@@ -8,6 +8,7 @@ set :format, :pretty
 set :pty, true
 set :linked_dirs, fetch(:linked_dirs, []).push('logs', 'vendor', 'param')
 set :keep_releases, 5
+set :use_sudo, true
 
 namespace :deploy do
 
