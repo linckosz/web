@@ -15,7 +15,7 @@ namespace :deploy do
 desc 'Init application'
 	task :composer do
 		on roles(:web), in: :sequence, wait: 1 do
-			#execute "cd #{release_path} && composer update"
+			execute "cd #{release_path} && composer update"
 		end
 	end
 
