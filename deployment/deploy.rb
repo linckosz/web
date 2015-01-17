@@ -14,8 +14,8 @@ namespace :deploy do
 desc 'Init application'
 task :composer do
 on roles(:web), in: :sequence, wait: 1 do
-execute "chown -R apache:apache #{release_path}/logs"
-execute "chown -R apache:apache #{release_path}/public"
+#execute "chown -R apache:apache #{release_path}/logs"
+#execute "chown -R apache:apache #{release_path}/public"
 end
 end
 
