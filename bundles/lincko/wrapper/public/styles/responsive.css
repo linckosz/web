@@ -1,0 +1,81 @@
+/* WEB RESPONSIVE CSS
+ * Author: Bruno Martin
+ * Date: January 7th, 2015
+ * Description:
+ * It helps to match as many as possible devices without zoom issue.
+ * 1~2% should not perfectly fit for touching, but stil readable
+ * Note: It must be used with the viewport meta tag
+ * <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+ */
+
+/* Define the default font */
+html {
+	font-size: 10px;
+	font-color: #333435;
+}
+
+body {
+	margin: 0px;
+	min-height: 100%;
+	height: 100%;
+}
+
+/* Default mode */
+/* Tablet in Landscape */
+.noMobile, .noMobileL, .noTablet, .noDesktop { display:block; }
+.isMobile, .isMobileL, .isTablet, .isDesktop { display:none; }
+.minMobile, .minMobileL, .minTablet, .minDesktop { display:none; }
+.maxMobile, .maxMobileL, .maxTablet, .maxDesktop { display:none; }
+.noTablet { display:none !important; }
+.isTablet { display:block; }
+.maxTablet, .maxDesktop { display:block; }
+.minMobile, .minMobileL, .minTablet { display:block; }
+
+
+/* Mobile phone in Portrait */
+@media only screen and (max-width: 479px){
+	.noMobile, .noMobileL, .noTablet, .noDesktop { display:block; }
+	.isMobile, .isMobileL, .isTablet, .isDesktop { display:none; }
+	.minMobile, .minMobileL, .minTablet, .minDesktop { display:none; }
+	.maxMobile, .maxMobileL, .maxTablet, .maxDesktop { display:none; }
+	.noMobile { display:none !important; }
+	.isMobile { display:block; }
+	.maxMobile, .maxMobileL, .maxTablet, .maxDesktop { display:block; }
+	.minMobile { display:block; }
+}
+
+/* Mobile phone in Landscape and Tablet in Portrait */
+@media only screen and (min-width: 480px) and (max-width: 900px){
+	.noMobile, .noMobileL, .noTablet, .noDesktop { display:block; }
+	.isMobile, .isMobileL, .isTablet, .isDesktop { display:none; }
+	.minMobile, .minMobileL, .minTablet, .minDesktop { display:none; }
+	.maxMobile, .maxMobileL, .maxTablet, .maxDesktop { display:none; }
+	.noMobileL { display:none !important; }
+	.isMobileL { display:block; }
+	.maxMobileL, .maxTablet, .maxDesktop { display:block; }
+	.minMobile, .minMobileL { display:block; }
+}
+
+/* Tablet in Landscape */
+@media only screen and (min-width: 901px) and (max-width: 1280px){
+	.noMobile, .noMobileL, .noTablet, .noDesktop { display:block; }
+	.isMobile, .isMobileL, .isTablet, .isDesktop { display:none; }
+	.minMobile, .minMobileL, .minTablet, .minDesktop { display:none; }
+	.maxMobile, .maxMobileL, .maxTablet, .maxDesktop { display:none; }
+	.noTablet { display:none !important; }
+	.isTablet { display:block; }
+	.maxTablet, .maxDesktop { display:block; }
+	.minMobile, .minMobileL, .minTablet { display:block; }
+}
+
+/* Notebook and PC */
+@media only screen and (min-width: 1281px){
+	.noMobile, .noMobileL, .noTablet, .noDesktop { display:block; }
+	.isMobile, .isMobileL, .isTablet, .isDesktop { display:none; }
+	.minMobile, .minMobileL, .minTablet, .minDesktop { display:none; }
+	.maxMobile, .maxMobileL, .maxTablet, .maxDesktop { display:none; }
+	.noDesktop { display:none !important; }
+	.isDesktop { display:block; }
+	.maxDesktop { display:block; }
+	.minMobile, .minMobileL, .minTablet, .minDesktop { display:block; }
+}

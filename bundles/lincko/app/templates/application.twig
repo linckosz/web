@@ -1,0 +1,108 @@
+{% extends '/bundles/lincko/app/templates/generic/base.twig' %}
+
+{% block content %}
+<body>
+{% if yonghu and jizhu %}
+{{ _trans('web', 8888, 0, 'html') }}{# Hello @@user~~, welcome back! #}
+<br />
+{% endif %}
+<br />
+<hr />
+{{ _trans('web', 8888, 1, 'html') }}{# Change language #}
+<br />
+<form id="translation" action="{{ _language_uri() }}" method="post">
+	<select id="translation_language" name="translation_language" style="display:inline;margin:0px;padding:0px;" onchange="this.form.submit();" >
+		{% set language = _language() %}
+		{% set languages = _languages('web') %}
+		{% for key, value in languages %}
+			<option value="{{ key }}" title="{{ value }}" {% if key == language %}selected="selected"{% endif %} >{{ value }}</option>
+		{% endfor %}
+	</select>
+</form>
+
+<br />
+<br />
+<hr />
+{{ _trans('web', 8888, 2, 'html') }}{# Create a user #}
+<br />
+<form id="user_create" action="user/create" method="post" onsubmit="return sendForm(this);">
+	<label for="user_create_email">{{ _trans('web', 8888, 4, 'html') }}{# Email #}</label>
+	<input type="email" id="user_create_email" name="email" value="@{{ domain }}" />
+	<br />
+	<input type="password" name="foilautofill" value="" autocomplete="off" style="display:none" />{# It avoids a behavior in Firefoz which does not know Autocomplete tag, FF fulfill by default the first field #}
+	<label for="user_create_password">{{ _trans('web', 8888, 5, 'html') }}{# Password #}</label>
+	<input type="password" id="user_create_password" name="password" value="" autocomplete="off" />
+	<br />
+	<input type="submit" id="user_create_submit" value="Submit (ignored)" style="display:none;" />
+	<input type='button' value="{{ _trans('web', 8888, 6, 'input') }}{# Create #}" onclick="$(this.form).submit();" />
+</form>
+
+<br />
+<br />
+<hr />
+{{ _trans('web', 8888, 7, 'html') }}{# Sign in #}
+<br />
+<form id="user_signin" action="user/signin" method="post" onsubmit="return sendForm(this);">
+	<label for="user_signin_email">{{ _trans('web', 8888, 4, 'html') }}{# Email #}</label>
+	<input type="text" id="user_signin_email" name="email" value="{{ youjian }}" />
+	<br />
+	<input type="password" name="foilautofill" value="" autocomplete="off" style="display:none" />{# It avoids a behavior in Firefoz which does not know Autocomplete tag, FF fulfill by default the first field #}
+	<label for="user_signin_password">{{ _trans('web', 8888, 5, 'html') }}{# Password #}</label>
+	<input type="password" id="user_signin_password" name="password" value="" autocomplete="off" />
+	<br />
+	<label for="user_signin_password">{{ _trans('web', 8888, 8, 'html') }}{# Remember me #}</label>
+	<input type="checkbox" id="user_signin_remember" name="remember" {% if jizhu %}checked="checked"{% endif %} />
+	<br />
+	<input type="submit" id="user_signin_submit" value="Submit (ignored)" style="display:none;" />
+	<input type='button' value='{{ _trans('web', 8888, 7, 'input') }}{# Sign in #}' onclick="$(this.form).submit();" />
+</form>
+
+<br />
+<br />
+<hr />
+{{ _trans('web', 8888, 9, 'html') }}{# Sign out #}
+<br />
+<input type='button' value='{{ _trans('web', 8888, 9, 'input') }}{# Sign out #}' onclick="sendAction('','post','user/signout');" />
+
+<br />
+<br />
+<hr />
+{{ _trans('web', 8888, 10, 'html') }}{# An application action #}
+<br />
+<input type='button' value='{{ _trans('web', 8888, 11, 'input') }}{# Test action get #}' onclick="sendAction('','get','test');" />
+<br />
+<input type='button' value='{{ _trans('web', 8888, 12, 'input') }}{# Test action post #}' onclick="sendAction('','post','test');" />
+<br />
+<input type='button' value='{{ _trans('web', 8888, 13, 'input') }}{# Test receive email #}' onclick="sendAction('','get','test/email');" />
+<br />
+<input type='button' value='{{ _trans('web', 8888, 11, 'input') }}{# Test receive get #}' onclick="sendAction('','get','test/user');" />
+
+<br />
+<br />
+<hr />
+{{ _trans('web', 8888, 17, 'html') }}{# Translator #}
+<br />
+<form id="translation_auto" action="translation/auto" method="post" onsubmit="return sendForm(this);">
+	<label for="translation_auto_text"></label>
+	<textarea id="translation_auto_text" name="text" rows="3" cols="100" style="font-size: 1.1em;" />Я наступил на Cornflake, 
+и теперь я зерновых убийца!</textarea>
+	<br />
+	<input type="submit" id="translation_auto_submit" value="Submit (ignored)" style="display:none;" />
+	<input type='button' value='{{ _trans('web', 8888, 19, 'input') }}{# Translate #}' onclick="$(this.form).submit();" />
+</form>
+
+<br />
+<br />
+<hr />
+<br />
+{{ _trans('web', 8888, 14, 'html') }}{# Response #} <input style='margin-left:10px;margin-bottom:5px;' type='button' value='{{ _trans('web', 8888, 15, 'html') }}{# Clear #}' onclick="$('#divbox').html('&nbsp;[...]');" />
+<br />
+<div id='divbox' style='border-style:solid;border-width:1px;font-family: monospace;font-size: 1.1em;'>
+	&nbsp;{{ _trans('web', 8888, 16, 'html') }}{# Start #}
+</div>
+
+<br />
+<br />
+<br />
+</body>
+{% endblock %}
