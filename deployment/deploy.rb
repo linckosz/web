@@ -42,17 +42,17 @@ namespace :deploy do
   desc 'Do something'
   task :do_something do
     on roles(:web) do
-      execute 'touch toto'
+      execute 'touch /var/www/lincko/slim.web/toto'
     end
   end
 
-  after :restart, :clear_cache do
-    on roles(:web), in: :groups, limit: 3, wait: 3 do
+#  after :restart, :clear_cache do
+#    on roles(:web), in: :groups, limit: 3, wait: 3 do
       # Here we can do anything such as:
       # within release_path do
       #   execute :rake, 'cache:clear'
       # end
-    end
-  end
+#    end
+#  end
 
 end
