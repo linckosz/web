@@ -11,20 +11,20 @@ set :keep_releases, 5
 
 namespace :deploy do
 
-	desc 'Init application'
-	task :composer do
-		on roles(:web), in: :sequence, wait: 1 do
-			execute "chown -R apache:apache #{release_path}/logs"
-			execute "chown -R apache:apache #{release_path}/public"
-		end
-	end
+desc 'Init application'
+task :composer do
+on roles(:web), in: :sequence, wait: 1 do
+execute "chown -R apache:apache #{release_path}/logs"
+execute "chown -R apache:apache #{release_path}/public"
+end
+end
 
-	before :publishing, :composer
+before :publishing, :composer
 
-	after :restart, :clear_cache do
-		on roles(:web), in: :groups, limit: 3, wait: 3 do
-			# Do noting
-		end
-	end
+after :restart, :clear_cache do
+on roles(:web), in: :groups, limit: 3, wait: 3 do
+# Do noting
+end
+end
 
 end
