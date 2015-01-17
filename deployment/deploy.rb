@@ -39,13 +39,17 @@ set :keep_releases, 5
 
 namespace :deploy do
 
+  desc 'Do something'
+  task :do_something do
+    execute 'echo something'
+  end
+  
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 3 do
       # Here we can do anything such as:
       # within release_path do
       #   execute :rake, 'cache:clear'
       # end
-      execute 'composer update'
     end
   end
 
