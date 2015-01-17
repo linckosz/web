@@ -41,9 +41,9 @@ namespace :deploy do
 
   desc 'Do something'
   task :do_something do
-    execute 'echo something'
+    execute 'touch toto'
   end
-  
+
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 3 do
       # Here we can do anything such as:
