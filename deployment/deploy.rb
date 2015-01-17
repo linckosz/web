@@ -2,7 +2,7 @@
 lock '3.3.5'
 set :application, 'lincko'
 set :repo_url, 'ssh://deploy@192.168.137.180/var/www/lincko/git/slim.web'
-#ssh_options[:port] = 22
+sssh_options[:port] = 22
 set :deploy_to, '/var/www/lincko/slim.web'
 set :format, :pretty
 set :pty, true
