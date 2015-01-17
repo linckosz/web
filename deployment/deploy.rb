@@ -1,6 +1,9 @@
 # config valid only for current version of Capistrano
 #lock '3.3.5'
 set :application, 'lincko'
+set :repo_url, 'ssh://deploy@192.168.137.180/var/www/lincko/git/slim.web'
+#ssh_options[:port] = 22
+set :deploy_to, '/var/www/lincko/slim.web'
 set :format, :pretty
 set :pty, true
 set :linked_files, fetch(:linked_files, []).push('composer.lock')
@@ -18,7 +21,7 @@ namespace :deploy do
 			# On server, do only once manually the follow commands
 			# "cd #{shared_path} && chown -R apache:apache logs"
 			# "cd #{shared_path} && chown -R apache:apache public"
-			#execute "cd #{release_path} && composer update"
+			execute "cd #{release_path} && composer update"
 		end
 	end
 
