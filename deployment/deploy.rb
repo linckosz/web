@@ -41,7 +41,9 @@ namespace :deploy do
 
   desc 'Do something'
   task :do_something do
-    execute 'touch toto'
+    on roles(:web) do
+      execute 'touch toto'
+    end
   end
 
   after :restart, :clear_cache do
