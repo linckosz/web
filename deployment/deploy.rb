@@ -15,7 +15,8 @@ desc 'Init application'
 	task :composer do
 		on roles(:web), in: :sequence, wait: 1 do
 			execute "cd #{release_path} && touch tata"
-			execute "chown -R apache:apache #{release_path}/logs"
+			execute "cd #{release_path} && chown -R apache:apache logs"
+			#execute "chown -R apache:apache #{release_path}/logs"
 			#execute "chown -R apache:apache #{release_path}/public"
 		end
 	end
