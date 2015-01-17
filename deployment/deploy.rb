@@ -16,7 +16,7 @@ namespace :deploy do
 desc 'Init application'
 	task :composer do
 		on roles(:web), in: :sequence, wait: 1 do
-			execute "ln -s #{shared_path}/composer.lock #{release_path}/composer.lock"
+			#execute "ln -s #{shared_path}/composer.lock #{release_path}/composer.lock"
 			# sudoer => give CHOWN privilege to deploy
 			execute "cd #{shared_path} && chown -R apache:apache logs"
 			execute "cd #{shared_path} && chown -R apache:apache public"
