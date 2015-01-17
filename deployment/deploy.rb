@@ -1,6 +1,7 @@
 # config valid only for current version of Capistrano
 lock '3.3.5'
 #ssh_options[:port] = 22
+set :port, 22
 set :application, 'lincko'
 set :format, :pretty
 set :pty, true
