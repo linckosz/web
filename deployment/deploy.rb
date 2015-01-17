@@ -1,7 +1,7 @@
 # config valid only for current version of Capistrano
 lock '3.3.5'
 set :application, 'lincko'
-set :repo_url, 'ssh://deploy@192.168.137.180/var/www/lincko/git/slim.web'
+set :repo_url, 'ssh://root@192.168.137.180/var/www/lincko/git/slim.web'
 #ssh_options[:port] = 22
 set :deploy_to, '/var/www/lincko/slim.web'
 set :format, :pretty
@@ -9,6 +9,7 @@ set :pty, true
 set :linked_files, fetch(:linked_files, []).push('composer.lock')
 set :linked_dirs, fetch(:linked_dirs, []).push('logs', 'vendor', 'param')
 set :keep_releases, 5
+set :use_sudo, true
 
 namespace :deploy do
 
