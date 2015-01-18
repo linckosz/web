@@ -24,9 +24,10 @@ namespace :deploy do
 			# "cd #{shared_path} && chown -R apache:apache public"
 			# ----------------------------------------------------
 			# Update Composer
-			execute "cd #{release_path} && composer update"
+			#execute "cd #{release_path} && composer update"
 			# Backup database
 			execute "automysqlbackup /etc/automysqlbackup/myserver.conf"
+			execute "mkdir -p #{release_path}/mysql/backup && cp -R #{root_path}/db/latest/* #{release_path}/mysql/backup"
 		end
 	end
 
