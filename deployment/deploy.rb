@@ -1,6 +1,6 @@
 # config valid only for current version of Capistrano
 lock '3.3.5'
-set :port, 2243
+#set :port, 2243
 set :application, 'lincko'
 set :format, :pretty
 set :pty, true
@@ -8,9 +8,9 @@ set :linked_files, fetch(:linked_files, []).push('composer.lock')
 set :linked_dirs, fetch(:linked_dirs, []).push('logs', 'vendor', 'param')
 set :keep_releases, 5
 
-#set :ssh_options, {
-#	port: 2243
-#}
+set :ssh_options, {
+	port: 2243
+}
 
 # to avoid an error message at the first launch, create the composer.lock file manually, and copy the current content
 # "cd #{shared_path} && nano composer.lock"
