@@ -1,6 +1,5 @@
 # config valid only for current version of Capistrano
 lock '3.3.5'
-#set :port, 2243
 set :application, 'lincko'
 set :format, :pretty
 set :pty, true
@@ -23,7 +22,7 @@ namespace :deploy do
 			# On server, do only once manually the follow commands
 			# "cd #{shared_path} && chown -R apache:apache logs"
 			# "cd #{shared_path} && chown -R apache:apache public"
-			#execute "cd #{release_path} && composer update"
+			execute "cd #{release_path} && composer update"
 		end
 	end
 
