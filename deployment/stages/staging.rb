@@ -1,5 +1,5 @@
 set :root_path, '/var/www/lincko'
-set :repo_url, 'ssh://deploy@192.168.137.180:2243#{root_path}/git/slim.web'
-set :deploy_to, '#{root_path}/slim.web'
+set :repo_url, 'ssh://deploy@192.168.137.180:2243#{fetch(:root_path)}/git/slim.web'
+set :deploy_to, '#{fetch(:root_path)}/slim.web'
 role :web, %w{deploy@192.168.137.180}
 #server '192.168.137.180', user: 'deploy', roles: %w{web}, port: 2243
