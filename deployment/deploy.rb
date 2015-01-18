@@ -1,5 +1,5 @@
 # config valid only for current version of Capistrano
-lock '3.3.5'
+#lock '3.3.5'
 set :application, 'lincko'
 set :format, :pretty
 set :pty, true
@@ -17,16 +17,20 @@ set :ssh_options, {
 namespace :deploy do
 
 	desc 'Init application'
-	task :composer do
+	task :bruno do
 		on roles(:web), in: :sequence, wait: 1 do
 			# On server, do only once manually the follow commands
 			# "cd #{shared_path} && chown -R apache:apache logs"
 			# "cd #{shared_path} && chown -R apache:apache public"
+			# ----------------------------------------------------
+			# Update Composer
 			execute "cd #{release_path} && composer update"
+			# Backup database
+			execute "automysqlbackup /etc/automysqlbackup/myserver.conf"
 		end
 	end
 
-	before :publishing, :composer
+	before :publishing, :bruno
 
 	after :restart, :clear_cache do
 		on roles(:web), in: :groups, limit: 3, wait: 3 do
