@@ -8,7 +8,7 @@ set :linked_dirs, fetch(:linked_dirs, []).push('logs', 'vendor', 'param')
 set :keep_releases, 5
 
 set :ssh_options, {
-	port: 2243
+	port: 2244
 }
 
 # to avoid an error message at the first launch, create the composer.lock file manually, and copy the current content
@@ -24,7 +24,7 @@ namespace :deploy do
 			# "cd #{shared_path} && chown -R apache:apache public"
 			# ----------------------------------------------------
 			# Update Composer
-			#execute "cd #{release_path} && composer update"
+			execute "cd #{release_path} && composer update"
 			# Backup database
 			execute "automysqlbackup /etc/automysqlbackup/myserver.conf"
 			execute "mkdir -p #{release_path}/mysql/backup && cp -R #{fetch(:root_path)}/db/latest/* #{release_path}/mysql/backup"
