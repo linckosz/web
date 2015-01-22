@@ -27,7 +27,8 @@ namespace :deploy do
 			execute "cd #{release_path} && composer update"
 			# Backup database
 			execute "automysqlbackup /etc/automysqlbackup/myserver.conf"
-			execute "mkdir -p #{release_path}/mysql/backup && cp -R #{fetch(:root_path)}/db/latest/* #{release_path}/mysql/backup"
+			execute "mkdir -p #{release_path}/mysql/backup && cp -R #{fetch(:root_path)}/deploy/share/db/latest/* #{release_path}/mysql/backup"
+			# MUST delete subfolders of share/db
 		end
 	end
 
