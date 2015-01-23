@@ -17,7 +17,7 @@ $app = new \Slim\Slim(array(
 
 function my_autoload($pClassName){
 	$app = \Slim\Slim::getInstance();
-	$pClassName = str_replace('\\', '/', $pClassName);
+	$pClassName = str_replace('\\', '/', $pClassName);echo $app->lincko->path.'/'.$pClassName.'.php';
 	include_once($app->lincko->path.'/'.$pClassName.'.php');
 }
 
