@@ -3,7 +3,7 @@
 set :application, 'lincko'
 set :format, :pretty
 set :pty, true
-set :linked_files, fetch(:linked_files, []).push('composer.lock')
+#set :linked_files, fetch(:linked_files, []).push('composer.lock')
 set :linked_dirs, fetch(:linked_dirs, []).push('logs', 'vendor', 'param')
 set :keep_releases, 5
 
