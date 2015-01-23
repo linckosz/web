@@ -56,7 +56,7 @@ class Folders {
 		return false;
 	}
 
-	public function createPath($folder){echo $folder;
+	public function createPath($folder){
 		$this->folder = false;
 		if(!is_dir($folder)){
 			if(mkdir($folder, 0755, true)){
