@@ -39,7 +39,7 @@ $app->configureMode('development', function () use ($app) {
 	$app->config(array(
 		'log.enable' => false,
 	));
-	ini_set('display_errors', '0');
+	ini_set('display_errors', '1');
 	ini_set('opcache.enable', '0');
 	//Only useful in rendering mode, useless in JSON mode
 	//$debugbar = new \Slim\Middleware\DebugBar();
