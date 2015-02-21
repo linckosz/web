@@ -11,10 +11,10 @@
 				{{ _trans('web', 3, 2, 'html') }}{# By using this site you agree to the use of cookies for analytics and personalised content. #}
 			</span>
 			<span class="floatright padding">
-				<img class="footer_image" src="{{ _filelatest('/lincko/web/images/foot/earth16.png') }}" />
+				<img class="footer_image" src="{{ _filelatest('/lincko/web/images/generic/foot/earth16.png') }}" />
 				<form id="translation" action="{{ _language_uri() }}" method="post">
 					<select id="translation_language" name="translation_language" class="footer_select" onchange="this.form.submit();" >
-						<img class="footer_image" src="{{ _filelatest('/lincko/web/images/foot/earth16.png') }}" />
+						<img class="footer_image" src="{{ _filelatest('/lincko/web/images/generic/foot/earth16.png') }}" />
 						{% set language = _language() %}
 						{% set languages = _languages('web') %}
 						{% for key, value in languages %}

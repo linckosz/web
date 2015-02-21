@@ -1,3 +1,7 @@
+/*
+ *
+ */
+
 .mobile_menu_wrapper {
 	background-color: #FFFFFF;
 	position: absolute;
@@ -15,7 +19,7 @@
 	width: 100%;
 	text-align: center;
 	background-color: #313335;
-	background-image: url('/lincko/web/images/mobile_menu/top.png');
+	background-image: url('/lincko/web/images/generic/mobile_menu/top.png');
 	background-repeat: repeat-x;
 	position: fixed;
 	font-family: "Comic Sans MS", Tahoma, Verdana, Helvetica, "Nimbus Sans L", "URW Gothic L", "Lucida Grande", Geneva, "DejaVu Sans", "Microsoft Sans Serif", sans-serif;
@@ -33,7 +37,7 @@
 
 .mobile_menu_back {
 	display: table-cell;
-	padding: 0 16px 0 16px;
+	padding: 0 0px 0 16px;
 	color: #F8F8F8;
 	white-space: nowrap;
 	height: 100%;
@@ -49,8 +53,7 @@
 
 .mobile_menu_back:active {
 	color: #6F7377;
-	background-image: url('/lincko/web/images/head/head_nav_active.png');
-	background-image: url('/lincko/web/images/mobile_menu/active.png');
+	background-image: url('/lincko/web/images/generic/mobile_menu/active.png');
 	box-shadow: inset 4px 4px 13px -5px #313335;
 	-moz-box-shadow: inset 4px 4px 13px -5px #313335;
 	-webkit-box-shadow: inset 4px 4px 13px -5px #313335;
@@ -99,4 +102,17 @@
 
 .mobile_menu_radio_icon {
 	height: 20px;
+}
+
+.mobile_menu_back_image {
+	border-right: #343434 2px solid;
+	padding-right: 14px;
+}
+
+.mobile_menu_back_image:hover {
+	border-color: transparent;
+}
+
+.mobile_menu_back_image:active {
+	border-color: transparent;
 }

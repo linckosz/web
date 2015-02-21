@@ -11,7 +11,7 @@ function wrapper(param, method, action, cb_success, cb_error, cb_complete){
 	var linkid = '?'+md5(Math.random());
 	var timeout = 10000; //10s
 	if(action == 'translation/auto'){
-		timeout = 20000; //20s, Twice the time because teh translation request has to request a third party
+		timeout = 20000; //20s, Twice the time because the translation request has to request a third party
 	}
 
 	xhr = $.ajax({
@@ -42,6 +42,10 @@ function wrapper(param, method, action, cb_success, cb_error, cb_complete){
 
 
 function sendForm(objForm, cb_success, cb_error, cb_complete){
+	if(typeof cb_success==="undefined"){ cb_success = function(){}; }
+	if(typeof cb_error==="undefined"){ cb_error = function(){}; }
+	if(typeof cb_complete==="undefined"){ cb_complete = function(){}; }
+
 	if($.type(objForm)==="string"){
 		objForm = $("#"+objForm);
 	} else {
@@ -62,6 +66,10 @@ function sendForm(objForm, cb_success, cb_error, cb_complete){
 }
 
 function sendAction(param, method, action, cb_success, cb_error, cb_complete){
+	if(typeof cb_success==="undefined"){ cb_success = function(){}; }
+	if(typeof cb_error==="undefined"){ cb_error = function(){}; }
+	if(typeof cb_complete==="undefined"){ cb_complete = function(){}; }
+	
 	var arr = [];
 	if(!$.isArray(param)){
 		//Here do not use "new Array(param)", because param[0] will be undefined is param is an integer

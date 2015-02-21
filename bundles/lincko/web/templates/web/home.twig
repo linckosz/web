@@ -1,5 +1,9 @@
+{# category 4 #}
 {% extends '/bundles/lincko/web/templates/generic/base.twig' %}
 
 {% block content %}
-	Home page
+<link rel="stylesheet" href="{{ _filelatest('/lincko/web/styles/web/home.css') }}" type="text/css" />
+<div id='begin_home'></div>
+<img class="head_image" src="{{ _filelatest('/lincko/web/images/web/home/thewall_bw_40.jpg') }}" />
+<div id='end_home'></div>
 {% endblock %}

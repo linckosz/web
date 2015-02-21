@@ -1,9 +1,10 @@
-/*
-var IMGpagefirst = new Image();
-IMGpagefirst.src = '';
+enquire.register(responsive.noMobileL, function() { 
+	console.log(responsive.noMobileL);
+});
 
-//Farir un array true/false => faire un a = !a puis recupere la source dans l'array
-*/
+enquire.register(responsive.minTablet, function() { 
+	Mobile_menu_Hideall();
+});
 
 var mobile_menu_zindex = 2000;
 
@@ -65,7 +66,7 @@ Mobile_menu.prototype = {
 		Elem.children('span').eq(0).html(attribute.title);
 		if("selected" in attribute){
 			if(attribute.selected){
-				Elem.children('span').eq(1).html("<img class='mobile_menu_radio_icon' src='/lincko/web/images/mobile_menu/check.png' />");
+				Elem.children('span').eq(1).html("<img class='mobile_menu_radio_icon' src='/lincko/web/images/generic/mobile_menu/check.png' />");
 			}
 		}
 		if("action" in attribute){
