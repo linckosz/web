@@ -1,0 +1,119 @@
+<script>
+	var mobile_menu_list = [];
+
+	mobile_menu_list['nav'] = {
+		"_title": {
+			"style": "title",
+			"title": "{{ _trans('web', 2, 10, 'js') }}", //Menu
+		},
+		"account": {
+			"style": "button",
+			"title": "{{ _trans('web', 2, 7, 'js') }}", //My account
+			"action": function(){
+				Mobile_menu_Hideall();
+			},
+			"class": "base_account_signin"
+		},
+		"signin": {
+			"style": "button",
+			"title": "{{ _trans('web', 2, 9, 'js') }}", //Sign in
+			"action": function(){
+				Mobile_menu_Hideall();
+			},
+			"class": "base_account_signout"
+		},
+		"joinus": {
+			"style": "button",
+			"title": "{{ _trans('web', 2, 8, 'js') }}", //Join us
+			"action": function(){
+				Mobile_menu_Hideall();
+			},
+			"class": "base_account_signout"
+		},
+		"home": {
+			"style": "button",
+			"title": "{{ _trans('web', 2, 1, 'js') }}", //Home
+			"action":  function(){
+				Mobile_menu_Hideall();
+				window.location.href = "{{ urlFor('home') }}";
+			},
+			"class": ""
+		},
+		"features": {
+			"style": "button",
+			"title": "{{ _trans('web', 2, 2, 'js') }}", //Features
+			"action":  function(){
+				Mobile_menu_Hideall();
+				window.location.href = "{{ urlFor('features') }}";
+			},
+			"class": ""
+		},
+		"price": {
+			"style": "button",
+			"title": "{{ _trans('web', 2, 3, 'js') }}", //Price
+			"action":  function(){
+				Mobile_menu_Hideall();
+				window.location.href = "{{ urlFor('price') }}";
+			},
+			"class": ""
+		},
+		"download": {
+			"style": "button",
+			"title": "{{ _trans('web', 2, 4, 'js') }}", //Download
+			"action":  function(){
+				Mobile_menu_Hideall();
+				window.location.href = "{{ urlFor('download') }}";
+			},
+			"class": ""
+		},
+		"help": {
+			"style": "button",
+			"title": "{{ _trans('web', 2, 5, 'js') }}", //Help
+			"action":  function(){
+				Mobile_menu_Hideall();
+				window.location.href = "{{ urlFor('help') }}";
+			},
+			"class": ""
+		},
+		"language": {
+			"style": "button",
+			"title": "{{ _trans('web', 2, 12, 'js') }}", //Language
+			"value": "{{ _language_full() }}",
+			"action": function(){
+				Mobile_menu_Build("language");
+			},
+			"class": ""
+		},
+		"signout": {
+			"style": "button",
+			"title": "{{ _trans('web', 2, 6, 'js') }}", //Sign out
+			"action": function(){
+				Mobile_menu_Hideall();
+			},
+			"class": "base_account_signin"
+		},
+	};
+
+	{% set language = _language() %}
+	{% set languages = _languages('web') %}
+	mobile_menu_list['language'] = {
+		"_title": {
+			"style": "title",
+			"title": "{{ _trans('web', 2, 12, 'js') }}", //Language
+		},
+		
+		{% for key, value in languages %}
+			"{{ key }}": {
+				"style": "radio",
+				"title": "{{ value }}",
+				"selected": {% if key == language %}true{% else %}false{% endif %},
+				"action": function(){
+					Mobile_menu_Hideall();
+					ChangeLanguage("{{ key }}");
+				},
+				"class": ""
+			},
+		{% endfor %}
+		
+	};
+</script>

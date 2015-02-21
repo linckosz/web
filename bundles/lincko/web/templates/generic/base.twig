@@ -2,11 +2,28 @@
 {% block base %}
 	<body>
 		<link rel="stylesheet" href="{{ _filelatest('/lincko/web/styles/generic/base.css') }}" type="text/css" />
-		{% include '/bundles/lincko/web/templates/generic/css/base.css.twig' %}
-		{% include '/bundles/lincko/web/templates/generic/head.twig' %}
-		{% include '/bundles/lincko/web/templates/generic/signin.twig' %}
-		{% block content %}
-		{% endblock %}
-		{% include '/bundles/lincko/web/templates/generic/foot.twig' %}
+		{% include '/bundles/lincko/web/templates/generic/styles/base.css.twig' %}
+		
+		{% include '/bundles/lincko/web/templates/generic/mobile_menu.twig' %}
+
+		<div class="base_wrapper">
+			{% include '/bundles/lincko/web/templates/generic/head.twig' %}
+			{% include '/bundles/lincko/web/templates/generic/signin.twig' %}
+			<div class="base_content">
+				<table class="base_table">
+					<tr>
+						<td class="base_body">
+							{% block content %}
+							{% endblock %}
+						</td>
+					</tr>
+					<tr>
+						<td class="base_foot minTablet">
+							{% include '/bundles/lincko/web/templates/generic/foot.twig' %}
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
 	</body>
 {% endblock %}

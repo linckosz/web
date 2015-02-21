@@ -22,8 +22,8 @@ body {
 
 /* Mobile phone in Portrait */
 @media only screen and (max-width: 479px){
-	.isMobileL, .isTablet, .isDesktop { display:none !important; }
-	.minMobileL, .minTablet, .minDesktop { display:none !important; }
+	.isMobileL, .isTablet, .isDesktop { display:none; }
+	.minMobileL, .minTablet, .minDesktop { display:none; }
 	/* no max */
 	.noMobile { display:none !important; }
 	.isMobile {  }
@@ -33,9 +33,9 @@ body {
 
 /* Mobile phone in Landscape and Tablet in Portrait */
 @media only screen and (min-width: 480px) and (max-width: 900px){
-	.isMobile, .isTablet, .isDesktop { display:none !important; }
-	.minTablet, .minDesktop { display:none !important; }
-	.maxMobile { display:none !important; }
+	.isMobile, .isTablet, .isDesktop { display:none; }
+	.minTablet, .minDesktop { display:none; }
+	.maxMobile { display:none; }
 	.noMobileL { display:none !important; }
 	.isMobileL { }
 	.maxMobileL, .maxTablet, .maxDesktop {  }
@@ -44,9 +44,9 @@ body {
 
 /* Tablet in Landscape */
 @media only screen and (min-width: 901px) and (max-width: 1280px){
-	.isMobile, .isMobileL, .isDesktop { display:none !important; }
-	.minDesktop { display:none !important; }
-	.maxMobile, .maxMobileL { display:none !important; }
+	.isMobile, .isMobileL, .isDesktop { display:none; }
+	.minDesktop { display:none; }
+	.maxMobile, .maxMobileL { display:none; }
 	.noTablet { display:none !important; }
 	.isTablet {  }
 	.maxTablet, .maxDesktop {  }
@@ -55,9 +55,9 @@ body {
 
 /* Notebook and PC */
 @media only screen and (min-width: 1281px){
-	.isMobile, .isMobileL, .isTablet { display:none !important; }
+	.isMobile, .isMobileL, .isTablet { display:none; }
 	/* no min */
-	.maxMobile, .maxMobileL, .maxTablet { display:none !important; }
+	.maxMobile, .maxMobileL, .maxTablet { display:none; }
 	.noDesktop { display:none !important; }
 	.isDesktop {  }
 	.maxDesktop {  }

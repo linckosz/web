@@ -1,14 +1,14 @@
 var xhr;
 var totalxhr = 1;
 
-function wrapper(param, method, action){
+function wrapper(param, method, action, cb_success, cb_error, cb_complete){
 
+	totalxhr++;
 	method = method.toUpperCase();
 	action = action.toLowerCase();
 
 	//We add a random md5 code to insure we avoid getting in queue for the same ajax call
 	var linkid = '?'+md5(Math.random());
-	var tx = totalxhr++;
 	var timeout = 10000; //10s
 	if(action == 'translation/auto'){
 		timeout = 20000; //20s, Twice the time because teh translation request has to request a third party
@@ -22,31 +22,26 @@ function wrapper(param, method, action){
 		dataType: 'json',
 		timeout: timeout,
 		success: function(data){
-			var msg = data.msg;
+			//Those 3 following lines are only for debug purpose
 			//var msg = JSON.stringify(data);
 			//var msg = data;
 			//var msg = JSON.parse(data.msg);
-			//$("#divbox").html(msg);
-			msg = msg.replace(/\n/g, "<br />");
-			$("#divbox").html($("#divbox").html()+'<br />'+tx+'&nbsp;&raquo;&nbsp;'+msg);
+
+			// Below is the production information with "dataType: 'json'"
+			cb_success(data.msg);
 		},
 		error: function(xhr_err, ajaxOptions, thrownError){
-			$("#divbox").html(
-				$("#divbox").html()
-				+'<br />'
-				+tx+'&nbsp;&raquo;&nbsp;'+'xhr.status => '+xhr_err.status
-				+'<br />'
-				+'thrownError => '+thrownError
-			);
+			cb_error(xhr_err, ajaxOptions, thrownError);
 		},
 		complete: function(){
 			xhr = false;
+			cb_complete();
 		},
 	});
 }
 
 
-function sendForm(objForm){
+function sendForm(objForm, cb_success, cb_error, cb_complete){
 	if($.type(objForm)==="string"){
 		objForm = $("#"+objForm);
 	} else {
@@ -59,14 +54,14 @@ function sendForm(objForm){
 		var param = objForm.serializeArray();
 		var method = objForm.attr('method');
 		var action = objForm.attr('action');
-		wrapper(param, method, action);
+		wrapper(param, method, action, cb_success, cb_error, cb_complete);
 	} else {
 		alert('The form does not exist!');
 	}
 	return false; //Disable submit action
 }
 
-function sendAction(param, method, action){
+function sendAction(param, method, action, cb_success, cb_error, cb_complete){
 	var arr = [];
 	if(!$.isArray(param)){
 		//Here do not use "new Array(param)", because param[0] will be undefined is param is an integer
@@ -76,7 +71,7 @@ function sendAction(param, method, action){
 	for(var val in param){
 		arr.push({name:val, value:param[val]});
 	}
-	wrapper(arr, method, action);
+	wrapper(arr, method, action, cb_success, cb_error, cb_complete);
 	return false; //Disable submit action
 }
 

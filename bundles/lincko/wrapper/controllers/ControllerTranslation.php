@@ -51,10 +51,12 @@ class ControllerTranslation extends Controller {
 			}
 		}
 		echo "
-		Lincko.Translation.get = function(bundle, category, phrase){
+		Lincko.Translation.get = function(bundle, phrase){
+			var category = '8000'; //Default category for JS sentences
 			if(bundle+'_'+category+'_'+phrase in Lincko.Translation._list){
 				var text = Lincko.Translation._list[bundle+'_'+category+'_'+phrase];
-				return Lincko.Translation.pushData(text);
+				return text;
+				//return Lincko.Translation.pushData(text);
 			} else {
 				return \"[".$app->trans->getJS('wrapper', 1, 2)."]\"; //[unknown value]  
 			}
@@ -62,6 +64,7 @@ class ControllerTranslation extends Controller {
 	}
 
 	public function setData(){
+		/*
 		$app = $this->app;
 		$app->lincko->translation['browser_title'] = $app->trans->getJS('wrapper', 1, 1); //Lincko - Team collaboration tool
 		$list = $app->lincko->translation;
@@ -83,6 +86,7 @@ class ControllerTranslation extends Controller {
 			}
 			return text;
 		};\n";
+		*/
 	}
 
 }

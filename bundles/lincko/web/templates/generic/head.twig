@@ -1,66 +1,74 @@
+{# category 1 #}
+{% set route = _route_name() %}
 <script>
 	JSfiles.push("{{ _filelatest('/lincko/web/scripts/generic/head.js') }}");
+	var head_link = [];
+	head_link['home'] = "{{ urlFor('home') }}";
+	head_link['features'] = "{{ urlFor('features') }}";
+	head_link['price'] = "{{ urlFor('price') }}";
+	head_link['download'] = "{{ urlFor('download') }}";
+	head_link['help'] = "{{ urlFor('help') }}";
 </script>
 <link rel="stylesheet" href="{{ _filelatest('/lincko/web/styles/generic/head.css') }}" type="text/css" />
 <div id='begin_head'></div>
-<nav class="base_menu base_nav">
+
+<nav class="base_menu head_nav">
+	
 	<div class="minTablet DIVcenter head_ul">
-		<div class="head_logo floatleft unselectable" id="head_home">
+		<div class="head_logo floatleft unselectable" id="head_logo_minTablet">
 			<span>
 				<div class="base_menu">
 					<img class="head_image" src="{{ _filelatest('/lincko/web/images/base/logo/lincko.png') }}" />
 				</div>
 			</span>
 		</div>
-		<div class="head_menu floatleft unselectable" id="head_features"><span>Features</span></div>
-		<div class="head_menu floatleft unselectable" id="head_price"><span>Price</span></div>
-		<div class="head_menu floatleft unselectable" id="head_download"><span>Download</span></div>
-		<div class="head_menu floatleft unselectable" id="head_help"><span>Help</span></div>
-		{% if yonghu and jizhu %}
-			<div class="head_signout floatright unselectable"><span><span>Sign out</span></span></div>
-			<div class="head_account floatright unselectable"><span><span>My account</span></span></div>
-		{% else %}
-			<div class="head_joinus floatright unselectable"><span><span>Join us</span></span></div>
-			<div class="head_signin floatright unselectable"><span><span>Sign in</span></span></div>
-		{% endif %}
+		<div class="head_menu floatleft unselectable {% if route == 'home' or route == 'root' %}active{% endif %}" id="head_home_minTablet"><span>{{ _trans('web', 1, 1, 'html') }}{# Home #}</span></div>
+		<div class="head_menu floatleft unselectable {% if route == 'features' %}active{% endif %}" id="head_features_minTablet"><span>{{ _trans('web', 1, 2, 'html') }}{# Features #}</span></div>
+		<div class="head_menu floatleft unselectable {% if route == 'price' %}active{% endif %}" id="head_price_minTablet"><span>{{ _trans('web', 1, 3, 'html') }}{# Price #}</span></div>
+		<div class="head_menu floatleft unselectable {% if route == 'download' %}active{% endif %}" id="head_download_minTablet"><span>{{ _trans('web', 1, 4, 'html') }}{# Download #}</span></div>
+		<div class="head_menu floatleft unselectable {% if route == 'help' %}active{% endif %}" id="head_help_minTablet"><span>{{ _trans('web', 1, 5, 'html') }}{# Help #}</span></div>
+		{# if yonghu and jizhu #}
+			<div class="head_signout floatright unselectable base_account_signin" id="head_signout_minTablet"><span><span>{{ _trans('web', 1, 6, 'html') }}{# Sign out #}</span></span></div>
+			<div class="head_account floatright unselectable base_account_signin" id="head_account_minTablet"><span><span>{{ _trans('web', 1, 7, 'html') }}{# My account #}</span></span></div>
+		{# else #}
+			<div class="head_joinus floatright unselectable base_account_signout" id="head_joinus_minTablet"><span><span>{{ _trans('web', 1, 8, 'html') }}{# Join us #}</span></span></div>
+			<div class="head_signin floatright unselectable base_account_signout" id="head_signin_minTablet"><span><span>{{ _trans('web', 1, 9, 'html') }}{# Sign in #}</span></span></div>
+		{# endif #}
 	</div>
+	
 	<div class="maxMobileL DIVcenter head_ul mobile">
-		<div class="head_logo floatleft unselectable" id="head_home">
-			<span>
-				<div class="base_menu">
-					<img class="head_image" src="{{ _filelatest('/lincko/web/images/base/logo/lincko.png') }}" />
-				</div>
-			</span>
-		</div>
-		<div class="head_menu icons floatright unselectable" id="head_features">
+		<div class="head_menu icons floatleft unselectable" id="head_menu_maxMobileL">
 			<span>
 				<img class="head_icons" src="{{ _filelatest('/lincko/web/images/head/menu11_0.png') }}" />
 			</span>
 		</div>
-		{% if yonghu and jizhu %}
-			<div class="head_account floatright unselectable" id="head_features"><span><span>My account</span></span></div>
-		{% else %}
-			<div class="head_joinus mobile floatright unselectable"><span><span>Sign in</span></span></div>
-		{% endif %}
+		<div class="head_logo floatleft unselectable" id="head_logo_maxMobileL">
+			<span>
+				<div class="base_menu">
+					<img class="head_image" src="{{ _filelatest('/lincko/web/images/base/logo/lincko.png') }}" />
+				</div>
+			</span>
+		</div>
+		<span class="base_menu_line head_title font_sans_serif unselectable isMobileL">
+			{% if route == 'home' or route == 'root' %}
+				{{ _trans('web', 1, 1, 'html') }}{# Home #}
+			{% elseif route == 'features' %}
+				{{ _trans('web', 1, 2, 'html') }}{# Features #}
+			{% elseif route == 'price' %}
+				{{ _trans('web', 1, 3, 'html') }}{# Price #}
+			{% elseif route == 'download' %}
+				{{ _trans('web', 1, 4, 'html') }}{# Download #}
+			{% elseif route == 'help' %}
+				{{ _trans('web', 1, 5, 'html') }}{# Help #}
+			{% endif %}
+		</span>
+		{# if yonghu and jizhu #}
+			<div class="head_account floatright unselectable base_account_signin"><span><span>{{ _trans('web', 1, 7, 'html') }}{# My account #}</span></span></div>
+		{# else #}
+			<div class="head_joinus mobile floatright unselectable base_account_signout"><span><span>{{ _trans('web', 1, 9, 'html') }}{# Sign in #}</span></span></div>
+		{# endif #}
 	</div>
+
 </nav>
-<div class="maxMobileL head_menu_extend">
-	{% if yonghu and jizhu %}
-		<div class="base_optionTab head_menu_deco unselectable"><span>My account</span></div>
-	{% else %}
-		<div class="base_optionTab head_menu_deco unselectable"><span>Sign in</span></div>
-		<div class="base_optionTab head_menu_deco unselectable"><span>Join us</span></div>
-	{% endif %}
-	<div class="base_optionTab head_menu_deco unselectable"><span>Features</span></div>
-	<div class="base_optionTab head_menu_deco unselectable"><span>Price</span></div>
-	<div class="base_optionTab head_menu_deco unselectable"><span>Download</span></div>
-	<div class="base_optionTab head_menu_deco unselectable"><span>Help</span></div>
-	<div class="base_optionTab head_menu_deco unselectable">
-		<span class="floatleft">Language</span>
-		<span class="floatright head_menu_value">{{ _language() }}</span>
-	</div>
-	{% if yonghu and jizhu %}
-		<div class="base_optionTab head_menu_deco unselectable"><span>Sign out</span></div>
-	{% endif %}
-</div>
+
 <div id='end_head'></div>

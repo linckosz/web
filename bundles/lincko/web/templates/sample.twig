@@ -2,6 +2,22 @@
 
 {% block content %}
 <body>
+<script>
+function cb_success(msg){
+	msg = msg.replace(/\n/g, "<br />");
+	$("#divbox").html($("#divbox").html()+'<br />'+totalxhr+'&nbsp;&raquo;&nbsp;'+msg);
+}
+function cb_error(xhr_err, ajaxOptions, thrownError){
+	$("#divbox").html(
+		$("#divbox").html()
+		+'<br />'
+		+totalxhr+'&nbsp;&raquo;&nbsp;'+'xhr.status => '+xhr_err.status
+		+'<br />'
+		+'thrownError => '+thrownError
+	);
+}
+</script>
+
 {% if yonghu and jizhu %}
 {{ _trans('web', 8888, 0, 'html') }}{# Hello @@user~~, welcome back! #}
 <br />
@@ -42,7 +58,7 @@
 <hr />
 {{ _trans('web', 8888, 7, 'html') }}{# Sign in #}
 <br />
-<form id="user_signin" action="user/signin" method="post" onsubmit="return sendForm(this);">
+<form id="user_signin" action="user/signin" method="post" onsubmit="return sendForm(this, function(dd){alert(dd);});">
 	<label for="user_signin_email">{{ _trans('web', 8888, 4, 'html') }}{# Email #}</label>
 	<input type="text" id="user_signin_email" name="email" value="{{ youjian }}" />
 	<br />

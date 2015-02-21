@@ -1,3 +1,4 @@
+{# category 3 #}
 <link rel="stylesheet" href="{{ _filelatest('/lincko/web/styles/generic/foot.css') }}" type="text/css" />
 <div id='begin_foot'></div>
 <footer class="footer">
@@ -5,9 +6,9 @@
 		<div class="footer_information DIVcenter">
 			<span class="floatleft padding">
 				Copyright © 2011-{{ "now"|date("Y") }} Lincko.<br />
-				<a target="_blank" style="color: currentColor;" href="{{ terms }}">Terms of use and Privacy policy</a><br />
+				<a target="_blank" style="color: currentColor;" href="{{ terms }}">{{ _trans('web', 3, 1, 'html') }}{# Terms of use and Privacy policy #}</a><br />
 				<br />
-				By using this site you agree to the use of cookies for analytics and personalised content.
+				{{ _trans('web', 3, 2, 'html') }}{# By using this site you agree to the use of cookies for analytics and personalised content. #}
 			</span>
 			<span class="floatright padding">
 				<img class="footer_image" src="{{ _filelatest('/lincko/web/images/foot/earth16.png') }}" />

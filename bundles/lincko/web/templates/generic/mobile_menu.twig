@@ -1,0 +1,30 @@
+{# category 2 #}
+{% set route = _route_name() %}
+<script>
+	JSfiles.push("{{ _filelatest('/lincko/web/scripts/generic/mobile_menu.js') }}");
+</script>
+{% include '/bundles/lincko/web/templates/generic/scripts/mobile_menu.js.twig' %}
+<link rel="stylesheet" href="{{ _filelatest('/lincko/web/styles/generic/mobile_menu.css') }}" type="text/css" />
+<div id='begin_mobile_menu'></div>
+<div style="display: none;">
+	<div id="-mobile_menu_wrapper" class="mobile_menu_wrapper">
+		<div class="base_menu mobile_menu_top unselectable">
+			<span class="mobile_menu_back font_sans_serif">{{ _trans('web', 2, 11, 'html') }}</span>
+			<span class="mobile_menu_title font_sans_serif"></span>
+		</div>
+		<div class="base_content mobile_menu_content unselectable">
+		</div>
+	</div>
+
+	<div id="-mobile_menu_button" class="base_optionTab mobile_menu_deco unselectable">
+		<span class=""></span>
+		<span class="mobile_menu_value"></span>
+	</div>
+
+	<div id="-mobile_menu_radio" class="base_optionTab mobile_menu_deco unselectable">
+		<span class=""></span>
+		<span class="mobile_menu_radio"></span>
+	</div>
+</div>
+
+<div id='end_mobile_menu'></div>

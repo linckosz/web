@@ -5,9 +5,7 @@
 .footer {
 	z-index: 998;
 	width: 100%;
-	position: absolute;
-	bottom: 0;
-	left: 0;
+	height: 100%;
 	background-color: #C8CFD2;
 	background-image: url('/lincko/web/images/head/head_nav.png');
 	background-repeat: repeat-x;

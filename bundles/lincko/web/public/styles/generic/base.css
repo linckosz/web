@@ -22,6 +22,7 @@
 
 .base_userIcon {
 	height: 40px;
+	line-height: 40px;
 	width: 40px;
 	border-style: none;
 }
@@ -47,8 +48,11 @@
 
 .base_menu {
 	height: 48px;
-	width: 100%;
 	border-style: none;
+}
+
+.base_menu_line {
+	line-height: 48px;
 }
 
 .base_menuBottom {
@@ -57,14 +61,61 @@
 	border-style: none;
 }
 
-.base_nav {
-	margin-top: -48px;
-}
-
 body {
 	background-image: url('/lincko/web/images/base/pattern.jpg');
 	background-repeat: repeat;
-	padding-top: 48px;
+}
+
+html, body {
+	height: 100%;
+}
+
+/*
+ * The folowwing css helps to have a fixed head, then a foot that keep on the bottom of the page, or the bottom of the screen.
+ * The scroll bar will be also only into the content div, like that we can add other layer, they will not be affected by the scrolling position.
+*/
+
+.base_wrapper {
+	background-color: #FFFFFF;
+	position: fixed;
+	font-size: 14px;
+	width: 100%;
+	height: 100%;
+	display: block;
+	z-index: 1000;
+	overflow: hidden;
+}
+
+.base_content {
+	width: 100%;
+	top: 48px;
+	bottom: 0px;
+	position: absolute;
+	overflow: hidden;
+	overflow-y: auto;
+}
+
+.base_table {
+	min-height: 100%;
+	width: 100%;
+	border-spacing: 0px;
+	border-style: none;
+	border-collapse: collapse;
+	table-layout: fixed;
+}
+
+.base_table td {
+	padding: 0px;
+	text-align: left;
+	vertical-align: top;
+}
+
+.base_body {
+	min-height: 100%;
+}
+
+.base_foot {
+	height: 1px; /* If not "main_body" will share the height */
 }
 
 /*
@@ -90,7 +141,8 @@ html, .font_sans_serif {
 
 /* CURSIVE */
 .font_cursive {
-	font-family: "Comic Sans MS", cursive, "Domestic Manners", "URW Chancery L", "Brush Script MT", Zapfino, "Apple Chancery", "Bradley Hand ITC", "Monotype Corsiva";
+	/*font-family: "Comic Sans MS", cursive, "Domestic Manners", "URW Chancery L", "Brush Script MT", Zapfino, "Apple Chancery", "Bradley Hand ITC", "Monotype Corsiva";*/
+	font-family: "Comic Sans MS", "Domestic Manners", "URW Chancery L", "Brush Script MT", Zapfino, "Apple Chancery", "Bradley Hand ITC", "Monotype Corsiva";
 }
 
 /* FANTASY */
@@ -109,6 +161,18 @@ html, .font_sans_serif {
 
 .DIVcenter {
 	margin: 0 auto;
+}
+
+/*
+ * Get an image centered into any box
+ * <table class="table_center_image"><tr><td><img src='/img.png' /></td></tr></table>
+ */
+
+.table_center_image {
+	vertical-align: middle;
+	text-align: center;
+	height: 100%;
+	width: 100%;
 }
 
 /*
@@ -134,13 +198,13 @@ html, .font_sans_serif {
 
 /* Minimum Tablet in Landscape */
 @media only screen and (min-width: 901px){
-	body {
-		padding-top: 60px;
-	}
 	.base_menu {
 		height: 60px;
 	}
-	.base_nav {
-		margin-top: -60px;
+	.base_menu_line {
+		line-height: 60px;
+	}
+	.base_content {
+		top: 60px;
 	}
 }
