@@ -1,5 +1,5 @@
 var xhr;
-var totalxhr = 1;
+var totalxhr = 0;
 
 function wrapper(param, method, action, cb_success, cb_error, cb_complete){
 
@@ -28,7 +28,7 @@ function wrapper(param, method, action, cb_success, cb_error, cb_complete){
 			//var msg = JSON.parse(data.msg);
 
 			// Below is the production information with "dataType: 'json'"
-			cb_success(data.msg);
+			cb_success(data.msg, data.error, data.status);
 		},
 		error: function(xhr_err, ajaxOptions, thrownError){
 			cb_error(xhr_err, ajaxOptions, thrownError);

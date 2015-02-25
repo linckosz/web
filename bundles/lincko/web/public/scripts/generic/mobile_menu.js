@@ -1,7 +1,3 @@
-enquire.register(responsive.noMobileL, function() { 
-	console.log(responsive.noMobileL);
-});
-
 enquire.register(responsive.minTablet, function() { 
 	Mobile_menu_Hideall();
 });

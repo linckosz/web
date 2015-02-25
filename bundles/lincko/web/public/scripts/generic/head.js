@@ -5,6 +5,16 @@ IMGpagefirst.src = '';
 // Faire un array true/false => faire un a = !a puis recupere la source dans l'array,
 // cela est pour preloader les images background au passage de la souris ou du doigt pour eviter le flash du temps de chargement
 */
+
+var head_signout_cb_success = function(msg){
+	window.location.href = head_link['home'];
+}
+
+var head_signout_cb_error = function(xhr_err, ajaxOptions, thrownError){
+	window.location.href = head_link['home'];
+}
+
+
 $('[id^="head_menu_"]').click(function(){
 	Mobile_menu_Build("nav");
 });
@@ -25,4 +35,7 @@ $('[id^="head_download_"]').click(function(){
 });
 $('[id^="head_help_"]').click(function(){
 	window.location.href = head_link['help'];
+});
+$('[id^="head_signout_"]').click(function(){
+	sendAction('','post','user/signout', head_signout_cb_success, head_signout_cb_error);
 });
