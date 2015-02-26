@@ -7,7 +7,12 @@ class STR {
 
 	//Convert a text to HTML entities, readable by HTML, INPUT, TEXTAREA
 	public static function sql_to_html($text){
-		$text = htmlentities($text, ENT_HTML5 | ENT_QUOTES);
+		//$text = htmlentities($text, ENT_HTML5 | ENT_QUOTES);
+		//$text = mb_convert_encoding($text, 'BASE64', 'UTF-8');
+		//$convmap = array(0x80, 0xffff, 0, 0xffff);
+		//$text = mb_encode_numericentity($text, $convmap, 'UTF-8');
+		$text = self::name_to_numerical($text);
+		 
 		$text = nl2br($text);
 		$text = self::break_line_conv($text,'');
 		return $text;
@@ -29,7 +34,14 @@ class STR {
 	}
 
 
-
+	private static function name_to_numerical($string){
+		static $tab = array();
+		$entities = get_html_translation_table(HTML_ENTITIES, ENT_HTML5 | ENT_QUOTES);
+		foreach( $entities as $k => $v ){
+			$tab[$k] = '&#' . ord($k) . ';';
+		}
+		return strtr($string, $tab);
+	}
 
 
 
