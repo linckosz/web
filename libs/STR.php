@@ -7,12 +7,8 @@ class STR {
 
 	//Convert a text to HTML entities, readable by HTML, INPUT, TEXTAREA
 	public static function sql_to_html($text){
-		//$text = htmlentities($text, ENT_HTML5 | ENT_QUOTES);
-		//$text = mb_convert_encoding($text, 'BASE64', 'UTF-8');
-		//$convmap = array(0x80, 0xffff, 0, 0xffff);
-		//$text = mb_encode_numericentity($text, $convmap, 'UTF-8');
+		//$text = htmlspecialchars ($text, ENT_HTML5 | ENT_QUOTES);
 		$text = self::name_to_numerical($text);
-		 
 		$text = nl2br($text);
 		$text = self::break_line_conv($text,'');
 		return $text;
@@ -36,17 +32,12 @@ class STR {
 
 	private static function name_to_numerical($string){
 		static $tab = array();
-		$entities = get_html_translation_table(HTML_SPECIALCHARS , ENT_HTML5 | ENT_QUOTES);
+		$entities = get_html_translation_table(HTML_SPECIALCHARS, ENT_HTML5 | ENT_QUOTES, 'UTF-8');
 		foreach( $entities as $k => $v ){
 			$tab[$k] = '&#' . ord($k) . ';';
 		}
 		return strtr($string, $tab);
 	}
-
-
-
-
-
 
 
 	//Encode in HTML text recordable in the DB without loosing information or symbole conflict
@@ -441,11 +432,11 @@ class STR {
 		$expire = "";
 		foreach ($temp as $i => $value) {
 		  if($i==0){
-		  	if($temp[$i]!=5 && $temp[$i]!=6){
-		  		break;
-		  	}
+			if($temp[$i]!=5 && $temp[$i]!=6){
+				break;
+			}
 		  } if(Odd($i) && array_key_exists($temp[$i],$strtonum)){
-		  	$expire = $expire.$strtonum[$temp[$i]];
+			$expire = $expire.$strtonum[$temp[$i]];
 		  }
 		}
 		$expire = intval($expire);
