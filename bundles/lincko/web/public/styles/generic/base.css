@@ -92,7 +92,7 @@ html, body {
 	bottom: 0px;
 	position: absolute;
 	overflow: hidden;
-	overflow-y: scroll;
+	overflow-y: auto;
 }
 
 .base_table {
