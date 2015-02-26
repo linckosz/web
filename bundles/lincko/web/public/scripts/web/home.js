@@ -20,7 +20,7 @@ home_resize_list.push(["#home_done", 100]);
 
 
 function home_resize_elements(){
-	var height = $("#base_content").height();
+	var height = $("#base_content").height();alert(height);
 	var height_tp = height;
 	for(var val in home_resize_list){
 		height_tp = Math.floor(height*home_resize_list[val][1]/100);
