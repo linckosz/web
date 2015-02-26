@@ -1,1 +1,0 @@
-var myScroll = new IScroll('#base_content');
