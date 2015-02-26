@@ -3,11 +3,37 @@
 
 namespace libs;
 
+class Ord_table {
+	// Hold an instance of the class
+	private static $instance;
+
+	private static $table = array();
+ 
+	// The singleton method
+	public static function singleton() {
+		if (!isset(self::$instance)) {
+			self::$instance = self::create_table();
+		}
+		return self::$instance;
+	}
+
+	private static function create_table() {
+		static $tab = array();
+		$entities = get_html_translation_table(HTML_SPECIALCHARS, ENT_HTML5 | ENT_QUOTES, 'UTF-8');
+		foreach( $entities as $k => $v ){
+			$tab[$k] = '&#' . ord($k) . ';';
+		}
+		return $tab;
+	}
+	
+}
+
 class STR {
 
 	//Convert a text to HTML entities, readable by HTML, INPUT, TEXTAREA
 	public static function sql_to_html($text){
-		//$text = htmlspecialchars ($text, ENT_HTML5 | ENT_QUOTES);
+		//Cannot use htmlspecialchars because Android 2.3 does not recognizes "named entity" ($quote;), but only "numerical entity" ($#39;)
+		//$text = htmlspecialchars($text, ENT_HTML5 | ENT_QUOTES);
 		$text = self::name_to_numerical($text);
 		$text = nl2br($text);
 		$text = self::break_line_conv($text,'');
@@ -31,13 +57,27 @@ class STR {
 
 
 	private static function name_to_numerical($string){
-		static $tab = array();
-		$entities = get_html_translation_table(HTML_SPECIALCHARS, ENT_HTML5 | ENT_QUOTES, 'UTF-8');
-		foreach( $entities as $k => $v ){
-			$tab[$k] = '&#' . ord($k) . ';';
-		}
+		$tab = Ord_table::singleton();
 		return strtr($string, $tab);
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 	//Encode in HTML text recordable in the DB without loosing information or symbole conflict
