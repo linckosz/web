@@ -83,7 +83,7 @@ html, body {
 	height: 100%;
 	display: block;
 	z-index: 1000;
-	overflow: hidden;
+	/*overflow: hidden;*/
 }
 
 .base_content {
@@ -91,7 +91,7 @@ html, body {
 	top: 48px;
 	bottom: 0px;
 	position: absolute;
-	overflow: hidden;
+	/*overflow: hidden;*/
 	overflow-y: auto;
 }
 
