@@ -24,7 +24,7 @@ function home_resize_elements(){
 	var height_tp = height;
 	for(var val in home_resize_list){
 		height_tp = Math.floor(height*home_resize_list[val][1]/100);
-		$(home_resize_list[val][0]).css({ "min-height": height_tp });
+		$(home_resize_list[val][0]).css({ "height": height_tp }).css({ "min-height": height_tp });
 	}
 }
 home_resize_elements();
