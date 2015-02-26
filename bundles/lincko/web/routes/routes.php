@@ -33,3 +33,8 @@ $app->get('/help', function () use($app) {
 	$app->render('/bundles/lincko/web/templates/web/help.twig');
 })
 ->name('help');
+
+$app->get('/test', function () use($app) {
+	$app->render('/bundles/lincko/web/templates/web/test.twig');
+})
+->name('test');
