@@ -18,4 +18,19 @@ var responsive = {
 	maxMobileL: "only screen and (max-width: 900px)",
 	maxTablet: "only screen and (max-width: 1280px)",
 	maxDesktop: "",
+
+	test: function(media){
+		if(window.matchMedia){
+			if(typeof this[media]==="undefined"){
+				return false;
+			} else {
+				if(window.matchMedia(this[media]).matches){
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
+	}
 }
+
