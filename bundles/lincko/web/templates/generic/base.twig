@@ -1,6 +1,9 @@
 {% extends '/bundles/lincko/wrapper/templates/wrapper.twig' %}
 {% block base %}
 	<body>
+		<script>
+		JSfiles.push("{{ _filelatest('/lincko/web/scripts/generic/base.js') }}");
+	</script>
 		<link rel="stylesheet" href="{{ _filelatest('/lincko/web/styles/generic/base.css') }}" type="text/css" />
 		{% include '/bundles/lincko/web/templates/generic/styles/base.css.twig' %}
 		
