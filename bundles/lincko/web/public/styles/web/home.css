@@ -194,8 +194,7 @@
 	font-size: 26px;
 	color: #292B29;
 	position: absolute;
-	/*bottom: 60px;*/
-	top: 60%;
+	top: 180px;
 	background-color:rgba(249,249,249,0.8);
 	padding: 20px 20px 20px 20px;
 }
