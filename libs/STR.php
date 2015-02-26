@@ -36,7 +36,7 @@ class STR {
 
 	private static function name_to_numerical($string){
 		static $tab = array();
-		$entities = get_html_translation_table(HTML_ENTITIES, ENT_HTML5 | ENT_QUOTES);
+		$entities = get_html_translation_table(HTML_SPECIALCHARS , ENT_HTML5 | ENT_QUOTES);
 		foreach( $entities as $k => $v ){
 			$tab[$k] = '&#' . ord($k) . ';';
 		}
