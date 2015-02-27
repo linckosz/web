@@ -195,6 +195,13 @@ html, .font_sans_serif {
 	float: right;
 }
 
+.blur {
+	-webkit-filter: blur(4px);
+	-moz-filter: blur(4px);
+	-o-filter: blur(4px);
+	-ms-filter: blur(4px);
+	filter: blur(4px);
+}
 
 /* Minimum Tablet in Landscape */
 @media only screen and (min-width: 901px){

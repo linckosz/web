@@ -9,30 +9,27 @@
 {% include '/bundles/lincko/web/templates/web/styles/home.css.twig' %}
 <div id='begin_home'></div>
 <div class="home_top_div minTablet"></div>
-<div class="home_sign_box" id="home_signin">
-	<form id="home_user_create" action="user/create" method="post" onsubmit="return sendForm(this, home_cb_success, home_cb_error);">
-		<label class="home_label_inside minDesktop" for="home_user_create_firstname">
-			<span>{{ _trans('web', 4, 6, 'html') }}{# First name #}</span>
-			<input type="text" id="home_user_create_firstname" name="firstname" value="" onfocus="$(this).prev().hide();" onblur="if($(this).val().length<=0){ $(this).prev().show(); }"/>
-		</label>
-		<label class="home_label_inside minDesktop" for="home_user_create_lastname">
-			<span>{{ _trans('web', 4, 7, 'html') }}{# Last name #}</span>
-			<input type="text" id="home_user_create_lastname" name="lastname" value="" onfocus="$(this).prev().hide();" onblur="if($(this).val().length<=0){ $(this).prev().show(); }"/>
-		</label>
-		<label class="home_label_inside" for="home_user_create_email">
-			<span>{{ _trans('web', 4, 2, 'html') }}{# Email #}</span>
-			<input type="email" id="home_user_create_email" name="email" value="" onfocus="$(this).prev().hide();" onblur="if($(this).val().length<=0){ $(this).prev().show(); }"/>
-		</label>
-		<input type="password" name="foilautofill" value="" autocomplete="off" style="display:none" />{# It avoids a behavior in Firefox which does not know Autocomplete tag, FF fulfill by default the first field #}
-		<label class="home_label_inside" for="home_user_create_password">
-			<span>{{ _trans('web', 4, 3, 'html') }}{# Password #}</span>
-			<input type="password" id="home_user_create_password" name="password" value="" autocomplete="off" onfocus="$(this).prev().hide();" onblur="if($(this).val().length<=0){ $(this).prev().show(); }" />
-		</label>
-		<input class="home_submit" id="home_user_create_submit" type='button' value="{{ _trans('web', 4, 1, 'input') }}{# join us #}" onclick="$(this.form).submit();" />
-		<div class="home_signin_div minDesktop">
-			{{ _trans('web', 4, 4, 'html') }}{# or #} <span class="home_signin_link" onclick="alert('Sign in');">{{ _trans('web', 4, 5, 'html') }}{# sign in #}</span>
-		</div>
-	</form>
+<div class="home_joinus_box" id="home_joinus_box">
+	<div>
+		<form id="home_joinus_form" action="user/create" method="post" onsubmit="return sendForm(this, home_cb_success, home_cb_error);">
+			<label class="home_label_inside" for="home_joinus_email">
+				<span>{{ _trans('web', 4, 2, 'html') }}{# Email #}</span>
+				<input type="email" id="home_joinus_email" name="email" value="" onfocus="display_label(this, false)" onblur="display_label(this, true)"/>
+			</label>
+			<input type="password" name="foilautofill" value="" autocomplete="off" style="display:none" />{# It avoids a behavior in Firefox which does not know Autocomplete tag, FF fulfill by default the first field #}
+			<label class="home_label_inside" for="home_joinus_password">
+				<span>{{ _trans('web', 4, 3, 'html') }}{# Password #}</span>
+				<input type="password" id="home_joinus_password" name="password" value="" autocomplete="off" onfocus="display_label(this, false)" onblur="display_label(this, true)" />
+			</label>
+			<input id="home_joinus_submit" type='button' value="{{ _trans('web', 4, 1, 'input') }}{# Join us #}" onclick="$(this.form).submit();" />
+			<div class="home_joinus_div minDesktop">
+				{{ _trans('web', 4, 4, 'html') }}{# or #} <span id="home_joinus_link">{{ _trans('web', 4, 5, 'html') }}{# Sign in #}</span>
+			</div>
+		</form>
+	</div>
+	<div id="home_joinus_tos" onclick="window.open('{{ terms }}', '_blank');">
+		{{ _trans('web', 4, 15, 'html') }}{# By clicking "Join us", you agree to our Terms of use and Privacy policy. #}
+	</div>
 </div>
 <div id="home_main_image">
 	<img class="home_logo" src="{{ _filelatest('/lincko/web/images/web/home/logo_arc.png') }}"/>	
@@ -47,7 +44,7 @@
 		<img src="{{ _filelatest('/lincko/web/images/web/home/learn_more.png') }}"/>
 	</div>
 </div>
-<div class="home_tools">
+<div class="home_tools" id="home_tools">
 	<img src="{{ _filelatest('/lincko/web/images/web/home/logo_arc.png') }}"/>
 	<br />
 	<br />

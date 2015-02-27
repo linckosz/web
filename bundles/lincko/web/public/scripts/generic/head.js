@@ -7,13 +7,19 @@ IMGpagefirst.src = '';
 */
 
 var head_signout_cb_success = function(msg){
-	window.location.href = head_link['home'];
 }
 
 var head_signout_cb_error = function(xhr_err, ajaxOptions, thrownError){
-	window.location.href = head_link['home'];
 }
 
+var head_signout_cb_begin = function(){
+	$(document.body).css('cursor', 'progress');
+}
+
+var head_signout_cb_complete = function(){
+	$(document.body).css('cursor', '');
+	window.location.href = head_link['home'];
+}
 
 $('[id^="head_menu_"]').click(function(){
 	Mobile_menu_Build("nav");
@@ -37,5 +43,11 @@ $('[id^="head_help_"]').click(function(){
 	window.location.href = head_link['help'];
 });
 $('[id^="head_signout_"]').click(function(){
-	sendAction('','post','user/signout', head_signout_cb_success, head_signout_cb_error);
+	sendAction('','post','user/signout', head_signout_cb_success, head_signout_cb_error, head_signout_cb_begin, head_signout_cb_complete);
+});
+$('[id^="head_signin_"]').click(function(){
+	if(typeof account_show !== 'undefined') { account_show(true); }
+});
+$('[id^="head_joinus_"]').click(function(){
+	if(typeof account_show !== 'undefined') { account_show(false); }
 });

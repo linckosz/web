@@ -1,8 +1,12 @@
 var xhr;
 var totalxhr = 0;
 
-function wrapper(param, method, action, cb_success, cb_error, cb_complete){
-
+function wrapper(param, method, action, cb_success, cb_error, cb_begin, cb_complete){
+	if(typeof cb_success==="undefined"){ cb_success = function(){}; }
+	if(typeof cb_error==="undefined"){ cb_error = function(){}; }
+	if(typeof cb_begin==="undefined"){ cb_begin = function(){}; }
+	if(typeof cb_complete==="undefined"){ cb_complete = function(){}; }
+	
 	totalxhr++;
 	method = method.toUpperCase();
 	action = action.toLowerCase();
@@ -21,11 +25,14 @@ function wrapper(param, method, action, cb_success, cb_error, cb_complete){
 		contentType: 'application/json; charset=UTF-8',
 		dataType: 'json',
 		timeout: timeout,
+		beforeSend: function(){
+			cb_begin();
+		},
 		success: function(data){
 			//Those 3 following lines are only for debug purpose
-			//var msg = JSON.stringify(data);
-			//var msg = data;
-			//var msg = JSON.parse(data.msg);
+			//var msg = JSON.stringify(data); //for test
+			//var msg = data; //for test
+			//var msg = JSON.parse(data.msg); //for test
 
 			// Below is the production information with "dataType: 'json'"
 			cb_success(data.msg, data.error, data.status);
@@ -41,9 +48,10 @@ function wrapper(param, method, action, cb_success, cb_error, cb_complete){
 }
 
 
-function sendForm(objForm, cb_success, cb_error, cb_complete){
+function sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete){
 	if(typeof cb_success==="undefined"){ cb_success = function(){}; }
 	if(typeof cb_error==="undefined"){ cb_error = function(){}; }
+	if(typeof cb_begin==="undefined"){ cb_begin = function(){}; }
 	if(typeof cb_complete==="undefined"){ cb_complete = function(){}; }
 
 	if($.type(objForm)==="string"){
@@ -58,16 +66,17 @@ function sendForm(objForm, cb_success, cb_error, cb_complete){
 		var param = objForm.serializeArray();
 		var method = objForm.attr('method');
 		var action = objForm.attr('action');
-		wrapper(param, method, action, cb_success, cb_error, cb_complete);
+		wrapper(param, method, action, cb_success, cb_error, cb_begin, cb_complete);
 	} else {
 		alert('The form does not exist!');
 	}
 	return false; //Disable submit action
 }
 
-function sendAction(param, method, action, cb_success, cb_error, cb_complete){
+function sendAction(param, method, action, cb_success, cb_error, cb_begin, cb_complete){
 	if(typeof cb_success==="undefined"){ cb_success = function(){}; }
 	if(typeof cb_error==="undefined"){ cb_error = function(){}; }
+	if(typeof cb_begin==="undefined"){ cb_begin = function(){}; }
 	if(typeof cb_complete==="undefined"){ cb_complete = function(){}; }
 	
 	var arr = [];
@@ -79,7 +88,7 @@ function sendAction(param, method, action, cb_success, cb_error, cb_complete){
 	for(var val in param){
 		arr.push({name:val, value:param[val]});
 	}
-	wrapper(arr, method, action, cb_success, cb_error, cb_complete);
+	wrapper(arr, method, action, cb_success, cb_error, cb_begin, cb_complete);
 	return false; //Disable submit action
 }
 

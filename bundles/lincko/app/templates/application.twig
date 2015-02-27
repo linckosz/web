@@ -1,7 +1,23 @@
-{% extends '/bundles/lincko/app/templates/generic/base.twig' %}
+{% extends '/bundles/lincko/web/templates/generic/base.twig' %}
 
 {% block content %}
 <body>
+<script>
+var sample_cb_success = function(msg){
+	msg = msg.replace(/\n/g, "<br />");
+	$("#divbox").html($("#divbox").html()+'<br />'+totalxhr+'&nbsp;&raquo;&nbsp;'+msg);
+}
+var sample_cb_error = function(xhr_err, ajaxOptions, thrownError){
+	$("#divbox").html(
+		$("#divbox").html()
+		+'<br />'
+		+totalxhr+'&nbsp;&raquo;&nbsp;'+'xhr.status => '+xhr_err.status
+		+'<br />'
+		+'thrownError => '+thrownError
+	);
+}
+</script>
+
 {% if yonghu and jizhu %}
 {{ _trans('web', 8888, 0, 'html') }}{# Hello @@user~~, welcome back! #}
 <br />
@@ -25,7 +41,7 @@
 <hr />
 {{ _trans('web', 8888, 2, 'html') }}{# Create a user #}
 <br />
-<form id="user_create" action="user/create" method="post" onsubmit="return sendForm(this);">
+<form id="user_create" action="user/create" method="post" onsubmit="return sendForm(this, sample_cb_success, sample_cb_error);">
 	<label for="user_create_email">{{ _trans('web', 8888, 4, 'html') }}{# Email #}</label>
 	<input type="email" id="user_create_email" name="email" value="@{{ domain }}" />
 	<br />
@@ -42,7 +58,7 @@
 <hr />
 {{ _trans('web', 8888, 7, 'html') }}{# Sign in #}
 <br />
-<form id="user_signin" action="user/signin" method="post" onsubmit="return sendForm(this);">
+<form id="user_signin" action="user/signin" method="post" onsubmit="return sendForm(this, sample_cb_success, sample_cb_error);">
 	<label for="user_signin_email">{{ _trans('web', 8888, 4, 'html') }}{# Email #}</label>
 	<input type="text" id="user_signin_email" name="email" value="{{ youjian }}" />
 	<br />
@@ -62,27 +78,27 @@
 <hr />
 {{ _trans('web', 8888, 9, 'html') }}{# Sign out #}
 <br />
-<input type='button' value='{{ _trans('web', 8888, 9, 'input') }}{# Sign out #}' onclick="sendAction('','post','user/signout');" />
+<input type='button' value='{{ _trans('web', 8888, 9, 'input') }}{# Sign out #}' onclick="sendAction('','post','user/signout', sample_cb_success, sample_cb_error);" />
 
 <br />
 <br />
 <hr />
 {{ _trans('web', 8888, 10, 'html') }}{# An application action #}
 <br />
-<input type='button' value='{{ _trans('web', 8888, 11, 'input') }}{# Test action get #}' onclick="sendAction('','get','test');" />
+<input type='button' value='{{ _trans('web', 8888, 11, 'input') }}{# Test action get #}' onclick="sendAction('','get','test', sample_cb_success, sample_cb_error);" />
 <br />
-<input type='button' value='{{ _trans('web', 8888, 12, 'input') }}{# Test action post #}' onclick="sendAction('','post','test');" />
+<input type='button' value='{{ _trans('web', 8888, 12, 'input') }}{# Test action post #}' onclick="sendAction('','post','test', sample_cb_success, sample_cb_error);" />
 <br />
-<input type='button' value='{{ _trans('web', 8888, 13, 'input') }}{# Test receive email #}' onclick="sendAction('','get','test/email');" />
+<input type='button' value='{{ _trans('web', 8888, 13, 'input') }}{# Test receive email #}' onclick="sendAction('','get','test/email', sample_cb_success, sample_cb_error);" />
 <br />
-<input type='button' value='{{ _trans('web', 8888, 11, 'input') }}{# Test receive get #}' onclick="sendAction('','get','test/user');" />
+<input type='button' value='{{ _trans('web', 8888, 11, 'input') }}{# Test receive get #}' onclick="sendAction('','get','test/user', sample_cb_success, sample_cb_error);" />
 
 <br />
 <br />
 <hr />
 {{ _trans('web', 8888, 17, 'html') }}{# Translator #}
 <br />
-<form id="translation_auto" action="translation/auto" method="post" onsubmit="return sendForm(this);">
+<form id="translation_auto" action="translation/auto" method="post" onsubmit="return sendForm(this, sample_cb_success, sample_cb_error);">
 	<label for="translation_auto_text"></label>
 	<textarea id="translation_auto_text" name="text" rows="3" cols="100" style="font-size: 1.1em;" />Я наступил на Cornflake, 
 и теперь я зерновых убийца!</textarea>

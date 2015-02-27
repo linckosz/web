@@ -67,7 +67,7 @@ class ControllerWrapper extends Controller {
 		}
 		@curl_close($ch);
 
-		if($json_result && isset($json_result->msg)){
+		if($json_result && isset($json_result->msg) && isset($json_result->error) && isset($json_result->flash)){
 			//In case of Access unauthorize, we force to sign out the user
 			if(isset($json_result->flash->signout) && $json_result->flash->signout===true){
 				//In case we accept to try to relog
@@ -89,17 +89,18 @@ class ControllerWrapper extends Controller {
 			}
 
 			unset($json_result->flash);
-			print_r(json_encode($json_result));
-			//print_r($json_result->msg);
-			//print_r($result);
-			//print_r($json_result);
-			return true;
+			print_r(json_encode($json_result)); //production output
+			//print_r($json_result->msg); //for test
+			//print_r($result); //for test
+			//print_r($json_result); //for test
+			return !$json_result->error;
 		} else {
 			//echo '{"msg":"Wrapper error","error":true,"status":500}';
 			echo '{"msg":"'.$app->trans->getJSON('wrapper', 1, 3).'","error":true,"status":500}';
+			return false;
 		}
 		
-		return true;
+		return false;
 	}
 
 	protected function autoSign(){
@@ -173,7 +174,11 @@ class ControllerWrapper extends Controller {
 
 		$this->action = $action;
 
+		$log_action = false;
+
 		if($action==='user/signin' && $type==='POST' && isset($this->json['data']['email']) && isset($this->json['data']['password'])){
+
+			$log_action = true;
 
 			$this->signOut();
 			
@@ -190,6 +195,8 @@ class ControllerWrapper extends Controller {
 			}
 		
 		} else if($action==='user/create' && $type==='POST' && isset($this->json['data']['email']) && isset($this->json['data']['password'])){
+
+			$log_action = true;
 
 			$this->json['data']['password'] = Datassl::encrypt($this->json['data']['password'], $this->json['data']['email']);
 
@@ -215,7 +222,17 @@ class ControllerWrapper extends Controller {
 
 		}
 
-		return $this->sendCurl();
+		if($log_action){
+			if(!$this->sendCurl()){
+				$this->signOut();
+			}
+		} else {
+			$this->sendCurl();
+		}
+
+		//Do not return false, it forces wrapper.js to send error message
+		//We keep using true because we want to handle PHP error action in Ajax success
+		return true;
 	}
 
 }

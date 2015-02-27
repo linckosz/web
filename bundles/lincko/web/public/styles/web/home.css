@@ -8,15 +8,31 @@
 	height: 1px;
 }
 
-
-.home_sign_box {
+.home_joinus_box {
 	position: absolute;
 	right: 5%;
-	background-color:rgba(249,249,249,0.6);
+	z-index: 100;
+}
+
+.home_joinus_box > div, .home_joinus_box > label {
+	display: block;
+	background-color: rgba(249,249,249,0.6);
 	width: 222px;
 	padding: 10px 20px 10px 20px;
 	border-radius: 4px;
-	z-index: 100;
+	margin-bottom: 4px;
+}
+
+#home_joinus_tos {
+	cursor: pointer; cursor: hand;
+	font-size: 12px;
+	color: #7E7E7E;
+	display: none;
+}
+
+#home_joinus_tos:hover {
+	background-color: rgba(255,246,229,0.9);
+	color: #3A3D41;
 }
 
 .home_label_inside {
@@ -34,17 +50,17 @@
 }
 
 .home_label_inside > input {
-	padding: 6px 10px 6px 10px;
+	padding: 6px 10px 6px 9px;
+	font-size: 16px;
 	background: linear-gradient(#FFFFFF,#F2F2F2);
 	border-radius: 4px;
 	border-width: 1px;
 	width: 200px
 }
 
-.home_submit {
+#home_joinus_submit {
 	display: block;
-	padding: 6px 10px 6px 10px;
-	margin-bottom: 6px;
+	padding: 8px 10px 8px 10px;
 	border-radius: 4px;
 	font-size: 16px;
 	color: #F8F8F8;
@@ -55,27 +71,27 @@
 	cursor: pointer; cursor: hand;
 }
 
-.home_signin_div {
+#home_joinus_submit:hover {
+	background-color: #FFC251;
+}
+
+#home_joinus_submit:active {
+	background-color: #E89700;
+}
+
+.home_joinus_div {
 	text-align: center;
 	color: #888888;
 	font-size: 14px;
 }
 
-.home_signin_link {
+#home_joinus_link {
 	color: #2895F2;
 	cursor: pointer; cursor: hand;
 }
 
-.home_signin_link:hover {
+.home_joinus_link:hover {
 	text-decoration: underline;
-}
-
-.home_submit:hover {
-	background-color: #FFC251;
-}
-
-.home_submit:active {
-	background-color: #E89700;
 }
 
 .home_logo {
@@ -196,7 +212,7 @@
 	position: absolute;
 	/*top: 60%;*/
 	bottom: 150px;
-	background-color:rgba(249,249,249,0.8);
+	background-color: rgba(249,249,249,0.8);
 	padding: 20px 20px 20px 20px;
 }
 
@@ -217,7 +233,7 @@
 		right: 0;
 		width: auto;
 		font-size: 26px;
-		background-color:rgba(249,249,249,0.8);
+		background-color: rgba(249,249,249,0.8);
 	}
 	.home_great_learn_more {
 		position: absolute;
