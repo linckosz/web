@@ -45,8 +45,6 @@ function home_resize_elements(){
 home_resize_elements();
 $(window).resize(home_resize_elements);
 
-var home_joinus_box_focus = false;
-
 function home_joinus_box_position(){
 	var height = $("#home_main_image").height();
 	var top = height - $("#home_joinus_submit").position().top + 6;
@@ -111,10 +109,5 @@ $("#home_joinus_email, #home_joinus_password").on({
 });
 
 $("#home_joinus_box").on('focusin', function(){
-	home_joinus_box_focus = true;
-	home_joinus_box_position_mobile();
-});
-
-$("#home_joinus_box").on('focusin', function(){
-	home_joinus_box_focus = false;
+	//home_joinus_box_position_mobile();
 });
