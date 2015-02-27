@@ -31,7 +31,7 @@ class Ord_table {
 class STR {
 
 	//Convert a text to HTML entities, readable by HTML, INPUT, TEXTAREA
-	public static function sql_to_html($text){
+	public static function sql_to_html($text) {
 		//Cannot use htmlspecialchars because Android 2.3 does not recognizes "named entity" ($quote;), but only "numerical entity" ($#39;)
 		//$text = htmlspecialchars($text, ENT_HTML5 | ENT_QUOTES);
 		$text = self::name_to_numerical($text);
@@ -42,7 +42,7 @@ class STR {
 
 	//Convert a text to JS entities, readable by JS
 	//Note, use quotes "..." around the JS variable while displaying
-	public static function sql_to_js($text){
+	public static function sql_to_js($text) {
 		$text = json_encode($text);
 		$text = str_replace("\\r\\n", "\\n", $text);
 		//Cancel the quote " added by json_encode
@@ -51,12 +51,12 @@ class STR {
 	}
 
 	//Delete any line return
-	public static function break_line_conv($text, $replace){ 
+	public static function break_line_conv($text, $replace) {
 		return str_replace(array("\r\n", "\r", "\n", CHR(10), CHR(13)), $replace, $text); 
 	}
 
 
-	private static function name_to_numerical($string){
+	private static function name_to_numerical($string) {
 		$tab = Ord_table::singleton();
 		return strtr($string, $tab);
 	}

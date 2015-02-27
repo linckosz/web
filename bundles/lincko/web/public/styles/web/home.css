@@ -194,7 +194,8 @@
 	font-size: 26px;
 	color: #292B29;
 	position: absolute;
-	top: 180px;
+	/*top: 60%;*/
+	bottom: 150px;
 	background-color:rgba(249,249,249,0.8);
 	padding: 20px 20px 20px 20px;
 }
@@ -230,6 +231,7 @@
 	}
 	.home_done_text {
 		font-size: 20px;
+		bottom: 100px;
 	}
 }
 
@@ -252,5 +254,9 @@
 	}
 	.home_responsive > div, .home_responsive > div > div {
 		display: block;
+	}
+	.home_done_text {
+		font-size: 18px;
+		bottom: 80px;
 	}
 }
