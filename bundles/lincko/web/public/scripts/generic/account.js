@@ -46,6 +46,7 @@ function account_select(select) {
 	$('#account_signin_box, #account_joinus_box').hide();
 	$('#account_tab_joinus, #account_tab_signin').removeClass('account_trans');
 	$('#account_tab_joinus > div, #account_tab_signin > div').removeClass('account_tab_joinus').removeClass('account_tab_signin');
+	account_hide_error();
 	if(select){
 		$('#account_signin_box').show();
 		$('#account_tab_joinus').addClass('account_trans');
@@ -59,11 +60,15 @@ function account_select(select) {
 	}
 }
 
+function account_hide_error() {
+	if($('#account_error').is(':visible')){
+		$("#account_error").velocity("transition.fadeOut", { duration: 500 });
+	}
+}
+
 function account_display_label(label, hide_error) {
 	if(hide_error){
-		if($('#account_error').is(':visible')){
-			$("#account_error").velocity("transition.fadeOut", { duration: 500 });
-		}
+		account_hide_error();
 	}
 	if($(label).val().length<=0){
 		$(label).prev().show();
