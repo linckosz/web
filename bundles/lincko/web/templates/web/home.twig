@@ -14,12 +14,12 @@
 		<form id="home_joinus_form" action="user/create" method="post" onsubmit="return sendForm(this, home_cb_success, home_cb_error);">
 			<label class="home_label_inside" for="home_joinus_email">
 				<span>{{ _trans('web', 4, 2, 'html') }}{# Email #}</span>
-				<input type="email" id="home_joinus_email" name="email" value="" onfocus="display_label(this, false)" onblur="display_label(this, true)"/>
+				<input type="email" id="home_joinus_email" name="email" value=""/>
 			</label>
 			<input type="password" name="foilautofill" value="" autocomplete="off" style="display:none" />{# It avoids a behavior in Firefox which does not know Autocomplete tag, FF fulfill by default the first field #}
 			<label class="home_label_inside" for="home_joinus_password">
 				<span>{{ _trans('web', 4, 3, 'html') }}{# Password #}</span>
-				<input type="password" id="home_joinus_password" name="password" value="" autocomplete="off" onfocus="display_label(this, false)" onblur="display_label(this, true)" />
+				<input type="password" id="home_joinus_password" name="password" value="" autocomplete="off" />
 			</label>
 			<input id="home_joinus_submit" type='button' value="{{ _trans('web', 4, 1, 'input') }}{# Join us #}" onclick="$(this.form).submit();" />
 			<div class="home_joinus_div minDesktop">
@@ -29,6 +29,8 @@
 	</div>
 	<div id="home_joinus_tos" onclick="window.open('{{ terms }}', '_blank');">
 		{{ _trans('web', 4, 15, 'html') }}{# By clicking "Join us", you agree to our Terms of use and Privacy policy. #}
+	</div>
+	<div id="home_joinus_error">
 	</div>
 </div>
 <div id="home_main_image">

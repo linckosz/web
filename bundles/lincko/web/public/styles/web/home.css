@@ -16,7 +16,7 @@
 
 .home_joinus_box > div, .home_joinus_box > label {
 	display: block;
-	background-color: rgba(249,249,249,0.6);
+	background-color: rgba(249, 249, 249, 0.6);
 	width: 222px;
 	padding: 10px 20px 10px 20px;
 	border-radius: 4px;
@@ -31,8 +31,16 @@
 }
 
 #home_joinus_tos:hover {
-	background-color: rgba(255,246,229,0.9);
+	background-color: rgba(255, 246, 229, 0.9);
 	color: #3A3D41;
+}
+
+#home_joinus_error {
+	display: none;
+	background-color: rgba(255, 68, 68, 0.8);
+	color: #F8F8F8;
+	font-size: 13px;
+	cursor: default;
 }
 
 .home_label_inside {
@@ -83,6 +91,7 @@
 	text-align: center;
 	color: #888888;
 	font-size: 14px;
+	padding-top: 6px;
 }
 
 #home_joinus_link {
@@ -212,7 +221,7 @@
 	position: absolute;
 	/*top: 60%;*/
 	bottom: 150px;
-	background-color: rgba(249,249,249,0.8);
+	background-color: rgba(249, 249, 249, 0.8);
 	padding: 20px 20px 20px 20px;
 }
 
@@ -233,7 +242,7 @@
 		right: 0;
 		width: auto;
 		font-size: 26px;
-		background-color: rgba(249,249,249,0.8);
+		background-color: rgba(249, 249, 249, 0.8);
 	}
 	.home_great_learn_more {
 		position: absolute;

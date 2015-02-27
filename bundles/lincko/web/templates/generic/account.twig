@@ -1,26 +1,30 @@
 {# category 5 #}
 <script>
 	JSfiles.push("{{ _filelatest('/lincko/web/scripts/generic/account.js') }}");
+	var account_link = [];
+	account_link['home'] = "{{ urlFor('home') }}";
+	account_link['account_forgot'] = "{{ urlFor('account_forgot') }}";
 </script>
 <link rel="stylesheet" href="{{ _filelatest('/lincko/web/styles/generic/account.css') }}" type="text/css" />
 <div id='begin_account'></div>
 <div id="account_wrapper" class="account_wrapper">
+	<img class="account_close" id="account_close" src="{{ _filelatest('/lincko/web/images/generic/account/close.png') }}" alt="{{ _trans('web', 5, 10, 'html') }}{# Close #}" />
 	<div>
 		<div class="account_tab">
-			<div class="account_trans" id="account_tab_joinus"><div class="account_tab_joinus">Create</div></div>
-			<div class="account_trans" id="account_tab_signin"><div class="account_tab_signin">Connection</div></div>
+			<div class="account_trans" id="account_tab_joinus"><div class="account_tab_joinus">{{ _trans('web', 5, 8, 'html') }}{# creation #}</div></div>
+			<div class="account_trans" id="account_tab_signin"><div class="account_tab_signin">{{ _trans('web', 5, 9, 'html') }}{# connection #}</div></div>
 		</div>
 		<div class="account_box" id="account_joinus_box">
 			<div class="account_joinus_box_div">
 				<form id="account_joinus_form" action="user/create" method="post" onsubmit="return sendForm(this, account_joinus_cb_success, account_joinus_cb_error);">
 					<label class="account_label_inside" for="account_joinus_email">
 						<span>{{ _trans('web', 5, 2, 'html') }}{# Email #}</span>
-						<input type="email" id="account_joinus_email" name="email" value="" onfocus="$(this).prev().hide();" onblur="if($(this).val().length<=0){ $(this).prev().show(); }"/>
+						<input type="email" id="account_joinus_email" name="email" value="" />
 					</label>
 					<input type="password" name="foilautofill" value="" autocomplete="off" style="display:none" />{# It avoids a behavior in Firefox which does not know Autocomplete tag, FF fulfill by default the first field #}
 					<label class="account_label_inside" for="account_joinus_password">
 						<span>{{ _trans('web', 5, 3, 'html') }}{# Password #}</span>
-						<input type="password" id="account_joinus_password" name="password" value="" autocomplete="off" onfocus="$(this).prev().hide();" onblur="if($(this).val().length<=0){ $(this).prev().show(); }" />
+						<input type="password" id="account_joinus_password" name="password" value="" autocomplete="off" />
 					</label>
 					<input id="account_joinus_submit" type='button' value="{{ _trans('web', 5, 1, 'input') }}{# Join us #}" onclick="$(this.form).submit();" />
 				</form>
@@ -34,12 +38,12 @@
 				<form id="account_signin_form" action="user/create" method="post" onsubmit="return sendForm(this, account_signin_cb_success, account_signin_cb_error);">
 					<label class="account_label_inside" for="account_signin_email">
 						<span>{{ _trans('web', 5, 2, 'html') }}{# Email #}</span>
-						<input type="email" id="account_signin_email" name="email" value="" onfocus="$(this).prev().hide();" onblur="if($(this).val().length<=0){ $(this).prev().show(); }"/>
+						<input type="email" id="account_signin_email" name="email" value="" />
 					</label>
 					<input type="password" name="foilautofill" value="" autocomplete="off" style="display:none" />{# It avoids a behavior in Firefox which does not know Autocomplete tag, FF fulfill by default the first field #}
 					<label class="account_label_inside" for="account_signin_password">
 						<span>{{ _trans('web', 5, 3, 'html') }}{# Password #}</span>
-						<input type="password" id="account_signin_password" name="password" value="" autocomplete="off" onfocus="$(this).prev().hide();" onblur="if($(this).val().length<=0){ $(this).prev().show(); }" />
+						<input type="password" id="account_signin_password" name="password" value="" autocomplete="off" />
 					</label>
 					<input id="account_signin_submit" type='button' value="{{ _trans('web', 5, 4, 'input') }}{# Sign in #}" onclick="$(this.form).submit();" />
 				</form>
@@ -53,6 +57,8 @@
 					{{ _trans('web', 5, 7, 'html') }}{# Forgot your password? #}
 				</div>
 			</div>
+		</div>
+		<div id="account_error">
 		</div>
 	</div>
 </div>

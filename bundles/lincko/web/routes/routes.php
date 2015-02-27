@@ -33,6 +33,15 @@ $app->get('/help', function () use($app) {
 	$app->render('/bundles/lincko/web/templates/web/help.twig');
 })
 ->name('help');
+
+$app->group('/account', function () use ($app) {
+
+	$app->get('/forgot', function () use($app) {
+		$app->render('/bundles/lincko/web/templates/account/forgot.twig');
+	})
+	->name('account_forgot');
+
+});
 /*
 $app->get('/test', function () use($app) {
 	$app->render('/bundles/lincko/web/templates/generic/test.twig');
