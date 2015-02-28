@@ -31,6 +31,8 @@ var home_cb_complete = function(){
 var home_resize_list = [];
 home_resize_list.push(["#home_main_image", 70]);
 home_resize_list.push(["#home_great_projects", 30]);
+home_resize_list.push(["#home_tools", 100]);
+home_resize_list.push(["#home_responsive", 100]);
 home_resize_list.push(["#home_done", 100]);
 
 
