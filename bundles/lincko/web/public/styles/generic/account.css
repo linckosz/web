@@ -150,8 +150,8 @@
 	background-color: #FFC251;
 }
 
-#account_joinus_submit:active {
-	background-color: #E89700;
+.account_joinus_submit_active, #account_joinus_submit:active {
+	background-color: #E89700 !important;
 }
 
 #account_signin_submit {
@@ -171,8 +171,8 @@
 	background-color: #4FA8F4;
 }
 
-#account_signin_submit:active {
-	background-color: #2586D8;
+.account_signin_submit_active, #account_signin_submit:active {
+	background-color: #2586D8 !important;
 }
 
 #account_signin_remember {

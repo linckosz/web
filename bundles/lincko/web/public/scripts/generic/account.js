@@ -97,6 +97,10 @@ $('#account_signin_forgot').click(function(){
 	window.location.href = account_link['account_forgot'];
 });
 
+$('#account_error').click(function(){
+	account_hide_error();
+});
+
 $("#account_joinus_email, #account_joinus_password, #account_signin_email, #account_signin_password").on({
 	focus: function(){ account_display_label(this, false); },
 	blur: function(){ account_display_label(this, false); },
@@ -105,10 +109,34 @@ $("#account_joinus_email, #account_joinus_password, #account_signin_email, #acco
 	copy: function(){ account_display_label(this, true); },
 	past: function(){ account_display_label(this, true); },
 	cut: function(){ account_display_label(this, true); },
+	keypress: function(e) {
+		if (e.which == 13) {
+			$(this.form).submit();
+		}
+	},
 });
 
-$("#account_joinus_submit").keypress(function (e) {
-  if (e.which == 13) {
-    $(this.form).submit();
-  }
+$("#account_joinus_submit, #account_signin_submit").keypress(function (e) {
+	if (e.which == 13) {
+		$(this.form).submit();
+	}
 });
+
+$("#account_joinus_submit").keydown(function(e){
+	if (e.which == 13) {
+		$('#account_joinus_submit').addClass('account_joinus_submit_active');
+	}
+});
+$("#account_joinus_submit").keyup(function(){
+	$('#account_joinus_submit').removeClass('account_joinus_submit_active');
+});
+
+$("#account_signin_submit").keydown(function(e){
+	if (e.which == 13) {
+		$('#account_signin_submit').addClass('account_signin_submit_active');
+	}
+});
+$("#account_signin_submit").keyup(function(){
+	$('#account_signin_submit').removeClass('account_signin_submit_active');
+});
+

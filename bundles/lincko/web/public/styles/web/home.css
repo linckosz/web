@@ -83,8 +83,8 @@
 	background-color: #FFC251;
 }
 
-#home_joinus_submit:active {
-	background-color: #E89700;
+.home_joinus_submit_active, #home_joinus_submit:active {
+	background-color: #E89700 !important;
 }
 
 .home_joinus_div {
@@ -140,7 +140,9 @@
 	line-height: 100%;
 	color: #9DA19D;
 	text-align: center;
-	width: 100%
+	width: 100%;
+	position: absolute;
+	bottom: 0;
 }
 
 .home_great_learn_more > img {
