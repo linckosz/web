@@ -2,9 +2,9 @@
 {% block base %}
 	<body>
 		<script>
-		JSfiles.push("{{ _filelatest('/lincko/wrapper/scripts/generic/base.js') }}");
+		JSfiles.push("{{ _filelatest('/lincko/app/scripts/generic/base.js') }}");
 	</script>
-		<link rel="stylesheet" href="{{ _filelatest('/lincko/wrapper/styles/generic/base.css') }}" type="text/css" />
+		<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/generic/base.css') }}" type="text/css" />
 		
 		{% block content %}
 		{% endblock %}
