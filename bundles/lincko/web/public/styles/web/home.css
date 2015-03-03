@@ -94,12 +94,12 @@
 	padding-top: 6px;
 }
 
-#home_joinus_link {
+#home_signin_link {
 	color: #2895F2;
 	cursor: pointer; cursor: hand;
 }
 
-.home_joinus_link:hover {
+#home_signin_link:hover {
 	text-decoration: underline;
 }
 

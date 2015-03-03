@@ -104,8 +104,8 @@ $(".home_great_learn_more").children().click(function(){
 	}, 700);
 });
 
-$("#home_joinus_link").click(function(){
-	if(typeof account_show !== 'undefined') { account_show(false); }
+$("#home_signin_link").click(function(){
+	if(typeof account_show !== 'undefined') { account_show(true); }
 });
 
 $('#home_joinus_error').click(function(){
