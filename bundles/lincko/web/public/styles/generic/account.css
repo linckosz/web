@@ -86,14 +86,14 @@
 	background-color: #2586D8 !important;
 }
 
-.account_box {
+.account_form {
 	display: table;
 	position: relative;
 	margin: auto;
 	z-index: 100;
 }
 
-.account_box > div, .account_box > label {
+.account_form > div, .account_form > label {
 	display: block;
 	background-color: rgba(249, 249, 249, 0.6);
 	width: 222px;
@@ -219,4 +219,17 @@
 	color: #F8F8F8;
 	font-size: 13px;
 	cursor: default;
+}
+
+#account_captcha {
+	width: 80px;
+	height: 30px;
+	border-radius: 3px;
+	border: 1px #B5B5B5 solid;
+	vertical-align: top;
+	cursor: pointer; cursor: hand;
+}
+
+#account_joinus_captcha {
+	width: 80px;
 }

@@ -21,7 +21,6 @@ class ControllerTranslation extends Controller {
 		$app->response->headers->set('Expires', 'Fri, 12 Aug 2011 14:57:00 GMT');
 		echo "Lincko.Translation = {};\n";
 		$this->setList();
-		$this->setData();
 	}
 
 	public function language_set(){
@@ -46,47 +45,29 @@ class ControllerTranslation extends Controller {
 		foreach ($list as $bundle => $list_bundles) {
 			foreach ($list_bundles as $category => $list_categories) {
 				foreach ($list_categories as $phrase => $value) {
-					echo 'Lincko.Translation._list["'.$bundle.'_'.$category.'_'.$phrase.'"] = "'.STR::sql_to_js($value)."\";\n";
+					echo 'Lincko.Translation._list["'.$bundle.'_'.$category.'_'.$phrase.'"] = {
+						js: "'.STR::sql_to_js($value).'",
+						html: "'.STR::sql_to_html($value).'",
+					};'."\n";
 				}
 			}
 		}
 		echo "
-		Lincko.Translation.get = function(bundle, phrase){
+		Lincko.Translation.get = function(bundle, phrase, format){
+			var format_tp = 'js';
 			var category = '8000'; //Default category for JS sentences
 			if(bundle+'_'+category+'_'+phrase in Lincko.Translation._list){
-				var text = Lincko.Translation._list[bundle+'_'+category+'_'+phrase];
+				if(typeof format !== 'undefined') {
+					if(format in Lincko.Translation._list[bundle+'_'+category+'_'+phrase]){
+						format_tp = format;
+					}
+				}
+				var text = Lincko.Translation._list[bundle+'_'+category+'_'+phrase][format_tp];
 				return text;
-				//return Lincko.Translation.pushData(text);
 			} else {
 				return \"[".$app->trans->getJS('wrapper', 1, 2)."]\"; //[unknown value]  
 			}
 		};\n";
-	}
-
-	public function setData(){
-		/*
-		$app = $this->app;
-		$app->lincko->translation['browser_title'] = $app->trans->getJS('wrapper', 1, 1); //Lincko - Team collaboration tool
-		$list = $app->lincko->translation;
-		echo "Lincko.Translation._data = [];\n";
-		foreach ($list as $key => $value) {
-					echo 'Lincko.Translation._data["'.$key.'"] = "'.STR::sql_to_js($value)."\";\n";
-		}
-		echo "
-		Lincko.Translation.pushData = function(text){
-			var Regexp = /@@(.+?)~~/;
-			while (match = Regexp.exec(text)) {
-				if(match[1] in Lincko.Translation._data){
-					text = text.replace('@@'+match[1]+'~~', Lincko.Translation._data[match[1]]);
-				} else {
-					JSerror.sendError('The word could not be converted: '+match[1]+' \\n'+text, '/translation/list.js', '0');
-					text = text.replace('@@'+match[1]+'~~', \"[".$app->trans->getJS('wrapper', 1, 2)."]\"); //[unknown value]
-				}
-
-			}
-			return text;
-		};\n";
-		*/
 	}
 
 }

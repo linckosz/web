@@ -1,33 +1,69 @@
 var global_select = true; //true = Join us / false = Sign in
 
-var account_joinus_cb_success = account_signin_cb_success = function(msg, err){
-	console.log(totalxhr+') '+msg);
+var account_joinus_cb_success = function(msg, err){
+	var field = 'undefined';
+	var msgtp = msg;
+	if(typeof msg.field !== 'undefined') { field = msg.field; }
+	if(typeof msg.msg !== 'undefined') { msgtp = php_nl2br(msg.msg); }
 	if(err){
-		$('#account_error').html(msg);
+		$('#account_error').html(msgtp);
+		$("#account_error").velocity("transition.slideDownIn", { duration: 500 });
+		$("#account_joinus_form input[name="+field+"]").addClass('base_input_text_error').focus();
+	} else {
+		window.location.href = account_link['root'];
+	}
+};
+
+var account_signin_cb_success = function(msg, err){
+	var field = 'undefined';
+	var msgtp = msg;
+	if(typeof msg.field !== 'undefined') { field = msg.field; }
+	if(typeof msg.msg !== 'undefined') { msgtp = php_nl2br(msg.msg); }
+	if(err){
+		$('#account_error').html(msgtp);
 		if($('#account_error').is(':hidden')){
 			$("#account_error").velocity("transition.slideDownIn", { duration: 500 });
 		}
+		$("#account_signin_form input[name="+field+"]").addClass('base_input_text_error').focus();
+	} else {
+		window.location.href = account_link['root'];
 	}
-}
+};
 
 var account_joinus_cb_error = account_signin_cb_error = function(xhr_err, ajaxOptions, thrownError){
-	alert(
+	var msgtp = Lincko.Translation.get('wrapper', 1, 'html'); //Communication error
+	$('#account_error').html(msgtp);
+	if($('#account_error').is(':hidden')){
+		$("#account_error").velocity("transition.slideDownIn", { duration: 500 });
+	}
+	console.log(
 		totalxhr+') '+'xhr.status => '+xhr_err.status
 		+'\n'
 		+'ajaxOptions => '+ajaxOptions
 		+'\n'
 		+'thrownError => '+thrownError
 	);
-}
+};
 
-var account_joinus_cb_begin = account_signin_cb_begin = function(){
+var account_joinus_cb_begin = function(){
 	$(document.body).css('cursor', 'progress');
-}
+	$('#account_joinus_submit_progress').show();
+};
 
-var account_joinus_cb_complete = account_signin_cb_complete = function(){
+var account_joinus_cb_complete = function(){
 	$(document.body).css('cursor', '');
-	//window.location.href = account_link['home'];
-}
+	$('#account_joinus_submit_progress').hide();
+};
+
+var account_signin_cb_begin = function(){
+	$(document.body).css('cursor', 'progress');
+	$('#account_signin_submit_progress').show();
+};
+
+var account_signin_cb_complete = function(){
+	$(document.body).css('cursor', '');
+	$('#account_signin_submit_progress').hide();
+};
 
 function account_show(select) {
 	if(typeof select==="undefined"){ select = false; }
@@ -69,6 +105,7 @@ function account_hide_error() {
 function account_display_label(label, hide_error) {
 	if(hide_error){
 		account_hide_error();
+		$(label).removeClass('base_input_text_error');
 	}
 	if($(label).val().length<=0){
 		$(label).prev().show();
@@ -104,14 +141,20 @@ $('#account_error').click(function(){
 $("#account_joinus_email, #account_joinus_password, #account_signin_email, #account_signin_password").on({
 	focus: function(){ account_display_label(this, false); },
 	blur: function(){ account_display_label(this, false); },
-	keyup: function(){ account_display_label(this, true); },
-	change: function(){ account_display_label(this, true); },
+	change: function(){ account_display_label(this, false); },
 	copy: function(){ account_display_label(this, true); },
 	past: function(){ account_display_label(this, true); },
 	cut: function(){ account_display_label(this, true); },
+	keyup: function(e) {
+		if (e.which != 13) {
+			account_display_label(this, true);
+		}
+	},
 	keypress: function(e) {
 		if (e.which == 13) {
 			$(this.form).submit();
+		} else {
+			account_display_label(this, true);
 		}
 	},
 });

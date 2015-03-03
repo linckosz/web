@@ -9,5 +9,10 @@
 <html>
 <body>
 {{ _debug(data) }}
+
+<img id="home_captcha" src="{{ _filelatest('/captcha/test1/4/320/120') }}" title="{{ _trans('web', 4, 17, 'brut') }}{# Refresh the captcha #}"/>
+
+<img id="home_captcha" src="{{ _filelatest('/captcha/test2/4/320/120') }}" title="{{ _trans('web', 4, 17, 'brut') }}{# Refresh the captcha #}"/>
+
 </body>
 </html>

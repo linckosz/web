@@ -6,8 +6,13 @@ $app = \Slim\Slim::getInstance();
 
 $app->get('/', function () use($app) {
 	
-	if($app->getCookie('yonghu', false) && $app->getCookie('youjian', false) && $app->getCookie('mima', false) && $app->getCookie('jizhu', false)){
-		$app->render('/bundles/lincko/app/templates/application.twig');
+	if(
+		\bundles\lincko\wrapper\models\Session::getData('yonghu')
+		&& \bundles\lincko\wrapper\models\Session::getData('youjian')
+		&& \bundles\lincko\wrapper\models\Session::getData('mima')
+		&& \bundles\lincko\wrapper\models\Session::getData('jizhu')
+	){
+		$app->render('/bundles/lincko/app/templates/app/application.twig');
 	} else {
 		$app->router->getNamedRoute('home')->dispatch();
 	}

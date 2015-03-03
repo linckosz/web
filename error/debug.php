@@ -15,8 +15,5 @@ $app = \Slim\Slim::getInstance();
 
 
 
-$a = array(
-	'A' => 'a',
-);
-
-echo $a['A'];
+//\bundles\lincko\wrapper\models\Creation::record();
+//\bundles\lincko\wrapper\models\Creation::exists();

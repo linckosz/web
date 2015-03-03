@@ -1,11 +1,12 @@
 {% extends '/bundles/lincko/wrapper/templates/wrapper.twig' %}
 {% block base %}
 	<body>
-		<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/generic/base.css') }}" type="text/css" />
-		{% include '/bundles/lincko/app/templates/generic/css/base.css.twig' %}
-		{% include '/bundles/lincko/app/templates/generic/head.twig' %}
+		<script>
+		JSfiles.push("{{ _filelatest('/lincko/wrapper/scripts/generic/base.js') }}");
+	</script>
+		<link rel="stylesheet" href="{{ _filelatest('/lincko/wrapper/styles/generic/base.css') }}" type="text/css" />
+		
 		{% block content %}
 		{% endblock %}
-		{% include '/bundles/lincko/app/templates/generic/foot.twig' %}
 	</body>
 {% endblock %}

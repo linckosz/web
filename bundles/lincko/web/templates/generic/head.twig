@@ -3,6 +3,7 @@
 <script>
 	JSfiles.push("{{ _filelatest('/lincko/web/scripts/generic/head.js') }}");
 	var head_link = [];
+	head_link['root'] = "{{ urlFor('root') }}";
 	head_link['home'] = "{{ urlFor('home') }}";
 	head_link['features'] = "{{ urlFor('features') }}";
 	head_link['price'] = "{{ urlFor('price') }}";

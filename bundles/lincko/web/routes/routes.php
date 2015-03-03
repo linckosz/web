@@ -42,6 +42,7 @@ $app->group('/account', function () use ($app) {
 	->name('account_forgot');
 
 });
+
 /*
 $app->get('/test', function () use($app) {
 	$app->render('/bundles/lincko/web/templates/generic/test.twig');

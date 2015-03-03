@@ -46,8 +46,7 @@ function wrapper(param, method, action, cb_success, cb_error, cb_begin, cb_compl
 		},
 	});
 }
-
-
+;
 function sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete){
 	if(typeof cb_success==="undefined"){ cb_success = function(){}; }
 	if(typeof cb_error==="undefined"){ cb_error = function(){}; }
@@ -59,6 +58,24 @@ function sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete){
 	} else {
 		objForm = $(objForm);
 	}
+	var valid = true;
+	$.each(objForm.find('input'), function() {
+		if(this.name in base_input_field){
+			if(typeof base_input_field[this.name].valid === "function" && typeof base_input_field[this.name].error_msg === "function"){
+				if(!base_input_field[this.name].valid($(this).val())){
+					cb_success(base_input_field[this.name].error_msg(), true, 400);
+					valid = false;
+					return false; //Disable submit action
+				}
+			}
+		}
+		return true;
+	});
+	
+	if(!valid){
+		return false;
+	}
+
 	if (objForm.length>0 && objForm.is('form')){
 		objForm.on('submit', function(e) {
 			 e.preventDefault(); //Disable submit action
@@ -68,7 +85,8 @@ function sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete){
 		var action = objForm.attr('action');
 		wrapper(param, method, action, cb_success, cb_error, cb_begin, cb_complete);
 	} else {
-		alert('The form does not exist!');
+		cb_success(Lincko.Translation.get('wrapper', 2, 'html'), true, 400); //The form does not exist!
+		return false; //Disable submit action
 	}
 	return false; //Disable submit action
 }

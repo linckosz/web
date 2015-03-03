@@ -4,6 +4,9 @@
 {% block content %}
 <script>
 	JSfiles.push("{{ _filelatest('/lincko/web/scripts/web/home.js') }}");
+	var home_link = [];
+	home_link['root'] = "{{ urlFor('root') }}";
+	home_link['home'] = "{{ urlFor('home') }}";
 </script>
 <link rel="stylesheet" href="{{ _filelatest('/lincko/web/styles/web/home.css') }}" type="text/css" />
 {% include '/bundles/lincko/web/templates/web/styles/home.css.twig' %}
@@ -11,7 +14,7 @@
 <div class="home_top_div minTablet"></div>
 <div class="home_joinus_box" id="home_joinus_box">
 	<div>
-		<form id="home_joinus_form" action="user/create" method="post" onsubmit="return sendForm(this, home_cb_success, home_cb_error);">
+		<form id="home_joinus_form" name="home_joinus_form" action="user/create" method="post" onsubmit="return sendForm(this, home_cb_success, home_cb_error, home_cb_begin, home_cb_complete);">
 			<label class="home_label_inside" for="home_joinus_email">
 				<span>{{ _trans('web', 4, 2, 'html') }}{# Email #}</span>
 				<input type="email" id="home_joinus_email" name="email" value=""/>
@@ -21,7 +24,16 @@
 				<span>{{ _trans('web', 4, 3, 'html') }}{# Password #}</span>
 				<input type="password" id="home_joinus_password" name="password" value="" autocomplete="off" />
 			</label>
+			{% if wrapper_user_created %}
+				<label class="home_label_inside" for="home_joinus_captcha">
+					<img  name="captcha" id="home_captcha" src="" title="{{ _trans('web', 4, 17, 'brut') }}{# Refresh the captcha #}"/>
+					<span>{{ _trans('web', 4, 16, 'html') }}{# Captcha #}</span>
+					<input type="text" id="home_joinus_captcha" name="captcha" value="" autocomplete="off" />
+					<input type="hidden" name="captcha_name" value="home_joinus_form" autocomplete="off" />
+				</label>
+			{% endif %}			
 			<input id="home_joinus_submit" type='button' value="{{ _trans('web', 4, 1, 'input') }}{# Join us #}" onclick="$(this.form).submit();" />
+			<img class="submit_progress_bar" id="home_joinus_submit_progress" src="{{ _filelatest('/lincko/web/images/generic/base/generic/loading_bar.gif') }}"/>
 			<div class="home_joinus_div minDesktop">
 				{{ _trans('web', 4, 4, 'html') }}{# or #} <span id="home_joinus_link">{{ _trans('web', 4, 5, 'html') }}{# Sign in #}</span>
 			</div>

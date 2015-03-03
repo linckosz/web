@@ -1,32 +1,43 @@
 
 var home_cb_success = function(msg, err){
-	console.log(totalxhr+') '+msg);
+	var field = 'undefined';
+	var msgtp = msg;
+	if(typeof msg.field !== 'undefined') { field = msg.field; }
+	if(typeof msg.msg !== 'undefined') { msgtp = php_nl2br(msg.msg); }
 	if(err){
-		$('#home_joinus_error').html(msg);
-		if($('#home_joinus_error').is(':hidden')){
-			$("#home_joinus_error").velocity("transition.slideDownIn", { duration: 500 });
-		}
+		$('#home_joinus_error').html(msgtp);
+		$("#home_joinus_error").velocity("transition.slideDownIn", { duration: 500 });
+		$("#home_joinus_form input[name="+field+"]").addClass('base_input_text_error').focus();
+	} else {
+		window.location.href = home_link['root'];
 	}
-}
+};
 
 var home_cb_error = function(xhr_err, ajaxOptions, thrownError){
-	alert(
+	var msgtp = Lincko.Translation.get('wrapper', 1, 'html'); //Communication error
+	$('#home_joinus_error').html(msgtp);
+	if($('#home_joinus_error').is(':hidden')){
+		$("#home_joinus_error").velocity("transition.slideDownIn", { duration: 500 });
+	}
+	console.log(
 		totalxhr+') '+'xhr.status => '+xhr_err.status
 		+'\n'
 		+'ajaxOptions => '+ajaxOptions
 		+'\n'
 		+'thrownError => '+thrownError
 	);
-}
+};
 
 var home_cb_begin = function(){
+	home_hide_error();
 	$(document.body).css('cursor', 'progress');
-}
+	$('#home_joinus_submit_progress').show();
+};
 
 var home_cb_complete = function(){
 	$(document.body).css('cursor', '');
-	//window.location.href = head_link['home'];
-}
+	$('#home_joinus_submit_progress').hide();
+};
 
 var home_resize_list = [];
 home_resize_list.push(["#home_main_image", 70]);
@@ -73,6 +84,7 @@ function home_hide_error() {
 function home_display_label(label, hide_error) {
 	if(hide_error){
 		home_hide_error();
+		$(label).removeClass('base_input_text_error');
 	}
 	if($(label).val().length<=0){
 		$(label).prev().show();
@@ -100,17 +112,23 @@ $('#home_joinus_error').click(function(){
 	home_hide_error();
 });
 
-$("#home_joinus_email, #home_joinus_password").on({
+$("#home_joinus_email, #home_joinus_password, #home_joinus_captcha").on({
 	focus: function(){ home_display_label(this, false); },
 	blur: function(){ home_display_label(this, false); },
-	keyup: function(){ home_display_label(this, true); },
-	change: function(){ home_display_label(this, true); },
+	change: function(){ home_display_label(this, false); },
 	copy: function(){ home_display_label(this, true); },
 	past: function(){ home_display_label(this, true); },
 	cut: function(){ home_display_label(this, true); },
+	keyup: function(e) {
+		if (e.which != 13) {
+			home_display_label(this, true);
+		}
+	},
 	keypress: function(e) {
 		if (e.which == 13) {
 			$(this.form).submit();
+		} else {
+			home_display_label(this, true);
 		}
 	},
 });

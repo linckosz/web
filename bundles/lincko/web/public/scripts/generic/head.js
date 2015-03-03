@@ -51,3 +51,10 @@ $('[id^="head_signin_"]').click(function(){
 $('[id^="head_joinus_"]').click(function(){
 	if(typeof account_show !== 'undefined') { account_show(false); }
 });
+$('[id^="head_account_"]').click(function(){
+	window.location.href = head_link['root'];
+});
+
+
+//Delete the click event from activated menu
+$('.head_menu.active').off('click');

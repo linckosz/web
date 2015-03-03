@@ -203,6 +203,19 @@ html, .font_sans_serif {
 	filter: blur(4px);
 }
 
+.submit_progress_bar {
+	height: 2px;
+	margin-left: 4px;
+	margin-top: -5px;
+	position: absolute;
+	z-index: 2;
+	display: none;
+}
+
+.base_input_text_error {
+	background: linear-gradient(#FFFFFF,#FFCFCF) !important;
+}
+
 /* Minimum Tablet in Landscape */
 @media only screen and (min-width: 901px){
 	.base_menu {

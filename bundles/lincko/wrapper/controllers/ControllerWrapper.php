@@ -2,6 +2,7 @@
 
 namespace bundles\lincko\wrapper\controllers;
 
+use \bundles\lincko\wrapper\models\Creation;
 use \libs\Controller;
 use \libs\Datassl;
 
@@ -86,6 +87,7 @@ class ControllerWrapper extends Controller {
 			//After signin, it return the username
 			if(isset($json_result->flash->username)){
 				$app->setCookie('yonghu', $json_result->flash->username);
+				$_SESSION['yonghu'] = $json_result->flash->username;
 			}
 
 			unset($json_result->flash);
@@ -107,12 +109,17 @@ class ControllerWrapper extends Controller {
 		$app = $this->app;
 		$this->setupKeys();
 		if($_SESSION['public_key'] == $app->lincko->security['public_key'] && $_SESSION['private_key'] == $app->lincko->security['private_key']){
-			if($app->getCookie('jizhu', false) && $app->getCookie('youjian', false) && $app->getCookie('mima', false)){
+			if(isset($_SESSION['youjian']) && isset($_SESSION['mima'])){
+				$this->json['data']['email'] = $_SESSION['youjian'];
+				$this->json['data']['password'] = $_SESSION['mima'];
+				return true;
+			} else if($app->getCookie('jizhu', false) && $app->getCookie('youjian', false) && $app->getCookie('mima', false)){
 				$this->json['data']['email'] = $app->getCookie('youjian', false);
 				$this->json['data']['password'] = $app->getCookie('mima', false);
 				$this->json['remember'] = true;
 				return true;
 			}
+			$this->signOut();
 			return false;
 		}
 		return true;
@@ -153,8 +160,13 @@ class ControllerWrapper extends Controller {
 
 	protected function signOut(){
 		$app = $this->app;
+		$app->deleteCookie('yonghu');
 		$app->deleteCookie('jizhu');
 		$app->deleteCookie('mima');
+		unset($_SESSION['yonghu']);
+		unset($_SESSION['youjian']);
+		unset($_SESSION['mima']);
+		unset($_SESSION['jizhu']);
 		unset($_SESSION['public_key']);
 		unset($_SESSION['private_key']);
 		return true;
@@ -184,6 +196,10 @@ class ControllerWrapper extends Controller {
 			
 			$this->json['data']['password'] = Datassl::encrypt($this->json['data']['password'], $this->json['data']['email']);
 
+			$_SESSION['youjian'] = $this->json['data']['email'];
+			$_SESSION['mima'] = $this->json['data']['password'];
+			$_SESSION['jizhu'] = true;
+
 			//Add Cookies if Remember
 			if(isset($this->json['data']['remember'])){
 				$app->setCookie('jizhu', true);
@@ -195,6 +211,19 @@ class ControllerWrapper extends Controller {
 			}
 		
 		} else if($action==='user/create' && $type==='POST' && isset($this->json['data']['email']) && isset($this->json['data']['password'])){
+
+			if(Creation::exists()){
+				if(isset($this->json['data']['captcha']) && isset($_SESSION['wrapper_captcha'])){
+					if(intval($this->json['data']['captcha']) !== $_SESSION['wrapper_captcha']){
+						echo '{"msg":{ "msg": "'.$app->trans->getJSON('wrapper', 1, 4).'", "field": "captcha" }, "error":true, "status":400}'; //The Captcha code does not match.
+						return true;
+					}
+				} else {
+					$app->lincko->translation['captcha_timing'] = Creation::remainTime();
+					echo '{"msg":{ "msg": "'.$app->trans->getJSON('wrapper', 1, 5).'", "field": "captcha" }, "error":true, "status":400}'; //You need to wait 5 minutes before to be able to create another account. Thank you for your patience.
+					return true;
+				}
+			}
 
 			$log_action = true;
 
@@ -225,6 +254,8 @@ class ControllerWrapper extends Controller {
 		if($log_action){
 			if(!$this->sendCurl()){
 				$this->signOut();
+			} else if($action==='user/create'){
+				Creation::record();
 			}
 		} else {
 			$this->sendCurl();
