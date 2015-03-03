@@ -37,7 +37,7 @@ function wrapper(param, method, action, cb_success, cb_error, cb_begin, cb_compl
 			// Below is the production information with "dataType: 'json'"
 			cb_success(data.msg, data.error, data.status);
 		},
-		error: function(xhr_err, ajaxOptions, thrownError){
+		error: function(xhr_err, ajaxOptions, thrownError){alert('ok');
 			cb_error(xhr_err, ajaxOptions, thrownError);
 		},
 		complete: function(){

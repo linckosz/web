@@ -12,6 +12,7 @@ $app->get('/', function () use($app) {
 		&& \bundles\lincko\wrapper\models\Session::getData('mima')
 		&& \bundles\lincko\wrapper\models\Session::getData('jizhu')
 	){
+		$app->lincko->data['user'] = \bundles\lincko\wrapper\models\Session::getData('yonghu');
 		$app->render('/bundles/lincko/app/templates/app/application.twig');
 	} else {
 		$app->router->getNamedRoute('home')->dispatch();
