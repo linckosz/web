@@ -7,6 +7,9 @@
 	var home_link = [];
 	home_link['root'] = "{{ urlFor('root') }}";
 	home_link['home'] = "{{ urlFor('home') }}";
+	var home_img = [];
+	home_img['home_main_image'] = "{{ _filelatest('/lincko/web/images/web/home/thewall_bw_60.jpg') }}";
+	home_img['home_done'] = "{{ _filelatest('/lincko/web/images/web/home/thewall_third_bw_60.jpg') }}";
 </script>
 <link rel="stylesheet" href="{{ _filelatest('/lincko/web/styles/web/home.css') }}" type="text/css" />
 {% include '/bundles/lincko/web/templates/web/styles/home.css.twig' %}

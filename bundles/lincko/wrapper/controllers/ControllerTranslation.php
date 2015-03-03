@@ -19,7 +19,6 @@ class ControllerTranslation extends Controller {
 		$app->response->headers->set('Content-Type', 'application/javascript');
 		$app->response->headers->set('Cache-Control', 'no-cache, must-revalidate');
 		$app->response->headers->set('Expires', 'Fri, 12 Aug 2011 14:57:00 GMT');
-		echo "Lincko.Translation = {};\n";
 		$this->setList();
 	}
 
@@ -41,6 +40,7 @@ class ControllerTranslation extends Controller {
 	protected function setList(){
 		$app = $this->app;
 		$list = $app->trans->getList(true, 8000);
+		echo "Lincko.Translation = {};\n";
 		echo "Lincko.Translation._list = [];\n";
 		foreach ($list as $bundle => $list_bundles) {
 			foreach ($list_bundles as $category => $list_categories) {

@@ -17,6 +17,7 @@
 
 <link rel="stylesheet" href="{{ _filelatest('/lincko/wrapper/styles/responsive.css') }}" type="text/css" />
 
+{# Load all libraries #}
 <script src="{{ _filelatest('/scripts/libs/jquery-1.11.1.min.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/json3.min.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/blueimp.md5.min.js') }}" type="text/javascript"></script>
@@ -51,11 +52,20 @@ var Lincko = Lincko || {}; //Create singleton object
 //Keep a record of JS files to be launch at the end of the page loading
 var JSfiles = [];
 
+{{ translation_list_js|raw }}
+</script>
+
+
+{#
+	Load wrapper scripts
+	Warning: Only scripts that does not depends on any library (i.e. if any jQuery code)
+#}
+<script src="{{ _filelatest('/lincko/wrapper/scripts/responsive.js') }}" type="text/javascript"></script>
+
+<script>
 $(function() {
 	$.cachedScript("{{ _filelatest('/lincko/wrapper/scripts/error.js') }}");
-	$.cachedScript("{{ _filelatest('/lincko/wrapper/scripts/language.js') }}");
-	$.cachedScript("{{ _filelatest('/lincko/wrapper/scripts/responsive.js') }}");
-	$.cachedScript("{{ _filelatest('/translation/list.js') }}").success(function() {
+	$.cachedScript("{{ _filelatest('/lincko/wrapper/scripts/language.js') }}").success(function() {
 		$.cachedScript("{{ _filelatest('/lincko/wrapper/scripts/wrapper.js') }}").success(function() {
 			//alert(Lincko.Translation.get('wrapper', 8000, 'js'));
 			for(var key in JSfiles){
