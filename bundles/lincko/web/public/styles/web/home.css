@@ -299,3 +299,10 @@
 		bottom: 80px;
 	}
 }
+
+/* To avoid the text be unreadable when using login */
+@media only screen and (max-height: 400px){
+	.home_joinus_box > div, .home_joinus_box > label {
+		background-color: rgba(249, 249, 249, 0.95);
+	}
+}
