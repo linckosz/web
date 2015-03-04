@@ -67,7 +67,7 @@ class ControllerWrapper extends Controller {
 			$json_result = json_decode($result);
 		}
 		@curl_close($ch);
-\libs\Watch::php($json_result,'$json_result',__FILE__);
+
 		if($json_result && isset($json_result->msg) && isset($json_result->error) && isset($json_result->flash)){
 			//In case of Access unauthorize, we force to sign out the user
 			if(isset($json_result->flash->signout) && $json_result->flash->signout===true){
