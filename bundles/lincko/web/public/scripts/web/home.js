@@ -19,13 +19,6 @@ var home_cb_error = function(xhr_err, ajaxOptions, thrownError){
 	if($('#home_joinus_error').is(':hidden')){
 		$("#home_joinus_error").velocity("transition.slideDownIn", { duration: 500 });
 	}
-	console.log(
-		totalxhr+') '+'xhr.status => '+xhr_err.status
-		+'\n'
-		+'ajaxOptions => '+ajaxOptions
-		+'\n'
-		+'thrownError => '+thrownError
-	);
 };
 
 var home_cb_begin = function(){

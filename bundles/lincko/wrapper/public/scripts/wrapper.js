@@ -34,10 +34,23 @@ function wrapper(param, method, action, cb_success, cb_error, cb_begin, cb_compl
 			//var msg = data; //for test
 			//var msg = JSON.parse(data.msg); //for test
 
+			if(data.error){
+				JSerror.sendError(JSON.stringify(data), '/wrapper.js/wrapper().success()', 0);
+				console.log(data);
+			}
+
 			// Below is the production information with "dataType: 'json'"
 			cb_success(data.msg, data.error, data.status);
 		},
-		error: function(xhr_err, ajaxOptions, thrownError){alert('ok');
+		error: function(xhr_err, ajaxOptions, thrownError){
+			var msg = totalxhr+') '+'xhr.status => '+xhr_err.status
+				+'\n'
+				+'ajaxOptions => '+ajaxOptions
+				+'\n'
+				+'thrownError => '+thrownError;
+
+			JSerror.sendError(msg, '/wrapper.js/wrapper().error()', 0);
+			console.log(msg);
 			cb_error(xhr_err, ajaxOptions, thrownError);
 		},
 		complete: function(){

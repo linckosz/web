@@ -36,13 +36,6 @@ var account_joinus_cb_error = account_signin_cb_error = function(xhr_err, ajaxOp
 	if($('#account_error').is(':hidden')){
 		$("#account_error").velocity("transition.slideDownIn", { duration: 500 });
 	}
-	console.log(
-		totalxhr+') '+'xhr.status => '+xhr_err.status
-		+'\n'
-		+'ajaxOptions => '+ajaxOptions
-		+'\n'
-		+'thrownError => '+thrownError
-	);
 };
 
 var account_joinus_cb_begin = function(){
