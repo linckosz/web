@@ -97,15 +97,21 @@ function account_hide_error() {
 	}
 }
 
-function account_display_label(label, hide_error) {
+function account_display_label(input, hide_error) {
 	if(hide_error){
 		account_hide_error();
-		$(label).removeClass('base_input_text_error');
+		$(input).removeClass('base_input_text_error');
 	}
-	if($(label).val().length<=0){
-		$(label).prev().show();
+	if($(input).val().length<=0){
+		//$(input).prev().css('visibility', 'visible').css('z-index', 1);
+		if($(input).prev().is(':hidden')){
+			$(input).prev().velocity("transition.fadeIn", { duration: 300 });
+		}
 	} else {
-		$(label).prev().hide();
+		//$(input).prev().css('visibility', 'hidden').css('z-index', -1);
+		if($(input).prev().is(':visible')){
+			$(input).prev().velocity("transition.fadeOut", { duration: 300 });
+		}
 	}
 }
 
@@ -133,7 +139,7 @@ $('#account_error').click(function(){
 	account_hide_error();
 });
 
-$("#account_joinus_email, #account_joinus_password, #account_signin_email, #account_signin_password").on({
+$("#account_joinus_email, #account_joinus_password, #account_joinus_captcha, #account_signin_email, #account_signin_password").on({
 	focus: function(){ account_display_label(this, false); },
 	blur: function(){ account_display_label(this, false); },
 	change: function(){ account_display_label(this, false); },

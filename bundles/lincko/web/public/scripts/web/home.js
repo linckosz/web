@@ -74,15 +74,21 @@ function home_hide_error() {
 	}
 }
 
-function home_display_label(label, hide_error) {
+function home_display_label(input, hide_error) {
 	if(hide_error){
 		home_hide_error();
-		$(label).removeClass('base_input_text_error');
+		$(input).removeClass('base_input_text_error');
 	}
-	if($(label).val().length<=0){
-		$(label).prev().show();
+	if($(input).val().length<=0){
+		//$(input).prev().css('visibility', 'visible').css('z-index', 1);
+		if($(input).prev().is(':hidden')){
+			$(input).prev().velocity("transition.fadeIn", { duration: 300 });
+		}
 	} else {
-		$(label).prev().hide();
+		//$(input).prev().css('visibility', 'hidden').css('z-index', -1);
+		if($(input).prev().is(':visible')){
+			$(input).prev().velocity("transition.fadeOut", { duration: 300 });
+		}
 	}
 	if($('#home_joinus_tos').is(':hidden')){
 		$("#home_joinus_tos").velocity("transition.slideDownIn", { duration: 500 });
