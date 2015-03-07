@@ -216,6 +216,18 @@ html, .font_sans_serif {
 	background: linear-gradient(#FFFFFF,#FFCFCF) !important;
 }
 
+.display_none {
+	display: none !important;
+}
+
+.visibility_hidden {
+	width: 0 !important;
+	height: 0 !important;
+	visibility: hidden !important;
+	z-index: -1 !important;
+	position: absolute !important;
+}
+
 /* Minimum Tablet in Landscape */
 @media only screen and (min-width: 901px){
 	.base_menu {

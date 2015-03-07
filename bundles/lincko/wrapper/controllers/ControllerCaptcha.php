@@ -29,7 +29,7 @@ class ControllerCaptcha extends Controller {
 		
 		$_SESSION['wrapper_captcha'] = $wrapper_captcha;
 		
-		$src->output(IMAGETYPE_PNG);
+		$src->output(IMAGETYPE_JPEG);
 		$src->destroy();
 		
 	}

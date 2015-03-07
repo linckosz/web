@@ -45,7 +45,6 @@ $.cachedScript = function( url ) {
 	return $.ajax( options );
 };
 
-
 //Global namespace (extend or create)
 var Lincko = Lincko || {}; //Create singleton object
 
@@ -65,9 +64,9 @@ var JSfiles = [];
 <script>
 $(function() {
 	$.cachedScript("{{ _filelatest('/lincko/wrapper/scripts/error.js') }}");
+	$.cachedScript("{{ _filelatest('/lincko/wrapper/scripts/divers.js') }}");
 	$.cachedScript("{{ _filelatest('/lincko/wrapper/scripts/language.js') }}").success(function() {
 		$.cachedScript("{{ _filelatest('/lincko/wrapper/scripts/wrapper.js') }}").success(function() {
-			//alert(Lincko.Translation.get('wrapper', 8000, 'js'));
 			for(var key in JSfiles){
 				$.cachedScript(JSfiles[key]);
 			}

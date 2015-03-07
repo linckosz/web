@@ -1,15 +1,16 @@
 {# category 5 #}
-<script>
-	JSfiles.push("{{ _filelatest('/lincko/web/scripts/generic/account.js') }}");
-	var account_link = [];
-	account_link['root'] = "{{ urlFor('root') }}";
-	account_link['home'] = "{{ urlFor('home') }}";
-	account_link['account_forgot'] = "{{ urlFor('account_forgot') }}";
-</script>
-<link rel="stylesheet" href="{{ _filelatest('/lincko/web/styles/generic/account.css') }}" type="text/css" />
-<div id='begin_account'></div>
+<div id="begin_account" class="visibility_hidden">
+	<script>
+		JSfiles.push("{{ _filelatest('/lincko/web/scripts/generic/account.js') }}");
+		var account_link = [];
+		account_link['root'] = "{{ urlFor('root') }}";
+		account_link['home'] = "{{ urlFor('home') }}";
+		account_link['account_forgot'] = "{{ urlFor('account_forgot') }}";
+	</script>
+	<link rel="stylesheet" href="{{ _filelatest('/lincko/web/styles/generic/account.css') }}" type="text/css" />
+</div>
 <div id="account_wrapper" class="account_wrapper">
-	<img class="account_close" id="account_close" src="{{ _filelatest('/lincko/web/images/generic/account/close.png') }}" alt="{{ _trans('web', 5, 10, 'html') }}{# Close #}" />
+	<img class="account_close" id="account_close" src="{{ _filelatest('/lincko/web/images/generic/account/close.png') }}" alt="{{ _trans('web', 5, 10, 'html') }}{# Close #}" title="{{ _trans('web', 5, 10, 'html') }}{# Close #}" />
 	<div>
 		<div class="account_tab">
 			<div class="account_trans" id="account_tab_joinus"><div class="account_tab_joinus">{{ _trans('web', 5, 8, 'html') }}{# creation #}</div></div>
@@ -73,4 +74,4 @@
 		</div>
 	</div>
 </div>
-<div id='end_account'></div>
+<div id="end_account" class="visibility_hidden"></div>

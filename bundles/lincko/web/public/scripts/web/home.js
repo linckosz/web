@@ -56,7 +56,7 @@ function home_joinus_box_position(){
 	var top = height - $("#home_joinus_submit").position().top + 6;
 	$("#home_joinus_box").css({ "top": top });
 
-	if(responsive.test("minTablet")){
+	if(false && responsive.test("minTablet")){
 		var scrollTop = $("#base_content").scrollTop();
 		if($("#home_joinus_box").position().top<6){
 			top = scrollTop + 6;

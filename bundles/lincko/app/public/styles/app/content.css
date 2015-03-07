@@ -1,0 +1,141 @@
+.app_content_table {
+	/*position: absolute;*/
+	display: table;
+	table-layout: fixed;
+	width: 100%;
+	height: 100%;
+}
+
+.app_content_table > div {
+	display: table-row;
+	width: auto;
+}
+
+.app_content_table > div > div{
+	display: table-cell;
+	width: auto;
+	vertical-align: top;
+	text-align: left;
+}
+
+.app_content_table_row_zero {
+	height: 0 !important;
+}
+
+.app_content_table_row_tab {
+	height: 48px !important;
+}
+
+.app_content_table_cell_zero {
+	width: 0 !important;
+}
+
+.app_content_table_cell_tab {
+	width: 48px !important;
+}
+
+.app_content_table_cell_middle {
+	vertical-align: middle !important;
+	text-align: center !important;
+}
+
+.app_content_top_img {
+	height: 32px;
+	margin: 8px;
+	cursor: pointer; cursor: hand;
+}
+
+.app_content_top {
+	height: 48px !important;
+	z-index: 3;
+}
+.app_content_top_visible {
+	background-color: #313335;
+	color: #F8F8F8;
+}
+
+.app_content_menu {
+	z-index: 2;
+}
+.app_content_menu_visible {
+	background-color: #FFA700;
+	color: #F8F8F8;
+}
+
+.app_content_dynamic {
+	z-index: 1;
+}
+.app_content_dynamic_visible {
+	background-color: rgba(254, 249, 214, 0.4);
+}
+
+/*
+
+.app_content_row_top {
+	width: 100%;
+	height: 48px;
+	background-color: #313335;
+	color: #F8F8F8;
+	z-index: 4;
+	overflow: hidden;
+	display: table-row;
+	table-layout: fixed;
+}
+
+.app_content_top_img {
+	height: 32px;
+	margin: 8px;
+	cursor: pointer; cursor: hand;
+}
+
+.app_content_row_bottom {
+	width: 100%;
+	height: 100%;
+	background-color: rgba(254, 249, 214, 0.8);
+	z-index: 3;
+	overflow: hidden;
+	display: table-row;
+	table-layout: fixed;
+}
+
+.app_content_top_left {
+	display: table-cell;
+	width: 48px;
+	text-align: left;
+	vertical-align: middle;
+}
+
+#app_content_top_middle {
+	display: table-cell;
+	width: auto;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.app_content_top_right {
+	display: table-cell;
+	width: 48px;
+	text-align: right;
+	vertical-align: middle;
+}
+
+#app_content_menu {
+	display: table-cell;
+	width: 48px;
+	height: 100%;
+	background-color: #FFA700;
+	z-index: 2;
+	color: #F8F8F8;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+#app_content_dynamic {
+	display: table-cell;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	color: #F8F8F8;
+}
+
+*/

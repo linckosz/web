@@ -1,15 +1,24 @@
 {% extends '/bundles/lincko/app/templates/generic/base.twig' %}
 
 {% block content %}
-	<div style="font-size: 14px;padding: 10px;">
-		Hello {{ user }},<br />
-		<br />
-		This page will be the application.<br />
-		I mostly worked on the logic in PHP and JS and a little CSS, 
-		to make our inhouse framework to build new plugins faster and to be easily responsive.<br />
-		Now I start to work on the application layout.
-		<br />
-		<br />
-		<a href="{{ urlFor('home') }}">Back to the website</a>
+<div id="begin_app_application" class="visibility_hidden">
+	<script>
+		JSfiles.push("{{ _filelatest('/lincko/app/scripts/app/application.js') }}");
+	</script>
+	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/app/application.css') }}" type="text/css" />
+</div>
+<div id="app_application_main">
+	<div id="app_application_project">
+		{% include '/bundles/lincko/app/templates/app/project.twig' %}
 	</div>
+	<div id="app_application_content">
+		{% include '/bundles/lincko/app/templates/app/content.twig' %}
+	</div>
+	<div id="app_application_project_block" class="app_application_block maxMobileL"></div>
+</div>
+<div id="app_application_menu">
+	{% include '/bundles/lincko/app/templates/app/menu.twig' %}
+</div>
+<div id="app_application_menu_block" class="app_application_block"></div>
+<div id="end_app_application" class="visibility_hidden"></div>
 {% endblock %}

@@ -86,26 +86,26 @@ class SimpleImage {
 		imagedestroy($this->image); //destroy the picture to free some memory
 	}
 
-	public function output($image_type=IMAGETYPE_JPEG, $compression=75) {
+	public function output($image_type=IMAGETYPE_JPEG, $filename=NULL, $compression=75) {
 		$app = \Slim\Slim::getInstance();
 
 		$app->response->headers->set('Cache-Control', 'no-cache, must-revalidate');
 		$app->response->headers->set('Expires', 'Fri, 12 Aug 2011 14:57:00 GMT');
 		if( $image_type == IMAGETYPE_JPEG ) {
 			$app->response->headers->set('Content-Type', 'image/jpeg');
-			imagejpeg($this->image,$compression);
+			imagejpeg($this->image,$filename,$compression);
 		} else if( $image_type == IMAGETYPE_GIF ) {
 			$app->response->headers->set('Content-Type', 'image/gif');
-			imagegif($this->image);         
+			imagegif($this->image,$filename);         
 		} else if( $image_type == IMAGETYPE_PNG ) {
 			$app->response->headers->set('Content-Type', 'image/png');
-			imagepng($this->image);
+			imagepng($this->image,$filename);
 		} else if( $image_type == IMAGETYPE_WBMP ) {
 			$app->response->headers->set('Content-Type', 'image/jpeg');
-			imagejpeg($this->image,$compression);
+			imagejpeg($this->image,$filename,$compression);
 		} else if( $image_type == IMAGETYPE_BMP ) {
 			$app->response->headers->set('Content-Type', 'image/jpeg');
-			imagejpeg($this->image,$compression);
+			imagejpeg($this->image,$filename,$compression);
 		}
 	}
 

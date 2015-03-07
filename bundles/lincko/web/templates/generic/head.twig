@@ -1,5 +1,6 @@
 {# category 1 #}
 {% set route = _route_name() %}
+<div id="begin_head" class="visibility_hidden">
 <script>
 	JSfiles.push("{{ _filelatest('/lincko/web/scripts/generic/head.js') }}");
 	var head_link = [];
@@ -11,8 +12,7 @@
 	head_link['help'] = "{{ urlFor('help') }}";
 </script>
 <link rel="stylesheet" href="{{ _filelatest('/lincko/web/styles/generic/head.css') }}" type="text/css" />
-<div id='begin_head'></div>
-
+</div>
 <nav class="base_menu head_nav">
 	
 	<div class="minTablet DIVcenter head_ul">
@@ -72,4 +72,4 @@
 
 </nav>
 
-<div id='end_head'></div>
+<div id="end_head" class="visibility_hidden"></div>

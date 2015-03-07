@@ -61,60 +61,8 @@
 	border-style: none;
 }
 
-body {
-	/*background-color: #FFA700;*/
-}
-
 html, body {
 	height: 100%;
-}
-
-/*
- * The folowwing css helps to have a fixed head, then a foot that keep on the bottom of the page, or the bottom of the screen.
- * The scroll bar will be also only into the content div, like that we can add other layer, they will not be affected by the scrolling position.
-*/
-
-.base_wrapper {
-	background-color: #FFFFFF;
-	position: fixed;
-	font-size: 14px;
-	width: 100%;
-	height: 100%;
-	display: block;
-	z-index: 1000;
-	overflow: hidden;
-}
-
-.base_content {
-	width: 100%;
-	top: 48px;
-	bottom: 0px;
-	position: absolute;
-	overflow: hidden;
-	overflow-y: auto;
-}
-
-.base_table {
-	min-height: 100%;
-	width: 100%;
-	border-spacing: 0px;
-	border-style: none;
-	border-collapse: collapse;
-	table-layout: fixed;
-}
-
-.base_table td {
-	padding: 0px;
-	text-align: left;
-	vertical-align: top;
-}
-
-.base_body {
-	min-height: 100%;
-}
-
-.base_foot {
-	height: 1px; /* If not "main_body" will share the height */
 }
 
 /*
@@ -213,6 +161,18 @@ html, .font_sans_serif {
 
 .base_input_text_error {
 	background: linear-gradient(#FFFFFF,#FFCFCF) !important;
+}
+
+.display_none {
+	display: none !important;
+}
+
+.visibility_hidden {
+	width: 0 !important;
+	height: 0 !important;
+	visibility: hidden !important;
+	z-index: -1 !important;
+	position: absolute !important;
 }
 
 /* Minimum Tablet in Landscape */
