@@ -13,12 +13,13 @@
 	home_resize_list.push(["#home_responsive", 100]);
 	home_resize_list.push(["#home_done", 100]);
 
-	function home_resize_elements(){console.log(home_resize_elements);
+	function home_resize_elements(){
 		var height = $("#base_content").height();
 		var height_tp = height;
 		for(var val in home_resize_list){
 			height_tp = Math.floor(height*home_resize_list[val][1]/100);
 			$(home_resize_list[val][0]).css({ "height": height_tp }).css({ "min-height": height_tp });
+			console.log(home_resize_list[val][0]+" => "+$(home_resize_list[val][0]).height());
 		}
 	}
 	home_resize_elements();
