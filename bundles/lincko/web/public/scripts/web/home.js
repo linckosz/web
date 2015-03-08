@@ -35,19 +35,6 @@ var home_cb_complete = function(){
 home_resize_elements();
 $(window).resize(home_resize_elements);
 
-function home_joinus_box_position(){
-	var height = $("#home_main_image").height();
-	var top = height - $("#home_joinus_submit").position().top + 6;
-	$("#home_joinus_box").css({ "top": top });
-
-	if(false && responsive.test("minTablet")){
-		var scrollTop = $("#base_content").scrollTop();
-		if($("#home_joinus_box").position().top<6){
-			top = scrollTop + 6;
-			$("#home_joinus_box").css({ "top": top });
-		}
-	}
-}
 home_joinus_box_position();
 $(window).resize(home_joinus_box_position);
 $("#base_content").on("scroll", home_joinus_box_position); 
