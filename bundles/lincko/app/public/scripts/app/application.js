@@ -35,7 +35,7 @@ function app_application_move_menu(Elem, Blur, Block, force_blur) {
 	var width_child = 320;
 	if(responsive.test("maxMobile")){
 		width = "100%";
-		width_child = $(document).width();
+		width_child = $(window).width();
 	}
 
 	if(Elem.hasClass('app_application_visible')){

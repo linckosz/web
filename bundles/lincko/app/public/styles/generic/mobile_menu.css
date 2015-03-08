@@ -22,7 +22,7 @@
 	background-image: url('/lincko/web/images/generic/mobile_menu/top.png');
 	background-repeat: repeat-x;
 	position: fixed;
-	font-family: "Comic Sans MS", Tahoma, Verdana, Helvetica, "Nimbus Sans L", "URW Gothic L", "Lucida Grande", Geneva, "DejaVu Sans", "Microsoft Sans Serif", sans-serif;
+	/*font-family: "Comic Sans MS", Tahoma, Verdana, Helvetica, "Nimbus Sans L", "URW Gothic L", "Lucida Grande", Geneva, "DejaVu Sans", "Microsoft Sans Serif", sans-serif;*/
 	overflow: hidden;
 }
 

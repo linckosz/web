@@ -13,7 +13,6 @@
 		home_img['home_done'] = "{{ _filelatest('/lincko/web/images/web/home/thewall_third_bw_60.jpg') }}";
 	</script>
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/web/styles/web/home.css') }}" type="text/css" />
-	{% include '/bundles/lincko/web/templates/web/styles/home.css.twig' %}
 </div>
 <div class="home_top_div minTablet"></div>
 <div class="home_joinus_box" id="home_joinus_box">
@@ -97,5 +96,19 @@
 Take control of tasks across different projects and ensure that today's tasks, and tomorrows, get done. #}</span>
 	</div>
 </div>
-<div id="end_home" class="visibility_hidden"></div>
+<div id="end_home" class="visibility_hidden">
+	<script>
+		/*
+		function home_resize_elements(){
+			var height = $("#base_content").height();
+			var height_tp = height;
+			for(var val in home_resize_list){
+				height_tp = Math.floor(height*home_resize_list[val][1]/100);
+				$(home_resize_list[val][0]).css({ "height": height_tp }).css({ "min-height": height_tp });
+			}
+		}
+		home_resize_elements();
+		*/
+	</script>
+</div>
 {% endblock %}

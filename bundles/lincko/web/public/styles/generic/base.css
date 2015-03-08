@@ -228,15 +228,3 @@ html, .font_sans_serif {
 	position: absolute !important;
 }
 
-/* Minimum Tablet in Landscape */
-@media only screen and (min-width: 901px){
-	.base_menu {
-		height: 60px;
-	}
-	.base_menu_line {
-		line-height: 60px;
-	}
-	.base_content {
-		top: 60px;
-	}
-}

@@ -143,3 +143,6 @@ $("#home_joinus_submit").keydown(function(){
 $("#home_joinus_submit").keyup(function(){
 	$('#home_joinus_submit').removeClass('home_joinus_submit_active');
 });
+
+$("#home_main_image").css("background-image","url("+home_img['home_main_image']+")");
+$("#home_done").css("background-image","url("+home_img['home_done']+")");
