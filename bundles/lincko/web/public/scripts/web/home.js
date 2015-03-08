@@ -32,22 +32,6 @@ var home_cb_complete = function(){
 	$('#home_joinus_submit_progress').hide();
 };
 
-var home_resize_list = [];
-home_resize_list.push(["#home_main_image", 70]);
-home_resize_list.push(["#home_great_projects", 30]);
-home_resize_list.push(["#home_tools", 100]);
-home_resize_list.push(["#home_responsive", 100]);
-home_resize_list.push(["#home_done", 100]);
-
-
-function home_resize_elements(){
-	var height = $("#base_content").height();
-	var height_tp = height;
-	for(var val in home_resize_list){
-		height_tp = Math.floor(height*home_resize_list[val][1]/100);
-		$(home_resize_list[val][0]).css({ "height": height_tp }).css({ "min-height": height_tp });
-	}
-}
 home_resize_elements();
 $(window).resize(home_resize_elements);
 
