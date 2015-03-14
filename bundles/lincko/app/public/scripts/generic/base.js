@@ -1,6 +1,6 @@
 var base_input_field = {};
 base_input_field.firstname = {
-	format: Lincko.Translation.get('web', 4, 'html'), //First name format: - 104 characters max
+	format: Lincko.Translation.get('app', 4, 'html'), //First name format: - 104 characters max
 	pattern: "^\\S{1,104}$",
 	required: true,
 	maxlength: 104,
@@ -13,7 +13,7 @@ base_input_field.firstname = {
 	},
 }
 base_input_field.lastname = {
-	format: Lincko.Translation.get('web', 5, 'html'), //Last name format: - 104 characters max
+	format: Lincko.Translation.get('app', 5, 'html'), //Last name format: - 104 characters max
 	pattern: "^\\S{1,104}$",
 	required: true,
 	maxlength: 104,
@@ -26,7 +26,7 @@ base_input_field.lastname = {
 	},
 }
 base_input_field.username = {
-	format: Lincko.Translation.get('web', 3, 'html'), //Username format: - 104 characters max - Without space
+	format: Lincko.Translation.get('app', 3, 'html'), //Username format: - 104 characters max - Without space
 	pattern: "^\\S{1,104}$",
 	required: true,
 	maxlength: 104,
@@ -39,7 +39,7 @@ base_input_field.username = {
 	},
 }
 base_input_field.email = {
-	format: Lincko.Translation.get('web', 1, 'html'), //Email address format: - {name}@{domain}.{ext} - 191 characters maxi
+	format: Lincko.Translation.get('app', 1, 'html'), //Email address format: - {name}@{domain}.{ext} - 191 characters maxi
 	pattern: "^.{1,100}@.*\\..{2,4}$",
 	required: true,
 	maxlength: 191,
@@ -54,7 +54,7 @@ base_input_field.email = {
 	},
 }
 base_input_field.password = {
-	format: Lincko.Translation.get('web', 2, 'html'), //Password format: - Between 6 and 60 characters - Alphanumeric
+	format: Lincko.Translation.get('app', 2, 'html'), //Password format: - Between 6 and 60 characters - Alphanumeric
 	pattern: "^[\\w\\d]{6,60}$",
 	required: true,
 	maxlength: 60,
@@ -67,7 +67,7 @@ base_input_field.password = {
 	},
 }
 base_input_field.captcha = {
-	format: Lincko.Translation.get('web', 7, 'html'), //Captcha format: - Between 1 and 6 characters - Number
+	format: Lincko.Translation.get('app', 7, 'html'), //Captcha format: - Between 1 and 6 characters - Number
 	pattern: "^\\d{1,6}$",
 	required: true,
 	maxlength: 6,
@@ -77,6 +77,18 @@ base_input_field.captcha = {
 	},
 	error_msg: function(){
 		return { msg: this.format, field: 'captcha' };
+	},
+}
+base_input_field.search = {
+	format: Lincko.Translation.get('app', 4, 'html'), //Search format: - Between 2 and 255 characters
+	pattern: "^\\S{2,255}$",
+	maxlength: 255,
+	valid: function(text){
+		var regex_1 = /^.{2,255}$/g;
+		return regex_1.test(text);
+	},
+	error_msg: function(){
+		return { msg: this.format, field: 'search' };
 	},
 }
 
@@ -99,8 +111,13 @@ function base_format_form(){
 		}
 	}
 
-	$('.submit_progress_bar').width(function(){
+	base_format_form_single($('.submit_progress_bar'));
+}
+base_format_form();
+
+//This function is only for IE which gives the wrong width when the element is hidden
+function base_format_form_single(Elem){
+	Elem.width(function(){
 		return $(this).prev().outerWidth() - 8;
 	});
 }
-base_format_form();

@@ -13,7 +13,6 @@
 	width: 0;
 	height: 100%;
 	min-height: 100%;
-	background-color: #FFFFFF;
 	overflow: hidden;
 	z-index: 1100;
 	visibility: hidden;
@@ -28,8 +27,6 @@
 	z-index: 1;
 	overflow: hidden;
 	vertical-align: top;
-	background-image: url("/lincko/web/images/web/home/thewall_bw_60.jpg");
-	background-repeat: repeat;
 }
 
 #app_application_menu {
@@ -41,7 +38,6 @@
 	width: 0;
 	height: 100%;
 	min-height: 100%;
-	background-color: red;
 	overflow: hidden;
 	z-index: 1200;
 	visibility: hidden;

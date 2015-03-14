@@ -99,11 +99,16 @@ function base_format_form(){
 		}
 	}
 
-	$('.submit_progress_bar').width(function(){
+	base_format_form_single($('.submit_progress_bar'));
+}
+base_format_form();
+
+//This function is only for IE which gives the wrong width when the element is hidden
+function base_format_form_single(Elem){
+	Elem.width(function(){
 		return $(this).prev().outerWidth() - 8;
 	});
 }
-base_format_form();
 
 var IMGcaptcha = new Image();
 IMGcaptcha.src = "/captcha/4/320/120";

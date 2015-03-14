@@ -24,6 +24,7 @@ var home_cb_error = function(xhr_err, ajaxOptions, thrownError){
 var home_cb_begin = function(){
 	home_hide_error();
 	$(document.body).css('cursor', 'progress');
+	base_format_form_single($('#home_joinus_submit_progres'));
 	$('#home_joinus_submit_progress').show();
 };
 

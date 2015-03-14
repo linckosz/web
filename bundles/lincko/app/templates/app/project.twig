@@ -5,15 +5,105 @@
 	</script>
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/app/project.css') }}" type="text/css" />
 </div>
-<div class="app_project_content app_application_width_child">
-	<div class="app_project_div_close app_application_width">
-		<img id="app_project_close" class="maxMobileL" src="{{ _filelatest('/lincko/app/images/generic/close.png') }}" alt="{{ _trans('app', 2, 1, 'html') }}{# Close #}" title="{{ _trans('app', 2, 1, 'html') }}{# Close #}" />
-	</div>
+<div class="app_project_content app_application_width_child base_color_main_bg">
+	<img id="app_project_close" class="maxMobileL" src="{{ _filelatest('/lincko/app/images/app/project/back.png') }}" alt="{{ _trans('app', 2, 1, 'html') }}{# Close #}" title="{{ _trans('app', 2, 1, 'html') }}{# Close #}" />
 	<div class="app_project_div_content app_application_width_child overthrow">
-		<br /><br /><br /><br /><br />
-		Project Project Project Project Project Project Project Project Project Project Project Project Project Project Project Project Project Project Project Project Project
-		<br />Project<br />Project<br />Project<br />Project<br />Project<br />Project<br />Project<br />Project<br />Project<br />Project<br />Project<br />Project<br />
-		Project Project Project Project Project Project Project Project Project Project Project Project Project Project Project Project Project Project Project Project Project
+		<div class="app_project_user">
+			<img id="app_project_user_image" src="{{ _filelatest('/lincko/app/images/app/project/user.png') }}" />
+			<div>
+				<div id="app_project_user_name">Jim Bilek</div>
+				<div id="app_project_user_email">bruno.martin@octointernational.edu.com.org</div>
+			</div>
+		</div>
+		<div class="app_project_line"><div></div></div>
+		<div class="app_project_space"></div>
+		<div>
+			<label class="" for="app_project_search">
+				<input type="text" id="app_project_search" name="search" title="{{ _trans('app', 2, 3, 'html') }}{# Search #}"/>
+				<img id="app_project_search_img" src="{{ _filelatest('/lincko/app/images/app/project/search.png') }}" />
+			</label>
+			
+			<img id="app_project_settings_img" src="{{ _filelatest('/lincko/app/images/app/project/settings.png') }}" alt="{{ _trans('app', 2, 2, 'html') }}{# Settings #}" title="{{ _trans('app', 2, 2, 'html') }}{# Settings #}" />
+		</div>
+		<div class="app_project_space"></div>
+		<div class="app_project_line"><div></div></div>
+		<div class="app_project_space"></div>
+		<div class="app_project_tab">
+			<div id="app_project_placeholder">
+				<div>
+					{{ _trans('app', 2, 4, 'html') }}{# Placeholder #}
+				</div>
+			</div>
+		</div>
+		<div class="app_project_space"></div>
+		<div class="app_project_line"><div></div></div>
+		<div class="app_project_space"></div>
+		<div class="app_project_tab_title">
+			<img src="{{ _filelatest('/lincko/app/images/app/project/project.png') }}" />
+			{{ _trans('app', 2, 7, 'html') }}{# Projects #}
+		</div>
+		<div class="app_project_tab">
+			<div id="app_project_project_01">
+				<div>
+					Vertical cylinder
+				</div>
+			</div>
+			<div id="app_project_project_02">
+				<div>
+					ytytytytytytytytytytytytytytytytytytytytytytytytytytytytytytytytytytytytytytytytytytytytytytytyt
+				</div>
+			</div>
+			<div id="app_project_project_02">
+				<div>
+					Smartwatch PCB
+				</div>
+			</div>
+			<div id="app_project_project_new">
+				<div>
+					<img class="app_project_project_new_img" src="{{ _filelatest('/lincko/app/images/app/project/new.png') }}" />
+				</div>
+			</div>
+			<div id="app_project_project_02">
+				<div>
+					{{ _trans('app', 2, 5, 'html') }}{# All #}
+					<img class="app_project_project_all_img" src="{{ _filelatest('/lincko/app/images/app/project/arrow_right.png') }}" />
+				</div>
+			</div>
+		</div>
+		<div class="app_project_space"></div>
+		<div class="minMobileL">
+			<div class="app_project_line"><div></div></div>
+			<div class="app_project_space"></div>
+			<div class="app_project_tab_title">
+				<img src="{{ _filelatest('/lincko/app/images/app/project/latest.png') }}" />
+				{{ _trans('app', 2, 6, 'html') }}{# Recent updates #}
+			</div>
+			<div class="app_project_info">
+				<div id="app_project_info_title">
+					Some title
+				</div>
+				<div id="app_project_info_content">
+					Vertical cylinder Vertical cylinderVertical cylinderVertical cylinderVertical cylinderVertical cylinderVertical cylinder<br />
+					1 - bla bla bla Vertical cylinderVertical cylinderVertical cylinderVertical cylinderVertical cylinder<br />
+					2 - bla bla bla Vertical cylinderVertical cylinderVertical cylinderVertical cylinderVertical cylinder<br />
+					3 - bla bla bla Vertical cylinderVertical cylinderVertical cylinderVertical cylinderVertical cylinder<br />
+					4 - bla bla bla Vertical cylinderVertical cylinderVertical cylinderVertical cylinderVertical cylinder<br />
+					5 - bla bla bla Vertical cylinderVertical cylinderVertical cylinderVertical cylinderVertical cylinder<br />
+				</div>
+			</div>
+		</div>
+		<div class="app_project_quick_access">
+			<div class="app_project_quick_access_title">
+				{{ _trans('app', 2, 8, 'html') }}{# Quick access #}
+				<input type="file" accept="image/*" capture="camera" id="capture">
+			</div>
+			<img class="app_project_quick_access_img" src="{{ _filelatest('/lincko/app/images/app/project/quick_note_1.png') }}" />
+			<img class="app_project_quick_access_img" src="{{ _filelatest('/lincko/app/images/app/project/quick_task_2.png') }}" />
+			<img class="app_project_quick_access_img isMobile" src="{{ _filelatest('/lincko/app/images/app/project/quick_cam_3.png') }}" />
+			<img class="app_project_quick_access_img noMobile" src="{{ _filelatest('/lincko/app/images/app/project/quick_upload_2.png') }}" />
+			<img class="app_project_quick_access_img" src="{{ _filelatest('/lincko/app/images/app/project/quick_calendar_1.png') }}" />
+			<img class="app_project_quick_access_img" src="{{ _filelatest('/lincko/app/images/app/project/quick_chat_2.png') }}" />
+		</div>
 	</div>
 </div>
 <div id="end_app_project" class="visibility_hidden"></div>

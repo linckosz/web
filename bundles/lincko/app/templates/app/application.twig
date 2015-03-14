@@ -1,6 +1,6 @@
 {% extends '/bundles/lincko/app/templates/generic/base.twig' %}
 
-{% block content %}
+{% block app_application %}
 <div id="begin_app_application" class="visibility_hidden">
 	<script>
 		JSfiles.push("{{ _filelatest('/lincko/app/scripts/app/application.js') }}");
@@ -11,14 +11,13 @@
 	<div id="app_application_project">
 		{% include '/bundles/lincko/app/templates/app/project.twig' %}
 	</div>
-	<div id="app_application_content">
+	<div id="app_application_content"  onresize="console.log('ok')">
 		{% include '/bundles/lincko/app/templates/app/content.twig' %}
 	</div>
 	<div id="app_application_project_block" class="app_application_block maxMobileL"></div>
 </div>
-<div id="app_application_menu">
-	{% include '/bundles/lincko/app/templates/app/menu.twig' %}
+<div id="app_application_menu_block" class="app_application_block">
+	{# I am thinking about it, but this block might be there to display sub menu #}
 </div>
-<div id="app_application_menu_block" class="app_application_block"></div>
 <div id="end_app_application" class="visibility_hidden"></div>
 {% endblock %}

@@ -131,7 +131,7 @@ html, body {
 
 /* SANS-SERIF */
 html, .font_sans_serif {
-	font-family: Tahoma, Verdana, Helvetica, "Nimbus Sans L", "URW Gothic L", "Lucida Grande", Geneva, "DejaVu Sans", "Microsoft Sans Serif", sans-serif;
+	font-family: Roboto, Tahoma, Verdana, Helvetica, "Nimbus Sans L", "URW Gothic L", "Lucida Grande", Geneva, "DejaVu Sans", "Microsoft Sans Serif", sans-serif;
 }
 
 /* MONOSPACE */

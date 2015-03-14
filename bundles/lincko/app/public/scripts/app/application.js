@@ -52,6 +52,9 @@ function app_application_move_menu(Elem, Blur, Block, force_blur) {
 					});
 					if(wrapper_broswer('webkit')){ Blur.velocity({ blur: 0 }, time); }
 				},
+				progress: function(){
+					$(window).trigger('resize');
+				},
 				complete: function(){
 					Elem.removeClass('app_application_visible');
 					Blur.removeClass('app_application_blur');
@@ -74,6 +77,9 @@ function app_application_move_menu(Elem, Blur, Block, force_blur) {
 					if(responsive.test("maxMobileL") || force_blur){
 						if(wrapper_broswer('webkit')){ Blur.velocity({ blur: 4 }, time); }
 					}
+				},
+				progress: function(){
+					$(window).trigger('resize');
 				},
 				complete: function(){
 					Elem.addClass('app_application_width');

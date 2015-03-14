@@ -1,16 +1,11 @@
-.app_project_div_close {
-	position: absolute;
-	height: 0;
-	text-align: right;
-	z-index: 2;
-}
-
 #app_project_close {
-	margin-top: 6px;
-	margin-right: 6px;
-	width: 24px;
+	padding: 6px 6px 12px 12px;
+	width: 20px;
 	cursor: pointer; cursor: hand;
 	z-index: 2;
+	position: absolute;
+	right: 0;
+	top: 0;
 }
 
 .app_project_content {
@@ -18,17 +13,290 @@
 	height: 100%;
 	min-height: 100%;
 	top: 0;
-	background-color: blue;
 	overflow: hidden;
 	float: right;
+	font-size: 14px;
 }
 
 .app_project_div_content {
 	position: absolute;
 	overflow: hidden;
-	overflow-y: auto;
+	height: 100%;
+	width: 100%;
 }
 
 .app_project_width {
 	width: 320px;
+}
+
+#app_project_user_image {
+	margin: 4px 16px 0px 16px;
+	height: 40px;
+	vertical-align: middle;
+	display: inline-block;
+}
+
+.app_project_user {
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.app_project_user > div {
+	display: inline-block;
+	vertical-align: bottom;
+	overflow: hidden;
+}
+
+#app_project_user_name {
+	font-weight: bold;
+	font-size: 18px;
+	vertical-align: middle;
+}
+
+#app_project_user_email {
+	color: rgba(255, 255, 255, 0.6);
+	font-size: 11px;
+}
+
+.app_project_line {
+	display: block;
+	height: 1px;
+	width: 100%;
+	padding: 4px 0;
+}
+
+.app_project_line > div {
+	height: 1px;
+	width: 96%;
+	margin: auto;
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+.app_project_space {
+	height: 6px;
+}
+
+.app_project_label_inside {
+	display: block;
+	font-size: 16px;
+	cursor: text;
+	margin-bottom: 10px;
+}
+
+#app_project_search {
+	background-color: transparent;
+	height: 20px;
+	padding: 2px 4px 2px 28px;
+	margin-left: 5%;
+	width: 60%;
+	border: 2px solid;
+	border-radius: 4px;
+	border-color: transparent;
+	outline: 0;
+	color: #FFFFFF;
+	z-index: 2;
+	font-size: 12px;
+	cursor: text;
+	position: absolute;
+}
+
+#app_project_search:hover, #app_project_search:active, #app_project_search:focus {
+	background-color: rgba(255, 255, 255, 0.3);
+}
+
+#app_project_search:active, #app_project_search:focus {
+	border-color: rgba(255, 255, 255, 0.6);
+}
+
+#app_project_settings_img {
+	position: absolute;
+	right: 16px;
+	height: 20px;
+	padding: 4px;
+	cursor: pointer; cursor: hand;
+}
+
+#app_project_search_img {
+	margin-left: 5%;
+	height: 20px;
+	padding: 4px;
+	padding-left: 6px;
+	cursor: text;
+}
+
+.app_project_tab_title {
+	width: 90%;
+	text-align: center;
+	padding-bottom: 4px;
+	font-size: 16px;
+	overflow: hidden;
+	white-space: nowrap;
+	margin: 1px auto;
+	filter:alpha(opacity=90);
+	opacity:0.9;
+	-moz-opacity:0.9;
+	-khtml-opacity:0.9;
+}
+
+.app_project_tab_title > img {
+	vertical-align: baseline;
+	height: 14px;
+	padding: 0 4px 0 0;
+}
+
+.app_project_tab > div {
+	width: 90%;
+	padding: 8px 0;
+	background-color: rgba(255, 255, 255, 0.2);
+	font-size: 16px;
+	overflow: hidden;
+	white-space: nowrap;
+	cursor: pointer; cursor: hand;
+	border: 2px solid transparent;
+	margin: 1px auto;
+}
+
+.app_project_tab > div:hover {
+	border-color: rgba(255, 255, 255, 0.3);
+}
+
+.app_project_tab > div:active {
+	background-color: rgba(255, 255, 255, 0.35);
+}
+
+.app_project_tab > div:first-of-type {
+	border-top-right-radius: 6px;
+	border-top-left-radius: 6px;
+}
+
+.app_project_tab > div:last-of-type {
+	border-bottom-right-radius: 6px;
+	border-bottom-left-radius: 6px;
+}
+
+.app_project_tab > div > div {
+	margin-left: 16px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.app_project_project_all_img {
+	height: 20px;
+	margin-right: 8px;
+	vertical-align: baseline;
+	float: right;
+}
+
+.app_project_project_new_img {
+	height: 20px;
+	vertical-align: middle;
+	filter:alpha(opacity=40);
+	opacity:0.4;
+	-moz-opacity:0.4;
+	-khtml-opacity:0.4;
+}
+
+#app_project_project_new {
+	text-align: center;
+}
+
+#app_project_project_new:hover > div > img {
+	filter:alpha(opacity=60);
+	opacity:0.6;
+	-moz-opacity:0.6;
+	-khtml-opacity:0.6;
+}
+
+.app_project_info {
+	width: 90%;
+	padding: 0;
+	font-size: 11px;
+	line-height: 14px;
+	overflow: hidden;
+	white-space: nowrap;
+	cursor: pointer; cursor: hand;
+	margin: 0 auto;
+	border-radius: 6px;
+	border: 2px solid transparent;
+}
+
+.app_project_info:hover {
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+.app_project_info:active {
+	background-color: rgba(255, 255, 255, 0.35);
+}
+
+#app_project_info_title {
+	font-weight: bold;
+	border-bottom: 1px solid transparent;
+	padding: 1px 2px;
+	margin: 0 6px 0 8px;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.app_project_info:hover > #app_project_info_title {
+	border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+#app_project_info_content {
+	font-weight: lighter;
+	margin: 0 6px 0 16px;
+	padding: 0 0 4px 0;
+	white-space: normal;
+	max-height: 26px;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+
+.app_project_quick_access {
+	position: absolute;
+	width: 100%;
+	bottom: 0;
+	text-align: center;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.app_project_quick_access_title {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+.app_project_quick_access_img {
+	height: 30px;
+	width: 30px;
+	padding: 6px;
+	margin: 8px 4px;
+	border: 2px	solid #FFFFFF;
+	border-radius: 8px;
+	filter:alpha(opacity=92);
+	opacity:0.92;
+	-moz-opacity:0.92;
+	-khtml-opacity:0.92;
+	cursor: pointer; cursor: hand;
+}
+
+.app_project_quick_access_img:hover, .app_project_quick_access_img:active {
+	filter:alpha(opacity=100);
+	opacity:1.0;
+	-moz-opacity:1.0;
+	-khtml-opacity:1.0;
+	-webkit-box-shadow: 0px 0px 8px 2px rgba(255,255,255,0.6);
+	-moz-box-shadow: 0px 0px 8px 2px rgba(255,255,255,0.6);
+	box-shadow: 0px 0px 8px 2px rgba(255,255,255,0.6);
+}
+
+/* Mobile phone in Portrait maximum */
+@media only screen and (max-width: 479px), only screen and (min-width: 901px) and (max-width: 1280px){
+	.app_project_space {
+		height: 4px;
+	}
+	.app_project_tab > div {
+		padding: 6px 0;
+	}
 }
