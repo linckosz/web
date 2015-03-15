@@ -125,7 +125,9 @@ function sendAction(param, method, action, cb_success, cb_error, cb_begin, cb_co
 
 $(function() {
 	//Disable submit action of all forms
-	$('form').on('submit', function(e) {
+	//Enable only submit of uploading files forms (multipart/form-data) because files cannot be sent by Ajax
+	$("form[enctype!='multipart/form-data']").on('submit', function(e) {
 		 e.preventDefault(); //Disable submit action
 	});
 });
+

@@ -20,3 +20,11 @@ $app->get('/', function () use($app) {
 
 })
 ->name('root');
+
+$app->post('/file/upload', function () use($app) {
+	echo 'ok';
+});
+
+$app->post('/file/uploado', function () use($app) {
+	echo 'oko';
+});

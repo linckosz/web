@@ -102,7 +102,7 @@
 			<img id="app_project_quick_access_calendar" class="app_project_quick_access_img" src="{{ _filelatest('/lincko/app/images/app/project/quick_calendar.png') }}" />
 			<img id="app_project_quick_access_chat" class="app_project_quick_access_img" src="{{ _filelatest('/lincko/app/images/app/project/quick_chat.png') }}" />
 		</div>
-		<form id="app_project_quick_upload_form" action="file/upload" method="post" enctype="multipart/form-data" onsubmit="return sendForm(this, account_joinus_cb_success, account_joinus_cb_error, account_joinus_cb_begin, account_joinus_cb_complete);">
+		<form id="app_project_quick_upload_form" action="file/upload" method="post" enctype="multipart/form-data" onsubmit="alert('ok');return true;">
 			<input type="file" accept="video/*" capture="camcorder" id="app_project_quick_upload_form_video">
 			<input type="file" accept="image/*" capture="camera" id="app_project_quick_upload_form_photo">
 			<input type="file" id="app_project_quick_upload_form_files"> 

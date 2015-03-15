@@ -60,7 +60,9 @@ $('#app_project_quick_upload_photo').click(function(){
 	bridgeit.camera(
 		'cameraBtn',
 		'onAfterPhotoCapture',
-		{postURL:'http://api.bridgeit.mobi/echo/'}
+		{
+			postURL:'file/uploado'
+		}
 	);
 	//If teh device does not support the function, we use normal input method
 	if(!device_supported){
@@ -70,3 +72,4 @@ $('#app_project_quick_upload_photo').click(function(){
 	}
 	device_supported = true; //This is important to keep device_supported at TRUE for next call
 });
+
