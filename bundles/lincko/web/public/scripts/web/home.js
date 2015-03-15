@@ -16,9 +16,7 @@ var home_cb_success = function(msg, err){
 var home_cb_error = function(xhr_err, ajaxOptions, thrownError){
 	var msgtp = Lincko.Translation.get('wrapper', 1, 'html'); //Communication error
 	$('#home_joinus_error').html(msgtp);
-	if($('#home_joinus_error').is(':hidden')){
-		$("#home_joinus_error").velocity("transition.slideDownIn", { duration: 500 });
-	}
+	$("#home_joinus_error").velocity("transition.slideDownIn", { duration: 500 });
 };
 
 var home_cb_begin = function(){

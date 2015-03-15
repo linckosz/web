@@ -21,9 +21,7 @@ var account_signin_cb_success = function(msg, err){
 	if(typeof msg.msg !== 'undefined') { msgtp = php_nl2br(msg.msg); }
 	if(err){
 		$('#account_error').html(msgtp);
-		if($('#account_error').is(':hidden')){
-			$("#account_error").velocity("transition.slideDownIn", { duration: 500 });
-		}
+		$("#account_error").velocity("transition.slideDownIn", { duration: 500 });
 		$("#account_signin_form input[name="+field+"]").addClass('base_input_text_error').focus();
 	} else {
 		window.location.href = account_link['root'];
