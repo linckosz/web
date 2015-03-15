@@ -48,6 +48,8 @@
 	width: 320px !important;
 }
 
+.app_application_show {}
+
 .app_application_visible {
 	visibility: visible !important;
 }

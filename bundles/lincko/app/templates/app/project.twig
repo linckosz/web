@@ -5,7 +5,7 @@
 	</script>
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/app/project.css') }}" type="text/css" />
 </div>
-<div class="app_project_content app_application_width_child base_color_main_bg">
+<div id="app_project_content" class="app_project_content app_application_width_child base_color_main_bg">
 	<img id="app_project_close" class="maxMobileL" src="{{ _filelatest('/lincko/app/images/app/project/back.png') }}" alt="{{ _trans('app', 2, 1, 'html') }}{# Close #}" title="{{ _trans('app', 2, 1, 'html') }}{# Close #}" />
 	<div class="app_project_div_content app_application_width_child overthrow">
 		<div class="app_project_user">
@@ -95,14 +95,20 @@
 		<div class="app_project_quick_access">
 			<div class="app_project_quick_access_title">
 				{{ _trans('app', 2, 8, 'html') }}{# Quick access #}
-				<input type="file" accept="image/*" capture="camera" id="capture">
 			</div>
-			<img class="app_project_quick_access_img" src="{{ _filelatest('/lincko/app/images/app/project/quick_note_1.png') }}" />
-			<img class="app_project_quick_access_img" src="{{ _filelatest('/lincko/app/images/app/project/quick_task_2.png') }}" />
-			<img class="app_project_quick_access_img isMobile" src="{{ _filelatest('/lincko/app/images/app/project/quick_cam_3.png') }}" />
-			<img class="app_project_quick_access_img noMobile" src="{{ _filelatest('/lincko/app/images/app/project/quick_upload_2.png') }}" />
-			<img class="app_project_quick_access_img" src="{{ _filelatest('/lincko/app/images/app/project/quick_calendar_1.png') }}" />
-			<img class="app_project_quick_access_img" src="{{ _filelatest('/lincko/app/images/app/project/quick_chat_2.png') }}" />
+			<img id="app_project_quick_access_note" class="app_project_quick_access_img" src="{{ _filelatest('/lincko/app/images/app/project/quick_note.png') }}" />
+			<img id="app_project_quick_access_task" class="app_project_quick_access_img" src="{{ _filelatest('/lincko/app/images/app/project/quick_task.png') }}" />
+			<img id="app_project_quick_access_upload" class="app_project_quick_access_img" src="{{ _filelatest('/lincko/app/images/app/project/quick_upload.png') }}" />
+			<img id="app_project_quick_access_calendar" class="app_project_quick_access_img" src="{{ _filelatest('/lincko/app/images/app/project/quick_calendar.png') }}" />
+			<img id="app_project_quick_access_chat" class="app_project_quick_access_img" src="{{ _filelatest('/lincko/app/images/app/project/quick_chat.png') }}" />
+		</div>
+		<div id="app_project_quick_upload">
+			<div class="app_project_quick_upload_icons">
+				<img id="app_project_quick_upload_video" class="app_project_quick_upload_img app_project_quick_upload_img_side" src="{{ _filelatest('/lincko/app/images/app/project/quick_video.png') }}" />
+				<img id="app_project_quick_upload_photo" class="app_project_quick_upload_img" src="{{ _filelatest('/lincko/app/images/app/project/quick_photo.png') }}" />
+				<img id="app_project_quick_upload_files" class="app_project_quick_upload_img app_project_quick_upload_img_side" src="{{ _filelatest('/lincko/app/images/app/project/quick_files.png') }}" />
+			</div>
+			<img class="app_project_quick_upload_band" src="{{ _filelatest('/lincko/app/images/app/project/quick_band.png') }}" />
 		</div>
 	</div>
 </div>

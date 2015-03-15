@@ -281,7 +281,22 @@
 	cursor: pointer; cursor: hand;
 }
 
-.app_project_quick_access_img:hover, .app_project_quick_access_img:active {
+.app_project_quick_upload_img {
+	height: 32px;
+	width: 32px;
+	padding: 10px;
+	margin: 5px 4px;
+	border: 2px	solid #FFFFFF;
+	border-radius: 100%;
+	vertical-align: top;
+	filter:alpha(opacity=92);
+	opacity:0.92;
+	-moz-opacity:0.92;
+	-khtml-opacity:0.92;
+	cursor: pointer; cursor: hand;
+}
+
+.app_project_quick_access_img:hover, .app_project_quick_access_img:active, .app_project_quick_upload_img:hover, .app_project_quick_upload_img:active {
 	filter:alpha(opacity=100);
 	opacity:1.0;
 	-moz-opacity:1.0;
@@ -289,6 +304,40 @@
 	-webkit-box-shadow: 0px 0px 8px 2px rgba(255,255,255,0.6);
 	-moz-box-shadow: 0px 0px 8px 2px rgba(255,255,255,0.6);
 	box-shadow: 0px 0px 8px 2px rgba(255,255,255,0.6);
+}
+
+.app_project_quick_access_img:active, .app_project_quick_upload_img:active {
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+#app_project_quick_upload {
+	position: absolute;
+	z-index: 2;
+	bottom: 0;
+	margin-bottom: 58px;
+	text-align: center;
+	white-space: nowrap;
+	overflow: hidden;
+	width: 100%;
+	display: none;
+}
+
+.app_project_quick_upload_icons {
+	position: absolute;
+	width: 100%;
+	z-index: 3;
+}
+
+.app_project_quick_upload_img_side {
+	margin-top: 16px;
+}
+
+.app_project_quick_upload_band {
+	width: 226px;
+	filter:alpha(opacity=30);
+	opacity:0.30;
+	-moz-opacity:0.30;
+	-khtml-opacity:0.30;
 }
 
 /* Mobile phone in Portrait maximum */
