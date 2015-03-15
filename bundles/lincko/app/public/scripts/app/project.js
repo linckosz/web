@@ -57,6 +57,7 @@ bridgeit.notSupported = function(id, command)  {
 };
 
 $('#app_project_quick_upload_photo').click(function(){
+	/*
 	bridgeit.camera(
 		'cameraBtn',
 		'onAfterPhotoCapture',
@@ -70,6 +71,7 @@ $('#app_project_quick_upload_photo').click(function(){
 		//$("#app_project_quick_upload_form_photo").focus().val($("#app_project_quick_upload_form_photo").val() + 'a');
 
 	}
+	*/
 	device_supported = true; //This is important to keep device_supported at TRUE for next call
 });
 
