@@ -287,8 +287,9 @@
 	padding: 10px;
 	margin: 5px 4px;
 	border: 2px	solid #FFFFFF;
-	border-radius: 100%;
+	border-radius: 32px;
 	vertical-align: top;
+	z-index: 4;
 	filter:alpha(opacity=92);
 	opacity:0.92;
 	-moz-opacity:0.92;
