@@ -92,6 +92,9 @@
 				</div>
 			</div>
 		</div>
+
+		<iframe id="app_project_quick_file_iframe" name="app_project_quick_file_iframe" src="https://file.{{ domain }}:8443/file"></iframe>
+
 		<div class="app_project_quick_access">
 			<div class="app_project_quick_access_title">
 				{{ _trans('app', 2, 8, 'html') }}{# Quick access #}
@@ -102,22 +105,17 @@
 			<img id="app_project_quick_access_calendar" class="app_project_quick_access_img" src="{{ _filelatest('/lincko/app/images/app/project/quick_calendar.png') }}" />
 			<img id="app_project_quick_access_chat" class="app_project_quick_access_img" src="{{ _filelatest('/lincko/app/images/app/project/quick_chat.png') }}" />
 		</div>
-		<form id="app_project_quick_upload_form" action="file/upload" method="post" enctype="multipart/form-data" onsubmit="alert('ok');return true;">
-			<input type="file" accept="video/*" capture="camcorder" id="app_project_quick_upload_form_video">
-			<input type="file" accept="image/*" capture="camera" id="app_project_quick_upload_form_photo">
-			<input type="file" id="app_project_quick_upload_form_files"> 
-		</form>
+		<div id="app_project_quick_upload_block">
+		</div>
 		<div id="app_project_quick_upload">
 			<div class="app_project_quick_upload_icons">
-				<label for="app_project_quick_upload_form_video">
+
 					<img id="app_project_quick_upload_video" class="app_project_quick_upload_img app_project_quick_upload_img_side" src="{{ _filelatest('/lincko/app/images/app/project/quick_video.png') }}" />
-				</label>
-				<label for="app_project_quick_upload_form_photo">
+
 					<img id="app_project_quick_upload_photo" class="app_project_quick_upload_img" src="{{ _filelatest('/lincko/app/images/app/project/quick_photo.png') }}" />
-				</label>
-				<label for="app_project_quick_upload_form_files">
+
 					<img id="app_project_quick_upload_files" class="app_project_quick_upload_img app_project_quick_upload_img_side" src="{{ _filelatest('/lincko/app/images/app/project/quick_files.png') }}" />
-				</label>
+
 			</div>
 			<img class="app_project_quick_upload_band" src="{{ _filelatest('/lincko/app/images/app/project/quick_band.png') }}" />
 		</div>

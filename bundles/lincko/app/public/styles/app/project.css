@@ -2,7 +2,7 @@
 	padding: 6px 6px 12px 12px;
 	width: 20px;
 	cursor: pointer; cursor: hand;
-	z-index: 2;
+	z-index: 10;
 	position: absolute;
 	right: 0;
 	top: 0;
@@ -289,7 +289,7 @@
 	border: 2px	solid #FFFFFF;
 	border-radius: 32px;
 	vertical-align: top;
-	z-index: 4;
+	z-index: 6;
 	filter:alpha(opacity=92);
 	opacity:0.92;
 	-moz-opacity:0.92;
@@ -311,9 +311,21 @@
 	background-color: rgba(255, 255, 255, 0.2);
 }
 
+#app_project_quick_upload_block {
+	position: absolute;
+	background-color: transparent;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: none;
+	z-index: 3;
+	cursor: default;
+}
+
 #app_project_quick_upload {
 	position: absolute;
-	z-index: 2;
+	z-index: 4;
 	bottom: 0;
 	margin-bottom: 58px;
 	text-align: center;
@@ -326,7 +338,7 @@
 .app_project_quick_upload_icons {
 	position: absolute;
 	width: 100%;
-	z-index: 3;
+	z-index: 5;
 }
 
 .app_project_quick_upload_img_side {
@@ -341,7 +353,7 @@
 	-khtml-opacity:0.30;
 }
 
-#app_project_quick_upload_form {
+#app_project_quick_file_iframe {
 	position: absolute;
 	width: 0;
 	height: 0;

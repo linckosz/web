@@ -94,8 +94,8 @@ function sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete){
 			 e.preventDefault(); //Disable submit action
 		});
 		var param = objForm.serializeArray();
-		var method = objForm.attr('method');
-		var action = objForm.attr('action');
+		var method = objForm.prop('method');
+		var action = objForm.prop('action');
 		wrapper(param, method, action, cb_success, cb_error, cb_begin, cb_complete);
 	} else {
 		cb_success(Lincko.Translation.get('wrapper', 2, 'html'), true, 400); //The form does not exist!

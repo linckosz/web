@@ -11,7 +11,7 @@ function Mobile_menu(obj) {
 	this.wrapper = null;
 	function Constructor(Elem){
 		Elem.wrapper = $('#-mobile_menu_wrapper').clone();
-		Elem.wrapper.attr("id",Elem.id);
+		Elem.wrapper.prop("id",Elem.id);
 		Elem.wrapper.children('div').eq(0).children('span').eq(0).click(function(){
 			Mobile_menu_Hide(Elem.id);
 		});
@@ -42,7 +42,7 @@ Mobile_menu.prototype = {
 	},
 	AddMenuButton: function(attribute) {
 		var Elem = $('#-mobile_menu_button').clone();
-		Elem.attr("id",null);
+		Elem.prop("id",null);
 		Elem.children('span').eq(0).html(attribute.title);
 		if("value" in attribute){
 			Elem.children('span').eq(1).html(attribute.value);
@@ -58,7 +58,7 @@ Mobile_menu.prototype = {
 	},
 	AddMenuRadio: function(attribute) {
 		var Elem = $('#-mobile_menu_radio').clone();
-		Elem.attr("id",null);
+		Elem.prop("id",null);
 		Elem.children('span').eq(0).html(attribute.title);
 		if("selected" in attribute){
 			if(attribute.selected){
@@ -105,7 +105,7 @@ function Mobile_menu_Hide(id){
 
 function Mobile_menu_Hideall(){
 	$('[id$="_mobile_menu_wrapper"]').each(function(){
-		Mobile_menu_Hide($(this).attr('id'));
+		Mobile_menu_Hide($(this).prop('id'));
 	});
 	mobile_menu_zindex = 2000;
 }

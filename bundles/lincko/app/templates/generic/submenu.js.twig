@@ -1,7 +1,7 @@
 <script>
-	var mobile_menu_list = [];
+	var submenu_list = [];
 
-	mobile_menu_list['nav'] = {
+	submenu_list['nav'] = {
 		"_title": {
 			"style": "title",
 			"title": "{{ _trans('web', 2, 10, 'js') }}", //Menu
@@ -10,7 +10,7 @@
 			"style": "button",
 			"title": "{{ _trans('web', 2, 7, 'js') }}", //My account
 			"action": function(){
-				Mobile_menu_Hideall();
+				Submenu_Hideall();
 				window.location.href = "{{ urlFor('root') }}";
 			},
 			"class": "base_account_signin"
@@ -19,7 +19,7 @@
 			"style": "button",
 			"title": "{{ _trans('web', 2, 9, 'js') }}", //Sign in
 			"action": function(){
-				Mobile_menu_Hideall();
+				Submenu_Hideall();
 				if(typeof account_show !== 'undefined') { account_show(true); }
 			},
 			"class": "base_account_signout"
@@ -28,7 +28,7 @@
 			"style": "button",
 			"title": "{{ _trans('web', 2, 8, 'js') }}", //Join us
 			"action": function(){
-				Mobile_menu_Hideall();
+				Submenu_Hideall();
 				if(typeof account_show !== 'undefined') { account_show(false); }
 			},
 			"class": "base_account_signout"
@@ -37,7 +37,7 @@
 			"style": "button",
 			"title": "{{ _trans('web', 2, 1, 'js') }}", //Home
 			"action":  function(){
-				Mobile_menu_Hideall();
+				Submenu_Hideall();
 				window.location.href = "{{ urlFor('home') }}";
 			},
 			"class": ""
@@ -46,7 +46,7 @@
 			"style": "button",
 			"title": "{{ _trans('web', 2, 2, 'js') }}", //Features
 			"action":  function(){
-				Mobile_menu_Hideall();
+				Submenu_Hideall();
 				window.location.href = "{{ urlFor('features') }}";
 			},
 			"class": ""
@@ -55,7 +55,7 @@
 			"style": "button",
 			"title": "{{ _trans('web', 2, 3, 'js') }}", //Price
 			"action":  function(){
-				Mobile_menu_Hideall();
+				Submenu_Hideall();
 				window.location.href = "{{ urlFor('price') }}";
 			},
 			"class": ""
@@ -64,7 +64,7 @@
 			"style": "button",
 			"title": "{{ _trans('web', 2, 4, 'js') }}", //Download
 			"action":  function(){
-				Mobile_menu_Hideall();
+				Submenu_Hideall();
 				window.location.href = "{{ urlFor('download') }}";
 			},
 			"class": ""
@@ -73,7 +73,7 @@
 			"style": "button",
 			"title": "{{ _trans('web', 2, 5, 'js') }}", //Help
 			"action":  function(){
-				Mobile_menu_Hideall();
+				Submenu_Hideall();
 				window.location.href = "{{ urlFor('help') }}";
 			},
 			"class": ""
@@ -83,7 +83,7 @@
 			"title": "{{ _trans('web', 2, 12, 'js') }}", //Language
 			"value": "{{ _language_full() }}",
 			"action": function(){
-				Mobile_menu_Build("language");
+				Submenu_Hideall("language");
 			},
 			"class": ""
 		},
@@ -91,7 +91,7 @@
 			"style": "button",
 			"title": "{{ _trans('web', 2, 6, 'js') }}", //Sign out
 			"action": function(){
-				Mobile_menu_Hideall();
+				Submenu_Hideall();
 				sendAction('','post','user/signout', head_signout_cb_success, head_signout_cb_error, head_signout_cb_begin, head_signout_cb_complete);
 			},
 			"class": "base_account_signin"
@@ -99,8 +99,8 @@
 	};
 
 	{% set language = _language() %}
-	{% set languages = _languages('web') %}
-	mobile_menu_list['language'] = {
+	{% set languages = _languages('app') %}
+	submenu_list['language'] = {
 		"_title": {
 			"style": "title",
 			"title": "{{ _trans('web', 2, 12, 'js') }}", //Language
@@ -112,7 +112,7 @@
 				"title": "{{ value }}",
 				"selected": {% if key == language %}true{% else %}false{% endif %},
 				"action": function(){
-					Mobile_menu_Hideall();
+					Submenu_Hideall();
 					ChangeLanguage("{{ key }}");
 				},
 				"class": ""

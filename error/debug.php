@@ -11,9 +11,8 @@
 $app = \Slim\Slim::getInstance();
 //print_r($data);
 
-//echo $app->urlFor('hello', array('name' => 'Josh','toto' => 'Ji'));
+echo $host = $app->request->getHostWithPort();
+echo '<br />';
+echo preg_match("/^file\..*:8443$/ui",$host);
+echo '<br />';
 
-
-
-//\bundles\lincko\wrapper\models\Creation::record();
-//\bundles\lincko\wrapper\models\Creation::exists();

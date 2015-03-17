@@ -197,6 +197,7 @@ html, .font_sans_serif {
 
 .base_color_main_bg {
 	background-color: #FBA025;
+	background: linear-gradient(#FBA025,#FD7D12);
 	color: #FFFFFF;
 }
 

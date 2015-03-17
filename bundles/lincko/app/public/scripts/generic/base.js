@@ -95,19 +95,19 @@ base_input_field.search = {
 function base_format_form(){
 	for(field in base_input_field){
 		if(typeof base_input_field[field].pattern !== 'undefined') {
-			$("input[name="+field+"]").attr('pattern', base_input_field[field].pattern);
+			$("input[name="+field+"]").prop('pattern', base_input_field[field].pattern);
 			if(base_input_field[field].format){
 				//Do not add title, it's annoying
-				//$("input[name="+field+"]").attr('title', php_br2nl(base_input_field[field].format));
+				//$("input[name="+field+"]").prop('title', php_br2nl(base_input_field[field].format));
 			}
 		}
 		if(typeof base_input_field[field].required !== 'undefined') {
 			if(base_input_field[field].required){
-				$("input[name="+field+"]").attr('required', 'required');
+				$("input[name="+field+"]").prop('required', 'required');
 			}
 		}
 		if(typeof base_input_field[field].maxlength !== 'undefined') {
-			$("input[name="+field+"]").attr('maxlength', base_input_field[field].maxlength);
+			$("input[name="+field+"]").prop('maxlength', base_input_field[field].maxlength);
 		}
 	}
 

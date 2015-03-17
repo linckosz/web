@@ -1,6 +1,6 @@
 function app_project_quick_upload_display(Elem, show) {
 	var Obj_div = $('#app_project_quick_upload');
-	var Obj_img = $('#app_project_quick_upload > div > label > img');
+	var Obj_img = $('#app_project_quick_upload > div > img');
 	var timing = 200;
 	if(typeof show === 'undefined') { show = true; }
 	if(Elem !== null) {
@@ -9,11 +9,13 @@ function app_project_quick_upload_display(Elem, show) {
 		}
 	}
 	if(Obj_div.is(':visible')){
+		$('#app_project_quick_upload_block').hide();
 		$.Velocity.RunSequence([
 			{ e: Obj_div, p: "transition.slideDownOut", o: { duration: timing, sequenceQueue: false } },
 			{ e: Obj_img, p: "transition.expandOut", o: { duration: timing, sequenceQueue: false } }
 		]);
 	} else if(Obj_div.is(':hidden') && show){
+		$('#app_project_quick_upload_block').show();
 		$.Velocity.RunSequence([
 			{ e: Obj_div, p: "transition.slideUpIn", o: { duration: timing, sequenceQueue: false } },
 			{ e: Obj_img, p: "transition.expandIn", o: { duration: timing, sequenceQueue: false } }
@@ -32,7 +34,7 @@ $('#app_project_quick_access_upload').click(function(){
 	app_project_quick_upload_display($(this));
 });
 
-$('html').click(function(){
+$('#app_project_quick_upload_block').click(function(){
 	if($('#app_project_quick_upload').is(':visible') && !app_project_quick_upload){
 		app_project_quick_upload_display(null, false);
 	}
@@ -46,7 +48,7 @@ $('#app_project_quick_upload').mouseleave(function(){
 	app_project_quick_upload = false;
 });
 
-
+/*
 var onAfterPhotoCapture = function(){
 	alert('uploaded');
 }
@@ -55,7 +57,7 @@ var device_supported = true;
 bridgeit.notSupported = function(id, command)  {
 	device_supported = false;
 };
-
+*/
 $('#app_project_quick_upload_photo').click(function(){
 	/*
 	bridgeit.camera(
@@ -72,6 +74,21 @@ $('#app_project_quick_upload_photo').click(function(){
 
 	}
 	*/
-	device_supported = true; //This is important to keep device_supported at TRUE for next call
+	//device_supported = true; //This is important to keep device_supported at TRUE for next call
+
+
+	//var form = $('#app_project_quick_file_iframe').contents().find('#api_file_form');
+	var photo = $('#app_project_quick_file_iframe').contents().find('#api_file_upload_photo');
+	var input = $('#app_project_quick_file_iframe').contents().find('#api_file_form_photo');
+	input.off('change');
+	input.change(function(){
+		$('#app_project_quick_file_iframe').contents().find('#api_file_form').submit();
+		$(this).off('change');
+		$(this).val('');
+		app_project_quick_upload_display(null, false);
+	});
+	photo.click();
+
+
 });
 

@@ -2,7 +2,7 @@
  *
  */
 
-.mobile_menu_wrapper {
+.submenu_wrapper {
 	background-color: #FFFFFF;
 	position: absolute;
 	font-size: 14px;
@@ -13,20 +13,20 @@
 	overflow: hidden;
 }
 
-.mobile_menu_top {
+.submenu_top {
 	display: table;
 	height: 48px;
 	width: 100%;
 	text-align: center;
 	background-color: #313335;
-	background-image: url('/lincko/web/images/generic/mobile_menu/top.png');
+	background-image: url('/lincko/web/images/generic/submenu/top.png');
 	background-repeat: repeat-x;
 	position: fixed;
 	/*font-family: "Comic Sans MS", Tahoma, Verdana, Helvetica, "Nimbus Sans L", "URW Gothic L", "Lucida Grande", Geneva, "DejaVu Sans", "Microsoft Sans Serif", sans-serif;*/
 	overflow: hidden;
 }
 
-.mobile_menu_content {
+.submenu_content {
 	width: 100%;
 	top: 48px;
 	bottom: 0px;
@@ -35,7 +35,7 @@
 	overflow-y: auto;
 }
 
-.mobile_menu_back {
+.submenu_back {
 	display: table-cell;
 	padding: 0 0px 0 16px;
 	color: #F8F8F8;
@@ -46,20 +46,20 @@
 	text-align: center;
 }
 
-.mobile_menu_back:hover {
+.submenu_back:hover {
 	background-color: #181A15;
 	background-image: url('');
 }
 
-.mobile_menu_back:active {
+.submenu_back:active {
 	color: #6F7377;
-	background-image: url('/lincko/web/images/generic/mobile_menu/active.png');
+	background-image: url('/lincko/web/images/generic/submenu/active.png');
 	box-shadow: inset 4px 4px 13px -5px #313335;
 	-moz-box-shadow: inset 4px 4px 13px -5px #313335;
 	-webkit-box-shadow: inset 4px 4px 13px -5px #313335;
 }
 
-.mobile_menu_title {
+.submenu_title {
 	display: table-cell;
 	padding: 0 16px 0 16px;
 	color: #F8F8F8;
@@ -70,7 +70,7 @@
 	width: 100%;
 }
 
-.mobile_menu_deco {
+.submenu_deco {
 	display: table;
 	white-space: nowrap;
 	color: #6F7377;
@@ -81,38 +81,38 @@
 	text-align: left;
 }
 
-.mobile_menu_deco:hover {
+.submenu_deco:hover {
 	background-color: #FFFFFF;
 }
 
-.mobile_menu_deco > span {
+.submenu_deco > span {
 	display: table-cell;
 	vertical-align: middle;
 	padding: 0 16px 0 16px;
 }
 
-.mobile_menu_value {
+.submenu_value {
 	font-style: italic;
 	text-align: right !important;
 }
 
-.mobile_menu_radio {
+.submenu_radio {
 	text-align: right !important;
 }
 
-.mobile_menu_radio_icon {
+.submenu_radio_icon {
 	height: 20px;
 }
 
-.mobile_menu_back_image {
+.submenu_back_image {
 	border-right: #343434 2px solid;
 	padding-right: 14px;
 }
 
-.mobile_menu_back_image:hover {
+.submenu_back_image:hover {
 	border-color: transparent;
 }
 
-.mobile_menu_back_image:active {
+.submenu_back_image:active {
 	border-color: transparent;
 }
