@@ -95,7 +95,7 @@ function sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete){
 		});
 		var param = objForm.serializeArray();
 		var method = objForm.prop('method');
-		var action = objForm.prop('action');
+		var action = objForm.attr('action'); //Do not use prpo here because (attr => user/logout | prop => https://lincko.net/user/logout (error))
 		wrapper(param, method, action, cb_success, cb_error, cb_begin, cb_complete);
 	} else {
 		cb_success(Lincko.Translation.get('wrapper', 2, 'html'), true, 400); //The form does not exist!
