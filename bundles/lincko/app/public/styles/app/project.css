@@ -359,6 +359,7 @@
 	height: 0;
 	overflow: hidden;
 	z-index: -1;
+	border-style: none;
 }
 
 /* Mobile phone in Portrait maximum */
