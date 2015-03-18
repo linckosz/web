@@ -360,8 +360,10 @@
 	overflow: hidden;
 	z-index: -1;
 	border-style: none;
+	/*
 	visibility: hidden;
 	display: none;
+	*/
 }
 
 /* Mobile phone in Portrait maximum */

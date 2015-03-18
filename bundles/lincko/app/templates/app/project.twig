@@ -92,9 +92,6 @@
 				</div>
 			</div>
 		</div>
-		<iframe id="api_file_upload_iframe" name="api_file_upload_iframe" frameborder="0" height="0" width="0" scrolling="no" src=""></iframe>
-		<iframe id="app_project_quick_file_iframe" name="app_project_quick_file_iframe" frameborder="0" height="0" width="0" scrolling="no" src="https://file.{{ domain }}:8443/file"></iframe>
-
 		<div class="app_project_quick_access">
 			<div class="app_project_quick_access_title">
 				{{ _trans('app', 2, 8, 'html') }}{# Quick access #}
@@ -119,6 +116,8 @@
 			</div>
 			<img class="app_project_quick_upload_band" src="{{ _filelatest('/lincko/app/images/app/project/quick_band.png') }}" />
 		</div>
+		<iframe id="app_project_quick_file_iframe" name="app_project_quick_file_iframe" frameborder="0" height="0" width="0" scrolling="no" src="https://file.{{ domain }}:8443/file"></iframe>
+		<iframe id="api_file_upload_iframe" name="api_file_upload_iframe" frameborder="0" height="0" width="0" scrolling="no" src=""></iframe>
 	</div>
 </div>
 <div id="end_app_project" class="visibility_hidden"></div>
