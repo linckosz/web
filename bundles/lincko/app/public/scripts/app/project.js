@@ -48,37 +48,11 @@ $('#app_project_quick_upload').mouseleave(function(){
 	app_project_quick_upload = false;
 });
 
-/*
-var onAfterPhotoCapture = function(){
-	alert('uploaded');
-}
-
-var device_supported = true;
-bridgeit.notSupported = function(id, command)  {
-	device_supported = false;
-};
-*/
 $('#app_project_quick_upload_photo').click(function(){
-	/*
-	bridgeit.camera(
-		'cameraBtn',
-		'onAfterPhotoCapture',
-		{
-			postURL:'file/uploado'
-		}
-	);
-	//If teh device does not support the function, we use normal input method
-	if(!device_supported){
-		//$("#input").trigger("focus").val($("#input").val() + 'a')
-		//$("#app_project_quick_upload_form_photo").focus().val($("#app_project_quick_upload_form_photo").val() + 'a');
+	
+	//Because label.click() "api_file_upload_photo" does not work on android 2.5, we have to click on input directly, but it might not work on some browser (but all work on my test devices). So keep using "api_file_form_photo" since it works
+	var photo = $('#app_project_quick_file_iframe').contents().find('#api_file_form_photo');
 
-	}
-	*/
-	//device_supported = true; //This is important to keep device_supported at TRUE for next call
-
-
-	//var form = $('#app_project_quick_file_iframe').contents().find('#api_file_form');
-	var photo = $('#app_project_quick_file_iframe').contents().find('#api_file_upload_photo');
 	var input = $('#app_project_quick_file_iframe').contents().find('#api_file_form_photo');
 	input.off('change');
 	input.change(function(){
@@ -88,7 +62,5 @@ $('#app_project_quick_upload_photo').click(function(){
 		app_project_quick_upload_display(null, false);
 	});
 	photo.click();
-
-
 });
 

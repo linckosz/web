@@ -353,13 +353,15 @@
 	-khtml-opacity:0.30;
 }
 
-#app_project_quick_file_iframe {
-	position: absolute;
+#app_project_quick_file_iframe, #api_file_upload_iframe {
+	/*position: absolute;*/
 	width: 0;
 	height: 0;
 	overflow: hidden;
 	z-index: -1;
 	border-style: none;
+	visibility: hidden;
+	display: none;
 }
 
 /* Mobile phone in Portrait maximum */
