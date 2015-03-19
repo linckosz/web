@@ -82,6 +82,7 @@ class ControllerWrapper extends Controller {
 			else if(isset($json_result->flash->public_key) && isset($json_result->flash->private_key)){
 				$_SESSION['public_key'] = $json_result->flash->public_key;
 				$_SESSION['private_key'] = $json_result->flash->private_key;
+				$this->uploadKeys();
 			}
 
 			//After signin, it return the username
@@ -142,13 +143,12 @@ class ControllerWrapper extends Controller {
 
 	protected function uploadKeys(){
 		$app = $this->app;
-		//$app->setCookie('public_key', $_SESSION['public_key'], null, '/file', 'file.'.$app->lincko->domain, null, null);
-		//$app->setCookie('private_key', $_SESSION['private_key'], null, '/file', 'file.'.$app->lincko->domain, null, null);
-
-		$app->setCookie('public_key', 'abc', null, null, null, null, false);
-		//setcookie("public_key","abc",time()+1000); //366 days
-
-		//Datassl::encrypt($this->json['data']['password'], $this->json['data']['email']);
+		$checksum = md5($_SESSION['private_key'].$_SESSION['public_key']);
+		//Upload user public key
+		$app->setCookie('shangzai_puk', $_SESSION['public_key'], null, null, null, null, false);
+		//Secret code built with user private code which must e equal to public key after conversion on server side
+		//WARNING: slim 'cookies.secret_key' must be the same on client and server side!
+		$app->setCookie('shangzai_cs', $checksum, null, null, null, null, false);
 	}
 
 	protected function setupKeys(){
@@ -176,8 +176,8 @@ class ControllerWrapper extends Controller {
 		$app->deleteCookie('yonghu');
 		$app->deleteCookie('jizhu');
 		$app->deleteCookie('mima');
-		$app->deleteCookie('public_key');
-		$app->deleteCookie('private_key');
+		$app->deleteCookie('shangzai_puk');
+		$app->deleteCookie('shangzai_cs');
 		unset($_SESSION['yonghu']);
 		unset($_SESSION['youjian']);
 		unset($_SESSION['mima']);

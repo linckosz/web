@@ -28,7 +28,7 @@
 		<div class="head_menu floatleft unselectable {% if route == 'price' %}active{% endif %}" id="head_price_minTablet"><span>{{ _trans('web', 1, 3, 'html') }}{# Price #}</span></div>
 		<div class="head_menu floatleft unselectable {% if route == 'download' %}active{% endif %}" id="head_download_minTablet"><span>{{ _trans('web', 1, 4, 'html') }}{# Download #}</span></div>
 		<div class="head_menu floatleft unselectable {% if route == 'help' %}active{% endif %}" id="head_help_minTablet"><span>{{ _trans('web', 1, 5, 'html') }}{# Help #}</span></div>
-		{# if yonghu and jizhu #}
+		{# if logged #}
 			<div class="head_signout floatright unselectable base_account_signin" id="head_signout_minTablet"><span><span>{{ _trans('web', 1, 6, 'html') }}{# Sign out #}</span></span></div>
 			<div class="head_account floatright unselectable base_account_signin" id="head_account_minTablet"><span><span>{{ _trans('web', 1, 7, 'html') }}{# My account #}</span></span></div>
 		{# else #}
@@ -63,7 +63,7 @@
 				{{ _trans('web', 1, 5, 'html') }}{# Help #}
 			{% endif %}
 		</span>
-		{# if yonghu and jizhu #}
+		{# if logged #}
 			<div class="head_account floatright unselectable base_account_signin" id="head_account_maxMobileL"><span><span>{{ _trans('web', 1, 7, 'html') }}{# My account #}</span></span></div>
 		{# else #}
 			<div class="head_joinus mobile floatright unselectable base_account_signout" id="head_signin_maxMobileL"><span><span>{{ _trans('web', 1, 9, 'html') }}{# Sign in #}</span></span></div>
