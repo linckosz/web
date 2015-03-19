@@ -106,29 +106,33 @@
  * SIGN IN
  */
 
-.head_signin {
+.head_joinus {
 	cursor: default;
 }
 
-.head_signin > span > span:hover {
+.head_joinus > span > span:hover {
 	border-bottom: 2px solid currentColor;
 	padding-bottom: 1px;
 	cursor: pointer; cursor: hand;
 }
 
 /*
- * JOIN US
+ * LOGO
  */
 
 .head_logo {
 	cursor: default;
 }
 
-.head_joinus {
+/*
+ * JOIN US
+ */
+
+.head_signin {
 	cursor: default;
 }
 
-.head_joinus > span > span {
+.head_signin > span > span {
 	background-color: #FFA700;
 	border: 2px solid #FFA700;;
 	border-radius: 50%;
@@ -138,7 +142,7 @@
 	padding: 8px 24px 8px 24px;
 }
 
-.head_joinus > span > span:hover {
+.head_signin > span > span:hover {
 	background-color: #FFA700;
 	border-color: #FFFFFF;
 }

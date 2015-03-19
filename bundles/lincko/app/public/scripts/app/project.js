@@ -49,7 +49,7 @@ $('#app_project_quick_upload').mouseleave(function(){
 });
 
 $('#app_project_quick_upload_photo').click(function(){
-	
+	alert($.cookie("public_key"));
 	//Because label.click() "api_file_upload_photo" does not work on android 2.5, we have to click on input directly, but it might not work on some browser (but all work on my test devices). So keep using "api_file_form_photo" since it works
 	var photo = $('#app_project_quick_file_iframe').contents().find('#api_file_form_photo');
 

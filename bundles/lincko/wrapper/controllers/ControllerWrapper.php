@@ -140,6 +140,17 @@ class ControllerWrapper extends Controller {
 		}
 	}
 
+	protected function uploadKeys(){
+		$app = $this->app;
+		//$app->setCookie('public_key', $_SESSION['public_key'], null, '/file', 'file.'.$app->lincko->domain, null, null);
+		//$app->setCookie('private_key', $_SESSION['private_key'], null, '/file', 'file.'.$app->lincko->domain, null, null);
+
+		$app->setCookie('public_key', 'abc', null, null, null, null, false);
+		//setcookie("public_key","abc",time()+1000); //366 days
+
+		//Datassl::encrypt($this->json['data']['password'], $this->json['data']['email']);
+	}
+
 	protected function setupKeys(){
 		$app = $this->app;
 		if(!isset($_SESSION['public_key'])){
@@ -148,6 +159,7 @@ class ControllerWrapper extends Controller {
 		if(!isset($_SESSION['private_key'])){
 			$_SESSION['private_key'] = $app->lincko->security['private_key'];
 		}
+		$this->uploadKeys();
 		return true;
 	}
 
@@ -155,6 +167,7 @@ class ControllerWrapper extends Controller {
 		$app = $this->app;
 		$_SESSION['public_key'] = $app->lincko->security['public_key'];
 		$_SESSION['private_key'] = $app->lincko->security['private_key'];
+		$this->uploadKeys();
 		return true;
 	}
 
@@ -163,6 +176,8 @@ class ControllerWrapper extends Controller {
 		$app->deleteCookie('yonghu');
 		$app->deleteCookie('jizhu');
 		$app->deleteCookie('mima');
+		$app->deleteCookie('public_key');
+		$app->deleteCookie('private_key');
 		unset($_SESSION['yonghu']);
 		unset($_SESSION['youjian']);
 		unset($_SESSION['mima']);
