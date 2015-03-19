@@ -48,15 +48,23 @@ $('#app_project_quick_upload').mouseleave(function(){
 	app_project_quick_upload = false;
 });
 
-$('#app_project_quick_upload_photo').click(function(){
-	alert($.cookie("shangzai_puk"));
-
+$('#app_project_quick_upload_video').click(function(){
 	$('#app_project_quick_file_iframe').contents().find('#api_file_shangzai_puk').val($.cookie("shangzai_puk"));
 	$('#app_project_quick_file_iframe').contents().find('#api_file_shangzai_cs').val($.cookie("shangzai_cs"));
+	var input = $('#app_project_quick_file_iframe').contents().find('#api_file_form_video');
+	input.off('change');
+	input.change(function(){
+		$('#app_project_quick_file_iframe').contents().find('#api_file_form').submit();
+		$(this).off('change');
+		$(this).val('');
+		app_project_quick_upload_display(null, false);
+	});
+	input.click();
+});
 
-	//Because label.click() "api_file_upload_photo" does not work on android 2.5, we have to click on input directly, but it might not work on some browser (but all work on my test devices). So keep using "api_file_form_photo" since it works
-	var photo = $('#app_project_quick_file_iframe').contents().find('#api_file_form_photo');
-
+$('#app_project_quick_upload_photo').click(function(){
+	$('#app_project_quick_file_iframe').contents().find('#api_file_shangzai_puk').val($.cookie("shangzai_puk"));
+	$('#app_project_quick_file_iframe').contents().find('#api_file_shangzai_cs').val($.cookie("shangzai_cs"));
 	var input = $('#app_project_quick_file_iframe').contents().find('#api_file_form_photo');
 	input.off('change');
 	input.change(function(){
@@ -65,6 +73,20 @@ $('#app_project_quick_upload_photo').click(function(){
 		$(this).val('');
 		app_project_quick_upload_display(null, false);
 	});
-	photo.click();
+	input.click();
+});
+
+$('#app_project_quick_upload_files').click(function(){
+	$('#app_project_quick_file_iframe').contents().find('#api_file_shangzai_puk').val($.cookie("shangzai_puk"));
+	$('#app_project_quick_file_iframe').contents().find('#api_file_shangzai_cs').val($.cookie("shangzai_cs"));
+	var input = $('#app_project_quick_file_iframe').contents().find('#api_file_form_files');
+	input.off('change');
+	input.change(function(){
+		$('#app_project_quick_file_iframe').contents().find('#api_file_form').submit();
+		$(this).off('change');
+		$(this).val('');
+		app_project_quick_upload_display(null, false);
+	});
+	input.click();
 });
 
