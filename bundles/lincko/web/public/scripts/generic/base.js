@@ -119,3 +119,5 @@ $("img[name=captcha]").click(function(){
 	IMGcaptcha.src = IMGcaptcha.src;
 	$("img[name=captcha]").prop("src",IMGcaptcha.src);
 });
+
+functio

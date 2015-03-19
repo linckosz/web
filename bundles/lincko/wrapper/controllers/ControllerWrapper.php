@@ -203,7 +203,9 @@ class ControllerWrapper extends Controller {
 
 		$log_action = false;
 
-		if($action==='user/signin' && $type==='POST' && isset($this->json['data']['email']) && isset($this->json['data']['password'])){
+		if($action==='user/autosign' && $type==='POST' && isset($this->json['data']['email']) && isset($this->json['data']['password'])){
+
+		} else if($action==='user/signin' && $type==='POST' && isset($this->json['data']['email']) && isset($this->json['data']['password'])){
 
 			$log_action = true;
 

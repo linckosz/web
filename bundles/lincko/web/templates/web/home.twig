@@ -11,7 +11,7 @@
 <div class="home_top_div minTablet"></div>
 <div class="home_joinus_box" id="home_joinus_box">
 	<div>
-		<form id="home_joinus_form" name="home_joinus_form" action="user/create" method="post" onsubmit="return sendForm(this, home_cb_success, home_cb_error, home_cb_begin, home_cb_complete);">
+		<form id="home_joinus_form" name="home_joinus_form" action="user/create" method="post" onsubmit="return wrapper_sendForm(this, home_cb_success, home_cb_error, home_cb_begin, home_cb_complete);">
 			<label class="home_label_inside" for="home_joinus_email">
 				<span>{{ _trans('web', 4, 2, 'html') }}{# Email #}</span>
 				<input type="email" id="home_joinus_email" name="email" value=""/>

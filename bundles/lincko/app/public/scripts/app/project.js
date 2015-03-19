@@ -48,13 +48,48 @@ $('#app_project_quick_upload').mouseleave(function(){
 	app_project_quick_upload = false;
 });
 
+function app_project_upload(form){
+	
+	var bar = $('#app_project_progress_bar');
+	var percent = $('#app_project_progress_percent');
+	var status = $('#app_project_progress_status');
+
+	form.ajaxForm({
+		beforeSend: function() {console.log('beforeSend');
+			status.empty();
+			var percentVal = '0%';
+			bar.width(percentVal)
+			percent.html(percentVal);
+		},
+		uploadProgress: function(event, position, total, percentComplete) {console.log('uploadProgress');
+			console.log(event);
+			console.log(position);
+			console.log(total);
+			console.log(percentComplete);
+			var percentVal = percentComplete + '%';
+			bar.width(percentVal)
+			percent.html(percentVal);
+		},
+		success: function() {console.log('success');
+			var percentVal = '100%';
+			bar.width(percentVal)
+			percent.html(percentVal);
+		},
+		complete: function(xhr) {console.log('complete');
+			status.html(xhr.responseText);
+		}
+	});
+}
+
 $('#app_project_quick_upload_video').click(function(){
 	$('#app_project_quick_file_iframe').contents().find('#api_file_shangzai_puk').val($.cookie("shangzai_puk"));
 	$('#app_project_quick_file_iframe').contents().find('#api_file_shangzai_cs').val($.cookie("shangzai_cs"));
 	var input = $('#app_project_quick_file_iframe').contents().find('#api_file_form_video');
 	input.off('change');
 	input.change(function(){
-		$('#app_project_quick_file_iframe').contents().find('#api_file_form').submit();
+		var form = $('#app_project_quick_file_iframe').contents().find('#api_file_form');
+		app_project_upload(form);
+		form.submit();
 		$(this).off('change');
 		$(this).val('');
 		app_project_quick_upload_display(null, false);
@@ -68,7 +103,9 @@ $('#app_project_quick_upload_photo').click(function(){
 	var input = $('#app_project_quick_file_iframe').contents().find('#api_file_form_photo');
 	input.off('change');
 	input.change(function(){
-		$('#app_project_quick_file_iframe').contents().find('#api_file_form').submit();
+		var form = $('#app_project_quick_file_iframe').contents().find('#api_file_form');
+		app_project_upload(form);
+		form.submit();
 		$(this).off('change');
 		$(this).val('');
 		app_project_quick_upload_display(null, false);
@@ -82,11 +119,12 @@ $('#app_project_quick_upload_files').click(function(){
 	var input = $('#app_project_quick_file_iframe').contents().find('#api_file_form_files');
 	input.off('change');
 	input.change(function(){
-		$('#app_project_quick_file_iframe').contents().find('#api_file_form').submit();
+		var form = $('#app_project_quick_file_iframe').contents().find('#api_file_form');
+		app_project_upload(form);
+		form.submit();
 		$(this).off('change');
 		$(this).val('');
 		app_project_quick_upload_display(null, false);
 	});
 	input.click();
 });
-

@@ -366,6 +366,11 @@
 	*/
 }
 
+
+#app_project_progress { position:relative; width:400px; border: 1px solid #ddd; padding: 1px; border-radius: 3px; }
+#app_project_progress_bar { background-color: #B4F5B4; width:0%; height:20px; border-radius: 3px; }
+#app_project_progress_percent { position:absolute; display:inline-block; top:3px; left:48%; }
+
 /* Mobile phone in Portrait maximum */
 @media only screen and (max-width: 479px), only screen and (min-width: 901px) and (max-width: 1280px){
 	.app_project_space {

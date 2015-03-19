@@ -65,8 +65,8 @@
 			</div>
 			<div id="app_project_project_02">
 				<div>
-					{{ _trans('app', 2, 5, 'html') }}{# All #}
 					<img class="app_project_project_all_img" src="{{ _filelatest('/lincko/app/images/app/project/arrow_right.png') }}" />
+					{{ _trans('app', 2, 5, 'html') }}{# All #}
 				</div>
 			</div>
 		</div>
@@ -116,6 +116,11 @@
 			</div>
 			<img class="app_project_quick_upload_band" src="{{ _filelatest('/lincko/app/images/app/project/quick_band.png') }}" />
 		</div>
+		<div id="app_project_progress">
+			<div id="app_project_progress_bar"></div >
+			<div id="app_project_progress_percent">0%</div >
+		</div>
+		<div id="app_project_progress_status">status</div>
 		<iframe id="app_project_quick_file_iframe" name="app_project_quick_file_iframe" frameborder="0" height="0" width="0" scrolling="no" src="https://file.{{ domain }}:8443/file"></iframe>
 		<iframe id="api_file_upload_iframe" name="api_file_upload_iframe" frameborder="0" height="0" width="0" scrolling="no" src=""></iframe>
 	</div>

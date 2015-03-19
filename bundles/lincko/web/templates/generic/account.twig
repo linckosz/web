@@ -17,7 +17,7 @@
 			<div class="account_trans" id="account_tab_signin"><div class="account_tab_signin">{{ _trans('web', 5, 9, 'html') }}{# connection #}</div></div>
 		</div>
 		<div id="account_joinus_box">
-			<form class="account_form" id="account_joinus_form" action="user/create" method="post" onsubmit="return sendForm(this, account_joinus_cb_success, account_joinus_cb_error, account_joinus_cb_begin, account_joinus_cb_complete);">
+			<form class="account_form" id="account_joinus_form" action="user/create" method="post" onsubmit="return wrapper_sendForm(this, account_joinus_cb_success, account_joinus_cb_error, account_joinus_cb_begin, account_joinus_cb_complete);">
 				<div class="account_joinus_box_div">
 					<label class="account_label_inside" for="account_joinus_email">
 						<span>{{ _trans('web', 5, 2, 'html') }}{# Email #}</span>
@@ -45,7 +45,7 @@
 			</form>
 		</div>
 		<div id="account_signin_box">
-			<form class="account_form" id="account_signin_form" action="user/signin" method="post" onsubmit="return sendForm(this, account_signin_cb_success, account_signin_cb_error, account_signin_cb_begin, account_signin_cb_complete);">
+			<form class="account_form" id="account_signin_form" action="user/signin" method="post" onsubmit="return wrapper_sendForm(this, account_signin_cb_success, account_signin_cb_error, account_signin_cb_begin, account_signin_cb_complete);">
 				<div class="account_signin_box_div">
 					<label class="account_label_inside" for="account_signin_email">
 						<span>{{ _trans('web', 5, 2, 'html') }}{# Email #}</span>

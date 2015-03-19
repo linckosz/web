@@ -1,7 +1,7 @@
 var xhr;
 var totalxhr = 0;
 
-function wrapper(param, method, action, cb_success, cb_error, cb_begin, cb_complete){
+function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_complete){
 	if(typeof cb_success==="undefined"){ cb_success = function(){}; }
 	if(typeof cb_error==="undefined"){ cb_error = function(){}; }
 	if(typeof cb_begin==="undefined"){ cb_begin = function(){}; }
@@ -35,7 +35,7 @@ function wrapper(param, method, action, cb_success, cb_error, cb_begin, cb_compl
 			//var msg = JSON.parse(data.msg); //for test
 
 			if(data.error){
-				JSerror.sendError(JSON.stringify(data), '/wrapper.js/wrapper().success()', 0);
+				JSerror.sendError(JSON.stringify(data), '/wrapper.js/wrapper_ajax().success()', 0);
 				console.log(data);
 			}
 
@@ -49,7 +49,7 @@ function wrapper(param, method, action, cb_success, cb_error, cb_begin, cb_compl
 				+'\n'
 				+'thrownError => '+thrownError;
 
-			JSerror.sendError(msg, '/wrapper.js/wrapper().error()', 0);
+			JSerror.sendError(msg, '/wrapper.js/wrapper_ajax().error()', 0);
 			console.log(msg);
 			cb_error(xhr_err, ajaxOptions, thrownError);
 		},
@@ -60,7 +60,7 @@ function wrapper(param, method, action, cb_success, cb_error, cb_begin, cb_compl
 	});
 }
 ;
-function sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete){
+function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete){
 	if(typeof cb_success==="undefined"){ cb_success = function(){}; }
 	if(typeof cb_error==="undefined"){ cb_error = function(){}; }
 	if(typeof cb_begin==="undefined"){ cb_begin = function(){}; }
@@ -96,7 +96,7 @@ function sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete){
 		var param = objForm.serializeArray();
 		var method = objForm.prop('method');
 		var action = objForm.attr('action'); //Do not use prpo here because (attr => user/logout | prop => https://lincko.net/user/logout (error))
-		wrapper(param, method, action, cb_success, cb_error, cb_begin, cb_complete);
+		wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_complete);
 	} else {
 		cb_success(Lincko.Translation.get('wrapper', 2, 'html'), true, 400); //The form does not exist!
 		return false; //Disable submit action
@@ -104,7 +104,7 @@ function sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete){
 	return false; //Disable submit action
 }
 
-function sendAction(param, method, action, cb_success, cb_error, cb_begin, cb_complete){
+function wrapper_sendAction(param, method, action, cb_success, cb_error, cb_begin, cb_complete){
 	if(typeof cb_success==="undefined"){ cb_success = function(){}; }
 	if(typeof cb_error==="undefined"){ cb_error = function(){}; }
 	if(typeof cb_begin==="undefined"){ cb_begin = function(){}; }
@@ -119,7 +119,7 @@ function sendAction(param, method, action, cb_success, cb_error, cb_begin, cb_co
 	for(var val in param){
 		arr.push({name:val, value:param[val]});
 	}
-	wrapper(arr, method, action, cb_success, cb_error, cb_begin, cb_complete);
+	wrapper_ajax(arr, method, action, cb_success, cb_error, cb_begin, cb_complete);
 	return false; //Disable submit action
 }
 
@@ -131,3 +131,17 @@ $(function() {
 	});
 });
 
+function wrapper_upload_action(upload) {
+	alert('ok');
+	console.log(upload);
+	if(typeof upload === 'object') {
+		if(typeof upload.msg === 'string' && typeof upload.error === 'boolean' && typeof upload.resign === 'boolean'){
+			if(upload.error){
+				console.log(upload.msg);
+			}
+			if(upload.resign){
+				wrapper_sendAction('','post','user/resign');
+			}
+		}
+	}
+}

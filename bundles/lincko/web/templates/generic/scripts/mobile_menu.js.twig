@@ -92,7 +92,7 @@
 			"title": "{{ _trans('web', 2, 6, 'js') }}", //Sign out
 			"action": function(){
 				Mobile_menu_Hideall();
-				sendAction('','post','user/signout', head_signout_cb_success, head_signout_cb_error, head_signout_cb_begin, head_signout_cb_complete);
+				wrapper_sendAction('','post','user/signout', head_signout_cb_success, head_signout_cb_error, head_signout_cb_begin, head_signout_cb_complete);
 			},
 			"class": "base_account_signin"
 		},

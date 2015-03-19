@@ -43,7 +43,7 @@ $('[id^="head_help_"]').click(function(){
 	window.location.href = head_link['help'];
 });
 $('[id^="head_signout_"]').click(function(){
-	sendAction('','post','user/signout', head_signout_cb_success, head_signout_cb_error, head_signout_cb_begin, head_signout_cb_complete);
+	wrapper_sendAction('','post','user/signout', head_signout_cb_success, head_signout_cb_error, head_signout_cb_begin, head_signout_cb_complete);
 });
 $('[id^="head_signin_"]').click(function(){
 	if(typeof account_show !== 'undefined') { account_show(true); }
