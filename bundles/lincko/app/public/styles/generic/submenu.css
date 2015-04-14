@@ -6,11 +6,18 @@
 	background-color: #FFFFFF;
 	position: absolute;
 	font-size: 14px;
-	width: 100%;
+	width: 320px;
 	height: 100%;
-	min-height: 100%;
 	display: none;
 	overflow: hidden;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+
+.submenu_wrapper_important {
+	position: absolute !important;
+	width: 100% !important;
 }
 
 .submenu_top {
@@ -18,12 +25,26 @@
 	height: 48px;
 	width: 100%;
 	text-align: center;
+	vertical-align: middle;
 	background-color: #313335;
-	background-image: url('/lincko/web/images/generic/submenu/top.png');
+	background-image: url('/lincko/app/images/generic/submenu/top.png');
 	background-repeat: repeat-x;
-	position: fixed;
-	/*font-family: "Comic Sans MS", Tahoma, Verdana, Helvetica, "Nimbus Sans L", "URW Gothic L", "Lucida Grande", Geneva, "DejaVu Sans", "Microsoft Sans Serif", sans-serif;*/
+	position: absolute;
 	overflow: hidden;
+}
+
+.submenu_bottom {
+	display: table;
+	height: 48px;
+	width: 100%;
+	text-align: center;
+	vertical-align: middle;
+	background-color: #313335;
+	background-image: url('/lincko/app/images/generic/submenu/top.png');
+	background-repeat: repeat-x;
+	position: absolute;
+	overflow: hidden;
+	bottom: 0;
 }
 
 .submenu_content {
@@ -32,12 +53,12 @@
 	bottom: 0px;
 	position: absolute;
 	overflow: hidden;
-	overflow-y: auto;
+	overflow-y: auto !important;
 }
 
 .submenu_back {
 	display: table-cell;
-	padding: 0 0px 0 16px;
+	padding: 0 0 0 16px;
 	color: #F8F8F8;
 	white-space: nowrap;
 	height: 100%;
@@ -48,15 +69,26 @@
 
 .submenu_back:hover {
 	background-color: #181A15;
-	background-image: url('');
+	background-image: none;
 }
 
 .submenu_back:active {
 	color: #6F7377;
-	background-image: url('/lincko/web/images/generic/submenu/active.png');
+	background-image: url('/lincko/app/images/generic/submenu/active.png');
 	box-shadow: inset 4px 4px 13px -5px #313335;
 	-moz-box-shadow: inset 4px 4px 13px -5px #313335;
 	-webkit-box-shadow: inset 4px 4px 13px -5px #313335;
+}
+
+.submenu_close {
+	display: table-cell;
+	padding: 0 0 0 16px;
+	color: #6F7377;
+	white-space: nowrap;
+	height: 100%;
+	cursor: pointer; cursor: hand;
+	vertical-align: middle;
+	text-align: center;
 }
 
 .submenu_title {
@@ -70,6 +102,33 @@
 	width: 100%;
 }
 
+.submenu_bottom_cell {
+	display: table-cell;
+	padding: 0 16px 0 16px;
+	color: #F8F8F8;
+	white-space: nowrap;
+	height: 100%;
+	vertical-align: middle;
+	text-align: center;
+	width: 100%;
+}
+
+.submenu_form_valid {
+	padding: 4px 30px;
+	border-radius: 5px;
+	border: 2px solid #F8F8F8;
+	font-size: 16px;
+	cursor: pointer; cursor: hand;
+}
+
+.submenu_form_valid:hover {
+	background-color: #181A15;
+}
+
+.submenu_form_valid:active {
+	background-color: #969696;
+}
+
 .submenu_deco {
 	display: table;
 	white-space: nowrap;
@@ -81,11 +140,19 @@
 	text-align: left;
 }
 
+.submenu_deco_info {
+	cursor: default !important;
+}
+
 .submenu_deco:hover {
 	background-color: #FFFFFF;
 }
 
-.submenu_deco > span {
+.submenu_deco_next {
+	background-color: #FFFFF0 !important;
+}
+
+.submenu_padding {
 	display: table-cell;
 	vertical-align: middle;
 	padding: 0 16px 0 16px;
@@ -100,8 +167,17 @@
 	text-align: right !important;
 }
 
-.submenu_radio_icon {
+.submenu_icon {
 	height: 20px;
+	padding-left: 6px;
+	vertical-align: middle;
+}
+
+.submenu_icon_next {
+	filter:alpha(opacity=30);
+	opacity:0.3;
+	-moz-opacity:0.3;
+	-khtml-opacity:0.3;
 }
 
 .submenu_back_image {
@@ -109,10 +185,239 @@
 	padding-right: 14px;
 }
 
-.submenu_back_image:hover {
+.submenu_back_image_on {
+	display: none;
+}
+
+.submenu_back_image_off {
+	display: block;
+}
+
+.submenu_back:hover .submenu_back_image {
 	border-color: transparent;
 }
 
-.submenu_back_image:active {
+.submenu_back:active .submenu_back_image {
 	border-color: transparent;
+	filter:alpha(opacity=40);
+	opacity:0.4;
+	-moz-opacity:0.4;
+	-khtml-opacity:0.4;
+}
+.submenu_back:active .submenu_back_image_on {
+	display: block;
+}
+.submenu_back:active .submenu_back_image_off {
+	display: none;
+}
+
+.submenu_close_image {
+	padding-right: 14px;
+	filter:alpha(opacity=30);
+	opacity:0.3;
+	-moz-opacity:0.3;
+	-khtml-opacity:0.3;
+}
+
+.submenu_close:hover .submenu_close_image {
+	filter:alpha(opacity=40);
+	opacity:0.4;
+	-moz-opacity:0.4;
+	-khtml-opacity:0.4;
+}
+
+.submenu_close:active .submenu_close_image {
+	filter:alpha(opacity=60);
+	opacity:0.6;
+	-moz-opacity:0.6;
+	-khtml-opacity:0.6;
+}
+
+
+/* Start app_upload */
+
+.submenu_app_upload_single {
+	display: block;
+	width: 100%;
+}
+
+.submenu_app_upload_single_row {
+	display: table;
+	table-layout: fixed;
+	width: 100%;
+	color: #6F7377;
+}
+
+.submenu_app_upload_progress {
+	display: table-cell;
+	padding: 16px 16px 4px 16px;
+	white-space: nowrap;
+	vertical-align: middle;
+	text-align: left;
+	width: 100%;
+}
+
+.submenu_app_upload_progress_full {
+	position: relative; /* This is important to be able to use % width inside without interfering with padding value */
+	border: 1px solid #CAE4C7;
+	width: 100%;
+	text-align: left;
+	overflow: hidden;
+}
+
+.submenu_app_upload_progress_pc {
+	background-color: #ACF9A4;
+	min-height: 16px;
+	width: 0%;
+}
+
+.submenu_app_upload_progress_pc_text {
+	position: absolute;
+	width: 100%;
+	font-size: 11px;
+	line-height: 16px;
+	text-align: center;
+	vertical-align: middle;
+	filter:alpha(opacity=70);
+	opacity:0.7;
+	-moz-opacity:0.7;
+	-khtml-opacity:0.7;
+}
+
+
+
+.submenu_app_upload_single_cancel {
+	display: table-cell;
+	padding: 16px 16px 4px 0;
+	white-space: nowrap;
+	vertical-align: middle;
+	text-align: left;
+	width: auto;
+}
+
+.submenu_app_upload_single_cancel_image {
+	float: right;
+	padding: 0;
+	height: 18px;
+	margin-top: -1px;
+	filter:alpha(opacity=30);
+	opacity:0.3;
+	-moz-opacity:0.3;
+	-khtml-opacity:0.3;
+	cursor: pointer; cursor: hand;
+}
+
+.submenu_app_upload_single_cancel_image:hover {
+	filter:alpha(opacity=40);
+	opacity:0.4;
+	-moz-opacity:0.4;
+	-khtml-opacity:0.4;
+}
+
+.submenu_app_upload_single_cancel_image:active {
+	filter:alpha(opacity=60);
+	opacity:0.6;
+	-moz-opacity:0.6;
+	-khtml-opacity:0.6;
+}
+
+.submenu_app_upload_preview {
+	display: table-cell;
+	padding: 0 8px 0 0;
+	white-space: nowrap;
+	vertical-align: top;
+	text-align: left;
+	width: auto;
+	float: left;
+}
+
+.submenu_app_upload_preview_image {
+	height: 60px;
+	width: 60px;
+	float: left;
+	padding: 0;
+	border: 1px solid #EBEFF3;
+}
+
+.submenu_app_upload_info {
+	display: table-cell;
+	padding: 4px 24px 16px 24px;
+	white-space: nowrap;
+	vertical-align: top;
+	text-align: left;
+	width: 100%;
+}
+
+.submenu_app_upload_info_speed {
+	display: table;
+}
+
+.submenu_app_upload_info_speed > span {
+	display: table-cell;
+}
+
+.submenu_app_upload_info_destination {
+	font-size: 12px;
+	filter:alpha(opacity=70);
+	opacity:0.7;
+	-moz-opacity:0.7;
+	-khtml-opacity:0.7;
+}
+
+/* End app_upload */
+
+
+
+/* Minimum Desktop */
+@media only screen and (min-width: 1281px) {
+	.submenu_wrapper {
+		border: 1px solid #DFDFDF;
+		width: 320px;
+		position: relative;
+		float: left;
+	}
+	.submenu_top {
+		background-color: #DFDFDF;
+		background-image: url('/lincko/app/images/generic/submenu/active.png');
+	}
+	.submenu_title {
+		color: #6F7377;
+		font-size: 15px;
+	}
+	.submenu_bottom {
+		background-color: #BCBCBC;
+		background-image: none;
+	}
+	.submenu_form_valid:hover {
+		background-color: #A9A9AA;
+	}
+	.submenu_form_valid:active {
+		background-color: #969696;
+	}
+	.submenu_app_upload_progress_full {
+		border-color: #CAE4C7;
+	}
+	.submenu_app_upload_progress_pc {
+		background-color: #CAE4C7;
+	}
+}
+
+@media only screen and (min-width: 480px) and (max-width: 1280px) {
+	.submenu_app_upload_progress_pc {
+		min-height: 22px;
+	}
+	.submenu_app_upload_progress_pc_text {
+		font-size: 12px;
+		line-height: 22px;
+	}
+	.submenu_app_upload_single_cancel_image {
+		height: 24px;
+	}
+}
+
+/* Maximum Tablet Landscape */
+@media only screen and (max-width: 1280px) {
+	.submenu_wrapper {
+		width: 100% !important; 
+	}
 }

@@ -16,8 +16,11 @@
 	</div>
 	<div id="app_application_project_block" class="app_application_block maxMobileL"></div>
 </div>
-<div id="app_application_menu_block" class="app_application_block">
-	{# I am thinking about it, but this block might be there to display sub menu #}
+<div id="app_application_submenu_block">
+	{% include '/bundles/lincko/app/templates/generic/submenu.twig' %}
+</div>
+<div class="app_application_upload">
+	{% include '/bundles/lincko/app/templates/app/upload.twig' %}
 </div>
 <div id="end_app_application" class="visibility_hidden"></div>
 {% endblock %}

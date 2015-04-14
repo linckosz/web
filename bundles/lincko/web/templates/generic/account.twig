@@ -20,12 +20,12 @@
 			<form class="account_form" id="account_joinus_form" action="user/create" method="post" onsubmit="return wrapper_sendForm(this, account_joinus_cb_success, account_joinus_cb_error, account_joinus_cb_begin, account_joinus_cb_complete);">
 				<div class="account_joinus_box_div">
 					<label class="account_label_inside" for="account_joinus_email">
-						<span>{{ _trans('web', 5, 2, 'html') }}{# Email #}</span>
+						<span class="unselectable">{{ _trans('web', 5, 2, 'html') }}{# Email #}</span>
 						<input type="email" id="account_joinus_email" name="email" value="" />
 					</label>
 					<input type="password" name="foilautofill" value="" autocomplete="off" style="display:none;" />{# It avoids a behavior in Firefox which does not know Autocomplete tag, FF fulfill by default the first field #}
 					<label class="account_label_inside" for="account_joinus_password">
-						<span>{{ _trans('web', 5, 3, 'html') }}{# Password #}</span>
+						<span class="unselectable">{{ _trans('web', 5, 3, 'html') }}{# Password #}</span>
 						<input type="password" id="account_joinus_password" name="password" value="" autocomplete="off" />
 					</label>
 					{% if wrapper_user_created %}
@@ -48,12 +48,12 @@
 			<form class="account_form" id="account_signin_form" action="user/signin" method="post" onsubmit="return wrapper_sendForm(this, account_signin_cb_success, account_signin_cb_error, account_signin_cb_begin, account_signin_cb_complete);">
 				<div class="account_signin_box_div">
 					<label class="account_label_inside" for="account_signin_email">
-						<span>{{ _trans('web', 5, 2, 'html') }}{# Email #}</span>
+						<span class="unselectable">{{ _trans('web', 5, 2, 'html') }}{# Email #}</span>
 						<input type="email" id="account_signin_email" name="email" value="" />
 					</label>
 					<input type="password" name="foilautofill" value="" autocomplete="off" style="display:none;" />{# It avoids a behavior in Firefox which does not know Autocomplete tag, FF fulfill by default the first field #}
 					<label class="account_label_inside" for="account_signin_password">
-						<span>{{ _trans('web', 5, 3, 'html') }}{# Password #}</span>
+						<span class="unselectable">{{ _trans('web', 5, 3, 'html') }}{# Password #}</span>
 						<input type="password" id="account_signin_password" name="password" value="" autocomplete="off" />
 					</label>
 					<input id="account_signin_submit" type='button' value="{{ _trans('web', 5, 4, 'input') }}{# Sign in #}" onclick="$(this.form).submit();" />

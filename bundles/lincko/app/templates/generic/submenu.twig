@@ -1,30 +1,73 @@
 {# category 1 #}
 {% set route = _route_name() %}
-<div id="begin_mobile_menu" class="visibility_hidden">
+<div id="begin_submenu" class="visibility_hidden">
 	<script>
-		JSfiles.push("{{ _filelatest('/lincko/app/scripts/generic/mobile_menu.js') }}");
+		JSfiles.push("{{ _filelatest('/lincko/app/scripts/generic/submenu.js') }}");
 	</script>
-	{% include '/bundles/lincko/app/templates/generic/scripts/mobile_menu.js.twig' %}
-	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/generic/mobile_menu.css') }}" type="text/css" />
+	{% include '/bundles/lincko/app/templates/generic/scripts/submenu.js.twig' %}
+	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/generic/submenu.css') }}" type="text/css" />
 </div>
 <div class="display_none">
-	<div id="-mobile_menu_wrapper_top" class="mobile_menu_wrapper_top unselectable">
-		<div class="base_menu mobile_menu_top">
-			<span class="mobile_menu_back font_sans_serif"><img class="base_button mobile_menu_back_image" src="{{ _filelatest('/lincko/app/images/generic/mobile_menu/back_w.png') }}" alt="{{ _trans('app', 1, 2, 'html') }}" title="{{ _trans('app', 1, 2, 'html') }}" /></span>
-			<span class="mobile_menu_title font_sans_serif"></span>
+	<div id="-submenu_wrapper" class="submenu_wrapper unselectable">
+		<div class="base_menu submenu_top">
+			<span class="submenu_back font_sans_serif submenu_hide maxTablet" find="submenu_wrapper_back">
+				<img class="base_button submenu_back_image submenu_back_image_off" src="{{ _filelatest('/lincko/app/images/generic/submenu/back_w.png') }}" alt="{{ _trans('app', 1, 2, 'html') }}{# Back #}" title="{{ _trans('app', 1, 2, 'html') }}{# Back #}" />
+				<img  find="test2" class="base_button submenu_back_image submenu_back_image_on" src="{{ _filelatest('/lincko/app/images/generic/submenu/back_b.png') }}" alt="{{ _trans('app', 1, 2, 'html') }}{# Back #}" title="{{ _trans('app', 1, 2, 'html') }}{# Back #}" />
+			</span>
+			<span class="submenu_title font_sans_serif" find="submenu_wrapper_title"></span>
+			<span class="submenu_close font_sans_serif submenu_hide minDesktop" find="submenu_wrapper_back">
+				<img class="base_button submenu_close_image" src="{{ _filelatest('/lincko/app/images/generic/submenu/close.png') }}" alt="{{ _trans('app', 1, 3, 'html') }}{# Close #}" title="{{ _trans('app', 1, 3, 'html') }}{# Close #}" />
+			</span>
 		</div>
-		<div class="base_content mobile_menu_content overthrow">
+		<div class="base_content submenu_content overthrow" find="submenu_wrapper_content">
+		</div>
+		<div find="submenu_wrapper_bottom">
 		</div>
 	</div>
 
-	<div id="-mobile_menu_button" class="base_optionTab mobile_menu_deco">
-		<span class=""></span>
-		<span class="mobile_menu_value"></span>
+	<div id="-submenu_button" class="base_optionTab submenu_deco">
+		<span class="submenu_padding" find="submenu_button_title"></span>
+		<span class="submenu_padding submenu_value" find="submenu_button_value"></span>
 	</div>
 
-	<div id="-mobile_menu_radio" class="base_optionTab mobile_menu_deco">
-		<span class=""></span>
-		<span class="mobile_menu_radio"></span>
+	<div id="-submenu_next" class="base_optionTab submenu_deco">
+		<span class="submenu_padding" find="submenu_next_title"></span>
+		<span class="submenu_padding submenu_value" find="submenu_next_value"></span>
+	</div>
+
+	<div id="-submenu_radio" class="base_optionTab submenu_deco">
+		<span class="submenu_padding" find="submenu_radio_title"></span>
+		<span class="submenu_padding submenu_radio" find="submenu_radio_value"></span>
+	</div>
+
+	<div id="-submenu_form" class="base_optionTab submenu_bottom_cell">
+		<span class="submenu_form_valid" find="submenu_form_title"></span>
+	</div>
+
+	<div id="-submenu_app_upload_single" class="submenu_app_upload_single submenu_deco submenu_deco_info">
+		<div class="submenu_app_upload_single_row">
+			<span class="submenu_app_upload_progress">
+				<div class="submenu_app_upload_progress_full">
+					<div class="submenu_app_upload_progress_pc_text ellipsis">
+						<span find="submenu_app_upload_progress_pc_text">0%</span><span class="isMobile"> (<span find="submenu_app_upload_name" ></span>)</span>
+						<img class="submenu_app_upload_single_cancel_image noMobile" find="submenu_app_upload_single_cancel" src="{{ _filelatest('/lincko/app/images/generic/submenu/cancel.png') }}" alt="{{ _trans('app', 1, 4, 'html') }}{# Cancel #}" title="{{ _trans('app', 1, 4, 'html') }}{# Cancel #}" />
+					</div>
+					<div class="submenu_app_upload_progress_pc" find="submenu_app_upload_progress_pc"></div>
+				</div>
+			</span>
+		</div>
+		<div class="submenu_app_upload_single_row">
+			<span class="submenu_app_upload_info">
+				<span class="submenu_app_upload_preview noMobile">
+					<img class="submenu_app_upload_preview_image" src="{{ _filelatest('/lincko/app/images/generic/submenu/top.png') }}" />
+				</span>
+				<span>
+					<div class="noMobile ellipsis" find="submenu_app_upload_name"></div>
+					<div find="submenu_app_upload_size"></div>
+					<div class="submenu_app_upload_info_destination" find="submenu_app_upload_where"></div>
+				</span>
+			</span>
+		</div>
 	</div>
 </div>
-<div id="end_mobile_menu" class="visibility_hidden"></div>
+<div id="end_submenu" class="visibility_hidden"></div>

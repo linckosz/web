@@ -32,4 +32,3 @@ function app_content_dynamic_position() {
 }
 app_content_dynamic_position();
 $(window).resize(app_content_dynamic_position);
-

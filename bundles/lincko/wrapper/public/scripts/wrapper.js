@@ -1,5 +1,5 @@
-var xhr;
-var totalxhr = 0;
+var wrapper_xhr;
+var wrapper_totalxhr = 0;
 
 function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_complete){
 	if(typeof cb_success==="undefined"){ cb_success = function(){}; }
@@ -7,7 +7,7 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 	if(typeof cb_begin==="undefined"){ cb_begin = function(){}; }
 	if(typeof cb_complete==="undefined"){ cb_complete = function(){}; }
 	
-	totalxhr++;
+	wrapper_totalxhr++;
 	method = method.toUpperCase();
 	action = action.toLowerCase();
 
@@ -18,7 +18,7 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 		timeout = 20000; //20s, Twice the time because the translation request has to request a third party
 	}
 
-	xhr = $.ajax({
+	wrapper_xhr = $.ajax({
 		url: 'wrapper/'+action+linkid,
 		type: method, //Ajax calls will queue GET request only, that can timeout if the url is the same, but the PHP code still processing in background
 		data: JSON.stringify(param),
@@ -43,7 +43,7 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 			cb_success(data.msg, data.error, data.status);
 		},
 		error: function(xhr_err, ajaxOptions, thrownError){
-			var msg = totalxhr+') '+'xhr.status => '+xhr_err.status
+			var msg = wrapper_totalxhr+') '+'xhr.status => '+xhr_err.status
 				+'\n'
 				+'ajaxOptions => '+ajaxOptions
 				+'\n'
@@ -54,12 +54,12 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 			cb_error(xhr_err, ajaxOptions, thrownError);
 		},
 		complete: function(){
-			xhr = false;
+			wrapper_xhr = false;
 			cb_complete();
 		},
 	});
 }
-;
+
 function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete){
 	if(typeof cb_success==="undefined"){ cb_success = function(){}; }
 	if(typeof cb_error==="undefined"){ cb_error = function(){}; }
@@ -95,7 +95,7 @@ function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete){
 		});
 		var param = objForm.serializeArray();
 		var method = objForm.prop('method');
-		var action = objForm.attr('action'); //Do not use prpo here because (attr => user/logout | prop => https://lincko.net/user/logout (error))
+		var action = objForm.attr('action'); //Do not use prop here because (attr => user/logout | prop => https://lincko.net/user/logout (error))
 		wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_complete);
 	} else {
 		cb_success(Lincko.Translation.get('wrapper', 2, 'html'), true, 400); //The form does not exist!
@@ -127,13 +127,11 @@ $(function() {
 	//Disable submit action of all forms
 	//Enable only submit of uploading files forms (multipart/form-data) because files cannot be sent by Ajax
 	$("form[enctype!='multipart/form-data']").on('submit', function(e) {
-		 e.preventDefault(); //Disable submit action
+		 e.preventDefault(); //Disable submit action by click
 	});
 });
 
 function wrapper_upload_action(upload) {
-	alert('ok');
-	console.log(upload);
 	if(typeof upload === 'object') {
 		if(typeof upload.msg === 'string' && typeof upload.error === 'boolean' && typeof upload.resign === 'boolean'){
 			if(upload.error){

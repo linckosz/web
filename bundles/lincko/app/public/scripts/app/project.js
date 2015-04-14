@@ -48,83 +48,65 @@ $('#app_project_quick_upload').mouseleave(function(){
 	app_project_quick_upload = false;
 });
 
-function app_project_upload(form){
-	
-	var bar = $('#app_project_progress_bar');
-	var percent = $('#app_project_progress_percent');
-	var status = $('#app_project_progress_status');
-
-	form.ajaxForm({
-		beforeSend: function() {console.log('beforeSend');
-			status.empty();
-			var percentVal = '0%';
-			bar.width(percentVal)
-			percent.html(percentVal);
-		},
-		uploadProgress: function(event, position, total, percentComplete) {console.log('uploadProgress');
-			console.log(event);
-			console.log(position);
-			console.log(total);
-			console.log(percentComplete);
-			var percentVal = percentComplete + '%';
-			bar.width(percentVal)
-			percent.html(percentVal);
-		},
-		success: function() {console.log('success');
-			var percentVal = '100%';
-			bar.width(percentVal)
-			percent.html(percentVal);
-		},
-		complete: function(xhr) {console.log('complete');
-			status.html(xhr.responseText);
-		}
-	});
-}
-
 $('#app_project_quick_upload_video').click(function(){
-	$('#app_project_quick_file_iframe').contents().find('#api_file_shangzai_puk').val($.cookie("shangzai_puk"));
-	$('#app_project_quick_file_iframe').contents().find('#api_file_shangzai_cs').val($.cookie("shangzai_cs"));
-	var input = $('#app_project_quick_file_iframe').contents().find('#api_file_form_video');
-	input.off('change');
-	input.change(function(){
-		var form = $('#app_project_quick_file_iframe').contents().find('#api_file_form');
-		app_project_upload(form);
-		form.submit();
-		$(this).off('change');
-		$(this).val('');
-		app_project_quick_upload_display(null, false);
-	});
+	$('#app_upload_shangzai_puk').val($.cookie("shangzai_puk"));
+	$('#app_upload_shangzai_cs').val($.cookie("shangzai_cs"));
+	app_project_quick_upload_display(null, false);
+	var input = $('#app_upload_form_video');
 	input.click();
 });
 
 $('#app_project_quick_upload_photo').click(function(){
-	$('#app_project_quick_file_iframe').contents().find('#api_file_shangzai_puk').val($.cookie("shangzai_puk"));
-	$('#app_project_quick_file_iframe').contents().find('#api_file_shangzai_cs').val($.cookie("shangzai_cs"));
-	var input = $('#app_project_quick_file_iframe').contents().find('#api_file_form_photo');
-	input.off('change');
-	input.change(function(){
-		var form = $('#app_project_quick_file_iframe').contents().find('#api_file_form');
-		app_project_upload(form);
-		form.submit();
-		$(this).off('change');
-		$(this).val('');
-		app_project_quick_upload_display(null, false);
-	});
+	$('#app_upload_shangzai_puk').val($.cookie("shangzai_puk"));
+	$('#app_upload_shangzai_cs').val($.cookie("shangzai_cs"));
+	app_project_quick_upload_display(null, false);
+	var input = $('#app_upload_form_photo');
 	input.click();
 });
 
 $('#app_project_quick_upload_files').click(function(){
-	$('#app_project_quick_file_iframe').contents().find('#api_file_shangzai_puk').val($.cookie("shangzai_puk"));
-	$('#app_project_quick_file_iframe').contents().find('#api_file_shangzai_cs').val($.cookie("shangzai_cs"));
-	var input = $('#app_project_quick_file_iframe').contents().find('#api_file_form_files');
-	input.off('change');
-	input.change(function(){
-		var form = $('#app_project_quick_file_iframe').contents().find('#api_file_form');
-		app_project_upload(form);
-		form.submit();
-		$(this).off('change');
-		$(this).val('');
-		app_project_quick_upload_display(null, false);
-	});
+	$('#app_upload_shangzai_puk').val($.cookie("shangzai_puk"));
+	$('#app_upload_shangzai_cs').val($.cookie("shangzai_cs"));
+	app_project_quick_upload_display(null, false);
+	var input = $('#app_upload_form_files');
 	input.click();
 });
+
+$('#app_project_settings_img').click(function(){
+	submenu_Build("settings");
+});
+
+$('#app_project_quick_access_title').click(function(){
+	if($('#app_project_quick_access_title').find("[find=app_project_progress_all]").is(':visible')){
+		submenu_Build("app_upload", true);
+	}
+});
+
+function app_project_quick_access() {
+	var exist;
+	if(typeof app_upload_files !== 'undefined'){
+		for(var index in app_upload_files.lincko_record){
+			if(app_upload_files.lincko_record[index].id === Elem.id){
+				exist = true;
+			}
+		}
+		if(!exist){
+			app_upload_files.lincko_record[app_upload_files.lincko_record_index++] = {
+				id: "app_project_quick_access_title",
+				action: function(){
+					var Elem = $("#"+this.id);
+					if(app_upload_files.lincko_progressall>=100){
+						Elem.find("[find=app_project_quick_access]").show();
+						Elem.removeClass('app_project_quick_access_title_prog');
+						Elem.find("[find=app_project_progress_all]").hide().css('width', 0);
+					} else {
+						Elem.find("[find=app_project_quick_access]").hide();
+						Elem.addClass('app_project_quick_access_title_prog');
+						Elem.find("[find=app_project_progress_all]").show().css('width', app_upload_files.lincko_progressall+'%');
+					}
+				},
+			};
+		}
+	}
+}
+app_project_quick_access();

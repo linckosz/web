@@ -13,18 +13,18 @@
 	<div>
 		<form id="home_joinus_form" name="home_joinus_form" action="user/create" method="post" onsubmit="return wrapper_sendForm(this, home_cb_success, home_cb_error, home_cb_begin, home_cb_complete);">
 			<label class="home_label_inside" for="home_joinus_email">
-				<span>{{ _trans('web', 4, 2, 'html') }}{# Email #}</span>
+				<span class="unselectable">{{ _trans('web', 4, 2, 'html') }}{# Email #}</span>
 				<input type="email" id="home_joinus_email" name="email" value=""/>
 			</label>
 			<input type="password" name="foilautofill" value="" autocomplete="off" style="display:none" />{# It avoids a behavior in Firefox which does not know Autocomplete tag, FF fulfill by default the first field #}
 			<label class="home_label_inside" for="home_joinus_password">
-				<span>{{ _trans('web', 4, 3, 'html') }}{# Password #}</span>
+				<span class="unselectable">{{ _trans('web', 4, 3, 'html') }}{# Password #}</span>
 				<input type="password" id="home_joinus_password" name="password" value="" autocomplete="off" />
 			</label>
 			{% if wrapper_user_created %}
 				<label class="home_label_inside" for="home_joinus_captcha">
 					<img  name="captcha" id="home_captcha" src="" title="{{ _trans('web', 4, 17, 'brut') }}{# Refresh the captcha #}"/>
-					<span>{{ _trans('web', 4, 16, 'html') }}{# Captcha #}</span>
+					<span class="unselectable">{{ _trans('web', 4, 16, 'html') }}{# Captcha #}</span>
 					<input type="text" id="home_joinus_captcha" name="captcha" value="" autocomplete="off" />
 					<input type="hidden" name="captcha_name" value="home_joinus_form" autocomplete="off" />
 				</label>

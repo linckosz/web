@@ -73,7 +73,32 @@
 	vertical-align: top;
 }
 
+#app_application_submenu_block {
+	display: none;
+	position: fixed;
+	cursor: default;
+	height: 0;
+	width: 0
+	top: 0;
+	left: 0;
+	background-color: transparent;
+	z-index: 2000;
+	overflow: hidden;
+}
+
+.app_application_submenu_blur {}
+
+.app_application_upload {
+	position: absolute;
+	z-index: -1;
+	top: 0;
+	left: 0;
+	width: 0;
+	height: 0;
+}
+
 .app_application_blur {}
+
 
 .app_application_width_child {}
 
@@ -106,5 +131,16 @@
 		bottom: 0;
 		right: 0;
 		left: 0;
+	}
+}
+
+/* Minimum Desktop */
+@media only screen and (min-width: 1281px){
+	.app_application_submenu_blur {
+		-webkit-filter: blur(2px);
+		-moz-filter: blur(2px);
+		-o-filter: blur(2px);
+		-ms-filter: blur(2px);
+		filter: blur(2px);
 	}
 }

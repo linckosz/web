@@ -44,7 +44,7 @@
 
 .head_menu:hover {
 	background-color: #181A15;
-	background-image: url('');
+	background-image: none;
 }
 
 .head_menu.active {

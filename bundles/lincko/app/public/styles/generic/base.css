@@ -158,6 +158,11 @@ html, .font_sans_serif {
 	float: right;
 }
 
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .blur {
 	-webkit-filter: blur(4px);
 	-moz-filter: blur(4px);

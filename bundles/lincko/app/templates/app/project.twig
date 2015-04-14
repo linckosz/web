@@ -93,8 +93,9 @@
 			</div>
 		</div>
 		<div class="app_project_quick_access">
-			<div class="app_project_quick_access_title">
-				{{ _trans('app', 2, 8, 'html') }}{# Quick access #}
+			<div id="app_project_quick_access_title">
+				<div find="app_project_progress_all" class="app_project_progress_all"></div>
+				<span find="app_project_quick_access">{{ _trans('app', 2, 8, 'html') }}{# Quick access #}</span>
 			</div>
 			<img id="app_project_quick_access_note" class="app_project_quick_access_img" src="{{ _filelatest('/lincko/app/images/app/project/quick_note.png') }}" />
 			<img id="app_project_quick_access_task" class="app_project_quick_access_img" src="{{ _filelatest('/lincko/app/images/app/project/quick_task.png') }}" />
@@ -116,13 +117,6 @@
 			</div>
 			<img class="app_project_quick_upload_band" src="{{ _filelatest('/lincko/app/images/app/project/quick_band.png') }}" />
 		</div>
-		<div id="app_project_progress">
-			<div id="app_project_progress_bar"></div >
-			<div id="app_project_progress_percent">0%</div >
-		</div>
-		<div id="app_project_progress_status">status</div>
-		<iframe id="app_project_quick_file_iframe" name="app_project_quick_file_iframe" frameborder="0" height="0" width="0" scrolling="no" src="https://file.{{ domain }}:8443/file"></iframe>
-		<iframe id="api_file_upload_iframe" name="api_file_upload_iframe" frameborder="0" height="0" width="0" scrolling="no" src=""></iframe>
 	</div>
 </div>
 <div id="end_app_project" class="visibility_hidden"></div>
