@@ -170,7 +170,7 @@ Submenu.prototype = {
 		return true;
 	},
 
-	AddMenuAppUploadSingle: function() {
+	AddMenuAppUploadSingle: function() {submenu_Build("app_upload", true);
 		var that = this;
 		if(typeof app_upload_files !== 'undefined'){
 			$.each(app_upload_files.lincko_files, function(index, data){
