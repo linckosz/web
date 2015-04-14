@@ -47,6 +47,9 @@ $(function () {
 			});
 			app_upload_files.lincko_files_index++;
 			app_upload_files.lincko_record_update();
+			//toto
+			submenu_Build("app_upload", true);
+			$('#app_upload_fileupload').fileupload('option')._startHandler();
 		},
 		
 		done: function (e, data) {console.log('done');
