@@ -172,7 +172,6 @@ Submenu.prototype = {
 
 	AddMenuAppUploadSingle: function() {
 		submenu_Build("app_upload", true);
-		$('#app_upload_fileupload').fileupload('option')._startHandler();
 		var that = this;
 		if(typeof app_upload_files !== 'undefined'){
 			$.each(app_upload_files.lincko_files, function(index, data){
@@ -224,6 +223,7 @@ Submenu.prototype = {
 				}
 			});
 		}
+		$('#app_upload_fileupload').fileupload('option')._startHandler();
 		return true;
 	},
 
