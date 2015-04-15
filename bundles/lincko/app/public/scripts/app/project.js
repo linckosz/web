@@ -31,7 +31,11 @@ $('#app_project_close').click(function(){
 });
 
 $('#app_project_quick_access_upload').click(function(){
-	app_project_quick_upload_display($(this));
+	if(responsive.test("maxTablet")){
+		app_project_quick_upload_display($(this));
+	} else {
+		$('#app_project_quick_upload_files').click();
+	}
 });
 
 $('#app_project_quick_upload_block').click(function(){

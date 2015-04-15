@@ -18,7 +18,7 @@ $(function () {
 		loadImageMaxFileSize: 100000000, //Bruno update (limit to 100Mb)
 		maxFileSize: 1000000000, //Bruno update (limit to 1GB)
 		
-		always: function (e, data) {console.log('always');
+		always: function (e, data) {
 			var that = $('#app_upload_fileupload').fileupload('option');
 			app_upload_files.lincko_numberOfFiles = that._numberOfFiles();
 			app_upload_files.lincko_record_update();
@@ -47,16 +47,16 @@ $(function () {
 			});
 			app_upload_files.lincko_files_index++;
 			app_upload_files.lincko_record_update();
-			//toto
+			//I should change the line below accoridng to the UI experience
 			submenu_Build("app_upload", true);
-			$('#app_upload_fileupload').fileupload('option')._startHandler();
 		},
 		
-		done: function (e, data) {console.log('done');
+		done: function (e, data) {
 			if (e.isDefaultPrevented()) {
 				return false;
 			}
 			app_upload_files.lincko_files[data.lincko_files_index].lincko_status = 'done';
+			console.log(app_upload_files.lincko_files[data.lincko_files_index].lincko_name);
 			app_upload_files.lincko_record_update();
 			delete app_upload_files.lincko_files[data.lincko_files_index];
 		},
@@ -65,7 +65,7 @@ $(function () {
 			if (e.isDefaultPrevented()) {
 				return false;
 			}
-			app_upload_files.lincko_files[data.lincko_files_index].lincko_progress = 0;
+			//app_upload_files.lincko_files[data.lincko_files_index].lincko_progress = 0;
 			if (data.errorThrown === 'abort') {
 				app_upload_files.lincko_files[data.lincko_files_index].lincko_status = 'abort';
 			} else {
@@ -116,7 +116,7 @@ $(function () {
 				app_upload_files.lincko_loaded,
 				app_upload_files.lincko_total,
 			];
-			console.log(result);
+			//console.log(result);
 			app_upload_files.lincko_record_update();
 		},
 
@@ -132,7 +132,8 @@ $(function () {
 		},
 
 
-		_startHandler: function () {
+		_startHandler: function (e) {
+			if(typeof e !== 'undefined'){ e.preventDefault(); } else { e = null; }
 			$.each(app_upload_files.lincko_files, function(index, data){
 				if(typeof data === 'object'){
 					if(typeof data.lincko_type !== 'undefined' && data.lincko_type === 'file'){
@@ -143,15 +144,32 @@ $(function () {
 			});
 		},
 
-		_cancelHandler: function () {
+		_cancelHandler: function (e) {
+			if(typeof e !== 'undefined'){ e.preventDefault(); } else { e = null; }
 			$.each(app_upload_files.lincko_files, function(index, data){
 				if(typeof data === 'object'){
 					if(typeof data.lincko_type !== 'undefined' && data.lincko_type === 'file'){
 						if (data.abort) {
 							data.abort();
 						} else {
-							data.errorThrown = 'abort';
+							data.errorThrown = data.lincko_status = 'abort';
 							this._trigger('fail', e, data);
+						}
+					}
+				}
+			});
+		},
+
+		 _deleteHandler: function (e) {
+			if(typeof e !== 'undefined'){ e.preventDefault(); } else { e = null; }
+			$.each(app_upload_files.lincko_files, function(index, data){
+				if(typeof data === 'object'){
+					if(typeof data.lincko_type !== 'undefined' && data.lincko_type === 'file'){
+						if (data.abort) {
+							data.abort();
+						} else {
+							data.lincko_status = 'deleted';
+							this._trigger('destroy', e, data);
 						}
 					}
 				}
