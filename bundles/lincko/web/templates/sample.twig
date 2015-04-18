@@ -5,13 +5,13 @@
 <script>
 var sample_cb_success = function(msg){
 	msg = msg.replace(/\n/g, "<br />");
-	$("#divbox").html($("#divbox").html()+'<br />'+totalxhr+'&nbsp;&raquo;&nbsp;'+msg);
+	$("#divbox").html($("#divbox").html()+'<br />'+wrapper_totalxhr+'&nbsp;&raquo;&nbsp;'+msg);
 }
 var sample_cb_error = function(xhr_err, ajaxOptions, thrownError){
 	$("#divbox").html(
 		$("#divbox").html()
 		+'<br />'
-		+totalxhr+'&nbsp;&raquo;&nbsp;'+'xhr.status => '+xhr_err.status
+		+wrapper_totalxhr+'&nbsp;&raquo;&nbsp;'+'xhr.status => '+xhr_err.status
 		+'<br />'
 		+'thrownError => '+thrownError
 	);

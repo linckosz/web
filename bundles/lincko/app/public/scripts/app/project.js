@@ -99,7 +99,8 @@ function app_project_quick_access() {
 				id: "app_project_quick_access_title",
 				action: function(){
 					var Elem = $("#"+this.id);
-					if(app_upload_files.lincko_progressall>=100){
+					//if(app_upload_files.lincko_progressall>=100){
+					if(app_upload_files.lincko_numberOfFiles <= 0){
 						Elem.find("[find=app_project_quick_access]").show();
 						Elem.removeClass('app_project_quick_access_title_prog');
 						Elem.find("[find=app_project_progress_all]").hide().css('width', 0);

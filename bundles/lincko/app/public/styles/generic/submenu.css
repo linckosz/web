@@ -267,6 +267,20 @@
 	overflow: hidden;
 }
 
+.submenu_app_upload_progress_full_abort {
+	-webkit-box-shadow: 0px 0px 4px 1px rgba(251, 149, 31, 0.6);
+	-moz-box-shadow: 0px 0px 4px 1px rgba(251, 149, 31, 0.6);
+	box-shadow: 0px 0px 4px 1px rgba(251, 149, 31, 0.6);
+	color: #FBA025 !important;
+}
+
+.submenu_app_upload_progress_full_failed {
+	-webkit-box-shadow: 0px 0px 4px 1px rgba(229, 32, 32, 0.6);
+	-moz-box-shadow: 0px 0px 4px 1px rgba(229, 32, 32, 0.6);
+	box-shadow: 0px 0px 4px 1px rgba(229, 32, 32, 0.6);
+	color: #E52020 !important;
+}
+
 .submenu_app_upload_progress_pc {
 	background-color: #ACF9A4;
 	min-height: 16px;
@@ -325,20 +339,33 @@
 
 .submenu_app_upload_preview {
 	display: table-cell;
-	padding: 0 8px 0 0;
+	padding: 0 0 0 8px;
 	white-space: nowrap;
 	vertical-align: top;
-	text-align: left;
+	text-align: right;
 	width: auto;
-	float: left;
+	float: right;
 }
 
-.submenu_app_upload_preview_image {
-	height: 60px;
-	width: 60px;
-	float: left;
-	padding: 0;
+.submenu_app_upload_preview canvas {
 	border: 1px solid #EBEFF3;
+	max-width: 120px;
+	max-height: 60px;
+}
+
+/*
+To customize the audio/video player, need to play with the classes ".mejs-*", but my tests didn't work, I haven't check why
+http://brianshim.com/webtricks/style-the-wordpress-3-6-media-player/
+*/
+
+.submenu_app_upload_preview video {
+	border: 1px solid #EBEFF3;
+	max-width: 160px;
+}
+
+.submenu_app_upload_preview audio {
+	border: none;
+	max-width: 160px;
 }
 
 .submenu_app_upload_info {

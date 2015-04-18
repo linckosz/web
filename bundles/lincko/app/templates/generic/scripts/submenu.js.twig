@@ -1,5 +1,8 @@
 <script>
 
+	var submenu_language_full = "{{ _language_full() }}";
+	var submenu_list = [];
+
 	{% set language = _language() %}
 	{% set languages = _languages('app') %}
 	submenu_list['language'] = {
@@ -14,15 +17,12 @@
 				"title": "{{ value }}",
 				"selected": {% if key == language %}true{% else %}false{% endif %},
 				"action": function(){
-					submenu_Hideall();
 					ChangeLanguage("{{ key }}");
 				},
-				"class": ""
+				"hide": true,
+				"class": "",
 			},
 		{% endfor %}
 	};
-
-
-
 
 </script>

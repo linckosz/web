@@ -34,13 +34,17 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 			//var msg = data; //for test
 			//var msg = JSON.parse(data.msg); //for test
 
+			//This is importat because sometime in msg we return an object with some information inside
+			var msg = data.msg;
+			if(typeof msg === 'object' && msg.msg){
+				msg = msg.msg;
+			}
 			if(data.error){
 				JSerror.sendError(JSON.stringify(data), '/wrapper.js/wrapper_ajax().success()', 0);
 				console.log(data);
 			}
-
 			// Below is the production information with "dataType: 'json'"
-			cb_success(data.msg, data.error, data.status);
+			cb_success(msg, data.error, data.status);
 		},
 		error: function(xhr_err, ajaxOptions, thrownError){
 			var msg = wrapper_totalxhr+') '+'xhr.status => '+xhr_err.status
@@ -123,6 +127,11 @@ function wrapper_sendAction(param, method, action, cb_success, cb_error, cb_begi
 	return false; //Disable submit action
 }
 
+function wrapper_force_resign(){
+	wrapper_ajax([], 'get' , 'user/resign');
+	return true;
+}
+
 $(function() {
 	//Disable submit action of all forms
 	//Enable only submit of uploading files forms (multipart/form-data) because files cannot be sent by Ajax
@@ -130,16 +139,3 @@ $(function() {
 		 e.preventDefault(); //Disable submit action by click
 	});
 });
-
-function wrapper_upload_action(upload) {
-	if(typeof upload === 'object') {
-		if(typeof upload.msg === 'string' && typeof upload.error === 'boolean' && typeof upload.resign === 'boolean'){
-			if(upload.error){
-				console.log(upload.msg);
-			}
-			if(upload.resign){
-				wrapper_sendAction('','post','user/resign');
-			}
-		}
-	}
-}

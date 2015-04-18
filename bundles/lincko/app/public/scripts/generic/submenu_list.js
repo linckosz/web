@@ -1,5 +1,3 @@
-var submenu_list = [];
-
 /*
 //Only "style" and "title" must exist, other fields are optional
 submenu_list['sample'] = {
@@ -13,16 +11,16 @@ submenu_list['sample'] = {
 		"style": "button",
 		"title": "Single action",
 		"action": function(){
-			submenu_Hideall();
 			alert('An action');
 		},
 		"class": "",
+		"hide": false, //By default 'true', it hides all submenu after the click ( equivalent to submenu_Hideall(); )
 	},
 	//It will open a sub menu
 	"Submenu": {
 		"style": "next",
-		"title": "Submenu",
-		"next": "anothermenu", //The name of the next menu we will access
+		"title": "Submenu", //The name of the next menu we will access
+		"next": "anothermenu",
 		"value": "Un truc", //This will ne replace by the title of the sub menu if it exists
 		"class": "",
 	},
@@ -51,17 +49,18 @@ submenu_list['settings'] = {
 		"class": "",
 	},
 	//It will open a sub menu
-	"Submenu": {
+	"language": {
 		"style": "next",
-		"title": "Submenu",
-		"next": "anothermenu", //The name of the next menu we will access
-		"value": "Un truc", //This will be replaced by the title of the sub menu if it exists
+		"title": 'a'+Lincko.Translation.get('app', 1, 'html'), //Language
+		"next": "language",
+		"value": submenu_language_full,
 		"class": "",
 	},
 	//It will create a form with a validation button
 	"form": {
 		"style": "form",
 		"title": Lincko.Translation.get('app', 3, 'html'), //Confirm
+		"hide": false,
 	},
 };
 
@@ -73,5 +72,6 @@ submenu_list['app_upload'] = {
 	"app_upload_all": {
 		"style": "app_upload_all",
 		"title": "Upload all", //This title will be not used
+		"hide": false,
 	},
 };

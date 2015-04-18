@@ -68,30 +68,32 @@ class ControllerWrapper extends Controller {
 		}
 		@curl_close($ch);
 
-		if($json_result && isset($json_result->msg) && isset($json_result->error) && isset($json_result->flash)){
-			//In case of Access unauthorize, we force to sign out the user
-			if(isset($json_result->flash->signout) && $json_result->flash->signout===true){
+		if($json_result && isset($json_result->msg) && isset($json_result->error)){
+			
+			if(isset($json_result->flash)){
 				//In case we accept to try to relog
-				if(!$this->resignin && isset($json_result->flash->resignin) && $json_result->flash->resignin===true){
+				if(!$this->resignin && isset($json_result->flash) && isset($json_result->flash->resignin) && $json_result->flash->resignin===true){
 					return $this->reSignIn();
-				} else {
+				}
+				//In case of Access unauthorize, we force to sign out the user
+				else if(isset($json_result->flash->signout) && $json_result->flash->signout===true){
 					$this->signOut();
 				}
-			}
-			//In case of first Sign in (public key and private key must be a pair)
-			else if(isset($json_result->flash->public_key) && isset($json_result->flash->private_key)){
-				$_SESSION['public_key'] = $json_result->flash->public_key;
-				$_SESSION['private_key'] = $json_result->flash->private_key;
-				$this->uploadKeys();
-			}
+				//In case of first Sign in (public key and private key must be a pair)
+				else if(isset($json_result->flash->public_key) && isset($json_result->flash->private_key)){
+					$_SESSION['public_key'] = $json_result->flash->public_key;
+					$_SESSION['private_key'] = $json_result->flash->private_key;
+					$this->uploadKeys();
+				}
 
-			//After signin, it return the username
-			if(isset($json_result->flash->username)){
-				$app->setCookie('yonghu', $json_result->flash->username);
-				$_SESSION['yonghu'] = $json_result->flash->username;
-			}
+				//After signin, it return the username
+				if(isset($json_result->flash->username)){
+					$app->setCookie('yonghu', $json_result->flash->username);
+					$_SESSION['yonghu'] = $json_result->flash->username;
+				}
 
-			unset($json_result->flash);
+				unset($json_result->flash);
+			}
 			print_r(json_encode($json_result)); //production output
 			//print_r($json_result->msg); //for test
 			//print_r($result); //for test
@@ -110,7 +112,7 @@ class ControllerWrapper extends Controller {
 		$app = $this->app;
 		$this->setupKeys();
 		if($_SESSION['public_key'] == $app->lincko->security['public_key'] && $_SESSION['private_key'] == $app->lincko->security['private_key']){
-			if(isset($_SESSION['youjian']) && isset($_SESSION['mima'])){
+			if(isset($_SESSION['youjian']) && isset($_SESSION['mima']) && false){
 				$this->json['data']['email'] = $_SESSION['youjian'];
 				$this->json['data']['password'] = $_SESSION['mima'];
 				return true;
