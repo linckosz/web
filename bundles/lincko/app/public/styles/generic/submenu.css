@@ -22,6 +22,7 @@
 
 .submenu_top {
 	display: table;
+	table-layout: fixed;
 	height: 48px;
 	width: 100%;
 	text-align: center;
@@ -35,6 +36,7 @@
 
 .submenu_bottom {
 	display: table;
+	table-layout: fixed;
 	height: 48px;
 	width: 100%;
 	text-align: center;
@@ -102,6 +104,15 @@
 	width: 100%;
 }
 
+.submenu_top_side {
+	display: table-cell;
+	padding: 0;
+	white-space: nowrap;
+	vertical-align: middle;
+	text-align: center;
+	width: 62px;
+}
+
 .submenu_bottom_cell {
 	display: table-cell;
 	padding: 0 16px 0 16px;
@@ -150,6 +161,10 @@
 	background-color: #FFFFFF;
 }
 
+.submenu_deco_fix {
+	background-color: #FFFFFF !important;
+}
+
 .submenu_deco_next {
 	background-color: #FFFFF0 !important;
 }
@@ -185,6 +200,7 @@
 .submenu_back_image {
 	border-right: #343434 2px solid;
 	padding-right: 14px;
+	float: right;
 }
 
 .submenu_back_image_on {
@@ -215,6 +231,7 @@
 
 .submenu_close_image {
 	padding-right: 14px;
+	float: right;
 	filter:alpha(opacity=30);
 	opacity:0.3;
 	-moz-opacity:0.3;
@@ -412,6 +429,9 @@ http://brianshim.com/webtricks/style-the-wordpress-3-6-media-player/
 	.submenu_title {
 		color: #6F7377;
 		font-size: 15px;
+	}
+	.submenu_top_side {
+		width: 46px;
 	}
 	.submenu_bottom {
 		background-color: #BCBCBC;

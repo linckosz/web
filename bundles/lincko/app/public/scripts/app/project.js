@@ -82,7 +82,7 @@ $('#app_project_settings_img').click(function(){
 
 $('#app_project_quick_access_title').click(function(){
 	if($('#app_project_quick_access_title').find("[find=app_project_progress_all]").is(':visible')){
-		submenu_Build("app_upload", true);
+		submenu_Build("app_upload_all", true);
 	}
 });
 

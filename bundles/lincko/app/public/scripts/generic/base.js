@@ -121,3 +121,23 @@ function base_format_form_single(Elem){
 		return $(this).prev().outerWidth() - 8;
 	});
 }
+
+//Copy canvas
+//http://stackoverflow.com/questions/3318565/any-way-to-clone-html5-canvas-element-with-its-content
+//http://jsperf.com/copying-a-canvas-element
+function base_cloneCanvas(oldCanvas) {
+
+	//create a new canvas
+	var newCanvas = document.createElement('canvas');
+	var context = newCanvas.getContext('2d');
+
+	//set dimensions
+	newCanvas.width = oldCanvas.width;
+	newCanvas.height = oldCanvas.height;
+
+	//apply the old canvas to the new one
+	context.drawImage(oldCanvas, 0, 0);
+
+	//return the new canvas
+	return newCanvas;
+}

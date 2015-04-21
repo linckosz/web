@@ -11,12 +11,12 @@ var app_application = {
 	},
 }
 
-enquire.register(responsive.minTablet, function() { 
+enquire.register(responsive.noMobileL, function() { 
 	if(wrapper_broswer('webkit') && $('#app_application_project').hasClass('app_application_visible')){
 		$('#app_application_content').velocity({ blur: 0 }, 200);
 	}
 });
-enquire.register(responsive.maxMobileL, function() { 
+enquire.register(responsive.isMobileL, function() { 
 	if(wrapper_broswer('webkit') && $('#app_application_project').hasClass('app_application_visible')){
 		$('#app_application_content').velocity({ blur: 4 }, 200);
 	}
@@ -71,7 +71,7 @@ function app_application_move_menu(Elem, Blur, Block, force_blur) {
 					$.each(Elem.find('.app_application_width_child'), function() {
 						$(this).css('width', width_child);
 					});
-					if(responsive.test("maxMobileL") || force_blur){
+					if(responsive.test("isMobileL") || force_blur){
 						if(wrapper_broswer('webkit')){ Blur.velocity({ blur: 4 }, time); }
 					}
 				},

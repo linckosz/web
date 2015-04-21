@@ -11,12 +11,14 @@
 <div class="display_none">
 	<div id="-submenu_wrapper" class="submenu_wrapper unselectable">
 		<div class="base_menu submenu_top">
-			<span class="submenu_back font_sans_serif submenu_hide maxTablet" find="submenu_wrapper_back">
+			<span class="submenu_top_side submenu_back font_sans_serif submenu_hide maxTablet" find="submenu_wrapper_back">
 				<img class="base_button submenu_back_image submenu_back_image_off" src="{{ _filelatest('/lincko/app/images/generic/submenu/back_w.png') }}" alt="{{ _trans('app', 1, 2, 'html') }}{# Back #}" title="{{ _trans('app', 1, 2, 'html') }}{# Back #}" />
-				<img  find="test2" class="base_button submenu_back_image submenu_back_image_on" src="{{ _filelatest('/lincko/app/images/generic/submenu/back_b.png') }}" alt="{{ _trans('app', 1, 2, 'html') }}{# Back #}" title="{{ _trans('app', 1, 2, 'html') }}{# Back #}" />
+				<img  class="base_button submenu_back_image submenu_back_image_on" src="{{ _filelatest('/lincko/app/images/generic/submenu/back_b.png') }}" alt="{{ _trans('app', 1, 2, 'html') }}{# Back #}" title="{{ _trans('app', 1, 2, 'html') }}{# Back #}" />
 			</span>
-			<span class="submenu_title font_sans_serif" find="submenu_wrapper_title"></span>
-			<span class="submenu_close font_sans_serif submenu_hide minDesktop" find="submenu_wrapper_back">
+			<span class="submenu_top_side font_sans_serif minDesktop"></span>
+			<span class="submenu_title font_sans_serif ellipsis" find="submenu_wrapper_title"></span>
+			<span class="submenu_top_side font_sans_serif maxTablet"></span>
+			<span class="submenu_top_side submenu_close font_sans_serif submenu_hide minDesktop" find="submenu_wrapper_back">
 				<img class="base_button submenu_close_image" src="{{ _filelatest('/lincko/app/images/generic/submenu/close.png') }}" alt="{{ _trans('app', 1, 3, 'html') }}{# Close #}" title="{{ _trans('app', 1, 3, 'html') }}{# Close #}" />
 			</span>
 		</div>
@@ -55,6 +57,8 @@
 				<div class="submenu_app_upload_progress_full" find="submenu_app_upload_progress_full">
 					<div class="submenu_app_upload_progress_pc_text ellipsis">
 						<span find="submenu_app_upload_progress_pc_text">0%</span><span class="isMobile"> (<span find="submenu_app_upload_name" ></span>)</span>
+					</div>
+					<div class="submenu_app_upload_progress_pc_text ellipsis">
 						<img class="submenu_app_upload_single_cancel_image noMobile" find="submenu_app_upload_single_cancel" src="{{ _filelatest('/lincko/app/images/generic/submenu/cancel.png') }}" alt="{{ _trans('app', 1, 4, 'html') }}{# Cancel #}" title="{{ _trans('app', 1, 4, 'html') }}{# Cancel #}" />
 					</div>
 					<div class="submenu_app_upload_progress_pc" find="submenu_app_upload_progress_pc"></div>
@@ -67,6 +71,61 @@
 				<span>
 					<div class="noMobile ellipsis" find="submenu_app_upload_name"></div>
 					<div find="submenu_app_upload_size"></div>
+					<div class="submenu_app_upload_info_destination" find="submenu_app_upload_where"></div>
+				</span>
+			</span>
+		</div>
+	</div>
+
+	<div id="-submenu_app_upload_title" class="submenu_app_upload_title submenu_deco submenu_deco_info submenu_deco_fix">
+		<div class="submenu_app_upload_single_row">
+			<span class="submenu_app_upload_progress">
+				<div class="submenu_app_upload_progress_full" find="submenu_app_upload_progress_full">
+					<div class="submenu_app_upload_progress_pc_text ellipsis">
+						<span find="submenu_app_upload_all_progress_pc_text">0%</span><span class="isMobile"> (<span find="submenu_app_upload_all_files" ></span>)</span>
+					</div>
+					<div class="submenu_app_upload_progress_pc" find="submenu_app_upload_all_progress_pc"></div>
+				</div>
+			</span>
+		</div>
+		<div class="submenu_app_upload_single_row">
+			<span class="submenu_app_upload_info">
+				<div class="noMobile">
+					<span find="submenu_app_upload_all_files"></span>
+					<span class="floatright" find="submenu_app_upload_all_size"></span>
+				</div>
+				<div class="noMobile">
+					<span find="submenu_app_upload_all_speed"></span>
+					<span class="floatright" find="submenu_app_upload_all_time">00:00:00</span>
+				</div>
+				<div class="isMobile">
+					<span find="submenu_app_upload_all_size"></span>
+					<span class="floatright" find="submenu_app_upload_all_time">00:00:00</span>
+				</div>
+			</span>
+		</div>
+	</div>
+
+	<div id="-submenu_app_upload_sub" class="submenu_app_upload_single submenu_deco submenu_deco_info">
+		<input find="submenu_app_upload_sub_index" type="hidden" value="-1" />
+		<div class="submenu_app_upload_single_row">
+			<span class="submenu_app_upload_progress">
+				<div class="submenu_app_upload_progress_full" find="submenu_app_upload_progress_full">
+					<div class="submenu_app_upload_progress_pc_text ellipsis">
+						<span find="submenu_app_upload_progress_pc_text">0%</span><span class="isMobile"> (<span find="submenu_app_upload_name" ></span>)</span>
+					</div>
+					<div class="submenu_app_upload_progress_pc_text ellipsis"></div>
+					<div class="submenu_app_upload_progress_pc" find="submenu_app_upload_progress_pc"></div>
+				</div>
+			</span>
+		</div>
+		<div class="submenu_app_upload_single_row">
+			<span class="submenu_app_upload_info">
+				<div find="submenu_app_upload_size"></div>
+				<div class="submenu_app_upload_preview noMobile" find="submenu_app_upload_preview_image"></div>
+				<span>
+					<div class="noMobile ellipsis" find="submenu_app_upload_name"></div>
+					
 					<div class="submenu_app_upload_info_destination" find="submenu_app_upload_where"></div>
 				</span>
 			</span>

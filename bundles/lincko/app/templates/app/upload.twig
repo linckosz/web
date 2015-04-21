@@ -25,9 +25,10 @@
 			lincko_progressall: 100,
 			lincko_numberOfFiles: 0,
 			lincko_britate: '',
-			lincko_time: '',
+			lincko_time: '00:00:00',
 			lincko_loaded: '',
 			lincko_total: '',
+			lincko_size: '',
 			lincko_files: {},
 			lincko_files_index: 0,
 			lincko_record: {}, //Must be {id: 'ElemID', action: function(){ dosomething(); }}
@@ -53,7 +54,7 @@
 </div>
 
 <div id="app_upload_hidden">
-	<form id="app_upload_fileupload" action="https://file.{{ domain }}:8443/file" method="POST" enctype="multipart/form-data" onsubmit="return false;">
+	<form id="app_upload_fileupload" action="" target="app_upload_fileupload_iframe" method="POST" enctype="multipart/form-data" onsubmit="return false;">
 		<input type="hidden" value="" id="app_upload_shangzai_puk" name="shangzai_puk" />
 		<input type="hidden" value="" id="app_upload_shangzai_cs" name="shangzai_cs" />
 		<input type="hidden" value="" id="app_upload_project_id" name="project_id" />
@@ -63,5 +64,7 @@
 	</form>
 </div>
 
-<div id="end_app_upload" class="visibility_hidden"></div>
+<div id="end_app_upload" class="visibility_hidden">
+	<iframe id="app_upload_fileupload_iframe" src=""></iframe>
+</div>
 
