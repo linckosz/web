@@ -2,7 +2,7 @@
 {% set route = _route_name() %}
 <div id="begin_mobile_menu" class="visibility_hidden">
 	<script>
-		JSfiles.push("{{ _filelatest('/lincko/web/scripts/generic/mobile_menu.js') }}");
+		JSfiles.later("{{ _filelatest('/lincko/web/scripts/generic/mobile_menu.js') }}");
 	</script>
 	{% include '/bundles/lincko/web/templates/generic/scripts/mobile_menu.js.twig' %}
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/web/styles/generic/mobile_menu.css') }}" type="text/css" />

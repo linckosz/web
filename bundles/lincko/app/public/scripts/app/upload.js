@@ -303,9 +303,9 @@ $(function () {
 			}
 
 			if (bits >= 1000000000) {
-				return (bits / 1000000000).toFixed(2) + ' Gbit/s';
+				return (bits / 1000000000).toFixed(1) + ' Gbit/s';
 			} else if (bits >= 1000000) {
-				return (bits / 1000000).toFixed(2) + ' Mbit/s';
+				return (bits / 1000000).toFixed(1) + ' Mbit/s';
 			} else if (bits >= 1000) {
 				return (bits / 1000).toFixed(0) + ' kbit/s';
 			} else {

@@ -4,7 +4,7 @@
 	{% include '/bundles/lincko/app/templates/generic/scripts/submenu.js.twig' %}
 	<script src="{{ _filelatest('/lincko/app/scripts/generic/submenu_list.js') }}" type="text/javascript"></script>
 	<script>
-		JSfiles.push("{{ _filelatest('/lincko/app/scripts/generic/submenu.js') }}");
+		JSfiles.later("{{ _filelatest('/lincko/app/scripts/generic/submenu.js') }}");
 	</script>
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/generic/submenu.css') }}" type="text/css" />
 </div>

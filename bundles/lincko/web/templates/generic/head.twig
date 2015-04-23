@@ -2,7 +2,7 @@
 {% set route = _route_name() %}
 <div id="begin_head" class="visibility_hidden">
 <script>
-	JSfiles.push("{{ _filelatest('/lincko/web/scripts/generic/head.js') }}");
+	JSfiles.later("{{ _filelatest('/lincko/web/scripts/generic/head.js') }}");
 	var head_link = [];
 	head_link['root'] = "{{ urlFor('root') }}";
 	head_link['home'] = "{{ urlFor('home') }}";

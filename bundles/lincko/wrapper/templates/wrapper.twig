@@ -52,39 +52,63 @@ $.cachedScript = function( url ) {
 //Global namespace (extend or create)
 var Lincko = Lincko || {}; //Create singleton object
 
-//Keep a record of JS files to be launch at the end of the page loading
-var JSfiles = [];
-
+//Translation list
 {{ translation_list_js|raw }}
+
+//Keep a record of JS files to be launch at the end of the page loading
+var JSfiles = {};
+
+//It keeps a record of all libraries that must be loaded after DOM load, it has priority level too
+//Libraries with priority lower than 50 might be a dependency of other libraries, higher than 50 are sure other library will not need it (default).
+JSfiles.later = function(url, priority){
+	if(typeof priority === 'undefined'){ priority = 50; }
+	if(typeof JSfiles[priority] === 'undefined'){
+		JSfiles[priority] = [];
+	}
+	JSfiles[priority].push(url);
+}
+
+JSfiles.loadLibraries = function(){
+	var files = [];
+	var url = '';
+	var length = 0;
+	for(var pri in this){
+		files = this[pri];
+		length = files.length;
+		for(var key in files){
+			url = files[key];
+			if(key < files.length-1){
+				$.cachedScript(url);
+			} else {
+				delete JSfiles[pri];
+				$.cachedScript(url).complete(function() {
+					JSfiles.loadLibraries();
+				});
+			}
+		}
+		return true;
+	}
+}
+
+//Load all JS libraries only after DOM load
+$(function() {
+	JSfiles.loadLibraries();
+});
+
+//Minimal libraries
+JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/error.js') }}", 0);
+JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/divers.js') }}", 0);
+JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/language.js') }}", 30);
+JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/wrapper.js') }}", 40);
+
 </script>
 
-
 {#
-	Load wrapper scripts
 	Warning: Only scripts that does not depends on any library (i.e. if any jQuery code)
 #}
-
 <link rel="stylesheet" href="{{ _filelatest('/lincko/wrapper/styles/responsive.css') }}" type="text/css" />
 <script src="{{ _filelatest('/lincko/wrapper/scripts/responsive.js') }}" type="text/javascript"></script>
 
-<script>
-$(function() {
-	$.cachedScript("{{ _filelatest('/lincko/wrapper/scripts/error.js') }}");
-	$.cachedScript("{{ _filelatest('/lincko/wrapper/scripts/divers.js') }}");
-	$.cachedScript("{{ _filelatest('/scripts/libs/basicplusui/jquery.fileupload.js') }}").complete(function() {
-		$.cachedScript("{{ _filelatest('/lincko/wrapper/scripts/language.js') }}").complete(function() {
-			$.cachedScript("{{ _filelatest('/lincko/wrapper/scripts/wrapper.js') }}").complete(function() {
-				for(var key in JSfiles){
-					$.cachedScript(JSfiles[key]);
-				}
-			});
-		});
-	});
-
-});
-
-
-</script>
 </head>
 {% block base %}
 {% endblock %}

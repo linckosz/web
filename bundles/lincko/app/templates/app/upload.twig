@@ -2,21 +2,20 @@
 	{# START Blueimp file upload library 9.9.3 #}
 	<script src="{{ _filelatest('/scripts/libs/basicplusui/vendor/jquery.ui.widget.js') }}" type="text/javascript"></script>
 	<script>
-		// jquery.fileupload.js has to be loaded first
-		JSfiles.push("{{ _filelatest('/scripts/libs/basicplusui/divers/load-image.all.min.js') }}");
-		JSfiles.push("{{ _filelatest('/scripts/libs/basicplusui/divers/canvas-to-blob.min.js') }}");
-		JSfiles.push("{{ _filelatest('/scripts/libs/basicplusui/jquery.iframe-transport.js') }}");
-		JSfiles.push("{{ _filelatest('/scripts/libs/basicplusui/jquery.fileupload-process.js') }}");
-		JSfiles.push("{{ _filelatest('/scripts/libs/basicplusui/jquery.fileupload-image.js') }}");
-		JSfiles.push("{{ _filelatest('/scripts/libs/basicplusui/jquery.fileupload-audio.js') }}");
-		JSfiles.push("{{ _filelatest('/scripts/libs/basicplusui/jquery.fileupload-video.js') }}");
-		JSfiles.push("{{ _filelatest('/scripts/libs/basicplusui/jquery.fileupload-validate.js') }}");
-		//JSfiles.push("{{ _filelatest('/scripts/libs/basicplusui/jquery.fileupload-ui.js') }}");
-		JSfiles.push("{{ _filelatest('/lincko/app/scripts/app/upload.js') }}");
+		JSfiles.later("{{ _filelatest('/scripts/libs/basicplusui/jquery.fileupload.js') }}", 10);
+		JSfiles.later("{{ _filelatest('/scripts/libs/basicplusui/divers/load-image.all.min.js') }}", 20);
+		JSfiles.later("{{ _filelatest('/scripts/libs/basicplusui/divers/canvas-to-blob.min.js') }}", 20);
+		JSfiles.later("{{ _filelatest('/scripts/libs/basicplusui/jquery.iframe-transport.js') }}", 20);
+		JSfiles.later("{{ _filelatest('/scripts/libs/basicplusui/jquery.fileupload-process.js') }}", 20);
+		JSfiles.later("{{ _filelatest('/scripts/libs/basicplusui/jquery.fileupload-image.js') }}", 20);
+		JSfiles.later("{{ _filelatest('/scripts/libs/basicplusui/jquery.fileupload-audio.js') }}", 20);
+		JSfiles.later("{{ _filelatest('/scripts/libs/basicplusui/jquery.fileupload-video.js') }}", 20);
+		JSfiles.later("{{ _filelatest('/scripts/libs/basicplusui/jquery.fileupload-validate.js') }}", 20);
+		JSfiles.later("{{ _filelatest('/lincko/app/scripts/app/upload.js') }}");
 	</script>
 	<!--[if (gte IE 8)&(lt IE 10)]>
 	<script>
-		JSfiles.push("{{ _filelatest('/scripts/libs/basicplusui/cors/jquery.xdr-transport.js') }}");
+		JSfiles.later("{{ _filelatest('/scripts/libs/basicplusui/cors/jquery.xdr-transport.js') }}, 20");
 	</script>
 	<![endif]-->
 	<script>
@@ -58,8 +57,13 @@
 		<input type="hidden" value="" id="app_upload_shangzai_puk" name="shangzai_puk" />
 		<input type="hidden" value="" id="app_upload_shangzai_cs" name="shangzai_cs" />
 		<input type="hidden" value="" id="app_upload_project_id" name="project_id" />
+		<!--
 		<input type="file" name="files[]" multiple="" accept="video/*" capture="camcoder" id="app_upload_form_video" />
 		<input type="file" name="files[]" multiple="" accept="image/*" capture="camera" id="app_upload_form_photo" />
+		-->
+		<input type="file" name="files[]" multiple="" accept="video/*" id="app_upload_form_video" />
+		<input type="file" name="files[]" multiple="" accept="image/*" id="app_upload_form_photo" />
+
 		<input type="file" name="files[]" multiple="" id="app_upload_form_files" />
 	</form>
 </div>
