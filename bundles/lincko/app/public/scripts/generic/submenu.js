@@ -343,7 +343,7 @@ Submenu.prototype = {
 
 						if(data.files[0].preview && $.trim(Elem.find("[find=submenu_app_upload_preview_image]").html()) === ''){
 							var canvas_preview = null;
-							if(data.files[0].preview.tagName.toLowerCase() === 'canvas'){
+							if(typeof data.files[0].preview.tagName !== 'undefined' && data.files[0].preview.tagName.toLowerCase() === 'canvas'){
 								canvas_preview = base_cloneCanvas(data.files[0].preview);
 							} else {
 								Elem.find("[find=submenu_app_upload_preview_image]").html(
@@ -517,7 +517,7 @@ Submenu.prototype = {
 
 				if(data.files[0].preview && $.trim(Elem.find("[find=submenu_app_upload_preview_image]").html()) === ''){
 					var canvas_preview = null;
-					if(data.files[0].preview.tagName.toLowerCase() === 'canvas'){
+					if(typeof data.files[0].preview.tagName !== 'undefined' && data.files[0].preview.tagName.toLowerCase() === 'canvas'){
 						canvas_preview = base_cloneCanvas(data.files[0].preview);
 					} else {
 						Elem.find("[find=submenu_app_upload_preview_image]").html(
