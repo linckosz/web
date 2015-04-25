@@ -19,8 +19,8 @@ $(function () {
 		maxFileSize: 1000000000, //Bruno update (limit to 1GB)
 		loadImageMaxFileSize: 100000000, //Bruno update (limit to 100Mb)
 		loadImageFileTypes: /^image\/.*$/, //Bruno update
-		previewMaxWidth: 120,
-		previewMaxHeight: 60,
+		previewMaxWidth: 720,
+		previewMaxHeight: 360,
 		messages: {
 			maxNumberOfFiles: Lincko.Translation.get('app', 13, 'html'), //Maximum number of files exceeded
 			acceptFileTypes: Lincko.Translation.get('app', 14, 'html'), //File type not allowed
