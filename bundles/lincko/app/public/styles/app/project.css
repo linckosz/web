@@ -261,13 +261,22 @@
 	overflow: hidden;
 }
 
+.app_project_quick_access_text {
+	margin-top: 4px;
+}
+
+.app_project_upload_text {
+	display: none;
+	font-size: 12px;
+}
+
 #app_project_quick_access_title {
 	position: relative;
 	text-overflow: ellipsis;
-	overflow: hidden;
 	white-space: nowrap;
 	width: 90%;
 	margin: auto;
+	margin-bottom: 4px;
 	border: 1px solid transparent;
 	height: 20px;
 	box-sizing: border-box;

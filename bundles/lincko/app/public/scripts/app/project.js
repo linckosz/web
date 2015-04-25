@@ -101,11 +101,13 @@ function app_project_quick_access() {
 					var Elem = $("#"+this.id);
 					//if(app_upload_files.lincko_progressall>=100){
 					if(app_upload_files.lincko_numberOfFiles <= 0){
+						Elem.find("[find=app_project_upload]").hide();
 						Elem.find("[find=app_project_quick_access]").show();
 						Elem.removeClass('app_project_quick_access_title_prog');
 						Elem.find("[find=app_project_progress_all]").hide().css('width', 0);
 					} else {
 						Elem.find("[find=app_project_quick_access]").hide();
+						Elem.find("[find=app_project_upload]").show();
 						Elem.addClass('app_project_quick_access_title_prog');
 						Elem.find("[find=app_project_progress_all]").show().css('width', app_upload_files.lincko_progressall+'%');
 					}
