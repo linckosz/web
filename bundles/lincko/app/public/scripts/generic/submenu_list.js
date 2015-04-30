@@ -51,7 +51,7 @@ submenu_list['settings'] = {
 	//It will open a sub menu
 	"language": {
 		"style": "next",
-		"title": 'a'+Lincko.Translation.get('app', 1, 'html'), //Language
+		"title": Lincko.Translation.get('app', 1, 'html'), //Language
 		"next": "language",
 		"value": submenu_language_full,
 		"class": "",
@@ -64,25 +64,3 @@ submenu_list['settings'] = {
 	},
 };
 
-submenu_list['app_upload_all'] = {
-	"_title": {
-		"style": "title",
-		"title": Lincko.Translation.get('app', 4, 'html'), //Uploads
-	},
-	"app_upload_all": {
-		"style": "app_upload_all",
-		"title": "Upload all", //This title will be not used
-	},
-};
-
-submenu_list['app_upload_sub'] = {
-	"_title": {
-		"style": "title",
-		"title": Lincko.Translation.get('app', 21, 'html'), //Unknown
-	},
-	"app_upload_sub": {
-		"style": "app_upload_sub",
-		"title": "Upload single", //This title will be not used
-		"value": -1, //This must be previously updated before opening the menu
-	},
-};

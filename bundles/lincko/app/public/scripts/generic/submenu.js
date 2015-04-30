@@ -305,6 +305,8 @@ Submenu.prototype = {
 		var that = this;
 		var Elem = null;
 		var pause = true;
+		var finish = true;
+		var retry = true;
 		//Each
 		if(typeof app_upload_files !== 'undefined'){
 			$.each(app_upload_files.lincko_files, function(index, data){
@@ -333,8 +335,10 @@ Submenu.prototype = {
 								}
 							});
 							Elem.click(function(){
-								submenu_list['app_upload_sub'].app_upload_sub.value = index;
-								submenu_Build("app_upload_sub", that.layer+1);
+								if(typeof app_upload_files.lincko_files[index] !== 'undefined' && data.lincko_status !== 'deleted' && data.lincko_status !== 'done'){
+									submenu_list['app_upload_sub'].app_upload_sub.value = index;
+									submenu_Build("app_upload_sub", that.layer+1);
+								}
 							});
 							that.wrapper.find("[find=submenu_wrapper_content]").append(Elem);
 						} else {
@@ -401,6 +405,14 @@ Submenu.prototype = {
 							pause = false;
 						}
 
+						if(data.lincko_status !== 'done' && data.lincko_status !== 'deleted'){
+							finish = false;
+						}
+
+						if(data.lincko_status !== 'abort' && data.lincko_status !== 'failed' && data.lincko_status !== 'error'  && data.lincko_status !== 'deleted'){
+							retry = false;
+						}
+
 						if(data.lincko_status === 'done' || data.lincko_status === 'deleted'){
 							var delay = 1000;
 							if(data.lincko_status === 'deleted'){
@@ -423,6 +435,29 @@ Submenu.prototype = {
 				$('#'+that.id+'_submenu_app_upload_function_button_start').hide();
 				$('#'+that.id+'_submenu_app_upload_function_button_stop').show();
 			}
+
+			if(retry){
+				$('#'+that.id+'_submenu_app_upload_function_button_start').html(
+					Lincko.Translation.get('app', 24, 'html') //Retry
+				);
+			} else {
+				$('#'+that.id+'_submenu_app_upload_function_button_start').html(
+					Lincko.Translation.get('app', 5, 'html') //Start
+				);
+			}
+
+			if(finish){
+				$('#'+that.id+'_submenu_app_upload_function_button_cancel').html(
+					Lincko.Translation.get('app', 25, 'html') //Close
+				);
+				$('#'+that.id+'_submenu_app_upload_function_button_start').css('visibility', 'hidden');
+			} else {
+				$('#'+that.id+'_submenu_app_upload_function_button_cancel').html(
+					Lincko.Translation.get('app', 22, 'html') //Delete
+				);
+				$('#'+that.id+'_submenu_app_upload_function_button_start').css('visibility', 'visible');
+			}
+
 		}
 		return true;
 	},
@@ -433,6 +468,8 @@ Submenu.prototype = {
 		var Elem_bt = null;
 		var that = this;
 		var pause = true;
+		var retry = true;
+		var finish = true;
 		var lincko_files_index = -1;
 		var data;
 
@@ -577,12 +614,42 @@ Submenu.prototype = {
 					pause = false;
 				}
 
+				if(data.lincko_status !== 'done' && data.lincko_status !== 'deleted'){
+					finish = false;
+				}
+
+				if(data.lincko_status !== 'abort' && data.lincko_status !== 'failed' && data.lincko_status !== 'error'  && data.lincko_status !== 'deleted'){
+					retry = false;
+				}
+
 				if(pause){
 					$('#'+that.id+'_submenu_app_upload_function_button_stop').hide();
 					$('#'+that.id+'_submenu_app_upload_function_button_start').show();
 				} else {
 					$('#'+that.id+'_submenu_app_upload_function_button_start').hide();
 					$('#'+that.id+'_submenu_app_upload_function_button_stop').show();
+				}
+
+				if(retry){
+					$('#'+that.id+'_submenu_app_upload_function_button_start').html(
+						Lincko.Translation.get('app', 24, 'html') //Retry
+					);
+				} else {
+					$('#'+that.id+'_submenu_app_upload_function_button_start').html(
+						Lincko.Translation.get('app', 5, 'html') //Start
+					);
+				}
+
+				if(finish){
+					$('#'+that.id+'_submenu_app_upload_function_button_cancel').html(
+						Lincko.Translation.get('app', 25, 'html') //Close
+					);
+					$('#'+that.id+'_submenu_app_upload_function_button_start').css('visibility', 'hidden');
+				} else {
+					$('#'+that.id+'_submenu_app_upload_function_button_cancel').html(
+						Lincko.Translation.get('app', 22, 'html') //Delete
+					);
+					$('#'+that.id+'_submenu_app_upload_function_button_start').css('visibility', 'visible');
 				}
 			}
 		}

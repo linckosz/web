@@ -1,4 +1,79 @@
 
+submenu_list['app_upload_all'] = {
+	"_title": {
+		"style": "title",
+		"title": Lincko.Translation.get('app', 4, 'html'), //Uploads
+	},
+	"destination": {
+		"style": "next",
+		"title": Lincko.Translation.get('app', 26, 'html'), //Destination
+		"next": "app_upload_destination",
+		"value": "<b>Customized</b>",
+		"class": "",
+	},
+	"app_upload_all": {
+		"style": "app_upload_all",
+		"title": "Upload all", //This title will be not used
+	},
+};
+
+submenu_list['app_upload_sub'] = {
+	"_title": {
+		"style": "title",
+		"title": Lincko.Translation.get('app', 21, 'html'), //Unknown
+	},
+	"destination": {
+		"style": "next",
+		"title": Lincko.Translation.get('app', 26, 'html'), //Destination
+		"next": "app_upload_destination",
+		"value": "My Placeholder",
+		"class": "",
+	},
+	"app_upload_sub": {
+		"style": "app_upload_sub",
+		"title": "Upload single", //This title will be not used
+		"value": -1, //This must be previously updated before opening the menu
+	},
+};
+
+submenu_list['app_upload_destination'] = {
+	"_title": {
+		"style": "title",
+		"title": Lincko.Translation.get('app', 26, 'html'), //Destination
+	},
+	"destination_0": {
+		"style": "radio",
+		"title": "My Placeholder",
+		"selected": true,
+		"action": function(){
+			alert('Do something');
+		},
+		"hide": false,
+		"class": "",
+	},
+	"destination_1": {
+		"style": "radio",
+		"title": "Autocut NOVA",
+		"selected": false,
+		"action": function(){
+			alert('Do something');
+		},
+		"hide": false,
+		"class": "",
+	},
+	"destination_2": {
+		"style": "radio",
+		"title": "Air freshener mk2",
+		"selected": false,
+		"action": function(){
+			alert('Do something');
+		},
+		"hide": true,
+		"class": "",
+	},
+};
+
+
 $(function () {
 	//Do not use 'use strict', it makes the code heavier, even if it's better for conventional coding
 

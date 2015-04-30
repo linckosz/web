@@ -252,7 +252,7 @@
 	overflow: hidden;
 }
 
-.app_project_quick_access {
+#app_project_quick_access {
 	position: absolute;
 	width: 100%;
 	bottom: 0;
@@ -384,7 +384,14 @@
 }
 
 /* Mobile phone in Portrait maximum */
-@media only screen and (max-width: 479px), only screen and (min-width: 901px) and (max-width: 1280px){
+@media only screen and (max-width: 479px){
+	.app_project_space {
+		height: 2px;
+	}
+}
+
+/* Mobile phone in Portrait maximum */
+@media only screen and (min-width: 901px) and (max-width: 1280px){
 	.app_project_space {
 		height: 4px;
 	}

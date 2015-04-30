@@ -8,89 +8,101 @@
 <div id="app_project_content" class="app_project_content app_application_width_child base_color_main_bg">
 	<img id="app_project_close" class="maxMobileL" src="{{ _filelatest('/lincko/app/images/app/project/back.png') }}" alt="{{ _trans('app', 2, 1, 'html') }}{# Close #}" title="{{ _trans('app', 2, 1, 'html') }}{# Close #}" />
 	<div class="app_project_div_content app_application_width_child overthrow">
-		<div class="app_project_user">
-			<img id="app_project_user_image" src="{{ _filelatest('/lincko/app/images/app/project/user.png') }}" />
-			<div>
-				<div id="app_project_user_name">Bruno 马丁</div>
-				<div id="app_project_user_email">brunoocto@gmail.com</div>
-			</div>
-		</div>
-		<div class="app_project_line"><div></div></div>
-		<div class="app_project_space"></div>
-		<div>
-			<label class="" for="app_project_search">
-				<input type="text" id="app_project_search" name="search" title="{{ _trans('app', 2, 3, 'html') }}{# Search #}"/>
-				<img id="app_project_search_img" src="{{ _filelatest('/lincko/app/images/app/project/search.png') }}" />
-			</label>
-			
-			<img id="app_project_settings_img" src="{{ _filelatest('/lincko/app/images/app/project/settings.png') }}" alt="{{ _trans('app', 2, 2, 'html') }}{# Settings #}" title="{{ _trans('app', 2, 2, 'html') }}{# Settings #}" />
-		</div>
-		<div class="app_project_space"></div>
-		<div class="app_project_line"><div></div></div>
-		<div class="app_project_space"></div>
-		<div class="app_project_tab">
-			<div id="app_project_placeholder">
+		<div id="app_project_top">
+			<div class="app_project_user">
+				<img id="app_project_user_image" src="{{ _filelatest('/lincko/app/images/app/project/user.png') }}" />
 				<div>
-					{{ _trans('app', 2, 4, 'html') }}{# My Placeholder #}
+					<div id="app_project_user_name">Bruno 马丁</div>
+					<div id="app_project_user_email">brunoocto@gmail.com</div>
 				</div>
 			</div>
-		</div>
-		<div class="app_project_space"></div>
-		<div class="app_project_line"><div></div></div>
-		<div class="app_project_space"></div>
-		<div class="app_project_tab_title">
-			<img src="{{ _filelatest('/lincko/app/images/app/project/project.png') }}" />
-			{{ _trans('app', 2, 7, 'html') }}{# Projects #}
-		</div>
-		<div class="app_project_tab">
-			<div id="app_project_project_01">
-				<div>
-					Autocut NOVA
-				</div>
-			</div>
-			<div id="app_project_project_02">
-				<div>
-					Air freshener mk2
-				</div>
-			</div>
-			<div id="app_project_project_02">
-				<div>
-					Sensor PCB
-				</div>
-			</div>
-			<div id="app_project_project_new">
-				<div>
-					<img class="app_project_project_new_img" src="{{ _filelatest('/lincko/app/images/app/project/new.png') }}" />
-				</div>
-			</div>
-			<div id="app_project_project_02">
-				<div>
-					<img class="app_project_project_all_img" src="{{ _filelatest('/lincko/app/images/app/project/arrow_right.png') }}" />
-					{{ _trans('app', 2, 5, 'html') }}{# All #}
-				</div>
-			</div>
-		</div>
-		<div class="app_project_space"></div>
-		<div class="minMobileL">
 			<div class="app_project_line"><div></div></div>
 			<div class="app_project_space"></div>
-			<div class="app_project_tab_title">
-				<img src="{{ _filelatest('/lincko/app/images/app/project/latest.png') }}" />
-				{{ _trans('app', 2, 6, 'html') }}{# Recent updates #}
+			<div>
+				<label class="" for="app_project_search">
+					<input type="text" id="app_project_search" name="search" title="{{ _trans('app', 2, 3, 'html') }}{# Search #}"/>
+					<img id="app_project_search_img" src="{{ _filelatest('/lincko/app/images/app/project/search.png') }}" />
+				</label>
+				
+				<img id="app_project_settings_img" src="{{ _filelatest('/lincko/app/images/app/project/settings.png') }}" alt="{{ _trans('app', 2, 2, 'html') }}{# Settings #}" title="{{ _trans('app', 2, 2, 'html') }}{# Settings #}" />
 			</div>
-			<div class="app_project_info">
-				<div id="app_project_info_title">
-					[Mar 4th] Jim Bilek add a comment
+			<div class="app_project_space"></div>
+			<div class="app_project_line"><div></div></div>
+			<div class="app_project_space"></div>
+			<div class="app_project_tab">
+				<div id="app_project_placeholder">
+					<div>
+						{{ _trans('app', 2, 4, 'html') }}{# My Placeholder #}
+					</div>
 				</div>
-				<div id="app_project_info_content">
-					Simple carrot header, with login.<br />
-					I’m not sure we need all these menu items - especially on the marketing page. Need to hear more about what you’re thinking about the header.<br />
-					I like the look of the login box you get when you click the Join us in the top right<br />
-					Chinese looks like it is working, I did not try french.
+			</div>
+			<div class="app_project_space"></div>
+			<div class="app_project_line noMobile"><div></div></div>
+			<div class="app_project_space"></div>
+			<div class="app_project_tab_title noMobile">
+				<img src="{{ _filelatest('/lincko/app/images/app/project/project.png') }}" />
+				{{ _trans('app', 2, 7, 'html') }}{# Projects #}
+			</div>
+			<div id="app_project_tab" class="app_project_tab">
+				<div id="app_project_project_1" find="app_project_project">
+					<div>
+						Autocut NOVA
+					</div>
+				</div>
+				<div id="app_project_project_2" find="app_project_project">
+					<div>
+						Air freshener mk2
+					</div>
+				</div>
+				<div id="app_project_project_3" find="app_project_project">
+					<div>
+						Sensor PCB
+					</div>
+				</div>
+				<div id="app_project_project_4" find="app_project_project">
+					<div>
+						Autocut RICO
+					</div>
+				</div>
+				<div id="app_project_project_5" find="app_project_project">
+					<div>
+						Simple cut
+					</div>
+				</div>
+				<div id="app_project_project_new">
+					<div>
+						<img class="app_project_project_new_img" src="{{ _filelatest('/lincko/app/images/app/project/new.png') }}" />
+					</div>
+				</div>
+				<div id="app_project_project_all">
+					<div>
+						<img class="app_project_project_all_img" src="{{ _filelatest('/lincko/app/images/app/project/arrow_right.png') }}" />
+						{{ _trans('app', 2, 5, 'html') }}{# All #}
+					</div>
+				</div>
+			</div>
+			<div class="app_project_space"></div>
+			<div class="minMobileL">
+				<div class="app_project_line"><div></div></div>
+				<div class="app_project_space"></div>
+				<div class="app_project_tab_title">
+					<img src="{{ _filelatest('/lincko/app/images/app/project/latest.png') }}" />
+					{{ _trans('app', 2, 6, 'html') }}{# Recent updates #}
+				</div>
+				<div class="app_project_info">
+					<div id="app_project_info_title">
+						[Mar 4th] Jim Bilek add a comment
+					</div>
+					<div id="app_project_info_content">
+						Simple carrot header, with login.<br />
+						I’m not sure we need all these menu items - especially on the marketing page. Need to hear more about what you’re thinking about the header.<br />
+						I like the look of the login box you get when you click the Join us in the top right<br />
+						Chinese looks like it is working, I did not try french.
+					</div>
 				</div>
 			</div>
 		</div>
-		<div class="app_project_quick_access">
+		<div id="app_project_quick_access">
 			<div id="app_project_quick_access_title">
 				<div find="app_project_progress_all" class="app_project_progress_all"></div>
 				<div find="app_project_upload" class="app_project_upload_text">{{ _trans('app', 2, 10, 'html') }}{# Uploads #}</div>

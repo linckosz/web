@@ -1,3 +1,39 @@
+submenu_list['app_project_new'] = {
+	//Set the title of the top
+	"_title": {
+		"style": "title",
+		"title": Lincko.Translation.get('app', 2001, 'html'), //New project
+	},
+	//Just do an action (need to hide al menus manually by the function submenu_Hideall)
+	"required": {
+		"style": "form",
+		"title": "Required fields",
+		"forms": {
+			"title": {
+				"style": "input",
+				"type": "text",
+				"name": "app_project_form_title",
+			},
+		},
+	},
+};
+
+base_input_field.app_project_form_title = {
+	format: Lincko.Translation.get('app', 4, 'html'), //Title format: - 104 characters max
+	tags: {
+		pattern: "^\\S{1,104}$",
+		required: "required",
+		maxlength: 104,
+	},
+	valid: function(text){
+		var regex_1 = /^.{1,104}$/g;
+		return regex_1.test(text);
+	},
+	error_msg: function(){
+		return { msg: this.format, field: 'firstname' };
+	},
+}
+
 function app_project_quick_upload_display(Elem, show) {
 	var Obj_div = $('#app_project_quick_upload');
 	var Obj_img = $('#app_project_quick_upload > div > img');
@@ -117,3 +153,18 @@ function app_project_quick_access() {
 	}
 }
 app_project_quick_access();
+
+//Hide some projects if the window is not high enough
+function app_project_tab() {
+	var top_height = $(window).height() - $('#app_project_quick_access').height();
+	$('#app_project_tab').find("[find=app_project_project]").show();
+	for(var i=5; i>=2; i--){
+		if($('#app_project_top').height() < top_height){
+			break;
+		} else {
+			$('#app_project_project_'+i).hide();
+		}
+	}
+}
+app_project_tab();
+$(window).resize(app_project_tab);

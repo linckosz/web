@@ -58,6 +58,13 @@ var Lincko = Lincko || {}; //Create singleton object
 //Keep a record of JS files to be launch at the end of the page loading
 var JSfiles = {};
 
+//Keep a record of all functions we need to run once all JS files are loaded
+var wrapper_after_dom = [];
+
+JSfiles.finish = function(action){
+	wrapper_after_dom.push(action);
+}
+
 //It keeps a record of all libraries that must be loaded after DOM load, it has priority level too
 //Libraries with priority lower than 50 might be a dependency of other libraries, higher than 50 are sure other library will not need it (default).
 JSfiles.later = function(url, priority){
@@ -72,22 +79,31 @@ JSfiles.loadLibraries = function(){
 	var files = [];
 	var url = '';
 	var length = 0;
+	//It will scan first all numbers, which are the record for js files to load
 	for(var pri in this){
-		files = this[pri];
-		length = files.length;
-		for(var key in files){
-			url = files[key];
-			if(key < files.length-1){
-				$.cachedScript(url);
-			} else {
-				delete JSfiles[pri];
-				$.cachedScript(url).complete(function() {
-					JSfiles.loadLibraries();
-				});
+		if(typeof this[pri] === 'object'){
+			files = this[pri];
+			length = files.length;
+			for(var key in files){
+				url = files[key];
+				if(key < files.length-1){
+					$.cachedScript(url);
+				} else {
+					delete JSfiles[pri];
+					$.cachedScript(url).complete(function() {
+						JSfiles.loadLibraries();
+					});
+				}
 			}
+			return true;
 		}
-		return true;
 	}
+	//Once it reach a string, it means there is no more js files to load, so we can launch the ultimate functions
+	for(var action in wrapper_after_dom){
+		wrapper_after_dom[action]();
+	}
+	//The latest operation would be to trigger the window resize event to be sure the display fit the screen
+	$(window).trigger('resize');
 }
 
 //Load all JS libraries only after DOM load
