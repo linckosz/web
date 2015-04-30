@@ -709,10 +709,6 @@ Submenu.prototype = {
 		var time = 160;
 		if(typeof animate === 'undefined'){ animate = false; }
 		delete submenu_obj[that.layer];
-		if(animate && submenu_Getnext()<=1 && responsive.test("minDesktop")){
-			//Checking animate helps only to know if we pushed the button clse
-			if(wrapper_broswer('webkit')){ $('#app_content_dynamic').velocity({ blur: 0 }, time); }
-		}
 		//Reset menu selectionif(menu in submenu_list){
 		if((that.layer-1) in submenu_obj){
 			$.each(submenu_obj[that.layer-1].wrapper.find('.submenu_deco_next'), function() {
@@ -753,11 +749,16 @@ Submenu.prototype = {
 				);
 			}
 		} else {
+			time = 0;
 			Elem.hide().remove();
 			if(submenu_Getnext()<=1){
 				$('#app_content_dynamic').removeClass('app_application_submenu_blur');
 				$('#app_application_submenu_block').hide();
 			}
+		}
+		if(submenu_Getnext()<=1){
+			//Checking animate helps only to know if we pushed the button close
+			if(wrapper_broswer('webkit')){ $('#app_content_dynamic').velocity({ blur: 0 }, time); }
 		}
 	},
 };
