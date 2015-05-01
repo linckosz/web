@@ -2,6 +2,7 @@
 <div id="begin_app_project" class="visibility_hidden">
 	<script>
 		JSfiles.later("{{ _filelatest('/lincko/app/scripts/app/project.js') }}");
+		JSfiles.later("{{ _filelatest('/lincko/app/scripts/input/_project.js') }}", 40);
 	</script>
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/app/project.css') }}" type="text/css" />
 </div>
@@ -20,7 +21,7 @@
 			<div class="app_project_space"></div>
 			<div>
 				<label class="" for="app_project_search">
-					<input type="text" id="app_project_search" name="search" title="{{ _trans('app', 2, 3, 'html') }}{# Search #}"/>
+					<input type="text" id="app_project_search" name="base_search_text" title="{{ _trans('app', 2, 3, 'html') }}{# Search #}"/>
 					<img id="app_project_search_img" src="{{ _filelatest('/lincko/app/images/app/project/search.png') }}" />
 				</label>
 				

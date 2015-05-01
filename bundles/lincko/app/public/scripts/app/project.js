@@ -4,35 +4,22 @@ submenu_list['app_project_new'] = {
 		"style": "title",
 		"title": Lincko.Translation.get('app', 2001, 'html'), //New project
 	},
-	//Just do an action (need to hide al menus manually by the function submenu_Hideall)
-	"required": {
+	"form": {
 		"style": "form",
-		"title": "Required fields",
-		"forms": {
-			"title": {
-				"style": "input",
-				"type": "text",
-				"name": "app_project_form_title",
-			},
-		},
+		"title": Lincko.Translation.get('app', 3, 'html'), //Confirm
 	},
-};
+	"required_fields": {
+		"style": "title_small",
+		"title": Lincko.Translation.get('app', 27, 'html'), //Required fields
+	},
+	"title": {
+		"style": "input",
+		"title": Lincko.Translation.get('app', 28, 'html'), //Title
+		"name": "project_title_text",
+		"preview": "Something",
+	},
 
-base_input_field.app_project_form_title = {
-	format: Lincko.Translation.get('app', 4, 'html'), //Title format: - 104 characters max
-	tags: {
-		pattern: "^\\S{1,104}$",
-		required: "required",
-		maxlength: 104,
-	},
-	valid: function(text){
-		var regex_1 = /^.{1,104}$/g;
-		return regex_1.test(text);
-	},
-	error_msg: function(){
-		return { msg: this.format, field: 'firstname' };
-	},
-}
+};
 
 function app_project_quick_upload_display(Elem, show) {
 	var Obj_div = $('#app_project_quick_upload');

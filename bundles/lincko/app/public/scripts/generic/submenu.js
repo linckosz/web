@@ -204,7 +204,7 @@ Submenu.prototype = {
 			}
 		}
 		Elem.find("[find=submenu_form_title]").html(attribute.title).click(function(){
-			alert('ok');
+			base_format_form_single($('.submit_progress_bar'));
 		});
 		if("class" in attribute){
 			Elem.addClass(attribute.class);

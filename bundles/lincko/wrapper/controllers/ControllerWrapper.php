@@ -71,6 +71,7 @@ class ControllerWrapper extends Controller {
 		if($json_result && isset($json_result->msg) && isset($json_result->error)){
 			
 			if(isset($json_result->flash)){
+	
 				//In case we accept to try to relog
 				if(!$this->resignin && isset($json_result->flash) && isset($json_result->flash->resignin) && $json_result->flash->resignin===true){
 					return $this->reSignIn();
@@ -85,7 +86,7 @@ class ControllerWrapper extends Controller {
 					$_SESSION['private_key'] = $json_result->flash->private_key;
 					$this->uploadKeys();
 				}
-
+				
 				//After signin, it return the username
 				if(isset($json_result->flash->username)){
 					$app->setCookie('yonghu', $json_result->flash->username);
@@ -205,9 +206,7 @@ class ControllerWrapper extends Controller {
 
 		$log_action = false;
 
-		if($action==='user/autosign' && $type==='POST' && isset($this->json['data']['email']) && isset($this->json['data']['password'])){
-
-		} else if($action==='user/signin' && $type==='POST' && isset($this->json['data']['email']) && isset($this->json['data']['password'])){
+		if($action==='user/signin' && $type==='POST' && isset($this->json['data']['email']) && isset($this->json['data']['password'])){
 
 			$log_action = true;
 

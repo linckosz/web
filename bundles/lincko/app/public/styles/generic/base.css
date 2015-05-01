@@ -172,10 +172,12 @@ html, .font_sans_serif {
 }
 
 .submit_progress_bar {
-	height: 2px;
-	margin-left: 4px;
-	margin-top: -5px;
 	position: absolute;
+	bottom: 0;
+	left: 2px;
+	height: 2px;
+	width: 100%;
+	margin-bottom: 2px;
 	z-index: 2;
 	display: none;
 }
