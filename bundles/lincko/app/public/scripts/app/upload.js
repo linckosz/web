@@ -92,6 +92,7 @@ $(function () {
 		minFileSize: 1, //Bruno update
 		autoUpload: false, //Bruno update
 		maxFileSize: 1000000000, //Bruno update (limit to 1GB)
+		bitrateInterval: 1000, //Bruno update (display every second, which is more readible)
 		loadImageMaxFileSize: 100000000, //Bruno update (limit to 100Mb)
 		loadImageFileTypes: /^image\/.*$/, //Bruno update
 		previewMaxWidth: 360,

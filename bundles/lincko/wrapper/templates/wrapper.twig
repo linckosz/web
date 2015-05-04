@@ -79,24 +79,30 @@ JSfiles.loadLibraries = function(){
 	var files = [];
 	var url = '';
 	var length = 0;
-	//It will scan first all numbers, which are the record for js files to load
+	pri_tp = false;
+	//It will help to start from the smallest number
 	for(var pri in this){
 		if(typeof this[pri] === 'object'){
-			files = this[pri];
-			length = files.length;
-			for(var key in files){
-				url = files[key];
-				if(key < files.length-1){
-					$.cachedScript(url);
-				} else {
-					delete JSfiles[pri];
-					$.cachedScript(url).complete(function() {
-						JSfiles.loadLibraries();
-					});
-				}
+			if(pri_tp === false || pri < pri_tp){
+				pri_tp = pri;
 			}
-			return true;
 		}
+	}
+	if(pri_tp !== false){
+		files = this[pri_tp];
+		length = files.length;
+		for(var key in files){
+			url = files[key];
+			if(key < files.length-1){
+				$.cachedScript(url);
+			} else {
+				delete JSfiles[pri_tp];
+				$.cachedScript(url).complete(function() {
+					JSfiles.loadLibraries();
+				});
+			}
+		}
+		return true;
 	}
 	//Once it reach a string, it means there is no more js files to load, so we can launch the ultimate functions
 	for(var action in wrapper_after_dom){
@@ -108,6 +114,7 @@ JSfiles.loadLibraries = function(){
 
 //Load all JS libraries only after DOM load
 $(function() {
+	console.log(JSfiles);
 	JSfiles.loadLibraries();
 });
 

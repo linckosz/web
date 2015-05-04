@@ -14,9 +14,7 @@ function base_format_input(field){
 function base_format_form_single(Elem){
 	Elem.each(function() {
 		$(this).width("100%");
-		console.log('1: '+$(this).width());
 		$(this).width($(this).width() - 4);
-		console.log('2: '+$(this).width());
 	});
 }
 
