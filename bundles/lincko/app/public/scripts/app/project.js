@@ -7,18 +7,42 @@ submenu_list['app_project_new'] = {
 	"form": {
 		"style": "form",
 		"title": Lincko.Translation.get('app', 3, 'html'), //Confirm
+		"action": "project/edit",
+		"submit": function(that){
+			return wrapper_sendForm(that, submenu_form_cb_success, submenu_form_cb_error, submenu_form_cb_begin, submenu_form_cb_complete);
+		},
 	},
 	"required_fields": {
 		"style": "title_small",
-		"title": Lincko.Translation.get('app', 27, 'html'), //Required fields
+		"title": Lincko.Translation.get('app', 27, 'html'), //Required
 	},
 	"title": {
-		"style": "input",
+		"style": "input_text",
 		"title": Lincko.Translation.get('app', 28, 'html'), //Title
 		"name": "project_title_text",
-		"preview": "Something",
+		"value": "",
+		"class": "submenu_input_text",
 	},
-
+	"team": {
+		"style": "select_multiple",
+		"title": Lincko.Translation.get('app', 31, 'html'), //Team
+		"name": "project_team_select_multiple",
+		"value": "",
+		"class": "submenu_input_select_multiple",
+		"next": "app_users_contacts",
+	},
+	"optional_fields": {
+		"style": "title_small",
+		"title": Lincko.Translation.get('app', 29, 'html'), //Optional
+		"class": "submenu_title_small_top",
+	},
+	"description": {
+		"style": "input_textarea",
+		"title": Lincko.Translation.get('app', 30, 'html'), //Short description
+		"name": "project_description_textarea",
+		"value": "",
+		"class": "submenu_input_textarea",
+	},
 };
 
 function app_project_quick_upload_display(Elem, show) {
@@ -103,6 +127,11 @@ $('#app_project_settings_img').click(function(){
 	submenu_Build("settings");
 });
 
+
+$('#app_project_project_new').click(function(){
+	submenu_Build("app_project_new");
+});
+
 $('#app_project_quick_access_title').click(function(){
 	if($('#app_project_quick_access_title').find("[find=app_project_progress_all]").is(':visible')){
 		submenu_Build("app_upload_all", true);
@@ -155,3 +184,4 @@ function app_project_tab() {
 }
 app_project_tab();
 $(window).resize(app_project_tab);
+

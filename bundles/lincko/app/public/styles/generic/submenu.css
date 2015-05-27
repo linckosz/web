@@ -126,13 +126,15 @@
 
 .submenu_form_valid {
 	position: relative;
-	padding: 4px 30px;
+	padding: 6px 30px;
 	border-radius: 5px;
 	border: 2px solid #F8F8F8;
 	font-size: 16px;
 	cursor: pointer; cursor: hand;
 	margin-right: 10px;
 	margin-left: 10px;
+	color: #F8F8F8;
+	background-color: transparent;
 }
 
 .submenu_form_valid:hover {
@@ -405,7 +407,7 @@ http://brianshim.com/webtricks/style-the-wordpress-3-6-media-player/
 .submenu_app_upload_info {
 	display: table-cell;
 	padding: 4px 24px 16px 24px;
-	white-space: nowrap;
+	white-space: normal;
 	vertical-align: top;
 	text-align: left;
 	width: 100%;
@@ -417,6 +419,7 @@ http://brianshim.com/webtricks/style-the-wordpress-3-6-media-player/
 
 .submenu_app_upload_info_speed > span {
 	display: table-cell;
+	white-space: nowrap;
 }
 
 .submenu_app_upload_info_destination {
@@ -429,7 +432,96 @@ http://brianshim.com/webtricks/style-the-wordpress-3-6-media-player/
 
 /* End app_upload */
 
+.submenu_title_small {
+	color: #D7D4D1;
+	font-size: 12px;
+	text-align: left;
+	width: 100%;
+	padding-bottom: 2px;
+}
 
+.submenu_title_small > span {
+	padding-left: 6px;
+}
+
+.submenu_title_small_top {
+	border-top: 1px solid #EFEFEF;
+}
+
+
+.submenu_input_text, .submenu_input_textarea {
+	display: block;
+	font-size: 16px;
+	color: #3A3D41;
+	margin-bottom: 20px;
+	text-align: left;
+}
+
+.submenu_input_text > div, .submenu_input_textarea > div {
+	color: #BABDC0;
+	margin-left: 5%;
+	padding: 6px 10px 4px 2%;
+}
+
+.submenu_input_text > input {
+	width: 80%;
+	padding: 6px 10px 6px 9px;
+	font-size: 16px;
+	background: linear-gradient(#FFFFFF,#F2F2F2);
+	border-radius: 4px;
+	border-width: 1px;
+	margin-left: 5%;
+	cursor: text;
+}
+
+.submenu_input_textarea > textarea {
+	width: 80%;
+	padding: 6px 10px 6px 9px;
+	font-size: 16px;
+	background: linear-gradient(#FFFFFF,#F2F2F2);
+	border-radius: 4px;
+	border-width: 1px;
+	margin-left: 5%;
+	cursor: text;
+}
+
+.submenu_deco {
+	display: table;
+	white-space: nowrap;
+	color: #6F7377;
+	background-color: #FAFBFC;
+	border-bottom: solid 1px #EBEFF3;
+	cursor: pointer; cursor: hand;
+	overflow: hidden;
+	text-align: left;
+}
+
+.submenu_select {
+	display: table;
+	white-space: nowrap;
+	cursor: pointer; cursor: hand;
+	overflow: hidden;
+	text-align: left;
+	color: #BABDC0;
+	font-size: 16px;
+}
+
+.submenu_select_title {
+	padding-left: 7%;
+}
+
+.submenu_select_value {
+	color: #6F7377;
+}
+
+.submenu_select:hover {
+	background-color: #FAFBFC;
+}
+
+
+/* Start app_project */
+
+/* End app_project */
 
 /* Minimum Desktop */
 @media only screen and (min-width: 1281px) {

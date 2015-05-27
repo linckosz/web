@@ -1,13 +1,13 @@
 var submenu_zindex = 2000;
 var submenu_obj = {};
-var toto;
+
 //Modify the scaling of some effects
 $.Velocity.RegisterEffect.packagedEffects["transition.expandIn"].calls[0][0].scaleX = [ 1, 0.75 ];
 $.Velocity.RegisterEffect.packagedEffects["transition.expandIn"].calls[0][0].scaleY = [ 1, 0.75 ];
 $.Velocity.RegisterEffect.packagedEffects["transition.expandOut"].calls[0][0].scaleX = 0.8;
 $.Velocity.RegisterEffect.packagedEffects["transition.expandOut"].calls[0][0].scaleY = 0.8;
 
-function Submenu(menu, next) {
+function Submenu(menu, next, param) {
 	this.obj = submenu_list[menu];
 	this.menu = menu;
 	this.layer = 1;
@@ -19,6 +19,9 @@ function Submenu(menu, next) {
 		}
 	} else if(typeof next !== 'undefined' && next === true){
 		this.layer = submenu_Getposition(menu);
+	}
+	if(typeof param === 'undefined'){
+		this.param = null;
 	}
 	this.id = this.layer+"_submenu_wrapper_"+md5(Math.random());
 	this.zIndex = submenu_zindex+this.layer;
@@ -51,6 +54,15 @@ function Submenu(menu, next) {
 					Elem.AddMenuRadio(attribute);
 				} else if(attribute.style=="form"){
 					Elem.AddMenuForm(attribute);
+				} else if(attribute.style=="title_small"){
+					Elem.AddTitleSmall(attribute);
+				} else if(attribute.style=="input_text"){
+					Elem.AddInputText(attribute);
+				} else if(attribute.style=="input_textarea"){
+					Elem.AddInputTextarea(attribute);
+				}
+				 else if(attribute.style=="select_multiple"){
+					Elem.AddSelectMultiple(attribute);
 				}
 				//app_upload_all
 				else if(attribute.style=="app_upload_all"){
@@ -110,6 +122,16 @@ function Submenu(menu, next) {
 Submenu.prototype = {
 	AddMenuTitle: function(attribute) {
 		this.wrapper.find("[find=submenu_wrapper_title]").html(attribute.title);
+		return true;
+	},
+	AddTitleSmall: function(attribute) {
+		var Elem = $('#-submenu_title_small').clone();
+		Elem.prop("id", '');
+		Elem.find("[find=submenu_title]").html(attribute.title);
+		if("class" in attribute){
+			Elem.addClass(attribute.class);
+		}
+		this.wrapper.find("[find=submenu_wrapper_content]").append(Elem);
 		return true;
 	},
 	AddMenuButton: function(attribute) {
@@ -193,23 +215,118 @@ Submenu.prototype = {
 		this.wrapper.find("[find=submenu_wrapper_content]").append(Elem);
 		return true;
 	},
+	AddInputText: function(attribute) {
+		var Elem = $('#-submenu_input').clone();
+		var Input = $('<input type="text" />');
+		Elem.prop("id", '');
+		Elem.find("[find=submenu_title]").html(attribute.title);
+		Elem.prop('for', attribute.name);
+		Input.prop('name', attribute.name);	
+		Elem.append(Input);
+		if("value" in attribute){
+			Elem.find("[find=submenu_input]").prop('value', attribute.value);
+		}
+		if("class" in attribute){
+			Elem.addClass(attribute.class);
+		}
+		this.wrapper.find("[find=submenu_wrapper_content]").append(Elem);
+		return true;
+	},
+	AddInputTextarea: function(attribute) {
+		var Elem = $('#-submenu_input').clone();
+		var Value = '';
+		if("value" in attribute){
+			Value = attribute.value;
+		}
+		var Input = $('<textarea>'+Value+'</textarea>');
+		Elem.prop("id", '');
+		Elem.find("[find=submenu_title]").html(attribute.title);
+		Elem.prop('for', attribute.name);
+		Input.prop('name', attribute.name);
+		Elem.append(Input);
+		if("class" in attribute){
+			Elem.addClass(attribute.class);
+		}
+		this.wrapper.find("[find=submenu_wrapper_content]").append(Elem);
+		return true;
+	},
+	AddSelectMultiple: function(attribute) {
+		var Elem = $('#-submenu_select').clone();
+		var that = this;
+		var Num = 0;
+		Elem.prop("id", '');
+		if("value" in attribute){
+			Elem.find("[find=submenu_select_value]").html(attribute.value);
+		}
+		if("next" in attribute){
+			if(attribute.next in submenu_list){
+				if(attribute.style=="title"){
+					Elem.AddMenuTitle(attribute);
+				}
+				for(var att in submenu_list[attribute.next]){
+					next_attribute = submenu_list[attribute.next][att];
+					if("style" in next_attribute && "title" in next_attribute){
+						if(next_attribute.style == "title"){
+							attribute.title = next_attribute.title;
+						}
+					}
+					if("selected" in next_attribute){
+						if(next_attribute.selected){
+							Num++;
+						}
+					}
+				}
+				Elem.find("[find=submenu_select_value]").html(Num);
+				$("<img class='submenu_icon submenu_icon_next' src='/lincko/app/images/generic/submenu/next.png' />").appendTo(Elem.find("[find=submenu_select_value]"));
+				Elem.click(function(){
+					$.each(that.wrapper.find('.submenu_deco_next'), function() {
+						$(this).removeClass('submenu_deco_next');
+					});
+					submenu_Build(attribute.next, that.layer+1);
+					Elem.addClass('submenu_deco_next');
+				});
+			}
+		}
+		Elem.find("[find=submenu_select_title]").html(attribute.title);
+		if("class" in attribute){
+			Elem.addClass(attribute.class);
+		}
+		this.wrapper.find("[find=submenu_wrapper_content]").append(Elem);
+		return true;
+	},
 	AddMenuForm: function(attribute) {
 		var Elem = $('#-submenu_form').clone();
+		var that = this;
 		Elem.prop("id", '');
 		this.wrapper.find("[find=submenu_wrapper_bottom]").addClass('submenu_bottom');
 		this.wrapper.find("[find=submenu_wrapper_content]").css('bottom', this.wrapper.find("[find=submenu_wrapper_bottom]").height());
 		if("hide" in attribute){
 			if(attribute.hide) {
-				Elem.find("[find=submenu_form_title]").click(function(){ submenu_Hideall(); });
+				Elem.find("[find=submenu_form_button]").click(function(){ submenu_Hideall(); });
 			}
 		}
-		Elem.find("[find=submenu_form_title]").html(attribute.title).click(function(){
-			base_format_form_single($('.submit_progress_bar'));
+		Elem.find("[find=submenu_form_title]").html(attribute.title)
+		Elem.find("[find=submenu_form_button]").click(function(){
+			$('#'+that.id+'_submenu_form').submit();
 		});
 		if("class" in attribute){
 			Elem.addClass(attribute.class);
 		}
 		this.wrapper.find("[find=submenu_wrapper_bottom]").html(Elem);
+
+		var ElemForm = $("<form method='post' action='' submit='e.preventDefault(); return false;'></form>");
+		ElemForm.prop("id", this.id+'_submenu_form');
+		if("action" in attribute){
+			ElemForm.prop("action", attribute.action);
+		}
+		if("submit" in attribute){
+			ElemForm.on('submit', function(e) {
+				e.preventDefault();
+				attribute.submit(this);
+			});
+		}
+		this.wrapper.find("[find=submenu_wrapper_content]").wrap(ElemForm);
+
 		return true;
 	},
 
@@ -656,6 +773,30 @@ Submenu.prototype = {
 		return true;
 	},
 
+	FocusForm: function(){
+		var Elem = this.wrapper;
+		var that = this;
+		if(responsive.test("minDesktop")){
+			setTimeout(function(){
+				var ElemFocus = Elem.find("input:enabled:visible:first");
+				if(ElemFocus.length>=1){
+					ElemFocus.focus();
+					return true;
+				}
+				ElemFocus = Elem.find("textarea:enabled:visible:first");
+				if(ElemFocus.length>=1){
+					ElemFocus.focus();
+					return true;
+				}
+				ElemFocus = Elem.find("select:enabled:visible:first");
+				if(ElemFocus.length>=1){
+					ElemFocus.focus();
+					return true;
+				}
+			},1);
+		}
+	},
+
 	Show: function(){
 		var Elem = this.wrapper;
 		var that = this;
@@ -680,6 +821,7 @@ Submenu.prototype = {
 						Elem.hide().show(0);
 						Elem.css('z-index', that.zIndex);
 						$(window).trigger('resize');
+						that.FocusForm();
 					}
 				}
 			);
@@ -698,6 +840,7 @@ Submenu.prototype = {
 						//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas
 						Elem.hide().show(0);
 						$(window).trigger('resize');
+						that.FocusForm();
 					}
 				}
 			);
@@ -709,7 +852,7 @@ Submenu.prototype = {
 		var time = 160;
 		if(typeof animate === 'undefined'){ animate = false; }
 		delete submenu_obj[that.layer];
-		//Reset menu selectionif(menu in submenu_list){
+		//Reset menu selection if(menu in submenu_list){
 		if((that.layer-1) in submenu_obj){
 			$.each(submenu_obj[that.layer-1].wrapper.find('.submenu_deco_next'), function() {
 				$(this).removeClass('submenu_deco_next');
@@ -758,7 +901,12 @@ Submenu.prototype = {
 		}
 		if(submenu_Getnext()<=1){
 			//Checking animate helps only to know if we pushed the button close
-			if(wrapper_broswer('webkit')){ $('#app_content_dynamic').velocity({ blur: 0 }, time); }
+			if(wrapper_broswer('webkit')){ $('#app_content_dynamic').velocity({ blur: 0 }, time, function(){
+				//We need to check again if there is another menu replace the old one, so we keep it blur
+				if(submenu_Getnext()>1){
+					$('#app_content_dynamic').velocity({ blur: 2 }, 100);
+				}
+			}); }
 		}
 	},
 };
@@ -778,6 +926,7 @@ function submenu_Getfull(){
 	return next;
 }
 
+// "1" means that there is no submenu displayed
 function submenu_Getnext(){
 	submenu_layer = 0;
 	for(var index in submenu_obj){
@@ -840,3 +989,38 @@ function submenu_wrapper_width() {
 }
 submenu_wrapper_width();
 $(window).resize(submenu_wrapper_width);
+
+
+
+var submenu_form_cb_success = function(msg, err){
+	var field = 'undefined';
+	var msgtp = Lincko.Translation.get('wrapper', 3, 'html'); //Unknown error
+	if(err){
+		if(typeof msg.field === 'string') { field = msg.field; }
+		if(typeof msg.msg === 'string') { msgtp = php_nl2br(msg.msg); }
+		base_show_error(msgtp);
+		base_form_field_show_error(wrapper_objForm.find("[name="+field+"]"));
+		wrapper_objForm.find("[name="+field+"]").focus();
+	}
+	storage_update(msg);
+};
+
+var submenu_form_cb_error = function(xhr_err, ajaxOptions, thrownError){
+	var msgtp = Lincko.Translation.get('wrapper', 1, 'html'); //Communication error
+	base_show_error(msgtp);
+};
+
+var submenu_form_cb_begin = function(){
+	var submit_progress_bar = wrapper_objForm.parent().find("[find=submit_progress_bar]");
+	base_form_field_hide_error();
+	$(document.body).css('cursor', 'progress');
+	base_format_form_single(submit_progress_bar);
+	submit_progress_bar.show();
+};
+
+var submenu_form_cb_complete = function(){
+	var submit_progress_bar = wrapper_objForm.parent().find("[find=submit_progress_bar]");
+	$(document.body).css('cursor', '');
+	base_format_form_single(submit_progress_bar);
+	submit_progress_bar.hide();
+};

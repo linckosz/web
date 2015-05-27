@@ -211,3 +211,29 @@ html, .font_sans_serif {
 .base_color_neutral_bg {
 	background-color: #FBFBFB;
 }
+
+#base_error {
+	display: none;
+	position: fixed;
+	box-sizing: border-box;
+	z-index: 99999;
+	background-color: rgba(255, 68, 68, 0.8);
+	width: 300px;
+	right: 0px;
+	top: 50px;
+	padding: 10px 20px 10px 20px;
+	color: #F8F8F8;
+	font-size: 13px;
+	cursor: default;
+	filter:alpha(opacity=80);
+	opacity:0.8;
+	-moz-opacity:0.8;
+	-khtml-opacity:0.8;
+}
+
+/* Maximum Mobile phone in Portrait */
+@media only screen and (max-width: 479px) {
+	#base_error {
+		width: 100% !important;
+	}
+}

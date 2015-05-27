@@ -1,7 +1,7 @@
 //Initiiaze fields with same name
 function base_format_input(field){
 	if(field in base_input_field){
-		var Elem = $("input[name="+field+"]");
+		var Elem = $("[name="+field+"]");
 		if(typeof base_input_field[field].tags === 'object') {
 			for(tag in base_input_field[field].tags){
 				Elem.prop(tag, base_input_field[field].tags[tag]);
@@ -53,4 +53,55 @@ function base_cloneCanvas(oldCanvas) {
 
 	//return the new canvas
 	return newCanvas;
+}
+
+var base_error_timing;
+
+function base_show_error(msg) {
+	clearTimeout(base_error_timing);
+	$('#base_error').html(msg);
+	if($('#base_error').is(':hidden')){
+		$("#base_error").velocity("transition.slideRightBigIn", { duration: 260 });
+	}
+	base_error_timing = setTimeout(function(){ base_hide_error(); }, 4000);
+}
+
+function base_hide_error() {
+	clearTimeout(base_error_timing);
+	if($('#base_error').is(':visible')){
+		$("#base_error").velocity("transition.slideRightBigOut", {
+			duration: 160,
+			complete: function(){
+				$('#base_error').html('');
+			},
+		});
+	}
+}
+
+$('#base_error').click(function(){
+	base_hide_error();
+});
+
+function base_form_field_hide_error() {
+	base_hide_error();
+	$('.base_input_text_error').removeClass('base_input_text_error').off('change copy past cut keyup keypress');
+}
+
+function base_form_field_show_error(input){
+	input.addClass('base_input_text_error').on({
+		change: function(){ base_form_field_hide_error(); },
+		copy: function(){ base_form_field_hide_error(); },
+		past: function(){ base_form_field_hide_error(); },
+		cut: function(){ base_form_field_hide_error(); },
+		keyup: function(e) {
+			if (e.which != 13) {
+				base_form_field_hide_error();
+			}
+		},
+		keypress: function(e) {
+			if (e.which != 13) {
+				base_form_field_hide_error();
+			}
+		},
+	});
 }

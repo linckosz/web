@@ -4,6 +4,9 @@
 <div id="begin_app_application" class="visibility_hidden">
 	<script>
 		JSfiles.later("{{ _filelatest('/lincko/app/scripts/app/application.js') }}");
+		//Some JS that are not linked to a twig file
+		JSfiles.later("{{ _filelatest('/lincko/app/scripts/generic/storage.js') }}");
+		JSfiles.later("{{ _filelatest('/lincko/app/scripts/app/users.js') }}");
 	</script>
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/app/application.css') }}" type="text/css" />
 </div>

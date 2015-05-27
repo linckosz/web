@@ -1,5 +1,5 @@
 base_input_field.project_title_text = {
-	format: Lincko.Translation.get('app', 4, 'html'), //Title format: - 104 characters max
+	format: Lincko.Translation.get('app', 32, 'html'), //Title format: - 104 characters max
 	tags: {
 		pattern: "^\\S{1,104}$",
 		required: "required",
@@ -10,6 +10,13 @@ base_input_field.project_title_text = {
 		return regex_1.test(text);
 	},
 	error_msg: function(){
-		return { msg: this.format, field: 'firstname' };
+		return { msg: this.format, field: 'project_title_text' };
 	},
-}
+};
+
+base_input_field.project_description_textarea = {
+	tags: {
+		rows: 3,
+		required: "required",
+	},
+};

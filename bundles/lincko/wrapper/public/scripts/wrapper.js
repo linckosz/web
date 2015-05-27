@@ -64,17 +64,19 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 	});
 }
 
+var wrapper_objForm = null;
+//This function must return false, we do not send form action, we just use ajax.
 function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete){
 	if(typeof cb_success==="undefined"){ cb_success = function(){}; }
 	if(typeof cb_error==="undefined"){ cb_error = function(){}; }
 	if(typeof cb_begin==="undefined"){ cb_begin = function(){}; }
 	if(typeof cb_complete==="undefined"){ cb_complete = function(){}; }
-
 	if($.type(objForm)==="string"){
 		objForm = $("#"+objForm);
 	} else {
 		objForm = $(objForm);
 	}
+	wrapper_objForm = objForm;
 	var valid = true;
 	$.each(objForm.find('input'), function() {
 		if(this.name in base_input_field){
@@ -132,10 +134,16 @@ function wrapper_force_resign(){
 	return true;
 }
 
-$(function() {
+/*
+function wrapper_disable_submit(){
 	//Disable submit action of all forms
 	//Enable only submit of uploading files forms (multipart/form-data) because files cannot be sent by Ajax
 	$("form[enctype!='multipart/form-data']").on('submit', function(e) {
-		 e.preventDefault(); //Disable submit action by click
+		e.preventDefault(); //Disable submit action by click
 	});
+}
+
+$(function() {
+	wrapper_disable_submit();
 });
+*/
