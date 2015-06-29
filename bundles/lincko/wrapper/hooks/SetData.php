@@ -11,17 +11,21 @@ function SetData(){
 	$app = \Slim\Slim::getInstance();
 	
 	$logged = false;
-	if(\bundles\lincko\wrapper\models\Session::getData('yonghu')
-		&& \bundles\lincko\wrapper\models\Session::getData('youjian')
-		&& \bundles\lincko\wrapper\models\Session::getData('mima')
-		&& \bundles\lincko\wrapper\models\Session::getData('jizhu')
-		&& \bundles\lincko\wrapper\models\Session::getData('shangzai_puk')
-		&& \bundles\lincko\wrapper\models\Session::getData('shangzai_cs')){
+	if(Session::getData('yonghu')
+		&& Session::getData('youjian')
+		&& Session::getData('mima')
+		&& Session::getData('jizhu')
+		&& Session::getData('sha')
+		&& Session::getData('uid')
+		&& Session::getData('shangzai_puk')
+		&& Session::getData('shangzai_cs')){
 		$logged = true;
 	} else {
 		$app->deleteCookie('yonghu');
 		$app->deleteCookie('jizhu');
 		$app->deleteCookie('mima');
+		$app->deleteCookie('sha');
+		$app->deleteCookie('uid');
 		$app->deleteCookie('shangzai_puk');
 		$app->deleteCookie('shangzai_cs');
 		unset($_SESSION['yonghu']);
@@ -30,6 +34,8 @@ function SetData(){
 		unset($_SESSION['jizhu']);
 		unset($_SESSION['public_key']);
 		unset($_SESSION['private_key']);
+		unset($_SESSION['sha']);
+		unset($_SESSION['uid']);
 	}
 
 	$app->lincko->data = array_merge(
@@ -38,6 +44,8 @@ function SetData(){
 			'yonghu' => Session::getData('yonghu'),
 			'youjian' => Session::getData('youjian'),
 			'jizhu' => Session::getData('jizhu'),
+			'uid' => Session::getData('uid'),
+			'sha' => Session::getData('sha'),
 			'wrapper_user_created' => Creation::exists(),
 			'translation_list_js' => TranslationListJS::setList(),
 			'logged' => $logged,

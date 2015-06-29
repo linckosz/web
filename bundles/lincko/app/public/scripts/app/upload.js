@@ -256,7 +256,7 @@ $(function () {
 				app_upload_files.lincko_total = that._formatFileSize(0);
 				app_upload_files.lincko_size = that._formatComplete(0, 0);
 			}
-			app_upload_files.lincko_record_update();
+			app_application_objects.lincko_record_update();
 		},
 
 		//data => File object

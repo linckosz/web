@@ -45,7 +45,7 @@ class ControllerWrapper extends Controller {
 
 		$timeout = 8;
 		if($this->action==='translation/auto'){
-			$timeout = 18; //Need more time because requesting a thrid party for translation
+			$timeout = 18; //Need more time because requesting a third party for translation
 		}
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
@@ -85,6 +85,15 @@ class ControllerWrapper extends Controller {
 					$_SESSION['public_key'] = $json_result->flash->public_key;
 					$_SESSION['private_key'] = $json_result->flash->private_key;
 					$this->uploadKeys();
+				}
+
+				//"username_sha1" is a password used to encrypt data
+				//"uid" is the main user ID
+				if(isset($json_result->flash->username_sha1) && isset($json_result->flash->uid)){
+					$app->setCookie('sha', $json_result->flash->username_sha1);
+					$app->setCookie('uid', $json_result->flash->uid);
+					$_SESSION['sha'] = $json_result->flash->username_sha1;
+					$_SESSION['uid'] = $json_result->flash->uid;
 				}
 				
 				//After signin, it return the username
@@ -148,10 +157,10 @@ class ControllerWrapper extends Controller {
 		$app = $this->app;
 		$checksum = md5($_SESSION['private_key'].$_SESSION['public_key']);
 		//Upload user public key
-		$app->setCookie('shangzai_puk', $_SESSION['public_key'], null, null, null, null, false);
+		$app->setCookie('shangzai_puk', $_SESSION['public_key'], null, null, null, false, false);
 		//Secret code built with user private code which must e equal to public key after conversion on server side
 		//WARNING: slim 'cookies.secret_key' must be the same on client and server side!
-		$app->setCookie('shangzai_cs', $checksum, null, null, null, null, false);
+		$app->setCookie('shangzai_cs', $checksum, null, null, null, false, false);
 	}
 
 	protected function setupKeys(){
@@ -179,6 +188,8 @@ class ControllerWrapper extends Controller {
 		$app->deleteCookie('yonghu');
 		$app->deleteCookie('jizhu');
 		$app->deleteCookie('mima');
+		$app->deleteCookie('sha');
+		$app->deleteCookie('uid');
 		$app->deleteCookie('shangzai_puk');
 		$app->deleteCookie('shangzai_cs');
 		unset($_SESSION['yonghu']);
@@ -187,6 +198,8 @@ class ControllerWrapper extends Controller {
 		unset($_SESSION['jizhu']);
 		unset($_SESSION['public_key']);
 		unset($_SESSION['private_key']);
+		unset($_SESSION['sha']);
+		unset($_SESSION['uid']);
 		return true;
 	}
 

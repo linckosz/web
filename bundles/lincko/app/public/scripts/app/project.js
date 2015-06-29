@@ -140,14 +140,14 @@ $('#app_project_quick_access_title').click(function(){
 
 function app_project_quick_access() {
 	var exist;
-	if(typeof app_upload_files !== 'undefined'){
-		for(var index in app_upload_files.lincko_record){
-			if(app_upload_files.lincko_record[index].id === Elem.id){
+	if(typeof app_application_objects !== 'undefined' && typeof app_upload_files !== 'undefined'){
+		for(var index in app_application_objects.lincko_record){
+			if(app_application_objects.lincko_record[index].id === Elem.id){
 				exist = true;
 			}
 		}
 		if(!exist){
-			app_upload_files.lincko_record[app_upload_files.lincko_record_index++] = {
+			app_application_objects.lincko_record[app_application_objects.lincko_record_index++] = {
 				id: "app_project_quick_access_title",
 				action: function(){
 					var Elem = $("#"+this.id);

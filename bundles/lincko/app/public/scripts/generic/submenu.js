@@ -66,14 +66,14 @@ function Submenu(menu, next, param) {
 				}
 				//app_upload_all
 				else if(attribute.style=="app_upload_all"){
-					if(typeof app_upload_files !== 'undefined'){
-						for(var index in app_upload_files.lincko_record){
-							if(app_upload_files.lincko_record[index].id === Elem.id){
+					if(typeof app_application_objects !== 'undefined'){
+						for(var index in app_application_objects.lincko_record){
+							if(app_application_objects.lincko_record[index].id === Elem.id){
 								exist = true;
 							}
 						}
 						if(!exist){
-							app_upload_files.lincko_record[app_upload_files.lincko_record_index++] = {
+							app_application_objects.lincko_record[app_application_objects.lincko_record_index++] = {
 								id: Elem.id,
 								action: function(){
 									Elem.AddMenuAppUploadAllForm();
@@ -82,27 +82,27 @@ function Submenu(menu, next, param) {
 							};
 							Elem.AddMenuAppUploadAllForm();
 							Elem.AddMenuAppUploadAllFile();
-							app_upload_files.lincko_record_update();
+							app_application_objects.lincko_record_update();
 						}
 					}
 				}
 				//app_upload_single
 				else if(attribute.style=="app_upload_sub"){
-					if(typeof app_upload_files !== 'undefined' && typeof app_upload_files.lincko_files[attribute.value] !== 'undefined'){
-						for(var index in app_upload_files.lincko_record){
-							if(app_upload_files.lincko_record[index].id === Elem.id){
+					if(typeof app_application_objects !== 'undefined' && typeof app_upload_files !== 'undefined' && typeof app_upload_files.lincko_files[attribute.value] !== 'undefined'){
+						for(var index in app_application_objects.lincko_record){
+							if(app_application_objects.lincko_record[index].id === Elem.id){
 								exist = true;
 							}
 						}
 						if(!exist){
-							app_upload_files.lincko_record[app_upload_files.lincko_record_index++] = {
+							app_application_objects.lincko_record[app_application_objects.lincko_record_index++] = {
 								id: Elem.id,
 								action: function(){
 									Elem.AddMenuAppUploadSubFile();
 								},
 							};
 							Elem.AddMenuAppUploadSubFile(attribute);
-							app_upload_files.lincko_record_update();
+							app_application_objects.lincko_record_update();
 						}
 					} else {
 						Elem.display = false;
@@ -1002,7 +1002,7 @@ var submenu_form_cb_success = function(msg, err){
 		base_form_field_show_error(wrapper_objForm.find("[name="+field+"]"));
 		wrapper_objForm.find("[name="+field+"]").focus();
 	}
-	storage_update(msg);
+	Lincko.storage.pull(msg);
 };
 
 var submenu_form_cb_error = function(xhr_err, ajaxOptions, thrownError){

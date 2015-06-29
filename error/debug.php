@@ -11,8 +11,6 @@
 $app = \Slim\Slim::getInstance();
 //print_r($data);
 
-echo $host = $app->request->getHostWithPort();
-echo '<br />';
-echo preg_match("/^file\..*:8443$/ui",$host);
-echo '<br />';
+
+\libs\Watch::php($app->lincko->data,'$var',__FILE__);
 

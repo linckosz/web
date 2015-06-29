@@ -61,6 +61,14 @@ class STR {
 		return strtr($string, $tab);
 	}
 
+	//Convert "any_SHORT description " to "AnyShortDescription"
+	public static function textToFirstUC($text){
+		$text = str_replace('_', ' ', $text);
+		$text = ucwords(strtolower($text));
+		$text = str_replace(' ', '', $text);
+		return $text;
+	}
+
 
 
 

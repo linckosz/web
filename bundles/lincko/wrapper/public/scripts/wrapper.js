@@ -44,7 +44,7 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 				console.log(data);
 			}
 			// Below is the production information with "dataType: 'json'"
-			cb_success(msg, data.error, data.status);
+			cb_success(msg, data.error, data.status, data.msg);
 		},
 		error: function(xhr_err, ajaxOptions, thrownError){
 			var msg = wrapper_totalxhr+') '+'xhr.status => '+xhr_err.status
@@ -110,6 +110,7 @@ function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete){
 	return false; //Disable submit action
 }
 
+//param: array/string/number
 function wrapper_sendAction(param, method, action, cb_success, cb_error, cb_begin, cb_complete){
 	if(typeof cb_success==="undefined"){ cb_success = function(){}; }
 	if(typeof cb_error==="undefined"){ cb_error = function(){}; }
@@ -117,8 +118,10 @@ function wrapper_sendAction(param, method, action, cb_success, cb_error, cb_begi
 	if(typeof cb_complete==="undefined"){ cb_complete = function(){}; }
 	
 	var arr = [];
-	if(!$.isArray(param)){
-		//Here do not use "new Array(param)", because param[0] will be undefined is param is an integer
+
+	//We convert to an table any integer or string, if not the back server will not see it ($this->data->0)
+	if(!$.isArray(param) && !$.isPlainObject(param)){
+		//Here do not use "new Array(param)", because param[0] will be undefined if param is an integer
 		param = [param];
 	}
 	//Convert the array to the same format as jQuery does with forms

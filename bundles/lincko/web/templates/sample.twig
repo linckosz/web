@@ -3,7 +3,13 @@
 {% block content %}
 <body>
 <script>
-var sample_cb_success = function(msg){
+var sample_cb_success = function(data){
+	msg = 'unknown error';
+	if(typeof data === "string"){
+		msg = data;
+	} else if(typeof data.msg === "string"){
+		msg = data.msg;
+	}
 	msg = msg.replace(/\n/g, "<br />");
 	$("#divbox").html($("#divbox").html()+'<br />'+wrapper_totalxhr+'&nbsp;&raquo;&nbsp;'+msg);
 }

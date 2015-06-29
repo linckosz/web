@@ -48,4 +48,3 @@ $("img[name=captcha]").click(function(){
 	$("img[name=captcha]").prop("src",IMGcaptcha.src);
 });
 
-functio

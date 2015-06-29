@@ -30,21 +30,6 @@
 			lincko_size: '',
 			lincko_files: {},
 			lincko_files_index: 0,
-			lincko_record: {}, //Must be {id: 'ElemID', action: function(){ dosomething(); }}
-			lincko_record_index: 0,
-			lincko_record_update: function(){
-				var exist = false;
-				for(var index in this.lincko_record){
-					exist = false;
-					if(typeof this.lincko_record[index].id === 'string' && typeof this.lincko_record[index].action === 'function'){
-						if($('#'+this.lincko_record[index].id).length > 0){
-							this.lincko_record[index].action();
-							exist = true;
-						}
-					}
-					if(!exist){ delete this.lincko_record[index]; }
-				}
-			},
 		};
 	</script>
 	<link rel="stylesheet" href="{{ _filelatest('/styles/libs/basicplusui/jquery.fileupload.css') }}" type="text/css" />
