@@ -17,7 +17,7 @@ var JSerror = new function() {
 		}
 		var log = "COMP: "+this.yourplatform+" / "+this.youroscpu+" / "+this.colourbits+" / "+this.yourscreen+" / Javascript "+this.jsversion+" / "+this.javasupport+"\nBROW: "+this.yourappalt+"\nLINE: "+linenumber+"\nURL : "+url+"\nMSG : "+message;
 		this.xhr = $.ajax({
-			url: 'debug/js'+'?'+md5(Math.random()), //We add a random md5 code to insure we avoid getting in queue for the same ajax call
+			url: '/debug/js'+'?'+md5(Math.random()), //We add a random md5 code to insure we avoid getting in queue for the same ajax call
 			type: 'POST', //Ajax calls will queue GET request only, that can timeout if the url is the same, but the PHP code still processing in background
 			data: JSON.stringify(log),
 			contentType: 'application/json; charset=UTF-8',

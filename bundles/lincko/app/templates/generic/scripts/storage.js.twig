@@ -1,6 +1,8 @@
 <script>
 
-	Lincko.storage = {};
+	Lincko.storage = {
+		COMID: null,
+	};
 
 	Lincko.storage.getSha = function(){
 		return "{{ sha }}";
@@ -8,6 +10,11 @@
 
 	Lincko.storage.getUID = function(){
 		return "{{ uid }}";
+	}
+
+	Lincko.storage.getCOM = function(){
+		var url = {% if company is empty %}""{% else %}"{{ company }}"{% endif %};
+		return url.toLowerCase();
 	}
 
 </script>

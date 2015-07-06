@@ -92,14 +92,13 @@ JSfiles.loadLibraries = function(){
 		length = files.length;
 		for(var key in files){
 			url = files[key];
-			if(key < files.length-1){
-				$.cachedScript(url);
-			} else {
-				delete JSfiles[pri_tp];
-				$.cachedScript(url).complete(function() {
+			$.cachedScript(url).complete(function() {
+				length--;
+				if(length<=0){
+					delete JSfiles[pri_tp];
 					JSfiles.loadLibraries();
-				});
-			}
+				}
+			});
 		}
 		return true;
 	}

@@ -19,7 +19,7 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 	}
 
 	wrapper_xhr = $.ajax({
-		url: 'wrapper/'+action+linkid,
+		url: '/wrapper/'+action+linkid,
 		type: method, //Ajax calls will queue GET request only, that can timeout if the url is the same, but the PHP code still processing in background
 		data: JSON.stringify(param),
 		contentType: 'application/json; charset=UTF-8',
@@ -118,12 +118,15 @@ function wrapper_sendAction(param, method, action, cb_success, cb_error, cb_begi
 	if(typeof cb_complete==="undefined"){ cb_complete = function(){}; }
 	
 	var arr = [];
-
+	
 	//We convert to an table any integer or string, if not the back server will not see it ($this->data->0)
-	if(!$.isArray(param) && !$.isPlainObject(param)){
+	if(param===false || param==='' || param===null){
+		param = [];
+	} else if(!$.isArray(param) && !$.isPlainObject(param)){
 		//Here do not use "new Array(param)", because param[0] will be undefined if param is an integer
 		param = [param];
 	}
+	
 	//Convert the array to the same format as jQuery does with forms
 	for(var val in param){
 		arr.push({name:val, value:param[val]});
@@ -133,7 +136,7 @@ function wrapper_sendAction(param, method, action, cb_success, cb_error, cb_begi
 }
 
 function wrapper_force_resign(){
-	wrapper_ajax([], 'get' , 'user/resign');
+	wrapper_sendAction('','get','user/resign');
 	return true;
 }
 

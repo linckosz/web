@@ -812,7 +812,7 @@ Submenu.prototype = {
 						Elem.hide().show(0);
 						$(window).trigger('resize');
 						if(responsive.test("minDesktop")){
-							if(wrapper_broswer('webkit')){ $('#app_content_dynamic').velocity({ blur: 2 }, time); }
+							if(wrapper_browser('webkit')){ $('#app_content_dynamic').velocity({ blur: 2 }, time); }
 						}
 					},
 					complete: function(){
@@ -901,7 +901,7 @@ Submenu.prototype = {
 		}
 		if(submenu_Getnext()<=1){
 			//Checking animate helps only to know if we pushed the button close
-			if(wrapper_broswer('webkit')){ $('#app_content_dynamic').velocity({ blur: 0 }, time, function(){
+			if(wrapper_browser('webkit')){ $('#app_content_dynamic').velocity({ blur: 0 }, time, function(){
 				//We need to check again if there is another menu replace the old one, so we keep it blur
 				if(submenu_Getnext()>1){
 					$('#app_content_dynamic').velocity({ blur: 2 }, 100);
@@ -973,12 +973,12 @@ function submenu_Build(menu, next){
 }
 
 enquire.register(responsive.minDesktop, function() { 
-	if(wrapper_broswer('webkit') && submenu_Getnext()>1 && $('#app_content_dynamic').hasClass('app_application_submenu_blur')){
+	if(wrapper_browser('webkit') && submenu_Getnext()>1 && $('#app_content_dynamic').hasClass('app_application_submenu_blur')){
 		$('#app_content_dynamic').velocity({ blur: 2 }, 200);
 	}
 });
 enquire.register(responsive.maxTablet, function() { 
-	if(wrapper_broswer('webkit') && submenu_Getnext()>1 && $('#app_content_dynamic').hasClass('app_application_submenu_blur')){
+	if(wrapper_browser('webkit') && submenu_Getnext()>1 && $('#app_content_dynamic').hasClass('app_application_submenu_blur')){
 		$('#app_content_dynamic').velocity({ blur: 0 }, 200);
 	}
 });
