@@ -12,7 +12,7 @@ var sample_cb_success = function(data){
 	}
 	msg = msg.replace(/\n/g, "<br />");
 	$("#divbox").html($("#divbox").html()+'<br />'+wrapper_totalxhr+'&nbsp;&raquo;&nbsp;'+msg);
-}
+};
 var sample_cb_error = function(xhr_err, ajaxOptions, thrownError){
 	$("#divbox").html(
 		$("#divbox").html()
@@ -21,6 +21,9 @@ var sample_cb_error = function(xhr_err, ajaxOptions, thrownError){
 		+'<br />'
 		+'thrownError => '+thrownError
 	);
+};
+var sample_cb_complete = function(){
+	$("#divbox").html($("#divbox").html()+'<br />Complete callback');
 }
 </script>
 
@@ -91,7 +94,7 @@ var sample_cb_error = function(xhr_err, ajaxOptions, thrownError){
 <hr />
 {{ _trans('web', 8888, 10, 'html') }}{# An application action #}
 <br />
-<input type='button' value='{{ _trans('web', 8888, 11, 'input') }}{# Test action get #}' onclick="wrapper_sendAction('','get','test', sample_cb_success, sample_cb_error);" />
+<input type='button' value='{{ _trans('web', 8888, 11, 'input') }}{# Test action get #}' onclick="wrapper_sendAction('','get','test', sample_cb_success, sample_cb_error, null, sample_cb_complete);" />
 <br />
 <input type='button' value='{{ _trans('web', 8888, 12, 'input') }}{# Test action post #}' onclick="wrapper_sendAction('','post','test', sample_cb_success, sample_cb_error);" />
 <br />

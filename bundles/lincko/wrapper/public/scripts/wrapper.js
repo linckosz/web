@@ -2,10 +2,10 @@ var wrapper_xhr;
 var wrapper_totalxhr = 0;
 
 function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_complete){
-	if(typeof cb_success==="undefined"){ cb_success = function(){}; }
-	if(typeof cb_error==="undefined"){ cb_error = function(){}; }
-	if(typeof cb_begin==="undefined"){ cb_begin = function(){}; }
-	if(typeof cb_complete==="undefined"){ cb_complete = function(){}; }
+	if(typeof cb_success==="undefined" || cb_success===null){ cb_success = function(){}; }
+	if(typeof cb_error==="undefined" || cb_error===null){ cb_error = function(){}; }
+	if(typeof cb_begin==="undefined" || cb_begin===null){ cb_begin = function(){}; }
+	if(typeof cb_complete==="undefined" || cb_complete===null){ cb_complete = function(){}; }
 	
 	wrapper_totalxhr++;
 	method = method.toUpperCase();
@@ -67,10 +67,11 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 var wrapper_objForm = null;
 //This function must return false, we do not send form action, we just use ajax.
 function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete){
-	if(typeof cb_success==="undefined"){ cb_success = function(){}; }
-	if(typeof cb_error==="undefined"){ cb_error = function(){}; }
-	if(typeof cb_begin==="undefined"){ cb_begin = function(){}; }
-	if(typeof cb_complete==="undefined"){ cb_complete = function(){}; }
+	if(typeof cb_success==="undefined" || cb_success===null){ cb_success = function(){}; }
+	if(typeof cb_error==="undefined" || cb_error===null){ cb_error = function(){}; }
+	if(typeof cb_begin==="undefined" || cb_begin===null){ cb_begin = function(){}; }
+	if(typeof cb_complete==="undefined" || cb_complete===null){ cb_complete = function(){}; }
+	
 	if($.type(objForm)==="string"){
 		objForm = $("#"+objForm);
 	} else {
@@ -112,10 +113,10 @@ function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete){
 
 //param: array/string/number
 function wrapper_sendAction(param, method, action, cb_success, cb_error, cb_begin, cb_complete){
-	if(typeof cb_success==="undefined"){ cb_success = function(){}; }
-	if(typeof cb_error==="undefined"){ cb_error = function(){}; }
-	if(typeof cb_begin==="undefined"){ cb_begin = function(){}; }
-	if(typeof cb_complete==="undefined"){ cb_complete = function(){}; }
+	if(typeof cb_success==="undefined" || cb_success===null){ cb_success = function(){}; }
+	if(typeof cb_error==="undefined" || cb_error===null){ cb_error = function(){}; }
+	if(typeof cb_begin==="undefined" || cb_begin===null){ cb_begin = function(){}; }
+	if(typeof cb_complete==="undefined" || cb_complete===null){ cb_complete = function(){}; }
 	
 	var arr = [];
 	

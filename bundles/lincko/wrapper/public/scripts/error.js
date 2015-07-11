@@ -11,11 +11,20 @@ var JSerror = new function() {
 	this.setting = false;
 	var that = this; //Enable to call methods inside other methods
 
-	this.sendError = function (message, url, linenumber) {
+	this.sendError = function (message, url, linenumber, colnumber, error) {
 		if(!this.setting){
 			that.setup();
 		}
-		var log = "COMP: "+this.yourplatform+" / "+this.youroscpu+" / "+this.colourbits+" / "+this.yourscreen+" / Javascript "+this.jsversion+" / "+this.javasupport+"\nBROW: "+this.yourappalt+"\nLINE: "+linenumber+"\nURL : "+url+"\nMSG : "+message;
+
+		var log = "COMP: "+this.yourplatform+" / "+this.youroscpu+" / "+this.colourbits+" / "+this.yourscreen+" / Javascript "+this.jsversion+" / "+this.javasupport+"\nBROW: "+this.yourappalt+"\nLINE: "+linenumber;
+		if(typeof colnumber!=='undefined' && colnumber!==null){
+			log = log+"\nCOL : "+colnumber;
+		}
+		log = log+"\nURL : "+url+"\nMSG : "+message;
+		if(typeof error!=='undefined' && error!==null && typeof error.stack==='string'){
+			log = log+"\nERR : "+error.stack;
+		}
+
 		this.xhr = $.ajax({
 			url: '/debug/js'+'?'+md5(Math.random()), //We add a random md5 code to insure we avoid getting in queue for the same ajax call
 			type: 'POST', //Ajax calls will queue GET request only, that can timeout if the url is the same, but the PHP code still processing in background
@@ -58,6 +67,8 @@ var JSerror = new function() {
 
 }
 
-window.onerror = function(message, url, linenumber){
-	return JSerror.sendError(message, url, linenumber);
+window.onerror = function(message, url, linenumber, colnumber, error){
+	if(typeof colnumber==='undefined'){ colnumber = null; }
+	if(typeof error==='undefined'){ error = null; }
+	return JSerror.sendError(message, url, linenumber, colnumber, error);
 }

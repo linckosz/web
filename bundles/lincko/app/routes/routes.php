@@ -4,6 +4,11 @@ namespace bundles\lincko\app\routes;
 
 $app = \Slim\Slim::getInstance();
 
+$app->get('/', function () use($app) {
+	$app->router->getNamedRoute('root_workspace_company')->dispatch();
+})
+->name('root');
+
 $app->get('/(workspace/:company)', function ($company = null) use($app) {
 	$company = strtolower($company);
 	if($app->lincko->data['logged']){
@@ -17,5 +22,5 @@ $app->get('/(workspace/:company)', function ($company = null) use($app) {
 
 })
 ->conditions(array('company' => '[a-zA-Z0-9]{3,104}'))
-->name('root');
+->name('root_workspace_company');
 

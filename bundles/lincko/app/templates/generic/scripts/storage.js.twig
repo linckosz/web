@@ -1,11 +1,15 @@
 <script>
 
+	//Because this is loaded at very first
 	Lincko.storage = {
 		COMID: null,
+		last_visit: null,
+		data: {},
+		data_recent: {},
 	};
 
 	Lincko.storage.getSha = function(){
-		return "{{ sha }}";
+		return "{{ sha }}";{# unuse at this moment, but it can be used as prefix or encryption value for AmpliJS storage #}
 	}
 
 	Lincko.storage.getUID = function(){
