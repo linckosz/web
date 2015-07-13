@@ -289,7 +289,7 @@ $(function () {
 						data.lincko_status = 'deleted';
 						that.destroy(e, data);
 					} else if(typeof data.lincko_type !== 'undefined' && data.lincko_type === 'file'){
-						data.lincko_status = 'toto';
+						data.lincko_status = 'uploading';
 						data.submit();
 					}
 				}
