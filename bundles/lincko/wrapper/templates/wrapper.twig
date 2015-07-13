@@ -57,7 +57,30 @@ var Lincko = Lincko || {}; //Create singleton object
 {{ translation_list_js|raw }}
 
 //Keep a record of JS files to be launch at the end of the page loading
+//Can only add methods, cannot add property because it migth bug the page loading
 var JSfiles = {};
+
+//Number of priorities load to helps the progress bar to move
+var wrapper_load_progress = {
+	total: 0,
+	current: 0,
+	pourcentage_start: 10,
+	pourcentage_end: 60,
+	move: function(){
+		this.current++;
+		var pc = this.current/this.total;
+		var result = 50;
+		if(pc<0){ pc=0; }
+		else if(pc>1){ pc=1; }
+		result = Math.ceil(
+			this.pourcentage_start + pc*(this.pourcentage_end - this.pourcentage_start)
+		);
+		if(result<this.pourcentage_start){ result=this.pourcentage_start; }
+		else if(result>this.pourcentage_end){ result=this.pourcentage_end; }
+		app_loading_progress.move(result);
+		return true;
+	},
+};
 
 //Keep a record of all functions we need to run once all JS files are loaded
 var wrapper_after_dom = [];
@@ -97,6 +120,7 @@ JSfiles.loadLibraries = function(){
 			$.cachedScript(url).complete(function() {
 				length--;
 				if(length<=0){
+					wrapper_load_progress.move();
 					delete JSfiles[pri_tp];
 					JSfiles.loadLibraries();
 				}
@@ -114,6 +138,12 @@ JSfiles.loadLibraries = function(){
 
 //Load all JS libraries only after DOM load
 $(function() {
+	app_loading_progress.move(10);
+	for(var pri in JSfiles){
+		if(typeof JSfiles[pri] === 'object'){
+			wrapper_load_progress.total++;
+		}
+	}
 	JSfiles.loadLibraries();
 });
 

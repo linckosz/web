@@ -166,7 +166,7 @@ Lincko.storage.update = function(schema){
 			if(!Lincko.storage.data[i]){
 				Lincko.storage.data[i] = {};
 			}
-			Lincko.storage.data[i][j] = items[j];
+			Lincko.storage.data[i][j] = $.extend(Lincko.storage.data[i][j], items[j]);
 			update = true;
 		}
 	}
@@ -207,31 +207,35 @@ Lincko.storage.schema = function(schema){
 
 	//Step 2: Get all missing data
 	for(var i in schema) {
-		items = false;
 		if(!Lincko.storage.data[i]){
 			missing[i] = schema[i];
 			continue;
 		} else {
-			items = schema[i];
-		}
-		if(items){
-			for(var j in items) {
-				if(!Lincko.storage.data[i] || !Lincko.storage.data[i][j]){
+			for(var j in schema[i]) {
+				if(!Lincko.storage.data[i][j]){
 					if(typeof missing[i]==='undefined'){ missing[i] = {}; }
 					missing[i][j] = schema[i][j];
 					continue;
+				} else {
+					for(var k in schema[i][j]) {
+						if(typeof Lincko.storage.data[i][j][k] === 'undefined'){
+							if(typeof missing[i]==='undefined'){ missing[i] = {}; }
+							if(typeof missing[i][j]==='undefined'){ missing[i][j] = {}; }
+							missing[i][j][k] = schema[i][j][k];
+							continue;
+						}
+					}
 				}
 			}
 		}
 	}
-	
+
 	if(!$.isEmptyObject(missing)){
 		Lincko.storage.getMissing(missing);
 	}
 
 	if(update){
-		Lincko.storage.data_recent = {}; //Clean the history before to rebuild it
-		Lincko.storage.orderRecents(Lincko.storage.data);
+		Lincko.storage.orderRecents(Lincko.storage.data, true);
 		Lincko.storage.encrypt('data', JSON.stringify(Lincko.storage.data));
 		return true;
 	}
@@ -243,6 +247,7 @@ Lincko.storage.firstLatest = function(){
 	if(storage_first_request){
 		storage_first_request = false;
 		Lincko.storage.getSchema();
+		app_loading_progress.move(100);
 	}
 };
 
@@ -254,6 +259,60 @@ Lincko.storage.cleanLocal = function(){
 		}
 	});
 };
+
+Lincko.storage.orderRecents = function(data, clean){
+	var temp = {};
+	if(typeof clean === 'undefined'){ clean = false; }
+	if(clean){
+		Lincko.storage.data_recent = {}; //Clean the history before to rebuild it
+	}
+	categories = data[Lincko.storage.getCOMID()];
+	for(var cat in categories) {
+		for(var item in categories[cat]) {
+			if(typeof categories[cat][item]['created_at'] !== 'undefined' && typeof categories[cat][item]['created_by'] !== 'undefined' && typeof categories[cat][item]['history'] === 'object'){
+				Elem = categories[cat][item];
+
+				if(typeof Lincko.storage.data_recent[Elem['created_at']] === 'undefined'){ Lincko.storage.data_recent[Elem['created_at']] = {}; }
+				if(typeof Lincko.storage.data_recent[Elem['created_at']][cat] === 'undefined'){ Lincko.storage.data_recent[Elem['created_at']][cat] = {}; }
+				if(typeof Lincko.storage.data_recent[Elem['created_at']][cat][item] === 'undefined'){ Lincko.storage.data_recent[Elem['created_at']][cat][item] = {}; }
+
+				Lincko.storage.data_recent[Elem['created_at']][cat][item][0] = {
+					created_by: Elem['created_by'],
+					attribute: 'created_at',
+					old: null,
+					new: null,
+				};
+
+				for(var h_created_at in Elem['history']) {
+					for(var h_id in Elem['history'][h_created_at]) {
+						h_Elem = Elem['history'][h_created_at][h_id];
+
+						if(typeof Lincko.storage.data_recent[h_created_at] === 'undefined'){ Lincko.storage.data_recent[h_created_at] = {}; }
+						if(typeof Lincko.storage.data_recent[h_created_at][cat] === 'undefined'){ Lincko.storage.data_recent[h_created_at][cat] = {}; }
+						if(typeof Lincko.storage.data_recent[h_created_at][cat][item] === 'undefined'){ Lincko.storage.data_recent[h_created_at][cat][item] = {}; }
+
+						Lincko.storage.data_recent[h_created_at][cat][item][h_id] = {
+							created_by: h_Elem['created_by'],
+							attribute: h_Elem['attribute'],
+							old: null,
+							new: null,
+						};
+					}
+				}
+			}
+		}
+	}
+	
+	//Sort by key value (timestamp), Object.keys gets only an array of the keys, sort() sorts the array from big to small
+	var desc_order = Object.keys(Lincko.storage.data_recent).sort(function(a, b) { return b - a; });
+	for(i in desc_order){
+		if(typeof Lincko.storage.data_recent[desc_order[i]] === 'object'){
+			temp[desc_order[i]] = Lincko.storage.data_recent[desc_order[i]];
+		}
+	}
+	Lincko.storage.data_recent = temp;
+	return true;
+}
 
 /*
 	Samples:
@@ -317,83 +376,148 @@ Lincko.storage.search = function(type, param, category){
 	return results;
 }
 
-Lincko.storage.orderRecents = function(data){
-	var temp = {};
-	categories = data[Lincko.storage.getCOMID()];
-	for(var cat in categories) {
-		for(var item in categories[cat]) {
-			if(typeof categories[cat][item]['created_at'] !== 'undefined' && typeof categories[cat][item]['created_by'] !== 'undefined' && typeof categories[cat][item]['history'] === 'object'){
-				Elem = categories[cat][item];
-
-				if(typeof Lincko.storage.data_recent[Elem['created_at']] === 'undefined'){ Lincko.storage.data_recent[Elem['created_at']] = {}; }
-				if(typeof Lincko.storage.data_recent[Elem['created_at']][cat] === 'undefined'){ Lincko.storage.data_recent[Elem['created_at']][cat] = {}; }
-				if(typeof Lincko.storage.data_recent[Elem['created_at']][cat][item] === 'undefined'){ Lincko.storage.data_recent[Elem['created_at']][cat][item] = {}; }
-
-				Lincko.storage.data_recent[Elem['created_at']][cat][item][0] = {
-					created_by: Elem['created_by'],
-					attribute: 'created_at',
-					old: null,
-					new: null,
-				};
-
-				for(var h_created_at in Elem['history']) {
-					for(var h_id in Elem['history'][h_created_at]) {
-						h_Elem = Elem['history'][h_created_at][h_id];
-
-						if(typeof Lincko.storage.data_recent[h_created_at] === 'undefined'){ Lincko.storage.data_recent[h_created_at] = {}; }
-						if(typeof Lincko.storage.data_recent[h_created_at][cat] === 'undefined'){ Lincko.storage.data_recent[h_created_at][cat] = {}; }
-						if(typeof Lincko.storage.data_recent[h_created_at][cat][item] === 'undefined'){ Lincko.storage.data_recent[h_created_at][cat][item] = {}; }
-
-						Lincko.storage.data_recent[h_created_at][cat][item][h_id] = {
-							created_by: h_Elem['created_by'],
-							attribute: h_Elem['attribute'],
-							old: null,
-							new: null,
-						};
-					}
-				}
-			}
-		}
-	}
-	//Sort by key value (timestamp), Object.keys gets only an array of the keys, sort() sorts the array from big to small
-	var table = Object.keys(Lincko.storage.data_recent).sort(function(a, b) { return b - a; });
-	for(i in table){
-		if(typeof Lincko.storage.data_recent[table[i]] === 'object'){
-			temp[table[i]] = Lincko.storage.data_recent[table[i]];
-		}
-	}
-	Lincko.storage.data_recent = temp;
-	return true;
-}
-
 Lincko.storage.time = function(type, param, category){
-	var results = {};
+	var results = [];
 	var find = [];
-	company = Lincko.storage.getCOMID();
 	type = type.toLowerCase();
 	if(typeof param === 'string'){ param = param.toLowerCase(); }
 	if(typeof category === 'string'){ category = category.toLowerCase(); }
 
+	//Return a table of most recent updates
+	find['recent'] = function(){
+		var most_recent = 50; //Get the 50 latest updated
+		var items = {};
+		var timestamp;
+		//Sort by key value (timestamp), Object.keys gets only an array of the keys, sort() sorts the array from big to small
+		var desc_order = Object.keys(Lincko.storage.data_recent).sort(function(a, b) { return b - a; });
+		if(typeof param === 'number' && param > 0){ most_recent = param; }
+		for(var i in desc_order){
+			timestamp = desc_order[i];
+			for(var cat in Lincko.storage.data_recent[timestamp]){
+				items = {};
+				if(typeof category === 'string'){
+					if(cat.toLowerCase() === category){
+						items = Lincko.storage.data_recent[timestamp][cat];
+					}
+				} else {
+					items = Lincko.storage.data_recent[timestamp][cat];
+				}
+				for(var item_id in items){
+					for(var history_id in items[item_id]){
+						if(most_recent>0){
+							results.push({
+								timestamp: timestamp,
+								type: cat,
+								id: item_id,
+								by: items[item_id][history_id]['created_by'],
+								attribute: items[item_id][history_id]['attribute'],
+							});
+						} else {
+							return results.length;
+						}
+						most_recent--;
+					}
+				}
+			}	
+		}
+		return results.length;
+	}
+
+	//Return a table of most recent updates
+	find['between'] = function(){
+		var items = {};
+		var timestamp;
+		var check_param = false;
+		if(typeof param === 'object'){
+			if(typeof param.min === 'number' && typeof param.max === 'number' && param.max > param.min){
+				check_param = true;
+			}
+		}
+		if(!check_param){
+			param = {
+				min: Math.floor(Date.now() / 1000) - (3600*24), //24H before
+				max: Math.floor(Date.now() / 1000),
+			};
+		}
+
+		//Sort by key value (timestamp), Object.keys gets only an array of the keys, sort() sorts the array from big to small
+		var desc_order = [];
+		var temp = Object.keys(Lincko.storage.data_recent).sort(function(a, b) { return b - a; });
+		for(var i in temp){
+			if(temp[i]>=param.min && temp[i]<=param.max){
+				desc_order.push(temp[i]);
+			}
+		}
+		
+		for(var i in desc_order){
+			timestamp = desc_order[i];
+			for(var cat in Lincko.storage.data_recent[timestamp]){
+				items = {};
+				if(typeof category === 'string'){
+					if(cat.toLowerCase() === category){
+						items = Lincko.storage.data_recent[timestamp][cat];
+					}
+				} else {
+					items = Lincko.storage.data_recent[timestamp][cat];
+				}
+				for(var item_id in items){
+					for(var history_id in items[item_id]){
+						results.push({
+							timestamp: timestamp,
+							type: cat,
+							id: item_id,
+							by: items[item_id][history_id]['created_by'],
+							attribute: items[item_id][history_id]['attribute'],
+						});
+					}
+				}
+			}	
+		}
+		return results.length;
+	}
+
+	//Return only the latest update, not a table
+	find['latest'] = function(){
+		param = 1;
+		if(find['recent']()>0){
+			results = results[0];
+		} else {
+			results = false;
+		}
+		return 1;
+	}
+
+	if(typeof find[type] === 'function'){
+		if(typeof Lincko.storage.data_recent === 'object'){
+			find[type]();
+		}
+	}
+
 	return results;
 }
 
-//Update every 30s automatically
-setInterval(function(){
-	//Lincko.storage.getLatest();
-}, 30000);
 
-//Check the schema every 5 minutes
-setInterval(function(){
-	//Lincko.storage.getSchema();
-}, 300000);
 
 JSfiles.finish(function(){
+	app_loading_progress.move(60);
 	Lincko.storage.data = JSON.parse(Lincko.storage.decrypt('data'));
 	if(!Lincko.storage.data){
 		Lincko.storage.data = {};
 	}
+	app_loading_progress.move(65);
 	Lincko.storage.orderRecents(Lincko.storage.data);
 	Lincko.storage.cleanLocal();
+	app_loading_progress.move(70);
 	Lincko.storage.getLatest();
+
+	//Update every 30s automatically
+	setInterval(function(){
+		Lincko.storage.getLatest();
+	}, 15000);
+
+	//Check the schema every 5 minutes
+	setInterval(function(){
+		Lincko.storage.getSchema();
+	}, 300000);
 });
 

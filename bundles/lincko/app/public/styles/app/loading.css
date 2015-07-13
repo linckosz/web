@@ -1,0 +1,57 @@
+#app_loading_main_table {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	min-height: 100%;
+	display: table;
+	table-layout: fixed;
+	overflow: hidden;
+	vertical-align: middle;
+	text-align: center;
+	background: linear-gradient(#FFFFFF,#E8E8E8);
+	z-index: 1000;
+}
+
+#app_loading_main_table_cell {
+	width: 100%;
+	height: 100%;
+	min-height: 100%;
+	display: table-cell;
+	table-layout: fixed;
+	overflow: hidden;
+	vertical-align: middle;
+	text-align: center;
+}
+
+#app_loading_table {
+	width: 100%;
+	overflow: hidden;
+}
+
+#app_loading_table td {
+	width: 50%;
+	overflow: hidden;
+}
+
+#app_loading_cell_center {
+	width: auto !important;
+	color: #CBCBCB;
+	font-size: 50px;
+}
+
+#app_loading_progress {
+	text-align: left;
+}
+
+#app_loading_progress_bar {
+	height: 4px;
+	width: 0%;
+	background-color: #CBCBCB;
+}
+
+/* Mobile phone in Portrait */
+@media only screen and (max-width: 479px){
+	#app_loading_cell_center{
+		font-size: 40px;
+	}
+}

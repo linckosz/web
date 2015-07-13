@@ -32,6 +32,9 @@
 	{% include '/bundles/lincko/app/templates/generic/scripts/storage.js.twig' %}
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/app/application.css') }}" type="text/css" />
 </div>
+<div id="app_application_loading">
+	{% include '/bundles/lincko/app/templates/app/loading.twig' %}
+</div>
 <div id="app_application_main">
 	<div id="app_application_project">
 		{% include '/bundles/lincko/app/templates/app/project.twig' %}

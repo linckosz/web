@@ -16,3 +16,8 @@ wrapper_itemExists = function(haystack, needle) {
 	for(var i=0; i<haystack.length; i++) if(wrapper_compareObjects(haystack[i], needle)) return true;
 	return false;
 }
+
+//Polyfill of Date.now(), because of IE8-
+if (!Date.now) {
+	Date.now = function() { return new Date().getTime(); }
+}
