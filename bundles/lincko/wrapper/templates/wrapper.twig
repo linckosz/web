@@ -45,7 +45,7 @@ $.cachedScript = function( url ) {
 	options = $.extend( {}, {
 		dataType: "script",
 		cache: true, //Do not need to care here, the cacheability is handle by PHP header
-		url: url
+		url: url, //Note: A different sub domain will not cache the file
 	});
 	return $.ajax( options );
 };
@@ -53,46 +53,103 @@ $.cachedScript = function( url ) {
 //Global namespace (extend or create)
 var Lincko = Lincko || {}; //Create singleton object
 
-//Translation list
-{{ translation_list_js|raw }}
-
 //Keep a record of JS files to be launch at the end of the page loading
 //Can only add methods, cannot add property because it migth bug the page loading
 var JSfiles = {};
 
 //Number of priorities load to helps the progress bar to move
 var wrapper_load_progress = {
-	total: 0,
-	current: 0,
-	pourcentage_start: 10,
-	pourcentage_end: 60,
-	move: function(){
-		this.current++;
-		var pc = this.current/this.total;
+	progress_bar: null, //ID of HTML element. A % will be given to it's width.
+	progress_wall: null, //ID of HTML element. The element will progressively disappear after the progress match 100%
+	progress: 0,
+	done: false,
+	JSfiles_total: 0,
+	JSfiles_current: 0,
+	JSfiles_pourcentage_start: 10,
+	JSfiles_pourcentage_end: 60,
+	
+	JSfiles_load: function(){
+		this.JSfiles_current++;
+		var pc = this.JSfiles_current/this.JSfiles_total;
 		var result = 50;
 		if(pc<0){ pc=0; }
 		else if(pc>1){ pc=1; }
 		result = Math.ceil(
-			this.pourcentage_start + pc*(this.pourcentage_end - this.pourcentage_start)
+			this.JSfiles_pourcentage_start + pc*(this.JSfiles_pourcentage_end - this.JSfiles_pourcentage_start)
 		);
-		if(result<this.pourcentage_start){ result=this.pourcentage_start; }
-		else if(result>this.pourcentage_end){ result=this.pourcentage_end; }
-		app_loading_progress.move(result);
+		if(result<this.JSfiles_pourcentage_start){ result=this.JSfiles_pourcentage_start; }
+		else if(result>this.JSfiles_pourcentage_end){ result=this.JSfiles_pourcentage_end; }
+		this.move(result);
 		return true;
+	},
+
+	hide_progress_wall: function(){
+		if($('#'+this.progress_wall).length>0){
+			$('#'+this.progress_wall).velocity(
+				{
+					opacity: 0,
+				},
+				{
+					delay: 150,
+					duration: 100,
+					complete: function(){
+						$(this).hide().remove();
+					},
+				}
+			);
+		}
+	},
+
+	move: function(value){
+		var time = 2000;
+		var that = this;
+		if(typeof value === 'number'){
+			if(value < 0){ value = 0; }
+			else if(value > 100){ value = 100; }
+			else if(value <= this.progress) { return true; } //We do nothing, because we only go forward
+			this.progress = value;
+			if(value>=100){
+				time = 300;
+			}
+			if(!this.done && $('#'+this.progress_bar).length>0){
+				value = Math.ceil(value);
+				$('#'+this.progress_bar).clearQueue().stop().animate(
+					{
+						width: value+'%',
+					},
+					{
+						duration: time,
+						complete: function(){
+							if(value>=100){
+								that.done = true;
+								that.hide_progress_wall();
+							}
+						},
+					}
+				);
+			} else {
+				that.done = true;
+				that.hide_progress_wall();
+			}
+		}
 	},
 };
 
 //Keep a record of all functions we need to run once all JS files are loaded
-var wrapper_after_dom = [];
+var wrapper_after_dom = {};
 
-JSfiles.finish = function(action){
-	wrapper_after_dom.push(action);
+JSfiles.finish = function(action, priority){
+	if(typeof priority !== 'number'){ priority = 50;}
+	if(typeof wrapper_after_dom[priority] === 'undefined'){
+		wrapper_after_dom[priority] = [];
+	}
+	wrapper_after_dom[priority].push(action);
 }
 
 //It keeps a record of all libraries that must be loaded after DOM load, it has priority level too
 //Libraries with priority lower than 50 might be a dependency of other libraries, higher than 50 are sure other library will not need it (default).
 JSfiles.later = function(url, priority){
-	if(typeof priority === 'undefined'){ priority = 50; }
+	if(typeof priority !== 'number'){ priority = 50; }
 	if(typeof JSfiles[priority] === 'undefined'){
 		JSfiles[priority] = [];
 	}
@@ -103,10 +160,10 @@ JSfiles.loadLibraries = function(){
 	var files = [];
 	var url = '';
 	var length = 0;
-	pri_tp = false;
+	var pri_tp = false;
 	//It will help to start from the smallest number
 	for(var pri in this){
-		if(typeof this[pri] === 'object'){
+		if($.type(this[pri]) === 'array' || $.type(this[pri]) === 'object'){
 			if(pri_tp === false || pri < pri_tp){
 				pri_tp = pri;
 			}
@@ -120,7 +177,7 @@ JSfiles.loadLibraries = function(){
 			$.cachedScript(url).complete(function() {
 				length--;
 				if(length<=0){
-					wrapper_load_progress.move();
+					wrapper_load_progress.JSfiles_load();
 					delete JSfiles[pri_tp];
 					JSfiles.loadLibraries();
 				}
@@ -129,18 +186,42 @@ JSfiles.loadLibraries = function(){
 		return true;
 	}
 	//Once it reach a string, it means there is no more js files to load, so we can launch the ultimate functions
-	for(var action in wrapper_after_dom){
-		wrapper_after_dom[action]();
+	var asc_order = Object.keys(wrapper_after_dom).sort(function(a, b) { return a - b; }); //From smalll(high priority) to big(low priority)
+	for(var i in asc_order){
+		pri_tp = asc_order[i];
+		for(var action in wrapper_after_dom[pri_tp]){
+			wrapper_after_dom[pri_tp][action]();
+		}
 	}
 	//The latest operation would be to trigger the window resize event to be sure the display fit the screen
 	$(window).trigger('resize');
+	//After 9s wait we always force to display
+	setTimeout(function(){
+		wrapper_load_progress.move(80);
+	}, 3000);
+	setTimeout(function(){
+		wrapper_load_progress.move(90);
+	}, 6000);
+	setTimeout(function(){
+		wrapper_load_progress.move(100);
+	}, 9000);
 }
+
+var wrapper_fp = '{{ fingerprint }}';
+
+var wrapper_localstorage = {
+	sha: '{{ sha }}',
+	uid: '{{ uid }}',
+	company: '{{ company|lower }}',
+	prefix: '_{{ uid }}_',
+	quota: [],
+};
 
 //Load all JS libraries only after DOM load
 $(function() {
-	app_loading_progress.move(10);
+	wrapper_load_progress.move(5);
 	for(var pri in JSfiles){
-		if(typeof JSfiles[pri] === 'object'){
+		if($.type(JSfiles[pri]) === 'array' || $.type(JSfiles[pri]) === 'object'){
 			wrapper_load_progress.total++;
 		}
 	}
@@ -151,6 +232,7 @@ $(function() {
 JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/error.js') }}", 0);
 JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/divers.js') }}", 0);
 JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/language.js') }}", 30);
+JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/date.js') }}", 30);
 JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/wrapper.js') }}", 40);
 
 </script>
@@ -160,6 +242,8 @@ JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/wrapper.js') }}", 40);
 #}
 <link rel="stylesheet" href="{{ _filelatest('/lincko/wrapper/styles/responsive.css') }}" type="text/css" />
 <script src="{{ _filelatest('/lincko/wrapper/scripts/responsive.js') }}" type="text/javascript"></script>
+<script src="{{ _filelatest('/translation/list.js') }}" type="text/javascript"></script>
+<script src="{{ _filelatest('/translation/date.js') }}" type="text/javascript"></script>
 
 </head>
 {% block base %}

@@ -46,6 +46,7 @@
 	height: 0;
 	z-index: 2;
 	overflow: hidden;
+	overflow-y: auto;
 }
 
 #app_content_dynamic {
@@ -63,8 +64,58 @@
 	width: 0;
 	height: 0;
 	overflow: hidden;
+	overflow-y: auto !important;
 	background-color: #F7F7F7;
 	color: #525252;
+}
+
+.app_content_menu_table {
+	width: 100%;
+	display: table;
+	border-collapse: separate;
+	border-spacing: 6px;
+}
+.app_content_menu_table > div {
+	display: table-row;
+	vertical-align: middle;
+	text-align: center;
+}
+
+.app_content_menu_icon {
+	display: none;
+	background-color: #FFFFFF;
+	text-align: center;
+	cursor: pointer; cursor: hand;
+	border-width: 2px;
+	border-style: solid;
+	border-radius: 4px;
+	width: 36px;
+	padding: 4px;
+	box-sizing: border-box;
+	margin: auto;
+	filter:alpha(opacity=40);
+	opacity:0.40;
+	-moz-opacity:0.40;
+	-khtml-opacity:0.40;
+}
+
+.app_content_menu_icon:hover {
+	filter:alpha(opacity=80);
+	opacity:0.80;
+	-moz-opacity:0.80;
+	-khtml-opacity:0.80;
+}
+
+.app_content_menu_icon:active, .app_content_menu_icon.active {
+	filter:alpha(opacity=100) !important;
+	opacity:1.00 !important;
+	-moz-opacity:1.00 !important;
+	-khtml-opacity:1.00 !important;
+}
+
+.app_content_menu_icon > img {
+	width: 24px;
+	display: block;
 }
 
 /* Mobile phone in Portrait maximum */
@@ -80,8 +131,20 @@
 		height: 48px !important;
 		bottom: 0;
 		width: 100%;
+		overflow: hidden;
+		overflow-x: auto !important;
+		white-space: nowrap;
+		text-align: justify;
+	}
+	.app_content_menu_table {
+		height: 48px !important;
+		display: table;
+	}
+	.app_content_menu_table > div {
+		display: table-cell;
 	}
 	#app_content_dynamic {
 		margin-left: 0;
 	}
 }
+

@@ -1,5 +1,11 @@
 var wrapper_xhr;
 var wrapper_totalxhr = 0;
+var wrapper_shangzai = {
+		puk: null,
+		cs: null,
+};
+
+const fingerprint = wrapper_fp;
 
 function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_complete){
 	if(typeof cb_success==="undefined" || cb_success===null){ cb_success = function(){}; }
@@ -36,12 +42,16 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 
 			//This is importat because sometime in msg we return an object with some information inside
 			var msg = data.msg;
-			if(typeof msg === 'object' && msg.msg){
+			if($.type(msg) === 'object' && msg.msg){
 				msg = msg.msg;
 			}
 			if(data.error){
 				JSerror.sendError(JSON.stringify(data), '/wrapper.js/wrapper_ajax().success()', 0);
 				console.log(data);
+			}
+			if(data.shangzai && data.shangzai.puk && data.shangzai.cs){
+				wrapper_shangzai = data.shangzai;
+				wrapper_localstorage.encrypt('shangzai', JSON.stringify(data.shangzai));
 			}
 			// Below is the production information with "dataType: 'json'"
 			cb_success(msg, data.error, data.status, data.msg);
@@ -142,6 +152,7 @@ function wrapper_force_resign(){
 }
 
 /*
+//Do not allow it, it migth create bugs
 function wrapper_disable_submit(){
 	//Disable submit action of all forms
 	//Enable only submit of uploading files forms (multipart/form-data) because files cannot be sent by Ajax
@@ -149,8 +160,57 @@ function wrapper_disable_submit(){
 		e.preventDefault(); //Disable submit action by click
 	});
 }
-
-$(function() {
-	wrapper_disable_submit();
-});
 */
+
+function wrapper_get_shangzai(field){
+	var result = false;
+	var shangzai = false;
+	if(typeof field !== 'string'){
+		result = false;
+	} else if(wrapper_shangzai[field]){
+		result = wrapper_shangzai[field];
+	} else if(shangzai = wrapper_localstorage.decrypt('shangzai')){
+		shangzai = JSON.parse(shangzai);
+		if(shangzai[field]){
+			result = wrapper_shangzai[field] = shangzai[field];
+		}
+	}
+	return result;
+}
+
+wrapper_localstorage.encrypt = function (link, txt){
+	var result = false;
+	//If we over quota once, we do not continue to avoid CPU usage, it slow down the first loading but it's an easy solution
+	//A more complex solution would be to progressively delete few elements, and only load them at start, but it's a CPU consumer method
+	if(typeof this.quota[link] !== 'undefined' && !this.quota[link]){
+		return true;
+	} else {
+		try {
+			txt = this.sha+btoa(utf8_encode(txt));
+			var time = 1000*3600*24*31; //Keep the value for 1 month
+			result = amplify.store(this.prefix+link, txt, { expires: time });
+		} catch(e) {
+			this.quota[link] = false;
+			amplify.store(this.prefix+link, null);
+			console.log(e);
+		}
+	}
+	return result;
+};
+
+wrapper_localstorage.decrypt = function (link){
+	var txt = false;
+	var temp;
+	var sha = this.sha
+	try {
+		temp = amplify.store(this.prefix+link);
+		if(temp.indexOf(this.sha)===0){
+			txt = temp.substr(sha.length);
+			return utf8_decode(atob(txt));
+		}
+	} catch(e) {
+		amplify.store(this.prefix+link, null);
+		txt = false;
+	}
+	return txt;
+};

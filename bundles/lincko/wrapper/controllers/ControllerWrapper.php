@@ -3,6 +3,7 @@
 namespace bundles\lincko\wrapper\controllers;
 
 use \bundles\lincko\wrapper\models\Creation;
+use \libs\OneSeventySeven;
 use \libs\Controller;
 use \libs\Datassl;
 
@@ -19,6 +20,7 @@ class ControllerWrapper extends Controller {
 		'data' => array(), //Form data
 		'method' => 'GET', //Record the type of request (GET, POST, DELETE, etc.)
 		'language' => 'en', //By default use English
+		'fingerprint' => '', //A way to identify which browser the user is using, help to avoid cookies copy/paste fraud
 	);
 
 	public function __construct(){
@@ -30,13 +32,14 @@ class ControllerWrapper extends Controller {
 		$this->json['api_key'] = $app->lincko->wrapper['api_key'];
 		$this->json['method'] = mb_strtoupper($app->request->getMethod());
 		$this->json['language'] = $app->trans->getClientLanguage();
-		if(!$app->getCookie('yuyan', false)) {
-			$app->setCookie('yuyan', $this->json['language']);
+		$this->json['fingerprint'] = $app->lincko->data['fingerprint'];
+		if(!OneSeventySeven::get('yuyan')) {
+			OneSeventySeven::set(array('yuyan' => $this->json['language']));
 		}
 		return true;
 	}
 
-	protected function sendCurl(){
+	protected function sendCurl($reset_shangzai=false){
 		$app = $this->app;
 
 		$data = json_encode($this->json);
@@ -70,8 +73,14 @@ class ControllerWrapper extends Controller {
 
 		if($json_result && isset($json_result->msg) && isset($json_result->error)){
 			
+			if($reset_shangzai){
+				if(!isset($json_result->shangzai)){ $json_result->shangzai = new \stdClass; }
+				$json_result->shangzai->puk = NULL;
+				$json_result->shangzai->cs = NULL;
+			}
+
 			if(isset($json_result->flash)){
-	
+
 				//In case we accept to try to relog
 				if(!$this->resignin && isset($json_result->flash) && isset($json_result->flash->resignin) && $json_result->flash->resignin===true){
 					return $this->reSignIn();
@@ -84,22 +93,22 @@ class ControllerWrapper extends Controller {
 				else if(isset($json_result->flash->public_key) && isset($json_result->flash->private_key)){
 					$_SESSION['public_key'] = $json_result->flash->public_key;
 					$_SESSION['private_key'] = $json_result->flash->private_key;
-					$this->uploadKeys();
+					if(!isset($json_result->shangzai)){ $json_result->shangzai = new \stdClass; }
+					$json_result->shangzai->puk = Datassl::encrypt($_SESSION['public_key'], $app->lincko->security['private_key']);
+					$json_result->shangzai->cs = Datassl::encrypt(md5($_SESSION['private_key'].$_SESSION['public_key']), $app->lincko->security['public_key']);
 				}
 
 				//"username_sha1" is a password used to encrypt data
 				//"uid" is the main user ID
 				if(isset($json_result->flash->username_sha1) && isset($json_result->flash->uid)){
-					$app->setCookie('sha', $json_result->flash->username_sha1);
-					$app->setCookie('uid', $json_result->flash->uid);
-					$_SESSION['sha'] = $json_result->flash->username_sha1;
-					$_SESSION['uid'] = $json_result->flash->uid;
+					OneSeventySeven::set(array('sha' => $json_result->flash->username_sha1));
+					OneSeventySeven::set(array('uid' => $json_result->flash->uid));
 				}
 				
-				//After signin, it return the username
+				//After signin, it return the username, it's only used once to display the user name faster than the local storage.
+				//It's almost useless
 				if(isset($json_result->flash->username)){
-					$app->setCookie('yonghu', $json_result->flash->username);
-					$_SESSION['yonghu'] = $json_result->flash->username;
+					OneSeventySeven::set(array('yonghu' => $json_result->flash->username));
 				}
 
 				unset($json_result->flash);
@@ -121,15 +130,11 @@ class ControllerWrapper extends Controller {
 	protected function autoSign(){
 		$app = $this->app;
 		$this->setupKeys();
+		//\libs\Watch::php($_SESSION, '$autoSign', __FILE__, false, false, true);
 		if($_SESSION['public_key'] == $app->lincko->security['public_key'] && $_SESSION['private_key'] == $app->lincko->security['private_key']){
-			if(isset($_SESSION['youjian']) && isset($_SESSION['mima']) && false){
-				$this->json['data']['email'] = $_SESSION['youjian'];
-				$this->json['data']['password'] = $_SESSION['mima'];
-				return true;
-			} else if($app->getCookie('jizhu', false) && $app->getCookie('youjian', false) && $app->getCookie('mima', false)){
-				$this->json['data']['email'] = $app->getCookie('youjian', false);
-				$this->json['data']['password'] = $app->getCookie('mima', false);
-				$this->json['remember'] = true;
+			if(OneSeventySeven::get('youjian') && OneSeventySeven::get('lianke')){
+				$this->json['data']['email'] = OneSeventySeven::get('youjian');
+				$this->json['data']['password'] = OneSeventySeven::get('lianke');
 				return true;
 			}
 			$this->signOut();
@@ -145,22 +150,12 @@ class ControllerWrapper extends Controller {
 			$this->resignin = true;
 			$this->autoSign();
 			$this->prepareJson();
-			return $this->sendCurl();
+			return $this->sendCurl(true);
 		} else {
 			//echo '{"msg":"Wrapper error","error":true,"status":500}';
 			echo '{"msg":"'.$app->trans->getJSON('wrapper', 1, 3).'","error":true,"status":500}';
 			return true;
 		}
-	}
-
-	protected function uploadKeys(){
-		$app = $this->app;
-		$checksum = md5($_SESSION['private_key'].$_SESSION['public_key']);
-		//Upload user public key
-		$app->setCookie('shangzai_puk', $_SESSION['public_key'], null, null, null, false, false);
-		//Secret code built with user private code which must e equal to public key after conversion on server side
-		//WARNING: slim 'cookies.secret_key' must be the same on client and server side!
-		$app->setCookie('shangzai_cs', $checksum, null, null, null, false, false);
 	}
 
 	protected function setupKeys(){
@@ -171,7 +166,6 @@ class ControllerWrapper extends Controller {
 		if(!isset($_SESSION['private_key'])){
 			$_SESSION['private_key'] = $app->lincko->security['private_key'];
 		}
-		$this->uploadKeys();
 		return true;
 	}
 
@@ -179,27 +173,14 @@ class ControllerWrapper extends Controller {
 		$app = $this->app;
 		$_SESSION['public_key'] = $app->lincko->security['public_key'];
 		$_SESSION['private_key'] = $app->lincko->security['private_key'];
-		$this->uploadKeys();
 		return true;
 	}
 
 	protected function signOut(){
 		$app = $this->app;
-		$app->deleteCookie('yonghu');
-		$app->deleteCookie('jizhu');
-		$app->deleteCookie('mima');
-		$app->deleteCookie('sha');
-		$app->deleteCookie('uid');
-		$app->deleteCookie('shangzai_puk');
-		$app->deleteCookie('shangzai_cs');
-		unset($_SESSION['yonghu']);
-		unset($_SESSION['youjian']);
-		unset($_SESSION['mima']);
-		unset($_SESSION['jizhu']);
+		OneSeventySeven::unsetAll(array('jizhu', 'youjian'));
 		unset($_SESSION['public_key']);
 		unset($_SESSION['private_key']);
-		unset($_SESSION['sha']);
-		unset($_SESSION['uid']);
 		return true;
 	}
 
@@ -207,6 +188,10 @@ class ControllerWrapper extends Controller {
 		$this->setupKeys();
 		$this->json['public_key'] = $_SESSION['public_key'];
 		$this->json['checksum'] = md5($_SESSION['private_key'].json_encode($this->json['data']));
+	}
+
+	public function wrap_ok($action = NULL){
+		return true;
 	}
 
 	public function wrap_multi($action = NULL){
@@ -219,6 +204,8 @@ class ControllerWrapper extends Controller {
 
 		$log_action = false;
 
+		$reset_shangzai = false;
+
 		if($action==='user/signin' && $type==='POST' && isset($this->json['data']['email']) && isset($this->json['data']['password'])){
 
 			$log_action = true;
@@ -227,18 +214,16 @@ class ControllerWrapper extends Controller {
 			
 			$this->json['data']['password'] = Datassl::encrypt($this->json['data']['password'], $this->json['data']['email']);
 
-			$_SESSION['youjian'] = $this->json['data']['email'];
-			$_SESSION['mima'] = $this->json['data']['password'];
-			$_SESSION['jizhu'] = true;
+			OneSeventySeven::set(array(
+				'youjian' => $this->json['data']['email'],
+				'lianke' => $this->json['data']['password'],
+			));
 
 			//Add Cookies if Remember
 			if(isset($this->json['data']['remember'])){
-				$app->setCookie('jizhu', true);
-				$app->setCookie('youjian', $this->json['data']['email']);
-				$app->setCookie('mima', $this->json['data']['password']);
+				OneSeventySeven::set(array('jizhu' => true));
 			} else {
-				$app->deleteCookie('jizhu');
-				$app->deleteCookie('mima');
+				OneSeventySeven::set(array('jizhu' => false));
 			}
 		
 		} else if($action==='user/create' && $type==='POST' && isset($this->json['data']['email']) && isset($this->json['data']['password'])){
@@ -261,16 +246,15 @@ class ControllerWrapper extends Controller {
 			$this->json['data']['password'] = Datassl::encrypt($this->json['data']['password'], $this->json['data']['email']);
 
 			$this->signOut();
-			$app->setCookie('youjian', $this->json['data']['email']);
-			$app->setCookie('mima', $this->json['data']['password']);
-			$this->json['remember'] = true;
-			$app->setCookie('jizhu', true);
+			OneSeventySeven::set(array(
+				'youjian' => $this->json['data']['email'],
+				'lianke' => $this->json['data']['password'],
+				'jizhu' => true,
+			));
 
 		} else {
-
 			//We autosign if available
 			$this->autoSign();
-			
 		}
 
 		$this->prepareJson();
@@ -279,17 +263,18 @@ class ControllerWrapper extends Controller {
 		if($action==='user/signout' && $type==='POST'){
 
 			$this->signOut();
+			$reset_shangzai = true;
 
 		}
 
 		if($log_action){
-			if(!$this->sendCurl()){
+			if(!$this->sendCurl($reset_shangzai)){
 				$this->signOut();
 			} else if($action==='user/create'){
 				Creation::record();
 			}
 		} else {
-			$this->sendCurl();
+			$this->sendCurl($reset_shangzai);
 		}
 
 		//Do not return false, it forces wrapper.js to send error message

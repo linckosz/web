@@ -9,7 +9,7 @@
 <table id="app_content_top">
 	<tr>
 		<td class="app_content_top_cell">
-			<img class="app_content_top_img" id="app_content_top_project" src="{{ _filelatest('/lincko/app/images/app/content/project.png') }}" alt="{{ _trans('app', 4, 1, 'html') }}{# Projects #}" title="{{ _trans('app', 4, 1, 'html') }}{# Projects #}" />
+			<img class="app_content_top_img" id="app_content_top_project" src="{{ _filelatest('/lincko/app/images/app/content/menu.png') }}" alt="{{ _trans('app', 4, 1, 'html') }}{# Projects #}" title="{{ _trans('app', 4, 1, 'html') }}{# Projects #}" />
 		</td>
 		<td class="app_content_top_cell app_content_top_title">
 			<span id="app_content_top_title">
@@ -24,11 +24,47 @@
 </table>
 
 <div id="app_content_menu">
-	Some icons to select the what we want to display, for example tasks or a gantt chart.
+	<div class="font_sans_serif app_content_menu_table overthrow">
+		<div>
+			<div class="base_color_bd_third app_content_menu_icon">
+				<img id="app_content_menu_dashboard" class="base_color_bg_third" src="{{ _filelatest('/lincko/app/images/app/content/menu/dashboard.png') }}" alt="{{ _trans('app', 4, 4, 'html') }}{# dashboard #}" title="{{ _trans('app', 4, 4, 'html') }}{# dashboard #}" />
+			</div>
+		</div>
+		<div>
+			<div class="base_color_bd_third app_content_menu_icon">
+				<img id="app_content_menu_projects" class="base_color_bg_third" src="{{ _filelatest('/lincko/app/images/app/content/menu/projects.png') }}" alt="{{ _trans('app', 4, 5, 'html') }}{# projects #}" title="{{ _trans('app', 4, 5, 'html') }}{# projects #}" />
+			</div>
+		</div>
+		<div>
+			<div class="base_color_bd_third app_content_menu_icon">
+				<img id="app_content_menu_tasks" class="base_color_bg_third" src="{{ _filelatest('/lincko/app/images/app/content/menu/tasks.png') }}" alt="{{ _trans('app', 4, 6, 'html') }}{# tasks #}" title="{{ _trans('app', 4, 6, 'html') }}{# tasks #}" />
+			</div>
+		</div>
+		<div>
+			<div class="base_color_bd_third app_content_menu_icon">
+				<img id="app_content_menu_notes" class="base_color_bg_third" src="{{ _filelatest('/lincko/app/images/app/content/menu/notes.png') }}" alt="{{ _trans('app', 4, 7, 'html') }}{# notes #}" title="{{ _trans('app', 4, 7, 'html') }}{# notes #}" />
+			</div>
+		</div>
+		<div>
+			<div class="base_color_bd_third app_content_menu_icon">
+				<img id="app_content_menu_statistics" class="base_color_bg_third" src="{{ _filelatest('/lincko/app/images/app/content/menu/calendar.png') }}" alt="{{ _trans('app', 4, 8, 'html') }}{# calendar #}" title="{{ _trans('app', 4, 8, 'html') }}{# calendar #}" />
+			</div>
+		</div>
+		<div>
+			<div class="base_color_bd_third app_content_menu_icon">
+				<img id="app_content_menu_statistics" class="base_color_bg_third" src="{{ _filelatest('/lincko/app/images/app/content/menu/statistics.png') }}" alt="{{ _trans('app', 4, 9, 'html') }}{# statistics #}" title="{{ _trans('app', 4, 9, 'html') }}{# statistics #}" />
+			</div>
+		</div>
+		<div>
+			<div class="base_color_bd_third app_content_menu_icon">
+				<img id="app_content_menu_history" class="base_color_bg_third" src="{{ _filelatest('/lincko/app/images/app/content/menu/history.png') }}" alt="{{ _trans('app', 4, 10, 'html') }}{# recent activity #}" title="{{ _trans('app', 4, 10, 'html') }}{# recent activity #}" />
+			</div>
+		</div>
+	</div>
 </div>
 <div id="app_content_dynamic">
 	{# this absolute DIV is important, it help to fixed absolute elements position to this DIV and not the page itsel. #}
-	<div>
+	<div class="overthrow">{# DO NOT DELETE #}
 		{% include '/bundles/lincko/app/templates/app/layers.twig' %}
 	</div>
 </div>

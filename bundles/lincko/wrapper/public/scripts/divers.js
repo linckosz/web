@@ -21,3 +21,16 @@ wrapper_itemExists = function(haystack, needle) {
 if (!Date.now) {
 	Date.now = function() { return new Date().getTime(); }
 }
+
+String.prototype.ucfirst = function() {
+	if(this.length > 0){
+		return this.charAt(0).toUpperCase() + this.slice(1);
+	} else {
+		return this;
+	}
+}
+
+String.prototype.replaceAll = function(find, replace) {
+	find = find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+	return this.replace(new RegExp(find, 'gi'), replace);
+}

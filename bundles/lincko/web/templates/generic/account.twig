@@ -49,7 +49,7 @@
 				<div class="account_signin_box_div">
 					<label class="account_label_inside" for="account_signin_email">
 						<span class="unselectable">{{ _trans('web', 5, 2, 'html') }}{# Email #}</span>
-						<input type="email" id="account_signin_email" name="email" value="" />
+						<input type="email" id="account_signin_email" name="email" value="{{ youjian|lower }}" />
 					</label>
 					<input type="password" name="foilautofill" value="" autocomplete="off" style="display:none;" />{# It avoids a behavior in Firefox which does not know Autocomplete tag, FF fulfill by default the first field #}
 					<label class="account_label_inside" for="account_signin_password">

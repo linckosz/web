@@ -1,9 +1,12 @@
 <div id="begin_app_loading" class="visibility_hidden">
-	<script src="{{ _filelatest('/lincko/app/scripts/app/loading.js') }}" type="text/javascript"></script>
+	<script>
+		wrapper_load_progress.progress_bar = 'app_loading_progress_bar';
+		wrapper_load_progress.progress_wall = 'app_loading_progress_wall';
+	</script>
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/app/loading.css') }}" type="text/css" />
 </div>
-<div id="app_loading_main_table">
-	<div id="app_loading_main_table_cell">
+<div id="app_loading_progress_wall">
+	<div id="app_loading_progress_wall_cell">
 		<table id="app_loading_table">
 			<tr>
 				<td></td>

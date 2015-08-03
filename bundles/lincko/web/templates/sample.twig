@@ -23,12 +23,12 @@ var sample_cb_error = function(xhr_err, ajaxOptions, thrownError){
 	);
 };
 var sample_cb_complete = function(){
-	$("#divbox").html($("#divbox").html()+'<br />Complete callback');
+	$("#divbox").html($("#divbox").html()+' => Complete callback');
 }
 </script>
 
 {% if logged %}
-{{ _trans('web', 8888, 0, 'html') }}{# Hello @@user~~, welcome back! #}
+{{ _trans('web', 8888, 0, 'html') }}{# Hello @@username~~, welcome back! #}
 <br />
 {% endif %}
 <br />
@@ -76,7 +76,7 @@ var sample_cb_complete = function(){
 	<input type="password" id="user_signin_password" name="password" value="" autocomplete="off" />
 	<br />
 	<label for="user_signin_password">{{ _trans('web', 8888, 8, 'html') }}{# Remember me #}</label>
-	<input type="checkbox" id="user_signin_remember" name="remember" {% if jizhu %}checked="checked"{% endif %} />
+	<input type="checkbox" id="user_signin_remember" name="remember" {% if jizhu %}checked="checked"{% endif %} />{{ jizhu }}
 	<br />
 	<input type="submit" id="user_signin_submit" value="Submit (ignored)" style="display:none;" />
 	<input type='button' value='{{ _trans('web', 8888, 7, 'input') }}{# Sign in #}' onclick="$(this.form).submit();" />

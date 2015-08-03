@@ -200,17 +200,75 @@ html, .font_sans_serif {
 
 /*
  * COLOR
+ * http://paletton.com/#uid=30J0u0kryvvhaGqmlzpvmqAz1kX
+ * http://paletton.com/#uid=70J2t0kryvvnxzQpowVuCuVuDr6
+ * http://paletton.com/#uid=70J2w0kryvv9IACk8uSC1txMKpI
  */
 
-.base_color_main_bg {
-	background-color: #FBA025;
-	background: linear-gradient(#FBA025,#FD7D12);
-	color: #FFFFFF;
+.base_color_text_white { color: #FFFFFF; }
+.base_color_text_black { color: #000000; }
+.base_color_bg_neutral { background-color: #FBFBFB; }
+
+/* MAIN */
+.base_color_bg_main_less_less {   background-color: #FFDEB2; }
+.base_color_bg_main_less {        background-color: #F6B55B; }
+.base_color_bg_main {             background-color: #FBA023; }
+.base_color_bg_main_plus {        background-color: #EB8800; }
+.base_color_bg_main_plus_plus {   background-color: #CD7700; }
+
+.base_color_bd_main_less_less {   border-color: #FFDEB2; }
+.base_color_bd_main_less {        border-color: #F6B55B; }
+.base_color_bd_main {             border-color: #FBA023; }
+.base_color_bd_main_plus {        border-color: #EB8800; }
+.base_color_bd_main_plus_plus {   border-color: #CD7700; }
+
+/* SECOND */
+.base_color_bg_second_less_less { background-color: #7BB1A9; }
+.base_color_bg_second_less {      background-color: #399A8D; }
+.base_color_bg_second {           background-color: #169D8B; }
+.base_color_bg_second_plus {      background-color: #00947F; }
+.base_color_bg_second_plus_plus { background-color: #00816F; }
+
+.base_color_bd_second_less_less { border-color: #7BB1A9; }
+.base_color_bd_second_less {      border-color: #399A8D; }
+.base_color_bd_second {           border-color: #169D8B; }
+.base_color_bd_second_plus {      border-color: #00947F; }
+.base_color_bd_second_plus_plus { border-color: #00816F; }
+
+/* THIRD */
+.base_color_bg_third_less_less {  background-color: #FFD2B2; }
+.base_color_bg_third_less {       background-color: #F69B5B; }
+.base_color_bg_third {            background-color: #FB7D23; }
+.base_color_bg_third_plus {       background-color: #EB6200; }
+.base_color_bg_third_plus_plus {  background-color: #CD5500; }
+
+.base_color_bd_third_less_less {  border-color: #FFD2B2; }
+.base_color_bd_third_less {       border-color: #F69B5B; }
+.base_color_bd_third {            border-color: #FB7D23; }
+.base_color_bd_third_plus {       border-color: #EB6200; }
+.base_color_bd_third_plus_plus {  border-color: #CD5500; }
+
+/* FORTH */
+.base_color_bg_forth_less_less {  background-color: #819D84; }
+.base_color_bg_forth_less {       background-color: #42759F; }
+.base_color_bg_forth {            background-color: #2067A2; }
+.base_color_bg_forth_plus {       background-color: #085798; }
+.base_color_bg_forth_plus_plus {  background-color: #044A84; }
+
+.base_color_bd_forth_less_less {  border-color: #819D84; }
+.base_color_bd_forth_less {       border-color: #42759F; }
+.base_color_bd_forth {            border-color: #2067A2; }
+.base_color_bd_forth_plus {       border-color: #085798; }
+.base_color_bd_forth_plus_plus {  border-color: #044A84; }
+
+/* MAIN GRADIENT MAIN to THIRD */
+.base_color_bg_main_gradient {
+	background: -webkit-linear-gradient(#FBA023,#FB7D23) !important; /* For Safari 5.1 to 6.0 */
+	background: -o-linear-gradient(#FBA023,#FB7D23) !important; /* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(#FBA023,#FB7D23) !important; /* For Firefox 3.6 to 15 */
+	background: linear-gradient(#FBA023,#FB7D23) !important; /* Standard syntax */
 }
 
-.base_color_neutral_bg {
-	background-color: #FBFBFB;
-}
 
 #base_error {
 	display: none;

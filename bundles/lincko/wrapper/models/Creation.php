@@ -23,7 +23,8 @@ class Creation extends Model {
 	public static function record(){
 		$app = \Slim\Slim::getInstance();
 		$IP = $app->request->getIp();
-		$creation = self::find($IP);
+		$fingerprint = $app->lincko->data['fingerprint'];
+		$creation = self::where('IP', $IP)->where('fingerprint', $fingerprint)->first();
 		if($creation){
 			$creation->updated_at = new \DateTime();
 			$creation->save();
@@ -31,6 +32,7 @@ class Creation extends Model {
 		} else {
 			$creation = new self;
 			$creation->IP = $IP;
+			$creation->fingerprint = $app->lincko->data['fingerprint'];
 			$creation->save();
 			return true;
 		}
@@ -43,10 +45,11 @@ class Creation extends Model {
 		$limit->sub(new \DateInterval('PT'.$app->lincko->wrapper['captcha_timing'].'S'));
 		
 		$IP = $app->request->getIp();
+		$fingerprint = $app->lincko->data['fingerprint'];
 
-		$creation = self::find($IP);
+		$creation = self::where('IP', $IP)->where('fingerprint', $fingerprint)->where('updated_at', '>', $limit)->first();
 		if($creation){
-			return ($creation->updated_at > $limit);
+			return true;
 		}
 		return false;
 	}

@@ -1,7 +1,7 @@
 base_input_field.firstname = {
 	format: Lincko.Translation.get('web', 4, 'html'), //First name format: - 104 characters max
 	tags: {
-		pattern: "^\\S{1,104}$",
+		pattern: "^.{1,104}$",
 		required: true,
 		maxlength: 104,
 	},
@@ -17,7 +17,7 @@ base_input_field.firstname = {
 base_input_field.lastname = {
 	format: Lincko.Translation.get('web', 5, 'html'), //Last name format: - 104 characters max
 	tags: {
-		pattern: "^\\S{1,104}$",
+		pattern: "^.{1,104}$",
 		required: true,
 		maxlength: 104,
 	},

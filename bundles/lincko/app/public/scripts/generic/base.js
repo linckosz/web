@@ -2,7 +2,7 @@
 function base_format_input(field){
 	if(field in base_input_field){
 		var Elem = $("[name="+field+"]");
-		if(typeof base_input_field[field].tags === 'object') {
+		if($.type(base_input_field[field].tags) === 'object') {
 			for(tag in base_input_field[field].tags){
 				Elem.prop(tag, base_input_field[field].tags[tag]);
 			}

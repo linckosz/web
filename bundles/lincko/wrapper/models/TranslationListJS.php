@@ -4,6 +4,12 @@ namespace bundles\lincko\wrapper\models;
 
 use \libs\STR;
 
+// It's currently not used, we use the ControllerTranslation instead
+// To use it, we need to activate it on setData.php with in the merge: 'translation_list_js' => TranslationListJS::setList(),
+// This can be used as bellow to get JS translation file in a Twig file
+// {{ translation_list_js|raw }}
+
+
 class TranslationListJS {
 
 	public static function setList(){
@@ -39,7 +45,6 @@ class TranslationListJS {
 		};\n";
 
 		return $script;
-		//return 'script';
 	}
 
 }

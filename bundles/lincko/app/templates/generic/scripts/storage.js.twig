@@ -4,21 +4,10 @@
 	Lincko.storage = {
 		COMID: null,
 		last_visit: null,
+		last_visit_clean: {% if reset_data is empty %}false{% else %}true{% endif %},
 		data: {},
 		data_recent: {},
+		data_favorite: {},
 	};
-
-	Lincko.storage.getSha = function(){
-		return "{{ sha }}";{# unuse at this moment, but it can be used as prefix or encryption value for AmpliJS storage #}
-	}
-
-	Lincko.storage.getUID = function(){
-		return "{{ uid }}";
-	}
-
-	Lincko.storage.getCOM = function(){
-		var url = {% if company is empty %}""{% else %}"{{ company }}"{% endif %};
-		return url.toLowerCase();
-	}
 
 </script>

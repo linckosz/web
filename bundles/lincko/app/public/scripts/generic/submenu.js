@@ -66,43 +66,27 @@ function Submenu(menu, next, param) {
 				}
 				//app_upload_all
 				else if(attribute.style=="app_upload_all"){
-					if(typeof app_application_objects !== 'undefined'){
-						for(var index in app_application_objects.lincko_record){
-							if(app_application_objects.lincko_record[index].id === Elem.id){
-								exist = true;
-							}
-						}
-						if(!exist){
-							app_application_objects.lincko_record[app_application_objects.lincko_record_index++] = {
-								id: Elem.id,
-								action: function(){
-									Elem.AddMenuAppUploadAllForm();
-									Elem.AddMenuAppUploadAllFile();
-								},
-							};
+					if(typeof app_application_lincko !== 'undefined'){
+						
+						if(app_application_lincko.add(Elem.id, 'upload', function(){ //We cannot simplify because Elem is not the HTML object, it's a JS Submenu objec
 							Elem.AddMenuAppUploadAllForm();
 							Elem.AddMenuAppUploadAllFile();
-							app_application_objects.lincko_record_update();
+						})){
+							Elem.AddMenuAppUploadAllForm();
+							Elem.AddMenuAppUploadAllFile();
+							app_application_lincko.update('upload');
 						}
 					}
 				}
 				//app_upload_single
 				else if(attribute.style=="app_upload_sub"){
-					if(typeof app_application_objects !== 'undefined' && typeof app_upload_files !== 'undefined' && typeof app_upload_files.lincko_files[attribute.value] !== 'undefined'){
-						for(var index in app_application_objects.lincko_record){
-							if(app_application_objects.lincko_record[index].id === Elem.id){
-								exist = true;
-							}
-						}
-						if(!exist){
-							app_application_objects.lincko_record[app_application_objects.lincko_record_index++] = {
-								id: Elem.id,
-								action: function(){
-									Elem.AddMenuAppUploadSubFile();
-								},
-							};
+					if(typeof app_application_lincko !== 'undefined' && typeof app_upload_files !== 'undefined' && typeof app_upload_files.lincko_files[attribute.value] !== 'undefined'){
+						
+						if(app_application_lincko.add(Elem.id, 'upload', function(){ //We cannot simplify because Elem is not the HTML object, it's a JS Submenu object
+							Elem.AddMenuAppUploadSubFile();
+						})){
 							Elem.AddMenuAppUploadSubFile(attribute);
-							app_application_objects.lincko_record_update();
+							app_application_lincko.update('upload');
 						}
 					} else {
 						Elem.display = false;
@@ -390,9 +374,9 @@ Submenu.prototype = {
 		Elem.find("[find=submenu_app_upload_all_progress_pc_text]").html(
 			function(){
 				if(app_upload_files.lincko_progressall>=100 && app_upload_files.lincko_numberOfFiles<=0){
-					return Lincko.Translation.get('app', 8, 'html') //Complete
+					return Lincko.Translation.get('app', 8, 'html'); //Complete
 				} else {
-					return Math.floor(app_upload_files.lincko_progressall) + '%'
+					return Math.floor(app_upload_files.lincko_progressall) + '%';
 				}
 			}
 		);
@@ -427,7 +411,7 @@ Submenu.prototype = {
 		//Each
 		if(typeof app_upload_files !== 'undefined'){
 			$.each(app_upload_files.lincko_files, function(index, data){
-				if(typeof data === 'object'){
+				if($.type(data) === 'object'){
 					if(typeof data.lincko_type !== 'undefined' && data.lincko_type === 'file'){
 						if($('#'+that.id+'_submenu_app_upload_single_'+index).length <= 0){
 							Elem = $('#-submenu_app_upload_single').clone();
@@ -590,7 +574,7 @@ Submenu.prototype = {
 		var lincko_files_index = -1;
 		var data;
 
-		if(typeof app_upload_files === 'object'){
+		if($.type(app_upload_files) === 'object'){
 			
 			//Upload function buttons
 			if($('#'+this.id+'_submenu_app_upload_function').length <= 0){
@@ -653,7 +637,7 @@ Submenu.prototype = {
 				lincko_files_index = this.wrapper.find("[find=submenu_app_upload_sub_index]").val();
 			}
 
-			if(typeof app_upload_files.lincko_files[lincko_files_index] === 'object'){
+			if($.type(app_upload_files.lincko_files[lincko_files_index]) === 'object'){
 				data = app_upload_files.lincko_files[lincko_files_index];
 				if($('#'+that.id+'_submenu_app_upload_sub').length <= 0){
 					Elem = $('#-submenu_app_upload_sub').clone();

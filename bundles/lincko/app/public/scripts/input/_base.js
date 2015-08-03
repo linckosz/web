@@ -1,7 +1,7 @@
 base_input_field.firstname = {
 	format: Lincko.Translation.get('app', 4, 'html'), //First name format: - 104 characters max
 	tags: {
-		pattern: "^\\S{1,104}$",
+		pattern: "^.{1,104}$",
 		required: "required",
 		maxlength: 104,
 	},
@@ -17,7 +17,7 @@ base_input_field.firstname = {
 base_input_field.lastname = {
 	format: Lincko.Translation.get('app', 5, 'html'), //Last name format: - 104 characters max
 	tags: {
-		pattern: "^\\S{1,104}$",
+		pattern: "^.{1,104}$",
 		required: "required",
 		maxlength: 104,
 	},
@@ -43,6 +43,20 @@ base_input_field.username = {
 	},
 	error_msg: function(){
 		return { msg: this.format, field: 'username' };
+	},
+}
+
+base_input_field.gender = {
+	format: Lincko.Translation.get('app', 8, 'html'), //Genderr format: - Male or Female
+	tags: {
+		pattern: "^0|1$",
+	},
+	valid: function(text){
+		var regex_1 = /^0|1$/g;
+		return regex_1.test(text);
+	},
+	error_msg: function(){
+		return { msg: this.format, field: 'gender' };
 	},
 }
 
@@ -99,7 +113,7 @@ base_input_field.captcha = {
 base_input_field.base_search_text = {
 	format: Lincko.Translation.get('app', 4, 'html'), //Search format: - Between 2 and 255 characters
 	tags: {
-		pattern: "^\\S{2,255}$",
+		pattern: "^.{2,255}$",
 		maxlength: 255,
 	},
 	valid: function(text){

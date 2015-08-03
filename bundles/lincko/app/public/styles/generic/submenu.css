@@ -291,7 +291,7 @@
 	-webkit-box-shadow: 0px 0px 4px 1px rgba(251, 149, 31, 0.6);
 	-moz-box-shadow: 0px 0px 4px 1px rgba(251, 149, 31, 0.6);
 	box-shadow: 0px 0px 4px 1px rgba(251, 149, 31, 0.6);
-	color: #FBA025 !important;
+	color: #FBA023 !important;
 }
 
 .submenu_app_upload_progress_full_failed {
@@ -524,7 +524,7 @@ http://brianshim.com/webtricks/style-the-wordpress-3-6-media-player/
 /* End app_project */
 
 /* Minimum Desktop */
-@media only screen and (min-width: 1281px) {
+@media only screen and (min-width: 1280px) {
 	.submenu_wrapper {
 		border: 1px solid #DFDFDF;
 		width: 320px;
@@ -560,7 +560,7 @@ http://brianshim.com/webtricks/style-the-wordpress-3-6-media-player/
 	}
 }
 
-@media only screen and (min-width: 480px) and (max-width: 1280px) {
+@media only screen and (min-width: 480px) and (max-width: 1279px) {
 	.submenu_app_upload_progress_pc {
 		min-height: 22px;
 	}
@@ -574,7 +574,7 @@ http://brianshim.com/webtricks/style-the-wordpress-3-6-media-player/
 }
 
 /* Maximum Tablet Landscape */
-@media only screen and (max-width: 1280px) {
+@media only screen and (max-width: 1279px) {
 	.submenu_wrapper {
 		width: 100% !important; 
 	}

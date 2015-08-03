@@ -3,30 +3,9 @@
 {% block app_application %}
 <div id="begin_app_application" class="visibility_hidden">
 	<script>
-		//This variable must be loaded before because other JS files will record their IDs inside
-		var app_application_objects = {
-			//Must be app_application_objects.lincko_record[app_application_objects.lincko_record_index++] = {id: 'ElemID', action: function(){ dosomething(); }}
-			lincko_record: {},
-			lincko_record_index: 0,
-			lincko_record_update: function(){
-				var exist = false;
-				for(var index in this.lincko_record){
-					exist = false;
-					if(typeof this.lincko_record[index].id === 'string' && typeof this.lincko_record[index].action === 'function'){
-						if($('#'+this.lincko_record[index].id).length > 0){
-							this.lincko_record[index].action();
-							exist = true;
-						}
-					}
-					if(!exist){ delete this.lincko_record[index]; }
-				}
-			},
-		};
-	</script>
-	<script>
-		JSfiles.later("{{ _filelatest('/lincko/app/scripts/app/application.js') }}");
+		JSfiles.later("{{ _filelatest('/lincko/app/scripts/app/application.js', 10) }}");
 		//Some JS that are not linked to a twig file
-		JSfiles.later("{{ _filelatest('/lincko/app/scripts/generic/storage.js') }}");
+		JSfiles.later("{{ _filelatest('/lincko/app/scripts/generic/storage.js', 40) }}");
 		JSfiles.later("{{ _filelatest('/lincko/app/scripts/app/users.js') }}");
 	</script>
 	{% include '/bundles/lincko/app/templates/generic/scripts/storage.js.twig' %}

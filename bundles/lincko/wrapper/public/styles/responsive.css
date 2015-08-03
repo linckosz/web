@@ -43,7 +43,7 @@ body {
 }
 
 /* Tablet in Landscape */
-@media only screen and (min-width: 901px) and (max-width: 1280px){
+@media only screen and (min-width: 901px) and (max-width: 1279px){
 	.isMobile, .isMobileL, .isDesktop { display:none !important; }
 	.minDesktop { display:none !important; }
 	.maxMobile, .maxMobileL { display:none !important; }
@@ -54,7 +54,7 @@ body {
 }
 
 /* Notebook and PC */
-@media only screen and (min-width: 1281px){
+@media only screen and (min-width: 1280px){
 	.isMobile, .isMobileL, .isTablet { display:none !important; }
 	/* no min */
 	.maxMobile, .maxMobileL, .maxTablet { display:none !important; }

@@ -2,6 +2,7 @@
 
 namespace bundles\lincko\wrapper\controllers;
 
+use \libs\OneSeventySeven;
 use \libs\Controller;
 use \libs\STR;
 
@@ -10,7 +11,7 @@ class ControllerTranslation extends Controller {
 	protected $app = NULL;
 
 	public function __construct(){
-		$app = $this->app = \Slim\Slim::getInstance();
+		$this->app = \Slim\Slim::getInstance();
 		return true;
 	}
 
@@ -32,7 +33,8 @@ class ControllerTranslation extends Controller {
 		}
 		if(is_string($data)){
 			if(preg_match("/([\w-]{2,})(?:$|\W)/ui", $data)){
-				$app->setCookie('yuyan', $data);
+				OneSeventySeven::set(array('yuyan' => $data));
+				OneSeventySeven::set(array('reset_data' => true));
 			}
 		}
 	}
@@ -41,7 +43,7 @@ class ControllerTranslation extends Controller {
 		$app = $this->app;
 		$list = $app->trans->getList(true, 8000);
 		echo "Lincko.Translation = {};\n";
-		echo "Lincko.Translation._list = [];\n";
+		echo "Lincko.Translation._list = {};\n";
 		foreach ($list as $bundle => $list_bundles) {
 			foreach ($list_bundles as $category => $list_categories) {
 				foreach ($list_categories as $phrase => $value) {

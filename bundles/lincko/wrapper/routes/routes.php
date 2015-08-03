@@ -13,6 +13,13 @@ $app->group('/wrapper', function () use ($app) {
 	->conditions(array('action' => '[\w\d\/]*'))
 	->via('GET', 'POST', 'PUT', 'DELETE');
 
+	$app->map(
+		'(/):action',
+		'\bundles\lincko\wrapper\controllers\ControllerWrapper:wrap_ok'
+	)
+	->conditions(array('action' => '[\w\d\/]*'))
+	->via('OPTIONS');
+
 });
 
 $app->get(

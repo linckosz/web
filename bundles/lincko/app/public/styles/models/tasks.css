@@ -1,0 +1,30 @@
+/*
+	TASKS
+*/
+.models_tasks {
+	background-color: #4A985E;
+	color: #FFFFFF;
+	border-radius: 4px;
+	padding: 6px;
+	margin: 20px;
+	display: block;
+	border: 2px solid transparent;
+}
+
+.models_tasks:hover {
+	border-color: rgba(255, 255, 255, 0.5);
+}
+
+.models_tasks_line {
+	display: block;
+	height: 1px;
+	width: 100%;
+	padding: 4px 0;
+}
+
+.models_tasks_line > div {
+	height: 1px;
+	width: 96%;
+	margin: auto;
+	background-color: rgba(255, 255, 255, 0.2);
+}

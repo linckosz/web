@@ -73,6 +73,15 @@ submenu_list['app_upload_destination'] = {
 	},
 };
 
+if(typeof app_application_lincko !== 'undefined'){
+	app_application_lincko.setFields('upload');
+}
+
+function app_upload_prepare_log(){
+	$('#app_upload_shangzai_puk').val(wrapper_get_shangzai('puk'));
+	$('#app_upload_shangzai_cs').val(wrapper_get_shangzai('cs'));
+	$('#app_upload_fingerprint').val(fingerprint);
+}
 
 $(function () {
 	//Do not use 'use strict', it makes the code heavier, even if it's better for conventional coding
@@ -169,8 +178,7 @@ $(function () {
 		//data => File object
 		submit: function (e, data) {
 			app_upload_files.lincko_files[data.lincko_files_index].lincko_status = 'uploading';
-			$('#app_upload_shangzai_puk').val($.cookie("shangzai_puk"));
-			$('#app_upload_shangzai_cs').val($.cookie("shangzai_cs"));
+			app_upload_prepare_log();
 		},
 		
 		//data => File object
@@ -211,7 +219,7 @@ $(function () {
 			if (typeof e !== 'undefined' && e.isDefaultPrevented()) { return false; }
 			var that = $('#app_upload_fileupload').fileupload('option');
 			app_upload_files.lincko_numberOfFiles = that._numberOfFiles();
-			if(typeof data === 'object' && data.loaded && data.total && data.bitrate){
+			if($.type(data) === 'object' && data.loaded && data.total && data.bitrate){
 				var progress = Math.floor( 100 * data.loaded/data.total );
 				if(app_upload_files.lincko_numberOfFiles<=0){
 					progress = 100;
@@ -240,7 +248,7 @@ $(function () {
 				} else {
 					var lincko_progress = false;
 					$.each(app_upload_files.lincko_files, function(index, data){
-						if(typeof data === 'object'){
+						if($.type(data) === 'object'){
 							if(data.lincko_progress > 0){
 								return lincko_progress = true;
 							}
@@ -256,7 +264,7 @@ $(function () {
 				app_upload_files.lincko_total = that._formatFileSize(0);
 				app_upload_files.lincko_size = that._formatComplete(0, 0);
 			}
-			app_application_objects.lincko_record_update();
+			app_application_lincko.update('upload');
 		},
 
 		//data => File object
@@ -284,7 +292,7 @@ $(function () {
 			if(typeof e !== 'undefined'){ e.preventDefault(); }
 			var that = this;
 			$.each(app_upload_files.lincko_files, function(index, data){
-				if(typeof data === 'object'){
+				if($.type(data) === 'object'){
 					if(data.lincko_status === 'failed'){
 						data.lincko_status = 'deleted';
 						that.destroy(e, data);
@@ -300,7 +308,7 @@ $(function () {
 			if(typeof e !== 'undefined'){ e.preventDefault(); }
 			var that = this;
 			$.each(app_upload_files.lincko_files, function(index, data){
-				if(typeof data === 'object'){
+				if($.type(data) === 'object'){
 					if(typeof data.lincko_type !== 'undefined' && data.lincko_type === 'file' && data.lincko_status !== 'abort'){
 						data.lincko_status = 'abort';
 						data.abort();
@@ -313,7 +321,7 @@ $(function () {
 			if(typeof e !== 'undefined'){ e.preventDefault(); }
 			var that = this;
 			$.each(app_upload_files.lincko_files, function(index, data){
-				if(typeof data === 'object'){
+				if($.type(data) === 'object'){
 					if(typeof data.lincko_type !== 'undefined' && data.lincko_type === 'file' && data.lincko_status !== 'deleted'){
 						data.lincko_status = 'deleted';
 						that.destroy(e, data);
@@ -325,7 +333,7 @@ $(function () {
 		_numberOfFiles: function(){
 			var num = 0;
 			$.each(app_upload_files.lincko_files, function(index, data){
-				if(typeof data === 'object'){
+				if($.type(data) === 'object'){
 					if(typeof data.lincko_type !== 'undefined' && data.lincko_type === 'file'){
 						num++;
 					}

@@ -12,6 +12,12 @@ $app->group('/translation', function () use ($app) {
 	)
 	->name('translation_list');
 
+	$app->get(
+		'/date.js',
+		'\bundles\lincko\wrapper\controllers\ControllerDate:date_get'
+	)
+	->name('translation_date');
+
 	$app->post(
 		'/language',
 		'\bundles\lincko\wrapper\controllers\ControllerTranslation:language_set'

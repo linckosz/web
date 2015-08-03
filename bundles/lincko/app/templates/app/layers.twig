@@ -5,7 +5,7 @@
 	</script>
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/app/layers.css') }}" type="text/css" />
 </div>
-<div>
-	Here will be displayed the content of the project, for exemple all tasks, budget, and so. etc, etc, etc, etc, etc, etc, etc, etc.
-</div>
+{% include '/bundles/lincko/app/templates/models/projects.twig' %}
+{% include '/bundles/lincko/app/templates/models/tasks.twig' %}
+<div id="app_layers_content"></div>
 <div id="end_app_layers" class="visibility_hidden"></div>

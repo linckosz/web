@@ -82,7 +82,12 @@ function account_select(select) {
 		$('#account_signin_box').show();
 		$('#account_tab_joinus').addClass('account_trans');
 		$('#account_tab_joinus > div').addClass('account_tab_joinus');
-		$('#account_signin_email').focus();
+		if($('#account_signin_email').val() != ''){
+			account_display_label($('#account_signin_email'), false);
+			$('#account_signin_password').focus();
+		} else {
+			$('#account_signin_email').focus();
+		}
 	} else {
 		$('#account_joinus_box').show();
 		$('#account_tab_signin').addClass('account_trans');
@@ -184,3 +189,6 @@ $("#account_signin_submit").keyup(function(){
 	$('#account_signin_submit').removeClass('account_signin_submit_active');
 });
 
+JSfiles.finish(function(){
+	account_display_label($('#account_signin_email'), false);
+});
