@@ -7,7 +7,7 @@ function app_layers_history_createPage(param){
 	Elem.prop('id', 'app_layers_history');
 	Elem.appendTo(layer);
 	app_layers_history_feedPage(param);
-	app_application_lincko.add("app_layers_history", "history", function(){
+	app_application_lincko.add("app_layers_history", null, function(){
 		app_layers_history_feedPage(null, false);
 	});
 }
