@@ -398,6 +398,10 @@ $('#app_project_placeholder').click(function(){
 	app_content_menu.selection(Lincko.storage.getMyPlaceholder()['_id'], 'dashboard');
 });
 
+$('#app_project_info').click(function(){
+	app_content_menu.selection(Lincko.storage.getMyPlaceholder()['_id'], 'history');
+});
+
 $('#app_project_company').click(function(){
 	app_content_menu.selection(-1, 'statistics');
 });

@@ -112,4 +112,7 @@ var app_content_menu = {
 		if(responsive.test("maxMobileL")){ app_application.forceClose(); }
 	},
 }
-	
+
+$('#app_content_top_home, #app_content_top_title_menu').click(function(){
+	app_content_menu.selection(Lincko.storage.getMyPlaceholder()['_id'], 'dashboard');
+});

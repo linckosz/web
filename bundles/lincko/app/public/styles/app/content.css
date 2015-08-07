@@ -43,6 +43,13 @@
 	vertical-align: middle;
 }
 
+#app_content_top_home {
+	height: 24px;
+	margin-right: 2px;
+	vertical-align: middle;
+	cursor: pointer; cursor: hand;
+}
+
 #app_content_menu {
 	position: absolute;
 	background-color: #FFFFFF;
