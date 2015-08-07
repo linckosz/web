@@ -34,3 +34,7 @@ String.prototype.replaceAll = function(find, replace) {
 	find = find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 	return this.replace(new RegExp(find, 'gi'), replace);
 }
+
+$.fn.hasScrollBar = function() {
+	return this.get(0).scrollHeight > this.height();
+}

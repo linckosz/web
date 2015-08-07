@@ -26,7 +26,7 @@ submenu_list['app_upload_sub'] = {
 		"style": "next",
 		"title": Lincko.Translation.get('app', 26, 'html'), //Destination
 		"next": "app_upload_destination",
-		"value": "My Placeholder",
+		"value": base_myplaceholder,
 		"class": "",
 	},
 	"app_upload_sub": {
@@ -43,7 +43,7 @@ submenu_list['app_upload_destination'] = {
 	},
 	"destination_0": {
 		"style": "radio",
-		"title": "My Placeholder",
+		"title": base_myplaceholder,
 		"selected": true,
 		"action": function(){
 			alert('Do something');

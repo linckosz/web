@@ -1,4 +1,4 @@
-{# category ? #}
+{# category 6 #}
 <div id="begin_models_projects" class="visibility_hidden">
 	<script>
 		JSfiles.later("{{ _filelatest('/lincko/app/scripts/models/projects.js') }}");
@@ -9,10 +9,17 @@
 
 <div class="display_none">
 
-	<div id="-models_projects" class="models_projects">
-		<div find="title"></div>
-		<div class="models_projects_line"><div></div></div>
-		<div find="tasks"></div>
+	<div id="-models_projects" class="models_projects_standard base_color_bg_second_less_less">
+		<img find="favorite" class="models_projects_standard_favorite" src="{{ _filelatest('/lincko/app/images/models/projects/favorite.png') }}" alt="{{ _trans('app', 5, 1, 'html') }}{# favorite #}" title="{{ _trans('app', 5, 1, 'html') }}{# favorite #}" />
+		<div find="title" class="models_projects_standard_title"></div>
+		<div class="models_projects_standard_details">
+			<div class="models_projects_standard_picture">
+				<img find="picture" src="{{ _filelatest('/lincko/app/images/models/projects/project70.png') }}" />
+			</div>
+			<div class="models_projects_standard_statistics">
+				<canvas find="tasks_statistics" width="200" height="80" ></canvas>
+			</div>
+		</div>
 	</div>
 
 </div>

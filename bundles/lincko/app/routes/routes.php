@@ -14,7 +14,7 @@ $app->get('/', function () use($app) {
 $app->get('/(workspace/:company)', function ($company = null) use($app) {
 	$company = strtolower($company);
 	if($app->lincko->data['logged']){
-		$app->lincko->data['company'] = $company;
+		$app->lincko->data['company'] = $_SESSION['company'] = $company;
 		$app->lincko->translation['company'] = $company;
 		$app->lincko->data['reset_data'] = OneSeventySeven::get('reset_data');
 		if($app->lincko->data['reset_data']){

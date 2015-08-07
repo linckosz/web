@@ -249,13 +249,13 @@ html, .font_sans_serif {
 .base_color_bd_third_plus_plus {  border-color: #CD5500; }
 
 /* FORTH */
-.base_color_bg_forth_less_less {  background-color: #819D84; }
+.base_color_bg_forth_less_less {  background-color: #819DB4; }
 .base_color_bg_forth_less {       background-color: #42759F; }
 .base_color_bg_forth {            background-color: #2067A2; }
 .base_color_bg_forth_plus {       background-color: #085798; }
 .base_color_bg_forth_plus_plus {  background-color: #044A84; }
 
-.base_color_bd_forth_less_less {  border-color: #819D84; }
+.base_color_bd_forth_less_less {  border-color: #819DB4; }
 .base_color_bd_forth_less {       border-color: #42759F; }
 .base_color_bd_forth {            border-color: #2067A2; }
 .base_color_bd_forth_plus {       border-color: #085798; }

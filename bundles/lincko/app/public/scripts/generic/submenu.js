@@ -35,6 +35,8 @@ function Submenu(menu, next, param) {
 			submenu_Clean(Elem.layer, true);
 		});
 		Elem.wrapper.css('z-index', Elem.zIndex);
+		//Do not not add "overthrow" in twig template, if not the scrollbar will not work
+		Elem.wrapper.find("[find=submenu_wrapper_content]").addClass('overthrow');
 		//This is because we can only place 3 menus on Desktop mode, so after 3 layers we switch to full width mode
 		if(Elem.layer>3) { Elem.wrapper.addClass('submenu_wrapper_important'); }
 		Elem.wrapper.insertBefore('#end_submenu');
@@ -54,6 +56,8 @@ function Submenu(menu, next, param) {
 					Elem.AddMenuRadio(attribute);
 				} else if(attribute.style=="form"){
 					Elem.AddMenuForm(attribute);
+				} else if(attribute.style=="form_button"){
+					Elem.AddMenuFormButton(attribute);
 				} else if(attribute.style=="title_small"){
 					Elem.AddTitleSmall(attribute);
 				} else if(attribute.style=="input_text"){
@@ -99,15 +103,18 @@ function Submenu(menu, next, param) {
 		} else {
 			Elem.Hide();
 		}
+		wrapper_perfectScrollbar();
 	}
 	Constructor(this);
 }
  
 Submenu.prototype = {
+
 	AddMenuTitle: function(attribute) {
 		this.wrapper.find("[find=submenu_wrapper_title]").html(attribute.title);
 		return true;
 	},
+
 	AddTitleSmall: function(attribute) {
 		var Elem = $('#-submenu_title_small').clone();
 		Elem.prop("id", '');
@@ -118,6 +125,7 @@ Submenu.prototype = {
 		this.wrapper.find("[find=submenu_wrapper_content]").append(Elem);
 		return true;
 	},
+
 	AddMenuButton: function(attribute) {
 		var Elem = $('#-submenu_button').clone();
 		Elem.prop("id", '');
@@ -131,7 +139,11 @@ Submenu.prototype = {
 			}
 		}
 		if("action" in attribute){
-			Elem.click(attribute.action);
+			if("action_param" in attribute){
+				Elem.click(attribute.action_param, attribute.action);
+			} else {
+				Elem.click(attribute.action);
+			}
 		}
 		if("class" in attribute){
 			Elem.addClass(attribute.class);
@@ -139,6 +151,7 @@ Submenu.prototype = {
 		this.wrapper.find("[find=submenu_wrapper_content]").append(Elem);
 		return true;
 	},
+
 	AddMenuNext: function(attribute) {
 		var Elem = $('#-submenu_next').clone();
 		var that = this;
@@ -176,6 +189,7 @@ Submenu.prototype = {
 		this.wrapper.find("[find=submenu_wrapper_content]").append(Elem);
 		return true;
 	},
+
 	AddMenuRadio: function(attribute) {
 		var Elem = $('#-submenu_radio').clone();
 		Elem.prop("id", '');
@@ -191,7 +205,11 @@ Submenu.prototype = {
 			}
 		}
 		if("action" in attribute){
-			Elem.click(attribute.action);
+			if("action_param" in attribute){
+				Elem.click(attribute.action_param, attribute.action);
+			} else {
+				Elem.click(attribute.action);
+			}
 		}
 		if("class" in attribute){
 			Elem.addClass(attribute.class);
@@ -199,6 +217,7 @@ Submenu.prototype = {
 		this.wrapper.find("[find=submenu_wrapper_content]").append(Elem);
 		return true;
 	},
+
 	AddInputText: function(attribute) {
 		var Elem = $('#-submenu_input').clone();
 		var Input = $('<input type="text" />');
@@ -216,6 +235,7 @@ Submenu.prototype = {
 		this.wrapper.find("[find=submenu_wrapper_content]").append(Elem);
 		return true;
 	},
+
 	AddInputTextarea: function(attribute) {
 		var Elem = $('#-submenu_input').clone();
 		var Value = '';
@@ -234,6 +254,7 @@ Submenu.prototype = {
 		this.wrapper.find("[find=submenu_wrapper_content]").append(Elem);
 		return true;
 	},
+
 	AddSelectMultiple: function(attribute) {
 		var Elem = $('#-submenu_select').clone();
 		var that = this;
@@ -278,6 +299,7 @@ Submenu.prototype = {
 		this.wrapper.find("[find=submenu_wrapper_content]").append(Elem);
 		return true;
 	},
+
 	AddMenuForm: function(attribute) {
 		var Elem = $('#-submenu_form').clone();
 		var that = this;
@@ -296,7 +318,11 @@ Submenu.prototype = {
 		if("class" in attribute){
 			Elem.addClass(attribute.class);
 		}
-		this.wrapper.find("[find=submenu_wrapper_bottom]").html(Elem);
+		if(this.wrapper.find("[find=submenu_wrapper_bottom]").find(".submenu_bottom_cell").length == 0){
+			this.wrapper.find("[find=submenu_wrapper_bottom]").html(Elem); 
+		} else {
+			this.wrapper.find("[find=submenu_wrapper_bottom]").find(".submenu_bottom_cell").append(Elem.children());
+		}
 
 		var ElemForm = $("<form method='post' action='' submit='e.preventDefault(); return false;'></form>");
 		ElemForm.prop("id", this.id+'_submenu_form');
@@ -310,6 +336,38 @@ Submenu.prototype = {
 			});
 		}
 		this.wrapper.find("[find=submenu_wrapper_content]").wrap(ElemForm);
+
+		return true;
+	},
+
+	AddMenuFormButton: function(attribute) {
+		var Elem = $('#-submenu_form').clone();
+		var that = this;
+		Elem.prop("id", '');
+		this.wrapper.find("[find=submenu_wrapper_bottom]").addClass('submenu_bottom');
+		this.wrapper.find("[find=submenu_wrapper_content]").css('bottom', this.wrapper.find("[find=submenu_wrapper_bottom]").height());
+		if("hide" in attribute){
+			if(attribute.hide) {
+				Elem.find("[find=submenu_form_button]").click(function(){ submenu_Hideall(); });
+			}
+		}
+		if("action" in attribute){
+			if("action_param" in attribute){
+				Elem.find("[find=submenu_form_button]").click(attribute.action_param, attribute.action);
+			} else {
+				Elem.find("[find=submenu_form_button]").click(attribute.action);
+			}
+		}
+		Elem.find('img').remove();
+		Elem.find("[find=submenu_form_title]").html(attribute.title)
+		if("class" in attribute){
+			Elem.addClass(attribute.class);
+		}
+		if(this.wrapper.find("[find=submenu_wrapper_bottom]").find(".submenu_bottom_cell").length == 0){
+			this.wrapper.find("[find=submenu_wrapper_bottom]").html(Elem); 
+		} else {
+			this.wrapper.find("[find=submenu_wrapper_bottom]").find(".submenu_bottom_cell").append(Elem.children());
+		}
 
 		return true;
 	},
@@ -976,9 +1034,10 @@ $(window).resize(submenu_wrapper_width);
 
 
 
-var submenu_form_cb_success = function(msg, err){
+var submenu_form_cb_success = function(msg, err, status, data){
 	var field = 'undefined';
 	var msgtp = Lincko.Translation.get('wrapper', 3, 'html'); //Unknown error
+	submenu_form_cb_hide_progress();
 	if(err){
 		if(typeof msg.field === 'string') { field = msg.field; }
 		if(typeof msg.msg === 'string') { msgtp = php_nl2br(msg.msg); }
@@ -986,11 +1045,12 @@ var submenu_form_cb_success = function(msg, err){
 		base_form_field_show_error(wrapper_objForm.find("[name="+field+"]"));
 		wrapper_objForm.find("[name="+field+"]").focus();
 	}
-	Lincko.storage.pull(msg);
+	storage_cb_success(msg, err, status, data);
 };
 
 var submenu_form_cb_error = function(xhr_err, ajaxOptions, thrownError){
 	var msgtp = Lincko.Translation.get('wrapper', 1, 'html'); //Communication error
+	submenu_form_cb_hide_progress();
 	base_show_error(msgtp);
 };
 
@@ -1003,8 +1063,12 @@ var submenu_form_cb_begin = function(){
 };
 
 var submenu_form_cb_complete = function(){
-	var submit_progress_bar = wrapper_objForm.parent().find("[find=submit_progress_bar]");
 	$(document.body).css('cursor', '');
+	submenu_form_cb_hide_progress();
+};
+
+var submenu_form_cb_hide_progress = function(){
+	var submit_progress_bar = wrapper_objForm.parent().find("[find=submit_progress_bar]");
 	base_format_form_single(submit_progress_bar);
 	submit_progress_bar.hide();
-};
+}

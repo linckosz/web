@@ -1,0 +1,79 @@
+/*
+	HISTORY
+*/
+.models_history_standard {
+	vertical-align: top;
+	color: #FFFFFF;
+	border-radius: 2px;
+	padding: 6px;
+	padding-left: 20px;
+	margin: 2px auto 2px auto;
+	display: block;
+	border: 2px solid transparent;
+	width: 50%;
+	min-width: 440px;
+	max-width: 720px;
+	font-size: 12px;
+	overflow: hidden;
+	text-align: left;
+	box-sizing: border-box;
+}
+
+.models_history_standard_title {
+	white-space: normal;
+}
+
+.models_history_standard_content {
+	white-space: normal;
+	width: 100%;
+	box-sizing: border-box;
+	font-size: 10px;
+	text-align: left;
+}
+
+.models_history_standard_line {
+	display: block;
+	height: 1px;
+	width: 100%;
+	padding: 4px 0;
+}
+
+.models_history_standard_line > div {
+	height: 1px;
+	width: 96%;
+	margin: auto;
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+
+/* Mobile phone in Portrait */
+@media only screen and (max-width: 479px){
+	.models_history_standard {
+		background-color: transparent;
+		color: #085798;
+		border-radius: 0;
+		border-bottom-color: rgba(129, 157, 180, 0.25) !important;
+		width: 100%;
+		max-width: initial;
+		min-width: initial;
+		margin: 0px;
+		padding: 10px;
+	}
+	.models_history_standard_content {
+		color: #819DB4;
+	}
+}
+
+/* Mobile phone in Landscape and Tablet in Portrait */
+@media only screen and (min-width: 480px) and (max-width: 900px){
+	.models_history_standard {
+		width: 80%;
+	}
+}
+
+/* Tablet in Landscape */
+@media only screen and (min-width: 901px) and (max-width: 1279px){
+	.models_history_standard {
+		width: 80%;
+	}
+}

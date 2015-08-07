@@ -17,6 +17,5 @@ base_input_field.project_title_text = {
 base_input_field.project_description_textarea = {
 	tags: {
 		rows: 3,
-		required: "required",
 	},
 };

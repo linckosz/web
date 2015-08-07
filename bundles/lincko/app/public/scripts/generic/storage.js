@@ -18,6 +18,8 @@ Lincko.storage.getCOMID = function(){
 		return Lincko.storage.COMID;
 	} else if(Lincko.storage.searchCOMID() !== false){
 		return Lincko.storage.COMID;
+	} else if($.isEmptyObject(Lincko.storage.data)){
+		return false;
 	} else {
 		throw new Error(Lincko.Translation.get('app', 34, 'brut')); //We could not define in which workspace you are.
 		return false;
@@ -35,7 +37,10 @@ Lincko.storage.searchCOMID = function(){
 		var object = Lincko.storage.data['_']['companies'];
 		for(var key in object) {
 			if(object[key].url && object[key].url == wrapper_localstorage.company){
-				return Lincko.storage.COMID = parseInt(key, 10);
+				Lincko.storage.COMNAME = object[key].name;
+				Lincko.storage.COMID = parseInt(key, 10);
+				app_application_lincko.update('companies');
+				return Lincko.storage.COMID;
 			}
 		}
 		base_show_error(Lincko.Translation.get('app', 33, 'html')); //You are not allowed to access this company's workspace.
@@ -620,6 +625,7 @@ Lincko.storage.getFavorites = function(category, param, extend){
 	if(typeof category === 'string'){ category = category.toLowerCase(); } else { return results; }
 	if(typeof param === 'string'){ param = parseInt(id, 10); }
 	if(typeof param !== 'number'){ param = -1; } //Since it's below 0, we can scan all items
+	if(param == 0){ param = -1; } //0 will display all items
 	if(typeof extend === 'undefined'){ extend = false; } //If true, look for creation date at second step
 
 	if(typeof Lincko.storage.data_favorite[company] === 'object' && typeof Lincko.storage.data_favorite[company][category] === 'object'){

@@ -14,7 +14,7 @@ submenu_list['sample'] = {
 			alert('An action');
 		},
 		"class": "",
-		"hide": false, //By default 'true', it hides all submenu after the click ( equivalent to submenu_Hideall(); )
+		"hide": true, //By default 'false', it hides all submenu after the click ( equivalent to submenu_Hideall(); )
 	},
 	//It will open a sub menu
 	"Submenu": {
@@ -27,7 +27,8 @@ submenu_list['sample'] = {
 	//It will create a form with a validation button
 	"form": {
 		"style": "form",
-		"title": "Confirm",
+		"title": Lincko.Translation.get('app', 3, 'html'), //Confirm
+		"hide": true, //By default 'false', it hides all submenu after the click ( equivalent to submenu_Hideall(); )
 	},
 };
 */
@@ -38,17 +39,15 @@ submenu_list['settings'] = {
 		"style": "title",
 		"title": Lincko.Translation.get('app', 2, 'html'), //Settings
 	},
-	//Just do an action (need to hide al menus manually by the function submenu_Hideall)
-	"action": {
-		"style": "button",
-		"title": "Single action",
-		"action": function(){
-			submenu_Hideall();
-			alert('An action');
-		},
+	//Change the workspace
+	"workspace": {
+		"style": "next",
+		"title": Lincko.Translation.get('app', 39, 'html'), //Workspace
+		"next": "workspace",
+		"value": Lincko.storage.COMNAME,
 		"class": "",
 	},
-	//It will open a sub menu
+	//Change the language
 	"language": {
 		"style": "next",
 		"title": Lincko.Translation.get('app', 1, 'html'), //Language
@@ -56,11 +55,51 @@ submenu_list['settings'] = {
 		"value": submenu_language_full,
 		"class": "",
 	},
-	//It will create a form with a validation button
-	"form": {
-		"style": "form",
-		"title": Lincko.Translation.get('app', 3, 'html'), //Confirm
-		"hide": false,
+	"signout": {
+		"style": "button",
+		"title": Lincko.Translation.get('app', 38, 'html'), //Sign out
+		"action": function(){
+			wrapper_sendAction('','post','user/signout', null, null, wrapper_signout_cb_begin, wrapper_signout_cb_complete);
+		},
+		"class": "",
 	},
 };
 
+submenu_list['workspace'] = {
+	"_title": {
+		"style": "title",
+		"title": Lincko.Translation.get('app', 39, 'html'), //Workspace
+	},
+	"_myworkspace_": {
+		"style": "button",
+		"title": Lincko.Translation.get('app', 40, 'html'), //My workspace
+		"action": function(){
+			app_application_change_workspace();
+		},
+	},
+};
+
+
+JSfiles.finish(function(){
+	app_application_lincko.add(function(){
+		for(var menu in submenu_list['workspace']){
+			if(menu != "_title" && menu != "_myworkspace_"){
+				delete submenu_list['workspace'][menu];
+			}
+		}
+		var companies = Lincko.storage.list('companies');
+		for(var i in companies){
+			if(companies[i].url){
+				submenu_list['workspace'][companies[i].url] = {
+					"style": "button",
+					"title": companies[i].name,
+					"action_param": { workspace:companies[i].url, },
+					"action": function(event){
+						app_application_change_workspace(event.data.workspace);
+					},
+				};
+			}
+		}
+	}, 'companies');
+
+});

@@ -1,30 +1,82 @@
 /*
 	TASKS
 */
-.models_tasks {
-	background-color: #4A985E;
+.models_tasks_standard {
+	vertical-align: top;
 	color: #FFFFFF;
-	border-radius: 4px;
+	border-radius: 2px;
 	padding: 6px;
+	padding-left: 20px;
 	margin: 20px;
-	display: block;
+	display: inline-block;
 	border: 2px solid transparent;
+	width: 25%;
+	min-width: 220px;
+	max-width: 360px;
+	font-size: 12px;
+	overflow: hidden;
+	text-align: left;
+	box-sizing: border-box;
 }
 
-.models_tasks:hover {
-	border-color: rgba(255, 255, 255, 0.5);
-}
-
-.models_tasks_line {
+.models_tasks_standard_line {
 	display: block;
 	height: 1px;
 	width: 100%;
 	padding: 4px 0;
 }
 
-.models_tasks_line > div {
+.models_tasks_standard_line > div {
 	height: 1px;
 	width: 96%;
 	margin: auto;
 	background-color: rgba(255, 255, 255, 0.2);
+}
+
+.models_tasks_standard_title {
+	white-space: normal;
+}
+
+.models_tasks_standard_comment {
+	white-space: normal;
+	width: 100%;
+	box-sizing: border-box;
+	font-size: 10px;
+	text-align: left;
+}
+
+
+/* Mobile phone in Portrait */
+@media only screen and (max-width: 479px){
+	.models_tasks_standard {
+		background-color: transparent;
+		color: #085798;
+		border-radius: 0;
+		border-bottom-color: rgba(129, 157, 180, 0.25) !important;
+		width: 100%;
+		max-width: initial;
+		min-width: initial;
+		margin: 0px;
+		padding: 10px;
+	}
+	.models_tasks_standard_comment {
+		color: #819DB4;
+	}
+	.models_tasks_standard_line {
+		display: none;
+	}
+}
+
+/* Mobile phone in Landscape and Tablet in Portrait */
+@media only screen and (min-width: 480px) and (max-width: 900px){
+	.models_tasks_standard {
+		width: 45%;
+	}
+}
+
+/* Tablet in Landscape */
+@media only screen and (min-width: 901px) and (max-width: 1279px){
+	.models_tasks_standard {
+		width: 30%;
+	}
 }

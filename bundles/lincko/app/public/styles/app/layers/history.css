@@ -1,0 +1,12 @@
+.app_layers_history {
+	text-align: center;
+	padding: 24px 0 38px 0;
+	font-size: 0; /* Avoid any space between inline-block */
+}
+
+/* Mobile phone in Portrait */
+@media only screen and (max-width: 479px){
+	.app_layers_history {
+		padding: 0;
+	}
+}

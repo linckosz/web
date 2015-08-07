@@ -1,0 +1,116 @@
+.app_layers_projects {
+	text-align: center;
+	padding: 6px 0 20px 0;
+	font-size: 0; /* Avoid any space between inline-block */
+}
+
+.app_layers_projects_add_corner {
+	display: none;
+	position: fixed;
+	z-index: 100;
+	right: 0;
+	bottom: 0;
+	width: 32px;
+	height: 32px;
+	padding: 8px;
+	border-radius: 48px;
+	margin: 14px;
+	cursor: pointer; cursor: hand;
+	filter:alpha(opacity=30);
+	opacity:0.30;
+	-moz-opacity:0.30;
+	-khtml-opacity:0.30;
+}
+
+.app_layers_projects_add_corner:hover {
+	filter:alpha(opacity=60);
+	opacity:0.60;
+	-moz-opacity:0.60;
+	-khtml-opacity:0.60;
+}
+
+.app_layers_projects_add_corner:active {
+	filter:alpha(opacity=80);
+	opacity:0.80;
+	-moz-opacity:0.80;
+	-khtml-opacity:0.80;
+}
+
+.app_layers_projects_add_icon {
+	vertical-align: top;
+	color: #FFFFFF;
+	font-size: 12px;
+	border-radius: 2px;
+	margin: 20px;
+	padding: 12px;
+	display: inline-block;
+	border: 2px solid transparent;
+	cursor: pointer; cursor: hand;
+	width: 25%;
+	min-width: 220px;
+	max-width: 360px;
+	overflow: hidden;
+	text-align: center;
+	filter:alpha(opacity=30);
+	opacity:0.30;
+	-moz-opacity:0.30;
+	-khtml-opacity:0.30;
+	box-sizing: border-box;
+}
+
+.app_layers_projects_add_icon > img {
+	width: 32px;
+	height: 32px;
+	padding: 2px;
+}
+
+.app_layers_projects_add_icon:hover {
+	filter:alpha(opacity=60);
+	opacity:0.60;
+	-moz-opacity:0.60;
+	-khtml-opacity:0.60;
+}
+
+.app_layers_projects_add_icon:active {
+	filter:alpha(opacity=80);
+	opacity:0.80;
+	-moz-opacity:0.80;
+	-khtml-opacity:0.80;
+}
+
+/* Mobile phone in Portrait */
+@media only screen and (max-width: 479px){
+	.app_layers_projects {
+		padding: 0;
+	}
+	.app_layers_projects_add_icon {
+		border-radius: 0;
+		width: 100%;
+		max-width: none;
+		margin: 0px;
+		padding: 10px;
+	}
+	.app_layers_projects_add_corner {
+		margin-bottom: 56px;
+		margin-right: 8px;
+		background-color: #717171;
+	}
+}
+
+/* Mobile phone in Landscape and Tablet in Portrait */
+@media only screen and (min-width: 480px) and (max-width: 900px){
+	.app_layers_projects_add_icon {
+		width: 45%;
+	}
+	.app_layers_projects_add_corner {
+		margin-bottom: 56px;
+		margin-right: 8px;
+	}
+}
+
+/* Tablet in Landscape */
+@media only screen and (min-width: 901px) and (max-width: 1279px){
+	.app_layers_projects_add_icon {
+		width: 30%;
+	}
+}

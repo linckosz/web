@@ -126,7 +126,7 @@ var app_application_lincko = {
 				this._fields[field] = false; //Reset to updated
 			}
 		}
-		
+
 		if(!$.isEmptyObject(items)){
 			for(var i in items){
 				field = items[i];
@@ -141,7 +141,6 @@ var app_application_lincko = {
 			}
 		}
 		
-
 		if(!$.isEmptyObject(items)){
 			//First we scan all HTML elements
 			for(var id in this._elements){
@@ -230,16 +229,23 @@ var app_application_lincko = {
 
 
 var app_application = {
-	'project': function(force_blur){
+	project: function(force_blur){
 		app_application_move_menu($('#app_application_project'), $('#app_application_content'), $('#app_application_project_block'), $('#app_content_top_project'), force_blur);
 	},
-	'move': function(div, force_blur){
+	
+	move: function(div, force_blur){
 		if(typeof force_blur==="undefined"){ force_blur = false; }
 		if(typeof this[div] !== 'undefined'){
 			return this[div](force_blur);
 		}
 		return false;
 	},
+
+	forceClose: function(){
+		if($('#app_application_project').hasClass('app_application_visible')){
+			app_application_move_menu($('#app_application_project'), $('#app_application_content'), $('#app_application_project_block'), $('#app_content_top_project'));
+		}
+	}
 };
 
 enquire.register(responsive.noMobileL, function() { 
@@ -334,6 +340,14 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 $('#app_application_project_block').click(function(){
 	app_application.move('project');
 });
+
+function app_application_change_workspace(workspace){
+	if(typeof workspace !== 'undefined'){
+		top.location.replace('/workspace/'+workspace);
+	} else {
+		top.location.replace('/');
+	}
+}
 
 
 function app_application_submenu_position() {

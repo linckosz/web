@@ -7,6 +7,14 @@ var wrapper_shangzai = {
 
 const fingerprint = wrapper_fp;
 
+var wrapper_signout_cb_begin = function(){
+	$(document.body).css('cursor', 'progress');
+}
+var wrapper_signout_cb_complete = function(){
+	$(document.body).css('cursor', '');
+	window.location.href = wrapper_link['home'];
+}
+
 function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_complete){
 	if(typeof cb_success==="undefined" || cb_success===null){ cb_success = function(){}; }
 	if(typeof cb_error==="undefined" || cb_error===null){ cb_error = function(){}; }
@@ -76,11 +84,12 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 
 var wrapper_objForm = null;
 //This function must return false, we do not send form action, we just use ajax.
-function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete){
+function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete, param){
 	if(typeof cb_success==="undefined" || cb_success===null){ cb_success = function(){}; }
 	if(typeof cb_error==="undefined" || cb_error===null){ cb_error = function(){}; }
 	if(typeof cb_begin==="undefined" || cb_begin===null){ cb_begin = function(){}; }
 	if(typeof cb_complete==="undefined" || cb_complete===null){ cb_complete = function(){}; }
+	if(typeof param==="undefined"){ param = null; }
 	
 	if($.type(objForm)==="string"){
 		objForm = $("#"+objForm);
@@ -110,10 +119,24 @@ function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete){
 		objForm.on('submit', function(e) {
 			 e.preventDefault(); //Disable submit action
 		});
-		var param = objForm.serializeArray();
+		var arr = objForm.serializeArray();
 		var method = objForm.prop('method');
 		var action = objForm.attr('action'); //Do not use prop here because (attr => user/logout | prop => https://lincko.net/user/logout (error))
-		wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_complete);
+
+		//We convert to an table any integer or string, if not the back server will not see it ($this->data->0)
+		if(param===false || param==='' || param===null){
+			param = [];
+		} else if(!$.isArray(param) && !$.isPlainObject(param)){
+			//Here do not use "new Array(param)", because param[0] will be undefined if param is an integer
+			param = [param];
+		}
+		
+		//Convert the array to the same format as jQuery does with forms
+		for(var val in param){
+			arr.push({name:val, value:param[val]});
+		}
+		
+		wrapper_ajax(arr, method, action, cb_success, cb_error, cb_begin, cb_complete);
 	} else {
 		cb_success(Lincko.Translation.get('wrapper', 2, 'html'), true, 400); //The form does not exist!
 		return false; //Disable submit action
@@ -214,3 +237,19 @@ wrapper_localstorage.decrypt = function (link){
 	}
 	return txt;
 };
+
+wrapper_perfectScrollbar_options = {
+	minScrollbarLength: 50,
+}
+function wrapper_perfectScrollbar(){
+	var overthrow = $('.overthrow');
+	overthrow.css('overflow', 'hidden').css('overflow-x', 'hidden').css('overflow-y', 'hidden');
+	overthrow.perfectScrollbar(wrapper_perfectScrollbar_options);
+	overthrow.perfectScrollbar('initialize');
+	overthrow.perfectScrollbar('update');
+}
+$(window).resize(wrapper_perfectScrollbar);
+
+JSfiles.finish(function(){
+	wrapper_perfectScrollbar();
+});

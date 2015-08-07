@@ -55,7 +55,6 @@
 	bottom: 0px;
 	position: absolute;
 	overflow: hidden;
-	overflow-y: auto !important;
 }
 
 .submenu_back {

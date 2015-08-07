@@ -26,7 +26,6 @@ function base_format_form(prefix){
 			base_format_input(field);
 		}
 	}
-
 	base_format_form_single($('.submit_progress_bar'));
 }
 base_format_form();
