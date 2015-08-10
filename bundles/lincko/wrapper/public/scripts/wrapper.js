@@ -133,7 +133,9 @@ function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete, 
 		
 		//Convert the array to the same format as jQuery does with forms
 		for(var val in param){
-			arr.push({name:val, value:param[val]});
+			if(typeof param[val] !== 'undefined'){
+				arr.push({name:val, value:param[val]});
+			}
 		}
 		
 		wrapper_ajax(arr, method, action, cb_success, cb_error, cb_begin, cb_complete);
@@ -163,7 +165,9 @@ function wrapper_sendAction(param, method, action, cb_success, cb_error, cb_begi
 	
 	//Convert the array to the same format as jQuery does with forms
 	for(var val in param){
-		arr.push({name:val, value:param[val]});
+		if(typeof param[val] !== 'undefined'){
+			arr.push({name:val, value:param[val]});
+		}
 	}
 	wrapper_ajax(arr, method, action, cb_success, cb_error, cb_begin, cb_complete);
 	return false; //Disable submit action

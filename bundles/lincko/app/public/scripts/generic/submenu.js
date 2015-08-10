@@ -1044,8 +1044,10 @@ var submenu_form_cb_success = function(msg, err, status, data){
 		base_show_error(msgtp);
 		base_form_field_show_error(wrapper_objForm.find("[name="+field+"]"));
 		wrapper_objForm.find("[name="+field+"]").focus();
+	} else {
+		storage_cb_success(msg, err, status, data);
+		submenu_Hideall();
 	}
-	storage_cb_success(msg, err, status, data);
 };
 
 var submenu_form_cb_error = function(xhr_err, ajaxOptions, thrownError){

@@ -182,6 +182,9 @@ var app_layers_projects_feedPage = function(param, animation){
 	});
 	Elem.appendTo(position);
 
+	//Delete the last border in Mobile mode
+	position.find('.models_projects_standard').last().addClass('models_projects_standard_last');
+
 	app_layers_projects_icon_add_visibility();
 
 	app_layers_projects_options.animation = animation;
@@ -205,3 +208,5 @@ var app_layers_projects_feedPage = function(param, animation){
 	}, 100); //Must be after app_layers_changePage timing (50ms)
 
 }
+
+position

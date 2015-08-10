@@ -83,7 +83,8 @@ Lincko.storage.display = function(force){
 				company = companies[i];
 				if($.type(Lincko.storage.data[company]) === 'object'){
 					for(var category in Lincko.storage.data[company]) {
-						if(category.indexOf('_')!==0 && $.type(Lincko.storage.data[company][category]) === 'object'){
+						//if(category.indexOf('_')!==0 && $.type(Lincko.storage.data[company][category]) === 'object'){ There is no meaning to exclude "_"
+						if($.type(Lincko.storage.data[company][category]) === 'object'){
 							app_application_lincko.setFields(category);
 						}
 					}
@@ -134,6 +135,9 @@ Lincko.storage.update = function(partial){
 			}
 			if(!Lincko.storage.data[i]){
 				Lincko.storage.data[i] = {};
+			}
+			if(!Lincko.storage.data[i][j]){
+				Lincko.storage.data[i][j] = {};
 				app_application_lincko.setFields(j);
 			}
 			//We merge/update proporties, we do know overwritte the complete object (because history record are dowloaded separatly)

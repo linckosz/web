@@ -276,6 +276,8 @@ var app_project_info = {
 		var item = Lincko.storage.time('latest');
 		var time = 300;
 		if(Lincko.storage.isHistoryReady() && item){
+			var history = Lincko.storage.getHistoryInfo(item);
+			if(history.title===null){ return false; }
 			if(JSON.stringify(item) !== app_project_info.current){
 				if(app_project_info.current){
 					if($('#app_project_recent').is(':hidden')){
@@ -291,7 +293,6 @@ var app_project_info = {
 									{
 										duration: time,
 										begin: function(){
-											var history = Lincko.storage.getHistoryInfo(item);
 											$('#app_project_info_title').html(php_nl2br(history.title));
 											$('#app_project_info_content').html(php_nl2br(history.content));
 											$(this).show();
@@ -308,7 +309,6 @@ var app_project_info = {
 						{
 							duration: time,
 							begin: function(){
-								var history = Lincko.storage.getHistoryInfo(item);
 								$('#app_project_info_title').html(php_nl2br(history.title));
 								$('#app_project_info_content').html(php_nl2br(history.content));
 								$(this).show();

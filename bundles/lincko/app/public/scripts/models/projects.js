@@ -11,14 +11,13 @@ submenu_list['app_project_new'] = {
 		"submit": function(that){
 			return wrapper_sendForm(
 				that,
-				function(msg, err, status, data){
-					submenu_form_cb_success(msg, err, status, data);
-					submenu_Hideall();
-				},
+				submenu_form_cb_success,
 				submenu_form_cb_error,
 				submenu_form_cb_begin,
 				submenu_form_cb_complete,
-				{ 'lastvisit': Lincko.storage.getLastVisit(), }
+				{
+					'lastvisit': Lincko.storage.getLastVisit(),
+				}
 			);
 		},
 	},

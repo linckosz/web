@@ -67,17 +67,24 @@
 	box-sizing: border-box;
 }
 
+.models_projects_standard_last {}
 
 /* Mobile phone in Portrait */
 @media only screen and (max-width: 479px){
 	.models_projects_standard {
 		border-radius: 0;
+		border-width: 0;
+		border-color: transparent;
+		border-bottom-width: 2px;
 		border-bottom-color: rgba(255, 255, 255, 0.25) !important;
 		width: 100%;
 		max-width: initial;
 		min-width: initial;
 		margin: 0px;
 		padding: 10px;
+	}
+	.models_projects_standard_last{
+		border-bottom-color: transparent !important;
 	}
 	.models_projects_standard:hover {
 		border-color: transparent;

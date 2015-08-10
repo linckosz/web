@@ -47,6 +47,9 @@ var app_content_menu = {
 
 	selection: function(projects_id, menu, param){
 		
+		//We do not allow to display anything until the personal project is available
+		if(typeof projects_id === 'undefined'){ return false; }
+
 		app_content_menu.projects_id = projects_id;
 		app_content_menu.menu = menu;
 		app_content_menu.param = param;
@@ -54,6 +57,7 @@ var app_content_menu = {
 		if(typeof param === 'undefined'){ param = null; }
 		var list = [];
 		var Elem = $('#app_content_menu');
+		$('#app_content_menu_table').removeClass('display_none');
 		Elem.find(".app_content_menu_icon_active").removeClass('app_content_menu_icon_active');
 		Elem.find(".app_content_menu_cell").addClass('display_none');
 		Elem.find(".app_content_menu_icon").off('click');
@@ -115,4 +119,14 @@ var app_content_menu = {
 
 $('#app_content_top_home, #app_content_top_title_menu').click(function(){
 	app_content_menu.selection(Lincko.storage.getMyPlaceholder()['_id'], 'dashboard');
+});
+
+var app_content_menu_first_launch = true;
+JSfiles.finish(function(){	
+	app_application_lincko.add(function(){
+		if(app_content_menu_first_launch && typeof Lincko.storage.getMyPlaceholder() !== 'undefined'){
+			app_content_menu_first_launch = false;
+			$('#app_content_top_home').click();
+		}
+	}, "projects");
 });

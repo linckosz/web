@@ -140,7 +140,7 @@ var app_application_lincko = {
 				}
 			}
 		}
-		
+
 		if(!$.isEmptyObject(items)){
 			//First we scan all HTML elements
 			for(var id in this._elements){

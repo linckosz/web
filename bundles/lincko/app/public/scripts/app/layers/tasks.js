@@ -7,6 +7,7 @@ function app_layers_tasks_createPage(param){
 	Elem.prop('id', 'app_layers_tasks');
 	Elem.appendTo(layer);
 	app_layers_tasks_feedPage(param);
+
 	app_application_lincko.add("app_layers_tasks", "tasks", function(){
 		app_layers_tasks_feedPage(null, false);
 	});
@@ -59,6 +60,9 @@ var app_layers_tasks_feedPage = function(param){
 		submenu_Build("app_task_new");
 	});
 	Elem.appendTo(position);
+
+	//Delete the last border in Mobile mode
+	position.find('.models_tasks_standard').last().addClass('models_tasks_standard_last');
 
 	app_layers_tasks_icon_add_visibility();
 

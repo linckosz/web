@@ -45,6 +45,8 @@
 	text-align: left;
 }
 
+.models_tasks_standard_last {}
+
 
 /* Mobile phone in Portrait */
 @media only screen and (max-width: 479px){
@@ -58,6 +60,9 @@
 		min-width: initial;
 		margin: 0px;
 		padding: 10px;
+	}
+	.models_tasks_standard_last {
+		border-bottom-color: transparent !important;
 	}
 	.models_tasks_standard_comment {
 		color: #819DB4;

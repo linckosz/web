@@ -79,13 +79,13 @@
 	color: #525252;
 }
 
-.app_content_menu_table {
+#app_content_menu_table {
 	width: 100%;
 	display: table;
 	border-collapse: separate;
 	border-spacing: 6px;
 }
-.app_content_menu_table > div {
+#app_content_menu_table > div {
 	display: table-row;
 	vertical-align: middle;
 	text-align: center;
@@ -157,11 +157,11 @@
 		white-space: nowrap;
 		text-align: justify;
 	}
-	.app_content_menu_table {
+	#app_content_menu_table {
 		height: 48px !important;
 		display: table;
 	}
-	.app_content_menu_table > div {
+	#app_content_menu_table > div {
 		display: table-cell;
 	}
 	#app_content_dynamic {
