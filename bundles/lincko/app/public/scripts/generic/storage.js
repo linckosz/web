@@ -930,8 +930,8 @@ JSfiles.finish(function(){
 	//Update every 15s automatically
 	setInterval(function(){
 		Lincko.storage.getLatest();
-	//}, 3000);
-	}, 15000); //15s
+	}, 3000000);
+	//}, 15000); //15s
 
 	//Check the schema every 30 minutes
 	setInterval(function(){

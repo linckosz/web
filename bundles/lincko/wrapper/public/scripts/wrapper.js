@@ -1,4 +1,6 @@
 var wrapper_xhr;
+var wrapper_run = {}; //Keep a track of all form running
+var wrapper_objForm = null;
 var wrapper_totalxhr = 0;
 var wrapper_shangzai = {
 		puk: null,
@@ -38,6 +40,17 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 		param[param.length] = {name:'set_shangzai', value:wrapper_set_shangzai};
 	}
 
+	wrapper_form_id = false;
+	//Create a unique instance of the form for each ajax call
+	var ajax_objForm = wrapper_objForm;
+	if(ajax_objForm){
+		param[param.length] = {name:'form_id', value:ajax_objForm.prop('id')};
+		//If the form is sending an action, we quite the function to avoid double click
+		if(typeof wrapper_run[ajax_objForm.prop('id')] !== 'undefined'){
+			return false;
+		}
+	}
+
 	wrapper_xhr = $.ajax({
 		url: '/wrapper/'+action+linkid,
 		type: method, //Ajax calls will queue GET request only, that can timeout if the url is the same, but the PHP code still processing in background
@@ -46,6 +59,10 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 		dataType: 'json',
 		timeout: timeout,
 		beforeSend: function(){
+			wrapper_objForm = ajax_objForm;
+			if(ajax_objForm){
+				wrapper_run[ajax_objForm.prop('id')] = true;
+			}
 			cb_begin();
 		},
 		success: function(data){
@@ -53,6 +70,9 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 			//var msg = JSON.stringify(data); //for test
 			//var msg = data; //for test
 			//var msg = JSON.parse(data.msg); //for test
+
+			//Get back the form object if it was sent from a form
+			wrapper_objForm = ajax_objForm;
 
 			//This is importat because sometime in msg we return an object with some information inside
 			var msg = data.msg;
@@ -72,6 +92,8 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 			cb_success(msg, data.error, data.status, data.msg);
 		},
 		error: function(xhr_err, ajaxOptions, thrownError){
+			//Get back the form object if it was sent from a form
+			wrapper_objForm = ajax_objForm;
 			var msg = wrapper_totalxhr+') '+'xhr.status => '+xhr_err.status
 				+'\n'
 				+'ajaxOptions => '+ajaxOptions
@@ -83,13 +105,19 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 			cb_error(xhr_err, ajaxOptions, thrownError);
 		},
 		complete: function(){
+			//Get back the form object if it was sent from a form
+			wrapper_objForm = ajax_objForm;
 			wrapper_xhr = false;
 			cb_complete();
+			//Enable the submit action once the action is finished
+			if(ajax_objForm){
+				delete wrapper_run[ajax_objForm.prop('id')];
+			}
+			wrapper_objForm = null;
 		},
 	});
 }
 
-var wrapper_objForm = null;
 //This function must return false, we do not send form action, we just use ajax.
 function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete, param){
 	if(typeof cb_success==="undefined" || cb_success===null){ cb_success = function(){}; }
@@ -161,6 +189,7 @@ function wrapper_sendAction(param, method, action, cb_success, cb_error, cb_begi
 	if(typeof cb_complete==="undefined" || cb_complete===null){ cb_complete = function(){}; }
 	
 	var arr = [];
+	wrapper_objForm = null;
 	
 	//We convert to an table any integer or string, if not the back server will not see it ($this->data->0)
 	if(param===false || param==='' || param===null){

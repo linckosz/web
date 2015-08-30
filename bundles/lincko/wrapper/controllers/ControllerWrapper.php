@@ -12,6 +12,7 @@ class ControllerWrapper extends Controller {
 	protected $app = NULL;
 	protected $action = NULL;
 	protected $resignin = false; //It should not, but avoid to loop
+	protected $form_id = false;
 
 	protected $json = array(
 		'api_key' => '', //Software authorization key
@@ -40,6 +41,11 @@ class ControllerWrapper extends Controller {
 		}
 		if(!OneSeventySeven::get('yuyan')) {
 			OneSeventySeven::set(array('yuyan' => $this->json['language']));
+		}
+		\libs\Watch::php($this->json, '$this->json', __FILE__, false, false, true);
+		if(isset($this->json['data']['form_id'])){
+			$this->form_id = $this->json['data']['form_id'];
+			unset($this->json['data']['form_id']);
 		}
 		return true;
 	}
@@ -118,6 +124,11 @@ class ControllerWrapper extends Controller {
 
 				unset($json_result->flash);
 			}
+			//If the request comes from a form, we add it's ID
+			if($this->form_id){
+				$json_result->form_id = $this->form_id;
+			}
+			\libs\Watch::php($json_result, '$json_result', __FILE__, false, false, true);
 			print_r(json_encode($json_result)); //production output
 			//print_r($json_result->msg); //for test
 			//print_r($result); //for test
