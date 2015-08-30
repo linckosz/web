@@ -243,15 +243,6 @@ Lincko.storage.firstLatest = function(){
 	}
 };
 
-//Force to delete all data that are not linked to the user for security reason and to release some space
-Lincko.storage.cleanLocal = function(){
-	$.each(amplify.store(), function (storeKey) {
-		if(storeKey.indexOf(wrapper_localstorage.prefix)!==0){
-			amplify.store(storeKey, null);
-		}
-	});
-};
-
 Lincko.storage.setHistory = function(category, id, stop_order){
 	if(typeof force_order === 'undefined'){ stop_order = false; }
 	var temp = {};
@@ -933,15 +924,14 @@ JSfiles.finish(function(){
 	}
 	wrapper_load_progress.move(65);
 	Lincko.storage.orderRecents(Lincko.storage.data);
-	Lincko.storage.cleanLocal();
 	wrapper_load_progress.move(70);
 	Lincko.storage.getLatest();
 
 	//Update every 15s automatically
 	setInterval(function(){
 		Lincko.storage.getLatest();
-	}, 3000);
-	//}, 15000); //15s
+	//}, 3000);
+	}, 15000); //15s
 
 	//Check the schema every 30 minutes
 	setInterval(function(){
@@ -949,4 +939,3 @@ JSfiles.finish(function(){
 	}, 1800000); //30min
 
 }, 10);
-

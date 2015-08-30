@@ -31,7 +31,7 @@
 <script src="{{ _filelatest('/scripts/libs/verge.min.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/media.match.min.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/enquire.min.js') }}" type="text/javascript"></script>
-<script src="{{ _filelatest('/scripts/libs/overthrow.min.js') }}" type="text/javascript"></script>
+{# <script src="{{ _filelatest('/scripts/libs/overthrow.min.js') }}" type="text/javascript"></script> #}
 <script src="{{ _filelatest('/scripts/libs/php.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/base64.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/object-keys-polyfill.js') }}" type="text/javascript"></script>
@@ -223,7 +223,8 @@ var wrapper_localstorage = {
 	sha: '{{ sha }}',
 	uid: '{{ uid }}',
 	company: '{{ company|lower }}',
-	prefix: '_{{ uid }}_',
+	prefixuid: '_{{ uid }}_',
+	prefix: '_{{ uid }}_{{ company|lower }}_',
 	quota: [],
 };
 

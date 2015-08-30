@@ -4,6 +4,7 @@ var wrapper_shangzai = {
 		puk: null,
 		cs: null,
 };
+var wrapper_set_shangzai = true;
 
 const fingerprint = wrapper_fp;
 
@@ -30,6 +31,11 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 	var timeout = 10000; //10s
 	if(action == 'translation/auto'){
 		timeout = 20000; //20s, Twice the time because the translation request has to request a third party
+	}
+
+	//initialize file uploading
+	if(wrapper_set_shangzai){
+		param[param.length] = {name:'set_shangzai', value:wrapper_set_shangzai};
 	}
 
 	wrapper_xhr = $.ajax({
@@ -60,6 +66,7 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 			if(data.shangzai && data.shangzai.puk && data.shangzai.cs){
 				wrapper_shangzai = data.shangzai;
 				wrapper_localstorage.encrypt('shangzai', JSON.stringify(data.shangzai));
+				wrapper_set_shangzai = false;
 			}
 			// Below is the production information with "dataType: 'json'"
 			cb_success(msg, data.error, data.status, data.msg);
@@ -205,7 +212,8 @@ function wrapper_get_shangzai(field){
 	return result;
 }
 
-wrapper_localstorage.encrypt = function (link, txt){
+wrapper_localstorage.encrypt = function (link, txt, tryit){
+	if(typeof tryit === 'undefined'){ tryit = true; }
 	var result = false;
 	//If we over quota once, we do not continue to avoid CPU usage, it slow down the first loading but it's an easy solution
 	//A more complex solution would be to progressively delete few elements, and only load them at start, but it's a CPU consumer method
@@ -213,26 +221,57 @@ wrapper_localstorage.encrypt = function (link, txt){
 		return true;
 	} else {
 		try {
-			txt = this.sha+btoa(utf8_encode(txt));
+			var store_txt = this.sha+btoa(utf8_encode(txt));
 			var time = 1000*3600*24*31; //Keep the value for 1 month
-			result = amplify.store(this.prefix+link, txt, { expires: time });
+			result = amplify.store(this.prefix+link, store_txt, { expires: time });
 		} catch(e) {
-			this.quota[link] = false;
-			amplify.store(this.prefix+link, null);
-			console.log(e);
+			if(tryit){
+				if(wrapper_localstorage.cleanLocalWorkspace()){ //Delete other workspace data, and try one more time to store
+					result = wrapper_localstorage.encrypt(link, txt, false);
+				} else {
+					tryit = false;
+				}
+			}
+			if(!tryit){ //If cannot, just delete teh data
+				this.quota[link] = false;
+				amplify.store(this.prefix+link, null);
+				console.log(e);
+			}
 		}
 	}
 	return result;
 };
 
+//Force to delete all data that are not linked to the workspace to release some space
+wrapper_localstorage.cleanLocalWorkspace = function(){
+	var result = false;
+	$.each(amplify.store(), function (storeKey) {
+		result = true;
+		if(storeKey.indexOf(wrapper_localstorage.prefix)!==0){
+			amplify.store(storeKey, null);
+		}
+	});
+	console.log(result);
+	return result;
+};
+
+//Force to delete all data that are not linked to the user for security reason and to release some space
+wrapper_localstorage.cleanLocalUser = function(){
+	$.each(amplify.store(), function (storeKey) {
+		if(storeKey.indexOf(wrapper_localstorage.prefixuid)!==0){
+			amplify.store(storeKey, null);
+		}
+	});
+};
+
 wrapper_localstorage.decrypt = function (link){
 	var txt = false;
 	var temp;
-	var sha = this.sha
+	//If we cannot decrypt, the data might be conrupted, so we delete it
 	try {
 		temp = amplify.store(this.prefix+link);
 		if(temp.indexOf(this.sha)===0){
-			txt = temp.substr(sha.length);
+			txt = temp.substr(this.sha.length);
 			return utf8_decode(atob(txt));
 		}
 	} catch(e) {
@@ -256,4 +295,5 @@ $(window).resize(wrapper_perfectScrollbar);
 
 JSfiles.finish(function(){
 	wrapper_perfectScrollbar();
+	wrapper_localstorage.cleanLocalUser();
 });
