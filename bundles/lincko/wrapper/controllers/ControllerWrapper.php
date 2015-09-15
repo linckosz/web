@@ -42,7 +42,6 @@ class ControllerWrapper extends Controller {
 		if(!OneSeventySeven::get('yuyan')) {
 			OneSeventySeven::set(array('yuyan' => $this->json['language']));
 		}
-		\libs\Watch::php($this->json, '$this->json', __FILE__, false, false, true);
 		if(isset($this->json['data']['form_id'])){
 			$this->form_id = $this->json['data']['form_id'];
 			unset($this->json['data']['form_id']);
@@ -128,7 +127,6 @@ class ControllerWrapper extends Controller {
 			if($this->form_id){
 				$json_result->form_id = $this->form_id;
 			}
-			\libs\Watch::php($json_result, '$json_result', __FILE__, false, false, true);
 			print_r(json_encode($json_result)); //production output
 			//print_r($json_result->msg); //for test
 			//print_r($result); //for test
@@ -146,7 +144,6 @@ class ControllerWrapper extends Controller {
 	protected function autoSign(){
 		$app = $this->app;
 		$this->setupKeys();
-		//\libs\Watch::php($_SESSION, '$autoSign', __FILE__, false, false, true);
 		if($_SESSION['public_key'] == $app->lincko->security['public_key'] && $_SESSION['private_key'] == $app->lincko->security['private_key']){
 			if(OneSeventySeven::get('youjian') && OneSeventySeven::get('lianke')){
 				$this->json['data']['email'] = OneSeventySeven::get('youjian');
