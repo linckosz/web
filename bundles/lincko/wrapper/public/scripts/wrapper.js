@@ -334,6 +334,14 @@ function wrapper_perfectScrollbar(){
 }
 $(window).resize(wrapper_perfectScrollbar);
 
+function wrapper_clean_chart(){
+	for(var i in Chart.instances){
+		if(!Chart.instances[i].chart.canvas.clientWidth){
+			Chart.instances[i].destroy();
+		}
+	}
+}
+
 JSfiles.finish(function(){
 	wrapper_perfectScrollbar();
 	wrapper_localstorage.cleanLocalUser();

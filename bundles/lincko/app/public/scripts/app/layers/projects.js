@@ -70,6 +70,7 @@ function app_layers_projects_charts_resize(){
 	clearTimeout(app_layers_projects_charts_resize_timing);
 	app_layers_projects_charts_resize_timing = setTimeout(function(){
 		var instance;
+		wrapper_clean_chart();
 		for(var i in Chart.instances){
 			instance = Chart.instances[i];
 			if (instance.options.responsive){
@@ -194,6 +195,7 @@ var app_layers_projects_feedPage = function(param, animation){
 		var projectChart;
 		var Elem;
 		var data;
+		wrapper_clean_chart();
 		for(var Elem_id in app_layers_projects_charts){
 			Elem = $('#'+Elem_id);
 			if(Elem.length>0){
