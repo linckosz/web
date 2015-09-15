@@ -57,7 +57,13 @@ function base_cloneCanvas(oldCanvas) {
 
 var base_error_timing;
 
-function base_show_error(msg) {
+function base_show_error(msg, error) {
+	if(typeof error === 'undefined'){ error = false; }
+	if(error && $('#base_error').hasClass('base_message')){
+		$('#base_error').removeClass('base_message');
+	} else if(!error && !$('#base_error').hasClass('base_message')){
+		$('#base_error').addClass('base_message');
+	}
 	clearTimeout(base_error_timing);
 	$('#base_error').html(msg);
 	if($('#base_error').is(':hidden')){

@@ -88,6 +88,15 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 				wrapper_localstorage.encrypt('shangzai', JSON.stringify(data.shangzai));
 				wrapper_set_shangzai = false;
 			}
+
+			if(data.show && typeof base_show_error === 'function'){
+				if(typeof data.show === 'string'){
+					base_show_error(php_nl2br(data.show), data.error);
+				} else if(typeof msg === 'string'){
+					base_show_error(php_nl2br(msg), data.error);
+				}
+			}				
+
 			// Below is the production information with "dataType: 'json'"
 			cb_success(msg, data.error, data.status, data.msg);
 		},

@@ -289,6 +289,10 @@ html, .font_sans_serif {
 	-khtml-opacity:0.8;
 }
 
+.base_message {
+	background-color: rgba(66, 117, 159, 0.8) !important;
+}
+
 /* Maximum Mobile phone in Portrait */
 @media only screen and (max-width: 479px) {
 	#base_error {
