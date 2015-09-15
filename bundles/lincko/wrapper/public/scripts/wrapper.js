@@ -8,11 +8,10 @@ var wrapper_shangzai = {
 };
 var wrapper_set_shangzai = true;
 
-try {
-	const fingerprint = wrapper_fp;
-} catch(e) {
-	var fingerprint = wrapper_fp;
-}
+// Because "const" seems to not work in some browsers
+// http://stackoverflow.com/questions/24370447/the-const-keyword-in-javascript
+// const fingerprint = wrapper_fp;
+var fingerprint = wrapper_fp;
 
 var wrapper_signout_cb_begin = function(){
 	$(document.body).css('cursor', 'progress');
