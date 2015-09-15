@@ -8,7 +8,11 @@ var wrapper_shangzai = {
 };
 var wrapper_set_shangzai = true;
 
-const fingerprint = wrapper_fp;
+try {
+	const fingerprint = wrapper_fp;
+} catch(e) {
+	var fingerprint = wrapper_fp;
+}
 
 var wrapper_signout_cb_begin = function(){
 	$(document.body).css('cursor', 'progress');
