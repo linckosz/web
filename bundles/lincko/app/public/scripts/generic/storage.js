@@ -126,18 +126,22 @@ Lincko.storage.getMissing = function(missing){
 Lincko.storage.update = function(partial){
 	var item;
 	var update = false;
+	var newField = false;
 	for(var i in partial) {
 		items = partial[i];
 		for(var j in items) {
 			//Check if the object hierarchy exists
 			if(!Lincko.storage.data){
 				Lincko.storage.data = {};
+				newField = true;
 			}
 			if(!Lincko.storage.data[i]){
 				Lincko.storage.data[i] = {};
+				newField = true;
 			}
 			if(!Lincko.storage.data[i][j]){
 				Lincko.storage.data[i][j] = {};
+				newField = true;
 				app_application_lincko.setFields(j);
 			}
 			//We merge/update proporties, we do know overwritte the complete object (because history record are dowloaded separatly)
@@ -152,6 +156,9 @@ Lincko.storage.update = function(partial){
 		Lincko.storage.orderRecents(partial);
 		Lincko.storage.display();
 		wrapper_localstorage.encrypt('data', JSON.stringify(Lincko.storage.data));
+		if(newField){
+			Lincko.storage.getSchema();
+		}
 		return true;
 	}
 	return false;
