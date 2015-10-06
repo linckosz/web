@@ -42,11 +42,14 @@ function Submenu(menu, next, param) {
 		Elem.wrapper.insertBefore('#end_submenu');
 		var attribute = null;
 		var exist = false;
+		var prefix = false;
 		for(var att in Elem.obj){
 			attribute = Elem.obj[att];
 			if("style" in attribute && "title" in attribute){
 				//Standard
-				if(attribute.style=="title"){
+				if(attribute.style=="prefix"){
+					prefix = attribute.title;
+				} else if(attribute.style=="title"){
 					Elem.AddMenuTitle(attribute);
 				} else if(attribute.style=="button"){
 					Elem.AddMenuButton(attribute);
@@ -55,8 +58,10 @@ function Submenu(menu, next, param) {
 				} else if(attribute.style=="radio"){
 					Elem.AddMenuRadio(attribute);
 				} else if(attribute.style=="form"){
+					if(!prefix){ prefix=''; }
 					Elem.AddMenuForm(attribute);
 				} else if(attribute.style=="form_button"){
+					if(!prefix){ prefix=''; }
 					Elem.AddMenuFormButton(attribute);
 				} else if(attribute.style=="title_small"){
 					Elem.AddTitleSmall(attribute);
@@ -102,6 +107,9 @@ function Submenu(menu, next, param) {
 			Elem.Show();
 		} else {
 			Elem.Hide();
+		}
+		if(prefix){
+			base_format_form(prefix);
 		}
 		wrapper_perfectScrollbar();
 	}
@@ -1032,18 +1040,15 @@ function submenu_wrapper_width() {
 submenu_wrapper_width();
 $(window).resize(submenu_wrapper_width);
 
-
-
 var submenu_form_cb_success = function(msg, err, status, data){
 	var field = 'undefined';
-	var msgtp = Lincko.Translation.get('wrapper', 3, 'html'); //Unknown error
 	submenu_form_cb_hide_progress();
 	if(err){
-		if(typeof msg.field === 'string') { field = msg.field; }
-		if(typeof msg.msg === 'string') { msgtp = php_nl2br(msg.msg); }
-		base_show_error(msgtp);
-		base_form_field_show_error(wrapper_objForm.find("[name="+field+"]"));
-		wrapper_objForm.find("[name="+field+"]").focus();
+		if(wrapper_objForm){
+			if(typeof data.field === 'string') { field = data.field; }
+			base_form_field_show_error(wrapper_objForm.find("[name="+field+"]"));
+			wrapper_objForm.find("[name="+field+"]").focus();
+		}
 	} else {
 		storage_cb_success(msg, err, status, data);
 		submenu_Hideall();
@@ -1057,11 +1062,13 @@ var submenu_form_cb_error = function(xhr_err, ajaxOptions, thrownError){
 };
 
 var submenu_form_cb_begin = function(){
-	var submit_progress_bar = wrapper_objForm.parent().find("[find=submit_progress_bar]");
-	base_form_field_hide_error();
 	$(document.body).css('cursor', 'progress');
-	base_format_form_single(submit_progress_bar);
-	submit_progress_bar.show();
+	if(wrapper_objForm){
+		var submit_progress_bar = wrapper_objForm.parent().find("[find=submit_progress_bar]");
+		base_form_field_hide_error();
+		base_format_form_single(submit_progress_bar);
+		submit_progress_bar.show();
+	}
 };
 
 var submenu_form_cb_complete = function(){
@@ -1070,7 +1077,9 @@ var submenu_form_cb_complete = function(){
 };
 
 var submenu_form_cb_hide_progress = function(){
-	var submit_progress_bar = wrapper_objForm.parent().find("[find=submit_progress_bar]");
-	base_format_form_single(submit_progress_bar);
-	submit_progress_bar.hide();
+	if(wrapper_objForm){
+		var submit_progress_bar = wrapper_objForm.parent().find("[find=submit_progress_bar]");
+		base_format_form_single(submit_progress_bar);
+		submit_progress_bar.hide();
+	}
 }

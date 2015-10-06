@@ -1,7 +1,7 @@
 var wrapper_xhr;
 var wrapper_run = {}; //Keep a track of all form running
-var wrapper_totalxhr = 0;
 var wrapper_objForm = null;
+var wrapper_totalxhr = 0;
 var wrapper_shangzai = {
 		puk: null,
 		cs: null,
@@ -21,12 +21,11 @@ var wrapper_signout_cb_complete = function(){
 	window.location.href = wrapper_link['home'];
 }
 
-function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_complete, ajax_objForm){
+function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_complete){
 	if(typeof cb_success==="undefined" || cb_success===null){ cb_success = function(){}; }
 	if(typeof cb_error==="undefined" || cb_error===null){ cb_error = function(){}; }
 	if(typeof cb_begin==="undefined" || cb_begin===null){ cb_begin = function(){}; }
 	if(typeof cb_complete==="undefined" || cb_complete===null){ cb_complete = function(){}; }
-	if(typeof ajax_objForm==="undefined" || ajax_objForm===null || !ajax_objForm.is('form')){ ajax_objForm = null; }
 	
 	wrapper_totalxhr++;
 	method = method.toUpperCase();
@@ -44,7 +43,9 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 		param[param.length] = {name:'set_shangzai', value:wrapper_set_shangzai};
 	}
 
+	wrapper_form_id = false;
 	//Create a unique instance of the form for each ajax call
+	var ajax_objForm = wrapper_objForm;
 	if(ajax_objForm){
 		param[param.length] = {name:'form_id', value:ajax_objForm.prop('id')};
 		//If the form is sending an action, we quite the function to avoid double click
@@ -142,15 +143,13 @@ function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete, 
 	} else {
 		objForm = $(objForm);
 	}
-	var ajax_objForm = wrapper_objForm = objForm;
+	wrapper_objForm = objForm;
 	var valid = true;
 	$.each(objForm.find('input'), function() {
 		if(this.name in base_input_field){
 			if(typeof base_input_field[this.name].valid === "function" && typeof base_input_field[this.name].error_msg === "function"){
 				if(!base_input_field[this.name].valid($(this).val())){
-					var data = base_input_field[this.name].error_msg();
-					base_show_error(php_nl2br(data.msg), true);
-					cb_success(null, true, 400, data);
+					cb_success(base_input_field[this.name].error_msg(), true, 400);
 					valid = false;
 					return false; //Disable submit action
 				}
@@ -186,7 +185,7 @@ function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete, 
 			}
 		}
 		
-		wrapper_ajax(arr, method, action, cb_success, cb_error, cb_begin, cb_complete, ajax_objForm);
+		wrapper_ajax(arr, method, action, cb_success, cb_error, cb_begin, cb_complete);
 	} else {
 		cb_success(Lincko.Translation.get('wrapper', 2, 'html'), true, 400); //The form does not exist!
 		return false; //Disable submit action
@@ -202,6 +201,7 @@ function wrapper_sendAction(param, method, action, cb_success, cb_error, cb_begi
 	if(typeof cb_complete==="undefined" || cb_complete===null){ cb_complete = function(){}; }
 	
 	var arr = [];
+	wrapper_objForm = null;
 	
 	//We convert to an table any integer or string, if not the back server will not see it ($this->data->0)
 	if(param===false || param==='' || param===null){

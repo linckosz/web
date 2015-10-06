@@ -6,6 +6,11 @@ submenu_list['sample'] = {
 		"style": "title",
 		"title": "Sample",
 	},
+	//Add HTML/JS checking input format
+	"_input": {
+		"style": "prefix",
+		"title": "sample",
+	},
 	//Just do an action (need to hide al menus manually by the function submenu_Hideall)
 	"action": {
 		"style": "button",

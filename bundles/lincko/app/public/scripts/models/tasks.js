@@ -4,6 +4,11 @@ submenu_list['app_task_new'] = {
 		"style": "title",
 		"title": Lincko.Translation.get('app', 2201, 'html'), //New task
 	},
+	//Add HTML/JS checking input format
+	"_input": {
+		"style": "prefix",
+		"title": "task",
+	},
 	"form_create": {
 		"style": "form",
 		"title": Lincko.Translation.get('app', 41, 'html'), //Create
