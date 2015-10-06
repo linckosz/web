@@ -51,7 +51,6 @@
 }
 
 #app_content_menu {
-	display: table-cell;
 	position: absolute;
 	background-color: #FFFFFF;
 	color: #525252;
