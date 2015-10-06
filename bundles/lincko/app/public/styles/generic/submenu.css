@@ -203,14 +203,9 @@
 	border-right: #343434 2px solid;
 	padding-right: 14px;
 	float: right;
-}
-
-.submenu_back_image_on {
-	display: none;
-}
-
-.submenu_back_image_off {
-	display: block;
+	background-image: url('/lincko/app/images/generic/submenu/back_w.png');
+	background-size: 32px 32px;
+	background-repeat: no-repeat;
 }
 
 .submenu_back:hover .submenu_back_image {
@@ -223,13 +218,9 @@
 	opacity:0.4;
 	-moz-opacity:0.4;
 	-khtml-opacity:0.4;
+	background-image: url('/lincko/app/images/generic/submenu/back_b.png');
 }
-.submenu_back:active .submenu_back_image_on {
-	display: block;
-}
-.submenu_back:active .submenu_back_image_off {
-	display: none;
-}
+
 
 .submenu_close_image {
 	padding-right: 14px;
