@@ -14,11 +14,13 @@ function getFingerprint(){
 function SetData(){
 	$app = \Slim\Slim::getInstance();
 	$logged = false;
+
+	
 	if(
 		   //Minimum fields required to display offline
 		   OneSeventySeven::get('youjian') //resign & display
 		&& OneSeventySeven::get('lianke') //resign
-		&& OneSeventySeven::get('jizhu') //resign & display
+		&& ( OneSeventySeven::get('jizhu') || ( isset($_SESSION['public_key']) && isset($_SESSION['private_key']) ) ) //resign & display
 		&& OneSeventySeven::get('sha') //data
 		&& OneSeventySeven::get('uid') //data
 	){
@@ -31,6 +33,8 @@ function SetData(){
 		//Also Keep at least the email address force quicker completion (even if set to off the 'remember me')
 		OneSeventySeven::unsetAll(array('jizhu', 'youjian'));
 	}
+	
+
 	//The below lines will give null if previously unsetAll
 	$yonghu = OneSeventySeven::get('yonghu');
 	$youjian = OneSeventySeven::get('youjian');

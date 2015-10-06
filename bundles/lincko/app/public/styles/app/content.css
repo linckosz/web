@@ -58,6 +58,7 @@
 	height: 0;
 	z-index: 4;
 	overflow: hidden;
+	display: table;
 }
 
 #app_content_dynamic {
@@ -84,6 +85,7 @@
 	display: table;
 	border-collapse: separate;
 	border-spacing: 6px;
+	z-index: 5;
 }
 #app_content_menu_table > div {
 	display: table-row;
