@@ -11,10 +11,19 @@ $('#app_content_top_note').click(function(){
 function app_content_menu_position() {
 	$('#app_content_menu').height(function(){
 		if(responsive.test("maxMobileL")){
-			base_show_error('48');
 			return 48;
 		} else {
-			base_show_error('temp: '+$(window).height()+' / '+$('#app_content_top').height());
+			return $(window).height() - $('#app_content_top').height();
+		}
+	});
+	msg = $('#app_content_menu').height()+" / "+$('#app_content_menu').width()+" / ";
+	base_show_error(msg);
+}
+function app_content_menu_position_old() {
+	$('#app_content_menu').height(function(){
+		if(responsive.test("maxMobileL")){
+			return 48;
+		} else {
 			return $(window).height() - $('#app_content_top').height();
 		}
 	});
