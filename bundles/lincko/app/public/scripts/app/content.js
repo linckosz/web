@@ -17,6 +17,7 @@ function app_content_menu_position() {
 		}
 	});
 	msg = $('#app_content_menu').height()+" / "+$('#app_content_menu').width()+" / ";
+	$('#app_content_menu').css("z-index", 100);
 	base_show_error(msg);
 }
 function app_content_menu_position_old() {
