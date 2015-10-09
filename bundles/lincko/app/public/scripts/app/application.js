@@ -250,12 +250,24 @@ var app_application = {
 
 enquire.register(responsive.noMobileL, function() { 
 	if(wrapper_browser('webkit') && $('#app_application_project').hasClass('app_application_visible')){
-		$('#app_application_content').velocity({ blur: 0 }, 200);
+		$('#app_application_content').velocity(
+			{ blur: 0 },
+			{
+				duration: 200,
+				easing: [ 2 ],
+			}
+		);
 	}
 });
 enquire.register(responsive.isMobileL, function() { 
 	if(wrapper_browser('webkit') && $('#app_application_project').hasClass('app_application_visible')){
-		$('#app_application_content').velocity({ blur: 4 }, 200);
+		$('#app_application_content').velocity(
+			{ blur: 4 },
+			{
+				duration: 200,
+				easing: [ 2 ],
+			}
+		);
 	}
 });
 
@@ -285,7 +297,15 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 					$.each(Elem.find('.app_application_width_child'), function() {
 						$(this).removeClass('app_application_width').css('width', width_child);
 					});
-					if(wrapper_browser('webkit')){ Blur.velocity({ blur: 0 }, time); }
+					if(wrapper_browser('webkit')){
+						Blur.velocity(
+							{ blur: 0 },
+							{
+								duration: time,
+								easing: [ 2 ],
+							}
+						);
+					}
 				},
 				progress: function(){
 					$(window).trigger('resize');
@@ -314,7 +334,15 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 						$(this).css('width', width_child);
 					});
 					if(responsive.test("isMobileL") || force_blur){
-						if(wrapper_browser('webkit')){ Blur.velocity({ blur: 4 }, time); }
+						if(wrapper_browser('webkit')){
+							Blur.velocity(
+								{ blur: 4 },
+								{
+									duration: time,
+									easing: [ 2 ],
+								}
+							);
+						}
 					}
 				},
 				progress: function(){

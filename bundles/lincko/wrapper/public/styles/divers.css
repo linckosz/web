@@ -1,20 +1,11 @@
 /*
-	Improving HTML5 app performance with GPU accelerated CSS transitions
-	https://www.urbaninsight.com/2013/01/04/improving-html5-app-performance-gpu-accelerated-css-transitions
+	Improving HTML5 app performance with GPU accelerated CSS transform
 */
 .accelerated {
+	will-change: transform;
 	-webkit-transform: translateZ(0);
 	-moz-transform: translateZ(0);
 	-ms-transform: translateZ(0);
 	-o-transform: translateZ(0);
 	transform: translateZ(0);
-
-	/* some older browsers mobile versions do not support 3D transformation */
-	/*
-	-moz-transition: all 1s;
-	-webkit-transition: all 1s;
-	-o-transition: all 1s;
-	transition: all 1s ;
-	*/
-	will-change: transform;
 }
