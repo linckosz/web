@@ -152,12 +152,12 @@
 @media only screen and (max-width: 900px){
 	#app_content_menu {
 		height: 48px !important;
-		bottom: 0;
+		position: fixed !important;
+		bottom: 0 !important;
 		width: 100%;
 		overflow: hidden;
 		white-space: nowrap;
 		text-align: justify;
-		position: fixed;
 	}
 	#app_content_menu_table {
 		height: 48px !important;

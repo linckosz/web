@@ -20,20 +20,6 @@ function app_content_menu_position() {
 app_content_menu_position();
 $(window).resize(app_content_menu_position);
 
-function toto(){
-	var top = $('#app_content_menu').offset().top;
-	var left = $('#app_content_menu').offset().left;
-	msg = 'top: ' + top + ', left: ' + left;
-	base_show_error(msg);
-}
-setInterval(function(){
-	toto();
-	app_content_menu_position();
-}, 2000);
-enquire.register(responsive.maxMobileL, function() { 
-	//$('#app_content_menu').
-});
-
 function app_content_dynamic_position() {
 	$('#app_content_dynamic, #app_content_dynamic_sub').height(function(){
 		if(responsive.test("maxMobileL")){
