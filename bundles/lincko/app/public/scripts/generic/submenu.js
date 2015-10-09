@@ -862,10 +862,14 @@ Submenu.prototype = {
 						Elem.hide().show(0);
 						$(window).trigger('resize');
 						if(responsive.test("minDesktop")){
-							/*
 							//The blur is hard to calculate, it creates some flickering
-							if(wrapper_browser('webkit')){ $('#app_content_dynamic').velocity({ blur: 2 }, time); }
-							*/
+							if(wrapper_browser('webkit')){ $('#app_content_dynamic').velocity(
+								{ blur: 2 },
+								{
+									duration: time,
+									easing: [ 1 ],
+								}
+							); }
 						}
 					},
 					complete: function(){
@@ -953,16 +957,27 @@ Submenu.prototype = {
 			}
 		}
 		if(submenu_Getnext()<=1){
-			/*
 			//The blur is hard to calculate, it creates some flickering
 			//Checking animate helps only to know if we pushed the button close
-			if(wrapper_browser('webkit')){ $('#app_content_dynamic').velocity({ blur: 0 }, time, function(){
-				//We need to check again if there is another menu replace the old one, so we keep it blur
-				if(submenu_Getnext()>1){
-					$('#app_content_dynamic').velocity({ blur: 2 }, 100);
+			if(wrapper_browser('webkit')){ $('#app_content_dynamic').velocity(
+				{ blur: 0 },
+				{
+					duration: 100,
+					easing: [ 1 ],
+					complete: function(){
+						//We need to check again if there is another menu replace the old one, so we keep it blur
+						if(submenu_Getnext()>1){
+							$('#app_content_dynamic').velocity(
+								{ blur: 2 },
+								{
+									duration: 100,
+									easing: [ 1 ],
+								}
+							);
+						}
+					}
 				}
-			}); }
-			*/
+			); }
 		}
 	},
 };
@@ -1029,20 +1044,28 @@ function submenu_Build(menu, next){
 }
 
 enquire.register(responsive.minDesktop, function() { 
-	/*
 	//The blur is hard to calculate, it creates some flickering
 	if(wrapper_browser('webkit') && submenu_Getnext()>1 && $('#app_content_dynamic').hasClass('app_application_submenu_blur')){
-		$('#app_content_dynamic').velocity({ blur: 2 }, 200);
+		$('#app_content_dynamic').velocity(
+			{ blur: 2 },
+			{
+				duration: 200,
+				easing: [ 1 ],
+			}
+		);
 	}
-	*/
 });
 enquire.register(responsive.maxTablet, function() { 
-	/*
 	//The blur is hard to calculate, it creates some flickering
 	if(wrapper_browser('webkit') && submenu_Getnext()>1 && $('#app_content_dynamic').hasClass('app_application_submenu_blur')){
-		$('#app_content_dynamic').velocity({ blur: 0 }, 200);
+		$('#app_content_dynamic').velocity(
+			{ blur: 0 },
+			{
+				duration: 200,
+				easing: [ 1 ],
+			}
+		);
 	}
-	*/
 });
 
 function submenu_wrapper_width() {
