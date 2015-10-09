@@ -157,6 +157,7 @@
 		overflow: hidden;
 		white-space: nowrap;
 		text-align: justify;
+		position: fixed;
 	}
 	#app_content_menu_table {
 		height: 48px !important;

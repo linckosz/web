@@ -30,6 +30,9 @@ setInterval(function(){
 	toto();
 	app_content_menu_position();
 }, 2000);
+enquire.register(responsive.maxMobileL, function() { 
+	//$('#app_content_menu').
+});
 
 function app_content_dynamic_position() {
 	$('#app_content_dynamic, #app_content_dynamic_sub').height(function(){
