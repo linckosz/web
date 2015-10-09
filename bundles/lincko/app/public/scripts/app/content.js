@@ -28,7 +28,8 @@ function toto(){
 }
 setInterval(function(){
 	toto();
-}, 100);
+	app_content_menu_position();
+}, 2000);
 
 function app_content_dynamic_position() {
 	$('#app_content_dynamic, #app_content_dynamic_sub').height(function(){
