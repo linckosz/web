@@ -297,6 +297,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 		Elem.css('width', width).velocity(
 			{width: 0},
 			{
+				easing: [ 4 ],
 				duration: time,
 				begin: function(){
 					Elem.removeClass('app_application_width');
@@ -335,6 +336,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 		Elem.css('width', 0).velocity(
 			{width: width},
 			{
+				easing: [ 4 ],
 				duration: time,
 				begin: function(){
 					Elem.addClass('app_application_visible');
