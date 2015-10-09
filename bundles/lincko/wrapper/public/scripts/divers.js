@@ -2,7 +2,6 @@ wrapper_browser = function(ua) {
 	if(typeof ua==="undefined"){
 		return false;
 	}
-	return true;
 	return navigator.userAgent.toUpperCase().indexOf(ua.toUpperCase())>=0;
 };
 

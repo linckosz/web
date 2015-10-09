@@ -867,7 +867,7 @@ Submenu.prototype = {
 								{ blur: 2 },
 								{
 									duration: time,
-									easing: [ 1 ],
+									easing: [ 4 ],
 								}
 							); }
 						}
@@ -971,7 +971,7 @@ Submenu.prototype = {
 								{ blur: 2 },
 								{
 									duration: 100,
-									easing: [ 1 ],
+									easing: [ 4 ],
 								}
 							);
 						}
@@ -1050,7 +1050,7 @@ enquire.register(responsive.minDesktop, function() {
 			{ blur: 2 },
 			{
 				duration: 200,
-				easing: [ 1 ],
+				easing: [ 4 ],
 			}
 		);
 	}
@@ -1062,7 +1062,7 @@ enquire.register(responsive.maxTablet, function() {
 			{ blur: 0 },
 			{
 				duration: 200,
-				easing: [ 1 ],
+				easing: [ 4 ],
 			}
 		);
 	}

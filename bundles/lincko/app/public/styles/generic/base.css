@@ -171,14 +171,6 @@ html, .font_sans_serif {
 	filter: blur(4px);
 }
 
-.blur_medium {
-	-webkit-filter: blur(2px);
-	-moz-filter: blur(2px);
-	-o-filter: blur(2px);
-	-ms-filter: blur(2px);
-	filter: blur(2px);
-}
-
 .submit_progress_bar {
 	position: absolute;
 	bottom: 0;

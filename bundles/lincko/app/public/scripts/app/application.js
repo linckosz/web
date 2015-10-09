@@ -255,7 +255,7 @@ enquire.register(responsive.noMobileL, function() {
 			{ blur: 0 },
 			{
 				duration: 200,
-				easing: [ 1 ],
+				easing: [ 4 ],
 			}
 		);
 	}
@@ -267,7 +267,7 @@ enquire.register(responsive.isMobileL, function() {
 			{ blur: 4 },
 			{
 				duration: 200,
-				easing: [ 1 ],
+				easing: [ 4 ],
 			}
 		);
 	}
@@ -305,7 +305,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 							{ blur: 0 },
 							{
 								duration: time,
-								easing: [ 1 ],
+								easing: [ 4 ],
 							}
 						);
 					}
@@ -343,7 +343,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 								{ blur: 4 },
 								{
 									duration: time,
-									easing: [ 1 ],
+									easing: [ 4 ],
 								}
 							);
 						}
