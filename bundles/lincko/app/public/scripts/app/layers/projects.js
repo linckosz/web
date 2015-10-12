@@ -84,9 +84,9 @@ $(window).resize(app_layers_projects_charts_resize);
 
 function app_layers_projects_icon_add_visibility(){
 	if($("#app_content_dynamic_sub").hasScrollBar()){
-		$('#app_layers_projects').find(".app_layers_projects_add_corner").show();
+		$('#app_layers_content').find(".app_layers_projects_add_corner").show();
 	} else {
-		$('#app_layers_projects').find(".app_layers_projects_add_corner").hide();
+		$('#app_layers_content').find(".app_layers_projects_add_corner").hide();
 	}
 }
 $(window).resize(app_layers_projects_icon_add_visibility);
@@ -181,7 +181,7 @@ var app_layers_projects_feedPage = function(param, animation){
 	Elem.click(function(){
 		submenu_Build("app_project_new");
 	});
-	Elem.appendTo(position);
+	Elem.insertAfter(position);
 
 	//Delete the last border in Mobile mode
 	position.find('.models_projects_standard').last().addClass('models_projects_standard_last');
