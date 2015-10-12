@@ -290,9 +290,8 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 	if(Elem.hasClass('app_application_visible')){
 		time = 2;
 		width = Elem.width();
-
 		TweenLite.to(Elem, time, {
-			css:{width:width},
+			css:{width:0},
 			ease:Power2.easeOut,
 			onStart: function(){
 				Elem.removeClass('app_application_width');
@@ -324,42 +323,40 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 			{ duration: time, }
 		);
 	} else {
-		time = 300;
-		Elem.css('width', 0).velocity(
-			{width: width},
-			{
-				duration: time,
-				begin: function(){
-					Elem.addClass('app_application_visible');
-					Block.addClass('app_application_block_visible');
-					$.each(Elem.find('.app_application_width_child'), function() {
-						$(this).css('width', width_child);
-					});
-					if(responsive.test("isMobileL") || force_blur){
-						//The blur is hard to calculate, it creates some flickering
-						if(wrapper_browser('webkit')){
-							Blur.velocity(
-								{ blur: 4 },
-								{
-									duration: time,
-									easing: [ 4 ],
-								}
-							);
-						}
+		time = 3;
+		TweenLite.to(Elem, time, {
+			css:{width:width},
+			ease:Power2.easeOut,
+			onStart: function(){
+				Elem.addClass('app_application_visible');
+				Block.addClass('app_application_block_visible');
+				$.each(Elem.find('.app_application_width_child'), function() {
+					$(this).css('width', width_child);
+				});
+				if(responsive.test("isMobileL") || force_blur){
+					//The blur is hard to calculate, it creates some flickering
+					if(wrapper_browser('webkit')){
+						Blur.velocity(
+							{ blur: 4 },
+							{
+								duration: time,
+								easing: [ 4 ],
+							}
+						);
 					}
-				},
-				progress: function(){
-					$(window).trigger('resize');
-				},
-				complete: function(){
-					Elem.addClass('app_application_width');
-					Blur.addClass('app_application_blur');
-					$.each(Elem.find('.app_application_width_child'), function() {
-						$(this).addClass('app_application_width');
-					});
-				},
-			}
-		);
+				}
+			},
+			onUpdate: function(){
+				$(window).trigger('resize');
+			},
+			onComplete: function(){
+				Elem.addClass('app_application_width');
+				Blur.addClass('app_application_blur');
+				$.each(Elem.find('.app_application_width_child'), function() {
+					$(this).addClass('app_application_width');
+				});
+			},
+		});
 		Button.velocity(
 			{ rotateZ: 90, },
 			{ duration: time, }
