@@ -5,7 +5,7 @@ $('#app_content_top_project').click(function(){
 });
 
 $('#app_content_top_note').click(function(){
-	alert('Add a note');
+	submenu_Build("test", true, false);
 });
 
 function app_content_menu_position() {

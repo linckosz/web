@@ -38,6 +38,14 @@ submenu_list['sample'] = {
 };
 */
 
+submenu_list['test'] = {
+	//Set the title of the top
+	"_title": {
+		"style": "title",
+		"title": 'Test', //Settings
+	},
+};
+
 submenu_list['settings'] = {
 	//Set the title of the top
 	"_title": {
@@ -106,5 +114,4 @@ JSfiles.finish(function(){
 			}
 		}
 	}, 'companies');
-
 });

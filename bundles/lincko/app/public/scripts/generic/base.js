@@ -41,8 +41,8 @@ JSfiles.finish(function(){
 function base_cloneCanvas(oldCanvas) {
 
 	//create a new canvas
-	var newCanvas = document.createElement('canvas');
-	var context = newCanvas.getContext('2d');
+	newCanvas = document.createElement('canvas');
+	context = newCanvas.getContext('2d');
 
 	//set dimensions
 	newCanvas.width = oldCanvas.width;
@@ -50,6 +50,8 @@ function base_cloneCanvas(oldCanvas) {
 
 	//apply the old canvas to the new one
 	context.drawImage(oldCanvas, 0, 0);
+
+	delete context;
 
 	//return the new canvas
 	return newCanvas;
@@ -78,7 +80,7 @@ function base_hide_error() {
 		$("#base_error").velocity("transition.slideRightBigOut", {
 			duration: 160,
 			complete: function(){
-				$('#base_error').html('');
+				$('#base_error').empty();
 			},
 		});
 	}

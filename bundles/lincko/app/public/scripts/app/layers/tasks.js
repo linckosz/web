@@ -7,12 +7,10 @@ function app_layers_tasks_createPage(param){
 	Elem.prop('id', 'app_layers_tasks');
 	Elem.appendTo(layer);
 	app_layers_tasks_feedPage(param);
-
 	app_application_lincko.add("app_layers_tasks", "tasks", function(){
 		app_layers_tasks_feedPage(null, false);
 	});
 }
-
 
 function app_layers_tasks_icon_add_visibility(){
 	if($("#app_content_dynamic_sub").hasScrollBar()){
@@ -27,7 +25,7 @@ $(window).resize(app_layers_tasks_icon_add_visibility);
 var app_layers_tasks_feedPage = function(param){
 	if(typeof param === 'undefined'){ param = null; }
 	var position = $('#app_layers_tasks');
-	position.html('');
+	position.empty();
 	if(app_content_menu.projects_id == Lincko.storage.getMyPlaceholder()['_id']){
 		var items = Lincko.storage.list('tasks', null, true);
 	} else {

@@ -98,7 +98,10 @@ function Mobile_menu_Hide(id){
 		{
 			duration: 90,
 			easing: [ .38, .1, .13, .9 ],
-			complete: function(){ Elem.hide().remove(); }
+			complete: function(){
+				Elem.hide().remove();
+				Elem = null;
+			}
 		}
 	);
 }

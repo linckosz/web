@@ -99,6 +99,7 @@
 .app_content_menu_icon {
 	background-color: #FFFFFF;
 	text-align: center;
+	vertical-align: middle;
 	cursor: pointer; cursor: hand;
 	border-width: 2px;
 	border-style: solid;
@@ -128,7 +129,7 @@
 }
 
 .app_content_menu_icon_active, .app_content_menu_icon_active:hover, .app_content_menu_icon_active:active {
-	cursor: default;
+	cursor: default !important;
 	filter:alpha(opacity=80) !important;
 	opacity:0.80 !important;
 	-moz-opacity:0.80 !important;

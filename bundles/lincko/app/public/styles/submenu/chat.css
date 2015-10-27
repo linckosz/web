@@ -1,0 +1,64 @@
+
+.submenu_app_chat_table {
+	width: 100%;
+	display: table;
+	border-collapse: separate;
+	padding: 0;
+}
+.submenu_app_chat_table > div {
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+}
+
+.submenu_app_chat_chatmenu_icon {
+	text-align: center;
+	vertical-align: middle;
+	cursor: pointer; cursor: hand;
+	width: 36px;
+	margin: auto;
+	-webkit-filter: brightness(0.6);
+	-moz-filter: brightness(0.6);
+	-o-filter: brightness(0.6);
+	-ms-filter: brightness(0.6);
+	filter: alpha(opacity=40) brightness(0.6);
+	opacity:0.40;
+	-moz-opacity:0.40;
+	-khtml-opacity:0.40;
+}
+
+.submenu_app_chat_chatmenu_icon:hover {
+	filter:alpha(opacity=70);
+	opacity:0.70;
+	-moz-opacity:0.70;
+	-khtml-opacity:0.70;
+}
+
+.submenu_app_chat_chatmenu_icon:active {
+	-webkit-filter: none;
+	-moz-filter: none;
+	-o-filter: none;
+	-ms-filter: none;
+	filter: none !important;
+	opacity:1.00 !important;
+	-moz-opacity:1.00 !important;
+	-khtml-opacity:1.00 !important;
+}
+
+.submenu_app_chat_chatmenu_icon_active, .submenu_app_chat_chatmenu_icon_active:hover, .submenu_app_chat_chatmenu_icon_active:active {
+	cursor: default !important;
+	-webkit-filter: none !important;
+	-moz-filter: none !important;
+	-o-filter: none !important;
+	-ms-filter: none !important;
+	filter:alpha(opacity=80) grayscale(0) !important;
+	opacity:0.80 !important;
+	-moz-opacity:0.80 !important;
+	-khtml-opacity:0.80 !important;
+}
+
+
+.submenu_app_chat_chatmenu_icon > img {
+	width: 24px;
+	display: block;
+}

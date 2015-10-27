@@ -1,0 +1,37 @@
+{# category 1 #}
+{% set route = _route_name() %}
+<div id="begin_submenu" class="visibility_hidden">
+
+	<script>
+		var submenu_list = [];
+		JSfiles.later("{{ _filelatest('/lincko/app/scripts/submenu/generic/submenu.js') }}", 30);
+		{# Loop the folder to include automaticaly all files #}
+		{% set folder = '/lincko/app/scripts/submenu' %}
+		{% set files = _loop_public_folder(folder) %}
+		{% for key, value in files %}
+			JSfiles.later("{{ _filelatest(folder ~ '/' ~ value) }}", 40);
+		{% endfor %}
+	</script>
+	{% include '/bundles/lincko/app/templates/submenu/scripts/submenu.js.twig' %}
+
+	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/submenu/generic/submenu.css') }}" type="text/css" />
+	{# Loop the folder to include automaticaly all files #}
+	{% set folder = '/lincko/app/styles/submenu' %}
+	{% set files = _loop_public_folder(folder) %}
+	{% for key, value in files %}
+		<link rel="stylesheet" href="{{ _filelatest(folder ~ '/' ~ value) }}" type="text/css" />
+	{% endfor %}
+
+</div>
+<div class="display_none">
+	
+	{# Loop the folder to include automaticaly all files #}
+	{% set folder = '/submenu' %}
+	{% set bundle = 'lincko/app' %}
+	{% set files = _loop_twig_folder(bundle, folder) %}
+	{% for key, value in files %}
+		{% include value %}
+	{% endfor %}
+
+</div>
+<div id="end_submenu" class="visibility_hidden"></div>

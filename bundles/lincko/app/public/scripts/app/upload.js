@@ -133,6 +133,8 @@ $(function () {
 			if (typeof e !== 'undefined' && e.isDefaultPrevented()) { return false; }
 			var that = $('#app_upload_fileupload').fileupload('option');
 
+			that.reindex(e, this);
+
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index] = data;
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_type = 'file';
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_files_index = app_upload_files.lincko_files_index;
@@ -141,7 +143,6 @@ $(function () {
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_progress = 0;
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_name = data.files[0].name;
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_size = data.files[0].size;
-
 
 			//Reinitialise display information
 			that.lincko_bitrate.length = [];
@@ -164,7 +165,7 @@ $(function () {
 			app_upload_files.lincko_files_index++;
 			that.progressall(e, this);
 			//I should change the line below accoridng to the UI experience
-			submenu_Build("app_upload_all", true);
+			submenu_Build("app_upload_all", true, false);
 			//This is used to force the preview to appear because the preview variable is not available at once right after the object creation
 			setTimeout(function() {
 				$('#app_upload_fileupload').fileupload('option').progressall(e, this);
@@ -173,6 +174,17 @@ $(function () {
 			setTimeout(function() {
 				$('#app_upload_fileupload').fileupload('option').progressall(e, this);
 			}, 2000);
+
+		},
+
+		//It will decrement the file index to rewrite over previously allocated memory space.
+		//data => File object
+		reindex: function (e, data) {
+			if (typeof e !== 'undefined' && e.isDefaultPrevented()) { return false; }
+			var that = $('#app_upload_fileupload').fileupload('option');
+			while(app_upload_files.lincko_files_index > 0 && typeof app_upload_files.lincko_files[app_upload_files.lincko_files_index-1] === 'undefined'){
+				app_upload_files.lincko_files_index--;
+			}
 		},
 
 		//data => File object
@@ -184,6 +196,7 @@ $(function () {
 		//data => File object
 		done: function (e, data) {
 			if (typeof e !== 'undefined' && e.isDefaultPrevented()) { return false; }
+			var that = $('#app_upload_fileupload').fileupload('option');
 			if(data.result.error){
 				app_upload_files.lincko_files[data.lincko_files_index].lincko_status = 'error';
 				app_upload_files.lincko_files[data.lincko_files_index].lincko_error = Lincko.Translation.get('app', 18, 'html'); //Server error
@@ -198,6 +211,7 @@ $(function () {
 				app_upload_files.lincko_files[data.lincko_files_index].lincko_status = 'done';
 				$('#app_upload_fileupload').fileupload('option').progressall(e, this);
 				delete app_upload_files.lincko_files[data.lincko_files_index];
+				that.reindex(e, this);
 			}
 		},
 
@@ -279,11 +293,13 @@ $(function () {
 		//data => File object
 		destroy: function (e, data) {
 			if (typeof e !== 'undefined' && e.isDefaultPrevented()) { return false; }
+			var that = $('#app_upload_fileupload').fileupload('option');
 			app_upload_files.lincko_files[data.lincko_files_index].abort();
 			app_upload_files.lincko_files[data.lincko_files_index].lincko_status = 'deleted';
 			app_upload_files.lincko_files[data.lincko_files_index].lincko_progress = 0;
 			$('#app_upload_fileupload').fileupload('option').progressall(e, this);
 			delete app_upload_files.lincko_files[data.lincko_files_index];
+			that.reindex(e, this);
 			$('#app_upload_fileupload').fileupload('option').progressall(e, this);
 		},
 
@@ -317,7 +333,7 @@ $(function () {
 			});
 		},
 
-		 _deleteHandler: function (e) {
+		_deleteHandler: function (e) {
 			if(typeof e !== 'undefined'){ e.preventDefault(); }
 			var that = this;
 			$.each(app_upload_files.lincko_files, function(index, data){

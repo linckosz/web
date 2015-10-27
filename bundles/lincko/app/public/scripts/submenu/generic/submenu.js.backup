@@ -180,7 +180,7 @@ Submenu.prototype = {
 						}
 					}
 				}
-				$("<img class='submenu_icon submenu_icon_next' src='/lincko/app/images/generic/submenu/next.png' />").appendTo(Elem.find("[find=submenu_next_value]"));
+				$("<img class='submenu_icon submenu_icon_next' src='/lincko/app/images/submenu/next.png' />").appendTo(Elem.find("[find=submenu_next_value]"));
 				Elem.click(function(){
 					$.each(that.wrapper.find('.submenu_deco_next'), function() {
 						$(this).removeClass('submenu_deco_next');
@@ -204,7 +204,7 @@ Submenu.prototype = {
 		Elem.find("[find=submenu_radio_title]").html(attribute.title);
 		if("selected" in attribute){
 			if(attribute.selected){
-				Elem.find("[find=submenu_radio_value]").html("<img class='submenu_icon' src='/lincko/app/images/generic/submenu/check.png' />");
+				Elem.find("[find=submenu_radio_value]").html("<img class='submenu_icon' src='/lincko/app/images/submenu/check.png' />");
 			}
 		}
 		if("hide" in attribute){
@@ -290,7 +290,7 @@ Submenu.prototype = {
 					}
 				}
 				Elem.find("[find=submenu_select_value]").html(Num);
-				$("<img class='submenu_icon submenu_icon_next' src='/lincko/app/images/generic/submenu/next.png' />").appendTo(Elem.find("[find=submenu_select_value]"));
+				$("<img class='submenu_icon submenu_icon_next' src='/lincko/app/images/submenu/next.png' />").appendTo(Elem.find("[find=submenu_select_value]"));
 				Elem.click(function(){
 					$.each(that.wrapper.find('.submenu_deco_next'), function() {
 						$(this).removeClass('submenu_deco_next');

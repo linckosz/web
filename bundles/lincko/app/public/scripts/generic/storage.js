@@ -456,9 +456,9 @@ Lincko.storage.formatHistoryInfo = function(text, history){
 
 /*
 	Samples:
-	Lincko.storage.search('word', 'autocut');
-	Lincko.storage.search('word', 'a', 'projects');
-	Lincko.storage.search('category', null, 'projects');
+	Lincko.storage.search('word', 'autocut'); //Find the word 'autocut' in all categories
+	Lincko.storage.search('word', 'a', 'projects'); //Find the word 'a' in the category 'projects'
+	Lincko.storage.search('category', null, 'projects'); //Return all items of the category
 */
 Lincko.storage.search = function(type, param, category){
 	var results = {};
@@ -839,7 +839,7 @@ Lincko.storage.time = function(type, param, category){
 };
 
 /*
-	Lincko.storage.list('tasks'); => List all tasks
+	Lincko.storage.list('tasks'); => List all tasks, order from newest to oldest
 	Lincko.storage.list('tasks', 5); => List 5 latest tasks
 	Lincko.storage.list('tasks', 5, {'projects_id': 5}); => List 5 latest tasks from the project No5, the conditions must be an object
 	Lincko.storage.list('tasks', null, {'projects_id': 5, 'created_by': 1}); => List all tasks from the project No5, and created by the user No 1
@@ -864,7 +864,11 @@ Lincko.storage.list = function(category, limit, conditions){
 		if($.type(Lincko.storage.data[company]) === 'object' && $.type(Lincko.storage.data[company][category]) === 'object'){
 			items = Lincko.storage.data[company][category];
 			for(var j in items) {
+				//'_id
 				item = items[j];
+				//Add info to element, use "_" to recognize that it has been added by JS
+				item['_id'] = j;
+				item['_type'] = category;
 				save = true;
 				timestamp = 0;
 				if(typeof item['created_at'] !== 'undefined'){
@@ -886,7 +890,7 @@ Lincko.storage.list = function(category, limit, conditions){
 		}
 	}
 
-	//Order by newes
+	//Order by newest
 	if(!$.isEmptyObject(temp)){
 		//Sort by key value (timestamp), Object.keys gets only an array of the keys, sort() sorts the array from big to small (newest to oldest)
 		var desc_timestamp = Object.keys(temp).sort(function(a, b) { return b - a; });

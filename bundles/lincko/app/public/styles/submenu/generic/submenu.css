@@ -28,7 +28,7 @@
 	text-align: center;
 	vertical-align: middle;
 	background-color: #313335;
-	background-image: url('/lincko/app/images/generic/submenu/top.png');
+	background-image: url('/lincko/app/images/submenu/top.png');
 	background-repeat: repeat-x;
 	position: absolute;
 	overflow: hidden;
@@ -42,7 +42,7 @@
 	text-align: center;
 	vertical-align: middle;
 	background-color: #313335;
-	background-image: url('/lincko/app/images/generic/submenu/top.png');
+	background-image: url('/lincko/app/images/submenu/top.png');
 	background-repeat: repeat-x;
 	position: absolute;
 	overflow: hidden;
@@ -75,7 +75,7 @@
 
 .submenu_back:active {
 	color: #6F7377;
-	background-image: url('/lincko/app/images/generic/submenu/active.png');
+	background-image: url('/lincko/app/images/submenu/active.png');
 	box-shadow: inset 4px 4px 13px -5px #313335;
 	-moz-box-shadow: inset 4px 4px 13px -5px #313335;
 	-webkit-box-shadow: inset 4px 4px 13px -5px #313335;
@@ -203,7 +203,7 @@
 	border-right: #343434 2px solid;
 	padding-right: 14px;
 	float: right;
-	background-image: url('/lincko/app/images/generic/submenu/back_w.png');
+	background-image: url('/lincko/app/images/submenu/back_w.png');
 	background-size: 32px 32px;
 	background-repeat: no-repeat;
 }
@@ -218,7 +218,7 @@
 	opacity:0.4;
 	-moz-opacity:0.4;
 	-khtml-opacity:0.4;
-	background-image: url('/lincko/app/images/generic/submenu/back_b.png');
+	background-image: url('/lincko/app/images/submenu/back_b.png');
 }
 
 
@@ -244,183 +244,6 @@
 	-moz-opacity:0.6;
 	-khtml-opacity:0.6;
 }
-
-
-/* Start app_upload */
-
-.submenu_app_upload_single {
-	display: block;
-	width: 100%;
-}
-
-.submenu_app_upload_single_row {
-	display: table;
-	table-layout: fixed;
-	width: 100%;
-	color: #6F7377;
-}
-
-.submenu_app_upload_progress {
-	display: table-cell;
-	padding: 16px 16px 4px 16px;
-	white-space: nowrap;
-	vertical-align: middle;
-	text-align: left;
-	width: 100%;
-}
-
-.submenu_app_upload_progress_full {
-	position: relative; /* This is important to be able to use % width inside without interfering with padding value */
-	border: 1px solid #CAE4C7;
-	width: 100%;
-	text-align: left;
-	overflow: hidden;
-}
-
-.submenu_app_upload_progress_full_abort {
-	-webkit-box-shadow: 0px 0px 4px 1px rgba(251, 149, 31, 0.6);
-	-moz-box-shadow: 0px 0px 4px 1px rgba(251, 149, 31, 0.6);
-	box-shadow: 0px 0px 4px 1px rgba(251, 149, 31, 0.6);
-	color: #FBA023 !important;
-}
-
-.submenu_app_upload_progress_full_failed {
-	-webkit-box-shadow: 0px 0px 4px 1px rgba(229, 32, 32, 0.6);
-	-moz-box-shadow: 0px 0px 4px 1px rgba(229, 32, 32, 0.6);
-	box-shadow: 0px 0px 4px 1px rgba(229, 32, 32, 0.6);
-	color: #E52020 !important;
-}
-
-.submenu_app_upload_progress_pc {
-	background-color: #ACF9A4;
-	min-height: 16px;
-	width: 0%;
-}
-
-.submenu_app_upload_progress_pc_text {
-	position: absolute;
-	width: 100%;
-	font-size: 11px;
-	line-height: 16px;
-	text-align: center;
-	vertical-align: middle;
-	filter:alpha(opacity=70);
-	opacity:0.7;
-	-moz-opacity:0.7;
-	-khtml-opacity:0.7;
-}
-
-
-
-.submenu_app_upload_single_cancel {
-	display: table-cell;
-	padding: 16px 16px 4px 0;
-	white-space: nowrap;
-	vertical-align: middle;
-	text-align: left;
-	width: auto;
-}
-
-.submenu_app_upload_single_cancel_image {
-	float: right;
-	padding: 0;
-	height: 18px;
-	margin-top: -1px;
-	filter:alpha(opacity=30);
-	opacity:0.3;
-	-moz-opacity:0.3;
-	-khtml-opacity:0.3;
-	cursor: pointer; cursor: hand;
-}
-
-.submenu_app_upload_single_cancel_image:hover {
-	filter:alpha(opacity=40);
-	opacity:0.4;
-	-moz-opacity:0.4;
-	-khtml-opacity:0.4;
-}
-
-.submenu_app_upload_single_cancel_image:active {
-	filter:alpha(opacity=60);
-	opacity:0.6;
-	-moz-opacity:0.6;
-	-khtml-opacity:0.6;
-}
-
-.submenu_app_upload_preview {
-	display: table-cell;
-	padding: 0 0 0 8px;
-	white-space: nowrap;
-	vertical-align: top;
-	text-align: right;
-	width: auto;
-	float: right;
-}
-
-.submenu_app_upload_sub_preview_canvas {
-	width: 100%;
-	zoom: 250%; /* 120px * 2.5 = 300px */
-	text-align: center !important;
-	padding: 8px 0 0 0 !important;
-}
-
-.submenu_app_upload_sub_preview_player {
-	width: 100%;
-	zoom: 180%; /* 160px * 1.8 = 304px */
-	text-align: center !important;
-	padding: 8px 0 0 0 !important;
-}
-
-.submenu_app_upload_preview canvas {
-	border: 1px solid #EBEFF3;
-	max-width: 120px;
-	max-height: 60px;
-}
-
-/*
-To customize the audio/video player, need to play with the classes ".mejs-*", but my tests didn't work, I haven't check why
-http://brianshim.com/webtricks/style-the-wordpress-3-6-media-player/
-*/
-
-.submenu_app_upload_preview video {
-	border: 1px solid #EBEFF3;
-	max-width: 160px;
-	max-height: 160px;
-}
-
-.submenu_app_upload_preview audio {
-	border: none;
-	max-width: 160px;
-	max-height: 320px;
-}
-
-.submenu_app_upload_info {
-	display: table-cell;
-	padding: 4px 24px 16px 24px;
-	white-space: normal;
-	vertical-align: top;
-	text-align: left;
-	width: 100%;
-}
-
-.submenu_app_upload_info_speed {
-	display: table;
-}
-
-.submenu_app_upload_info_speed > span {
-	display: table-cell;
-	white-space: nowrap;
-}
-
-.submenu_app_upload_info_destination {
-	font-size: 12px;
-	filter:alpha(opacity=70);
-	opacity:0.7;
-	-moz-opacity:0.7;
-	-khtml-opacity:0.7;
-}
-
-/* End app_upload */
 
 .submenu_title_small {
 	color: #D7D4D1;
@@ -523,7 +346,7 @@ http://brianshim.com/webtricks/style-the-wordpress-3-6-media-player/
 	}
 	.submenu_top {
 		background-color: #DFDFDF;
-		background-image: url('/lincko/app/images/generic/submenu/active.png');
+		background-image: url('/lincko/app/images/submenu/active.png');
 	}
 	.submenu_title {
 		color: #6F7377;

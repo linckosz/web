@@ -89,6 +89,9 @@ $('#app_project_settings_img').click(function(){
 	submenu_Build("settings");
 });
 
+$('#app_project_quick_access_chat').click(function(){
+	submenu_Build("chat");
+});
 
 $('#app_project_project_new').click(function(){
 	submenu_Build("app_project_new");
@@ -100,7 +103,8 @@ $('#app_project_quick_access_title').click(function(){
 	}
 });
 
-function app_project_quick_access_title(Elem){
+function app_project_quick_access_title(Elem_id){
+	Elem = $('#'+Elem_id);
 	if(app_upload_files.lincko_numberOfFiles <= 0){
 		Elem.find("[find=app_project_upload]").hide();
 		Elem.find("[find=app_project_quick_access]").show();
@@ -112,6 +116,7 @@ function app_project_quick_access_title(Elem){
 		Elem.addClass('app_project_quick_access_title_prog');
 		Elem.find("[find=app_project_progress_all]").show().css('width', app_upload_files.lincko_progressall+'%');
 	}
+	delete Elem;
 }
 
 function app_project_quick_access() {
@@ -220,13 +225,13 @@ var app_project_build = {
 		}
 	},
 
-	_app_feedProject: function(Elem){
+	_app_feedProject: function(Elem_id){
 		var item_id = this.action_param[0];
 		var item_type = this.action_param[1];
 		var item = Lincko.storage.get(item_type, item_id);
-		if(item && item['_timestamp'] != Elem.attr('timestamp')){
+		if(item && item['_timestamp'] != $('#'+Elem_id).attr('timestamp')){
 			var item_title = item['+title'];
-			app_project_build.feedProject(Elem, item_title);
+			app_project_build.feedProject($('#'+Elem_id), item_title);
 		}
 	},
 
@@ -323,8 +328,8 @@ var app_project_info = {
 			if($('#app_project_recent').is(':visible')){
 				$('#app_project_recent').velocity("transition.fadeOut", { duration: time, complete: function(){
 					app_project_tab();
-					$('#app_project_info_title').html('');
-					$('#app_project_info_content').html('');
+					$('#app_project_info_title').empty();
+					$('#app_project_info_content').empty();
 				}, });
 			}
 			app_project_info.current = false;

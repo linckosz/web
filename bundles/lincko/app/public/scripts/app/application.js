@@ -16,7 +16,7 @@ var app_application_lincko = {
 		var object = false;
 		//Assign id
 		var item = {
-			range: {},							//Reacte to which catogory (all for empty)
+			range: {},							//React to which category (all for empty)
 			exists: function(){ return true; },	//Check exitistance of any related object
 			exists_param: null,					//optional parameters
 			action: function(){},				//If HTML exists and its related objects, we take action
@@ -143,17 +143,18 @@ var app_application_lincko = {
 
 		if(!$.isEmptyObject(items)){
 			//First we scan all HTML elements
-			for(var id in this._elements){
+			for(var Elem_id in this._elements){
 				for(var i in items){
 					item = items[i];
-					if($.isEmptyObject(this._elements[id].range) || typeof this._elements[id].range[item] !== 'undefined'){
-						Elem = $('#'+id);
-						if(Elem.length > 0 && this._elements[id].exists()){
-							this._elements[id].action(Elem);
+					if($.isEmptyObject(this._elements[Elem_id].range) || typeof this._elements[Elem_id].range[item] !== 'undefined'){
+						Elem = $('#'+Elem_id);
+						if(Elem.length > 0 && this._elements[Elem_id].exists()){
+							this._elements[Elem_id].action(Elem_id);
 						} else {
-							this._elements[id].deletion();
-							delete this._elements[id];
+							this._elements[Elem_id].deletion();
+							delete this._elements[Elem_id];
 						}
+						delete Elem;
 						break;
 					}	
 				}

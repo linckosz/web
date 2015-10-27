@@ -22,14 +22,14 @@ var app_layers_launchMenu = function(menu, param){
 	if(typeof param === 'undefined'){ param = null; }
 	var launch = [];
 	var layer = $('#app_layers_content');
-	layer.html('');
+	layer.empty();
 	menu = menu.toLowerCase();
 
-	launch['error'] = function(restriction){
+	launch['error'] = function(){
 		layer.html('Page not found');
 	};
 
-	launch['dashboard'] = function(restriction){
+	launch['dashboard'] = function(){
 		
 	};
 

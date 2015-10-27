@@ -15,7 +15,7 @@ function app_layers_history_createPage(param){
 var app_layers_history_feedPage = function(param){
 	if(typeof param === 'undefined'){ param = null; }
 	var position = $('#app_layers_history');
-	position.html('');
+	position.empty();
 	var items = Lincko.storage.time('recent');
 	var history;
 	var item;
