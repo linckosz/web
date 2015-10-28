@@ -524,6 +524,7 @@ Submenu.prototype.Show = function(){
 				easing: [ .38, .1, .13, .9 ],
 				begin: function(){
 					$('#'+that.id).hide().show(0);
+					$(window).trigger('resize');
 				},
 				progress: function(){
 					$(window).trigger('resize');
@@ -583,6 +584,9 @@ Submenu.prototype.Hide = function (animate){
 					duration: 2*time,
 					delay: delay,
 					easing: [ .38, .1, .13, .9 ],
+					begin: function(){
+						$(window).trigger('resize');
+					},
 					progress: function(){
 						$(window).trigger('resize');
 					},

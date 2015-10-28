@@ -309,6 +309,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				duration: time,
 				delay: delay,
 				begin: function(){
+					$(window).trigger('resize');
 					Button.velocity(
 						{ rotateZ: 0, },
 						{
@@ -359,6 +360,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				duration: time,
 				delay: delay,
 				begin: function(){
+					$(window).trigger('resize');
 					if(responsive.test("minTablet")){
 						Button.velocity(
 							{ rotateZ: 90, },
