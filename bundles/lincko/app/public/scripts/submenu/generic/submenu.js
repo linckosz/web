@@ -114,7 +114,7 @@ function Submenu(menu, next, param) {
 			Elem.attribute = Elem.obj[att];
 			if("style" in Elem.attribute && "title" in Elem.attribute){
 				if(typeof Submenu_select[Elem.attribute.style] === "function"){
-					Submenu_select[Elem.attribute.style](Elem);
+					//Submenu_select[Elem.attribute.style](Elem);
 				}
 			}
 		}
