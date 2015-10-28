@@ -480,7 +480,7 @@ Submenu.prototype.Show = function(){
 	submenu_wrapper = this.Wrapper();
 	var that = this;
 	var time = 200;
-	var delay = 60;
+	var delay = 0;
 	if(responsive.test("minDesktop")){
 		if(that.layer<=3){ submenu_wrapper.css('z-index', submenu_zindex); }
 		submenu_wrapper.velocity(
@@ -550,7 +550,7 @@ Submenu.prototype.Hide = function (animate){
 	submenu_wrapper = this.Wrapper();
 	var that = this;
 	var time = 160;
-	var delay = 60;
+	var delay = 0;
 	if(typeof animate === 'undefined'){ animate = false; }
 	//Reset menu selection if(menu in submenu_list){
 	if((that.layer-1) in submenu_obj){

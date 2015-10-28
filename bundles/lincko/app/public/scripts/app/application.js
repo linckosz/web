@@ -281,7 +281,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 	if(typeof force_blur==="undefined"){ force_blur = false; }
 
 	var time = 200;
-	var delay = 60;
+	var delay = 0;
 	var width = 320;
 	var width_child = 320;
 	if(responsive.test("maxMobile")){
