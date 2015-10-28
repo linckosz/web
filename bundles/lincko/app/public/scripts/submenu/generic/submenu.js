@@ -91,7 +91,7 @@ function Submenu(menu, next, param) {
 	//this.id = this.layer+"_submenu_wrapper_"+md5(Math.random());
 	
 	//The creation or reuse of HTML element seems to have some display problem, and DIV deletion issue
-	this.id = this.layer+"_submenu_wrapper_"+menu;//md5(Math.random());
+	this.id = this.layer+"_submenu_wrapper_"+menu;
 	
 	this.zIndex = submenu_zindex+this.layer;
 	this.display = true;
@@ -470,6 +470,7 @@ Submenu.prototype.Show = function(){
 					delete submenu_wrapper;
 				},
 				complete: function(){
+					/*
 					submenu_wrapper = that.Wrapper();
 					submenu_wrapper.find("[find=submenu_wrapper_content]").focus();
 					//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas
@@ -479,6 +480,7 @@ Submenu.prototype.Show = function(){
 					that.FocusForm();
 					//Free memory
 					delete submenu_wrapper;
+					*/
 				}
 			}
 		);
@@ -488,22 +490,17 @@ Submenu.prototype.Show = function(){
 			"transition.slideRightBigIn",
 			//"transition.slideRightIn",
 			{
-				duration: time,
+				duration: 2*time,
 				delay: 100,
 				easing: [ .38, .1, .13, .9 ],
 				begin: function(){
-					/*
 					submenu_wrapper = that.Wrapper();
 					submenu_wrapper.hide().show(0);
 					$(window).trigger('resize');
 					//Free memory
 					delete submenu_wrapper;
-					*/
-					$('#'+that.id).hide().show(0);
-					$(window).trigger('resize');
 				},
 				complete: function(){
-					/*
 					submenu_wrapper = that.Wrapper();
 					submenu_wrapper.find("[find=submenu_wrapper_content]").focus();
 					//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas
@@ -512,12 +509,6 @@ Submenu.prototype.Show = function(){
 					that.FocusForm();
 					//Free memory
 					delete submenu_wrapper;
-					*/
-					$('#'+that.id).find("[find=submenu_wrapper_content]").focus();
-					//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas
-					$('#'+that.id).hide().show(0);
-					$(window).trigger('resize');
-					that.FocusForm();
 				}
 			}
 		);

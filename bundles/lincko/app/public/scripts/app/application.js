@@ -290,11 +290,15 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 
 	if(Elem.hasClass('app_application_visible')){
 		time = 200;
+		if(responsive.test("maxTablet")){
+			time = Math.floor(1.5*time)
+		}
 		width = Elem.width();
 		Elem.css('width', width).velocity(
 			{width: 0},
 			{
 				duration: time,
+				delay: 100,
 				begin: function(){
 					Elem.removeClass('app_application_width');
 					$.each(Elem.find('.app_application_width_child'), function() {
@@ -327,10 +331,14 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 		);
 	} else {
 		time = 300;
+		if(responsive.test("maxTablet")){
+			time = Math.floor(1.5*time)
+		}
 		Elem.css('width', 0).velocity(
 			{width: width},
 			{
 				duration: time,
+				delay: 100,
 				begin: function(){
 					Elem.addClass('app_application_visible');
 					Block.addClass('app_application_block_visible');
