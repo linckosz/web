@@ -483,9 +483,11 @@ Submenu.prototype.Show = function(){
 		);
 	} else {
 		submenu_wrapper.velocity(
-			"transition.expandIn",
+			//"transition.expandIn",
+			"transition.slideRightBigIn",
+			//"transition.slideRightIn",
 			{
-				duration: time,
+				duration: 3*time,
 				easing: [ .38, .1, .13, .9 ],
 				begin: function(){
 					submenu_wrapper = that.Wrapper();
@@ -541,9 +543,10 @@ Submenu.prototype.Hide = function (animate){
 			);
 		} else {
 			submenu_wrapper.velocity(
-				"transition.expandOut",
+				//"transition.expandOut",
+				"transition.slideRightBigOut",
 				{
-					duration: time,
+					duration: 3*time,
 					easing: [ .38, .1, .13, .9 ],
 					complete: function(){
 						that.Remove();
