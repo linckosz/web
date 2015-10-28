@@ -487,8 +487,9 @@ Submenu.prototype.Show = function(){
 	} else {
 		submenu_wrapper.velocity(
 			//"transition.expandIn",
-			"transition.slideRightBigIn",
+			//"transition.slideRightBigIn",
 			//"transition.slideRightIn",
+			"transition.bounceRightIn",
 			{
 				duration: 2*time,
 				delay: 100,
