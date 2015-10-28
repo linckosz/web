@@ -480,13 +480,13 @@ Submenu.prototype.Show = function(){
 	submenu_wrapper = this.Wrapper();
 	var that = this;
 	var time = 200;
+	var delay = 60;
 	if(responsive.test("minDesktop")){
 		if(that.layer<=3){ submenu_wrapper.css('z-index', submenu_zindex); }
 		submenu_wrapper.velocity(
 			"transition.slideLeftBigIn",
 			{
 				duration: time,
-				delay: 60,
 				easing: [ .38, .1, .13, .9 ],
 				begin: function(){
 					$('#'+that.id).hide().show(0);
@@ -520,7 +520,7 @@ Submenu.prototype.Show = function(){
 			//"bruno.slideRightIn",
 			{
 				duration: 2*time,
-				delay: 60,
+				delay: delay,
 				easing: [ .38, .1, .13, .9 ],
 				begin: function(){
 					$('#'+that.id).hide().show(0);
@@ -546,6 +546,7 @@ Submenu.prototype.Hide = function (animate){
 	submenu_wrapper = this.Wrapper();
 	var that = this;
 	var time = 160;
+	var delay = 60;
 	if(typeof animate === 'undefined'){ animate = false; }
 	//Reset menu selection if(menu in submenu_list){
 	if((that.layer-1) in submenu_obj){
@@ -560,7 +561,6 @@ Submenu.prototype.Hide = function (animate){
 				"transition.slideLeftBigOut",
 				{
 					duration: time,
-					delay: 80,
 					easing: [ .38, .1, .13, .9 ],
 					complete: function(){
 						that.Remove();
@@ -578,7 +578,7 @@ Submenu.prototype.Hide = function (animate){
 				//"bruno.slideRightOut",
 				{
 					duration: 2*time,
-					delay: 80,
+					delay: delay,
 					easing: [ .38, .1, .13, .9 ],
 					complete: function(){
 						that.Remove();

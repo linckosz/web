@@ -281,11 +281,15 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 	if(typeof force_blur==="undefined"){ force_blur = false; }
 
 	var time = 200;
+	var delay = 60;
 	var width = 320;
 	var width_child = 320;
 	if(responsive.test("maxMobile")){
 		width = "100%";
 		width_child = $(window).width();
+	}
+	if(responsive.test("isDesktop")){
+		delay = 0;
 	}
 
 	if(Elem.hasClass('app_application_visible')){
@@ -298,7 +302,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 			{width: 0},
 			{
 				duration: time,
-				delay: 60,
+				delay: delay,
 				begin: function(){
 					Elem.removeClass('app_application_width');
 					$.each(Elem.find('.app_application_width_child'), function() {
@@ -317,8 +321,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				},
 				progress: function(){
 					if(responsive.test("minTablet")){
-						//Triggering the windows resize slow down a lot the animation
-						//app_content_dynamic_position();
+						app_content_dynamic_position();
 						submenu_wrapper_width();
 						app_application_submenu_position();
 					}
@@ -333,7 +336,10 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 		);
 		Button.velocity(
 			{ rotateZ: 0, },
-			{ duration: time, }
+			{
+				duration: time,
+				delay: delay,
+			}
 		);
 	} else {
 		time = 300;
@@ -344,7 +350,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 			{width: width},
 			{
 				duration: time,
-				delay: 60,
+				delay: delay,
 				begin: function(){
 					Elem.addClass('app_application_visible');
 					Block.addClass('app_application_block_visible');
@@ -366,7 +372,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				},
 				progress: function(){
 					if(responsive.test("minTablet")){
-						//app_content_dynamic_position();
+						app_content_dynamic_position();
 						submenu_wrapper_width();
 						app_application_submenu_position();
 					}
@@ -383,7 +389,10 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 		);
 		Button.velocity(
 			{ rotateZ: 90, },
-			{ duration: time, }
+			{
+				duration: time,
+				delay: delay,
+			}
 		);
 	}
 	return true;
