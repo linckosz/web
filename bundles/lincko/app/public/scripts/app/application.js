@@ -296,7 +296,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 	if(Elem.hasClass('app_application_visible')){
 		time = 200;
 		if(responsive.test("maxTablet")){
-			time = Math.floor(1.5*time)
+			time = Math.floor(2*time)
 		}
 		width = Elem.width();
 		Elem.removeClass('app_application_width');

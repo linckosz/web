@@ -516,8 +516,8 @@ Submenu.prototype.Show = function(){
 		);
 	} else {
 		submenu_wrapper.velocity(
-			//"bruno.expandIn",
-			"bruno.slideRightIn",
+			"bruno.expandIn",
+			//"bruno.slideRightIn",
 			{
 				duration: 2*time,
 				delay: delay,
@@ -574,8 +574,8 @@ Submenu.prototype.Hide = function (animate){
 			);
 		} else {
 			submenu_wrapper.velocity(
-				//"bruno.expandOut",
-				"bruno.slideRightOut",
+				"bruno.expandOut",
+				//"bruno.slideRightOut",
 				{
 					duration: 2*time,
 					delay: delay,
