@@ -61,7 +61,7 @@ var Submenu_select = {
 // http://stackoverflow.com/questions/19469881/javascript-remove-all-event-listeners-of-specific-type
 Submenu.prototype.Remove = function(){
 	$('#'+this.id).find('.overthrow').perfectScrollbar('destroy');
-	$('#'+this.id).hide();//.remove();
+	$('#'+this.id).hide().remove();
 	submenu_obj[this.layer] = null;
 	delete submenu_obj[this.layer];
 };
@@ -114,7 +114,7 @@ function Submenu(menu, next, param) {
 			Elem.attribute = Elem.obj[att];
 			if("style" in Elem.attribute && "title" in Elem.attribute){
 				if(typeof Submenu_select[Elem.attribute.style] === "function"){
-					//Submenu_select[Elem.attribute.style](Elem);
+					Submenu_select[Elem.attribute.style](Elem);
 				}
 			}
 		}
