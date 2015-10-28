@@ -292,12 +292,17 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 		delay = 0;
 	}
 
+	//Close
 	if(Elem.hasClass('app_application_visible')){
 		time = 200;
 		if(responsive.test("maxTablet")){
 			time = Math.floor(1.5*time)
 		}
 		width = Elem.width();
+		Elem.removeClass('app_application_width');
+		$.each(Elem.find('.app_application_width_child'), function() {
+			$(this).removeClass('app_application_width').css('width', width_child);
+		});
 		Elem.css('width', width).velocity(
 			{width: 0},
 			{
@@ -308,13 +313,8 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 						{ rotateZ: 0, },
 						{
 							duration: time,
-							delay: delay,
 						}
 					);
-					Elem.removeClass('app_application_width');
-					$.each(Elem.find('.app_application_width_child'), function() {
-						$(this).removeClass('app_application_width').css('width', width_child);
-					});
 					//The blur is hard to calculate, it creates some flickering
 					if(wrapper_browser('webkit')){
 						Blur.velocity(
@@ -327,6 +327,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 					}
 				},
 				progress: function(){
+					$(window).trigger('resize');
 					if(responsive.test("minTablet")){
 						app_content_dynamic_position();
 						submenu_wrapper_width();
@@ -341,23 +342,31 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				},
 			}
 		);
-		
+	//Open
 	} else {
 		time = 300;
 		if(responsive.test("maxTablet")){
 			time = Math.floor(1.5*time)
 		}
+		Elem.addClass('app_application_visible');
+		Block.addClass('app_application_block_visible');
+		$.each(Elem.find('.app_application_width_child'), function() {
+			$(this).css('width', width_child);
+		});
 		Elem.css('width', 0).velocity(
 			{width: width},
 			{
 				duration: time,
 				delay: delay,
 				begin: function(){
-					Elem.addClass('app_application_visible');
-					Block.addClass('app_application_block_visible');
-					$.each(Elem.find('.app_application_width_child'), function() {
-						$(this).css('width', width_child);
-					});
+					if(responsive.test("minTablet")){
+						Button.velocity(
+							{ rotateZ: 90, },
+							{
+								duration: time,
+							}
+						);
+					}
 					if(responsive.test("isMobileL") || force_blur){
 						//The blur is hard to calculate, it creates some flickering
 						if(wrapper_browser('webkit')){
@@ -372,6 +381,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 					}
 				},
 				progress: function(){
+					$(window).trigger('resize');
 					if(responsive.test("minTablet")){
 						app_content_dynamic_position();
 						submenu_wrapper_width();
@@ -386,13 +396,6 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 						$(this).addClass('app_application_width');
 					});
 				},
-			}
-		);
-		Button.velocity(
-			{ rotateZ: 90, },
-			{
-				duration: time,
-				delay: delay,
 			}
 		);
 	}

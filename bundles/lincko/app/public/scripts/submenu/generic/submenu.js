@@ -516,14 +516,17 @@ Submenu.prototype.Show = function(){
 		);
 	} else {
 		submenu_wrapper.velocity(
-			"bruno.expandIn",
-			//"bruno.slideRightIn",
+			//"bruno.expandIn",
+			"bruno.slideRightIn",
 			{
 				duration: 2*time,
 				delay: delay,
 				easing: [ .38, .1, .13, .9 ],
 				begin: function(){
 					$('#'+that.id).hide().show(0);
+				},
+				progress: function(){
+					$(window).trigger('resize');
 				},
 				complete: function(){
 					submenu_wrapper = that.Wrapper();
@@ -574,12 +577,15 @@ Submenu.prototype.Hide = function (animate){
 			);
 		} else {
 			submenu_wrapper.velocity(
-				"bruno.expandOut",
-				//"bruno.slideRightOut",
+				//"bruno.expandOut",
+				"bruno.slideRightOut",
 				{
 					duration: 2*time,
 					delay: delay,
 					easing: [ .38, .1, .13, .9 ],
+					progress: function(){
+						$(window).trigger('resize');
+					},
 					complete: function(){
 						that.Remove();
 						if(submenu_Getnext()<=1){
