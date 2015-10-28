@@ -1,12 +1,58 @@
 var submenu_zindex = 2000;
 var submenu_obj = {};
 
-//Modify the scaling of some effects
-$.Velocity.RegisterEffect.packagedEffects["transition.expandIn"].calls[0][0].scaleX = [ 1, 0.75 ];
-$.Velocity.RegisterEffect.packagedEffects["transition.expandIn"].calls[0][0].scaleY = [ 1, 0.75 ];
-$.Velocity.RegisterEffect.packagedEffects["transition.expandOut"].calls[0][0].scaleX = 0.8;
-$.Velocity.RegisterEffect.packagedEffects["transition.expandOut"].calls[0][0].scaleY = 0.8;
+$.Velocity.RegisterEffect.packagedEffects["bruno.expandIn"] = {
+	defaultDuration: 700,
+	calls: [
+		[ { opacity: [ 1, 0 ], transformOriginX: [ "50%", "50%" ], transformOriginY: [ "50%", "50%" ], scaleX: [ 1, 0.75 ], scaleY: [ 1, 0.75 ], translateZ: 0 } ]
+	]
+};
 
+$.Velocity.RegisterEffect.packagedEffects["bruno.expandOut"] = {
+	defaultDuration: 700,
+	calls: [
+		[ { opacity: [ 0, 1 ], transformOriginX: [ "50%", "50%" ], transformOriginY: [ "50%", "50%" ], scaleX: 0.8, scaleY: 0.8, translateZ: 0 } ]
+	],
+	reset: { scaleX: 1, scaleY: 1 }
+};
+
+$.Velocity.RegisterEffect.packagedEffects["bruno.slideRightIn"] = {
+	defaultDuration: 750,
+	calls: [
+		[ { translateX: [ 0, '100%' ] }, 1, { easing: "easeOutCirc" } ]
+	]
+};
+
+$.Velocity.RegisterEffect.packagedEffects["bruno.slideRightOut"] = {
+	defaultDuration: 750,
+	calls: [
+		[ { translateX: [ '100%', 0 ] }, 1, { easing: "easeInCirc" } ]
+	]
+};
+
+/*
+$.Velocity.RegisterEffect.packagedEffects["bruno.slideRightIn"] = {
+	defaultDuration: 750,
+	calls: [
+		[ { opacity: [ 1, 0 ], translateX: [ -30, 1250 ] }, 0.60, { easing: "easeOutCirc" } ],
+		[ { translateX: 10 }, 0.20 ],
+		[ { translateX: 0 }, 0.20 ]
+	]
+};
+
+$.Velocity.RegisterEffect.packagedEffects["bruno.slideRightOut"] = {
+	defaultDuration: 750,
+	calls: [
+		[ { translateX: -30 }, 0.20 ],
+		[ { opacity: [ 0, "easeInCirc", 1 ], translateX: 1250 }, 0.80 ]
+	],
+	reset: { translateX: 0 }
+};
+*/
+
+for (var effectName in $.Velocity.RegisterEffect.packagedEffects) {
+	$.Velocity.RegisterEffect(effectName, $.Velocity.RegisterEffect.packagedEffects[effectName]);
+}
 
 var Submenu_select = {
 	
@@ -455,7 +501,7 @@ Submenu.prototype.Show = function(){
 				begin: function(){
 					submenu_wrapper = that.Wrapper();
 					submenu_wrapper.hide().show(0);
-					//$(window).trigger('resize');
+					$(window).trigger('resize');
 					if(responsive.test("minDesktop")){
 						//The blur is hard to calculate, it creates some flickering
 						if(wrapper_browser('webkit')){ $('#app_content_dynamic').velocity(
@@ -467,10 +513,9 @@ Submenu.prototype.Show = function(){
 						); }
 					}
 					//Free memory
-					//delete submenu_wrapper;
+					delete submenu_wrapper;
 				},
 				complete: function(){
-					/*
 					submenu_wrapper = that.Wrapper();
 					submenu_wrapper.find("[find=submenu_wrapper_content]").focus();
 					//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas
@@ -480,18 +525,15 @@ Submenu.prototype.Show = function(){
 					that.FocusForm();
 					//Free memory
 					delete submenu_wrapper;
-					*/
 				}
 			}
 		);
 	} else {
 		submenu_wrapper.velocity(
-			//"transition.expandIn",
-			//"transition.slideRightBigIn",
-			//"transition.slideRightIn",
-			"transition.bounceRightIn",
+			//"bruno.expandIn",
+			"bruno.slideRightIn",
 			{
-				duration: 2*time,
+				duration: 10*time,
 				delay: 100,
 				easing: [ .38, .1, .13, .9 ],
 				begin: function(){
@@ -548,10 +590,10 @@ Submenu.prototype.Hide = function (animate){
 			);
 		} else {
 			submenu_wrapper.velocity(
-				//"transition.expandOut",
-				"transition.slideRightBigOut",
+				//"bruno.expandOut",
+				"bruno.slideRightOut",
 				{
-					duration: time,
+					duration: 10*time,
 					delay: 100,
 					easing: [ .38, .1, .13, .9 ],
 					complete: function(){
