@@ -304,6 +304,13 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				duration: time,
 				delay: delay,
 				begin: function(){
+					Button.velocity(
+						{ rotateZ: 0, },
+						{
+							duration: time,
+							delay: delay,
+						}
+					);
 					Elem.removeClass('app_application_width');
 					$.each(Elem.find('.app_application_width_child'), function() {
 						$(this).removeClass('app_application_width').css('width', width_child);
@@ -334,13 +341,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				},
 			}
 		);
-		Button.velocity(
-			{ rotateZ: 0, },
-			{
-				duration: time,
-				delay: delay,
-			}
-		);
+		
 	} else {
 		time = 300;
 		if(responsive.test("maxTablet")){
