@@ -529,19 +529,22 @@ Submenu.prototype.Show = function(){
 			}
 		);
 	} else {
+		submenu_wrapper.hide().show(0);
 		submenu_wrapper.velocity(
 			//"bruno.expandIn",
 			"bruno.slideRightIn",
 			{
 				duration: 10*time,
-				delay: 100,
+				delay: 1000,
 				easing: [ .38, .1, .13, .9 ],
 				begin: function(){
+					/*
 					submenu_wrapper = that.Wrapper();
 					submenu_wrapper.hide().show(0);
 					$(window).trigger('resize');
 					//Free memory
 					delete submenu_wrapper;
+					*/
 				},
 				complete: function(){
 					submenu_wrapper = that.Wrapper();
