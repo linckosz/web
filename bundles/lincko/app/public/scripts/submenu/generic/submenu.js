@@ -455,7 +455,7 @@ Submenu.prototype.Show = function(){
 				begin: function(){
 					submenu_wrapper = that.Wrapper();
 					submenu_wrapper.hide().show(0);
-					$(window).trigger('resize');
+					//$(window).trigger('resize');
 					if(responsive.test("minDesktop")){
 						//The blur is hard to calculate, it creates some flickering
 						if(wrapper_browser('webkit')){ $('#app_content_dynamic').velocity(
@@ -467,7 +467,7 @@ Submenu.prototype.Show = function(){
 						); }
 					}
 					//Free memory
-					delete submenu_wrapper;
+					//delete submenu_wrapper;
 				},
 				complete: function(){
 					/*
