@@ -298,7 +298,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 			{width: 0},
 			{
 				duration: time,
-				delay: 100,
+				delay: 60,
 				begin: function(){
 					Elem.removeClass('app_application_width');
 					$.each(Elem.find('.app_application_width_child'), function() {
@@ -316,9 +316,15 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 					}
 				},
 				progress: function(){
-					$(window).trigger('resize');
+					if(responsive.test("minTablet")){
+						//Triggering the windows resize slow down a lot the animation
+						//app_content_dynamic_position();
+						submenu_wrapper_width();
+						app_application_submenu_position();
+					}
 				},
 				complete: function(){
+					$(window).trigger('resize');
 					Elem.removeClass('app_application_visible');
 					Blur.removeClass('app_application_blur');
 					Block.removeClass('app_application_block_visible');
@@ -338,7 +344,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 			{width: width},
 			{
 				duration: time,
-				delay: 100,
+				delay: 60,
 				begin: function(){
 					Elem.addClass('app_application_visible');
 					Block.addClass('app_application_block_visible');
@@ -359,9 +365,14 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 					}
 				},
 				progress: function(){
-					$(window).trigger('resize');
+					if(responsive.test("minTablet")){
+						//app_content_dynamic_position();
+						submenu_wrapper_width();
+						app_application_submenu_position();
+					}
 				},
 				complete: function(){
+					$(window).trigger('resize');
 					Elem.addClass('app_application_width');
 					Blur.addClass('app_application_blur');
 					$.each(Elem.find('.app_application_width_child'), function() {

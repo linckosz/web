@@ -104,18 +104,6 @@ var Submenu_select = {
 
 }
 
-// http://stackoverflow.com/questions/19469881/javascript-remove-all-event-listeners-of-specific-type
-Submenu.prototype.Remove = function(){
-	$('#'+this.id).find('.overthrow').perfectScrollbar('destroy');
-	$('#'+this.id).hide().remove();
-	submenu_obj[this.layer] = null;
-	delete submenu_obj[this.layer];
-};
-
-Submenu.prototype.Wrapper = function(){
-	return $('#'+this.id);
-}
-
 function Submenu(menu, next, param) {
 	this.obj = submenu_list[menu];
 	this.menu = menu;
@@ -463,10 +451,12 @@ Submenu.prototype.Add_MenuFormButton = function() {
 	return true;
 };
 
+
 Submenu.prototype.FocusForm = function(){
-	submenu_wrapper = this.Wrapper();
+	var that = this;
 	if(responsive.test("minDesktop")){
 		setTimeout(function(){
+			submenu_wrapper = that.Wrapper();
 			var ElemFocus = submenu_wrapper.find("input:enabled:visible:first");
 			if(ElemFocus.length>=1){
 				ElemFocus.focus();
@@ -496,12 +486,10 @@ Submenu.prototype.Show = function(){
 			"transition.slideLeftBigIn",
 			{
 				duration: time,
-				delay: 100,
+				delay: 60,
 				easing: [ .38, .1, .13, .9 ],
 				begin: function(){
-					submenu_wrapper = that.Wrapper();
-					submenu_wrapper.hide().show(0);
-					$(window).trigger('resize');
+					$('#'+that.id).hide().show(0);
 					if(responsive.test("minDesktop")){
 						//The blur is hard to calculate, it creates some flickering
 						if(wrapper_browser('webkit')){ $('#app_content_dynamic').velocity(
@@ -512,8 +500,6 @@ Submenu.prototype.Show = function(){
 							}
 						); }
 					}
-					//Free memory
-					delete submenu_wrapper;
 				},
 				complete: function(){
 					submenu_wrapper = that.Wrapper();
@@ -529,23 +515,15 @@ Submenu.prototype.Show = function(){
 			}
 		);
 	} else {
-		submenu_wrapper.hide().show(0);
 		submenu_wrapper.velocity(
-			//"bruno.expandIn",
-			"bruno.slideRightIn",
+			"bruno.expandIn",
+			//"bruno.slideRightIn",
 			{
 				duration: 2*time,
-				delay: 100,
+				delay: 60,
 				easing: [ .38, .1, .13, .9 ],
 				begin: function(){
-					$(window).trigger('resize');
-					/*
-					submenu_wrapper = that.Wrapper();
-					submenu_wrapper.hide().show(0);
-					$(window).trigger('resize');
-					//Free memory
-					delete submenu_wrapper;
-					*/
+					$('#'+that.id).hide().show(0);
 				},
 				complete: function(){
 					submenu_wrapper = that.Wrapper();
@@ -582,6 +560,7 @@ Submenu.prototype.Hide = function (animate){
 				"transition.slideLeftBigOut",
 				{
 					duration: time,
+					delay: 80,
 					easing: [ .38, .1, .13, .9 ],
 					complete: function(){
 						that.Remove();
@@ -589,16 +568,17 @@ Submenu.prototype.Hide = function (animate){
 							$('#app_content_dynamic').removeClass('app_application_submenu_blur');
 							$('#app_application_submenu_block').hide();
 						}
+						$(window).trigger('resize');
 					}
 				}
 			);
 		} else {
 			submenu_wrapper.velocity(
-				//"bruno.expandOut",
-				"bruno.slideRightOut",
+				"bruno.expandOut",
+				//"bruno.slideRightOut",
 				{
-					duration: 10*time,
-					delay: 100,
+					duration: 2*time,
+					delay: 80,
 					easing: [ .38, .1, .13, .9 ],
 					complete: function(){
 						that.Remove();
@@ -606,6 +586,7 @@ Submenu.prototype.Hide = function (animate){
 							$('#app_content_dynamic').removeClass('app_application_submenu_blur');
 							$('#app_application_submenu_block').hide();
 						}
+						$(window).trigger('resize');
 					}
 				}
 			);
@@ -617,6 +598,7 @@ Submenu.prototype.Hide = function (animate){
 			$('#app_content_dynamic').removeClass('app_application_submenu_blur');
 			$('#app_application_submenu_block').hide();
 		}
+		$(window).trigger('resize');
 	}
 	if(submenu_Getnext()<=1){
 		//The blur is hard to calculate, it creates some flickering
@@ -644,6 +626,18 @@ Submenu.prototype.Hide = function (animate){
 	//Free memory
 	delete submenu_wrapper;
 };
+
+// http://stackoverflow.com/questions/19469881/javascript-remove-all-event-listeners-of-specific-type
+Submenu.prototype.Remove = function(){
+	$('#'+this.id).find('.overthrow').perfectScrollbar('destroy');
+	$('#'+this.id).hide().remove();
+	submenu_obj[this.layer] = null;
+	delete submenu_obj[this.layer];
+};
+
+Submenu.prototype.Wrapper = function(){
+	return $('#'+this.id);
+}
 
 function submenu_Hideall(){
 	for(var index in submenu_obj){
