@@ -480,7 +480,7 @@ Submenu.prototype.Show = function(){
 	submenu_wrapper = this.Wrapper();
 	var that = this;
 	var time = 200;
-	var delay = 0;
+	var delay = 60;
 	if(responsive.test("minDesktop")){
 		if(that.layer<=3){ submenu_wrapper.css('z-index', submenu_zindex); }
 		submenu_wrapper.velocity(
@@ -516,18 +516,14 @@ Submenu.prototype.Show = function(){
 		);
 	} else {
 		submenu_wrapper.velocity(
-			"bruno.expandIn",
-			//"bruno.slideRightIn",
+			//"bruno.expandIn",
+			"bruno.slideRightIn",
 			{
 				duration: 2*time,
 				delay: delay,
 				easing: [ .38, .1, .13, .9 ],
 				begin: function(){
 					$('#'+that.id).hide().show(0);
-					$(window).trigger('resize');
-				},
-				progress: function(){
-					$(window).trigger('resize');
 				},
 				complete: function(){
 					submenu_wrapper = that.Wrapper();
@@ -550,7 +546,7 @@ Submenu.prototype.Hide = function (animate){
 	submenu_wrapper = this.Wrapper();
 	var that = this;
 	var time = 160;
-	var delay = 0;
+	var delay = 60;
 	if(typeof animate === 'undefined'){ animate = false; }
 	//Reset menu selection if(menu in submenu_list){
 	if((that.layer-1) in submenu_obj){
@@ -578,18 +574,12 @@ Submenu.prototype.Hide = function (animate){
 			);
 		} else {
 			submenu_wrapper.velocity(
-				"bruno.expandOut",
-				//"bruno.slideRightOut",
+				//"bruno.expandOut",
+				"bruno.slideRightOut",
 				{
 					duration: 2*time,
 					delay: delay,
 					easing: [ .38, .1, .13, .9 ],
-					begin: function(){
-						$(window).trigger('resize');
-					},
-					progress: function(){
-						$(window).trigger('resize');
-					},
 					complete: function(){
 						that.Remove();
 						if(submenu_Getnext()<=1){

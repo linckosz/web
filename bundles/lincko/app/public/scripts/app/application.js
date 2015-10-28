@@ -281,7 +281,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 	if(typeof force_blur==="undefined"){ force_blur = false; }
 
 	var time = 200;
-	var delay = 0;
+	var delay = 60;
 	var width = 320;
 	var width_child = 320;
 	if(responsive.test("maxMobile")){
@@ -309,7 +309,6 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				duration: time,
 				delay: delay,
 				begin: function(){
-					$(window).trigger('resize');
 					Button.velocity(
 						{ rotateZ: 0, },
 						{
@@ -328,7 +327,6 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 					}
 				},
 				progress: function(){
-					$(window).trigger('resize');
 					if(responsive.test("minTablet")){
 						app_content_dynamic_position();
 						submenu_wrapper_width();
@@ -360,7 +358,6 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				duration: time,
 				delay: delay,
 				begin: function(){
-					$(window).trigger('resize');
 					if(responsive.test("minTablet")){
 						Button.velocity(
 							{ rotateZ: 90, },
@@ -383,7 +380,6 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 					}
 				},
 				progress: function(){
-					$(window).trigger('resize');
 					if(responsive.test("minTablet")){
 						app_content_dynamic_position();
 						submenu_wrapper_width();
