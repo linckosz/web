@@ -488,17 +488,22 @@ Submenu.prototype.Show = function(){
 			"transition.slideRightBigIn",
 			//"transition.slideRightIn",
 			{
-				duration: 1.5*time,
-				delay: 1000,
+				duration: time,
+				delay: 100,
 				easing: [ .38, .1, .13, .9 ],
 				begin: function(){
+					/*
 					submenu_wrapper = that.Wrapper();
 					submenu_wrapper.hide().show(0);
 					$(window).trigger('resize');
 					//Free memory
 					delete submenu_wrapper;
+					*/
+					$('#'+that.id).hide().show(0);
+					$(window).trigger('resize');
 				},
 				complete: function(){
+					/*
 					submenu_wrapper = that.Wrapper();
 					submenu_wrapper.find("[find=submenu_wrapper_content]").focus();
 					//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas
@@ -507,6 +512,12 @@ Submenu.prototype.Show = function(){
 					that.FocusForm();
 					//Free memory
 					delete submenu_wrapper;
+					*/
+					$('#'+that.id).find("[find=submenu_wrapper_content]").focus();
+					//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas
+					$('#'+that.id).hide().show(0);
+					$(window).trigger('resize');
+					that.FocusForm();
 				}
 			}
 		);
@@ -548,8 +559,8 @@ Submenu.prototype.Hide = function (animate){
 				//"transition.expandOut",
 				"transition.slideRightBigOut",
 				{
-					duration: 1.5*time,
-					delay: 1000,
+					duration: time,
+					delay: 100,
 					easing: [ .38, .1, .13, .9 ],
 					complete: function(){
 						that.Remove();
