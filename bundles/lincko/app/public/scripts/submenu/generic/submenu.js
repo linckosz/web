@@ -450,6 +450,7 @@ Submenu.prototype.Show = function(){
 			"transition.slideLeftBigIn",
 			{
 				duration: time,
+				delay: 100,
 				easing: [ .38, .1, .13, .9 ],
 				begin: function(){
 					submenu_wrapper = that.Wrapper();
@@ -487,7 +488,8 @@ Submenu.prototype.Show = function(){
 			"transition.slideRightBigIn",
 			//"transition.slideRightIn",
 			{
-				duration: 3*time,
+				duration: 1.5*time,
+				delay: 1000,
 				easing: [ .38, .1, .13, .9 ],
 				begin: function(){
 					submenu_wrapper = that.Wrapper();
@@ -546,7 +548,8 @@ Submenu.prototype.Hide = function (animate){
 				//"transition.expandOut",
 				"transition.slideRightBigOut",
 				{
-					duration: 3*time,
+					duration: 1.5*time,
+					delay: 1000,
 					easing: [ .38, .1, .13, .9 ],
 					complete: function(){
 						that.Remove();
