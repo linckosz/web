@@ -534,10 +534,11 @@ Submenu.prototype.Show = function(){
 			//"bruno.expandIn",
 			"bruno.slideRightIn",
 			{
-				duration: 10*time,
-				delay: 1000,
+				duration: 2*time,
+				delay: 100,
 				easing: [ .38, .1, .13, .9 ],
 				begin: function(){
+					$(window).trigger('resize');
 					/*
 					submenu_wrapper = that.Wrapper();
 					submenu_wrapper.hide().show(0);
