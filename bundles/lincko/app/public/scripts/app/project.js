@@ -1,7 +1,7 @@
 function app_project_quick_upload_display(Elem, show) {
 	var Obj_div = $('#app_project_quick_upload');
 	var Obj_img = $('#app_project_quick_upload > div > img');
-	var timing = 200;
+	var timing = 2000;
 	var delay = 100;
 	if(typeof show === 'undefined') { show = true; }
 	if(Elem !== null) {
@@ -211,14 +211,15 @@ var app_project_build = {
 
 	feedProject: function(Elem, item_title){
 		var title = Elem.find("[find=app_project_project_title]");
+		var timing = 300;
 		var delay = 60;
 		if(php_nl2br(item_title) != title.html()){
 			if(title.html()){
 				var Sequence = [
-					{ e: title, p: { opacity: 0, }, o: { duration: 300, delay: delay,
+					{ e: title, p: { opacity: 0, }, o: { duration: timing, delay: delay,
 						complete: function(){ title.html(php_nl2br(item_title)); },
 					} },
-					{ e: title, p: { opacity: 1, }, o: { duration: 300, delay: delay, sequenceQueue: true, } },
+					{ e: title, p: { opacity: 1, }, o: { duration: timing, delay: delay+timing, sequenceQueue: false, } },
 				];
 				$.Velocity.RunSequence(Sequence);
 			} else {
