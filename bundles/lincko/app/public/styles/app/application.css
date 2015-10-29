@@ -63,7 +63,7 @@
 	width: 100%;
 	top: 0;
 	left: 0;
-	background-color: transparent;
+	background-color: red;/*transparent;*/
 	z-index: 1000;
 	overflow: hidden;
 }
@@ -114,6 +114,10 @@
 	#app_application_content {
 		width: 100%;
 	}
+}
+
+/* Mobile phone in Landscape and Tablet in Portrait */
+@media only screen and (min-width: 480px) and (max-width: 900px){
 	.app_application_blur {
 		-webkit-filter: blur(4px);
 		-moz-filter: blur(4px);

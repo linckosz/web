@@ -387,14 +387,12 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 					}
 				},
 				complete: function(){
-					/*
 					$(window).trigger('resize');
 					Elem.addClass('app_application_width');
 					Blur.addClass('app_application_blur');
 					$.each(Elem.find('.app_application_width_child'), function() {
 						$(this).addClass('app_application_width');
 					});
-					*/
 				},
 			}
 		);
