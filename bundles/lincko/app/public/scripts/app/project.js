@@ -2,6 +2,7 @@ function app_project_quick_upload_display(Elem, show) {
 	var Obj_div = $('#app_project_quick_upload');
 	var Obj_img = $('#app_project_quick_upload > div > img');
 	var timing = 200;
+	var delay = 100;
 	if(typeof show === 'undefined') { show = true; }
 	if(Elem !== null) {
 		if(Elem.length > 0){
@@ -11,14 +12,14 @@ function app_project_quick_upload_display(Elem, show) {
 	if(Obj_div.is(':visible')){
 		$('#app_project_quick_upload_block').hide();
 		$.Velocity.RunSequence([
-			{ e: Obj_div, p: "transition.slideDownOut", o: { duration: timing, sequenceQueue: false } },
-			{ e: Obj_img, p: "transition.expandOut", o: { duration: timing, sequenceQueue: false } }
+			{ e: Obj_div, p: "transition.slideDownOut", o: { duration: timing, delay: delay,  sequenceQueue: false } },
+			{ e: Obj_img, p: "transition.expandOut", o: { duration: timing, delay: delay, sequenceQueue: false } }
 		]);
 	} else if(Obj_div.is(':hidden') && show){
 		$('#app_project_quick_upload_block').show();
 		$.Velocity.RunSequence([
-			{ e: Obj_div, p: "transition.slideUpIn", o: { duration: timing, sequenceQueue: false } },
-			{ e: Obj_img, p: "transition.expandIn", o: { duration: timing, sequenceQueue: false } }
+			{ e: Obj_div, p: "transition.slideUpIn", o: { duration: timing, delay: delay, sequenceQueue: false } },
+			{ e: Obj_img, p: "transition.expandIn", o: { duration: timing, delay: delay, sequenceQueue: false } }
 		]);
 	}
 
@@ -210,13 +211,14 @@ var app_project_build = {
 
 	feedProject: function(Elem, item_title){
 		var title = Elem.find("[find=app_project_project_title]");
+		var delay = 60;
 		if(php_nl2br(item_title) != title.html()){
 			if(title.html()){
 				var Sequence = [
-					{ e: title, p: { opacity: 0, }, o: { duration: 300,
+					{ e: title, p: { opacity: 0, }, o: { duration: 300, delay: delay,
 						complete: function(){ title.html(php_nl2br(item_title)); },
 					} },
-					{ e: title, p: { opacity: 1, }, o: { duration: 300, sequenceQueue: true, } },
+					{ e: title, p: { opacity: 1, }, o: { duration: 300, delay: delay, sequenceQueue: true, } },
 				];
 				$.Velocity.RunSequence(Sequence);
 			} else {
