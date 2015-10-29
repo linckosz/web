@@ -584,6 +584,7 @@ Submenu.prototype.Hide = function (animate){
 					complete: function(){
 						that.Remove();
 						$(window).trigger('resize');
+						submenu_content_unblur();
 					}
 				}
 			);
@@ -601,6 +602,7 @@ Submenu.prototype.Hide = function (animate){
 					complete: function(){
 						that.Remove();
 						$(window).trigger('resize');
+						submenu_content_unblur();
 					}
 				}
 			);
@@ -609,6 +611,7 @@ Submenu.prototype.Hide = function (animate){
 		time = 0;
 		that.Remove();
 		$(window).trigger('resize');
+		submenu_content_unblur();
 	}
 	//Free memory
 	delete submenu_wrapper;
@@ -753,7 +756,6 @@ function submenu_content_unblur() {
 	}
 }
 submenu_content_unblur();
-$(window).resize(submenu_content_unblur);
 
 function submenu_wrapper_width() {
 	var width = Math.floor($('#app_application_content').width()/3);
