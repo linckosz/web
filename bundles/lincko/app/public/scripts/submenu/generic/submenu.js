@@ -603,6 +603,7 @@ Submenu.prototype.Hide = function (animate){
 						that.Remove();
 						$(window).trigger('resize');
 						submenu_content_unblur();
+						$(document).trigger('resize');
 					}
 				}
 			);
@@ -612,6 +613,7 @@ Submenu.prototype.Hide = function (animate){
 		that.Remove();
 		$(window).trigger('resize');
 		submenu_content_unblur();
+		$(document).trigger('resize');
 	}
 	//Free memory
 	delete submenu_wrapper;
@@ -763,6 +765,11 @@ function submenu_wrapper_width() {
 }
 submenu_wrapper_width();
 $(window).resize(submenu_wrapper_width);
+
+function toto(){
+	alert('toto');
+}
+$(document).resize(toto);
 
 var submenu_form_cb_success = function(msg, err, status, data){
 	var field = 'undefined';
