@@ -366,7 +366,10 @@
 
 .app_project_quick_upload_icons {
 	position: absolute;
-	width: 100%;
+	width: 226px;
+	left: 0;
+	right: 0;
+	margin: auto;
 	z-index: 5;
 }
 
