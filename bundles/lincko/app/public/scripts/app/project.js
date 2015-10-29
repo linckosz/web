@@ -1,7 +1,7 @@
 function app_project_quick_upload_display(Elem, show) {
 	var Obj_div = $('#app_project_quick_upload');
 	var Obj_img = $('#app_project_quick_upload > div > img');
-	var timing = 200;
+	var timing = 5000;
 	var delay = 100;
 	if(typeof show === 'undefined') { show = true; }
 	if(Elem !== null) {
@@ -12,14 +12,14 @@ function app_project_quick_upload_display(Elem, show) {
 	if(Obj_div.is(':visible')){
 		$('#app_project_quick_upload_block').hide();
 		$.Velocity.RunSequence([
-			{ e: Obj_div, p: "transition.slideDownOut", o: { duration: timing, delay: delay,  sequenceQueue: false } },
-			{ e: Obj_img, p: "transition.expandOut", o: { duration: timing, delay: delay, sequenceQueue: false } }
+			{ e: Obj_img, p: "transition.expandOut", o: { duration: timing, delay: delay } },
+			{ e: Obj_div, p: "transition.slideDownOut", o: { duration: timing, sequenceQueue: false } },
 		]);
 	} else if(Obj_div.is(':hidden') && show){
 		$('#app_project_quick_upload_block').show();
 		$.Velocity.RunSequence([
-			{ e: Obj_div, p: "transition.slideUpIn", o: { duration: timing, delay: delay, sequenceQueue: false } },
-			{ e: Obj_img, p: "transition.expandIn", o: { duration: timing, delay: delay, sequenceQueue: false } }
+			{ e: Obj_img, p: "transition.expandIn", o: { duration: timing, delay: delay } },
+			{ e: Obj_div, p: "transition.slideUpIn", o: { duration: timing, sequenceQueue: false } },
 		]);
 	}
 }
@@ -218,7 +218,7 @@ var app_project_build = {
 					{ e: title, p: { opacity: 0, }, o: { duration: timing, delay: delay,
 						complete: function(){ title.html(php_nl2br(item_title)); },
 					} },
-					{ e: title, p: { opacity: 1, }, o: { duration: timing, delay: delay+timing, sequenceQueue: false, } },
+					{ e: title, p: { opacity: 1, }, o: { duration: timing, sequenceQueue: true, } },
 				];
 				$.Velocity.RunSequence(Sequence);
 			} else {

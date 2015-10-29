@@ -8,7 +8,7 @@ var app_layers_changePage = function(menu, param){
 	if(!layer.html()){ timing = 0; }
 	var Sequence = [
 		{ e: layer, p: { opacity: 0, }, o: { duration: timing, delay: delay, } },
-		{ e: layer, p: { opacity: 1, }, o: { duration: 50, delay: delay+timing, sequenceQueue: false,
+		{ e: layer, p: { opacity: 1, }, o: { duration: 50, sequenceQueue: true,
 			begin: function(){
 				app_layers_launchMenu(menu, param);
 				wrapper_perfectScrollbar();
