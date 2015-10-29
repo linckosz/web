@@ -308,6 +308,7 @@ html, .font_sans_serif {
 /* Maximum Mobile phone in Portrait */
 @media only screen and (max-width: 479px) {
 	#base_error {
+		top: 48px !important;
 		width: 100% !important;
 	}
 }
