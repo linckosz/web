@@ -256,6 +256,7 @@ enquire.register(responsive.noMobileL, function() {
 			{ blur: 0 },
 			{
 				duration: 200,
+				delay: 100,
 				easing: [ 4 ],
 			}
 		);
@@ -268,6 +269,7 @@ enquire.register(responsive.isMobileL, function() {
 			{ blur: 4 },
 			{
 				duration: 200,
+				delay: 100,
 				easing: [ 4 ],
 			}
 		);
@@ -288,8 +290,8 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 		width = "100%";
 		width_child = $(window).width();
 	}
-	if(responsive.test("isDesktop")){
-		delay = 0;
+	if(responsive.test("minDesktop")){
+		delay = 60;
 	}
 
 	//Close
@@ -303,29 +305,29 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 		$.each(Elem.find('.app_application_width_child'), function() {
 			$(this).removeClass('app_application_width').css('width', width_child);
 		});
+		Button.velocity(
+			{ rotateZ: 0, },
+			{
+				duration: time,
+				delay: delay,
+			}
+		);
+		//The blur is hard to calculate, it creates some flickering
+		if(wrapper_browser('webkit')){
+			Blur.velocity(
+				{ blur: 0 },
+				{
+					duration: time,
+					delay: delay,
+					easing: [ 4 ],
+				}
+			);
+		}
 		Elem.css('width', width).velocity(
 			{width: 0},
 			{
 				duration: time,
 				delay: delay,
-				begin: function(){
-					Button.velocity(
-						{ rotateZ: 0, },
-						{
-							duration: time,
-						}
-					);
-					//The blur is hard to calculate, it creates some flickering
-					if(wrapper_browser('webkit')){
-						Blur.velocity(
-							{ blur: 0 },
-							{
-								duration: time,
-								easing: [ 4 ],
-							}
-						);
-					}
-				},
 				progress: function(){
 					if(responsive.test("minTablet")){
 						app_content_dynamic_position();
@@ -352,33 +354,33 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 		$.each(Elem.find('.app_application_width_child'), function() {
 			$(this).css('width', width_child);
 		});
+		if(responsive.test("minTablet")){
+			Button.velocity(
+				{ rotateZ: 90, },
+				{
+					duration: time,
+					delay: delay,
+				}
+			);
+		}
+		if(responsive.test("isMobileL") || force_blur){
+			//The blur is hard to calculate, it creates some flickering
+			if(wrapper_browser('webkit')){
+				Blur.velocity(
+					{ blur: 4 },
+					{
+						duration: time,
+						delay: delay,
+						easing: [ 4 ],
+					}
+				);
+			}
+		}
 		Elem.css('width', 0).velocity(
 			{width: width},
 			{
 				duration: time,
 				delay: delay,
-				begin: function(){
-					if(responsive.test("minTablet")){
-						Button.velocity(
-							{ rotateZ: 90, },
-							{
-								duration: time,
-							}
-						);
-					}
-					if(responsive.test("isMobileL") || force_blur){
-						//The blur is hard to calculate, it creates some flickering
-						if(wrapper_browser('webkit')){
-							Blur.velocity(
-								{ blur: 4 },
-								{
-									duration: time,
-									easing: [ 4 ],
-								}
-							);
-						}
-					}
-				},
 				progress: function(){
 					if(responsive.test("minTablet")){
 						app_content_dynamic_position();

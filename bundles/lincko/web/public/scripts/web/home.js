@@ -10,7 +10,7 @@ var home_cb_success = function(msg, err){
 	}
 	if(err){
 		$('#home_joinus_error').html(msgtp);
-		$("#home_joinus_error").velocity("transition.slideDownIn", { duration: 500 });
+		$("#home_joinus_error").velocity("transition.slideDownIn", { duration: 500, delay: 100, });
 		$("#home_joinus_form input[name="+field+"]").addClass('base_input_text_error').focus();
 	} else {
 		window.location.href = home_link['root'];
@@ -20,7 +20,7 @@ var home_cb_success = function(msg, err){
 var home_cb_error = function(xhr_err, ajaxOptions, thrownError){
 	var msgtp = Lincko.Translation.get('wrapper', 1, 'html'); //Communication error
 	$('#home_joinus_error').html(msgtp);
-	$("#home_joinus_error").velocity("transition.slideDownIn", { duration: 500 });
+	$("#home_joinus_error").velocity("transition.slideDownIn", { duration: 500, delay: 100, });
 };
 
 var home_cb_begin = function(){
@@ -44,7 +44,7 @@ $("#base_content").on("scroll", home_joinus_box_position);
 
 function home_hide_error() {
 	if($('#home_joinus_error').is(':visible')){
-		$("#home_joinus_error").velocity("transition.fadeOut", { duration: 500 });
+		$("#home_joinus_error").velocity("transition.fadeOut", { duration: 500, delay: 100, });
 	}
 }
 
@@ -56,16 +56,16 @@ function home_display_label(input, hide_error) {
 	if($(input).val().length<=0){
 		//$(input).prev().css('visibility', 'visible').css('z-index', 1);
 		if($(input).prev().is(':hidden')){
-			$(input).prev().velocity("transition.fadeIn", { duration: 300 });
+			$(input).prev().velocity("transition.fadeIn", { duration: 300, delay: 100, });
 		}
 	} else {
 		//$(input).prev().css('visibility', 'hidden').css('z-index', -1);
 		if($(input).prev().is(':visible')){
-			$(input).prev().velocity("transition.fadeOut", { duration: 300 });
+			$(input).prev().velocity("transition.fadeOut", { duration: 300, delay: 100, });
 		}
 	}
 	if($('#home_joinus_tos').is(':hidden')){
-		$("#home_joinus_tos").velocity("transition.slideDownIn", { duration: 500 });
+		$("#home_joinus_tos").velocity("transition.slideDownIn", { duration: 500, delay: 100, });
 	}
 }
 

@@ -498,11 +498,15 @@ Submenu.prototype.Show = function(){
 	var time = 200;
 	var delay = 60;
 	if(responsive.test("minDesktop")){
+		delay = 60;
+	}
+	if(responsive.test("minDesktop")){
 		if(that.layer<=3){ submenu_wrapper.css('z-index', submenu_zindex); }
 		submenu_wrapper.velocity(
 			"transition.slideLeftBigIn",
 			{
 				duration: time,
+				delay: delay,
 				easing: [ .38, .1, .13, .9 ],
 				begin: function(){
 					$('#'+that.id).hide().show(0);
@@ -512,6 +516,7 @@ Submenu.prototype.Show = function(){
 							{ blur: 2 },
 							{
 								duration: time,
+								delay: delay,
 								easing: [ 4 ],
 							}
 						); }
@@ -523,7 +528,8 @@ Submenu.prototype.Show = function(){
 					//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas
 					submenu_wrapper.hide().show(0);
 					submenu_wrapper.css('z-index', that.zIndex);
-					$(window).trigger('resize');
+					app_application_submenu_position();
+					submenu_content_unblur();
 					that.FocusForm();
 					//Free memory
 					delete submenu_wrapper;
@@ -549,7 +555,8 @@ Submenu.prototype.Show = function(){
 					submenu_wrapper.find("[find=submenu_wrapper_content]").focus();
 					//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas
 					submenu_wrapper.hide().show(0);
-					$(window).trigger('resize');
+					app_application_submenu_position();
+					submenu_content_unblur();
 					that.FocusForm();
 					//Free memory
 					delete submenu_wrapper;
@@ -566,6 +573,9 @@ Submenu.prototype.Hide = function (animate){
 	var that = this;
 	var time = 160;
 	var delay = 60;
+	if(responsive.test("minDesktop")){
+		delay = 60;
+	}
 	if(typeof animate === 'undefined'){ animate = false; }
 	//Reset menu selection if(menu in submenu_list){
 	if((that.layer-1) in submenu_obj){
@@ -580,10 +590,11 @@ Submenu.prototype.Hide = function (animate){
 				"transition.slideLeftBigOut",
 				{
 					duration: time,
+					delay: delay,
 					easing: [ .38, .1, .13, .9 ],
 					complete: function(){
 						that.Remove();
-						$(window).trigger('resize');
+						app_application_submenu_position();
 						submenu_content_unblur();
 					}
 				}
@@ -601,9 +612,8 @@ Submenu.prototype.Hide = function (animate){
 					easing: [ .38, .1, .13, .9 ],
 					complete: function(){
 						that.Remove();
-						$(window).trigger('resize');
+						app_application_submenu_position();
 						submenu_content_unblur();
-						$(document).trigger('resize');
 					}
 				}
 			);
@@ -611,9 +621,8 @@ Submenu.prototype.Hide = function (animate){
 	} else {
 		time = 0;
 		that.Remove();
-		$(window).trigger('resize');
+		app_application_submenu_position();
 		submenu_content_unblur();
-		$(document).trigger('resize');
 	}
 	//Free memory
 	delete submenu_wrapper;
@@ -712,6 +721,7 @@ enquire.register(responsive.minDesktop, function() {
 			{ blur: 2 },
 			{
 				duration: 200,
+				delay: 100,
 				easing: [ 4 ],
 			}
 		);
@@ -724,6 +734,7 @@ enquire.register(responsive.maxTablet, function() {
 			{ blur: 0 },
 			{
 				duration: 200,
+				delay: 100,
 				easing: [ 4 ],
 			}
 		);
@@ -740,6 +751,7 @@ function submenu_content_unblur() {
 			{ blur: 0 },
 			{
 				duration: 100,
+				delay: 100,
 				easing: [ 1 ],
 				complete: function(){
 					//We need to check again if there is another menu replace the old one, so we keep it blur
@@ -748,6 +760,7 @@ function submenu_content_unblur() {
 							{ blur: 2 },
 							{
 								duration: 100,
+								delay: 100,
 								easing: [ 4 ],
 							}
 						);
@@ -765,11 +778,6 @@ function submenu_wrapper_width() {
 }
 submenu_wrapper_width();
 $(window).resize(submenu_wrapper_width);
-
-function toto(){
-	alert('toto');
-}
-$(document).resize(toto);
 
 var submenu_form_cb_success = function(msg, err, status, data){
 	var field = 'undefined';

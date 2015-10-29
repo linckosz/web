@@ -80,6 +80,7 @@ Mobile_menu.prototype = {
 			"transition.expandIn",
 			{
 				duration: 90,
+				delay: 100,
 				easing: [ .38, .1, .13, .9 ],
 				begin: function(){ Elem.show(); },
 				complete: function(){
@@ -97,6 +98,7 @@ function Mobile_menu_Hide(id){
 		"transition.expandOut",
 		{
 			duration: 90,
+			delay: 100,
 			easing: [ .38, .1, .13, .9 ],
 			complete: function(){
 				Elem.hide().remove();

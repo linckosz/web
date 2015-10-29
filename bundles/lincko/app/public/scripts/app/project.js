@@ -172,11 +172,11 @@ var app_project_build = {
 		app_project_build.removeProjectFrom(max_display);
 
 		if(list.length<=0 && $("#app_project_project_all").is(':visible')){
-			$('#app_project_project_all').velocity("slideUp", { duration: 200, complete: function(){
+			$('#app_project_project_all').velocity("slideUp", { duration: 200, delay: 100, complete: function(){
 				app_project_tab();
 			}, });
 		} else if(list.length>0 && !$("#app_project_project_all").is(':visible')){
-			$('#app_project_project_all').velocity("slideDown", { duration: 200, complete: function(){
+			$('#app_project_project_all').velocity("slideDown", { duration: 200, delay: 100, complete: function(){
 				app_project_tab();
 			}, });
 		}
@@ -199,7 +199,7 @@ var app_project_build = {
 			} else {
 				Elem.insertBefore(Elem_position);
 			}
-			Elem.velocity("slideDown", { duration: 200, complete: function(){
+			Elem.velocity("slideDown", { duration: 200, delay: 100, complete: function(){
 				app_project_tab();
 			}, });
 			app_application_lincko.add(Elem.prop('id'), item_type, app_project_build._app_feedProject, [item_id, item_type]);
@@ -243,7 +243,7 @@ var app_project_build = {
 				Elem.prop('id', null);
 				app_project_build.removeProject(Elem);
 				Elem_clone.insertBefore(Elem_position);
-				Elem_clone.velocity("slideDown", { duration: 200, complete: function(){
+				Elem_clone.velocity("slideDown", { duration: 200, delay: 100, complete: function(){
 					app_project_tab();
 				}, });
 			}
@@ -253,7 +253,7 @@ var app_project_build = {
 	removeProject: function(Elem){
 		if(Elem.length>0){
 			$(Elem).attr('projectvisible', 0);
-			Elem.velocity("slideUp", { duration: 200 });
+			Elem.velocity("slideUp", { duration: 200, delay: 100, });
 		}
 	},
 
@@ -266,7 +266,7 @@ var app_project_build = {
 				}
 			}
 		);
-		$('#app_project_tab').find('[projectvisible^="0"]').velocity("slideUp", { duration: 200, complete: function(){
+		$('#app_project_tab').find('[projectvisible^="0"]').velocity("slideUp", { duration: 200, delay: 100, complete: function(){
 			$(this).remove();
 		}, });
 
@@ -292,11 +292,13 @@ var app_project_info = {
 						"transition.fadeOut",
 						{
 							duration: time,
+							delay: 60,
 							complete: function(){
 								$('#app_project_info').velocity(
 									"transition.fadeIn",
 									{
 										duration: time,
+										delay: 60,
 										begin: function(){
 											$('#app_project_info_title').html(php_nl2br(history.title));
 											$('#app_project_info_content').html(php_nl2br(history.content));
@@ -313,6 +315,7 @@ var app_project_info = {
 						"transition.fadeIn",
 						{
 							duration: time,
+							delay: 60,
 							begin: function(){
 								$('#app_project_info_title').html(php_nl2br(history.title));
 								$('#app_project_info_content').html(php_nl2br(history.content));
@@ -326,7 +329,7 @@ var app_project_info = {
 			}
 		} else {
 			if($('#app_project_recent').is(':visible')){
-				$('#app_project_recent').velocity("transition.fadeOut", { duration: time, complete: function(){
+				$('#app_project_recent').velocity("transition.fadeOut", { duration: time, delay: 100, complete: function(){
 					app_project_tab();
 					$('#app_project_info_title').empty();
 					$('#app_project_info_content').empty();

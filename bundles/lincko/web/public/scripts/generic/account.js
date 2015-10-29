@@ -11,7 +11,7 @@ var account_joinus_cb_success = function(msg, err){
 	}
 	if(err){
 		$('#account_error').html(msgtp);
-		$("#account_error").velocity("transition.slideDownIn", { duration: 500 });
+		$("#account_error").velocity("transition.slideDownIn", { duration: 500, delay: 100, });
 		$("#account_joinus_form input[name="+field+"]").addClass('base_input_text_error').focus();
 	} else {
 		window.location.href = account_link['root'];
@@ -29,7 +29,7 @@ var account_signin_cb_success = function(msg, err){
 	}
 	if(err){
 		$('#account_error').html(msgtp);
-		$("#account_error").velocity("transition.slideDownIn", { duration: 500 });
+		$("#account_error").velocity("transition.slideDownIn", { duration: 500, delay: 100, });
 		$("#account_signin_form input[name="+field+"]").addClass('base_input_text_error').focus();
 	} else {
 		window.location.href = account_link['root'];
@@ -40,7 +40,7 @@ var account_joinus_cb_error = account_signin_cb_error = function(xhr_err, ajaxOp
 	var msgtp = Lincko.Translation.get('wrapper', 1, 'html'); //Communication error
 	$('#account_error').html(msgtp);
 	if($('#account_error').is(':hidden')){
-		$("#account_error").velocity("transition.slideDownIn", { duration: 500 });
+		$("#account_error").velocity("transition.slideDownIn", { duration: 500, delay: 100, });
 	}
 };
 
@@ -106,7 +106,7 @@ function account_select(select) {
 
 function account_hide_error() {
 	if($('#account_error').is(':visible')){
-		$("#account_error").velocity("transition.fadeOut", { duration: 500 });
+		$("#account_error").velocity("transition.fadeOut", { duration: 500, delay: 100, });
 	}
 }
 
@@ -118,12 +118,12 @@ function account_display_label(input, hide_error) {
 	if($(input).val().length<=0){
 		//$(input).prev().css('visibility', 'visible').css('z-index', 1);
 		if($(input).prev().is(':hidden')){
-			$(input).prev().velocity("transition.fadeIn", { duration: 300 });
+			$(input).prev().velocity("transition.fadeIn", { duration: 300, delay: 100, });
 		}
 	} else {
 		//$(input).prev().css('visibility', 'hidden').css('z-index', -1);
 		if($(input).prev().is(':visible')){
-			$(input).prev().velocity("transition.fadeOut", { duration: 300 });
+			$(input).prev().velocity("transition.fadeOut", { duration: 300, delay: 100, });
 		}
 	}
 }
