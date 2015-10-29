@@ -1,7 +1,7 @@
 function app_project_quick_upload_display(Elem, show) {
 	var Obj_div = $('#app_project_quick_upload');
 	var Obj_img = $('#app_project_quick_upload > div > img');
-	var timing = 20000;
+	var timing = 200;
 	var delay = 100;
 	if(typeof show === 'undefined') { show = true; }
 	if(Elem !== null) {
@@ -22,7 +22,6 @@ function app_project_quick_upload_display(Elem, show) {
 			{ e: Obj_img, p: "transition.expandIn", o: { duration: timing, delay: delay, sequenceQueue: false } }
 		]);
 	}
-
 }
 
 $('#app_project_close').click(function(){
