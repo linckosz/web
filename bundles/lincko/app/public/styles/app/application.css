@@ -63,7 +63,7 @@
 	width: 100%;
 	top: 0;
 	left: 0;
-	background-color: red;/*transparent;*/
+	background-color: transparent;
 	z-index: 1000;
 	overflow: hidden;
 }
@@ -81,7 +81,7 @@
 	width: 0
 	top: 0;
 	left: 0;
-	background-color: transparent;
+	background-color: red;
 	z-index: 2000;
 	overflow: hidden;
 }
