@@ -4,7 +4,11 @@ var account_joinus_cb_success = function(msg, err){
 	var field = 'undefined';
 	var msgtp = msg;
 	if(typeof msg.field !== 'undefined') { field = msg.field; }
-	if(typeof msg.msg !== 'undefined') { msgtp = php_nl2br(msg.msg); }
+	if(typeof msg.show === 'string'){
+		msgtp = php_nl2br(msg.show);
+	} else if(typeof msg.msg === 'string') {
+		msgtp = php_nl2br(msg.msg);
+	}
 	if(err){
 		$('#account_error').html(msgtp);
 		$("#account_error").velocity("transition.slideDownIn", { duration: 500 });
@@ -18,7 +22,11 @@ var account_signin_cb_success = function(msg, err){
 	var field = 'undefined';
 	var msgtp = msg;
 	if(typeof msg.field !== 'undefined') { field = msg.field; }
-	if(typeof msg.msg !== 'undefined') { msgtp = php_nl2br(msg.msg); }
+	if(typeof msg.show === 'string'){
+		msgtp = php_nl2br(msg.show);
+	} else if(typeof msg.msg === 'string') {
+		msgtp = php_nl2br(msg.msg);
+	}
 	if(err){
 		$('#account_error').html(msgtp);
 		$("#account_error").velocity("transition.slideDownIn", { duration: 500 });

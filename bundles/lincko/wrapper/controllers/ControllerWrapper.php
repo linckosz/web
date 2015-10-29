@@ -133,8 +133,8 @@ class ControllerWrapper extends Controller {
 			//print_r($json_result); //for test
 			return !$json_result->error;
 		} else {
-			//echo '{"msg":"Wrapper error","error":true,"status":500}';
-			echo '{"msg":"'.$app->trans->getJSON('wrapper', 1, 3).'","error":true,"status":500}';
+			//echo '{"msg":"Communication error","msg":"Wrapper error","error":true,"status":500}';
+			echo '{"show":"'.$app->trans->getJSON('wrapper', 1, 6).'","msg":"'.$app->trans->getJSON('wrapper', 1, 3).'","error":true,"status":500}';
 			return false;
 		}
 		
@@ -165,8 +165,8 @@ class ControllerWrapper extends Controller {
 			$this->prepareJson();
 			return $this->sendCurl(true);
 		} else {
-			//echo '{"msg":"Wrapper error","error":true,"status":500}';
-			echo '{"msg":"'.$app->trans->getJSON('wrapper', 1, 3).'","error":true,"status":500}';
+			//echo '{"show":"Communication error","msg":"Wrapper error","error":true,"status":500}';
+			echo '{"show":"'.$app->trans->getJSON('wrapper', 1, 6).'","msg":"'.$app->trans->getJSON('wrapper', 1, 3).'","error":true,"status":500}';
 			return true;
 		}
 	}

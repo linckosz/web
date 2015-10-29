@@ -523,7 +523,7 @@ Submenu.prototype.Show = function(){
 					//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas
 					submenu_wrapper.hide().show(0);
 					submenu_wrapper.css('z-index', that.zIndex);
-					$(window).trigger('resize');
+					//$(window).trigger('resize');
 					that.FocusForm();
 					//Free memory
 					delete submenu_wrapper;
@@ -549,7 +549,7 @@ Submenu.prototype.Show = function(){
 					submenu_wrapper.find("[find=submenu_wrapper_content]").focus();
 					//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas
 					submenu_wrapper.hide().show(0);
-					$(window).trigger('resize');
+					//$(window).trigger('resize');
 					that.FocusForm();
 					//Free memory
 					delete submenu_wrapper;
