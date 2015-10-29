@@ -1,7 +1,7 @@
 function app_project_quick_upload_display(Elem, show) {
 	var Obj_div = $('#app_project_quick_upload');
 	var Obj_img = $('#app_project_quick_upload > div > img');
-	var timing = 2000;
+	var timing = 20000;
 	var delay = 100;
 	if(typeof show === 'undefined') { show = true; }
 	if(Elem !== null) {
