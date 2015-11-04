@@ -323,6 +323,30 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				}
 			);
 		}
+		
+		TweenLite.to(
+			Elem,
+			time/1000,
+			{
+				width: 0,
+				delay: delay/1000,
+				onUpdate: function(){
+					if(responsive.test("minTablet")){
+						app_content_dynamic_position();
+						submenu_wrapper_width();
+						app_application_submenu_position();
+					}
+				},
+				onComplete: function(){
+					$(window).trigger('resize');
+					Elem.removeClass('app_application_visible');
+					Blur.removeClass('app_application_blur');
+					Block.removeClass('app_application_block_visible');
+				},
+			}
+		);
+		/*
+		// Velocity solution has some flickering
 		Elem.css('width', width).velocity(
 			{width: 0},
 			{
@@ -343,6 +367,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				},
 			}
 		);
+*/
 	//Open
 	} else {
 		time = 300;
@@ -401,6 +426,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 			}
 		);
 		/*
+		// Velocity solution has some flickering
 		Elem.css('width', 0).velocity(
 			{width: width},
 			{
