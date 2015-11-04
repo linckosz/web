@@ -287,7 +287,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 	var width = 320;
 	var width_child = 320;
 	if(responsive.test("maxMobile")){
-		width = "50%";
+		width = "100%";
 		width_child = $(window).width();
 	}
 	if(responsive.test("minDesktop")){
