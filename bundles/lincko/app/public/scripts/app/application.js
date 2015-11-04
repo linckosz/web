@@ -287,7 +287,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 	var width = 320;
 	var width_child = 320;
 	if(responsive.test("maxMobile")){
-		width = "100%";
+		width = "50%";
 		width_child = $(window).width();
 	}
 	if(responsive.test("minDesktop")){
@@ -298,7 +298,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 	if(Elem.hasClass('app_application_visible')){
 		time = 200;
 		if(responsive.test("maxTablet")){
-			time = Math.floor(2*time)
+			time = Math.floor(2.5*time);
 		}
 		width = Elem.width();
 		Elem.removeClass('app_application_width');
@@ -323,7 +323,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				}
 			);
 		}
-		
+		/*
 		TweenLite.to(
 			Elem,
 			time/1000,
@@ -345,8 +345,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				},
 			}
 		);
-		/*
-		// Velocity solution has some flickering
+		*/
 		Elem.css('width', width).velocity(
 			{width: 0},
 			{
@@ -367,12 +366,12 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				},
 			}
 		);
-*/
+		
 	//Open
 	} else {
 		time = 300;
 		if(responsive.test("maxTablet")){
-			time = Math.floor(1.5*time)
+			time = Math.floor(2*time);
 		}
 		Elem.addClass('app_application_visible');
 		Block.addClass('app_application_block_visible');
@@ -401,7 +400,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				);
 			}
 		}
-		
+		/*
 		TweenLite.to(
 			Elem,
 			time/1000,
@@ -417,7 +416,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				},
 				onComplete: function(){
 					$(window).trigger('resize');
-					Elem.addClass('app_application_width');
+					//Elem.addClass('app_application_width');
 					Blur.addClass('app_application_blur');
 					$.each(Elem.find('.app_application_width_child'), function() {
 						$(this).addClass('app_application_width');
@@ -425,8 +424,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				},
 			}
 		);
-		/*
-		// Velocity solution has some flickering
+		*/
 		Elem.css('width', 0).velocity(
 			{width: width},
 			{
@@ -449,7 +447,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				},
 			}
 		);
-		*/
+
 	}
 	return true;
 }
