@@ -376,6 +376,31 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				);
 			}
 		}
+		
+		TweenLite.to(
+			Elem,
+			time/1000,
+			{
+				width: width,
+				delay: delay/1000,
+				onUpdate: function(){
+					if(responsive.test("minTablet")){
+						app_content_dynamic_position();
+						submenu_wrapper_width();
+						app_application_submenu_position();
+					}
+				},
+				onComplete: function(){
+					$(window).trigger('resize');
+					Elem.addClass('app_application_width');
+					Blur.addClass('app_application_blur');
+					$.each(Elem.find('.app_application_width_child'), function() {
+						$(this).addClass('app_application_width');
+					});
+				},
+			}
+		);
+		/*
 		Elem.css('width', 0).velocity(
 			{width: width},
 			{
@@ -398,6 +423,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				},
 			}
 		);
+		*/
 	}
 	return true;
 }

@@ -83,7 +83,6 @@ Lincko.storage.display = function(force){
 				company = companies[i];
 				if($.type(Lincko.storage.data[company]) === 'object'){
 					for(var category in Lincko.storage.data[company]) {
-						//if(category.indexOf('_')!==0 && $.type(Lincko.storage.data[company][category]) === 'object'){ There is no meaning to exclude "_"
 						if($.type(Lincko.storage.data[company][category]) === 'object'){
 							app_application_lincko.setFields(category);
 						}
@@ -102,13 +101,17 @@ Lincko.storage.display = function(force){
 Lincko.storage.getLatest = function(){
 	var arr = {
 		'lastvisit': Lincko.storage.getLastVisit(),
+		'show_error': false,
 	};
 	wrapper_sendAction(arr, 'post', 'data/latest', storage_cb_success);
 };
 
 //Function that check for latest updates
 Lincko.storage.getSchema = function(){
-	wrapper_sendAction('', 'get', 'data/schema', storage_cb_success);
+	var arr = {
+		'show_error': false,
+	};
+	wrapper_sendAction(arr, 'post', 'data/schema', storage_cb_success);
 };
 
 //Function that check for latest updates
@@ -116,6 +119,7 @@ Lincko.storage.getMissing = function(missing){
 	if($.type(missing) === 'object'){
 		var arr = {
 			'partial': {},
+			'show_error': false,
 		};
 		arr.partial[wrapper_localstorage.uid] = missing;
 		wrapper_sendAction(arr, 'post', 'data/missing', storage_cb_success);
@@ -918,6 +922,64 @@ Lincko.storage.list = function(category, limit, conditions){
 	
 };
 
+
+
+//setup a check timing procedure to not overload the backend server
+var storage_check_timing_interval;
+var storage_check_timing_timeout;
+var storage_check_timing = {
+	slow: 60000, //60s
+	medium: 30000, //30s
+	fast: 15000, //15s
+	real: 8000, //8s
+	
+	timeout: 60000, //60s
+	current: 30000, //30s
+
+	set: function(time, clear, now, timer){
+		if(typeof clear !== 'boolean'){ clear = false; }
+		if(typeof now !== 'boolean'){ now = false; }
+		if(typeof timer !== 'boolean'){ timer = false; }
+		if(now){
+			Lincko.storage.getLatest();
+		}
+		if(clear || storage_check_timing.current != time){
+			storage_check_timing.current = time;
+			storage_check_timing.launch();
+		}
+		if(timer){
+			window.clearTimeout(storage_check_timing_timeout);
+			storage_check_timing_timeout = window.setTimeout(function(){
+				storage_check_timing.set(storage_check_timing.medium, true);
+			}, storage_check_timing.timeout);
+		}
+		storage_check_timing.current = time;
+	},
+
+	launch: function(){
+		window.clearTimeout(storage_check_timing_timeout);
+		window.clearInterval(storage_check_timing_interval);
+		storage_check_timing_interval = window.setInterval(function(){
+			Lincko.storage.getLatest();
+		}, storage_check_timing.current);
+	},
+};
+
+$(window).on({
+	//now + 60s (clear)
+	blur:		function(){ storage_check_timing.set(storage_check_timing.slow, true, true); },
+	//now + 30s (clear)
+	focus:		function(){ storage_check_timing.set(storage_check_timing.medium, true, true); },
+	//15s (clear 1st + 60s)
+	keyup:		function(){ storage_check_timing.set(storage_check_timing.fast, false, false, true); },
+	change:		function(){ storage_check_timing.set(storage_check_timing.fast, false, false, true); },
+	copy:		function(){ storage_check_timing.set(storage_check_timing.fast, false, false, true); },
+	past:		function(){ storage_check_timing.set(storage_check_timing.fast, false, false, true); },
+	mousedown:	function(){ storage_check_timing.set(storage_check_timing.fast, false, false, true); },
+});
+
+
+
 JSfiles.finish(function(){
 	wrapper_load_progress.move(60);
 	if(Lincko.storage.last_visit_clean){
@@ -938,11 +1000,8 @@ JSfiles.finish(function(){
 	wrapper_load_progress.move(70);
 	Lincko.storage.getLatest();
 
-	//Update every 15s automatically
-	setInterval(function(){
-		Lincko.storage.getLatest();
-	}, 5000);
-	//}, 15000); //15s
+	//Launch the time interval for back server data check
+	storage_check_timing.launch();
 
 	//Check the schema every 30 minutes
 	setInterval(function(){

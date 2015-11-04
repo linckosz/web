@@ -42,6 +42,20 @@ $.Velocity.RegisterEffect.packagedEffects["bruno.slideRightBigOut"] = {
 	reset: { translateX: 0 }
 };
 
+$.Velocity.RegisterEffect.packagedEffects["bruno.fadeIn"] = {
+	defaultDuration: 500,
+	calls: [
+		[ { opacity: [ 1, 0.7 ] } ]
+	]
+};
+
+$.Velocity.RegisterEffect.packagedEffects["bruno.fadeOut"] = {
+	defaultDuration: 500,
+	calls: [
+		[ { opacity: [ 0.7, 1 ] } ]
+	]
+};
+
 
 
 for (var effectName in $.Velocity.RegisterEffect.packagedEffects) {

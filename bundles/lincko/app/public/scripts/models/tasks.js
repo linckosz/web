@@ -22,7 +22,6 @@ submenu_list['app_task_new'] = {
 				submenu_form_cb_complete,
 				{
 					'lastvisit': Lincko.storage.getLastVisit(),
-					'projects_id': app_content_menu.projects_id,
 				}
 			);
 		},
@@ -54,5 +53,15 @@ submenu_list['app_task_new'] = {
 		"name": "task_comment_textarea",
 		"value": "",
 		"class": "submenu_input_textarea",
+	},
+	"projects_id": {
+		"style": "input_hidden",
+		"title": "",
+		"name": "task_projects_id_hidden",
+		"value": "",
+		"now": function(that, Elem){
+			Elem.find("[find=submenu_input]").prop('value', app_content_menu.projects_id);
+		},
+		"class": "",
 	},
 };

@@ -37,6 +37,10 @@ var Submenu_select = {
 		Elem.Add_TitleSmall();
 	},
 
+	input_hidden: function(Elem){
+		Elem.Add_InputHidden();
+	},
+
 	input_text: function(Elem){
 		Elem.Add_InputText();
 	},
@@ -132,6 +136,9 @@ Submenu.prototype.Add_TitleSmall = function() {
 	if("class" in attribute){
 		Elem.addClass(attribute.class);
 	}
+	if("now" in attribute && typeof attribute.now === "function"){
+		attribute.now(this, Elem);
+	}
 	submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
 	//Free memory
 	delete submenu_wrapper;
@@ -160,6 +167,9 @@ Submenu.prototype.Add_MenuButton = function() {
 	}
 	if("class" in attribute){
 		Elem.addClass(attribute.class);
+	}
+	if("now" in attribute && typeof attribute.now === "function"){
+		attribute.now(this, Elem);
 	}
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
 	return true;
@@ -202,6 +212,9 @@ Submenu.prototype.Add_MenuNext = function() {
 	if("class" in attribute){
 		Elem.addClass(attribute.class);
 	}
+	if("now" in attribute && typeof attribute.now === "function"){
+		attribute.now(this, Elem);
+	}
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
 	return true;
 };
@@ -231,14 +244,17 @@ Submenu.prototype.Add_MenuRadio = function() {
 	if("class" in attribute){
 		Elem.addClass(attribute.class);
 	}
+	if("now" in attribute && typeof attribute.now === "function"){
+		attribute.now(this, Elem);
+	}
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
 	return true;
 };
 
-Submenu.prototype.Add_InputText = function() {
+Submenu.prototype.Add_InputHidden = function() {
 	var attribute = this.attribute;
 	var Elem = $('#-submenu_input').clone();
-	var Input = $('<input type="text" />');
+	var Input = $('<input type="hidden" find="submenu_input" />');
 	Elem.prop("id", '');
 	Elem.find("[find=submenu_title]").html(attribute.title);
 	Elem.prop('for', attribute.name);
@@ -249,6 +265,31 @@ Submenu.prototype.Add_InputText = function() {
 	}
 	if("class" in attribute){
 		Elem.addClass(attribute.class);
+	}
+	if("now" in attribute && typeof attribute.now === "function"){
+		attribute.now(this, Elem);
+	}
+	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
+	return true;
+};
+
+Submenu.prototype.Add_InputText = function() {
+	var attribute = this.attribute;
+	var Elem = $('#-submenu_input').clone();
+	var Input = $('<input type="text" find="submenu_input" />');
+	Elem.prop("id", '');
+	Elem.find("[find=submenu_title]").html(attribute.title);
+	Elem.prop('for', attribute.name);
+	Input.prop('name', attribute.name);	
+	Elem.append(Input);
+	if("value" in attribute){
+		Elem.find("[find=submenu_input]").prop('value', attribute.value);
+	}
+	if("class" in attribute){
+		Elem.addClass(attribute.class);
+	}
+	if("now" in attribute && typeof attribute.now === "function"){
+		attribute.now(this, Elem);
 	}
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
 	return true;
@@ -269,6 +310,9 @@ Submenu.prototype.Add_InputTextarea = function() {
 	Elem.append(Input);
 	if("class" in attribute){
 		Elem.addClass(attribute.class);
+	}
+	if("now" in attribute && typeof attribute.now === "function"){
+		attribute.now(this, Elem);
 	}
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
 	return true;
@@ -317,6 +361,9 @@ Submenu.prototype.Add_SelectMultiple = function() {
 	if("class" in attribute){
 		Elem.addClass(attribute.class);
 	}
+	if("now" in attribute && typeof attribute.now === "function"){
+		attribute.now(this, Elem);
+	}
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
 	return true;
 };
@@ -340,6 +387,9 @@ Submenu.prototype.Add_MenuForm = function() {
 	});
 	if("class" in attribute){
 		Elem.addClass(attribute.class);
+	}
+	if("now" in attribute && typeof attribute.now === "function"){
+		attribute.now(this, Elem);
 	}
 	if(submenu_wrapper.find("[find=submenu_wrapper_bottom]").find(".submenu_bottom_cell").length == 0){
 		submenu_wrapper.find("[find=submenu_wrapper_bottom]").html(Elem); 
@@ -387,6 +437,9 @@ Submenu.prototype.Add_MenuFormButton = function() {
 	Elem.find("[find=submenu_form_title]").html(attribute.title)
 	if("class" in attribute){
 		Elem.addClass(attribute.class);
+	}
+	if("now" in attribute && typeof attribute.now === "function"){
+		attribute.now(this, Elem);
 	}
 	if(submenu_wrapper.find("[find=submenu_wrapper_bottom]").find(".submenu_bottom_cell").length == 0){
 		submenu_wrapper.find("[find=submenu_wrapper_bottom]").html(Elem); 

@@ -67,9 +67,17 @@ function base_show_error(msg, error) {
 		$('#base_error').addClass('base_message');
 	}
 	clearTimeout(base_error_timing);
-	$('#base_error').html(msg);
-	if($('#base_error').is(':hidden')){
-		$("#base_error").velocity("transition.slideRightBigIn", { duration: 260, delay: 120, });
+	//This avoid a double call
+	if(php_nl2br(php_br2nl(msg)) != php_nl2br(php_br2nl($('#base_error').html()))){
+		$('#base_error').html(msg);
+		if($('#base_error').is(':hidden')){
+			$("#base_error").velocity("transition.slideRightBigIn", {
+				duration: 260,
+				delay: 120,
+			});
+		} else {
+			$("#base_error").fadeTo( 80 , 0.8).fadeTo( 150 , 1);
+		}
 	}
 	base_error_timing = setTimeout(function(){ base_hide_error(); }, 4000);
 }

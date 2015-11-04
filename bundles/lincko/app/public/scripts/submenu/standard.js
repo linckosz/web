@@ -18,6 +18,11 @@ submenu_list['sample'] = {
 		"action": function(){
 			alert('An action');
 		},
+		"now": function(that, Elem){ //An action to launch at element creation
+			alert('An action');
+			console.log(that);
+			console.log(Elem);
+		},
 		"class": "",
 		"hide": true, //By default 'false', it hides all submenu after the click ( equivalent to submenu_Hideall(); )
 	},

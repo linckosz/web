@@ -13,6 +13,7 @@ class ControllerWrapper extends Controller {
 	protected $action = NULL;
 	protected $resignin = false; //It should not, but avoid to loop
 	protected $form_id = false;
+	protected $show_error = true;
 
 	protected $json = array(
 		'api_key' => '', //Software authorization key
@@ -45,6 +46,10 @@ class ControllerWrapper extends Controller {
 		if(isset($this->json['data']['form_id'])){
 			$this->form_id = $this->json['data']['form_id'];
 			unset($this->json['data']['form_id']);
+		}
+		if(isset($this->json['data']['show_error'])){
+			$this->show_error = $this->json['data']['show_error'];
+			unset($this->json['data']['show_error']);
 		}
 		return true;
 	}
@@ -132,9 +137,13 @@ class ControllerWrapper extends Controller {
 			//print_r($result); //for test
 			//print_r($json_result); //for test
 			return !$json_result->error;
-		} else {
-			//echo '{"msg":"Communication error","msg":"Wrapper error","error":true,"status":500}';
+		} else if($this->show_error){
+			//echo '{"show":"Communication error","msg":"Wrapper error","error":true,"status":500}';
 			echo '{"show":"'.$app->trans->getJSON('wrapper', 1, 6).'","msg":"'.$app->trans->getJSON('wrapper', 1, 3).'","error":true,"status":500}';
+			return false;
+		} else {
+			//echo '{"show":false,"msg":"Wrapper error","error":true,"status":500}';
+			echo '{"show":false,"msg":"'.$app->trans->getJSON('wrapper', 1, 3).'","error":true,"status":500}';
 			return false;
 		}
 		
