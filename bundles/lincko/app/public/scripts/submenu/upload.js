@@ -30,6 +30,7 @@ Submenu.prototype.Add_MenuAppUploadAllForm = function() {
 	submenu_wrapper = this.Wrapper();
 	var Elem = null;
 	var Elem_bt = null;
+	var Elem_ct = null;
 	var that = this;
 
 	//Upload function buttons
@@ -69,6 +70,13 @@ Submenu.prototype.Add_MenuAppUploadAllForm = function() {
 			}
 		});
 		Elem.append(Elem_bt);
+
+		Elem_bt = $('#-submenu_app_upload_add_corner').clone();
+		Elem_bt.prop('id', 'submenu_app_upload_add_corner');
+		Elem_bt.click(function(){
+			$('#app_project_quick_upload_files').click();
+		});
+		Elem_bt.appendTo(submenu_wrapper.find("[find=submenu_wrapper_content]"));
 
 		submenu_wrapper.find("[find=submenu_wrapper_bottom]").append(Elem);
 	}

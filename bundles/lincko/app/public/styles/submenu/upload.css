@@ -175,3 +175,35 @@ http://brianshim.com/webtricks/style-the-wordpress-3-6-media-player/
 	-moz-opacity:0.7;
 	-khtml-opacity:0.7;
 }
+
+.submenu_app_upload_add_corner {
+	position: fixed;
+	background-color: #717171;
+	z-index: 100;
+	right: 0;
+	bottom: 48px;
+	width: 32px;
+	height: 32px;
+	padding: 8px;
+	border-radius: 48px;
+	margin: 14px;
+	cursor: pointer; cursor: hand;
+	filter:alpha(opacity=30);
+	opacity:0.30;
+	-moz-opacity:0.30;
+	-khtml-opacity:0.30;
+}
+
+.submenu_app_upload_add_corner:hover {
+	filter:alpha(opacity=60);
+	opacity:0.60;
+	-moz-opacity:0.60;
+	-khtml-opacity:0.60;
+}
+
+.submenu_app_upload_add_corner:active {
+	filter:alpha(opacity=80);
+	opacity:0.80;
+	-moz-opacity:0.80;
+	-khtml-opacity:0.80;
+}

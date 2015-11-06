@@ -39,26 +39,22 @@ $('#app_project_quick_access_upload').click(function(){
 });
 
 $('#app_project_quick_upload_block').click(function(){
-	console.log($('#app_project_quick_upload').is(':visible'));
-	console.log(app_project_quick_upload);
 	if($('#app_project_quick_upload').is(':visible') && !app_project_quick_upload){
 		app_project_quick_upload_display(null, false);
 	}
 });
 
 $('#app_project_quick_upload').click(function(){
-	console.log($('#app_project_quick_upload').is(':visible'));
-	console.log(app_project_quick_upload);
 	if($('#app_project_quick_upload').is(':visible') && !app_project_quick_upload){
 		app_project_quick_upload_display(null, false);
 	}
 });
 
 var app_project_quick_upload = false;
-$('#app_project_quick_upload').children().hover(function(){console.log('on')
+$('#app_project_quick_upload').children().hover(function(){
 	app_project_quick_upload = true;
 });
-$('#app_project_quick_upload').children().mouseleave(function(){console.log('off')
+$('#app_project_quick_upload').children().mouseleave(function(){
 	app_project_quick_upload = false;
 });
 
