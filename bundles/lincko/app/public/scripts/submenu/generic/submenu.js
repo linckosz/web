@@ -569,6 +569,7 @@ Submenu.prototype.Hide = function (animate){
 		delay = 60;
 	}
 	submenu_show[this.id] = false;
+	submenu_content_unblur();
 	if(typeof animate === 'undefined'){ animate = false; }
 	//Reset menu selection if(menu in submenu_list){
 	if((that.layer-1) in submenu_obj){
@@ -588,7 +589,6 @@ Submenu.prototype.Hide = function (animate){
 					complete: function(){
 						that.Remove();
 						app_application_submenu_position();
-						submenu_content_unblur();
 					}
 				}
 			);
@@ -606,7 +606,6 @@ Submenu.prototype.Hide = function (animate){
 					complete: function(){
 						that.Remove();
 						app_application_submenu_position();
-						submenu_content_unblur();
 					}
 				}
 			);
@@ -615,7 +614,6 @@ Submenu.prototype.Hide = function (animate){
 		time = 0;
 		that.Remove();
 		app_application_submenu_position();
-		submenu_content_unblur();
 	}
 	//Free memory
 	delete submenu_wrapper;
@@ -735,33 +733,23 @@ enquire.register(responsive.maxTablet, function() {
 
 function submenu_content_unblur() {
 	//submenu_show
-	if(submenu_Getnext()<=1){
-		$('#app_content_dynamic').removeClass('app_application_submenu_blur');
-		$('#app_application_submenu_block').hide();
-		//The blur is hard to calculate, it creates some flickering
-		//Checking animate helps only to know if we pushed the button close
-		if(wrapper_browser('webkit')){ $('#app_content_dynamic').velocity(
-			{ blur: 0 },
-			{
-				duration: 100,
-				delay: 100,
-				easing: [ 1 ],
-				complete: function(){
-					//We need to check again if there is another menu replace the old one, so we keep it blur
-					if(submenu_Getnext()>1){
-						$('#app_content_dynamic').velocity(
-							{ blur: 2 },
-							{
-								duration: 100,
-								delay: 10,
-								easing: [ 4 ],
-							}
-						);
-					}
-				}
-			}
-		); }
+	for(var i in submenu_show){
+		if(submenu_show[i]){
+			return true;
+		}
 	}
+	$('#app_content_dynamic').removeClass('app_application_submenu_blur');
+	$('#app_application_submenu_block').hide();
+	//The blur is hard to calculate, it creates some flickering
+	//Checking animate helps only to know if we pushed the button close
+	if(wrapper_browser('webkit')){ $('#app_content_dynamic').velocity(
+		{ blur: 0 },
+		{
+			duration: 100,
+			delay: 100,
+			easing: [ 1 ],
+		}
+	); }
 }
 submenu_content_unblur();
 
