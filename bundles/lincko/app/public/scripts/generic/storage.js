@@ -927,11 +927,12 @@ Lincko.storage.list = function(category, limit, conditions){
 //setup a check timing procedure to not overload the backend server
 var storage_check_timing_interval;
 var storage_check_timing_timeout;
+var storage_check_timing_speed = 4; //Default = 1, use 4 for demo purpose only
 var storage_check_timing = {
-	slow: 60000, //60s
-	medium: 30000, //30s
-	fast: 15000, //15s
-	real: 8000, //8s
+	slow: Math.floor(60000/storage_check_timing_speed), //60s
+	medium: Math.floor(30000/storage_check_timing_speed), //30s
+	fast: Math.floor(15000/storage_check_timing_speed), //15s
+	real: Math.floor(8000/storage_check_timing_speed), //8s
 	
 	timeout: 60000, //60s
 	current: 30000, //30s
