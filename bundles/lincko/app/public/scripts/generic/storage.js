@@ -935,7 +935,7 @@ var storage_check_timing = {
 	real: Math.floor(8000/storage_check_timing_speed), //8s
 	
 	timeout: 60000, //60s
-	current: 30000, //30s
+	current: Math.floor(30000/storage_check_timing_speed), //30s
 
 	set: function(time, clear, now, timer){
 		if(typeof clear !== 'boolean'){ clear = false; }
