@@ -588,7 +588,6 @@ Submenu.prototype.Hide = function (animate){
 					easing: [ .38, .1, .13, .9 ],
 					complete: function(){
 						that.Remove();
-						app_application_submenu_position();
 					}
 				}
 			);
@@ -605,7 +604,6 @@ Submenu.prototype.Hide = function (animate){
 					easing: [ .38, .1, .13, .9 ],
 					complete: function(){
 						that.Remove();
-						app_application_submenu_position();
 					}
 				}
 			);
@@ -613,7 +611,6 @@ Submenu.prototype.Hide = function (animate){
 	} else {
 		time = 0;
 		that.Remove();
-		app_application_submenu_position();
 	}
 	//Free memory
 	delete submenu_wrapper;
@@ -625,6 +622,8 @@ Submenu.prototype.Remove = function(){
 	$('#'+this.id).hide().remove();
 	submenu_obj[this.layer] = null;
 	delete submenu_obj[this.layer];
+	app_application_submenu_position();
+	submenu_content_block_hide();
 };
 
 Submenu.prototype.Wrapper = function(){
@@ -731,6 +730,16 @@ enquire.register(responsive.maxTablet, function() {
 	}
 });
 
+function submenu_content_block_hide() {
+	//submenu_show
+	for(var i in submenu_show){
+		if(submenu_show[i]){
+			return true;
+		}
+	}
+	$('#app_application_submenu_block').hide();
+}
+
 function submenu_content_unblur() {
 	//submenu_show
 	for(var i in submenu_show){
@@ -739,7 +748,6 @@ function submenu_content_unblur() {
 		}
 	}
 	$('#app_content_dynamic').removeClass('app_application_submenu_blur');
-	$('#app_application_submenu_block').hide();
 	//The blur is hard to calculate, it creates some flickering
 	//Checking animate helps only to know if we pushed the button close
 	if(wrapper_browser('webkit')){ $('#app_content_dynamic').velocity(
