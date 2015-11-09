@@ -63,7 +63,7 @@ var app_application_lincko = {
 						   $.type(Lincko.storage.data) === 'object'
 						&& $.type(Lincko.storage.data['_']) === 'object'
 						&& $.type(Lincko.storage.data['_']['_relations']) === 'object'
-						&& $.type(Lincko.storage.data['_']['_relations'][range[i]]) === 'object'
+						&& $.type(Lincko.storage.data['_']['_relations'][range[i]]) === 'array'
 						){
 						for(var j in Lincko.storage.data['_']['_relations'][range[i]]){
 							item.range[Lincko.storage.data['_']['_relations'][range[i]][j]] = true;

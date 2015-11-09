@@ -1,14 +1,9 @@
 /* Category 21xx */
 
-function app_layers_projects_createPage(param){
+function app_layers_projects_registerPage(param){
 	if(typeof param === 'undefined'){ param = null; }
-	var layer = $('#app_layers_content');
-	var Elem = $('#-app_layers_projects').clone();
-	Elem.prop('id', 'app_layers_projects');
-	Elem.appendTo(layer);
-	app_layers_projects_feedPage(param);
-	app_application_lincko.add("app_layers_projects", "projects", function(){
-		app_layers_projects_feedPage(null, false);
+	app_application_lincko.add("app_layers_projects", ["projects", "tasks"], function(){
+		app_layers_projects_feedPage();
 	});
 }
 

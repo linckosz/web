@@ -18,51 +18,26 @@ var app_layers_changePage = function(menu, param){
 	$.Velocity.RunSequence(Sequence);
 }
 
-
 var app_layers_launchMenu = function(menu, param){
 	if(typeof param === 'undefined'){ param = null; }
-	var launch = [];
 	var layer = $('#app_layers_content');
 	layer.empty();
 	menu = menu.toLowerCase();
 
-	launch['error'] = function(){
-		layer.html('Page not found');
-	};
-
-	launch['dashboard'] = function(){
-		
-	};
-
-	launch['projects'] = function(){
-		app_layers_projects_createPage(param);
-	};
-
-	launch['tasks'] = function(){
-		app_layers_tasks_createPage(param);
-	};
-
-	launch['notes'] = function(){
-		
-	};
-
-	launch['calendar'] = function(){
-		
-	};
-
-	launch['statistics'] = function(){
-		
-	};
-
-	launch['history'] = function(){
-		app_layers_history_createPage(param);
-	};
-
-	if(typeof launch[menu] === 'function'){
-		launch[menu]();
+	if($('#-app_layers_'+menu).length>0){
+		var layer = $('#app_layers_content');
+		var Elem = $('#-app_layers_'+menu).clone();
+		Elem.prop('id', 'app_layers_'+menu);
+		Elem.appendTo(layer);
+		if(typeof window['app_layers_'+menu+'_registerPage'] === 'function'){
+			window['app_layers_'+menu+'_registerPage'](param);
+		}
+		if(typeof window['app_layers_'+menu+'_feedPage'] === 'function'){
+			window['app_layers_'+menu+'_feedPage'](param);
+		}
 		return true;
 	} else {
-		launch['error']();
+		layer.html(Lincko.Translation.get('app', 42, 'html')); //Page not found
 		return false;
 	}
 

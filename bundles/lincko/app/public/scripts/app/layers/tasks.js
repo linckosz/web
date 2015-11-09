@@ -1,14 +1,9 @@
 /* Category 22xx */
 
-function app_layers_tasks_createPage(param){
+function app_layers_tasks_registerPage(param){
 	if(typeof param === 'undefined'){ param = null; }
-	var layer = $('#app_layers_content');
-	var Elem = $('#-app_layers_tasks').clone();
-	Elem.prop('id', 'app_layers_tasks');
-	Elem.appendTo(layer);
-	app_layers_tasks_feedPage(param);
 	app_application_lincko.add("app_layers_tasks", "tasks", function(){
-		app_layers_tasks_feedPage(null, false);
+		app_layers_tasks_feedPage();
 	});
 }
 

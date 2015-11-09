@@ -1,14 +1,9 @@
 /* Category ? */
 
-function app_layers_history_createPage(param){
+function app_layers_history_registerPage(param){
 	if(typeof param === 'undefined'){ param = null; }
-	var layer = $('#app_layers_content');
-	var Elem = $('#-app_layers_history').clone();
-	Elem.prop('id', 'app_layers_history');
-	Elem.appendTo(layer);
-	app_layers_history_feedPage(param);
 	app_application_lincko.add("app_layers_history", null, function(){
-		app_layers_history_feedPage(null, false);
+		app_layers_history_feedPage();
 	});
 }
 
