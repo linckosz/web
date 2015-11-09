@@ -14,11 +14,13 @@
 {% set files = _loop_twig_folder(bundle, folder) %}
 {% for key, value in files %}
 	{% include value %}
+}
+}
 {% endfor %}
 
 {# LAYERS #}
 {# Loop the folder to include automaticaly all files #}
-{% set folder = '/layers' %}
+{% set folder = '/app/layers' %}
 {% set files = _loop_twig_folder(bundle, folder) %}
 {% for key, value in files %}
 	{% include value %}
