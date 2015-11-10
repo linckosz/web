@@ -1,10 +1,11 @@
 /* Category ? */
 
-function app_layers_history_registerPage(param){
+function app_layers_history_launchPage(param){
 	if(typeof param === 'undefined'){ param = null; }
 	app_application_lincko.add("app_layers_history", null, function(){
 		app_layers_history_feedPage();
 	});
+	app_layers_history_feedPage();
 }
 
 var app_layers_history_feedPage = function(param){

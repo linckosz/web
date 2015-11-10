@@ -1,10 +1,11 @@
 /* Category 22xx */
 
-function app_layers_tasks_registerPage(param){
+function app_layers_tasks_launchPage(param){
 	if(typeof param === 'undefined'){ param = null; }
 	app_application_lincko.add("app_layers_tasks", "tasks", function(){
 		app_layers_tasks_feedPage();
 	});
+	app_layers_tasks_feedPage();
 }
 
 function app_layers_tasks_icon_add_visibility(){

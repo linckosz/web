@@ -29,11 +29,8 @@ var app_layers_launchMenu = function(menu, param){
 		var Elem = $('#-app_layers_'+menu).clone();
 		Elem.prop('id', 'app_layers_'+menu);
 		Elem.appendTo(layer);
-		if(typeof window['app_layers_'+menu+'_registerPage'] === 'function'){
-			window['app_layers_'+menu+'_registerPage'](param);
-		}
-		if(typeof window['app_layers_'+menu+'_feedPage'] === 'function'){
-			window['app_layers_'+menu+'_feedPage'](param);
+		if(typeof window['app_layers_'+menu+'_launchPage'] === 'function'){
+			window['app_layers_'+menu+'_launchPage'](param);
 		}
 		return true;
 	} else {

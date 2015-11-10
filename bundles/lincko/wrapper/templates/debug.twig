@@ -10,37 +10,16 @@
 #}
 <!doctype html>
 <html>
-<style>
+<script>
 
-#aaa {
-	width: 400px;
-	height: 400px;
-	background: red;
-	display: table;
+function foo(a=2){
+	var b = a*2;
+	return b;
 }
+foo();
 
-#bbb {
-	display: table-cell;
-	vertical-align: middle;
-	text-align: center;
-}
-
-#ccc {
-	width: 128px;
-	height: 128px;
-	background: blue;
-	border: solid 10px black;
-	vertical-align: middle;
-}
-
-</style>
+</script>
 <body>
-{{ _debug(data) }}
-<div id='aaa'>
-	<div id='bbb'>
-		<img id='ccc' src="{{ _filelatest('/lincko/app/images/app/project/quick_photo.png') }}" />
-		A text
-	</div>
-</div>
+
 </body>
 </html>

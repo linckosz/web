@@ -1,10 +1,11 @@
 /* Category 21xx */
 
-function app_layers_projects_registerPage(param){
+function app_layers_projects_launchPage(param){
 	if(typeof param === 'undefined'){ param = null; }
 	app_application_lincko.add("app_layers_projects", ["projects", "tasks"], function(){
 		app_layers_projects_feedPage();
 	});
+	app_layers_projects_feedPage();
 }
 
 var app_layers_projects_data = {
