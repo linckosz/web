@@ -5,7 +5,7 @@ function app_layers_history_launchPage(param){
 	app_application_lincko.add("app_layers_history", null, function(){
 		app_layers_history_feedPage();
 	});
-	app_layers_history_feedPage();
+	app_layers_history_feedPage();alert('ok');
 }
 
 var app_layers_history_feedPage = function(param){
