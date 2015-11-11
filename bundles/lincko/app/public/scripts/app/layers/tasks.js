@@ -33,8 +33,8 @@ var app_layers_tasks_feedPage = function(param){
 		item = items[i];
 		Elem = $('#-models_tasks').clone();
 		Elem.prop('id', 'models_tasks_'+item['_id']);
-		Elem.find("[find=title]").html( php_nl2br(item['+title']) );
-		Elem.find("[find=comment]").html( php_nl2br(item['-comment']) );
+		Elem.find("[find=title]").html( wrapper_to_html(item['+title']) );
+		Elem.find("[find=comment]").html( wrapper_to_html(item['-comment']) );
 		if(item['-comment'] == ''){
 			Elem.find(".models_tasks_standard_line").hide();
 		}

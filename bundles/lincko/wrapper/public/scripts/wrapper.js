@@ -90,12 +90,12 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 				wrapper_localstorage.encrypt('shangzai', JSON.stringify(data.shangzai));
 				wrapper_set_shangzai = false;
 			}
-
+			
 			if(data.show && typeof base_show_error === 'function'){
 				if(typeof data.show === 'string'){
-					base_show_error(php_nl2br(data.show), data.error);
+					base_show_error(data.show, data.error);
 				} else if(typeof msg === 'string'){
-					base_show_error(php_nl2br(msg), data.error);
+					base_show_error(msg, data.error);
 				}
 			}
 
@@ -149,7 +149,7 @@ function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete, 
 			if(typeof base_input_field[this.name].valid === "function" && typeof base_input_field[this.name].error_msg === "function"){
 				if(!base_input_field[this.name].valid($(this).val())){
 					var data = base_input_field[this.name].error_msg();
-					base_show_error(php_nl2br(data.msg), true);
+					base_show_error(data.msg, true);
 					cb_success(null, true, 400, data);
 					valid = false;
 					return false; //Disable submit action

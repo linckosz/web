@@ -108,7 +108,7 @@ var app_layers_projects_feedPage = function(param, animation){
 		if(item['personal_private']==1){ continue; } //Do not display personal folder
 		Elem = $('#-models_projects').clone();
 		Elem.prop('id', 'models_projects_'+item['_id']);
-		Elem.find("[find=title]").html( php_nl2br(item['+title']) );
+		Elem.find("[find=title]").html( wrapper_to_html(item['+title']) );
 		if(Lincko.storage.favorite('projects', item['_id'])){
 			Elem.find("[find=favorite]").css('visibility', 'visible');
 		}

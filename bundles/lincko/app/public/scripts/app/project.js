@@ -218,17 +218,17 @@ var app_project_build = {
 		var title = Elem.find("[find=app_project_project_title]");
 		var timing = 300;
 		var delay = 60;
-		if(php_nl2br(item_title) != title.html()){
+		if(wrapper_to_html(item_title) != title.html()){
 			if(title.html()){
 				var Sequence = [
 					{ e: title, p: { opacity: 0, }, o: { duration: timing, delay: delay,
-						complete: function(){ title.html(php_nl2br(item_title)); },
+						complete: function(){ title.html(wrapper_to_html(item_title)); },
 					} },
 					{ e: title, p: { opacity: 1, }, o: { duration: timing, sequenceQueue: true, } },
 				];
 				$.Velocity.RunSequence(Sequence);
 			} else {
-				title.html(php_nl2br(item_title));
+				title.html(wrapper_to_html(item_title));
 			}
 		}
 	},
@@ -308,8 +308,8 @@ var app_project_info = {
 										duration: time,
 										delay: 60,
 										begin: function(){
-											$('#app_project_info_title').html(php_nl2br(history.title));
-											$('#app_project_info_content').html(php_nl2br(history.content));
+											$('#app_project_info_title').html(wrapper_to_html(history.title));
+											$('#app_project_info_content').html(wrapper_to_html(history.content));
 											$(this).show();
 											app_project_tab();
 										},
@@ -325,8 +325,8 @@ var app_project_info = {
 							duration: time,
 							delay: 60,
 							begin: function(){
-								$('#app_project_info_title').html(php_nl2br(history.title));
-								$('#app_project_info_content').html(php_nl2br(history.content));
+								$('#app_project_info_title').html(wrapper_to_html(history.title));
+								$('#app_project_info_content').html(wrapper_to_html(history.content));
 								$(this).show();
 								app_project_tab();
 							},
@@ -450,12 +450,12 @@ JSfiles.finish(function(){
 		if(typeof user['gender'] !== 'undefined' && user['gender'] == 1){
 			$('#app_project_user_image').attr('src', app_project_img_user_female.src);
 		}
-		$('#app_project_user_name').html(php_nl2br(username));
-		$('#app_project_user_email').html(php_nl2br(email));
+		$('#app_project_user_name').html(wrapper_to_html(username));
+		$('#app_project_user_email').html(wrapper_to_html(email));
 	});
 
 	app_application_lincko.add("app_project_company", "companies", function(){
-		$('#app_project_company div:first-child').html(php_nl2br(Lincko.storage.COMNAME));
+		$('#app_project_company div:first-child').html(wrapper_to_html(Lincko.storage.COMNAME));
 	});
 	
 	app_application_lincko.update(true); //Update everything

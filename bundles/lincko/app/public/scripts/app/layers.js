@@ -25,7 +25,6 @@ var app_layers_launchMenu = function(menu, param){
 	menu = menu.toLowerCase();
 
 	if($('#-app_layers_'+menu).length>0){
-		var layer = $('#app_layers_content');
 		var Elem = $('#-app_layers_'+menu).clone();
 		Elem.prop('id', 'app_layers_'+menu);
 		Elem.appendTo(layer);
