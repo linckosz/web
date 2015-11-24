@@ -330,7 +330,7 @@ Lincko.storage.orderRecents = function(data, clean){
 /*
 	Lincko.storage.get("projects", 5); => get full item
 	Lincko.storage.get("tasks", 4); => get full item
-	Lincko.storage.get("tasks", 4, username); => get item attribute
+	Lincko.storage.get("tasks", 4, "created_at"); => get item attribute
 */
 Lincko.storage.get = function(category, id, attribute){
 	var companies = ['_']; //Always include the default folder
@@ -352,6 +352,8 @@ Lincko.storage.get = function(category, id, attribute){
 					result = Lincko.storage.data[companies[i]][category][id]['-'+attribute];
 				} else if(typeof Lincko.storage.data[companies[i]][category][id]['+'+attribute] !== 'undefined'){
 					result = Lincko.storage.data[companies[i]][category][id]['+'+attribute];
+				} else if(typeof Lincko.storage.data[companies[i]][category][id]['_'+attribute] !== 'undefined'){
+					result = Lincko.storage.data[companies[i]][category][id]['_'+attribute];
 				} else {
 					result = false;
 				}

@@ -184,6 +184,7 @@
 }
 
 .head_joinus.mobile > span > span {
+	background-color: #FFA700;
 	padding: 4px 16px 4px 16px;
 	border-radius: 48px;
 	-moz-border-radius: 48px;
