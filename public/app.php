@@ -43,6 +43,6 @@ require_once $path.'/config/autoload.php' ;
 require_once $path.'/error/errorPHP.php';
 require_once $path.'/config/eloquent.php';
 require_once $path.'/config/session.php';
-
+\libs\Watch::php($path, '$path', __FILE__, false, false, true);
 $app->run();
 //Checking $app (print_r) after run can make php crashed out of memory because it contains files data
