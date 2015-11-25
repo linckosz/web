@@ -153,7 +153,7 @@ function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete, 
 						if(typeof base_show_error === 'function'){
 							base_show_error(data.msg, true);
 						}
-						cb_success(null, true, 400, data);
+						cb_success(data.msg, true, 400, data);
 						valid = false;
 						return false; //Disable submit action
 					}
