@@ -84,6 +84,8 @@ class Folders {
 	}
 
 	public function createSymlink($target, $link){
+		\libs\Watch::php($target, '$target', __FILE__, false, false, true);
+		\libs\Watch::php($link, '$link', __FILE__, false, false, true);
 		if($this->createPath($link)){
 			if(rmdir($link)){
 				if(symlink($target, $link)){

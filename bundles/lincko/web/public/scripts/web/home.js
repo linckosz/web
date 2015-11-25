@@ -4,10 +4,11 @@ var home_cb_success = function(msg, err){
 	var msgtp = msg;
 	if(typeof msg.field !== 'undefined') { field = msg.field; }
 	if(typeof msg.show === 'string'){
-		msgtp = php_nl2br(msg.show);
+		msgtp = msg.show;
 	} else if(typeof msg.msg === 'string') {
-		msgtp = php_nl2br(msg.msg);
+		msgtp = msg.msg;
 	}
+	msgtp = php_nl2br(msgtp);
 	if(err){
 		$('#home_joinus_error').html(msgtp);
 		$("#home_joinus_error").velocity("transition.slideDownIn", { duration: 500, delay: 100, });
