@@ -78,6 +78,8 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 
 			//This is importat because sometime in msg we return an object with some information inside
 			var msg = data.msg;
+			var show = data.msg;
+			if(typeof data.show === 'string'){ show = data.show; }
 			if($.type(msg) === 'object' && msg.msg){
 				msg = msg.msg;
 			}
@@ -100,7 +102,7 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 			}
 
 			// Below is the production information with "dataType: 'json'"
-			cb_success(msg, data.error, data.status, data.msg);
+			cb_success(msg, data.error, data.status, data.msg, show);
 		},
 		error: function(xhr_err, ajaxOptions, thrownError){
 			//Get back the form object if it was sent from a form
@@ -145,14 +147,18 @@ function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete, 
 	var ajax_objForm = wrapper_objForm = objForm;
 	var valid = true;
 	$.each(objForm.find('input'), function() {
-		if(this.name in base_input_field){
-			if(typeof base_input_field[this.name].valid === "function" && typeof base_input_field[this.name].error_msg === "function"){
-				if(!base_input_field[this.name].valid($(this).val())){
-					var data = base_input_field[this.name].error_msg();
-					base_show_error(data.msg, true);
-					cb_success(null, true, 400, data);
-					valid = false;
-					return false; //Disable submit action
+		if(typeof base_input_field === 'object'){
+			if(this.name in base_input_field){
+				if(typeof base_input_field[this.name].valid === "function" && typeof base_input_field[this.name].error_msg === "function"){
+					if(!base_input_field[this.name].valid($(this).val())){
+						var data = base_input_field[this.name].error_msg();
+						if(typeof base_show_error === 'function'){
+							base_show_error(data.msg, true);
+						}
+						cb_success(null, true, 400, data);
+						valid = false;
+						return false; //Disable submit action
+					}
 				}
 			}
 		}
