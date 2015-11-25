@@ -78,10 +78,12 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 
 			//This is importat because sometime in msg we return an object with some information inside
 			var msg = data.msg;
-			var show = data.msg;
-			if(typeof data.show === 'string'){ show = data.show; }
-			if($.type(msg) === 'object' && msg.msg){
+			if(typeof data.show === 'string'){
+				msg = data.show;
+			} else if($.type(msg) === 'object' && msg.msg){
 				msg = msg.msg;
+			} else if(typeof msg !== 'string'){
+				msg = '';
 			}
 			if(data.error){
 				JSerror.sendError(JSON.stringify(data), '/wrapper.js/wrapper_ajax().success()', 0);
@@ -93,16 +95,12 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 				wrapper_set_shangzai = false;
 			}
 			
-			if(data.show && typeof base_show_error === 'function'){
-				if(typeof data.show === 'string'){
-					base_show_error(data.show, data.error);
-				} else if(typeof msg === 'string'){
-					base_show_error(msg, data.error);
-				}
+			if(typeof base_show_error === 'function'){
+				base_show_error(msg, data.error);
 			}
 
 			// Below is the production information with "dataType: 'json'"
-			cb_success(msg, data.error, data.status, data.msg, show);
+			cb_success(msg, data.error, data.status, data.msg);
 		},
 		error: function(xhr_err, ajaxOptions, thrownError){
 			//Get back the form object if it was sent from a form
