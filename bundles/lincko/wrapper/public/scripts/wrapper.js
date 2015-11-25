@@ -7,7 +7,7 @@ var wrapper_shangzai = {
 		cs: null,
 };
 var wrapper_set_shangzai = true;
-alert('ok');
+
 // Because "const" seems to not work in some browsers
 // http://stackoverflow.com/questions/24370447/the-const-keyword-in-javascript
 // const fingerprint = wrapper_fp;
