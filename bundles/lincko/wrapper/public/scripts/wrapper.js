@@ -95,7 +95,7 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 				wrapper_set_shangzai = false;
 			}
 			
-			if(typeof base_show_error === 'function'){
+			if(data.show && typeof base_show_error === 'function'){
 				base_show_error(msg, data.error);
 			}
 
