@@ -58,9 +58,9 @@ class ControllerWrapper extends Controller {
 		$app = $this->app;
 
 		$data = json_encode($this->json);
-
+\libs\Watch::php($data, '$data', __FILE__, false, false, true);
 		$url = $app->lincko->wrapper['url'].$this->action;
-
+\libs\Watch::php($url, '$url', __FILE__, false, false, true);
 		$timeout = 8;
 		if($this->action==='translation/auto'){
 			$timeout = 18; //Need more time because requesting a third party for translation
@@ -83,9 +83,10 @@ class ControllerWrapper extends Controller {
 		$json_result = false;
 		if($result = curl_exec($ch)){
 			$json_result = json_decode($result);
+			\libs\Watch::php(true, '$result', __FILE__, false, false, true);
 		}
 		@curl_close($ch);
-
+\libs\Watch::php($json_result, '$json_result', __FILE__, false, false, true);
 		if($json_result && isset($json_result->msg) && isset($json_result->error)){
 			
 			if($reset_shangzai){
