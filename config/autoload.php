@@ -14,7 +14,6 @@ foreach($app->lincko->bundles as $bundle) {
 	$folder->includeRecursive();
 
 	//Include public files (create symlink at first launch only)
-	\libs\Watch::php(is_dir($app->lincko->publicPath.'/'.$bundle), $app->lincko->publicPath.'/'.$bundle, __FILE__, false, false, true);
 	if(is_dir($app->lincko->path.'/bundles/'.$bundle.'/public') && !is_dir($app->lincko->publicPath.'/'.$bundle)){
 		$folder = new Folders();
 		$folder->createSymlink($app->lincko->path.'/bundles/'.$bundle.'/public', $app->lincko->publicPath.'/'.$bundle);
