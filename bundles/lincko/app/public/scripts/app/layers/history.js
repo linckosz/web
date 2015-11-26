@@ -22,8 +22,9 @@ var app_layers_history_feedPage = function(param){
 		Elem.prop('id', 'models_thistory_'+item['id']);
 		history = Lincko.storage.getHistoryInfo(item);
 		if(history.title===null){ continue; }
-		Elem.find("[find=title]").html( wrapper_to_html(history.title) );
-		Elem.find("[find=content]").html( wrapper_to_html(history.content) );
+		// We don't need to use wrapper_to_html for 'history' because the text is already protected in history format method
+		Elem.find("[find=title]").html( php_nl2br(history.title) );
+		Elem.find("[find=content]").html( php_nl2br(history.content) );
 		Elem.appendTo(position);
 	}
 

@@ -478,7 +478,7 @@ Lincko.storage.formatHistoryInfo = function(text, history){
 			text = text.replaceAll(search, '"'+Lincko.Translation.get('app', 21, 'html')+'"');
 		}
 	}
-	return text;
+	return wrapper_to_html(text);
 };
 
 /*
