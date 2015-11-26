@@ -1,5 +1,6 @@
 var storage_first_request = true; //Help to launch getSchema within getLatest only once at the beginning to insure nothing is missing
 
+/* PRIVATE METHOD */
 var storage_cb_success = function(msg, err, status, data){
 	if($.type(data) === 'object' && $.type(data.partial) === 'object' && $.type(data.partial[wrapper_localstorage.uid]) === 'object'){
 		if(Lincko.storage.update(data.partial[wrapper_localstorage.uid]) && typeof data.lastvisit === 'number'){
@@ -13,6 +14,7 @@ var storage_cb_success = function(msg, err, status, data){
 	Lincko.storage.firstLatest();
 };
 
+/* PRIVATE METHOD */
 Lincko.storage.getCOMID = function(){
 	if(Lincko.storage.COMID !== null){
 		return Lincko.storage.COMID;
@@ -26,6 +28,7 @@ Lincko.storage.getCOMID = function(){
 	}
 };
 
+/* PRIVATE METHOD */
 Lincko.storage.searchCOMID = function(){
 	if(wrapper_localstorage.company === ''){
 		return Lincko.storage.COMID = 0;
@@ -50,6 +53,7 @@ Lincko.storage.searchCOMID = function(){
 };
 
 //Function that check for latest updates
+/* PRIVATE METHOD */
 Lincko.storage.getLastVisit = function(){
 	//We parse the value to insure it will be an integer
 	if(Lincko.storage.last_visit && Lincko.storage.last_visit !== null){
@@ -62,6 +66,7 @@ Lincko.storage.getLastVisit = function(){
 };
 
 //Function that check for latest updates
+/* PRIVATE METHOD */
 Lincko.storage.setLastVisit = function(timestamp){
 	timestamp = parseInt(timestamp, 10);
 	if(timestamp>0){
@@ -71,6 +76,7 @@ Lincko.storage.setLastVisit = function(timestamp){
 };
 
 //Function update all objects displayed
+/* PRIVATE METHOD */
 Lincko.storage.display = function(force){
 	if(typeof app_application_lincko !== 'undefined'){
 		if(typeof force !== 'undefined' && force){
@@ -98,6 +104,7 @@ Lincko.storage.display = function(force){
 
 
 //Function that check for latest updates
+/* PRIVATE METHOD */
 Lincko.storage.getLatest = function(){
 	var arr = {
 		'lastvisit': Lincko.storage.getLastVisit(),
@@ -107,6 +114,7 @@ Lincko.storage.getLatest = function(){
 };
 
 //Function that check for latest updates
+/* PRIVATE METHOD */
 Lincko.storage.getSchema = function(){
 	var arr = {
 		'show_error': false,
@@ -115,6 +123,7 @@ Lincko.storage.getSchema = function(){
 };
 
 //Function that check for latest updates
+/* PRIVATE METHOD */
 Lincko.storage.getMissing = function(missing){
 	if($.type(missing) === 'object'){
 		var arr = {
@@ -127,6 +136,7 @@ Lincko.storage.getMissing = function(missing){
 };
 
 //Function that update the localweb database
+/* PRIVATE METHOD */
 Lincko.storage.update = function(partial){
 	var item;
 	var update = false;
@@ -169,6 +179,7 @@ Lincko.storage.update = function(partial){
 };
 
 //Function that check the javascript database schema
+/* PRIVATE METHOD */
 Lincko.storage.schema = function(schema){
 	var update = false;
 	var missing = {};
@@ -243,6 +254,7 @@ Lincko.storage.schema = function(schema){
 	return false;
 };
 
+/* PRIVATE METHOD */
 Lincko.storage.firstLatest = function(){
 	if(storage_first_request){
 		Lincko.storage.getSchema();
@@ -254,6 +266,7 @@ Lincko.storage.firstLatest = function(){
 	}
 };
 
+/* PRIVATE METHOD */
 Lincko.storage.setHistory = function(category, id, stop_order){
 	if(typeof force_order === 'undefined'){ stop_order = false; }
 	var temp = {};
@@ -301,6 +314,7 @@ Lincko.storage.setHistory = function(category, id, stop_order){
 	return true;
 }
 
+/* PRIVATE METHOD */
 Lincko.storage.orderRecents = function(data, clean){
 	var temp = {};
 	if(typeof clean === 'undefined'){ clean = false; }
@@ -335,7 +349,11 @@ Lincko.storage.orderRecents = function(data, clean){
 Lincko.storage.get = function(category, id, attribute){
 	var companies = ['_']; //Always include the default folder
 	companies.push(Lincko.storage.getCOMID());
-	if(typeof category === 'string'){ category = category.toLowerCase(); } else { return false; }
+	if(typeof category === 'string' && category.indexOf('_')!==0){
+		category = category.toLowerCase();
+	} else {
+		return false;
+	}
 	if(typeof id === 'string'){ id = parseInt(id, 10); }
 	if(typeof id !== 'number'){ return false; }
 
@@ -364,11 +382,15 @@ Lincko.storage.get = function(category, id, attribute){
 	return false;
 };
 
-
+/* PRIVATE METHOD */
 Lincko.storage.isHistoryReady = function(){
 	return ($.type(Lincko.storage.data['_']) === 'object' && $.type(Lincko.storage.data['_']['_history_title']) === 'object');
 }
-//Return an object { title, content }
+
+/*
+	Return an object { title, content }
+	Lincko.storage.getHistoryInfo( Lincko.storage.time('latest') ) => Return formatted information about the time object passed in parameter. For a list of time objects like “Lincko.storage.time('recent')”, use a loop.
+*/
 Lincko.storage.getHistoryInfo = function(history){
 	var result = {
 		title: null,
@@ -415,6 +437,7 @@ Lincko.storage.getHistoryInfo = function(history){
 	return result;
 };
 
+/* PRIVATE METHOD */
 Lincko.storage.formatHistoryInfo = function(text, history){
 	var search;
 	var replacement;
@@ -422,8 +445,6 @@ Lincko.storage.formatHistoryInfo = function(text, history){
 	var array;
 	var filter;
 
-	
-	
 	if(array_needle){
 		for(var i in array_needle){
 			search = array_needle[i];
@@ -474,7 +495,12 @@ Lincko.storage.search = function(type, param, category){
 	companies.push(Lincko.storage.getCOMID());
 	type = type.toLowerCase();
 	if(typeof param === 'string'){ param = param.toLowerCase(); }
-	if(typeof category === 'string'){ category = category.toLowerCase(); }
+	if(typeof category === 'string'){
+		category = category.toLowerCase();
+		if(category.indexOf('_')===0){
+			return false;
+		}
+	}
 
 	//List all items in a category that contain a word
 	find['word'] = function(item){
@@ -512,13 +538,20 @@ Lincko.storage.search = function(type, param, category){
 					categories = Lincko.storage.data[key];
 				}
 				for(var cat in categories) {
-					//Scan each item in a category
-					for(var item in categories[cat]) {
-						save_result = false;
-						if(save_result = find[type](categories[cat][item])){
-							if(!$.isEmptyObject(save_result)){
-								if(typeof results[cat] === 'undefined'){ results[cat] = {}; }
-								results[cat][item] = save_result;
+					if(cat.indexOf('_')!==0){ //Exclude system object which start by an underscore
+						//Scan each item in a category
+						for(var item in categories[cat]) {
+							save_result = false;
+							if(save_result = find[type](categories[cat][item])){
+								if(!$.isEmptyObject(save_result)){
+									if(
+										typeof save_result['personal_private']==='undefined'
+										|| ((typeof save_result['personal_private']==='string' || typeof save_result['personal_private']==='number') && parseInt(save_result['personal_private'], 10)===0)
+									){
+										if(typeof results[cat] === 'undefined'){ results[cat] = {}; }
+										results[cat][item] = save_result;
+									}
+								}
 							}
 						}
 					}
@@ -537,7 +570,11 @@ Lincko.storage.search = function(type, param, category){
 	Lincko.storage.favorite('projects', 2, false); //Delete the favorite
 */
 Lincko.storage.favorite = function(category, id, save){
-	if(typeof category === 'string'){ category = category.toLowerCase(); } else { return false; }
+	if(typeof category === 'string' && category.indexOf('_')!==0){
+		category = category.toLowerCase();
+	} else {
+		return false;
+	}
 	if(typeof id !== 'string' && typeof id !== 'number'){ return false; }
 	var company = Lincko.storage.getCOMID();
 	var index;
@@ -588,10 +625,14 @@ Lincko.storage.favorite = function(category, id, save){
 /*
 	If available, move the items into the category to it's new position
 	Lincko.storage.moveFavorite('projects', 5, 2) => Move the project No5 to the 2nd favorite position, and then record it to localstorage
-	NOTE: teh position 2nd equal to the index 1 of an array
+	NOTE: the 2nd position equals to the index 1 of an array (the list starts from index 0)
 */
 Lincko.storage.moveFavorite = function(category, id, order){
-	if(typeof category === 'string'){ category = category.toLowerCase(); } else { return false; }
+	if(typeof category === 'string' && category.indexOf('_')!==0){
+		category = category.toLowerCase();
+	} else {
+		return false;
+	}
 	if(typeof id !== 'string' && typeof id !== 'number'){ return false; }
 	if(typeof order !== 'number' || order <= 0){ return false; }
 	var company = Lincko.storage.getCOMID();
@@ -630,7 +671,11 @@ Lincko.storage.getFavorites = function(category, param, extend){
 	var company = Lincko.storage.getCOMID();
 	var list;
 	var item_tp;
-	if(typeof category === 'string'){ category = category.toLowerCase(); } else { return results; }
+	if(typeof category === 'string' && category.indexOf('_')!==0){
+		category = category.toLowerCase();
+	} else {
+		return results;
+	}
 	if(typeof param === 'string'){ param = parseInt(id, 10); }
 	if(typeof param !== 'number'){ param = -1; } //Since it's below 0, we can scan all items
 	if(param == 0){ param = -1; } //0 will display all items
@@ -677,6 +722,7 @@ Lincko.storage.getFavorites = function(category, param, extend){
 };
 
 //Return a single item which is the earliest My Placeholder project
+/* PRIVATE METHOD */
 Lincko.storage.getMyPlaceholder = function(){
 	var company = Lincko.storage.getCOMID();
 	var category = 'projects';
@@ -693,6 +739,21 @@ Lincko.storage.getMyPlaceholder = function(){
 	return false;
 };
 
+/*
+	Return a simple table with item as value;
+	Lincko.storage.time('latest'); => Return the latest operation as a single object.
+	Lincko.storage.time('recent'); => Return an array of the 50 (default value) latest operations.
+	Lincko.storage.time('recent', 10); => Return an array of the 10 latest operations.
+	Lincko.storage.time('recent', -1); => Return an array of all operations. (It can be very long!)
+	Lincko.storage.time('recent', -1, 'tasks'); => Return an array of all operations done of “tasks”.
+	Lincko.storage.time('recent', null, 'tasks'); => Return an array of the 50 (default value) latest operations done of “tasks”.
+	Lincko.storage.time(recent_created_at, -1); => Return an array of all object creation operations. Actually “recent_created_at” works with same parameters as “recent”, but it lists only creation operations.
+	Lincko.storage.time('between'); => Return an array of all operations done the last 24H.
+	Lincko.storage.time('between', null, 'tasks'); => Return an array of all operations done on “tasks” the last 24H.
+	Lincko.storage.time('between', null, 'tasks'); => Return an array of all operations done on “tasks” the last 24H.
+	Lincko.storage.time('between', {min: 1448487687, max: 1448530609}); => Return an array of all operations done between 2 timestamps (UTC).
+	Lincko.storage.time('between', {min: 1448487687, max: 1448530609}, 'projects'); => Return an array of all operations done on “projects” between 2 timestamps (UTC).
+*/
 Lincko.storage.time = function(type, param, category){
 	var results = [];
 	var find = [];
