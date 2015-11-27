@@ -44,7 +44,8 @@ var app_application_lincko = {
 				object = 'element';
 			}
 		} else if(typeof id === 'function' && !wrapper_load_progress.done){
-			//We do not record functions after DOM load
+			//We do not record functions after DOM load to avoid to multipliate a lot some functions because each function is anonymous and we cannot classified them.
+			//It's something we migth work on to also avoid the same function registered in 2 differents fields
 			object = 'function';
 		}
 
@@ -58,6 +59,7 @@ var app_application_lincko = {
 				for(var i in range){
 					range[i] = range[i].toLowerCase();
 					item.range[range[i]] = true;
+					/*
 					//Check if it has relatives
 					if(
 						   $.type(Lincko.storage.data) === 'object'
@@ -69,6 +71,7 @@ var app_application_lincko = {
 							item.range[Lincko.storage.data['_']['_relations'][range[i]][j]] = true;
 						}
 					}
+					*/
 				}
 			}
 
@@ -101,52 +104,68 @@ var app_application_lincko = {
 		app_application_lincko.update(false); => It doesn't update any element, only Launch all functions
 		app_application_lincko.update(true); => Update all elements, and launch all functions
 		app_application_lincko.update('tasks'); => It updates all elements that are linked to any _fields at true and the string, and update all elements with empty range, and launch all functions
-		app_application_lincko.update(['tasks', 'Chats']); => It updates all elements that are linked to any _fields at true and strings in the array, and update all elements with empty range, and launch all functions
+		app_application_lincko.update(['tasks', 'chats']); => It updates all elements that are linked to any _fields at true and strings in the array, and update all elements with empty range, and launch all functions
+		app_application_lincko.update('tasks', false); => The second parameters at false disable the parents update
 	*/
-	update: function(items){
+	update: function(items, propagation){
 		var action = false;
 		var deletion = false;
 		var item;
-		if(typeof items === 'string' || typeof items === 'number'){
-			items = [items];
+		var items_list = [];
+
+		if(typeof propagation !== 'boolean'){
+			propagation = true;
 		}
-		if(items === true || $.isEmptyObject(this._fields)){
-			items = [];
+
+		//Adding the list "items" in parameter
+		if(typeof items === 'string' || typeof items === 'number'){
+			items_list[items] = true;
+		} else if($.type(items) === 'array'){
+			for(var i in items){
+				if(typeof field === 'string' || typeof field === 'number'){
+					items_list[field] = true; 
+				}
+			}
+		} else if(items === true){
 			for(var field in this._fields){
-				items.push(field);
+				items_list[field] = true;
 			}
 		}
-		if($.type(items) !== 'array'){
-			items = [];
-		}
-		//Add _fields at true
+
+		//Adding the fields that are true (=need to update)
 		for(var field in this._fields){
 			if(this._fields[field]){
-				items.push(field);
-				this._fields[field] = false; //Reset to updated
+				items_list[field] = true;
+			}
+			this._fields[field] = false; //Reset to updated
+		}
+
+		//Add parent fields
+		if(
+			propagation
+			&& !$.isEmptyObject(items_list)
+			&& $.type(Lincko.storage.data) === 'object'
+			&& $.type(Lincko.storage.data['_']) === 'object'
+			&& $.type(Lincko.storage.data['_']['_relations']) === 'object'
+		){
+			//Note that Up and Down reationship is already done one back server
+			for(var i in items_list){
+				if($.type(Lincko.storage.data['_']['_relations'][i]) === 'array'){
+					for(var j in Lincko.storage.data['_']['_relations'][i]){
+						if(typeof items_list[ Lincko.storage.data['_']['_relations'][i][j] ] === 'undefined'){
+							items_list[ Lincko.storage.data['_']['_relations'][i][j] ] = true;
+						}
+					}
+				}
 			}
 		}
 
-		if(!$.isEmptyObject(items)){
-			for(var i in items){
-				field = items[i];
-				//Delete any double value
-				if(this._fields[field]){
-					this._fields[field] = false; 
-				}
-				//Delete any value that are neither string nor number
-				if(typeof field !== 'string' && typeof field !== 'number'){
-					delete items[field];
-				}
-			}
-		}
-
-		if(!$.isEmptyObject(items)){
+		if(!$.isEmptyObject(items_list)){
+			
 			//First we scan all HTML elements
 			for(var Elem_id in this._elements){
-				for(var i in items){
-					item = items[i];
-					if($.isEmptyObject(this._elements[Elem_id].range) || typeof this._elements[Elem_id].range[item] !== 'undefined'){
+				for(var field in items_list){
+					if($.isEmptyObject(this._elements[Elem_id].range) || typeof this._elements[Elem_id].range[field] !== 'undefined'){
 						Elem = $('#'+Elem_id);
 						if(Elem.length > 0 && this._elements[Elem_id].exists()){
 							this._elements[Elem_id].action(Elem_id);
@@ -159,19 +178,23 @@ var app_application_lincko = {
 					}	
 				}
 			}
-			for(var i in items){
-				field = items[i];
+
+			//Second scann all functions
+			for(var field in items_list){
 				if(typeof this._functions.fields[field] === 'object'){
 					for(var j in this._functions.fields[field]){
 						this._functions.fields[field][j]();
 					}
 				}
 			}
+
+			//Only then we launch all functions registered in all
+			//But do it only if the local database has been updated, if not there is no use to launch those functions
+			for(var i in this._functions.all){
+				this._functions.all[i]();
+			}
 		}
-		//Only then we launch all functions registered in all
-		for(var i in this._functions.all){
-			this._functions.all[i]();
-		}
+		
 		return true;
 	},
 
@@ -207,7 +230,7 @@ var app_application_lincko = {
 	},
 
 	/*
-		"setFields" prepare common fields to launch when we do not precise which field to check
+		"setFields" creates common fields to launch when we do not precise which field to check, and set it to true. If the field already exists, it only sets it to true.
 		app_application_lincko.setFields(['tasks', 'chats']); => Add string as a field to be checked
 		app_application_lincko.setFields(['tasks', 'chats']); => Add strings in array as fields to be checked
 	*/
@@ -502,7 +525,7 @@ $(window).resize(app_application_submenu_position);
 JSfiles.finish(function(){
 	//Update every 15s automatically
 	setInterval(function(){
-		app_application_lincko.update();
-	}, 4000);
-	//}, 15000); //15s
+		//app_application_lincko.update();
+	//}, 4000); //4s Demo
+	}, 15000); //15s Production
 });

@@ -3,9 +3,9 @@
 {% block app_application %}
 <div id="begin_app_application" class="visibility_hidden">
 	<script>
-		JSfiles.later("{{ _filelatest('/lincko/app/scripts/app/application.js', 10) }}");
+		JSfiles.later("{{ _filelatest('/lincko/app/scripts/app/application.js') }}", 10);
 		//Some JS that are not linked to a twig file
-		JSfiles.later("{{ _filelatest('/lincko/app/scripts/generic/storage.js', 40) }}");
+		JSfiles.later("{{ _filelatest('/lincko/app/scripts/generic/storage.js') }}", 40);
 		JSfiles.later("{{ _filelatest('/lincko/app/scripts/generic/velocity.js') }}");
 		JSfiles.later("{{ _filelatest('/lincko/app/scripts/app/users.js') }}");
 	</script>

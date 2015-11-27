@@ -326,8 +326,8 @@ var app_project_info = {
 							duration: time,
 							delay: 60,
 							begin: function(){
-								$('#app_project_info_title').html(wrapper_to_html(history.title));
-								$('#app_project_info_content').html(wrapper_to_html(history.content));
+								$('#app_project_info_title').html(php_nl2br(history.title));
+								$('#app_project_info_content').html(php_nl2br(history.content));
 								$(this).show();
 								app_project_tab();
 							},
