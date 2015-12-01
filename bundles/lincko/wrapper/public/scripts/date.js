@@ -3,11 +3,11 @@ $.extend(wrapper_date.prototype, {
 	time: false,
 
 	Constructor: function(timestamp){
-		if(typeof timestamp === 'number' || typeof timestamp === 'string'){
-			this.time = new Date(1000*parseInt(timestamp, 10)); //Convert in milliseconds
-		} else {
-			this.time = Math.floor((new Date()).getTime() / 1000);
+		if(typeof timestamp !== 'number' && typeof timestamp !== 'string'){
+			timestamp = Math.floor((new Date()).getTime() / 1000);
+
 		}
+		this.time = new Date(1000*parseInt(timestamp, 10)); //Convert in milliseconds
 	},
 
 	setTime: function(timestamp){
