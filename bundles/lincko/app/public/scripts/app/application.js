@@ -16,6 +16,7 @@ var app_application_lincko = {
 		var object = false;
 		//Assign id
 		var item = {
+			id: null,
 			range: {},							//React to which category (all for empty)
 			exists: function(){ return true; },	//Check exitistance of any related object
 			exists_param: null,					//optional parameters
@@ -31,6 +32,7 @@ var app_application_lincko = {
 
 		//Assign Exists, Action and Deletion methods
 		if(typeof id === 'string' || typeof id === 'number'){
+			item.id = id;
 			if(typeof action === 'function'){
 				item.action = action;
 				object = 'element';
@@ -59,19 +61,6 @@ var app_application_lincko = {
 				for(var i in range){
 					range[i] = range[i].toLowerCase();
 					item.range[range[i]] = true;
-					/*
-					//Check if it has relatives
-					if(
-						   $.type(Lincko.storage.data) === 'object'
-						&& $.type(Lincko.storage.data['_']) === 'object'
-						&& $.type(Lincko.storage.data['_']['_relations']) === 'object'
-						&& $.type(Lincko.storage.data['_']['_relations'][range[i]]) === 'array'
-						){
-						for(var j in Lincko.storage.data['_']['_relations'][range[i]]){
-							item.range[Lincko.storage.data['_']['_relations'][range[i]][j]] = true;
-						}
-					}
-					*/
 				}
 			}
 
@@ -122,6 +111,7 @@ var app_application_lincko = {
 			items_list[items] = true;
 		} else if($.type(items) === 'array'){
 			for(var i in items){
+				field = items[i];
 				if(typeof field === 'string' || typeof field === 'number'){
 					items_list[field] = true; 
 				}
@@ -140,7 +130,7 @@ var app_application_lincko = {
 			this._fields[field] = false; //Reset to updated
 		}
 
-		//Add parent fields
+		//Add relations fields
 		if(
 			propagation
 			&& !$.isEmptyObject(items_list)
@@ -150,7 +140,7 @@ var app_application_lincko = {
 		){
 			//Note that Up and Down reationship is already done one back server
 			for(var i in items_list){
-				if($.type(Lincko.storage.data['_']['_relations'][i]) === 'array'){
+				if(typeof Lincko.storage.data['_']['_relations'][i] === 'object'){
 					for(var j in Lincko.storage.data['_']['_relations'][i]){
 						if(typeof items_list[ Lincko.storage.data['_']['_relations'][i][j] ] === 'undefined'){
 							items_list[ Lincko.storage.data['_']['_relations'][i][j] ] = true;
@@ -168,7 +158,7 @@ var app_application_lincko = {
 					if($.isEmptyObject(this._elements[Elem_id].range) || typeof this._elements[Elem_id].range[field] !== 'undefined'){
 						Elem = $('#'+Elem_id);
 						if(Elem.length > 0 && this._elements[Elem_id].exists()){
-							this._elements[Elem_id].action(Elem_id);
+							this._elements[Elem_id].action();
 						} else {
 							this._elements[Elem_id].deletion();
 							delete this._elements[Elem_id];
@@ -176,6 +166,32 @@ var app_application_lincko = {
 						delete Elem;
 						break;
 					}	
+				}
+			}
+
+			//For "false", we still launches all functions
+			if(items === false){
+				for(var field in this._fields){
+					items_list[field] = true;
+				}
+				//Add relation fields
+				if(
+					propagation
+					&& !$.isEmptyObject(items_list)
+					&& $.type(Lincko.storage.data) === 'object'
+					&& $.type(Lincko.storage.data['_']) === 'object'
+					&& $.type(Lincko.storage.data['_']['_relations']) === 'object'
+				){
+					//Note that Up and Down reationship is already done one back server
+					for(var i in items_list){
+						if(typeof Lincko.storage.data['_']['_relations'][i] === 'object'){
+							for(var j in Lincko.storage.data['_']['_relations'][i]){
+								if(typeof items_list[ Lincko.storage.data['_']['_relations'][i][j] ] === 'undefined'){
+									items_list[ Lincko.storage.data['_']['_relations'][i][j] ] = true;
+								}
+							}
+						}
+					}
 				}
 			}
 

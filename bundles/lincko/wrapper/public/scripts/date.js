@@ -3,8 +3,10 @@ $.extend(wrapper_date.prototype, {
 	time: false,
 
 	Constructor: function(timestamp){
-		if(typeof timestamp !== 'undefined'){
+		if(typeof timestamp === 'number' || typeof timestamp === 'string'){
 			this.time = new Date(1000*parseInt(timestamp, 10)); //Convert in milliseconds
+		} else {
+			this.time = Math.floor((new Date()).getTime() / 1000);
 		}
 	},
 

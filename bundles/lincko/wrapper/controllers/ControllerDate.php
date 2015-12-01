@@ -27,6 +27,7 @@ class ControllerDate extends Controller {
 		$app->trans->setDefaultLanguage('wrapper');
 
 		echo "
+		//timestamp (optional) default is current UTC
 		function wrapper_date(timestamp) {
 
 			if(typeof this.Constructor === 'function'){
