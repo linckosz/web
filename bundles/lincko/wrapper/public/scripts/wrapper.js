@@ -99,6 +99,11 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 				base_show_error(msg, data.error);
 			}
 
+			//Force to update elements if the function is available
+			if(typeof storage_cb_success === 'function'){
+				storage_cb_success(msg, data.error, data.status, data.msg);
+			}
+
 			// Below is the production information with "dataType: 'json'"
 			cb_success(msg, data.error, data.status, data.msg);
 		},
@@ -130,7 +135,7 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 }
 
 //This function must return false, we do not send form action, we just use ajax.
-function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete, param){
+function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete, param, force_action){
 	if(typeof cb_success==="undefined" || cb_success===null){ cb_success = function(){}; }
 	if(typeof cb_error==="undefined" || cb_error===null){ cb_error = function(){}; }
 	if(typeof cb_begin==="undefined" || cb_begin===null){ cb_begin = function(){}; }
@@ -173,7 +178,17 @@ function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete, 
 		});
 		var arr = objForm.serializeArray();
 		var method = objForm.prop('method');
+		//We use post method by default
+		if(typeof objForm.attr('method') === 'undefined'){
+			method = 'post';
+		}
 		var action = objForm.attr('action'); //Do not use prop here because (attr => user/logout | prop => https://lincko.net/user/logout (error))
+		console.log(force_action);
+		if(typeof force_action === 'string'){
+			action = force_action;
+		} else if(typeof action !== 'string'){
+			action = '';
+		}
 
 		//We convert to an table any integer or string, if not the back server will not see it ($this->data->0)
 		if(param===false || param==='' || param===null){

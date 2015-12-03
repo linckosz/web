@@ -233,13 +233,13 @@ var app_project_build = {
 		}
 	},
 
-	_app_feedProject: function(Elem_id){
+	_app_feedProject: function(){
 		var item_id = this.action_param[0];
 		var item_type = this.action_param[1];
 		var item = Lincko.storage.get(item_type, item_id);
-		if(item && item['_timestamp'] != $('#'+Elem_id).attr('timestamp')){
+		if(item && item['_timestamp'] != $('#'+this.id).attr('timestamp')){
 			var item_title = item['+title'];
-			app_project_build.feedProject($('#'+Elem_id), item_title);
+			app_project_build.feedProject($('#'+this.id), item_title);
 		}
 	},
 
