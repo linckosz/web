@@ -1062,7 +1062,13 @@ JSfiles.finish(function(){
 	wrapper_load_progress.move(65);
 	Lincko.storage.orderRecents(Lincko.storage.data);
 	wrapper_load_progress.move(70);
-	Lincko.storage.getLatest();
+	if($.isEmptyObject(Lincko.storage.data)){
+		Lincko.storage.getLatest();
+	} else {
+		setTimeout(function(){
+			Lincko.storage.getLatest();
+		}, 1000);
+	}
 
 	//Launch the time interval for back server data check
 	storage_check_timing.launch();

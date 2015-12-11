@@ -679,9 +679,10 @@ function submenu_Clean(layer, animate){
 	}
 }
 
-function submenu_Build(menu, next, hide){
+function submenu_Build(menu, next, hide, param){
 	if(typeof next === 'undefined'){ next = 1; }
 	if(typeof hide === 'undefined'){ hide = true; }
+	if(typeof param === 'undefined'){ param = null; }
 
 	//If the tab already exists, just close it if we launch again the action
 	if(hide){
@@ -694,7 +695,7 @@ function submenu_Build(menu, next, hide){
 	}
 
 	if(menu in submenu_list){
-		var temp = new Submenu(menu, next);
+		var temp = new Submenu(menu, next, param);
 		$('#app_application_submenu_block').show();
 		$('#app_content_dynamic').addClass('app_application_submenu_blur');
 		submenu_obj[temp.layer] = temp;
