@@ -318,6 +318,7 @@ $(function () {
 					}
 				}
 			});
+			app_application_lincko.update('upload');
 		},
 
 		_cancelHandler: function (e) {
@@ -331,6 +332,7 @@ $(function () {
 					}
 				}
 			});
+			app_application_lincko.update('upload');
 		},
 
 		_deleteHandler: function (e) {
@@ -344,6 +346,7 @@ $(function () {
 					}
 				}
 			});
+			app_application_lincko.update('upload');
 		},
 
 		_numberOfFiles: function(){

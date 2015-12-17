@@ -4,6 +4,11 @@ var storage_first_request = true; //Help to launch getSchema within getLatest on
 var storage_cb_success = function(msg, err, status, data){
 	if($.type(data) === 'object' && $.type(data.partial) === 'object' && $.type(data.partial[wrapper_localstorage.uid]) === 'object'){
 		if(Lincko.storage.update(data.partial[wrapper_localstorage.uid]) && typeof data.lastvisit === 'number'){
+			//Scan the schema if lastvisit was set to 0 previously
+			//if(data.lastvisit === 0 || Lincko.storage.getLastVisit() === 0){
+			if($.type(data) === 'object' && $.type(data.schema) === 'string' && data.schema === 'reset'){
+				Lincko.storage.schema(data.partial[wrapper_localstorage.uid]);
+			}
 			//Update the last visit day only if we are sure the update is finish
 			Lincko.storage.setLastVisit(data.lastvisit);
 		}
@@ -56,7 +61,7 @@ Lincko.storage.searchCOMID = function(){
 /* PRIVATE METHOD */
 Lincko.storage.getLastVisit = function(){
 	//We parse the value to insure it will be an integer
-	if(Lincko.storage.last_visit && Lincko.storage.last_visit !== null){
+	if(typeof Lincko.storage.last_visit !== 'undefined' && Lincko.storage.last_visit !== null){
 		return Lincko.storage.last_visit;
 	} else if (wrapper_localstorage.decrypt('lastvisit')){
 		return Lincko.storage.last_visit = parseInt(wrapper_localstorage.decrypt('lastvisit'), 10);
@@ -183,7 +188,6 @@ Lincko.storage.update = function(partial){
 Lincko.storage.schema = function(schema){
 	var update = false;
 	var missing = {};
-	
 	//Step 1: Delete all unlinked items
 	for(var i in Lincko.storage.data) {
 		if(!schema[i]){
@@ -257,12 +261,15 @@ Lincko.storage.schema = function(schema){
 /* PRIVATE METHOD */
 Lincko.storage.firstLatest = function(){
 	if(storage_first_request){
+		storage_first_request = false;
 		Lincko.storage.getSchema();
 		if(!$.isEmptyObject(Lincko.storage.data)){
-			storage_first_request = false;
 			Lincko.storage.display(true);
-			wrapper_load_progress.move(100);
+		} else {
+			//If we cannot get data object, we force to download the whole object
+			Lincko.storage.setLastVisit(0);
 		}
+		wrapper_load_progress.move(100);
 	}
 };
 
