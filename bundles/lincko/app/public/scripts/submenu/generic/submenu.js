@@ -780,6 +780,7 @@ var submenu_form_cb_success = function(msg, err, status, data){
 		}
 	} else {
 		storage_cb_success(msg, err, status, data);
+		//No need to call "storage_cb_success", it's called internally by "wrapper_ajax"
 		submenu_Hideall();
 	}
 };

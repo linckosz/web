@@ -1,19 +1,27 @@
 var storage_first_request = true; //Help to launch getSchema within getLatest only once at the beginning to insure nothing is missing
 
 /* PRIVATE METHOD */
+/*
+	NOTE: Do not add this callback to wrapper_sendAction, because wrapper_ajax already launches it internally
+*/
 var storage_cb_success = function(msg, err, status, data){
+	var schema = true;
+	var info = false;
+	if($.type(data) === 'object' && $.type(data.info) === 'string'){
+		info = data.info;
+	}
+
 	if($.type(data) === 'object' && $.type(data.partial) === 'object' && $.type(data.partial[wrapper_localstorage.uid]) === 'object'){
-		if(Lincko.storage.update(data.partial[wrapper_localstorage.uid]) && typeof data.lastvisit === 'number'){
-			//Scan the schema if lastvisit was set to 0 previously
-			//if(data.lastvisit === 0 || Lincko.storage.getLastVisit() === 0){
-			if($.type(data) === 'object' && $.type(data.schema) === 'string' && data.schema === 'reset'){
+		if(Lincko.storage.update(data.partial[wrapper_localstorage.uid], info) && typeof data.lastvisit === 'number'){
+			if(info === 'reset'){
 				Lincko.storage.schema(data.partial[wrapper_localstorage.uid]);
+				schema = false;
 			}
 			//Update the last visit day only if we are sure the update is finish
 			Lincko.storage.setLastVisit(data.lastvisit);
 		}
 	}
-	if($.type(data) === 'object' && $.type(data.schema) === 'object' && $.type(data.schema[wrapper_localstorage.uid]) === 'object'){
+	if(schema && $.type(data) === 'object' && $.type(data.schema) === 'object' && $.type(data.schema[wrapper_localstorage.uid]) === 'object'){
 		Lincko.storage.schema(data.schema[wrapper_localstorage.uid]);
 	}
 	Lincko.storage.firstLatest();
@@ -74,7 +82,7 @@ Lincko.storage.getLastVisit = function(){
 /* PRIVATE METHOD */
 Lincko.storage.setLastVisit = function(timestamp){
 	timestamp = parseInt(timestamp, 10);
-	if(timestamp>0){
+	if(timestamp>=0){
 		Lincko.storage.last_visit = timestamp;
 		wrapper_localstorage.encrypt('lastvisit', timestamp);
 	}
@@ -104,6 +112,7 @@ Lincko.storage.display = function(force){
 		} else {
 			app_application_lincko.update();
 		}
+		wrapper_load_progress.move(100);
 	}
 };
 
@@ -115,16 +124,17 @@ Lincko.storage.getLatest = function(){
 		'lastvisit': Lincko.storage.getLastVisit(),
 		'show_error': false,
 	};
-	wrapper_sendAction(arr, 'post', 'data/latest', storage_cb_success);
+	wrapper_sendAction(arr, 'post', 'data/latest', null);
 };
 
 //Function that check for latest updates
 /* PRIVATE METHOD */
 Lincko.storage.getSchema = function(){
+	storage_first_request = false; //No need to launch firstLatest()
 	var arr = {
 		'show_error': false,
 	};
-	wrapper_sendAction(arr, 'post', 'data/schema', storage_cb_success);
+	wrapper_sendAction(arr, 'post', 'data/schema', null);
 };
 
 //Function that check for latest updates
@@ -136,13 +146,13 @@ Lincko.storage.getMissing = function(missing){
 			'show_error': false,
 		};
 		arr.partial[wrapper_localstorage.uid] = missing;
-		wrapper_sendAction(arr, 'post', 'data/missing', storage_cb_success);
+		wrapper_sendAction(arr, 'post', 'data/missing', null);
 	}
 };
 
 //Function that update the localweb database
 /* PRIVATE METHOD */
-Lincko.storage.update = function(partial){
+Lincko.storage.update = function(partial, info){
 	var item;
 	var update = false;
 	var newField = false;
@@ -175,7 +185,7 @@ Lincko.storage.update = function(partial){
 		Lincko.storage.orderRecents(partial);
 		Lincko.storage.display();
 		wrapper_localstorage.encrypt('data', JSON.stringify(Lincko.storage.data));
-		if(newField){
+		if(newField && !info){
 			Lincko.storage.getSchema();
 		}
 		return true;
@@ -188,6 +198,9 @@ Lincko.storage.update = function(partial){
 Lincko.storage.schema = function(schema){
 	var update = false;
 	var missing = {};
+
+	storage_first_request = false; //No need to launch firstLatest()
+
 	//Step 1: Delete all unlinked items
 	for(var i in Lincko.storage.data) {
 		if(!schema[i]){
@@ -269,7 +282,6 @@ Lincko.storage.firstLatest = function(){
 			//If we cannot get data object, we force to download the whole object
 			Lincko.storage.setLastVisit(0);
 		}
-		wrapper_load_progress.move(100);
 	}
 };
 
@@ -1070,11 +1082,13 @@ JSfiles.finish(function(){
 	Lincko.storage.orderRecents(Lincko.storage.data);
 	wrapper_load_progress.move(70);
 	if($.isEmptyObject(Lincko.storage.data)){
+		Lincko.storage.setLastVisit(0);
 		Lincko.storage.getLatest();
 	} else {
 		setTimeout(function(){
 			Lincko.storage.getLatest();
 		}, 1000);
+		wrapper_load_progress.move(100);
 	}
 
 	//Launch the time interval for back server data check
