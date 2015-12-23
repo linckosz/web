@@ -223,7 +223,7 @@ var wrapper_fp = '{{ fingerprint }}';
 
 var wrapper_localstorage = {
 	sha: '{{ sha }}',
-	uid: '{{ uid }}',
+	uid: {{ uid }},
 	company: '{{ company|lower }}',
 	prefixuid: '_{{ uid }}_',
 	prefix: '_{{ uid }}_{{ company|lower }}_',
