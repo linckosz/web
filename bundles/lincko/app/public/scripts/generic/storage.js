@@ -50,7 +50,7 @@ Lincko.storage.searchCOMID = function(){
 	){
 		var object = Lincko.storage.data['_']['companies'];
 		for(var key in object) {
-			if(object[key].personal_private==1 && wrapper_localstorage.company === ''){
+			if(object[key].personal_private>0 && object[key].personal_private==wrapper_localstorage.uid && wrapper_localstorage.company === ''){
 				Lincko.storage.COMID = parseInt(key, 10);
 				app_application_lincko.update('companies');
 				return Lincko.storage.COMID;
@@ -757,7 +757,7 @@ Lincko.storage.getMyPlaceholder = function(){
 	if($.type(Lincko.storage.data[company]) === 'object' && $.type(Lincko.storage.data[company][category]) === 'object'){
 		for(var id in Lincko.storage.data[company][category]){
 			item_tp = Lincko.storage.data[company][category][id];
-			if((typeof item_tp['personal_private']==='string' || typeof item_tp['personal_private']==='number') && parseInt(item_tp['personal_private'], 10)===1){
+			if((typeof item_tp['personal_private']==='string' || typeof item_tp['personal_private']==='number') && parseInt(item_tp['personal_private'], 10)===wrapper_localstorage.uid){
 				return Lincko.storage.get(category, id);
 			}
 		}
