@@ -43,16 +43,18 @@ Lincko.storage.getCOMID = function(){
 
 /* PRIVATE METHOD */
 Lincko.storage.searchCOMID = function(){
-	if(wrapper_localstorage.company === ''){
-		return Lincko.storage.COMID = 0;
-	} else if(
+	if(
 		   Lincko.storage.data
 		&& Lincko.storage.data['_']
 		&& Lincko.storage.data['_']['companies']
 	){
 		var object = Lincko.storage.data['_']['companies'];
 		for(var key in object) {
-			if(object[key].url && object[key].url == wrapper_localstorage.company){
+			if(object[key].personal_private==1 && wrapper_localstorage.company === ''){
+				Lincko.storage.COMID = parseInt(key, 10);
+				app_application_lincko.update('companies');
+				return Lincko.storage.COMID;
+			} else if(object[key].personal_private==0 && object[key].url && object[key].url == wrapper_localstorage.company){
 				Lincko.storage.COMNAME = object[key].name;
 				Lincko.storage.COMID = parseInt(key, 10);
 				app_application_lincko.update('companies');
@@ -292,6 +294,7 @@ Lincko.storage.setHistory = function(category, id, stop_order){
 	var new_key = false;
 	var company = Lincko.storage.getCOMID();
 	var item;
+	var username;
 
 	if($.type(Lincko.storage.data[company]) === 'object' && $.type(Lincko.storage.data[company][category]) === 'object' && $.type(Lincko.storage.data[company][category][id]) === 'object'){
 		item = Lincko.storage.data[company][category][id];
@@ -311,8 +314,12 @@ Lincko.storage.setHistory = function(category, id, stop_order){
 					if(typeof h_item['old'] !== 'undefined' && typeof h_item['new'] !== 'undefined'){
 						Lincko.storage.data_recent[h_created_at][category][id][h_id]['old'] = h_item['old'];
 					}
+					Lincko.storage.data_recent[h_created_at][category][id][h_id]['par'] = {};
 					if(typeof h_item['par'] !== 'undefined'){
 						Lincko.storage.data_recent[h_created_at][category][id][h_id]['par'] = h_item['par'];
+					}
+					if(username = Lincko.storage.get('users', h_item['by'], 'username')){
+						Lincko.storage.data_recent[h_created_at][category][id][h_id]['par']['un'] = username; 
 					}
 				}
 			}
