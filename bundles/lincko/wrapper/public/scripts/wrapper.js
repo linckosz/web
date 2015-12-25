@@ -343,6 +343,7 @@ wrapper_localstorage.decrypt = function (link){
 
 wrapper_perfectScrollbar_options = {
 	minScrollbarLength: 50,
+	swipePropagation: false,
 }
 function wrapper_perfectScrollbar(){
 	var overthrow = $('.overthrow');
