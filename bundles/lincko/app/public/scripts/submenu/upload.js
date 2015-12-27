@@ -180,7 +180,7 @@ Submenu.prototype.Add_MenuAppUploadAllFile = function(e) {
 						Elem = $('#'+that.id+'_submenu_app_upload_single_'+index);
 					}
 
-					if(data.files[0].preview && $.trim(Elem.find("[find=submenu_app_upload_preview_image]").html()) === ''){console.log(data.files[0]); //[toto]
+					if(data.files[0].preview && $.trim(Elem.find("[find=submenu_app_upload_preview_image]").html()) === ''){console.log(data.files[0]); //[toto] File staying in cache, memory not cleared?
 						if(typeof data.files[0].preview.tagName !== 'undefined' && data.files[0].preview.tagName.toLowerCase() === 'canvas'){
 							Elem.find("[find=submenu_app_upload_preview_image]").html(
 								'<img src="'+data.files[0].preview.toDataURL()+'" style="width: auto; height: auto;">'

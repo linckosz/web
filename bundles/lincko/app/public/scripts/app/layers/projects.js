@@ -105,7 +105,7 @@ var app_layers_projects_feedPage = function(param, animation){
 	app_layers_projects_charts = {};
 	for(var i in items){
 		item = items[i];
-		if(item['personal_private']==wrapper_localstorage.uid){ continue; } //Do not display personal folder
+		if(item['personal_private']==wrapper_localstorage.uid){ continue; } //Do not display personal workspace
 		Elem = $('#-models_projects').clone();
 		Elem.prop('id', 'models_projects_'+item['_id']);
 		Elem.find("[find=title]").html( wrapper_to_html(item['+title']) );

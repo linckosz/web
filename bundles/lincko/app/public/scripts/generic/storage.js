@@ -50,11 +50,11 @@ Lincko.storage.searchCOMID = function(){
 	){
 		var object = Lincko.storage.data['_']['companies'];
 		for(var key in object) {
-			if(object[key].personal_private>0 && object[key].personal_private==wrapper_localstorage.uid && wrapper_localstorage.company === ''){
+			if(object[key].personal_private!==null && object[key].personal_private==wrapper_localstorage.uid && wrapper_localstorage.company === ''){
 				Lincko.storage.COMID = parseInt(key, 10);
 				app_application_lincko.update('companies');
 				return Lincko.storage.COMID;
-			} else if(object[key].personal_private==0 && object[key].url && object[key].url == wrapper_localstorage.company){
+			} else if(object[key].personal_private===null && object[key].url && object[key].url == wrapper_localstorage.company){
 				Lincko.storage.COMNAME = object[key].name;
 				Lincko.storage.COMID = parseInt(key, 10);
 				app_application_lincko.update('companies');
@@ -572,7 +572,7 @@ Lincko.storage.search = function(type, param, category){
 								if(!$.isEmptyObject(save_result)){
 									if(
 										typeof save_result['personal_private']==='undefined'
-										|| ((typeof save_result['personal_private']==='string' || typeof save_result['personal_private']==='number') && parseInt(save_result['personal_private'], 10)===0)
+										|| ((typeof save_result['personal_private']==='string' || typeof save_result['personal_private']==='number') && save_result['personal_private']===null)
 									){
 										if(typeof results[cat] === 'undefined'){ results[cat] = {}; }
 										results[cat][item] = save_result;
@@ -711,7 +711,7 @@ Lincko.storage.getFavorites = function(category, param, extend){
 		list = Lincko.storage.data_favorite[company][category];
 		for(var i in list){
 			if(item_tp = Lincko.storage.get(category, list[i])){
-				if(typeof id_record[item_tp['_id']]==='undefined' && (typeof item_tp['personal_private']==='undefined' || parseInt(item_tp['personal_private'], 10)===0)){
+				if(typeof id_record[item_tp['_id']]==='undefined' && (typeof item_tp['personal_private']==='undefined' || item_tp['personal_private']===null)){
 					//Add info to element, use "_" to recognize that it has been added by JS
 					item_tp['_timestamp'] = item_tp['created_at'];
 					results.push(item_tp);
@@ -730,7 +730,7 @@ Lincko.storage.getFavorites = function(category, param, extend){
 		list = Lincko.storage.time('recent_created_at', param, category);
 		for(var i in list){
 			if(item_tp = Lincko.storage.get(category, list[i].id)){
-				if(typeof id_record[item_tp['_id']]==='undefined' && (typeof item_tp['personal_private']==='undefined' || parseInt(item_tp['personal_private'], 10)===0)){
+				if(typeof id_record[item_tp['_id']]==='undefined' && (typeof item_tp['personal_private']==='undefined' || item_tp['personal_private']===null)){
 					//Add info to element, use "_" to recognize that it has been added by JS
 					item_tp['_timestamp'] = item_tp['created_at'];
 					results.push(item_tp);
