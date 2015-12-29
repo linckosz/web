@@ -73,7 +73,8 @@ var app_content_menu = {
 			   $.type(Lincko.storage.data[Lincko.storage.getCOMID()]) === 'object'
 			&& $.type(Lincko.storage.data[Lincko.storage.getCOMID()]['projects']) === 'object'
 			&& $.type(Lincko.storage.data[Lincko.storage.getCOMID()]['projects'][projects_id]) === 'object'
-			&& Lincko.storage.data[Lincko.storage.getCOMID()]['projects'][projects_id]['personal_private'] == 0
+			&& (Lincko.storage.data[Lincko.storage.getCOMID()]['projects'][projects_id]['personal_private'] == 0
+				|| Lincko.storage.data[Lincko.storage.getCOMID()]['projects'][projects_id]['personal_private'] == null)
 		){
 			title = Lincko.storage.data[Lincko.storage.getCOMID()]['projects'][projects_id]['+title'];
 			list = [
