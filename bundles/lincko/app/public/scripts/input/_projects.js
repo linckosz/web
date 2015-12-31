@@ -1,5 +1,5 @@
 base_input_field.project_title_text = {
-	format: Lincko.Translation.get('app', 32, 'html'), //Title format: - 104 characters max
+	format: Lincko.Translation.get('app', 32, 'js'), //Title format: - 104 characters max
 	tags: {
 		pattern: "^.{1,104}$",
 		required: "required",

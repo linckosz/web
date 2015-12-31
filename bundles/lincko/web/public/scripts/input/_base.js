@@ -1,5 +1,5 @@
 base_input_field.firstname = {
-	format: Lincko.Translation.get('web', 4, 'html'), //First name format: - 104 characters max
+	format: Lincko.Translation.get('web', 4, 'js'), //First name format: - 104 characters max
 	tags: {
 		pattern: "^.{1,104}$",
 		required: true,
@@ -15,7 +15,7 @@ base_input_field.firstname = {
 }
 
 base_input_field.lastname = {
-	format: Lincko.Translation.get('web', 5, 'html'), //Last name format: - 104 characters max
+	format: Lincko.Translation.get('web', 5, 'js'), //Last name format: - 104 characters max
 	tags: {
 		pattern: "^.{1,104}$",
 		required: true,
@@ -31,7 +31,7 @@ base_input_field.lastname = {
 }
 
 base_input_field.username = {
-	format: Lincko.Translation.get('web', 3, 'html'), //Username format: - 104 characters max - Without space
+	format: Lincko.Translation.get('web', 3, 'js'), //Username format: - 104 characters max - Without space
 	tags: {
 		pattern: "^\\S{1,104}$",
 		required: true,
@@ -47,7 +47,7 @@ base_input_field.username = {
 }
 
 base_input_field.email = {
-	format: Lincko.Translation.get('web', 1, 'html'), //Email address format: - {name}@{domain}.{ext} - 191 characters maxi
+	format: Lincko.Translation.get('web', 1, 'js'), //Email address format: - {name}@{domain}.{ext} - 191 characters maxi
 	tags: {
 		pattern: "^.{1,100}@.*\\..{2,4}$",
 		required: "required",
@@ -65,7 +65,7 @@ base_input_field.email = {
 }
 
 base_input_field.password = {
-	format: Lincko.Translation.get('web', 2, 'html'), //Password format: - Between 6 and 60 characters - Alphanumeric
+	format: Lincko.Translation.get('web', 2, 'js'), //Password format: - Between 6 and 60 characters - Alphanumeric
 	tags: {
 		pattern: "^[\\w\\d]{6,60}$",
 		required: "required",
@@ -81,7 +81,7 @@ base_input_field.password = {
 }
 
 base_input_field.captcha = {
-	format: Lincko.Translation.get('web', 7, 'html'), //Captcha format: - Between 1 and 6 characters - Number
+	format: Lincko.Translation.get('web', 7, 'js'), //Captcha format: - Between 1 and 6 characters - Number
 	tags: {
 		pattern: "^\\d{1,6}$",
 		required: "required",
