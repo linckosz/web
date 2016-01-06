@@ -12,6 +12,11 @@ var JSerror = new function() {
 	var that = this; //Enable to call methods inside other methods
 
 	this.sendError = function (message, url, linenumber, colnumber, error) {
+		if(typeof url == 'undefined'){ url = '';}
+		if(typeof linenumber == 'undefined'){ linenumber = 0;}
+		if(typeof colnumber == 'undefined'){ colnumber = 0;}
+		if(typeof error == 'undefined'){ error = '';}
+
 		if(!this.setting){
 			that.setup();
 		}
