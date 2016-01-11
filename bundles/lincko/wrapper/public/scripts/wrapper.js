@@ -341,22 +341,21 @@ wrapper_localstorage.decrypt = function (link){
 };
 
 var wrapper_IScroll_options = {
-	//click: true, //Do we need it on mobile? or tap event can work? be carefull to gohst click on old android
+	click: true,
 	keyBindings: true,
 	mouseWheel: true,
-
-	//https://github.com/cubiq/iscroll/pull/548
-	click: false,
-	preventDefaultException:{tagName:/.*/},
-
 	scrollbars: true,
 	scrollX: false,
-	scrollY: true, //Default behavior
-	fadeScrollbars: true,
+	scrollY: true,
+	//fadeScrollbars: true,
 	interactiveScrollbars: true,
 	shrinkScrollbars: 'clip',
 	scrollbars: 'custom',
 
+	//In case we encounter ghost click (double click event), but the issue is that it launch the click while scrolling on desktop
+	//https://github.com/cubiq/iscroll/pull/548
+	//click: false,
+	//preventDefaultException:{tagName:/.*/},
 };
 
 var wrapper_IScroll_options_new = {};
