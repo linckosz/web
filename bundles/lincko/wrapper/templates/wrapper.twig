@@ -19,8 +19,8 @@
 
 <link rel="stylesheet" href="{{ _filelatest('/styles/libs/jquery-ui.min.css') }}" type="text/css" />
 <link rel="stylesheet" href="{{ _filelatest('/styles/libs/roboto.css') }}" type="text/css" />
-<link rel="stylesheet" href="{{ _filelatest('/styles/libs/perfect-scrollbar.min.css') }}" type="text/css" />
 <link rel="stylesheet" href="{{ _filelatest('/styles/libs/easyeditor.css') }}" type="text/css" />
+{#<link rel="stylesheet" href="{{ _filelatest('/styles/libs/perfect-scrollbar.min.css') }}" type="text/css" />#}
 
 {# Load all libraries #}
 <script src="{{ _filelatest('/scripts/libs/jquery-1.11.3.min.js') }}" type="text/javascript"></script>
@@ -39,9 +39,11 @@
 <script src="{{ _filelatest('/scripts/libs/php.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/base64.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/object-keys-polyfill.js') }}" type="text/javascript"></script>
-<script src="{{ _filelatest('/scripts/libs/perfect-scrollbar.jquery.min.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/encoder.min.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/jquery.easyeditor.js') }}" type="text/javascript"></script>
+<script src="{{ _filelatest('/scripts/libs/iscroll.js') }}" type="text/javascript"></script>
+{#<script src="{{ _filelatest('/scripts/libs/perfect-scrollbar.jquery.min.js') }}" type="text/javascript"></script>#}
+
 
 {# draw Charts #}
 <script src="{{ _filelatest('/scripts/libs/chart.min.js') }}" type="text/javascript"></script>
@@ -72,6 +74,9 @@ var Lincko = Lincko || {}; //Create singleton object
 //Keep a record of JS files to be launch at the end of the page loading
 //Can only add methods, cannot add property because it migth bug the page loading
 var JSfiles = {};
+
+//This timeout help some window resize, or scroll, to not be called continuously
+var wrapper_timeout_timer = 200;
 
 //Number of priorities load to helps the progress bar to move
 var wrapper_load_progress = {
@@ -249,8 +254,9 @@ $(function() {
 });
 
 //Minimal libraries
-JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/error.js') }}", 0);
-JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/divers.js') }}", 0);
+JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/null.js') }}", 0); //This empty file helps to load the first 304
+JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/error.js') }}", 1);
+JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/divers.js') }}", 1);
 JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/language.js') }}", 30);
 JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/date.js') }}", 30);
 JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/wrapper.js') }}", 40);
@@ -262,6 +268,7 @@ JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/wrapper.js') }}", 40);
 #}
 <link rel="stylesheet" href="{{ _filelatest('/lincko/wrapper/styles/responsive.css') }}" type="text/css" />
 <link rel="stylesheet" href="{{ _filelatest('/lincko/wrapper/styles/divers.css') }}" type="text/css" />
+<link rel="stylesheet" href="{{ _filelatest('/lincko/wrapper/styles/wrapper.css') }}" type="text/css" />
 <script src="{{ _filelatest('/lincko/wrapper/scripts/responsive.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/translation/list.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/translation/date.js') }}" type="text/javascript"></script>

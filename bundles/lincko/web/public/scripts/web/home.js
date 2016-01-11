@@ -37,10 +37,19 @@ var home_cb_complete = function(){
 };
 
 home_resize_elements();
-$(window).resize(home_resize_elements);
+var home_resize_elements_timer;
+$(window).resize(function(){
+	clearTimeout(home_resize_elements_timer);
+	home_resize_elements_timer = setTimeout(home_resize_elements, wrapper_timeout_timer);
+});
 
 home_joinus_box_position();
-$(window).resize(home_joinus_box_position);
+var home_joinus_box_position_timer;
+$(window).resize(function(){
+	clearTimeout(home_joinus_box_position_timer);
+	home_joinus_box_position_timer = setTimeout(home_joinus_box_position, wrapper_timeout_timer);
+});
+
 $("#base_content").on("scroll", home_joinus_box_position); 
 
 function home_hide_error() {

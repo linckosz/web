@@ -18,7 +18,11 @@ function app_content_menu_position() {
 	});
 }
 app_content_menu_position();
-$(window).resize(app_content_menu_position);
+var app_content_menu_position_timer;
+$(window).resize(function(){
+	clearTimeout(app_content_menu_position_timer);
+	app_content_menu_position_timer = setTimeout(app_content_menu_position, wrapper_timeout_timer);
+});
 
 function app_content_dynamic_position() {
 	$('#app_content_dynamic, #app_content_dynamic_sub').height(function(){
@@ -31,7 +35,11 @@ function app_content_dynamic_position() {
 	$('#app_content_dynamic_sub').width($('#app_content_dynamic').width());
 }
 app_content_dynamic_position();
-$(window).resize(app_content_dynamic_position);
+var app_content_dynamic_position_timer;
+$(window).resize(function(){
+	clearTimeout(app_content_dynamic_position_timer);
+	app_content_dynamic_position_timer = setTimeout(app_content_dynamic_position, wrapper_timeout_timer);
+});
 
 var app_content_menu = {
 
@@ -49,12 +57,13 @@ var app_content_menu = {
 		
 		//We do not allow to display anything until the personal project is available
 		if(typeof projects_id === 'undefined'){ return false; }
-
-		app_content_menu.projects_id = projects_id;
-		app_content_menu.menu = menu;
-		app_content_menu.param = param;
-
+		if(typeof menu === 'undefined'){ menu = 'dashboard'; }
 		if(typeof param === 'undefined'){ param = null; }
+
+		//app_content_menu.projects_id = projects_id;
+		//app_content_menu.menu = menu;
+		//app_content_menu.param = param;
+
 		var list = [];
 		var Elem = $('#app_content_menu');
 		$('#app_content_menu_table').removeClass('display_none');
@@ -98,6 +107,16 @@ var app_content_menu = {
 		if($.inArray(menu, list) < 0){
 			menu = list[0];
 		}
+
+		//Do nothing if we are in the same menu
+		if(app_content_menu.menu == menu){
+			return true;
+		}
+
+		app_content_menu.projects_id = projects_id;
+		app_content_menu.menu = menu;
+		app_content_menu.param = param;
+
 		for(var i in list){
 			$('#app_content_menu_'+list[i]).removeClass('display_none');
 			$('#app_content_menu_'+list[i]).find(".app_content_menu_icon").click(
@@ -123,11 +142,20 @@ $('#app_content_top_home, #app_content_top_title_menu').click(function(){
 });
 
 var app_content_menu_first_launch = true;
+
+var app_content_menu_default = function(){
+	if(app_content_menu_first_launch && Lincko.storage.getMyPlaceholder() !== false){
+		app_content_menu_first_launch = false;
+		app_content_menu.selection(Lincko.storage.getMyPlaceholder()['_id']);
+	}
+};
+
+//Scroll additional parameters
+wrapper_IScroll_options_new['app_content_menu'] = {
+	scrollX: true,
+}
+
 JSfiles.finish(function(){	
-	app_application_lincko.add(function(){
-		if(app_content_menu_first_launch && typeof Lincko.storage.getMyPlaceholder() !== 'undefined'){
-			app_content_menu_first_launch = false;
-			$('#app_content_top_home').click();
-		}
-	}, "projects");
+	app_application_lincko.add(app_content_menu_default, "projects");
+	app_content_menu_default();
 });

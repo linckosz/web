@@ -106,6 +106,7 @@ Lincko.storage.display = function(force){
 					for(var category in Lincko.storage.data[company]) {
 						if($.type(Lincko.storage.data[company][category]) === 'object'){
 							app_application_lincko.setFields(category);
+							console.log(category);
 						}
 					}
 				}
@@ -279,7 +280,8 @@ Lincko.storage.firstLatest = function(){
 		storage_first_request = false;
 		Lincko.storage.getSchema();
 		if(!$.isEmptyObject(Lincko.storage.data)){
-			Lincko.storage.display(true);
+			//Lincko.storage.display(true); //I don't think we need to force, probability of mismatching is almost null
+			Lincko.storage.display();
 		} else {
 			//If we cannot get data object, we force to download the whole object
 			Lincko.storage.setLastVisit(0);

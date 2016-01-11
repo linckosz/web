@@ -247,7 +247,7 @@ Submenu.prototype.Add_MenuAppUploadAllFile = function(e) {
 
 					if(data.lincko_status === 'done' || data.lincko_status === 'deleted'){
 						//Remove overthrow link being able to detach from DOM
-						Elem.find('.overthrow').perfectScrollbar('destroy');
+						//Elem.find('.overthrow').perfectScrollbar('destroy');
 						var delay = 1000;
 						if(data.lincko_status === 'deleted'){
 							delay = 1500;

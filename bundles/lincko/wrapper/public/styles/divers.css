@@ -2,7 +2,7 @@
 	Improving HTML5 app performance with GPU accelerated CSS transform
 	BUG: fixed position and transform are buggy on some browsers (especially Firefox)
 */
-.accelerated {
+.accelerated_donotuse {
 	will-change: transform;
 	-webkit-transform: translateZ(0);
 	-moz-transform: translateZ(0);

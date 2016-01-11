@@ -183,7 +183,6 @@ function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete, 
 			method = 'post';
 		}
 		var action = objForm.attr('action'); //Do not use prop here because (attr => user/logout | prop => https://lincko.net/user/logout (error))
-		console.log(force_action);
 		if(typeof force_action === 'string'){
 			action = force_action;
 		} else if(typeof action !== 'string'){
@@ -341,18 +340,97 @@ wrapper_localstorage.decrypt = function (link){
 	return txt;
 };
 
-wrapper_perfectScrollbar_options = {
-	minScrollbarLength: 50,
-	swipePropagation: false,
-}
-function wrapper_perfectScrollbar(){
+var wrapper_IScroll_options = {
+	//click: true, //Do we need it on mobile? or tap event can work? be carefull to gohst click on old android
+	keyBindings: true,
+	mouseWheel: true,
+
+	//https://github.com/cubiq/iscroll/pull/548
+	click: false,
+	preventDefaultException:{tagName:/.*/},
+
+	scrollbars: true,
+	scrollX: false,
+	scrollY: true, //Default behavior
+	fadeScrollbars: true,
+	interactiveScrollbars: true,
+	shrinkScrollbars: 'clip',
+	scrollbars: 'custom',
+
+};
+
+var wrapper_IScroll_options_new = {};
+
+var myIScrollList = {};
+function wrapper_IScroll(){
 	var overthrow = $('.overthrow');
 	overthrow.css('overflow', 'hidden').css('overflow-x', 'hidden').css('overflow-y', 'hidden');
-	overthrow.perfectScrollbar(wrapper_perfectScrollbar_options);
-	overthrow.perfectScrollbar('initialize');
-	overthrow.perfectScrollbar('update');
+	//Create new
+	overthrow.each(function(){
+		var Elem = $(this);
+		if(Elem.children().first().length>0){
+			if(!this.id){
+				this.id = "overthrow_"+md5(Math.random());
+			}
+			if(!myIScrollList[this.id]){
+				//Merge with optional options
+				var wrapper_IScroll_options_temp = {};
+				//We have to loop to recreate the object because of JS memory assignment
+				for(key in wrapper_IScroll_options){
+					wrapper_IScroll_options_temp[key] = wrapper_IScroll_options[key];
+				}
+				//We add specific options to the element
+				if(typeof wrapper_IScroll_options_new[this.id] === 'object'){
+					for(key in wrapper_IScroll_options_new[this.id]){
+						wrapper_IScroll_options_temp[key] = wrapper_IScroll_options_new[this.id][key];
+					}
+				}
+				//Always show scrollbar on desktop (only need to launch at page creation, the user resize only in rare cases, and it's not a annoying detail)
+				if(responsive.test("minDesktop")){
+					wrapper_IScroll_options_temp.fadeScrollbars = false;
+					wrapper_IScroll_options_temp.interactiveScrollbars = true;
+					wrapper_IScroll_options_temp.shrinkScrollbars = 'scale'; //CPU hunger, not suitable for mobiles
+				}
+
+				//Enable vertical and horizontal scrolling
+				if(!Elem.children().first().hasClass('iscroll_sub_div') ){
+					Elem.children().wrapAll('<div class="iscroll_sub_div" />');
+					var div_scroll = Elem.children().first();
+					if(typeof wrapper_IScroll_options_temp.scrollX != 'undefined' && wrapper_IScroll_options_temp.scrollX){
+						div_scroll.addClass('scrollX');
+					}
+					if(typeof wrapper_IScroll_options_temp.scrollY != 'undefined' && wrapper_IScroll_options_temp.scrollY){
+						div_scroll.addClass('scrollY');
+					}
+				}
+				
+				myIScrollList[this.id] = new IScroll(this, wrapper_IScroll_options_temp);
+			}
+		}
+	});
+
+	//Reinitialize or Delete all in a setTimeout to be sure it's loaded after DOM repainting
+	setTimeout(function(){
+		for(var i in myIScrollList){
+			if($('#'+i)){
+				if('refresh' in myIScrollList[i]){
+					myIScrollList[i].refresh();
+				}
+			} else {
+				myIScrollList[i].destroy();
+				myIScrollList[i] = null;
+				delete myIScrollList[i];
+			}
+		}
+	}, wrapper_timeout_timer);
 }
-$(window).resize(wrapper_perfectScrollbar);
+
+var wrapper_timeout_timer = 200;
+var wrapper_IScroll_timer;
+$(window).resize(function(){
+	clearTimeout(wrapper_IScroll_timer);
+	wrapper_IScroll_timer = setTimeout(wrapper_IScroll, wrapper_timeout_timer);
+});
 
 function wrapper_clean_chart(){
 	for(var i in Chart.instances){
@@ -363,6 +441,6 @@ function wrapper_clean_chart(){
 }
 
 JSfiles.finish(function(){
-	wrapper_perfectScrollbar();
+	wrapper_IScroll();
 	wrapper_localstorage.cleanLocalUser();
 });

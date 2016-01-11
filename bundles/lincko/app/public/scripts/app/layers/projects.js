@@ -75,7 +75,11 @@ function app_layers_projects_charts_resize(){
 		}
 	}, 100);
 }
-$(window).resize(app_layers_projects_charts_resize);
+var app_layers_projects_charts_resize_timer;
+$(window).resize(function(){
+	clearTimeout(app_layers_projects_charts_resize_timer);
+	app_layers_projects_charts_resize_timer = setTimeout(app_layers_projects_charts_resize, wrapper_timeout_timer);
+});
 
 
 function app_layers_projects_icon_add_visibility(){
@@ -85,7 +89,11 @@ function app_layers_projects_icon_add_visibility(){
 		$('#app_layers_projects').find(".app_layers_projects_add_corner").hide();
 	}
 }
-$(window).resize(app_layers_projects_icon_add_visibility);
+var app_layers_projects_icon_add_visibility_timer;
+$(window).resize(function(){
+	clearTimeout(app_layers_projects_icon_add_visibility_timer);
+	app_layers_projects_icon_add_visibility_timer = setTimeout(app_layers_projects_icon_add_visibility, wrapper_timeout_timer);
+});
 
 
 var app_layers_projects_feedPage = function(param, animation){
@@ -157,7 +165,10 @@ var app_layers_projects_feedPage = function(param, animation){
 		}
 
 		Elem.click(
-			{projects_id: item['_id']}, function(event){
+			{
+				projects_id: item['_id']
+			},
+			function(event){
 				app_content_menu.selection(event.data.projects_id, 'tasks');
 			}
 		);
@@ -207,4 +218,3 @@ var app_layers_projects_feedPage = function(param, animation){
 
 }
 
-position

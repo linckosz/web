@@ -86,14 +86,11 @@
 	border-spacing: 6px;
 	z-index: 5;
 }
-#app_content_menu_table > div {
+
+.app_content_menu_cell {
 	display: table-row;
 	vertical-align: middle;
 	text-align: center;
-}
-
-.app_content_menu_cell {
-	display: none;
 }
 
 .app_content_menu_icon {
@@ -164,7 +161,7 @@
 		height: 48px !important;
 		display: table;
 	}
-	#app_content_menu_table > div {
+	.app_content_menu_cell {
 		display: table-cell;
 	}
 	#app_content_dynamic {

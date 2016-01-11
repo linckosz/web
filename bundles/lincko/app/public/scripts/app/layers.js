@@ -11,7 +11,7 @@ var app_layers_changePage = function(menu, param){
 		{ e: layer, p: { opacity: 1, }, o: { duration: 50, sequenceQueue: true,
 			begin: function(){
 				app_layers_launchMenu(menu, param);
-				wrapper_perfectScrollbar();
+				wrapper_IScroll();
 			},
 		} },
 	];

@@ -9,7 +9,7 @@
 	vertical-align: middle;
 	text-align: center;
 	background: linear-gradient(#FFFFFF,#E8E8E8);
-	z-index: 1000;
+	z-index: 9000;
 }
 
 #app_loading_progress_wall_cell {

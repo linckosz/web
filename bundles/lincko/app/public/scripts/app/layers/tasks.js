@@ -15,8 +15,11 @@ function app_layers_tasks_icon_add_visibility(){
 		$('#app_layers_taskss').find(".app_layers_tasks_add_corner").hide();
 	}
 }
-$(window).resize(app_layers_tasks_icon_add_visibility);
-
+var app_layers_tasks_icon_add_visibility_timer;
+$(window).resize(function(){
+	clearTimeout(app_layers_tasks_icon_add_visibility_timer);
+	app_layers_tasks_icon_add_visibility_timer = setTimeout(app_layers_tasks_icon_add_visibility, wrapper_timeout_timer);
+});
 
 var app_layers_tasks_feedPage = function(param){
 	if(typeof param === 'undefined'){ param = null; }

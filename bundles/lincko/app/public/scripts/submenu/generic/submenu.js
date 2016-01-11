@@ -116,7 +116,7 @@ function Submenu(menu, next, param) {
 		if(Elem.prefix){
 			base_format_form(Elem.prefix);
 		}
-		wrapper_perfectScrollbar();
+		wrapper_IScroll();
 		//Free memory
 		delete submenu_wrapper;
 	}
@@ -618,7 +618,7 @@ Submenu.prototype.Hide = function (animate){
 
 // http://stackoverflow.com/questions/19469881/javascript-remove-all-event-listeners-of-specific-type
 Submenu.prototype.Remove = function(){
-	$('#'+this.id).find('.overthrow').perfectScrollbar('destroy');
+	//$('#'+this.id).find('.overthrow').perfectScrollbar('destroy');
 	$('#'+this.id).hide().remove();
 	submenu_obj[this.layer] = null;
 	delete submenu_obj[this.layer];
@@ -767,7 +767,11 @@ function submenu_wrapper_width() {
 	$('.submenu_wrapper').css('width', width);
 }
 submenu_wrapper_width();
-$(window).resize(submenu_wrapper_width);
+var submenu_wrapper_width_timer;
+$(window).resize(function(){
+	clearTimeout(submenu_wrapper_width_timer);
+	submenu_wrapper_width_timer = setTimeout(submenu_wrapper_width, wrapper_timeout_timer);
+});
 
 var submenu_form_cb_success = function(msg, err, status, data){
 	var field = 'undefined';

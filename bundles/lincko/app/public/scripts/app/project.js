@@ -423,13 +423,23 @@ $('#app_project_company').click(function(){
 	app_content_menu.selection(-1, 'statistics');
 });
 
+var app_project_img_user_male = new Image();
+app_project_img_user_male.src = app_project_img_user_male_src;
+var app_project_img_user_female = new Image();
+app_project_img_user_female.src = app_project_img_user_female_src;
+$('#app_project_user_image').attr('src', app_project_img_user_male.src);
+
+var app_project_tab_timer;
 JSfiles.finish(function(){
 	$('#app_project_recent').hide();
 	app_project_quick_access();
 	app_project_tab();
 	app_project_build.scan();
 	app_project_info.build();
-	$(window).resize(app_project_tab);
+	$(window).resize(function(){
+		clearTimeout(app_project_tab_timer);
+		app_project_tab_timer = setTimeout(app_project_tab, wrapper_timeout_timer);
+	});
 	
 	app_application_lincko.add(app_project_info.build);
 	app_application_lincko.add(app_project_build.scan, 'projects');
@@ -450,6 +460,8 @@ JSfiles.finish(function(){
 		}
 		if(typeof user['gender'] !== 'undefined' && user['gender'] == 1){
 			$('#app_project_user_image').attr('src', app_project_img_user_female.src);
+		} else {
+			$('#app_project_user_image').attr('src', app_project_img_user_male.src);
 		}
 		$('#app_project_user_name').html(wrapper_to_html(username));
 		$('#app_project_user_email').html(wrapper_to_html(email));
@@ -460,6 +472,5 @@ JSfiles.finish(function(){
 	});
 	
 	app_application_lincko.update(true); //Update everything
-	$('#app_project_project_all').click();
 });
 
