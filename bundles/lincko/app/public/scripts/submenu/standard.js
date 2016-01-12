@@ -73,6 +73,14 @@ submenu_list['settings'] = {
 		"value": submenu_language_full,
 		"class": "",
 	},
+	"home": {
+		"style": "button",
+		"title": Lincko.Translation.get('app', 43, 'html'), //Home page
+		"action": function(){
+			window.location.href = wrapper_link['home'];
+		},
+		"class": "",
+	},
 	"signout": {
 		"style": "button",
 		"title": Lincko.Translation.get('app', 38, 'html'), //Sign out

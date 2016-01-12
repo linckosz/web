@@ -100,6 +100,7 @@ var app_layers_projects_feedPage = function(param, animation){
 	if(typeof param === 'undefined'){ param = null; }
 	if(typeof animation === 'undefined'){ animation = true; } //Animate te graph by default
 	var position = $('#app_layers_projects');
+	position.addClass('overthrow');
 	position.empty();
 	var items = Lincko.storage.getFavorites('projects', null, true);
 	var item;

@@ -60,16 +60,7 @@ var app_content_menu = {
 		if(typeof menu === 'undefined'){ menu = 'dashboard'; }
 		if(typeof param === 'undefined'){ param = null; }
 
-		//app_content_menu.projects_id = projects_id;
-		//app_content_menu.menu = menu;
-		//app_content_menu.param = param;
-
 		var list = [];
-		var Elem = $('#app_content_menu');
-		$('#app_content_menu_table').removeClass('display_none');
-		Elem.find(".app_content_menu_icon_active").removeClass('app_content_menu_icon_active');
-		Elem.find(".app_content_menu_cell").addClass('display_none');
-		Elem.find(".app_content_menu_icon").off('click');
 		var title = base_myplaceholder;
 
 		if(projects_id < 0){ //Company
@@ -108,14 +99,20 @@ var app_content_menu = {
 			menu = list[0];
 		}
 
-		//Do nothing if we are in the same menu
-		if(app_content_menu.menu == menu){
+		//Do nothing if we are in the same menu of the same project
+		if(app_content_menu.projects_id == projects_id && app_content_menu.menu == menu){
 			return true;
 		}
 
 		app_content_menu.projects_id = projects_id;
 		app_content_menu.menu = menu;
 		app_content_menu.param = param;
+
+		var Elem = $('#app_content_menu');
+		$('#app_content_menu_table').removeClass('display_none');
+		Elem.find(".app_content_menu_icon_active").removeClass('app_content_menu_icon_active');
+		Elem.find(".app_content_menu_cell").addClass('display_none');
+		Elem.find(".app_content_menu_icon").off('click');
 
 		for(var i in list){
 			$('#app_content_menu_'+list[i]).removeClass('display_none');

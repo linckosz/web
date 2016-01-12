@@ -1,7 +1,9 @@
+{# category 9 #}
 <div id="begin_app_loading" class="visibility_hidden">
 	<script>
 		wrapper_load_progress.progress_bar = 'app_loading_progress_bar';
 		wrapper_load_progress.progress_wall = 'app_loading_progress_wall';
+		JSfiles.later("{{ _filelatest('/lincko/app/scripts/app/loading.js') }}", 40);
 	</script>
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/app/loading.css') }}" type="text/css" />
 </div>
@@ -20,6 +22,7 @@
 			</tr>
 		</table>
 	</div>
+	<div id="app_loading_home">{{ _trans('app', 9, 1, 'html') }}{# Home page#}</div>
 </div>
 <div id="end_app_loading" class="visibility_hidden"></div>
 

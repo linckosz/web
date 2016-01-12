@@ -30,7 +30,21 @@
 
 #app_loading_table td {
 	width: 50%;
-	overflow: hidden;
+	/*overflow: hidden;*/
+}
+
+#app_loading_home {
+	position: fixed;
+	cursor: pointer; cursor: hand;
+	right: 15px;
+	bottom: 5px;
+	padding: 5px;
+	font-size: 12px;
+	font-style: bold;
+	color: #CBCBCB;
+}
+#app_loading_home:hover {
+	text-decoration: underline;
 }
 
 #app_loading_cell_center {

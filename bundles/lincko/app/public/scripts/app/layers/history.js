@@ -11,6 +11,7 @@ function app_layers_history_launchPage(param){
 var app_layers_history_feedPage = function(param){
 	if(typeof param === 'undefined'){ param = null; }
 	var position = $('#app_layers_history');
+	position.addClass('overthrow');
 	position.empty();
 	var items = Lincko.storage.time('recent');
 	var history;

@@ -347,16 +347,23 @@ var wrapper_IScroll_options = {
 	scrollbars: true,
 	scrollX: false,
 	scrollY: true,
-	//fadeScrollbars: true,
+	fadeScrollbars: true,
 	interactiveScrollbars: true,
 	shrinkScrollbars: 'clip',
 	scrollbars: 'custom',
 
-	//In case we encounter ghost click (double click event), but the issue is that it launch the click while scrolling on desktop
-	//https://github.com/cubiq/iscroll/pull/548
+	//[Mobile devices] The disavantage is that on desktop the clikc event will be launch after a mouse move (= scroll)
 	//click: false,
-	//preventDefaultException:{tagName:/.*/},
+	//preventDefaultException: {tagName:/.*/},
+	//[Desktop] The disavantage is that we don't see the mouse click by css (:active)
+	//click: true,
+	//preventDefaultException: { tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/ },
 };
+
+if(supportsTouch){
+	wrapper_IScroll_options.click = false;
+	wrapper_IScroll_options.preventDefaultException = {tagName:/.*/};
+}
 
 var wrapper_IScroll_options_new = {};
 
@@ -367,11 +374,13 @@ function wrapper_IScroll(){
 	//Create new
 	overthrow.each(function(){
 		var Elem = $(this);
-		if(Elem.children().first().length>0){
+		var Child = Elem.children().first();
+		if(Child.length>0){
 			if(!this.id){
 				this.id = "overthrow_"+md5(Math.random());
 			}
-			if(!myIScrollList[this.id]){
+			if(!myIScrollList[this.id] || Child.hasClass('iscroll_destroyed')){
+				Child.removeClass('iscroll_destroyed')
 				//Merge with optional options
 				var wrapper_IScroll_options_temp = {};
 				//We have to loop to recreate the object because of JS memory assignment
@@ -392,14 +401,16 @@ function wrapper_IScroll(){
 				}
 
 				//Enable vertical and horizontal scrolling
-				if(!Elem.children().first().hasClass('iscroll_sub_div') ){
+				if(!Child.hasClass('iscroll_sub_div')){
 					Elem.children().wrapAll('<div class="iscroll_sub_div" />');
 					var div_scroll = Elem.children().first();
 					if(typeof wrapper_IScroll_options_temp.scrollX != 'undefined' && wrapper_IScroll_options_temp.scrollX){
 						div_scroll.addClass('scrollX');
+						Elem.width('100%'); //Be sure that it will not stretch up the parent element
 					}
 					if(typeof wrapper_IScroll_options_temp.scrollY != 'undefined' && wrapper_IScroll_options_temp.scrollY){
 						div_scroll.addClass('scrollY');
+						Elem.height('100%'); //Be sure that it will not stretch up the parent element
 					}
 				}
 				
@@ -410,19 +421,32 @@ function wrapper_IScroll(){
 
 	//Reinitialize or Delete all in a setTimeout to be sure it's loaded after DOM repainting
 	setTimeout(function(){
+		var Elem = false;
+		var Child = null;
 		for(var i in myIScrollList){
-			if($('#'+i)){
-				if('refresh' in myIScrollList[i]){
-					myIScrollList[i].refresh();
+			Elem = $('#'+i);
+			Child = Elem.children().first();
+			if(Elem.length>0){
+				if(Elem.hasClass('overthrow')){
+					if('refresh' in myIScrollList[i]){
+						myIScrollList[i].refresh();
+						continue;
+					}
+				} else {
+					if('destroy' in myIScrollList[i]){
+						if(Child.length>0 && Child.hasClass('iscroll_sub_div')){
+							Child.addClass('iscroll_destroyed');
+						}
+					}
+					myIScrollList[i].destroy();
 				}
-			} else {
-				myIScrollList[i].destroy();
-				myIScrollList[i] = null;
-				delete myIScrollList[i];
 			}
+			myIScrollList[i] = null;
+			delete myIScrollList[i];
+			
 		}
 	}, wrapper_timeout_timer);
-}
+};
 
 var wrapper_timeout_timer = 200;
 var wrapper_IScroll_timer;

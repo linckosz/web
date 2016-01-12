@@ -170,7 +170,7 @@ var app_application_lincko = {
 			}
 
 			//For "false", we still launches all functions
-			if(items === false){
+			if(typeof items === 'boolean' && items === false){
 				for(var field in this._fields){
 					items_list[field] = true;
 				}
@@ -250,7 +250,8 @@ var app_application_lincko = {
 		app_application_lincko.setFields(['tasks', 'chats']); => Add string as a field to be checked
 		app_application_lincko.setFields(['tasks', 'chats']); => Add strings in array as fields to be checked
 	*/
-	setFields: function(items){
+	setFields: function(items, force){
+		if(typeof force !== 'boolean'){ force = false; }
 		var item;
 		if(typeof items === 'string' || typeof items === 'number'){
 			items = [items];
@@ -259,7 +260,9 @@ var app_application_lincko = {
 			for(var i in items){
 				item = items[i];
 				if(typeof item === 'string' || typeof item === 'number'){
-					this._fields[item] = true; //Force to true even if it exists already
+					if(force || typeof this._fields[item] === 'undefined'){
+						this._fields[item] = true; //Force to true even if it exists already
+					}
 				}
 			}
 		}

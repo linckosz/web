@@ -24,6 +24,7 @@ $(window).resize(function(){
 var app_layers_tasks_feedPage = function(param){
 	if(typeof param === 'undefined'){ param = null; }
 	var position = $('#app_layers_tasks');
+	position.addClass('overthrow');
 	position.empty();
 	if(app_content_menu.projects_id == Lincko.storage.getMyPlaceholder()['_id']){
 		var items = Lincko.storage.list('tasks', null, true);

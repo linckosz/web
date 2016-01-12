@@ -165,7 +165,7 @@ JSfiles.finish = function(action, priority){
 		wrapper_after_dom[priority] = [];
 	}
 	wrapper_after_dom[priority].push(action);
-}
+};
 
 //It keeps a record of all libraries that must be loaded after DOM load, it has priority level too
 //Libraries with priority lower than 50 might be a dependency of other libraries, higher than 50 are sure other library will not need it (default).
@@ -175,7 +175,7 @@ JSfiles.later = function(url, priority){
 		JSfiles[priority] = [];
 	}
 	JSfiles[priority].push(url);
-}
+};
 
 JSfiles.loadLibraries = function(){
 	var files = [];
@@ -226,7 +226,7 @@ JSfiles.loadLibraries = function(){
 	setTimeout(function(){
 		wrapper_load_progress.move(100);
 	}, 9000);
-}
+};
 
 var wrapper_fp = '{{ fingerprint }}';
 

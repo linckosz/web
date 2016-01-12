@@ -92,9 +92,10 @@ Lincko.storage.setLastVisit = function(timestamp){
 
 //Function update all objects displayed
 /* PRIVATE METHOD */
-Lincko.storage.display = function(force){
+Lincko.storage.display = function(setFields, force){
+	if(typeof force !== 'undefined'){ force  = false; }
 	if(typeof app_application_lincko !== 'undefined'){
-		if(typeof force !== 'undefined' && force){
+		if(typeof setFields !== 'undefined' && setFields){
 			//Force to list all fields to insure all elements are up to date according to the storage
 			var fields_full = [];
 			var companies = ['_']; //Always include the default folder
@@ -105,12 +106,13 @@ Lincko.storage.display = function(force){
 				if($.type(Lincko.storage.data[company]) === 'object'){
 					for(var category in Lincko.storage.data[company]) {
 						if($.type(Lincko.storage.data[company][category]) === 'object'){
-							app_application_lincko.setFields(category);
-							console.log(category);
+							app_application_lincko.setFields(category, force);
 						}
 					}
 				}
 			}
+		}
+		if(force){
 			app_application_lincko.update(true);
 		} else {
 			app_application_lincko.update();
@@ -280,8 +282,7 @@ Lincko.storage.firstLatest = function(){
 		storage_first_request = false;
 		Lincko.storage.getSchema();
 		if(!$.isEmptyObject(Lincko.storage.data)){
-			//Lincko.storage.display(true); //I don't think we need to force, probability of mismatching is almost null
-			Lincko.storage.display();
+			Lincko.storage.display(true); //I don't think we need to force, probability of mismatching is almost null
 		} else {
 			//If we cannot get data object, we force to download the whole object
 			Lincko.storage.setLastVisit(0);
@@ -1095,6 +1096,7 @@ JSfiles.finish(function(){
 		Lincko.storage.setLastVisit(0);
 		Lincko.storage.getLatest();
 	} else {
+		Lincko.storage.display(true, true);
 		setTimeout(function(){
 			Lincko.storage.getLatest();
 		}, 1000);

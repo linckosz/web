@@ -28,6 +28,8 @@ var wrapper_to_html = function(text){
 	return text;
 }
 
+var supportsTouch = 'ontouchstart' in window || navigator.msMaxTouchPoints;
+
 String.prototype.ucfirst = function() {
 	if(this.length > 0){
 		return this.charAt(0).toUpperCase() + this.slice(1);
