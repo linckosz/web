@@ -121,15 +121,24 @@ Lincko.storage.display = function(setFields, force){
 	}
 };
 
-
 //Function that check for latest updates
 /* PRIVATE METHOD */
+var storage_ajax_latest = {};
 Lincko.storage.getLatest = function(){
+	var lastvisit = Lincko.storage.getLastVisit();
 	var arr = {
-		'lastvisit': Lincko.storage.getLastVisit(),
+		'lastvisit': lastvisit,
 		'show_error': false,
 	};
+	if(storage_ajax_latest[lastvisit]){
+		if('abort' in storage_ajax_latest[lastvisit]){
+			storage_ajax_latest[lastvisit].abort();
+		}
+		storage_ajax_latest[lastvisit] = null;
+		delete storage_ajax_latest[lastvisit];
+	}
 	wrapper_sendAction(arr, 'post', 'data/latest', null);
+	storage_ajax_latest[lastvisit] = wrapper_xhr;
 };
 
 //Function that check for latest updates

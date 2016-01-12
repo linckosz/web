@@ -115,9 +115,12 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 				+'ajaxOptions => '+ajaxOptions
 				+'\n'
 				+'thrownError => '+thrownError;
-
-			JSerror.sendError(msg, '/wrapper.js/wrapper_ajax().error()', 0);
-			console.log(msg);
+			if(ajaxOptions!='abort' && ajaxOptions!='timeout'){
+				JSerror.sendError(msg, '/wrapper.js/wrapper_ajax().error()', 0);
+			}
+			if(ajaxOptions!='abort'){
+				console.log(msg);
+			}
 			cb_error(xhr_err, ajaxOptions, thrownError);
 		},
 		complete: function(){
@@ -351,18 +354,16 @@ var wrapper_IScroll_options = {
 	interactiveScrollbars: true,
 	shrinkScrollbars: 'clip',
 	scrollbars: 'custom',
+	preventDefaultException: {tagName:/.*/},
 
 	//[Mobile devices] The disavantage is that on desktop the clikc event will be launch after a mouse move (= scroll)
 	//click: false,
-	//preventDefaultException: {tagName:/.*/},
 	//[Desktop] The disavantage is that we don't see the mouse click by css (:active)
 	//click: true,
-	//preventDefaultException: { tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/ },
 };
 
 if(supportsTouch){
 	wrapper_IScroll_options.click = false;
-	wrapper_IScroll_options.preventDefaultException = {tagName:/.*/};
 }
 
 var wrapper_IScroll_options_new = {};
