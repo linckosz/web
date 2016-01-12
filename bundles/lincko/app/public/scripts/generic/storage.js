@@ -7,22 +7,27 @@ var storage_first_request = true; //Help to launch getSchema within getLatest on
 var storage_cb_success = function(msg, err, status, data){
 	var schema = true;
 	var info = false;
+	var allow_set_lastvisit = true;
 	if($.type(data) === 'object' && $.type(data.info) === 'string'){
 		info = data.info;
 	}
 
 	if($.type(data) === 'object' && $.type(data.partial) === 'object' && $.type(data.partial[wrapper_localstorage.uid]) === 'object'){
-		if(Lincko.storage.update(data.partial[wrapper_localstorage.uid], info) && typeof data.lastvisit === 'number'){
+		if(Lincko.storage.update(data.partial[wrapper_localstorage.uid], info)){
 			if(info === 'reset'){
 				Lincko.storage.schema(data.partial[wrapper_localstorage.uid]);
 				schema = false;
 			}
-			//Update the last visit day only if we are sure the update is finish
-			Lincko.storage.setLastVisit(data.lastvisit);
+		} else {
+			allow_set_lastvisit = false;
 		}
 	}
 	if(schema && $.type(data) === 'object' && $.type(data.schema) === 'object' && $.type(data.schema[wrapper_localstorage.uid]) === 'object'){
 		Lincko.storage.schema(data.schema[wrapper_localstorage.uid]);
+	}
+	//Update the last visit day only if we are sure the update is finish
+	if(allow_set_lastvisit && $.type(data) === 'object' && typeof data.lastvisit === 'number'){
+		Lincko.storage.setLastVisit(data.lastvisit);
 	}
 	Lincko.storage.firstLatest();
 };
