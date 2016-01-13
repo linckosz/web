@@ -364,7 +364,7 @@ var wrapper_IScroll_options = {
 
 if(supportsTouch){
 	wrapper_IScroll_options.click = false;
-	interactiveScrollbars: false,
+	wrapper_IScroll_options.interactiveScrollbars = false;
 }
 
 var wrapper_IScroll_options_new = {};
