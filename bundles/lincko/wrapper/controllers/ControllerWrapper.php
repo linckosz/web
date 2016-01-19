@@ -203,6 +203,7 @@ class ControllerWrapper extends Controller {
 		OneSeventySeven::unsetAll(array('jizhu', 'youjian'));
 		unset($_SESSION['public_key']);
 		unset($_SESSION['private_key']);
+		unset($_SESSION['company']);
 		return true;
 	}
 

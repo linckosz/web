@@ -343,15 +343,16 @@ wrapper_localstorage.decrypt = function (link){
 	return txt;
 };
 
+//Default is Mobile
 var wrapper_IScroll_options = {
-	click: true,
+	click: false, //At true, on mobile it works but but the element doesn't flash
 	keyBindings: true,
 	mouseWheel: true,
 	scrollbars: true,
 	scrollX: false,
 	scrollY: true,
 	fadeScrollbars: true,
-	interactiveScrollbars: true,
+	interactiveScrollbars: false,
 	shrinkScrollbars: 'clip',
 	scrollbars: 'custom',
 	preventDefaultException: {tagName:/.*/},
@@ -362,9 +363,12 @@ var wrapper_IScroll_options = {
 	//click: true,
 };
 
-if(supportsTouch){
-	wrapper_IScroll_options.click = false;
-	wrapper_IScroll_options.interactiveScrollbars = false;
+//For Desktop support
+if(!supportsTouch){
+	wrapper_IScroll_options.fadeScrollbars = false;
+	wrapper_IScroll_options.click = true; //true avoid ghost click for Desktop (Migth be a problem for hybrid computer like Surface Pro)
+	wrapper_IScroll_options.interactiveScrollbars = true;
+	wrapper_IScroll_options.shrinkScrollbars = 'scale'; //CPU hunger, not suitable for mobiles
 }
 
 var wrapper_IScroll_options_new = {};
@@ -394,12 +398,6 @@ function wrapper_IScroll(){
 					for(key in wrapper_IScroll_options_new[this.id]){
 						wrapper_IScroll_options_temp[key] = wrapper_IScroll_options_new[this.id][key];
 					}
-				}
-				//Always show scrollbar on desktop (only need to launch at page creation, the user resize only in rare cases, and it's not a annoying detail)
-				if(responsive.test("minDesktop")){
-					wrapper_IScroll_options_temp.fadeScrollbars = false;
-					wrapper_IScroll_options_temp.interactiveScrollbars = true;
-					wrapper_IScroll_options_temp.shrinkScrollbars = 'scale'; //CPU hunger, not suitable for mobiles
 				}
 
 				//Enable vertical and horizontal scrolling

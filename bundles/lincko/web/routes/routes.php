@@ -8,6 +8,8 @@ $app = \Slim\Slim::getInstance();
 
 function web_wrapper_user_created(){
 	$app = \Slim\Slim::getInstance();
+	//We need to insure we are working outside a workspace
+	$app->lincko->data['company'] = $_SESSION['company'] = '';
 	$app->lincko->data = array_merge( $app->lincko->data, array('wrapper_user_created' => Creation::exists(),) );
 }
 
