@@ -463,8 +463,30 @@ function wrapper_clean_chart(){
 	}
 }
 
+//http://stackoverflow.com/questions/23885255/how-to-remove-ignore-hover-css-style-on-touch-devices
+//This disable some unwanted behavior whe double tapping within the 300ms
+function wrapper_mobile_hover(){
+	if (supportsTouch) { // remove all :hover stylesheets
+		try { // prevent crash on browsers not supporting DOM styleSheets properly
+			for (var si in document.styleSheets) {
+				var styleSheet = document.styleSheets[si];
+				if (!styleSheet.rules) continue;
+
+				for (var ri = styleSheet.rules.length - 1; ri >= 0; ri--) {
+					if (!styleSheet.rules[ri].selectorText) continue;
+
+					if (styleSheet.rules[ri].selectorText.match(':hover')) {
+						styleSheet.rules[ri].selectorText = styleSheet.rules[ri].selectorText.replace(":hover", ":active");
+					}
+				}
+			}
+		} catch (ex) {}
+	}
+}
+
 JSfiles.finish(function(){
 	wrapper_IScroll();
 	wrapper_localstorage.cleanLocalUser();
 	FastClick.attach(document.body);
+	setTimeout(wrapper_mobile_hover, 100); //Load it in another thread to not slow down the page loading
 });
