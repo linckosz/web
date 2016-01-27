@@ -466,4 +466,5 @@ function wrapper_clean_chart(){
 JSfiles.finish(function(){
 	wrapper_IScroll();
 	wrapper_localstorage.cleanLocalUser();
+	FastClick.attach(document.body);
 });

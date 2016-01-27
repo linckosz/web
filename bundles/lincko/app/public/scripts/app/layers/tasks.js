@@ -29,7 +29,7 @@ var app_layers_tasks_feedPage = function(param){
 	if(app_content_menu.projects_id == Lincko.storage.getMyPlaceholder()['_id']){
 		var items = Lincko.storage.list('tasks', null, true);
 	} else {
-		var items = Lincko.storage.list('tasks', null, { 'projects_id': app_content_menu.projects_id });
+		var items = Lincko.storage.list('tasks', null, { 'parent': 'projects', 'parent_id': app_content_menu.projects_id });
 	}
 	var item;
 	var Elem;

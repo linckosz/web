@@ -765,6 +765,42 @@ Lincko.storage.getFavorites = function(category, param, extend){
 	return results;
 };
 
+/*
+	Return a integer
+	Lincko.storage.getAllow('projects', 5); => Return the maximum allowed to the user
+*/
+
+Lincko.storage.getAllow = function(category, id){
+	category = category.toLowerCase();
+	var category_ori = category;
+	var item;
+	var role;
+	var limit = 100; //by security limit to 100 loops
+	alert('Add comparison with authoization table, grant and owner, no need to scanne if maxi 0');
+	while(item = Lincko.storage.get(category, id) && limit>0){
+		if(typeof item['_perm']!=='undefined'){
+			if(typeof item['_perm']['single']!=='undefined'){
+				return item['_perm']['single'];
+			} else if(typeof item['_perm']['roles_id']!=='undefined'){
+				if(role = Lincko.storage.get('roles', item['_perm']['roles_id'])){
+					if(role['perm_grant']){
+						return 2; //Maximum permission
+					} else if(typeof role['perm_'+category_ori]){
+						return role['perm_'+category_ori];
+					} else {
+						return role['perm_all'];
+					}
+				}
+			}
+		} else if(item['parent']!=null && item['parent_id']!=null){
+			category = item['parent'];
+			id = item['parent_id'];
+		}
+		limit--;
+	}
+	return 0;
+};
+
 //Return a single item which is the earliest My Placeholder project
 /* PRIVATE METHOD */
 Lincko.storage.getMyPlaceholder = function(){
@@ -952,8 +988,8 @@ Lincko.storage.time = function(type, param, category){
 /*
 	Lincko.storage.list('tasks'); => List all tasks, order from newest to oldest
 	Lincko.storage.list('tasks', 5); => List 5 latest tasks
-	Lincko.storage.list('tasks', 5, {'projects_id': 5}); => List 5 latest tasks from the project No5, the conditions must be an object
-	Lincko.storage.list('tasks', null, {'projects_id': 5, 'created_by': 1}); => List all tasks from the project No5, and created by the user No 1
+	Lincko.storage.list('tasks', 5, {'parent': 'projects', 'parent_id': 5}); => List 5 latest tasks from the project No5, the conditions must be an object
+	Lincko.storage.list('tasks', null, {'parent': 'projects', 'parent_id': 5, 'created_by': 1}); => List all tasks from the project No5, and created by the user No 1
 */
 Lincko.storage.list = function(category, limit, conditions){
 	var temp = {};
