@@ -372,6 +372,7 @@ if(!supportsTouch){
 }
 
 var wrapper_IScroll_options_new = {};
+var wrapper_IScroll_cb_creation = {};
 
 var myIScrollList = {};
 function wrapper_IScroll(){
@@ -415,6 +416,10 @@ function wrapper_IScroll(){
 				}
 				
 				myIScrollList[this.id] = new IScroll(this, wrapper_IScroll_options_temp);
+				//We add specific options to the element
+				if(typeof wrapper_IScroll_cb_creation[this.id] === 'function'){
+					wrapper_IScroll_cb_creation[this.id]();
+				}
 			}
 		}
 	});
@@ -465,16 +470,19 @@ function wrapper_clean_chart(){
 
 //http://stackoverflow.com/questions/23885255/how-to-remove-ignore-hover-css-style-on-touch-devices
 //This disable some unwanted behavior whe double tapping within the 300ms
+//This function is slow to run, so use it in another thread
 function wrapper_mobile_hover(){
 	if (supportsTouch) { // remove all :hover stylesheets
 		try { // prevent crash on browsers not supporting DOM styleSheets properly
 			for (var si in document.styleSheets) {
 				var styleSheet = document.styleSheets[si];
-				if (!styleSheet.rules) continue;
-
+				if (!styleSheet.rules){
+					continue;
+				}
 				for (var ri = styleSheet.rules.length - 1; ri >= 0; ri--) {
-					if (!styleSheet.rules[ri].selectorText) continue;
-
+					if (!styleSheet.rules[ri].selectorText){
+						continue;
+					}
 					if (styleSheet.rules[ri].selectorText.match(':hover')) {
 						styleSheet.rules[ri].selectorText = styleSheet.rules[ri].selectorText.replace(":hover", ":active");
 					}
