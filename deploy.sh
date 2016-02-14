@@ -1,5 +1,5 @@
 #!/bin/bash
-
+echo ok
 ssh-add /apache_ssh/id_rsa
 ssh-add -l
 #git rm -r --cached .
