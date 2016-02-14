@@ -2,6 +2,7 @@
 
 namespace bundles\lincko\wrapper\controllers;
 
+use \bundles\lincko\wrapper\models\TranslationListJS;
 use \libs\OneSeventySeven;
 use \libs\Controller;
 use \libs\STR;
@@ -39,37 +40,8 @@ class ControllerTranslation extends Controller {
 		}
 	}
 
-	protected function setList(){
-		$app = $this->app;
-		$list = $app->trans->getList(true, 8000);
-		echo "Lincko.Translation = {};\n";
-		echo "Lincko.Translation._list = {};\n";
-		foreach ($list as $bundle => $list_bundles) {
-			foreach ($list_bundles as $category => $list_categories) {
-				foreach ($list_categories as $phrase => $value) {
-					echo 'Lincko.Translation._list["'.$bundle.'_'.$category.'_'.$phrase.'"] = {
-						js: "'.STR::sql_to_js($value).'",
-						html: "'.STR::sql_to_html($value).'",
-					};'."\n";
-				}
-			}
-		}
-		echo "
-		Lincko.Translation.get = function(bundle, phrase, format){
-			var format_tp = 'js';
-			var category = '8000'; //Default category for JS sentences
-			if(bundle+'_'+category+'_'+phrase in Lincko.Translation._list){
-				if(typeof format !== 'undefined') {
-					if(format in Lincko.Translation._list[bundle+'_'+category+'_'+phrase]){
-						format_tp = format;
-					}
-				}
-				var text = Lincko.Translation._list[bundle+'_'+category+'_'+phrase][format_tp];
-				return text;
-			} else {
-				return \"[".$app->trans->getJS('wrapper', 1, 2)."]\"; //[unknown value]  
-			}
-		};\n";
+	public function setList(){
+		echo TranslationListJS::setList();
 	}
 
 }

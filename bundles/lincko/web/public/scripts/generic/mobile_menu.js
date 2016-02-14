@@ -51,7 +51,7 @@ Mobile_menu.prototype = {
 			Elem.click(attribute.action);
 		}
 		if("class" in attribute){
-			Elem.addClass(attribute.class);
+			Elem.addClass(attribute['class']);
 		}
 		this.wrapper.children('div').eq(1).append(Elem);
 		return true;
@@ -69,7 +69,7 @@ Mobile_menu.prototype = {
 			Elem.click(attribute.action);
 		}
 		if("class" in attribute){
-			Elem.addClass(attribute.class);
+			Elem.addClass(attribute['class']);
 		}
 		this.wrapper.children('div').eq(1).append(Elem);
 		return true;

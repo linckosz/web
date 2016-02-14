@@ -17,11 +17,6 @@ var wrapper_itemExists = function(haystack, needle) {
 	return false;
 };
 
-//Polyfill of Date.now(), because of IE8-
-if (!Date.now) {
-	Date.now = function() { return new Date().getTime(); }
-}
-
 var wrapper_to_html = function(text){
 	text = php_htmlentities(text, true); //Need to enable double encoding
 	text = php_nl2br(text);

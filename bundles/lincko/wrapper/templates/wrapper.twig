@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+<meta http-equiv="X-UA-Compatible" content="IE=9,chrome=1" />
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
 <title>{{ _trans('wrapper', 1, 1, 'html') }}{# Lincko - Team collaboration toll #}</title>
 <link rel="shortcut icon" href="{{ _filelatest('/favicon.ico') }}" type="image/x-icon" />
@@ -22,8 +22,14 @@
 <link rel="stylesheet" href="{{ _filelatest('/styles/libs/easyeditor.css') }}" type="text/css" />
 {#<link rel="stylesheet" href="{{ _filelatest('/styles/libs/perfect-scrollbar.min.css') }}" type="text/css" />#}
 
+<script src="{{ _filelatest('/lincko/wrapper/scripts/polyfill.js') }}" type="text/javascript"></script>
+<!--[if lte IE 8]>
+	console.log('addEventlisterner bugs in IE8');
+	<script src="{{ _filelatest('/scripts/libs/ie8.js') }}" type="text/javascript"></script>
+<![endif]-->
+
 {# Load all libraries #}
-<script src="{{ _filelatest('/scripts/libs/jquery-1.11.3.min.js') }}" type="text/javascript"></script>
+<script src="{{ _filelatest('/scripts/libs/jquery-1.12.0.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/jquery-ui.min.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/jquery.cookie.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/json3.min.js') }}" type="text/javascript"></script>
@@ -42,7 +48,7 @@
 <script src="{{ _filelatest('/scripts/libs/base64.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/object-keys-polyfill.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/encoder.min.js') }}" type="text/javascript"></script>
-<script src="{{ _filelatest('/scripts/libs/jquery.easyeditor.js') }}" type="text/javascript"></script>
+<script src="{{ _filelatest('/scripts/libs/jquery.easyeditor.bruno.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/iscroll.js') }}" type="text/javascript"></script>
 {#<script src="{{ _filelatest('/scripts/libs/perfect-scrollbar.jquery.min.js') }}" type="text/javascript"></script>#}
 

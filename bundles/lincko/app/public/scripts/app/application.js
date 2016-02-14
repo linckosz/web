@@ -512,6 +512,14 @@ function app_application_change_workspace(workspace){
 	}
 }
 
+function app_application_change_private(user){
+	if(typeof user !== 'undefined'){
+		top.location.replace('/user/'+user);
+	} else {
+		top.location.replace('/');
+	}
+}
+
 
 function app_application_submenu_position() {
 	var Elem = $('#app_application_submenu_block');

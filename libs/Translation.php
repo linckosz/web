@@ -386,9 +386,17 @@ class TranslationModel extends Model {
 
 	/////////////////////////////////////
 
+	//Add these functions to insure that nobody can make them disappear
+	public function delete(){}
+	public function restore(){}
+
 	//"READ ONLY" mode
 	//Overwrite the basic function save() to not update or add anymore line
 	public function save(array $options = array()){
+		if( isset($app->lincko->deployment) && password_verify($app->lincko->deployment, '$2y$10$J6gakNmqkjrpnyMFJHhyq.JQves6JslSHJLKqpWXfZVJ6qpDKDXK6') ){
+			$return = parent::save($options);
+			return $return;
+		}
 		return false;
 	}
 

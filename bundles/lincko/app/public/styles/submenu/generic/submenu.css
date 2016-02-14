@@ -175,6 +175,9 @@
 	display: table-cell;
 	vertical-align: middle;
 	padding: 0 16px 0 16px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .submenu_value {
@@ -296,17 +299,6 @@
 	border-width: 1px;
 	margin-left: 5%;
 	cursor: text;
-}
-
-.submenu_deco {
-	display: table;
-	white-space: nowrap;
-	color: #6F7377;
-	background-color: #FAFBFC;
-	border-bottom: solid 1px #EBEFF3;
-	cursor: pointer; cursor: hand;
-	overflow: hidden;
-	text-align: left;
 }
 
 .submenu_select {

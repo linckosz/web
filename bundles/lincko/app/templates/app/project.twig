@@ -31,16 +31,23 @@
 			<div class="app_project_space"></div>
 			<div class="app_project_line"><div></div></div>
 			<div class="app_project_space"></div>
+			{% if company %}
+				<div id="app_project_user_workspace_mobile" class="app_project_tab_title isMobile">
+					<img src="{{ _filelatest('/lincko/app/images/app/project/project.png') }}" />
+					{{ _trans('app', 2, 7, 'html') }}{# Projects #}
+				</div>
+				<div class="app_project_space"></div>
+			{% endif %}
 			<div class="app_project_tab">
 				<div id="app_project_placeholder">
 					<div>
 						{{ _trans('app', 2, 4, 'html') }}{# My Placeholder #}
 					</div>
 				</div>
-				{% if company %}
+				{% if company and space=='workspace' %}
 				<div id="app_project_company">
 					<div id="app_project_company_title">
-						{{ company|ucfirst }}
+						{{ _trans('app', 2, 11, 'html') }}{# Overview #}
 					</div>
 				</div>
 				{% endif %}
@@ -48,10 +55,18 @@
 			<div class="app_project_space"></div>
 			<div class="app_project_line noMobile"><div></div></div>
 			<div class="app_project_space"></div>
-			<div class="app_project_tab_title noMobile">
-				<img src="{{ _filelatest('/lincko/app/images/app/project/project.png') }}" />
-				{{ _trans('app', 2, 7, 'html') }}{# Projects #}
-			</div>
+			{% if company %}
+				<div id="app_project_user_workspace" class="app_project_tab_title noMobile">
+					<img src="{{ _filelatest('/lincko/app/images/app/project/project.png') }}" />
+					{{ _trans('app', 2, 7, 'html') }}{# Projects #}
+				</div>
+				<div class="app_project_space"></div>
+			{% else %}
+				<div class="app_project_tab_title noMobile">
+					<img src="{{ _filelatest('/lincko/app/images/app/project/project.png') }}" />
+					{{ _trans('app', 2, 7, 'html') }}{# Projects #}
+				</div>
+			{% endif %}
 			<div id="app_project_tab" class="app_project_tab">
 				<div id="app_project_project_all">
 					<div>

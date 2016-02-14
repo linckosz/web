@@ -137,8 +137,15 @@ function app_project_tab() {
 	var limit = 100; //Just to insure to not make an infinite loop, but should be useless
 	var top_height = $(window).height() - $('#app_project_quick_access').height();
 	$('#app_project_tab [id^="app_project_project_open_"]').show();
-	while($('#app_project_top').height() >= top_height && $('#app_project_tab [id^="app_project_project_open_"]').filter(':visible').length>1 && limit>0){
-		$('#app_project_tab [id^="app_project_project_open_"]').filter(':visible').last().hide();
+	$('#app_project_recent').show();
+	while($('#app_project_top').height() >= top_height && limit>0){
+		if($('#app_project_tab [id^="app_project_project_open_"]').filter(':visible').length>1){
+			$('#app_project_tab [id^="app_project_project_open_"]').filter(':visible').last().hide();
+		} else {
+			$('#app_project_recent').hide();
+			limit = 0;
+			break;
+		}
 		limit--;
 	}
 }
@@ -467,8 +474,12 @@ JSfiles.finish(function(){
 		$('#app_project_user_email').html(wrapper_to_html(email));
 	});
 
-	app_application_lincko.add("app_project_company", "companies", function(){
-		$('#app_project_company div:first-child').html(wrapper_to_html(Lincko.storage.COMNAME));
+	app_application_lincko.add("app_project_user_workspace_mobile", "companies", function(){
+		$('#app_project_user_workspace_mobile').html(wrapper_to_html(Lincko.storage.COMNAME));
+	});
+
+	app_application_lincko.add("app_project_user_workspace", "companies", function(){
+		$('#app_project_user_workspace').html(wrapper_to_html(Lincko.storage.COMNAME));
 	});
 	
 	app_application_lincko.update(true); //Update everything

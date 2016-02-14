@@ -8,7 +8,7 @@ use \libs\STR;
 // To use it, we need to activate it on setData.php with in the merge: 'translation_list_js' => TranslationListJS::setList(),
 // This can be used as bellow to get JS translation file in a Twig file
 // {{ translation_list_js|raw }}
-
+// We do use ControllerTranslation because it gives a better feeling to load list.js than seeing all code in HTML code, but teh result is same
 
 class TranslationListJS {
 
@@ -28,7 +28,7 @@ class TranslationListJS {
 			}
 		}
 		$script .= "
-		Lincko.Translation.get = function(bundle, phrase, format){
+		Lincko.Translation.get = function(bundle, phrase, format, param){
 			var format_tp = 'js';
 			var category = '8000'; //Default category for JS sentences
 			if(bundle+'_'+category+'_'+phrase in Lincko.Translation._list){
@@ -38,6 +38,11 @@ class TranslationListJS {
 					}
 				}
 				var text = Lincko.Translation._list[bundle+'_'+category+'_'+phrase][format_tp];
+				if(typeof param == 'object'){
+					for(var i in param){
+						text = text.replace(new RegExp('{{'+i+'}}'), param[i]);
+					}
+				}
 				return text;
 			} else {
 				return \"[".$app->trans->getJS('wrapper', 1, 2)."]\"; //[unknown value]  

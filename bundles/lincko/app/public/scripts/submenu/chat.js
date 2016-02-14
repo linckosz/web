@@ -49,7 +49,7 @@ Submenu.prototype.Add_ChatMenu = function() {
 		}
 	});
 	if("class" in attribute){
-		Elem.addClass(attribute.class);
+		Elem.addClass(attribute['class']);
 	}
 	submenu_wrapper.find("[find=submenu_wrapper_bottom]").append(Elem);
 	Elem.find("[find=select_chats]").click();
@@ -93,7 +93,7 @@ Submenu.prototype.Add_ChatChats = function() {
 	}
 	Elem.find("[find=submenu_next_title]").html(attribute.title);
 	if("class" in attribute){
-		Elem.addClass(attribute.class);
+		Elem.addClass(attribute['class']);
 	}
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
 	return true;
