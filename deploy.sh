@@ -7,4 +7,4 @@ echo ok1
 git add .
 git commit -a -m "Web revision: $(date +'%s')"
 git push $1 master
-#cap $1 deploy --trace
+cap $1 deploy --trace
