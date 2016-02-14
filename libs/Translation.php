@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use \libs\STR;
 use \libs\OneSeventySeven;
-#
+
 class Translation {
 
 	const LANG = 'en';
