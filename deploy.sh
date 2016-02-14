@@ -1,6 +1,6 @@
 #!/bin/bash
 
-su ssh-add /root/.ssh/id_rsa
+ssh-add /root/.ssh/id_rsa
 ssh-add -l
 #git rm -r --cached .
 git add .
