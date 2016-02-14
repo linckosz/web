@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ssh-add /root/.ssh/id_rsa
-ssh-add -l
+ssh-add -l 
 #git rm -r --cached .
 git add .
 git config --global user.name "Bruno Martin"
