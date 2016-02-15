@@ -83,7 +83,7 @@ class Folders {
 		return $this->setPath($folder);
 	}
 
-	public function createSymlink($target, $link){
+	public function createSymlink($target, $link){echo 'ok<br />';
 		if($this->createPath($link)){
 			if(rmdir($link)){
 				if(symlink($target, $link)){
