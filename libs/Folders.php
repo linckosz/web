@@ -77,6 +77,8 @@ class Folders {
 		$app = \Slim\Slim::getInstance();
 		$path = $app->lincko->path;
 		exec('chown -R deploy:apache '.$path.' 2>&1', $tablo, $test);
+		\libs\Watch::php($path, '$path', __FILE__, false, false, true);
+		\libs\Watch::php($tablo, '$tablo', __FILE__, false, false, true);
 	}
 
 	public function createPath($folder){
