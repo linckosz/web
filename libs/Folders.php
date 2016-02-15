@@ -10,7 +10,7 @@ class Folders {
 		return $this->setPath($folder);
 	}
 
-	public function getPath(){
+	public function getPath(){echo 'ok<br />';
 		return $this->folder;
 	}
 
@@ -83,7 +83,7 @@ class Folders {
 		return $this->setPath($folder);
 	}
 
-	public function createSymlink($target, $link){echo 'ok<br />';
+	public function createSymlink($target, $link){
 		if($this->createPath($link)){
 			if(rmdir($link)){
 				if(symlink($target, $link)){
