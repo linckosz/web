@@ -73,10 +73,17 @@ class Folders {
 		return false;
 	}
 
+	public function allowDeploy(){
+		$app = \Slim\Slim::getInstance();
+		$path = $app->lincko->path;
+		exec('chown -R deploy:apache '.$pat.' 2>&1', $tablo, $test);
+	}
+
 	public function createPath($folder){
 		$this->folder = false;
 		if(!is_dir($folder)){
-			if(mkdir($folder, 0755, true) && chown($folder, 'deploy')){
+			if(mkdir($folder, 0755, true)){
+				$this->allowDeploy();
 				return $this->setPath($folder);
 			}
 		}
@@ -86,7 +93,8 @@ class Folders {
 	public function createSymlink($target, $link){
 		if($this->createPath($link)){
 			if(rmdir($link)){
-				if(symlink($target, $link) && chown($link, 'deploy')){
+				if(symlink($target, $link)){
+					$this->allowDeploy();
 					return $this->setPath($link);
 				}
 			}
