@@ -86,7 +86,7 @@ class Folders {
 	public function createSymlink($target, $link){
 		if($this->createPath($link)){
 			if(rmdir($link)){
-				if(symlink($target, $link) && chown($folder, 'deploy')){
+				if(symlink($target, $link) && chown($link, 'deploy')){
 					return $this->setPath($link);
 				}
 			}
