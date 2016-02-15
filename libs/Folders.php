@@ -76,7 +76,7 @@ class Folders {
 	public function allowDeploy(){
 		$app = \Slim\Slim::getInstance();
 		$path = $app->lincko->path;
-		exec('chown -R deploy:apache '.$pat.' 2>&1', $tablo, $test);
+		exec('chown -R deploy:apache '.$path.' 2>&1', $tablo, $test);
 	}
 
 	public function createPath($folder){
