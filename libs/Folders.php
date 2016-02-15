@@ -84,6 +84,7 @@ class Folders {
 	}
 
 	public function createSymlink($target, $link){
+		echo $target.'<br /> => '.$link.'<br />';
 		if($this->createPath($link)){
 			if(rmdir($link)){
 				if(symlink($target, $link)){
