@@ -1,7 +1,7 @@
 <?php
 
 namespace libs;
-
+echo 'ok<br />';echo 'ok<br />';
 class Folders {
 
 	protected $folder = false;
@@ -10,7 +10,7 @@ class Folders {
 		return $this->setPath($folder);
 	}
 
-	public function getPath(){echo 'ok<br />';
+	public function getPath(){
 		return $this->folder;
 	}
 
