@@ -47,7 +47,7 @@ class Folders {
 			}
 		}
 		return true;
-	}	
+	}
 
 	public function loopFolder(){
 		$list = array();
@@ -76,7 +76,7 @@ class Folders {
 	public function createPath($folder){
 		$this->folder = false;
 		if(!is_dir($folder)){
-			if(mkdir($folder, 0755, true)){
+			if(mkdir($folder, 0755, true) && chown($folder, 'deploy')){
 				return $this->setPath($folder);
 			}
 		}
@@ -86,7 +86,7 @@ class Folders {
 	public function createSymlink($target, $link){
 		if($this->createPath($link)){
 			if(rmdir($link)){
-				if(symlink($target, $link)){
+				if(symlink($target, $link) && chown($folder, 'deploy')){
 					return $this->setPath($link);
 				}
 			}
