@@ -1,7 +1,7 @@
 <?php
 
 namespace libs;
-echo 'ok<br />';echo 'ok<br />';
+
 class Folders {
 
 	protected $folder = false;
