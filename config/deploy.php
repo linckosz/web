@@ -115,7 +115,6 @@ $app->post('/pull', function () use($app) {
 							if($sentence->querySave()){
 								$str_dirty = preg_replace( "/\r|\n/", "\\n", json_encode($dirty, JSON_UNESCAPED_UNICODE) );
 								$str_original = preg_replace( "/\r|\n/", "\\n", json_encode($original, JSON_UNESCAPED_UNICODE) );
-								\libs\Watch::php($str_original, '$str_original', __FILE__, false, false, true);
 								echo "  - [FROM]: $str_original\n";
 								echo "  - [ TO ]: $str_dirty\n\n";
 							}
