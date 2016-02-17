@@ -392,12 +392,34 @@ class TranslationModel extends Model {
 
 	//"READ ONLY" mode
 	//Overwrite the basic function save() to not update or add anymore line
-	public function save(array $options = array()){
+	public function save(array $options = array()){ return false; }
+
+	protected function checkDeployment(){
+		$app = \Slim\Slim::getInstance();
 		if( isset($app->lincko->deployment) && password_verify($app->lincko->deployment, '$2y$10$J6gakNmqkjrpnyMFJHhyq.JQves6JslSHJLKqpWXfZVJ6qpDKDXK6') ){
-			$return = parent::save($options);
+			return true;
+		}
+		return false;
+	}
+
+	public static function queryInsert($attributes){
+		$return = false;
+		if($this->checkDeployment()){
+			$return = TranslationModel::on($bundle)->insert($attributes);
 			return $return;
 		}
 		return false;
+	}
+
+	public function querySave(){
+		$return = false;
+		if($this->checkDeployment()){
+			$dirty = $this->getDirty();
+			if(count($dirty) > 0){
+				$return = $this->where('category', $this->category)->where('phrase', $this->phrase)->getQuery()->update($dirty);
+			}
+		}
+		return $return;
 	}
 
 }
