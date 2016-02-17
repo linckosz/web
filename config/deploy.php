@@ -113,8 +113,9 @@ $app->post('/pull', function () use($app) {
 						if($value){ //Check that there is a value inside the 
 							$original = $sentence->getOriginal();
 							if($sentence->querySave()){
-								$str_dirty = preg_replace( "/\r|\n/", "\\n", serialize($dirty) );
-								$str_original = preg_replace( "/\r|\n/", "\\n", serialize($original) );
+								$str_dirty = preg_replace( "/\r|\n/", "\\n", json_encode($dirty, JSON_UNESCAPED_UNICODE) );
+								$str_original = preg_replace( "/\r|\n/", "\\n", json_encode($original, JSON_UNESCAPED_UNICODE) );
+								\libs\Watch::php($str_original, '$str_original', __FILE__, false, false, true);
 								echo "  - [FROM]: $str_original\n";
 								echo "  - [ TO ]: $str_dirty\n\n";
 							}
@@ -125,7 +126,7 @@ $app->post('/pull', function () use($app) {
 			} else {
 				//New sentence
 				if(TranslationModel::on($bundle)->queryInsert($item)){
-					$str_new = preg_replace( "/\r|\n/", "\\n", serialize($item) );
+					$str_new = preg_replace( "/\r|\n/", "\\n", json_encode($item, JSON_UNESCAPED_UNICODE) );
 					echo "  - {NEW} : $str_new\n\n";
 				}
 			}
