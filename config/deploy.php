@@ -67,16 +67,13 @@ $app->get('/push/:ip/:hostname/:deployment/:sub', function ($ip = null, $hostnam
 		)
 	);
 
-	$debug = true; //To true for verbose debugging
-	if($debug){
-		$verbose = fopen('php://temp', 'w+');
-		curl_setopt($ch, CURLOPT_VERBOSE, true);
-		curl_setopt($ch, CURLOPT_STDERR, $verbose);
-	}
+	$verbose = fopen('php://temp', 'w+');
+	curl_setopt($ch, CURLOPT_VERBOSE, true);
+	curl_setopt($ch, CURLOPT_STDERR, $verbose);
 
 	if($result = curl_exec($ch)){
 		echo $result;
-	} else if($debug){
+	} else {
 		echo "cURL error!\n";
 		\libs\Watch::php(curl_getinfo($ch), '$ch', __FILE__, false, false, true);
 		$error = '['.curl_errno($ch)."] => ".htmlspecialchars(curl_error($ch));
