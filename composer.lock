@@ -76,16 +76,16 @@
         },
         {
             "name": "illuminate/container",
-            "version": "v5.2.6",
+            "version": "v5.2.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/container.git",
-                "reference": "778616cde8f6bdf2c6fb96ec7d2aacbf88745486"
+                "reference": "834233e20704ec6573593a0a8e8bfe9e28d23b67"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/container/zipball/778616cde8f6bdf2c6fb96ec7d2aacbf88745486",
-                "reference": "778616cde8f6bdf2c6fb96ec7d2aacbf88745486",
+                "url": "https://api.github.com/repos/illuminate/container/zipball/834233e20704ec6573593a0a8e8bfe9e28d23b67",
+                "reference": "834233e20704ec6573593a0a8e8bfe9e28d23b67",
                 "shasum": ""
             },
             "require": {
@@ -115,20 +115,20 @@
             ],
             "description": "The Illuminate Container package.",
             "homepage": "http://laravel.com",
-            "time": "2015-12-23 01:00:15"
+            "time": "2016-01-18 22:49:36"
         },
         {
             "name": "illuminate/contracts",
-            "version": "v5.2.6",
+            "version": "v5.2.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
-                "reference": "51b3acf96a12f5a10d767d5f2a534fed6f304235"
+                "reference": "511a6798e097666b95c6ef3f339e386cc006feba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/contracts/zipball/51b3acf96a12f5a10d767d5f2a534fed6f304235",
-                "reference": "51b3acf96a12f5a10d767d5f2a534fed6f304235",
+                "url": "https://api.github.com/repos/illuminate/contracts/zipball/511a6798e097666b95c6ef3f339e386cc006feba",
+                "reference": "511a6798e097666b95c6ef3f339e386cc006feba",
                 "shasum": ""
             },
             "require": {
@@ -157,20 +157,20 @@
             ],
             "description": "The Illuminate Contracts package.",
             "homepage": "http://laravel.com",
-            "time": "2015-12-19 14:25:38"
+            "time": "2016-01-07 19:57:38"
         },
         {
             "name": "illuminate/database",
-            "version": "v5.2.0",
+            "version": "v5.2.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/database.git",
-                "reference": "af0e0d1cb4e4abf18eae6400c4ed5685a69a9e41"
+                "reference": "7072548f8a2933230e7f3e7199b78496fda964b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/database/zipball/af0e0d1cb4e4abf18eae6400c4ed5685a69a9e41",
-                "reference": "af0e0d1cb4e4abf18eae6400c4ed5685a69a9e41",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/7072548f8a2933230e7f3e7199b78496fda964b5",
+                "reference": "7072548f8a2933230e7f3e7199b78496fda964b5",
                 "shasum": ""
             },
             "require": {
@@ -217,20 +217,20 @@
                 "orm",
                 "sql"
             ],
-            "time": "2015-12-20 16:11:11"
+            "time": "2016-01-06 16:20:30"
         },
         {
             "name": "illuminate/support",
-            "version": "v5.2.6",
+            "version": "v5.2.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "7be481e742f527a5c4bc84e967bd06a31f50ec0e"
+                "reference": "6443a072215137161dcfc56385af95dd6eceaaad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/7be481e742f527a5c4bc84e967bd06a31f50ec0e",
-                "reference": "7be481e742f527a5c4bc84e967bd06a31f50ec0e",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/6443a072215137161dcfc56385af95dd6eceaaad",
+                "reference": "6443a072215137161dcfc56385af95dd6eceaaad",
                 "shasum": ""
             },
             "require": {
@@ -273,7 +273,7 @@
             ],
             "description": "The Illuminate Support package.",
             "homepage": "http://laravel.com",
-            "time": "2015-12-29 14:47:47"
+            "time": "2016-02-16 14:39:24"
         },
         {
             "name": "maximebf/debugbar",
@@ -638,16 +638,16 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.0.1",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "49ff736bd5d41f45240cec77b44967d76e0c3d25"
+                "reference": "1289d16209491b584839022f29257ad859b8532d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/49ff736bd5d41f45240cec77b44967d76e0c3d25",
-                "reference": "49ff736bd5d41f45240cec77b44967d76e0c3d25",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/1289d16209491b584839022f29257ad859b8532d",
+                "reference": "1289d16209491b584839022f29257ad859b8532d",
                 "shasum": ""
             },
             "require": {
@@ -659,7 +659,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0-dev"
+                    "dev-master": "1.1-dev"
                 }
             },
             "autoload": {
@@ -693,20 +693,20 @@
                 "portable",
                 "shim"
             ],
-            "time": "2015-11-20 09:19:13"
+            "time": "2016-01-20 09:13:37"
         },
         {
             "name": "symfony/translation",
-            "version": "v3.0.1",
+            "version": "v3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "dff0867826a7068d673801b7522f8e2634016ef9"
+                "reference": "2de0b6f7ebe43cffd8a06996ebec6aab79ea9e91"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/dff0867826a7068d673801b7522f8e2634016ef9",
-                "reference": "dff0867826a7068d673801b7522f8e2634016ef9",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/2de0b6f7ebe43cffd8a06996ebec6aab79ea9e91",
+                "reference": "2de0b6f7ebe43cffd8a06996ebec6aab79ea9e91",
                 "shasum": ""
             },
             "require": {
@@ -757,20 +757,20 @@
             ],
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
-            "time": "2015-12-05 17:45:07"
+            "time": "2016-02-02 13:44:19"
         },
         {
             "name": "symfony/var-dumper",
-            "version": "v3.0.1",
+            "version": "v3.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
-                "reference": "87db8700deb12ba2b65e858f656a1f885530bcb0"
+                "reference": "24bb94807eff00db49374c37ebf56a0304e8aef3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/87db8700deb12ba2b65e858f656a1f885530bcb0",
-                "reference": "87db8700deb12ba2b65e858f656a1f885530bcb0",
+                "url": "https://api.github.com/repos/symfony/var-dumper/zipball/24bb94807eff00db49374c37ebf56a0304e8aef3",
+                "reference": "24bb94807eff00db49374c37ebf56a0304e8aef3",
                 "shasum": ""
             },
             "require": {
@@ -820,7 +820,7 @@
                 "debug",
                 "dump"
             ],
-            "time": "2015-12-05 11:13:14"
+            "time": "2016-01-07 13:38:51"
         },
         {
             "name": "twig/extensions",
