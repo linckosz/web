@@ -77,6 +77,7 @@ $app->get('/push/:ip/:hostname/:deployment/:sub', function ($ip = null, $hostnam
 	if($result = curl_exec($ch)){
 		echo $result;
 	} else if($debug){
+		echo "cURL error!\n";
 		\libs\Watch::php(curl_getinfo($ch), '$ch', __FILE__, false, false, true);
 		$error = '['.curl_errno($ch)."] => ".htmlspecialchars(curl_error($ch));
 		\libs\Watch::php($error, '$error', __FILE__, false, false, true);
