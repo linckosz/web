@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  *
  * @author Henrik Bjornskov <hb@peytz.dk>
+ * @package Twig
+ * @subpackage Twig-extensions
  */
 class Twig_Extensions_Extension_Text extends Twig_Extension
 {
@@ -26,7 +28,7 @@ class Twig_Extensions_Extension_Text extends Twig_Extension
     }
 
     /**
-     * Name of this extension.
+     * Name of this extension
      *
      * @return string
      */
@@ -49,7 +51,7 @@ if (function_exists('mb_get_info')) {
                 $length = $breakpoint;
             }
 
-            return rtrim(mb_substr($value, 0, $length, $env->getCharset())).$separator;
+            return rtrim(mb_substr($value, 0, $length, $env->getCharset())) . $separator;
         }
 
         return $value;
@@ -66,7 +68,7 @@ if (function_exists('mb_get_info')) {
         mb_regex_encoding($previous);
 
         foreach ($pieces as $piece) {
-            while (!$preserve && mb_strlen($piece, $env->getCharset()) > $length) {
+            while(!$preserve && mb_strlen($piece, $env->getCharset()) > $length) {
                 $sentences[] = mb_substr($piece, 0, $length, $env->getCharset());
                 $piece = mb_substr($piece, $length, 2048, $env->getCharset());
             }
@@ -86,7 +88,7 @@ if (function_exists('mb_get_info')) {
                 }
             }
 
-            return rtrim(substr($value, 0, $length)).$separator;
+            return rtrim(substr($value, 0, $length)) . $separator;
         }
 
         return $value;

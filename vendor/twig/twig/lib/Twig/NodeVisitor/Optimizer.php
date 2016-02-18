@@ -19,7 +19,7 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_NodeVisitor_Optimizer extends Twig_BaseNodeVisitor
+class Twig_NodeVisitor_Optimizer implements Twig_NodeVisitorInterface
 {
     const OPTIMIZE_ALL = -1;
     const OPTIMIZE_NONE = 0;
@@ -50,7 +50,7 @@ class Twig_NodeVisitor_Optimizer extends Twig_BaseNodeVisitor
     /**
      * {@inheritdoc}
      */
-    protected function doEnterNode(Twig_Node $node, Twig_Environment $env)
+    public function enterNode(Twig_NodeInterface $node, Twig_Environment $env)
     {
         if (self::OPTIMIZE_FOR === (self::OPTIMIZE_FOR & $this->optimizers)) {
             $this->enterOptimizeFor($node, $env);
@@ -76,7 +76,7 @@ class Twig_NodeVisitor_Optimizer extends Twig_BaseNodeVisitor
     /**
      * {@inheritdoc}
      */
-    protected function doLeaveNode(Twig_Node $node, Twig_Environment $env)
+    public function leaveNode(Twig_NodeInterface $node, Twig_Environment $env)
     {
         $expression = $node instanceof Twig_Node_Expression;
 

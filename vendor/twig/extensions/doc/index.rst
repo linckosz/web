@@ -23,7 +23,7 @@ command line:
 
 .. code-block:: bash
 
-    composer require twig/extensions
+    composer require twig/extensions ~1.1.0
 
 * :doc:`Text <text>`: Provides useful filters for text manipulation;
 

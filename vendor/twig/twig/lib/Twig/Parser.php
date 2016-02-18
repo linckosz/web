@@ -254,28 +254,19 @@ class Twig_Parser implements Twig_ParserInterface
 
     public function setMacro($name, Twig_Node_Macro $node)
     {
-        if ($this->isReservedMacroName($name)) {
-            throw new Twig_Error_Syntax(sprintf('"%s" cannot be used as a macro name as it is a reserved keyword', $name), $node->getLine(), $this->getFilename());
-        }
-
-        $this->macros[$name] = $node;
-    }
-
-    public function isReservedMacroName($name)
-    {
         if (null === $this->reservedMacroNames) {
             $this->reservedMacroNames = array();
             $r = new ReflectionClass($this->env->getBaseTemplateClass());
             foreach ($r->getMethods() as $method) {
-                $methodName = strtolower($method->getName());
-
-                if ('get' === substr($methodName, 0, 3) && isset($methodName[3])) {
-                    $this->reservedMacroNames[] = substr($methodName, 3);
-                }
+                $this->reservedMacroNames[] = $method->getName();
             }
         }
 
-        return in_array(strtolower($name), $this->reservedMacroNames);
+        if (in_array($name, $this->reservedMacroNames)) {
+            throw new Twig_Error_Syntax(sprintf('"%s" cannot be used as a macro name as it is a reserved keyword', $name), $node->getLine(), $this->getFilename());
+        }
+
+        $this->macros[$name] = $node;
     }
 
     public function addTrait($trait)

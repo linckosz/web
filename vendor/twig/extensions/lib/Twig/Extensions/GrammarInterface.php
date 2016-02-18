@@ -10,9 +10,9 @@
  */
 interface Twig_Extensions_GrammarInterface
 {
-    public function setParser(Twig_Parser $parser);
+    function setParser(Twig_ParserInterface $parser);
 
-    public function parse(Twig_Token $token);
+    function parse(Twig_Token $token);
 
-    public function getName();
+    function getName();
 }
