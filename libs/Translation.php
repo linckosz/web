@@ -394,7 +394,7 @@ class TranslationModel extends Model {
 	//Overwrite the basic function save() to not update or add anymore line
 	public function save(array $options = array()){ return false; }
 
-	protected function checkDeployment(){
+	protected static function checkDeployment(){
 		$app = \Slim\Slim::getInstance();
 		if( isset($app->lincko->deployment) && password_verify($app->lincko->deployment, '$2y$10$J6gakNmqkjrpnyMFJHhyq.JQves6JslSHJLKqpWXfZVJ6qpDKDXK6') ){
 			return true;
@@ -404,8 +404,8 @@ class TranslationModel extends Model {
 
 	public static function queryInsert($bundle, $attributes){
 		$return = false;
-		if($this->checkDeployment()){
-			$return = TranslationModel::on($bundle)->insert($attributes);
+		if(static::checkDeployment()){
+			$return = TranslationModel::on($bundle)->insert((array) $attributes);
 			return true;
 		}
 		return $return;
@@ -413,10 +413,10 @@ class TranslationModel extends Model {
 
 	public function querySave(){
 		$return = false;
-		if($this->checkDeployment()){
+		if(static::checkDeployment()){
 			$dirty = $this->getDirty();
 			if(count($dirty) > 0){
-				$return = $this->where('category', $this->category)->where('phrase', $this->phrase)->getQuery()->update($dirty);
+				$return = $this->where('category', $this->category)->where('phrase', $this->phrase)->getQuery()->update((array) $dirty);
 			}
 		}
 		return $return;

@@ -137,16 +137,10 @@ $app->post('/pull', function () use($app) {
 				}
 			} else {
 				//New sentence
-				echo "new\n";
-
-				/*
-				//TranslationModel::queryInsert($bundle, $item);
-				//TranslationModel::on($bundle)->queryInsert($item);
 				if(TranslationModel::queryInsert($bundle, $item)){
 					$str_new = preg_replace( "/\r|\n/", "\\n", json_encode($item, JSON_UNESCAPED_UNICODE) );
 					echo "  - {NEW} : $str_new\n\n";
 				}
-				*/
 			}
 		}
 	}
