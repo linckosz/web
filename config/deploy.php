@@ -110,7 +110,7 @@ $app->post('/pull', function () use($app) {
 		echo "You are not authorized to modify the translation database\n";
 		return true;
 	}
-	echo "Pull the translation data [$domain] => \n";return true;
+	echo "Pull the translation data [$domain] => \n";
 	$translation = json_decode($app->request->getBody())->translation;
 	foreach ($translation as $bundle => $items) {
 		foreach ($items as $item) {
