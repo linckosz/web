@@ -99,12 +99,6 @@ $app->lincko->hooks = array(
 	['lincko/wrapper', 'SendEmail', 'slim.after', 20],
 );
 
-//List all mysql servers to use in master-master (galera cluster) replication configuration
-$hosts = array(
-	'mariadbweb',
-);
-$app->lincko->hosts = $hosts[array_rand($hosts)];
-
 $app->lincko->security = array(
 	'public_key' => 'Bruno Martin', //Value for Sign out
 	'private_key' => 'Zhang Xiaorui', //Value for Sign out
