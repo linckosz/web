@@ -13,7 +13,8 @@ $app = new \Slim\Slim();
 
 require_once $path.'/config/global.php';
 require_once $path.'/config/language.php';
-require_once $path.'/param/parameters.php';;
+require_once $path.'/param/common.php';
+require_once $path.'/param/unique/parameters.php';
 
 $app->config(array(
 	'log.enable' => false,
@@ -40,10 +41,6 @@ $app->get('/push/:ip/:hostname/:deployment/:sub', function ($ip = null, $hostnam
 		echo "It has to use a hostname qualified\n";
 		return true;
 	}
-	if($hostname == $domain){
-		echo "We cannot modify the same server\n";
-		return true;
-	}
 	if( !password_verify($deployment, '$2y$10$J6gakNmqkjrpnyMFJHhyq.JQves6JslSHJLKqpWXfZVJ6qpDKDXK6') ){
 		echo "You are not authorized to modify the translation database\n";
 		return true;
@@ -62,6 +59,7 @@ $app->get('/push/:ip/:hostname/:deployment/:sub', function ($ip = null, $hostnam
 	curl_setopt($ch, CURLOPT_TIMEOUT, 8);
 	curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
 	curl_setopt($ch, CURLOPT_FORBID_REUSE, true);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER ,true);
 	curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 			'Content-Type: application/json; charset=UTF-8',
 			'Content-Length: ' . mb_strlen($data),
@@ -69,9 +67,23 @@ $app->get('/push/:ip/:hostname/:deployment/:sub', function ($ip = null, $hostnam
 		)
 	);
 
+	$debug = true; //To true for verbose debugging
+	if($debug){
+		$verbose = fopen('php://temp', 'w+');
+		curl_setopt($ch, CURLOPT_VERBOSE, true);
+		curl_setopt($ch, CURLOPT_STDERR, $verbose);
+	}
+
 	if($result = curl_exec($ch)){
 		echo $result;
+	} else if($debug){
+		\libs\Watch::php(curl_getinfo($ch), '$ch', __FILE__, false, false, true);
+		$error = '['.curl_errno($ch)."] => ".htmlspecialchars(curl_error($ch));
+		\libs\Watch::php($error, '$error', __FILE__, false, false, true);
+		rewind($verbose);
+		\libs\Watch::php(stream_get_contents($verbose), '$verbose', __FILE__, false, false, true);
 	}
+	
 	@curl_close($ch);
 
 	echo "DONE\n";
@@ -98,7 +110,7 @@ $app->post('/pull', function () use($app) {
 		echo "You are not authorized to modify the translation database\n";
 		return true;
 	}
-	echo "Pull the translation data [$domain] => \n";
+	echo "Pull the translation data [$domain] => \n";return true;
 	$translation = json_decode($app->request->getBody())->translation;
 	foreach ($translation as $bundle => $items) {
 		foreach ($items as $item) {

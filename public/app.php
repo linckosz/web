@@ -8,7 +8,8 @@ $app = new \Slim\Slim();
 
 require_once $path.'/config/global.php';
 require_once $path.'/config/language.php';
-require_once $path.'/param/parameters.php';
+require_once $path.'/param/common.php';
+require_once $path.'/param/unique/parameters.php';
 
 // Only invoked if mode is "production"
 $app->configureMode('production', function () use ($app) {
