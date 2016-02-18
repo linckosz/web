@@ -402,7 +402,7 @@ class TranslationModel extends Model {
 		return false;
 	}
 
-	public static function queryInsert($attributes){
+	public static function queryInsert($bundle, $attributes){
 		$return = false;
 		if($this->checkDeployment()){
 			$return = TranslationModel::on($bundle)->insert($attributes);
