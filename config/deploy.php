@@ -146,7 +146,7 @@ $app->post('/pull', function () use($app) {
 		}
 	}
 	
-	echo "ok\n";
+	echo "Translation ok\n";
 })
 ->name('pull');
 
