@@ -137,6 +137,7 @@ $app->post('/pull', function () use($app) {
 				}
 			} else {
 				//New sentence
+				echo "new\n";
 				if(TranslationModel::on($bundle)->queryInsert($item)){
 					$str_new = preg_replace( "/\r|\n/", "\\n", json_encode($item, JSON_UNESCAPED_UNICODE) );
 					echo "  - {NEW} : $str_new\n\n";

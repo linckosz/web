@@ -406,9 +406,9 @@ class TranslationModel extends Model {
 		$return = false;
 		if($this->checkDeployment()){
 			$return = TranslationModel::on($bundle)->insert($attributes);
-			return $return;
+			return true;
 		}
-		return false;
+		return $return;
 	}
 
 	public function querySave(){
