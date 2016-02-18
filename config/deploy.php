@@ -51,7 +51,7 @@ $app->get('/push/:ip/:hostname/:deployment/:sub', function ($ip = null, $hostnam
 		'translation' => $list,
 		'deployment' => $deployment,
 	));
-	$ch = curl_init($ip.':8888/pull');
+	$ch = curl_init($ip.':88888/pull');
 	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -83,6 +83,7 @@ $app->get('/push/:ip/:hostname/:deployment/:sub', function ($ip = null, $hostnam
 		\libs\Watch::php($error, '$error', __FILE__, false, false, true);
 		rewind($verbose);
 		\libs\Watch::php(stream_get_contents($verbose), '$verbose', __FILE__, false, false, true);
+		fclose($verbose);
 	}
 	
 	@curl_close($ch);
