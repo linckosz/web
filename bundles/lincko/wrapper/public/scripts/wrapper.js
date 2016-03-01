@@ -469,11 +469,14 @@ function wrapper_clean_chart(){
 }
 
 //http://stackoverflow.com/questions/23885255/how-to-remove-ignore-hover-css-style-on-touch-devices
-//This disable some unwanted behavior whe double tapping within the 300ms
+//This disable some unwanted behavior the double tapping within the 300ms
 //This function is slow to run, so use it in another thread
 function wrapper_mobile_hover(){
 	if (supportsTouch) { // remove all :hover stylesheets
 		try { // prevent crash on browsers not supporting DOM styleSheets properly
+			//We first disbale Fastclick on some elements
+			$("[contenteditable], textarea, [type=checkbox], [type=password], [type=radio], [type=text]").addClass('needsclick');
+			//Remove hover
 			for (var si in document.styleSheets) {
 				var styleSheet = document.styleSheets[si];
 				if (!styleSheet.rules){
