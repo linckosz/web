@@ -12,5 +12,4 @@
 	https://lincko.co/debug
 */
 $app = \Slim\Slim::getInstance();
-echo "toto";
 //print_r($data);
