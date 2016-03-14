@@ -1,0 +1,602 @@
+#app_layers_dev_skytasks {
+	font-size:20px;
+	color:#3677A7;
+}
+.app_layers_dev_skytasks_tasklist_wrapper {
+
+}
+.app_layers_dev_skytasks_tasklist {
+	position:relative;
+	padding:0px 10px;
+}
+.app_layers_dev_skytasks_tasklist_shifted {
+
+}
+.app_layers_dev_skytasks_tasklist_icon {
+	max-width:20px;
+	background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 100%;
+    width: 15px;
+    display: inline-block;
+}
+
+.app_layers_dev_skytasks_task {
+	min-width: 800px;
+	padding:5px;
+	border-top-color: #3F84B0;
+    border-top-style: dashed;
+    border-top-width: 2px;
+	position: relative;
+}
+
+.app_layers_dev_skytasks_task span{
+	padding:2px 5px;
+}
+
+
+.app_layers_dev_skytasks_task:first-child {
+	border-top:0px;
+}
+.app_layers_dev_skytasks_textwrapper{
+	text-decoration: inherit;
+}
+.app_layers_dev_skytasks_task [find=title]{
+	font-size: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    max-width: 50%;
+    vertical-align: text-bottom;
+    text-decoration: inherit;
+}
+.app_layers_dev_skytasks_task_comments {
+	float:right;
+	margin: 3px 0px;
+}
+.app_layers_dev_skytasks_task [find=description] {
+    font-size: smaller;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    width: 20%;
+    vertical-align: text-bottom;
+    text-decoration: inherit;
+}
+.app_layers_dev_skytasks_task [find=time] {
+	width:80px;
+}
+.app_layers_dev_skytasks_tasklist_icon_text {
+    display: inline-block;
+}
+
+.app_layers_dev_skytasks_checkbox [type="checkbox"]{
+	visibility:hidden;
+	display:none;
+}
+.app_layers_dev_skytasks_checkbox_visual{
+	content: "";
+    background-color: #EFEFEF;
+    font-family: Times New Roman;
+    overflow: visible;
+    border: 2px solid #3F84B0;
+    height: 5px;
+    width: 5px;
+    padding: 9px;
+    display: inline-block;
+    border-radius: 6px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    vertical-align: middle;
+}
+.app_layers_dev_skytasks_checkbox label {
+	cursor: pointer;
+	padding: 13px;
+	position: absolute;
+	top: 3px;
+	left: 8px;
+}
+
+.app_layers_dev_skytasks_checkbox input[type="checkbox"]:checked + .app_layers_dev_skytasks_checkbox_visual{
+	/*content: '✓';*/
+	/*content: url('/lincko/app/images/app/icons/Status-13.png');*/
+	background-image: url('/lincko/app/images/app/icons/Status-13.png');
+
+	
+}
+.app_layers_dev_skytasks_checkbox input[type="checkbox"]:not(:checked) + .app_layers_dev_skytasks_checkbox_visual{
+	content: '';
+	background-image: none;
+}
+.app_layers_dev_skytasks_detail_checked{
+	background-image: url('/lincko/app/images/app/icons/Status-13.png');
+}
+
+.app_layers_dev_skytasks_task_rightOptions {
+	float:right;
+	margin-right: 0px;
+}
+
+.app_layers_dev_skytasks_ellipsis {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	position: relative;
+}
+
+.app_layers_dev_skytasks_newtaskBox {
+	font-size:50px;
+	background-color:#FFFFFF;
+	opacity:0.5;
+	border:2px solid gray;
+	margin:10px;
+	text-align: center;
+	cursor: pointer;
+}
+.app_layers_dev_skytasks_newtaskBox:hover {
+	opacity:1;
+}
+
+.app_layers_dev_skytasks_newtaskCircle {
+	z-index: 200;
+    font-size: 50px;
+    font-weight: bold;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    text-align: center;
+    width: 50px;
+    padding: 8px;
+    border-radius: 100px;
+    /*color: #FBA026;*/
+    opacity: 0.3;
+    cursor: pointer;
+    cursor: hand;
+}
+.app_layers_dev_skytasks_newtaskCircle:hover {
+	opacity:1;
+}
+
+.app_layers_dev_skytasks_detail{
+	padding: 10px 21px;
+	border:2px solid #3F84B0;
+	background-color: #3F84B0;
+	background-color: rgba(63,132,176,0.1);
+	/*opacity: 0.5;*/
+	height: 55%;
+    min-height: 300px;
+	bottom:0;
+	left:0;
+	right:0;
+	position:fixed;
+    z-index:100;
+    _position:absolute;
+}
+.app_layers_dev_skytasks_closedetail{
+	font-size: 30px;
+    cursor: pointer;
+    z-index: 10;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    border-radius: 8px;
+    padding: 0px 5px;
+}
+.app_layers_dev_skytasks_closedetail:hover{
+	background-color: grey;
+}
+.app_layers_dev_skytasks_detail_block{
+	border: 1px solid lightgrey;
+	box-sizing: border-box;
+    width: 50%;
+    height: 100%;
+    float: left;
+    position: relative;
+    overflow: hidden;
+}
+.app_layers_dev_skytasks_detail_block:first-child:after {
+ 	content: "";
+    border: 1px solid #3F84B0;
+    position: absolute;
+    top: 10%;
+    bottom: 10%;
+    right: 0px;
+}
+.app_layers_dev_skytasks_detail_block_title{
+	display:table-row;
+}
+.app_layers_dev_skytasks_detail_block_title span{
+	display:table-cell;
+	vertical-align: middle;
+}
+.app_layers_dev_skytasks_detail_block_title [find=title]{
+	font-size:30px;
+	padding-left: 5px;
+	line-height: 1;
+}
+.app_layers_dev_skytasks_detail .app_layers_dev_skytasks_checkbox label{
+	margin:0px;
+}
+.app_layers_dev_skytasks_detail_block_body{
+	padding: 5px 30px;
+}
+.app_layers_dev_skytasks_detail_block_body_row1{
+	padding: 15px 0px;
+}
+.app_layers_dev_skytasks_detail [find=taskid]{
+	position: absolute;
+    bottom: 0;
+    right:0;
+}
+.app_layers_dev_skytasks_detail_usericon{
+    padding: 10px 0px 0 25px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+.app_layers_dev_skytasks_detail_commentbox{
+	border: 1px lightgrey solid;
+    display: table;
+    margin: 20px 10px;
+}
+.app_layers_dev_skytasks_detail_commentbox_icon{
+	display: table-cell;
+    vertical-align: middle;
+    padding: 10px;
+}
+.app_layers_dev_skytasks_detail_commentbox .app_layers_dev_skytasks_detail_usericon{
+	border: 1px black solid;
+    border-radius: 25px;
+    width: 50px;
+    height: 50px;
+    padding: 0px;
+    display: inline-block;
+}
+.app_layers_dev_skytasks_detail_penicon{
+	width:20px;
+}
+.app_layers_dev_skytasks_detail_okcancel{
+	position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 10px;
+}
+.app_layers_dev_skytasks_detail_okcancel span{
+	margin:10px;
+}
+
+.app_layers_dev_skytasks_newtaskform {
+	padding:10px;
+	width:100%;
+	background-color: #99c2ff;
+    position:fixed;
+    z-index:150;
+    _position:absolute;
+    min-height:100px;
+    bottom:0;
+}
+.app_layers_dev_skytasks_navbar {
+	width:100%;
+	padding: 0px 10px;
+}
+.app_layers_dev_skytasks_navbar span{
+	padding: 0px 10px;
+}
+.app_layers_dev_skytasks_people {
+	float: left;
+}
+
+.app_layers_dev_skytasks_timesort {
+	position:relative;
+	overflow: hidden;
+	padding: 7px 0px;
+}
+.app_layers_dev_skytasks_timesort_text{
+	text-align:center;
+	max-width: 150px;
+}
+.app_layers_dev_skytasks_sortdot {
+	width:150px;
+	text-align:center;
+	top:0px;
+}
+.app_layers_dev_skytasks_timesort_dot {
+	position:relative;
+	padding:0px 5px !important;
+	font-size:25px;
+}
+
+.app_layers_dev_skytasks_active {
+	color:#FBA026; /*lincko orange*/
+	opacity:1 !important;
+}
+.app_layers_dev_skytasks_active:before {
+    content: "";
+    width: 0;
+    height: 0;
+    border-top: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+    border-left: 10px solid #FBA026;
+    position: absolute;
+    top: 18px;
+    margin-left: -10px;
+}
+.app_layers_dev_skytasks_menuicon {
+	max-width: 35px;
+}
+
+.app_layers_dev_skytasks_strike{
+	opacity:0.4;
+	text-decoration: line-through;
+}
+.app_layers_dev_skytasks_selected{
+	background-color: #5AAFD3;
+}
+.app_layers_dev_skytasks_tasklist_icon_wrapper{
+		display:inline-block;
+		height:100%;
+	}
+.app_layers_dev_skytasks_tasklist_icon_1 {
+	background-image: url('/lincko/app/images/app/icons/Users-9.png');
+}
+.app_layers_dev_skytasks_tasklist_icon_2 {
+	background-image: url('/lincko/app/images/app/icons/Time-3.png');
+}
+.app_layers_dev_skytasks_spacesstick {
+    background-color: purple;
+    padding: 18px 2px;
+}
+
+/*MobileL to mobile*/
+@media only screen and (max-width: 900px) {
+	.app_layers_dev_skytasks_navbar {
+		display: table;
+		padding:0;
+	}
+	.app_layers_dev_skytasks_people {
+		vertical-align:middle;
+		display: table-cell;
+		width: 100px;
+		float:none;
+		padding-top: 5px !important;
+    	padding-bottom: 5px !important;
+	}
+	.app_layers_dev_skytasks_active:before {
+		display:none;
+	}
+	.app_layers_dev_skytasks_timesort {
+		text-align:center;
+		overflow: hidden;
+		margin: 0px 120px 0px 0px;
+		padding: 0;
+	}
+	.app_layers_dev_skytasks_timesort_text {
+		left:0;
+		right:0;
+		margin:0 auto;
+		margin-top: 5px;
+		position:absolute !important;
+	}
+	.app_layers_dev_skytasks_timesort span{
+		position: relative; /*toto*/
+		text-align: center;
+	}
+
+	.app_layers_dev_skytasks_tasklist{
+		padding:0px;
+	}
+	.app_layers_dev_skytasks_task {
+		min-width:initial;
+		padding:0px;
+		border-top-style: solid;
+	}
+
+	.app_layers_dev_skytasks_textwrapper{
+		padding:0px !important;
+	}
+	.app_layers_dev_skytasks_task [find=title]{
+		font-size:inherit;
+		display:block;
+		text-overflow: ellipsis;
+		overflow: hidden;
+	}
+	.app_layers_dev_skytasks_task [find=dash]{
+		float:left;
+	}
+	.app_layers_dev_skytasks_task [find=description]{
+		float: left;
+		width: 35%;
+	}
+	.app_layers_dev_skytasks_task_comments {
+	    font-size: smaller;
+	    text-align: right;
+	    width: 35%;
+	    min-width:120px;
+	    position:absolute;
+	    bottom:0px;
+	    right:0px;
+	}
+
+	.app_layers_dev_skytasks_spacesstick {
+		background-color: purple;
+		padding: 25px 3px;
+    	margin: 5px 0;
+    	margin-left: 3px;
+	}
+
+	.app_layers_dev_skytasks_checkbox label {
+	    padding: 30px;
+	    top: 0px;
+	    bottom: 0px;
+	    left: 0;
+	}
+	.app_layers_dev_skytasks_checkbox .app_layers_dev_skytasks_checkbox_visual {
+	    font-size: 63px;
+	    text-align: center;
+	    height: 10px;
+	    width: 10px;
+	    padding: 10px;
+	    margin: 11px 0px;
+	    border-radius: 10px;
+	}
+	.app_layers_dev_skytasks_menuicon {
+		max-width:40px;
+	}
+
+
+	.app_layers_dev_skytasks_task_rightOptions {
+		position:relative;
+		z-index:5;
+	}
+
+	.app_layers_dev_skytasks_tasklist_icon {
+		max-width: 50px;
+   		height: 34px;
+	    width: 100%;
+	    margin: 0px auto;
+ 	   	display: block;
+	}
+	.app_layers_dev_skytasks_tasklist_icon_text{
+		display: block;
+    	font-size: 15px;
+    	color: white;
+    	text-align: center;
+    	overflow:hidden;
+		text-overflow: ellipsis;
+		width: initial !important;
+	}
+	.app_layers_dev_skytasks_tasklist_icon_text sup{
+		vertical-align:text-top;
+	}
+	.app_layers_dev_skytasks_tasklist_icon_wrapper{
+		float: left;
+		width:70px;
+		height:62px;
+	}
+	.app_layers_dev_skytasks_tasklist_icon_name{
+		background-color: #3778A7;
+	}
+	.app_layers_dev_skytasks_tasklist_icon_spaces{
+		background-color:#4799D3;
+	}
+	.app_layers_dev_skytasks_tasklist_icon_time{
+		background-color:#295B7F;
+	}
+	.app_layers_dev_skytasks_checkbox input {
+		width: 25px;
+		height: 25px;
+	}
+	.app_layers_dev_skytasks_leftOptions {
+		position: absolute;
+	    top: 0;
+	    bottom: 0;
+	    left: 0;
+	    background-color:#FBA026; /*lincko orange*/
+	}
+	.app_layers_dev_skytasks_delete {
+		height: 100%;
+	    display: -webkit-flex; /* Safari */
+	    -webkit-align-items: center; /* Safari 7.0+ */
+	    display: flex;
+	    align-items: center;
+	    background-color: orange;
+	    float: right;
+	    width:75px;
+	}
+	.app_layers_dev_skytasks_taskblur {
+		/*
+		filter:blur(1px);
+		-webkit-filter: blur(1px); /*chrome safari opera*/
+
+		-webkit-box-shadow: 0 20px 15px -15px #202020 inset, 0 -20px 15px -15px #202020 inset;
+	   	-moz-box-shadow: 	0 20px 15px -15px #202020 inset, 0 -20px 15px -15px #202020 inset;
+		box-shadow: 		0 20px 15px -15px #202020 inset, 0 -20px 15px -15px #202020 inset;
+
+		/*box-shadow:#888888 inset;*/
+		
+		background-image: url('/lincko/app/images/app/blur22.png');
+		background-repeat: repeat;
+		position: absolute;
+	    top: 0;
+	    bottom: 0;
+	    left: 0;
+	    right: 0;
+	    opacity:0.8;
+
+	    display:none;
+	}
+
+	.app_layers_dev_skytasks_detail{
+		padding: 10px 11px;
+	}
+}
+
+/*mobile only*/
+@media only screen and (max-width: 479px) {
+	#app_layers_dev_skytasks {
+
+	}
+	.app_layers_dev_skytasks_detail{
+		top:0;
+		left:0;
+   		margin-top: 48px;
+   		height:initial;
+   		background-color: #3F84B0;
+	}
+	.app_layers_dev_skytasks_detail_block{
+		width:100%;
+		height:50%;
+	}
+	.app_layers_dev_skytasks_task_rightOptions {
+		position:absolute;
+		top: 0px;
+		bottom: -2px;
+		/*right: 0;*/
+		background: #FBA026; /*lincko orange*/
+		background: #3F84B0;
+		white-space: nowrap;
+		z-index: 10;
+		filter:none;
+		-webkit-filter: none; /*chrome safari opera*/
+	}
+	.app_layers_dev_skytasks_tasklist_icon_wrapper{
+		padding-bottom:0px;
+	}
+	
+	.app_layers_dev_skytasks_tasklist_icon {
+
+	}
+	.app_layers_dev_skytasks_taskpress {
+		position: absolute;
+	    top: 0;
+	    bottom: 0;
+	    left: 0;
+	    right: 0;
+	    opacity:0.8;
+	}
+	.app_layers_dev_skytasks_taskpress_status {
+		left: 0;
+		right: 0;
+		vertical-align: middle;
+		height: 50%;
+		margin: auto;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		text-align: center;
+	}
+	.app_layers_dev_skytasks_taskpress_status_0 {
+		background-color: inherit;
+	}
+	.app_layers_dev_skytasks_taskpress_status_1 {
+		background-color: #66b266;
+	}
+	.app_layers_dev_skytasks_taskpress_status_2 {
+		background-color: #6666ff;
+	}
+	.app_layers_dev_skytasks_taskpress_status_3 {
+		background-color: #ff6666;
+	}
+	
+}

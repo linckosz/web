@@ -1,0 +1,93 @@
+#app_layers_skynotes {
+    position: relative;
+    height: 100%;
+}
+.app_layers_skynotes_editor {
+    font-size:15px;
+    position: relative;
+    /*
+    overflow: auto;
+    height:100%;
+    */
+    border: 1px solid black;
+    background-color: white;
+    margin:0px 20px;
+    min-height:300px;
+}
+
+.easyeditor-wrapper {
+
+}
+.app_layers_skynotes_wrapper {
+    height:500px;
+}
+.app_layers_skynotes_wrapper_inner {
+    position: relative;
+    /*
+    overflow:visible !important;
+    */
+}
+.app_layers_skynotes_concealer {
+    height: 329px;
+    width: 100%;
+    background-color: grey;
+    position: absolute;
+    bottom: 0;
+    opacity:0.5;
+}
+
+
+/*MobileL to mobile*/
+@media only screen and (max-width: 900px) {
+    .app_layers_skynotes_editor {
+        margin:initial;
+    }
+    .app_layers_skynotes_editortool_mobile{
+        /*
+        z-index: 10;
+        background: rgba(241, 241, 241, 0.5);
+        width: 60px;
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid #e9e9e9;
+        position: absolute;
+        right: 0;
+        top: 0;
+        */
+        padding: 0px;
+    }
+    .app_layers_skynotes_editortool_mobile ul{
+        /*
+        padding:0px;
+        margin:0;
+        */
+        margin: 0px;
+        padding: 0px;
+        white-space: nowrap;
+        overflow-x: auto;
+    }
+    .app_layers_skynotes_editortool_mobile li {
+        /*
+        float: none;
+        text-align: center;
+        height: 40px;
+        */
+        display: inline-block;
+        float: none;
+    }
+    .app_layers_skynotes_editortool_mobile li button {
+        /*
+        float: none;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        border-radius: 0;
+        */
+        margin: 0px;
+        padding: 5px 15px;
+        border-radius: 0px;
+    }
+    .app_layers_skynotes_editortool_mobile_highlight {
+        background-color: orange;
+    }
+}
