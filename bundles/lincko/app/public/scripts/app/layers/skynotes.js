@@ -60,9 +60,11 @@ app_layers_dev_skynotes_ClassTextEditor.prototype.construct = function(){
 	that.elem_editor = $('<div class="needsclick app_layers_skynotes_editor"></div>')
 
 	that.elem_editor.appendTo(that.elem_wrapper_inner);
-	that.elem_wrapper_inner.appendTo(that.elem_wrapper).addClass('overthrow');
+	that.elem_wrapper_inner.appendTo(that.elem_wrapper);//.addClass('overthrow');
 	that.elem_wrapper.addClass('app_layers_skynotes_wrapper');
-	that.elem_editor.easyEditor();
+	that.elem_editor.easyEditor({
+		buttons: ['bold', 'italic', 'link', 'h2', 'h3', 'h4', 'alignleft', 'aligncenter', 'alignright', 'quote', 'code', 'image', 'youtube', 'x']
+	});
 	that.elem_editor.prev('.easyeditor-toolbar').addClass('app_layers_skynotes_editortool_mobile');
 	//$('#-app_layers_skynotes_concealer').prop('id','app_layers_skynotes_concealer').insertAfter(that.elem_wrapper_inner);
 
@@ -83,7 +85,7 @@ app_layers_dev_skynotes_ClassTextEditor.prototype.construct = function(){
 	that.elem_wrapper_inner.keydown(function(){
 		console.log('keydown');
 		//myIScrollList['app_layers_skynotes_wrapper_inner'].refresh();
-
+/*
 		// Create a cloned input element below the original one
         if (!that.elem_wrapper_inner_clone) {
             var zIndex = that.elem_wrapper_inner.css('zIndex');
