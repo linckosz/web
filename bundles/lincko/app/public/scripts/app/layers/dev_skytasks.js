@@ -1,5 +1,6 @@
 setTimeout(function(){
-	app_layers_changePage('dev_skytasks');
+	//app_layers_changePage('dev_skytasks');
+	app_layers_changePage('skynotes');
 }, 2000);
 
 //polyfill
@@ -79,10 +80,13 @@ var app_layers_dev_skytasks_feedPage = function(){
 	app_application_lincko.add(
 		'app_layers_dev_skytasks_tasklist_wrapper',
 		'tasks',
+		app_layers_dev_skytasks_tasklist.tasklist_update
+		/*
 		function(){
 			//console.log('dev_skytasks lincko.add task update');
 			app_layers_dev_skytasks_tasklist.tasklist_update('all');
 		}
+		*/
 	);
 
 };//end of app_layers_skytasks_feedPage()
@@ -327,7 +331,7 @@ var app_layers_dev_skytasks_ClassTasklist = function(tasklist_wrapper){
 	this.elem_leftOptionsL;
 	this.elem_rightOptionsL;
 	this.mousedown = false;
-	this.pan_threshold = {bool: false, valX: 30, valY:50};
+	this.pan_threshold = {bool: false, valX: 20, valY:50};
 	this.panyes = false;
 	this.options_startL;
 
@@ -378,10 +382,10 @@ app_layers_dev_skytasks_ClassTasklist.prototype.construct = function(){
 	$(window).trigger('resize');
 
 	wrapper_IScroll_options_new['app_layers_dev_skytasks_tasklist_'+that.md5id] = { 
-	click: false,
-	//mouseWheel: true,
-	//fadeScrollbars: false,
-	//scrollX: true,
+		click: false,
+		//mouseWheel: true,
+		//fadeScrollbars: false,
+		//scrollX: true,
 	};	
 	
 	wrapper_IScroll_cb_creation['app_layers_dev_skytasks_tasklist_'+that.md5id] = function(){
@@ -393,7 +397,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.construct = function(){
 
 		IScroll.on('scrollEnd', function(){
 			console.log('scrollEnd');
-			console.log(event);
+			//console.log(event);
 			var IScrollY = IScroll.y;
 			console.log(IScrollY);
 			if( IScrollY != 0 ){
@@ -427,18 +431,18 @@ app_layers_dev_skytasks_ClassTasklist.prototype.window_resize = function(){
 
 	console.log('end of resize');
 }
-app_layers_dev_skytasks_ClassTasklist.prototype.tasklist_update = function(mode){
+app_layers_dev_skytasks_ClassTasklist.prototype.tasklist_update = function(){
 	var that = this;
 	var items = Lincko.storage.list('tasks');
 	var item;
-	if( mode == 'all'){
-		that.tasklist.find('.iscroll_sub_div').empty();
-		for (var i in items){
-			item = items[i];
-			that.tasklist.find('.iscroll_sub_div').append(that.addTask(item));
-		}
-		that.elem_newtaskBox.appendTo(that.tasklist.find('.iscroll_sub_div'));
+	console.log('tasklist_update: all');
+	that.tasklist.find('.iscroll_sub_div').empty();
+	for (var i in items){
+		item = items[i];
+		that.tasklist.find('.iscroll_sub_div').append(that.addTask(item));
 	}
+	that.add_newtaskBox(that.tasklist.find('.iscroll_sub_div'));
+	//that.elem_newtaskBox.appendTo(that.tasklist.find('.iscroll_sub_div'));
 	that.store_all_elem();
 	//myIScrollList['app_layers_dev_skytasks_tasklist_'+that.md5id].refresh();
 	that.window_resize();
@@ -464,6 +468,14 @@ app_layers_dev_skytasks_ClassTasklist.prototype.addTask = function(item){
 	var created_by;
 	var duedate;
 
+	if(item == null){
+		item = {};
+		item['_id'] = 'blankTask';
+		item['+title'] = 'blankTask';
+		item['created_by'] = wrapper_localstorage.uid;
+		item.start = $.now()/1000;
+		item.duration = "86400";
+	}
 	Elem.prop('id','app_layers_dev_skytasks_task_'+that.md5id+'_'+item['_id']);
 
 	Elem.find('.app_layers_dev_skytasks_checkbox input').prop('id','app_layers_dev_skytasks_task_checkbox_'+that.md5id+'_'+item['_id']);
@@ -483,6 +495,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.addTask = function(item){
 	Elem.find('[find=name]').html(created_by);
 
 	duedate = new wrapper_date(item.start + parseInt(item.duration,10));
+	console.log(duedate);
 	Elem.find('[find=time]').html(duedate.display());
 
 	Elem.data('taskid',item['_id']);
@@ -522,16 +535,28 @@ app_layers_dev_skytasks_ClassTasklist.prototype.addTask = function(item){
 
 	return Elem;
 }
-app_layers_dev_skytasks_ClassTasklist.prototype.add_newtaskBox = function(){
+app_layers_dev_skytasks_ClassTasklist.prototype.add_newtaskBox = function(elem_appendTo){
 	var Elem;
 	var that = this;
-	Elem = $('#-app_layers_dev_skytasks_newtaskBox').clone();
-	Elem.prop('id','app_layers_dev_skytasks_newtaskBox_'+that.md5id);
+	var elem_blankTask;
+	Elem = $('#-app_layers_dev_skytasks_newtaskBox').clone().removeAttr('id');
 	Elem.on('click', function(){
-		submenu_Build("app_task_new");	
+		if( responsive.test("minTablet") ){
+			$(this).before(that.addTask(null));
+			myIScrollList['app_layers_dev_skytasks_tasklist_'+that.md5id].refresh();
+		}
+		else{
+			submenu_Build("app_task_new");	
+		}
 	});
 	that.elem_newtaskBox = Elem;
-	that.elem_newtaskBox.appendTo(that.tasklist);
+	//that.elem_newtaskBox.appendTo(that.tasklist);
+	if(!elem_appendTo){
+		that.elem_newtaskBox.appendTo(that.tasklist);
+	}
+	else{
+		that.elem_newtaskBox.appendTo(elem_appendTo);
+	}
 }
 
 
@@ -547,9 +572,9 @@ app_layers_dev_skytasks_ClassTasklist.prototype.on_mousedown = function(event, t
 	if( responsive.test("isMobile") ){
 		that.elem_rightOptions = that.actiontask.find('[find=task_rightOptions]');
 	}
-	that.delX_ini = event.pageX || event.touches[0].pageX;
-	that.delX_now = event.pageX || event.touches[0].pageX;
-	that.delY_ini = event.pageY || event.touches[0].pageY;
+	that.delX_ini = event.pageX || event.originalEvent.touches[0].pageX || event.touches[0].pageX;
+	that.delX_now = that.delX_ini;
+	that.delY_ini = event.pageY || event.originalEvent.touches[0].pageY || event.touches[0].pageY;
 	that.mousedown = true;
 	console.log(that.mousedown);
 
@@ -561,9 +586,9 @@ app_layers_dev_skytasks_ClassTasklist.prototype.on_mousemove = function(event){
 	var elem_options;
 
 	that.delX_now = that.delX;
-	that.delX = (event.pageX || event.touches[0].pageX) - that.delX_ini;
+	that.delX = (event.pageX || event.originalEvent.touches[0].pageX || event.touches[0].pageX) - that.delX_ini;
 	that.delX_now = that.delX - that.delX_now;
-	that.delY = (event.pageY || event.touches[0].pageY) - that.delY_ini;
+	that.delY = (event.pageY || event.originalEvent.touches[0].pageY || event.touches[0].pageY) - that.delY_ini;
 
 
 	//if past threshold, slide left or right options
@@ -800,6 +825,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.toggle_NewtaskCircle = function(
 	var that = this;
 	var newtaskBox = that.elem_newtaskBox;
 	var newtaskCircle = that.elem_newtaskCircle;
+	console.log(newtaskBox);
 	if(newtaskBox.offset().top + newtaskBox.outerHeight() > $(window).height()){
 		//newtaskBox hidden
 		newtaskCircle.removeClass('display_none');
@@ -833,6 +859,11 @@ app_layers_dev_skytasks_ClassTasklist.prototype.minMobileL = function(){
 	var that = this;
 	that.tasklist.find('[find=task_rightOptions]').removeAttr("style").removeClass('display_none');
 	that.tasklist.find('[find=task_center]').removeAttr('style');
+/*
+	that.elem_leftOptions_all.width(that.window_width*2)
+					.css('left',-that.window_width*2)
+					.removeClass('display_none');
+*/
 }
 
 app_layers_dev_skytasks_ClassTasklist.prototype.isMobile = function(){

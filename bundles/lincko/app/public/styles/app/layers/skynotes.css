@@ -13,6 +13,8 @@
     background-color: white;
     margin:0px 20px;
     min-height:300px;
+    -webkit-user-select: text;
+    user-select: text;
 }
 
 .easyeditor-wrapper {

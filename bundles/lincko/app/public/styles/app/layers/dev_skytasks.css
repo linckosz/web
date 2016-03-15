@@ -50,6 +50,7 @@
     max-width: 50%;
     vertical-align: text-bottom;
     text-decoration: inherit;
+    width: 30%;
 }
 .app_layers_dev_skytasks_task_comments {
 	float:right;
@@ -63,6 +64,7 @@
     width: 20%;
     vertical-align: text-bottom;
     text-decoration: inherit;
+    opacity: 0.6;
 }
 .app_layers_dev_skytasks_task [find=time] {
 	width:80px;

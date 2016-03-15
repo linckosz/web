@@ -82,6 +82,7 @@ app_layers_dev_skynotes_ClassTextEditor.prototype.construct = function(){
 
 	that.elem_wrapper_inner.keydown(function(){
 		console.log('keydown');
+		//myIScrollList['app_layers_skynotes_wrapper_inner'].refresh();
 
 		// Create a cloned input element below the original one
         if (!that.elem_wrapper_inner_clone) {
