@@ -448,6 +448,10 @@ Lincko.storage.getHistoryInfo = function(history){
 	var result = {
 		title: '',
 		content: '',
+		root: {
+			content: '',
+			par: null,
+		},
 	};
 	var company = Lincko.storage.getCOMID();
 
@@ -463,6 +467,11 @@ Lincko.storage.getHistoryInfo = function(history){
 		} else if(typeof Lincko.storage.data['_']['_history_title'][history.type]['_'] !== 'undefined'){
 			result.title = Lincko.storage.data['_']['_history_title'][history.type]['_'];
 		}
+
+		result.root = {
+			title: result.title,
+			history: history,
+		};
 
 		result.title = Lincko.storage.formatHistoryInfo(result.title, history);
 		var date = new wrapper_date(history.timestamp);
@@ -484,9 +493,9 @@ Lincko.storage.getHistoryInfo = function(history){
 				result.content = item[history.att];
 			}
 		}
+		
 		result.content = Lincko.storage.formatHistoryInfo(result.content, history);
 	}
-	
 	return result;
 };
 
