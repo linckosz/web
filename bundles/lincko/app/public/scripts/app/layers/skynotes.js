@@ -181,8 +181,16 @@ app_layers_dev_skynotes_ClassTextEditor.prototype.construct = function(){
 }
 app_layers_dev_skynotes_ClassTextEditor.prototype.window_resize = function(){
 	console.log('window resize skynotes');
+	var that = this;
 	/*
 	var content_height = $('#app_layers_content').outerHeight();
 	$('#app_layers_skynotes_wrapper').height(content_height-400);
 	*/
+
+	var editor_maxHeight = $(window).height() - $('#app_content_top').outerHeight();
+	if(responsive.test("maxMobileL")){
+		editor_maxHeight -= $('#app_content_menu').outerHeight();
+	}
+	that.elem_editor.css('height', editor_maxHeight);
+
 }
