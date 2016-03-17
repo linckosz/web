@@ -1,4 +1,3 @@
-online
 {
     "require": {
         "slim/slim": "2.*",
