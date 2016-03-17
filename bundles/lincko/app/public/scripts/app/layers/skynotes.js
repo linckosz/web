@@ -25,9 +25,11 @@ var app_layers_skynotes_feedPage = function(){
 */
 	//Elem.easyEditor();
 
-	$('#-skynotes_test').prop('id','skynotes_test').appendTo(position);
+	$('#-skynotes_test').clone().prop('id','skynotes_test').appendTo(position);
 
 	//app_layers_dev_skynotes_editor = new app_layers_dev_skynotes_ClassTextEditor(Elem);
+	app_layers_dev_skynotes_editor=null;
+	delete app_layers_dev_skynotes_editor;
 	app_layers_dev_skynotes_editor = new app_layers_dev_skynotes_ClassTextEditor($('#skynotes_test'));
 
 	//$('#app_layers_skynotes_wrapper_inner').addClass('overthrow');
@@ -187,10 +189,11 @@ app_layers_dev_skynotes_ClassTextEditor.prototype.window_resize = function(){
 	$('#app_layers_skynotes_wrapper').height(content_height-400);
 	*/
 
-	var editor_maxHeight = $(window).height() - $('#app_content_top').outerHeight();
-	if(responsive.test("maxMobileL")){
-		editor_maxHeight -= $('#app_content_menu').outerHeight();
-	}
+	var editor_maxHeight = that.elem_wrapper.height();
+	console.log(that.elem_wrapper);
+	console.log(editor_maxHeight);
+	editor_maxHeight -= that.elem_wrapper_inner.find('.easyeditor-toolbar').outerHeight();
+	console.log(editor_maxHeight);
 	that.elem_editor.css('height', editor_maxHeight);
 
 }

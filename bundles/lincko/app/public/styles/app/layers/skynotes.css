@@ -21,7 +21,8 @@
 
 }
 .app_layers_skynotes_wrapper {
-    height:500px;
+    /*height:500px;*/
+    height:100%;
 }
 .app_layers_skynotes_wrapper_inner {
     position: relative;
