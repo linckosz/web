@@ -53,6 +53,8 @@ if(isset($_SERVER["SERVER_HOST"])){
 	$app->lincko->domain = $_SERVER["HTTP_HOST"];
 }
 
+$app->lincko->domain_restriction = "/^(?:api|dc|file|info|lincko|mail|mx|ns|pop|smtp|tp|debug|www|.{1,3})\d*$/ui";
+
 //Do not enable debug when we are using json ajax respond
 $app->config(array(
 	'debug' => false,
@@ -141,7 +143,12 @@ $app->lincko->data = array(
 	'title' => $app->lincko->title,
 	'company' => '',
 	'space' => '',
+	'api_url' => '', //Only used for development purpose "dev.master[.bruno].lincko.cn"
 );
+
+if(isset($_SERVER["DEV_API"])){
+	$app->lincko->data['api_url'] = $_SERVER["DEV_API"];
+}
 
 ////////////////////////////////////
 // BUNDLE lincko/wrapper

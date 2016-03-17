@@ -71,6 +71,8 @@ function Submenu(menu, next, param) {
 	}
 	if(typeof param === 'undefined'){
 		this.param = null;
+	} else {
+		this.param = param;
 	}
 	
 	//The creation of new submenu with MD5 seems to lead to a Memory leak
