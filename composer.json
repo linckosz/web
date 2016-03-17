@@ -1,4 +1,3 @@
-toto
 {
     "require": {
         "slim/slim": "2.*",
