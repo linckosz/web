@@ -15,6 +15,7 @@
     -webkit-user-select: text;
     user-select: text;
     box-sizing: border-box;
+    color:black;
 }
 
 .easyeditor-wrapper {

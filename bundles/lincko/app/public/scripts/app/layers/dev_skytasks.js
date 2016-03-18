@@ -1,6 +1,7 @@
 setTimeout(function(){
 	//app_layers_changePage('dev_skytasks');
 	//app_layers_changePage('skynotes');
+	submenu_Build('skyler');
 }, 2000);
 
 //polyfill
