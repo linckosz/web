@@ -67,7 +67,7 @@ var app_content_menu = {
 			title = Lincko.storage.WORKNAME;
 			list = [
 				'statistics',
-				'history',
+				'chat',
 			];
 		} else if(
 			   $.type(Lincko.storage.data['projects']) === 'object'
@@ -79,7 +79,7 @@ var app_content_menu = {
 			list = [
 				'tasks',
 				'statistics',
-				'history',
+				'chat',
 			];
 		} else { //My placeholder (default)
 			title = base_myplaceholder;
@@ -90,7 +90,7 @@ var app_content_menu = {
 				'notes',
 				'calendar',
 				//'statistics',
-				'history',
+				'chat',
 			];
 		}
 
