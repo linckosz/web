@@ -49,12 +49,23 @@
 				<label for=""></label>
 			</span>
 			<span class="app_layers_dev_skytasks_textwrapper">
-				<span find='comments' class="app_layers_dev_skytasks_task_comments">
+				<span find='comments' class="app_layers_dev_skytasks_task_comments minMobileL">
 					<img class="app_layers_dev_skytasks_tasklist_icon minTablet" src="{{_filelatest('/lincko/app/images/app/icons/Edition-32.png') }}"/>
-					<span class="maxMobileL">Comments{# toto #}</span><span class="">(?)</span>
+					<span class="maxMobileL minMobileL">Comments{# toto #}</span><span class="">(?)</span>
 				</span>
 				<span find='title' contenteditable="true"></span><!--<span find='dash'>-</span>-->
-				<span find='description'></span>
+				<span find='description' class="minMobileL"></span>
+			</span>
+			<span class="app_layers_dev_skytasks_mobileQuickInfo maxMobile">
+				<div find="time"></div>
+				<div>
+					<img class="" src="{{_filelatest('/lincko/app/images/app/icons/Users-1.png') }}"/>
+					<span find="name"></span>
+				</div>
+				<div>
+					<img class="" src="{{_filelatest('/lincko/app/images/app/icons/Edition-32.png') }}"/>
+					<span class="">(?)</span>
+				</div>
 			</span>	
 		</div>
 		<div class="app_layers_dev_skytasks_taskblur"></div>

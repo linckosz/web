@@ -1,3 +1,6 @@
+/*
+	lincko translation category 33
+*/
 setTimeout(function(){
 	//app_layers_changePage('dev_skytasks');
 	//app_layers_changePage('skynotes');
@@ -496,8 +499,12 @@ app_layers_dev_skytasks_ClassTasklist.prototype.addTask = function(item){
 	Elem.find('[find=name]').html(created_by);
 
 	duedate = new wrapper_date(item.start + parseInt(item.duration,10));
-	console.log(duedate);
-	Elem.find('[find=time]').html(duedate.display());
+	if( duedate.happensToday() ){
+		Elem.find('[find=time]').html("Today"/*toto*/);
+	}
+	else{
+		Elem.find('[find=time]').html(duedate.display());
+	}
 
 	Elem.data('taskid',item['_id']);
 	Elem.data('options',false);
@@ -838,6 +845,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.toggle_NewtaskCircle = function(
 }
 
 app_layers_dev_skytasks_ClassTasklist.prototype.minTablet = function(){
+	console.log('skytasks minTablet');
 	var that = this;
 	that.elem_newtaskCircle.removeAttr("style");
 }
@@ -857,9 +865,13 @@ app_layers_dev_skytasks_ClassTasklist.prototype.maxMobileL = function(){
 }
 
 app_layers_dev_skytasks_ClassTasklist.prototype.minMobileL = function(){
+	console.log('skytasks minMobileL');
 	var that = this;
 	that.tasklist.find('[find=task_rightOptions]').removeAttr("style").removeClass('display_none');
 	that.tasklist.find('[find=task_center]').removeAttr('style');
+
+	that.elem_taskcenter_all.find('[find=title]').prop('contenteditable',true);
+
 /*
 	that.elem_leftOptions_all.width(that.window_width*2)
 					.css('left',-that.window_width*2)
@@ -870,4 +882,6 @@ app_layers_dev_skytasks_ClassTasklist.prototype.minMobileL = function(){
 app_layers_dev_skytasks_ClassTasklist.prototype.isMobile = function(){
 	var that = this;
 	that.tasklist.find('[find=task_rightOptions]').addClass('display_none');
+
+	that.elem_taskcenter_all.find('[find=title]').prop('contenteditable',false);
 }
