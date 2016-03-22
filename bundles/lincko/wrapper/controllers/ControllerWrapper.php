@@ -66,7 +66,7 @@ class ControllerWrapper extends Controller {
 			$timeout = 18; //Need more time because requesting a third party for translation
 		}
 		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_URL, $url); //Port used is 10443 only
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

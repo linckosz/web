@@ -53,7 +53,7 @@ if(isset($_SERVER["SERVER_HOST"])){
 	$app->lincko->domain = $_SERVER["HTTP_HOST"];
 }
 
-$app->lincko->domain_restriction = "/^(?:api|dc|file|info|lincko|mail|mx|ns|pop|smtp|tp|debug|www|.{1,3})\d*$/ui";
+$app->lincko->domain_restriction = "/^(?:.{1,3}|(?:api|cloud|dc|file|info|lincko|mail|mx|ns|pop|smtp|tp|debug|www)\d*)$/ui";
 
 //Do not enable debug when we are using json ajax respond
 $app->config(array(
@@ -143,11 +143,15 @@ $app->lincko->data = array(
 	'title' => $app->lincko->title,
 	'company' => '',
 	'space' => '',
-	'api_url' => '', //Only used for development purpose "dev.master[.bruno].lincko.cn"
+	'lincko_back' => '', //Only used for development purpose "master-[bruno].lincko.cafe"
 );
 
-if(isset($_SERVER["DEV_API"])){
-	$app->lincko->data['api_url'] = $_SERVER["DEV_API"];
+if(isset($_SERVER["LINCKO_BACK"])){
+	$app->lincko->data['lincko_back'] = $_SERVER["LINCKO_BACK"];
+}
+
+if(isset($_SERVER["LINCKO_WORKSPACE"])){
+	$app->lincko->data['company'] = $_SERVER["LINCKO_WORKSPACE"];
 }
 
 ////////////////////////////////////
@@ -156,10 +160,14 @@ if(isset($_SERVER["DEV_API"])){
 
 //Parameters of API
 $app->lincko->wrapper = array(
-	'url' => 'https://api.'.$app->lincko->domain.'/',
+	'url' => 'https://api.'.$app->lincko->domain.':10443/',
 	'api_key' => '87f1eb12192652c8f1811804a7e18ef8', //API key for www.lincko.net
 	'captcha_timing' => 300, //How many second we avoid the same IP to creation account without Captcha
 );
+
+if($app->lincko->data['lincko_back'] != ''){
+	$app->lincko->wrapper['url'] = 'https://'.$app->lincko->data['lincko_back'].'.api.'.$app->lincko->domain.':10443/';
+}
 
 ////////////////////////////////////
 // BUNDLE lincko/web
