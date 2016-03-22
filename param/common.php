@@ -147,7 +147,7 @@ $app->lincko->data = array(
 );
 
 if(isset($_SERVER["LINCKO_BACK"])){
-	$app->lincko->data['lincko_back'] = $_SERVER["LINCKO_BACK"];
+	$app->lincko->data['lincko_back'] = $_SERVER["LINCKO_BACK"].'.';
 }
 
 if(isset($_SERVER["LINCKO_WORKSPACE"])){
@@ -160,14 +160,10 @@ if(isset($_SERVER["LINCKO_WORKSPACE"])){
 
 //Parameters of API
 $app->lincko->wrapper = array(
-	'url' => 'https://api.'.$app->lincko->domain.':10443/',
+	'url' => 'https://'.$app->lincko->data['lincko_back'].'api.'.$app->lincko->domain.':10443/',
 	'api_key' => '87f1eb12192652c8f1811804a7e18ef8', //API key for www.lincko.net
 	'captcha_timing' => 300, //How many second we avoid the same IP to creation account without Captcha
 );
-
-if($app->lincko->data['lincko_back'] != ''){
-	$app->lincko->wrapper['url'] = 'https://'.$app->lincko->data['lincko_back'].'.api.'.$app->lincko->domain.':10443/';
-}
 
 ////////////////////////////////////
 // BUNDLE lincko/web
