@@ -207,7 +207,6 @@ app_layers_dev_skytasks_ClassTimesort.prototype.construct = function(){
 		if (!responsive.test("maxMobileL")){
 			that.makeSelection( sort );
 		}
-		console.log(that.sort_fn);
 		that.sort_fn(sort);
 	});
 
