@@ -24,7 +24,10 @@ var app_layers_dev_skytasks_timesort = null;
 var app_layers_dev_skytasks_tasklist = null;
 
 /*GLOBAL VARIABLES END----------------------------------------------------------------------*/
-
+var app_layers_dev_skytasks_calcDudate = function(task_obj){
+	var duedate = new wrapper_date(task_obj.start + parseInt(task_obj.duration,10));
+	return duedate;
+}
 
 function app_layers_dev_skytasks_launchPage(){
 	console.log('app_layers_dev_skytasks_launchPage');
@@ -53,14 +56,39 @@ var app_layers_dev_skytasks_feedPage = function(){
 	});
 	
 	Elem.appendTo(position);
-
-	app_layers_dev_skytasks_timesort = new app_layers_dev_skytasks_ClassTimesort($('#app_layers_dev_skytasks_timesort'),['All','Today','Tomorrow','Spaces']);
+/*
+	app_layers_dev_skytasks_timesort = new app_layers_dev_skytasks_ClassTimesort(
+		$('#app_layers_dev_skytasks_timesort'),
+		[
+			Lincko.Translation.get('app', 3301, 'html'),/*all*/
+/*			Lincko.Translation.get('app', 3302, 'html'),/*today*/
+/*			Lincko.Translation.get('app', 3303, 'html'),/*tomorrow*/
+/*			'Spaces'
+		],
+		app_layers_dev_skytasks_tasklist.tasklist_update
+	);
+*/
 	//app_layers_dev_skytasks_timesort2 = new app_layers_dev_skytasks_ClassTimesort($('#app_layers_dev_skytasks_timesort2'),['11','22','33','44']);
 
 	Elem = $('#-app_layers_dev_skytasks_tasklist_wrapper').clone();
 	Elem.prop('id','app_layers_dev_skytasks_tasklist_wrapper');
 	Elem.appendTo(position);
 	app_layers_dev_skytasks_tasklist = new app_layers_dev_skytasks_ClassTasklist($('#app_layers_dev_skytasks_tasklist_wrapper'));
+
+	var app_layers_dev_skytasks_tasklist_filter = function(filter_by){
+		app_layers_dev_skytasks_tasklist.tasklist_update(filter_by);
+	}
+
+	app_layers_dev_skytasks_timesort = new app_layers_dev_skytasks_ClassTimesort(
+		$('#app_layers_dev_skytasks_timesort'),
+		[
+			Lincko.Translation.get('app', 3301, 'html'),/*all*/
+			Lincko.Translation.get('app', 3302, 'html'),/*today*/
+			Lincko.Translation.get('app', 3303, 'html'),/*tomorrow*/
+			'Spaces'
+		],
+		app_layers_dev_skytasks_tasklist_filter
+	);
 
 
 
@@ -122,12 +150,13 @@ var app_layers_dev_skytasks_isMobile = function() {
 
 
 
-var app_layers_dev_skytasks_ClassTimesort = function(elem, sort_array){
+var app_layers_dev_skytasks_ClassTimesort = function(elem, sort_array, sort_fn){
 	elem.empty();
 	this.elem = elem;
 	this.that = this;
 	this.sortcount = 0;
 	this.sort_array = sort_array;
+	this.sort_fn = sort_fn;
 	this.elem_sortdot;   //sortdot wrapper element
 	this.elem_sorts = {};//object in array format of all [sort] elements, can find element by name
 	this.elem_sorts_text = {}; //just the text
@@ -174,9 +203,12 @@ app_layers_dev_skytasks_ClassTimesort.prototype.construct = function(){
 
 
 	that.elem_Jsorts.click(function(){
+		var sort = $(this).attr('sort');
 		if (!responsive.test("maxMobileL")){
-			that.makeSelection( $(this).attr('sort') );
+			that.makeSelection( sort );
 		}
+		console.log(that.sort_fn);
+		that.sort_fn(sort);
 	});
 
 	/*hammer.js--------------------------------------------------------------------------*/
@@ -435,25 +467,34 @@ app_layers_dev_skytasks_ClassTasklist.prototype.window_resize = function(){
 
 	console.log('end of resize');
 }
-app_layers_dev_skytasks_ClassTasklist.prototype.tasklist_update = function(){
+app_layers_dev_skytasks_ClassTasklist.prototype.tasklist_update = function(filter_by){
 	var that = this;
 	var items = Lincko.storage.list('tasks');
 	var item;
+	var duedate;
+
+	if( filter_by == 'today' ){filter_by = 0}
+	else if( filter_by == 'tomorrow' ){filter_by = 1}
+	else{ filter_by = null }
+
 	console.log('tasklist_update: all');
 	that.tasklist.find('.iscroll_sub_div').empty();
 	for (var i in items){
 		item = items[i];
-		that.tasklist.find('.iscroll_sub_div').append(that.addTask(item));
+		duedate = app_layers_dev_skytasks_calcDudate(item);
+		if(filter_by == null || duedate.happensSomeday(filter_by)){
+			that.tasklist.find('.iscroll_sub_div').append(that.addTask(item));
+		}
 	}
 	that.add_newtaskBox(that.tasklist.find('.iscroll_sub_div'));
 	//that.elem_newtaskBox.appendTo(that.tasklist.find('.iscroll_sub_div'));
 	that.store_all_elem();
 	//myIScrollList['app_layers_dev_skytasks_tasklist_'+that.md5id].refresh();
 	that.window_resize();
-	
-
-	
+		
 }
+
+
 app_layers_dev_skytasks_ClassTasklist.prototype.addTask_all = function(){
 	var that = this;
 	var items = Lincko.storage.list('tasks');
@@ -498,9 +539,13 @@ app_layers_dev_skytasks_ClassTasklist.prototype.addTask = function(item){
 	created_by = Lincko.storage.get("users", created_by,"username");
 	Elem.find('[find=name]').html(created_by);
 
-	duedate = new wrapper_date(item.start + parseInt(item.duration,10));
-	if( duedate.happensToday() ){
-		Elem.find('[find=time]').html("Today"/*toto*/);
+	/*duedate = new wrapper_date(item.start + parseInt(item.duration,10));*/
+	duedate = app_layers_dev_skytasks_calcDudate(item);
+	if( duedate.happensSomeday(0) ){
+		Elem.find('[find=time]').html(Lincko.Translation.get('app', 3302, 'html')/*today*/);
+	}
+	else if( duedate.happensSomeday(1) ){
+		Elem.find('[find=time]').html(Lincko.Translation.get('app', 3303, 'html')/*tomorrow*/);
 	}
 	else{
 		Elem.find('[find=time]').html(duedate.display());
@@ -767,7 +812,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.taskClick = function(event,task_
 			console.log(target);
 			return;
 		}
-	//this.openDetail(true,$(task_elem));
+	this.openDetail($(task_elem));
 
 	//clicking on the task will close options
 	if( task_elem.data('options') ){
@@ -777,13 +822,17 @@ app_layers_dev_skytasks_ClassTasklist.prototype.taskClick = function(event,task_
 
 }
 
-app_layers_dev_skytasks_ClassTasklist.prototype.openDetail = function(open, task_elem){
+app_layers_dev_skytasks_ClassTasklist.prototype.openDetail = function(/*open,*/ task_elem){
+	var that = this;
+	var taskid = task_elem.data('taskid');
+	submenu_Build('taskdetail', null, null, taskid);
+
 	/*
 		open == true : open detail pane
 		open == false: close detail pane
 		open == null: just update the detail pane, dont open or close
 		task_elem : the specific task that will be displayed on the detail pane (always include this param)
-	*/
+
 	var that = this;
 	var tasklist = that.tasklist;
 	var detail = that.detail;
@@ -825,7 +874,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.openDetail = function(open, task
 		newtaskCircle.removeClass('display_none');
 	}
 	$(window).trigger('resize');
-
+	*/
 }
 
 app_layers_dev_skytasks_ClassTasklist.prototype.toggle_NewtaskCircle = function(){

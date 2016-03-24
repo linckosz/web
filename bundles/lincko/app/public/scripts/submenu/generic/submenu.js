@@ -101,7 +101,6 @@ Submenu.prototype.changeState = function() {
 
 }
 
-
 function submenu_exchangeAnimation(Elem) {
     var tmp = Elem.outAnimation;
     var stack = Elem.preview ? submenu_obj['preview'] : submenu_obj['submenu'];

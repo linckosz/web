@@ -156,6 +156,19 @@ $.extend(wrapper_date.prototype, {
 			return false;
 	},
 
+	happensSomeday: function(int) {
+		var dateStampPrev = Math.floor(Date.now() / 86400000) * 86400000;
+		if(int != 0){
+			dateStampPrev += int*86400000;
+		}
+		var dateStampNext = dateStampPrev + 86400000;
+		var timestamp = this.getTime().getTime();
+		if ((timestamp >= dateStampPrev) && (timestamp < dateStampNext))
+			return true;
+		else
+			return false;
+	},
+
 	//Transform the format sentence into a readable date
 	regex: function(format){
 		var that = this;

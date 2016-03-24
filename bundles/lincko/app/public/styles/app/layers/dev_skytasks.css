@@ -67,7 +67,7 @@
     opacity: 0.6;
 }
 .app_layers_dev_skytasks_task_rightOptions [find=time] {
-	width:80px;
+	width:86px;
 }
 .app_layers_dev_skytasks_tasklist_icon_text {
     display: inline-block;
