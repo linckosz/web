@@ -5,6 +5,7 @@ var app_layers_changePage = function(menu, param){
 	var timing = 150;
 	var delay = 60;
 	var layer = $('#app_layers_content');
+	layer.width($('#app_content_dynamic').width()-320);
 	if(!layer.html()){ timing = 0; }
 	var Sequence = [
 		{ e: layer, p: { opacity: 0, }, o: { duration: timing, delay: delay, } },
@@ -24,7 +25,7 @@ var app_layers_launchMenu = function(menu, param){
 	layer.empty();
 	menu = menu.toLowerCase();
 
-	if($('#-app_layers_'+menu).length>0){
+	if($('#-app_layers_'+menu).length>0) {
 		var Elem = $('#-app_layers_'+menu).clone();
 		Elem.prop('id', 'app_layers_'+menu);
 		Elem.appendTo(layer);

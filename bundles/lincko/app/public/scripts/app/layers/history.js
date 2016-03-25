@@ -27,6 +27,9 @@ var app_layers_history_feedPage = function(param){
 		Elem.find("[find=title]").html( php_nl2br(history.title) );
 		Elem.find("[find=content]").html( php_nl2br(history.content) );
 		Elem.appendTo(position);
+		Elem.click(function() {
+			submenu_Build("test", true, false, null, true);
+		});
 	}
 
 }

@@ -1,3 +1,4 @@
+console.log("loaded submenu");
 var submenu_zindex = 2000;
 var submenu_obj = {};
 var submenu_show = {};
@@ -56,7 +57,7 @@ var Submenu_select = {
 
 }
 
-function Submenu(menu, next, param) {
+function Submenu(menu, next, param, preview) {
 	this.obj = submenu_list[menu];
 	this.menu = menu;
 	this.layer = 1;
@@ -101,7 +102,12 @@ function Submenu(menu, next, param) {
 		submenu_wrapper.find("[find=submenu_wrapper_content]").addClass('overthrow');
 		//This is because we can only place 3 menus on Desktop mode, so after 3 layers we switch to full width mode
 		if(Elem.layer>3) { submenu_wrapper.addClass('submenu_wrapper_important'); }
-		submenu_wrapper.insertBefore('#end_submenu');
+		if (preview) {
+			submenu_wrapper.insertBefore('#app_content_submenu_preview .end_submenu');
+		}
+		else {
+			submenu_wrapper.insertBefore('#app_application_submenu_block .end_submenu');
+		}
 		for(var att in Elem.obj){
 			Elem.attribute = Elem.obj[att];
 			if("style" in Elem.attribute && "title" in Elem.attribute){
@@ -111,7 +117,7 @@ function Submenu(menu, next, param) {
 			}
 		}
 		if(Elem.display){
-			Elem.Show();
+			Elem.Show(preview);
 		} else {
 			Elem.Hide();
 		}
@@ -488,19 +494,12 @@ Submenu.prototype.FocusForm = function(){
 	}
 };
 
-Submenu.prototype.Show = function(){
-	submenu_wrapper = this.Wrapper();
+Submenu.prototype.showSubmenu = function(time, delay) {
+	var submenu_wrapper = this.Wrapper();
 	var that = this;
-	var time = 200;
-	var delay = 60;
 	if(responsive.test("minDesktop")){
-		delay = 60;
-	}
-	if(typeof submenu_show[this.id] !== 'boolean' || !submenu_show[this.id]){
-		submenu_show[this.id] = true;
-		if(responsive.test("minDesktop")){
-			if(that.layer<=3){ submenu_wrapper.css('z-index', submenu_zindex); }
-			submenu_wrapper.velocity(
+		if(that.layer<=3){ submenu_wrapper.css('z-index', submenu_zindex); }
+		submenu_wrapper.velocity(
 				"transition.slideLeftBigIn",
 				{
 					duration: time,
@@ -517,7 +516,7 @@ Submenu.prototype.Show = function(){
 									delay: delay,
 									easing: [ 4 ],
 								}
-							); }
+							);} 
 						}
 					},
 					complete: function(){
@@ -562,9 +561,81 @@ Submenu.prototype.Show = function(){
 				}
 			);
 		}
+}
+
+Submenu.prototype.showPreview = function(time, delay) {
+	var submenu_wrapper = this.Wrapper();
+	var that = this;
+	if(responsive.test("minDesktop")){
+		if(that.layer<=3){ submenu_wrapper.css('z-index', submenu_zindex); }
+			submenu_wrapper.velocity(
+				"transition.slideLeftBigIn",
+				{
+					duration: time,
+					delay: delay,
+					easing: [ .38, .1, .13, .9 ],
+					begin: function(){
+						$('#'+that.id).hide().show(0);
+					},
+					complete: function(){
+						submenu_wrapper = that.Wrapper();
+						submenu_wrapper.find("[find=submenu_wrapper_content]").focus();
+						//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas
+						submenu_wrapper.hide().show(0);
+						submenu_wrapper.css('z-index', that.zIndex);
+						app_application_submenu_position();
+						that.FocusForm();
+						//Free memory
+						delete submenu_wrapper;
+					}
+				}
+			);
+		} else {
+			var animation = "bruno.expandIn";
+			if(submenu_Getnext()>=2){
+				animation = "bruno.slideRightBigIn";
+			}
+			submenu_wrapper.velocity(
+				animation,
+				{
+					duration: Math.floor(1.5*time),
+					delay: delay,
+					easing: [ .38, .1, .13, .9 ],
+					begin: function(){
+						$('#'+that.id).hide().show(0);
+					},
+					complete: function(){
+						submenu_wrapper = that.Wrapper();
+						submenu_wrapper.find("[find=submenu_wrapper_content]").focus();
+						//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas
+						submenu_wrapper.hide().show(0);
+						app_application_submenu_position();
+						submenu_content_unblur();
+						that.FocusForm();
+						//Free memory
+						delete submenu_wrapper;
+					}
+				}
+			);
+		}
+}
+
+Submenu.prototype.Show = function(preview) {
+	var that = this;
+	var time = 200;
+	var delay = 60;
+	if(responsive.test("minDesktop")){
+		delay = 60;
 	}
-	//Free memory
-	delete submenu_wrapper;
+	if(typeof submenu_show[this.id] !== 'boolean' || !submenu_show[this.id]){
+		submenu_show[this.id] = true;
+		if (preview) {
+			this.showPreview(time, delay);
+		}
+		else {
+			this.showSubmenutime, delay();
+		}
+	}
 };
 
 Submenu.prototype.Hide = function (animate){
@@ -685,7 +756,7 @@ function submenu_Clean(layer, animate){
 	}
 }
 
-function submenu_Build(menu, next, hide, param){
+function submenu_Build(menu, next, hide, param, preview){
 	if(typeof next === 'undefined'){ next = 1; }
 	if(typeof hide === 'undefined'){ hide = true; }
 	if(typeof param === 'undefined'){ param = null; }
@@ -701,9 +772,15 @@ function submenu_Build(menu, next, hide, param){
 	}
 
 	if(menu in submenu_list){
-		var temp = new Submenu(menu, next, param);
-		$('#app_application_submenu_block').show();
-		$('#app_content_dynamic').addClass('app_application_submenu_blur');
+		if (preview) {
+			var temp = new Submenu(menu, next, param, preview);
+			$('#app_content_submenu_preview').show();
+		}
+		else {
+			var temp = new Submenu(menu, next, param);
+			$('#app_application_submenu_block').show();
+			$('#app_content_dynamic').addClass('app_application_submenu_blur');
+		}
 		submenu_obj[temp.layer] = temp;
 		temp = null;
 	}
@@ -769,7 +846,8 @@ function submenu_content_unblur() {
 submenu_content_unblur();
 
 function submenu_wrapper_width() {
-	var width = Math.floor($('#app_application_content').width()/3);
+	//var width = Math.floor($('#app_application_content').width()/3);
+	var width = 320;
 	$('.submenu_wrapper').css('width', width);
 }
 submenu_wrapper_width();

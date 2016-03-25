@@ -69,6 +69,7 @@
 	z-index: 1;
 	overflow: hidden;
 	margin-left: 48px;
+	position: relative;
 }
 
 #app_content_dynamic > div {
@@ -140,10 +141,29 @@
 	display: block;
 }
 
+#app_content_dynamic_sub {
+	margin-right: 320px;
+}
+
+div#app_content_submenu_preview {
+	width: 320px;
+	color: red;
+	background-color: grey;
+	right: 0;
+	top: 0;
+	height: 100%;
+	font-size: large;
+}
 /* Mobile phone in Portrait maximum */
 @media only screen and (max-width: 479px){
 	#app_content_top {
 		font-size: 18px;
+	}
+	#app_content_dynamic_sub {
+		margin-right: 0;
+	}
+	div#app_content_submenu_preview {
+		display: none;
 	}
 }
 
