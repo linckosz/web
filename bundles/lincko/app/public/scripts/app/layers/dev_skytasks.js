@@ -273,7 +273,8 @@ app_layers_dev_skytasks_ClassTimesort.prototype.construct = function(){
 			that.elem_sorts_text[that.sort_array[that.sortnum_new]].velocity({left: 0});
 			//that.elem_sorts_text[that.sort_array[that.sortnum]].velocity({opacity:0},500); 
 
-			that.makeSelection(that.sort_array[that.sortnum_new]);		
+			that.makeSelection(that.sort_array[that.sortnum_new]);
+			that.sort_fn(that.sort_array[that.sortnum_new]);
 		
 		}
 

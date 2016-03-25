@@ -8,7 +8,9 @@
 .app_layers_dev_skytasks_tasklist {
 	position:relative;
 	padding:0px 10px;
-	padding-top: 40px;
+}
+.app_layers_dev_skytasks_tasklist .iScrollIndicator {
+	margin-top: 41px;
 }
 .app_layers_dev_skytasks_tasklist sup {
 	vertical-align: baseline;
@@ -47,6 +49,7 @@
 
 .app_layers_dev_skytasks_task:first-child {
 	border-top:0px;
+	padding-top: 41px;
 }
 .app_layers_dev_skytasks_textwrapper{
 	text-decoration: inherit;
@@ -422,12 +425,17 @@
 
 	.app_layers_dev_skytasks_tasklist{
 		padding:0px;
-		padding-top: 60px;
+	}
+	.app_layers_dev_skytasks_tasklist .iScrollIndicator {
+		margin-top: 60px;
 	}
 	.app_layers_dev_skytasks_task {
 		min-width:initial;
 		padding:0px;
 		border-top-style: solid;
+	}
+	.app_layers_dev_skytasks_task:first-child{
+		padding-top: 60px;
 	}
 
 	.app_layers_dev_skytasks_textwrapper{
