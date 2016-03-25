@@ -464,7 +464,29 @@ app_layers_dev_skytasks_ClassTasklist.prototype.window_resize = function(){
 	that.setHeight();
 	that.clearOptions();
 
-	console.log('end of resize');
+	var simpleDesktopWidth = 1000;
+	var simpleDesktopWidth2 = 800;
+	var tasklist_width = that.tasklist_wrapper.width();
+
+	if(responsive.test("minTablet") ){
+		if( tasklist_width < simpleDesktopWidth2 ){
+			that.tasklist_wrapper
+				.addClass('app_layers_dev_skytasks_simpleDesktop')
+				.addClass('app_layers_dev_skytasks_simpleDesktop2');
+		}
+		else if( tasklist_width < simpleDesktopWidth ){
+			that.tasklist_wrapper
+				.addClass('app_layers_dev_skytasks_simpleDesktop')
+				.removeClass('app_layers_dev_skytasks_simpleDesktop2');
+		}
+		else if( tasklist_width >= simpleDesktopWidth ){
+			that.tasklist_wrapper
+				.removeClass('app_layers_dev_skytasks_simpleDesktop')
+				.removeClass('app_layers_dev_skytasks_simpleDesktop2');
+		}
+	}
+
+	console.log('end of resize -- ClassTasklist');
 }
 app_layers_dev_skytasks_ClassTasklist.prototype.tasklist_update = function(filter_by){
 	var that = this;
@@ -773,7 +795,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.clearOptions = function(task){
 
 app_layers_dev_skytasks_ClassTasklist.prototype.setHeight = function(){
 	var that = this;
-	var height = $(window).height() - $('#app_content_top').outerHeight() - $('#app_layers_dev_skytasks_navbar').outerHeight();
+	var height = $(window).height() - $('#app_content_top').outerHeight() /*- $('#app_layers_dev_skytasks_navbar').outerHeight()*/;
 	if(responsive.test("maxMobileL")){
 		height -= $('#app_content_menu').outerHeight();
 	}
@@ -807,7 +829,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.taskClick = function(event,task_
 	}
 	var that = this;
 	var target = $(event.target);
-		if( target.is('label') || target.is('input') ){
+		if( target.is('label') || target.is('input') || target.attr('contenteditable')=="true" ){
 			console.log(target);
 			return;
 		}

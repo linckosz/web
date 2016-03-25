@@ -8,6 +8,12 @@
 .app_layers_dev_skytasks_tasklist {
 	position:relative;
 	padding:0px 10px;
+	padding-top: 40px;
+}
+.app_layers_dev_skytasks_tasklist sup {
+	vertical-align: baseline;
+	position: relative;
+	top: -0.4em;
 }
 .app_layers_dev_skytasks_tasklist_shifted {
 
@@ -23,12 +29,15 @@
 }
 
 .app_layers_dev_skytasks_task {
-	min-width: 800px;
+	/*min-width: 800px;*/
 	padding:5px;
 	border-top-color: #3F84B0;
     border-top-style: dashed;
     border-top-width: 2px;
 	position: relative;
+}
+.app_layers_dev_skytasks_task:hover {
+	background-color: #FFFFFF;
 }
 
 .app_layers_dev_skytasks_task span{
@@ -50,7 +59,8 @@
     max-width: 50%;
     vertical-align: text-bottom;
     text-decoration: inherit;
-    width: 30%;
+    width: 50%;
+    cursor: text;
 }
 .app_layers_dev_skytasks_task_comments {
 	float:right;
@@ -118,6 +128,7 @@
 .app_layers_dev_skytasks_task_rightOptions {
 	float:right;
 	margin-right: 0px;
+	margin-top: 4px;
 }
 
 .app_layers_dev_skytasks_ellipsis {
@@ -281,6 +292,9 @@
 .app_layers_dev_skytasks_navbar {
 	width:100%;
 	padding: 0px 10px;
+	position: absolute;
+    background-color: rgba(247, 247, 247, 0.8);
+    z-index: 5;
 }
 .app_layers_dev_skytasks_navbar span{
 	padding: 0px 10px;
@@ -351,6 +365,26 @@
     /*visibility:hidden;*/
 }
 
+/*-------------------simpleDesktop-----------------------*/
+.app_layers_dev_skytasks_simpleDesktop [find=description]{
+	display: none;
+}
+.app_layers_dev_skytasks_simpleDesktop [find=title]{
+	width: initial;
+}
+.app_layers_dev_skytasks_simpleDesktop2 .fa, 
+.app_layers_dev_skytasks_simpleDesktop2 .app_layers_dev_skytasks_tasklist_icon_text{
+	padding: 0px;
+}
+.app_layers_dev_skytasks_simpleDesktop2 .fa-users:before, 
+.app_layers_dev_skytasks_simpleDesktop2 .fa-hashtag:before, 
+.app_layers_dev_skytasks_simpleDesktop2 .fa-calendar:before {
+	content: "|";
+}
+
+/*-------------------simpleDesktop END--------------------*/
+
+
 /*MobileL to mobile*/
 @media only screen and (max-width: 900px) {
 	.app_layers_dev_skytasks_navbar {
@@ -388,6 +422,7 @@
 
 	.app_layers_dev_skytasks_tasklist{
 		padding:0px;
+		padding-top: 60px;
 	}
 	.app_layers_dev_skytasks_task {
 		min-width:initial;
@@ -451,6 +486,7 @@
 	.app_layers_dev_skytasks_task_rightOptions {
 		position:relative;
 		z-index:5;
+		margin-top: initial;
 	}
 
 	.app_layers_dev_skytasks_tasklist_icon {
