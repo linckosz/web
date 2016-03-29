@@ -5,7 +5,6 @@ var app_layers_changePage = function(menu, param){
 	var timing = 150;
 	var delay = 60;
 	var layer = $('#app_layers_content');
-	layer.width($('#app_content_dynamic').width()-320);
 	if(!layer.html()){ timing = 0; }
 	var Sequence = [
 		{ e: layer, p: { opacity: 0, }, o: { duration: timing, delay: delay, } },
