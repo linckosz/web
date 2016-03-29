@@ -1,7 +1,7 @@
 console.log("loaded submenu");
 var submenu_zindex = 2000;
-var submenu_obj = {};
-var submenu_show = {};
+var submenu_obj = {'submenu':{}, 'preview':{}};
+var submenu_show = {'submenu':{}, 'preview':{}};
 
 var Submenu_select = {
 	
@@ -61,14 +61,15 @@ function Submenu(menu, next, param, preview) {
 	this.obj = submenu_list[menu];
 	this.menu = menu;
 	this.layer = 1;
+	this.preview = preview ?true: false;
 	if(typeof next === 'number'){
 		if(next === 0){
-			this.layer = submenu_Getfull();
+			this.layer = submenu_Getfull(preview);
 		} else {
 			this.layer = next;
 		}
 	} else if(typeof next !== 'undefined' && next === true){
-		this.layer = submenu_Getposition(menu);
+		this.layer = submenu_Getposition(menu, preview);
 	}
 	if(typeof param === 'undefined'){
 		this.param = null;
@@ -86,16 +87,17 @@ function Submenu(menu, next, param, preview) {
 	this.display = true;
 	this.prefix = false;
 	this.attribute = null;
+	var self = this;
 	function Constructor(Elem){
 		//First we have to empty the element if it exists
 
-		submenu_Clean(Elem.layer);
+		submenu_Clean(Elem.layer, false, preview);
 
 		submenu_wrapper = $('#-submenu_wrapper').clone();
 		submenu_wrapper.prop("id",Elem.id);
 		//Back button
 		submenu_wrapper.find("[find=submenu_wrapper_back]").click(function(){
-			submenu_Clean(Elem.layer, true);
+			submenu_Clean(Elem.layer, true, self.preview);
 		});
 		submenu_wrapper.css('z-index', Elem.zIndex);
 		//Do not not add "overthrow" in twig template, if not the scrollbar will not work
@@ -117,7 +119,7 @@ function Submenu(menu, next, param, preview) {
 			}
 		}
 		if(Elem.display){
-			Elem.Show(preview);
+			Elem.Show();
 		} else {
 			Elem.Hide();
 		}
@@ -168,7 +170,7 @@ Submenu.prototype.Add_MenuButton = function() {
 	}
 	if("hide" in attribute){
 		if(attribute.hide) {
-			Elem.click(function(){ submenu_Hideall(); });
+			Elem.click(function(){ submenu_Hideall(this.preview); });
 		}
 	}
 	if("action" in attribute){
@@ -247,7 +249,7 @@ Submenu.prototype.Add_MenuRadio = function() {
 	}
 	if("hide" in attribute){
 		if(attribute.hide) {
-			Elem.click(function(){ submenu_Hideall(); });
+			Elem.click(function(){ submenu_Hideall(this.preview); });
 		}
 	}
 	if(!selected){
@@ -396,7 +398,7 @@ Submenu.prototype.Add_MenuForm = function() {
 	submenu_wrapper.find("[find=submenu_wrapper_content]").css('bottom', submenu_wrapper.find("[find=submenu_wrapper_bottom]").height());
 	if("hide" in attribute){
 		if(attribute.hide) {
-			Elem.find("[find=submenu_form_button]").click(function(){ submenu_Hideall(); });
+			Elem.find("[find=submenu_form_button]").click(function(){ submenu_Hideall(this.preview); });
 		}
 	}
 	Elem.find("[find=submenu_form_title]").html(attribute.title)
@@ -441,7 +443,7 @@ Submenu.prototype.Add_MenuFormButton = function() {
 	submenu_wrapper.find("[find=submenu_wrapper_content]").css('bottom', submenu_wrapper.find("[find=submenu_wrapper_bottom]").height());
 	if("hide" in attribute){
 		if(attribute.hide) {
-			Elem.find("[find=submenu_form_button]").click(function(){ submenu_Hideall(); });
+			Elem.find("[find=submenu_form_button]").click(function(){ submenu_Hideall(this.preview); });
 		}
 	}
 	if("action" in attribute){
@@ -520,7 +522,6 @@ Submenu.prototype.showSubmenu = function(time, delay) {
 						}
 					},
 					complete: function(){
-						submenu_wrapper = that.Wrapper();
 						submenu_wrapper.find("[find=submenu_wrapper_content]").focus();
 						//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas
 						submenu_wrapper.hide().show(0);
@@ -528,8 +529,6 @@ Submenu.prototype.showSubmenu = function(time, delay) {
 						app_application_submenu_position();
 						submenu_content_unblur();
 						that.FocusForm();
-						//Free memory
-						delete submenu_wrapper;
 					}
 				}
 			);
@@ -548,15 +547,12 @@ Submenu.prototype.showSubmenu = function(time, delay) {
 						$('#'+that.id).hide().show(0);
 					},
 					complete: function(){
-						submenu_wrapper = that.Wrapper();
 						submenu_wrapper.find("[find=submenu_wrapper_content]").focus();
 						//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas
 						submenu_wrapper.hide().show(0);
 						app_application_submenu_position();
 						submenu_content_unblur();
 						that.FocusForm();
-						//Free memory
-						delete submenu_wrapper;
 					}
 				}
 			);
@@ -578,15 +574,12 @@ Submenu.prototype.showPreview = function(time, delay) {
 						$('#'+that.id).hide().show(0);
 					},
 					complete: function(){
-						submenu_wrapper = that.Wrapper();
 						submenu_wrapper.find("[find=submenu_wrapper_content]").focus();
 						//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas
 						submenu_wrapper.hide().show(0);
 						submenu_wrapper.css('z-index', that.zIndex);
 						app_application_submenu_position();
 						that.FocusForm();
-						//Free memory
-						delete submenu_wrapper;
 					}
 				}
 			);
@@ -605,35 +598,32 @@ Submenu.prototype.showPreview = function(time, delay) {
 						$('#'+that.id).hide().show(0);
 					},
 					complete: function(){
-						submenu_wrapper = that.Wrapper();
 						submenu_wrapper.find("[find=submenu_wrapper_content]").focus();
 						//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas
 						submenu_wrapper.hide().show(0);
 						app_application_submenu_position();
-						submenu_content_unblur();
 						that.FocusForm();
-						//Free memory
-						delete submenu_wrapper;
 					}
 				}
 			);
 		}
 }
 
-Submenu.prototype.Show = function(preview) {
+Submenu.prototype.Show = function() {
 	var that = this;
 	var time = 200;
 	var delay = 60;
 	if(responsive.test("minDesktop")){
 		delay = 60;
 	}
-	if(typeof submenu_show[this.id] !== 'boolean' || !submenu_show[this.id]){
-		submenu_show[this.id] = true;
-		if (preview) {
+	var stack = this.preview? submenu_show['preview']: submenu_show['submenu'];
+	if(typeof stack[this.id] !== 'boolean' || !stack[this.id]){
+		stack[this.id] = true;
+		if (this.preview) {
 			this.showPreview(time, delay);
 		}
 		else {
-			this.showSubmenutime, delay();
+			this.showSubmenu(time, delay);
 		}
 	}
 };
@@ -643,15 +633,17 @@ Submenu.prototype.Hide = function (animate){
 	var that = this;
 	var time = 160;
 	var delay = 60;
+	var stack = this.preview? submenu_obj['preview']: submenu_obj['submenu'];
+	var preview = this.preview? "preview": "submenu";
 	if(responsive.test("minDesktop")){
 		delay = 60;
 	}
-	submenu_show[this.id] = false;
+	submenu_show[preview][this.id] = false;
 	submenu_content_unblur();
 	if(typeof animate === 'undefined'){ animate = false; }
 	//Reset menu selection if(menu in submenu_list){
-	if((that.layer-1) in submenu_obj){
-		$.each(submenu_obj[that.layer-1].Wrapper().find('.submenu_deco_next'), function() {
+	if((that.layer-1) in stack){
+		$.each(stack[that.layer-1].Wrapper().find('.submenu_deco_next'), function() {
 			$(this).removeClass('submenu_deco_next');
 		});
 	}
@@ -696,26 +688,28 @@ Submenu.prototype.Hide = function (animate){
 
 // http://stackoverflow.com/questions/19469881/javascript-remove-all-event-listeners-of-specific-type
 Submenu.prototype.Remove = function(){
+	var stack = this.preview? submenu_obj["preview"]: submenu_obj["submenu"];
 	$('#'+this.id).hide().remove();
-	submenu_obj[this.layer] = null;
-	delete submenu_obj[this.layer];
+	stack[this.layer] = null;
+	delete stack[this.layer];
 	app_application_submenu_position();
-	submenu_content_block_hide();
+	submenu_content_block_hide(this.preview);
 };
 
 Submenu.prototype.Wrapper = function(){
 	return $('#'+this.id);
 }
 
-function submenu_Hideall(){
-	for(var index in submenu_obj){
-		submenu_Clean();
+function submenu_Hideall(preview){
+	var stack = preview? submenu_obj['preview']: submenu_obj['submenu'];
+	for(var index in stack){
+		submenu_Clean(1, false, preview);
 	}
 }
 
 //Return the next layer to display full screen
-function submenu_Getfull(){
-	var next = submenu_Getnext();
+function submenu_Getfull(preview){
+	var next = submenu_Getnext(preview);
 	if(next<4){
 		next = 4;
 	}
@@ -723,35 +717,38 @@ function submenu_Getfull(){
 }
 
 // "1" means that there is no submenu displayed
-function submenu_Getnext(){
+function submenu_Getnext(preview){
+	var stack = preview? submenu_obj['preview']: submenu_obj['submenu'];
 	submenu_layer = 0;
-	for(var index in submenu_obj){
-		if(submenu_obj[index].layer > submenu_layer){
-			submenu_layer = submenu_obj[index].layer;
+	for(var index in stack){
+		if(stack[index].layer > submenu_layer){
+			submenu_layer = stack[index].layer;
 		}
 	}
 	submenu_layer++;
 	return submenu_layer;
 }
 
-function submenu_Getposition(menu){
-	submenu_position = submenu_Getnext();
-	for(var index in submenu_obj){
-		if(submenu_obj[index].menu === menu){
-			submenu_position = submenu_obj[index].layer;
+function submenu_Getposition(menu, preview){
+	var stack = preview? submenu_obj['preview']: submenu_obj['submenu'];
+	submenu_position = submenu_Getnext(preview);
+	for(var index in stack){
+		if(stack[index].menu === menu){
+			submenu_position = stack[index].layer;
 		}
 	}
 	return submenu_position;
 }
 
-function submenu_Clean(layer, animate){
+function submenu_Clean(layer, animate, preview){
+	var stack = preview? submenu_obj['preview']: submenu_obj['submenu'];
 	if(typeof layer !== 'number' || layer<1){
 		layer = 1;
 	}
 	if(typeof animate === 'undefined'){ animate = false; }
-	for(var index in submenu_obj){
-		if(submenu_obj[index].layer >= layer){
-			submenu_obj[index].Hide(animate);
+	for(var index in stack){
+		if(stack[index].layer >= layer){
+			stack[index].Hide(animate);
 		}
 	}
 }
@@ -760,12 +757,15 @@ function submenu_Build(menu, next, hide, param, preview){
 	if(typeof next === 'undefined'){ next = 1; }
 	if(typeof hide === 'undefined'){ hide = true; }
 	if(typeof param === 'undefined'){ param = null; }
+	var stack = preview? submenu_obj["preview"]: submenu_obj["submenu"];
 
 	//If the tab already exists, just close it if we launch again the action
 	if(hide){
-		for(var index in submenu_obj){
-			if(submenu_obj[index].menu === menu){
-				submenu_Clean(next, true);
+		for(var index in stack){
+			if(stack[index].menu === menu){
+				// clean underneath layer according to if it is preview or submenu
+				//var preview = submenu_obj[index].preview? 'preview': 'submenu';
+				submenu_Clean(next, true, preview);
 				return false;
 			}
 		}
@@ -774,6 +774,7 @@ function submenu_Build(menu, next, hide, param, preview){
 	if(menu in submenu_list){
 		if (preview) {
 			var temp = new Submenu(menu, next, param, preview);
+			$('#app_content_submenu_preview').parent().addClass("with_preview");
 			$('#app_content_submenu_preview').show();
 		}
 		else {
@@ -781,7 +782,7 @@ function submenu_Build(menu, next, hide, param, preview){
 			$('#app_application_submenu_block').show();
 			$('#app_content_dynamic').addClass('app_application_submenu_blur');
 		}
-		submenu_obj[temp.layer] = temp;
+		stack[temp.layer] = temp;
 		temp = null;
 	}
 	return true;
@@ -814,20 +815,28 @@ enquire.register(responsive.maxTablet, function() {
 	}
 });
 
-function submenu_content_block_hide() {
+function submenu_content_block_hide(preview) {
 	//submenu_show
-	for(var i in submenu_show){
-		if(submenu_show[i]){
+	var stack = preview? submenu_show['preview']: submenu_show['submenu'];
+	for(var i in stack){
+		if(stack[i]){
 			return true;
 		}
 	}
-	$('#app_application_submenu_block').hide();
+	if (preview) {
+		$('#app_content_submenu_preview').hide().parent().removeClass("with_preview");
+	}
+	else {
+		$('#app_application_submenu_block').hide();
+	}
 }
 
 function submenu_content_unblur() {
+	// This method is only called by submenu, not preview
 	//submenu_show
-	for(var i in submenu_show){
-		if(submenu_show[i]){
+	var stack = submenu_show['submenu'];
+	for(var i in stack){
+		if(stack[i]){
 			return true;
 		}
 	}

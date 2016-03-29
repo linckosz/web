@@ -147,11 +147,12 @@
 	display: block;
 }
 
-#app_content_dynamic_layers {
+.with_preview > #app_content_dynamic_layers {
 	margin-right: 320px;
 }
 
 div#app_content_submenu_preview {
+	display: none;
 	width: 320px;
 	color: red;
 	background-color: grey;
