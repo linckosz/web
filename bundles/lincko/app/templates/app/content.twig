@@ -63,13 +63,18 @@
 	</div>
 </div>
 <div id="app_content_dynamic" class="clear">
+
 	{# this absolute DIV is important, it help to fixed absolute elements position to this DIV and not the page itsel. #}
 	<div id="app_content_dynamic_sub">{# DO NOT DELETE #}
-		{% include '/bundles/lincko/app/templates/app/layers.twig' %}
+		<div id="app_content_submenu_preview">
+			{% include '/bundles/lincko/app/templates/submenu/generic/submenu.twig' %}
+		</div>
+		<div id="app_content_dynamic_layers">
+			{% include '/bundles/lincko/app/templates/app/layers.twig' %}
+		</div>
+
 	</div>
-	<div id="app_content_submenu_preview">
-		{% include '/bundles/lincko/app/templates/submenu/generic/submenu.twig' %}
-	</div>
+
 </div>
 
 
