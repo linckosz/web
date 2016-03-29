@@ -10,15 +10,20 @@
 
 
 <div class="display_none">
-	<div id="-app_layers_dev_skytasks" class="">
+	<div id="-app_layers_dev_skytasks" class="base_color_text_grey">
 	</div>
 
 	<div id="-app_layers_dev_skytasks_navbar" class="app_layers_dev_skytasks_navbar">
 		<span class = "app_layers_dev_skytasks_people">
+			<span people="1" class="fa fa-user"></span>
+			<span people="2" class="fa fa-users"></span>
+			{#
 			<img people="1" class = "app_layers_dev_skytasks_menuicon" src="{{_filelatest('/lincko/app/images/app/icons/Users-1.png') }}"/>
 			<img people="2" class = "app_layers_dev_skytasks_menuicon app_layers_dev_skytasks_selected" src="{{_filelatest('/lincko/app/images/app/icons/Users-22.png') }}"/>
+			#}
 		</span>
 		<div id="-app_layers_dev_skytasks_timesort" class="app_layers_dev_skytasks_timesort"></div>
+		<span class="fa fa-search app_layers_dev_skytasks_navbar_search_icon"></span>
 	</div>
 
 	<div id="-app_layers_dev_skytasks_tasklist_wrapper" class="app_layers_dev_skytasks_tasklist_wrapper"></div>

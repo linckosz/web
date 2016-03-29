@@ -82,9 +82,9 @@ var app_layers_dev_skytasks_feedPage = function(){
 	app_layers_dev_skytasks_timesort = new app_layers_dev_skytasks_ClassTimesort(
 		$('#app_layers_dev_skytasks_timesort'),
 		[
-			Lincko.Translation.get('app', 3301, 'html'),/*all*/
-			Lincko.Translation.get('app', 3302, 'html'),/*today*/
-			Lincko.Translation.get('app', 3303, 'html'),/*tomorrow*/
+			Lincko.Translation.get('app', 3301, 'html').toUpperCase(),/*all*/
+			Lincko.Translation.get('app', 3302, 'html').toUpperCase(),/*today*/
+			Lincko.Translation.get('app', 3303, 'html').toUpperCase(),/*tomorrow*/
 			'Spaces'
 		],
 		app_layers_dev_skytasks_tasklist_filter
@@ -494,19 +494,26 @@ app_layers_dev_skytasks_ClassTasklist.prototype.tasklist_update = function(filte
 	var items = Lincko.storage.list('tasks');
 	var item;
 	var duedate;
-
-	if( filter_by == 'today' ){filter_by = 0}
-	else if( filter_by == 'tomorrow' ){filter_by = 1}
+	var taskcount = 0;
+	var iscroll_elem;
+			
+	if 		( filter_by == Lincko.Translation.get('app', 3302, 'html').toUpperCase()/*today*/ ){filter_by = 0}
+	else if ( filter_by == Lincko.Translation.get('app', 3303, 'html').toUpperCase()/*tomorrow*/ ){filter_by = 1}
+	else if ( filter_by == 'Spaces' ){}
 	else{ filter_by = null }
 
 	console.log('tasklist_update: all');
-	that.tasklist.find('.iscroll_sub_div').empty();
+	iscroll_elem = that.tasklist.find('.iscroll_sub_div').empty();
 	for (var i in items){
 		item = items[i];
 		duedate = app_layers_dev_skytasks_calcDudate(item);
 		if(filter_by == null || duedate.happensSomeday(filter_by)){
-			that.tasklist.find('.iscroll_sub_div').append(that.addTask(item));
+			iscroll_elem.append(that.addTask(item));
+			taskcount += 1;
 		}
+	}
+	if( taskcount==0 ){
+		iscroll_elem.append('<div class="app_layers_dev_skytasks_task">There are no tasks.</div>');
 	}
 	that.add_newtaskBox(that.tasklist.find('.iscroll_sub_div'));
 	//that.elem_newtaskBox.appendTo(that.tasklist.find('.iscroll_sub_div'));
@@ -564,10 +571,10 @@ app_layers_dev_skytasks_ClassTasklist.prototype.addTask = function(item){
 	/*duedate = new wrapper_date(item.start + parseInt(item.duration,10));*/
 	duedate = app_layers_dev_skytasks_calcDudate(item);
 	if( duedate.happensSomeday(0) ){
-		Elem.find('[find=time]').html(Lincko.Translation.get('app', 3302, 'html')/*today*/);
+		Elem.find('[find=time]').html(Lincko.Translation.get('app', 3302, 'html').toUpperCase()/*today*/);
 	}
 	else if( duedate.happensSomeday(1) ){
-		Elem.find('[find=time]').html(Lincko.Translation.get('app', 3303, 'html')/*tomorrow*/);
+		Elem.find('[find=time]').html(Lincko.Translation.get('app', 3303, 'html').toUpperCase()/*tomorrow*/);
 	}
 	else{
 		Elem.find('[find=time]').html(duedate.display());
@@ -834,13 +841,14 @@ app_layers_dev_skytasks_ClassTasklist.prototype.taskClick = function(event,task_
 			console.log(target);
 			return;
 		}
-	this.openDetail($(task_elem));
-
+	
 	//clicking on the task will close options
 	if( task_elem.data('options') ){
 		that.clearOptions(task_elem);
 		return;
 	}
+
+	this.openDetail($(task_elem));
 
 }
 

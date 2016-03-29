@@ -1,13 +1,22 @@
 .submenu_taskdetail {
 	height:100%;
+	overflow-y: auto;
 }
 .submenu_taskdetail .fa {
 	font-size: 20px;
 }
 
-.submenu_taskdetail_tasktitle {
+.submenu_taskdetail > .submenu_taskdetail_tasktitle,
+.submenu_taskdetail > .submenu_taskdetail_description,
+.submenu_taskdetail > .submenu_taskdetail_meta,
+.submenu_taskdetail > .submenu_taskdetail_comments {
+	padding: 5px;
 	border: 5px solid white;
 	background: #C7E9FF;
+}
+
+
+.submenu_taskdetail_tasktitle {
 	width: 100%;
 }
 .submenu_taskdetail_tasktitle table {
@@ -24,6 +33,8 @@ td.app_layers_dev_skytasks_checkbox {
     word-break: break-all;
     text-overflow: ellipsis;
     box-sizing: border-box;
+    color:#3677A7;
+    font-size: 20px;
 }
 .submenu_taskdetail_tasktitle .app_layers_dev_skytasks_checkbox_visual {
 	margin: 4px;
@@ -45,7 +56,7 @@ td.submenu_taskdetail_share .fa{
 }
 .submenu_taskdetail_description {
 	border: 5px solid white;
-	background: #C7E9FF;
+	/*background: #C7E9FF;*/
 	height: 20%;
 	overflow: auto;
 }
@@ -53,8 +64,7 @@ td.submenu_taskdetail_share .fa{
 	min-height: 60%;
 }
 .submenu_taskdetail_meta {
-	border: 5px solid white;
-	background: #C7E9FF;
+	/*background: #C7E9FF;*/
 	width: 100%;
 }
 .submenu_taskdetail_meta_box {
@@ -75,8 +85,8 @@ td.submenu_taskdetail_share .fa{
 }
 
 .submenu_taskdetail_comments {
-	background: #C7E9FF;
-	padding-bottom: 40px;
+	/*background: #C7E9FF;*/
+	padding-bottom: 40px !important;
 }
 .submenu_taskdetail_comments_header {
 	height: 25px;

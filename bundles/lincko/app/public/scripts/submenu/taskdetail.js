@@ -56,6 +56,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	created_by = Lincko.storage.get("tasks", taskid,'created_by');
 	created_by = Lincko.storage.get("users", created_by,"username");
 	elem.find('[find=assigned_text]').html(created_by);
+
 	duedate = app_layers_dev_skytasks_calcDuedate(Lincko.storage.get("tasks", taskid));
 
 	if( duedate.happensSomeday(0) ){
