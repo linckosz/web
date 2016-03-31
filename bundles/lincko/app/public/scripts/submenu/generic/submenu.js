@@ -81,7 +81,7 @@ function Submenu(menu, next, param, preview) {
     //this.id = this.layer+"_submenu_wrapper_"+md5(Math.random());
 
     //The creation or reuse of HTML element seems to have some display problem, and DIV deletion issue
-    this.id = this.layer + "_submenu_wrapper_" + menu;
+    this.id = this.layer + "_submenu_wrapper_" + menu + "_" + this.preview;
 
     this.zIndex = submenu_zindex + this.layer;
     this.display = true;
@@ -558,11 +558,14 @@ Submenu.prototype.showSubmenu = function(time, delay) {
 
 Submenu.prototype.showPreview = function(time, delay) {
     var submenu_wrapper = $('#app_content_submenu_preview');
+    var loaded = submenu_wrapper.is(":visible");
     var that = this;
+    var animation;
     if (responsive.test("minDesktop")) {
+    	animation = loaded? "transition.fadeIn":"transition.slideRightBigIn";
         if (that.layer <= 3) { submenu_wrapper.css('z-index', submenu_zindex); }
         submenu_wrapper.velocity(
-            "transition.slideRightBigIn", {
+            animation, {
                 duration: time,
                 delay: delay,
                 easing: [.38, .1, .13, .9],
@@ -580,10 +583,11 @@ Submenu.prototype.showPreview = function(time, delay) {
             }
         );
     } else {
-        var animation = "bruno.expandIn";
+        animation = "bruno.expandIn";
         if (submenu_Getnext() >= 2) {
             animation = "bruno.slideRightBigIn";
         }
+        animation = loaded? "transition.fadeIn": animation;
         submenu_wrapper.velocity(
             animation, {
                 duration: Math.floor(1.5 * time),
@@ -657,13 +661,15 @@ Submenu.prototype.hideSubmenu = function(time, delay) {
     delete submenu_wrapper;
 }
 
-Submenu.prototype.hidePreview = function(time, delay) {
+Submenu.prototype.hidePreview = function(time, delay, animate) {
 	var submenu_wrapper = $('#app_content_submenu_preview');
 	var that = this;
+	var animation;
     if (responsive.test("minDesktop")) {
+    	animation = animate? animate: "transition.slideRightBigOut";
         if (that.layer <= 3) { submenu_wrapper.css('z-index', submenu_zindex); }
         submenu_wrapper.velocity(
-            "transition.slideRightBigOut", {
+           animation, {
                 duration: time,
                 delay: delay,
                 easing: [.38, .1, .13, .9],
@@ -673,10 +679,11 @@ Submenu.prototype.hidePreview = function(time, delay) {
             }
         );
     } else {
-        var animation = "bruno.expandOut";
+        animation = "bruno.expandOut";
         if (submenu_Getnext() > 2) {
             animation = "bruno.slideRightBigOut";
         }
+        animation = animate? animate: animation;
         submenu_wrapper.velocity(
             animation, {
                 duration: Math.floor(1.5 * time),
@@ -712,10 +719,10 @@ Submenu.prototype.Hide = function(animate) {
     }
     if (animate) {
     	if (this.preview) {
-    		this.hidePreview(time, delay);
+    		this.hidePreview(time, delay, animate);
     	}
     	else {
-    		this.hideSubmenu(time, delay);
+    		this.hideSubmenu(time, delay, animate);
     	}
     } else {
         time = 0;
@@ -802,7 +809,7 @@ function submenu_Build(menu, next, hide, param, preview) {
             if (stack[index].menu === menu) {
                 // clean underneath layer according to if it is preview or submenu
                 //var preview = submenu_obj[index].preview? 'preview': 'submenu';
-                submenu_Clean(next, true, preview);
+                submenu_Clean(next, "transition.fadeOut", preview);
                 return false;
             }
         }
