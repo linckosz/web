@@ -15,6 +15,10 @@
 	background: #C7E9FF;
 }
 
+.submenu_taskdetail [contenteditable=true]{
+	cursor: text;
+}
+
 
 .submenu_taskdetail_tasktitle {
 	width: 100%;

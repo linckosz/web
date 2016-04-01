@@ -1,6 +1,6 @@
 #app_layers_dev_skytasks {
 	font-size:20px;
-	color:#3677A7;
+	/*color:#3677A7;*/
 }
 .app_layers_dev_skytasks_tasklist_wrapper {
 
@@ -15,10 +15,20 @@
 .app_layers_dev_skytasks_tasklist .iScrollIndicator {
 	margin-top: 41px;
 }
+.app_layers_dev_skytasks_nativeScroll.app_layers_dev_skytasks_tasklist_wrapper {
+	overflow: auto;
+}
+.app_layers_dev_skytasks_nativeScroll .app_layers_dev_skytasks_tasklist {
+	height: 100%;
+	padding-top: 41px;
+}
 .app_layers_dev_skytasks_tasklist sup {
 	vertical-align: baseline;
 	position: relative;
 	top: -0.4em;
+}
+.app_layers_dev_skytasks_tasklist [contenteditable=true] {
+	cursor: text;
 }
 .app_layers_dev_skytasks_tasklist_shifted {
 
@@ -31,6 +41,8 @@
     height: 100%;
     width: 15px;
     display: inline-block;
+    font-size: 35px;
+    text-align: center;
 }
 
 .app_layers_dev_skytasks_task {
@@ -40,6 +52,8 @@
     border-top-style: dashed;
     border-top-width: 2px;
 	position: relative;
+	border-top-color: #FFFFFF;
+    background-color: #CBE6F8;
 }
 .app_layers_dev_skytasks_task:hover {
 	background-color: #FFFFFF;
@@ -66,7 +80,9 @@
     vertical-align: text-bottom;
     text-decoration: inherit;
     width: 50%;
-    cursor: text;
+}
+.app_layers_dev_skytasks_task [find=title]:focus {
+    background-color: #FBFBFB;
 }
 .app_layers_dev_skytasks_task_comments {
 	float:right;
@@ -94,6 +110,7 @@
 	display:none;
 }
 .app_layers_dev_skytasks_checkbox_visual{
+	/*
 	content: "";
     background-color: #EFEFEF;
     font-family: Times New Roman;
@@ -107,6 +124,19 @@
     background-size: contain;
     background-repeat: no-repeat;
     vertical-align: middle;
+    */
+
+    background-color: #EFEFEF;
+    overflow: visible;
+    border: 2px solid #3F84B0;
+    height: 23px;
+    width: 23px;
+    display: inline-block;
+    border-radius: 6px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    vertical-align: middle;
+    font-size: 24px !important;
 }
 .app_layers_dev_skytasks_checkbox label {
 	cursor: pointer;
@@ -115,18 +145,22 @@
 	top: 3px;
 	left: 8px;
 }
-
+/*
 .app_layers_dev_skytasks_checkbox input[type="checkbox"]:checked + .app_layers_dev_skytasks_checkbox_visual{
-	/*content: '✓';*/
-	/*content: url('/lincko/app/images/app/icons/Status-13.png');*/
-	background-image: url('/lincko/app/images/app/icons/Status-13.png');
-
-	
+	background-image: url('/lincko/app/images/app/icons/Status-13.png');	
 }
 .app_layers_dev_skytasks_checkbox input[type="checkbox"]:not(:checked) + .app_layers_dev_skytasks_checkbox_visual{
 	content: '';
 	background-image: none;
 }
+*/
+.app_layers_dev_skytasks_checkbox input[type="checkbox"]:checked + .fa-check:before{
+	content: "\f00c";
+}
+.app_layers_dev_skytasks_checkbox input[type="checkbox"]:not(:checked) + .fa-check:before{
+	content: '';
+}
+
 .app_layers_dev_skytasks_detail_checked{
 	background-image: url('/lincko/app/images/app/icons/Status-13.png');
 }
@@ -172,6 +206,9 @@
     opacity: 0.3;
     cursor: pointer;
     cursor: hand;
+}
+.app_layers_dev_skytasks_newtaskCircle_fixed {
+	position: fixed;
 }
 .app_layers_dev_skytasks_newtaskCircle:hover {
 	opacity:1;
@@ -449,6 +486,10 @@
 	.app_layers_dev_skytasks_tasklist .iScrollIndicator {
 		margin-top: 60px;
 	}
+	.app_layers_dev_skytasks_nativeScroll .app_layers_dev_skytasks_tasklist {
+		height: 100%;
+		padding-top: 60px;
+	}
 	.app_layers_dev_skytasks_task {
 		min-width:initial;
 		padding:0px;
@@ -498,11 +539,20 @@
 	    left: 0;
 	}
 	.app_layers_dev_skytasks_checkbox .app_layers_dev_skytasks_checkbox_visual {
+	    /*
 	    font-size: 63px;
 	    text-align: center;
 	    height: 10px;
 	    width: 10px;
 	    padding: 10px;
+	    margin: 11px 0px;
+	    border-radius: 10px;
+	    */
+
+	    font-size: 31px !important;
+	    text-align: center;
+	    height: 30px;
+	    width: 30px;
 	    margin: 11px 0px;
 	    border-radius: 10px;
 	}
@@ -532,6 +582,7 @@
     	overflow:hidden;
 		text-overflow: ellipsis;
 		width: initial !important;
+		padding: 0px !important;
 	}
 	.app_layers_dev_skytasks_tasklist_icon_text sup{
 		vertical-align:text-top;
@@ -559,17 +610,15 @@
 	    top: 0;
 	    bottom: 0;
 	    left: 0;
-	    background-color:#FBA026; /*lincko orange*/
+	    /*background-color:#FBA026; /*lincko orange*/
+	    background-color: #D83A3A; /*red*/
+    	color: white;
 	}
 	.app_layers_dev_skytasks_delete {
-		height: 100%;
-	    display: -webkit-flex; /* Safari */
-	    -webkit-align-items: center; /* Safari 7.0+ */
-	    display: flex;
-	    align-items: center;
-	    background-color: orange;
+	    height: 100%;
 	    float: right;
-	    width:75px;
+	    width: 75px;
+	    text-align: center;
 	}
 	.app_layers_dev_skytasks_taskblur {
 		/*

@@ -33,17 +33,20 @@
 		
 		<div find='task_rightOptions' class="app_layers_dev_skytasks_task_rightOptions">
 			<div class="app_layers_dev_skytasks_tasklist_icon_wrapper app_layers_dev_skytasks_tasklist_icon_name">
-				<span class="app_layers_dev_skytasks_tasklist_icon maxMobileL" style="background-image: url('{{_filelatest('/lincko/app/images/app/icons/Users-1.png') }}')">&nbsp;</span>
+				{#<span class="app_layers_dev_skytasks_tasklist_icon maxMobileL" style="background-image: url('{{_filelatest('/lincko/app/images/app/icons/Users-1.png') }}')">&nbsp;</span>#}
+				<span class="app_layers_dev_skytasks_tasklist_icon fa fa-user base_color_text_linckoOrange maxMobileL" ></span>
 				<span class="fa fa-user minTablet"></span>
 				<span find='name' class="app_layers_dev_skytasks_tasklist_icon_text">Name{# toto #}</span>
 			</div>
 			<div class="app_layers_dev_skytasks_tasklist_icon_wrapper app_layers_dev_skytasks_tasklist_icon_spaces">
-				<span class="app_layers_dev_skytasks_tasklist_icon maxMobileL" style="background-image: url('{{_filelatest('/lincko/app/images/app/icons/Time-3.png') }}')">&nbsp;</span>
+				{#<span class="app_layers_dev_skytasks_tasklist_icon maxMobileL" style="background-image: url('{{_filelatest('/lincko/app/images/app/icons/Time-3.png') }}')">&nbsp;</span>#}
+				<span class="app_layers_dev_skytasks_tasklist_icon fa fa-hashtag base_color_text_linckoOrange maxMobileL" ></span>
 				<span class="fa fa-hashtag minTablet"></span>
 				<span find='spaces' class="app_layers_dev_skytasks_tasklist_icon_text">Spaces{# toto #}</span>
 			</div>
 			<div class="app_layers_dev_skytasks_tasklist_icon_wrapper app_layers_dev_skytasks_tasklist_icon_time">
-				<span class="app_layers_dev_skytasks_tasklist_icon maxMobileL" style="background-image: url('{{_filelatest('/lincko/app/images/app/icons/Time-3.png') }}')">&nbsp;</span>
+				{#<span class="app_layers_dev_skytasks_tasklist_icon maxMobileL" style="background-image: url('{{_filelatest('/lincko/app/images/app/icons/Time-3.png') }}')">&nbsp;</span>#}
+				<span class="app_layers_dev_skytasks_tasklist_icon fa fa-calendar base_color_text_linckoOrange maxMobileL" ></span>
 				<span class="fa fa-calendar minTablet"></span>
 				<span find='time' class="app_layers_dev_skytasks_tasklist_icon_text">Time{# toto #}</span>
 			</div>
@@ -53,16 +56,16 @@
 			<div class="app_layers_dev_skytasks_spacesstick floatleft"></div>
 			<span class="app_layers_dev_skytasks_checkbox floatleft">
 				<input type="checkbox" id="" name="checkname" value="">
-				<div class="app_layers_dev_skytasks_checkbox_visual"></div>
+				<div class="app_layers_dev_skytasks_checkbox_visual fa fa-check"></div>
 				<label for=""></label>
 			</span>
 			<span class="app_layers_dev_skytasks_textwrapper">
 				<span find='comments' class="app_layers_dev_skytasks_task_comments minMobileL">
 					{#<img class="app_layers_dev_skytasks_tasklist_icon minTablet" src="{{_filelatest('/lincko/app/images/app/icons/Edition-32.png') }}"/>#}
 					<span class="fa fa-pencil minTablet"></span>
-					<span class="maxMobileL minMobileL">Comments{# toto #}</span><span class="">(?)</span>
+					<span class="maxMobileL minMobileL">{{ _trans('app', 10, 3, 'html') }}{# comments #}</span><span class="">(?)</span>
 				</span>
-				<span find='title' contenteditable='true'></span><!--<span find='dash'>-</span>-->
+				<span find='title' contenteditable="true"></span><!--<span find='dash'>-</span>-->
 				<span find='description' class="minMobileL"></span>
 			</span>
 			<span class="app_layers_dev_skytasks_mobileQuickInfo maxMobile">
@@ -81,7 +84,8 @@
 
 		<div find='task_leftOptions' class="app_layers_dev_skytasks_leftOptions maxMobileL">
 			<div class="app_layers_dev_skytasks_delete">
-				DELETE{# toto #}
+				<span class="fa fa-trash-o"></span>
+				<span>{{ _trans('app', 8000, 22, 'html') }}{# Delete #}</span>
 			</div>
 		</div>
 

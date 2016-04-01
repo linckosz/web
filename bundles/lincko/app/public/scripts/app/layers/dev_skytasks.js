@@ -21,9 +21,40 @@ if (!Math.sign) {
 /*GLOBAL VARIABLES-------------------------------------------------------------------------*/
 var app_layers_dev_skytasks_test_var = null;
 var app_layers_dev_skytasks_timesort = null;
-var app_layers_dev_skytasks_tasklist = null;
+/*var app_layers_dev_skytasks_tasklist = null;*/
+var app_layers_dev_skytasks_tasklist = {};
+var app_layers_dev_skytasks_tasklist_id = 1;
 
 /*GLOBAL VARIABLES END----------------------------------------------------------------------*/
+
+var app_layers_dev_skytasks_tasklist_clear = function(){
+	for( var i in app_layers_dev_skytasks_tasklist ){
+
+		for( var g in app_layers_dev_skytasks_tasklist[i] ){
+			console.log('g: '+g);
+			console.log(app_layers_dev_skytasks_tasklist[i]);
+			delete app_layers_dev_skytasks_tasklist[i][g];
+			console.log(app_layers_dev_skytasks_tasklist[i]);
+		}
+			console.log( app_layers_dev_skytasks_tasklist[i].window_resize );
+			console.log('clear windowwidth: '+app_layers_dev_skytasks_tasklist[i].window_width );
+			console.log('clear isMobile.fn: '+app_layers_dev_skytasks_tasklist[i].isMobile );
+			$(window).unbind("resize", app_layers_dev_skytasks_tasklist[i].window_resize );
+			$(window).unbind("resize", app_layers_dev_skytasks_tasklist[i].minMobileL );
+			console.log( app_layers_dev_skytasks_tasklist[i].window_resize );
+			app_layers_dev_skytasks_tasklist[i] = null;
+			delete app_layers_dev_skytasks_tasklist[i];
+	}
+}
+var app_layers_dev_skytasks_memoryTest = function(){
+	for( var i=0; i<100; i++){
+		/*app_layers_dev_skytasks_tasklist = new app_layers_dev_skytasks_ClassTasklist($('#app_layers_dev_skytasks_tasklist_wrapper'));*/
+		app_layers_dev_skytasks_tasklist[++app_layers_dev_skytasks_tasklist_id] = new app_layers_dev_skytasks_ClassTasklist($('#app_layers_dev_skytasks_tasklist_wrapper'));
+		app_layers_dev_skytasks_tasklist_clear();
+	}
+}
+
+
 var app_layers_dev_skytasks_calcDudate = function(task_obj){
 	var duedate = new wrapper_date(task_obj.start + parseInt(task_obj.duration,10));
 	return duedate;
@@ -37,7 +68,7 @@ function app_layers_dev_skytasks_launchPage(){
 
 
 var app_layers_dev_skytasks_feedPage = function(){
-
+	console.log('app_layers_dev_skytasks_feedPage');
 	var position = $('#app_layers_dev_skytasks');
 	var Elem;
 	position.empty();
@@ -73,10 +104,22 @@ var app_layers_dev_skytasks_feedPage = function(){
 	Elem = $('#-app_layers_dev_skytasks_tasklist_wrapper').clone();
 	Elem.prop('id','app_layers_dev_skytasks_tasklist_wrapper');
 	Elem.appendTo(position);
-	app_layers_dev_skytasks_tasklist = new app_layers_dev_skytasks_ClassTasklist($('#app_layers_dev_skytasks_tasklist_wrapper'));
 
+	/*app_layers_dev_skytasks_tasklist = new app_layers_dev_skytasks_ClassTasklist($('#app_layers_dev_skytasks_tasklist_wrapper'));*/
+	/*
+	console.log('before');
+	console.log(app_layers_dev_skytasks_tasklist);
+	*/
+	app_layers_dev_skytasks_tasklist[++app_layers_dev_skytasks_tasklist_id] = new app_layers_dev_skytasks_ClassTasklist($('#app_layers_dev_skytasks_tasklist_wrapper'));
+	/*
+	console.log('after');
+	console.log(app_layers_dev_skytasks_tasklist);
+
+	app_layers_dev_skytasks_tasklist = new app_layers_dev_skytasks_ClassTasklist($('#app_layers_dev_skytasks_tasklist_wrapper'));
+*/
 	var app_layers_dev_skytasks_tasklist_filter = function(filter_by){
-		app_layers_dev_skytasks_tasklist.tasklist_update(filter_by);
+		app_layers_dev_skytasks_tasklist[app_layers_dev_skytasks_tasklist_id].tasklist_update(filter_by);
+		/*app_layers_dev_skytasks_tasklist.tasklist_update(filter_by);*/
 	}
 
 	app_layers_dev_skytasks_timesort = new app_layers_dev_skytasks_ClassTimesort(
@@ -112,7 +155,8 @@ var app_layers_dev_skytasks_feedPage = function(){
 	app_application_lincko.add(
 		'app_layers_dev_skytasks_tasklist_wrapper',
 		'tasks',
-		app_layers_dev_skytasks_tasklist.tasklist_update
+		/*app_layers_dev_skytasks_tasklist.tasklist_update*/
+		app_layers_dev_skytasks_tasklist[app_layers_dev_skytasks_tasklist_id].tasklist_update
 		/*
 		function(){
 			//console.log('dev_skytasks lincko.add task update');
@@ -353,6 +397,10 @@ var app_layers_dev_skytasks_ClassTasklist = function(tasklist_wrapper){
 	this.elem_rightOptions_all;
 	this.elem_task_all;
 
+	this.editing_focus = false;
+	this.editing_timeout;
+	this.is_scrolling = false;
+
 
 	//variables for left-right slide options
 	this.window_width;
@@ -393,6 +441,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.construct = function(){
 		.addClass('overthrow')
 		.prop('id','app_layers_dev_skytasks_tasklist_'+that.md5id)
 		.appendTo(that.tasklist_wrapper);
+	//that.tasklist_wrapper.addClass('app_layers_dev_skytasks_nativeScroll');
 
 	that.task = $('#-app_layers_dev_skytasks_task').clone();
 
@@ -412,7 +461,8 @@ app_layers_dev_skytasks_ClassTasklist.prototype.construct = function(){
 	that.setHeight();
 
 	$(window).resize(function(){
-		that.window_resize();
+		that.minMobileL();
+		/*that.window_resize();*/
 	});
 	//that.window_resize();
 	$(window).trigger('resize');
@@ -428,21 +478,29 @@ app_layers_dev_skytasks_ClassTasklist.prototype.construct = function(){
 		var IScroll = myIScrollList['app_layers_dev_skytasks_tasklist_'+that.md5id];
 
 		IScroll.on('scrollStart', function(){
-			$('#app_layers_dev_skytasks_navbar').css('box-shadow','0px 5px 20px #888888');
+			if( myIScrollList['app_layers_dev_skytasks_tasklist_'+that.md5id].hasVerticalScroll ){
+				$('#app_layers_dev_skytasks_navbar').css('box-shadow','0px 5px 20px #888888');
+				that.is_scrolling = true;
+			}
 		});//scrollStart
 
 		IScroll.on('scrollEnd', function(){
 			console.log('scrollEnd');
+			setTimeout(function(){
+				that.is_scrolling = false;
+			},500);
+			
 			//console.log(event);
 			var IScrollY = IScroll.y;
-			console.log(IScrollY);
-			if( IScrollY != 0 ){
-				$('#app_layers_dev_skytasks_navbar').css('box-shadow','0px 5px 20px #888888');
+			if( myIScrollList['app_layers_dev_skytasks_tasklist_'+that.md5id].hasVerticalScroll ){
+				if( IScrollY != 0 ){
+					$('#app_layers_dev_skytasks_navbar').css('box-shadow','0px 5px 20px #888888');
+				}
+				else{
+					$('#app_layers_dev_skytasks_navbar').removeAttr('style');
+				}
+				that.toggle_NewtaskCircle();
 			}
-			else{
-				$('#app_layers_dev_skytasks_navbar').removeAttr('style');
-			}
-			that.toggle_NewtaskCircle();
 		});//scrollEnd
 
 	}
@@ -460,6 +518,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.store_all_elem = function(){
 
 app_layers_dev_skytasks_ClassTasklist.prototype.window_resize = function(){
 	var that = this;
+	console.log(that);
 	that.window_width = $(window).width();
 	console.log('window_width: '+that.window_width);
 	that.setHeight();
@@ -486,8 +545,20 @@ app_layers_dev_skytasks_ClassTasklist.prototype.window_resize = function(){
 				.removeClass('app_layers_dev_skytasks_simpleDesktop2');
 		}
 	}
-
+	else {
+		that.tasklist_wrapper
+			.removeClass('app_layers_dev_skytasks_simpleDesktop')
+			.removeClass('app_layers_dev_skytasks_simpleDesktop2');
+	}
+	if( myIScrollList['app_layers_dev_skytasks_tasklist_'+that.md5id] ){
+		myIScrollList['app_layers_dev_skytasks_tasklist_'+that.md5id].refresh();
+		console.log('IScroll refresh');
+		
+	}
+	console.log(that.md5id);
 	console.log('end of resize -- ClassTasklist');
+	delete that;
+	delete this;
 }
 app_layers_dev_skytasks_ClassTasklist.prototype.tasklist_update = function(filter_by){
 	var that = this;
@@ -503,26 +574,38 @@ app_layers_dev_skytasks_ClassTasklist.prototype.tasklist_update = function(filte
 	else{ filter_by = null }
 
 	console.log('tasklist_update: all');
-	iscroll_elem = that.tasklist.find('.iscroll_sub_div').empty();
-	for (var i in items){
-		item = items[i];
-		duedate = app_layers_dev_skytasks_calcDudate(item);
-		if(filter_by == null || duedate.happensSomeday(filter_by)){
-			iscroll_elem.append(that.addTask(item));
-			taskcount += 1;
+	that.tasklist.velocity("fadeOut",{
+		duration: 200,
+		complete: function(){
+			if( that.tasklist.find('.iscroll_sub_div').length > 0 ){
+				iscroll_elem = that.tasklist.find('.iscroll_sub_div').empty();
+			}else{
+				iscroll_elem = that.tasklist.empty();
+			}
+			for (var i in items){
+				item = items[i];
+				duedate = app_layers_dev_skytasks_calcDudate(item);
+				if(filter_by == null || duedate.happensSomeday(filter_by)){
+					iscroll_elem.append(that.addTask(item));
+					taskcount += 1;
+				}
+			}
+			if( taskcount==0 ){
+				iscroll_elem.append('<div class="app_layers_dev_skytasks_task">There are no tasks.</div>');
+			}
+			that.add_newtaskBox(iscroll_elem);
+			that.store_all_elem();
+			$('#app_layers_dev_skytasks_navbar').removeAttr('style');
 		}
-	}
-	if( taskcount==0 ){
-		iscroll_elem.append('<div class="app_layers_dev_skytasks_task">There are no tasks.</div>');
-	}
-	that.add_newtaskBox(that.tasklist.find('.iscroll_sub_div'));
-	//that.elem_newtaskBox.appendTo(that.tasklist.find('.iscroll_sub_div'));
-	that.store_all_elem();
-	//myIScrollList['app_layers_dev_skytasks_tasklist_'+that.md5id].refresh();
-	that.window_resize();
+	})
+	.velocity("fadeIn",{
+		duration: 200,
+		complete: function(){
+			that.window_resize();
+		}
+	});
 		
 }
-
 
 app_layers_dev_skytasks_ClassTasklist.prototype.addTask_all = function(){
 	var that = this;
@@ -592,6 +675,17 @@ app_layers_dev_skytasks_ClassTasklist.prototype.addTask = function(item){
 			that.taskClick(event,this);
 		}
 	});
+	Elem.find('[find=title]').focus(function(){
+		clearTimeout(that.editing_timeout);
+		that.editing_focus = true;
+		console.log('that.editing_focus: '+that.editing_focus);
+	});
+	Elem.find('[find=title]').blur(function(){
+		that.editing_timeout = setTimeout(function(){
+			that.editing_focus = false;
+			console.log('that.editing_focus: '+that.editing_focus);
+		},200);
+	});
 	//event actions for swipe left and right on the task
 	Elem.on('mousedown touchstart', function(event){ //for firefox, event must be passed as the parameter of this fn
 		//console.log(e);
@@ -618,14 +712,20 @@ app_layers_dev_skytasks_ClassTasklist.prototype.addTask = function(item){
 	return Elem;
 }
 app_layers_dev_skytasks_ClassTasklist.prototype.add_newtaskBox = function(elem_appendTo){
+	console.log('add_newtaskBox');
+	console.log(elem_appendTo);
 	var Elem;
 	var that = this;
 	var elem_blankTask;
 	Elem = $('#-app_layers_dev_skytasks_newtaskBox').clone().removeAttr('id');
 	Elem.on('click', function(){
 		if( responsive.test("minTablet") ){
-			$(this).before(that.addTask(null));
+			elem_blankTask = that.addTask(null);
+			$(this).before(elem_blankTask);
+			elem_blankTask.velocity("fadeIn");
 			myIScrollList['app_layers_dev_skytasks_tasklist_'+that.md5id].refresh();
+			elem_blankTask.find('[find=title]').focus();
+			console.log(elem_blankTask.find('[find=title]'));
 		}
 		else{
 			submenu_Build("app_task_new");	
@@ -703,7 +803,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.on_mousemove = function(event){
 				that.options_startL = that.window_width;
 			}
 			if( that.actiontask.data('options') ){
-				that.actiontask.find('.app_layers_dev_skytasks_taskblur').fadeIn(500);
+				that.actiontask.find('.app_layers_dev_skytasks_taskblur').velocity('fadeIn',500);
 				that.actiontask.find('[find=task_center]').css('opacity',0.6);
 			}
 		}
@@ -808,6 +908,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.setHeight = function(){
 		height -= $('#app_content_menu').outerHeight();
 	}
 	that.tasklist_wrapper.height(height);
+
 }
 
 app_layers_dev_skytasks_ClassTasklist.prototype.checkboxClick = function(event,task_elem){
@@ -837,7 +938,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.taskClick = function(event,task_
 	}
 	var that = this;
 	var target = $(event.target);
-		if( target.is('label') || target.is('input') || target.attr('contenteditable')=="true" ){
+		if( target.is('label') || target.is('input') || target.attr('contenteditable')=="true" || that.editing_focus || that.is_scrolling ){
 			console.log(target);
 			return;
 		}
@@ -912,7 +1013,6 @@ app_layers_dev_skytasks_ClassTasklist.prototype.toggle_NewtaskCircle = function(
 	var that = this;
 	var newtaskBox = that.elem_newtaskBox;
 	var newtaskCircle = that.elem_newtaskCircle;
-	console.log(newtaskBox);
 	if(newtaskBox.offset().top + newtaskBox.outerHeight() > $(window).height()){
 		//newtaskBox hidden
 		newtaskCircle.removeClass('display_none');
