@@ -937,9 +937,9 @@ function submenu_content_unblur() {
 submenu_content_unblur();
 
 function submenu_wrapper_width() {
-    //var width = Math.floor($('#app_application_content').width()/3);
-    var width = 320;
-    $('.submenu_wrapper').css('width', width);
+    var width = Math.floor($('#app_application_content').width()/3);
+    //var width = 320;
+    $('#app_application_submenu_block .submenu_wrapper').css('width', width);
 }
 submenu_wrapper_width();
 var submenu_wrapper_width_timer;
