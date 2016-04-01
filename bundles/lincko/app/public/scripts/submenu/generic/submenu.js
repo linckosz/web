@@ -1,7 +1,32 @@
-console.log("loaded submenu");
 var submenu_zindex = 2000;
 var submenu_obj = { 'submenu': {}, 'preview': {} };
 var submenu_show = { 'submenu': {}, 'preview': {} };
+var animation_map_preview = {
+    'new_in': {
+    	'desktop':"transition.slideRightBigIn",
+    	'mobile': "bruno.expandIn",
+    },
+    'new_out': {
+    	'desktop': "transition.slideRightBigOut",
+    	'mobile': "bruno.expandOut",
+    },
+    'insert_in': {
+    	'desktop': 'transition.fadeIn',
+    	'mobile': 'transition.fadeIn', 
+    },
+    'insert_out': {
+    	'desktop': 'transition.fadeOut',
+    	'mobile':'transition.fadeOut',
+    },
+    'cover_in': {
+    	'desktop':"bruno.slideRightBigIn",
+    	'mobile': "bruno.slideRightBigIn",
+    },
+    'cover_out': {
+    	'desktop': "bruno.expandOut",
+    	'mobile': "bruno.expandOut",
+    },
+}
 
 var Submenu_select = {
 
@@ -57,6 +82,34 @@ var Submenu_select = {
 
 }
 
+Submenu.prototype.changeState = function() {
+    // to check what animation this submenu should use.
+    var next = submenu_Getnext(this.preview);
+    if (next == 1 && this.layer == 1) {
+        this.inAnimation = 'new_in';
+        this.outAnimation = 'new_out';
+    } else if (this.layer < next) {
+        // this layer is going to substitute the content
+        // of another layer, so they need to exchange animation
+        this.inAnimation = 'insert_in';
+        this.outAnimation = 'insert_out';
+        submenu_exchangeAnimation(this);
+    } else {
+        this.inAnimation = "cover_in";
+        this.outAnimation = "cover_out";
+    }
+
+}
+
+
+function submenu_exchangeAnimation(Elem) {
+    var tmp = Elem.outAnimation;
+    var stack = Elem.preview ? submenu_obj['preview'] : submenu_obj['submenu'];
+    Elem.outAnimation = stack[Elem.layer].outAnimation;
+    stack[Elem.layer].outAnimation = tmp;
+}
+
+
 function Submenu(menu, next, param, preview) {
     this.obj = submenu_list[menu];
     this.menu = menu;
@@ -90,6 +143,8 @@ function Submenu(menu, next, param, preview) {
     var self = this;
 
     function Constructor(Elem) {
+
+        Elem.changeState();
         //First we have to empty the element if it exists
 
         submenu_Clean(Elem.layer, false, preview);
@@ -558,13 +613,12 @@ Submenu.prototype.showSubmenu = function(time, delay) {
 
 Submenu.prototype.showPreview = function(time, delay) {
     var submenu_wrapper = $('#app_content_submenu_preview');
-    var loaded = submenu_wrapper.is(":visible");
     var that = this;
     var animation;
     if (responsive.test("minDesktop")) {
-    	animation = loaded? "transition.fadeIn":"transition.slideRightBigIn";
+        animation = animation_map_preview[this.inAnimation]['desktop'];
         if (that.layer <= 3) { submenu_wrapper.css('z-index', submenu_zindex); }
-        submenu_wrapper.velocity(
+        submenu_wrapper.velocity("stop", true).velocity(
             animation, {
                 duration: time,
                 delay: delay,
@@ -583,12 +637,8 @@ Submenu.prototype.showPreview = function(time, delay) {
             }
         );
     } else {
-        animation = "bruno.expandIn";
-        if (submenu_Getnext() >= 2) {
-            animation = "bruno.slideRightBigIn";
-        }
-        animation = loaded? "transition.fadeIn": animation;
-        submenu_wrapper.velocity(
+        animation = animation_map_preview[this.inAnimation]['mobile'];
+        submenu_wrapper.velocity("stop", true).velocity(
             animation, {
                 duration: Math.floor(1.5 * time),
                 delay: delay,
@@ -627,8 +677,8 @@ Submenu.prototype.Show = function() {
 };
 
 Submenu.prototype.hideSubmenu = function(time, delay) {
-	var submenu_wrapper = this.Wrapper();
-	var that = this;
+    var submenu_wrapper = this.Wrapper();
+    var that = this;
     if (responsive.test("minDesktop")) {
         if (that.layer <= 3) { submenu_wrapper.css('z-index', submenu_zindex); }
         submenu_wrapper.velocity(
@@ -661,15 +711,17 @@ Submenu.prototype.hideSubmenu = function(time, delay) {
     delete submenu_wrapper;
 }
 
-Submenu.prototype.hidePreview = function(time, delay, animate) {
-	var submenu_wrapper = $('#app_content_submenu_preview');
-	var that = this;
-	var animation;
+Submenu.prototype.hidePreview = function(time, delay) {
+	var submenu_wrapper = this.Wrapper();
+	if(this.outAnimation == "new_out")
+		submenu_wrapper = $("#app_content_submenu_preview");
+    var that = this;
+    var animation;
     if (responsive.test("minDesktop")) {
-    	animation = animate? animate: "transition.slideRightBigOut";
+        animation = animation_map_preview[this.outAnimation]['desktop'];
         if (that.layer <= 3) { submenu_wrapper.css('z-index', submenu_zindex); }
-        submenu_wrapper.velocity(
-           animation, {
+        submenu_wrapper.velocity("stop", true).velocity(
+            animation, {
                 duration: time,
                 delay: delay,
                 easing: [.38, .1, .13, .9],
@@ -679,12 +731,8 @@ Submenu.prototype.hidePreview = function(time, delay, animate) {
             }
         );
     } else {
-        animation = "bruno.expandOut";
-        if (submenu_Getnext() > 2) {
-            animation = "bruno.slideRightBigOut";
-        }
-        animation = animate? animate: animation;
-        submenu_wrapper.velocity(
+        animation = animation_map_preview[this.outAnimation]['mobile'];
+        submenu_wrapper.velocity("stop", true).velocity(
             animation, {
                 duration: Math.floor(1.5 * time),
                 delay: delay,
@@ -718,12 +766,11 @@ Submenu.prototype.Hide = function(animate) {
         });
     }
     if (animate) {
-    	if (this.preview) {
-    		this.hidePreview(time, delay, animate);
-    	}
-    	else {
-    		this.hideSubmenu(time, delay, animate);
-    	}
+        if (this.preview) {
+            this.hidePreview(time, delay);
+        } else {
+            this.hideSubmenu(time, delay);
+        }
     } else {
         time = 0;
         that.Remove();
@@ -809,7 +856,7 @@ function submenu_Build(menu, next, hide, param, preview) {
             if (stack[index].menu === menu) {
                 // clean underneath layer according to if it is preview or submenu
                 //var preview = submenu_obj[index].preview? 'preview': 'submenu';
-                submenu_Clean(next, "transition.fadeOut", preview);
+                submenu_Clean(next, true, preview);
                 return false;
             }
         }

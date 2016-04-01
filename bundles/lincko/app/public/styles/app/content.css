@@ -155,7 +155,7 @@ div#app_content_submenu_preview {
 	display: none;
 	width: 320px;
 	color: red;
-	background-color: grey;
+	background-color: #f7f7f7;
 	float: right;
 	height: 100%;
 	font-size: large;
