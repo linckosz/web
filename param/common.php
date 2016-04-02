@@ -142,7 +142,6 @@ $app->lincko->data = array(
 	'domain' => $app->lincko->domain,
 	'title' => $app->lincko->title,
 	'company' => '',
-	'space' => '',
 	'lincko_back' => '', //Only used for development purpose "master-[bruno].lincko.cafe"
 );
 

@@ -76,9 +76,8 @@ Lincko.storage.searchCOMID = function(){
 				return Lincko.storage.COMID;
 			}
 		}
-		base_show_error(Lincko.Translation.get('app', 33, 'js')); //You are not allowed to access this company's workspace.
-		return false;
 	}
+	base_show_error(Lincko.Translation.get('app', 33, 'js')); //You are not allowed to access this workspace.
 	return false;
 };
 

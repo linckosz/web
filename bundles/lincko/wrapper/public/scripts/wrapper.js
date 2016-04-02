@@ -60,12 +60,12 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 		contentType: 'application/json; charset=UTF-8',
 		dataType: 'json',
 		timeout: timeout,
-		beforeSend: function(){
+		beforeSend: function(jqXHR, settings){
 			wrapper_objForm = ajax_objForm;
 			if(ajax_objForm){
 				wrapper_run[ajax_objForm.prop('id')] = true;
 			}
-			cb_begin();
+			cb_begin(jqXHR, settings);
 		},
 		success: function(data){
 			//Those 3 following lines are only for debug purpose
@@ -376,6 +376,10 @@ var wrapper_IScroll_cb_creation = {};
 
 var myIScrollList = {};
 function wrapper_IScroll(){
+	// We do not allow iScroll for mobile device, native scroll helps to make things running smoothly, but we need to careful the callback
+	if(supportsTouch){
+		return true;
+	}
 	var overthrow = $('.overthrow');
 	overthrow.css('overflow', 'hidden').css('overflow-x', 'hidden').css('overflow-y', 'hidden');
 	//Create new
