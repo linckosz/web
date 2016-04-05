@@ -148,17 +148,21 @@
 }
 
 .with_preview > #app_content_dynamic_layers {
-	margin-right: 320px;
+	margin-right: 38%;
 }
 
 div#app_content_submenu_preview {
 	display: none;
-	width: 320px;
+	width: 38%;
 	color: red;
 	background-color: #f7f7f7;
 	float: right;
 	height: 100%;
 	font-size: large;
+}
+
+#app_content_submenu_preview .submenu_wrapper{
+	width: 100%;
 }
 /* Mobile phone in Portrait maximum */
 @media only screen and (max-width: 479px){
@@ -190,6 +194,9 @@ div#app_content_submenu_preview {
 	}
 	#app_content_dynamic {
 		margin-left: 0;
+	}
+	.with_preview > #app_content_dynamic_layers {
+		margin-right: 0;
 	}
 }
 
