@@ -396,7 +396,6 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				progress: function(){
 					if(responsive.test("minTablet")){
 						app_content_dynamic_position();
-						submenu_wrapper_width();
 						app_application_submenu_position();
 					}
 				},
@@ -478,7 +477,6 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				progress: function(){
 					if(responsive.test("minTablet")){
 						app_content_dynamic_position();
-						submenu_wrapper_width();
 						app_application_submenu_position();
 					}
 				},

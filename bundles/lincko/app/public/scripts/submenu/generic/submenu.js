@@ -936,18 +936,6 @@ function submenu_content_unblur() {
 }
 submenu_content_unblur();
 
-function submenu_wrapper_width() {
-    var width = Math.floor($('#app_application_content').width()/3);
-    //var width = 320;
-    $('#app_application_submenu_block .submenu_wrapper').css('width', width);
-}
-submenu_wrapper_width();
-var submenu_wrapper_width_timer;
-$(window).resize(function() {
-    clearTimeout(submenu_wrapper_width_timer);
-    submenu_wrapper_width_timer = setTimeout(submenu_wrapper_width, wrapper_timeout_timer);
-});
-
 var submenu_form_cb_success = function(msg, err, status, data) {
     var field = 'undefined';
     submenu_form_cb_hide_progress();
