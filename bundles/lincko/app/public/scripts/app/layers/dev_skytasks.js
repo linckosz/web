@@ -29,29 +29,34 @@ var app_layers_dev_skytasks_tasklist_id = 1;
 
 var app_layers_dev_skytasks_tasklist_clear = function(){
 	for( var i in app_layers_dev_skytasks_tasklist ){
-
+		app_layers_dev_skytasks_tasklist[i].tasklist_wrapper.empty();
+		$(window).unbind("resize", app_layers_dev_skytasks_tasklist[i].window_resize2 );
+		$('body').unbind("mouseleave");
 		for( var g in app_layers_dev_skytasks_tasklist[i] ){
 			console.log('g: '+g);
 			console.log(app_layers_dev_skytasks_tasklist[i]);
+			app_layers_dev_skytasks_tasklist[i][g] = null;
 			delete app_layers_dev_skytasks_tasklist[i][g];
 			console.log(app_layers_dev_skytasks_tasklist[i]);
 		}
+		/*
 			console.log( app_layers_dev_skytasks_tasklist[i].window_resize );
 			console.log('clear windowwidth: '+app_layers_dev_skytasks_tasklist[i].window_width );
 			console.log('clear isMobile.fn: '+app_layers_dev_skytasks_tasklist[i].isMobile );
 			$(window).unbind("resize", app_layers_dev_skytasks_tasklist[i].window_resize );
 			$(window).unbind("resize", app_layers_dev_skytasks_tasklist[i].minMobileL );
-			console.log( app_layers_dev_skytasks_tasklist[i].window_resize );
+			*/
 			app_layers_dev_skytasks_tasklist[i] = null;
 			delete app_layers_dev_skytasks_tasklist[i];
 	}
 }
 var app_layers_dev_skytasks_memoryTest = function(){
-	for( var i=0; i<100; i++){
+	for( var i=0; i<200; i++){
 		/*app_layers_dev_skytasks_tasklist = new app_layers_dev_skytasks_ClassTasklist($('#app_layers_dev_skytasks_tasklist_wrapper'));*/
+		app_layers_dev_skytasks_tasklist_id = i;
 		app_layers_dev_skytasks_tasklist[++app_layers_dev_skytasks_tasklist_id] = new app_layers_dev_skytasks_ClassTasklist($('#app_layers_dev_skytasks_tasklist_wrapper'));
-		app_layers_dev_skytasks_tasklist_clear();
 	}
+	//app_layers_dev_skytasks_tasklist_clear();
 }
 
 
@@ -460,10 +465,15 @@ app_layers_dev_skytasks_ClassTasklist.prototype.construct = function(){
 	that.addTask_all();
 	that.setHeight();
 
+	$(window).resize(that.window_resize);
+
+/*
 	$(window).resize(function(){
+		console.log('tasklist resize whopwhop');
+		/*
 		that.minMobileL();
-		/*that.window_resize();*/
-	});
+		that.window_resize();*/
+/*	});*/
 	//that.window_resize();
 	$(window).trigger('resize');
 
