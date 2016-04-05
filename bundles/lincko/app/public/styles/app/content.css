@@ -168,9 +168,6 @@ div#app_content_submenu_preview {
 	#app_content_dynamic_sub {
 		margin-right: 0;
 	}
-	div#app_content_submenu_preview {
-		display: none;
-	}
 }
 
 /* Tablet in Portrait maximum */
