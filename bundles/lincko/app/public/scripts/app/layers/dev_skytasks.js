@@ -27,29 +27,6 @@ var app_layers_dev_skytasks_tasklist_id = 1;
 
 /*GLOBAL VARIABLES END----------------------------------------------------------------------*/
 
-var app_layers_dev_skytasks_tasklist_clear = function(){
-	for( var i in app_layers_dev_skytasks_tasklist ){
-		app_layers_dev_skytasks_tasklist[i].tasklist_wrapper.empty();
-		$(window).unbind("resize", app_layers_dev_skytasks_tasklist[i].window_resize2 );
-		$('body').unbind("mouseleave");
-		for( var g in app_layers_dev_skytasks_tasklist[i] ){
-			console.log('g: '+g);
-			console.log(app_layers_dev_skytasks_tasklist[i]);
-			app_layers_dev_skytasks_tasklist[i][g] = null;
-			delete app_layers_dev_skytasks_tasklist[i][g];
-			console.log(app_layers_dev_skytasks_tasklist[i]);
-		}
-		/*
-			console.log( app_layers_dev_skytasks_tasklist[i].window_resize );
-			console.log('clear windowwidth: '+app_layers_dev_skytasks_tasklist[i].window_width );
-			console.log('clear isMobile.fn: '+app_layers_dev_skytasks_tasklist[i].isMobile );
-			$(window).unbind("resize", app_layers_dev_skytasks_tasklist[i].window_resize );
-			$(window).unbind("resize", app_layers_dev_skytasks_tasklist[i].minMobileL );
-			*/
-			app_layers_dev_skytasks_tasklist[i] = null;
-			delete app_layers_dev_skytasks_tasklist[i];
-	}
-}
 var app_layers_dev_skytasks_memoryTest = function(){
 	for( var i=0; i<200; i++){
 		app_layers_dev_skytasks_tasklist = new app_layers_dev_skytasks_ClassTasklist($('#app_layers_dev_skytasks_tasklist_wrapper'));
@@ -68,7 +45,7 @@ var app_layers_dev_skytasks_memoryTest2 = function(){
 }
 
 
-var app_layers_dev_skytasks_calcDudate = function(task_obj){
+var app_layers_dev_skytasks_calcDuedate = function(task_obj){
 	var duedate = new wrapper_date(task_obj.start + parseInt(task_obj.duration,10));
 	return duedate;
 }
@@ -262,8 +239,8 @@ app_layers_dev_skytasks_ClassTimesort.prototype.construct = function(){
 		var sort = $(this).attr('sort');
 		if (!responsive.test("maxMobileL")){
 			that.makeSelection( sort );
+			that.sort_fn(sort);
 		}
-		that.sort_fn(sort);
 	});
 
 	/*hammer.js--------------------------------------------------------------------------*/
@@ -513,7 +490,6 @@ app_layers_dev_skytasks_ClassTasklist.prototype.construct = function(){
 				that.toggle_NewtaskCircle();
 			}
 		});//scrollEnd
-
 	}
 }
 
@@ -545,38 +521,30 @@ app_layers_dev_skytasks_ClassTasklist.prototype.store_all_elem = function(){
 
 app_layers_dev_skytasks_ClassTasklist.prototype.window_resize = function(){
 	var that = this;
-	console.log(that);
 	that.window_width = $(window).width();
 	console.log('window_width: '+that.window_width);
 	that.setHeight();
 	that.clearOptions();
 
-	var simpleDesktopWidth = 1000;
-	var simpleDesktopWidth2 = 800;
-	var tasklist_width = that.tasklist_wrapper.width();
-
-	if(responsive.test("minTablet") ){
-		if( tasklist_width < simpleDesktopWidth2 ){
-			that.tasklist_wrapper
-				.addClass('app_layers_dev_skytasks_simpleDesktop')
-				.addClass('app_layers_dev_skytasks_simpleDesktop2');
-		}
-		else if( tasklist_width < simpleDesktopWidth ){
-			that.tasklist_wrapper
-				.addClass('app_layers_dev_skytasks_simpleDesktop')
-				.removeClass('app_layers_dev_skytasks_simpleDesktop2');
-		}
-		else if( tasklist_width >= simpleDesktopWidth ){
-			that.tasklist_wrapper
-				.removeClass('app_layers_dev_skytasks_simpleDesktop')
-				.removeClass('app_layers_dev_skytasks_simpleDesktop2');
-		}
+	if( responsive.test("isMobile") ){
+		that.isMobile();
 	}
-	else {
+	if( responsive.test("minMobileL") ){
+		that.minMobileL();
+	}
+	if( responsive.test("maxMobileL") ){
+		that.maxMobileL();
+	}
+	if( responsive.test("minTablet") ){
+		that.minTablet();
+	}	
+
+	if(!responsive.test("minTablet") ){
 		that.tasklist_wrapper
 			.removeClass('app_layers_dev_skytasks_simpleDesktop')
 			.removeClass('app_layers_dev_skytasks_simpleDesktop2');
 	}
+
 	if( myIScrollList['app_layers_dev_skytasks_tasklist_'+that.md5id] ){
 		myIScrollList['app_layers_dev_skytasks_tasklist_'+that.md5id].refresh();
 		console.log('IScroll refresh');
@@ -584,10 +552,9 @@ app_layers_dev_skytasks_ClassTasklist.prototype.window_resize = function(){
 	}
 	console.log(that.md5id);
 	console.log('end of resize -- ClassTasklist');
-	delete that;
-	delete this;
 }
 app_layers_dev_skytasks_ClassTasklist.prototype.tasklist_update = function(filter_by){
+	console.log('tasklist_update filter: '+filter_by);
 	var that = this;
 	var items = Lincko.storage.list('tasks');
 	var item;
@@ -600,7 +567,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.tasklist_update = function(filte
 	else if ( filter_by == 'Spaces' ){}
 	else{ filter_by = null }
 
-	console.log('tasklist_update: all');
+	
 	that.tasklist.velocity("fadeOut",{
 		duration: 200,
 		complete: function(){
@@ -611,7 +578,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.tasklist_update = function(filte
 			}
 			for (var i in items){
 				item = items[i];
-				duedate = app_layers_dev_skytasks_calcDudate(item);
+				duedate = app_layers_dev_skytasks_calcDuedate(item);
 				if(filter_by == null || duedate.happensSomeday(filter_by)){
 					iscroll_elem.append(that.addTask(item));
 					taskcount += 1;
@@ -623,6 +590,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.tasklist_update = function(filte
 			that.add_newtaskBox(iscroll_elem);
 			that.store_all_elem();
 			$('#app_layers_dev_skytasks_navbar').removeAttr('style');
+			that.window_resize();
 		}
 	})
 	.velocity("fadeIn",{
@@ -679,7 +647,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.addTask = function(item){
 	Elem.find('[find=name]').html(created_by);
 
 	/*duedate = new wrapper_date(item.start + parseInt(item.duration,10));*/
-	duedate = app_layers_dev_skytasks_calcDudate(item);
+	duedate = app_layers_dev_skytasks_calcDuedate(item);
 	if( duedate.happensSomeday(0) ){
 		Elem.find('[find=time]').html(Lincko.Translation.get('app', 3302, 'html').toUpperCase()/*today*/);
 	}
@@ -1051,12 +1019,34 @@ app_layers_dev_skytasks_ClassTasklist.prototype.toggle_NewtaskCircle = function(
 }
 
 app_layers_dev_skytasks_ClassTasklist.prototype.minTablet = function(){
-	console.log('skytasks minTablet');
+	console.log('dev_skytasks_tasklist minTablet');
 	var that = this;
 	that.elem_newtaskCircle.removeAttr("style");
+
+	var simpleDesktopWidth = 1000;
+	var simpleDesktopWidth2 = 800;
+	var tasklist_width = that.tasklist_wrapper.width();
+	if( tasklist_width < simpleDesktopWidth2 ){
+		that.tasklist_wrapper
+			.addClass('app_layers_dev_skytasks_simpleDesktop')
+			.addClass('app_layers_dev_skytasks_simpleDesktop2');
+	}
+	else if( tasklist_width < simpleDesktopWidth ){
+		that.tasklist_wrapper
+			.addClass('app_layers_dev_skytasks_simpleDesktop')
+			.removeClass('app_layers_dev_skytasks_simpleDesktop2');
+	}
+	else if( tasklist_width >= simpleDesktopWidth ){
+		that.tasklist_wrapper
+			.removeClass('app_layers_dev_skytasks_simpleDesktop')
+			.removeClass('app_layers_dev_skytasks_simpleDesktop2');
+	}
+
+
 }
 
 app_layers_dev_skytasks_ClassTasklist.prototype.maxMobileL = function(){
+	console.log('dev_skytasks_tasklist maxMobileL');
 	var that = this;
 	var window_width = $(window).width();
 	//that.tasklist.find('[find=task_leftOptions]').width(window_width).css('left',-window_width);
@@ -1071,7 +1061,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.maxMobileL = function(){
 }
 
 app_layers_dev_skytasks_ClassTasklist.prototype.minMobileL = function(){
-	console.log('skytasks minMobileL');
+	console.log('dev_skytasks_tasklist minMobileL');
 	var that = this;
 	that.tasklist.find('[find=task_rightOptions]').removeAttr("style").removeClass('display_none');
 	that.tasklist.find('[find=task_center]').removeAttr('style');
@@ -1086,6 +1076,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.minMobileL = function(){
 }
 
 app_layers_dev_skytasks_ClassTasklist.prototype.isMobile = function(){
+	console.log('dev_skytasks_tasklist isMobile');
 	var that = this;
 	that.tasklist.find('[find=task_rightOptions]').addClass('display_none');
 
