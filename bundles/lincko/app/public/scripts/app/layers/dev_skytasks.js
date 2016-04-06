@@ -72,7 +72,9 @@ function app_layers_dev_skytasks_launchPage(){
 	//feed page
 	app_layers_dev_skytasks_feedPage();
 };
-
+function app_layers_dev_skytasks_closePage(){
+	console.log('app_layers_dev_skytasks_closePage');
+};
 
 var app_layers_dev_skytasks_feedPage = function(){
 	console.log('app_layers_dev_skytasks_feedPage');

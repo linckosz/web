@@ -19,13 +19,21 @@ var app_layers_changePage = function(menu, param){
 	$.Velocity.RunSequence(Sequence);
 }
 
+var app_layers_menu = null;
+
 var app_layers_launchMenu = function(menu, param){
 	if(typeof param === 'undefined'){ param = null; }
 	var layer = $('#app_layers_content');
+
+	if(typeof window['app_layers_'+app_layers_menu+'_closePage'] === 'function'){
+		window['app_layers_'+app_layers_menu+'_closePage']();
+	}
+
 	layer.empty();
 	menu = menu.toLowerCase();
 
-	if($('#-app_layers_'+menu).length>0) {
+	app_layers_menu = menu;
+	if($('#-app_layers_'+menu).length>0){
 		var Elem = $('#-app_layers_'+menu).clone();
 		Elem.prop('id', 'app_layers_'+menu);
 		Elem.appendTo(layer);
