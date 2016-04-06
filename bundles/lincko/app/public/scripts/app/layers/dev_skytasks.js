@@ -724,7 +724,8 @@ app_layers_dev_skytasks_ClassTasklist.prototype.add_newtaskBox = function(elem_a
 			console.log(elem_blankTask.find('[find=title]'));
 		}
 		else{
-			submenu_Build("app_task_new");	
+			//submenu_Build("app_task_new");	
+			submenu_Build('taskdetail', null, null, 'new');
 		}
 	});
 	that.elem_newtaskBox = Elem;
@@ -913,7 +914,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.checkboxClick = function(event,t
 
 	var task = $(task_elem).closest('.app_layers_dev_skytasks_task');
 
-	task.find('[find=task_center]').toggleClass('app_layers_dev_skytasks_strike');
+	task.toggleClass('app_layers_dev_skytasks_strike');
 
 /*
 	var detail = $('#app_layers_skytasks_detail');
@@ -952,7 +953,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.taskClick = function(event,task_
 app_layers_dev_skytasks_ClassTasklist.prototype.openDetail = function(/*open,*/ task_elem){
 	var that = this;
 	var taskid = task_elem.data('taskid');
-	submenu_Build('taskdetail', null, null, taskid);
+	submenu_Build('taskdetail', null, null, taskid, true);
 
 	/*
 		open == true : open detail pane

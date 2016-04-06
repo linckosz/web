@@ -37,7 +37,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	var elem;
 	var duedate;
 	var created_by;
-	var item;
+	var item = {};
 
 	if(taskid == 'new' ){
 		item['+title'] = 'Enter Your Task Title Here!';

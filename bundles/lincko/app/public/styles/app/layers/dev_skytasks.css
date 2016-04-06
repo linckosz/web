@@ -99,7 +99,7 @@
     opacity: 0.6;
 }
 .app_layers_dev_skytasks_task_rightOptions [find=time] {
-	width:86px;
+	width:110px;
 }
 .app_layers_dev_skytasks_tasklist_icon_text {
     display: inline-block;
@@ -338,6 +338,7 @@
 	position: absolute;
     background-color: rgba(247, 247, 247, 0.8);
     z-index: 5;
+    box-sizing: border-box;
 }
 .app_layers_dev_skytasks_navbar span{
 	padding: 0px 10px;
@@ -393,7 +394,7 @@
 	max-width: 35px;
 }
 
-.app_layers_dev_skytasks_strike{
+.app_layers_dev_skytasks_strike,.app_layers_dev_skytasks_strike [find=task_center] {
 	opacity:0.4;
 	text-decoration: line-through;
 }
