@@ -206,3 +206,11 @@ div#app_content_submenu_preview {
 		width: 48px !important;
 	}
 }
+
+#app_content_dynamic_sub[max-width~="900px"] div#app_content_submenu_preview {
+    width: 100%;
+}
+
+.with_preview[max-width~="900px"] #app_content_dynamic_layers {
+	display: none;
+}
