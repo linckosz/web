@@ -52,9 +52,11 @@ var app_layers_dev_skytasks_tasklist_clear = function(){
 }
 var app_layers_dev_skytasks_memoryTest = function(){
 	for( var i=0; i<200; i++){
-		/*app_layers_dev_skytasks_tasklist = new app_layers_dev_skytasks_ClassTasklist($('#app_layers_dev_skytasks_tasklist_wrapper'));*/
+		app_layers_dev_skytasks_tasklist = new app_layers_dev_skytasks_ClassTasklist($('#app_layers_dev_skytasks_tasklist_wrapper'));
+		/*
 		app_layers_dev_skytasks_tasklist_id = i;
 		app_layers_dev_skytasks_tasklist[++app_layers_dev_skytasks_tasklist_id] = new app_layers_dev_skytasks_ClassTasklist($('#app_layers_dev_skytasks_tasklist_wrapper'));
+		*/
 	}
 	//app_layers_dev_skytasks_tasklist_clear();
 }
@@ -110,21 +112,15 @@ var app_layers_dev_skytasks_feedPage = function(){
 	Elem.prop('id','app_layers_dev_skytasks_tasklist_wrapper');
 	Elem.appendTo(position);
 
-	/*app_layers_dev_skytasks_tasklist = new app_layers_dev_skytasks_ClassTasklist($('#app_layers_dev_skytasks_tasklist_wrapper'));*/
-	/*
-	console.log('before');
-	console.log(app_layers_dev_skytasks_tasklist);
-	*/
+/*
 	app_layers_dev_skytasks_tasklist[++app_layers_dev_skytasks_tasklist_id] = new app_layers_dev_skytasks_ClassTasklist($('#app_layers_dev_skytasks_tasklist_wrapper'));
-	/*
-	console.log('after');
-	console.log(app_layers_dev_skytasks_tasklist);
+*/
 
 	app_layers_dev_skytasks_tasklist = new app_layers_dev_skytasks_ClassTasklist($('#app_layers_dev_skytasks_tasklist_wrapper'));
-*/
+
 	var app_layers_dev_skytasks_tasklist_filter = function(filter_by){
-		app_layers_dev_skytasks_tasklist[app_layers_dev_skytasks_tasklist_id].tasklist_update(filter_by);
-		/*app_layers_dev_skytasks_tasklist.tasklist_update(filter_by);*/
+		//app_layers_dev_skytasks_tasklist[app_layers_dev_skytasks_tasklist_id].tasklist_update(filter_by);
+		app_layers_dev_skytasks_tasklist.tasklist_update(filter_by);
 	}
 
 	app_layers_dev_skytasks_timesort = new app_layers_dev_skytasks_ClassTimesort(
@@ -160,8 +156,8 @@ var app_layers_dev_skytasks_feedPage = function(){
 	app_application_lincko.add(
 		'app_layers_dev_skytasks_tasklist_wrapper',
 		'tasks',
-		/*app_layers_dev_skytasks_tasklist.tasklist_update*/
-		app_layers_dev_skytasks_tasklist[app_layers_dev_skytasks_tasklist_id].tasklist_update
+		app_layers_dev_skytasks_tasklist.tasklist_update
+		//app_layers_dev_skytasks_tasklist[app_layers_dev_skytasks_tasklist_id].tasklist_update
 		/*
 		function(){
 			//console.log('dev_skytasks lincko.add task update');
@@ -465,15 +461,10 @@ app_layers_dev_skytasks_ClassTasklist.prototype.construct = function(){
 	that.addTask_all();
 	that.setHeight();
 
-	$(window).resize(that.window_resize);
 
-/*
 	$(window).resize(function(){
-		console.log('tasklist resize whopwhop');
-		/*
-		that.minMobileL();
-		that.window_resize();*/
-/*	});*/
+		that.window_resize();
+	});
 	//that.window_resize();
 	$(window).trigger('resize');
 
