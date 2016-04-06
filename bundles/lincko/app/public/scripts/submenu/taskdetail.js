@@ -37,10 +37,22 @@ Submenu.prototype.Add_taskdetail = function() {
 	var elem;
 	var duedate;
 	var created_by;
+	var item;
+
+	if(taskid == 'new' ){
+		item['+title'] = 'Enter Your Task Title Here!';
+		item['-comment'] = 'Enter Your Task Description Here.';
+		item['created_by'] = wrapper_localstorage.uid;
+		item.start = $.now()/1000;
+		item.duration = "86400";
+	} 
+	else{
+		item = Lincko.storage.get("tasks", taskid);
+	}
 
 	/*---tasktitle---*/
 	elem = $('#-submenu_taskdetail_tasktitle').clone().prop('id','submenu_taskdetail_tasktitle');
-	elem.find('[find=title_text]').html(Lincko.storage.get("tasks", taskid,'+title'));
+	elem.find('[find=title_text]').html(item['+title']);
 	elem.find("[find=taskid]").html(taskid);
 	elem.find("[type=checkbox]").prop('id','app_layers_dev_skytasks_checkbox_'+taskid);
 	elem.find('.app_layers_dev_skytasks_checkbox label').prop('for','app_layers_dev_skytasks_checkbox_'+taskid);
@@ -48,16 +60,16 @@ Submenu.prototype.Add_taskdetail = function() {
 
 	/*---taskdescription---*/
 	elem = $('#-submenu_taskdetail_description').clone().prop('id','submenu_taskdetail_description');
-	elem.find('[find=description_text]').html(Lincko.storage.get("tasks", taskid,'-comment'));
+	elem.find('[find=description_text]').html(item['-comment']);
 	submenu_taskdetail.append(elem);
 
 	/*---taskmeta---*/
 	elem = $('#-submenu_taskdetail_meta').clone().prop('id','submenu_taskdetail_meta');
-	created_by = Lincko.storage.get("tasks", taskid,'created_by');
+	created_by = item['created_by'];
 	created_by = Lincko.storage.get("users", created_by,"username");
 	elem.find('[find=assigned_text]').html(created_by);
 
-	duedate = app_layers_dev_skytasks_calcDuedate(Lincko.storage.get("tasks", taskid));
+	duedate = app_layers_dev_skytasks_calcDuedate(item);
 
 	if( duedate.happensSomeday(0) ){
 		elem.find("[find=duedate_text]").html(Lincko.Translation.get('app', 3302, 'html').toUpperCase()/*today*/);

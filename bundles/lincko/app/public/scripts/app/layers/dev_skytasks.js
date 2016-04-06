@@ -523,6 +523,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.window_resize = function(){
 	var that = this;
 	that.window_width = $(window).width();
 	console.log('window_width: '+that.window_width);
+	that.editing_focus = false;
 	that.setHeight();
 	that.clearOptions();
 
@@ -951,7 +952,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.taskClick = function(event,task_
 app_layers_dev_skytasks_ClassTasklist.prototype.openDetail = function(/*open,*/ task_elem){
 	var that = this;
 	var taskid = task_elem.data('taskid');
-	submenu_Build('taskdetail', null, null, taskid, true);
+	submenu_Build('taskdetail', null, null, taskid);
 
 	/*
 		open == true : open detail pane
