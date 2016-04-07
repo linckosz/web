@@ -379,6 +379,13 @@
 	width:0px;
 	vertical-align: middle;
 	font-size: 15px;
+	box-sizing: border-box;
+}
+
+.app_layers_dev_skytasks_dropdown {
+	width: 150px;
+	display: block;
+	position: fixed;
 }
 
 .app_layers_dev_skytasks_active {

@@ -44,6 +44,39 @@ var app_layers_dev_skytasks_memoryTest2 = function(){
 	}
 }
 
+var app_layers_dev_skytasks_regex = function(elem){
+	var elem_dropdown = $('#-app_layers_dev_skytasks_dropdown').clone().prop('id','app_layers_dev_skytasks_dropdown');
+	var app_layers_dev_skytasks_regex_str = "";
+	
+	var regex_destroy = function(){
+		elem_dropdown.data('active',false);
+	 	app_layers_dev_skytasks_regex_str = "";
+	 	elem_dropdown.remove();
+	}
+
+	elem.keypress(function(event){
+ 		 var char = event.which || event.keyCode;
+ 		 char = String.fromCharCode(char);
+ 		 console.log(char);
+ 		 if( elem_dropdown.data('active') ){
+ 		 	app_layers_dev_skytasks_regex_str += char;
+ 		 	elem_dropdown.append('<option>'+app_layers_dev_skytasks_regex_str+'</option>');
+ 		 }
+ 		 if( char == '@' ){
+ 		 	elem_dropdown.empty();
+ 		 	$(this).after(elem_dropdown);
+ 		 	elem_dropdown.data('active',true);
+ 		 }
+ 		 else if( char == ' ' ){
+ 		 	regex_destroy();
+ 		 }
+ 		 
+	});
+	elem.focusout(function(){
+		regex_destroy();
+	});
+
+}
 
 var app_layers_dev_skytasks_calcDuedate = function(task_obj){
 	var duedate = new wrapper_date(task_obj.start + parseInt(task_obj.duration,10));
@@ -72,6 +105,8 @@ var app_layers_dev_skytasks_feedPage = function(){
 	var Elem;
 	position.empty();
 
+	
+
 	//navbar
 	Elem = $('#-app_layers_dev_skytasks_navbar').clone();
 	Elem.prop('id','app_layers_dev_skytasks_navbar');
@@ -93,6 +128,9 @@ var app_layers_dev_skytasks_feedPage = function(){
 					begin: function(){
 						textbox.removeClass('display_none');
 					},
+					complete: function(){
+						textbox.focus();
+					}
 				}
 			);
 		}
@@ -106,12 +144,7 @@ var app_layers_dev_skytasks_feedPage = function(){
 			);
 		}
 	});
-
-	Elem.find('[find=search_textbox]').keypress(function(event){
- 		 var keyCode = event.which || event.keyCode;
- 		 console.log(keycode);
-	});
-
+	app_layers_dev_skytasks_regex(Elem.find('[find=search_textbox]'));
 	
 	Elem.appendTo(position);
 /*
