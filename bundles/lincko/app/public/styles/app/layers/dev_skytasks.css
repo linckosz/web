@@ -195,7 +195,7 @@
 	z-index: 200;
     font-size: 50px;
     font-weight: bold;
-    position: fixed;
+    position: absolute;
     bottom: 20px;
     right: 20px;
     text-align: center;
@@ -345,7 +345,7 @@
 }
 .app_layers_dev_skytasks_people {
 	float: left;
-	padding: 7px 10px !important;
+	padding: 7px 0px !important;
 }
 
 .app_layers_dev_skytasks_timesort {
@@ -367,12 +367,18 @@
 	padding:0px 5px !important;
 	font-size:25px;
 }
-.app_layers_dev_skytasks_navbar_search_icon {
-    float: right;
+
+.app_layers_dev_skytasks_navbar_search{
+	float: right;
     position: absolute;
     top: 0;
     right: 0;
-    padding: 10px 32px !important;
+    padding: 7px 32px !important;
+}
+.app_layers_dev_skytasks_navbar_search [find='search_textbox']{
+	width:0px;
+	vertical-align: middle;
+	font-size: 15px;
 }
 
 .app_layers_dev_skytasks_active {
@@ -394,8 +400,10 @@
 	max-width: 35px;
 }
 
-.app_layers_dev_skytasks_strike,.app_layers_dev_skytasks_strike [find=task_center] {
+.app_layers_dev_skytasks_strike {
 	opacity:0.4;
+}
+.app_layers_dev_skytasks_strike [find=task_center] {
 	text-decoration: line-through;
 }
 .app_layers_dev_skytasks_selected{
@@ -473,9 +481,12 @@
 		position: relative; /*toto*/
 		text-align: center;
 	}
-	.app_layers_dev_skytasks_navbar_search_icon {
-		padding: 17px 32px !important;
+	.app_layers_dev_skytasks_navbar_search {
+		padding: 13px 14px !important;
     	font-size: 25px;
+	}
+	.app_layers_dev_skytasks_navbar_search [find='search_textbox'] {
+		font-size: 18px;
 	}
 
 	.app_layers_dev_skytasks_tasklist{
@@ -718,7 +729,6 @@
 	    word-wrap: normal;
 	    white-space: initial;
 	    display: inline-block;
-	    vertical-align: middle;
 	    line-height: normal;
 	}
 	.app_layers_dev_skytasks_task_rightOptions {

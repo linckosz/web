@@ -84,6 +84,34 @@ var app_layers_dev_skytasks_feedPage = function(){
 		$('#app_layers_dev_skytasks_navbar [people]').removeClass('app_layers_dev_skytasks_selected');
 		selection.addClass('app_layers_dev_skytasks_selected');
 	});
+
+	Elem.find('[find=search_icon]').click(function(){
+		var textbox = $(this).prev('[find=search_textbox]');
+		if( textbox.hasClass('display_none')){
+			textbox.velocity({width:150},
+				{
+					begin: function(){
+						textbox.removeClass('display_none');
+					},
+				}
+			);
+		}
+		else{
+			textbox.velocity({width:0},
+				{
+					complete: function(){
+						textbox.addClass('display_none');
+					},
+				}
+			);
+		}
+	});
+
+	Elem.find('[find=search_textbox]').keypress(function(event){
+ 		 var keyCode = event.which || event.keyCode;
+ 		 console.log(keycode);
+	});
+
 	
 	Elem.appendTo(position);
 /*
@@ -131,11 +159,8 @@ var app_layers_dev_skytasks_feedPage = function(){
 
 	/*--------------Enquire.JS------------------------------*/
 	enquire.register(responsive.minTablet, app_layers_dev_skytasks_minTablet);
-
 	enquire.register(responsive.maxMobileL, app_layers_dev_skytasks_maxMobileL);
-
 	enquire.register(responsive.minMobileL, app_layers_dev_skytasks_minMobileL);
-
 	enquire.register(responsive.isMobile, app_layers_dev_skytasks_isMobile);
 	/*--------------Enquire.JS------------------------------*/
 
@@ -161,7 +186,6 @@ var app_layers_dev_skytasks_minTablet = function(){
 	console.log('dev_skytasks minTablet');
 	app_layers_dev_skytasks_timesort.minTablet();
 	app_layers_dev_skytasks_tasklist.minTablet();
-
 };
 var app_layers_dev_skytasks_maxMobileL = function(){
 	console.log('dev_skytasks maxMobileL');
@@ -1056,7 +1080,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.maxMobileL = function(){
 
 
 	content_menu = $('#app_content_menu');
-	that.elem_newtaskCircle.css('margin-bottom',content_menu.outerHeight());
+	//that.elem_newtaskCircle.css('margin-bottom',content_menu.outerHeight()); //for when newtaskCircle is positioned fixed
 
 	that.elem_rightOptionsL = that.tasklist.find('.app_layers_dev_skytasks_tasklist_icon_wrapper').first().outerWidth()*3;
 	that.elem_leftOptionsL = that.tasklist.find('.app_layers_dev_skytasks_delete').outerWidth();
