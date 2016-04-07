@@ -63,6 +63,7 @@ var app_layers_dev_skytasks_regex = function(elem){
  		 	elem_dropdown.append('<option>'+app_layers_dev_skytasks_regex_str+'</option>');
  		 }
  		 if( char == '@' ){
+ 		 	console.log(event);
  		 	elem_dropdown.empty();
  		 	$(this).after(elem_dropdown);
  		 	elem_dropdown.data('active',true);
@@ -73,7 +74,7 @@ var app_layers_dev_skytasks_regex = function(elem){
  		 
 	});
 	elem.focusout(function(){
-		regex_destroy();
+		//regex_destroy();
 	});
 
 }
@@ -693,6 +694,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.addTask = function(item){
 
 	Elem.find('[find=task_options]').addClass('app_layers_skytasks_floatright');
 	Elem.find('[find=title]').html(item['+title']);
+	app_layers_dev_skytasks_regex(Elem.find('[find=title]'));
 	if (!item['-comment']){ 
 		Elem.find('[find=description]').html('&nbsp;');
 	}
