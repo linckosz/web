@@ -1,11 +1,12 @@
 /*
 	lincko translation category 33
 */
+//console.log(submenu_list['skyler']);
+
 setTimeout(function(){
-	//app_layers_changePage('dev_skytasks');
-	//app_layers_changePage('skynotes');
-	submenu_Build('skyler');
+	//submenu_Build('skyler');
 }, 2000);
+
 
 //polyfill
 if (!Math.sign) {
