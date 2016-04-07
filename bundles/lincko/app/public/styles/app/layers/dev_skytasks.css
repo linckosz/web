@@ -386,6 +386,7 @@
 	width: 150px;
 	display: block;
 	position: fixed;
+	z-index: 900;
 }
 
 .app_layers_dev_skytasks_active {

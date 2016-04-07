@@ -1,12 +1,6 @@
 /*
 	lincko translation category 33
 */
-//console.log(submenu_list['skyler']);
-
-setTimeout(function(){
-	//submenu_Build('skyler');
-}, 2000);
-
 
 //polyfill
 if (!Math.sign) {
@@ -55,6 +49,60 @@ var app_layers_dev_skytasks_regex = function(elem){
 	 	elem_dropdown.remove();
 	}
 
+	var  getSelectionCoords = function(win) {
+	    win = win || window;
+	    var doc = win.document;
+	    var sel = doc.selection, range, rects, rect;
+	    var x = 0, y = 0;
+	    if (sel) {
+	        if (sel.type != "Control") {
+	            range = sel.createRange();
+	            range.collapse(true);
+	            x = range.boundingLeft;
+	            y = range.boundingTop;
+	        }
+	    } else if (win.getSelection) {
+	        sel = win.getSelection();
+	        if (sel.rangeCount) {
+	            range = sel.getRangeAt(0).cloneRange();
+	            if (range.getClientRects) {
+	                range.collapse(true);
+	                rects = range.getClientRects();
+	                if (rects.length > 0) {
+	                    rect = rects[0];
+	                }
+	                x = rect.left;
+	                y = rect.top;
+	            }
+	            // Fall back to inserting a temporary element
+	            if (x == 0 && y == 0) {
+	                var span = doc.createElement("span");
+	                if (span.getClientRects) {
+	                    // Ensure span has dimensions and position by
+	                    // adding a zero-width space character
+	                    span.appendChild( doc.createTextNode("\u200b") );
+	                    range.insertNode(span);
+	                    rect = span.getClientRects()[0];
+	                    x = rect.left;
+	                    y = rect.top;
+	                    var spanParent = span.parentNode;
+	                    spanParent.removeChild(span);
+
+	                    // Glue any broken text nodes back together
+	                    spanParent.normalize();
+	                }
+	            }
+	        }
+	    }
+	    var content_top_height = $('#app_content_top').outerHeight();
+	    y = y - content_top_height + elem.outerHeight();
+	    if( responsive.test('minTablet') ){
+	    	var content_menu_width = $('#app_content_menu').outerWidth();
+	    	x -= content_menu_width;
+	    }
+	    return { x: x, y: y };
+	}
+
 	elem.keypress(function(event){
  		 var char = event.which || event.keyCode;
  		 char = String.fromCharCode(char);
@@ -65,7 +113,34 @@ var app_layers_dev_skytasks_regex = function(elem){
  		 }
  		 if( char == '@' ){
  		 	console.log(event);
- 		 	elem_dropdown.empty();
+
+ 		 	var coord = getSelectionCoords();
+ 		 	console.log(coord);
+/*
+ 		 	var x = 0;
+		    var y = 0;
+		    var sel = window.getSelection();
+		    if(sel.rangeCount) {
+		        var range = sel.getRangeAt(0).cloneRange();
+		        if(range.getClientRects()) {
+			        range.collapse(true);
+			        var rect = range.getClientRects()[0];
+			        if(rect) {
+			            y = rect.top;
+			            x = rect.left;
+			        }
+		        }
+		    }
+		    console.log(sel);
+		    console.log('x: '+x);
+		    console.log('y: '+y);
+*/
+
+ 		 	//elem_dropdown.empty().css('top',coord.y).css('left',coord.x);
+ 		 	elem_dropdown.empty().css('top',coord.y).css('left',function(){
+ 		 		
+ 		 	});
+
  		 	$(this).after(elem_dropdown);
  		 	elem_dropdown.data('active',true);
  		 }
