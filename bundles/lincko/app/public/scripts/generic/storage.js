@@ -12,7 +12,8 @@ var storage_cb_success = function(msg, err, status, data){
 		info = data.info;
 	}
 
-	if($.type(data) === 'object' && $.type(data.partial) === 'object' && $.type(data.partial[wrapper_localstorage.uid]) === 'object'){
+	//Need to keep ".iud" to insure we receive the same user data
+	if($.type(data) === 'object' && $.type(data.partial) === 'object' && $.type(data.partial[wrapper_localstorage.uid]) === 'object' && !$.isEmptyObject(data.partial[wrapper_localstorage.uid])){
 		if(Lincko.storage.update(data.partial[wrapper_localstorage.uid], info)){
 			if(info === 'reset'){
 				Lincko.storage.schema(data.partial[wrapper_localstorage.uid]);
@@ -22,7 +23,7 @@ var storage_cb_success = function(msg, err, status, data){
 			allow_set_lastvisit = false;
 		}
 	}
-	if(schema && $.type(data) === 'object' && $.type(data.schema) === 'object' && $.type(data.schema[wrapper_localstorage.uid]) === 'object'){
+	if(schema && $.type(data) === 'object' && $.type(data.schema) === 'object' && $.type(data.schema[wrapper_localstorage.uid]) === 'object' && !$.isEmptyObject(data.schema[wrapper_localstorage.uid])){
 		Lincko.storage.schema(data.schema[wrapper_localstorage.uid]);
 	}
 	//Update the last visit day only if we are sure the update is finish

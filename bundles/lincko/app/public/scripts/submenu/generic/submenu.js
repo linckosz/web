@@ -160,9 +160,11 @@ function Submenu(menu, next, param, preview) {
         //This is because we can only place 3 menus on Desktop mode, so after 3 layers we switch to full width mode
         if (Elem.layer > 3) { submenu_wrapper.addClass('submenu_wrapper_important'); }
         if (preview) {
-            submenu_wrapper.insertBefore('#end_preview');
+            //submenu_wrapper.insertBefore('#app_content_submenu_preview .end_submenu');
+            submenu_wrapper.append('#app_content_submenu_preview');
         } else {
-            submenu_wrapper.insertBefore('#end_submenu');
+            //submenu_wrapper.insertBefore('#app_application_submenu_block .end_submenu');
+            submenu_wrapper.append('#app_application_submenu_block');
         }
         for (var att in Elem.obj) {
             Elem.attribute = Elem.obj[att];

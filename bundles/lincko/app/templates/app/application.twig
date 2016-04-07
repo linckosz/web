@@ -1,4 +1,5 @@
 {% extends '/bundles/lincko/app/templates/generic/base.twig' %}
+{% set route = _route_name() %}
 
 {% block app_application %}
 <div id="begin_app_application" class="visibility_hidden">
@@ -24,10 +25,13 @@
 	</div>
 	<div id="app_application_project_block" class="app_application_block maxMobileL"></div>
 </div>
+<div class="accelerated">
+	
+</div>
+<div id="app_application_submenu" class="accelerated display_none">
+	{% include '/bundles/lincko/app/templates/submenu/generic/submenu.twig' %}
+</div>
 <div id="app_application_submenu_block" class="accelerated base_color_text_grey">
-	<div id="begin_submenu" class="visibility_hidden">
-        	{% include '/bundles/lincko/app/templates/submenu/generic/submenu.twig' %}
-        <div class="visibility_hidden" id="end_submenu"></div>
 </div>
 <div class="app_application_upload">
 	{% include '/bundles/lincko/app/templates/app/upload.twig' %}

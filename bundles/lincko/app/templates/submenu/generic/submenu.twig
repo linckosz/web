@@ -11,8 +11,31 @@
 		{% for key, value in files %}
 			JSfiles.later("{{ _filelatest(folder ~ '/' ~ value) }}", 40);
 		{% endfor %}
+
+		var submenu_language_full = "{{ _language_full() }}";
+		{% set language = _language() %}
+		{% set languages = _languages('app') %}
+		submenu_list['language'] = {
+			"_title": {
+				"style": "title",
+				"title": Lincko.Translation.get('app', 1, 'html'), //Language
+			},
+			
+			{% for key, value in languages %}
+				"{{ key }}": {
+					"style": "radio",
+					"title": "{{ value }}",
+					"selected": {% if key == language %}true{% else %}false{% endif %},
+					"action": function(){
+						ChangeLanguage("{{ key }}");
+					},
+					"hide": true,
+					"class": "",
+				},
+			{% endfor %}
+		};
+
 	</script>
-	{% include '/bundles/lincko/app/templates/submenu/scripts/submenu.js.twig' %}
 
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/submenu/generic/submenu.css') }}" type="text/css" />
 	{# Loop the folder to include automaticaly all files #}
@@ -35,3 +58,4 @@
 
 </div>
 
+<div id="end_submenu" class="visibility_hidden"></div>
