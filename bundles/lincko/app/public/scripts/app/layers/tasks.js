@@ -64,4 +64,13 @@ var app_layers_tasks_feedPage = function(param){
 
 	app_layers_tasks_icon_add_visibility();
 
+
+	app_application_lincko.add(
+		'app_layers_tasks',
+		'tasks',
+		function(){
+			console.log('tasklist update function');
+		}
+	);
+
 }

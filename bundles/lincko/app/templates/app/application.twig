@@ -9,7 +9,6 @@
 		JSfiles.later("{{ _filelatest('/lincko/app/scripts/generic/storage.js') }}", 40);
 		JSfiles.later("{{ _filelatest('/lincko/app/scripts/generic/velocity.js') }}");
 		JSfiles.later("{{ _filelatest('/lincko/app/scripts/app/users.js') }}");
-		JSfiles.later("{{ _filelatest('/lincko/app/scripts/app/burger.js') }}");
 	</script>
 	{% include '/bundles/lincko/app/templates/generic/scripts/storage.js.twig' %}
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/app/application.css') }}" type="text/css" />
@@ -36,6 +35,9 @@
 </div>
 <div class="app_application_upload">
 	{% include '/bundles/lincko/app/templates/app/upload.twig' %}
+</div>
+<div id="app_application_burger">
+	{% include '/bundles/lincko/app/templates/generic/burger.twig' %}
 </div>
 <div id="end_app_application" class="visibility_hidden"></div>
 {% endblock %}

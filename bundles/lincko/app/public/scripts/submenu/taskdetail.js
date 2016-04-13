@@ -12,15 +12,16 @@ submenu_list['taskdetail'] = {
 	},
 
 	"confirm": {
-		"style": "form",
+		"style": "form_button",
 		"title": Lincko.Translation.get('app', 3, 'html'), //Confirm
 		"hide": true, //By default 'false', it hides all submenu after the click ( equivalent to submenu_Hideall(); )
 	},
-	"cancel": {
-		"style": "form",
-		"title": Lincko.Translation.get('app', 7, 'html'), //Confirm
-		"hide": true, //By default 'false', it hides all submenu after the click ( equivalent to submenu_Hideall(); )
+	"form_cancel": {
+		"style": "form_button",
+		"title": Lincko.Translation.get('app', 7, 'html'), //Cancel
+		"hide": true,
 	},
+
 
 };
 
@@ -58,11 +59,6 @@ Submenu.prototype.Add_taskdetail = function() {
 	elem.find('.app_layers_dev_skytasks_checkbox label').prop('for','app_layers_dev_skytasks_checkbox_'+taskid);
 	submenu_taskdetail.append(elem);
 
-	/*---taskdescription---*/
-	elem = $('#-submenu_taskdetail_description').clone().prop('id','submenu_taskdetail_description');
-	elem.find('[find=description_text]').html(item['-comment']);
-	submenu_taskdetail.append(elem);
-
 	/*---taskmeta---*/
 	elem = $('#-submenu_taskdetail_meta').clone().prop('id','submenu_taskdetail_meta');
 	created_by = item['created_by'];
@@ -80,6 +76,11 @@ Submenu.prototype.Add_taskdetail = function() {
 	else{
 		elem.find("[find=duedate_text]").html(duedate.display());
 	}
+	submenu_taskdetail.append(elem);
+
+	/*---taskdescription---*/
+	elem = $('#-submenu_taskdetail_description').clone().prop('id','submenu_taskdetail_description');
+	elem.find('[find=description_text]').html(item['-comment']);
 	submenu_taskdetail.append(elem);
 
 	/*---taskcomments--*/

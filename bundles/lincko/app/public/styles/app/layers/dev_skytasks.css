@@ -30,6 +30,9 @@
 .app_layers_dev_skytasks_tasklist [contenteditable=true] {
 	cursor: text;
 }
+.app_layers_dev_skytasks_tasklist [contenteditable=true]:focus{
+	text-overflow: initial;
+}
 .app_layers_dev_skytasks_tasklist_shifted {
 
 }
@@ -48,11 +51,14 @@
 .app_layers_dev_skytasks_task {
 	/*min-width: 800px;*/
 	padding:5px;
+	position: relative;
+	/*
 	border-top-color: #3F84B0;
     border-top-style: dashed;
     border-top-width: 2px;
-	position: relative;
 	border-top-color: #FFFFFF;
+	*/
+	margin-bottom: 2px;
     background-color: #CBE6F8;
 }
 .app_layers_dev_skytasks_task:hover {
@@ -65,7 +71,7 @@
 
 
 .app_layers_dev_skytasks_task:first-child {
-	border-top:0px;
+	/*border-top:0px;*/
 	/*adding-top: 41px;*/
 }
 .app_layers_dev_skytasks_textwrapper{
@@ -382,12 +388,7 @@
 	box-sizing: border-box;
 }
 
-.app_layers_dev_skytasks_dropdown {
-	width: 150px;
-	display: block;
-	position: fixed;
-	z-index: 900;
-}
+
 
 .app_layers_dev_skytasks_active {
 	color:#FBA026; /*lincko orange*/
@@ -513,7 +514,7 @@
 	.app_layers_dev_skytasks_task {
 		min-width:initial;
 		padding:0px;
-		border-top-style: solid;
+		/*border-top-style: solid;*/
 	}
 	.app_layers_dev_skytasks_task:first-child {
 		/*padding-top: 60px;*/
