@@ -1,0 +1,17 @@
+
+<div id="begin_burger" class="visibility_hidden">
+	<script>
+		JSfiles.later("{{ _filelatest('/lincko/app/scripts/generic/burger.js') }}");
+	</script>
+	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/generic/burger.css') }}" type="text/css" />
+</div>
+<div id="end_burger" class="visibility_hidden">
+	<div class="display_none">
+		<div id="-burger_dropdown" class="burger_dropdown base_color_bg_neutral"></div>
+		<div id="-burger_option" class="burger_option">
+			<div find="username"></div>
+			<div find="email"></div>
+		</div>
+		<div id="-burger_tag" class="burger_tag"></div>
+	</div>
+</div>

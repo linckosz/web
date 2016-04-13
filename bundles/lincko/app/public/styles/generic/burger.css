@@ -1,0 +1,19 @@
+.burger_dropdown {
+	width: 150px;
+	height: 50px;
+	font-size: 12px;
+	border: 2px solid black;
+	display: block;
+	position: fixed;
+	z-index: 900;
+	display: none;
+}
+.burger_tag {
+    font-weight: bold;
+    border-radius: 7px;
+    padding: 1px;
+    cursor: pointer;
+}
+.burger_option:hover{
+	background: orange;
+}
