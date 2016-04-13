@@ -11,6 +11,40 @@ submenu_list['taskdetail'] = {
 		"class": "",
 	},
 
+	"create": {
+		"style": "tasklist_button",
+		"title": Lincko.Translation.get('app', 41, 'html'), //Create
+		
+		"action": function(){
+			console.log('submenu_list');
+			console.log(submenu_wrapper);
+			var title = submenu_wrapper.find('[find=title_text]').text();
+			var arr = [
+				{ title: title },
+			]
+		},
+/*
+		"action": function(that, Elem){
+			console.log(submenu_wrapper);
+		},
+		/*
+		"submit": function(that, Elem){
+			console.log(that);
+		},
+		*/
+	},
+
+	"projects_id": {
+		"style": "input_hidden",
+		"title": "",
+		"name": "task_projects_id_hidden",
+		"value": "",
+		"now": function(that, Elem){
+			Elem.find("[find=submenu_input]").prop('value', app_content_menu.projects_id);
+		},
+		"class": "",
+	},
+
 	"confirm": {
 		"style": "form_button",
 		"title": Lincko.Translation.get('app', 3, 'html'), //Confirm
