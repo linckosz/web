@@ -781,6 +781,9 @@ Submenu.prototype.Hide = function(animate) {
         time = 0;
         that.Remove();
     }
+    if( preview == 'preview' ){
+        $(document).trigger("previewHide");
+    }
 };
 
 // http://stackoverflow.com/questions/19469881/javascript-remove-all-event-listeners-of-specific-type

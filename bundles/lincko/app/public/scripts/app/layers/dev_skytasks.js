@@ -400,6 +400,7 @@ var app_layers_dev_skytasks_ClassTasklist = function(tasklist_wrapper){
 	var that = this;
 	
 	this.md5id = md5(Math.random());
+	this.window_resize_timeout = null;
 
 	//all elem group storage
 	this.elem_taskblur_all;
@@ -473,10 +474,17 @@ app_layers_dev_skytasks_ClassTasklist.prototype.construct = function(){
 	that.setHeight();
 
 	$(window).on("resize.app_layers_dev_skytasks_tasklist_"+that.md5id, function(){
-		that.window_resize();
+		clearTimeout(that.window_resize_timeout);
+		that.window_resize_timeout = settimeout(function(){
+			that.window_resize();
+		},200);
 	});
 	that.window_resize();
 	//$(window).trigger('resize');
+
+	$(document).on("previewHide.app_layers_dev_skytasks_tasklist"+that.md5id, function(){
+		that.previewHide();
+	});
 
 	wrapper_IScroll_options_new['app_layers_dev_skytasks_tasklist_'+that.md5id] = { 
 		click: false,
@@ -521,6 +529,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.destroy = function(){
 	app_layers_dev_skytasks_tasklist.tasklist_wrapper.empty();
 	$(window).off("resize.app_layers_dev_skytasks_tasklist_"+that.md5id);
 	$('body').off("mouseleave.app_layers_dev_skytasks_tasklist_"+that.md5id);
+	$(document).off("previewHide.app_layers_dev_skytasks_tasklist"+that.md5id);
 	for( var g in app_layers_dev_skytasks_tasklist ){
 		console.log('g: '+g);
 		console.log(app_layers_dev_skytasks_tasklist);
@@ -530,6 +539,10 @@ app_layers_dev_skytasks_ClassTasklist.prototype.destroy = function(){
 	}
 	app_layers_dev_skytasks_tasklist = null;
 	delete app_layers_dev_skytasks_tasklist;
+}
+
+app_layers_dev_skytasks_ClassTasklist.prototype.previewHide = function(){
+	console.log('previewHide');
 }
 
 app_layers_dev_skytasks_ClassTasklist.prototype.store_all_elem = function(){
@@ -971,9 +984,8 @@ app_layers_dev_skytasks_ClassTasklist.prototype.taskClick = function(event,task_
 		that.clearOptions(task_elem);
 		return;
 	}
-	this.elem_task_all.removeClass('app_layers_dev_skytasks_TaskSelected');
+	that.elem_task_all.removeClass('app_layers_dev_skytasks_TaskSelected');
 	task_elem.addClass('app_layers_dev_skytasks_TaskSelected');
-	console.log(this.elem_task_all);
 	this.openDetail(task_elem);
 
 }

@@ -11,7 +11,7 @@ submenu_list['taskdetail'] = {
 		"class": "",
 	},
 
-	"create": {
+	"confirm": {
 		"style": "tasklist_button",
 		"title": function(that){
 			if( that.param == "new" ){
