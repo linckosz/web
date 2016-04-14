@@ -13,25 +13,27 @@ submenu_list['taskdetail'] = {
 
 	"create": {
 		"style": "tasklist_button",
-		"title": Lincko.Translation.get('app', 41, 'html'), //Create
-		
+		"title": function(that){
+			if( that.param == "new" ){
+				return Lincko.Translation.get('app', 41, 'html'); //Create
+			}
+			else{
+				return Lincko.Translation.get('app', 3, 'html'); //Confirm
+			}
+		},
 		"action": function(){
-			console.log('submenu_list');
-			console.log(submenu_wrapper);
 			var title = submenu_wrapper.find('[find=title_text]').text();
-			var arr = [
-				{ title: title },
-			]
+	  		var description = submenu_wrapper.find('[find=description_text]').text();
+			var proj_id = app_content_menu.projects_id.toString();
+			var param = 
+			{
+				"task_title_text": title,
+				"task_projects_id_hidden": proj_id,
+				"task_comment_textarea": description,
+			}
+			wrapper_sendAction(param,'post','task/create');
 		},
-/*
-		"action": function(that, Elem){
-			console.log(submenu_wrapper);
-		},
-		/*
-		"submit": function(that, Elem){
-			console.log(that);
-		},
-		*/
+		"hide": true,
 	},
 
 	"projects_id": {
@@ -45,19 +47,64 @@ submenu_list['taskdetail'] = {
 		"class": "",
 	},
 
-	"confirm": {
-		"style": "form_button",
-		"title": Lincko.Translation.get('app', 3, 'html'), //Confirm
-		"hide": true, //By default 'false', it hides all submenu after the click ( equivalent to submenu_Hideall(); )
-	},
 	"form_cancel": {
 		"style": "form_button",
 		"title": Lincko.Translation.get('app', 7, 'html'), //Cancel
 		"hide": true,
 	},
 
-
 };
+
+Submenu_select.tasklist_button = function(Elem) {
+	Elem.Add_MenuTasklistButton();
+}
+
+Submenu.prototype.Add_MenuTasklistButton = function() {
+    var that = this;
+    var task_create = function(){
+        console.log('task_create');
+    }
+    var attribute = this.attribute;
+    submenu_wrapper = this.Wrapper();
+    console.log(submenu_wrapper.find('[find=title_text]').text());
+    console.log(this);
+    console.log('attribute');
+    console.log(attribute);
+    console.log(submenu_wrapper);
+    console.log(Elem);
+    var Elem = $('#-submenu_form').clone();
+    Elem.prop("id", '');
+    submenu_wrapper.find("[find=submenu_wrapper_bottom]").addClass('submenu_bottom');
+    submenu_wrapper.find("[find=submenu_wrapper_content]").css('bottom', submenu_wrapper.find("[find=submenu_wrapper_bottom]").height());
+    if ("hide" in attribute) {
+        if (attribute.hide) {
+            Elem.find("[find=submenu_form_button]").click(function() { submenu_Hideall(this.preview); });
+        }
+    }
+    if ("action" in attribute) {
+        if ("action_param" in attribute) {
+            Elem.find("[find=submenu_form_button]").click(attribute.action_param, attribute.action);
+        } else {
+            Elem.find("[find=submenu_form_button]").click(attribute.action);
+        }
+    }
+    Elem.find('img').remove();
+    Elem.find("[find=submenu_form_title]").html(attribute.title(this))
+    if ("class" in attribute) {
+        Elem.addClass(attribute['class']);
+    }
+    if ("now" in attribute && typeof attribute.now === "function") {
+        attribute.now(this, Elem);
+    }
+    if (submenu_wrapper.find("[find=submenu_wrapper_bottom]").find(".submenu_bottom_cell").length == 0) {
+        submenu_wrapper.find("[find=submenu_wrapper_bottom]").html(Elem);
+    } else {
+        submenu_wrapper.find("[find=submenu_wrapper_bottom]").find(".submenu_bottom_cell").append(Elem.children());
+    }
+    //Free memory
+    delete submenu_wrapper;
+    return true;
+}
 
 Submenu_select.taskdetail = function(Elem){
 	Elem.Add_taskdetail();

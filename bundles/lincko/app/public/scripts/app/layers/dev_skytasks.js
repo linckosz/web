@@ -463,7 +463,8 @@ app_layers_dev_skytasks_ClassTasklist.prototype.construct = function(){
 	that.elem_newtaskCircle = $('#-app_layers_dev_skytasks_newtaskCircle').clone()
 		.prop('id','app_layers_dev_skytasks_newtaskCircle_'+that.md5id)
 		.click(function(){
-			submenu_Build("app_task_new");
+			//submenu_Build("app_task_new");
+			submenu_Build('taskdetail', null, null, 'new', true);
 		})
 		.appendTo(that.tasklist_wrapper);
 
@@ -750,7 +751,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.add_newtaskBox = function(elem_a
 		}
 		else{
 			//submenu_Build("app_task_new");	
-			submenu_Build('taskdetail', null, null, 'new');
+			submenu_Build('taskdetail', null, null, 'new', trued);
 		}
 	});
 	that.elem_newtaskBox = Elem;
@@ -970,15 +971,17 @@ app_layers_dev_skytasks_ClassTasklist.prototype.taskClick = function(event,task_
 		that.clearOptions(task_elem);
 		return;
 	}
-
-	this.openDetail($(task_elem));
+	this.elem_task_all.removeClass('app_layers_dev_skytasks_TaskSelected');
+	task_elem.addClass('app_layers_dev_skytasks_TaskSelected');
+	console.log(this.elem_task_all);
+	this.openDetail(task_elem);
 
 }
 
 app_layers_dev_skytasks_ClassTasklist.prototype.openDetail = function(/*open,*/ task_elem){
 	var that = this;
 	var taskid = task_elem.data('taskid');
-	submenu_Build('taskdetail', null, null, taskid/*, true*/);
+	submenu_Build('taskdetail', null, null, taskid, true);
 
 	/*
 		open == true : open detail pane

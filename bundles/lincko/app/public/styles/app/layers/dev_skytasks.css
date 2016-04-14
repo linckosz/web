@@ -419,6 +419,9 @@
 	/*background-color: #5AAFD3;*/
 	color: #FBA026;
 }
+.app_layers_dev_skytasks_TaskSelected {
+	background: #FFFFFF;
+}
 .app_layers_dev_skytasks_tasklist_icon_wrapper{
 		display:inline-block;
 		height:100%;
