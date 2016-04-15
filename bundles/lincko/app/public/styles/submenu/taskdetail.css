@@ -66,8 +66,19 @@ td.submenu_taskdetail_share .fa{
 	overflow: auto;
 }
 .submenu_taskdetail_description [find=description_text] {
-	min-height: 60%;
+	/*min-height: 60%;*/
 }
+.submenu_taskdetail_collapsable_button {
+	border: 1px solid #FBA026;
+	cursor: pointer;
+}
+.submenu_taskdetail_collapsable_button .fa {
+    padding: 0px 10px;
+}
+.submenu_taskdetail_collapsable_content {
+
+}
+
 .submenu_taskdetail_meta {
 	/*background: #C7E9FF;*/
 	width: 100%;

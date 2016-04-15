@@ -22,8 +22,8 @@ submenu_list['taskdetail'] = {
 			}
 		},
 		"action": function(){
-			var title = submenu_wrapper.find('[find=title_text]').text();
-	  		var description = submenu_wrapper.find('[find=description_text]').text();
+			var title = submenu_wrapper.find('[find=title_text]').html();
+	  		var description = submenu_wrapper.find('[find=description_text]').html();
 			var proj_id = app_content_menu.projects_id.toString();
 			var param = 
 			{
@@ -175,6 +175,29 @@ Submenu.prototype.Add_taskdetail = function() {
 	/*---taskdescription---*/
 	elem = $('#-submenu_taskdetail_description').clone().prop('id','submenu_taskdetail_description');
 	elem.find('[find=description_text]').html(item['-comment']);
+	elem.find('.submenu_taskdetail_collapsable_button').click(function(){
+		if( $(this).next().css('display')!='none' ){
+			$(this).next().velocity('slideUp',{
+				begin: function(){
+					$(this).css({
+						'background-color':'#FBFBFB',
+						'height':'60%',
+					});
+				},
+			});
+		}
+		else{
+			$(this).next().velocity('slideDown',{
+				begin: function(){
+					$(this).css('background','#FBFBFB');
+				},
+				complete: function(){
+					$(this).removeAttr('style');
+				},
+			});
+		}
+		
+	});
 	submenu_taskdetail.append(elem);
 
 	/*---taskcomments--*/
