@@ -11,3 +11,11 @@
 	transform: translateZ(0);
 }
 
+/*
+ *CSS for compatibility
+*/
+[contenteditable] {
+/*fix for iOS 7 and up, for typing in contenteditable*/
+    -webkit-user-select: text;
+    user-select: text;
+}
