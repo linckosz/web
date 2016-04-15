@@ -711,8 +711,21 @@ app_layers_dev_skytasks_ClassTasklist.prototype.addTask = function(item){
 	}
 	Elem.prop('id','app_layers_dev_skytasks_task_'+that.md5id+'_'+item['_id']);
 
-	Elem.find('.app_layers_dev_skytasks_checkbox input').prop('id','app_layers_dev_skytasks_task_checkbox_'+that.md5id+'_'+item['_id']);
+	Elem.find('.app_layers_dev_skytasks_checkbox input')
+		.prop(
+			{
+				'id':'app_layers_dev_skytasks_task_checkbox_'+that.md5id+'_'+item['_id'],
+				'checked': function(){
+					if(item['done_at'] == null){
+						return false;
+					}
+					else{
+						return true;
+					}
+				}
+			});
 	Elem.find('.app_layers_dev_skytasks_checkbox label').prop('for','app_layers_dev_skytasks_task_checkbox_'+that.md5id+'_'+item['_id']);
+
 
 	Elem.find('[find=task_options]').addClass('app_layers_skytasks_floatright');
 	Elem.find('[find=title]').html(item['+title']);
