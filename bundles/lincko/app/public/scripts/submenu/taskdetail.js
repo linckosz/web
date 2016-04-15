@@ -136,7 +136,19 @@ Submenu.prototype.Add_taskdetail = function() {
 	elem = $('#-submenu_taskdetail_tasktitle').clone().prop('id','submenu_taskdetail_tasktitle');
 	elem.find('[find=title_text]').html(item['+title']);
 	elem.find("[find=taskid]").html(taskid);
-	elem.find("[type=checkbox]").prop('id','app_layers_dev_skytasks_checkbox_'+taskid);
+	elem.find("[type=checkbox]")
+		.prop(
+			{
+				'id':'app_layers_dev_skytasks_task_checkbox_'+taskid,
+				'checked': function(){
+					if(item['done_at'] == null){
+						return false;
+					}
+					else{
+						return true;
+					}
+				}
+			});
 	elem.find('.app_layers_dev_skytasks_checkbox label').prop('for','app_layers_dev_skytasks_checkbox_'+taskid);
 	submenu_taskdetail.append(elem);
 

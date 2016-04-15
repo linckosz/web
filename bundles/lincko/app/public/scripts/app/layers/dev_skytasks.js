@@ -711,7 +711,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.addTask = function(item){
 	}
 	Elem.prop('id','app_layers_dev_skytasks_task_'+that.md5id+'_'+item['_id']);
 
-	Elem.find('.app_layers_dev_skytasks_checkbox input')
+	Elem.find("[type=checkbox]")
 		.prop(
 			{
 				'id':'app_layers_dev_skytasks_task_checkbox_'+that.md5id+'_'+item['_id'],
