@@ -139,7 +139,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	elem.find("[type=checkbox]")
 		.prop(
 			{
-				'id':'app_layers_dev_skytasks_task_checkbox_'+taskid,
+				'id':'app_layers_dev_skytasks_checkbox_'+taskid,
 				'checked': function(){
 					if(item['done_at'] == null){
 						return false;
@@ -148,7 +148,7 @@ Submenu.prototype.Add_taskdetail = function() {
 						elem.toggleClass('app_layers_dev_skytasks_strike');
 						return true;
 					}
-				}
+				},
 			});
 	elem.find('.app_layers_dev_skytasks_checkbox label').prop('for','app_layers_dev_skytasks_checkbox_'+taskid);
 	submenu_taskdetail.append(elem);

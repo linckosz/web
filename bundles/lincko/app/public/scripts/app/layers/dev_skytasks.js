@@ -565,6 +565,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.destroy = function(){
 
 app_layers_dev_skytasks_ClassTasklist.prototype.previewHide = function(){
 	console.log('previewHide');
+	this.elem_task_all.removeClass('app_layers_dev_skytasks_TaskSelected');
 	$(window).resize();
 }
 
