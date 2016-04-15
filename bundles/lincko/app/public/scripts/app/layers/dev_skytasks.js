@@ -17,6 +17,8 @@ if (!Math.sign) {
 var app_layers_dev_skytasks_test_var = null;
 var app_layers_dev_skytasks_timesort = null;
 var app_layers_dev_skytasks_tasklist = null;
+var app_layers_dev_skytasks_tasklist_searchTimeout = null;
+var app_layers_dev_skytasks_tasklist_searchTerm = null;
 //var app_layers_dev_skytasks_tasklist = {};
 var app_layers_dev_skytasks_tasklist_id = 1;
 
@@ -106,6 +108,26 @@ var app_layers_dev_skytasks_feedPage = function(){
 		}
 	});
 	burger(Elem.find('[find=search_textbox]'));
+
+	var tasklist_search = function(term){
+		console.log('tasklist_search');
+		var filter_by = ['word', term, 'tasks'];
+		console.log(filter_by);
+        app_layers_dev_skytasks_tasklist.tasklist_update('search',filter_by);
+	}
+
+	Elem.find('[find=search_textbox]').keyup(function(event){
+		app_layers_dev_skytasks_tasklist_searchTerm = $(this).val();
+		clearTimeout(app_layers_dev_skytasks_tasklist_searchTimeout);
+		if(event.keyCode == 13){
+			tasklist_search(app_layers_dev_skytasks_tasklist_searchTerm);
+		}
+		else{
+			app_layers_dev_skytasks_tasklist_searchTimeout = setTimeout(function(){
+				tasklist_search(app_layers_dev_skytasks_tasklist_searchTerm);
+			},400);
+		}
+	});
 	
 	Elem.appendTo(position);
 /*
@@ -132,9 +154,9 @@ var app_layers_dev_skytasks_feedPage = function(){
 
 	app_layers_dev_skytasks_tasklist = new app_layers_dev_skytasks_ClassTasklist($('#app_layers_dev_skytasks_tasklist_wrapper'));
 
-	var app_layers_dev_skytasks_tasklist_filter = function(filter_by){
+	var app_layers_dev_skytasks_tasklist_filter = function(type, filter_by){
 		//app_layers_dev_skytasks_tasklist[app_layers_dev_skytasks_tasklist_id].tasklist_update(filter_by);
-		app_layers_dev_skytasks_tasklist.tasklist_update(filter_by);
+		app_layers_dev_skytasks_tasklist.tasklist_update(type, filter_by);
 	}
 
 	app_layers_dev_skytasks_timesort = new app_layers_dev_skytasks_ClassTimesort(
@@ -261,7 +283,7 @@ app_layers_dev_skytasks_ClassTimesort.prototype.construct = function(){
 		var sort = $(this).attr('sort');
 		if (!responsive.test("maxMobileL")){
 			that.makeSelection( sort );
-			that.sort_fn(sort);
+			that.sort_fn('duedate', sort);
 		}
 	});
 
@@ -329,7 +351,7 @@ app_layers_dev_skytasks_ClassTimesort.prototype.construct = function(){
 			//that.elem_sorts_text[that.sort_array[that.sortnum]].velocity({opacity:0},500); 
 
 			that.makeSelection(that.sort_array[that.sortnum_new]);
-			that.sort_fn(that.sort_array[that.sortnum_new]);
+			that.sort_fn('duedate',that.sort_array[that.sortnum_new]);
 		
 		}
 
@@ -475,9 +497,9 @@ app_layers_dev_skytasks_ClassTasklist.prototype.construct = function(){
 
 	$(window).on("resize.app_layers_dev_skytasks_tasklist_"+that.md5id, function(){
 		clearTimeout(that.window_resize_timeout);
-		that.window_resize_timeout = settimeout(function(){
+		that.window_resize_timeout = setTimeout(function(){
 			that.window_resize();
-		},200);
+		},100);
 	});
 	that.window_resize();
 	//$(window).trigger('resize');
@@ -543,6 +565,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.destroy = function(){
 
 app_layers_dev_skytasks_ClassTasklist.prototype.previewHide = function(){
 	console.log('previewHide');
+	$(window).resize();
 }
 
 app_layers_dev_skytasks_ClassTasklist.prototype.store_all_elem = function(){
@@ -590,21 +613,42 @@ app_layers_dev_skytasks_ClassTasklist.prototype.window_resize = function(){
 	console.log(that.md5id);
 	console.log('end of resize -- ClassTasklist');
 }
-app_layers_dev_skytasks_ClassTasklist.prototype.tasklist_update = function(filter_by){
-	console.log('tasklist_update filter: '+filter_by);
+app_layers_dev_skytasks_ClassTasklist.prototype.tasklist_update = function(type, filter_by){
+	console.log('tasklist_update filter: ');
+	console.log(filter_by);
 	var that = this;
-	var items = Lincko.storage.list('tasks');
+	var items;
+	var items_filtered = [];
 	var item;
-	var duedate;
 	var taskcount = 0;
 	var iscroll_elem;
-			
-	if 		( filter_by == Lincko.Translation.get('app', 3302, 'html').toUpperCase()/*today*/ ){filter_by = 0}
-	else if ( filter_by == Lincko.Translation.get('app', 3303, 'html').toUpperCase()/*tomorrow*/ ){filter_by = 1}
-	else if ( filter_by == 'Spaces' ){}
-	else{ filter_by = null }
 
-	console.log(this);
+	if( type=='duedate' || !type ){
+		var duedate;
+		if 		( filter_by == Lincko.Translation.get('app', 3302, 'html').toUpperCase()/*today*/ ){filter_by = 0}
+		else if ( filter_by == Lincko.Translation.get('app', 3303, 'html').toUpperCase()/*tomorrow*/ ){filter_by = 1}
+		else if ( filter_by == 'Spaces' ){}
+		else{ filter_by = null }
+
+		items = Lincko.storage.list('tasks');
+
+		for (var i in items){
+			item = items[i];
+			duedate = app_layers_dev_skytasks_calcDuedate(item);
+			if(filter_by == null || duedate.happensSomeday(filter_by)){
+				items_filtered.push(item);
+				taskcount += 1;
+			}
+		}
+	}
+	else if( type == 'search'){
+		items_filtered = Lincko.storage.search(filter_by[0], filter_by[1], filter_by[2])[filter_by[2]];
+		if(items_filtered){
+			taskcount = items_filtered.length;
+		}
+		console.log(taskcount);
+	}
+
 	that.tasklist.velocity("fadeOut",{
 		duration: 200,
 		complete: function(){
@@ -613,17 +657,17 @@ app_layers_dev_skytasks_ClassTasklist.prototype.tasklist_update = function(filte
 			}else{
 				iscroll_elem = that.tasklist.empty();
 			}
-			for (var i in items){
-				item = items[i];
-				duedate = app_layers_dev_skytasks_calcDuedate(item);
-				if(filter_by == null || duedate.happensSomeday(filter_by)){
-					iscroll_elem.append(that.addTask(item));
-					taskcount += 1;
-				}
-			}
+
 			if( taskcount==0 ){
 				iscroll_elem.append('<div class="app_layers_dev_skytasks_task">There are no tasks.</div>');
 			}
+			else{
+				for (var i in items_filtered){
+					item = items_filtered[i];
+					iscroll_elem.append(that.addTask(item));
+				}
+			}
+			
 			that.add_newtaskBox(iscroll_elem);
 			that.store_all_elem();
 			$('#app_layers_dev_skytasks_navbar').removeAttr('style');
