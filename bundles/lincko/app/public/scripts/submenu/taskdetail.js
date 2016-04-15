@@ -145,6 +145,7 @@ Submenu.prototype.Add_taskdetail = function() {
 						return false;
 					}
 					else{
+						elem.toggleClass('app_layers_dev_skytasks_strike');
 						return true;
 					}
 				}

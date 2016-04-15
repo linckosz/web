@@ -720,6 +720,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.addTask = function(item){
 						return false;
 					}
 					else{
+						Elem.toggleClass('app_layers_dev_skytasks_strike');
 						return true;
 					}
 				}
