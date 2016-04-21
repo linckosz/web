@@ -51,10 +51,9 @@ Lincko.storage.getCOMID = function(){
 Lincko.storage.searchCOMID = function(){
 	if(
 		   Lincko.storage.data
-		&& Lincko.storage.data['_']
-		&& Lincko.storage.data['_']['companies']
+		&& Lincko.storage.data['companies']
 	){
-		var object = Lincko.storage.data['_']['companies'];
+		var object = Lincko.storage.data['companies'];
 		for(var key in object) {
 			if(object[key].personal_private!=null && object[key].personal_private!=0 && object[key].personal_private==wrapper_localstorage.uid && wrapper_localstorage.company === ''){
 				Lincko.storage.COMID = parseInt(key, 10);
@@ -113,16 +112,10 @@ Lincko.storage.display = function(setFields, force){
 		if(typeof setFields !== 'undefined' && setFields){
 			//Force to list all fields to insure all elements are up to date according to the storage
 			var fields_full = [];
-			var companies = ['_']; //Always include the default folder
-			var company;
-			companies.push(Lincko.storage.getCOMID());
-			for(var i in companies) {
-				company = companies[i];
-				if($.type(Lincko.storage.data[company]) === 'object'){
-					for(var category in Lincko.storage.data[company]) {
-						if($.type(Lincko.storage.data[company][category]) === 'object'){
-							app_application_lincko.setFields(category, force);
-						}
+			if($.type(Lincko.storage.data) === 'object'){
+				for(var category in Lincko.storage.data) {
+					if($.type(Lincko.storage.data[category]) === 'object'){
+						app_application_lincko.setFields(category, force);
 					}
 				}
 			}
@@ -186,29 +179,20 @@ Lincko.storage.update = function(partial, info){
 	var update = false;
 	var newField = false;
 	for(var i in partial) {
-		items = partial[i];
-		for(var j in items) {
-			//Check if the object hierarchy exists
-			if(!Lincko.storage.data){
-				Lincko.storage.data = {};
-				newField = true;
-			}
-			if(!Lincko.storage.data[i]){
-				Lincko.storage.data[i] = {};
-				newField = true;
-			}
-			if(!Lincko.storage.data[i][j]){
-				Lincko.storage.data[i][j] = {};
-				newField = true;
-				app_application_lincko.setFields(j);
-			}
-			//We merge/update proporties, we do know overwritte the complete object (because history record are dowloaded separatly)
-			Lincko.storage.data[i][j] = $.extend(Lincko.storage.data[i][j], items[j]);
-			update = true;
+		//Check if the object hierarchy exists
+		if(!Lincko.storage.data){
+			Lincko.storage.data = {};
+			newField = true;
 		}
-		if(update){
-			app_application_lincko.prepare(j);
+		if(!Lincko.storage.data[i]){
+			Lincko.storage.data[i] = {};
+			newField = true;
+			app_application_lincko.setFields(i);
 		}
+		//We merge/update proporties, we do know overwritte the complete object (because history record are dowloaded separatly)
+		Lincko.storage.data[i] = $.extend(Lincko.storage.data[i], partial[i]);
+		app_application_lincko.prepare(i);
+		update = true;
 	}
 	if(update){
 		Lincko.storage.orderRecents(partial);
@@ -230,7 +214,7 @@ Lincko.storage.schema = function(schema){
 
 	storage_first_request = false; //No need to launch firstLatest()
 
-	//Step 1: Delete all unlinked items
+	//Step 1: Delete all unlinked items (only check 2 levels deep)
 	for(var i in Lincko.storage.data) {
 		if(!schema[i]){
 			delete Lincko.storage.data[i];
@@ -244,15 +228,6 @@ Lincko.storage.schema = function(schema){
 					update = true;
 					app_application_lincko.prepare(j);
 					continue;
-				} else {
-					for(var k in Lincko.storage.data[i][j]) {
-						if(!schema[i][j][k]){
-							delete Lincko.storage.data[i][j][k];
-							update = true;
-							app_application_lincko.prepare(j);
-							continue;
-						}
-					}
 				}
 			}
 		}
@@ -263,24 +238,15 @@ Lincko.storage.schema = function(schema){
 	for(var i in schema) {
 		if(!Lincko.storage.data[i]){
 			missing[i] = schema[i];
+			app_application_lincko.setFields(i);
 			continue;
 		} else {
 			for(var j in schema[i]) {
 				if(!Lincko.storage.data[i][j]){
 					if(typeof missing[i]==='undefined'){ missing[i] = {}; }
 					missing[i][j] = schema[i][j];
-					app_application_lincko.setFields(j);
+					app_application_lincko.setFields(i);
 					continue;
-				} else {
-					for(var k in schema[i][j]) {
-						if(typeof Lincko.storage.data[i][j][k] === 'undefined'){
-							if(typeof missing[i]==='undefined'){ missing[i] = {}; }
-							if(typeof missing[i][j]==='undefined'){ missing[i][j] = {}; }
-							missing[i][j][k] = schema[i][j][k];
-							app_application_lincko.setFields(j);
-							continue;
-						}
-					}
 				}
 			}
 		}
@@ -319,12 +285,11 @@ Lincko.storage.setHistory = function(category, id, stop_order){
 	if(typeof stop_order === 'undefined'){ stop_order = false; }
 	var temp = {};
 	var new_key = false;
-	var company = Lincko.storage.getCOMID();
 	var item;
 	var username;
 
-	if($.type(Lincko.storage.data[company]) === 'object' && $.type(Lincko.storage.data[company][category]) === 'object' && $.type(Lincko.storage.data[company][category][id]) === 'object'){
-		item = Lincko.storage.data[company][category][id];
+	if($.type(Lincko.storage.data[category]) === 'object' && $.type(Lincko.storage.data[category][id]) === 'object'){
+		item = Lincko.storage.data[category][id];
 		if(typeof item['created_at'] !== 'undefined' && item['created_at'] > 0 && typeof item['created_by'] !== 'undefined' && item['created_by'] > 0 && $.type(item['history']) === 'object'){
 			for(var h_created_at in item['history']) {
 				for(var h_id in item['history'][h_created_at]) {
@@ -337,7 +302,9 @@ Lincko.storage.setHistory = function(category, id, stop_order){
 					Lincko.storage.data_recent[h_created_at][category][id][h_id] = {
 						by: h_item['by'],
 						att: h_item['att'],
+						not: h_item['not'],
 					};
+					// NOTE: "New" attribute can be recovered by checking same history type until item itself
 					if(typeof h_item['old'] !== 'undefined' && typeof h_item['new'] !== 'undefined'){
 						Lincko.storage.data_recent[h_created_at][category][id][h_id]['old'] = h_item['old'];
 					}
@@ -374,9 +341,8 @@ Lincko.storage.orderRecents = function(data, clean){
 	if(clean){
 		Lincko.storage.data_recent = {}; //Clean the history before to rebuild it
 	}
-	var company = Lincko.storage.getCOMID();
-	for(var category in data[company]) {
-		for(var id in data[company][category]) {
+	for(var category in data) {
+		for(var id in data[category]) {
 			Lincko.storage.setHistory(category, id, true);
 		}
 	}
@@ -400,8 +366,6 @@ Lincko.storage.orderRecents = function(data, clean){
 	Lincko.storage.get("tasks", 4, "created_at"); => get item attribute
 */
 Lincko.storage.get = function(category, id, attribute){
-	var companies = ['_']; //Always include the default folder
-	companies.push(Lincko.storage.getCOMID());
 	if(typeof category === 'string' && category.indexOf('_')!==0){
 		category = category.toLowerCase();
 	} else {
@@ -410,35 +374,33 @@ Lincko.storage.get = function(category, id, attribute){
 	if(typeof id === 'string'){ id = parseInt(id, 10); }
 	if(typeof id !== 'number'){ return false; }
 
-	for(var i in companies) {
-		if($.type(Lincko.storage.data[companies[i]]) === 'object' && $.type(Lincko.storage.data[companies[i]][category]) === 'object' && $.type(Lincko.storage.data[companies[i]][category][id]) === 'object'){
-			var result = Lincko.storage.data[companies[i]][category][id];
-			//Add info to element, use "_" to recognize that it has been added by JS
-			result['_id'] = id;
-			result['_type'] = category;
-			if(typeof attribute === 'string'){
-				if(typeof Lincko.storage.data[companies[i]][category][id][attribute] !== 'undefined'){
-					result = Lincko.storage.data[companies[i]][category][id][attribute];
-				} else if(typeof Lincko.storage.data[companies[i]][category][id]['-'+attribute] !== 'undefined'){
-					result = Lincko.storage.data[companies[i]][category][id]['-'+attribute];
-				} else if(typeof Lincko.storage.data[companies[i]][category][id]['+'+attribute] !== 'undefined'){
-					result = Lincko.storage.data[companies[i]][category][id]['+'+attribute];
-				} else if(typeof Lincko.storage.data[companies[i]][category][id]['_'+attribute] !== 'undefined'){
-					result = Lincko.storage.data[companies[i]][category][id]['_'+attribute];
-				} else {
-					result = false;
-				}
+	if($.type(Lincko.storage.data) === 'object' && $.type(Lincko.storage.data[category]) === 'object' && $.type(Lincko.storage.data[category][id]) === 'object'){
+		var result = Lincko.storage.data[category][id];
+		//Add info to element, use "_" to recognize that it has been added by JS
+		result['_id'] = id;
+		result['_type'] = category;
+		if(typeof attribute === 'string'){
+			if(typeof Lincko.storage.data[category][id][attribute] !== 'undefined'){
+				result = Lincko.storage.data[category][id][attribute];
+			} else if(typeof Lincko.storage.data[category][id]['-'+attribute] !== 'undefined'){
+				result = Lincko.storage.data[category][id]['-'+attribute];
+			} else if(typeof Lincko.storage.data[category][id]['+'+attribute] !== 'undefined'){
+				result = Lincko.storage.data[category][id]['+'+attribute];
+			} else if(typeof Lincko.storage.data[category][id]['_'+attribute] !== 'undefined'){
+				result = Lincko.storage.data[category][id]['_'+attribute];
+			} else {
+				result = false;
 			}
-			return result;
 		}
+		return result;
 	}
 	return false;
 };
 
 /* PRIVATE METHOD */
 Lincko.storage.isHistoryReady = function(){
-	return ($.type(Lincko.storage.data['_']) === 'object' && $.type(Lincko.storage.data['_']['_history_title']) === 'object');
-}
+	return ($.type(Lincko.storage.data) === 'object' && $.type(Lincko.storage.data['_history_title']) === 'object');
+};
 
 /*
 	Return an object { title, content }
@@ -453,19 +415,18 @@ Lincko.storage.getHistoryInfo = function(history){
 			par: null,
 		},
 	};
-	var company = Lincko.storage.getCOMID();
 
 	if(
-		   $.type(Lincko.storage.data['_']) === 'object'
-		&& $.type(Lincko.storage.data['_']['_history_title']) === 'object'
-		&& $.type(Lincko.storage.data['_']['_history_title'][history.type]) === 'object'
-		&& (typeof Lincko.storage.data['_']['_history_title'][history.type][history.att] !== 'undefined'
-		 || typeof Lincko.storage.data['_']['_history_title'][history.type]['_'] !== 'undefined')
+		   $.type(Lincko.storage.data) === 'object'
+		&& $.type(Lincko.storage.data['_history_title']) === 'object'
+		&& $.type(Lincko.storage.data['_history_title'][history.type]) === 'object'
+		&& (typeof Lincko.storage.data['_history_title'][history.type][history.att] !== 'undefined'
+		 || typeof Lincko.storage.data['_history_title'][history.type] !== 'undefined')
 	){
-		if(typeof Lincko.storage.data['_']['_history_title'][history.type][history.att] !== 'undefined'){
-			result.title = Lincko.storage.data['_']['_history_title'][history.type][history.att];
-		} else if(typeof Lincko.storage.data['_']['_history_title'][history.type]['_'] !== 'undefined'){
-			result.title = Lincko.storage.data['_']['_history_title'][history.type]['_'];
+		if(typeof Lincko.storage.data['_history_title'][history.type][history.att] !== 'undefined'){
+			result.title = Lincko.storage.data['_history_title'][history.type][history.att];
+		} else if(typeof Lincko.storage.data['_history_title'][history.type] !== 'undefined'){
+			result.title = Lincko.storage.data['_history_title'][history.type];
 		}
 
 		result.root = {
@@ -477,7 +438,7 @@ Lincko.storage.getHistoryInfo = function(history){
 		var date = new wrapper_date(history.timestamp);
 		result.title = '[ '+date.display('date_short')+' ] '+result.title.ucfirst();
 		
-		var item = Lincko.storage.data[company][history.type][history.id];
+		var item = Lincko.storage.data[history.type][history.id];
 		//Add to the content the main title (such as "project name")
 		for(var prop in item) {
 			if(prop.indexOf('+')===0){
@@ -554,8 +515,6 @@ Lincko.storage.search = function(type, param, category){
 	var results = {};
 	var find = [];
 	var save_result = false;
-	var companies = ['_']; //Always include the default folder
-	companies.push(Lincko.storage.getCOMID());
 	type = type.toLowerCase();
 	if(typeof param === 'string'){ param = param.toLowerCase(); }
 	if(typeof category === 'string'){
@@ -588,17 +547,15 @@ Lincko.storage.search = function(type, param, category){
 	};
 
 	if(typeof find[type] === 'function'){
-		for(var i in companies) {
-			key = companies[i];
-			if($.type(Lincko.storage.data[key]) === 'object'){
+			if($.type(Lincko.storage.data) === 'object'){
 				categories = {};
 				if(typeof category !== 'undefined'){
-					if($.type(Lincko.storage.data[key][category]) === 'object'){
+					if($.type(Lincko.storage.data[category]) === 'object'){
 						categories = {}
-						categories[category] = Lincko.storage.data[key][category];
+						categories[category] = Lincko.storage.data[category];
 					}
 				} else {
-					categories = Lincko.storage.data[key];
+					categories = Lincko.storage.data;
 				}
 				for(var cat in categories) {
 					if(cat.indexOf('_')!==0){ //Exclude system object which start by an underscore
@@ -620,14 +577,13 @@ Lincko.storage.search = function(type, param, category){
 					}
 				}
 			}
-		}
 	}
 	return results;
 };
 
 
 /*
-	We only work with item inside a company, not the common folder '_'
+	[toto] We should move favorite records to the backend
 	Lincko.storage.favorite('projects', 2, true); //Save the favorite
 	Lincko.storage.favorite('projects', 2); //Request the favorite
 	Lincko.storage.favorite('projects', 2, false); //Delete the favorite
@@ -639,43 +595,39 @@ Lincko.storage.favorite = function(category, id, save){
 		return false;
 	}
 	if(typeof id !== 'string' && typeof id !== 'number'){ return false; }
-	var company = Lincko.storage.getCOMID();
 	var index;
 
 	//Before saving it, we do not need to double check if the items exist because it can be temporary hidden by another user 
 	
 	if(typeof save === 'undefined'){
-		if(typeof Lincko.storage.data_favorite[company] !== 'undefined' && typeof Lincko.storage.data_favorite[company][category] !== 'undefined' && $.inArray(id, Lincko.storage.data_favorite[company][category])!=-1){
-			return $.inArray(id, Lincko.storage.data_favorite[company][category]);
+		if(typeof Lincko.storage.data_favorite[category] !== 'undefined' && $.inArray(id, Lincko.storage.data_favorite[category])!=-1){
+			return $.inArray(id, Lincko.storage.data_favorite[category]);
 		}
 	} else if(save){
 		//Do not save unexisting items
-		if(typeof Lincko.storage.data[company] === 'undefined' || typeof Lincko.storage.data[company][category] === 'undefined' || typeof Lincko.storage.data[company][category][id] === 'undefined'){
+		if(typeof Lincko.storage.data[category] === 'undefined' || typeof Lincko.storage.data[category][id] === 'undefined'){
 			return false
 		}
-		if(typeof Lincko.storage.data_favorite[company] === 'undefined'){
-			Lincko.storage.data_favorite[company] = {};
-		}
-		if(typeof Lincko.storage.data_favorite[company][category] === 'undefined'){
-			Lincko.storage.data_favorite[company][category] = [];
+		if(typeof Lincko.storage.data_favorite[category] === 'undefined'){
+			Lincko.storage.data_favorite[category] = [];
 		}
 		
-		index = $.inArray(id, Lincko.storage.data_favorite[company][category]);
+		index = $.inArray(id, Lincko.storage.data_favorite[category]);
 		if(index == -1){
-			Lincko.storage.data_favorite[company][category].push(id);
+			Lincko.storage.data_favorite[category].push(id);
 			app_application_lincko.update(category);
 			wrapper_localstorage.encrypt('data_favorite', JSON.stringify(Lincko.storage.data_favorite));
 			//Return it's index position
-			return $.inArray(id, Lincko.storage.data_favorite[company][category]);
+			return $.inArray(id, Lincko.storage.data_favorite[category]);
 		} else {
 			//Return it's current index position
 			return index;
 		}
 	} else if(!save){
-		if(typeof Lincko.storage.data_favorite[company] !== 'undefined' && typeof Lincko.storage.data_favorite[company][category] !== 'undefined'){
-			index = $.inArray(id, Lincko.storage.data_favorite[company][category]);
+		if(typeof Lincko.storage.data_favorite[category] !== 'undefined'){
+			index = $.inArray(id, Lincko.storage.data_favorite[category]);
 			if(index != -1){
-				Lincko.storage.data_favorite[company][category].splice(index, 1); //splice delte and reconstruct the table indexation
+				Lincko.storage.data_favorite[category].splice(index, 1); //splice delte and reconstruct the table indexation
 				app_application_lincko.update(category);
 				wrapper_localstorage.encrypt('data_favorite', JSON.stringify(Lincko.storage.data_favorite));
 				return true;
@@ -698,23 +650,22 @@ Lincko.storage.moveFavorite = function(category, id, order){
 	}
 	if(typeof id !== 'string' && typeof id !== 'number'){ return false; }
 	if(typeof order !== 'number' || order <= 0){ return false; }
-	var company = Lincko.storage.getCOMID();
 	var index;
 	var position;
 	var item;
 	order = order-1; //We decrease the number to fit array position starting from 0
-	if(typeof Lincko.storage.data_favorite[company] === 'object' && typeof Lincko.storage.data_favorite[company][category] === 'object'){
-		index = $.inArray(id, Lincko.storage.data_favorite[company][category]);
+	if(typeof Lincko.storage.data_favorite[category] === 'object'){
+		index = $.inArray(id, Lincko.storage.data_favorite[category]);
 		if(index != -1){
-			item = Lincko.storage.data_favorite[company][category][index];
+			item = Lincko.storage.data_favorite[category][index];
 			if(order != index){
 				//We delete the item first
-				Lincko.storage.data_favorite[company][category].splice(index, 1);
+				Lincko.storage.data_favorite[category].splice(index, 1);
 				//then we reinsert to it's new position
-				Lincko.storage.data_favorite[company][category].splice(order, 0, item);
+				Lincko.storage.data_favorite[category].splice(order, 0, item);
 				app_application_lincko.update(category);
 				wrapper_localstorage.encrypt('data_favorite', JSON.stringify(Lincko.storage.data_favorite));
-				return $.inArray(id, Lincko.storage.data_favorite[company][category]);
+				return $.inArray(id, Lincko.storage.data_favorite[category]);
 			}
 		}
 	}
@@ -731,7 +682,6 @@ Lincko.storage.moveFavorite = function(category, id, order){
 Lincko.storage.getFavorites = function(category, param, extend){
 	var results = [];
 	var id_record = {}; //Avoid double record
-	var company = Lincko.storage.getCOMID();
 	var list;
 	var item_tp;
 	if(typeof category === 'string' && category.indexOf('_')!==0){
@@ -744,8 +694,8 @@ Lincko.storage.getFavorites = function(category, param, extend){
 	if(param == 0){ param = -1; } //0 will display all items
 	if(typeof extend === 'undefined'){ extend = false; } //If true, look for creation date at second step
 
-	if(typeof Lincko.storage.data_favorite[company] === 'object' && typeof Lincko.storage.data_favorite[company][category] === 'object'){
-		list = Lincko.storage.data_favorite[company][category];
+	if(typeof Lincko.storage.data_favorite[category] === 'object'){
+		list = Lincko.storage.data_favorite[category];
 		for(var i in list){
 			if(item_tp = Lincko.storage.get(category, list[i])){
 				if(typeof id_record[item_tp['_id']]==='undefined' && (typeof item_tp['personal_private']==='undefined' || item_tp['personal_private']==null || item_tp['personal_private']==0)){
@@ -823,13 +773,12 @@ Lincko.storage.getAllow = function(category, id){
 //Return a single item which is the earliest My Placeholder project
 /* PRIVATE METHOD */
 Lincko.storage.getMyPlaceholder = function(){
-	var company = Lincko.storage.getCOMID();
 	var category = 'projects';
 	var item_tp;
 
-	if($.type(Lincko.storage.data[company]) === 'object' && $.type(Lincko.storage.data[company][category]) === 'object'){
-		for(var id in Lincko.storage.data[company][category]){
-			item_tp = Lincko.storage.data[company][category][id];
+	if($.type(Lincko.storage.data[category]) === 'object'){
+		for(var id in Lincko.storage.data[category]){
+			item_tp = Lincko.storage.data[category][id];
 			if((typeof item_tp['personal_private']==='string' || typeof item_tp['personal_private']==='number') && parseInt(item_tp['personal_private'], 10)===wrapper_localstorage.uid){
 				return Lincko.storage.get(category, id);
 			}
@@ -891,10 +840,11 @@ Lincko.storage.time = function(type, param, category){
 									id: item_id,
 									by: items[item_id][history_id]['by'],
 									att: items[item_id][history_id]['att'],
+									not: items[item_id][history_id]['not'],
 								};
-								//We do not keep copy of new and old in data_recent, we just need to keep it from origin 'data' item, because there is 2 cases scenario:
-								// 1) Get Old and New from item itself
-								// 2) Old and New not available offline, so we download them before displaying (POST | 'data/history')
+								//We do not keep copy of Old in data_recent, we just need to keep it from origin 'data' item, because there is 2 cases scenario:
+								// 1) Get Old from item itself
+								// 2) Old is not available offline, so we download it before displaying (POST | 'data/history')
 								if(typeof items[item_id][history_id]['par'] !== 'undefined'){
 									par = items[item_id][history_id]['par'];
 									if($.type(par) === 'object' && !$.isEmptyObject(par)){
@@ -966,10 +916,11 @@ Lincko.storage.time = function(type, param, category){
 							id: item_id,
 							by: items[item_id][history_id]['by'],
 							att: items[item_id][history_id]['att'],
+							not: items[item_id][history_id]['not'],
 						};
-						//We do not keep copy of new and old in data_recent, we just need to keep it from origin 'data' item, because there is 2 cases scenario:
-						// 1) Get Old and New from item itself
-						// 2) Old and New not available offline, so we download them before displaying (POST | 'data/history')
+						//We do not keep copy of Old in data_recent, we just need to keep it from origin 'data' item, because there is 2 cases scenario:
+						// 1) Get Old from item itself
+						// 2) Old is not available offline, so we download it before displaying (POST | 'data/history')
 						if(typeof items[item_id][history_id]['par'] !== 'undefined'){
 							par = items[item_id][history_id]['par'];
 							if($.type(par) === 'object' && !$.isEmptyObject(par)){
@@ -1018,41 +969,34 @@ Lincko.storage.list = function(category, limit, conditions){
 	if($.type(conditions) !== 'object'){ conditions = {}; }
 
 	category = category.toLowerCase();
-	var companies = ['_']; //Always include the default folder
-	var company;
 	var items;
 	var item;
 	var save = false;
 	var timestamp = 0;
-	companies.push(Lincko.storage.getCOMID());
-	for(var i in companies) {
-		company = companies[i];
-		if($.type(Lincko.storage.data[company]) === 'object' && $.type(Lincko.storage.data[company][category]) === 'object'){
-			items = Lincko.storage.data[company][category];
-			for(var j in items) {
-				//'_id
-				item = items[j];
-				//Add info to element, use "_" to recognize that it has been added by JS
-				item['_id'] = j;
-				item['_type'] = category;
-				save = true;
-				timestamp = 0;
-				if(typeof item['created_at'] !== 'undefined'){
-					timestamp = item['created_at'];
-				} else if(typeof item['updated_at'] !== 'undefined'){
-					timestamp = item['updated_at'];
-				}
-				for(var property in conditions) {
-					if(typeof item[property] !== 'undefined' && item[property]!=conditions[property]){
-						save = false;
-					}
-				}
-				if(save){
-					if(typeof temp[timestamp] === 'undefined'){ temp[timestamp] = {};}
-					temp[timestamp][j] = item;
+	if($.type(Lincko.storage.data[category]) === 'object'){
+		items = Lincko.storage.data[category];
+		for(var j in items) {
+			//'_id
+			item = items[j];
+			//Add info to element, use "_" to recognize that it has been added by JS
+			item['_id'] = j;
+			item['_type'] = category;
+			save = true;
+			timestamp = 0;
+			if(typeof item['created_at'] !== 'undefined'){
+				timestamp = item['created_at'];
+			} else if(typeof item['updated_at'] !== 'undefined'){
+				timestamp = item['updated_at'];
+			}
+			for(var property in conditions) {
+				if(typeof item[property] !== 'undefined' && item[property]!=conditions[property]){
+					save = false;
 				}
 			}
-			break;
+			if(save){
+				if(typeof temp[timestamp] === 'undefined'){ temp[timestamp] = {};}
+				temp[timestamp][j] = item;
+			}
 		}
 	}
 
@@ -1089,7 +1033,7 @@ Lincko.storage.list = function(category, limit, conditions){
 //setup a check timing procedure to not overload the backend server
 var storage_check_timing_interval;
 var storage_check_timing_timeout;
-var storage_check_timing_speed = 1; //Default = 1, use 4 for demo purpose only
+var storage_check_timing_speed = 2; //Default = 1, use 4 for demo purpose only
 var storage_check_timing = {
 	slow: Math.floor(60000/storage_check_timing_speed), //60s
 	medium: Math.floor(30000/storage_check_timing_speed), //30s

@@ -70,13 +70,12 @@ var app_content_menu = {
 				'history',
 			];
 		} else if(
-			   $.type(Lincko.storage.data[Lincko.storage.getCOMID()]) === 'object'
-			&& $.type(Lincko.storage.data[Lincko.storage.getCOMID()]['projects']) === 'object'
-			&& $.type(Lincko.storage.data[Lincko.storage.getCOMID()]['projects'][projects_id]) === 'object'
-			&& (Lincko.storage.data[Lincko.storage.getCOMID()]['projects'][projects_id]['personal_private'] == 0
-				|| Lincko.storage.data[Lincko.storage.getCOMID()]['projects'][projects_id]['personal_private'] == null)
+			   $.type(Lincko.storage.data['projects']) === 'object'
+			&& $.type(Lincko.storage.data['projects'][projects_id]) === 'object'
+			&& (Lincko.storage.data['projects'][projects_id]['personal_private'] == 0
+				|| Lincko.storage.data['projects'][projects_id]['personal_private'] == null)
 		){
-			title = Lincko.storage.data[Lincko.storage.getCOMID()]['projects'][projects_id]['+title'];
+			title = Lincko.storage.data['projects'][projects_id]['+title'];
 			list = [
 				'tasks',
 				'statistics',

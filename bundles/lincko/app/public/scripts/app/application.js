@@ -135,15 +135,14 @@ var app_application_lincko = {
 			propagation
 			&& !$.isEmptyObject(items_list)
 			&& $.type(Lincko.storage.data) === 'object'
-			&& $.type(Lincko.storage.data['_']) === 'object'
-			&& $.type(Lincko.storage.data['_']['_relations']) === 'object'
+			&& $.type(Lincko.storage.data['_relations']) === 'object'
 		){
 			//Note that Up and Down reationship is already done one back server
 			for(var i in items_list){
-				if(typeof Lincko.storage.data['_']['_relations'][i] === 'object'){
-					for(var j in Lincko.storage.data['_']['_relations'][i]){
-						if(typeof items_list[ Lincko.storage.data['_']['_relations'][i][j] ] === 'undefined'){
-							items_list[ Lincko.storage.data['_']['_relations'][i][j] ] = true;
+				if(typeof Lincko.storage.data['_relations'][i] === 'object'){
+					for(var j in Lincko.storage.data['_relations'][i]){
+						if(typeof items_list[ Lincko.storage.data['_relations'][i][j] ] === 'undefined'){
+							items_list[ Lincko.storage.data['_relations'][i][j] ] = true;
 						}
 					}
 				}
@@ -179,15 +178,14 @@ var app_application_lincko = {
 					propagation
 					&& !$.isEmptyObject(items_list)
 					&& $.type(Lincko.storage.data) === 'object'
-					&& $.type(Lincko.storage.data['_']) === 'object'
-					&& $.type(Lincko.storage.data['_']['_relations']) === 'object'
+					&& $.type(Lincko.storage.data['_relations']) === 'object'
 				){
 					//Note that Up and Down reationship is already done one back server
 					for(var i in items_list){
-						if(typeof Lincko.storage.data['_']['_relations'][i] === 'object'){
-							for(var j in Lincko.storage.data['_']['_relations'][i]){
-								if(typeof items_list[ Lincko.storage.data['_']['_relations'][i][j] ] === 'undefined'){
-									items_list[ Lincko.storage.data['_']['_relations'][i][j] ] = true;
+						if(typeof Lincko.storage.data['_relations'][i] === 'object'){
+							for(var j in Lincko.storage.data['_relations'][i]){
+								if(typeof items_list[ Lincko.storage.data['_relations'][i][j] ] === 'undefined'){
+									items_list[ Lincko.storage.data['_relations'][i][j] ] = true;
 								}
 							}
 						}
