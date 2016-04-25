@@ -107,30 +107,22 @@ JSfiles.finish(function(){
 		var username;
 		var select;
 		//My workspace
-		for(var i in companies){
-			if(companies[i].personal_private!=null && companies[i].personal_private==wrapper_localstorage.uid && companies[i].url==''){
-				name = Lincko.Translation.get('app', 40, 'html'), //My workspace
-				url = companies[i].personal_private+'/'+username;
-				if(typeof submenu_list['workspace']['_0_'+url] == 'undefined'){
-					submenu_list['workspace']['_0_'+companies[i]['_id']] = {
-						"style": "radio",
-						"title": name,
-						"hide": true,
-						"action_param": { workspace:url, },
-						"action": function(event){
-							app_application_change_private(event.data.workspace);
-						},
-						"selected": false,
-					};
-					if(companies[i]['_id']==Lincko.storage.COMID){
-						submenu_list['workspace']['_0_'+companies[i]['_id']].selected = true;
-					}
-				}
-			}
+		submenu_list['workspace']['_0_0'] = {
+			"style": "radio",
+			"title": Lincko.Translation.get('app', 40, 'html'), //My workspace
+			"hide": true,
+			"action_param": null,
+			"action": function(event){
+				app_application_change_private();
+			},
+			"selected": false,
+		};
+		if(!wrapper_localstorage.company){
+			submenu_list['workspace']['_0_0'].selected = true;
 		}
 		//List first Companies' workspace
 		for(var i in companies){
-			if(companies[i].personal_private==null && companies[i].url!=''){
+			if(companies[i].name.length > 0){
 				name = companies[i].name.ucfirst();
 				url = companies[i].url;
 				if(typeof submenu_list['workspace']['_1_'+companies[i]['_id']] == 'undefined'){
@@ -144,32 +136,8 @@ JSfiles.finish(function(){
 						},
 						"selected": false,
 					};
-					if(companies[i]['_id']==Lincko.storage.COMID){
+					if(wrapper_localstorage.company == url){
 						submenu_list['workspace']['_1_'+companies[i]['_id']].selected = true;
-					}
-				}
-			}
-		}
-		
-		//List others' Private workspace
-		for(var i in companies){
-			if(companies[i].personal_private!=null && companies[i].personal_private!=wrapper_localstorage.uid && companies[i].url==''){
-				username = Lincko.storage.get("users", companies[i].personal_private, "username");
-				name = Lincko.Translation.get('app', 44, 'js', {username: username.ucfirst(),});
-				url = companies[i].personal_private+'/'+username;
-				if(typeof submenu_list['workspace']['_2_'+companies[i]['_id']] == 'undefined'){
-					submenu_list['workspace']['_2_'+companies[i]['_id']] = {
-						"style": "radio",
-						"title": name,
-						"hide": true,
-						"action_param": { workspace:url, },
-						"action": function(event){
-							app_application_change_private(event.data.workspace);
-						},
-						"selected": false,
-					};
-					if(companies[i]['_id']==Lincko.storage.COMID){
-						submenu_list['workspace']['_2_'+companies[i]['_id']].selected = true;
 					}
 				}
 			}

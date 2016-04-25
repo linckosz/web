@@ -502,18 +502,14 @@ $('#app_application_project_block').click(function(){
 
 function app_application_change_workspace(workspace){
 	if(typeof workspace !== 'undefined'){
-		top.location.replace('/workspace/'+workspace);
+		top.location.replace(top.location.protocol+'//'+workspace+'.'+document.domain); //Company workspace
 	} else {
-		top.location.replace('/');
+		base_show_error(Lincko.Translation.get('app', 45, 'js')); //We could not define which workspace you want to consult.
 	}
 }
 
-function app_application_change_private(user){
-	if(typeof user !== 'undefined'){
-		top.location.replace('/user/'+user);
-	} else {
-		top.location.replace('/');
-	}
+function app_application_change_private(){
+	top.location.replace(top.location.protocol+'//'+document.domain); //Personal workspace
 }
 
 

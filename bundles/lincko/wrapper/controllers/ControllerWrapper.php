@@ -102,7 +102,7 @@ class ControllerWrapper extends Controller {
 				}
 				//In case of Access unauthorize, we force to sign out the user
 				else if(isset($json_result->flash->signout) && $json_result->flash->signout===true){
-					$this->signOut();
+					$this->signOut(true);
 				}
 				//In case of first Sign in (public key and private key must be a pair)
 				else if(isset($json_result->flash->public_key) && isset($json_result->flash->private_key)){
@@ -198,9 +198,13 @@ class ControllerWrapper extends Controller {
 		return true;
 	}
 
-	protected function signOut(){
+	protected function signOut($clear=false){
 		$app = $this->app;
-		OneSeventySeven::unsetAll(array('jizhu', 'youjian'));
+		if($clear){ //Do not keep user info
+			OneSeventySeven::unsetAll(array('jizhu'));
+		} else {
+			OneSeventySeven::unsetAll(array('jizhu', 'youjian'));
+		}
 		unset($_SESSION['public_key']);
 		unset($_SESSION['private_key']);
 		unset($_SESSION['company']);
@@ -233,7 +237,7 @@ class ControllerWrapper extends Controller {
 
 			$log_action = true;
 
-			$this->signOut();
+			$this->signOut(true);
 			
 			$this->json['data']['password'] = Datassl::encrypt($this->json['data']['password'], $this->json['data']['email']);
 
@@ -268,7 +272,7 @@ class ControllerWrapper extends Controller {
 
 			$this->json['data']['password'] = Datassl::encrypt($this->json['data']['password'], $this->json['data']['email']);
 
-			$this->signOut();
+			$this->signOut(true);
 			OneSeventySeven::set(array(
 				'youjian' => $this->json['data']['email'],
 				'lianke' => $this->json['data']['password'],
@@ -285,7 +289,7 @@ class ControllerWrapper extends Controller {
 		//This action must be after prepareJson() to force the client side to sign out, and then the server will sign out too. Like that we don't have to wait the response from server (back) to be able to sign out.
 		if($action==='user/signout' && $type==='POST'){
 
-			$this->signOut();
+			$this->signOut(true);
 			$reset_shangzai = true;
 
 		}

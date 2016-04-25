@@ -49,29 +49,20 @@ Lincko.storage.getCOMID = function(){
 
 /* PRIVATE METHOD */
 Lincko.storage.searchCOMID = function(){
-	if(
+	if(wrapper_localstorage.company == ''){
+		Lincko.storage.COMID = 0;
+		Lincko.storage.COMNAME = Lincko.Translation.get('app', 40, 'js');
+		app_application_lincko.update('companies');
+		return Lincko.storage.COMID;
+	} else if(
 		   Lincko.storage.data
 		&& Lincko.storage.data['companies']
 	){
 		var object = Lincko.storage.data['companies'];
 		for(var key in object) {
-			if(object[key].personal_private!=null && object[key].personal_private!=0 && object[key].personal_private==wrapper_localstorage.uid && wrapper_localstorage.company === ''){
-				Lincko.storage.COMID = parseInt(key, 10);
-				//Be carefull the following method get(), it calls inside searchCOMID() too, so if COMID is not previously definied, it will crash teh browser
-				username = Lincko.storage.get("users", object[key].personal_private, "username")
-				Lincko.storage.COMNAME = Lincko.Translation.get('app', 40, 'js');
-				app_application_lincko.update('companies');
-				return Lincko.storage.COMID;
-			} else if((object[key].personal_private==null || object[key].personal_private==0) && object[key].url && object[key].url == wrapper_localstorage.company){
+			if(object[key].url && object[key].url.length > 0 && object[key].url.toLowerCase() == wrapper_localstorage.company.toLowerCase()){
 				Lincko.storage.COMNAME = object[key].name;
 				Lincko.storage.COMID = parseInt(key, 10);
-				app_application_lincko.update('companies');
-				return Lincko.storage.COMID;
-			} else if((object[key].personal_private!=null || object[key].personal_private!=0) && object[key].personal_private == wrapper_localstorage.company){
-				Lincko.storage.COMID = parseInt(key, 10);
-				//Be carefull the following method get(), it calls inside searchCOMID() too, so if COMID is not previously definied, it will crash teh browser
-				username = Lincko.storage.get("users", object[key].personal_private, "username")
-				Lincko.storage.COMNAME = Lincko.Translation.get('app', 44, 'js', {username: username.ucfirst(),});
 				app_application_lincko.update('companies');
 				return Lincko.storage.COMID;
 			}
