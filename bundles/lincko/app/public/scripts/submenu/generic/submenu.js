@@ -615,7 +615,8 @@ Submenu.prototype.showSubmenu = function(time, delay) {
 }
 
 Submenu.prototype.showPreview = function(time, delay) {
-    var submenu_wrapper = $('#app_content_submenu_preview');
+    //var submenu_wrapper = $('#app_content_submenu_preview');
+    var submenu_wrapper = this.Wrapper();
     var that = this;
     var animation;
     if (responsive.test("minDesktop")) {
@@ -717,8 +718,8 @@ Submenu.prototype.hideSubmenu = function(time, delay) {
 
 Submenu.prototype.hidePreview = function(time, delay) {
 	var submenu_wrapper = this.Wrapper();
-	if(this.outAnimation == "new_out")
-		submenu_wrapper = $("#app_content_submenu_preview");
+	//if(this.outAnimation == "new_out")
+	//	submenu_wrapper = $("#app_content_submenu_preview");
     var that = this;
     var animation;
     if (responsive.test("minDesktop")) {
@@ -912,7 +913,7 @@ function submenu_content_block_hide(preview) {
         }
     }
     if (preview) {
-        $('#app_content_submenu_preview').hide().parent().removeClass("with_preview");
+        $('#app_content_submenu_preview').parent().removeClass("with_preview");
     } else {
         $('#app_application_submenu_block').hide();
     }

@@ -148,14 +148,16 @@
 }
 
 .with_preview > #app_content_dynamic_layers {
-	margin-right: 38%;
+	margin-right: 55%;
 }
 
 div#app_content_submenu_preview {
-	display: none;
-	width: 38%;
+	//display: none;
+	position: relative;
+	width: 55%;
 	color: red;
-	background-color: #f7f7f7;
+	background-image: url('/lincko/app/images/submenu/submenu_background.JPG');
+	background-size: 100% 100%;
 	float: right;
 	height: 100%;
 	font-size: large;
@@ -207,10 +209,19 @@ div#app_content_submenu_preview {
 	}
 }
 
-#app_content_dynamic_sub[max-width~="900px"] div#app_content_submenu_preview {
-    width: 100%;
+#app_content_dynamic_sub[max-width~="900px"] #app_content_submenu_preview {
+       display: none !important;
 }
 
-.with_preview[max-width~="900px"] #app_content_dynamic_layers {
-	display: none;
+#app_content_dynamic_sub[max-width~="900px"] #app_content_dynamic_layers {
+	width: 100% !important;
+}
+
+#app_content_dynamic_sub.with_preview[max-width~="900px"] #app_content_submenu_preview {
+    width: 100% !important;
+    display: block !important;
+}
+
+#app_content_dynamic_sub.with_preview[max-width~="900px"] #app_content_dynamic_layers {
+	display: none !important;
 }
