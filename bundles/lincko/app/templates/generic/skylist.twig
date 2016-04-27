@@ -15,16 +15,7 @@
 				<div class="fa fa-trash-o"></div>
 			</div>
 		</div>
-		<div find='card_rightOptions' class="skylist_card_rightOptions maxMobileL">
-			<div class="skylist_rightOptionBox">
-				<div class="fa fa-user"></div>
-				<div find='name' class="skylist_rightOptionBox_text">Name{# toto #}</div>
-			</div>
-			<div class="skylist_rightOptionBox">
-				<div class="fa fa-calendar"></div>
-				<div find='time' class="skylist_rightOptionBox_text">Time{# toto #}</div>
-			</div>
-		</div>
+		<div find='card_rightOptions' class="skylist_card_rightOptions maxMobileL"></div>
 		<table find='card_center' class="skylist_card_center">
 			<tr>
 				<td find='card_spacestick' class="skylist_card_spacestick">&nbsp;</td>
@@ -46,15 +37,15 @@
 		</table>
 	</div>
 
-	<img id="-skylist_newcardCircle" class="skylist_newcardCircle base_color_bg_main" src="{{_filelatest('/lincko/app/images/models/tasks/add.png') }}"/>
+	<span id="-skylist_newcardCircle" class="skylist_newcardCircle icon-AddIcon"></span>
 
-	{#rightOptionBox#}
+	{#rightOptionBox, goes inside <div find='card_rightOptions' #}
 	<div id="-skylist_rightOptionBox" class="skylist_rightOptionBox">
 		<div find='icon' class="fa"></div>
 		<div find='text' class="skylist_rightOptionBox_text">Name{# toto #}</div>
 	</div>
 
-	{#for tasklist#}
+	{#for tasklist, goes inside <td find='card_leftbox'></td> #}
 	<span id='-skylist_checkbox' class="skylist_checkbox floatleft">
 		<input type="checkbox" id="" name="checkname" value="" class="display_none">
 		<label for="" class="icon-CheckboxCheck skylist_checkbox_visual"></label>

@@ -291,9 +291,6 @@ skylist.prototype.addTask = function(item){
 	var Elem_checkbox = $('#-skylist_checkbox').clone().prop('id','');
 	Elem.find('[find=card_leftbox]').html(Elem_checkbox);
 	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').empty();
-	var Elem_rightOptionsBox = $('#-skylist_rightOptionBox').clone().prop('id','');
-	var Elem_rightOptionsBox_tmp;
-	console.log(Elem_checkbox);
 	var created_by;
 	var duedate;
 
@@ -384,6 +381,19 @@ skylist.prototype.addTask = function(item){
 			console.log('that.editing_focus: '+that.editing_focus);
 		},200);
 	});
+
+	that.add_cardEvents(Elem);
+
+	return Elem;
+}
+skylist.prototype.add_rightOptionsBox = function(text, icon_class){
+	var Elem_rightOptionsBox = $('#-skylist_rightOptionBox').clone().prop('id','');
+	Elem_rightOptionsBox.find('[find=text]').html(text);
+	Elem_rightOptionsBox.find('[find=icon]').addClass(icon_class);
+	return Elem_rightOptionsBox;
+}
+skylist.prototype.add_cardEvents = function(Elem){
+	var that = this;
 	//event actions for swipe left and right on the task
 	Elem.on('mousedown touchstart', function(event){ //for firefox, event must be passed as the parameter of this fn
 		//console.log(e);
@@ -406,15 +416,6 @@ skylist.prototype.addTask = function(item){
 		console.log('mouseleave');
 		Elem.mouseup();//trigger mouseup
 	});
-
-	return Elem;
-}
-
-skylist.prototype.add_rightOptionsBox = function(text, icon_class){
-	var Elem_rightOptionsBox = $('#-skylist_rightOptionBox').clone().prop('id','');
-	Elem_rightOptionsBox.find('[find=text]').html(text);
-	Elem_rightOptionsBox.find('[find=icon]').addClass(icon_class);
-	return Elem_rightOptionsBox;
 }
 
 skylist.prototype.add_newtaskBox = function(elem_appendTo){
@@ -483,11 +484,12 @@ skylist.prototype.on_mousemove = function(event){
 	//if past threshold, slide left or right options
 	if ( that.pan_threshold.bool && Math.abs(that.delY) < that.pan_threshold.valY ){
 		console.log('sliding...');
-			that.actiontask.css('left', that.delX);
+			that.actiontask.css('left', that.options_startL + that.delX);
 	}
 	//if just past threshold, initialize
 	else if ( Math.abs(that.delX) > that.pan_threshold.valX && Math.abs(that.delY) < that.pan_threshold.valY){		
 		console.log('initialize...');
+		that.options_startL = parseInt(that.actiontask.css('left'),10);
 		/*
 		if( !that.actiontask.data('options') ){
 			console.log('delX: '+that.delX);
@@ -659,7 +661,7 @@ skylist.prototype.toggle_NewcardCircle = function(){
 skylist.prototype.minTablet = function(){
 	console.log('skylist minTablet');
 	var that = this;
-	that.elem_newcardCircle.removeAttr("style");
+	//that.elem_newcardCircle.removeAttr("style");
 
 	var simpleDesktopWidth = 1000;
 	var simpleDesktopWidth2 = 800;

@@ -137,6 +137,16 @@
 }
 
 
+.skylist_newcardCircle {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    font-size: 50px;
+    margin: 10px;
+    cursor: pointer;
+}
+
+
 /*Checkbox*/
 .skylist_checkbox_visual {
 	font-size: 22px;
