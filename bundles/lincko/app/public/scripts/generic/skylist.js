@@ -18,10 +18,11 @@ var skylist_calcDuedate = function(task_obj){
 }
 
 
-var app_layers_dev_skytasks_ClassTasklist = function(tasklist_wrapper){
-
+var skylist = function(list_type, list_wrapper){
 	this.that = this;
 	var that = this;
+
+	this.list_type = list_type;
 	
 	this.md5id = md5(Math.random());
 	this.window_resize_timeout = null;
@@ -37,7 +38,6 @@ var app_layers_dev_skytasks_ClassTasklist = function(tasklist_wrapper){
 	this.editing_timeout;
 	this.is_scrolling = false;
 
-
 	//variables for left-right slide options
 	this.window_width;
 	this.actiontask;
@@ -47,7 +47,11 @@ var app_layers_dev_skytasks_ClassTasklist = function(tasklist_wrapper){
 	this.delY;
 	this.delY_ini;
 	this.elem_leftOptions = null;
+	this.elem_leftOptions_count = 1;
+	this.elem_leftOptions_width = 80;
 	this.elem_rightOptions = null;
+	this.elem_rightOptions_count = 2;
+	this.elem_rightOptions_width = 80;
 	this.elem_leftOptionsL;
 	this.elem_rightOptionsL;
 	this.mousedown = false;
@@ -57,47 +61,42 @@ var app_layers_dev_skytasks_ClassTasklist = function(tasklist_wrapper){
 
 
 	//variables for construct
-	this.tasklist_wrapper = tasklist_wrapper;
-	this.tasklist;
+	this.list_wrapper = list_wrapper;
+	this.list;
 	this.task;
-	this.elem_newtaskCircle;
-	this.elem_newtaskBox;
+	this.elem_newcardCircle;
+	this.elem_newcardBox;
 	this.detail;
 	this.construct();
 
 
 }
 
-app_layers_dev_skytasks_ClassTasklist.prototype.construct = function(){
-	console.log('ClassTasklist.construct');
+skylist.prototype.construct = function(){
+	console.log('skylist.construct');
 	var that = this;
-	that.tasklist_wrapper = that.tasklist_wrapper.empty();
+	that.list_wrapper = that.list_wrapper.empty();
 
-	that.tasklist = $('#-app_layers_dev_skytasks_tasklist').clone()
+	that.list = $('#-skylist').clone()
 		.addClass('overthrow')
-		.prop('id','app_layers_dev_skytasks_tasklist_'+that.md5id)
-		.appendTo(that.tasklist_wrapper);
-	//that.tasklist_wrapper.addClass('app_layers_dev_skytasks_nativeScroll');
+		.prop('id','skylist_'+that.md5id)
+		.appendTo(that.list_wrapper);
 
-	that.task = $('#-app_layers_dev_skytasks_task').clone();
-
-	that.detail = $('#-app_layers_dev_skytasks_detail').clone()
-		.prop('id','app_layers_dev_skytasks_detail_'+that.md5id)
-		.appendTo(that.tasklist_wrapper);
-
-	that.elem_newtaskCircle = $('#-app_layers_dev_skytasks_newtaskCircle').clone()
-		.prop('id','app_layers_dev_skytasks_newtaskCircle_'+that.md5id)
+	that.elem_newcardCircle = $('#-skylist_newcardCircle').clone()
+		.prop('id','skylist_newcardCircle_'+that.md5id)
 		.click(function(){
-			//submenu_Build("app_task_new");
-			submenu_Build('taskdetail', null, null, 'new', true);
+			if( that.list_type == 'tasks' ){
+				submenu_Build('taskdetail', null, null, 'new', true);
+			}
 		})
-		.appendTo(that.tasklist_wrapper);
+		.appendTo(that.list_wrapper);
 
-
-	that.addTask_all();
+	if( that.list_type=='tasks' ){
+		that.addTask_all();
+	}
 	that.setHeight();
 
-	$(window).on("resize.app_layers_dev_skytasks_tasklist_"+that.md5id, function(){
+	$(window).on("resize.skylist_"+that.md5id, function(){
 		clearTimeout(that.window_resize_timeout);
 		that.window_resize_timeout = setTimeout(function(){
 			that.window_resize();
@@ -106,82 +105,69 @@ app_layers_dev_skytasks_ClassTasklist.prototype.construct = function(){
 	that.window_resize();
 	//$(window).trigger('resize');
 
-	$(document).on("previewHide.app_layers_dev_skytasks_tasklist"+that.md5id, function(){
+	$(document).on("previewHide.skylist_"+that.md5id, function(){
 		that.previewHide();
 	});
 
-	wrapper_IScroll_options_new['app_layers_dev_skytasks_tasklist_'+that.md5id] = { 
+	wrapper_IScroll_options_new['skylist_'+that.md5id] = { 
 		click: false,
 		//mouseWheel: true,
 		//fadeScrollbars: false,
 		//scrollX: true,
 	};	
 	
-	wrapper_IScroll_cb_creation['app_layers_dev_skytasks_tasklist_'+that.md5id] = function(){
-		var IScroll = myIScrollList['app_layers_dev_skytasks_tasklist_'+that.md5id];
+	wrapper_IScroll_cb_creation['skylist_'+that.md5id] = function(){
+		var IScroll = myIScrollList['skylist_'+that.md5id];
 
 		IScroll.on('scrollStart', function(){
-			if( myIScrollList['app_layers_dev_skytasks_tasklist_'+that.md5id].hasVerticalScroll ){
-				$('#app_layers_dev_skytasks_navbar').css('box-shadow','-10px 5px 20px #888888');
-				that.is_scrolling = true;
-			}
+			
 		});//scrollStart
 
 		IScroll.on('scrollEnd', function(){
 			console.log('scrollEnd');
-			setTimeout(function(){
-				that.is_scrolling = false;
-			},500);
-			
-			//console.log(event);
-			var IScrollY = IScroll.y;
-			if( myIScrollList['app_layers_dev_skytasks_tasklist_'+that.md5id].hasVerticalScroll ){
-				if( IScrollY != 0 ){
-					$('#app_layers_dev_skytasks_navbar').css('box-shadow','0px 5px 20px #888888');
-				}
-				else{
-					$('#app_layers_dev_skytasks_navbar').removeAttr('style');
-				}
-				that.toggle_NewtaskCircle();
-			}
+
 		});//scrollEnd
 	}
-}
 
-app_layers_dev_skytasks_ClassTasklist.prototype.destroy = function(){
+	console.log('end of construct');
+}//end of construct
+
+skylist.prototype.destroy = function(){
 	var that = this;
-	app_layers_dev_skytasks_tasklist.tasklist_wrapper.empty();
-	$(window).off("resize.app_layers_dev_skytasks_tasklist_"+that.md5id);
-	$('body').off("mouseleave.app_layers_dev_skytasks_tasklist_"+that.md5id);
-	$(document).off("previewHide.app_layers_dev_skytasks_tasklist"+that.md5id);
-	for( var g in app_layers_dev_skytasks_tasklist ){
+	that.list_wrapper.empty();
+	$(window).off("resize.skylist_"+that.md5id);
+	$('body').off("mouseleave.skylist_"+that.md5id);
+	$(document).off("previewHide.skylist_"+that.md5id);
+	for( var g in that ){
 		console.log('g: '+g);
-		console.log(app_layers_dev_skytasks_tasklist);
-		app_layers_dev_skytasks_tasklist[g] = null;
-		delete app_layers_dev_skytasks_tasklist[g];
-		console.log(app_layers_dev_skytasks_tasklist);
+		console.log(that);
+		that[g] = null;
+		delete that[g];
+		console.log(that);
 	}
-	app_layers_dev_skytasks_tasklist = null;
-	delete app_layers_dev_skytasks_tasklist;
+	that = null;
+	delete that;
 }
 
-app_layers_dev_skytasks_ClassTasklist.prototype.previewHide = function(){
+skylist.prototype.previewHide = function(){
 	console.log('previewHide');
-	this.elem_task_all.removeClass('app_layers_dev_skytasks_TaskSelected');
+	this.elem_task_all.removeClass('skylist_TaskSelected');
+	//this.list.addClass('skylist_noPreviewLayer');
 	$(window).resize();
 }
 
-app_layers_dev_skytasks_ClassTasklist.prototype.store_all_elem = function(){
+skylist.prototype.store_all_elem = function(){
 	console.log('store_all_elem fn');
 	//should be lanunched when all DOM is loaded
-	this.elem_taskblur_all = this.tasklist.find('.app_layers_dev_skytasks_taskblur');
-	this.elem_taskcenter_all = this.tasklist.find('[find=task_center]');
-	this.elem_leftOptions_all = this.tasklist.find('[find=task_leftOptions]');
-	this.elem_rightOptions_all = this.tasklist.find('[find=task_rightOptions]');
-	this.elem_task_all = this.tasklist.find('.app_layers_dev_skytasks_task');
+	//this.elem_taskblur_all = this.tasklist.find('.app_layers_dev_skytasks_taskblur');
+	this.elem_taskcenter_all = this.list.find('[find=task_center]');
+	this.elem_leftOptions_all = this.list.find('[find=card_leftOptions]');
+	this.elem_rightOptions_all = this.list.find('[find=card_leftOptions]');
+
+	this.elem_task_all = this.list.find('[find=card]');
 }
 
-app_layers_dev_skytasks_ClassTasklist.prototype.window_resize = function(){
+skylist.prototype.window_resize = function(){
 	var that = this;
 	that.window_width = $(window).width();
 	console.log('window_width: '+that.window_width);
@@ -203,20 +189,20 @@ app_layers_dev_skytasks_ClassTasklist.prototype.window_resize = function(){
 	}	
 
 	if(!responsive.test("minTablet") ){
-		that.tasklist_wrapper
+		that.list_wrapper
 			.removeClass('app_layers_dev_skytasks_simpleDesktop')
 			.removeClass('app_layers_dev_skytasks_simpleDesktop2');
 	}
 
-	if( myIScrollList['app_layers_dev_skytasks_tasklist_'+that.md5id] ){
-		myIScrollList['app_layers_dev_skytasks_tasklist_'+that.md5id].refresh();
+	if( myIScrollList['skylist_'+that.md5id] ){
+		myIScrollList['skylist_'+that.md5id].refresh();
 		console.log('IScroll refresh');
 		
 	}
 	console.log(that.md5id);
 	console.log('end of resize -- ClassTasklist');
 }
-app_layers_dev_skytasks_ClassTasklist.prototype.tasklist_update = function(type, filter_by){
+skylist.prototype.tasklist_update = function(type, filter_by){
 	console.log('tasklist_update filter: ');
 	console.log(filter_by);
 	var that = this;
@@ -252,13 +238,13 @@ app_layers_dev_skytasks_ClassTasklist.prototype.tasklist_update = function(type,
 		console.log(taskcount);
 	}
 
-	that.tasklist.velocity("fadeOut",{
+	that.list.velocity("fadeOut",{
 		duration: 200,
 		complete: function(){
-			if( that.tasklist.find('.iscroll_sub_div').length > 0 ){
-				iscroll_elem = that.tasklist.find('.iscroll_sub_div').empty();
+			if( that.list.find('.iscroll_sub_div').length > 0 ){
+				iscroll_elem = that.list.find('.iscroll_sub_div').empty();
 			}else{
-				iscroll_elem = that.tasklist.empty();
+				iscroll_elem = that.list.empty();
 			}
 
 			if( taskcount==0 ){
@@ -286,21 +272,24 @@ app_layers_dev_skytasks_ClassTasklist.prototype.tasklist_update = function(type,
 		
 }
 
-app_layers_dev_skytasks_ClassTasklist.prototype.addTask_all = function(){
+skylist.prototype.addTask_all = function(){
+	console.log('addTask_all');
 	var that = this;
 	var items = Lincko.storage.list('tasks');
 	var item;
 	for (var i in items){
 		item = items[i];
-		that.tasklist.append(that.addTask(item));
+		that.list.append(that.addTask(item));
 	}
 	that.store_all_elem();
 	that.add_newtaskBox();
 }
 
-app_layers_dev_skytasks_ClassTasklist.prototype.addTask = function(item){
+skylist.prototype.addTask = function(item){
 	var that = this;
-	var Elem = that.task.clone();
+	var Elem = $('#-skylist_card').clone();
+	var Elem_checkbox = $('#-skylist_skylist_checkbox').prop('id','skylist_skylist_checkbox').clone();
+	Elem.find('[find=card_leftbox]').append(Elem_checkbox);
 	var created_by;
 	var duedate;
 
@@ -312,26 +301,26 @@ app_layers_dev_skytasks_ClassTasklist.prototype.addTask = function(item){
 		item.start = $.now()/1000;
 		item.duration = "86400";
 	}
-	Elem.prop('id','app_layers_dev_skytasks_task_'+that.md5id+'_'+item['_id']);
+	Elem.prop('id','skylist_card_'+that.md5id+'_'+item['_id']);
 
 	Elem.find("[type=checkbox]")
 		.prop(
 			{
-				'id':'app_layers_dev_skytasks_task_checkbox_'+that.md5id+'_'+item['_id'],
+				'id':'skylist_checkbox_'+that.md5id+'_'+item['_id'],
 				'checked': function(){
 					if(item['done_at'] == null){
 						return false;
 					}
 					else{
-						Elem.toggleClass('app_layers_dev_skytasks_strike');
+						Elem.toggleClass('skylist_strike');
 						return true;
 					}
 				}
 			});
-	Elem.find('.app_layers_dev_skytasks_checkbox label').prop('for','app_layers_dev_skytasks_task_checkbox_'+that.md5id+'_'+item['_id']);
+	Elem.find('.skylist_checkbox label').prop('for','skylist_checkbox_'+that.md5id+'_'+item['_id']);
 
 
-	Elem.find('[find=task_options]').addClass('app_layers_skytasks_floatright');
+	Elem.find('[find=task_options]').addClass('skylist_floatright');
 	Elem.find('[find=title]').html(item['+title']);
 	burger(Elem.find('[find=title]'));
 	/*
@@ -348,15 +337,15 @@ app_layers_dev_skytasks_ClassTasklist.prototype.addTask = function(item){
 	Elem.find('[find=name]').html(created_by);
 
 	/*duedate = new wrapper_date(item.start + parseInt(item.duration,10));*/
-	duedate = app_layers_dev_skytasks_calcDuedate(item);
+	duedate = skylist_calcDuedate(item);
 	if( duedate.happensSomeday(0) ){
 		Elem.find('[find=time]').html(Lincko.Translation.get('app', 3302, 'html').toUpperCase()/*today*/);
 	}
 	else if( duedate.happensSomeday(1) ){
-		Elem.find('[find=time]').html(Lincko.Translation.get('app', 3303, 'html').toUpperCase()/*tomorrow*/);
+		Elem.find('[find=card_time]').html(Lincko.Translation.get('app', 3303, 'html').toUpperCase()/*tomorrow*/);
 	}
 	else{
-		Elem.find('[find=time]').html(duedate.display());
+		Elem.find('[find=card_time]').html(duedate.display());
 	}
 
 	Elem.data('taskid',item['_id']);
@@ -400,38 +389,38 @@ app_layers_dev_skytasks_ClassTasklist.prototype.addTask = function(item){
 			that.on_mouseup();
 		}
 	});
-	$('body').on("mouseleave.app_layers_dev_skytasks_tasklist_"+that.md5id, function(){
+	$('body').on("mouseleave.skylist_"+that.md5id, function(){
 		console.log('mouseleave');
 		Elem.mouseup();//trigger mouseup
 	});
 
 	return Elem;
 }
-app_layers_dev_skytasks_ClassTasklist.prototype.add_newtaskBox = function(elem_appendTo){
+skylist.prototype.add_newtaskBox = function(elem_appendTo){
 	console.log('add_newtaskBox');
 	console.log(elem_appendTo);
 	var Elem;
 	var that = this;
 	var elem_blankTask;
-	Elem = $('#-app_layers_dev_skytasks_newtaskBox').clone().removeAttr('id');
+	Elem = $('#-skylist_newtaskBox').clone().removeAttr('id');
 	Elem.on('click', function(){
 		if( responsive.test("minTablet") ){
 			elem_blankTask = that.addTask(null);
 			$(this).before(elem_blankTask);
 			elem_blankTask.velocity("fadeIn");
-			myIScrollList['app_layers_dev_skytasks_tasklist_'+that.md5id].refresh();
+			myIScrollList['skylist_'+that.md5id].refresh();
 			elem_blankTask.find('[find=title]').focus();
 			console.log(elem_blankTask.find('[find=title]'));
 		}
 		else{
 			//submenu_Build("app_task_new");	
-			submenu_Build('taskdetail', null, null, 'new', trued);
+			submenu_Build('taskdetail', null, null, 'new', true);
 		}
 	});
 	that.elem_newtaskBox = Elem;
 	//that.elem_newtaskBox.appendTo(that.tasklist);
 	if(!elem_appendTo){
-		that.elem_newtaskBox.appendTo(that.tasklist);
+		that.elem_newtaskBox.appendTo(that.list);
 	}
 	else{
 		that.elem_newtaskBox.appendTo(elem_appendTo);
@@ -439,7 +428,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.add_newtaskBox = function(elem_a
 }
 
 
-app_layers_dev_skytasks_ClassTasklist.prototype.on_mousedown = function(event, task_elem){
+skylist.prototype.on_mousedown = function(event, task_elem){
 	/*
 		task_elem must be JQuery object of the task element at hand
 	*/
@@ -447,9 +436,9 @@ app_layers_dev_skytasks_ClassTasklist.prototype.on_mousedown = function(event, t
 	var that = this;
 	that.actiontask = task_elem;
 	
-	that.elem_leftOptions = that.actiontask.find('[find=task_leftOptions]');
+	that.elem_leftOptions = that.actiontask.find('[find=card_leftOptions]');
 	if( responsive.test("isMobile") ){
-		that.elem_rightOptions = that.actiontask.find('[find=task_rightOptions]');
+		that.elem_rightOptions = that.actiontask.find('[find=card_rightOptions]');
 	}
 	that.delX_ini = event.pageX || event.originalEvent.touches[0].pageX || event.touches[0].pageX;
 	that.delX_now = that.delX_ini;
@@ -459,7 +448,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.on_mousedown = function(event, t
 
 }
 
-app_layers_dev_skytasks_ClassTasklist.prototype.on_mousemove = function(event){
+skylist.prototype.on_mousemove = function(event){
 	console.log('on_mousemove');
 	var that = this;
 	var elem_options;
@@ -473,13 +462,12 @@ app_layers_dev_skytasks_ClassTasklist.prototype.on_mousemove = function(event){
 	//if past threshold, slide left or right options
 	if ( that.pan_threshold.bool && Math.abs(that.delY) < that.pan_threshold.valY ){
 		console.log('sliding...');
-		if( that.actiontask.data('options')=='right' ){ elem_options = that.elem_rightOptions;}
-		else if(that.actiontask.data('options')=='left' ){ elem_options = that.elem_leftOptions;}
-		elem_options.css('left',that.options_startL + that.delX);
+			that.actiontask.css('left', that.delX);
 	}
 	//if just past threshold, initialize
 	else if ( Math.abs(that.delX) > that.pan_threshold.valX && Math.abs(that.delY) < that.pan_threshold.valY){		
 		console.log('initialize...');
+		/*
 		if( !that.actiontask.data('options') ){
 			console.log('delX: '+that.delX);
 			//initialize left options
@@ -510,6 +498,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.on_mousemove = function(event){
 		else if( that.actiontask.data('options')=='right' ){
 			that.options_startL = parseInt(that.elem_rightOptions.css('left'),10);
 		}
+		*/
 
 		that.pan_threshold.bool = true;
 		that.panyes = true; 
@@ -518,7 +507,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.on_mousemove = function(event){
 	}
 }
 
-app_layers_dev_skytasks_ClassTasklist.prototype.on_mouseup = function(){
+skylist.prototype.on_mouseup = function(){
 	console.log('on_mouseup');
 	var that = this;
 	
@@ -530,10 +519,11 @@ app_layers_dev_skytasks_ClassTasklist.prototype.on_mouseup = function(){
 
 	if( that.pan_threshold.bool ){
 		//righthand side option
-		if( that.actiontask.data('options')=='right' ){
+		if( parseInt(that.actiontask.css('left'),10) < 0 ){
 			console.log('mouseup rightoptions');
-			if( (parseInt(that.elem_rightOptions.css('left'),10) <= that.window_width - that.elem_rightOptionsL) || that.delX_now < 0 ) {
-				that.elem_rightOptions.velocity({ left: that.window_width - that.elem_rightOptionsL });
+			var rightOptions_totalW = that.elem_rightOptions_count*that.elem_rightOptions_width;
+			if( (parseInt(that.actiontask.css('left'),10) <= -rightOptions_totalW ) || that.delX_now < 0 ) {
+				that.actiontask.velocity({ left: -rightOptions_totalW });
 			}
 			else if (that.delX_now >= 0){
 				that.clearOptions(that.actiontask);
@@ -541,15 +531,14 @@ app_layers_dev_skytasks_ClassTasklist.prototype.on_mouseup = function(){
 			}
 		}
 		//lefthand side option
-		else if( that.actiontask.data('options')=='left' ){
+		else{
 			console.log('mouseup leftoptions');
-			console.log('window_width: '+that.window_width);
-			console.log('leftOptionsL: '+that.elem_leftOptionsL);
-			if( parseInt(that.elem_leftOptions.css('left'),10) > -(that.window_width*2-that.elem_leftOptionsL) ){
-				that.elem_leftOptions.velocity({ left: -(that.window_width*2-that.elem_leftOptionsL) });
+			var leftOptions_totalW = that.elem_leftOptions_count*that.elem_leftOptions_width;
+			console.log(leftOptions_totalW);
+			if( parseInt(that.actiontask.css('left'),10) >= leftOptions_totalW  ){
+				that.actiontask.velocity({ left: leftOptions_totalW });
 			}
 			else{
-
 				that.clearOptions(that.actiontask);
 			}
 		}
@@ -557,64 +546,36 @@ app_layers_dev_skytasks_ClassTasklist.prototype.on_mouseup = function(){
 	that.pan_threshold.bool = false;
 }
 
-app_layers_dev_skytasks_ClassTasklist.prototype.clearOptions = function(task){
+skylist.prototype.clearOptions = function(task){
 	var that = this;
 	console.log('clearOptions fn');
 	if( !task ){
-		that.elem_taskblur_all.fadeOut();
-		that.elem_taskcenter_all.removeAttr('style');
-		that.elem_leftOptions_all.removeAttr('style').addClass('display_none');
-		that.elem_rightOptions_all.removeAttr('style');
-		if(responsive.test("maxMobileL")){
-			that.elem_leftOptions_all.addClass('display_none');
-		}
-		if(responsive.test("isMobile")){
-			that.elem_rightOptions_all.addClass('display_none');
-		}
+		that.elem_task_all.removeAttr('style');
 		that.elem_task_all.data('options',false);
 	}
 	else{
 		that.actiontask.data('options',false);
-		task.find('.app_layers_dev_skytasks_taskblur').fadeOut();
-		if (responsive.test("isMobile")){
-			that.elem_rightOptions.velocity( { left:that.window_width },{
-				complete: function(){
-					if (task.data('options')==false){
-						task.find('[find=task_center]').css('opacity','');
-						task.find('[find=task_rightOptions]').css('box-shadow','').addClass('display_none');
-					}
-				}
-			});
-		}
-		that.elem_leftOptions.velocity( {left: -that.window_width*2},{
-			complete: function(){
-				if(task.data('options') == false){
-					task.find('[find=task_center]').css('opacity','');
-					task.find('[find=task_leftOptions]').addClass('display_none');
-				}
-			}
-		});
-
+		task.velocity( {left: 0});
 	}
 }
 
-app_layers_dev_skytasks_ClassTasklist.prototype.setHeight = function(){
+skylist.prototype.setHeight = function(){
 	var that = this;
 	var height = $(window).height() - $('#app_content_top').outerHeight() /*- $('#app_layers_dev_skytasks_navbar').outerHeight()*/;
 	if(responsive.test("maxMobileL")){
 		height -= $('#app_content_menu').outerHeight();
 	}
-	that.tasklist_wrapper.height(height);
+	that.list_wrapper.height(height);
 
 }
 
-app_layers_dev_skytasks_ClassTasklist.prototype.checkboxClick = function(event,task_elem){
+skylist.prototype.checkboxClick = function(event,task_elem){
 	console.log('checkboxClick');
 	event.stopPropagation();
 
-	var task = $(task_elem).closest('.app_layers_dev_skytasks_task');
+	var task = $(task_elem).closest('.skylist_card');
 
-	task.toggleClass('app_layers_dev_skytasks_strike');
+	task.toggleClass('skylist_strike');
 
 /*
 	var detail = $('#app_layers_skytasks_detail');
@@ -628,7 +589,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.checkboxClick = function(event,t
 */
 }
 
-app_layers_dev_skytasks_ClassTasklist.prototype.taskClick = function(event,task_elem){
+skylist.prototype.taskClick = function(event,task_elem){
 	console.log('taskClick');
 	if( !(task_elem instanceof jQuery) ){
 		task_elem = $(task_elem);
@@ -641,133 +602,75 @@ app_layers_dev_skytasks_ClassTasklist.prototype.taskClick = function(event,task_
 		}
 	
 	//clicking on the task will close options
-	if( task_elem.data('options') ){
+	if( parseInt(task_elem.css('left'),10) != 0 ){
 		that.clearOptions(task_elem);
 		return;
 	}
-	that.elem_task_all.removeClass('app_layers_dev_skytasks_TaskSelected');
-	task_elem.addClass('app_layers_dev_skytasks_TaskSelected');
+	that.elem_task_all.removeClass('skylist_TaskSelected');
+	task_elem.addClass('skylist_TaskSelected');
 	this.openDetail(task_elem);
 
 }
 
-app_layers_dev_skytasks_ClassTasklist.prototype.openDetail = function(/*open,*/ task_elem){
+skylist.prototype.openDetail = function(/*open,*/ task_elem){
 	var that = this;
 	var taskid = task_elem.data('taskid');
+	//that.list.removeClass('skylist_noPreviewLayer');
 	submenu_Build('taskdetail', null, null, taskid, true);
-
-	/*
-		open == true : open detail pane
-		open == false: close detail pane
-		open == null: just update the detail pane, dont open or close
-		task_elem : the specific task that will be displayed on the detail pane (always include this param)
-
-	var that = this;
-	var tasklist = that.tasklist;
-	var detail = that.detail;
-	var newtaskCircle = that.newtaskCircle;
-
-	if( task_elem ){
-		var taskid_prev = detail.find('[find=taskid]').html();
-		var taskid = task_elem.data('taskid');
-
-		detail.data('taskid',taskid);
-		detail.find('[find=taskid]').html(taskid);
-		detail.find('[find=title]').html(Lincko.storage.get("tasks", taskid,'+title'));
-		detail.find('[find=comment]').html(Lincko.storage.get("tasks", taskid,'-comment'));
-		createdbyID = Lincko.storage.get('tasks',taskid)['created_by'];
-		detail.find('[find=username]').html(Lincko.storage.get('users',createdbyID,'username'));
-
-		var duedate = new wrapper_date(Lincko.storage.get('tasks',taskid).start+parseInt(Lincko.storage.get('tasks',taskid).duration,10));
-		detail.find('[find=time]').html(duedate.display());
-
-		projectsID = Lincko.storage.get('tasks',taskid)['projects_id'];
-		//detail.find('[find=project]').html(Lincko.storage.get('projects',projectsID)['+title']);
-		detail.find('.app_layers_skytasks_checkbox label').prop('for','app_layers_skytasks_task_checkbox_'+taskid);
-
-		if( task_elem.find('[type=checkbox]').is(':checked') ){
-			detail.find('.app_layers_skytasks_checkbox label').addClass("app_layers_skytasks_detail_checked");
-		}
-		else{
-			detail.find('.app_layers_skytasks_checkbox label').removeClass("app_layers_skytasks_detail_checked");
-		}
-	}
-	if( open == null ){return;}
-
-	if (open == true){
-		detail.removeClass('display_none');
-		newtaskCircle.addClass('display_none');
-	}
-	else if(open == false){
-		detail.addClass('display_none');
-		newtaskCircle.removeClass('display_none');
-	}
-	$(window).trigger('resize');
-	*/
 }
 
-app_layers_dev_skytasks_ClassTasklist.prototype.toggle_NewtaskCircle = function(){
-	console.log('toggle_NewtaskCircle');
+skylist.prototype.toggle_NewcardCircle = function(){
+	console.log('toggle_NewcardCircle');
 	var that = this;
 	var newtaskBox = that.elem_newtaskBox;
-	var newtaskCircle = that.elem_newtaskCircle;
+	var newcardCircle = that.elem_newcardCircle;
 	if(newtaskBox.offset().top + newtaskBox.outerHeight() > $(window).height()){
 		//newtaskBox hidden
-		newtaskCircle.removeClass('display_none');
+		newcardCircle.removeClass('display_none');
 	}
 	else {
 		//newtaskBox visible
-		newtaskCircle.addClass('display_none');
+		newcardCircle.addClass('display_none');
 	}
 }
 
-app_layers_dev_skytasks_ClassTasklist.prototype.minTablet = function(){
-	console.log('dev_skytasks_tasklist minTablet');
+skylist.prototype.minTablet = function(){
+	console.log('skylist minTablet');
 	var that = this;
-	that.elem_newtaskCircle.removeAttr("style");
+	that.elem_newcardCircle.removeAttr("style");
 
 	var simpleDesktopWidth = 1000;
 	var simpleDesktopWidth2 = 800;
-	var tasklist_width = that.tasklist_wrapper.width();
-	if( tasklist_width < simpleDesktopWidth2 ){
-		that.tasklist_wrapper
-			.addClass('app_layers_dev_skytasks_simpleDesktop')
-			.addClass('app_layers_dev_skytasks_simpleDesktop2');
+	var list_width = that.list_wrapper.width();
+	if( list_width < simpleDesktopWidth2 ){
+		that.list_wrapper
+			.addClass('skylist_simpleDesktop')
+			.addClass('skylist_simpleDesktop2');
 	}
-	else if( tasklist_width < simpleDesktopWidth ){
-		that.tasklist_wrapper
-			.addClass('app_layers_dev_skytasks_simpleDesktop')
-			.removeClass('app_layers_dev_skytasks_simpleDesktop2');
+	else if( list_width < simpleDesktopWidth ){
+		that.list_wrapper
+			.addClass('skylist_simpleDesktop')
+			.removeClass('skylist_simpleDesktop2');
 	}
-	else if( tasklist_width >= simpleDesktopWidth ){
-		that.tasklist_wrapper
-			.removeClass('app_layers_dev_skytasks_simpleDesktop')
-			.removeClass('app_layers_dev_skytasks_simpleDesktop2');
+	else if( list_width >= simpleDesktopWidth ){
+		that.list_wrapper
+			.removeClass('skylist_simpleDesktop')
+			.removeClass('skylist_simpleDesktop2');
 	}
 
 
 }
 
-app_layers_dev_skytasks_ClassTasklist.prototype.maxMobileL = function(){
-	console.log('dev_skytasks_tasklist maxMobileL');
+skylist.prototype.maxMobileL = function(){
+	console.log('skylist maxMobileL');
 	var that = this;
-	var window_width = $(window).width();
-	//that.tasklist.find('[find=task_leftOptions]').width(window_width).css('left',-window_width);
-	that.tasklist.find('[find=task_leftOptions]').addClass('display_none');
-
-
-	content_menu = $('#app_content_menu');
-	//that.elem_newtaskCircle.css('margin-bottom',content_menu.outerHeight()); //for when newtaskCircle is positioned fixed
-
-	that.elem_rightOptionsL = that.tasklist.find('.app_layers_dev_skytasks_tasklist_icon_wrapper').first().outerWidth()*3;
-	that.elem_leftOptionsL = that.tasklist.find('.app_layers_dev_skytasks_delete').outerWidth();
 }
 
-app_layers_dev_skytasks_ClassTasklist.prototype.minMobileL = function(){
-	console.log('dev_skytasks_tasklist minMobileL');
+skylist.prototype.minMobileL = function(){
+	console.log('dev_skytasks_list minMobileL');
 	var that = this;
-	that.tasklist.find('[find=task_rightOptions]').removeAttr("style").removeClass('display_none');
-	that.tasklist.find('[find=task_center]').removeAttr('style');
+	that.list.find('[find=task_rightOptions]').removeAttr("style").removeClass('display_none');
+	that.list.find('[find=task_center]').removeAttr('style');
 
 	that.elem_taskcenter_all.find('[find=title]').prop('contenteditable',true);
 
@@ -778,10 +681,10 @@ app_layers_dev_skytasks_ClassTasklist.prototype.minMobileL = function(){
 */
 }
 
-app_layers_dev_skytasks_ClassTasklist.prototype.isMobile = function(){
-	console.log('dev_skytasks_tasklist isMobile');
+skylist.prototype.isMobile = function(){
+	console.log('dev_skytasks_list isMobile');
 	var that = this;
-	that.tasklist.find('[find=task_rightOptions]').addClass('display_none');
+	//that.list.find('[find=task_rightOptions]').addClass('display_none');
 
 	that.elem_taskcenter_all.find('[find=title]').prop('contenteditable',false);
 }

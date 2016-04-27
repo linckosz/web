@@ -1,0 +1,148 @@
+.skylist {
+	width: 45%;
+	margin-left: 24px;
+	height: 100%;
+}
+.skylist_card_leftOptions {
+	position: absolute;
+	height: 100%;
+    background-color: #BE2C1F;
+    color: #FBA026;
+    height: 100%;
+}
+
+.skylist_card_rightOptions {
+	position: absolute;
+    height: 100%;
+    right: 0px;
+}
+
+.skylist_card {
+	/*border: 2px solid blue;*/
+    position: relative;
+    border-bottom: 1px solid rgba(0,0,0,0.24);
+    margin-bottom: 2px;
+    height: 81px;
+}
+.skylist_card_center {
+	height: 60px;
+	background-color: #FFFFFF;
+}
+.skylist_card_center [find=title], .skylist_card_center [find=description] {
+	white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 80%;
+}
+
+.skylist_card_spacestick {
+	background-color: #4E2A84;
+    padding: 0px 2px;
+    width: 2px;
+    left: 0;
+    position: absolute;
+    bottom: 25px;
+    top: 5px;
+}
+
+.skylist_card_textwrapper {
+	width:100%;
+	font-family: Roboto-Light, Roboto;
+	font-size: 20px;
+	color: #475577;
+}
+
+.skylist_card_time{
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	font-family: Helvetica;
+	font-size: 14px;
+	color: #53ADD2;
+	padding: 4px;
+}
+
+.skylist_card_bottom {
+	height: 20px;
+	width: 100%;
+	padding-right: 5px;
+	background-color: rgba(182,214,232,0.1);
+	text-align: right;
+	font-family: Roboto-Light, Roboto;
+	font-size: 12px;
+	color: #475577;
+}
+.skylist_card_bottom .fa {
+	color: #53ADD2;
+}
+.skylist_card_bottom [find=name] {
+    width: 100px;
+    text-align: left;
+    display: inline-block;
+}
+
+.skylist_card_leftOptions, .skylist_card_rightOptions {
+	position: absolute;
+	border-collapse: collapse;
+	z-index: 100;
+	height: 100%;
+	width: 450px;
+    box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.50);   
+}
+.skylist_card_leftOptions {
+    background-color: #BE2C1F;
+    color: #FBA026;
+    left: -450px;
+}
+.skylist_card_rightOptions {
+    background-color: #437CA8;
+    color: #FBA026;
+    right:-450px;
+}
+.skylist_leftOptionBox, .skylist_rightOptionBox {
+	width: 80px;
+    text-align: center;
+    font-size: 25px;
+    height: 100%;
+    display: inline-table;
+    vertical-align: middle;
+}
+.skylist_leftOptionBox {
+	float: right;
+    display: table;
+}
+.skylist_leftOptionBox .fa {
+	display: table-cell;
+    vertical-align: middle;
+}
+.skylist_rightOptionBox .fa {
+    padding-top: 11px;
+    font-size: 40px;
+    padding: 10px 0px;   
+}
+
+.skylist_rightOptionBox:nth-child(odd) {
+	background-color: #475577;
+}
+.skylist_rightOptionBox:nth-child(even) {
+	background-color: #53ADD2;
+}
+.skylist_rightOptionBox_text {
+	font-size: 11px;
+	font-family: Roboto-Regular, Roboto;
+}
+
+
+
+/*MobileL to mobile*/
+@media only screen and (max-width: 900px) {
+	.skylist {
+		width: initial;
+	}
+}
+
+
+/*mobile only*/
+@media only screen and (max-width: 479px) {
+
+}
