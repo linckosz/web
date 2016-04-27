@@ -147,7 +147,7 @@
 	display: block;
 }
 
-.with_preview > #app_content_dynamic_layers {
+#app_content_dynamic_layers {
 	margin-right: 55%;
 }
 
