@@ -10,14 +10,11 @@
 	<div id="-skylist" class="skylist"></div>
 
 	<div id="-skylist_card" find="card" class="skylist_card">
-
 		<div find='card_leftOptions' class="skylist_card_leftOptions maxMobileL">
 			<div class="skylist_leftOptionBox">
 				<div class="fa fa-trash-o"></div>
-				{#<span>{{ _trans('app', 8000, 22, 'html') }}totoDelete</span>#}
 			</div>
 		</div>
-		
 		<div find='card_rightOptions' class="skylist_card_rightOptions maxMobileL">
 			<div class="skylist_rightOptionBox">
 				<div class="fa fa-user"></div>
@@ -28,11 +25,10 @@
 				<div find='time' class="skylist_rightOptionBox_text">Time{# toto #}</div>
 			</div>
 		</div>
-
 		<table find='card_center' class="skylist_card_center">
 			<tr>
 				<td find='card_spacestick' class="skylist_card_spacestick">&nbsp;</td>
-				<td find='card_leftbox'>&nbsp;</td>
+				<td find='card_leftbox'></td>
 				<td find='card_textwrapper' class="skylist_card_textwrapper">
 					<div find='title' contenteditable="true"></div><!--<span find='dash'>-</span>-->
 					<div find='description'></div>
@@ -40,7 +36,6 @@
 				<span find='card_time' class="skylist_card_time floatright"></span>
 			</tr>
 		</table>
-
 		<table find="card_bottom" class="skylist_card_bottom">
 			<td>
 				<span class="fa fa-user"></span>
@@ -49,17 +44,20 @@
 				<span find='comments' class="skylist_icon_text">(2){# toto #}</span>
 			</td>
 		</table>
-
 	</div>
 
 	<img id="-skylist_newcardCircle" class="skylist_newcardCircle base_color_bg_main" src="{{_filelatest('/lincko/app/images/models/tasks/add.png') }}"/>
 
+	{#rightOptionBox#}
+	<div id="-skylist_rightOptionBox" class="skylist_rightOptionBox">
+		<div find='icon' class="fa"></div>
+		<div find='text' class="skylist_rightOptionBox_text">Name{# toto #}</div>
+	</div>
 
 	{#for tasklist#}
 	<span id='-skylist_checkbox' class="skylist_checkbox floatleft">
-		<input type="checkbox" id="" name="checkname" value="">
-		<div class="skylist_checkbox_visual fa fa-check"></div>
-		<label for=""></label>
+		<input type="checkbox" id="" name="checkname" value="" class="display_none">
+		<label for="" class="icon-CheckboxCheck skylist_checkbox_visual"></label>
 	</span>
 
 

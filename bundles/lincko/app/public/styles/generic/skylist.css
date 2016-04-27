@@ -1,5 +1,4 @@
 .skylist {
-	width: 45%;
 	margin-left: 24px;
 	height: 100%;
 }
@@ -8,7 +7,6 @@
 	height: 100%;
     background-color: #BE2C1F;
     color: #FBA026;
-    height: 100%;
 }
 
 .skylist_card_rightOptions {
@@ -23,6 +21,12 @@
     border-bottom: 1px solid rgba(0,0,0,0.24);
     margin-bottom: 2px;
     height: 81px;
+}
+.skylist_card_opacity {
+	opacity: 0.4;
+}
+.skylist_card_opacity .skylist_card_textwrapper {
+	text-decoration: line-through;
 }
 .skylist_card_center {
 	height: 60px;
@@ -133,6 +137,12 @@
 }
 
 
+/*Checkbox*/
+.skylist_checkbox_visual {
+	font-size: 22px;
+	color: #475577;
+	margin-left: 6px;
+}
 
 /*MobileL to mobile*/
 @media only screen and (max-width: 900px) {

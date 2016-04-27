@@ -22,6 +22,7 @@ var wrapper_signout_cb_complete = function(){
 }
 
 function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_complete, ajax_objForm){
+	return true; //toto
 	if(typeof cb_success==="undefined" || cb_success===null){ cb_success = function(){}; }
 	if(typeof cb_error==="undefined" || cb_error===null){ cb_error = function(){}; }
 	if(typeof cb_begin==="undefined" || cb_begin===null){ cb_begin = function(){}; }
@@ -379,7 +380,9 @@ function wrapper_IScroll(){
 	// We do not allow iScroll for mobile device, native scroll helps to make things running smoothly, but we need to careful the callback
 	var overthrow = $('.overthrow');
 	if(supportsTouch){
-		overthrow.css('overflow','auto');
+		console.log('supportsTouch');
+		//overthrow.css('overflow','auto');
+		overthrow.css('overflow', 'hidden').css('overflow-x', 'hidden').css('overflow-y', 'auto');
 		return true;
 	}
 	overthrow.css('overflow', 'hidden').css('overflow-x', 'hidden').css('overflow-y', 'hidden');

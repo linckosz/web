@@ -288,8 +288,12 @@ skylist.prototype.addTask_all = function(){
 skylist.prototype.addTask = function(item){
 	var that = this;
 	var Elem = $('#-skylist_card').clone();
-	var Elem_checkbox = $('#-skylist_skylist_checkbox').prop('id','skylist_skylist_checkbox').clone();
-	Elem.find('[find=card_leftbox]').append(Elem_checkbox);
+	var Elem_checkbox = $('#-skylist_checkbox').clone().prop('id','');
+	Elem.find('[find=card_leftbox]').html(Elem_checkbox);
+	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').empty();
+	var Elem_rightOptionsBox = $('#-skylist_rightOptionBox').clone().prop('id','');
+	var Elem_rightOptionsBox_tmp;
+	console.log(Elem_checkbox);
 	var created_by;
 	var duedate;
 
@@ -303,6 +307,9 @@ skylist.prototype.addTask = function(item){
 	}
 	Elem.prop('id','skylist_card_'+that.md5id+'_'+item['_id']);
 
+	/*
+	checkbox
+	*/
 	Elem.find("[type=checkbox]")
 		.prop(
 			{
@@ -312,41 +319,47 @@ skylist.prototype.addTask = function(item){
 						return false;
 					}
 					else{
-						Elem.toggleClass('skylist_strike');
+						Elem.toggleClass('skylist_card_opacity');
 						return true;
 					}
 				}
 			});
 	Elem.find('.skylist_checkbox label').prop('for','skylist_checkbox_'+that.md5id+'_'+item['_id']);
 
-
-	Elem.find('[find=task_options]').addClass('skylist_floatright');
+	/*
+	title
+	*/
 	Elem.find('[find=title]').html(item['+title']);
 	burger(Elem.find('[find=title]'));
-	/*
-	if (!item['-comment']){ 
-		Elem.find('[find=description]').html('&nbsp;');
-	}
-	else{
-		Elem.find('[find=description]').html(item['-comment']);
-	}
-	*/
 
+	/*created_by*/
 	created_by = item['created_by'];
 	created_by = Lincko.storage.get("users", created_by,"username");
 	Elem.find('[find=name]').html(created_by);
+	
+	/*
+	rightOptions - created_by
+	*/
+	Elem_rightOptions.append(that.add_rightOptionsBox(created_by,'fa-user'));
+
 
 	/*duedate = new wrapper_date(item.start + parseInt(item.duration,10));*/
 	duedate = skylist_calcDuedate(item);
 	if( duedate.happensSomeday(0) ){
-		Elem.find('[find=time]').html(Lincko.Translation.get('app', 3302, 'html').toUpperCase()/*today*/);
+		duedate = Lincko.Translation.get('app', 3302, 'html').toUpperCase()/*today*/;
 	}
 	else if( duedate.happensSomeday(1) ){
-		Elem.find('[find=card_time]').html(Lincko.Translation.get('app', 3303, 'html').toUpperCase()/*tomorrow*/);
+		duedate = Lincko.Translation.get('app', 3303, 'html').toUpperCase()/*tomorrow*/;
 	}
 	else{
-		Elem.find('[find=card_time]').html(duedate.display());
+		duedate = duedate.display();
 	}
+	Elem.find('[find=card_time]').html(duedate);
+
+	/*
+	rightOptions - duedate
+	*/
+	Elem_rightOptions.append(that.add_rightOptionsBox(duedate,'fa-calendar'));
 
 	Elem.data('taskid',item['_id']);
 	Elem.data('options',false);
@@ -396,6 +409,14 @@ skylist.prototype.addTask = function(item){
 
 	return Elem;
 }
+
+skylist.prototype.add_rightOptionsBox = function(text, icon_class){
+	var Elem_rightOptionsBox = $('#-skylist_rightOptionBox').clone().prop('id','');
+	Elem_rightOptionsBox.find('[find=text]').html(text);
+	Elem_rightOptionsBox.find('[find=icon]').addClass(icon_class);
+	return Elem_rightOptionsBox;
+}
+
 skylist.prototype.add_newtaskBox = function(elem_appendTo){
 	console.log('add_newtaskBox');
 	console.log(elem_appendTo);
@@ -575,7 +596,7 @@ skylist.prototype.checkboxClick = function(event,task_elem){
 
 	var task = $(task_elem).closest('.skylist_card');
 
-	task.toggleClass('skylist_strike');
+	task.toggleClass('skylist_card_opacity');
 
 /*
 	var detail = $('#app_layers_skytasks_detail');
@@ -602,7 +623,8 @@ skylist.prototype.taskClick = function(event,task_elem){
 		}
 	
 	//clicking on the task will close options
-	if( parseInt(task_elem.css('left'),10) != 0 ){
+	var task_elem_left = parseInt(task_elem.css('left'),10);
+	if( $.isNumeric(task_elem_left) && task_elem_left != 0 ){
 		that.clearOptions(task_elem);
 		return;
 	}
