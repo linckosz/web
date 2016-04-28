@@ -1,4 +1,8 @@
+/*
+ * the ultimate Lincko Burger
+ */
 var burger = function(elem){
+	this.toto = 'toto';
 	var elem_dropdown = $('#-burger_dropdown').clone().prop('id','burger_dropdown');
 	var burger_str = "";
 	var burger_on = false;
