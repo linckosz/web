@@ -1,5 +1,4 @@
 //polyfill
-/*
 if (!Math.sign) {
 	Math.sign = function (x) {
 		x = +x;
@@ -9,7 +8,7 @@ if (!Math.sign) {
 		return x > 0 ? 1 : -1;
 	};
 }
-*/
+
 
 
 var skylist_calcDuedate = function(task_obj){
@@ -17,8 +16,7 @@ var skylist_calcDuedate = function(task_obj){
 	return duedate;
 }
 
-
-var skylist = function(list_type, list_wrapper){
+var skylist = function(list_type, list_wrapper, sort_array){
 	this.that = this;
 	var that = this;
 
@@ -26,6 +24,31 @@ var skylist = function(list_type, list_wrapper){
 	
 	this.md5id = md5(Math.random());
 	this.window_resize_timeout = null;
+
+
+	//timesort-------------------------------------------------
+	this.elem_navbar;
+	this.elem_timesort;
+	this.sortcount = 0;
+	this.sort_array = sort_array;
+	this.sort_fn = this.tasklist_update;
+	this.elem_sortdot;   //sortdot wrapper element
+	this.elem_sorts = {};//object in array format of all [sort] elements, can find element by name
+	this.elem_sorts_text = {}; //just the text
+	this.elem_Jsorts;	//JQuery object of elem.find('[sort]')
+	this.sort = null;
+	this.active_sort = "";
+
+	//hammer.JS variables
+	this.pan_direction = null;
+	this.sortnum; //integer
+	this.sortnum_new; //integer
+	this.delX;
+	this.pan_range_max = 200;
+	this.pan_range_min = 70;
+	this.timeout;
+	//END OF timesort variables-------------------------------
+
 
 	//all elem group storage
 	this.elem_taskblur_all;
@@ -36,6 +59,7 @@ var skylist = function(list_type, list_wrapper){
 
 	this.editing_focus = false;
 	this.editing_timeout;
+	this.editing_target;
 	this.is_scrolling = false;
 
 	//variables for left-right slide options
@@ -62,6 +86,7 @@ var skylist = function(list_type, list_wrapper){
 
 	//variables for construct
 	this.list_wrapper = list_wrapper;
+	this.list_subwrapper;
 	this.list;
 	this.task;
 	this.elem_newcardCircle;
@@ -76,11 +101,17 @@ skylist.prototype.construct = function(){
 	console.log('skylist.construct');
 	var that = this;
 	that.list_wrapper = that.list_wrapper.empty();
+	that.list_subwrapper = $('#-skylist_subwrapper').prop('id','');
+
+	that.menu_construct();
+
+
 
 	that.list = $('#-skylist').clone()
-		.addClass('overthrow')
 		.prop('id','skylist_'+that.md5id)
-		.appendTo(that.list_wrapper);
+		.appendTo(that.list_subwrapper);
+	that.list_subwrapper.appendTo(that.list_wrapper);
+
 
 	that.elem_newcardCircle = $('#-skylist_newcardCircle').clone()
 		.prop('id','skylist_newcardCircle_'+that.md5id)
@@ -169,6 +200,7 @@ skylist.prototype.store_all_elem = function(){
 
 skylist.prototype.window_resize = function(){
 	var that = this;
+
 	that.window_width = $(window).width();
 	console.log('window_width: '+that.window_width);
 	that.editing_focus = false;
@@ -298,6 +330,7 @@ skylist.prototype.addTask = function(item){
 		item = {};
 		item['_id'] = 'blankTask';
 		item['+title'] = 'blankTask';
+		item['_perm'][0] = 3; //RCUD
 		item['created_by'] = wrapper_localstorage.uid;
 		item.start = $.now()/1000;
 		item.duration = "86400";
@@ -326,8 +359,27 @@ skylist.prototype.addTask = function(item){
 	/*
 	title
 	*/
-	Elem.find('[find=title]').html(item['+title']);
+	var contenteditable = false;
+	var elem_title = Elem.find('[find=title]');
+	if(item['_perm'][0] > 1 ){ //RCU and beyond
+		contenteditable = true; 
+	}
+	elem_title.html(item['+title']);
+	elem_title.on('mousedown touchstart', function(event){ 
+		that.editing_target = $(this);
+		clearTimeout(that.editing_timeout);
+		that.editing_timeout = setTimeout(function(){
+			console.log('--------------------');
+			that.editing_target.attr('contenteditable',true);
+			that.editing_target.focus();
+		},1000);
+	});
+	elem_title.on('mouseup touchend', function(event){
+		clearTimeout(that.editing_timeout);
+	});
+	//.attr('contenteditable',contenteditable);
 	burger(Elem.find('[find=title]'));
+
 
 	/*created_by*/
 	created_by = item['created_by'];
@@ -378,6 +430,7 @@ skylist.prototype.addTask = function(item){
 	Elem.find('[find=title]').blur(function(){
 		that.editing_timeout = setTimeout(function(){
 			that.editing_focus = false;
+			that.editing_target.attr('contenteditable',false);
 			console.log('that.editing_focus: '+that.editing_focus);
 		},200);
 	});
@@ -586,10 +639,11 @@ skylist.prototype.setHeight = function(){
 	var that = this;
 	var height = $(window).height() - $('#app_content_top').outerHeight() /*- $('#app_layers_dev_skytasks_navbar').outerHeight()*/;
 	if(responsive.test("maxMobileL")){
+		console.log('heyheyhyhey');
 		height -= $('#app_content_menu').outerHeight();
 	}
 	that.list_wrapper.height(height);
-
+	that.list_subwrapper.height(height - that.elem_navbar.outerHeight());
 }
 
 skylist.prototype.checkboxClick = function(event,task_elem){
@@ -658,6 +712,231 @@ skylist.prototype.toggle_NewcardCircle = function(){
 	}
 }
 
+
+/*
+ *menu methods (old timesort functions)-------------------------------------------------------------------------------------
+*/
+skylist.prototype.menu_construct = function(){
+	console.log('menu_construct');
+	var that = this;
+	//navbar
+	that.elem_navbar = $('#-skylist_menu_navbar').clone().prop('id','skylist_menu_navbar');
+
+	//individual or group selection in navbar
+	that.elem_navbar.find('[people]').on('click', function(){
+		console.log('people clicked');
+		var selection = $(this);
+		$('#skylist_menu_navbar [people]').removeClass('skylist_menu_selected');
+		selection.addClass('skylist_menu_selected');
+	});
+
+	that.elem_navbar.find('[find=search_icon]').click(function(){
+		var textbox = $(this).prev('[find=search_textbox]');
+		if( textbox.hasClass('display_none')){
+			textbox.velocity({width:150},
+				{
+					begin: function(){
+						textbox.removeClass('display_none');
+					},
+					complete: function(){
+						textbox.focus();
+					}
+				}
+			);
+		}
+		else{
+			textbox.velocity({width:0},
+				{
+					complete: function(){
+						textbox.addClass('display_none');
+					},
+				}
+			);
+		}
+	});
+	burger(that.elem_navbar.find('[find=search_textbox]'));
+
+	var tasklist_search = function(term){
+		console.log('tasklist_search');
+		var filter_by = ['word', term, 'tasks'];
+		console.log(filter_by);
+        that.tasklist_update('search',filter_by);
+	}
+
+	that.elem_navbar.find('[find=search_textbox]').keyup(function(event){
+		app_layers_dev_skytasks_tasklist_searchTerm = $(this).val();
+		clearTimeout(app_layers_dev_skytasks_tasklist_searchTimeout);
+		if(event.keyCode == 13){
+			tasklist_search(app_layers_dev_skytasks_tasklist_searchTerm);
+		}
+		else{
+			app_layers_dev_skytasks_tasklist_searchTimeout = setTimeout(function(){
+				tasklist_search(app_layers_dev_skytasks_tasklist_searchTerm);
+			},400);
+		}
+	});
+	
+	that.list_wrapper.append(that.elem_navbar);
+
+	var sort;
+	that.elem_timesort = that.elem_navbar.find('.skylist_menu_timesort');
+	that.elem_timesort.append('<span class="skylist_menu_sortdot maxMobileL"></span>');
+	that.elem_sortdot = that.elem_timesort.find('.skylist_menu_sortdot');
+	var elem_timesort_text_wrapper = $('#-skylist_menu_timesort_text_wrapper').clone().prop('id','');
+	var elem_timesort_text_wrapper_tmp;
+	
+	for (var i = 0; i < that.sort_array.length; ++i){
+		sort = that.sort_array[i];
+		elem_timesort_text_wrapper_tmp = elem_timesort_text_wrapper.clone();
+		elem_timesort_text_wrapper_tmp.attr('sort',sort);
+		elem_timesort_text_wrapper_tmp.find('[find=text]').html(sort);
+		that.elem_sortdot.append('<span sort='+sort+' find="indicator" class="skylist_menu_timesort_dot">&#149;</span>');
+		that.elem_sorts_text[sort] =elem_timesort_text_wrapper_tmp;
+		that.elem_sortdot.before(elem_timesort_text_wrapper_tmp);
+		console.log(that.elem_timesort);
+		that.elem_sorts[sort] = that.elem_timesort.find('[sort='+sort+']');
+		that.sortcount = i;
+	}
+	that.elem_sortdot.before('<br />');
+	that.elem_Jsorts = that.elem_timesort.find('[sort]');
+
+	that.menu_makeSelection(that.sort_array[0]);
+
+
+	that.elem_Jsorts.click(function(){
+		var sort = $(this).attr('sort');
+		if (!responsive.test("maxMobileL")){
+			that.menu_makeSelection( sort );
+			that.sort_fn('duedate', sort);
+		}
+	});
+
+	/*hammer.js----------------------------------------------------*/
+	that.elem_timesort.hammer().on("panstart", function(event){
+		event.preventDefault();
+		console.log('panstart');
+		if (responsive.test("maxMobileL")){
+			that.pan_direction = (event.gesture.deltaX);
+			if (that.pan_direction > 0){
+				that.pan_direction = "panright";
+			}
+			else if(that.pan_direction < 0){
+				that.pan_direction = "panleft";
+			}
+			that.menu_sortnum_fn();
+
+		}
+	});//end of panstart
+
+	that.elem_timesort.hammer().on("panmove", function(event){
+		event.preventDefault();
+		console.log('panmove');
+		clearTimeout(that.editing_timeout);
+		if (responsive.test("maxMobileL") && that.sortnum_new != null ){
+			that.delX = event.gesture.deltaX;
+
+			if( that.delX < 0 && that.pan_direction=="panright" ){
+				that.pan_direction = "panleft";
+				that.menu_sortnum_fn();
+			}
+			else if( that.delX > 0 && that.pan_direction=="panleft" ){
+				that.pan_direction = "panright";
+				that.menu_sortnum_fn();
+			} 
+
+			var opacity_fade = Math.abs(1/(that.delX/50));
+			var opacity_show = 1 - opacity_fade;
+
+			if ( Math.abs(that.delX) < that.pan_range_max ){
+				that.elem_sorts_text[that.sort_array[that.sortnum]]
+					.css("left",that.delX)
+					.css("opacity",opacity_fade);
+				that.elem_sorts_text[that.sort_array[that.sortnum_new]]
+					.removeClass('display_none')
+					.css( "left",Math.sign(that.delX)*(Math.abs(that.delX)-that.pan_range_max) )
+					.css("opacity",opacity_show);
+			}
+		}
+	});//end of panmove
+
+	that.elem_timesort.hammer().on("panend", function(event){
+		event.preventDefault();
+		console.log('panend');
+		if (responsive.test("maxMobileL") && that.sortnum_new != null){
+
+			if (Math.abs(that.delX) < that.pan_range_min){ //threshold when timesort will scroll to next sort
+				//undo timesort change
+				that.menu_sortnum_fn_rev();
+			}
+			console.log('pandirection: '+that.pan_direction);
+			console.log('sort: '+that.sort_array[that.sortnum]);
+			console.log(that.elem_sorts_text[that.sort_array[that.sortnum]]);
+			console.log('sortNew: '+that.sort_array[that.sortnum_new]);
+			
+			that.elem_sorts_text[that.sort_array[that.sortnum_new]].velocity({left: 0});
+			//that.elem_sorts_text[that.sort_array[that.sortnum]].velocity({opacity:0},500); 
+
+			that.menu_makeSelection(that.sort_array[that.sortnum_new]);
+			that.sort_fn('duedate',that.sort_array[that.sortnum_new]);
+		
+		}
+
+	});//end of panend
+	/*hammer.js END--------------------------------------*/
+
+} //construct END
+
+skylist.prototype.menu_makeSelection = function(selection){
+	console.log('makeSelection: '+selection);
+	var that = this;
+	if(that.elem_sorts[selection]){
+		that.elem_Jsorts.find('[find=indicator]').removeClass('icon-Indicator');
+		that.elem_sorts[selection].find('[find=indicator]').addClass('icon-Indicator');
+		that.active_sort = selection;
+	}
+	if (responsive.test("maxMobileL")){
+		$.each(that.elem_sorts_text, function(name,value){
+			value.addClass('display_none');//.removeClass('skylist_menu_selected');
+		});
+		that.elem_Jsorts.removeClass('skylist_menu_timesort_selected');
+		that.elem_sorts[selection].removeClass('display_none').addClass('skylist_menu_timesort_selected');
+		
+		that.elem_Jsorts.removeAttr("style");
+	}
+	else{
+		console.log('selection does not exist.');
+	}
+}//makeSelection END
+
+skylist.prototype.menu_sortnum_fn = function(){
+	console.log('sortnum_fn');
+	var that = this;
+	that.sortnum = that.sort_array.indexOf(that.active_sort);
+	if (that.pan_direction == "panleft") {
+		if (that.sortnum >= that.sortcount){ that.sortnum_new = 0;}
+		else { that.sortnum_new = that.sortnum+1;}
+	}
+	else if (that.pan_direction == "panright") {
+		if (that.sortnum <= 0){ that.sortnum_new = that.sortcount;}
+		else { that.sortnum_new = that.sortnum-1;}
+	}
+	console.log('sortnum: '+that.sortnum);
+	console.log('sortnum_new: '+that.sortnum_new);
+} //end of sortnum_fn
+
+skylist.prototype.menu_sortnum_fn_rev = function(){
+	console.log('sortnum_fn_rev');
+	var that = this;
+	var sortnum_temp;
+	sortnum_temp = that.sortnum_new;
+	that.sortnum_new = that.sortnum;
+	that.sortnum = sortnum_temp;
+}//end of sortnum_fn_rev
+/*
+ * END OF menu methods (old timesort functions)--------------------------------------------------------------------------
+*/
+
+
 skylist.prototype.minTablet = function(){
 	console.log('skylist minTablet');
 	var that = this;
@@ -682,12 +961,16 @@ skylist.prototype.minTablet = function(){
 			.removeClass('skylist_simpleDesktop2');
 	}
 
+	that.elem_Jsorts.removeClass('display_none');
+
 
 }
 
 skylist.prototype.maxMobileL = function(){
 	console.log('skylist maxMobileL');
 	var that = this;
+	that.elem_Jsorts.not('.skylist_menu_timesort_dot').addClass('display_none');
+	that.elem_navbar.find('.icon-Indicator').closest('.skylist_menu_timesort_text_wrapper').removeClass('display_none');
 }
 
 skylist.prototype.minMobileL = function(){

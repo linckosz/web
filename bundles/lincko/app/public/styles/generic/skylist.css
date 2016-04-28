@@ -1,3 +1,81 @@
+.skylist_menu_navbar {
+	width:100%;
+	padding: 0px 10px;
+    background-color: rgba(247, 247, 247, 0.8);
+    z-index: 5;
+    box-sizing: border-box;
+}
+.skylist_menu_navbar span{
+	padding: 0px 10px;
+}
+.skylist_menu_people {
+	font-size:20px;
+	float: left;
+	padding: 7px 0px !important;
+}
+
+.skylist_menu_timesort {
+	position:relative;
+	overflow: hidden;
+	padding: 7px 20px;
+}
+.skylist_menu_selected {
+	color: #FBA026;
+}
+.skylist_menu_timesort_text_wrapper {
+	position: relative;
+	text-align:center;
+	max-width: 150px;
+	font-size: 20px;
+	padding: 0px !important;
+}
+.skylist_menu_timesort_text_wrapper [find=indicator] {
+	padding: 0px;
+}
+.skylist_menu_timesort_text_wrapper .icon-Indicator:before {
+    position: absolute;
+    left: -7px;
+    bottom: 6px;
+    font-size: 15px;
+}
+.skylist_menu_timesort_text_wrapper .icon-Indicator + span {
+	color: #FBA026;
+}
+.skylist_menu_sortdot {
+	width:150px;
+	text-align:center;
+	top:0px;
+}
+.skylist_menu_timesort_dot {
+	position:relative;
+	padding:0px 5px !important;
+	font-size:25px;
+}
+
+.skylist_menu_navbar_search{
+	float: right;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 7px 32px !important;
+}
+.skylist_menu_navbar_search [find='search_icon']{
+	font-size: 25px;
+}
+.skylist_menu_navbar_search [find='search_textbox']{
+	width:0px;
+	vertical-align: middle;
+	font-size: 15px;
+	box-sizing: border-box;
+}
+.skylist_menu_navbar .icon-Indicator {
+	color: #FBA026;
+}
+
+.skylist_subwrapper {
+	position: absolute;
+	width: 100%;
+}
 .skylist {
 	margin-left: 24px;
 	height: 100%;
@@ -156,6 +234,50 @@
 
 /*MobileL to mobile*/
 @media only screen and (max-width: 900px) {
+	.skylist_menu_navbar {
+		display: table;
+		padding:0;
+	}
+	.skylist_menu_people {
+		font-size: 26px;
+		vertical-align:middle;
+		display: table-cell;
+		width: 100px;
+		float:none;
+		padding-top: 5px !important;
+    	padding-bottom: 5px !important;
+	}
+	.skylist_menu_active:before {
+		display:none;
+	}
+	.skylist_menu_timesort {
+		text-align:center;
+		overflow: hidden;
+		margin: 0px 120px 0px 0px;
+		padding: 0;
+	}
+	.skylist_menu_timesort_selected {
+		color: #FBA026;
+	}
+	.skylist_menu_timesort_text_wrapper {
+		left:0;
+		right:0;
+		margin:0 auto;
+		margin-top: 5px;
+		position:absolute !important;
+	}
+	.skylist_menu_timesort span{
+		position: relative; /*toto*/
+		text-align: center;
+	}
+	.skylist_menu_navbar_search {
+		padding: 13px 14px !important;
+    	font-size: 25px;
+	}
+	.skylist_menu_navbar_search [find='search_textbox'] {
+		font-size: 18px;
+	}
+
 	.skylist {
 		width: initial;
 	}

@@ -7,7 +7,25 @@
 <div id="end_skylist" class="visibility_hidden"></div>
 
 <div class="display_none">
-	<div id="-skylist" class="skylist"></div>
+
+	<div id="-skylist_menu_navbar" class="skylist_menu_navbar">
+		<span class = "skylist_menu_people">
+			<span people="1" class="icon-SinglePerson"></span>
+			<span people="2" class="icon-MultiplePeople"></span>
+		</span>
+		<div class="skylist_menu_timesort"></div>
+		<span class="skylist_menu_navbar_search">
+			<input find='search_textbox' class="display_none" type='textbox' placeholder="Search Here"></input>
+			<span find='search_icon' class="fa fa-search"></span>
+		</span>
+	</div>
+	<span id="-skylist_menu_timesort_text_wrapper" class="skylist_menu_timesort_text_wrapper" sort=''>
+		<span find='indicator' class="minTablet"></span>
+		<span find='text' class="skylist_menu_timesort_text"></span>
+	</span>
+
+	<div id='-skylist_subwrapper' class="skylist_subwrapper"></div>
+	<div id="-skylist" class="skylist overthrow"></div>
 
 	<div id="-skylist_card" find="card" class="skylist_card">
 		<div find='card_leftOptions' class="skylist_card_leftOptions maxMobileL">
@@ -21,7 +39,7 @@
 				<td find='card_spacestick' class="skylist_card_spacestick">&nbsp;</td>
 				<td find='card_leftbox'></td>
 				<td find='card_textwrapper' class="skylist_card_textwrapper">
-					<div find='title' contenteditable="true"></div><!--<span find='dash'>-</span>-->
+					<div find='title' contenteditable="false"></div><!--<span find='dash'>-</span>-->
 					<div find='description'></div>
 				</td>
 				<span find='card_time' class="skylist_card_time floatright"></span>

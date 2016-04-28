@@ -49,23 +49,16 @@ var app_layers_skytasks_feedPage = function(){
 	Elem.prop('id','app_layers_skytasks_tasklist');
 	Elem.appendTo(position);
 
-	app_layers_skytasks_tasklist = new skylist('tasks',$('#app_layers_skytasks_tasklist'));
-
-	var app_layers_skytasks_tasklist_filter = function(type, filter_by){
-		app_layers_skytasks_tasklist.tasklist_update(type, filter_by);
-	}
-
-	app_layers_skytasks_timesort = new app_layers_dev_skytasks_ClassTimesort(
-		$('#app_layers_skytasks_timesort'),
+	app_layers_skytasks_tasklist = new skylist(
+		'tasks',
+		$('#app_layers_skytasks_tasklist'),
 		[
 			Lincko.Translation.get('app', 3301, 'html').toUpperCase(),/*all*/
 			Lincko.Translation.get('app', 3302, 'html').toUpperCase(),/*today*/
 			Lincko.Translation.get('app', 3303, 'html').toUpperCase(),/*tomorrow*/
 			'Spaces'
-		],
-		app_layers_skytasks_tasklist_filter
-	);
-
+		]
+		);
 
 
 
@@ -100,12 +93,12 @@ var app_layers_skytasks_feedPage = function(){
 /*--------------START of enquire.js functions------------------------------*/
 var app_layers_skytasks_minTablet = function(){
 	console.log('skytasks minTablet');
-	app_layers_skytasks_timesort.minTablet();
+	//app_layers_skytasks_timesort.minTablet();
 	app_layers_skytasks_tasklist.minTablet();
 };
 var app_layers_skytasks_maxMobileL = function(){
 	console.log('skytasks maxMobileL');
-	app_layers_skytasks_timesort.maxMobileL();
+	//app_layers_skytasks_timesort.maxMobileL();
 	app_layers_skytasks_tasklist.maxMobileL();
 };
 
