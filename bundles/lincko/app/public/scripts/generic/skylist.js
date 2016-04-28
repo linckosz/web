@@ -94,7 +94,6 @@ var skylist = function(list_type, list_wrapper, sort_array){
 	this.detail;
 	this.construct();
 
-
 }
 
 skylist.prototype.construct = function(){
@@ -314,7 +313,6 @@ skylist.prototype.addTask_all = function(){
 		that.list.append(that.addTask(item));
 	}
 	that.store_all_elem();
-	that.add_newtaskBox();
 }
 
 skylist.prototype.addTask = function(item){
@@ -537,6 +535,7 @@ skylist.prototype.on_mousemove = function(event){
 	//if past threshold, slide left or right options
 	if ( that.pan_threshold.bool && Math.abs(that.delY) < that.pan_threshold.valY ){
 		console.log('sliding...');
+			if(Math.abs(parseInt(that.actiontask.css('left'),10)) >= $(window).width()/2 ){return;}
 			that.actiontask.css('left', that.options_startL + that.delX);
 	}
 	//if just past threshold, initialize
@@ -639,7 +638,6 @@ skylist.prototype.setHeight = function(){
 	var that = this;
 	var height = $(window).height() - $('#app_content_top').outerHeight() /*- $('#app_layers_dev_skytasks_navbar').outerHeight()*/;
 	if(responsive.test("maxMobileL")){
-		console.log('heyheyhyhey');
 		height -= $('#app_content_menu').outerHeight();
 	}
 	that.list_wrapper.height(height);
