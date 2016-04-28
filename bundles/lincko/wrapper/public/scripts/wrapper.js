@@ -395,7 +395,7 @@ function wrapper_IScroll(){
 				this.id = "overthrow_"+md5(Math.random());
 			}
 			if(!myIScrollList[this.id] || Child.hasClass('iscroll_destroyed')){
-				Child.removeClass('iscroll_destroyed')
+				Child.removeClass('iscroll_destroyed');
 				//Merge with optional options
 				var wrapper_IScroll_options_temp = {};
 				//We have to loop to recreate the object because of JS memory assignment

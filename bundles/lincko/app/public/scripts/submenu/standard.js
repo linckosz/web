@@ -62,7 +62,7 @@ submenu_list['settings'] = {
 		"style": "next",
 		"title": Lincko.Translation.get('app', 39, 'html'), //Workspace
 		"next": "workspace",
-		"value": function(){ return Lincko.storage.COMNAME; },
+		"value": function(){ return Lincko.storage.WORKNAME; },
 		"class": "",
 	},
 	//Change the language
@@ -101,7 +101,7 @@ submenu_list['workspace'] = {
 
 JSfiles.finish(function(){
 	app_application_lincko.add(function(){
-		var companies = Lincko.storage.list('companies');
+		var workspaces = Lincko.storage.list('workspaces');
 		var url;
 		var name;
 		var username;
@@ -117,16 +117,16 @@ JSfiles.finish(function(){
 			},
 			"selected": false,
 		};
-		if(!wrapper_localstorage.company){
+		if(!wrapper_localstorage.workspace){
 			submenu_list['workspace']['_0_0'].selected = true;
 		}
-		//List first Companies' workspace
-		for(var i in companies){
-			if(companies[i].name.length > 0){
-				name = companies[i].name.ucfirst();
-				url = companies[i].url;
-				if(typeof submenu_list['workspace']['_1_'+companies[i]['_id']] == 'undefined'){
-					submenu_list['workspace']['_1_'+companies[i]['_id']] = {
+		//List first Workspaces' workspace
+		for(var i in workspaces){
+			if(workspaces[i].name.length > 0){
+				name = workspaces[i].name.ucfirst();
+				url = workspaces[i].url;
+				if(typeof submenu_list['workspace']['_1_'+workspaces[i]['_id']] == 'undefined'){
+					submenu_list['workspace']['_1_'+workspaces[i]['_id']] = {
 						"style": "radio",
 						"title": name,
 						"hide": true,
@@ -136,12 +136,12 @@ JSfiles.finish(function(){
 						},
 						"selected": false,
 					};
-					if(wrapper_localstorage.company == url){
-						submenu_list['workspace']['_1_'+companies[i]['_id']].selected = true;
+					if(wrapper_localstorage.workspace == url){
+						submenu_list['workspace']['_1_'+workspaces[i]['_id']].selected = true;
 					}
 				}
 			}
 		}
 		
-	}, 'companies');
+	}, 'workspaces');
 });

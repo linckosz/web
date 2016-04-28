@@ -89,8 +89,8 @@ $(function () {
 	$('#app_upload_fileupload').fileupload({
 		
 		dataType: 'json',
-		url: top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':8443/file', //Bruno update
-		url_result: top.location.protocol++'//'+document.linckoBack+'file.'+document.domain+':8443/result?%s',
+		url: top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':8443/file/create', //Bruno update
+		url_result: top.location.protocol++'//'+document.linckoBack+'file.'+document.domain+':8443/file/result?%s',
 		// Enable image resizing, except for Android and Opera,
 		// which actually support image resizing, but fail to
 		// send Blob objects via XHR requests:

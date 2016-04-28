@@ -63,8 +63,8 @@ var app_content_menu = {
 		var list = [];
 		var title = base_myplaceholder;
 
-		if(projects_id < 0){ //Company
-			title = Lincko.storage.COMNAME;
+		if(projects_id < 0){ //Workspace
+			title = Lincko.storage.WORKNAME;
 			list = [
 				'statistics',
 				'history',

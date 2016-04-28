@@ -426,7 +426,7 @@ $('#app_project_info').click(function(){
 	app_content_menu.selection(Lincko.storage.getMyPlaceholder()['_id'], 'history');
 });
 
-$('#app_project_company').click(function(){
+$('#app_project_workspace').click(function(){
 	app_content_menu.selection(-1, 'statistics');
 });
 
@@ -474,12 +474,12 @@ JSfiles.finish(function(){
 		$('#app_project_user_email').html(wrapper_to_html(email));
 	});
 
-	app_application_lincko.add("app_project_user_workspace_mobile", "companies", function(){
-		$('#app_project_user_workspace_mobile').html(wrapper_to_html(Lincko.storage.COMNAME));
+	app_application_lincko.add("app_project_user_workspace_mobile", "workspaces", function(){
+		$('#app_project_user_workspace_mobile').html(wrapper_to_html(Lincko.storage.WORKNAME));
 	});
 
-	app_application_lincko.add("app_project_user_workspace", "companies", function(){
-		$('#app_project_user_workspace').html(wrapper_to_html(Lincko.storage.COMNAME));
+	app_application_lincko.add("app_project_user_workspace", "workspaces", function(){
+		$('#app_project_user_workspace').html(wrapper_to_html(Lincko.storage.WORKNAME));
 	});
 	
 	app_application_lincko.update(true); //Update everything

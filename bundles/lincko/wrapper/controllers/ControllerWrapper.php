@@ -23,7 +23,7 @@ class ControllerWrapper extends Controller {
 		'method' => 'GET', //Record the type of request (GET, POST, DELETE, etc.)
 		'language' => 'en', //By default use English
 		'fingerprint' => '', //A way to identify which browser the user is using, help to avoid cookies copy/paste fraud
-		'company' => '', //the url (=ID unique string) of the company, by default use "My workspace"
+		'workspace' => '', //the url (=ID unique string) of the workspace, by default use "Shared workspace"
 	);
 
 	public function __construct(){
@@ -36,9 +36,9 @@ class ControllerWrapper extends Controller {
 		$this->json['method'] = mb_strtoupper($app->request->getMethod());
 		$this->json['language'] = $app->trans->getClientLanguage();
 		$this->json['fingerprint'] = $app->lincko->data['fingerprint'];
-		$this->json['company'] = $app->lincko->data['company'];
-		if(isset($_SESSION['company'])){
-			$this->json['company'] = $_SESSION['company'];
+		$this->json['workspace'] = $app->lincko->data['workspace'];
+		if(isset($_SESSION['workspace'])){
+			$this->json['workspace'] = $_SESSION['workspace'];
 		}
 		if(!OneSeventySeven::get('yuyan')) {
 			OneSeventySeven::set(array('yuyan' => $this->json['language']));
@@ -207,7 +207,7 @@ class ControllerWrapper extends Controller {
 		}
 		unset($_SESSION['public_key']);
 		unset($_SESSION['private_key']);
-		unset($_SESSION['company']);
+		unset($_SESSION['workspace']);
 		return true;
 	}
 

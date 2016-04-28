@@ -17,6 +17,8 @@ var storage_cb_success = function(msg, err, status, data){
 		if(Lincko.storage.update(data.partial[wrapper_localstorage.uid], info)){
 			if(info === 'reset'){
 				Lincko.storage.schema(data.partial[wrapper_localstorage.uid]);
+				wrapper_localstorage.encrypt('data', JSON.stringify(Lincko.storage.data));
+				wrapper_sendAction('', 'post', 'data/reset_init');
 				schema = false;
 			}
 		} else {
@@ -34,11 +36,11 @@ var storage_cb_success = function(msg, err, status, data){
 };
 
 /* PRIVATE METHOD */
-Lincko.storage.getCOMID = function(){
-	if(Lincko.storage.COMID !== null){
-		return Lincko.storage.COMID;
-	} else if(Lincko.storage.searchCOMID() !== false){
-		return Lincko.storage.COMID;
+Lincko.storage.getWORKID = function(){
+	if(Lincko.storage.WORKID !== null){
+		return Lincko.storage.WORKID;
+	} else if(Lincko.storage.searchWORKID() !== false){
+		return Lincko.storage.WORKID;
 	} else if($.isEmptyObject(Lincko.storage.data)){
 		return false;
 	} else {
@@ -48,23 +50,23 @@ Lincko.storage.getCOMID = function(){
 };
 
 /* PRIVATE METHOD */
-Lincko.storage.searchCOMID = function(){
-	if(wrapper_localstorage.company == ''){
-		Lincko.storage.COMID = 0;
-		Lincko.storage.COMNAME = Lincko.Translation.get('app', 40, 'js');
-		app_application_lincko.update('companies');
-		return Lincko.storage.COMID;
+Lincko.storage.searchWORKID = function(){
+	if(wrapper_localstorage.workspace == ''){
+		Lincko.storage.WORKID = 0;
+		Lincko.storage.WORKNAME = Lincko.Translation.get('app', 40, 'js');
+		app_application_lincko.update('workspaces');
+		return Lincko.storage.WORKID;
 	} else if(
 		   Lincko.storage.data
-		&& Lincko.storage.data['companies']
+		&& Lincko.storage.data['workspaces']
 	){
-		var object = Lincko.storage.data['companies'];
+		var object = Lincko.storage.data['workspaces'];
 		for(var key in object) {
-			if(object[key].url && object[key].url.length > 0 && object[key].url.toLowerCase() == wrapper_localstorage.company.toLowerCase()){
-				Lincko.storage.COMNAME = object[key].name;
-				Lincko.storage.COMID = parseInt(key, 10);
-				app_application_lincko.update('companies');
-				return Lincko.storage.COMID;
+			if(object[key].url && object[key].url.length > 0 && object[key].url.toLowerCase() == wrapper_localstorage.workspace.toLowerCase()){
+				Lincko.storage.WORKNAME = object[key].name;
+				Lincko.storage.WORKID = parseInt(key, 10);
+				app_application_lincko.update('workspaces');
+				return Lincko.storage.WORKID;
 			}
 		}
 	}
@@ -792,6 +794,9 @@ Lincko.storage.getMyPlaceholder = function(){
 	Lincko.storage.time('between', null, 'tasks'); => Return an array of all operations done on “tasks” the last 24H.
 	Lincko.storage.time('between', {min: 1448487687, max: 1448530609}); => Return an array of all operations done between 2 timestamps (UTC).
 	Lincko.storage.time('between', {min: 1448487687, max: 1448530609}, 'projects'); => Return an array of all operations done on “projects” between 2 timestamps (UTC).
+
+	Lincko.storage.time('between', {min: 1448487687, max: 1448530609}, 'projects');
+	Lincko.storage.time('between', {min: 1448487687, max: 1448530609}, 'projects');
 */
 Lincko.storage.time = function(type, param, category){
 	var results = [];
@@ -949,8 +954,8 @@ Lincko.storage.time = function(type, param, category){
 /*
 	Lincko.storage.list('tasks'); => List all tasks, order from newest to oldest
 	Lincko.storage.list('tasks', 5); => List 5 latest tasks
-	Lincko.storage.list('tasks', 5, {'parent': 'projects', 'parent_id': 5}); => List 5 latest tasks from the project No5, the conditions must be an object
-	Lincko.storage.list('tasks', null, {'parent': 'projects', 'parent_id': 5, 'created_by': 1}); => List all tasks from the project No5, and created by the user No 1
+	Lincko.storage.list('tasks', 5, {'created_by': 1}); => List 5 latest tasks from the project No5, the conditions must be an object
+	Lincko.storage.list('tasks', null, {'_parent': ['project', 8], 'created_by': 1}); => List all tasks from the project No5, and created by the user No 1
 */
 Lincko.storage.list = function(category, limit, conditions){
 	var temp = {};
@@ -963,6 +968,7 @@ Lincko.storage.list = function(category, limit, conditions){
 	var items;
 	var item;
 	var save = false;
+	var condition_alert = false;
 	var timestamp = 0;
 	if($.type(Lincko.storage.data[category]) === 'object'){
 		items = Lincko.storage.data[category];
@@ -980,8 +986,26 @@ Lincko.storage.list = function(category, limit, conditions){
 				timestamp = item['updated_at'];
 			}
 			for(var property in conditions) {
-				if(typeof item[property] !== 'undefined' && item[property]!=conditions[property]){
+				if(typeof item[property] === 'undefined'){ //We reject if the condition is wrong
+					condition_alert = true;
 					save = false;
+					break;
+				} else {
+					if(typeof conditions[property]  === 'object'){
+						for(var sub in conditions[property]) {
+							if(typeof item[property][sub] === 'undefined'){ //We reject if the condition is wrong
+								condition_alert = true;
+								save = false;
+								break;
+							} else if(item[property][sub]!=conditions[property][sub]){
+								save = false;
+								break;
+							}
+						}
+					} else if(item[property]!=conditions[property]){
+						save = false;
+						break;
+					}
 				}
 			}
 			if(save){
@@ -989,6 +1013,11 @@ Lincko.storage.list = function(category, limit, conditions){
 				temp[timestamp][j] = item;
 			}
 		}
+	}
+
+	if(condition_alert){
+		console.log(conditions);
+		console.log('The condition requested for the list has an issue.');
 	}
 
 	//Order by newest

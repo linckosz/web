@@ -141,7 +141,7 @@ $app->lincko->translation = array(
 $app->lincko->data = array(
 	'domain' => $app->lincko->domain,
 	'title' => $app->lincko->title,
-	'company' => '',
+	'workspace' => '',
 	'lincko_back' => '', //Only used for development purpose "master-[bruno].lincko.cafe"
 );
 
@@ -150,7 +150,7 @@ if(isset($_SERVER["LINCKO_BACK"])){
 }
 
 if(isset($_SERVER["LINCKO_WORKSPACE"])){
-	$app->lincko->data['company'] = $_SERVER["LINCKO_WORKSPACE"];
+	$app->lincko->data['workspace'] = $_SERVER["LINCKO_WORKSPACE"];
 }
 
 ////////////////////////////////////

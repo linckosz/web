@@ -31,7 +31,7 @@
 			<div class="app_project_space"></div>
 			<div class="app_project_line"><div></div></div>
 			<div class="app_project_space"></div>
-			{% if company %}
+			{% if workspace %}
 				<div id="app_project_user_workspace_mobile" class="app_project_tab_title isMobile">
 					<img src="{{ _filelatest('/lincko/app/images/app/project/project.png') }}" />
 					{{ _trans('app', 2, 7, 'html') }}{# Projects #}
@@ -44,9 +44,9 @@
 						{{ _trans('app', 2, 4, 'html') }}{# My Placeholder #}
 					</div>
 				</div>
-				{% if company and space=='workspace' %}
-				<div id="app_project_company">
-					<div id="app_project_company_title">
+				{% if workspace %}
+				<div id="app_project_workspace">
+					<div id="app_project_workspace_title">
 						{{ _trans('app', 2, 11, 'html') }}{# Overview #}
 					</div>
 				</div>
@@ -55,7 +55,7 @@
 			<div class="app_project_space"></div>
 			<div class="app_project_line noMobile"><div></div></div>
 			<div class="app_project_space"></div>
-			{% if company %}
+			{% if workspace %}
 				<div id="app_project_user_workspace" class="app_project_tab_title noMobile">
 					<img src="{{ _filelatest('/lincko/app/images/app/project/project.png') }}" />
 					{{ _trans('app', 2, 7, 'html') }}{# Projects #}
