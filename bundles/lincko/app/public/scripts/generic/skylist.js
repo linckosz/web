@@ -1103,3 +1103,4 @@ skylist.prototype.isMobile = function(){
 
 	that.elem_taskcenter_all.find('[find=title]').prop('contenteditable',false);
 }
+>>>>>>> tmp commit
