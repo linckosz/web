@@ -89,7 +89,7 @@ var skylist = function(list_type, list_wrapper, sort_array){
 	this.list_subwrapper;
 	this.list;
 	this.task;
-	this.Lincko_storage_data_list;
+	this.Lincko_itemsList;
 	this.elem_newcardCircle;
 	this.elem_newcardBox;
 	this.detail;
@@ -122,11 +122,7 @@ skylist.prototype.construct = function(){
 		})
 		.appendTo(that.list_wrapper);
 
-	if(app_content_menu.projects_id == Lincko.storage.getMyPlaceholder()['_id']){
-		that.Lincko_storage_data_list = Lincko.storage.list(that.list_type, null, true);
-	} else {
-		that.Lincko_storage_data_list = Lincko.storage.list(that.list_type, null, {'_parent': ['projects', app_content_menu.projects_id]});
-	}
+	that.generate_Lincko_itemsList();
 	that.addCard_all();
 	that.setHeight();
 
@@ -190,6 +186,23 @@ skylist.prototype.previewHide = function(){
 	$(window).resize();
 }
 
+skylist.prototype.generate_Lincko_itemsList = function(){
+	var that = this;
+	if (that.list_type == "chats") {
+		that.Lincko_itemsList = mainMenu.getlist(null, app_content_menu.projects_id);
+	}
+	else if (that.list_type == "global_chats") {
+		that.Lincko_itemsList = mainMenu.getlist();
+	}
+	else{
+		if(app_content_menu.projects_id == Lincko.storage.getMyPlaceholder()['_id']){
+			that.Lincko_itemsList = Lincko.storage.list(that.list_type, null, true);
+		} else {
+			that.Lincko_itemsList = Lincko.storage.list(that.list_type, null, {'_parent': ['projects', app_content_menu.projects_id]});
+		}
+	}
+}
+
 skylist.prototype.store_all_elem = function(){
 	console.log('store_all_elem fn');
 	//should be lanunched when all DOM is loaded
@@ -237,6 +250,11 @@ skylist.prototype.window_resize = function(){
 	console.log(that.md5id);
 	console.log('end of resize -- ClassTasklist');
 }
+
+skylist.prototype.skylist_update = function(type, filter_by){
+
+}
+
 skylist.prototype.tasklist_update = function(type, filter_by){
 	console.log('tasklist_update filter: ');
 	console.log(filter_by);
@@ -255,7 +273,7 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 		else{ filter_by = null }
 
 		//items = Lincko.storage.list('tasks');
-		items = that.Lincko_storage_data_list;
+		items = that.Lincko_itemsList;
 
 		for (var i in items){
 			item = items[i];
@@ -310,7 +328,7 @@ skylist.prototype.addCard_all = function(){
 	console.log('addCard_all');
 	var that = this;
 	var items;
-	items = that.Lincko_storage_data_list;
+	items = that.Lincko_itemsList;
 	var item;
 	for (var i in items){
 		item = items[i];
@@ -458,7 +476,7 @@ skylist.prototype.addNote_all = function(){
 	var that = this;
 	var items;
 	//var items = Lincko.storage.list('tasks');
-	items = that.Lincko_storage_data_list;
+	items = that.Lincko_itemsList;
 	var item;
 	for (var i in items){
 		item = items[i];
@@ -872,7 +890,6 @@ skylist.prototype.menu_construct = function(){
 		that.elem_sortdot.append('<span sort='+sort+' find="indicator" class="skylist_menu_timesort_dot">&#149;</span>');
 		that.elem_sorts_text[sort] =elem_timesort_text_wrapper_tmp;
 		that.elem_sortdot.before(elem_timesort_text_wrapper_tmp);
-		console.log(that.elem_timesort);
 		that.elem_sorts[sort] = that.elem_timesort.find('[sort='+sort+']');
 		that.sortcount = i;
 	}
