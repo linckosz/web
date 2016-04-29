@@ -34,7 +34,7 @@ function app_layers_skytasks_closePage(){
 	enquire.unregister(responsive.minMobileL, app_layers_skytasks_minMobileL);
 	enquire.unregister(responsive.isMobile, app_layers_skytasks_isMobile);
 
-	app_layers_skytasks_tasklist.destroy();
+	//app_layers_skytasks_tasklist.destroy();
 
 };
 
