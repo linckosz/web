@@ -252,7 +252,8 @@ skylist.prototype.window_resize = function(){
 }
 
 skylist.prototype.skylist_update = function(type, filter_by){
-
+	var that = this;
+	var current_user_id = wrapper_localstorage.uid;
 }
 
 skylist.prototype.tasklist_update = function(type, filter_by){
