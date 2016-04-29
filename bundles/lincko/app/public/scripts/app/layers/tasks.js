@@ -13,12 +13,12 @@ function app_layers_tasks_launchPage(param){
 	app_layers_tasks_feedPage();
 }
 
-function app_layers_skytasks_closePage(){
+function app_layers_tasks_closePage(){
 	console.log('skytasks_closePage');
-	enquire.unregister(responsive.minTablet, app_layers_skytasks_minTablet);
-	enquire.unregister(responsive.maxMobileL, app_layers_skytasks_maxMobileL);
-	enquire.unregister(responsive.minMobileL, app_layers_skytasks_minMobileL);
-	enquire.unregister(responsive.isMobile, app_layers_skytasks_isMobile);
+	enquire.unregister(responsive.minTablet, app_layers_tasks_minTablet);
+	enquire.unregister(responsive.maxMobileL, app_layers_tasks_maxMobileL);
+	enquire.unregister(responsive.minMobileL, app_layers_tasks_minMobileL);
+	enquire.unregister(responsive.isMobile, app_layers_tasks_isMobile);
 
 	app_layers_tasks_tasklist.destroy();
 
@@ -49,10 +49,10 @@ var app_layers_tasks_feedPage = function(param){
 
 
 	/*--------------Enquire.JS------------------------------*/
-	enquire.register(responsive.minTablet, app_layers_skytasks_minTablet);
-	enquire.register(responsive.maxMobileL, app_layers_skytasks_maxMobileL);
-	enquire.register(responsive.minMobileL, app_layers_skytasks_minMobileL);
-	enquire.register(responsive.isMobile, app_layers_skytasks_isMobile);
+	enquire.register(responsive.minTablet, app_layers_tasks_minTablet);
+	enquire.register(responsive.maxMobileL, app_layers_tasks_maxMobileL);
+	enquire.register(responsive.minMobileL, app_layers_tasks_minMobileL);
+	enquire.register(responsive.isMobile, app_layers_tasks_isMobile);
 	/*--------------Enquire.JS------------------------------*/
 
 
@@ -74,24 +74,24 @@ var app_layers_tasks_feedPage = function(param){
 		*/
 	);
 
-};//end of app_layers_skytasks_feedPage()
+};//end of app_layers_tasks_feedPage()
 
 /*--------------START of enquire.js functions------------------------------*/
-var app_layers_skytasks_minTablet = function(){
+var app_layers_tasks_minTablet = function(){
 	console.log('skytasks minTablet');
 	app_layers_tasks_tasklist.minTablet();
 };
-var app_layers_skytasks_maxMobileL = function(){
+var app_layers_tasks_maxMobileL = function(){
 	console.log('skytasks maxMobileL');
 	app_layers_tasks_tasklist.maxMobileL();
 };
 
-var app_layers_skytasks_minMobileL = function() {
+var app_layers_tasks_minMobileL = function() {
 	console.log('skytasks minMobileL');
 	app_layers_tasks_tasklist.minMobileL();
 
 };
-var app_layers_skytasks_isMobile = function() {
+var app_layers_tasks_isMobile = function() {
 	console.log('skytasks isMobile');
 	app_layers_tasks_tasklist.isMobile();
 
