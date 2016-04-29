@@ -253,7 +253,18 @@ skylist.prototype.window_resize = function(){
 
 skylist.prototype.skylist_update = function(type, filter_by){
 	var that = this;
+	var items;
+	var items_filtered = [];
 	var current_user_id = wrapper_localstorage.uid;
+
+	items = that.Lincko_itemsList;
+
+	for( var i in items ){
+		item = items[i];
+
+		//item['_users'][0]
+
+	}
 }
 
 skylist.prototype.tasklist_update = function(type, filter_by){
