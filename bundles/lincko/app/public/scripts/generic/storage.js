@@ -1,5 +1,5 @@
 var storage_first_request = true; //Help to launch getSchema within getLatest only once at the beginning to insure nothing is missing
-
+var storage_call_missing = false;
 /* PRIVATE METHOD */
 /*
 	NOTE: Do not add this callback to wrapper_sendAction, because wrapper_ajax already launches it internally
@@ -27,6 +27,7 @@ var storage_cb_success = function(msg, err, status, data){
 	}
 	if(schema && $.type(data) === 'object' && $.type(data.schema) === 'object' && $.type(data.schema[wrapper_localstorage.uid]) === 'object' && !$.isEmptyObject(data.schema[wrapper_localstorage.uid])){
 		Lincko.storage.schema(data.schema[wrapper_localstorage.uid]);
+		wrapper_sendAction('', 'post', 'data/reset_init');
 	}
 	//Update the last visit day only if we are sure the update is finish
 	if(allow_set_lastvisit && $.type(data) === 'object' && typeof data.lastvisit === 'number'){
@@ -203,6 +204,7 @@ Lincko.storage.update = function(partial, info){
 /* PRIVATE METHOD */
 Lincko.storage.schema = function(schema){
 	var update = false;
+	var calling_missing = false;
 	var missing = {};
 
 	storage_first_request = false; //No need to launch firstLatest()
