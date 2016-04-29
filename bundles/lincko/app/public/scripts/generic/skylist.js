@@ -374,15 +374,13 @@ skylist.prototype.addTask = function(item){
 		that.editing_target = $(this);
 		clearTimeout(that.editing_timeout);
 		that.editing_timeout = setTimeout(function(){
-			console.log('--------------------');
-			that.editing_target.attr('contenteditable',true);
+			that.editing_target.attr('contenteditable',contenteditable);
 			that.editing_target.focus();
 		},1000);
 	});
 	elem_title.on('mouseup touchend', function(event){
 		clearTimeout(that.editing_timeout);
 	});
-	//.attr('contenteditable',contenteditable);
 	burger(Elem.find('[find=title]'), 'regex');
 
 
