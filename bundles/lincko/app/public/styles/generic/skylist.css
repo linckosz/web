@@ -224,13 +224,31 @@
     cursor: pointer;
 }
 
-
-/*Checkbox*/
+/*
+ * For tasklist----------------------------------------------
+ */
 .skylist_checkbox_visual {
 	font-size: 22px;
 	color: #475577;
 	margin-left: 6px;
+} 
+/*
+ * END OF for tasklist----------------------------------------------
+ */
+
+
+/*
+ * For noteslist----------------------------------------------
+ */
+.skylist_card_leftbox_empty {
+    padding: 0px 30px;
+    border: 1px solid black;
 }
+/*
+ * END OF for tasklist----------------------------------------------
+ */
+
+
 
 /*MobileL to mobile*/
 @media only screen and (max-width: 900px) {

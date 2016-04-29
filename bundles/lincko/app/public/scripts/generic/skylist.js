@@ -470,6 +470,7 @@ skylist.prototype.addNote_all = function(){
 skylist.prototype.addNote = function(item){
 	var that = this;
 	var Elem = $('#-skylist_card').clone();
+	Elem.find('[find=card_leftbox]').addClass('skylist_card_leftbox_empty');
 	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').empty();
 	var created_by;
 	var created_at;
