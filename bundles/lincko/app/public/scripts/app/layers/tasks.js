@@ -1,76 +1,99 @@
 /* Category 22xx */
 
+
+/*GLOBAL VARIABLES-------------------------------------------------------------------------*/
+var app_layers_tasks_tasklist = null;
+
+/*GLOBAL VARIABLES END----------------------------------------------------------------------*/
+
+
 function app_layers_tasks_launchPage(param){
+	console.log('app_layers_tasks_launchPage');
 	if(typeof param === 'undefined'){ param = null; }
-	app_application_lincko.add("app_layers_tasks", "tasks", function(){
-		app_layers_tasks_feedPage();
-	});
 	app_layers_tasks_feedPage();
 }
 
-function app_layers_tasks_icon_add_visibility(){
-	if($("#app_content_dynamic_sub").hasScrollBar()){
-		$('#app_layers_tasks').find(".app_layers_tasks_add_corner").show();
-	} else {
-		$('#app_layers_taskss').find(".app_layers_tasks_add_corner").hide();
-	}
-}
-var app_layers_tasks_icon_add_visibility_timer;
-$(window).resize(function(){
-	clearTimeout(app_layers_tasks_icon_add_visibility_timer);
-	app_layers_tasks_icon_add_visibility_timer = setTimeout(app_layers_tasks_icon_add_visibility, wrapper_timeout_timer);
-});
+function app_layers_skytasks_closePage(){
+	console.log('skytasks_closePage');
+	enquire.unregister(responsive.minTablet, app_layers_skytasks_minTablet);
+	enquire.unregister(responsive.maxMobileL, app_layers_skytasks_maxMobileL);
+	enquire.unregister(responsive.minMobileL, app_layers_skytasks_minMobileL);
+	enquire.unregister(responsive.isMobile, app_layers_skytasks_isMobile);
+
+	app_layers_tasks_tasklist.destroy();
+
+};
 
 var app_layers_tasks_feedPage = function(param){
 	if(typeof param === 'undefined'){ param = null; }
+	console.log('skytasks_feedPage');
 	var position = $('#app_layers_tasks');
-	position.addClass('overthrow');
-	position.empty();
-	if(app_content_menu.projects_id == Lincko.storage.getMyPlaceholder()['_id']){
-		var items = Lincko.storage.list('tasks', null, true);
-	} else {
-		var items = Lincko.storage.list('tasks', null, {'_parent': ['projects', app_content_menu.projects_id]});
-	}
-	var item;
 	var Elem;
-	for(var i in items){
-		item = items[i];
-		Elem = $('#-models_tasks').clone();
-		Elem.prop('id', 'models_tasks_'+item['_id']);
-		Elem.find("[find=title]").html( wrapper_to_html(item['+title']) );
-		Elem.find("[find=comment]").html( wrapper_to_html(item['-comment']) );
-		if(item['-comment'] == ''){
-			Elem.find(".models_tasks_standard_line").hide();
-		}
-		Elem.appendTo(position);
-	}
+	position.empty();
 
-	Elem = $('#-app_layers_tasks_add_icon').clone();
-	Elem.prop('id', 'app_layers_tasks_add_icon');
-	Elem.click(function(){
-		submenu_Build("app_task_new");
-	});
+	Elem = $('#-app_layers_tasks_tasklist').clone();
+	Elem.prop('id','app_layers_tasks_tasklist');
 	Elem.appendTo(position);
 
-	Elem = $('#-app_layers_tasks_add_corner').clone();
-	Elem.prop('id', 'app_layers_tasks_add_corner');
-	Elem.click(function(){
-		submenu_Build("app_task_new");
-	});
-	Elem.appendTo(position);
+	app_layers_tasks_tasklist = new skylist(
+		'tasks',
+		$('#app_layers_tasks_tasklist'),
+		[
+			Lincko.Translation.get('app', 3301, 'html').toUpperCase(),/*all*/
+			Lincko.Translation.get('app', 3302, 'html').toUpperCase(),/*today*/
+			Lincko.Translation.get('app', 3303, 'html').toUpperCase(),/*tomorrow*/
+			'Spaces'
+		]
+		);
 
-	//Delete the last border in Mobile mode
-	position.find('.models_tasks_standard').last().addClass('models_tasks_standard_last');
-
-	app_layers_tasks_icon_add_visibility();
 
 
+	/*--------------Enquire.JS------------------------------*/
+	enquire.register(responsive.minTablet, app_layers_skytasks_minTablet);
+	enquire.register(responsive.maxMobileL, app_layers_skytasks_maxMobileL);
+	enquire.register(responsive.minMobileL, app_layers_skytasks_minMobileL);
+	enquire.register(responsive.isMobile, app_layers_skytasks_isMobile);
+	/*--------------Enquire.JS------------------------------*/
+
+
+	//update tasklist when database is changed
 	app_application_lincko.add(
-		'app_layers_tasks',
+		'app_layers_tasks_tasklist',
 		'tasks',
 		function(){
-			console.log('tasklist update function');
+			app_layers_tasks_tasklist.tasklist_update();
 		}
+		
+		//app_layers_dev_skytasks_tasklist.tasklist_update
+		//app_layers_dev_skytasks_tasklist[app_layers_dev_skytasks_tasklist_id].tasklist_update
+		/*
+		function(){
+			//console.log('dev_skytasks lincko.add task update');
+			app_layers_dev_skytasks_tasklist.tasklist_update('all');
+		}
+		*/
 	);
 
-}
+};//end of app_layers_skytasks_feedPage()
+
+/*--------------START of enquire.js functions------------------------------*/
+var app_layers_skytasks_minTablet = function(){
+	console.log('skytasks minTablet');
+	app_layers_tasks_tasklist.minTablet();
+};
+var app_layers_skytasks_maxMobileL = function(){
+	console.log('skytasks maxMobileL');
+	app_layers_tasks_tasklist.maxMobileL();
+};
+
+var app_layers_skytasks_minMobileL = function() {
+	console.log('skytasks minMobileL');
+	app_layers_tasks_tasklist.minMobileL();
+
+};
+var app_layers_skytasks_isMobile = function() {
+	console.log('skytasks isMobile');
+	app_layers_tasks_tasklist.isMobile();
+
+};
+/*--------------END of enquire.js functions------------------------------*/

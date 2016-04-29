@@ -10,7 +10,6 @@ if (!Math.sign) {
 }
 
 
-
 var skylist_calcDuedate = function(task_obj){
 	var duedate = new wrapper_date(task_obj.start + parseInt(task_obj.duration,10));
 	return duedate;
@@ -100,7 +99,7 @@ skylist.prototype.construct = function(){
 	console.log('skylist.construct');
 	var that = this;
 	that.list_wrapper = that.list_wrapper.empty();
-	that.list_subwrapper = $('#-skylist_subwrapper').prop('id','');
+	that.list_subwrapper = $('#-skylist_subwrapper').clone().prop('id','');
 
 	that.menu_construct();
 
@@ -108,7 +107,6 @@ skylist.prototype.construct = function(){
 		.prop('id','skylist_'+that.md5id)
 		.appendTo(that.list_subwrapper);
 	that.list_subwrapper.appendTo(that.list_wrapper);
-
 
 	that.elem_newcardCircle = $('#-skylist_newcardCircle').clone()
 		.prop('id','skylist_newcardCircle_'+that.md5id)
@@ -248,7 +246,12 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 		else if ( filter_by == 'Spaces' ){}
 		else{ filter_by = null }
 
-		items = Lincko.storage.list('tasks');
+		//items = Lincko.storage.list('tasks');
+		if(app_content_menu.projects_id == Lincko.storage.getMyPlaceholder()['_id']){
+			items = Lincko.storage.list('tasks', null, true);
+		} else {
+			items = Lincko.storage.list('tasks', null, {'_parent': ['projects', app_content_menu.projects_id]});
+		}
 
 		for (var i in items){
 			item = items[i];
@@ -286,7 +289,6 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 				}
 			}
 			
-			that.add_newtaskBox(iscroll_elem);
 			that.store_all_elem();
 			$('#app_layers_dev_skytasks_navbar').removeAttr('style');
 			that.window_resize();
@@ -304,12 +306,19 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 skylist.prototype.addTask_all = function(){
 	console.log('addTask_all');
 	var that = this;
-	var items = Lincko.storage.list('tasks');
+	var items;
+	//var items = Lincko.storage.list('tasks');
+	if(app_content_menu.projects_id == Lincko.storage.getMyPlaceholder()['_id']){
+		items = Lincko.storage.list('tasks', null, true);
+	} else {
+		items = Lincko.storage.list('tasks', null, {'_parent': ['projects', app_content_menu.projects_id]});
+	}
 	var item;
 	for (var i in items){
 		item = items[i];
 		that.list.append(that.addTask(item));
 	}
+	console.log(that.list);
 	that.store_all_elem();
 }
 
@@ -374,7 +383,7 @@ skylist.prototype.addTask = function(item){
 		clearTimeout(that.editing_timeout);
 	});
 	//.attr('contenteditable',contenteditable);
-	burger(Elem.find('[find=title]'));
+	burger(Elem.find('[find=title]'), 'regex');
 
 
 	/*created_by*/
@@ -465,37 +474,6 @@ skylist.prototype.add_cardEvents = function(Elem){
 		console.log('mouseleave');
 		Elem.mouseup();//trigger mouseup
 	});
-}
-
-skylist.prototype.add_newtaskBox = function(elem_appendTo){
-	console.log('add_newtaskBox');
-	console.log(elem_appendTo);
-	var Elem;
-	var that = this;
-	var elem_blankTask;
-	Elem = $('#-skylist_newtaskBox').clone().removeAttr('id');
-	Elem.on('click', function(){
-		if( responsive.test("minTablet") ){
-			elem_blankTask = that.addTask(null);
-			$(this).before(elem_blankTask);
-			elem_blankTask.velocity("fadeIn");
-			myIScrollList['skylist_'+that.md5id].refresh();
-			elem_blankTask.find('[find=title]').focus();
-			console.log(elem_blankTask.find('[find=title]'));
-		}
-		else{
-			//submenu_Build("app_task_new");	
-			submenu_Build('taskdetail', null, null, 'new', true);
-		}
-	});
-	that.elem_newtaskBox = Elem;
-	//that.elem_newtaskBox.appendTo(that.tasklist);
-	if(!elem_appendTo){
-		that.elem_newtaskBox.appendTo(that.list);
-	}
-	else{
-		that.elem_newtaskBox.appendTo(elem_appendTo);
-	}
 }
 
 
@@ -693,20 +671,6 @@ skylist.prototype.openDetail = function(/*open,*/ task_elem){
 	submenu_Build('taskdetail', null, null, taskid, true);
 }
 
-skylist.prototype.toggle_NewcardCircle = function(){
-	console.log('toggle_NewcardCircle');
-	var that = this;
-	var newtaskBox = that.elem_newtaskBox;
-	var newcardCircle = that.elem_newcardCircle;
-	if(newtaskBox.offset().top + newtaskBox.outerHeight() > $(window).height()){
-		//newtaskBox hidden
-		newcardCircle.removeClass('display_none');
-	}
-	else {
-		//newtaskBox visible
-		newcardCircle.addClass('display_none');
-	}
-}
 
 
 /*
@@ -750,7 +714,7 @@ skylist.prototype.menu_construct = function(){
 			);
 		}
 	});
-	burger(that.elem_navbar.find('[find=search_textbox]'));
+	//burger(that.elem_navbar.find('[find=search_textbox]'), 'regex');
 
 	var tasklist_search = function(term){
 		console.log('tasklist_search');
@@ -991,4 +955,3 @@ skylist.prototype.isMobile = function(){
 
 	that.elem_taskcenter_all.find('[find=title]').prop('contenteditable',false);
 }
->>>>>>> tmp commit
