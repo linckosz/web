@@ -22,8 +22,7 @@ var burger = function(elem, burger_mode){
 	}
 
 
-
-	if( burger_mode = 'regex' ){
+	if( burger_mode == 'regex' ){
 		var burger_str = "";
 		var burger_on = false;
 		var burger_type = null;
@@ -91,7 +90,12 @@ var burger = function(elem, burger_mode){
 			//burger_destroy();
 		});
 	}//END OF burger_mode == regex
-
+    else if( burger_mode == 'in_charge' ){
+        elem.click(function(event){
+            event.stopPropagation();
+            console.log(elem.position());
+        });       
+    }
 }
 
 function burger_regex_getCaretOffset(elem) {

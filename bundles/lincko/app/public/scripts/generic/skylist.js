@@ -264,7 +264,7 @@ skylist.prototype.filter_by_people = function(items,filter){
 	else{
 		for( var i in items ){
 			item = items[i];
-			if( item['_users'][filter]['in_charge'] ){
+			if( item['_users'][filter] && item['_users'][filter]['in_charge'] ){
 				items_filtered.push(item);
 			}
 		}
@@ -505,6 +505,18 @@ skylist.prototype.addTask = function(item){
 		}
 	}
 	Elem.find('[find=name]').html(in_charge);
+	var elem_burger = $('#-burger_dropdown').clone().prop('id','').insertAfter(Elem.find('[find=name]'));
+	Elem.find('[find=name]').click(function(event){
+		event.stopPropagation();
+		var coord = $(this).position();
+		$(this).next('.burger_dropdown')
+			.html('AAAA')
+			.css('left', coord.left)
+			.css('top', coord.top + $(this).closest('table').outerHeight() )
+			.css('position','absolute')
+			.velocity("slideDown");
+	});
+	//burger(Elem.find('[find=name]'), 'in_charge');
 	
 	/*
 	rightOptions - created_by
