@@ -10,7 +10,7 @@ submenu_list['taskdetail'] = {
 		"title": "taskdetail",
 		"class": "",
 	},
-
+/*
 	"confirm": {
 		"style": "tasklist_button",
 		"title": function(that){
@@ -35,6 +35,7 @@ submenu_list['taskdetail'] = {
 		},
 		"hide": true,
 	},
+*/
 
 	"projects_id": {
 		"style": "input_hidden",
@@ -46,13 +47,6 @@ submenu_list['taskdetail'] = {
 		},
 		"class": "",
 	},
-
-	"form_cancel": {
-		"style": "form_button",
-		"title": Lincko.Translation.get('app', 7, 'html'), //Cancel
-		"hide": true,
-	},
-
 };
 
 Submenu_select.tasklist_button = function(Elem) {
@@ -119,6 +113,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	var elem;
 	var duedate;
 	var created_by;
+	var in_charge = '';
 	var item = {};
 
 	if(taskid == 'new' ){
@@ -155,9 +150,14 @@ Submenu.prototype.Add_taskdetail = function() {
 
 	/*---taskmeta---*/
 	elem = $('#-submenu_taskdetail_meta').clone().prop('id','submenu_taskdetail_meta');
-	created_by = item['created_by'];
-	created_by = Lincko.storage.get("users", created_by,"username");
-	elem.find('[find=assigned_text]').html(created_by);
+
+	for (var i in item['_users']){
+		if( item['_users'][i]['in_charge']==true ){
+			in_charge += ' ';
+			in_charge += Lincko.storage.get("users", i ,"username");
+		}
+	}
+	elem.find('[find=assigned_text]').html(in_charge);
 
 	duedate = app_layers_dev_skytasks_calcDuedate(item);
 
@@ -175,42 +175,66 @@ Submenu.prototype.Add_taskdetail = function() {
 	/*---taskdescription---*/
 	elem = $('#-submenu_taskdetail_description').clone().prop('id','submenu_taskdetail_description');
 	elem.find('[find=description_text]').html(item['-comment']);
-	elem.find('.submenu_taskdetail_collapsable_button').click(function(){
-		if( $(this).next().css('display')!='none' ){
-			$(this).next().velocity('slideUp',{
-				begin: function(){
-					$(this).css({
-						'background-color':'#FBFBFB',
-						'height':'60%',
-					});
-				},
-			});
-		}
-		else{
-			$(this).next().velocity('slideDown',{
-				begin: function(){
-					$(this).css('background','#FBFBFB');
-				},
-				complete: function(){
-					$(this).removeAttr('style');
-				},
-			});
-		}
-		
-	});
 	submenu_taskdetail.append(elem);
 
 	/*---taskcomments--*/
 	elem = $('#-submenu_taskdetail_comments').clone().prop('id','submenu_taskdetail_comments');
 	submenu_taskdetail.append(elem);
 
-	elem = $('#-submenu_taskdetail_commentbubble').clone().prop('id','submenu_taskdetail_commentbubble');
-	submenu_taskdetail.find('.submenu_taskdetail_comments_main').append(elem);
-	elem = $('#-submenu_taskdetail_commentbubble').clone().prop('id','submenu_taskdetail_commentbubble');
-	submenu_taskdetail.find('.submenu_taskdetail_comments_main').append(elem);
-	elem = $('#-submenu_taskdetail_commentbubble').clone().prop('id','submenu_taskdetail_commentbubble').addClass('submenu_taskdetail_commentbubble_right');
-	submenu_taskdetail.find('.submenu_taskdetail_comments_main').append(elem);
+	elem_commentbubble = $('#-submenu_taskdetail_commentbubble').clone().prop('id','submenu_taskdetail_commentbubble');
+	var elem_tmp;
 
+	var comments = Lincko.storage.list('comments',null,{'_parent': ['tasks',taskid]});
+	var commentCount = 0;
+	for ( var i in comments ){
+		comment = comments[i];
+		elem = elem_commentbubble.clone();
+		elem.find('[find=text]').html(comment['+comment']);
+		created_by = Lincko.storage.get("users", comment['created_by'],"username");
+		elem.find('[find=name]').html(created_by);
+		submenu_taskdetail.find('.submenu_taskdetail_comments_main').append(elem);
+		commentCount++;
+	}
+	console.log('commentCount');
+	console.log(commentCount);
+	submenu_taskdetail.find('[find=commentCount]').html(commentCount);
+
+
+
+	/*attach collapsable_fn*/
+	var submenu_taskdetail_collapsable_fn = function(){
+		var elem_btn = $(this);
+		var elem_content = $(this).siblings();
+		var elem_arrow = elem_btn.find('[find=icon_arrow]');
+			if( elem_content.css('display')!='none' ){
+				elem_content.velocity('slideUp',{
+					begin: function(){
+						elem_content.css({
+							'background-color':'#FBFBFB',
+						});
+						elem_arrow.addClass('fa-rotate-360');
+					},
+				});
+				elem_arrow.velocity({
+					'rotateZ': -90,
+				});
+			}
+			else{
+				elem_content.velocity('slideDown',{
+					begin: function(){
+						elem_content.css('background','#FBFBFB');
+						elem_arrow.removeClass('fa-rotate-360');
+					},
+					complete: function(){
+						elem_content.removeAttr('style');
+					},
+				});
+				elem_arrow.velocity({
+					'rotateZ': 0,
+				});
+			}
+		}
+	submenu_taskdetail.find('.submenu_taskdetail_collapsable_button').click(submenu_taskdetail_collapsable_fn);
 
 	submenu_wrapper.find('[find=submenu_wrapper_content]').removeClass('overthrow');
 

@@ -519,9 +519,17 @@ skylist.prototype.addTask = function(item){
 	//burger(Elem.find('[find=name]'), 'in_charge');
 	
 	/*
-	rightOptions - created_by
+	rightOptions - in_charge
 	*/
-	Elem_rightOptions.append(that.add_rightOptionsBox(created_by,'fa-user'));
+	Elem_rightOptions.append(that.add_rightOptionsBox(in_charge,'fa-user'));
+
+	/*
+	comments
+	*/
+	var commentCount = 0;
+	var comments = Lincko.storage.list('comments',null,{'_parent': ['tasks',item['_id']]});
+	commentCount = comments.length;
+	Elem.find('[find=commentCount]').html(commentCount);
 
 
 	/*duedate = new wrapper_date(item.start + parseInt(item.duration,10));*/

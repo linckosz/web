@@ -1,6 +1,6 @@
 <div id="-submenu_taskdetail" class="submenu_taskdetail base_color_text_grey"></div>
 
-<table id="-submenu_taskdetail_tasktitle" class="submenu_taskdetail_tasktitle">
+<table id="-submenu_taskdetail_tasktitle" class="submenu_taskdetail_tasktitle submenu_taskdetail_paddingLeft">
 	<tr>
 		<td class="app_layers_dev_skytasks_checkbox">
 			<input type="checkbox" name="checkname">
@@ -20,60 +20,83 @@
 </table>
 
 <div id="-submenu_taskdetail_description" class="submenu_taskdetail_description">
-	<div class="submenu_taskdetail_collapsable_button">
-		<span class="fa fa-caret-down base_color_text_linckoOrange"></span>
-		<strong>{{ _trans('app', 10, 4, 'html') }}{#description#}:</strong>
-	</div>
-	<div find="description_text" contenteditable="true" class="needsclick submenu_taskdetail_collapsable_content"></div>
+	<table class="submenu_taskdetail_collapsable_button submenu_taskdetail_paddingLeft">
+		<td find="icon_arrow" class="icon-Expanded base_color_text_linckoOrange"></td>
+		<td>{{ _trans('app', 10, 4, 'html') }}{#description#}</td>
+	</table>
+	<div find="description_text" contenteditable="true" class="needsclick submenu_taskdetail_collapsable_content submenu_taskdetail_paddingLeft"></div>
 </div>
-
-<table id="-submenu_taskdetail_meta" class="submenu_taskdetail_meta">
-	<tr>
-		<td class="submenu_taskdetail_meta_box">
-			{#<img src="{{_filelatest('/lincko/app/images/app/icons/Users-1.png') }}"/>#}
-			<span class="fa fa-user"></span>
-			<div find="assigned_text"></div>
-		</td>
-		<td class="submenu_taskdetail_meta_box">
-			{#<img src="{{_filelatest('/lincko/app/images/app/icons/Time-3.png') }}"/>#}
-			<span class="fa fa-calendar"></span>
-			<div find="duedate_text"></div>
-		</td>
-		<td class="submenu_taskdetail_meta_box">
-			{#<img src="{{_filelatest('/lincko/app/images/app/icons/Time-3.png') }}"/>#}
-			<span class="fa fa-hashtag"></span>
-			<div find="spaces_text">Spaces</div>
-		</td>
-	</tr>
-</table>
+<div id="-submenu_taskdetail_meta" class="submenu_taskdetail_meta submenu_taskdetail_paddingLeft">
+	<table>
+		<tr>
+			<td find="calendar" class="submenu_taskdetail_meta_box">
+				{#<img src="{{_filelatest('/lincko/app/images/app/icons/Time-3.png') }}"/>#}
+				<span class="submenu_taskdetail_meta_icons fa fa-calendar"></span>
+				<span find="duedate_text" class="submenu_taskdetail_meta_text"></span>
+			</td>
+			<td find="user" class="submenu_taskdetail_meta_box">
+				{#<img src="{{_filelatest('/lincko/app/images/app/icons/Users-1.png') }}"/>#}
+				<span class="submenu_taskdetail_meta_icons fa fa-user"></span>
+				<span find="assigned_text" class="submenu_taskdetail_meta_text"></span>
+			</td>
+			<td find="spaces" class="submenu_taskdetail_meta_box">
+				{#<img src="{{_filelatest('/lincko/app/images/app/icons/Time-3.png') }}"/>#}
+				<span class="submenu_taskdetail_meta_icons fa fa-hashtag"></span>
+				<span find="spaces_text" class="submenu_taskdetail_meta_text">Spaces</span>
+			</td>
+		</tr>
+	</table>
+</div>
 
 <div id="-submenu_taskdetail_comments" class="submenu_taskdetail_comments">
+	<table class="submenu_taskdetail_collapsable_button submenu_taskdetail_paddingLeft">
+		<td find="icon_arrow" class="icon-Expanded base_color_text_linckoOrange"></td>
+		<td>{{ _trans('app', 10, 3, 'html') }}{#comments#} (<span find="commentCount"></span>)</td>
+	</table>
+	<div class="submenu_taskdetail_comments_seePrev">
+		<span class="submeu_taskdetail_blueButton">See previous (x comments)...{#toto#}</span>
+	</div>
+	{#
 	<div class="submenu_taskdetail_comments_header">
-		{#<img src="{{_filelatest('/lincko/app/images/app/icons/Edition-32.png') }}"/>#}
 		<span class="fa fa-pencil"></span>
-		<span class="submenu_taskdetail_text">{{ _trans('app', 10, 3, 'html') }}{#see comments#} (?)<span>
+		<span class="submenu_taskdetail_text">{{ _trans('app', 10, 3, 'html') }}(?)<span>
 		<span class="fa fa-plus-circle submenu_taskdetail_plusminus"></span>
 		<span class="fa fa-minus-circle submenu_taskdetail_plusminus"></span>
-		{#
-		<img class="submenu_taskdetail_plusminus" src="{{_filelatest('/lincko/app/images/app/icons/Interface-90.png') }}"/>
-		<img class="submenu_taskdetail_plusminus" src="{{_filelatest('/lincko/app/images/app/icons/Interface-89.png') }}"/>
-		#}
-
 	</div>
-	<div class="submenu_taskdetail_comments_main"></div>
-	<div class="submeu_taskdetail_comments_action">
-		<span class="base_color_text_linckoOrange">{{ _trans('app', 10, 1, 'html') }}{#see unread#}</span>
-		<span class="base_color_text_linckoOrange">{{ _trans('app', 10, 2, 'html') }}{#see all#}</span>
+	#}
+	<div class="submenu_taskdetail_comments_main submenu_taskdetail_paddingLeft"></div>
+	<div class="submenu_taskdetail_paddingLeft">
+		<span class="submeu_taskdetail_blueButton">Add new comment {#toto#}</span>
 	</div>
 </div>
 
+
+<table id="-submenu_taskdetail_commentbubble" class="submenu_taskdetail_commentbubble">
+	<td class="submenu_taskdetail_commentbubble_profile">
+		<div find="profile_pic" class="icon-Persona"></div>
+		<div find="name">Skyler</div>
+	</td>
+	<td class="submenu_taskdetail_commentbubble_text">
+		<div find="text">
+			WHOAAAAAAAAAAAA THIS COMMENT IS AWESOME! I can't wait to put more comments to this task.
+		</div>
+		<div class="submenu_taskdetail_commentbubble_quickAction">
+			<span find="reply" class="base_color_text_linckoOrange">Reply{#toto#}</span>
+			<span find="seeAll" class="base_color_text_linckoOrange">{{ _trans('app', 10, 2, 'html') }}{#see all#}</span>
+			<span find="date">March 22{#toto#}</span>
+		</div>
+	</td>
+</table>
+
+{#
 <div id="-submenu_taskdetail_commentbubble" class="submenu_taskdetail_commentbubble">
 	<span class="submenu_taskdetail_commentbubble_profile">
-		<img src="{{_filelatest('/lincko/app/images/app/icons/Users-1.png') }}"/>
-		<span find="name">Skyler</span>
+		<div find="profile_pic" class="icon-Persona"></div>
+		<div find="name">Skyler</div>
 	</span>
-	<span class="submenu_taskdetail_commentbubble_text">
+	<span find="text" class="submenu_taskdetail_commentbubble_text">
 		WHOAAAAAAAAAAAA THIS COMMENT IS AWESOME! I can't wait to put more comments to this task.
 	</span>
 	<span class="submenu_taskdetail_commentbubble_setHeight"></span>
 </div>
+#}
