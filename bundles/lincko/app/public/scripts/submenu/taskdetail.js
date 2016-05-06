@@ -205,6 +205,11 @@ Submenu.prototype.Add_taskdetail = function() {
 		created_at = new wrapper_date(comment['created_at']);
 		created_at = created_at.display();
 		elem.find('[find=date]').html(created_at);
+
+		if( comment['created_by'] == wrapper_localstorage.uid ){
+			elem.addClass('submenu_taskdetail_commentbubble_me');
+		}
+
 		commentCount++;
 	}
 	console.log('commentCount');

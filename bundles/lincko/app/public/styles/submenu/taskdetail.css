@@ -206,8 +206,12 @@ td.submenu_taskdetail_share .fa{
 .submenu_taskdetail_commentbubble_quickAction [find=date]{
 	color: #979797;
 }
+
+/*
+styling for if the comment is from 'me'
+*/
 .submenu_taskdetail_commentbubble_me [find=text] {
-	color: #437CA8;
+	color: #54ADD2;
 }
 
 /*MobileL to mobile*/
