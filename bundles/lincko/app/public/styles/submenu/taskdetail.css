@@ -29,6 +29,9 @@ td.app_layers_dev_skytasks_checkbox {
 	width:40px;
 	position:relative;
 }
+.submenu_taskdetail_tasktitle .skylist_checkbox {
+	margin:0px !important;
+}
 .submenu_taskdetail_tasktitle [find=title_text] {
     max-height: 50px;
     overflow: hidden;
@@ -136,6 +139,10 @@ td.submenu_taskdetail_share .fa{
 	height:100%;
 }
 */
+.submenu_taskdetail_comments [find=addNewComment_text] {
+	display: block;
+
+}
 .submeu_taskdetail_blueButton {
     font-size: 12px;
     color: #54ADD2;

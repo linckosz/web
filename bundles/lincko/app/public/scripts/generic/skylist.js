@@ -553,8 +553,8 @@ skylist.prototype.addTask = function(item){
 	Elem.data('taskid',item['_id']);
 	Elem.data('options',false);
 
-	Elem.find('[type=checkbox]').on('click', function(event){
-		that.checkboxClick(event,this);
+	Elem.find('[find=checkbox]').on('click', function(event){
+		that.checkboxClick(event,$(this));
 	});
 	
 	Elem.on('click', function(event){
@@ -866,12 +866,12 @@ skylist.prototype.setHeight = function(){
 	that.list_subwrapper.height(height - that.elem_navbar.outerHeight());
 }
 
-skylist.prototype.checkboxClick = function(event,task_elem){
+skylist.prototype.checkboxClick = function(event,elem_checkbox){
 	console.log('checkboxClick');
 	event.stopPropagation();
 
-	var task = $(task_elem).closest('.skylist_card');
-
+	var task = elem_checkbox.closest('.skylist_card');
+	elem_checkbox.toggleClass('fa fa-check');
 	task.toggleClass('skylist_card_opacity');
 
 /*
@@ -893,7 +893,7 @@ skylist.prototype.taskClick = function(event,task_elem){
 	}
 	var that = this;
 	var target = $(event.target);
-		if( target.is('label') || target.is('input') || target.attr('contenteditable')=="true" || that.editing_focus || that.is_scrolling ){
+		if( target.is('[find=checkbox]') || target.is('label') || target.is('input') || target.attr('contenteditable')=="true" || that.editing_focus || that.is_scrolling ){
 			console.log(target);
 			return;
 		}

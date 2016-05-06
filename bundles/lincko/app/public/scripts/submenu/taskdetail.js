@@ -113,6 +113,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	var elem;
 	var duedate;
 	var created_by;
+	var created_at;
 	var in_charge = '';
 	var item = {};
 
@@ -131,6 +132,13 @@ Submenu.prototype.Add_taskdetail = function() {
 	elem = $('#-submenu_taskdetail_tasktitle').clone().prop('id','submenu_taskdetail_tasktitle');
 	elem.find('[find=title_text]').html(item['+title']);
 	elem.find("[find=taskid]").html(taskid);
+	elem.find('[find=checkbox]').on('click', function(event){
+		console.log('checkboxClick');
+		event.stopPropagation();
+		var elem_checkbox = $(this);
+		elem_checkbox.toggleClass('fa fa-check');
+	});
+	/* OLD CHECKBOX METHOD
 	elem.find("[type=checkbox]")
 		.prop(
 			{
@@ -146,6 +154,7 @@ Submenu.prototype.Add_taskdetail = function() {
 				},
 			});
 	elem.find('.app_layers_dev_skytasks_checkbox label').prop('for','app_layers_dev_skytasks_checkbox_'+taskid);
+	*/
 	submenu_taskdetail.append(elem);
 
 	/*---taskmeta---*/
@@ -184,7 +193,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	elem_commentbubble = $('#-submenu_taskdetail_commentbubble').clone().prop('id','submenu_taskdetail_commentbubble');
 	var elem_tmp;
 
-	var comments = Lincko.storage.list('comments',null,{'_parent': ['tasks',taskid]});
+	var comments = Lincko.storage.list('comments',null,{'_parent': ['tasks',taskid]}).reverse();
 	var commentCount = 0;
 	for ( var i in comments ){
 		comment = comments[i];
@@ -193,11 +202,48 @@ Submenu.prototype.Add_taskdetail = function() {
 		created_by = Lincko.storage.get("users", comment['created_by'],"username");
 		elem.find('[find=name]').html(created_by);
 		submenu_taskdetail.find('.submenu_taskdetail_comments_main').append(elem);
+		created_at = new wrapper_date(comment['created_at']);
+		created_at = created_at.display();
+		elem.find('[find=date]').html(created_at);
 		commentCount++;
 	}
 	console.log('commentCount');
 	console.log(commentCount);
 	submenu_taskdetail.find('[find=commentCount]').html(commentCount);
+
+
+	/*addNewComment*/
+	var elem_addNewComment_wrapper = submenu_taskdetail.find('.submenu_taskdetail_addNewComment_wrapper');
+	var elem_addNewComment_btn = elem_addNewComment_wrapper.find('[find=addNewComment_btn]');
+	var elem_addNewComment_bubble_wrapper = elem_addNewComment_wrapper.find('[find=addNewComment_bubble_wrapper]');
+	var elem_addNewComment_text = elem_addNewComment_wrapper.find('[find=addNewComment_text]');
+	elem_addNewComment_bubble_wrapper.find('[find=name]').html(Lincko.storage.get("users", wrapper_localstorage.uid,"username"));
+	var toggleNewComment = function(){
+		elem_addNewComment_btn.toggleClass('display_none');
+		elem_addNewComment_bubble_wrapper.toggleClass('display_none');
+	}
+	elem_addNewComment_btn.click(function(){
+		elem_addNewComment_text.empty();
+		toggleNewComment();
+		elem_addNewComment_text.focus();
+	});
+	elem_addNewComment_text.keyup(function (event) {
+	    if (event.keyCode == 13) {
+	    	var param = {
+	    		"parent_type": "tasks",
+	    		"parent_id": taskid,
+	    		"comment": elem_addNewComment_text.val(),
+	    	}
+	    	wrapper_sendAction(param, 'post', 'comment/create');
+	    	elem_addNewComment_text.blur();	    	
+	    }
+	});
+	elem_addNewComment_text.focusout(function(event){
+		toggleNewComment();
+	});
+
+
+
 
 
 

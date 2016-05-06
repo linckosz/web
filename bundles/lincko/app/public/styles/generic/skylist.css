@@ -227,6 +227,21 @@
 /*
  * For tasklist----------------------------------------------
  */
+.skylist_checkbox {
+    cursor: pointer;
+    /* background-color: #EFEFEF; */
+    /* overflow: visible; */
+    border: 2px solid #3F84B0;
+    height: 23px;
+    width: 23px;
+    display: inline-block;
+    border-radius: 6px;
+    /* background-size: contain; */
+    /* background-repeat: no-repeat; */
+    vertical-align: middle;
+    font-size: 24px !important;
+    margin: 10px;
+}
 .skylist_checkbox_visual {
 	font-size: 22px;
 	color: #475577;
