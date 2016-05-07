@@ -527,7 +527,7 @@ skylist.prototype.addTask = function(item){
 	comments
 	*/
 	var commentCount = 0;
-	var comments = Lincko.storage.list('comments',null,{'_parent': ['tasks',item['_id']]});
+	var comments = Lincko.storage.list('comments',null,{'_parent': [that.list_type,item['_id']]});
 	commentCount = comments.length;
 	Elem.find('[find=commentCount]').html(commentCount);
 
@@ -550,7 +550,7 @@ skylist.prototype.addTask = function(item){
 	*/
 	Elem_rightOptions.append(that.add_rightOptionsBox(duedate,'fa-calendar'));
 
-	Elem.data('taskid',item['_id']);
+	Elem.data('item_id',item['_id']);
 	Elem.data('options',false);
 
 	Elem.find('[find=checkbox]').on('click', function(event){
@@ -651,6 +651,14 @@ skylist.prototype.addNote = function(item){
 	*/
 	Elem_rightOptions.append(that.add_rightOptionsBox(created_by,'fa-user'));
 
+	/*
+	comments
+	*/
+	var commentCount = 0;
+	var comments = Lincko.storage.list('comments',null,{'_parent': [that.list_type,item['_id']]});
+	commentCount = comments.length;
+	Elem.find('[find=commentCount]').html(commentCount);
+
 
 	/*duedate = new wrapper_date(item.start + parseInt(item.duration,10));*/
 
@@ -662,7 +670,7 @@ skylist.prototype.addNote = function(item){
 	*/
 	Elem_rightOptions.append(that.add_rightOptionsBox(created_at,'fa-calendar'));
 
-	Elem.data('noteid',item['_id']);
+	Elem.data('item_id',item['_id']);
 	Elem.data('options',false);
 
 	
@@ -912,9 +920,12 @@ skylist.prototype.taskClick = function(event,task_elem){
 
 skylist.prototype.openDetail = function(/*open,*/ task_elem){
 	var that = this;
-	var taskid = task_elem.data('taskid');
 	//that.list.removeClass('skylist_noPreviewLayer');
-	submenu_Build('taskdetail', null, null, taskid, true);
+	submenu_Build(
+		'taskdetail', null, null, {
+			"type":that.list_type, 
+			"id":task_elem.data('item_id'),
+		}, true);
 }
 
 

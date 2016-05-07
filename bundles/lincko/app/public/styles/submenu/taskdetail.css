@@ -30,7 +30,7 @@ td.app_layers_dev_skytasks_checkbox {
 	position:relative;
 }
 .submenu_taskdetail_tasktitle .skylist_checkbox {
-	margin:0px !important;
+	margin-right: 10px !important;
 }
 .submenu_taskdetail_tasktitle [find=title_text] {
     max-height: 50px;
