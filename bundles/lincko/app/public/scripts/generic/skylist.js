@@ -162,11 +162,35 @@ skylist.prototype.construct = function(){
 		});//scrollEnd
 	}
 
+	/*--------------Enquire.JS------------------------------*/
+	enquire.register(responsive.minTablet,	that.minTablet);
+	enquire.register(responsive.maxMobileL,	that.maxMobileL);
+	enquire.register(responsive.minMobileL,	that.minMobileL);
+	enquire.register(responsive.isMobile,	that.isMobile);
+	/*--------------Enquire.JS------------------------------*/
+
+	app_application_lincko.add(
+		that.list.prop('id'),
+		that.list_type,
+		function(){
+			if(that.list_type == "tasks" ){
+				that.tasklist_update();
+			}
+		}
+	);
+
 	console.log('end of construct');
 }//end of construct
 
 skylist.prototype.destroy = function(){
 	var that = this;
+
+	enquire.unregister(responsive.minTablet,	that.minTablet);
+	enquire.unregister(responsive.maxMobileL,	that.maxMobileL);
+	enquire.unregister(responsive.minMobileL,	that.minMobileL);
+	enquire.unregister(responsive.isMobile,		that.isMobile);
+
+
 	that.list_wrapper.empty();
 	$(window).off("resize.skylist_"+that.md5id);
 	$('body').off("mouseleave.skylist_"+that.md5id);
@@ -178,6 +202,7 @@ skylist.prototype.destroy = function(){
 		delete that[g];
 		console.log(that);
 	}
+
 	that = null;
 	delete that;
 }
@@ -264,7 +289,10 @@ skylist.prototype.filter_by_people = function(items,filter){
 	else{
 		for( var i in items ){
 			item = items[i];
-			if( item['_users'][filter] && item['_users'][filter]['in_charge'] ){
+			if( that.list_type == "tasks" && item['_users'][filter] && item['_users'][filter]['in_charge']){
+				items_filtered.push(item);
+			}
+			else if( that.list_type == "notes" && item['created_by'] == filter ){
 				items_filtered.push(item);
 			}
 		}
@@ -373,7 +401,9 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 		taskcount = items_filtered.length;
 	}
 
-	items_filtered = that.filter_by_people( items_filtered, that.Lincko_itemsList_filter[0] );
+	if( that.list_type == "tasks" || that.list_type == "notes" ){
+		items_filtered = that.filter_by_people( items_filtered, that.Lincko_itemsList_filter[0] );
+	}
 
 	that.list.velocity("fadeOut",{
 		duration: 200,
@@ -426,9 +456,11 @@ skylist.prototype.addCard = function(item){
 	var elem_card;
 	if( that.list_type == 'tasks' ){
 		elem_card = that.addTask(item);
+		elem_card.find('[find=card_spacestick]').removeClass('display_none');
 	}
 	else if( that.list_type == 'notes' ){
 		elem_card = that.addNote(item);
+		elem_card.find('[find=card_spacestick]').removeClass('display_none');
 	}
 	return elem_card;
 }
@@ -1162,6 +1194,7 @@ skylist.prototype.menu_sortnum_fn_rev = function(){
 skylist.prototype.minTablet = function(){
 	console.log('skylist minTablet');
 	var that = this;
+	if(!that.list_wrapper){return;}
 	//that.elem_newcardCircle.removeAttr("style");
 
 	var simpleDesktopWidth = 1000;
@@ -1191,6 +1224,7 @@ skylist.prototype.minTablet = function(){
 skylist.prototype.maxMobileL = function(){
 	console.log('skylist maxMobileL');
 	var that = this;
+	if(!that.list_wrapper){return;}
 	that.elem_Jsorts.not('.skylist_menu_timesort_dot').addClass('display_none');
 	that.elem_navbar.find('.icon-Indicator').closest('.skylist_menu_timesort_text_wrapper').removeClass('display_none');
 }
@@ -1198,6 +1232,7 @@ skylist.prototype.maxMobileL = function(){
 skylist.prototype.minMobileL = function(){
 	console.log('dev_skytasks_list minMobileL');
 	var that = this;
+	if(!that.list_wrapper){return;}
 	that.list.find('[find=task_rightOptions]').removeAttr("style").removeClass('display_none');
 	that.list.find('[find=task_center]').removeAttr('style');
 
@@ -1213,6 +1248,7 @@ skylist.prototype.minMobileL = function(){
 skylist.prototype.isMobile = function(){
 	console.log('dev_skytasks_list isMobile');
 	var that = this;
+	if(!that.list_wrapper){return;}
 	//that.list.find('[find=task_rightOptions]').addClass('display_none');
 
 	that.elem_taskcenter_all.find('[find=title]').prop('contenteditable',false);

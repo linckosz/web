@@ -115,7 +115,7 @@
     position: relative;
     border-bottom: 1px solid rgba(0,0,0,0.24);
     margin-bottom: 2px;
-    height: 81px;
+    /*height: 81px;*/
 }
 .skylist_card_opacity {
 	opacity: 0.4;
