@@ -8,11 +8,21 @@
 .skylist_menu_navbar span{
 	padding: 0px 10px;
 }
+.skylist_menu_navbar .icon-Indicator {
+	visibility: hidden;
+}
 .skylist_menu_people {
 	font-size:20px;
 	float: left;
 	padding: 7px 0px !important;
 }
+.skylist_menu_people [find=noSelect], .skylist_menu_people .skylist_menu_selected [find=Select] {
+	display: initial;
+}
+.skylist_menu_people [find=Select], .skylist_menu_people .skylist_menu_selected [find=noSelect] {
+	display: none;
+}
+
 
 .skylist_menu_timesort {
 	position:relative;
@@ -72,6 +82,10 @@
 	color: #FBA026;
 }
 
+/*
+ *******************END OF .skylist_menu*****************************
+*/
+
 .skylist_subwrapper {
 	position: absolute;
 	width: 100%;
@@ -79,6 +93,9 @@
 .skylist {
 	margin-left: 24px;
 	height: 100%;
+}
+.skylist_paddingRight {
+	padding-right: 10px !important;
 }
 .skylist_card_leftOptions {
 	position: absolute;
@@ -154,7 +171,7 @@
 	font-size: 12px;
 	color: #475577;
 }
-.skylist_card_bottom .fa {
+.skylist_card_bottom [class^="icon-"], .skylist_card_bottom [class*=" icon-"] {
 	color: #53ADD2;
 }
 .skylist_card_bottom [find=name] {

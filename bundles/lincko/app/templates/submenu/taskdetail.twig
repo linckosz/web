@@ -24,7 +24,7 @@
 
 <div id="-submenu_taskdetail_description" class="submenu_taskdetail_description">
 	<table class="submenu_taskdetail_collapsable_button submenu_taskdetail_paddingLeft">
-		<td find="icon_arrow" class="icon-Expanded base_color_text_linckoOrange"></td>
+		<td find="icon_arrow" class="icon-Accordion base_color_text_linckoOrange"></td>
 		<td>{{ _trans('app', 10, 4, 'html') }}{#description#}</td>
 	</table>
 	<div find="description_text" contenteditable="true" class="needsclick submenu_taskdetail_collapsable_content submenu_taskdetail_paddingLeft"></div>
@@ -34,17 +34,17 @@
 		<tr>
 			<td find="calendar" class="submenu_taskdetail_meta_box">
 				{#<img src="{{_filelatest('/lincko/app/images/app/icons/Time-3.png') }}"/>#}
-				<span class="submenu_taskdetail_meta_icons fa fa-calendar"></span>
+				<span class="submenu_taskdetail_meta_icons icon-Calendar"></span>
 				<span find="duedate_text" class="submenu_taskdetail_meta_text"></span>
 			</td>
 			<td find="user" class="submenu_taskdetail_meta_box">
 				{#<img src="{{_filelatest('/lincko/app/images/app/icons/Users-1.png') }}"/>#}
-				<span class="submenu_taskdetail_meta_icons fa fa-user"></span>
+				<span class="submenu_taskdetail_meta_icons icon-Small-Persona"></span>
 				<span find="assigned_text" class="submenu_taskdetail_meta_text"></span>
 			</td>
 			<td find="spaces" class="submenu_taskdetail_meta_box">
 				{#<img src="{{_filelatest('/lincko/app/images/app/icons/Time-3.png') }}"/>#}
-				<span class="submenu_taskdetail_meta_icons fa fa-hashtag"></span>
+				<span class="submenu_taskdetail_meta_icons icon-Hash"></span>
 				<span find="spaces_text" class="submenu_taskdetail_meta_text">Spaces</span>
 			</td>
 		</tr>
@@ -53,7 +53,7 @@
 
 <div id="-submenu_taskdetail_comments" class="submenu_taskdetail_comments">
 	<table class="submenu_taskdetail_collapsable_button submenu_taskdetail_paddingLeft">
-		<td find="icon_arrow" class="icon-Expanded base_color_text_linckoOrange"></td>
+		<td find="icon_arrow" class="icon-Accordion base_color_text_linckoOrange"></td>
 		<td>{{ _trans('app', 10, 3, 'html') }}{#comments#} (<span find="commentCount"></span>)</td>
 	</table>
 	<div class="submenu_taskdetail_comments_seePrev">
@@ -71,7 +71,7 @@
 	<div class="submenu_taskdetail_addNewComment_wrapper submenu_taskdetail_paddingLeft">
 		<table find="addNewComment_bubble_wrapper" class="submenu_taskdetail_commentbubble display_none">
 			<td class="submenu_taskdetail_commentbubble_profile">
-				<div find="profile_pic" class="icon-Persona"></div>
+				<div find="profile_pic" class="icon-Small-Persona"></div>
 				<div find="name"></div>
 			</td>
 			<td class="submenu_taskdetail_commentbubble_text">
@@ -84,17 +84,20 @@
 
 
 <table id="-submenu_taskdetail_commentbubble" class="submenu_taskdetail_commentbubble">
+	<td find="comment_id" class="display_none"></td>
+	<td class="submenu_taskdetail_commentbubble_bar"></td>
 	<td class="submenu_taskdetail_commentbubble_profile">
-		<div find="profile_pic" class="icon-Persona"></div>
+		<div find="profile_pic" class="icon-Small-Persona"></div>
 		<div find="name"></div>
 	</td>
 	<td class="submenu_taskdetail_commentbubble_text">
 		<div find="text"></div>
 		<div class="submenu_taskdetail_commentbubble_quickAction">
-			<span find="reply" class="base_color_text_linckoOrange">Reply{#toto#}</span>
-			<span find="seeAll" class="base_color_text_linckoOrange">{{ _trans('app', 10, 2, 'html') }}{#see all#}</span>
+			<span find="replyBtn" class="base_color_text_linckoOrange">Reply{#toto#}</span>
+			<span find="seeAllBtn" class="base_color_text_linckoOrange">{{ _trans('app', 10, 2, 'html') }}{#see all#}</span>
 			<span find="date"></span>
 		</div>
+		<input type="textarea" find="addNewComment_text" placeholder="enter comment here..."{#toto#}>
 	</td>
 </table>
 

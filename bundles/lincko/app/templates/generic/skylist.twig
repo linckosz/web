@@ -10,8 +10,14 @@
 
 	<div id="-skylist_menu_navbar" class="skylist_menu_navbar">
 		<span class = "skylist_menu_people">
-			<span people="1" class="icon-SinglePerson"></span>
-			<span people="2" class="icon-MultiplePeople"></span>
+			<span people="1">
+				<i find="noSelect" class="icon-Single-Person"></i>
+				<i find="Select" class="icon-Single-Person-Selected"></i>
+			</span>
+			<span people="2">
+				<i find="noSelect" class="icon-Multiple-People"></i>
+				<i find="Select" class="icon-Multiple-People-Selected"></i>
+			</span>
 		</span>
 		<div class="skylist_menu_timesort"></div>
 		<span class="skylist_menu_navbar_search">
@@ -42,20 +48,20 @@
 					<div find='title' contenteditable="false"></div><!--<span find='dash'>-</span>-->
 					<div find='description'></div>
 				</td>
-				<span find='card_time' class="skylist_card_time floatright"></span>
+				<span find='card_time' class="skylist_card_time floatright skylist_paddingRight"></span>
 			</tr>
 		</table>
-		<table find="card_bottom" class="skylist_card_bottom">
+		<table find="card_bottom" class="skylist_card_bottom skylist_paddingRight">
 			<td>
-				<span class="fa fa-user"></span>
+				<span class="icon-Small-Persona"></span>
 				<span find='name' class="skylist_icon_text">Name{# toto #}</span>
-				<span class="fa fa-pencil"></span>
+				<span class="icon-Pencil"></span>
 				<span find='comments' class="skylist_icon_text">(<span find="commentCount"></span>){# toto #}</span>
 			</td>
 		</table>
 	</div>
 
-	<span id="-skylist_newcardCircle" class="skylist_newcardCircle icon-AddIcon"></span>
+	<span id="-skylist_newcardCircle" class="skylist_newcardCircle icon-Big-Add"></span>
 
 	{#rightOptionBox, goes inside <div find='card_rightOptions' #}
 	<div id="-skylist_rightOptionBox" class="skylist_rightOptionBox">
