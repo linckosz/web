@@ -81,6 +81,29 @@ var Submenu_select = {
 
 }
 
+Submenu.prototype.Add_MenuTitle = function() {
+    var attribute = this.attribute;
+    submenu_wrapper = this.Wrapper();
+    var title;
+    var className;
+    if( typeof attribute.title === "function" ){
+        title = attribute.title(this);
+    }
+    else{
+        title = attribute.title;
+    }
+    if ("class" in attribute && typeof attribute.class === "function") {
+        submenu_wrapper.find('.submenu_top').addClass(attribute.class(this));
+    }
+    else if( "class" in attribute ){
+        submenu_wrapper.find('.submenu_top').addClass(attribute['class']);
+    }
+    submenu_wrapper.find("[find=submenu_wrapper_title]").html(title);
+    //Free memory
+    delete submenu_wrapper;
+    return true;
+};
+
 Submenu.prototype.changeState = function() {
     // to check what animation this submenu should use.
     var next = submenu_Getnext(this.preview);
