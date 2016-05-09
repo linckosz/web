@@ -39,6 +39,7 @@
 			</td>
 		</tr>
 	</table>
+	<span class="icon-Actions submenu_taskdetail_meta_actions"></span>
 </div>
 
 <div id="-submenu_taskdetail_comments" class="submenu_taskdetail_comments">
@@ -49,14 +50,6 @@
 	<div class="submenu_taskdetail_comments_seePrev">
 		<span class="submeu_taskdetail_blueButton">See previous (x comments)...{#toto#}</span>
 	</div>
-	{#
-	<div class="submenu_taskdetail_comments_header">
-		<span class="fa fa-pencil"></span>
-		<span class="submenu_taskdetail_text">{{ _trans('app', 10, 3, 'html') }}(?)<span>
-		<span class="fa fa-plus-circle submenu_taskdetail_plusminus"></span>
-		<span class="fa fa-minus-circle submenu_taskdetail_plusminus"></span>
-	</div>
-	#}
 	<div class="submenu_taskdetail_comments_main submenu_taskdetail_paddingLeft"></div>
 	<div class="submenu_taskdetail_addNewComment_wrapper submenu_taskdetail_paddingLeft">
 		<table find="addNewComment_bubble_wrapper" class="submenu_taskdetail_commentbubble display_none">
@@ -90,16 +83,3 @@
 		<input type="textarea" find="addNewComment_text" placeholder="enter comment here..."{#toto#}>
 	</td>
 </table>
-
-{#
-<div id="-submenu_taskdetail_commentbubble" class="submenu_taskdetail_commentbubble">
-	<span class="submenu_taskdetail_commentbubble_profile">
-		<div find="profile_pic" class="icon-Persona"></div>
-		<div find="name">Skyler</div>
-	</span>
-	<span find="text" class="submenu_taskdetail_commentbubble_text">
-		WHOAAAAAAAAAAAA THIS COMMENT IS AWESOME! I can't wait to put more comments to this task.
-	</span>
-	<span class="submenu_taskdetail_commentbubble_setHeight"></span>
-</div>
-#}

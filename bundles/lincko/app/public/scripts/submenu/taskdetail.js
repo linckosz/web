@@ -2,7 +2,15 @@ submenu_list['taskdetail'] = {
 	//Set the title of the top
 	"_title": {
 		"style": "title",
-		"title": "Task Information",
+		"title": function(that){
+			var title = that.param.type.slice(0,-1) + ' Information';/*toto*/
+			return title;
+		},
+		"class": function(that){
+			var className = 'submenu_wrapper_taskdetail_'+that.param.type;
+			return className;
+		},
+		//"title": "Task Information",
 	},
 
 	"taskdetail": {
@@ -99,6 +107,7 @@ Submenu_select.taskdetail = function(Elem){
 };
 
 Submenu.prototype.Add_taskdetail = function() {
+	var that = this;
 	var attribute = this.attribute;
 	submenu_wrapper = this.Wrapper();
 	var submenu_content = submenu_wrapper.find("[find=submenu_wrapper_content]");
@@ -159,6 +168,23 @@ Submenu.prototype.Add_taskdetail = function() {
 
 	/*meta (general)*/
 	elem = $('#-submenu_taskdetail_meta').clone().prop('id','submenu_taskdetail_meta');
+	elem.find('.submenu_taskdetail_meta_actions').click(function(){
+		var route;
+		console.log(that.param.type);
+		if( that.param.type == "tasks" ){
+			route = "task/delete";
+		}
+		else if( this.param.type == "notes" ){
+			route = "note/delete";
+		}
+		wrapper_sendAction(
+		    {
+		        "id": taskid,
+		    },
+		    'post',
+		    route
+		);
+	});
 	/*---taskmeta---*/
 	if( this.param.type == "tasks" ){
 		for (var i in item['_users']){
@@ -179,7 +205,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		else{
 			elem.find("[find=duedate_text]").html(duedate.display());
 		}
-	}
+	}/*---notesmeta---*/
 	else if( this.param.type == "notes" ){
 		elem.find('[find=assigned_text]').html(Lincko.storage.get("users", item['updated_by'],"username"));
 		var date = new wrapper_date(item['updated_at']);
@@ -304,8 +330,6 @@ Submenu.prototype.Add_taskdetail = function() {
 	});
 
 
-
-
 	/*attach collapsable_fn*/
 	var submenu_taskdetail_collapsable_fn = function(){
 		var elem_btn = $(this);
@@ -349,6 +373,40 @@ Submenu.prototype.Add_taskdetail = function() {
 
 	/*---append to submenu_content---*/
 	submenu_content.append(submenu_taskdetail);
+
+
+
+	/*----create/save on previewHide----*/
+	$(document).on("previewHide.skylist", function(){
+		console.log('previewHide'+taskid);
+		route = '';
+		var param = {};
+		if( that.param.type == "tasks" ){
+			route += 'task';
+		}
+		else if( that.param.type == "notes" ){
+			route += 'note';
+		}
+
+		if( taskid == 'new' ){
+			route += '/create';
+			param['parent_id'] = app_content_menu['projects_id'];
+		}
+		else{
+			route += '/update';
+			param['id'] = taskid;
+		}
+
+		param['title'] = submenu_taskdetail.find('[find=title_text]').html();
+		if( param['title'] == '' ){
+			param['title'] = 'A new ' + that.param.type.slice(0,-1);
+		}
+		param['comment'] = submenu_taskdetail.find('[find=description_text]').html();
+
+		wrapper_sendAction( param,'post',route );
+
+		$(document).off('previewHide.skylist');
+	});
 
 	//Free memory
 	delete submenu_wrapper;

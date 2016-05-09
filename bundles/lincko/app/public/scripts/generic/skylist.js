@@ -14,6 +14,23 @@ var skylist_calcDuedate = function(task_obj){
 	var duedate = new wrapper_date(task_obj.start + parseInt(task_obj.duration,10));
 	return duedate;
 }
+var skylist_textDate = function(date){
+	//param: wrapper_date instance
+	//returns text for TODAY, TOMORROW
+	//returns false if not
+	if( date.happensSomeday(0) ){
+		return Lincko.Translation.get('app', 3302, 'html').toUpperCase()/*today*/;
+	}
+	else if( date.happensSomeday(1) ){
+		return Lincko.Translation.get('app', 3303, 'html').toUpperCase()/*tomorrow*/;
+	}
+	else if(date.happensSomeday(-1)  ){
+		return 'yesterday'.toUpperCase()/*yesterday toto*/;
+	}
+	else{
+		false;
+	}
+}
 
 var skylist = function(list_type, list_wrapper, sort_array){
 	this.that = this;
@@ -114,12 +131,11 @@ skylist.prototype.construct = function(){
 	that.elem_newcardCircle = $('#-skylist_newcardCircle').clone()
 		.prop('id','skylist_newcardCircle_'+that.md5id)
 		.click(function(){
-			if( that.list_type == 'tasks' ){
-				submenu_Build('taskdetail', null, null, 'new', true);
-			}
-			if( that.list_type == 'notes' ){
-				//submenu_Build('notesdetail', null, null, 'new', true);
-			}
+			submenu_Build('taskdetail', null, null, 
+				{
+					"type":that.list_type,
+					"id": 'new', 
+				}, true);
 		})
 		.appendTo(that.list_wrapper);
 
@@ -138,6 +154,7 @@ skylist.prototype.construct = function(){
 	that.elem_navbar.find('[people=1]').click();
 
 	$(document).on("previewHide.skylist_"+that.md5id, function(){
+		console.log('previewHide');
 		that.previewHide();
 	});
 
@@ -353,6 +370,7 @@ skylist.prototype.list_update = function(type, filter_by){
 skylist.prototype.tasklist_update = function(type, filter_by){
 	console.log('tasklist_update filter: '+filter_by);
 	var that = this;
+	that.generate_Lincko_itemsList();
 	var items = that.Lincko_itemsList;
 	var items_filtered = [];
 	var item;
@@ -622,11 +640,8 @@ skylist.prototype.addTask = function(item){
 
 	/*duedate = new wrapper_date(item.start + parseInt(item.duration,10));*/
 	duedate = skylist_calcDuedate(item);
-	if( duedate.happensSomeday(0) ){
-		duedate = Lincko.Translation.get('app', 3302, 'html').toUpperCase()/*today*/;
-	}
-	else if( duedate.happensSomeday(1) ){
-		duedate = Lincko.Translation.get('app', 3303, 'html').toUpperCase()/*tomorrow*/;
+	if(skylist_textDate(duedate)){
+		duedate = skylist_textDate(duedate);
 	}
 	else{
 		duedate = duedate.display();
@@ -744,7 +759,13 @@ skylist.prototype.addNote = function(item){
 	Elem.find('[find=commentCount]').html(commentCount);
 
 	updated_at = new wrapper_date(item['updated_at']);
-	Elem.find('[find=card_time]').html(updated_at.display());
+	if(skylist_textDate(updated_at)){
+		updated_at = skylist_textDate(updated_at);
+	}
+	else{
+		updated_at = updated_at.display();
+	}
+	Elem.find('[find=card_time]').html(updated_at);
 
 	/*
 	rightOptions - duedate

@@ -1,3 +1,17 @@
+[class^="submenu_wrapper_taskdetail"] .submenu_top, [class*="submenu_wrapper_taskdetail"] .submenu_top {
+    background-image: none;
+}
+[class^="submenu_wrapper_taskdetail"] .submenu_title, [class*="submenu_wrapper_taskdetail"] .submenu_title {
+    color: #FFFFFF;
+    text-transform: capitalize;
+}
+.submenu_wrapper_taskdetail_tasks .submenu_top {
+	background-color: #475577;
+}
+.submenu_wrapper_taskdetail_notes .submenu_top {
+	background-color: #F0EB4E;
+}
+
 .submenu_taskdetail {
 	height:100%;
 	overflow-y: auto;
@@ -88,6 +102,7 @@ td.submenu_taskdetail_share .fa{
 .submenu_taskdetail_meta {
 	height: 30px;
 	background: #F7FAFC;
+	position: relative;
 }
 .submenu_taskdetail_meta_icons{
 	font-size: 20px;
@@ -101,6 +116,16 @@ td.submenu_taskdetail_share .fa{
 }
 .submenu_taskdetail_meta_box[find=user] {
 
+}
+.submenu_taskdetail_meta_actions {
+	position: absolute;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    padding: 6px;
+    font-size: 18px;
+    color: #53ADD2;
+    cursor: pointer; cursor: hand;
 }
 
 /* old design with 3 blocks with huge icons

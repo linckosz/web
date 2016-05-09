@@ -222,8 +222,10 @@ function Submenu(menu, next, param, preview) {
 Submenu.prototype.Add_CustomisedTitle = function() {
     var attribute = this.attribute;
     submenu_wrapper = this.Wrapper();
+
     var Elem = $('#-submenu_customized_top').clone();
     Elem.prop("id", '');
+
     var title;
     var className;
     if( typeof attribute.title === "function" ){
@@ -232,6 +234,7 @@ Submenu.prototype.Add_CustomisedTitle = function() {
     else{
         title = attribute.title;
     }
+    
     if ("class" in attribute && typeof attribute.class === "function") {
         Elem.addClass(attribute.class(this));
     }
@@ -263,6 +266,7 @@ Submenu.prototype.Add_CustomisedTitle = function() {
     }
 
     submenu_wrapper.prepend(Elem);
+
     //Free memory
     delete submenu_wrapper;
     return true;
