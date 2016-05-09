@@ -108,6 +108,8 @@ Submenu.prototype.Add_taskdetail = function() {
 	var duedate;
 	var created_by;
 	var created_at;
+	var updated_by;
+	var updated_at;
 	var in_charge = '';
 	var item = {};
 
@@ -179,8 +181,8 @@ Submenu.prototype.Add_taskdetail = function() {
 		}
 	}
 	else if( this.param.type == "notes" ){
-		elem.find('[find=assigned_text]').html(Lincko.storage.get("users", item['created_by'],"username"));
-		var date = new wrapper_date(item['created_at']);
+		elem.find('[find=assigned_text]').html(Lincko.storage.get("users", item['updated_by'],"username"));
+		var date = new wrapper_date(item['updated_at']);
 		elem.find("[find=duedate_text]").html(date.display());
 	}
 	submenu_taskdetail.append(elem);

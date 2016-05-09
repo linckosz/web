@@ -281,7 +281,7 @@ skylist.prototype.filter_by_people = function(items,filter){
 			if( that.list_type == "tasks" && item['_users'][filter] && item['_users'][filter]['in_charge']){
 				items_filtered.push(item);
 			}
-			else if( that.list_type == "notes" && item['created_by'] == filter ){
+			else if( that.list_type == "notes" && item['updated_by'] == filter ){
 				items_filtered.push(item);
 			}
 		}
@@ -683,8 +683,8 @@ skylist.prototype.addNote = function(item){
 	var Elem = $('#-skylist_card').clone();
 	Elem.find('[find=card_leftbox]').addClass('skylist_card_leftbox_empty');
 	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').empty();
-	var created_by;
-	var created_at;
+	var updated_by;
+	var updated_at;
 
 	if(item == null){
 		item = {};
@@ -692,8 +692,8 @@ skylist.prototype.addNote = function(item){
 		item['+title'] = 'blankNote';
 		item['-comment'] = 'blankNote';
 		item['_perm'][0] = 3; //RCUD
-		item['created_by'] = wrapper_localstorage.uid;
-		item['created_at'] = $.now()/1000;
+		item['updated_by'] = wrapper_localstorage.uid;
+		item['updated_at'] = $.now()/1000;
 	}
 	Elem.prop('id','skylist_card_'+that.md5id+'_'+item['_id']);
 
@@ -725,15 +725,15 @@ skylist.prototype.addNote = function(item){
 	Elem.find('[find=description]').html(item['-comment']);
 
 
-	/*created_by*/
-	created_by = item['created_by'];
-	created_by = Lincko.storage.get("users", created_by,"username");
-	Elem.find('[find=name]').html(created_by);
+	/*updated_by*/
+	updated_by = item['updated_by'];
+	updated_by = Lincko.storage.get("users", updated_by,"username");
+	Elem.find('[find=name]').html(updated_by);
 	
 	/*
-	rightOptions - created_by
+	rightOptions - updated_by
 	*/
-	Elem_rightOptions.append(that.add_rightOptionsBox(created_by,'fa-user'));
+	Elem_rightOptions.append(that.add_rightOptionsBox(updated_by,'fa-user'));
 
 	/*
 	comments
@@ -743,16 +743,13 @@ skylist.prototype.addNote = function(item){
 	commentCount = comments.length;
 	Elem.find('[find=commentCount]').html(commentCount);
 
-
-	/*duedate = new wrapper_date(item.start + parseInt(item.duration,10));*/
-
-	created_at = new wrapper_date(item['created_at']);
-	Elem.find('[find=card_time]').html(created_at.display());
+	updated_at = new wrapper_date(item['updated_at']);
+	Elem.find('[find=card_time]').html(updated_at.display());
 
 	/*
 	rightOptions - duedate
 	*/
-	Elem_rightOptions.append(that.add_rightOptionsBox(created_at,'fa-calendar'));
+	Elem_rightOptions.append(that.add_rightOptionsBox(updated_at,'fa-calendar'));
 
 	Elem.data('item_id',item['_id']);
 	Elem.data('options',false);
