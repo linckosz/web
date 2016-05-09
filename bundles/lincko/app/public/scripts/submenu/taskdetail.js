@@ -60,12 +60,6 @@ Submenu.prototype.Add_MenuTasklistButton = function() {
     }
     var attribute = this.attribute;
     submenu_wrapper = this.Wrapper();
-    console.log(submenu_wrapper.find('[find=title_text]').text());
-    console.log(this);
-    console.log('attribute');
-    console.log(attribute);
-    console.log(submenu_wrapper);
-    console.log(Elem);
     var Elem = $('#-submenu_form').clone();
     Elem.prop("id", '');
     submenu_wrapper.find("[find=submenu_wrapper_bottom]").addClass('submenu_bottom');
@@ -123,6 +117,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		item['created_by'] = wrapper_localstorage.uid;
 		item.start = $.now()/1000;
 		item.duration = "86400";
+		item['_type'] = 'tasks';
 	} 
 	else{
 		item = Lincko.storage.get(this.param.type, taskid);
@@ -132,15 +127,15 @@ Submenu.prototype.Add_taskdetail = function() {
 	elem = $('#-submenu_taskdetail_tasktitle').clone().prop('id','submenu_taskdetail_tasktitle');
 	elem.find('[find=title_text]').html(item['+title']);
 	elem.find("[find=taskid]").html(taskid);
-
-	var elem_checkbox = $('#-skylist_checkbox').clone().prop('id','');
-	elem.find('[find=leftbox]').html(elem_checkbox);
-	elem.find('[find=checkbox]').on('click', function(event){
-		console.log('checkboxClick');
-		event.stopPropagation();
-		var elem_checkbox = $(this);
-		elem_checkbox.toggleClass('fa fa-check');
-	});
+	if( item['_type'] == "tasks" ){
+		var elem_checkbox = $('#-skylist_checkbox').clone().prop('id','');
+		elem.find('[find=leftbox]').html(elem_checkbox);
+		elem.find('[find=checkbox]').on('click', function(event){
+			event.stopPropagation();
+			var elem_checkbox = $(this);
+			elem_checkbox.toggleClass('fa fa-check');
+		});
+	}
 	/* OLD CHECKBOX METHOD
 	elem.find("[type=checkbox]")
 		.prop(
@@ -243,8 +238,6 @@ Submenu.prototype.Add_taskdetail = function() {
 
 		commentCount++;
 	}
-	console.log('commentCount');
-	console.log(commentCount);
 	submenu_taskdetail.find('[find=commentCount]').html(commentCount);
 
 
@@ -291,7 +284,6 @@ Submenu.prototype.Add_taskdetail = function() {
 
 		elem_addNewComment_text.keyup(function(event) {
 		    if (event.keyCode == 13) {
-		    	console.log(elem_click);
 		    	sendAction_newComment(
 		    		"comments",
 		    		elem_replyTo.find('[find=comment_id]').html(),
