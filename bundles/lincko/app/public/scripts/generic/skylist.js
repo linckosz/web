@@ -552,7 +552,7 @@ skylist.prototype.addTask = function(item){
 
 	if(item == null){
 		item = {};
-		item['_id'] = 'blankTask';
+		item['_id'] = 'new';
 		item['+title'] = 'blankTask';
 		item['_perm'][0] = 3; //RCUD
 		item['created_by'] = wrapper_localstorage.uid;
@@ -611,18 +611,7 @@ skylist.prototype.addTask = function(item){
 		}
 	}
 	Elem.find('[find=name]').html(in_charge);
-	var elem_burger = $('#-burger_dropdown').clone().prop('id','').insertAfter(Elem.find('[find=name]'));
-	Elem.find('[find=name]').click(function(event){
-		event.stopPropagation();
-		var coord = $(this).position();
-		$(this).next('.burger_dropdown')
-			.html('AAAA')
-			.css('left', coord.left)
-			.css('top', coord.top + $(this).closest('table').outerHeight() )
-			.css('position','absolute')
-			.velocity("slideDown");
-	});
-	//burger(Elem.find('[find=name]'), 'in_charge');
+	burger(Elem.find('[find=name]'), '_users', item);
 	
 	/*
 	rightOptions - in_charge

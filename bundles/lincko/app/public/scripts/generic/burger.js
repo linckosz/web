@@ -1,9 +1,10 @@
 /*
  * the ultimate Lincko Burger
  */
-var burger = function(elem, burger_mode){
+var burger = function(elem, burger_mode, item){
 	this.toto = 'toto';
-	var elem_dropdown = $('#-burger_dropdown').clone().prop('id','burger_dropdown');
+	var elem_dropdown = $('#-burger_dropdown').clone().prop('id','');
+    var burger_on = false;
 
 	var burger_destroy = function(){
 		console.log('burger_destroy');
@@ -24,7 +25,6 @@ var burger = function(elem, burger_mode){
 
 	if( burger_mode == 'regex' ){
 		var burger_str = "";
-		var burger_on = false;
 		var burger_type = null;
 		var elem_burger_tag = $('#-burger_tag').clone().prop('id','');
 		var burger_startIndex = null;
@@ -90,11 +90,36 @@ var burger = function(elem, burger_mode){
 			//burger_destroy();
 		});
 	}//END OF burger_mode == regex
-    else if( burger_mode == 'in_charge' ){
+    else if( burger_mode == '_users' ){
+        elem_dropdown.insertAfter(elem);
         elem.click(function(event){
+            console.log(burger_on);
             event.stopPropagation();
-            console.log(elem.position());
-        });       
+            if( burger_on ){
+                burger_destroy();
+            }
+            else{
+                burger_on = true;
+                var coord = $(this).position();
+                var username;
+                var elem_option = $('#-burger_option').clone().prop('id','');
+                var elem_option_clone;
+                $.each(item[burger_mode], function(key, value){
+                    username = Lincko.storage.get("users", key,"username");
+                    elem_dropdown_clone = elem_option.clone();
+                    elem_dropdown_clone.find('[find=username]').html(username);
+                    elem_dropdown.append(elem_dropdown_clone);
+                });
+                elem_dropdown
+                    .css('left', coord.left)
+                    .css('top', coord.top + $(this).closest('table').outerHeight() )
+                    .css('position','absolute')
+                    .velocity("slideDown");
+            }
+        });
+        elem.focusout(function(){
+            elem.remove();
+        });
     }
 }
 
