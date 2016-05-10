@@ -5,16 +5,13 @@
     z-index: 5;
     box-sizing: border-box;
 }
-.skylist_menu_navbar span{
-	padding: 0px 10px;
-}
 .skylist_menu_navbar .icon-Indicator {
 	visibility: hidden;
 }
 .skylist_menu_people {
-	font-size:20px;
-	float: left;
-	padding: 7px 0px !important;
+	font-size: 30px;
+    float: left;
+    line-height: 42px;
 }
 .skylist_menu_people [find=noSelect], .skylist_menu_people .skylist_menu_selected [find=Select] {
 	display: initial;
@@ -37,7 +34,7 @@
 	text-align:center;
 	max-width: 150px;
 	font-size: 20px;
-	padding: 0px !important;
+	padding: 0px 10px !important;
 }
 .skylist_menu_timesort_text_wrapper [find=indicator] {
 	padding: 0px;
@@ -210,7 +207,7 @@
 	float: right;
     display: table;
 }
-.skylist_leftOptionBox .fa {
+.skylist_leftOptionBox div {
 	display: table-cell;
     vertical-align: middle;
 }

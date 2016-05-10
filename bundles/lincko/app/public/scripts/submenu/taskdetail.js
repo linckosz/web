@@ -126,9 +126,10 @@ Submenu.prototype.Add_taskdetail = function() {
 		item['+title'] = 'Enter Your Task Title Here!';
 		item['-comment'] = 'Enter Your Task Description Here.';
 		item['created_by'] = wrapper_localstorage.uid;
+		item['updated_by'] = wrapper_localstorage.uid;
 		item.start = $.now()/1000;
 		item.duration = "86400";
-		item['_type'] = 'tasks';
+		item['_type'] = that.param.type;
 	} 
 	else{
 		item = Lincko.storage.get(this.param.type, taskid);
@@ -171,12 +172,14 @@ Submenu.prototype.Add_taskdetail = function() {
 	elem.find('.submenu_taskdetail_meta_actions').click(function(){
 		var route;
 		console.log(that.param.type);
+		console.log(taskid);
 		if( that.param.type == "tasks" ){
 			route = "task/delete";
 		}
-		else if( this.param.type == "notes" ){
+		else if( that.param.type == "notes" ){
 			route = "note/delete";
 		}
+		console.log(route);
 		wrapper_sendAction(
 		    {
 		        "id": taskid,

@@ -1,20 +1,45 @@
 .burger_dropdown {
-	width: 150px;
-	height: 50px;
+	width: 200px;
 	font-size: 12px;
-	border: 2px solid black;
 	display: block;
 	position: fixed;
 	z-index: 900;
 	display: none;
 	text-align: initial;
+	box-shadow: 0px 0px 4px 0px #3F84B0;
 }
 .burger_tag {
     font-weight: bold;
     border-radius: 7px;
     padding: 1px;
-    cursor: pointer;
+    cursor: pointer; cursor: hand;
 }
-.burger_option:hover{
-	background: orange;
+.burger_option {
+	padding: 5px 10px;
+}
+.burger_option:hover, .burger_option_selected {
+	background: #B6D6E8;
+}
+.burger_option [find=profile_pic], 
+.burger_option [find=username] {
+	display: none;
+}
+
+.burger_option_users [find=profile_pic] {
+	display: inline-block;
+    font-size: 28px;
+    text-align: center;
+    border: 2px solid #FBA026;
+    width: 34px;
+    height: 34px;
+    border-radius: 34px;
+    line-height: 34px;
+    vertical-align: middle;
+}
+.burger_option_users [find=username] {
+    display: inline-block;
+    line-height: 40px;
+    vertical-align: middle;
+    font-size: 20px;
+    color: #3F84B0;
 }

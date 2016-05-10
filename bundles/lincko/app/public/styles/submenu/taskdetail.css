@@ -1,14 +1,14 @@
-[class^="submenu_wrapper_taskdetail"] .submenu_top, [class*="submenu_wrapper_taskdetail"] .submenu_top {
+[class^="submenu_wrapper_taskdetail"].submenu_top, [class*="submenu_wrapper_taskdetail"].submenu_top {
     background-image: none;
 }
 [class^="submenu_wrapper_taskdetail"] .submenu_title, [class*="submenu_wrapper_taskdetail"] .submenu_title {
     color: #FFFFFF;
     text-transform: capitalize;
 }
-.submenu_wrapper_taskdetail_tasks .submenu_top {
+.submenu_wrapper_taskdetail_tasks.submenu_top {
 	background-color: #475577;
 }
-.submenu_wrapper_taskdetail_notes .submenu_top {
+.submenu_wrapper_taskdetail_notes.submenu_top {
 	background-color: #F0EB4E;
 }
 

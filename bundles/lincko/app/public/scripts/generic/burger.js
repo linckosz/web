@@ -2,14 +2,12 @@
  * the ultimate Lincko Burger
  */
 var burger = function(elem, burger_mode, item){
-	this.toto = 'toto';
+	console.log('burger burger');
 	var elem_dropdown = $('#-burger_dropdown').clone().prop('id','');
     var burger_on = false;
 
 	var burger_destroy = function(){
 		console.log('burger_destroy');
-		console.log(elem);
-		console.log('current caret: '+burger_regex_getCaretOffset(elem).caretOffset);
 		burger_on = false;
 	 	burger_str = "";
 	 	burger_type = null;
@@ -43,14 +41,12 @@ var burger = function(elem, burger_mode, item){
 	 		 	console.log('burger_str: '+burger_str);
 	 		 	console.log('current caret: '+burger_regex_getCaretOffset(elem).caretOffset);
 	 		 	var search_result = Lincko.storage.search('word',burger_str,burger_type)[burger_type];
+                elem_dropdown.empty();
 	 		 	if( !$.isEmptyObject(search_result) ){
 	 		 		for( var i in search_result ){
 	 		 			var username = search_result[i]['-username'];
-	 		 			var email = search_result[i]['email'];
-	 		 			var elem_dropdown_option = $('#-burger_option').clone().prop('id','');
+	 		 			var elem_dropdown_option = $('#-burger_option').clone().prop('id','').addClass('burger_option_users');
 	 		 			elem_dropdown_option.find('[find=username]').html(username);
-	 		 			elem_dropdown_option.find('[find=email]').html(email);
-	 		 			elem_dropdown.empty();
 	 		 			elem_dropdown.append(elem_dropdown_option);
 	 		 			elem_dropdown_option.click(function(event){
 	 		 				event.stopPropagation();
@@ -76,7 +72,33 @@ var burger = function(elem, burger_mode, item){
 	 		 	//var coord = getSelectionCoords();
 	 		 	burger_startIndex = coord.caretOffset;
 	 		 	console.log('burger_startIndex: '+burger_startIndex);
-	 		 	elem_dropdown.empty().html('List goes here'/*toto*/).css({'top':coord.y, 'left':coord.x});
+	 		 	elem_dropdown.empty().css({'top':coord.y, 'left':coord.x});
+
+                var search_result = Lincko.storage.search('category',null,burger_type)[burger_type];
+                if( !$.isEmptyObject(search_result) ){
+                    for( var i in search_result ){
+                        var username = search_result[i]['-username'];
+                        var elem_dropdown_option = $('#-burger_option').clone().prop('id','').addClass('burger_option_users');
+                        elem_dropdown_option.find('[find=username]').html(username);
+                        elem_dropdown.append(elem_dropdown_option);
+                        elem_dropdown_option.click(function(event){
+                            event.stopPropagation();
+                            
+                            var re = new RegExp('@'+burger_str);
+                            //elem_burger_tag.html(username);
+                            //pasteHtmlAtCaret(elem_burger_tag);
+                            var str = elem.text().replace(re, '<span contenteditable="false" class="burger_tag base_color_bg_main">'+username+'</span>');
+                            elem.html(str);
+                            console.log('str: '+str);
+                            burger_destroy();
+                        });
+                    }
+                }
+                else{
+                    elem_dropdown.html('no match');/*toto*/
+                } 
+
+
 	 		 	$('#app_content_dynamic_sub').append(elem_dropdown);
 	 		 	elem_dropdown.velocity("slideDown");
 	 		 	
@@ -91,30 +113,61 @@ var burger = function(elem, burger_mode, item){
 		});
 	}//END OF burger_mode == regex
     else if( burger_mode == '_users' ){
-        elem_dropdown.insertAfter(elem);
         elem.click(function(event){
-            console.log(burger_on);
             event.stopPropagation();
             if( burger_on ){
                 burger_destroy();
             }
             else{
+                //elem_dropdown.empty().insertAfter(elem);
+                elem_dropdown.empty().appendTo('#app_layers_content');
                 burger_on = true;
-                var coord = $(this).position();
+                //var coord = $(this).position();
+                var coord = $(this).offset();
                 var username;
-                var elem_option = $('#-burger_option').clone().prop('id','');
+                var elem_option = $('#-burger_option').clone().prop('id','').addClass('burger_option'+burger_mode);
                 var elem_option_clone;
                 $.each(item[burger_mode], function(key, value){
                     username = Lincko.storage.get("users", key,"username");
-                    elem_dropdown_clone = elem_option.clone();
-                    elem_dropdown_clone.find('[find=username]').html(username);
-                    elem_dropdown.append(elem_dropdown_clone);
+                    elem_option_clone = elem_option.clone();
+                    elem_option_clone.find('[find=username]').html(username);
+
+                    if( item['_type'] == 'tasks' && item['_users'][key]['in_charge'] ){
+                        elem_option_clone.addClass('burger_option_selected');
+                    }
+                    if( item['_type'] == 'notes' && item['updated_by'] == key ){
+                        elem_option_clone.addClass('burger_option_selected');
+                    }
+
+                    if( item['_type'] == 'tasks'){
+                        elem_option_clone.click(function(){
+                            wrapper_sendAction(
+                            {
+                                'id': item['_id'],
+                                //''
+                            }, 'post', 'task/update');
+                        });
+                    }
+
+                     elem_dropdown.append(elem_option_clone);
                 });
+
+                var left = coord.left;
+                var top = coord.top - $('#app_content_top').outerHeight() + $(this).closest('table').outerHeight();
+                if( responsive.test("minTablet")){
+                    left -= $('#app_content_menu').outerWidth();
+                }
+                 
                 elem_dropdown
-                    .css('left', coord.left)
-                    .css('top', coord.top + $(this).closest('table').outerHeight() )
+                    .css('left',left)
+                    .css('top',top)
                     .css('position','absolute')
                     .velocity("slideDown");
+                    /*
+                    .css('left', coord.left)
+                    .css('top', coord.top + $(this).closest('table').outerHeight() )
+                    */
+                    
             }
         });
         elem.focusout(function(){
