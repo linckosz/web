@@ -180,7 +180,7 @@ function Submenu(menu, next, param, preview) {
         submenu_wrapper = $('#-submenu_wrapper').clone();
         submenu_wrapper.prop("id", Elem.id);
         //Back button
-        submenu_wrapper.find("[find=submenu_wrapper_back]").click(function() {
+        submenu_wrapper.on('click', "[find=submenu_wrapper_back]", function() {
             submenu_Clean(Elem.layer, true, self.preview);
         });
         submenu_wrapper.css('z-index', Elem.zIndex);
