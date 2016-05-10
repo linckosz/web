@@ -37,8 +37,12 @@ var Submenu_select = {
         Elem.Add_MenuTitle();
     },
 
-    button: function(Elem) {
-        Elem.Add_MenuButton();
+    customized_title: function(Elem) {
+        Elem.Add_CustomisedTitle();
+    },
+
+    button: function(Elem, position) {
+        Elem.Add_MenuButton(position);
     },
 
     next: function(Elem) {
@@ -83,9 +87,12 @@ var Submenu_select = {
 
 Submenu.prototype.Add_MenuTitle = function() {
     var attribute = this.attribute;
-    submenu_wrapper = this.Wrapper();
+    var submenu_wrapper = this.Wrapper();
     var title;
     var className;
+    var Elem = $('#-submenu_top').clone();
+    Elem.prop("id", '');
+    submenu_wrapper.prepend(Elem);
     if( typeof attribute.title === "function" ){
         title = attribute.title(this);
     }
@@ -212,16 +219,44 @@ function Submenu(menu, next, param, preview) {
     Constructor(this);
 }
 
-
-
-Submenu.prototype.Add_MenuTitle = function() {
+Submenu.prototype.Add_CustomisedTitle = function() {
+    debugger;
     var attribute = this.attribute;
     submenu_wrapper = this.Wrapper();
-    submenu_wrapper.find("[find=submenu_wrapper_title]").html(attribute.title);
+    var Elem = $('#-submenu_customized_top').clone();
+    Elem.prop("id", '');
+    Elem.find("[find=submenu_title]").html(attribute.title);
+
+    if ("class" in attribute) {
+        Elem.addClass(attribute['class']);
+    }
+    if ("now" in attribute && typeof attribute.now === "function") {
+        attribute.now(this, Elem);
+    }
+
+    if ("left" in attribute) {
+        for (var left_item in attribute['left']) {
+            if('style' in attribute['left'][left_item] && attribute['left'][left_item].style in Submenu_select) {
+                this.attribute = attribute['left'][left_item];
+                Submenu_select[attribute['left'][left_item].style](this, Elem.find('.submenu_top_side_left'));       
+            }
+        }
+    }
+
+    if ("right" in attribute) {
+        for (var right_item in attribute['right']) {
+            if('style' in attribute['right'][right_item] && attribute['left'][right_item].style in Submenu_select) {
+                this.attribute = attribute['right'][right_item];
+                Submenu_select[attribute['right'][right_item].style](this, Elem.find('.submenu_top_side_right'));       
+            }
+        }
+    }
+
+    submenu_wrapper.prepend(Elem);
     //Free memory
     delete submenu_wrapper;
     return true;
-};
+}
 
 Submenu.prototype.Add_TitleSmall = function() {
     var attribute = this.attribute;
@@ -241,7 +276,7 @@ Submenu.prototype.Add_TitleSmall = function() {
     return true;
 };
 
-Submenu.prototype.Add_MenuButton = function() {
+Submenu.prototype.Add_MenuButton = function(position) {
     var attribute = this.attribute;
     var Elem = $('#-submenu_button').clone();
     Elem.prop("id", '');
@@ -267,7 +302,12 @@ Submenu.prototype.Add_MenuButton = function() {
     if ("now" in attribute && typeof attribute.now === "function") {
         attribute.now(this, Elem);
     }
-    this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
+    if (!position) {
+        this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
+    }
+    else {
+        position.append(Elem);
+    }
     return true;
 };
 

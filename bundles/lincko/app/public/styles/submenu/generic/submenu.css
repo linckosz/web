@@ -323,6 +323,14 @@
 	background-color: #FAFBFC;
 }
 
+.submenu_top .submenu_top_side_left {
+	float: left;
+}
+
+.submenu_top .submenu_top_side_right {
+	float: right;
+}
+
 #app_application_submenu_block .submenu_wrapper {
     width: 33.33%;
 }
