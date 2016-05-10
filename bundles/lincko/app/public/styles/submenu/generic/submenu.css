@@ -323,6 +323,10 @@
 	background-color: #FAFBFC;
 }
 
+.submenu_top .submenu_value {
+	display: none;
+}
+
 .submenu_top .submenu_top_side_left {
 	float: left;
 }
