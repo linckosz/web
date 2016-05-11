@@ -1,3 +1,181 @@
+var mainMenu = (function() {
+    function orderList(list) {
+        return list.sort(function(a, b) {
+            return a.timestamp - b.timestamp;
+        });
+    }
+
+    function feedChatItem(position, data) {
+        var item = $("#-app_project_chat_item").clone();
+        var name = '';
+        $(position).append(item);
+        item.removeAttr('id', '');
+        item.removeAttr('style', '');
+        var cnt = notifier[data.type]['get'](data.id);
+        if (cnt) {
+            if (cnt > 99) {
+                item.find('.notification').text('...').show();
+            } else {
+                item.find('.notification').text(cnt).show();
+            }
+        }
+        if (data.type == "history") {
+            name = Lincko.storage.get("projects", data.id, "+title") + " Activity";
+            item.find('img.logo').attr('src', 'icon-MultiplePeople');
+            item.find('span.logo').remove();
+        } else if (data.type == 'chats') {
+            var users = Lincko.storage.get('chats', data.id, 'users');
+            for (var u in users) {
+                name = name.concat(Lincko.storage.get('users', u, '-username') + ", ");
+            }
+            name = name.slice(0, -2);
+            if (Object.keys(users).length > 1) {
+                item.find('span.logo').addClass('icon-MultiplePeople');
+                item.find('img').remove();
+            } else {
+                item.find('span.logo').addClass('icon-SinglePerson_Selected');
+                item.find('img').remove();
+            }
+        }
+        item.find('header').text(name);
+        item.find('article').text(data.comment);
+        return item;
+    }
+    function initChatTab() {
+        //get list
+        var chatHistoryList = orderChatList(4);
+        var maxHeight = parseInt($("#app_project_chat").css("max-height").slice(0, -2)) - $("#app_project_chat").height();
+        var itemHeight = 0;
+        //caculate
+        for (var c in chatHistoryList) {
+            if (maxHeight > itemHeight) {
+                var item = feedChatItem('#app_project_chat', chatHistoryList[c]);
+                itemHeight = item.height();
+                maxHeight = maxHeight - itemHeight;
+            }
+            var data = chatHistoryList[c];
+
+            item.on("click", data, function(event) {
+                var title;
+                if (event.data.type == 'chats') {
+                    title = $(this).find('header').text();
+                } else {
+                    title = Lincko.storage.get("projects", event.data.id, "+title") + " Activity";
+                }
+                //render
+                submenu_Build("newchat", false, false, {
+                    type: event.data.type,
+                    id: event.data.id,
+                    title: title,
+                });
+            });
+        }
+    }
+
+    function initProjectTab() {
+        var projectList = Lincko.storage.list('projects', 4);
+        var maxHeight = parseInt($("#app_project_tab").css("max-height").slice(0, -2));
+        var itemHeight = 0;
+        //caculate
+        for (var p in projectList) {
+            if (maxHeight > itemHeight) {
+                var item = $("#-app_project_item").clone();
+                $('#app_project_tab').append(item);
+                item.removeAttr('id', '');
+                item.removeAttr('style', '');
+                item.find('p').text(projectList[p]['+title']);
+                itemHeight = item.height();
+                maxHeight = maxHeight - itemHeight;
+            }
+        }
+    }
+
+    function initMainMenuEvents() {
+        $("#app_project_content .icon-Settings").on("click", function() {
+            submenu_Build("settings");
+        });
+
+        $("#app_project_chat .app_project_header_stats").on("click", function() {
+            //render
+            submenu_Build('mainchat');
+        });
+
+    }
+
+    /*
+        Get an ordered chat history list for unlimited number
+        or limited number.
+        number: limit of rows of items which will report
+        project_id: given if just target a specific project not the main menu
+    */
+    function orderChatList(number, project_id) {
+    	debugger;
+        var merge_list = [];
+        // each item should be:
+        // {'type': ['history'|'chat'], 'id': ['project_id'|'chat_id'], 'timestamp': 'the_latest_update_history_or_chat'}
+        //get project list
+        var project_list = Lincko.storage.list('projects', number);
+
+        //get the most recent history for each project
+        for (var p in project_list) {
+            if (project_id && project_list[p]._id != project_id) {
+                continue;
+            }
+            //var e1 = Lincko.storage.hist('recent', project_list[p]._id, 1)[0];
+            var e1 = Lincko.storage.hist(null, 1, null, 'projects', project_list[p]._id,false)[0];
+            var e2 = Lincko.storage.list('comments', 1, null, 'projects', project_list[p]._id, false)[0];
+            var timestamp = e1.timestamp;
+            var txt = Lincko.storage.getHistoryInfo(e1).title;
+            if (e2 && e1.timestamp < e2.created_at) {
+                var timestamp = e2.created_at;
+                var txt = e2['+comment'];
+            }
+
+            merge_list.push({
+                'type': 'history',
+                'id': project_list[p]._id,
+                'timestamp': timestamp,
+                'comment': txt,
+            });
+        }
+        if (project_id) {
+        	 // Get chats belong to specific project
+        	var chat_list = Lincko.storage.list('chats', null, null, 'projects', project_id, false);
+        }
+        else {
+        	 // Get all chats
+        	var chat_list = Lincko.storage.list('chats', number, null, null, null, false);
+        }
+
+        //get the most recent comment for each project
+        for (var c in chat_list) {
+            var timestamp = chat_list[c].updated_at;
+            var comment = Lincko.storage.list('comments', 1, null, 'chats', chat_list[c]._id);
+            if(comment.length>0){
+                merge_list.push({
+                    'type': 'chats',
+                    'id': chat_list[c]._id,
+                    'timestamp': timestamp,
+                    'comment': comment[0]['+comment'],
+                });
+            }
+        }
+        return orderList(merge_list);
+    }
+    return {
+        'init': function() {
+            initProjectTab();
+            initChatTab();
+            initMainMenuEvents();
+        },
+        'getlist': orderChatList,
+        'feed': feedChatItem,
+    };
+})();
+JSfiles.finish(function() {
+    mainMenu.init();
+});
+
 function app_project_quick_upload_display(Elem, show) {
 	var Obj_div = $('#app_project_quick_upload');
 	var Obj_img = $('#app_project_quick_upload > div > img');
