@@ -724,7 +724,7 @@ skylist.prototype.addNote = function(item){
 	burger(Elem.find('[find=title]'), 'regex');
 
 	/*
-	 note body
+	 note description
 	 */
 	Elem.find('[find=description]').html(item['-comment']);
 

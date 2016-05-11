@@ -217,10 +217,11 @@ Submenu.prototype.Add_taskdetail = function() {
 	submenu_taskdetail.append(elem);
 	/*---END OF taskmeta---*/
 
-	/*---taskdescription---*/
+	/*---description---*/
 	elem = $('#-submenu_taskdetail_description').clone().prop('id','submenu_taskdetail_description');
 	elem.find('[find=description_text]').html(item['-comment']);
 	submenu_taskdetail.append(elem);
+	
 
 	/*---taskcomments--*/
 	var elem_submenu_taskdetail_comments = $('#-submenu_taskdetail_comments').clone().prop('id','submenu_taskdetail_comments');
@@ -410,6 +411,13 @@ Submenu.prototype.Add_taskdetail = function() {
 
 		$(document).off('previewHide.skylist');
 	});
+
+	/*---easyEditor---*/
+	if(that.param.type == 'notes' ){
+		submenu_wrapper.find('[find=description_text]').easyEditor();
+	}
+	console.log(submenu_wrapper.find('[find=submenu_wrapper_content]'));
+	console.log(submenu_wrapper.find('[find=submenu_wrapper_content]').prop('id'));
 
 	//Free memory
 	delete submenu_wrapper;

@@ -181,7 +181,6 @@
                 _this.$toolbarContainer.children('ul').append('<li><button class="toolbar-'+ settings.buttonIdentifier +'" title="'+ buttonTitle +'">'+ settings.buttonHtml +'</button></li>');
             }
         }
-
         // bind click event
         if(typeof settings.clickHandler === 'function') {
             $('html').find(_this.elem).closest(_this.containerClass).delegate('.toolbar-'+ settings.buttonIdentifier, 'click', function(event){

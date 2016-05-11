@@ -81,6 +81,19 @@ td.submenu_taskdetail_share .fa{
 .submenu_taskdetail_description [find=description_text] {
 	/*min-height: 60%;*/
 }
+
+/*------easyEditor------*/
+.submenu_taskdetail_description .easyeditor-toolbar {
+	padding: 0px;
+}
+.submenu_taskdetail_description ul {
+	margin: 0px;
+}
+.submenu_taskdetail_description button {
+	margin: 0px;
+}
+
+
 .submenu_taskdetail_collapsable_button {
     border-bottom: 1px solid #FBA026;
     width: 100%;

@@ -2,7 +2,6 @@
  * the ultimate Lincko Burger
  */
 var burger = function(elem, burger_mode, item){
-	console.log('burger burger');
 	var elem_dropdown = $('#-burger_dropdown').clone().prop('id','');
     var burger_on = false;
 
