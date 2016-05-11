@@ -1191,7 +1191,6 @@ Lincko.storage.sort_items = function(array_items, att, page_start, page_end, asc
 			asc_id = Object.keys(temp[attribute]).sort(function(a, b) { return a - b; });
 			for(var j in asc_id){
 				item_id = asc_id[j];
-				console.log(pagination+" >= "+page_start);
 				if(pagination >= page_start){
 					results.push(temp[attribute][item_id]);
 				}
