@@ -500,16 +500,33 @@ $('#app_application_project_block').click(function(){
 	app_application.move('project');
 });
 
+function app_application_dev_link(){
+	//Used for development site only
+	var dev_front = "";
+	var dev_back = "";
+	if(document.linckoFront || document.linckoBack){
+		var dev_front = "master-";
+		if(document.linckoFront){
+			dev_front = document.linckoFront;
+		}
+		var dev_back = "master.";
+		if(document.linckoBack){
+			dev_back = document.linckoBack;
+		}
+	}
+	return dev_front+dev_back;
+}
+
 function app_application_change_workspace(workspace){
 	if(typeof workspace !== 'undefined'){
-		top.location.replace(top.location.protocol+'//'+workspace+'.'+document.domain); //Company workspace
+		top.location.replace(top.location.protocol+'//'+app_application_dev_link()+workspace+'.'+document.domain); //Company workspace
 	} else {
 		base_show_error(Lincko.Translation.get('app', 45, 'js')); //We could not define which workspace you want to consult.
 	}
 }
 
 function app_application_change_private(){
-	top.location.replace(top.location.protocol+'//'+document.domain); //Personal workspace
+	top.location.replace(top.location.protocol+'//'+app_application_dev_link()+document.domain); //Personal workspace
 }
 
 

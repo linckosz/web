@@ -121,7 +121,7 @@ var app_layers_projects_feedPage = function(param, animation){
 		if(Lincko.storage.favorite('projects', item['_id'])){
 			Elem.find("[find=favorite]").css('visibility', 'visible');
 		}
-		tasks = Lincko.storage.list('tasks', null, {'_parent': ['projects', item['_id']]});
+		tasks = Lincko.storage.list('tasks', -1, null, 'projects', item['_id']);
 		for(var j in tasks){
 			//Do not count canceled tasks
 			if(tasks[j]['status'] == 3){

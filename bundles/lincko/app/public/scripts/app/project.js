@@ -293,7 +293,7 @@ var app_project_info = {
 	current: false,
 
 	build: function(){
-		var item = Lincko.storage.time('latest');
+		var item = Lincko.storage.hist(null, 1); //Latest
 		var time = 300;
 		if(Lincko.storage.isHistoryReady() && item){
 			var history = Lincko.storage.getHistoryInfo(item);

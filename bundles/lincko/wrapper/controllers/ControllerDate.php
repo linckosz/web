@@ -71,6 +71,8 @@ class ControllerDate extends Controller {
 			format: {
 				date_short: \"".$app->trans->getJS('wrapper', 2, 1)."\", //Jul 8th (Default)
 
+				date_very_short: \"".$app->trans->getJS('wrapper', 2, 7)."\", //Jul 8
+
 				date_medium: \"".$app->trans->getJS('wrapper', 2, 2)."\", //July 8th, 2015
 
 				date_long: \"".$app->trans->getJS('wrapper', 2, 3)."\", //8 Jul 2015 01:51 PM

@@ -142,8 +142,13 @@ $app->lincko->data = array(
 	'domain' => $app->lincko->domain,
 	'title' => $app->lincko->title,
 	'workspace' => '',
-	'lincko_back' => '', //Only used for development purpose "master-[bruno].lincko.cafe"
+	'lincko_back' => '', //Only used for development purpose "master-[bruno.]lincko.cafe"
+	'lincko_front' => '', //Only used for development purpose "[master-]bruno.lincko.cafe"
 );
+
+if(isset($_SERVER["LINCKO_FRONT"])){
+	$app->lincko->data['lincko_front'] = $_SERVER["LINCKO_FRONT"].'-';
+}
 
 if(isset($_SERVER["LINCKO_BACK"])){
 	$app->lincko->data['lincko_back'] = $_SERVER["LINCKO_BACK"].'.';

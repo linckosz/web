@@ -13,7 +13,7 @@ var app_layers_history_feedPage = function(param){
 	var position = $('#app_layers_history');
 	position.addClass('overthrow');
 	position.empty();
-	var items = Lincko.storage.time('recent');
+	var items = Lincko.storage.hist(null, 50); //recent
 	var history;
 	var item;
 	var Elem;

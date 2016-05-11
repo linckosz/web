@@ -18,6 +18,7 @@ var storage_cb_success = function(msg, err, status, data){
 			if(info === 'reset'){
 				Lincko.storage.schema(data.partial[wrapper_localstorage.uid]);
 				wrapper_localstorage.encrypt('data', JSON.stringify(Lincko.storage.data));
+				wrapper_localstorage.cleanLocalWorkspace();
 				wrapper_sendAction('', 'post', 'data/reset_init');
 				schema = false;
 			}
@@ -189,7 +190,7 @@ Lincko.storage.update = function(partial, info){
 		update = true;
 	}
 	if(update){
-		Lincko.storage.orderRecents(partial);
+		Lincko.storage.childrenList(partial);
 		Lincko.storage.display();
 		wrapper_localstorage.encrypt('data', JSON.stringify(Lincko.storage.data));
 		if(newField && !info){
@@ -252,7 +253,7 @@ Lincko.storage.schema = function(schema){
 	}
 
 	if(update){
-		Lincko.storage.orderRecents(Lincko.storage.data, true);
+		Lincko.storage.childrenList(Lincko.storage.data);
 		Lincko.storage.display();
 		wrapper_localstorage.encrypt('data', JSON.stringify(Lincko.storage.data));
 		return true;
@@ -276,80 +277,35 @@ Lincko.storage.firstLatest = function(){
 };
 
 /* PRIVATE METHOD */
-Lincko.storage.setHistory = function(category, id, stop_order){
-	if(typeof stop_order === 'undefined'){ stop_order = false; }
-	var temp = {};
-	var new_key = false;
-	var item;
-	var username;
+Lincko.storage.childrenList = function(data){
+	var parent_type = null;
+	var parent_id = 0;
 
-	if($.type(Lincko.storage.data[category]) === 'object' && $.type(Lincko.storage.data[category][id]) === 'object'){
-		item = Lincko.storage.data[category][id];
-		if(typeof item['created_at'] !== 'undefined' && item['created_at'] > 0 && typeof item['created_by'] !== 'undefined' && item['created_by'] > 0 && $.type(item['history']) === 'object'){
-			for(var h_created_at in item['history']) {
-				for(var h_id in item['history'][h_created_at]) {
-					h_item = item['history'][h_created_at][h_id];
+	//Clean children
+	for(var category in Lincko.storage.data) {
+		for(var id in Lincko.storage.data[category]) {
+			delete Lincko.storage.data[category][id]['_children'];
+		}
+	}
 
-					if(typeof Lincko.storage.data_recent[h_created_at] === 'undefined'){ Lincko.storage.data_recent[h_created_at] = {}; new_key = true;  }
-					if(typeof Lincko.storage.data_recent[h_created_at][category] === 'undefined'){ Lincko.storage.data_recent[h_created_at][category] = {}; }
-					if(typeof Lincko.storage.data_recent[h_created_at][category][id] === 'undefined'){ Lincko.storage.data_recent[h_created_at][category][id] = {}; }
-
-					Lincko.storage.data_recent[h_created_at][category][id][h_id] = {
-						by: h_item['by'],
-						att: h_item['att'],
-						not: h_item['not'],
-					};
-					// NOTE: "New" attribute can be recovered by checking same history type until item itself
-					if(typeof h_item['old'] !== 'undefined' && typeof h_item['new'] !== 'undefined'){
-						Lincko.storage.data_recent[h_created_at][category][id][h_id]['old'] = h_item['old'];
-					}
-					Lincko.storage.data_recent[h_created_at][category][id][h_id]['par'] = {};
-					if(typeof h_item['par'] !== 'undefined'){
-						Lincko.storage.data_recent[h_created_at][category][id][h_id]['par'] = h_item['par'];
-					}
-					if(username = Lincko.storage.get('users', h_item['by'], 'username')){
-						Lincko.storage.data_recent[h_created_at][category][id][h_id]['par']['un'] = username; 
-					}
+	//Rebuild children tree
+	for(var category in Lincko.storage.data) {
+		for(var id in Lincko.storage.data[category]) {
+			if(typeof Lincko.storage.data[category][id]['_parent']!=='undefined' && typeof Lincko.storage.data[category][id]['_parent'][0]==='string' && Lincko.storage.data[category][id]['_parent'][1]){
+				parent_type = Lincko.storage.data[category][id]['_parent'][0];
+				parent_id = Lincko.storage.data[category][id]['_parent'][1];
+				if(!Lincko.storage.data[parent_type][parent_id]['_children']){
+					Lincko.storage.data[parent_type][parent_id]['_children'] = {};
 				}
+				if(!Lincko.storage.data[parent_type][parent_id]['_children'][category]){
+					Lincko.storage.data[parent_type][parent_id]['_children'][category] = {};
+				}
+				Lincko.storage.data[parent_type][parent_id]['_children'][category][id] = true;
 			}
-		}
-	}
-
-	if(new_key && !stop_order){
-		//Sort by key value (timestamp), Object.keys gets only an array of the keys, sort() sorts the array from big to small
-		var desc_order = Object.keys(Lincko.storage.data_recent).sort(function(a, b) { return b - a; });
-		for(i in desc_order){
-			if($.type(Lincko.storage.data_recent[desc_order[i]]) === 'object'){
-				temp[desc_order[i]] = Lincko.storage.data_recent[desc_order[i]];
-			}
-		}
-		Lincko.storage.data_recent = temp;
-	}
-
-	return true;
-}
-
-/* PRIVATE METHOD */
-Lincko.storage.orderRecents = function(data, clean){
-	var temp = {};
-	if(typeof clean === 'undefined'){ clean = false; }
-	if(clean){
-		Lincko.storage.data_recent = {}; //Clean the history before to rebuild it
-	}
-	for(var category in data) {
-		for(var id in data[category]) {
-			Lincko.storage.setHistory(category, id, true);
+			delete Lincko.storage.data[category][id]['_children'];
 		}
 	}
 	
-	//Sort by key value (timestamp), Object.keys gets only an array of the keys, sort() sorts the array from big to small
-	var desc_order = Object.keys(Lincko.storage.data_recent).sort(function(a, b) { return b - a; });
-	for(i in desc_order){
-		if($.type(Lincko.storage.data_recent[desc_order[i]]) === 'object'){
-			temp[desc_order[i]] = Lincko.storage.data_recent[desc_order[i]];
-		}
-	}
-	Lincko.storage.data_recent = temp;
 	app_application_lincko.update(true);
 	return true;
 };
@@ -372,7 +328,7 @@ Lincko.storage.get = function(category, id, attribute){
 	if($.type(Lincko.storage.data) === 'object' && $.type(Lincko.storage.data[category]) === 'object' && $.type(Lincko.storage.data[category][id]) === 'object'){
 		var result = Lincko.storage.data[category][id];
 		//Add info to element, use "_" to recognize that it has been added by JS
-		result['_id'] = id;
+		result['_id'] = parseInt(id, 10);
 		result['_type'] = category;
 		if(typeof attribute === 'string'){
 			if(typeof Lincko.storage.data[category][id][attribute] !== 'undefined'){
@@ -399,15 +355,15 @@ Lincko.storage.isHistoryReady = function(){
 
 /*
 	Return an object { title, content }
-	Lincko.storage.getHistoryInfo( Lincko.storage.time('latest') ) => Return formatted information about the time object passed in parameter. For a list of time objects like “Lincko.storage.time('recent')”, use a loop.
+	Lincko.storage.getHistoryInfo( Lincko.storage.hist(null, 1); ) => Return formatted information about the time object passed in parameter. For a list of time objects like “Lincko.storage.hist(null, 50);”, use a loop.
 */
 Lincko.storage.getHistoryInfo = function(history){
 	var result = {
 		title: '',
 		content: '',
 		root: {
-			content: '',
-			par: null,
+			title: '',
+			history: null,
 		},
 	};
 
@@ -415,13 +371,20 @@ Lincko.storage.getHistoryInfo = function(history){
 		   $.type(Lincko.storage.data) === 'object'
 		&& $.type(Lincko.storage.data['_history_title']) === 'object'
 		&& $.type(Lincko.storage.data['_history_title'][history.type]) === 'object'
-		&& (typeof Lincko.storage.data['_history_title'][history.type][history.att] !== 'undefined'
+		&& (typeof Lincko.storage.data['_history_title'][history.type][history.cod] !== 'undefined'
 		 || typeof Lincko.storage.data['_history_title'][history.type] !== 'undefined')
 	){
-		if(typeof Lincko.storage.data['_history_title'][history.type][history.att] !== 'undefined'){
-			result.title = Lincko.storage.data['_history_title'][history.type][history.att];
+		if(typeof Lincko.storage.data['_history_title'][history.type][history.cod] !== 'undefined'){
+			result.title = Lincko.storage.data['_history_title'][history.type][history.cod];
 		} else if(typeof Lincko.storage.data['_history_title'][history.type] !== 'undefined'){
 			result.title = Lincko.storage.data['_history_title'][history.type];
+		}
+
+		if(username = Lincko.storage.get('users', history['by'], 'username')){
+			if(typeof history.par=='undefined'){
+				history.par = {};
+			}
+			history.par.un = username; 
 		}
 
 		result.root = {
@@ -441,12 +404,18 @@ Lincko.storage.getHistoryInfo = function(history){
 				break;
 			}
 		}
+		console.log(history)
 		//Add to the content an optional detail if any (such as "project description")
-		if(history.att.indexOf('-')===0 && item[history.att]){
+		if(history.att.indexOf('-')!=0){
+			attribute = "-"+history.att;
+		} else {
+			attribute = history.att;
+		}
+		if(attribute.indexOf('-')===0 && item[attribute]){
 			if(result.content){
-				result.content = result.content+' &#8680; '+item[history.att];
+				result.content = result.content+' &#8680; '+item[attribute];
 			} else {
-				result.content = item[history.att];
+				result.content = item[attribute];
 			}
 		}
 		
@@ -497,7 +466,7 @@ Lincko.storage.formatHistoryInfo = function(text, history){
 			text = text.replaceAll(search, '"'+Lincko.Translation.get('app', 21, 'html')+'"');
 		}
 	}
-	return wrapper_to_html(text);
+	return text; // normaly we should not use wrapper_to_html(text) here
 };
 
 /*
@@ -561,7 +530,7 @@ Lincko.storage.search = function(type, param, category){
 								if(!$.isEmptyObject(save_result)){
 									if(
 										typeof save_result['personal_private']==='undefined'
-										|| ((typeof save_result['personal_private']==='string' || typeof save_result['personal_private']==='number') && (save_result['personal_private']==null ||save_result['personal_private']==0))
+										|| ((typeof save_result['personal_private']==='string' || typeof save_result['personal_private']==='number') && (save_result['personal_private']==null || save_result['personal_private']==0))
 									){
 										if(typeof results[cat] === 'undefined'){ results[cat] = {}; }
 										results[cat][item] = save_result;
@@ -709,7 +678,7 @@ Lincko.storage.getFavorites = function(category, param, extend){
 
 	if(extend){
 		//Then it will scan creation date until it match the limitation number (param)
-		list = Lincko.storage.time('recent_created_at', param, category);
+		list = Lincko.storage.hist(category, param, {att: 'created_at'});
 		for(var i in list){
 			if(item_tp = Lincko.storage.get(category, list[i].id)){
 				if(typeof id_record[item_tp['_id']]==='undefined' && (typeof item_tp['personal_private']==='undefined' || item_tp['personal_private']==null || item_tp['personal_private']==0)){
@@ -782,275 +751,450 @@ Lincko.storage.getMyPlaceholder = function(){
 	return false;
 };
 
+// "include" [default: true] at true it includes the object itself
 /*
-	Return a simple table with item as value;
-	Lincko.storage.time('latest'); => Return the latest operation as a single object.
-	Lincko.storage.time('recent'); => Return an array of the 50 (default value) latest operations.
-	Lincko.storage.time('recent', 10); => Return an array of the 10 latest operations.
-	Lincko.storage.time('recent', -1); => Return an array of all operations. (It can be very long!)
-	Lincko.storage.time('recent', -1, 'tasks'); => Return an array of all operations done of “tasks”.
-	Lincko.storage.time('recent', null, 'tasks'); => Return an array of the 50 (default value) latest operations done of “tasks”.
-	Lincko.storage.time(recent_created_at, -1); => Return an array of all object creation operations. Actually “recent_created_at” works with same parameters as “recent”, but it lists only creation operations.
-	Lincko.storage.time('between'); => Return an array of all operations done the last 24H.
-	Lincko.storage.time('between', null, 'tasks'); => Return an array of all operations done on “tasks” the last 24H.
-	Lincko.storage.time('between', null, 'tasks'); => Return an array of all operations done on “tasks” the last 24H.
-	Lincko.storage.time('between', {min: 1448487687, max: 1448530609}); => Return an array of all operations done between 2 timestamps (UTC).
-	Lincko.storage.time('between', {min: 1448487687, max: 1448530609}, 'projects'); => Return an array of all operations done on “projects” between 2 timestamps (UTC).
-
-	Lincko.storage.time('between', {min: 1448487687, max: 1448530609}, 'projects');
-	Lincko.storage.time('between', {min: 1448487687, max: 1448530609}, 'projects');
+	"include" [default: true] at true it includes the object itself
+	"extend": [default: true] at true it scan the whole hierarchy, at false only the level 1
+	Lincko.storage.tree('projects', 5); => All elements that belongs to, and are parent of, the project No5
+	Lincko.storage.tree('projects', 5, 'children'); => All elements that belongs to the project No5
+	Lincko.storage.tree('projects', 5, 'parents'); => All elements that are parent of the project No5
 */
-Lincko.storage.time = function(type, param, category){
-	var results = [];
-	var find = [];
-	type = type.toLowerCase();
-	if(typeof param === 'string'){ param = param.toLowerCase(); }
-	if(typeof category === 'string'){ category = category.toLowerCase(); }
+Lincko.storage.tree = function(category, id, direction, include, extend){
+	var results = false;
+	var children = {};
+	var parents = {};
+	var temp;
+	if(typeof category !== 'string' || category.indexOf('_')===0){ return results; } else { category = category.toLowerCase(); }
+	if(!$.isNumeric(id)){ return results; } else { id = parseInt(id, 10); }
+	if(typeof direction !== 'string'){ direction = 'all'; }
+	direction = direction.toLowerCase();
+	if(direction!='all' && direction!='children' && direction!='parents'){ return results; }
+	if(typeof include !== 'boolean'){ include = true; }
+	if(typeof extend !== 'boolean'){ extend = true; }
+	if(typeof Lincko.storage.data[category] == 'undefined'){ return results; }
+	if(typeof Lincko.storage.data[category][id] == 'undefined'){ return results; }
 
-	//Return a table of most recent updates
-	find['recent'] = function(restriction){
-		var most_recent = 50; //Get the 50 latest updated
-		var items = {};
-		var arr;
-		var par;
-		var timestamp;
-		//Sort by key value (timestamp), Object.keys gets only an array of the keys, sort() sorts the array from big to small
-		var desc_order = Object.keys(Lincko.storage.data_recent).sort(function(a, b) { return b - a; });
-		if(typeof param === 'number' && param >= 0){ most_recent = param; }
-		for(var i in desc_order){
-			timestamp = desc_order[i];
-			for(var cat in Lincko.storage.data_recent[timestamp]){
-				items = {};
-				if(typeof category === 'string'){
-					if(cat.toLowerCase() === category){
-						items = Lincko.storage.data_recent[timestamp][cat];
+	results = {};
+
+	//Include the object itself
+	if(include){
+		results[category] = {};
+		results[category][id] = true;
+	}
+
+	//Include all children (level 1)
+	if(direction=='all' || direction=='children'){
+		if(Lincko.storage.data[category][id]['_children']){
+			var items = Lincko.storage.data[category][id]['_children'];
+			for(var child_cat in items){
+				for(var child_id in items[child_cat]){
+					child_id = parseInt(child_id, 10);
+					if(typeof results[child_cat]=='undefined'){
+						results[child_cat] = {};
 					}
-				} else {
-					items = Lincko.storage.data_recent[timestamp][cat];
-				}
-				for(var item_id in items){
-					for(var history_id in items[item_id]){
-						if(typeof restriction === 'undefined' || (typeof restriction === 'string' && restriction.toLowerCase() === items[item_id][history_id]['att'])){
-							if(most_recent>0 || param<0){
-								arr = {
-									timestamp: timestamp,
-									type: cat,
-									id: item_id,
-									by: items[item_id][history_id]['by'],
-									att: items[item_id][history_id]['att'],
-									not: items[item_id][history_id]['not'],
-								};
-								//We do not keep copy of Old in data_recent, we just need to keep it from origin 'data' item, because there is 2 cases scenario:
-								// 1) Get Old from item itself
-								// 2) Old is not available offline, so we download it before displaying (POST | 'data/history')
-								if(typeof items[item_id][history_id]['par'] !== 'undefined'){
-									par = items[item_id][history_id]['par'];
-									if($.type(par) === 'object' && !$.isEmptyObject(par)){
-										arr['par'] = par;
-									}
+					results[child_cat][child_id] = true;
+					if(extend){
+						temp = Lincko.storage.tree(child_cat, child_id, 'children', false);
+						for(var temp_cat in temp){
+							for(var temp_id in temp[temp_cat]){
+								if(typeof results[temp_cat]=='undefined'){
+									results[temp_cat] = {};
 								}
-								results.push(arr);
-							} else {
-								return results.length;
+								results[temp_cat][temp_id] = true;
 							}
-							most_recent--;
+						}
+					}
+				}
+			}
+		}
+	}
+	//Include the parent (level 1)
+	if(direction=='all' || direction=='parents'){
+		if(Lincko.storage.data[category][id]['_parent']){
+			if(typeof Lincko.storage.data[category][id]['_parent'] == 'object'){
+				var item = Lincko.storage.data[category][id]['_parent'];
+				var par_cat = item[0];
+				var par_id = parseInt(item[1], 10);
+				if(typeof results[par_cat]=='undefined'){
+					results[par_cat] = {};
+				}
+				results[par_cat][par_id] = true;
+				if(extend){
+					temp = Lincko.storage.tree(par_cat, par_id, 'parents', false);
+					for(var temp_cat in temp){
+						for(var temp_id in temp[temp_cat]){
+							if(typeof results[temp_cat]=='undefined'){
+								results[temp_cat] = {};
+							}
+							results[temp_cat][temp_id] = true;
 						}
 					}
 				}
-			}	
-		}
-		return results.length;
-	};
-
-	find['recent_created_at'] = function(){
-		find['recent']('created_at');
-		return results.length;
-	};
-
-	//Return a table of most recent updates
-	find['between'] = function(){
-		var items = {};
-		var arr;
-		var par;
-		var timestamp;
-		var check_param = false;
-		if($.type(param) === 'object'){
-			if(typeof param.min === 'number' && typeof param.max === 'number' && param.max > param.min){
-				check_param = true;
 			}
-		}
-		if(!check_param){
-			param = {
-				min: Math.floor(Date.now() / 1000) - (3600*24), //24H before
-				max: Math.floor(Date.now() / 1000),
-			};
-		}
-
-		//Sort by key value (timestamp), Object.keys gets only an array of the keys, sort() sorts the array from big to small
-		var desc_order = [];
-		var temp = Object.keys(Lincko.storage.data_recent).sort(function(a, b) { return b - a; });
-		for(var i in temp){
-			if(temp[i]>=param.min && temp[i]<=param.max){
-				desc_order.push(temp[i]);
-			}
-		}
-		
-		for(var i in desc_order){
-			timestamp = desc_order[i];
-			for(var cat in Lincko.storage.data_recent[timestamp]){
-				items = {};
-				if(typeof category === 'string'){
-					if(cat.toLowerCase() === category){
-						items = Lincko.storage.data_recent[timestamp][cat];
-					}
-				} else {
-					items = Lincko.storage.data_recent[timestamp][cat];
-				}
-				for(var item_id in items){
-					for(var history_id in items[item_id]){
-						arr = {
-							timestamp: timestamp,
-							type: cat,
-							id: item_id,
-							by: items[item_id][history_id]['by'],
-							att: items[item_id][history_id]['att'],
-							not: items[item_id][history_id]['not'],
-						};
-						//We do not keep copy of Old in data_recent, we just need to keep it from origin 'data' item, because there is 2 cases scenario:
-						// 1) Get Old from item itself
-						// 2) Old is not available offline, so we download it before displaying (POST | 'data/history')
-						if(typeof items[item_id][history_id]['par'] !== 'undefined'){
-							par = items[item_id][history_id]['par'];
-							if($.type(par) === 'object' && !$.isEmptyObject(par)){
-								arr['par'] = par;
-							}
-						}
-						results.push(arr);
-					}
-				}
-			}	
-		}
-		return results.length;
-	};
-
-	//Return only the latest update, not a table
-	find['latest'] = function(){
-		param = 1;
-		if(find['recent']()>0){
-			results = results[0];
-		} else {
-			results = false;
-		}
-		return 1;
-	};
-
-	if(typeof find[type] === 'function'){
-		if($.type(Lincko.storage.data_recent) === 'object'){
-			find[type]();
 		}
 	}
 
+	if($.isEmptyObject(results)){
+		results = false;
+	}
+
 	return results;
-};
+}
 
 /*
-	Lincko.storage.list('tasks'); => List all tasks, order from newest to oldest
-	Lincko.storage.list('tasks', 5); => List 5 latest tasks
-	Lincko.storage.list('tasks', 5, {'created_by': 1}); => List 5 latest tasks from the project No5, the conditions must be an object
-	Lincko.storage.list('tasks', null, {'_parent': ['project', 8], 'created_by': 1}); => List all tasks from the project No5, and created by the user No 1
-*/
-Lincko.storage.list = function(category, limit, conditions){
-	var temp = {};
-	var results = [];
-	if(typeof category !== 'string' || category.indexOf('_')===0){ return results; }
-	if(typeof limit !== 'number' || !limit || limit <= 0){ limit = -1 } //All items
-	if($.type(conditions) !== 'object'){ conditions = {}; }
+	list() => return a list of elements
+	hist() => return a list of notifications
+	Lincko.storage.list(); => List all tasks, order from newest to oldest
+	Lincko.storage.list(null, 5, { created_by: 3, }, 'projects', 3, true); => List all kind of element belonging to Project No3 and created by the User 3, and includes nested elements, limited the the 5 newest elements
+	Lincko.storage.list('tasks', '5-10'); => pagination from the 5th to the 10th Task element
+	Lincko.storage.list(null, -1, null, null, null, false); => Default value, it list everything
+	Lincko.storage.list('tasks', -1, { created_at: ['>', 123456789], }); => Return all tasks which have been created after a timestamp, the array condition object can be design for all kind of attribute
+	More examples: (list can be replaced by hist)
 
-	category = category.toLowerCase();
+	Lincko.storage.list();
+	Lincko.storage.list('comments', -1, null, 'projects', 3, true);
+	Lincko.storage.list('comments', -1, null, 'projects', 3, false);
+	Lincko.storage.list(null, 10, null, 'projects', 3, true);
+	Lincko.storage.list(null, '5-10', null, 'projects', 3, true);
+	Lincko.storage.list('tasks', -1, null, 'projects', 3);
+	Lincko.storage.list('tasks', -1, {created_by: 3}, 'projects', 3);
+	Lincko.storage.list('tasks', -1, [{created_at: ['<', 1449451377]}, {created_at: ['>', 1449107022]}], 'projects', 3);
+	Lincko.storage.list('tasks', -1, [{created_by: 3}, {created_at: ['<', 1449451377]}, {created_at: ['>', 1449107022]}], 'projects', 3);
+	Lincko.storage.list('tasks', '2-5', [{created_by: 3}, {created_at: ['<', 1449451377]}, {created_at: ['>', 1449107022]}], 'projects', 3, false);
+
+	Lincko.storage.hist();
+	Lincko.storage.hist('comments', -1, null, 'projects', 3, true);
+	Lincko.storage.hist('comments', -1, null, 'projects', 3, false);
+	Lincko.storage.hist(null, 10, null, 'projects', 3, true);
+	Lincko.storage.hist(null, '5-10', null, 'projects', 3, true);
+	Lincko.storage.hist('tasks', -1, null, 'projects', 3);
+	Lincko.storage.hist('tasks', -1, {att: 'created_at'}, 'projects', 3);
+	Lincko.storage.hist('tasks', -1, [{timestamp: ['<', 1449451377]}, {timestamp: ['>', 1449107022]}], 'projects', 3);
+	Lincko.storage.hist('tasks', -1, [{att: 'created_at'}, {timestamp: ['<', 1449451377]}, {timestamp: ['>', 1449107022]}], 'projects', 3);
+	Lincko.storage.hist('tasks', '2-5', [{att: 'created_at'}, {timestamp: ['<', 1449451377]}, {timestamp: ['>', 1449107022]}], 'projects', 3, false);
+*/
+Lincko.storage.list = function(category, page_end, conditions, parent_type, parent_id, children){
+	return Lincko.storage.list_multi(null, category, page_end, conditions, parent_type, parent_id, children);
+}
+Lincko.storage.hist = function(category, page_end, conditions, parent_type, parent_id, children){
+	return Lincko.storage.list_multi('notifications', category, page_end, conditions, parent_type, parent_id, children);
+}
+Lincko.storage.list_multi = function(type, category, page_end, conditions, parent_type, parent_id, children){
+
+	var temp;
+	var attribute;
+	var only_items = false;
+	var results = [];
+	var page_start = 0;
+	var pagination = null;
+	if(type != 'notifications'){ type = null; }
+	if(typeof category == 'string' && category.indexOf('_')===0){//We exclude excluse everything which is not an object (start by an underscore)
+		return results;
+	} else if(typeof category == 'string'){
+		category = category.toLowerCase();
+	} else {
+		category = null;
+	}
+	if(typeof page_end == 'undefined'){ page_end = -1; }
+	if($.type(conditions) == 'object'){ conditions = [conditions]; }
+	if($.type(conditions) != 'array'){ conditions = []; }
+	if(typeof parent_type != 'string'){ parent_type = null; } else { parent_type = parent_type.toLowerCase(); }
+	if(!$.isNumeric(parent_id)){ parent_id = null; } else { parent_id = parseInt(parent_id, 10); }
+	if(typeof children != 'boolean'){ children = null; }
+
+	if(parent_type!=null && parent_id!=null){
+		if(children){
+			only_items = Lincko.storage.tree(parent_type, parent_id, 'children');
+		} else {
+			only_items = Lincko.storage.tree(parent_type, parent_id, 'children', true, false);
+		}
+		if(category){
+			if(typeof only_items[category] != 'undefined'){
+				temp = only_items[category];
+				only_items = {};
+				only_items[category] = temp;
+			} else {
+				only_items = {};
+			}
+		}
+		if(!only_items){ //Must return an empty object to be sure the reject all
+			only_items = {};
+		}
+	}
+	
+	if($.isNumeric(page_end)){
+		page_end = parseInt(page_end, 10);
+		if(page_end<0){
+			page_end = -1;
+		}
+	} else if(typeof page_end == 'string'){
+		pagination = page_end.match(/(\d+)-(\d+)/);
+		if($.type(pagination) == 'array'){
+			page_start = parseInt(pagination[1], 10);
+			page_end = parseInt(pagination[2], 10);
+			if(page_end < page_start){
+				return results;
+			}
+		} else {
+			return results;
+		}
+	}
+
 	var items;
 	var item;
 	var save = false;
 	var condition_alert = false;
 	var timestamp = 0;
-	if($.type(Lincko.storage.data[category]) === 'object'){
-		items = Lincko.storage.data[category];
-		for(var j in items) {
-			//'_id
-			item = items[j];
-			//Add info to element, use "_" to recognize that it has been added by JS
-			item['_id'] = j;
-			item['_type'] = category;
-			save = true;
-			timestamp = 0;
-			if(typeof item['created_at'] !== 'undefined'){
-				timestamp = item['created_at'];
-			} else if(typeof item['updated_at'] !== 'undefined'){
-				timestamp = item['updated_at'];
+	var history_items = {}
+	var array_items = [];
+
+	//notifications
+	if(type=='notifications'){
+		for(var cat in Lincko.storage.data){
+			if(only_items && typeof only_items[cat]=='undefined'){
+				continue;
 			}
-			for(var property in conditions) {
-				if(typeof item[property] === 'undefined'){ //We reject if the condition is wrong
-					condition_alert = true;
-					save = false;
-					break;
-				} else {
-					if(typeof conditions[property]  === 'object'){
-						for(var sub in conditions[property]) {
-							if(typeof item[property][sub] === 'undefined'){ //We reject if the condition is wrong
-								condition_alert = true;
-								save = false;
-								break;
-							} else if(item[property][sub]!=conditions[property][sub]){
+			if((category==null || cat==category) && cat.indexOf('_')!==0){
+				items = Lincko.storage.data[cat];
+				for(var id in items) {
+					save = true;
+					if(only_items && typeof only_items[cat][id]=='undefined'){
+						save = false;
+						continue;
+					}
+					if(typeof history_items[cat] == 'undefined'){ history_items[cat] = {};}
+					history_items[cat][id] = items[id];
+				}
+			}
+		}
+		for(var cat in history_items){
+			for(var id in history_items[cat]){
+				if(typeof history_items[cat][id]['history']){
+					for(var timestamp in history_items[cat][id]['history']){
+						for(var history_id in history_items[cat][id]['history'][timestamp]){
+							//We do not keep copy of Old in Lincko.storage.data, we just need to keep it from origin 'data' item, because there is 2 cases scenario:
+							// 1) Get Old from item itself
+							// 2) Old is not available offline, so we download it before displaying (POST | 'data/history')
+							item = history_items[cat][id]['history'][timestamp][history_id];
+							if(
+								   item['by']<=0
+								|| typeof Lincko.storage.data['users'][item['by']]=='undefined'
+								|| item['timestamp']<=0 || item['timestamp']==null
+								|| typeof Lincko.storage.data['_history_title'][item['type']]=='undefined'
+								|| typeof Lincko.storage.data['_history_title'][item['type']][item['cod']]=='undefined'
+							){
 								save = false;
 								break;
 							}
+							save = true;
+							for(var i in conditions) {
+								for(var att in conditions[i]) {
+									if(typeof item[att] == 'undefined'){
+										condition_alert = true;
+										save = false;
+										break;
+									}
+									attribute = att;
+									if(save){
+										if($.type(conditions[i][att]) == 'array' && conditions[i][att].length==2){
+											save = false;
+											if(conditions[i][att][0] == "<" && item[attribute] < conditions[i][att][1]){
+												save = true;
+											} else if(conditions[i][att][0] == "<=" && item[attribute] <= conditions[i][att][1]){
+												save = true;
+											} else if(conditions[i][att][0] == "==" && item[attribute] == conditions[i][att][1]){
+												save = true;
+											} else if(conditions[i][att][0] == "!=" && item[attribute] != conditions[i][att][1]){
+												save = true;
+											} else if(conditions[i][att][0] == ">=" && item[attribute] >= conditions[i][att][1]){
+												save = true;
+											} else if(conditions[i][att][0] == ">" && item[attribute] > conditions[i][att][1]){
+												save = true;
+											}
+											if(!save){
+												break;
+											}
+										} else if(item[attribute]!=conditions[i][att]){
+											save = false;
+											break;
+										} 
+									}
+								}
+							}
+							if(save){
+								array_items.push(item);
+							}
 						}
-					} else if(item[property]!=conditions[property]){
-						save = false;
-						break;
 					}
 				}
 			}
-			if(save){
-				if(typeof temp[timestamp] === 'undefined'){ temp[timestamp] = {};}
-				temp[timestamp][j] = item;
+		}
+	} else { //elements
+		for(var cat in Lincko.storage.data){
+			if(only_items && typeof only_items[cat]=='undefined'){
+				continue;
+			}
+			if((category==null || cat==category) && cat.indexOf('_')!==0){
+				items = Lincko.storage.data[cat];
+				for(var id in items) {
+					save = true;
+					if(only_items && typeof only_items[cat][id]=='undefined'){
+						save = false;
+						continue;
+					}
+					item = items[id];
+					//Add info to element, use "_" to recognize that it has been added by JS
+					item['_id'] = parseInt(id, 10);
+					item['_type'] = cat;
+					timestamp = 0;
+					if(typeof item['created_at'] != 'undefined'){
+						timestamp = item['created_at'];
+					} else if(typeof item['updated_at'] != 'undefined'){
+						timestamp = item['updated_at'];
+						item['created_at'] = timestamp; //This should never happen, but it's just in case, we need it to sort items
+					}
+					for(var i in conditions) {
+						for(var att in conditions[i]) {
+							if(typeof item[att] != 'undefined'){
+								attribute = att;
+							} else if(typeof item["+"+att] != 'undefined'){
+								attribute = "+"+att;
+							} else if(typeof item["-"+att] != 'undefined'){
+								attribute = "-"+att;
+							} else {
+								condition_alert = true;
+								save = false;
+								break;
+							}
+							if(save){
+								if($.type(conditions[i][att]) == 'array' && conditions[i][att].length==2){
+									save = false;
+									if(conditions[i][att][0] == "<" && item[attribute] < conditions[i][att][1]){
+										save = true;
+									} else if(conditions[i][att][0] == "<=" && item[attribute] <= conditions[i][att][1]){
+										save = true;
+									} else if(conditions[i][att][0] == "==" && item[attribute] == conditions[i][att][1]){
+										save = true;
+									} else if(conditions[i][att][0] == "!=" && item[attribute] != conditions[i][att][1]){
+										save = true;
+									} else if(conditions[i][att][0] == ">=" && item[attribute] >= conditions[i][att][1]){
+										save = true;
+									} else if(conditions[i][att][0] == ">" && item[attribute] > conditions[i][att][1]){
+										save = true;
+									}
+									if(!save){
+										break;
+									}
+								} else if(item[attribute]!=conditions[i][att]){
+									save = false;
+									break;
+								} 
+							}
+						}
+					}
+					if(save){
+						array_items.push(item);
+					}
+				}
 			}
 		}
 	}
 
 	if(condition_alert){
 		console.log(conditions);
-		console.log('The condition requested for the list has an issue.');
+		console.log('The parameters request has an issue.');
 	}
 
-	//Order by newest
-	if(!$.isEmptyObject(temp)){
-		//Sort by key value (timestamp), Object.keys gets only an array of the keys, sort() sorts the array from big to small (newest to oldest)
-		var desc_timestamp = Object.keys(temp).sort(function(a, b) { return b - a; });
-		var asc_id;
-		var item_id;
-		for(var i in desc_timestamp){
-			timestamp = desc_timestamp[i]
-			//Sort IDs from smallest to bigger
-			asc_id = Object.keys(temp[timestamp]).sort(function(a, b) { return a - b; });
-			for(var j in asc_id){
-				item_id = asc_id[j];
-				results.push(temp[timestamp][item_id]);
-				limit--;
-				if(limit==0){
-					break;
-				}
-			}
-			if(limit==0){
-				break;
-			}
+	if(array_items.length>0){
+		if(type=='notifications'){
+			results = Lincko.storage.sort_items(array_items, 'timestamp', page_start, page_end, false); //From newest (big timestamp) to oldest (small timestamp)
+		} else {
+			results = Lincko.storage.sort_items(array_items, 'created_at', page_start, page_end, false); //From newest (big timestamp) to oldest (small timestamp)
 		}
 	}
-	
+
 	return results;
 	
 };
 
-
+/*
+	Sort items by an attribute, reject items that doesn't have the attribute
+	"array_items": must in the format array_items[]
+*/
+Lincko.storage.sort_items = function(array_items, att, page_start, page_end, ascendant){
+	var results = [];
+	var temp = [];
+	var item;
+	var value;
+	var save = false;
+	if(typeof page_start == 'undefined'){ page_start = 0 } else { page_start = parseInt(page_start, 10); }
+	if(typeof page_end == 'undefined'){ page_end = -1 } else { page_end = parseInt(page_end, 10); }
+	if(typeof ascendant != 'boolean'){ ascendant = true; }
+	if(page_end < page_start){
+		page_start = 0;
+		page_end = -1;
+	}
+	
+	for(var i in array_items){
+		item = array_items[i];
+		save = false;
+		if(typeof item[att] != 'undefined'){
+			save = true;
+			value = item[att];
+		} else if(typeof item["+"+att] != 'undefined'){
+			save = true;
+			value = item["+"+att];
+		} else if(typeof item["-"+att] != 'undefined'){
+			save = true;
+			value = item["-"+att];
+		} else {
+			break;
+		}
+		if(save){
+			if(typeof value == 'boolean'){
+				value = value ? 1 : 0;
+			} else if(!value){
+				value = 0;
+			} else {
+				value = value.toString();
+				if(!value){
+					value = 0;
+				}
+			}
+			if(typeof temp[value] === 'undefined'){ temp[value] = [];}
+			temp[value].push(item);
+		}
+	}
+	
+	pagination = 0;
+	if(!$.isEmptyObject(temp)){
+		if(ascendant){
+			//Sort by key value (attribute), Object.keys gets only an array of the keys, sort() sorts the array from small to big
+			var desc_att = Object.keys(temp).sort(function(a, b) { return a - b; });
+		} else {
+			//Sort by key value (attribute), Object.keys gets only an array of the keys, sort() sorts the array from big to small
+			var desc_att = Object.keys(temp).sort(function(a, b) { return b - a; });
+		}
+		var asc_id;
+		var item_id;
+		for(var i in desc_att){
+			attribute = desc_att[i]
+			//Sort IDs from smallest to bigger
+			asc_id = Object.keys(temp[attribute]).sort(function(a, b) { return a - b; });
+			for(var j in asc_id){
+				item_id = asc_id[j];
+				if(pagination >= page_start){
+					results.push(temp[attribute][item_id]);
+				}
+				pagination++;
+			}
+			if(page_end > page_start && pagination > page_end){
+				break;
+			}
+		}
+	}
+	return results;
+}
 
 //setup a check timing procedure to not overload the backend server
 var storage_check_timing_interval;
@@ -1125,7 +1269,7 @@ JSfiles.finish(function(){
 		Lincko.storage.data_favorite = {};
 	}
 	wrapper_load_progress.move(65);
-	Lincko.storage.orderRecents(Lincko.storage.data);
+	Lincko.storage.childrenList(Lincko.storage.data);
 	wrapper_load_progress.move(70);
 	if($.isEmptyObject(Lincko.storage.data)){
 		Lincko.storage.setLastVisit(0);

@@ -43,7 +43,7 @@ $.fn.hasScrollBar = function() {
 };
 
 
-/*
+
 
 
 
@@ -72,8 +72,8 @@ function wrapper_test(type, RCUD){
 		else if(RCUD==1){
 			wrapper_sendAction(
 				{
-					"parent_type": "",
-					"parent_id": null,
+					"parent_type": "projects",
+					"parent_id": "13",
 					"title": "It's a chat room title",
 				},
 				'post',
@@ -85,7 +85,9 @@ function wrapper_test(type, RCUD){
 			wrapper_sendAction(
 				{
 					"id": 4,
-					"title": "你好, No: "+Math.floor(Math.random() * 20),
+					//"parent_type": "projects", //OPTIONAL
+					//"parent_id": 59, //OPTIONAL
+					"title": "你好, No: "+Math.floor(Math.random() * 20), //OPTIONAL
 				},
 				'post',
 				'chat/update',
@@ -95,10 +97,20 @@ function wrapper_test(type, RCUD){
 		else if(RCUD==3){
 			wrapper_sendAction(
 				{
-					"id": 7,
+					"id": 4,
 				},
 				'post',
 				'chat/delete',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==4){
+			wrapper_sendAction(
+				{
+					"id": 4,
+				},
+				'post',
+				'chat/restore',
 				wrapper_test_display
 			);
 		}
@@ -115,6 +127,48 @@ function wrapper_test(type, RCUD){
 				wrapper_test_display
 			);
 		}
+		else if(RCUD==1){
+			wrapper_sendAction(
+				{
+					"parent_type": "comments",
+					"parent_id": 127,
+					"comment": "It's a comment",
+				},
+				'post',
+				'comment/create',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==2){ //Work within 2 minutes
+			wrapper_sendAction(
+				{
+					"id": 147,
+				},
+				'post',
+				'comment/recall',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==3){
+			wrapper_sendAction(
+				{
+					"id": 137,
+				},
+				'post',
+				'comment/delete',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==4){
+			wrapper_sendAction(
+				{
+					"id": 137,
+				},
+				'post',
+				'comment/restore',
+				wrapper_test_display
+			);
+		}
 	}
 
 	if(type=='*' || type=='notes'){
@@ -128,16 +182,106 @@ function wrapper_test(type, RCUD){
 				wrapper_test_display
 			);
 		}
+		else if(RCUD==1){
+			wrapper_sendAction(
+				{
+					"parent_id": 4,
+					"title": "It's a note title", //OPTIONAL {''}
+					"comment": "It's a note content",
+				},
+				'post',
+				'note/create',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==2){
+			wrapper_sendAction(
+				{
+					"id": 46,
+					//"parent_id": 4, //OPTIONAL
+					//"title": "It's a note title"+Math.floor(Math.random() * 20), //OPTIONAL
+					"comment": "It's a note content"+Math.floor(Math.random() * 20),
+				},
+				'post',
+				'note/update',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==3){
+			wrapper_sendAction(
+				{
+					"id": 16,
+				},
+				'post',
+				'note/delete',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==4){
+			wrapper_sendAction(
+				{
+					"id": 16,
+				},
+				'post',
+				'note/restore',
+				wrapper_test_display
+			);
+		}
 	}
 
 	if(type=='*' || type=='projects'){
 		if(RCUD==0){
 			wrapper_sendAction(
 				{
-					"id": 99,
+					"id": 13,
 				},
 				'post',
 				'project/read',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==1){
+			wrapper_sendAction(
+				{
+					"parent_id": 0,
+					"title": "It's a project title",
+					"description": "It's a project content", //OPTIONAL {''}
+				},
+				'post',
+				'project/create',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==2){
+			wrapper_sendAction(
+				{
+					"id": 13,
+					//"parent_id": 0, //OPTIONAL
+					"title": "项目 "+Math.floor(Math.random() * 20), //OPTIONAL
+					"description": "It's a project content"+Math.floor(Math.random() * 20), //OPTIONAL
+				},
+				'post',
+				'project/update',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==3){
+			wrapper_sendAction(
+				{
+					"id": 13,
+				},
+				'post',
+				'project/delete',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==4){
+			wrapper_sendAction(
+				{
+					"id": 13,
+				},
+				'post',
+				'project/restore',
 				wrapper_test_display
 			);
 		}
@@ -154,16 +298,133 @@ function wrapper_test(type, RCUD){
 				wrapper_test_display
 			);
 		}
+		else if(RCUD==1){ //To run in a company workspace
+			wrapper_sendAction(
+				{
+					"parent_id": 1,
+					"name": "It's a role title",
+					//"perm_grant": false, //OPTIONAL {0}
+					"perm_all": 0, //OPTIONAL {0}
+					//"perm_workspaces": 0, //OPTIONAL {0}
+					//"perm_projects": 0, //OPTIONAL {0}
+					"perm_tasks": 2, //OPTIONAL {0}
+					"perm_notes": 2, //OPTIONAL {0}
+					"perm_files": 0, //OPTIONAL {0}
+					//"perm_chats": 0, //OPTIONAL {0}
+					//"perm_comments": 0, //OPTIONAL {0}
+				},
+				'post',
+				'role/create',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==2){ //To run in a company workspace
+			wrapper_sendAction(
+				{
+					"id": 4,
+					"parent_id": 1, //OPTIONAL
+					"name": "Role "+Math.floor(Math.random() * 20), //OPTIONAL
+					//"perm_grant": false, //OPTIONAL
+					"perm_all": 0, //OPTIONAL
+					//"perm_workspaces": 0, //OPTIONAL
+					"perm_projects": 0, //OPTIONAL
+					"perm_tasks": 1, //OPTIONAL
+					"perm_notes": 2, //OPTIONAL
+					//"perm_files": 0, //OPTIONAL
+					//"perm_chats": 0, //OPTIONAL
+					//"perm_comments": 0, //OPTIONAL
+				},
+				'post',
+				'role/update',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==3){ //To run in a company workspace
+			wrapper_sendAction(
+				{
+					"id": 4,
+				},
+				'post',
+				'role/delete',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==4){ //To run in a company workspace
+			wrapper_sendAction(
+				{
+					"id": 4,
+				},
+				'post',
+				'role/restore',
+				wrapper_test_display
+			);
+		}
 	}
 
 	if(type=='*' || type=='tasks'){
 		if(RCUD==0){
 			wrapper_sendAction(
 				{
-					"id": 146,
+					"id": 6,
 				},
 				'post',
 				'task/read',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==1){
+			wrapper_sendAction(
+				{
+					"parent_id": 4,
+					"title": "It's a note title",
+					"comment": "It's a note content", //OPTIONAL {''}
+					//"start": 1462110422, //OPTIONAL { current_timestamp }
+					"duration": 86400, //OPTIONAL {86400}
+					//"fixed": 1, //OPTIONAL {0}
+					"status": 0, //OPTIONAL {0}
+					"progress": 50, //OPTIONAL {0}
+				},
+				'post',
+				'task/create',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==2){
+			wrapper_sendAction(
+				{
+					"id": 6,
+					//"parent_id": 4,
+					//"title": "Title "+Math.floor(Math.random() * 20), //OPTIONAL
+					//"comment": "Content "+Math.floor(Math.random() * 20), //OPTIONAL
+					//"start": 1462110422, //OPTIONAL
+					//"duration": 86400, //OPTIONAL
+					//"fixed": 1, //OPTIONAL
+					"approved": !Lincko.storage.data.tasks[6]['approved'], //OPTIONAL
+					//"status": 0, //OPTIONAL
+					//"progress":  Math.floor(Math.random() * 10), //OPTIONAL
+				},
+				'post',
+				'task/update',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==3){
+			wrapper_sendAction(
+				{
+					"id": 10,
+				},
+				'post',
+				'task/delete',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==4){
+			wrapper_sendAction(
+				{
+					"id": 10,
+				},
+				'post',
+				'task/restore',
 				wrapper_test_display
 			);
 		}
@@ -180,6 +441,55 @@ function wrapper_test(type, RCUD){
 				wrapper_test_display
 			);
 		}
+		else if(RCUD==1){
+			wrapper_sendAction(
+				{
+					"email": "test"+Math.floor(Math.random() * 20)+"@lincko.cafe",
+					"password": "123456",
+					//"username": "test"+Math.floor(Math.random() * 20), //OPTIONAL { email_basename }
+					"firstname": "Albert", //OPTIONAL {''}
+					//"lastname": "Dupond", //OPTIONAL {''}
+					"gender": 1, //OPTIONAL {0}
+				},
+				'post',
+				'user/create',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==2){
+			wrapper_sendAction(
+				{
+					"id": 3,
+					//"username": "test"+Math.floor(Math.random() * 20), //OPTIONAL
+					"firstname": "Bruno"+Math.floor(Math.random() * 20), //OPTIONAL
+					//"lastname": "Martin", //OPTIONAL
+					//"gender": 1, //OPTIONAL
+				},
+				'post',
+				'user/update',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==3){
+			wrapper_sendAction(
+				{
+					"id": 3,
+				},
+				'post',
+				'user/delete',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==4){
+			wrapper_sendAction(
+				{
+					"id": 3,
+				},
+				'post',
+				'user/restore',
+				wrapper_test_display
+			);
+		}
 	}
 
 	if(type=='*' || type=='workspaces'){
@@ -193,8 +503,51 @@ function wrapper_test(type, RCUD){
 				wrapper_test_display
 			);
 		}
+		else if(RCUD==1){
+			wrapper_sendAction(
+				{
+					"name": "DONGKEY",
+					"domain": "www.truc.com", //OPTIONAL {''}
+					"url": "abcdef", //OPTIONAL { name }
+				},
+				'post',
+				'workspace/create',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==2){
+			wrapper_sendAction(
+				{
+					"id": 1,
+					"name": "DONGKEY "+Math.floor(Math.random() * 20), //OPTIONAL
+					//"domain": "www.truc.com", //OPTIONAL
+					//"url": "abcdef", //OPTIONAL
+				},
+				'post',
+				'workspace/update',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==3){
+			wrapper_sendAction(
+				{
+					"id": 1,
+				},
+				'post',
+				'workspace/delete',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==4){
+			wrapper_sendAction(
+				{
+					"id": 1,
+				},
+				'post',
+				'workspace/restore',
+				wrapper_test_display
+			);
+		}
 	}
 
 }
-
-*/

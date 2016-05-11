@@ -214,13 +214,13 @@ html, .font_sans_serif {
 /* MAIN */
 .base_color_bg_main_less_less {   background-color: #FFDEB2; }
 .base_color_bg_main_less {        background-color: #F6B55B; }
-.base_color_bg_main {             background-color: #FBA023; }
+.base_color_bg_main {             background-color: #FBA026; }
 .base_color_bg_main_plus {        background-color: #EB8800; }
 .base_color_bg_main_plus_plus {   background-color: #CD7700; }
 
 .base_color_bd_main_less_less {   border-color: #FFDEB2; }
 .base_color_bd_main_less {        border-color: #F6B55B; }
-.base_color_bd_main {             border-color: #FBA023; }
+.base_color_bd_main {             border-color: #FBA026; }
 .base_color_bd_main_plus {        border-color: #EB8800; }
 .base_color_bd_main_plus_plus {   border-color: #CD7700; }
 
@@ -261,15 +261,16 @@ html, .font_sans_serif {
 .base_color_bd_forth_less {       border-color: #42759F; }
 .base_color_bd_forth {            border-color: #2067A2; }
 .base_color_bd_forth_plus {       border-color: #085798; }
-.base_color_bd_forth_plus_plus {  border-color: #044A84; }
+.color_bd_forth_plus_plus {  border-color: #044A84; }
 
 /* MAIN GRADIENT MAIN to THIRD */
 .base_color_bg_main_gradient {
-	background: -webkit-linear-gradient(#FBA023,#FB7D23) !important; /* For Safari 5.1 to 6.0 */
-	background: -o-linear-gradient(#FBA023,#FB7D23) !important; /* For Opera 11.1 to 12.0 */
-	background: -moz-linear-gradient(#FBA023,#FB7D23) !important; /* For Firefox 3.6 to 15 */
-	background: linear-gradient(#FBA023,#FB7D23) !important; /* Standard syntax */
+	background: -webkit-linear-gradient(#FBA026,#FB7D23) !important; /* For Safari 5.1 to 6.0 */
+	background: -o-linear-gradient(#FBA026,#FB7D23) !important; /* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(#FBA026,#FB7D23) !important; /* For Firefox 3.6 to 15 */
+	background: linear-gradient(#FBA026,#FB7D23) !important; /* Standard syntax */
 }
+
 
 
 #base_error {
@@ -306,6 +307,74 @@ html, .font_sans_serif {
 	-ms-filter: grayscale(1);
 	filter: grayscale(1);
 }
+
+
+/*
+	START
+	JIM's color settings
+*/
+
+/** PRIMARY TEXT COLOURS **/
+.base_SortMenuSelectedText { color: #FBA026; }
+.base_MenuListText { color: #3F84B0; }
+.base_SortMenuUnSelectedText { color: #3F84B0; }
+.base_ChatTimeStampText { color: #979797; }
+.base_MainElementText { color: #475577; }
+.base_SettingsText { color: #3270A0; }
+.base_DayText { color: #53ADD2; }
+.base_DescriptionText { color: #000000; }
+.base_MyCommentText { color: #437CA8; }
+.base_MainMenuItemsText { color: #444444; }
+.base_MainMenuHeaderText { color: #000000; }
+
+/** PRIMARY ICONS COLOURS **/
+.base_ChatIcon { color: #679E52; }
+.base_NoteIcon { color: #F0EB4E; }
+.base_FileIcon { color: #6526CB; }
+.base_SortMenuSelectedIcon { color: #FBA026; }
+.base_SortMenuUnselected { color: #53ADD2; }
+.base_OtherIndicatorIcons { color: #53ADD2; }
+.base_TaskIcon { color: #475577; }
+
+/** PRIMARY BACKGROUND COLOURS **/
+.base_SelectedElement {
+	background-color: #B6D6E8;
+	filter:alpha(opacity=10); opacity:0.10; -moz-opacity:0.10; -khtml-opacity:0.10;
+}
+.base_OtherPersonChatBubble {
+	background-color: #B6D6E8;
+	filter:alpha(opacity=22); opacity:0.22; -moz-opacity:0.22; -khtml-opacity:0.22;
+}
+.base_CommentActionsBubble { background-color: #B6D6E8; }
+.base_InformationBackground { background-color: #B6D6E8; }
+.base_AccordionBackground { background-color: #B6D6E8; }
+.base_DeleteBackground { background-color: #BE2B1F; }
+.base_ListBackground { background-color: #EFEFEF; } 
+.base_ChatMenuHeader { background-color: #679E52; }
+.base_MyChatBubble {
+	background-color: #679E52;
+	filter:alpha(opacity=22); opacity:0.22; -moz-opacity:0.22; -khtml-opacity:0.22;
+}
+.base_NoteMenuHeader { background-color: #F0EB4E; }
+.base_FileMenuHeader { background-color: #6526CB; }
+.base_DetailBackground { background-color: #FFFFFF; }
+.base_TaskMenuHeader { background-color: #475577; }
+.base_NotCurrentlyUsed01 { background-color: #437CA8; }
+.base_NotCurrentlyUsed02 { background-color: #53ADD2; }
+.base_SettingsMenuHeader { background-color: #000000; }
+.base_PrimaryMainMenu {
+	background: -webkit-linear-gradient(#FBA026,#FB7D23) !important; /* For Safari 5.1 to 6.0 */
+	background: -o-linear-gradient(#FBA026,#FB7D23) !important; /* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(#FBA026,#FB7D23) !important; /* For Firefox 3.6 to 15 */
+	background: linear-gradient(#FBA026,#FB7D23) !important; /* Standard syntax */
+} /* end-color: FB7D23, E98723, E98823, F3B14D */
+
+/*
+	END
+	JIM's color settings
+*/
+
+
 
 /* Maximum Mobile phone in Portrait */
 @media only screen and (max-width: 479px) {
