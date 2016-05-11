@@ -11,6 +11,7 @@ var mainMenu = (function() {
         $(position).append(item);
         item.removeAttr('id', '');
         item.removeAttr('style', '');
+        /*
         var cnt = notifier[data.type]['get'](data.id);
         if (cnt) {
             if (cnt > 99) {
@@ -19,6 +20,7 @@ var mainMenu = (function() {
                 item.find('.notification').text(cnt).show();
             }
         }
+        */
         if (data.type == "history") {
             name = Lincko.storage.get("projects", data.id, "+title") + " Activity";
             item.find('img.logo').attr('src', 'icon-MultiplePeople');
@@ -109,7 +111,6 @@ var mainMenu = (function() {
         project_id: given if just target a specific project not the main menu
     */
     function orderChatList(number, project_id) {
-    	debugger;
         var merge_list = [];
         // each item should be:
         // {'type': ['history'|'chat'], 'id': ['project_id'|'chat_id'], 'timestamp': 'the_latest_update_history_or_chat'}
@@ -122,21 +123,25 @@ var mainMenu = (function() {
                 continue;
             }
             //var e1 = Lincko.storage.hist('recent', project_list[p]._id, 1)[0];
-            var e1 = Lincko.storage.hist(null, 1, null, 'projects', project_list[p]._id,false)[0];
+            var e1 = Lincko.storage.hist(null, 1, null, 'projects', project_list[p]._id, true)[0];
             var e2 = Lincko.storage.list('comments', 1, null, 'projects', project_list[p]._id, false)[0];
-            var timestamp = e1.timestamp;
-            var txt = Lincko.storage.getHistoryInfo(e1).title;
+            if (e1) {
+                var timestamp = e1.timestamp;
+                var txt = Lincko.storage.getHistoryInfo(e1).title;
+            }
             if (e2 && e1.timestamp < e2.created_at) {
                 var timestamp = e2.created_at;
                 var txt = e2['+comment'];
             }
+            if (e1) {
+            	merge_list.push({
+                    'type': 'history',
+                    'id': project_list[p]._id,
+                    'timestamp': timestamp,
+                    'comment': txt,
+                });
+            }
 
-            merge_list.push({
-                'type': 'history',
-                'id': project_list[p]._id,
-                'timestamp': timestamp,
-                'comment': txt,
-            });
         }
         if (project_id) {
         	 // Get chats belong to specific project
@@ -173,7 +178,7 @@ var mainMenu = (function() {
     };
 })();
 JSfiles.finish(function() {
-    mainMenu.init();
+    //mainMenu.init();
 });
 
 function app_project_quick_upload_display(Elem, show) {
