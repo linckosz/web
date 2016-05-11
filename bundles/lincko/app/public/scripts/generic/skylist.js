@@ -447,7 +447,82 @@ skylist.prototype.addCard = function(item){
 		elem_card = that.addNote(item);
 		elem_card.find('[find=card_spacestick]').removeClass('display_none');
 	}
+    else if (that.list_type == 'chats' || that.list_type == 'global_chats') {
+        elem_card = that.addChat(item);
+    }
 	return elem_card;
+}
+
+skylist.prototype.addChat = function(item){
+        var that = this;
+        var Elem = $('#-skylist_card').clone();
+        var Elem_rightOptions = Elem.find('[find=card_rightOptions]').empty();
+        var Elem_logo = $('#-skylist_logo').clone().prop('id','');
+        Elem.find('[find=card_leftbox]').html(Elem_logo);
+        var name = '';
+        //var created_by;
+        //var timestamp;
+
+/*
+        if(item == null){
+                item = {};
+                item['_id'] = 'blankTask';
+                item['+title'] = 'blankTask';
+                item['_perm'][0] = 3; //RCUD
+                item['created_by'] = wrapper_localstorage.uid;
+                item.start = $.now()/1000;
+                item.duration = "86400";
+        }
+        */
+        Elem.prop('id','skylist_card_'+that.md5id+'_'+item['id']);
+
+        /*
+        title
+        */
+        burger(Elem.find('[find=title]'), 'regex');
+
+        var elem_title = Elem.find('[find=title]');
+        if (item.type == "history") {
+            name = Lincko.storage.get("projects", item.id, "+title") + " Activity";
+            Elem_logo.find('img.logo').attr('src', 'icon-MultiplePeople');
+            Elem_logo.find('span.logo').remove();
+        } else if (item.type == 'chats') {
+            var users = Lincko.storage.get('chats', item.id, 'users');
+            for (var u in users) {
+                name = name.concat(Lincko.storage.get('users', u, '-username') + ", ");
+            }
+            name = name.slice(0, -2);
+            if (Object.keys(users).length > 1) {
+                Elem_logo.find('span.logo').addClass('icon-MultiplePeople');
+                                Elem_logo.find('img').remove();
+            } else {
+                Elem_logo.find('span.logo').addClass('icon-SinglePerson_Selected');
+                Elem_logo.find('img').remove();
+            }
+
+        }
+        var contenteditable = false;
+        var elem_title = Elem.find('[find=title]');
+        elem_title.html(name);
+
+        Elem.find('[find=description]').html(item['comment']);
+
+        var latest_update = new wrapper_date(item.timestamp);
+
+        if( latest_update.happensSomeday(0) ){
+                latest_update = Lincko.Translation.get('app', 3302, 'html').toUpperCase();
+        }
+        else if( latest_update.happensSomeday(-1) ){
+                latest_update = Lincko.Translation.get('app', 3303, 'html').toUpperCase();
+        }
+        else{
+                latest_update = latest_update.display();
+        }
+        Elem.find('[find=card_time]').html(latest_update);
+        Elem.data('options',false);
+        that.add_cardEvents(Elem);
+
+        return Elem;
 }
 
 skylist.prototype.addTask = function(item){

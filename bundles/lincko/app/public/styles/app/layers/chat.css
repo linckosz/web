@@ -4,10 +4,33 @@
 .app_layers_chat .skylist_menu_people {
 	display: none;
 }
+.app_layers_chat .skylist_card {
+	cursor: pointer;
+}
+.app_layers_chat .skylist_card_center [find=description] {
+	font-size: 14px;
+	color: #3270A0;
+}
+
+.app_layers_chat .skylist_card_center [find=title] {
+	font-size: 18px;
+	color: #475577;
+}
 
 /* Mobile phone in Portrait */
 @media only screen and (max-width: 479px){
 	.app_layers_chat {
 		padding: 0;
+	}
+}
+
+/* Tablet in Landscape */
+@media only screen and (max-width: 1279px){
+	.app_layers_chat .skylist_card_center [find=description] {
+		font-size: 12px;
+	}
+
+	.app_layers_chat .skylist_card_center [find=title] {
+		font-size: 14px;
 	}
 }
