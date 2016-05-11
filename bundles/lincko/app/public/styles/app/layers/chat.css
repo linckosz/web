@@ -1,0 +1,13 @@
+.app_layers_chat .skylist_card_bottom {
+	display: none;
+}
+.app_layers_chat .skylist_menu_people {
+	display: none;
+}
+
+/* Mobile phone in Portrait */
+@media only screen and (max-width: 479px){
+	.app_layers_chat {
+		padding: 0;
+	}
+}
