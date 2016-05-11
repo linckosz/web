@@ -883,7 +883,7 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 	var attribute;
 	var only_items = false;
 	var results = [];
-	var page_start = 0;
+	var page_start = 1;
 	var pagination = null;
 	if(type != 'notifications'){ type = null; }
 	if(typeof category == 'string' && category.indexOf('_')===0){//We exclude excluse everything which is not an object (start by an underscore)
@@ -1125,14 +1125,24 @@ Lincko.storage.sort_items = function(array_items, att, page_start, page_end, asc
 	var item;
 	var value;
 	var save = false;
+	
 	if(typeof page_start == 'undefined'){ page_start = 0 } else { page_start = parseInt(page_start, 10); }
 	if(typeof page_end == 'undefined'){ page_end = -1 } else { page_end = parseInt(page_end, 10); }
 	if(typeof ascendant != 'boolean'){ ascendant = true; }
+	
+	if(page_end==0){
+		return results;
+	} else if(page_end<0){
+		page_start = 0;
+		page_end = -1;
+	}
+	page_start = page_start-1; //Because we start from 1st, not 0
+	page_end = page_end-1; //Because we start from 1st, not 0
 	if(page_end < page_start){
 		page_start = 0;
 		page_end = -1;
 	}
-	
+
 	for(var i in array_items){
 		item = array_items[i];
 		save = false;
@@ -1181,12 +1191,13 @@ Lincko.storage.sort_items = function(array_items, att, page_start, page_end, asc
 			asc_id = Object.keys(temp[attribute]).sort(function(a, b) { return a - b; });
 			for(var j in asc_id){
 				item_id = asc_id[j];
+				console.log(pagination+" >= "+page_start);
 				if(pagination >= page_start){
 					results.push(temp[attribute][item_id]);
 				}
 				pagination++;
 			}
-			if(page_end > page_start && pagination > page_end){
+			if(page_end >= page_start && pagination > page_end){
 				break;
 			}
 		}
