@@ -233,11 +233,14 @@ skylist.prototype.generate_Lincko_itemsList = function(){
 		that.Lincko_itemsList = mainMenu.getlist();
 	}
 	else{
+		that.Lincko_itemsList = Lincko.storage.list(that.list_type, null, null, 'projects', app_content_menu.projects_id, false);
+		/*
 		if(app_content_menu.projects_id == Lincko.storage.getMyPlaceholder()['_id']){
 			that.Lincko_itemsList = Lincko.storage.list(that.list_type, null, true);
 		} else {
 			that.Lincko_itemsList = Lincko.storage.list(that.list_type, null, {'_parent': ['projects', app_content_menu.projects_id]});
 		}
+		*/
 	}
 }
 
