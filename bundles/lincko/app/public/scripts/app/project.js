@@ -155,7 +155,7 @@ var app_project_build = {
 	scan: function(){
 		//Limit favorite number to 5
 		var max_display = 5;
-		var list = Lincko.storage.getFavorites('projects', max_display, true);
+		var list = Lincko.storage.time('projects');
 		var timestamp;
 		//First we scan and remove all elements that does not appear in the list
 		var list_id = {};

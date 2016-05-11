@@ -102,7 +102,7 @@ var app_layers_projects_feedPage = function(param, animation){
 	var position = $('#app_layers_projects');
 	position.addClass('overthrow');
 	position.empty();
-	var items = Lincko.storage.getFavorites('projects', null, true);
+	var items = Lincko.storage.list('projects');
 	var item;
 	var tasks;
 	var progress = 0;
