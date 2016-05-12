@@ -198,22 +198,21 @@ var chatFeed = (function() {
 
 
     function app_layers_history_launchPage(position, type, projectId) {
-        if (type =='history') {
-            //app_application_lincko.add("app_layers_history", null, function() {
-            //    app_layers_history_feedPage(param);
-            //});
+        //var parentId = position.parent().attr('id');
+        var update = function() {
+                position.addClass('overthrow').addClass("submenu_chat_contents");
+                position.empty();
+                app_layers_history_feedPage(position, type, projectId);
+                wrapper_IScroll();
+        }
+        update();
+        if (type != 'history'){
+
+            app_application_lincko.add("chats", update);
         }
         else {
-            var parentId = position.parent().attr('id');
-            app_application_lincko.add(parentId, "comments", 
-                function() {
-                    position.removeClass('overthrow').addClass('overthrow').addClass("submenu_chat_contents");
-                    position.empty();
-                    app_layers_history_feedPage(position, 'comments', projectId);
-                    wrapper_IScroll();
-            });
+            app_application_lincko.add("projects", update);
         }
-        app_layers_history_feedPage(position, type, projectId);
     }
 
     function fake_history_generator_for_multimedia(item) {
