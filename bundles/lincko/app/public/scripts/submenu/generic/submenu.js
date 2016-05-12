@@ -289,6 +289,7 @@ Submenu.prototype.Add_TitleSmall = function() {
 Submenu.prototype.Add_MenuButton = function(position) {
     var attribute = this.attribute;
     var Elem = $('#-submenu_button').clone();
+    var preview = this.preview;
     Elem.prop("id", '');
     Elem.find("[find=submenu_button_title]").html(attribute.title);
     if ("value" in attribute) {
@@ -296,7 +297,7 @@ Submenu.prototype.Add_MenuButton = function(position) {
     }
     if ("hide" in attribute) {
         if (attribute.hide) {
-            Elem.click(function() { submenu_Hideall(this.preview); });
+            Elem.click(function() {submenu_Hideall(preview); });
         }
     }
     if ("action" in attribute) {

@@ -36,6 +36,17 @@ var storage_cb_success = function(msg, err, status, data){
 	Lincko.storage.firstLatest();
 };
 
+Lincko.storage.getParent = function(type, id, attr) {
+    var elem = Lincko.storage.get(type, id);
+    var parent;
+    var parent_type = elem._parent[0];
+    var parent_id = elem._parent[1];
+    if (elem && parent_type && parent_id) {
+        parent = Lincko.storage.get(parent_type, parent_id, attr);
+    }
+    return parent;
+};
+
 /* PRIVATE METHOD */
 Lincko.storage.getWORKID = function(){
 	if(Lincko.storage.WORKID !== null){

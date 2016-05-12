@@ -1,9 +1,24 @@
 submenu_list['newchat'] = {
     //Set the title of the top
     "_title": {
-        "style": "title_placeholder",
-        "title": "", //chat room you are in
-        //"title": "I am title"
+        "style": "customized_title",
+        "title": function(elem){
+            return elem.param.title;
+        }, //chat room you are in
+        "left": [{
+            "style": "button",
+            "title": "Close",
+            //"action": function() {
+            //    console.log('close');
+            //}
+            'hide': true,
+        }],
+        "right": [{
+            "style": "button",
+            "title": "",
+            "class": "icon-Small-Persona",
+        }],
+        "class": "submenu_newchat_header",
     },
     "chat_contents": {
     	"style": "chat_contents",
@@ -14,10 +29,6 @@ submenu_list['newchat'] = {
         "title": "",
     },
 };
-
-Submenu_select.title_placeholder = function(Elem) {
-	Elem.Add_TitlePH();
-}
 
 Submenu_select.chat_contents = function(Elem) {
 	Elem.Add_ChatContents();
@@ -33,15 +44,6 @@ Submenu.prototype.Add_ChatContents = function() {
     position.addClass('overthrow').addClass("submenu_chat_contents");
     position.empty();
     chatFeed.feedHistory(position, this.param.type,this.param.id);
-}
-
-Submenu.prototype.Add_TitlePH = function() {
-	var attribute = this.attribute;
-	submenu_wrapper = this.Wrapper();
-	submenu_wrapper.find("[find=submenu_wrapper_title]").html(this.param['title']);
-	//Free memory
-	delete submenu_wrapper;
-	return true;
 }
 
 Submenu.prototype.Add_ChatMenu = function() {

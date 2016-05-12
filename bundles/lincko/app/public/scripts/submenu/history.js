@@ -237,10 +237,10 @@ var chatFeed = (function() {
 
     function getRawContents(type, id) {
         if (type == 'history') {
-            return Lincko.storage.time('recent', null, null, id);
+            return Lincko.storage.hist(null, null, null, 'projects', id, true);
         }
         else {
-            return Lincko.storage.list('comments', null, {'_parent': ['chats', id]});
+            return Lincko.storage.list('comments', null, null, 'chats', id, false);
         }
     }
 

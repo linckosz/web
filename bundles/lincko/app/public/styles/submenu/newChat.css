@@ -1,0 +1,78 @@
+.submenu_newchat_header {
+       background-color: #679E52;
+       background-image: none;
+}
+
+.submenu_newchat_header .submenu_deco {
+       background-color: #679E52;
+}
+
+.submenu_newchat_header .submenu_deco {
+       border-bottom: none;
+}
+
+.submenu_newchat_header .submenu_deco {
+       background-color: #679E52;
+       color:#525252;
+}
+
+.submenu_newchat_header .submenu_title {
+       color: #f8f8f8;
+}
+
+.submenu_newchat_header .icon-Small-Persona {
+       font-size: 25px;
+       text-align: center;
+       line-height: 2;
+       vertical-align: middle;
+       margin-right: 10px;
+       color: #FB7D23;
+}
+
+.submenu_newchat_header .icon-Small-Persona [find='submenu_button_title'] {
+       display: none;
+}
+
+.chat_bottom {
+	text-align: left;
+	color: #FB7D23;
+	position: relative;
+	height: 100%;
+}
+
+.v_pos {
+	position: absolute;
+	width: 100%;
+	top: 50%;
+	transform: translateY(-50%);
+	-webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+}
+
+.chat_bottom span.input {
+	overflow: hidden;
+	display: block;
+	padding: 0 10px;
+}
+
+.chat_bottom .comments_input {
+	font-size: 18px;
+	border-radius: 5px;
+	width: 100%;
+	display: block;
+}
+
+.chat_bottom .icons {
+	float: right;
+	margin: 0 10px;
+}
+
+.chat_bottom .emoji {
+	margin-right: 5px;
+}
+
+.chat_bottom .send {
+	display: none;
+}
