@@ -142,10 +142,26 @@ Submenu.prototype.Add_taskdetail = function() {
 	if( item['_type'] == "tasks" ){
 		var elem_checkbox = $('#-skylist_checkbox').clone().prop('id','');
 		elem.find('[find=leftbox]').html(elem_checkbox);
+		if(item['approved']){
+			elem.addClass('skylist_card_checked');
+		}
 		elem.find('[find=checkbox]').on('click', function(event){
 			event.stopPropagation();
-			var elem_checkbox = $(this);
-			elem_checkbox.toggleClass('fa fa-check');
+			var elem_title = $(this).closest('table');
+			elem_title.toggleClass('skylist_card_checked');
+			var approved = false;
+			if( elem_title.hasClass('skylist_card_checked') ){
+				approved = true;
+			}
+			else{
+				approved = false;
+			}
+			wrapper_sendAction(
+				{
+		    		"id": item['_id'],
+		    		"approved": approved,
+				},
+				'post', 'task/update');
 		});
 	}
 	/* OLD CHECKBOX METHOD
@@ -231,7 +247,48 @@ Submenu.prototype.Add_taskdetail = function() {
 	var elem_tmp;
 
 
-	var comments_primary = Lincko.storage.list('comments',null,{'_parent': [this.param.type,taskid]}).reverse();
+	var commentWithID = function(array, id){
+		for( var i in array){
+			if( array[i]['_id'] == id ){
+				return array[i];
+			}
+		}
+		return false;
+	}
+
+	var comment;
+	var comments_all = [];
+	if( $.isNumeric(taskid) ){
+		comments_all = Lincko.storage.list('comments',null, null, this.param.type, taskid, true).reverse();
+	}
+	var comments_primary = [];
+	var tree;
+	var comments_sorted = [];
+	var comments_sub = [];
+
+	for( var i in comments_all ){
+		comment = comments_all[i];
+		if( comment['_parent'][0] == 'tasks' ){
+			comments_primary.push(comment);
+		}
+	}
+
+	for( var j in comments_primary ){
+		comments_sub = [];
+		tree = Lincko.storage.tree('comments', comments_primary[j]['_id'], 'children', true, true);
+		for( var id in tree['comments'] ){
+			comments_sub.push(commentWithID(comments_all, id));
+		}
+		comments_sub = Lincko.storage.sort_items(comments_sub, 'created_at', 0, -1, true);
+		$.each(comments_sub, function(i,val){
+			comments_sorted.push(val);
+		});
+	}
+	
+
+	/*
+	var comments_primary = Lincko.storage.list('comments',null, null, this.param.type, taskid, false).reverse();
+	//var comments_primary = Lincko.storage.list('comments',null,{'_parent': [this.param.type,taskid]}).reverse();
 	var comments_sub;
 	var comments_sorted = [];
 	var comment_id;
@@ -240,13 +297,16 @@ Submenu.prototype.Add_taskdetail = function() {
 		comment = comments_primary[i];
 		comment_id = comment['_id'];
 		comments_sorted.push(comment);
-		comments_sub = Lincko.storage.list('comments',null,{'_parent': ['comments',comment_id]}).reverse();
+		//comments_sub = Lincko.storage.list('comments',null, null, 'comments', comment_id, true).reverse();
+		comments_sub = Lincko.storage.tree('comments', comment_id, 'children', false, true);
+		console.log(comments_sub);
 		if( comments_sub.length > 0 ){
 			for( var k in comments_sub ){
 				comments_sorted.push(comments_sub[k]);
 			}
 		}
 	}
+	*/
 	//var comments = Lincko.storage.list('comments',null,null,'tasks',taskid,true).reverse();
 	var commentCount = 0;
 	for ( var i in comments_sorted ){
@@ -258,7 +318,8 @@ Submenu.prototype.Add_taskdetail = function() {
 		elem.find('[find=name]').html(created_by);
 		submenu_taskdetail.find('.submenu_taskdetail_comments_main').append(elem);
 		created_at = new wrapper_date(comment['created_at']);
-		created_at = created_at.display();
+		created_at = created_at.display('date_full');
+		created_at += ' '+comment['_parent'][1];
 		elem.find('[find=date]').html(created_at);
 
 		if( comment['created_by'] == wrapper_localstorage.uid ){

@@ -20,11 +20,31 @@
 			</span>
 		</span>
 		<div class="skylist_menu_timesort"></div>
-		<span class="skylist_menu_navbar_search">
-			<input find='search_textbox' class="display_none" type='textbox' placeholder="Search Here"></input>
+		<span class="skylist_menu_navbar_filter_icon icon-Filter"></span>
+		<div class="skylist_menu_navbar_filter_pane">
+			<div find="filter_header_1">Filter:</div>
+			<div find="radio_wrapper">
+				<table find="option1" class="skylist_menu_navbar_filter_pane_optionWrapper">
+					<td find="radio" class="skylist_menu_navbar_filter_pane_radio fa fa-circle"></td>
+					<td find="text">Sort by duedate</td>
+				</table>
+				<table find="option2" class="skylist_menu_navbar_filter_pane_optionWrapper">
+					<td find="radio" class="skylist_menu_navbar_filter_pane_radio fa"></td>
+					<td find="text">Sort by most recently updated</td>
+				</table>
+			</div>
+			<div class="skylist_menu_navbar_filter_pane_divider"></div>
+			<div find="checkbox_wrapper">
+				<table class="skylist_menu_navbar_filter_pane_optionWrapper">
+					<td find="checkbox" class="skylist_menu_navbar_filter_pane_checkbox fa fa-check"></td>
+					<td find="text">Show completed tasks</td>
+				</table>
+			</div>
+		</div>
+		<div class="skylist_menu_navbar_search">
+			<input find='search_textbox' type='textbox' placeholder="Search Here"></input>
 			<span find='search_icon' class="icon-Search"></span>
-		</span>
-		<span class="icon-Filter"></span>
+		</div>
 	</div>
 	<span id="-skylist_menu_timesort_text_wrapper" class="skylist_menu_timesort_text_wrapper" sort=''>
 		<span find='indicator' class="minTablet"></span>
@@ -71,7 +91,7 @@
 	</div>
 
 	{#for tasklist, goes inside <td find='card_leftbox'></td> #}
-	<span id='-skylist_checkbox' find='checkbox' class="skylist_checkbox">
+	<span id='-skylist_checkbox' find='checkbox' class="skylist_checkbox fa fa-check">
 	</span>
 	{#
 	<span id='-skylist_checkbox' class="skylist_checkbox floatleft">
