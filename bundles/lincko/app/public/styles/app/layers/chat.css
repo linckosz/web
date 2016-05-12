@@ -12,6 +12,13 @@
 	color: #3270A0;
 }
 
+.app_layers_chat .skylist_logo >span {
+	display: inline-block;
+	width: 60px;
+	font-size: 55px;
+	color: #FB7D23;
+}
+
 .app_layers_chat .skylist_card_center [find=title] {
 	font-size: 18px;
 	color: #475577;
@@ -26,6 +33,10 @@
 
 /* Tablet in Landscape */
 @media only screen and (max-width: 1279px){
+	.app_layers_chat .skylist_logo >span {
+		width: 48px;
+		font-size: 40px;
+	}
 	.app_layers_chat .skylist_card_center [find=description] {
 		font-size: 12px;
 	}
