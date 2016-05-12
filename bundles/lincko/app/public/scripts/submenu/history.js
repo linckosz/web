@@ -1,4 +1,4 @@
-/* Category ? */
+/* Category 31 */
 var chatFeed = (function() {
     //  toto: fixme, these fake links need to be removed for production
     var fakeMedias = {
@@ -75,16 +75,15 @@ var chatFeed = (function() {
         line.addClass("models_history_line");
         var today = Math.floor((new Date()).getTime() / 86400000);
         if (timestamp == today * 86400) {
-            date = Lincko.Translation.get('app', 3302, 'html').toUpperCase();
+            date = Lincko.Translation.get('app', 3302, 'html').toUpperCase(); //Today
         }
         else if (timestamp == (today - 1) * 86400) {
-            date = 'Yesterday'; //TODO: This needs to be fixed
+            date = Lincko.Translation.get('app', 3304, 'html').toUpperCase(); //Yesterday
         }
         else{
-            date = (new wrapper_date(timestamp).display('date_short'));
+            date = (new wrapper_date(timestamp).display('date_very_short'));
         }
-
-        line.text(date);
+        line.find('span').html(date);
         return line;
     }
 
