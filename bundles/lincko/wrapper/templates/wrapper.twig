@@ -104,7 +104,10 @@ var wrapper_load_progress = {
 	
 	JSfiles_load: function(){
 		this.JSfiles_current++;
-		var pc = this.JSfiles_current/this.JSfiles_total;
+		var pc = 0;
+		if(this.JSfiles_total>0){
+			pc = this.JSfiles_current/this.JSfiles_total;
+		}
 		var result = 50;
 		if(pc<0){ pc=0; }
 		else if(pc>1){ pc=1; }
@@ -197,7 +200,7 @@ JSfiles.loadLibraries = function(){
 	var pri_tp = false;
 	//It will help to start from the smallest number
 	for(var pri in this){
-		if($.type(this[pri]) === 'array' || $.type(this[pri]) === 'object'){
+		if($.isNumeric(pri) && ($.type(this[pri]) == 'array' || $.type(this[pri]) == 'object')){
 			if(pri_tp === false || pri < pri_tp){
 				pri_tp = pri;
 			}
@@ -259,8 +262,8 @@ wrapper_localstorage.uid = parseInt(wrapper_localstorage.uid, 10);
 $(function() {
 	wrapper_load_progress.move(5);
 	for(var pri in JSfiles){
-		if($.type(JSfiles[pri]) === 'array' || $.type(JSfiles[pri]) === 'object'){
-			wrapper_load_progress.total++;
+		if($.isNumeric(pri) && ($.type(JSfiles[pri]) == 'array' || $.type(JSfiles[pri]) == 'object')){
+			wrapper_load_progress.JSfiles_total++;
 		}
 	}
 	JSfiles.loadLibraries();

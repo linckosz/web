@@ -131,7 +131,7 @@ html, body {
 
 /* SANS-SERIF */
 html, .font_sans_serif {
-	font-family: Roboto, Tahoma, Verdana, Helvetica, "Nimbus Sans L", "URW Gothic L", "Lucida Grande", Geneva, "DejaVu Sans", "Microsoft Sans Serif", sans-serif;
+	font-family: "San Francisco", Roboto, Helvetica, Tahoma, Verdana, "Nimbus Sans L", "URW Gothic L", "Lucida Grande", Geneva, "DejaVu Sans", "Microsoft Sans Serif", sans-serif;
 }
 
 /* MONOSPACE */
@@ -213,7 +213,12 @@ html, .font_sans_serif {
 }
 
 .base_input_text_error {
-	background: linear-gradient(#FFFFFF,#FFCFCF) !important;
+	background: #FFFFFF;
+	background-color: #FFFFFF;
+	background: -webkit-linear-gradient(#FFFFFF,#FFCFCF) !important; /* For Safari 5.1 to 6.0 */
+	background: -o-linear-gradient(#FFFFFF,#FFCFCF) !important; /* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(#FFFFFF,#FFCFCF) !important; /* For Firefox 3.6 to 15 */
+	background: linear-gradient(#FFFFFF,#FFCFCF) !important; /* Standard syntax */
 }
 
 .display_none {

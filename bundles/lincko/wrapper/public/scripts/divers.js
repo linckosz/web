@@ -255,10 +255,14 @@ function wrapper_test(type, RCUD){
 		else if(RCUD==2){
 			wrapper_sendAction(
 				{
-					"id": 13,
+					"id": 47,
 					//"parent_id": 0, //OPTIONAL
-					"title": "项目 "+Math.floor(Math.random() * 20), //OPTIONAL
-					"description": "It's a project content"+Math.floor(Math.random() * 20), //OPTIONAL
+					//"title": "项目 "+Math.floor(Math.random() * 20), //OPTIONAL
+					//"description": "It's a project content"+Math.floor(Math.random() * 20), //OPTIONAL
+					"users>access": {
+						6:  [true,false][Math.round(Math.random())],
+						12:  [true,false][Math.round(Math.random())],
+					},
 				},
 				'post',
 				'project/update',

@@ -85,6 +85,10 @@ $app->lincko->jsonException = false;
 
 $app->lincko->enableSession = true;
 
+//Use true for development to show error message on browser screen
+//Do not allow that for production, in case of any single bug, all users will see the message
+$app->lincko->showError = false;
+
 //List all bundles to load (routes are loaded in the order of appearance)
 $app->lincko->bundles = array(
 	//'bundle name'

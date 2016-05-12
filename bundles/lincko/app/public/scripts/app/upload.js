@@ -90,7 +90,7 @@ $(function () {
 		
 		dataType: 'json',
 		url: top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':8443/file/create', //Bruno update
-		url_result: top.location.protocol++'//'+document.linckoBack+'file.'+document.domain+':8443/file/result?%s',
+		url_result: top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':8443/file/result?%s',
 		// Enable image resizing, except for Android and Opera,
 		// which actually support image resizing, but fail to
 		// send Blob objects via XHR requests:
@@ -101,7 +101,7 @@ $(function () {
 		minFileSize: 1, //Bruno update
 		autoUpload: false, //Bruno update
 		maxFileSize: 1000000000, //Bruno update (limit to 1GB)
-		bitrateInterval: 1000, //Bruno update (display every second, which is more readible)
+		bitrateInterval: 1000, //Bruno update (display every second, which is more readable)
 		loadImageMaxFileSize: 100000000, //Bruno update (limit to 100Mb)
 		loadImageFileTypes: /^image\/.*$/, //Bruno update
 		previewMaxWidth: 360,
@@ -114,7 +114,7 @@ $(function () {
 			uploadedBytes: Lincko.Translation.get('app', 17, 'html'), //Uploaded bytes exceed file size
 		},
 
-		//Array used to smooth the uploading speed and time remaing display
+		//Array used to smooth the uploading speed and time remaining display
 		lincko_bitrate: [],
 		lincko_time: [],
 

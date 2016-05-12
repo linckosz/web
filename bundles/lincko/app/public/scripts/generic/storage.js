@@ -390,7 +390,10 @@ Lincko.storage.getHistoryInfo = function(history){
 			history: history,
 		};
 
-		result.title = Lincko.storage.formatHistoryInfo(result.title, history);
+		if(history.par){
+			result.title = Translation_filter(result.title, history.par);
+		}
+
 		var date = new wrapper_date(history.timestamp);
 		result.title = '[ '+date.display('date_short')+' ] '+result.title.ucfirst();
 		
@@ -402,7 +405,6 @@ Lincko.storage.getHistoryInfo = function(history){
 				break;
 			}
 		}
-		console.log(history)
 		//Add to the content an optional detail if any (such as "project description")
 		if(history.att.indexOf('-')!=0){
 			attribute = "-"+history.att;
@@ -417,7 +419,10 @@ Lincko.storage.getHistoryInfo = function(history){
 			}
 		}
 		
-		result.content = Lincko.storage.formatHistoryInfo(result.content, history);
+		if(history.par){
+			result.content = Translation_filter(result.content, history.par);
+		}
+		
 	}
 	return result;
 };

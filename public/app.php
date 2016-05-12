@@ -26,6 +26,7 @@ $app->configureMode('development', function () use ($app) {
 	));
 	ini_set('display_errors', '1');
 	ini_set('opcache.enable', '0');
+	$app->lincko->showError = true; //Force to see Error message
 	//Only useful in rendering mode, useless in JSON mode
 	//$debugbar = new \Slim\Middleware\DebugBar();
 	//$app->add($debugbar);
