@@ -112,6 +112,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	submenu_wrapper = this.Wrapper();
 	var submenu_content = submenu_wrapper.find("[find=submenu_wrapper_content]");
 	var submenu_taskdetail = $('#-submenu_taskdetail').clone().prop('id','submenu_taskdetail');
+	var contactServer = false;
 	var taskid = this.param.id;
 	var elem;
 	var duedate;
@@ -444,6 +445,9 @@ Submenu.prototype.Add_taskdetail = function() {
 	/*----create/save on previewHide----*/
 	$(document).on("previewHide.skylist", function(){
 		console.log('previewHide'+taskid);
+		if( !contactServer ){
+			return false;
+		}
 		route = '';
 		var param = {};
 		if( that.param.type == "tasks" ){
