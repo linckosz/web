@@ -559,6 +559,56 @@ Lincko.storage.search = function(type, param, category){
 	return results;
 };
 
+/*
+	array - array of items to conduct search	
+*/
+Lincko.storage.searchArray = function(type, param, array){
+	var results = {};
+	var find = [];
+	var save_result = false;
+	type = type.toLowerCase();
+	if(typeof param === 'string'){ param = param.toLowerCase(); }
+
+	//List all items in a category that contain a word
+	find['word'] = function(item){
+		var save_result = false;
+		//Scan each property of an item (don't forget to include "+")
+		for(var prop in item) {
+			if((prop.indexOf('-')===0 || prop.indexOf('+')===0) && typeof item[prop]==='string'){
+				if(item[prop].toLowerCase().indexOf(param)!==-1){
+					save_result = true;
+				}
+			}
+		}
+		if(save_result){
+			return item;
+		}
+		return false;
+	};
+
+	if(typeof find[type] === 'function'){
+			if($.type(array) === 'array'){
+				//Scan each item in a category
+				for(var item in array){
+					save_result = false;
+					if(save_result = find[type](array[item])){
+						if(!$.isEmptyObject(save_result)){
+							if(
+								typeof save_result['personal_private']==='undefined'
+								|| ((typeof save_result['personal_private']==='string' || typeof save_result['personal_private']==='number') && (save_result['personal_private']==null || save_result['personal_private']==0))
+							){
+								if(typeof results === 'undefined'){ results = {}; }
+								results[item] = save_result;
+							}
+						}
+					}
+				}
+
+			}
+	}
+	return results;
+};
+
 
 /*
 	[toto] We should move favorite records to the backend

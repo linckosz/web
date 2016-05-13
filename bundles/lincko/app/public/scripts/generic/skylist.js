@@ -196,8 +196,7 @@ skylist.prototype.construct = function(){
 		that.list.prop('id'),
 		that.list_type,
 		function(){
-			console.log(that.list.prop('id'));
-			if(that.list_type == "tasks" ){
+			if(that.list_type == "tasks" || that.list_type == "notes" ){
 				that.tasklist_update();
 			}
 		}
@@ -335,7 +334,9 @@ skylist.prototype.filter_by_duedate = function(items, filter){
 	var item;
 	var duedate;
 	var filter_num;
-	if( filter == null ){ return items; }
+	if( filter == null ){ 
+		return items; 
+	}
 	else{
 		for( var i in items ){
 			item = items[i];
@@ -414,69 +415,9 @@ skylist.prototype.filter_by_search = function(items, filter){
 		return items;
 	}
 	else{
-		console.log(Lincko.storage.search('word', filter, that.list_type));
-		items_filtered = Lincko.storage.search('word', filter, that.list_type)[that.list_type];
+		items_filtered = Lincko.storage.searchArray('word', filter, items);
 		return items_filtered;
 	}
-}
-
-skylist.prototype.list_update = function(type, filter_by){
-	var that = this;
-	var items;
-	var items_filtered = [];
-	var current_user_id = wrapper_localstorage.uid;
-	var filtercheck = false;
-
-	items = that.Lincko_itemsList;
-
-	for( var i in items ){
-		item = items[i];
-		for ( var k in that.Lincko_itemsList_filter ){
-			if( that.Lincko_itemsList_filter[k] != filter_by[k] )
-			{
-				break;
-			}
-		}
-
-		for( var filter in that.Lincko_itemsList_filter ){
-			if( that.Lincko_itemsList_filter[filter] == null ){break;}
-			else if( item['_users'][0] == that.Lincko_itemsList_filter.people ){
-				items_filtered.push(item);
-			}
-		}
-
-	}
-
-	that.list.velocity("fadeOut",{
-		duration: 200,
-		complete: function(){
-			if( that.list.find('.iscroll_sub_div').length > 0 ){
-				iscroll_elem = that.list.find('.iscroll_sub_div').empty();
-			}else{
-				iscroll_elem = that.list.empty();
-			}
-
-			if( taskcount==0 ){
-				iscroll_elem.append('<div class="app_layers_dev_skytasks_task">There are no tasks.</div>');
-			}
-			else{
-				for (var i in items_filtered){
-					item = items_filtered[i];
-					iscroll_elem.append(that.addCard(item));
-				}
-			}
-			
-			that.store_all_elem();
-			$('#app_layers_dev_skytasks_navbar').removeAttr('style');
-			that.window_resize();
-		}
-	})
-	.velocity("fadeIn",{
-		duration: 200,
-		complete: function(){
-			that.window_resize();
-		}
-	});
 }
 
 skylist.prototype.tasklist_update = function(type, filter_by){
@@ -493,7 +434,7 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 	if( !type ){
 		console.log('type: '+type);
 	}
-	if( type=='duedate' /*|| !type*/ ){
+	if( type=='duedate' ){
 		that.Lincko_itemsList_filter.timesort = filter_by;
 	}
 	else if( type == 'search'){
@@ -516,10 +457,6 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 		items_filtered = that.filter_by_sort_alt( items_filtered, that.Lincko_itemsList_filter.sort_alt );
 		items_filtered = that.filter_by_hide_completed( items_filtered, that.Lincko_itemsList_filter.hide_completed );
 	}
-	else if( that.list_type == "notes" ){
-		items_filtered = that.filter_by_search( items_filtered, that.Lincko_itemsList_filter.search );
-		items_filtered = that.filter_by_people( items_filtered, that.Lincko_itemsList_filter.people );
-	}
 
 	that.list.velocity("fadeOut",{
 		duration: 200,
@@ -530,6 +467,7 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 				iscroll_elem = that.list.empty();
 			}
 
+			console.log(items_filtered);
 			if( items_filtered.length < 1 ){
 				iscroll_elem.append('<div class="app_layers_dev_skytasks_task">There are no tasks.</div>');
 			}
@@ -1227,22 +1165,15 @@ skylist.prototype.menu_construct = function(){
 	});
 	//burger(that.elem_navbar.find('[find=search_textbox]'), 'regex');
 
-	var tasklist_search = function(term){
-		var filter_by = ['word', term, 'tasks'];
-        that.tasklist_update('search',filter_by);
-	}
-
 	that.elem_navbar.find('[find=search_textbox]').keyup(function(event){
 		var search_term = $(this).val();
 		clearTimeout(that.searchTimeout);
 		if(event.keyCode == 13){
 			that.tasklist_update('search',search_term);
-			//tasklist_search(app_layers_dev_skytasks_tasklist_searchTerm);
 		}
 		else{
 			that.searchTimeout = setTimeout(function(){
 				that.tasklist_update('search',search_term);
-				//tasklist_search(app_layers_dev_skytasks_tasklist_searchTerm);
 			},400);
 		}
 	});
