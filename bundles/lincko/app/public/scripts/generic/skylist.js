@@ -110,6 +110,7 @@ var skylist = function(list_type, list_wrapper, sort_array){
 		'sort_alt': false,
 		'hide_completed': false,
 	};
+	this.searchTimeout;
 
 	//variables for construct
 	this.list_wrapper = list_wrapper;
@@ -406,6 +407,19 @@ skylist.prototype.filter_by_hide_completed = function(items, filter){
 	return items_filtered;
 }
 
+skylist.prototype.filter_by_search = function(items, filter){
+	var that = this;
+	var items_filtered = [];
+	if( filter == null ){
+		return items;
+	}
+	else{
+		console.log(Lincko.storage.search('word', filter, that.list_type));
+		items_filtered = Lincko.storage.search('word', filter, that.list_type)[that.list_type];
+		return items_filtered;
+	}
+}
+
 skylist.prototype.list_update = function(type, filter_by){
 	var that = this;
 	var items;
@@ -483,9 +497,7 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 		that.Lincko_itemsList_filter.timesort = filter_by;
 	}
 	else if( type == 'search'){
-		items_filtered = Lincko.storage.search(filter_by[0], filter_by[1], filter_by[2])[filter_by[2]];
-		if(items_filtered){
-		}
+		that.Lincko_itemsList_filter.search = filter_by;
 	}
 	else if( type == 'people' ){
 		that.Lincko_itemsList_filter.people = filter_by;
@@ -498,10 +510,15 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 	}
 
 	if( that.list_type == "tasks" || that.list_type == "notes" ){
+		items_filtered = that.filter_by_search( items_filtered, that.Lincko_itemsList_filter.search );
 		items_filtered = that.filter_by_people( items_filtered, that.Lincko_itemsList_filter.people );
 		items_filtered = that.filter_by_duedate( items_filtered, that.Lincko_itemsList_filter.timesort );
 		items_filtered = that.filter_by_sort_alt( items_filtered, that.Lincko_itemsList_filter.sort_alt );
 		items_filtered = that.filter_by_hide_completed( items_filtered, that.Lincko_itemsList_filter.hide_completed );
+	}
+	else if( that.list_type == "notes" ){
+		items_filtered = that.filter_by_search( items_filtered, that.Lincko_itemsList_filter.search );
+		items_filtered = that.filter_by_people( items_filtered, that.Lincko_itemsList_filter.people );
 	}
 
 	that.list.velocity("fadeOut",{
@@ -1216,14 +1233,16 @@ skylist.prototype.menu_construct = function(){
 	}
 
 	that.elem_navbar.find('[find=search_textbox]').keyup(function(event){
-		app_layers_dev_skytasks_tasklist_searchTerm = $(this).val();
-		clearTimeout(app_layers_dev_skytasks_tasklist_searchTimeout);
+		var search_term = $(this).val();
+		clearTimeout(that.searchTimeout);
 		if(event.keyCode == 13){
-			tasklist_search(app_layers_dev_skytasks_tasklist_searchTerm);
+			that.tasklist_update('search',search_term);
+			//tasklist_search(app_layers_dev_skytasks_tasklist_searchTerm);
 		}
 		else{
-			app_layers_dev_skytasks_tasklist_searchTimeout = setTimeout(function(){
-				tasklist_search(app_layers_dev_skytasks_tasklist_searchTerm);
+			that.searchTimeout = setTimeout(function(){
+				that.tasklist_update('search',search_term);
+				//tasklist_search(app_layers_dev_skytasks_tasklist_searchTerm);
 			},400);
 		}
 	});

@@ -113,6 +113,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	var submenu_content = submenu_wrapper.find("[find=submenu_wrapper_content]");
 	var submenu_taskdetail = $('#-submenu_taskdetail').clone().prop('id','submenu_taskdetail');
 	var contactServer = false;
+	var param_sendAction = {};
 	var taskid = this.param.id;
 	var elem;
 	var duedate;
@@ -445,35 +446,37 @@ Submenu.prototype.Add_taskdetail = function() {
 	/*----create/save on previewHide----*/
 	$(document).on("previewHide.skylist", function(){
 		console.log('previewHide'+taskid);
-		if( !contactServer ){
-			return false;
-		}
-		route = '';
+		var contactServer = false;
 		var param = {};
-		if( that.param.type == "tasks" ){
-			route += 'task';
-		}
-		else if( that.param.type == "notes" ){
-			route += 'note';
-		}
 
-		if( taskid == 'new' ){
-			route += '/create';
-			param['parent_id'] = app_content_menu['projects_id'];
-		}
-		else{
-			route += '/update';
-			param['id'] = taskid;
-		}
-
+		//param values that are common to all
+		param['id'] = taskid;
+		param['parent_id'] = app_content_menu['projects_id'];
 		param['title'] = submenu_taskdetail.find('[find=title_text]').html();
-		if( param['title'] == '' ){
-			param['title'] = 'A new ' + that.param.type.slice(0,-1);
-		}
 		param['comment'] = submenu_taskdetail.find('[find=description_text]').html();
 
-		wrapper_sendAction( param,'post',route );
+		if( taskid == 'new' || param['title'] != item['+title'] || param['comment'] != item['-comment'] ){
+			contactServer = true;
+		}
 
+		if( contactServer ){
+			var route = '';
+			if( that.param.type == "tasks" ){
+				route += 'task';
+			}
+			else if( that.param.type == "notes" ){
+				route += 'note';
+			}
+
+			if( taskid == 'new' ){
+				route += '/create';
+			}
+			else{
+				route += '/update';
+
+			}
+			wrapper_sendAction( param,'post',route );
+		}
 		$(document).off('previewHide.skylist');
 	});
 
