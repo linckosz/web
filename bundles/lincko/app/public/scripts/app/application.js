@@ -134,6 +134,15 @@ var app_application_lincko = {
 		if(
 			propagation
 			&& !$.isEmptyObject(items_list)
+		){
+			console.log(items_list);
+		}
+
+		/*
+		//Add relations fields
+		if(
+			propagation
+			&& !$.isEmptyObject(items_list)
 			&& $.type(Lincko.storage.data) === 'object'
 			&& $.type(Lincko.storage.data['_relations']) === 'object'
 		){
@@ -148,6 +157,7 @@ var app_application_lincko = {
 				}
 			}
 		}
+		*/
 
 		if(!$.isEmptyObject(items_list)){
 			
@@ -220,25 +230,23 @@ var app_application_lincko = {
 
 		NOTE: Because JS is not ready yet (obverse() is too new) to observe any object change, we have to add it manually.
 	*/
-	prepare: function(items){
-		var item;
-		if(typeof items === 'string' || typeof items === 'number'){
-			if(typeof this._fields[items] === 'boolean'){
-				this._fields[items] = true; //Force to update
-			}
-		} else if($.type(items) === 'object' || $.type(items) === 'array'){
-			for(var i in items){
-				item = items[i];
-				if(typeof item !== 'string' && typeof item !== 'number'){
-					delete items[i];
-				} else if(typeof this._fields[item] === 'boolean'){
-					this._fields[item] = true; //Force to update
+	prepare: function(fields){
+		var field;
+		if(typeof fields == 'string' || typeof fields == 'number'){
+			this._fields[fields] = true;
+		} else if(typeof fields == 'object'){
+			for(var i in fields){
+				if(typeof fields[i] == 'string' || typeof fields[i] == 'number'){
+					this._fields[fields[i]] = true;
 				}
 			}
 		} else {
-			//Force all to be updated
-			for(var item in this._fields){
-				this._fields[item] = true;
+			//Prepare all to be updated
+			for(var field in this._elements){
+				this._fields[field] = true;
+			}
+			for(var field in this._functions){
+				this._fields[field] = true;
 			}
 		}
 	},
