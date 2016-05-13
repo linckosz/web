@@ -5,7 +5,7 @@ var chatFeed = (function() {
             '64':{'thumbnail': 'http://cdn.duitang.com/uploads/item/201311/08/20131108161501_BMkku.thumb.700_0.jpeg',
                   'url': 'http://cdn.duitang.com/uploads/item/201311/08/20131108161501_BMkku.thumb.700_0.jpeg',
                   'target': 'dodolong_1.jpeg'},
-            '108': {'thumbnail': 'http://img4.yytcdn.com/video/mv/150612/2308579/-M-8929f5ae099185010c48b930c829479b_240x135.jpg',
+            '124': {'thumbnail': 'http://img4.yytcdn.com/video/mv/150612/2308579/-M-8929f5ae099185010c48b930c829479b_240x135.jpg',
                   'url': 'http://download.wavetlan.com/SVV/Media/HTTP/H264/Talkinghead_Media/H264_test1_Talkinghead_mp4_480x360.mp4',
                   'target': 'dodolong_video.mp4'},
             '126': {'thumbnail': 'http://cdn.duitang.com/uploads/item/201311/12/20131112153049_JFvE4.thumb.700_0.jpeg',
@@ -17,10 +17,16 @@ var chatFeed = (function() {
             var popout = $('#-pic_preview_full_screen').clone();
             popout.attr('id', 'pic_preview_full_screen');
             popout.find('img').attr('src', event.url);
+            var names = event.url.split('/');
+            var basename = names[names.length-1];
+            popout.find('.pic_preview_name').html(basename);
+            popout.find('img').attr('src', event.url);
+            popout.find('.pic_preview_icon').attr("href", event.url);
             $("body").append(popout);
             $('.close', '#pic_preview_full_screen').click(function() {
                 $('#pic_preview_full_screen').remove();
             });
+            
             return false;
         },
         'video': function(event) {

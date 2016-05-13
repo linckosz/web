@@ -113,7 +113,6 @@
 }
 
 .models_history_standard_shortcut_wrapper {
-    border-left: 2px solid #FB7D23;
     padding: 6px 20px;
     margin: 6px auto;
 }
@@ -124,7 +123,7 @@
 
 .models_history_standard_shortcut {
     display: inline-block;
-    width: 100px;
+    width: 60px;
     border-radius: 10%;
     margin-right: 10px;
 }

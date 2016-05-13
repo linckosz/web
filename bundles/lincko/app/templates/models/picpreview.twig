@@ -8,9 +8,23 @@
 
 <div class="display_none">
 	<div id="-pic_preview_full_screen">
+		<iframe id="my_iframe" style="display:none;"></iframe>
+		<script>
+			function Download(url) {
+    			document.getElementById('my_iframe').src = url;
+			};
+		</script>
 		<div id="pic_preview_wrapper">
-				<label class="fa fa-2x fa-times-circle close" aria-hidden="true"></label>
+			<label class="fa fa-2x fa-times-circle close" aria-hidden="true"></label>
+			<div class="pic_wrapper">
 				<img src="">
+				<label class="label">
+					<p class="pic_preview_name"></p>
+					<a download class="pic_preview_icon icon-Cloud-Download"></a>
+				</label>
+			</div>
 		</div>
 	</div>
 </div>
+
+

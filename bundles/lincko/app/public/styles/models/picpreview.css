@@ -1,0 +1,76 @@
+div#pic_preview_full_screen {
+	position:fixed !important;
+	top:0;
+	right:0;
+	bottom:0;
+	left:0;
+	z-index: 2006;
+}
+
+#pic_preview_wrapper {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+	-webkit-transform: translate(-50%,-50%);
+    -moz-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    -o-transform: translate(-50%,-50%);
+	width: 80%;
+	height: 80%;
+	background-color: rgba(0, 0, 0, 0.6);
+}
+
+.pic_width_wrapper {
+	position: relative;
+}
+
+#pic_preview_wrapper img {
+	display: block;
+	max-width: 100%;
+	max-height: 100%;
+	margin: 0 auto;
+}
+
+#pic_preview_wrapper .close {
+	color: rgba(0, 0, 0, 0.6);
+	position: absolute;
+	top: 0;
+	right: 0;
+	transform: translate(50%, -50%);
+	-webkit-transform: translate(50%,-50%);
+    -moz-transform: translate(50%,-50%);
+    -ms-transform: translate(50%,-50%);
+    -o-transform: translate(50%,-50%);
+	cursor: pointer;
+}
+
+#pic_preview_wrapper .pic_wrapper {
+	position: absolute;
+	top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    -webkit-transform: translate(-50%,-50%);
+    -moz-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    -o-transform: translate(-50%,-50%);
+	height: 70%;
+	width: 80%;
+	text-align: center;
+}
+
+#pic_preview_wrapper .pic_preview_name  {
+	color: #FBA026;
+	margin: 5px;
+	font-size: 15px;
+	line-height: 1;
+}
+
+#pic_preview_wrapper .pic_preview_icon {
+	color: #53ADD2;
+	font-size: 30px;
+	margin-bottom: 10px;
+	cursor: pointer;
+	display: block;
+	text-decoration: none;
+}
