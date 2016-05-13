@@ -2,7 +2,7 @@
 var app_application_lincko = {
 	_elements: {},
 	_functions: { all:[], fields:{}, }, //Only register functions before loading is done, after it will be prohibited
-	_fields: { 'upload': true, }, //This must be setup previously somewhere, for instance storage.js
+	_fields: {}, //This must be setup previously somewhere, for instance storage.js
 
 	/*
 		Different ways to register an item (HTML element or function):
@@ -99,6 +99,7 @@ var app_application_lincko = {
 	update: function(items, propagation){
 		var action = false;
 		var deletion = false;
+		var all = true;
 		var item;
 		var items_list = [];
 
@@ -117,17 +118,12 @@ var app_application_lincko = {
 				}
 			}
 		} else if(items === true){
-			for(var field in this._fields){
-				items_list[field] = true;
-			}
+			all = true;
 		}
 
-		//Adding the fields that are true (=need to update)
+		//Adding the fields that are true (=previously prepared)
 		for(var field in this._fields){
-			if(this._fields[field]){
-				items_list[field] = true;
-			}
-			this._fields[field] = false; //Reset to updated
+			items_list[field] = true;
 		}
 
 		//Add relations fields
@@ -135,7 +131,7 @@ var app_application_lincko = {
 			propagation
 			&& !$.isEmptyObject(items_list)
 		){
-			console.log(items_list);
+			//console.log(items_list);
 		}
 
 		/*
@@ -218,6 +214,10 @@ var app_application_lincko = {
 				this._functions.all[i]();
 			}
 		}
+
+		for(var field in this._fields){
+			delete items_list[field];
+		}
 		
 		return true;
 	},
@@ -247,29 +247,6 @@ var app_application_lincko = {
 			}
 			for(var field in this._functions){
 				this._fields[field] = true;
-			}
-		}
-	},
-
-	/*
-		"setFields" creates common fields to launch when we do not precise which field to check, and set it to true. If the field already exists, it only sets it to true.
-		app_application_lincko.setFields(['tasks', 'chats']); => Add string as a field to be checked
-		app_application_lincko.setFields(['tasks', 'chats']); => Add strings in array as fields to be checked
-	*/
-	setFields: function(items, force){
-		if(typeof force !== 'boolean'){ force = false; }
-		var item;
-		if(typeof items === 'string' || typeof items === 'number'){
-			items = [items];
-		}
-		if($.type(items) === 'object' || $.type(items) === 'array'){
-			for(var i in items){
-				item = items[i];
-				if(typeof item === 'string' || typeof item === 'number'){
-					if(force || typeof this._fields[item] === 'undefined'){
-						this._fields[item] = true; //Force to true even if it exists already
-					}
-				}
 			}
 		}
 	},

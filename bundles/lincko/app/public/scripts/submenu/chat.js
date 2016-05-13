@@ -111,7 +111,6 @@ function submenu_chat_select(opt, Elem){
 
 JSfiles.finish(function(){
 	app_application_lincko.add(function(){
-		
 
 		for(var menu in submenu_list['chat']){
 			if(menu != "_title" && menu != "chat_menu"){

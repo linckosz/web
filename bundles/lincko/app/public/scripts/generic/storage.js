@@ -111,16 +111,16 @@ Lincko.storage.setLastVisit = function(timestamp){
 
 //Function update all objects displayed
 /* PRIVATE METHOD */
-Lincko.storage.display = function(setFields, force){
+Lincko.storage.display = function(prepare, force){
 	if(typeof force !== 'undefined'){ force  = false; }
 	if(typeof app_application_lincko !== 'undefined'){
-		if(typeof setFields !== 'undefined' && setFields){
+		if(typeof prepare !== 'undefined' && prepare){
 			//Force to list all fields to insure all elements are up to date according to the storage
 			var fields_full = [];
 			if($.type(Lincko.storage.data) === 'object'){
 				for(var category in Lincko.storage.data) {
 					if($.type(Lincko.storage.data[category]) === 'object'){
-						app_application_lincko.setFields(category, force);
+						app_application_lincko.prepare(category);
 					}
 				}
 			}
@@ -192,11 +192,12 @@ Lincko.storage.update = function(partial, info){
 		if(!Lincko.storage.data[i]){
 			Lincko.storage.data[i] = {};
 			newField = true;
-			app_application_lincko.setFields(i);
 		}
 		//We merge/update proporties, we do know overwritte the complete object (because history record are dowloaded separatly)
 		Lincko.storage.data[i] = $.extend(Lincko.storage.data[i], partial[i]);
-		app_application_lincko.prepare(i);
+		if(newField){
+			app_application_lincko.prepare(i);
+		}
 		update = true;
 	}
 	if(update){
@@ -243,14 +244,14 @@ Lincko.storage.schema = function(schema){
 	for(var i in schema) {
 		if(!Lincko.storage.data[i]){
 			missing[i] = schema[i];
-			app_application_lincko.setFields(i);
+			app_application_lincko.prepare(i);
 			continue;
 		} else {
 			for(var j in schema[i]) {
 				if(!Lincko.storage.data[i][j]){
 					if(typeof missing[i]==='undefined'){ missing[i] = {}; }
 					missing[i][j] = schema[i][j];
-					app_application_lincko.setFields(i);
+					app_application_lincko.prepare(i);
 					continue;
 				}
 			}
@@ -387,13 +388,6 @@ Lincko.storage.getHistoryInfo = function(history){
 			result.title = Lincko.storage.data['_history_title'][history.type][history.cod];
 		} else if(typeof Lincko.storage.data['_history_title'][history.type] !== 'undefined'){
 			result.title = Lincko.storage.data['_history_title'][history.type];
-		}
-
-		if(username = Lincko.storage.get('users', history['by'], 'username')){
-			if(typeof history.par=='undefined'){
-				history.par = {};
-			}
-			history.par.un = username; 
 		}
 
 		result.root = {
@@ -1121,6 +1115,16 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 								}
 							}
 							if(save){
+								if(typeof item.par=='undefined' || typeof item.par.un=='undefined'){
+									if(typeof item.par=='undefined'){
+										item.par = {};
+									}
+									if(typeof item.par.un=='undefined'){
+										if(username = Lincko.storage.get('users', item['by'], 'username')){
+											item.par.un = username;
+										}
+									}
+								}
 								array_items.push(item);
 							}
 						}

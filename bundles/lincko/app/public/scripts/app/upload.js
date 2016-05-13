@@ -73,10 +73,6 @@ submenu_list['app_upload_destination'] = {
 	},
 };
 
-if(typeof app_application_lincko !== 'undefined'){
-	app_application_lincko.setFields('upload');
-}
-
 function app_upload_prepare_log(){
 	$('#app_upload_shangzai_puk').val(wrapper_get_shangzai('puk'));
 	$('#app_upload_shangzai_cs').val(wrapper_get_shangzai('cs'));
