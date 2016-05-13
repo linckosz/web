@@ -333,6 +333,7 @@ html, .font_sans_serif {
 .base_MyCommentText { color: #437CA8; }
 .base_MainMenuItemsText { color: #444444; }
 .base_MainMenuHeaderText { color: #000000; }
+.base_DayOverdueText { color: #BE2B1F; }
 
 /** PRIMARY ICONS COLOURS **/
 .base_ChatIcon { color: #679E52; }

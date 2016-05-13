@@ -73,8 +73,12 @@ function wrapper_test(type, RCUD){
 			wrapper_sendAction(
 				{
 					"parent_type": "projects",
-					"parent_id": "13",
-					"title": "It's a chat room title",
+					"parent_id": "47",
+					"title": "It's a chat room talking about 项目, c'est testé en français",
+					"users>access": {
+						6: true, //Give access
+						12: true, //Give access
+					},
 				},
 				'post',
 				'chat/create',
@@ -260,8 +264,8 @@ function wrapper_test(type, RCUD){
 					//"title": "项目 "+Math.floor(Math.random() * 20), //OPTIONAL
 					//"description": "It's a project content"+Math.floor(Math.random() * 20), //OPTIONAL
 					"users>access": {
-						6:  [true,false][Math.round(Math.random())],
-						12:  [true,false][Math.round(Math.random())],
+						6:  true,//[true,false][Math.round(Math.random())],
+						12:  true,//[true,false][Math.round(Math.random())],
 					},
 				},
 				'post',
@@ -396,16 +400,27 @@ function wrapper_test(type, RCUD){
 		else if(RCUD==2){
 			wrapper_sendAction(
 				{
-					"id": 6,
+					"id": 32,
 					//"parent_id": 4,
 					//"title": "Title "+Math.floor(Math.random() * 20), //OPTIONAL
 					//"comment": "Content "+Math.floor(Math.random() * 20), //OPTIONAL
 					//"start": 1462110422, //OPTIONAL
 					//"duration": 86400, //OPTIONAL
 					//"fixed": 1, //OPTIONAL
-					"approved": !Lincko.storage.data.tasks[6]['approved'], //OPTIONAL
+					"approved": !Lincko.storage.data.tasks[32]['approved'], //OPTIONAL
 					//"status": 0, //OPTIONAL
 					//"progress":  Math.floor(Math.random() * 10), //OPTIONAL
+					"users>approver": {
+						6: [true,false][Math.round(Math.random())],
+						12: [true,false][Math.round(Math.random())],
+					},
+					"users>in_charge": {
+						3: [true,false][Math.round(Math.random())],
+						12: [true,false][Math.round(Math.random())],
+					},
+					"tasks>delay": {
+						85: Math.floor(Math.random() * 20000),
+					},
 				},
 				'post',
 				'task/update',
