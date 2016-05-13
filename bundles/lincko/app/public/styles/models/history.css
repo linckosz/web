@@ -31,6 +31,7 @@
 .models_history_content {
     border-radius: 2px;
     padding: 5px 8px;
+    cursor: pointer;
 }
 
 .models_history_self .models_history_content {

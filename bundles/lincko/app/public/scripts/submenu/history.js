@@ -36,15 +36,22 @@ var chatFeed = (function() {
         }
     };
     var RESOURCE_HANDLERS = {
-        'tasks': function(event) {
-            submenu_Build('taskdetail', null, null, event.data, true);
+        'tasks': function(taskid, elem) {
+            submenu_Build('taskdetail', null, null, {'type': 'tasks', 'id': taskid}, true);
             return false;
         },
-        'files': function(event) {
-            //submenu_Build('filedetail', null, null, event.data, true);
+        'files': function(fileid, elem) {
+            //submenu_Build('filedetail', null, null, fileid, true);
             return false;
         },
-        'comments': function(event) {
+        'comments': function(commentid, elem) {
+            var type = $(elem).find("[find=target_type]").attr('parent');
+            var p_id = $(elem).find("[find=target_type]").attr('parent_id');
+            RESOURCE_HANDLERS[type](p_id, elem);
+            return false;
+        },
+        'notes': function(noteid, elem) {
+            submenu_Build('taskdetail', null, null,  {'type': 'notes', 'id': noteid}, true);
             return false;
         }
     };
@@ -152,15 +159,21 @@ var chatFeed = (function() {
         Elem.find("[find=action]").html(action);
 
         if (this.item.type === "comments") {
-            var parent = Lincko.storage.getParent('comments', this.item.id);
-            target = parent.title;
-            if (parent._type == 'chats')
+            var root = Lincko.storage.getCommentRoot(this.item.id);
+            target = root['+title'];
+            var target_type = root['_type'];
+            if (root._type == 'chats')
                 return null;
         } else {
             target = Lincko.storage.get(this.item.type, this.item.id, "+title");
             if (!target) {
                 target = getFakeTarget(this.item.id);
             }
+        }
+        if (root) {
+            Elem.find("[find=target_type]").attr('parent', target_type)
+                .attr("parent_id", root['_id'])
+                .html(php_nl2br(Lincko.storage.data._history_title[target_type][0]));
         }
         Elem.find("[find=target]").html(php_nl2br(target));
         Elem.find("[find=content]").html(php_nl2br(history.content));
@@ -309,7 +322,8 @@ var chatFeed = (function() {
             var parent = $(this).parents('.models_history_wrapper');
             var id = parent.attr('id').split('models_thistory_')[1];
             var category = parent.attr('category');
-            RESOURCE_HANDLERS[category](id);
+            var that = this;
+            RESOURCE_HANDLERS[category](id, that);
             return false;
         });
     }
