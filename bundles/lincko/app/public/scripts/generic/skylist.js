@@ -411,7 +411,7 @@ skylist.prototype.filter_by_hide_completed = function(items, filter){
 skylist.prototype.filter_by_search = function(items, filter){
 	var that = this;
 	var items_filtered = [];
-	if( filter == null ){
+	if( filter == null || filter == "" ){
 		return items;
 	}
 	else{
@@ -467,7 +467,6 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 				iscroll_elem = that.list.empty();
 			}
 
-			console.log(items_filtered);
 			if( items_filtered.length < 1 ){
 				iscroll_elem.append('<div class="app_layers_dev_skytasks_task">There are no tasks.</div>');
 			}

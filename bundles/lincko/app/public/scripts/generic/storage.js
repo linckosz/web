@@ -560,10 +560,11 @@ Lincko.storage.search = function(type, param, category){
 };
 
 /*
-	array - array of items to conduct search	
+	array - array of items to conduct search
+	results - will return array not object
 */
 Lincko.storage.searchArray = function(type, param, array){
-	var results = {};
+	var results = [];
 	var find = [];
 	var save_result = false;
 	type = type.toLowerCase();
@@ -597,7 +598,7 @@ Lincko.storage.searchArray = function(type, param, array){
 								typeof save_result['personal_private']==='undefined'
 								|| ((typeof save_result['personal_private']==='string' || typeof save_result['personal_private']==='number') && (save_result['personal_private']==null || save_result['personal_private']==0))
 							){
-								if(typeof results === 'undefined'){ results = {}; }
+								if(typeof results === 'undefined'){ results = []; }
 								results[item] = save_result;
 							}
 						}
