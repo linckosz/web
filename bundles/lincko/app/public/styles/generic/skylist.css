@@ -181,6 +181,11 @@
     margin-bottom: 2px;
     /*height: 81px;*/
 }
+.skylist_card_noCard {
+    text-align: center;
+    margin-right: 24px;
+    font-size: 14px;
+}
 
 .skylist_card_center {
 	height: 60px;

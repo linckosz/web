@@ -1,7 +1,7 @@
 submenu_list['taskdetail'] = {
 	//Set the title of the top
 	"_title": {
-		"style": "title", //"customized_title",
+		"style": "customized_title",
 		"title": function(that){
 			var title = that.param.type.slice(0,-1) + ' Information';/*toto*/
 			return title;
@@ -10,7 +10,14 @@ submenu_list['taskdetail'] = {
 			var className = 'submenu_wrapper_taskdetail_'+that.param.type;
 			return className;
 		},
-		//"left": [{}]
+		"left": [{
+            "style": "button",
+            "title": "Close", //toto
+            //"action": function() {
+            //    console.log('close');
+            //}
+            'hide': true,
+        }],
 	},
 
 	"taskdetail": {

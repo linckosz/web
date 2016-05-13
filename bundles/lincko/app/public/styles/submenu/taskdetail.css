@@ -5,10 +5,14 @@
     color: #FFFFFF;
     text-transform: capitalize;
 }
-.submenu_wrapper_taskdetail_tasks.submenu_top {
+[class^="submenu_wrapper_taskdetail"] .submenu_deco, [class*="submenu_wrapper_taskdetail"] .submenu_deco {
+	background-color: inherit;
+	color: #FFFFFF;
+}
+.submenu_wrapper_taskdetail_tasks.submenu_top, .submenu_wrapper_taskdetail_tasks [find=submenu_button_title] {
 	background-color: #475577;
 }
-.submenu_wrapper_taskdetail_notes.submenu_top {
+.submenu_wrapper_taskdetail_notes.submenu_top .submenu_wrapper_taskdetail_notes [find=submenu_button_title] {
 	background-color: #F0EB4E;
 }
 
@@ -45,7 +49,8 @@ td.app_layers_dev_skytasks_checkbox {
 	position:relative;
 }
 .submenu_taskdetail_tasktitle .skylist_checkbox {
-	margin-right: 10px !important;
+	margin: 0px;
+	margin-right: 10px;
 }
 .submenu_taskdetail_tasktitle [find=title_text] {
     max-height: 50px;

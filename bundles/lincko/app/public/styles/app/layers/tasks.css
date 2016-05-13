@@ -1,3 +1,6 @@
 .app_layers_tasks_tasklist .skylist_newcardCircle {
 	color: #475577;
 }
+.app_layers_tasks_tasklist .skylist_card [find=description] {
+	display: none;
+}
