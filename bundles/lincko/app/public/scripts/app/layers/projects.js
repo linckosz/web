@@ -174,6 +174,7 @@ var app_layers_projects_feedPage = function(param, animation){
 		);
 
 		Elem.appendTo(position);
+
 	}
 
 	Elem = $('#-app_layers_projects_add_icon').clone();

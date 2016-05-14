@@ -107,7 +107,6 @@ var app_application_lincko = {
 		var Elem;
 
 		//Have to scan object, not fields to insure we do not launch many times the same function
-
 		
 		if(!$.isEmptyObject(this._fields)){
 			
@@ -142,7 +141,7 @@ var app_application_lincko = {
 								|| typeof this._elements[Elem_id].range[field.replace(/_\d+$/, '')] != 'undefined'
 							){
 								this._elements[Elem_id].action();
-								continue;
+								break; //Do not launch more than one time if ever launched
 							}
 						}
 					}

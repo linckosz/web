@@ -6,7 +6,7 @@ use \libs\OneSeventySeven;
 
 $app = \Slim\Slim::getInstance();
 
-$app->get('/', function () use($app) {
+$app->get('/', function () use ($app) {
 	if($app->lincko->data['logged']){
 		$_SESSION['workspace'] = $app->lincko->data['workspace'];
 		$app->lincko->translation['workspace'] = $app->lincko->data['workspace'];
