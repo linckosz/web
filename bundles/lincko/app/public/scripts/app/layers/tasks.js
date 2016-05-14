@@ -53,7 +53,7 @@ var app_layers_tasks_feedPage = function(param){
 	/*
 	app_application_lincko.add(
 		'app_layers_tasks_tasklist',
-		'tasks',
+		'projects_'+app_content_menu.projects_id,
 		function(){
 			app_layers_tasks_tasklist.tasklist_update();
 		}

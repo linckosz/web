@@ -274,7 +274,7 @@ $(function () {
 				app_upload_files.lincko_total = that._formatFileSize(0);
 				app_upload_files.lincko_size = that._formatComplete(0, 0);
 			}
-			app_application_lincko.update('upload');
+			app_application_lincko.prepare('upload', true);
 		},
 
 		//data => File object
@@ -314,7 +314,7 @@ $(function () {
 					}
 				}
 			});
-			app_application_lincko.update('upload');
+			app_application_lincko.prepare('upload', true);
 		},
 
 		_cancelHandler: function (e) {
@@ -328,7 +328,7 @@ $(function () {
 					}
 				}
 			});
-			app_application_lincko.update('upload');
+			app_application_lincko.prepare('upload', true);
 		},
 
 		_deleteHandler: function (e) {
@@ -342,7 +342,7 @@ $(function () {
 					}
 				}
 			});
-			app_application_lincko.update('upload');
+			app_application_lincko.prepare('upload', true);
 		},
 
 		_numberOfFiles: function(){

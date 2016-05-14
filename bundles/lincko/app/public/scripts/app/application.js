@@ -11,17 +11,28 @@ var app_application_lincko = {
 		app_application_lincko.add( (string)id, (string|array)range, (object)action{  (function)action, *(function)deletion	} );
 
 		(string|array)range: It helps to launch action() only if the update function calls one of it's name.
-	*/			
+
+		IMPORTANT => Be aware that the same element can cumulate multiple declaration, it can only overwrite
+	*/
 	add: function(id, range, action, action_param, exists, exists_param, deletion, deletion_param){
 		var object = false;
 		//Assign id
 		var item = {
 			id: null,
 			range: {},							//React to which category (all for empty)
+			action: function(){},				//If HTML exists and its related objects, we take action
+				/*
+					Access parameters like:
+					this.action_param
+					this.action_param[0]
+				*/
+			action_param: null,					//optional parameters =>
+				/*
+					item_id
+					[item_id, item_type]
+				*/
 			exists: function(){ return true; },	//Check exitistance of any related object
 			exists_param: null,					//optional parameters
-			action: function(){},				//If HTML exists and its related objects, we take action
-			action_param: null,					//optional parameters
 			deletion: function(){},				//If HTML element or related objects are missing, we take a deletion action
 			deletion_param: null,				//optional parameters
 		};
@@ -63,7 +74,7 @@ var app_application_lincko = {
 					item.range[range[i]] = true;
 				}
 			}
-
+			
 			if(object === 'element'){
 				this._elements[''+id] = item;
 			} else if(object === 'function'){
@@ -88,122 +99,64 @@ var app_application_lincko = {
 	},
 
 	/*
-		"update" launch the update of all registered HTML elements and functions
-		app_application_lincko.update(); => It updates all elements that are linked to any _fields at true, and launch all functions
-		app_application_lincko.update(false); => It doesn't update any element, only Launch all functions
-		app_application_lincko.update(true); => Update all elements, and launch all functions
-		app_application_lincko.update('tasks'); => It updates all elements that are linked to any _fields at true and the string, and update all elements with empty range, and launch all functions
-		app_application_lincko.update(['tasks', 'chats']); => It updates all elements that are linked to any _fields at true and strings in the array, and update all elements with empty range, and launch all functions
-		app_application_lincko.update('tasks', false); => The second parameters at false disable the parents update
+		It updates all elements and functions that are linked to any _fields
 	*/
-	update: function(items, propagation){
-		var action = false;
-		var deletion = false;
-		var all = true;
-		var item;
-		var items_list = [];
+	update: function(){
+		var temp_fields = {};
+		var temp;
+		var Elem;
 
-		if(typeof propagation !== 'boolean'){
-			propagation = true;
-		}
+		//Have to scan object, not fields to insure we do not launch many times the same function
 
-		//Adding the list "items" in parameter
-		if(typeof items === 'string' || typeof items === 'number'){
-			items_list[items] = true;
-		} else if($.type(items) === 'array'){
-			for(var i in items){
-				field = items[i];
-				if(typeof field === 'string' || typeof field === 'number'){
-					items_list[field] = true; 
-				}
-			}
-		} else if(items === true){
-			all = true;
-		}
-
-		//Adding the fields that are true (=previously prepared)
-		for(var field in this._fields){
-			items_list[field] = true;
-		}
-
-		//Add relations fields
-		if(
-			propagation
-			&& !$.isEmptyObject(items_list)
-		){
-			//console.log(items_list);
-		}
-
-		/*
-		//Add relations fields
-		if(
-			propagation
-			&& !$.isEmptyObject(items_list)
-			&& $.type(Lincko.storage.data) === 'object'
-			&& $.type(Lincko.storage.data['_relations']) === 'object'
-		){
-			//Note that Up and Down reationship is already done one back server
-			for(var i in items_list){
-				if(typeof Lincko.storage.data['_relations'][i] === 'object'){
-					for(var j in Lincko.storage.data['_relations'][i]){
-						if(typeof items_list[ Lincko.storage.data['_relations'][i][j] ] === 'undefined'){
-							items_list[ Lincko.storage.data['_relations'][i][j] ] = true;
+		
+		if(!$.isEmptyObject(this._fields)){
+			
+			//Add relations fields
+			for(var field in this._fields){
+				if(match = field.match(/^(.+)_(\d+)$/, '')){
+					if(temp = Lincko.storage.tree(match[1], match[2])){
+						for(var type in temp){
+							for(var id in temp[type]){
+								temp_fields[type+"_"+id] = true;
+							}
 						}
 					}
 				}
 			}
-		}
-		*/
-
-		if(!$.isEmptyObject(items_list)){
-			
-			//First we scan all HTML elements
-			for(var Elem_id in this._elements){
-				for(var field in items_list){
-					if($.isEmptyObject(this._elements[Elem_id].range) || typeof this._elements[Elem_id].range[field] !== 'undefined'){
-						Elem = $('#'+Elem_id);
-						if(Elem.length > 0 && this._elements[Elem_id].exists()){
-							this._elements[Elem_id].action();
-						} else {
-							this._elements[Elem_id].deletion();
-							delete this._elements[Elem_id];
-						}
-						delete Elem;
-						break;
-					}	
-				}
+			//Concatanate
+			for(var field in temp_fields){
+				this._fields[field] = true;
 			}
 
-			//For "false", we still launches all functions
-			if(typeof items === 'boolean' && items === false){
-				for(var field in this._fields){
-					items_list[field] = true;
-				}
-				//Add relation fields
-				if(
-					propagation
-					&& !$.isEmptyObject(items_list)
-					&& $.type(Lincko.storage.data) === 'object'
-					&& $.type(Lincko.storage.data['_relations']) === 'object'
-				){
-					//Note that Up and Down reationship is already done one back server
-					for(var i in items_list){
-						if(typeof Lincko.storage.data['_relations'][i] === 'object'){
-							for(var j in Lincko.storage.data['_relations'][i]){
-								if(typeof items_list[ Lincko.storage.data['_relations'][i][j] ] === 'undefined'){
-									items_list[ Lincko.storage.data['_relations'][i][j] ] = true;
-								}
+			//First we scan all HTML elements
+			for(var Elem_id in this._elements){
+				Elem = $('#'+Elem_id);
+				if(Elem.length <= 0 || !this._elements[Elem_id].exists()){ //delete the element if it doesn't exist on DOM
+					this._elements[Elem_id].deletion();
+					delete this._elements[Elem_id];
+				} else {
+					if(typeof this._elements[Elem_id].range == 'object'){
+						for(var field in this._fields){
+							if(
+								   typeof this._elements[Elem_id].range[field] != 'undefined'
+								|| typeof this._elements[Elem_id].range[field.replace(/_\d+$/, '')] != 'undefined'
+							){
+								this._elements[Elem_id].action();
+								continue;
 							}
 						}
 					}
 				}
 			}
 
-			//Second scann all functions
-			for(var field in items_list){
+			Elem = null;
+			delete Elem;
+
+			//Scan all functions
+			for(var field in this._fields){
 				if(typeof this._functions.fields[field] === 'object'){
-					for(var j in this._functions.fields[field]){
-						this._functions.fields[field][j]();
+					for(var i in this._functions.fields[field]){
+						this._functions.fields[field][i]();
 					}
 				}
 			}
@@ -216,21 +169,29 @@ var app_application_lincko = {
 		}
 
 		for(var field in this._fields){
-			delete items_list[field];
+			delete this._fields[field];
 		}
 		
 		return true;
 	},
 
 	/*
-		"prepare" tells the object which fields he will need to check, bu do not start it.
-		app_application_lincko.prepare(); => Ready to check all fields updated
-		app_application_lincko.prepare('tasks'); => Ready to check all fields updated, and forcing the one as string if it exist in _fields
-		app_application_lincko.prepare(['tasks', 'chats']); => Ready to check all fields updated, and forcing the ones in array if it exist in _fields
+		Prepare a list of element to be triggered by a timer (every 15s)
+		fields: [defaults: false]
+			- false: Do not add any type of element to be triggered
+			- true: Trigger all elements
+			- 'tasks': Trigger all elements that listen to the type tasks, or a single tasks ID (do not involve parents and children)
+			- 'tasks_20': Trigger all elements listening to tasks 20 only (IMPORTANT: using ID will trigger parents and children)
+			-  ['projects', 'tasks_20']: Use an array to combine
+		update: [default: false]
+			- false: Do nothing, just wait for the timer (every 15s) to launch an update
+			- true: Force update
 
 		NOTE: Because JS is not ready yet (obverse() is too new) to observe any object change, we have to add it manually.
 	*/
-	prepare: function(fields){
+	prepare: function(fields, update){
+		if(typeof fields == 'undefined'){ fields = false; }
+		if(typeof update != 'boolean'){ update = false; }
 		var field;
 		if(typeof fields == 'string' || typeof fields == 'number'){
 			this._fields[fields] = true;
@@ -240,14 +201,20 @@ var app_application_lincko = {
 					this._fields[fields[i]] = true;
 				}
 			}
-		} else {
+		} else if(fields === true){
 			//Prepare all to be updated
-			for(var field in this._elements){
+			for(var id in this._elements){
+				for(var field in this._elements[id].range){
+					this._fields[field] = true;
+				}
+			}
+			for(var field in this._functions.fields){
 				this._fields[field] = true;
 			}
-			for(var field in this._functions){
-				this._fields[field] = true;
-			}
+		}
+		//Force to update if update at true
+		if(update){
+			this.update();
 		}
 	},
 
@@ -555,8 +522,9 @@ $(window).resize(function(){
 
 JSfiles.finish(function(){
 	//Update every 15s automatically
+	app_application_lincko.prepare(true, true);
 	setInterval(function(){
-		app_application_lincko.update();
+		app_application_lincko.prepare(false, true);
 	//}, 4000); //4s Demo
 	}, 15000); //15s Production
 });

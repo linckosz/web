@@ -135,7 +135,7 @@ function wrapper_test(type, RCUD){
 			wrapper_sendAction(
 				{
 					"parent_type": "comments",
-					"parent_id": 127,
+					"parent_id": 124,
 					"comment": "It's a comment",
 				},
 				'post',

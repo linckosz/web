@@ -7,7 +7,7 @@ Submenu_select.app_upload_all = function(Elem){
 		})){
 			Elem.Add_MenuAppUploadAllForm();
 			Elem.Add_MenuAppUploadAllFile();
-			app_application_lincko.update('upload');
+			app_application_lincko.prepare('upload', true);
 		}
 	}
 };
@@ -19,7 +19,7 @@ Submenu_select.app_upload_sub = function(Elem){
 			Elem.Add_MenuAppUploadSubFile();
 		})){
 			Elem.Add_MenuAppUploadSubFile();
-			app_application_lincko.update('upload');
+			app_application_lincko.prepare('upload', true);
 		}
 	} else {
 		Elem.display = false;

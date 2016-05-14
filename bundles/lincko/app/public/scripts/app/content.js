@@ -144,7 +144,9 @@ var app_content_menu_default = function(){
 	if(app_content_menu_first_launch && Lincko.storage.getMyPlaceholder() !== false){
 		app_content_menu_first_launch = false;
 		app_content_menu.selection(Lincko.storage.getMyPlaceholder()['_id']);
+		return false;
 	}
+	return true;
 };
 
 //Scroll additional parameters
@@ -152,7 +154,7 @@ wrapper_IScroll_options_new['app_content_menu'] = {
 	scrollX: true,
 }
 
-JSfiles.finish(function(){	
-	app_application_lincko.add(app_content_menu_default, "projects");
+JSfiles.finish(function(){
+	app_application_lincko.add("body_lincko", "projects", null, null, app_content_menu_default);
 	app_content_menu_default();
 });

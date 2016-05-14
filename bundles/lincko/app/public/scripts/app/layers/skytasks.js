@@ -73,7 +73,7 @@ var app_layers_skytasks_feedPage = function(){
 	//update tasklist when database is changed
 	app_application_lincko.add(
 		'app_layers_skytasks_tasklist',
-		'tasks',
+		'projects_'+app_content_menu.projects_id,
 		function(){
 			app_layers_skytasks_tasklist.tasklist_update();
 		}

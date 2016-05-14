@@ -398,7 +398,7 @@ var app_project_build = {
 			Elem.velocity("slideDown", { duration: 200, delay: 100, complete: function(){
 				app_project_tab();
 			}, });
-			app_application_lincko.add(Elem.prop('id'), item_type, app_project_build._app_feedProject, [item_id, item_type]);
+			app_application_lincko.add(Elem.prop('id'), item_type+"_"+item_id, app_project_build._app_feedProject, [item_id, item_type]);
 			return Elem;
 		}
 		return false;
@@ -634,7 +634,7 @@ JSfiles.finish(function(){
 	app_application_lincko.add(app_project_info.build);
 	app_application_lincko.add(app_project_build.scan, 'projects');
 	
-	app_application_lincko.add("app_project_user", "users", function(){
+	app_application_lincko.add("app_project_user", "users_"+wrapper_localstorage.uid, function(){
 		var username = '';
 		var email = '';
 		var user = Lincko.storage.get('users', wrapper_localstorage.uid);
@@ -665,6 +665,6 @@ JSfiles.finish(function(){
 		$('#app_project_user_workspace').html(wrapper_to_html(Lincko.storage.WORKNAME));
 	});
 	
-	app_application_lincko.update(true); //Update everything
+	app_application_lincko.prepare(true, true); //Update everything
 });
 

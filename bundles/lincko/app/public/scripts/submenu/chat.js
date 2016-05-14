@@ -107,8 +107,6 @@ function submenu_chat_select(opt, Elem){
 	Elem.find("[find=select_"+opt+"]").addClass('submenu_app_chat_chatmenu_icon_active');
 }
 
-//app_application_lincko.add("app_project_quick_access_title", "upload", app_project_quick_access_title);
-
 JSfiles.finish(function(){
 	app_application_lincko.add(function(){
 
@@ -133,5 +131,5 @@ JSfiles.finish(function(){
 			}
 		}
 		
-	}, ['chats', 'chats_comments']);
+	}, 'chats');
 });

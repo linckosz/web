@@ -2,7 +2,7 @@
 
 function app_layers_projects_launchPage(param){
 	if(typeof param === 'undefined'){ param = null; }
-	app_application_lincko.add("app_layers_projects", ["projects", "tasks"], function(){
+	app_application_lincko.add("app_layers_projects", "projects", function(){
 		app_layers_projects_feedPage();
 	});
 	app_layers_projects_feedPage();

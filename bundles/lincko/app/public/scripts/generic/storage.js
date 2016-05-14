@@ -66,7 +66,7 @@ Lincko.storage.searchWORKID = function(){
 	if(wrapper_localstorage.workspace == ''){
 		Lincko.storage.WORKID = 0;
 		Lincko.storage.WORKNAME = Lincko.Translation.get('app', 40, 'js');
-		app_application_lincko.update('workspaces');
+		app_application_lincko.prepare('workspaces_'+Lincko.storage.WORKID, true);
 		return Lincko.storage.WORKID;
 	} else if(
 		   Lincko.storage.data
@@ -77,7 +77,7 @@ Lincko.storage.searchWORKID = function(){
 			if(object[key].url && object[key].url.length > 0 && object[key].url.toLowerCase() == wrapper_localstorage.workspace.toLowerCase()){
 				Lincko.storage.WORKNAME = object[key].name;
 				Lincko.storage.WORKID = parseInt(key, 10);
-				app_application_lincko.update('workspaces');
+				app_application_lincko.prepare('workspaces_'+Lincko.storage.WORKID, true);
 				return Lincko.storage.WORKID;
 			}
 		}
@@ -112,25 +112,18 @@ Lincko.storage.setLastVisit = function(timestamp){
 //Function update all objects displayed
 /* PRIVATE METHOD */
 Lincko.storage.display = function(prepare, force){
-	if(typeof force !== 'undefined'){ force  = false; }
-	if(typeof app_application_lincko !== 'undefined'){
-		if(typeof prepare !== 'undefined' && prepare){
-			//Force to list all fields to insure all elements are up to date according to the storage
-			var fields_full = [];
-			if($.type(Lincko.storage.data) === 'object'){
-				for(var category in Lincko.storage.data) {
-					if($.type(Lincko.storage.data[category]) === 'object'){
-						app_application_lincko.prepare(category);
-					}
-				}
-			}
-		}
+	if(typeof prepare != 'undefined'){ prepare  = false; }
+	if(typeof force != 'undefined'){ force  = false; }
+	if(typeof app_application_lincko != 'undefined'){
 		if(force){
-			app_application_lincko.update(true);
+			app_application_lincko.prepare(prepare, true); //Update now
 		} else {
-			app_application_lincko.update();
+			app_application_lincko.prepare(prepare); //Wait for timer
 		}
-		wrapper_load_progress.move(100);
+		setTimeout(function(){
+			wrapper_load_progress.move(100);
+		},200);
+
 	}
 };
 
@@ -182,29 +175,25 @@ Lincko.storage.getMissing = function(missing){
 Lincko.storage.update = function(partial, info){
 	var item;
 	var update = false;
-	var newField = false;
 	for(var i in partial) {
 		//Check if the object hierarchy exists
-		if(!Lincko.storage.data){
-			Lincko.storage.data = {};
-			newField = true;
+		if(typeof Lincko.storage.data == 'undefined'){ Lincko.storage.data = {}; }
+		if(typeof Lincko.storage.data[i] == 'undefined'){ Lincko.storage.data[i] = {}; }
+		for(var j in partial[i]) {
+			if(typeof Lincko.storage.data[i][j] == 'undefined'){
+				Lincko.storage.data[i][j] = partial[i][j];
+			} else {
+				Lincko.storage.data[i][j] = $.extend(Lincko.storage.data[i][j], partial[i][j]);
+			}
+			app_application_lincko.prepare(i+'_'+j);
+			update = true;
 		}
-		if(!Lincko.storage.data[i]){
-			Lincko.storage.data[i] = {};
-			newField = true;
-		}
-		//We merge/update proporties, we do know overwritte the complete object (because history record are dowloaded separatly)
-		Lincko.storage.data[i] = $.extend(Lincko.storage.data[i], partial[i]);
-		if(newField){
-			app_application_lincko.prepare(i);
-		}
-		update = true;
 	}
 	if(update){
 		Lincko.storage.childrenList(partial);
 		Lincko.storage.display();
 		wrapper_localstorage.encrypt('data', JSON.stringify(Lincko.storage.data));
-		if(newField && !info){
+		if(!info){
 			Lincko.storage.getSchema();
 		}
 		return true;
@@ -232,7 +221,7 @@ Lincko.storage.schema = function(schema){
 				if(!schema[i][j]){
 					delete Lincko.storage.data[i][j];
 					update = true;
-					app_application_lincko.prepare(j);
+					app_application_lincko.prepare(i+"_"+j);
 					continue;
 				}
 			}
@@ -251,7 +240,7 @@ Lincko.storage.schema = function(schema){
 				if(!Lincko.storage.data[i][j]){
 					if(typeof missing[i]==='undefined'){ missing[i] = {}; }
 					missing[i][j] = schema[i][j];
-					app_application_lincko.prepare(i);
+					app_application_lincko.prepare(i+"_"+j);
 					continue;
 				}
 			}
@@ -278,7 +267,7 @@ Lincko.storage.firstLatest = function(){
 		storage_first_request = false;
 		Lincko.storage.getSchema();
 		if(!$.isEmptyObject(Lincko.storage.data)){
-			Lincko.storage.display(true); //I don't think we need to force, probability of mismatching is almost null
+			Lincko.storage.display(true, true); //I don't think we need to force, probability of mismatching is almost null
 		} else {
 			//If we cannot get data object, we force to download the whole object
 			Lincko.storage.setLastVisit(0);
@@ -316,7 +305,7 @@ Lincko.storage.childrenList = function(data){
 		}
 	}
 	
-	app_application_lincko.update(true);
+	app_application_lincko.prepare(true, true); //Force update
 	return true;
 };
 
@@ -638,7 +627,7 @@ Lincko.storage.favorite = function(category, id, save){
 		index = $.inArray(id, Lincko.storage.data_favorite[category]);
 		if(index == -1){
 			Lincko.storage.data_favorite[category].push(id);
-			app_application_lincko.update(category);
+			app_application_lincko.prepare(category);
 			wrapper_localstorage.encrypt('data_favorite', JSON.stringify(Lincko.storage.data_favorite));
 			//Return it's index position
 			return $.inArray(id, Lincko.storage.data_favorite[category]);
@@ -651,7 +640,7 @@ Lincko.storage.favorite = function(category, id, save){
 			index = $.inArray(id, Lincko.storage.data_favorite[category]);
 			if(index != -1){
 				Lincko.storage.data_favorite[category].splice(index, 1); //splice delte and reconstruct the table indexation
-				app_application_lincko.update(category);
+				app_application_lincko.prepare(category);
 				wrapper_localstorage.encrypt('data_favorite', JSON.stringify(Lincko.storage.data_favorite));
 				return true;
 			}
@@ -686,7 +675,7 @@ Lincko.storage.moveFavorite = function(category, id, order){
 				Lincko.storage.data_favorite[category].splice(index, 1);
 				//then we reinsert to it's new position
 				Lincko.storage.data_favorite[category].splice(order, 0, item);
-				app_application_lincko.update(category);
+				app_application_lincko.prepare(category);
 				wrapper_localstorage.encrypt('data_favorite', JSON.stringify(Lincko.storage.data_favorite));
 				return $.inArray(id, Lincko.storage.data_favorite[category]);
 			}
@@ -1062,7 +1051,7 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 		}
 		for(var cat in history_items){
 			for(var id in history_items[cat]){
-				if(typeof history_items[cat][id]['history']){
+				if(typeof history_items[cat][id]['history'] != 'undefined'){
 					for(var timestamp in history_items[cat][id]['history']){
 						for(var history_id in history_items[cat][id]['history'][timestamp]){
 							//We do not keep copy of Old in Lincko.storage.data, we just need to keep it from origin 'data' item, because there is 2 cases scenario:
