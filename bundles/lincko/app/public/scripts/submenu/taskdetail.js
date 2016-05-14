@@ -132,8 +132,10 @@ Submenu.prototype.Add_taskdetail = function() {
 	var item = {};
 
 	if(taskid == 'new' ){
-		item['+title'] = 'Enter Your Task Title Here!';
-		item['-comment'] = 'Enter Your Task Description Here.';
+		var newTitle = 'Enter Your Title Here!'; //toto
+		var newDescription = 'Enter Your Description Here.'; //toto
+		item['+title'] = newTitle;
+		item['-comment'] = newDescription;
 		item['created_by'] = wrapper_localstorage.uid;
 		item['updated_by'] = wrapper_localstorage.uid;
 		item.start = $.now()/1000;
@@ -146,7 +148,12 @@ Submenu.prototype.Add_taskdetail = function() {
 
 	/*---tasktitle---*/
 	elem = $('#-submenu_taskdetail_tasktitle').clone().prop('id','submenu_taskdetail_tasktitle');
-	elem.find('[find=title_text]').html(item['+title']);
+	elem.find('[find=title_text]').html(item['+title']).click(function(){
+		if( $(this).html() == newTitle ){
+			$(this).html('');
+		}
+	});
+
 	elem.find("[find=taskid]").html(taskid);
 	if( item['_type'] == "tasks" ){
 		var elem_checkbox = $('#-skylist_checkbox').clone().prop('id','');
@@ -196,15 +203,12 @@ Submenu.prototype.Add_taskdetail = function() {
 	elem = $('#-submenu_taskdetail_meta').clone().prop('id','submenu_taskdetail_meta');
 	elem.find('.submenu_taskdetail_meta_actions').click(function(){
 		var route;
-		console.log(that.param.type);
-		console.log(taskid);
 		if( that.param.type == "tasks" ){
 			route = "task/delete";
 		}
 		else if( that.param.type == "notes" ){
 			route = "note/delete";
 		}
-		console.log(route);
 		wrapper_sendAction(
 		    {
 		        "id": taskid,
@@ -212,6 +216,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		    'post',
 		    route
 		);
+		submenu_Clean(null,null,true);
 	});
 	/*---taskmeta---*/
 	if( this.param.type == "tasks" ){
@@ -231,20 +236,24 @@ Submenu.prototype.Add_taskdetail = function() {
 			elem.find("[find=duedate_text]").html(Lincko.Translation.get('app', 3303, 'html').toUpperCase()/*tomorrow*/);
 		}
 		else{
-			elem.find("[find=duedate_text]").html(duedate.display());
+			elem.find("[find=duedate_text]").html(duedate.display('date_very_short'));
 		}
 	}/*---notesmeta---*/
 	else if( this.param.type == "notes" ){
 		elem.find('[find=assigned_text]').html(Lincko.storage.get("users", item['updated_by'],"username"));
 		var date = new wrapper_date(item['updated_at']);
-		elem.find("[find=duedate_text]").html(date.display());
+		elem.find("[find=duedate_text]").html(date.display('date_very_short'));
 	}
 	submenu_taskdetail.append(elem);
 	/*---END OF taskmeta---*/
 
 	/*---description---*/
 	elem = $('#-submenu_taskdetail_description').clone().prop('id','submenu_taskdetail_description');
-	elem.find('[find=description_text]').html(item['-comment']);
+	elem.find('[find=description_text]').html(item['-comment']).click(function(){
+		if( $(this).html() == newDescription ){
+			$(this).html('');
+		}
+	});
 	submenu_taskdetail.append(elem);
 	
 
@@ -327,8 +336,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		elem.find('[find=name]').html(created_by);
 		submenu_taskdetail.find('.submenu_taskdetail_comments_main').append(elem);
 		created_at = new wrapper_date(comment['created_at']);
-		created_at = created_at.display('date_full');
-		created_at += ' '+comment['_parent'][1];
+		created_at = created_at.display('date_very_short');
 		elem.find('[find=date]').html(created_at);
 
 		if( comment['created_by'] == wrapper_localstorage.uid ){
@@ -368,7 +376,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	});
 	elem_addNewComment_text.keyup(function (event) {
 	    if (event.keyCode == 13) {
-	    	sendAction_newComment(this.param.type,taskid,elem_addNewComment_text.val());
+	    	sendAction_newComment(that.param.type, taskid, elem_addNewComment_text.val());
 	    	elem_addNewComment_text.blur();	    	
 	    }
 	});
@@ -460,6 +468,9 @@ Submenu.prototype.Add_taskdetail = function() {
 		param['id'] = taskid;
 		param['parent_id'] = app_content_menu['projects_id'];
 		param['title'] = submenu_taskdetail.find('[find=title_text]').html();
+		if( param['title'] == '' ){
+			param['title'] = newTitle;
+		}
 		param['comment'] = submenu_taskdetail.find('[find=description_text]').html();
 
 		if( taskid == 'new' || param['title'] != item['+title'] || param['comment'] != item['-comment'] ){

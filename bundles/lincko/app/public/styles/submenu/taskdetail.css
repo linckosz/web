@@ -1,18 +1,21 @@
-[class^="submenu_wrapper_taskdetail"].submenu_top, [class*="submenu_wrapper_taskdetail"].submenu_top {
+.submenu_wrapper_taskdetail_tasks.submenu_top,
+.submenu_wrapper_taskdetail_notes.submenu_top {
     background-image: none;
 }
-[class^="submenu_wrapper_taskdetail"] .submenu_title, [class*="submenu_wrapper_taskdetail"] .submenu_title {
+.submenu_wrapper_taskdetail_tasks .submenu_title,
+.submenu_wrapper_taskdetail_notes .submenu_title {
     color: #FFFFFF;
     text-transform: capitalize;
 }
-[class^="submenu_wrapper_taskdetail"] .submenu_deco, [class*="submenu_wrapper_taskdetail"] .submenu_deco {
+.submenu_wrapper_taskdetail_tasks .submenu_deco,
+.submenu_wrapper_taskdetail_notes .submenu_deco {
 	background-color: inherit;
 	color: #FFFFFF;
 }
 .submenu_wrapper_taskdetail_tasks.submenu_top, .submenu_wrapper_taskdetail_tasks [find=submenu_button_title] {
 	background-color: #475577;
 }
-.submenu_wrapper_taskdetail_notes.submenu_top .submenu_wrapper_taskdetail_notes [find=submenu_button_title] {
+.submenu_wrapper_taskdetail_notes.submenu_top, .submenu_wrapper_taskdetail_notes [find=submenu_button_title] {
 	background-color: #F0EB4E;
 }
 
@@ -59,7 +62,7 @@ td.app_layers_dev_skytasks_checkbox {
     word-break: break-all;
     text-overflow: ellipsis;
     box-sizing: border-box;
-    color:#3677A7;
+    color:#475577;
     font-size: 20px;
 }
 .submenu_taskdetail_tasktitle .app_layers_dev_skytasks_checkbox_visual {
@@ -309,7 +312,7 @@ styling for sub comments
 	height: 23px;
 }
 .submenu_taskdetail_commentbubble_sub [find=text], .submenu_taskdetail_commentbubble_sub [find=name] {
-	font-size: 10px;
+	font-size: 12px;
 }
 .submenu_taskdetail_commentbubble_sub [find=seeAll] {
 	display: none;

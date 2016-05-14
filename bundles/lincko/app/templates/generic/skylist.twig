@@ -12,38 +12,42 @@
 		<span class = "skylist_menu_people">
 			<span people="1">
 				<i find="noSelect" class="icon-Single-Person"></i>
-				<i find="Select" class="icon-Single-Person-Selected"></i>
+				{#<i find="Select" class="icon-Single-Person-Selected"></i>#}
 			</span>
 			<span people="2">
 				<i find="noSelect" class="icon-Multiple-People"></i>
-				<i find="Select" class="icon-Multiple-People-Selected"></i>
+				{#<i find="Select" class="icon-Multiple-People-Selected"></i>#}
 			</span>
 		</span>
 		<div class="skylist_menu_timesort"></div>
 		<span class="skylist_menu_navbar_filter_icon icon-Filter"></span>
-		<div class="skylist_menu_navbar_filter_pane">
-			<div find="filter_header_1">Filter:</div>
+		<div class="skylist_menu_navbar_filter_pane" tabindex="1">
+			<div find="filter_header_1">Filter:{#toto#}</div>
 			<div find="radio_wrapper">
 				<table find="option1" class="skylist_menu_navbar_filter_pane_optionWrapper">
 					<td find="radio" class="skylist_menu_navbar_filter_pane_radio fa fa-circle"></td>
-					<td find="text">Sort by duedate</td>
+					<td find="text">Sort by due date{#toto#}</td>
 				</table>
 				<table find="option2" class="skylist_menu_navbar_filter_pane_optionWrapper">
 					<td find="radio" class="skylist_menu_navbar_filter_pane_radio fa"></td>
-					<td find="text">Sort by most recently updated</td>
+					<td find="text">Sort by most recently updated{#toto#}</td>
 				</table>
 			</div>
 			<div class="skylist_menu_navbar_filter_pane_divider"></div>
 			<div find="checkbox_wrapper">
 				<table class="skylist_menu_navbar_filter_pane_optionWrapper">
 					<td find="checkbox" class="skylist_menu_navbar_filter_pane_checkbox fa fa-check"></td>
-					<td find="text">Show completed tasks</td>
+					<td find="text">Show completed tasks{#toto#}</td>
 				</table>
 			</div>
 		</div>
 		<div class="skylist_menu_navbar_search">
-			<input find='search_textbox' type='textbox' placeholder="Search Here"></input>
-			<span find='search_icon' class="icon-Search"></span>
+			<input find='search_textbox' type='textbox'></input>
+			<div class="skylist_menu_navbar_search_overlay">
+				<span find='search_icon' class="icon-Search"></span>
+				<span>Search{#toto#}</span>
+			</div>
+			<span find="search_clear" class="display_none">&#x2715;</span>
 		</div>
 	</div>
 	<span id="-skylist_menu_timesort_text_wrapper" class="skylist_menu_timesort_text_wrapper" sort=''>
@@ -74,8 +78,9 @@
 		</table>
 		<table find="card_bottom" class="skylist_card_bottom skylist_paddingRight">
 			<td>
-				<span style="float: left" find="updated_at">March 22{#toto#}</span>
-				<span style="float: left" find="updated_by">Jim{#toto#}</span>
+				<span style="float: left" find="quickInfo1"></span>
+				<span style="float: left" find="quickInfo2"></span>
+				<span style="float: left" find="quickInfo3"></span>
 				<span class="icon-Small-Persona"></span>
 				<span find='name' class="skylist_icon_text">Name{# toto #}</span>
 				<span class="icon-Pencil"></span>

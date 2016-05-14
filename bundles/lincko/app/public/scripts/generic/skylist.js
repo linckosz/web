@@ -32,7 +32,7 @@ var skylist_textDate = function(date){
 	}
 }
 
-var skylist = function(list_type, list_wrapper, sort_array){
+var skylist = function(list_type, list_wrapper, sort_arrayText){
 	this.that = this;
 	var that = this;
 
@@ -46,8 +46,17 @@ var skylist = function(list_type, list_wrapper, sort_array){
 	this.elem_navbar;
 	this.elem_timesort;
 	this.sortcount = 0;
-	if( sort_array == null ){ sort_array=[]; }
-	this.sort_array = sort_array;
+
+	this.sort_arrayText = sort_arrayText;
+	this.sort_array = [];
+	//sort_arrayText keeps the text, sort_array is numerical, -1, 0, 2, etc.
+	if( sort_arrayText ){ 
+		this.sort_array = [-1];
+		for( var i = 0; i < sort_arrayText.length-1; i++ ){
+			this.sort_array.push(i);
+		}
+	}
+
 	this.sort_fn = this.tasklist_update;
 	this.elem_sortdot;   //sortdot wrapper element
 	this.elem_sorts = {};//object in array format of all [sort] elements, can find element by name
@@ -107,7 +116,7 @@ var skylist = function(list_type, list_wrapper, sort_array){
 		'people': null,
 		'duedate': null,
 		//'timesort': null,
-		'search': null,
+		'search': '',
 		'sort_alt': false,
 		'hide_completed': false,
 	};
@@ -249,7 +258,7 @@ skylist.prototype.generate_Lincko_itemsList = function(){
 			for( var i in that.Lincko_itemsList ){
 				that.Lincko_itemsList[i]['duedate'] = that.Lincko_itemsList[i]['start'] + that.Lincko_itemsList[i]['duration'];
 			}
-			that.Lincko_itemsList = Lincko.storage.sort_items(that.Lincko_itemsList, 'duedate', 0, -1, false);
+			that.Lincko_itemsList = Lincko.storage.sort_items(that.Lincko_itemsList, 'duedate', 0, -1, true);
 		}
 
 		/*
@@ -330,23 +339,29 @@ skylist.prototype.filter_by_people = function(items,filter){
 }
 
 skylist.prototype.filter_by_duedate = function(items, filter){
+	/*filter =	null/-1 : ALL
+				0 : TODAY
+				1 : TOMORROW 
+	*/
 	var that = this;
 	var items_filtered = [];
 	var item;
 	var duedate;
 	var filter_num;
-	if( filter == null ){ 
+	if( filter == null || filter == -1 ){ 
 		return items; 
 	}
 	else{
-		if 		( filter == Lincko.Translation.get('app', 3302, 'html').toUpperCase()/*today*/ ){filter = 0}
-		else if ( filter == Lincko.Translation.get('app', 3303, 'html').toUpperCase()/*tomorrow*/ ){filter = 1}
+		/*
+		if 		( filter == Lincko.Translation.get('app', 3302, 'html').toUpperCase() ){filter = 0}
+		else if ( filter == Lincko.Translation.get('app', 3303, 'html').toUpperCase() ){filter = 1}
 		else if ( filter == 'Spaces' ){}
+		*/
 
 		for( var i in items ){
 			item = items[i];
 			duedate = app_layers_dev_skytasks_calcDuedate(item);
-			if(filter == null || duedate.happensSomeday(filter)){
+			if(duedate.happensSomeday(filter)){
 				items_filtered.push(item);
 			}
 		}
@@ -429,7 +444,6 @@ skylist.prototype.filter_by_search = function(items, filter){
 
 skylist.prototype.tasklist_update = function(type, filter_by){
 	var that = this;
-	console.log(that.Lincko_itemsList_filter);
 	console.log('type: '+type);
 	console.log('filter_by: '+filter_by);
 	that.generate_Lincko_itemsList();
@@ -443,7 +457,6 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 	}
 	else{
 		that.Lincko_itemsList_filter[type] = filter_by;
-		console.log(that.Lincko_itemsList_filter);
 	}
 /*
 	if( type=='duedate' ){
@@ -499,7 +512,6 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 			that.window_resize();
 		}
 	});
-	console.log(that.Lincko_itemsList_filter);
 }
 
 skylist.prototype.addCard_all = function(){
@@ -591,7 +603,7 @@ skylist.prototype.addChat = function(item){
                 latest_update = Lincko.Translation.get('app', 3303, 'html').toUpperCase();
         }
         else{
-                latest_update = latest_update.display();
+                latest_update = latest_update.display('date_very_short');
         }
         Elem.find('[find=card_time]').html(latest_update);
         Elem.data('options',false);
@@ -622,9 +634,13 @@ skylist.prototype.addTask = function(item){
 	}
 	Elem.prop('id','skylist_card_'+that.md5id+'_'+item['_id']);
 
+	/*
+		add class to entire card based on task status
+	*/
 	if( item['approved'] ){
 		Elem.addClass('skylist_card_checked');
 	}
+
 
 	/*
 	checkbox (old)
@@ -650,7 +666,7 @@ skylist.prototype.addTask = function(item){
 	*/
 	var contenteditable = false;
 	var elem_title = Elem.find('[find=title]');
-	if(item['_perm'][0] > 1 ){ //RCU and beyond
+	if(item['_perm'][0] > 1 || true ){ //RCU and beyond
 		contenteditable = true; 
 	}
 	elem_title.html(item['+title']);
@@ -690,14 +706,38 @@ skylist.prototype.addTask = function(item){
 	commentCount = comments.length;
 	Elem.find('[find=commentCount]').html(commentCount);
 
+	/*
+	updated_at
+	*/
+	Elem.find('[find=quickInfo1]').html('Updated: '/*toto*/);
+	var updated_at = new wrapper_date(item['updated_at']);
+	if( skylist_textDate(updated_at) ){
+		updated_at = skylist_textDate(updated_at);
+	}
+	else{
+		updated_at = updated_at.display('date_very_short');
+	}
+	Elem.find('[find=quickInfo2]').html(updated_at+',&nbsp;');
+	/*
+	updated_by
+	*/
+	var updated_by = Lincko.storage.get("users", item['updated_by'] ,"username");
+	Elem.find('[find=quickInfo3]').html(updated_by);
 
 	/*duedate = new wrapper_date(item.start + parseInt(item.duration,10));*/
 	duedate = skylist_calcDuedate(item);
+	var now = new wrapper_date($.now()/1000);
+	if( now.time > duedate.time ){
+		Elem.addClass('skylist_card_overdue');
+	}
 	if(skylist_textDate(duedate)){
 		duedate = skylist_textDate(duedate);
+		if(duedate == Lincko.Translation.get('app', 3302, 'html').toUpperCase() /*today*/){
+			Elem.removeClass('skylist_card_overdue');
+		}
 	}
 	else{
-		duedate = duedate.display();
+		duedate = duedate.display('date_very_short');
 	}
 	Elem.find('[find=card_time]').html(duedate);
 
@@ -756,7 +796,7 @@ skylist.prototype.addNote = function(item){
 
 	if(item == null){
 		item = {};
-		item['_id'] = 'blankNote';
+		item['_id'] = 'new';
 		item['+title'] = 'blankNote';
 		item['-comment'] = 'blankNote';
 		item['_perm'][0] = 3; //RCUD
@@ -816,7 +856,7 @@ skylist.prototype.addNote = function(item){
 		updated_at = skylist_textDate(updated_at);
 	}
 	else{
-		updated_at = updated_at.display();
+		updated_at = updated_at.display('date_very_short');
 	}
 	Elem.find('[find=card_time]').html(updated_at);
 
@@ -1065,7 +1105,7 @@ skylist.prototype.taskClick = function(event,task_elem){
 	}
 	var that = this;
 	var target = $(event.target);
-		if( target.is('[find=checkbox]') || target.is('label') || target.is('input') || target.attr('contenteditable')=="true" || that.editing_focus || that.is_scrolling ){
+		if( target.is('[find=checkbox]') || target.is('label') || target.is('input') || target.attr('contenteditable')=="true" || that.editing_focus || that.is_scrolling || that.elem_navbar.find('.skylist_menu_navbar_filter_pane').css('display') != 'none'){
 			return;
 		}
 	
@@ -1120,11 +1160,22 @@ skylist.prototype.menu_construct = function(){
 	that.elem_navbar.find('.skylist_menu_navbar_filter_icon').click(function(){
 		var elem_filter_pane = that.elem_navbar.find('.skylist_menu_navbar_filter_pane');
 		if( elem_filter_pane.css('display')=='none' ){
-			elem_filter_pane.velocity('slideDown');
+			elem_filter_pane.velocity('slideDown',{
+				complete: function(){
+					elem_filter_pane.focus();
+				}
+			});
 		}
 		else{
-			elem_filter_pane.velocity('slideUp');
+			elem_filter_pane.blur();
 		}
+	});
+	that.elem_navbar.find('.skylist_menu_navbar_filter_pane').focus(function(){
+		console.log('filter pane focus');
+	});
+	that.elem_navbar.find('.skylist_menu_navbar_filter_pane').blur(function(){
+		console.log('filter pane blur');
+		$(this).velocity('slideUp');
 	});
 	that.elem_navbar.find('[find=radio_wrapper] .skylist_menu_navbar_filter_pane_optionWrapper').click(function(){
 		var elem_radio = $(this).closest('[find=radio_wrapper]').find('.skylist_menu_navbar_filter_pane_optionWrapper [find=radio]');
@@ -1146,9 +1197,9 @@ skylist.prototype.menu_construct = function(){
 	});
 
 
-
+	/*
 	that.elem_navbar.find('[find=search_icon]').click(function(){
-		/* old code for slideout searchbar
+		old code for slideout searchbar
 		var textbox = $(this).prev('[find=search_textbox]');
 		if( textbox.hasClass('display_none')){
 			textbox.velocity({width:150},
@@ -1171,11 +1222,30 @@ skylist.prototype.menu_construct = function(){
 				}
 			);
 		}
-		*/
-	});
-	//burger(that.elem_navbar.find('[find=search_textbox]'), 'regex');
 
-	that.elem_navbar.find('[find=search_textbox]').keyup(function(event){
+	});
+	*/
+	//burger(that.elem_navbar.find('[find=search_textbox]'), 'regex');
+	var elem_search_input = that.elem_navbar.find('[find=search_textbox]');
+	var elem_search_overlay = that.elem_navbar.find('.skylist_menu_navbar_search_overlay');
+	var elem_search_clear = that.elem_navbar.find('[find=search_clear]');
+
+	elem_search_overlay.click(function(){
+		$(this).addClass('display_none');
+		elem_search_input.focus();
+	});
+
+	elem_search_clear.on('mousedown', function(event){
+		event.preventDefault();
+		elem_search_input.val('');
+		elem_search_input.keyup();
+	});
+
+	elem_search_input.focus(function(){
+		elem_search_clear.removeClass('display_none');
+	});
+
+	elem_search_input.keyup(function(event){
 		var search_term = $(this).val();
 		clearTimeout(that.searchTimeout);
 		if(event.keyCode == 13){
@@ -1183,9 +1253,19 @@ skylist.prototype.menu_construct = function(){
 		}
 		else{
 			that.searchTimeout = setTimeout(function(){
+				if( that.Lincko_itemsList_filter.search == search_term ){
+					return false;
+				}
 				that.tasklist_update('search',search_term);
 			},400);
 		}
+	});
+
+	elem_search_input.blur(function(event){
+		$(this).val('');
+		elem_search_input.keyup();
+		elem_search_clear.addClass('display_none');
+		elem_search_overlay.removeClass('display_none');
 	});
 	
 	that.list_wrapper.append(that.elem_navbar);
@@ -1201,7 +1281,7 @@ skylist.prototype.menu_construct = function(){
 		sort = that.sort_array[i];
 		elem_timesort_text_wrapper_tmp = elem_timesort_text_wrapper.clone();
 		elem_timesort_text_wrapper_tmp.attr('sort',sort);
-		elem_timesort_text_wrapper_tmp.find('[find=text]').html(sort);
+		elem_timesort_text_wrapper_tmp.find('[find=text]').html(that.sort_arrayText[i]);
 		that.elem_sortdot.append('<span sort='+sort+' find="indicator" class="skylist_menu_timesort_dot">&#149;</span>');
 		that.elem_sorts_text[sort] =elem_timesort_text_wrapper_tmp;
 		that.elem_sortdot.before(elem_timesort_text_wrapper_tmp);
