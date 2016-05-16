@@ -1,3 +1,4 @@
+console.log("submenu newchat");
 submenu_list['newchat'] = {
     //Set the title of the top
     "_title": {
@@ -8,9 +9,6 @@ submenu_list['newchat'] = {
         "left": [{
             "style": "button",
             "title": "Close",
-            //"action": function() {
-            //    console.log('close');
-            //}
             'hide': true,
         }],
         "right": [{
@@ -39,11 +37,21 @@ Submenu_select.chat_menu = function(Elem) {
 
 Submenu.prototype.Add_ChatContents = function() {
     var attribute = this.attribute;
+    var id = this.param.id;
+    var type = this.param.type;
     submenu_wrapper = this.Wrapper();
     var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
     position.addClass('overthrow').addClass("submenu_chat_contents");
-    position.empty();
-    chatFeed.feedHistory(position, this.param.type,this.param.id);
+    chatFeed.feedHistory(position, type, id);
+    var height = submenu_wrapper.height() - 48 - 48;
+    position.find(".iScrollVerticalScrollbar").height(height);
+    debugger;
+    var chatScroll = myIScrollList[submenu_wrapper.find("[find=submenu_wrapper_content]").attr("id")];
+    debugger;
+    chatScroll.scrollTo(0, 0-height, 100);
+    chatScroll.on('scrollEnd', function() {
+    //chatFeed.feedPaging(type, position, id);
+    });
 }
 
 Submenu.prototype.Add_ChatMenu = function() {

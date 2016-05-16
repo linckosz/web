@@ -121,13 +121,14 @@ var chatFeed = (function() {
         }
     }
 
-    BaseHistoryCls.prototype.renderChatTemplate = function() {
+    BaseHistoryCls.prototype.renderChatTemplate = function(index) {
         var target;
         var action;
         var Elem = $("#" + this.templateType).clone();
         Elem.prop('id', 'models_thistory_' + this.item.id);
         Elem.addClass(this.decoratorClass);
         Elem.addClass(this.item.type);
+        Elem.attr('index', index);
 
         var uname = Lincko.storage.get('users', this.item.created_by)['-username'];
         Elem.find("[find=author]").text(php_nl2br(uname));
@@ -140,11 +141,12 @@ var chatFeed = (function() {
         return Elem;
     };
 
-    BaseHistoryCls.prototype.renderHistoryTemplate = function() {
+    BaseHistoryCls.prototype.renderHistoryTemplate = function(index) {
         var target;
         var action;
         var Elem = $("#" + this.templateType).clone();
         Elem.prop('id', 'models_thistory_' + this.item.id);
+        Elem.attr('index', index);
         Elem.addClass(this.decoratorClass);
         Elem.addClass(this.item.type);
         var history = Lincko.storage.getHistoryInfo(this.item);
@@ -252,17 +254,32 @@ var chatFeed = (function() {
         return fakeMedias[id]['target'];
     }
 
-    function getRawContents(type, id) {
+    function getRawContents(type, id, range) {
         if (type == 'history') {
-            return Lincko.storage.hist(null, null, null, 'projects', id, true);
+            return Lincko.storage.hist(null, range, null, 'projects', id, true);
         }
         else {
-            return Lincko.storage.list('comments', null, null, 'chats', id, false);
+            return Lincko.storage.list('comments', range, null, 'chats', id, false);
         }
     }
 
+    function getHistoryPaging(type, position, parentId) {
+        debugger;
+        var firstIndex = parseInt(position.find('.models_history_wrapper').first().attr('index'),10) +1;
+        var lastIndex = firstIndex + 20;
+        var newRange = firstIndex + "-" + lastIndex;
+
+        var items = getRawContents(type, parentId, newRange);
+        format_items(type, items, position);
+    }
+
     function app_layers_history_feedPage(position, type, parentId) {
-        var items = getRawContents(type, parentId);
+        var items = getRawContents(type, parentId, "0-20");
+        format_items(type, items, position);
+    }
+
+    function format_items(type, items, position) {
+       // var items = getRawContents(type, parentId, "0-50");
         /* Structure of item:
             att: "created_at"
             by: "12"
@@ -271,17 +288,18 @@ var chatFeed = (function() {
             timestamp: "1458629345"
             type: "tasks"
         */
+        var wrapper = $('<div>').addClass('chat_contents_wrapper').appendTo(position);
         for (var i in items) {
             var item = new BaseHistoryCls(items[i]);
             var newItem = fake_history_generator_for_multimedia(items[i]);
             if (item) {
                 item.getTemplate(type);
                 if (type =='history')
-                    var Elem = item.renderHistoryTemplate();
+                    var Elem = item.renderHistoryTemplate(i);
                 else
-                    var Elem = item.renderChatTemplate();
+                    var Elem = item.renderChatTemplate(i);
                 if (Elem)
-                        Elem.prependTo(position);
+                        Elem.prependTo(wrapper);
 
                 var dateStamp = checkRecentDate(item.item.timestamp, i);
                 if (dateStamp) {
@@ -298,7 +316,7 @@ var chatFeed = (function() {
                         Elem = item.renderHistoryTemplate();
                     else
                         Elem = item.renderChatTemplate();
-                    Elem.prependTo(position);
+                    Elem.prependTo(wrapper);
 
                     dateStamp = checkRecentDate(item.item.timestamp, i);
                     if (dateStamp) {
@@ -336,5 +354,6 @@ var chatFeed = (function() {
 
     return {
         'feedHistory': app_layers_history_launchPage,
+        'feedPaging': getHistoryPaging,
     }
 })();
