@@ -23,23 +23,6 @@
 		<span class="skylist_menu_navbar_filter_icon icon-Filter"></span>
 		<div class="skylist_menu_navbar_filter_pane" tabindex="1">
 			<div find="filter_header_1">Filter:{#toto#}</div>
-			<div find="radio_wrapper">
-				<table find="option1" class="skylist_menu_navbar_filter_pane_optionWrapper">
-					<td find="radio" class="skylist_menu_navbar_filter_pane_radio fa fa-circle"></td>
-					<td find="text">Sort by due date{#toto#}</td>
-				</table>
-				<table find="option2" class="skylist_menu_navbar_filter_pane_optionWrapper">
-					<td find="radio" class="skylist_menu_navbar_filter_pane_radio fa"></td>
-					<td find="text">Sort by most recently updated{#toto#}</td>
-				</table>
-			</div>
-			<div class="skylist_menu_navbar_filter_pane_divider"></div>
-			<div find="checkbox_wrapper">
-				<table class="skylist_menu_navbar_filter_pane_optionWrapper">
-					<td find="checkbox" class="skylist_menu_navbar_filter_pane_checkbox fa fa-check"></td>
-					<td find="text">Show completed tasks{#toto#}</td>
-				</table>
-			</div>
 		</div>
 		<div class="skylist_menu_navbar_search">
 			<input find='search_textbox' type='textbox'></input>
@@ -54,6 +37,25 @@
 		<span find='indicator' class="minTablet"></span>
 		<span find='text' class="skylist_menu_timesort_text"></span>
 	</span>
+
+	{# for tasklist, goes inside skylist_menu_navbar_filter_pane #}
+	<div id="-skylist_filter_tasks_radio_wrapper" find="radio_wrapper">
+		<table find="option1" class="skylist_menu_navbar_filter_pane_optionWrapper">
+			<td find="radio" class="skylist_menu_navbar_filter_pane_radio fa fa-circle"></td>
+			<td find="text">Sort by due date{#toto#}</td>
+		</table>
+		<table find="option2" class="skylist_menu_navbar_filter_pane_optionWrapper">
+			<td find="radio" class="skylist_menu_navbar_filter_pane_radio fa"></td>
+			<td find="text">Sort by most recently updated{#toto#}</td>
+		</table>
+	</div>
+	<div id="-skylist_filter_tasks_divider" class="skylist_menu_navbar_filter_pane_divider"></div>
+	<div id="-skylist_filter_tasks_checkbox_wrapper" find="checkbox_wrapper">
+		<table class="skylist_menu_navbar_filter_pane_optionWrapper">
+			<td find="checkbox" class="skylist_menu_navbar_filter_pane_checkbox fa fa-check"></td>
+			<td find="text">Show completed tasks{#toto#}</td>
+		</table>
+	</div>
 
 	<div id='-skylist_subwrapper' class="skylist_subwrapper"></div>
 	<div id="-skylist" class="skylist overthrow"></div>

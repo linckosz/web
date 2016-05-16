@@ -493,7 +493,16 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 			}
 
 			if( items_filtered.length < 1 ){
-				iscroll_elem.append('<div class="skylist_card_noCard">There are no '+that.list_type+'.</div>');
+				var noResultString = '<div class="skylist_card_noCard">There are no '+that.list_type+'.</div>';
+				if( that.list_type == 'tasks' ){
+					noResultString += '<div class="skylist_card_noCard">(Filter: ';
+					$.each(that.Lincko_itemsList_filter, function(key, val){
+						console.log(key+'-----------'+val);
+						noResultString += '['+key+': '+val+']';
+					});
+					noResultString += ')';
+				}
+				iscroll_elem.append(noResultString);
 			}
 			else{
 				for (var i in items_filtered){
@@ -1157,8 +1166,8 @@ skylist.prototype.menu_construct = function(){
 	/*
 		filter
 	*/
+	var elem_filter_pane = that.elem_navbar.find('.skylist_menu_navbar_filter_pane');
 	that.elem_navbar.find('.skylist_menu_navbar_filter_icon').click(function(){
-		var elem_filter_pane = that.elem_navbar.find('.skylist_menu_navbar_filter_pane');
 		if( elem_filter_pane.css('display')=='none' ){
 			elem_filter_pane.velocity('slideDown',{
 				complete: function(){
@@ -1170,31 +1179,14 @@ skylist.prototype.menu_construct = function(){
 			elem_filter_pane.blur();
 		}
 	});
-	that.elem_navbar.find('.skylist_menu_navbar_filter_pane').focus(function(){
-		console.log('filter pane focus');
-	});
 	that.elem_navbar.find('.skylist_menu_navbar_filter_pane').blur(function(){
-		console.log('filter pane blur');
 		$(this).velocity('slideUp');
 	});
-	that.elem_navbar.find('[find=radio_wrapper] .skylist_menu_navbar_filter_pane_optionWrapper').click(function(){
-		var elem_radio = $(this).closest('[find=radio_wrapper]').find('.skylist_menu_navbar_filter_pane_optionWrapper [find=radio]');
-		if( $(this).find('[find=radio]').hasClass('fa-circle') ){
-			that.elem_navbar.find('.skylist_menu_navbar_filter_icon').click();
-			return false;
-		}
-		else{
-			elem_radio.removeClass('fa-circle');
-			$(this).find('[find=radio]').toggleClass('fa-circle');
-			that.tasklist_update('sort_alt', !that.Lincko_itemsList_filter.sort_alt );
-			that.elem_navbar.find('.skylist_menu_navbar_filter_icon').click();
-		}
-	});
-	that.elem_navbar.find('[find=checkbox_wrapper] .skylist_menu_navbar_filter_pane_optionWrapper').click(function(){
-		$(this).find('[find=checkbox]').toggleClass('fa-check');
-		that.tasklist_update('hide_completed', !that.Lincko_itemsList_filter.hide_completed );
-		that.elem_navbar.find('.skylist_menu_navbar_filter_icon').click();
-	});
+
+	//populate the filter_pane
+	if( that.list_type == 'tasks' ){
+		that.addFilter_tasks(elem_filter_pane);
+	}
 
 
 	/*
@@ -1262,10 +1254,11 @@ skylist.prototype.menu_construct = function(){
 	});
 
 	elem_search_input.blur(function(event){
-		$(this).val('');
-		elem_search_input.keyup();
-		elem_search_clear.addClass('display_none');
-		elem_search_overlay.removeClass('display_none');
+		if( $(this).val() == '' ){
+			elem_search_input.keyup();
+			elem_search_clear.addClass('display_none');
+			elem_search_overlay.removeClass('display_none');
+		}
 	});
 	
 	that.list_wrapper.append(that.elem_navbar);
@@ -1415,6 +1408,32 @@ skylist.prototype.menu_sortnum_fn_rev = function(){
 /*
  * END OF menu methods (old timesort functions)--------------------------------------------------------------------------
 */
+
+skylist.prototype.addFilter_tasks = function(elem_filter_pane){
+	var that = this;
+	$('#-skylist_filter_tasks_radio_wrapper').clone().prop('id','').appendTo(elem_filter_pane);
+	$('#-skylist_filter_tasks_divider').clone().prop('id','').appendTo(elem_filter_pane);
+	$('#-skylist_filter_tasks_checkbox_wrapper').clone().prop('id','').appendTo(elem_filter_pane);
+
+	that.elem_navbar.find('[find=radio_wrapper] .skylist_menu_navbar_filter_pane_optionWrapper').click(function(){
+		var elem_radio = $(this).closest('[find=radio_wrapper]').find('.skylist_menu_navbar_filter_pane_optionWrapper [find=radio]');
+		if( $(this).find('[find=radio]').hasClass('fa-circle') ){
+			that.elem_navbar.find('.skylist_menu_navbar_filter_icon').click();
+			return false;
+		}
+		else{
+			elem_radio.removeClass('fa-circle');
+			$(this).find('[find=radio]').toggleClass('fa-circle');
+			that.tasklist_update('sort_alt', !that.Lincko_itemsList_filter.sort_alt );
+			that.elem_navbar.find('.skylist_menu_navbar_filter_icon').click();
+		}
+	});
+	that.elem_navbar.find('[find=checkbox_wrapper] .skylist_menu_navbar_filter_pane_optionWrapper').click(function(){
+		$(this).find('[find=checkbox]').toggleClass('fa-check');
+		that.tasklist_update('hide_completed', !that.Lincko_itemsList_filter.hide_completed );
+		that.elem_navbar.find('.skylist_menu_navbar_filter_icon').click();
+	});
+}
 
 
 skylist.prototype.minTablet = function(){
