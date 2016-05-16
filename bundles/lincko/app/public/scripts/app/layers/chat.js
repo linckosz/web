@@ -6,7 +6,8 @@ function app_layers_chat_feedChat(parent, handler, project) {
     );
     parent.delegate(".skylist_card", "click", handler);
     parent.delegate(".skylist_newcardCircle", "click", function() {
-        submenu_Build("contacts", false, false, null, true);
+        submenu_Build("contacts", false, false, {id:app_content_menu.projects_id}, true);
+        return false;
     });
 }
 
