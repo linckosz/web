@@ -82,9 +82,9 @@ Submenu.prototype.Add_ChatMenu = function() {
         var content = Elem.find('.comments_input').val();
         var id = 1;
         wrapper_sendAction({
-                'comment_comment_textarea': content,
-                'comment_type_text_hidden': 'chats',
-                'comment_type_id_hidden': id, //TODO: fix this hard code
+                'comment': content,
+                'parent_type': 'chats',
+                'parent_id': id, //TODO: fix this hard code
             },
             'post',
             'comment/create',
