@@ -757,7 +757,20 @@ skylist.prototype.addTask = function(item){
 	else{
 		duedate = duedate.display('date_very_short');
 	}
-	Elem.find('[find=card_time]').html(duedate);
+	Elem.find('[find=card_time]').addClass('display_none');
+	var elem_calendar = Elem.find('[find=card_time_calendar]');
+	var elem_calendar_timestamp = Elem.find('[find=card_time_calendar_timestamp]');
+	elem_calendar.removeClass('display_none');
+	elem_calendar_timestamp.removeClass('display_none');
+	Elem.find('[find=card_time_calendar]').val(duedate);
+	burger_calendar(elem_calendar_timestamp, elem_calendar );
+	elem_calendar.focus(function(){
+		elem_calendar_timestamp.focus();
+	});
+	elem_calendar.blur(function(){
+		elem_calendar_timestamp.blur();
+	})
+	//Elem.find('[find=card_time]').html(duedate);
 
 	/*
 	rightOptions - duedate

@@ -244,16 +244,14 @@ Submenu.prototype.Add_taskdetail = function() {
 		elem.find('[find=assigned_text]').html(in_charge);
 		elem_timestamp.val((item['start'] + duration_timestamp)*1000);
 
-		duedate = app_layers_dev_skytasks_calcDuedate(item);
-		if( duedate.happensSomeday(0) ){
-			elem.find("[find=duedate_text]").val(Lincko.Translation.get('app', 3302, 'html').toUpperCase()/*today*/);
-		}
-		else if( duedate.happensSomeday(1) ){
-			elem.find("[find=duedate_text]").val(Lincko.Translation.get('app', 3303, 'html').toUpperCase()/*tomorrow*/);
+		duedate = skylist_calcDuedate(item);
+		if( skylist_textDate(duedate) ){
+			elem.find("[find=duedate_text]").val(skylist_textDate(duedate));
 		}
 		else{
 			elem.find("[find=duedate_text]").val(duedate.display('date_very_short'));
 		}
+		
 	}/*---notesmeta---*/
 	else if( this.param.type == "notes" ){
 		elem.find('[find=assigned_text]').html(Lincko.storage.get("users", item['updated_by'],"username"));
