@@ -124,6 +124,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	var taskid = this.param.id;
 	var elem;
 	var duedate;
+	var duration_timestamp = 86400;
 	var created_by;
 	var created_at;
 	var updated_by;
@@ -139,11 +140,14 @@ Submenu.prototype.Add_taskdetail = function() {
 		item['created_by'] = wrapper_localstorage.uid;
 		item['updated_by'] = wrapper_localstorage.uid;
 		item.start = $.now()/1000;
-		item.duration = "86400";
+		item.duration = duration_timestamp;
 		item['_type'] = that.param.type;
 	} 
 	else{
 		item = Lincko.storage.get(this.param.type, taskid);
+		if( that.param.type == "tasks" ){
+			duration_timestamp = item['duration'];
+		}
 	}
 
 	/*---tasktitle---*/
@@ -218,6 +222,17 @@ Submenu.prototype.Add_taskdetail = function() {
 		);
 		submenu_Clean(null,null,true);
 	});
+
+	var elem_timestamp = elem.find('[find=duedate_timestamp]');
+	var elem_alt = elem.find("[find=duedate_text]");
+	burger_calendar( elem_timestamp, elem_alt );
+
+	elem_timestamp.change(function(){
+		if( that.param.type == "tasks" ){
+			duration_timestamp = $(this).val()/1000 - item['start'];
+		}
+	});
+
 	/*---taskmeta---*/
 	if( this.param.type == "tasks" ){
 		for (var i in item['_users']){
@@ -227,22 +242,23 @@ Submenu.prototype.Add_taskdetail = function() {
 			}
 		}
 		elem.find('[find=assigned_text]').html(in_charge);
+		elem_timestamp.val((item['start'] + duration_timestamp)*1000);
 
 		duedate = app_layers_dev_skytasks_calcDuedate(item);
 		if( duedate.happensSomeday(0) ){
-			elem.find("[find=duedate_text]").html(Lincko.Translation.get('app', 3302, 'html').toUpperCase()/*today*/);
+			elem.find("[find=duedate_text]").val(Lincko.Translation.get('app', 3302, 'html').toUpperCase()/*today*/);
 		}
 		else if( duedate.happensSomeday(1) ){
-			elem.find("[find=duedate_text]").html(Lincko.Translation.get('app', 3303, 'html').toUpperCase()/*tomorrow*/);
+			elem.find("[find=duedate_text]").val(Lincko.Translation.get('app', 3303, 'html').toUpperCase()/*tomorrow*/);
 		}
 		else{
-			elem.find("[find=duedate_text]").html(duedate.display('date_very_short'));
+			elem.find("[find=duedate_text]").val(duedate.display('date_very_short'));
 		}
 	}/*---notesmeta---*/
 	else if( this.param.type == "notes" ){
 		elem.find('[find=assigned_text]').html(Lincko.storage.get("users", item['updated_by'],"username"));
 		var date = new wrapper_date(item['updated_at']);
-		elem.find("[find=duedate_text]").html(date.display('date_very_short'));
+		elem.find("[find=duedate_text]").val(date.display('date_very_short'));
 	}
 	submenu_taskdetail.append(elem);
 	/*---END OF taskmeta---*/
@@ -477,6 +493,11 @@ Submenu.prototype.Add_taskdetail = function() {
 			contactServer = true;
 		}
 
+		if( that.param.type == "tasks" && duration_timestamp != item['duration'] ){
+			contactServer = true;
+			param['duration'] = duration_timestamp;
+		}
+
 		if( contactServer ){
 			var route = '';
 			if( that.param.type == "tasks" ){
@@ -498,12 +519,11 @@ Submenu.prototype.Add_taskdetail = function() {
 		$(document).off('previewHide.skylist');
 	});
 
+
 	/*---easyEditor---*/
 	if(that.param.type == 'notes' ){
 		submenu_wrapper.find('[find=description_text]').easyEditor();
 	}
-	console.log(submenu_wrapper.find('[find=submenu_wrapper_content]'));
-	console.log(submenu_wrapper.find('[find=submenu_wrapper_content]').prop('id'));
 
 	//Free memory
 	delete submenu_wrapper;

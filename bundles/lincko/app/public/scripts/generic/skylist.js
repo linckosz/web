@@ -147,19 +147,17 @@ skylist.prototype.construct = function(){
 	that.list_subwrapper.appendTo(that.list_wrapper);
 
 	that.elem_newcardCircle = $('#-skylist_newcardCircle').clone()
-		.prop('id','skylist_newcardCircle_'+that.md5id)
-		.click(function(){
-			submenu_Build('taskdetail', null, null, 
-				{
-					"type":that.list_type,
-					"id": 'new', 
-				}, true);
-		})
-		.appendTo(that.list_wrapper);
+		.prop('id','skylist_newcardCircle_'+that.md5id);
 
 	that.generate_Lincko_itemsList();
 	that.addCard_all();
 	that.setHeight();
+
+	/*functions that are specific to each module*/
+	if( that.list_type == "tasks" ){
+		that.tasksConstruct();
+	}
+	//that.chatsConstruct();
 
 	$(window).on("resize.skylist_"+that.md5id, function(){
 		clearTimeout(that.window_resize_timeout);
@@ -234,6 +232,17 @@ skylist.prototype.destroy = function(){
 
 	that = null;
 	delete that;
+}
+skylist.prototype.tasksConstruct = function(){
+	var that = this;
+	that.elem_newcardCircle.click(function(){
+		submenu_Build('taskdetail', null, null, 
+			{
+				"type":that.list_type,
+				"id": 'new', 
+			}, true);
+	})
+	.appendTo(that.list_wrapper);
 }
 
 skylist.prototype.previewHide = function(){
@@ -497,7 +506,6 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 				if( that.list_type == 'tasks' ){
 					noResultString += '<div class="skylist_card_noCard">(Filter: ';
 					$.each(that.Lincko_itemsList_filter, function(key, val){
-						console.log(key+'-----------'+val);
 						noResultString += '['+key+': '+val+']';
 					});
 					noResultString += ')';
@@ -574,6 +582,7 @@ skylist.prototype.addChat = function(item){
         }
         */
         Elem.prop('id','skylist_card_'+that.md5id+'_'+item['id']);
+
 
         /*
         title

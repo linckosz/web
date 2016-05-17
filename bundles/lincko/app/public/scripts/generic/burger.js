@@ -175,6 +175,19 @@ var burger = function(elem, burger_mode, item){
     }
 }
 
+function burger_calendar (elem_timestamp, elem_alt){
+    elem_timestamp.datepicker(
+    {
+        altFormat: "M d",
+        altField: elem_alt,
+        dateFormat: '@',
+        gotoCurrent: true,
+        beforeShow: function(){
+            $('#ui-datepicker-div').addClass('burger_calendar');
+        },
+    });
+}
+
 function burger_regex_getCaretOffset(elem) {
 	//http://stackoverflow.com/questions/6846230/coordinates-of-selected-text-in-browser-page
 	//http://stackoverflow.com/questions/4811822/get-a-ranges-start-and-end-offsets-relative-to-its-parent-container/4812022#4812022

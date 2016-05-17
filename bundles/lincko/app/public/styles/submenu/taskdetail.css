@@ -34,6 +34,13 @@
 .submenu_taskdetail > .submenu_taskdetail_comments {
 	/*background: #C7E9FF;*/
 }
+.submenu_taskdetail_hiddenInput {
+	position: absolute;
+    top: 0px;
+    bottom: 0px;
+    opacity: 0;
+    width: 75px;
+}
 
 .submenu_taskdetail [contenteditable=true]{
 	cursor: text;
@@ -134,6 +141,12 @@ td.submenu_taskdetail_share .fa{
 }
 .submenu_taskdetail_meta_text {
 	padding: 0px 5px;
+}
+.submenu_taskdetail_meta_text[find=duedate_text] {
+	border: 0px;
+    width: 45px;
+    background-color: initial;
+    color: inherit;
 }
 .submenu_taskdetail_meta_box[find=calendar] {
 
