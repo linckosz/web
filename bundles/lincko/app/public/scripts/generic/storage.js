@@ -18,7 +18,6 @@ var storage_cb_success = function(msg, err, status, data){
 				Lincko.storage.schema(data.partial[wrapper_localstorage.uid]);
 				wrapper_localstorage.encrypt('data', JSON.stringify(Lincko.storage.data));
 				wrapper_localstorage.cleanLocalWorkspace();
-				wrapper_sendAction('', 'post', 'data/reset_init');
 				schema = false;
 			}
 		} else {
@@ -27,7 +26,6 @@ var storage_cb_success = function(msg, err, status, data){
 	}
 	if(schema && $.type(data) === 'object' && $.type(data.schema) === 'object' && $.type(data.schema[wrapper_localstorage.uid]) === 'object' && !$.isEmptyObject(data.schema[wrapper_localstorage.uid])){
 		Lincko.storage.schema(data.schema[wrapper_localstorage.uid]);
-		wrapper_sendAction('', 'post', 'data/reset_init');
 	}
 	//Update the last visit day only if we are sure the update is finish
 	if(allow_set_lastvisit && $.type(data) === 'object' && typeof data.lastvisit === 'number'){
@@ -343,6 +341,56 @@ Lincko.storage.get = function(category, id, attribute){
 			}
 		}
 		return result;
+	}
+	return false;
+};
+
+Lincko.storage.whoHasAccess = function(category, id){
+	var list =  [];
+	var perm = Lincko.storage.get(category, id, '_perm');
+	if(perm){
+		for(var users_id in perm){
+			list.push(parseInt(users_id, 10));
+		}
+	}
+	return list;
+};
+
+Lincko.storage.canI = function(rcud, category, id, child_type){
+	if(typeof rcud == 'string'){
+		if(rcud=='read'){ rcud=0; }
+		else if(rcud=='create'){ rcud=1; }
+		else if(rcud=='edit'){ rcud=2; }
+		else if(rcud=='delete'){ rcud=3; }
+		else if(rcud=='restore'){ rcud=3; }
+	}
+	if($.isNumeric(rcud)){ rcud = parseInt(rcud, 10); }
+	if(rcud==1 && typeof child_type == 'string'){ id = parseInt(id, 10); }
+	if(rcud<0 || rcud>3){
+		return false;
+	}
+	var perm = Lincko.storage.get(category, id, '_perm');
+	if(perm){
+		if(typeof perm[wrapper_localstorage.uid] != 'undefined'){
+			if(rcud == 1){ //create works with child type and role of current element
+				var role = Lincko.storage.get('roles', perm[wrapper_localstorage.uid][1]);
+				if(role){
+					for(var att in role){
+						if(typeof role['perm_'+child_type] != 'undefined'){
+							if(rcud <= role['perm_'+child_type]){
+								return true;
+							}
+						} else if(typeof role['perm_all'] != 'undefined'){
+							if(rcud <= role['perm_all']){
+								return true;
+							}
+						}
+					}
+				}
+			} else if(rcud <= perm[wrapper_localstorage.uid][0]){
+				return true;
+			}
+		}
 	}
 	return false;
 };
