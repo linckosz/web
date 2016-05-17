@@ -26,12 +26,9 @@ var mainMenu = (function() {
             item.find('img.logo').attr('src', 'icon-MultiplePeople');
             item.find('span.logo').remove();
         } else if (data.type == 'chats') {
-            var users = Lincko.storage.get('chats', data.id, 'users');
-            for (var u in users) {
-                name = name.concat(Lincko.storage.get('users', u, '-username') + ", ");
-            }
-            name = name.slice(0, -2);
-            if (Object.keys(users).length > 1) {
+            var users = Object.keys(Lincko.storage.get('chats', data.id, '_perm'));
+            name = Lincko.storage.get('chats', data.id, '+title');
+            if (users.length > 1) {
                 item.find('span.logo').addClass('icon-MultiplePeople');
                 item.find('img').remove();
             } else {

@@ -603,17 +603,13 @@ skylist.prototype.addChat = function(item){
             name = Lincko.storage.get("projects", item.id, "+title") + " Activity";
             Elem_logo.find('span').addClass('fa fa-globe');
         } else if (item.type == 'chats') {
-            var users = Lincko.storage.get('chats', item.id, 'users');
-            for (var u in users) {
-                name = name.concat(Lincko.storage.get('users', u, '-username') + ", ");
-            }
-            name = name.slice(0, -2);
-            if (Object.keys(users).length > 1) {
+            var users = Object.keys(Lincko.storage.get('chats', item.id, '_perm'));
+            name = Lincko.storage.get('chats', item.id, '+title');
+            if (users.length > 2) {
                 Elem_logo.find('span').addClass('icon-Multiple-People');
             } else {
                 Elem_logo.find('span').addClass('icon-Single-Person');
             }
-
         }
         var contenteditable = false;
         var elem_title = Elem.find('[find=title]');
