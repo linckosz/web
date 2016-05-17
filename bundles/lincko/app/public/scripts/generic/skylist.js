@@ -32,11 +32,15 @@ var skylist_textDate = function(date){
 	}
 }
 
-var skylist = function(list_type, list_wrapper, sort_arrayText){
+var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct){
 	this.that = this;
 	var that = this;
 
 	this.list_type = list_type;
+
+	if( subConstruct ){
+		this.subConstruct = subConstruct;
+	}
 	
 	this.md5id = md5(Math.random());
 	this.window_resize_timeout = null;
@@ -154,10 +158,9 @@ skylist.prototype.construct = function(){
 	that.setHeight();
 
 	/*functions that are specific to each module*/
-	if( that.list_type == "tasks" ){
-		that.tasksConstruct();
+	if( that.subConstruct ){
+		that.subConstruct();
 	}
-	//that.chatsConstruct();
 
 	$(window).on("resize.skylist_"+that.md5id, function(){
 		clearTimeout(that.window_resize_timeout);
@@ -204,8 +207,8 @@ skylist.prototype.construct = function(){
 		that.list.prop('id'),
 		that.list_type,
 		function(){
-			if(that.list_type == "tasks" || that.list_type == "notes" ){
-				that.tasklist_update();
+			if( that.skylist_update ){
+				that.skylist_update();
 			}
 		}
 	);
@@ -232,17 +235,6 @@ skylist.prototype.destroy = function(){
 
 	that = null;
 	delete that;
-}
-skylist.prototype.tasksConstruct = function(){
-	var that = this;
-	that.elem_newcardCircle.click(function(){
-		submenu_Build('taskdetail', null, null, 
-			{
-				"type":that.list_type,
-				"id": 'new', 
-			}, true);
-	})
-	.appendTo(that.list_wrapper);
 }
 
 skylist.prototype.previewHide = function(){
@@ -549,6 +541,23 @@ skylist.prototype.addCard = function(item){
 	if( that.list_type == 'tasks' ){
 		elem_card = that.addTask(item);
 		elem_card.find('[find=card_spacestick]').removeClass('display_none');
+		app_application_lincko.add(
+		elem_card.prop('id'),
+		that.list_type+'_'+item['_id'],
+		function(){
+			console.log(this.id);
+			/*
+			var elem = $('#'+this.id);
+			elem.velocity('fadeOut',{
+				complete: function(){
+					//elem.replaceWith(that.addCard(item));
+				}
+			});
+			*/
+			//elem.replaceWith(that.addCard(item));
+			//elem.after(that.addCard(item));
+		}
+	);
 	}
 	else if( that.list_type == 'notes' ){
 		elem_card = that.addNote(item);
@@ -757,19 +766,18 @@ skylist.prototype.addTask = function(item){
 	else{
 		duedate = duedate.display('date_very_short');
 	}
-	Elem.find('[find=card_time]').addClass('display_none');
+	
 	var elem_calendar = Elem.find('[find=card_time_calendar]');
 	var elem_calendar_timestamp = Elem.find('[find=card_time_calendar_timestamp]');
+
+	Elem.find('[find=card_time]').addClass('display_none');
 	elem_calendar.removeClass('display_none');
 	elem_calendar_timestamp.removeClass('display_none');
-	Elem.find('[find=card_time_calendar]').val(duedate);
+
+	elem_calendar.val(duedate);
+	elem_calendar_timestamp.val((item['start']+item['duration'])*1000);
 	burger_calendar(elem_calendar_timestamp, elem_calendar );
-	elem_calendar.focus(function(){
-		elem_calendar_timestamp.focus();
-	});
-	elem_calendar.blur(function(){
-		elem_calendar_timestamp.blur();
-	})
+
 	//Elem.find('[find=card_time]').html(duedate);
 
 	/*

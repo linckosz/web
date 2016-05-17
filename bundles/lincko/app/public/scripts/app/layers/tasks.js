@@ -37,6 +37,18 @@ var app_layers_tasks_feedPage = function(param){
 	Elem.prop('id','app_layers_tasks_tasklist');
 	Elem.appendTo(position);
 
+	var tasklist_subConstruct = function(){
+		var that = this;
+		that.elem_newcardCircle.click(function(){
+			submenu_Build('taskdetail', null, null, 
+				{
+					"type":that.list_type,
+					"id": 'new', 
+				}, true);
+		})
+		.appendTo(that.list_wrapper);
+	}
+
 	app_layers_tasks_tasklist = new skylist(
 		'tasks',
 		$('#app_layers_tasks_tasklist'),
@@ -45,8 +57,21 @@ var app_layers_tasks_feedPage = function(param){
 			Lincko.Translation.get('app', 3302, 'html').toUpperCase(),/*today*/
 			Lincko.Translation.get('app', 3303, 'html').toUpperCase(),/*tomorrow*/
 			'Spaces'
-		]
-		);
+		],
+		tasklist_subConstruct
+	);
+
+	app_layers_tasks_tasklist.subConstruct = function(){
+		var that = this;
+		that.elem_newcardCircle.click(function(){
+			submenu_Build('taskdetail', null, null, 
+				{
+					"type":that.list_type,
+					"id": 'new', 
+				}, true);
+		})
+		.appendTo(that.list_wrapper);
+	}
 
 
 	//update tasklist when database is changed

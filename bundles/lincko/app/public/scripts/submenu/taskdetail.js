@@ -176,6 +176,8 @@ Submenu.prototype.Add_taskdetail = function() {
 			else{
 				approved = false;
 			}
+			console.log('checkbox wrapper_sendAction------------------');
+			console.log(item['_id']);
 			wrapper_sendAction(
 				{
 		    		"id": item['_id'],
@@ -224,12 +226,15 @@ Submenu.prototype.Add_taskdetail = function() {
 	});
 
 	var elem_timestamp = elem.find('[find=duedate_timestamp]');
-	var elem_alt = elem.find("[find=duedate_text]");
-	burger_calendar( elem_timestamp, elem_alt );
+	var elem_display = elem.find("[find=duedate_text]");
+	burger_calendar( elem_timestamp, elem_display );
 
 	elem_timestamp.change(function(){
 		if( that.param.type == "tasks" ){
 			duration_timestamp = $(this).val()/1000 - item['start'];
+			if( duration_timestamp < 0 ){
+				alert(item['start']+' duedate cant be before start date. (dont worry, this is just a test alert)');
+			}
 		}
 	});
 

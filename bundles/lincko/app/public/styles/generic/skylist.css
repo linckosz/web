@@ -260,7 +260,7 @@
 	padding: 4px;
 }
 .skylist_card_time[find=card_time_calendar]{
-    width: 100px;
+    width: 50px;
     text-align: right;
     background-color: inherit;
     border: none;
@@ -270,6 +270,7 @@
     right: 0px;
     opacity: 0;
     width: 200px;
+    z-index: -1;
 }
 
 .skylist_card_bottom {

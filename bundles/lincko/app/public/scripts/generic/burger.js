@@ -175,17 +175,36 @@ var burger = function(elem, burger_mode, item){
     }
 }
 
-function burger_calendar (elem_timestamp, elem_alt){
+function burger_calendar (elem_timestamp, elem_display){
     elem_timestamp.datepicker(
     {
-        altFormat: "M d",
-        altField: elem_alt,
+        //altFormat: "M d",
+        //altField: elem_alt,
         dateFormat: '@',
         gotoCurrent: true,
+        minDate: 0,
         beforeShow: function(){
             $('#ui-datepicker-div').addClass('burger_calendar');
         },
     });
+
+    elem_display.focus(function(){
+        elem_timestamp.focus();
+    });
+    elem_timestamp.change(function(){
+        var timestamp = $(this).val();
+        timestamp = parseInt(timestamp,10); 
+        timestamp += 86399000; //adds 23hrs59min59sec to make it end of the day
+        var date = new wrapper_date(timestamp/1000);
+        if(skylist_textDate(date)){
+            date = skylist_textDate(date);
+        }
+        else{
+            date = date.display('date_very_short');
+        }
+        elem_display.val(date);
+    });
+
 }
 
 function burger_regex_getCaretOffset(elem) {
