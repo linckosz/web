@@ -597,11 +597,12 @@ skylist.prototype.addChat = function(item){
         title
         */
         burger(Elem.find('[find=title]'), 'regex');
-
+        Elem.attr('type', item.type);
         var elem_title = Elem.find('[find=title]');
         if (item.type == "history") {
             name = Lincko.storage.get("projects", item.id, "+title") + " Activity";
             Elem_logo.find('span').addClass('fa fa-globe');
+
         } else if (item.type == 'chats') {
             var users = Object.keys(Lincko.storage.get('chats', item.id, '_perm'));
             name = Lincko.storage.get('chats', item.id, '+title');

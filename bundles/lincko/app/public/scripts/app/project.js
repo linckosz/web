@@ -161,6 +161,14 @@ var mainMenu = (function() {
                     'comment': comment[0]['+comment'],
                 });
             }
+            else {
+                merge_list.push({
+                    'type': 'chats',
+                    'id': chat_list[c]._id,
+                    'timestamp': timestamp,
+                    'comment': "",
+                });
+            }
         }
         return orderList(merge_list);
     }
