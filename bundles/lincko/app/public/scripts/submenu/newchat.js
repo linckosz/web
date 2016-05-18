@@ -45,9 +45,9 @@ Submenu.prototype.Add_ChatContents = function() {
     chatFeed.feedHistory(position, type, id);
     var height = submenu_wrapper.height() - 48 - 48;
     position.find(".iScrollVerticalScrollbar").height(height);
-    debugger;
+    //debugger;
     var chatScroll = myIScrollList[submenu_wrapper.find("[find=submenu_wrapper_content]").attr("id")];
-    debugger;
+    //debugger;
     chatScroll.scrollTo(0, 0-height, 100);
     chatScroll.on('scrollEnd', function() {
     //chatFeed.feedPaging(type, position, id);

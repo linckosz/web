@@ -19,7 +19,7 @@ submenu_list['contacts'] = {
                 var userList = {};
                 var nameList = "";
                 var items = $(this).parents(".submenu_wrapper").find(".submenu_contact_item .checked");
-                if (items.length == 0) {
+                if (items.length == 1) {
                     return;
                 }
                 for (var i=0;i<items.length; i++) {
@@ -32,6 +32,7 @@ submenu_list['contacts'] = {
                         var id = tmp[t].slice(7);
                     }
                 }
+                var comment_id;
                 if (id) {
                     wrapper_sendAction({
                         'parent_type':'projects',
@@ -42,7 +43,15 @@ submenu_list['contacts'] = {
                         'post',
                         'chat/create',
                         function() {
-                            //submenu_Build();
+                            var chat = Lincko.storage.list('chats', 1, {'temp_id': comment_id})[0];
+                            submenu_Build("newchat", false, false, {
+                                type: 'chats',
+                                id: chat['_id'],
+                                title: chat['+title']}, true);
+                        },
+                        null,
+                        function(jqXHR, settings, temp_id) {
+                            comment_id = temp_id;
                         }
                     );
                 }
@@ -56,7 +65,16 @@ submenu_list['contacts'] = {
                         'post',
                         'chat/create',
                         function() {
-                            //submenu_Build();
+                            debugger;
+                            var chat = Lincko.storage.list('chats', 1, {'temp_id': comment_id})[0];
+                            submenu_Build("newchat", false, false, {
+                                type: 'chats',
+                                id: chat['_id'],
+                                title: chat['+title']}, true);
+                        },
+                        null,
+                        function(jqXHR, settings, temp_id) {
+                            comment_id = temp_id;
                         }
                     );
                 }
@@ -114,6 +132,10 @@ function _app_submenu_contacts_genContacts(position) {
             $(this).find('.check').addClass('checked');
             return -1;
         });
+        if (contacts[c].id == wrapper_localstorage.uid) {
+            Elem.hide();
+            Elem.find('.check').addClass('checked');
+        }
 		position.append(Elem);
 	}
 }
