@@ -140,6 +140,8 @@ td.submenu_taskdetail_share .fa{
     font-size: 21px;
     color: #53ADD2;
     padding: 0px 3px;
+    display: inline-block;
+    vertical-align: bottom;
 }
 .submenu_taskdetail_meta_text {
 	padding: 0px 5px;
