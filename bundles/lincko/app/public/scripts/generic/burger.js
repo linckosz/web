@@ -126,15 +126,17 @@ var burger = function(elem, burger_mode, item){
                 var username;
                 var elem_option = $('#-burger_option').clone().prop('id','').addClass('burger_option'+burger_mode);
                 var elem_option_clone;
-                $.each(item[burger_mode], function(key, value){
-                    username = Lincko.storage.get("users", key,"username");
+                //$.each(item[burger_mode], function(key, value){
+                var accessList = Lincko.storage.whoHasAccess(item['_type'], item['_id']);
+                for (var i = 0; i < accessList.length; i++) {
+                    var userid = accessList[i];
+                    username = Lincko.storage.get("users", userid,"username");
                     elem_option_clone = elem_option.clone();
                     elem_option_clone.find('[find=username]').html(username);
-
-                    if( item['_type'] == 'tasks' && item['_users'][key]['in_charge'] ){
+                    if( item['_type'] == 'tasks' && userid in item['_users'] && item['_users'][userid]['in_charge'] ){
                         elem_option_clone.addClass('burger_option_selected');
                     }
-                    if( item['_type'] == 'notes' && item['updated_by'] == key ){
+                    if( item['_type'] == 'notes' && item['updated_by'] == userid ){
                         elem_option_clone.addClass('burger_option_selected');
                     }
 
@@ -149,7 +151,7 @@ var burger = function(elem, burger_mode, item){
                     }
 
                      elem_dropdown.append(elem_option_clone);
-                });
+                };
 
                 var left = coord.left;
                 var top = coord.top - $('#app_content_top').outerHeight() + $(this).closest('table').outerHeight();
