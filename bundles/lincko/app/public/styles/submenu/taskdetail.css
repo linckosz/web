@@ -23,6 +23,7 @@
 	height:100%;
 	overflow-y: auto;
 	padding-bottom: 50px;
+	font-weight: 100;
 }
 .submenu_taskdetail_paddingLeft {
 	padding-left: 22px;
@@ -136,8 +137,9 @@ td.submenu_taskdetail_share .fa{
 	position: relative;
 }
 .submenu_taskdetail_meta_icons{
-	font-size: 20px;
-	color: #53ADD2;
+    font-size: 21px;
+    color: #53ADD2;
+    padding: 0px 3px;
 }
 .submenu_taskdetail_meta_text {
 	padding: 0px 5px;

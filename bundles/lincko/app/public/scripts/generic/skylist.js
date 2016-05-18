@@ -140,7 +140,7 @@ var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct){
 
 skylist.prototype.construct = function(){
 	var that = this;
-	that.list_wrapper = that.list_wrapper.empty();
+	that.list_wrapper = that.list_wrapper.empty().addClass('skylist_wrapper');
 	that.list_subwrapper = $('#-skylist_subwrapper').clone().prop('id','');
 
 	that.menu_construct();
