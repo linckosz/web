@@ -238,7 +238,7 @@ skylist.prototype.destroy = function(){
 }
 
 skylist.prototype.previewHide = function(){
-	this.elem_task_all.removeClass('skylist_TaskSelected');
+	this.elem_task_all.removeClass('skylist_card_hover');
 	//this.list.addClass('skylist_noPreviewLayer');
 	$(window).resize();
 }
@@ -1151,8 +1151,8 @@ skylist.prototype.taskClick = function(event,task_elem){
 		that.clearOptions(task_elem);
 		return;
 	}
-	that.elem_task_all.removeClass('skylist_TaskSelected');
-	task_elem.addClass('skylist_TaskSelected');
+	that.elem_task_all.removeClass('skylist_card_hover');
+	task_elem.addClass('skylist_card_hover');
 	this.openDetail(task_elem);
 
 }

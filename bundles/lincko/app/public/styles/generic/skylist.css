@@ -187,6 +187,9 @@
 	margin-left: 24px;
 	height: 100%;
 }
+.skylist .iScrollVerticalScrollbar {
+	z-index: 0;
+}
 .skylist .iscroll_sub_div.scrollY {
 	padding-bottom: 60px;
 }
@@ -269,7 +272,7 @@
 	position: absolute;
     right: 0px;
     opacity: 0;
-    width: 200px;
+    width: 50px;
     z-index: -1;
 }
 
@@ -355,6 +358,20 @@
 }
 
 /*
+ * Hover-----------------------------------------------------
+ */
+ .skylist_card:hover .skylist_card_center, .skylist_card_hover .skylist_card_center {
+ 	background: #DBEBF4;
+ }
+.skylist_card:hover .skylist_card_bottom, .skylist_card_hover .skylist_card_bottom {
+	background: #D6E8F2;
+}
+
+
+
+
+
+/*
  * For tasklist----------------------------------------------
  */
 .skylist_checkbox {
@@ -398,9 +415,6 @@
 .skylist_card_checked [find=card_time] {
 	color: #53ADD2;
 }
-
-
-
 
 /*
  * END OF for tasklist----------------------------------------------
