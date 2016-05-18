@@ -172,23 +172,58 @@ Lincko.storage.getMissing = function(missing){
 /* PRIVATE METHOD */
 Lincko.storage.update = function(partial, info){
 	var item;
+	var item_old;
+	var item_new;
 	var update = false;
+	var update_real = false;
+	var children_list = {};
+	for(var category in Lincko.storage.data) {
+		children_list[category] = {};
+		for(var id in Lincko.storage.data[category]) {
+			if(typeof Lincko.storage.data[category][id]['_children'] != 'undefined'){
+				children_list[category][id] = JSON.stringify(Lincko.storage.data[category][id]['_children']);
+			}
+		}
+	}
 	for(var i in partial) {
 		//Check if the object hierarchy exists
 		if(typeof Lincko.storage.data == 'undefined'){ Lincko.storage.data = {}; }
 		if(typeof Lincko.storage.data[i] == 'undefined'){ Lincko.storage.data[i] = {}; }
 		for(var j in partial[i]) {
-			if(typeof Lincko.storage.data[i][j] == 'undefined'){
-				Lincko.storage.data[i][j] = partial[i][j];
+			update_real = false;
+			//If only update_at (parent->touch), we do not prepare for update
+			if(typeof Lincko.storage.data[i][j] != 'undefined'){
+				for(var k in partial[i][j]){
+					if(k!="_children" && k!="_id" && k!="type" && k!="history" && k!="created_at" && k!="created_by" && k!="updated_at" && k!="updated_by"){
+						if(typeof Lincko.storage.data[i][j][k] == 'undefined'){ //New field
+							update_real = true;
+							break;
+						} else if(typeof Lincko.storage.data[i][j][k] == 'object'){ //Different object
+							if(JSON.stringify(Lincko.storage.data[i][j][k]) != JSON.stringify(partial[i][j][k])){
+								update_real = true;
+								break;
+							}
+						} else if(Lincko.storage.data[i][j][k] != partial[i][j][k]){ //Different value
+							update_real = true;
+							break;
+						}
+					}
+				}
 			} else {
-				Lincko.storage.data[i][j] = $.extend(Lincko.storage.data[i][j], partial[i][j]);
+				update_real = true;
 			}
-			app_application_lincko.prepare(i+'_'+j);
+			
+			Lincko.storage.data[i][j] = partial[i][j];
+			if(update_real){
+				//console.log("update ==> "+i+'_'+j);
+				app_application_lincko.prepare(i+'_'+j);
+			}
 			update = true;
+
 		}
 	}
 	if(update){
-		Lincko.storage.childrenList(partial);
+		Lincko.storage.childrenList(partial, children_list);
 		Lincko.storage.display();
 		wrapper_localstorage.encrypt('data', JSON.stringify(Lincko.storage.data));
 		if(!info){
@@ -252,7 +287,6 @@ Lincko.storage.schema = function(schema){
 	if(update){
 		Lincko.storage.childrenList(Lincko.storage.data);
 		Lincko.storage.display();
-		wrapper_localstorage.encrypt('data', JSON.stringify(Lincko.storage.data));
 		return true;
 	}
 	
@@ -274,21 +308,28 @@ Lincko.storage.firstLatest = function(){
 };
 
 /* PRIVATE METHOD */
-Lincko.storage.childrenList = function(data){
+Lincko.storage.childrenList = function(data, children_list){
 	var parent_type = null;
 	var parent_id = 0;
-
-	//Clean children
-	for(var category in Lincko.storage.data) {
-		for(var id in Lincko.storage.data[category]) {
-			delete Lincko.storage.data[category][id]['_children'];
+	var change = false;
+	if(typeof children_list != 'object'){
+		children_list = {};
+		//Clean children
+		for(var category in Lincko.storage.data) {
+			children_list[category] = {};
+			for(var id in Lincko.storage.data[category]) {
+				if(typeof Lincko.storage.data[category][id]['_children'] != 'undefined'){
+					children_list[category][id] = JSON.stringify(Lincko.storage.data[category][id]['_children']);
+				}
+				delete Lincko.storage.data[category][id]['_children'];
+			}
 		}
 	}
 
 	//Rebuild children tree
 	for(var category in Lincko.storage.data) {
 		for(var id in Lincko.storage.data[category]) {
-			if(typeof Lincko.storage.data[category][id]['_parent']!=='undefined' && typeof Lincko.storage.data[category][id]['_parent'][0]==='string' && Lincko.storage.data[category][id]['_parent'][1]){
+			if(typeof Lincko.storage.data[category][id]['_parent']!='undefined' && typeof Lincko.storage.data[category][id]['_parent'][0]=='string' && Lincko.storage.data[category][id]['_parent'][1]){
 				parent_type = Lincko.storage.data[category][id]['_parent'][0];
 				parent_id = Lincko.storage.data[category][id]['_parent'][1];
 				if(!Lincko.storage.data[parent_type][parent_id]['_children']){
@@ -302,8 +343,32 @@ Lincko.storage.childrenList = function(data){
 			delete Lincko.storage.data[category][id]['_children'];
 		}
 	}
+
+	//Check which children list has been updated
+	for(var category in Lincko.storage.data) {
+		if(typeof children_list[category] == 'undefined'){
+			app_application_lincko.prepare(true); //Update everything
+			change = true;
+			continue;
+		}
+		for(var id in Lincko.storage.data[category]) {
+			if(typeof Lincko.storage.data[category][id]['_children'] != 'undefined'){
+				if(typeof children_list[category][id] == 'undefined'){
+					app_application_lincko.prepare(category+'_'+id); //Update everything
+					change = true;
+				} else if(children_list[category][id] != JSON.stringify(Lincko.storage.data[category][id]['_children'])){
+					app_application_lincko.prepare(category+'_'+id); //Update everything
+					change = true;
+				}
+			}
+		}
+	}
+
+	if(change){
+		wrapper_localstorage.encrypt('data', JSON.stringify(Lincko.storage.data));
+	}
 	
-	app_application_lincko.prepare(true, true); //Force update
+	app_application_lincko.prepare(false, true); //Luanch updates
 	return true;
 };
 
@@ -919,18 +984,20 @@ Lincko.storage.tree = function(category, id, direction, include, extend){
 			for(var child_cat in items){
 				for(var child_id in items[child_cat]){
 					child_id = parseInt(child_id, 10);
-					if(typeof results[child_cat]=='undefined'){
-						results[child_cat] = {};
-					}
-					results[child_cat][child_id] = true;
-					if(extend){
-						temp = Lincko.storage.tree(child_cat, child_id, 'children', false);
-						for(var temp_cat in temp){
-							for(var temp_id in temp[temp_cat]){
-								if(typeof results[temp_cat]=='undefined'){
-									results[temp_cat] = {};
+					if(Lincko.storage.get(child_cat, child_id)){ //Check existance
+						if(typeof results[child_cat]=='undefined'){
+							results[child_cat] = {};
+						}
+						results[child_cat][child_id] = true;
+						if(extend){
+							temp = Lincko.storage.tree(child_cat, child_id, 'children', false);
+							for(var temp_cat in temp){
+								for(var temp_id in temp[temp_cat]){
+									if(typeof results[temp_cat]=='undefined'){
+										results[temp_cat] = {};
+									}
+									results[temp_cat][temp_id] = true;
 								}
-								results[temp_cat][temp_id] = true;
 							}
 						}
 					}
@@ -945,18 +1012,20 @@ Lincko.storage.tree = function(category, id, direction, include, extend){
 				var item = Lincko.storage.data[category][id]['_parent'];
 				var par_cat = item[0];
 				var par_id = parseInt(item[1], 10);
-				if(typeof results[par_cat]=='undefined'){
-					results[par_cat] = {};
-				}
-				results[par_cat][par_id] = true;
-				if(extend){
-					temp = Lincko.storage.tree(par_cat, par_id, 'parents', false);
-					for(var temp_cat in temp){
-						for(var temp_id in temp[temp_cat]){
-							if(typeof results[temp_cat]=='undefined'){
-								results[temp_cat] = {};
+				if(Lincko.storage.get(par_cat, par_id)){ //Check existance
+					if(typeof results[par_cat]=='undefined'){
+						results[par_cat] = {};
+					}
+					results[par_cat][par_id] = true;
+					if(extend){
+						temp = Lincko.storage.tree(par_cat, par_id, 'parents', false);
+						for(var temp_cat in temp){
+							for(var temp_id in temp[temp_cat]){
+								if(typeof results[temp_cat]=='undefined'){
+									results[temp_cat] = {};
+								}
+								results[temp_cat][temp_id] = true;
 							}
-							results[temp_cat][temp_id] = true;
 						}
 					}
 				}

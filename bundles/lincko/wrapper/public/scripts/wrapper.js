@@ -33,10 +33,15 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 	action = action.toLowerCase();
 
 	//We add a random md5 code to insure we avoid getting in queue for the same ajax call
-	var linkid = '?'+md5(Math.random());
+	var unique_md5 = md5(Math.random());
+	var linkid = '?'+unique_md5;
 	var timeout = 10000; //10s
 	if(action == 'translation/auto'){
 		timeout = 20000; //20s, Twice the time because the translation request has to request a third party
+	}
+
+	if(action.match(/\/create$/, '')){
+		param[param.length] = {name:'temp_id', value:unique_md5};
 	}
 
 	//initialize file uploading
@@ -65,7 +70,20 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 			if(ajax_objForm){
 				wrapper_run[ajax_objForm.prop('id')] = true;
 			}
-			cb_begin(jqXHR, settings);
+			var temp_id = '';
+			if(settings.data){
+				var data = JSON.parse(settings.data);
+				if(typeof data == 'object'){
+					for(var i in data){
+						if(typeof data[i].name == 'string' && typeof data[i].value == 'string'){
+							if(data[i].name == 'temp_id'){
+								temp_id = data[i].value;
+							}
+						}
+					}
+				}
+			}
+			cb_begin(jqXHR, settings, temp_id);
 		},
 		success: function(data){
 			//Those 3 following lines are only for debug purpose

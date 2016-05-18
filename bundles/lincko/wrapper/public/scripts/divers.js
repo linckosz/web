@@ -58,6 +58,23 @@ function wrapper_test(type, RCUD){
 		console.log(data_msg);
 	}
 
+	function wrapper_test_begin(jqXHR, settings, temp_id){
+		console.log(temp_id);
+
+		var param = {};
+		if(settings.data){
+			var data = JSON.parse(settings.data);
+			if(typeof data == 'object'){
+				for(var i in data){
+					if(typeof data[i].name == 'string' && typeof data[i].value != 'undefined'){
+						param[data[i].name] = data[i].value;
+					}
+				}
+			}
+		}
+		console.log(param);
+	}
+
 	if(type=='*' || type=='chats'){
 		if(RCUD==0){
 			wrapper_sendAction(
@@ -394,7 +411,9 @@ function wrapper_test(type, RCUD){
 				},
 				'post',
 				'task/create',
-				wrapper_test_display
+				wrapper_test_display,
+				null,
+				wrapper_test_begin
 			);
 		}
 		else if(RCUD==2){
@@ -402,7 +421,7 @@ function wrapper_test(type, RCUD){
 				{
 					"id": 32,
 					//"parent_id": 4,
-					//"title": "Title "+Math.floor(Math.random() * 20), //OPTIONAL
+					"title": "Title "+Math.floor(Math.random() * 20), //OPTIONAL
 					//"comment": "Content "+Math.floor(Math.random() * 20), //OPTIONAL
 					//"start": 1462110422, //OPTIONAL
 					//"duration": 86400, //OPTIONAL
