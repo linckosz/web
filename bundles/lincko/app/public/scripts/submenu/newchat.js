@@ -77,14 +77,30 @@ Submenu.prototype.Add_ChatMenu = function() {
             Elem.find(".attachment").show();
         }
     });
+    $('.comments_input', submenu_wrapper).keypress(function(e) {
+        if(e.which == 13) {
+            var content = Elem.find('.comments_input').val();
+            var type = that.param.type == 'history' ? "projects":'chats';
+            wrapper_sendAction({
+                'comment': content,
+                'parent_type': type,
+                'parent_id': that.param.id,
+            },
+            'post',
+            'comment/create',
+            function() {
+                Elem.find('.comments_input').val('');
+            }
+            );
+        }
+    });
     $('.send', submenu_wrapper).on("click", function() {
-        //var content = submenu_wrapper.find('comments_input').val();//TODO: check why this submenu_wrapper is not apperaed in context
         var content = Elem.find('.comments_input').val();
-        var id = 1;
+        var type = that.param.type == 'history' ? "projects":'chats';
         wrapper_sendAction({
                 'comment': content,
-                'parent_type': 'chats',
-                'parent_id': id, //TODO: fix this hard code
+                'parent_type': type,
+                'parent_id': that.param.id,
             },
             'post',
             'comment/create',
@@ -93,6 +109,9 @@ Submenu.prototype.Add_ChatMenu = function() {
             }
         ); //TODO: fix the error handling logic
     });
+    //app_application_lincko.add(dom_id,"type_id", function() {
+        
+    //});
     //Free memory
     delete submenu_wrapper;
     return true;
