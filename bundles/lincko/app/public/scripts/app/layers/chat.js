@@ -1,8 +1,20 @@
 /* Category ? */
+
+var chatlist_subConstruct = function(){
+        var that = this;
+        that.elem_newcardCircle.click( function() {
+            submenu_Build("contacts", false, false, {id:app_content_menu.projects_id}, true);
+            return false;
+        })
+        .appendTo(that.list_wrapper);
+}
+
 function app_layers_chat_feedChat(parent, handler) {
     var app_layers_chatlist = new skylist(
         'chats',
-        parent
+        parent,
+        null,
+        chatlist_subConstruct
     );
     parent.delegate(".skylist_card", "click", handler);
     parent.delegate(".skylist_newcardCircle", "click", function() {
