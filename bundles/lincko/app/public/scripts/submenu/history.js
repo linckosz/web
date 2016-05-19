@@ -203,7 +203,7 @@ var chatFeed = (function() {
 
         if (this.item.type === "comments") {
             var parent = Lincko.storage.getParent('comments', this.item.id);
-            if (parent.type === 'projects') {
+            if (parent._type === 'projects') {
                 this.templateType = '-models_history_comment_short';
             } else {
                 this.templateType = '-models_history_comment_long';
