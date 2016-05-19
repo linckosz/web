@@ -543,7 +543,6 @@ Submenu.prototype.Add_taskdetail = function() {
 		function(){
 			var elem = $('#'+this.id);
 			var elem_new = elem.clone();
-			console.log(elem);
 			elem.velocity('fadeOut',{
 				duration: 200,
 				complete: function(){

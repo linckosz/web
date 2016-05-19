@@ -235,7 +235,6 @@ function burger_calendar (elem_timestamp, elem_display){
     });
 
     elem_timestamp.blur(function(){
-        console.log(elem_timestamp);
         if( $('#ui-datepicker-div').css('display') != 'block' ){
             $('#ui-datepicker-div').removeClass('burger_calendar');
         }
