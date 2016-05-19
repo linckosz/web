@@ -227,7 +227,6 @@ var chatFeed = (function() {
         }
         update();
         if (type != 'history'){
-
             app_application_lincko.add("chats", update);
         }
         else {
@@ -274,6 +273,7 @@ var chatFeed = (function() {
     }
 
     function app_layers_history_feedPage(position, type, parentId) {
+        debugger;
         var items = getRawContents(type, parentId, "0-20");
         format_items(type, items, position);
     }
@@ -288,7 +288,7 @@ var chatFeed = (function() {
             timestamp: "1458629345"
             type: "tasks"
         */
-        var wrapper = $('<div>').addClass('chat_contents_wrapper').appendTo(position);
+        var wrapper = $('<div>').addClass('chat_contents_wrapper').attr('id', 'chat_contents_wrapper').appendTo(position);
         for (var i in items) {
             var item = new BaseHistoryCls(items[i]);
             var newItem = fake_history_generator_for_multimedia(items[i]);
