@@ -173,7 +173,6 @@ skylist.prototype.construct = function(){
 	that.elem_navbar.find('[people=1]').click();
 
 	$(document).on("previewHide.skylist_"+that.md5id, function(){
-		console.log('previewHide');
 		that.previewHide();
 	});
 
@@ -207,8 +206,9 @@ skylist.prototype.construct = function(){
 		that.list.prop('id'),
 		that.list_type,
 		function(){
+			console.log('app_application_lincko.add '+that.list_type);
 			if( that.skylist_update ){
-				that.skylist_update();
+				//that.skylist_update();
 			}
 		}
 	);
@@ -273,7 +273,6 @@ skylist.prototype.generate_Lincko_itemsList = function(){
 }
 
 skylist.prototype.store_all_elem = function(){
-	console.log('store_all_elem fn');
 	//should be lanunched when all DOM is loaded
 	//this.elem_taskblur_all = this.tasklist.find('.app_layers_dev_skytasks_taskblur');
 	this.elem_taskcenter_all = this.list.find('[find=task_center]');
@@ -444,9 +443,8 @@ skylist.prototype.filter_by_search = function(items, filter){
 }
 
 skylist.prototype.tasklist_update = function(type, filter_by){
+	console.log('--------tasklist_update---------');
 	var that = this;
-	console.log('type: '+type);
-	console.log('filter_by: '+filter_by);
 	that.generate_Lincko_itemsList();
 	var items = that.Lincko_itemsList;
 	var items_filtered = items;
@@ -541,23 +539,24 @@ skylist.prototype.addCard = function(item){
 	if( that.list_type == 'tasks' ){
 		elem_card = that.addTask(item);
 		elem_card.find('[find=card_spacestick]').removeClass('display_none');
+
 		app_application_lincko.add(
-		elem_card.prop('id'),
-		that.list_type+'_'+item['_id'],
-		function(){
-			console.log(this.id);
-			/*
-			var elem = $('#'+this.id);
-			elem.velocity('fadeOut',{
-				complete: function(){
-					//elem.replaceWith(that.addCard(item));
-				}
-			});
-			*/
-			//elem.replaceWith(that.addCard(item));
-			//elem.after(that.addCard(item));
-		}
-	);
+			elem_card.prop('id'),
+			that.list_type+'_'+item['_id'],
+			function(){
+				var elem = $('#'+this.id);
+				elem.velocity('fadeOut',{
+					duration: 200,
+					complete: function(){
+						elem.replaceWith(that.addCard(Lincko.storage.get('tasks', item['_id'])));
+						that.store_all_elem();
+
+					}
+				});
+				//elem.replaceWith(that.addCard(item));
+				//elem.after(that.addCard(item));
+			}
+		);
 	}
 	else if( that.list_type == 'notes' ){
 		elem_card = that.addNote(item);
@@ -714,8 +713,9 @@ skylist.prototype.addTask = function(item){
 			in_charge += Lincko.storage.get("users", i ,"username");
 		}
 	}
-	Elem.find('[find=name]').html(in_charge);
-	burger(Elem.find('[find=name]'), '_users', item);
+	Elem.find('[find=name]').toggleClass('display_none');
+	Elem.find('input[find=name]').val(in_charge);
+	burger(Elem.find('input[find=name]'), '_users', item);
 	
 	/*
 	rightOptions - in_charge
@@ -764,18 +764,14 @@ skylist.prototype.addTask = function(item){
 		duedate = duedate.display('date_very_short');
 	}
 	
-	var elem_calendar = Elem.find('[find=card_time_calendar]');
+	var elem_calendar = Elem.find('[find=card_time]');
 	var elem_calendar_timestamp = Elem.find('[find=card_time_calendar_timestamp]');
 
-	Elem.find('[find=card_time]').addClass('display_none');
-	elem_calendar.removeClass('display_none');
 	elem_calendar_timestamp.removeClass('display_none');
 
-	elem_calendar.val(duedate);
+	elem_calendar.html(duedate);
 	elem_calendar_timestamp.val((item['start']+item['duration'])*1000);
 	burger_calendar(elem_calendar_timestamp, elem_calendar );
-
-	//Elem.find('[find=card_time]').html(duedate);
 
 	/*
 	rightOptions - duedate
@@ -935,6 +931,15 @@ skylist.prototype.add_rightOptionsBox = function(text, icon_class){
 
 skylist.prototype.add_cardEvents = function(Elem){
 	var that = this;
+
+	//icon click action to trigger text click
+	Elem.find('[find=name_icon]').click(function(){
+		Elem.find('[find=name]').click();
+	});
+	Elem.find('[find=comments_icon]').click(function(){
+		Elem.find('[find=comments]').click();
+	});
+
 	//event actions for swipe left and right on the task
 	Elem.on('mousedown touchstart', function(event){ //for firefox, event must be passed as the parameter of this fn
 		//console.log(e);
@@ -1078,7 +1083,6 @@ skylist.prototype.on_mouseup = function(){
 
 skylist.prototype.clearOptions = function(task){
 	var that = this;
-	console.log('clearOptions fn');
 	if( !task ){
 		that.elem_task_all.removeAttr('style');
 		that.elem_task_all.data('options',false);
@@ -1141,9 +1145,9 @@ skylist.prototype.taskClick = function(event,task_elem){
 	}
 	var that = this;
 	var target = $(event.target);
-		if( target.is('[find=checkbox]') || target.is('label') || target.is('input') || target.attr('contenteditable')=="true" || that.editing_focus || that.is_scrolling || that.elem_navbar.find('.skylist_menu_navbar_filter_pane').css('display') != 'none'){
-			return;
-		}
+	if( target.is('[find=checkbox]') || target.is('label') || target.is('input') || target.attr('contenteditable')=="true" || that.editing_focus || that.is_scrolling || that.elem_navbar.find('.skylist_menu_navbar_filter_pane').css('display') != 'none' || $('#burger_dropdown').length > 0 || $('#ui-datepicker-div').css('display') == 'block' ){
+		return;
+	}
 	
 	//clicking on the task will close options
 	var task_elem_left = parseInt(task_elem.css('left'),10);
@@ -1290,6 +1294,14 @@ skylist.prototype.menu_construct = function(){
 	
 	that.list_wrapper.append(that.elem_navbar);
 
+
+
+	/*
+	 * TIMESORT-----------------------------------------------------------------------------------------
+	 */
+	 if( !that.sort_arrayText ){
+	 	return false;
+	 }
 	var sort;
 	that.elem_timesort = that.elem_navbar.find('.skylist_menu_timesort');
 	that.elem_timesort.append('<span class="skylist_menu_sortdot maxMobileL"></span>');
@@ -1387,6 +1399,9 @@ skylist.prototype.menu_construct = function(){
 
 	});//end of panend
 	/*hammer.js END--------------------------------------*/
+	/*
+	 * end of TIMESORT-----------------------------------------------------------------------------------------
+	 */
 
 } //construct END
 
@@ -1488,7 +1503,9 @@ skylist.prototype.minTablet = function(){
 			.removeClass('skylist_simpleDesktop2');
 	}
 
-	that.elem_Jsorts.removeClass('display_none');
+	if( that.elem_Jsorts ){
+		that.elem_Jsorts.removeClass('display_none');
+	}
 
 
 }
@@ -1497,7 +1514,9 @@ skylist.prototype.maxMobileL = function(){
 	console.log('skylist.maxMobileL');
 	var that = this;
 	if(!that.list_wrapper){return;}
-	that.elem_Jsorts.not('.skylist_menu_timesort_dot').addClass('display_none');
+	if(that.elem_Jsorts ){
+		that.elem_Jsorts.not('.skylist_menu_timesort_dot').addClass('display_none');
+	}
 	that.elem_navbar.find('.icon-Indicator').closest('.skylist_menu_timesort_text_wrapper').removeClass('display_none');
 }
 

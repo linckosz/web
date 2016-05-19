@@ -293,9 +293,12 @@
 	color: #53ADD2;
 }
 .skylist_card_bottom [find=name] {
-    width: 100px;
+	width: 100px;
     text-align: left;
     display: inline-block;
+    background-color: initial;
+    border: none;
+    color: inherit;
 }
 
 .skylist_card_leftOptions, .skylist_card_rightOptions {
@@ -350,12 +353,21 @@
 
 
 .skylist_newcardCircle {
+	background-color: #FFFFFF;
     position: absolute;
     right: 0px;
     bottom: 0px;
     font-size: 50px;
     margin: 10px;
+    border-radius: 50px;
+    width: 40px;
+    height: 40px;
     cursor: pointer; cursor: hand;
+}
+.skylist_newcardCircle:before {
+	position: absolute;
+    right: -4px;
+    top: -4px;
 }
 .app_layers_tasks_tasklist .skylist_newcardCircle:hover {
     opacity: 0.5;
@@ -402,12 +414,12 @@
 	margin-left: 6px;
 } 
 
-.skylist_card_overdue [find=card_time_calendar]{
+.skylist_card_overdue [find=card_time]{
 	color: #BE2B1f;
 }
 
 .skylist_card_checked {
-	opacity: 0.4;
+	opacity: 0.5;
 }
 .skylist_card_checked .skylist_card_textwrapper {
 	text-decoration: line-through;

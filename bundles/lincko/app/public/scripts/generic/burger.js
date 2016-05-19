@@ -2,7 +2,7 @@
  * the ultimate Lincko Burger
  */
 var burger = function(elem, burger_mode, item){
-	var elem_dropdown = $('#-burger_dropdown').clone().prop('id','');
+	var elem_dropdown = $('#-burger_dropdown').clone().prop('id','burger_dropdown');
     var burger_on = false;
 
 	var burger_destroy = function(){
@@ -113,13 +113,16 @@ var burger = function(elem, burger_mode, item){
 	}//END OF burger_mode == regex
     else if( burger_mode == '_users' ){
         elem.click(function(event){
+            elem.focus();
+            console.log('click focus');
             event.stopPropagation();
             if( burger_on ){
                 burger_destroy();
             }
             else{
                 //elem_dropdown.empty().insertAfter(elem);
-                elem_dropdown.empty().appendTo('#app_layers_content');
+                //elem_dropdown.empty().appendTo('#app_layers_content');
+                elem_dropdown.empty().appendTo('#app_content_dynamic_sub');
                 burger_on = true;
                 //var coord = $(this).position();
                 var coord = $(this).offset();
@@ -131,7 +134,7 @@ var burger = function(elem, burger_mode, item){
                 for (var i = 0; i < accessList.length; i++) {
                     var userid = accessList[i];
                     username = Lincko.storage.get("users", userid,"username");
-                    elem_option_clone = elem_option.clone();
+                    elem_option_clone = elem_option.clone().attr('userid',userid);
                     elem_option_clone.find('[find=username]').html(username);
                     if( item['_type'] == 'tasks' && userid in item['_users'] && item['_users'][userid]['in_charge'] ){
                         elem_option_clone.addClass('burger_option_selected');
@@ -142,12 +145,25 @@ var burger = function(elem, burger_mode, item){
 
                     if( item['_type'] == 'tasks'){
                         elem_option_clone.click(function(){
-                            wrapper_sendAction(
-                            {
-                                'id': item['_id'],
-                                //''
-                            }, 'post', 'task/update');
+                            var userid = $(this).attr('userid');
+                            var param = {};
+                            param['id'] = item['_id'];
+                            param['users>in_charge'] = {};
+                            for (var i = 0; i < accessList.length; ++i){
+                                //for beta, only one person can be in_charge. so first set all users to false
+                                param['users>in_charge'][accessList[i]] = false;
+                            }
+                            if( userid in item['_users'] && item['_users'][userid]['in_charge'] ){
+                                //if user is already in charge
+                                param['users>in_charge'][userid] = false;
+                            }
+                            else {
+                                param['users>in_charge'][userid] = true;
+                            }
+                            wrapper_sendAction( param, 'post', 'task/update');
+                            burger_destroy();
                         });
+                        
                     }
 
                      elem_dropdown.append(elem_option_clone);
@@ -171,8 +187,8 @@ var burger = function(elem, burger_mode, item){
                     
             }
         });
-        elem.focusout(function(){
-            elem.remove();
+        elem.blur(function(){
+            burger_destroy();
         });
     }
 }
@@ -185,26 +201,44 @@ function burger_calendar (elem_timestamp, elem_display){
         dateFormat: '@',
         gotoCurrent: true,
         minDate: 0,
+        showAnim: "slideDown",
         beforeShow: function(){
             $('#ui-datepicker-div').addClass('burger_calendar');
         },
     });
 
-    elem_display.focus(function(){
-        elem_timestamp.focus();
+    elem_display.click(function(){
+        event.stopPropagation();
+        if( $('#ui-datepicker-div').length > 0 && $('#ui-datepicker-div').css('display') == 'block' ){
+            elem_timestamp.blur();
+        }
+        else{
+            elem_timestamp.focus();
+        }
     });
     elem_timestamp.change(function(){
         var timestamp = $(this).val();
         timestamp = parseInt(timestamp,10); 
         timestamp += 86399000; //adds 23hrs59min59sec to make it end of the day
+        $(this).val(timestamp);
         var date = new wrapper_date(timestamp/1000);
+        console.log(date);
         if(skylist_textDate(date)){
             date = skylist_textDate(date);
         }
         else{
             date = date.display('date_very_short');
         }
-        elem_display.val(date);
+        elem_display.html(date);
+        //elem_display.css('width',(elem_display.val().length-1)+'em');
+        //elem_display.attr('size',(elem_display.val().length+1));
+    });
+
+    elem_timestamp.blur(function(){
+        console.log(elem_timestamp);
+        if( $('#ui-datepicker-div').css('display') != 'block' ){
+            $('#ui-datepicker-div').removeClass('burger_calendar');
+        }
     });
 
 }

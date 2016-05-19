@@ -27,13 +27,14 @@
 				<span class="submenu_taskdetail_meta_icons icon-Calendar"></span>
 				{#<span find="duedate_text" class="submenu_taskdetail_meta_text"></span>#}
 				<input class="visibility_hidden"/>
-				<input type="text" find="duedate_text" class="submenu_taskdetail_meta_text" readonly="readonly"/>
-				<input type="text" find="duedate_timestamp" class="submenu_taskdetail_hiddenInput" readonly="readonly"/>
+				<span find="duedate_text" class="submenu_taskdetail_meta_text"></span>
+				<input type="text" find="duedate_timestamp" class="submenu_taskdetail_meta_text" readonly="readonly"/>
 			</td>
 			<td find="user" class="submenu_taskdetail_meta_box">
 				{#<img src="{{_filelatest('/lincko/app/images/app/icons/Users-1.png') }}"/>#}
 				<span class="submenu_taskdetail_meta_icons icon-Small-Persona"></span>
-				<span find="assigned_text" class="submenu_taskdetail_meta_text"></span>
+				<span find="user_text" class="submenu_taskdetail_meta_text"></span>
+				<input type="text" find="user_text_hidden" class="submenu_taskdetail_meta_text" readonly="readonly"/>
 			</td>
 			<td find="spaces" class="submenu_taskdetail_meta_box">
 				{#<img src="{{_filelatest('/lincko/app/images/app/icons/Time-3.png') }}"/>#}

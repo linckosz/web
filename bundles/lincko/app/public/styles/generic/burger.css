@@ -3,7 +3,7 @@
 	font-size: 12px;
 	display: block;
 	position: fixed;
-	z-index: 900;
+	z-index: 5000;
 	display: none;
 	text-align: initial;
 	box-shadow: 0px 0px 4px 0px #3F84B0;
@@ -42,4 +42,8 @@
     vertical-align: middle;
     font-size: 20px;
     color: #3F84B0;
+}
+
+.burger_calendar {
+    z-index: 5000 !important;
 }

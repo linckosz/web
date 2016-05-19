@@ -75,7 +75,6 @@
 					<div find='title' contenteditable="false"></div><!--<span find='dash'>-</span>-->
 					<div find='description'></div>
 				</td>
-				<input type="text" find="card_time_calendar" class="skylist_card_time floatright skylist_paddingRight display_none" readonly="readonly"/>
 				<input type="text" find="card_time_calendar_timestamp" class="skylist_card_time_hidden display_none" readonly="readonly"/>
 				<span find='card_time' class="skylist_card_time floatright skylist_paddingRight"></span>
 			</tr>
@@ -85,9 +84,10 @@
 				<span style="float: left" find="quickInfo1"></span>
 				<span style="float: left" find="quickInfo2"></span>
 				<span style="float: left" find="quickInfo3"></span>
-				<span class="icon-Small-Persona"></span>
+				<span find="name_icon" class="icon-Small-Persona"></span>
+				<input type="text" find='name' class="skylist_icon_text display_none" readonly="readonly"/>
 				<span find='name' class="skylist_icon_text">Name{# toto #}</span>
-				<span class="icon-Pencil"></span>
+				<span find="comments_icon" class="icon-Pencil"></span>
 				<span find='comments' class="skylist_icon_text">(<span find="commentCount"></span>){# toto #}</span>
 			</td>
 		</table>

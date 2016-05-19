@@ -113,8 +113,10 @@ Submenu_select.taskdetail = function(Elem){
 Submenu.prototype.Add_taskdetail = function() {
 	var that = this;
 	var attribute = this.attribute;
+	this.md5id = md5(Math.random());
 	submenu_wrapper = this.Wrapper();
 	var submenu_content = submenu_wrapper.find("[find=submenu_wrapper_content]");
+	submenu_content.prop('id','taskdetail_'+that.md5id);
 	var submenu_taskdetail = $('#-submenu_taskdetail').clone().prop('id','submenu_taskdetail');
 	var contactServer = false;
 	var param_sendAction = {};
@@ -203,7 +205,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	submenu_taskdetail.append(elem);
 
 	/*meta (general)*/
-	elem = $('#-submenu_taskdetail_meta').clone().prop('id','submenu_taskdetail_meta');
+	elem = $('#-submenu_taskdetail_meta').clone().prop('id','submenu_taskdetail_meta_'+that.md5id);
 	elem.find('.submenu_taskdetail_meta_actions').click(function(){
 		var route;
 		if( that.param.type == "tasks" ){
@@ -222,46 +224,61 @@ Submenu.prototype.Add_taskdetail = function() {
 		submenu_Clean(null,null,true);
 	});
 
-	var elem_timestamp = elem.find('[find=duedate_timestamp]');
-	var elem_display = elem.find("[find=duedate_text]");
-	burger_calendar( elem_timestamp, elem_display );
-
-	elem_timestamp.change(function(){
+	var update_meta = function(elem_meta){
+		var elem = elem_meta;
+		in_charge = '';
+		/*---taskmeta---*/
 		if( that.param.type == "tasks" ){
-			duration_timestamp = $(this).val()/1000 - item['start'];
-			if( duration_timestamp < 0 ){
-				alert(item['start']+' duedate cant be before start date. (dont worry, this is just a test alert)');
+			for (var i in item['_users']){
+				if( item['_users'][i]['in_charge']==true ){
+					in_charge += ' ';
+					in_charge += Lincko.storage.get("users", i ,"username");
+				}
 			}
-		}
-	});
 
-	/*---taskmeta---*/
-	if( this.param.type == "tasks" ){
-		for (var i in item['_users']){
-			if( item['_users'][i]['in_charge']==true ){
-				in_charge += ' ';
-				in_charge += Lincko.storage.get("users", i ,"username");
+			//----in_charge
+			var elem_in_charge = elem.find('[find=user_text]');
+			var elem_in_charge_hidden = elem.find('[find=user_text_hidden]');
+			elem_in_charge.html(in_charge);
+			burger(elem_in_charge_hidden, '_users', item);
+			elem_in_charge.click(function(){
+				elem_in_charge_hidden.click();
+			});
+			elem_in_charge_hidden.change(function(){
+				elem_in_charge.html(elem_in_charge_hidden.val());
+			});
+
+			//---duedate calenar
+			var elem_timestamp = elem.find('[find=duedate_timestamp]');
+			var elem_display = elem.find("[find=duedate_text]");
+			burger_calendar( elem_timestamp, elem_display );
+			elem_timestamp.val((item['start'] + duration_timestamp)*1000);
+			elem_timestamp.change(function(){
+				duration_timestamp = $(this).val()/1000 - item['start'];
+				if( duration_timestamp < 0 ){
+					alert(item['start']+' duedate cant be before start date. (dont worry, this is just a test alert)');
+				}
+			});
+
+			duedate = skylist_calcDuedate(item);
+			if( skylist_textDate(duedate) ){
+				elem.find("[find=duedate_text]").html(skylist_textDate(duedate));
 			}
+			else{
+				elem.find("[find=duedate_text]").html(duedate.display('date_very_short'));
+			}
+			
+		}/*---notesmeta---*/
+		else if( that.param.type == "notes" ){
+			elem.find('[find=user_text]').html(Lincko.storage.get("users", item['updated_by'],"username"));
+			var date = new wrapper_date(item['updated_at']);
+			elem.find("[find=duedate_text]").html(date.display('date_very_short'));
 		}
-		elem.find('[find=assigned_text]').html(in_charge);
-		elem_timestamp.val((item['start'] + duration_timestamp)*1000);
-
-		duedate = skylist_calcDuedate(item);
-		if( skylist_textDate(duedate) ){
-			elem.find("[find=duedate_text]").val(skylist_textDate(duedate));
-		}
-		else{
-			elem.find("[find=duedate_text]").val(duedate.display('date_very_short'));
-		}
-		
-	}/*---notesmeta---*/
-	else if( this.param.type == "notes" ){
-		elem.find('[find=assigned_text]').html(Lincko.storage.get("users", item['updated_by'],"username"));
-		var date = new wrapper_date(item['updated_at']);
-		elem.find("[find=duedate_text]").val(date.display('date_very_short'));
-	}
-	submenu_taskdetail.append(elem);
-	/*---END OF taskmeta---*/
+		return elem;
+	}// end of update_meta function
+	
+	submenu_taskdetail.append(update_meta(elem));
+	/*---END OF all meta---*/
 
 	/*---description---*/
 	elem = $('#-submenu_taskdetail_description').clone().prop('id','submenu_taskdetail_description');
@@ -473,7 +490,6 @@ Submenu.prototype.Add_taskdetail = function() {
 	submenu_content.append(submenu_taskdetail);
 
 
-
 	/*----create/save on previewHide----*/
 	$(document).on("previewHide.skylist", function(){
 		console.log('previewHide'+taskid);
@@ -496,6 +512,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		if( that.param.type == "tasks" && duration_timestamp != item['duration'] ){
 			contactServer = true;
 			param['duration'] = duration_timestamp;
+			console.log(param['duration']);
 		}
 
 		if( contactServer ){
@@ -520,10 +537,42 @@ Submenu.prototype.Add_taskdetail = function() {
 	});
 
 
+	app_application_lincko.add(
+		'submenu_taskdetail_meta_'+that.md5id,
+		that.param.type+'_'+item['_id'],
+		function(){
+			var elem = $('#'+this.id);
+			var elem_new = elem.clone();
+			console.log(elem);
+			elem.velocity('fadeOut',{
+				duration: 200,
+				complete: function(){
+					item = Lincko.storage.get(that.param.type, item['_id']);
+					if( that.list_type == "tasks" ){
+						duration_timestamp = item['duration'];
+					}
+					elem.replaceWith(update_meta(elem_new));
+				}
+			});
+		}
+	);
+
+
+
+
+	/*---IScroll options---*/
+	wrapper_IScroll_options_new['taskdetail_'+that.md5id] = { 
+		click: false,
+	};	
+
+
 	/*---easyEditor---*/
+	submenu_wrapper.find('[find=description_text]').easyEditor();
+	/*
 	if(that.param.type == 'notes' ){
 		submenu_wrapper.find('[find=description_text]').easyEditor();
 	}
+	*/
 
 	//Free memory
 	delete submenu_wrapper;
