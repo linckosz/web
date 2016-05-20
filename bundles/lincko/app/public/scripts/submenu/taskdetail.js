@@ -256,7 +256,17 @@ Submenu.prototype.Add_taskdetail = function() {
 			elem_timestamp.change(function(){
 				duration_timestamp = $(this).val()/1000 - item['start'];
 				if( duration_timestamp < 0 ){
-					alert(item['start']+' duedate cant be before start date. (dont worry, this is just a test alert)');
+					console.log(item['start']+' duedate cant be before start date.');
+				}
+				else{
+					var route = '';
+					if( that.param.type == "tasks" ){
+						route = 'task/update';
+					}
+					wrapper_sendAction({
+						id: item['_id'],
+						duration: duration_timestamp,
+					}, 'post', route);
 				}
 			});
 

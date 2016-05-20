@@ -773,6 +773,23 @@ skylist.prototype.addTask = function(item){
 	elem_calendar_timestamp.val((item['start']+item['duration'])*1000);
 	burger_calendar(elem_calendar_timestamp, elem_calendar );
 
+	elem_calendar_timestamp.change(function(){
+		var duration_timestamp = $(this).val()/1000 - item['start'];
+		if( duration_timestamp < 0 ){
+			console.log(item['start']+' duedate cant be before start date.');
+		}
+		else{
+			var route = '';
+			if( that.list_type == "tasks" ){
+				route = 'task/update';
+			}
+			wrapper_sendAction({
+				id: item['_id'],
+				duration: duration_timestamp,
+			}, 'post', route);
+		}
+	});
+
 	/*
 	rightOptions - duedate
 	*/
