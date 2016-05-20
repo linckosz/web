@@ -1,0 +1,35 @@
+div#player_preview_full_screen {
+	position:fixed !important;
+	top:0;
+	right:0;
+	bottom:0;
+	left:0;
+	z-index: 2006;
+}
+
+#player_preview_style_wrapper {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+	-webkit-transform: translate(-50%,-50%);
+    -moz-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    -o-transform: translate(-50%,-50%);
+	width: 70%;
+	height: 70%;
+	background-color: rgba(0, 0, 0, 0.6);
+}
+
+#player_preview_style_wrapper .close {
+	color: rgba(0, 0, 0, 0.6);
+	position: absolute;
+	top: 0;
+	right: 0;
+	transform: translate(50%, -50%);
+	-webkit-transform: translate(50%,-50%);
+    -moz-transform: translate(50%,-50%);
+    -ms-transform: translate(50%,-50%);
+    -o-transform: translate(50%,-50%);
+	cursor: pointer;
+}
