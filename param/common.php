@@ -148,6 +148,7 @@ $app->lincko->data = array(
 	'workspace' => '',
 	'lincko_back' => '', //Only used for development purpose "master-[bruno.]lincko.cafe"
 	'lincko_front' => '', //Only used for development purpose "[master-]bruno.lincko.cafe"
+	'lincko_show_error' => 'false', //Display some error for developpers on JS (NOTE: it has to be a string because of Twig conversion to JS)
 );
 
 if(isset($_SERVER["LINCKO_FRONT"])){

@@ -151,9 +151,9 @@ function wrapper_test(type, RCUD){
 		else if(RCUD==1){
 			wrapper_sendAction(
 				{
-					"parent_type": "comments",
-					"parent_id": 124,
-					"comment": "It's a comment",
+					"parent_type": "users",
+					"parent_id": 5,
+					"comment": "안녕하세요",
 				},
 				'post',
 				'comment/create',
@@ -419,7 +419,7 @@ function wrapper_test(type, RCUD){
 		else if(RCUD==2){
 			wrapper_sendAction(
 				{
-					"id": 32,
+					"id": 264,
 					//"parent_id": 4,
 					"title": "Title "+Math.floor(Math.random() * 20), //OPTIONAL
 					//"comment": "Content "+Math.floor(Math.random() * 20), //OPTIONAL
@@ -583,6 +583,31 @@ function wrapper_test(type, RCUD){
 				},
 				'post',
 				'workspace/restore',
+				wrapper_test_display
+			);
+		}
+	}
+
+	if(type=='*' || type=='data'){
+		if(RCUD==0){
+			wrapper_sendAction(
+				{
+					"tasks_264": true,
+					"tasks_287": true,
+				},
+				'post',
+				'data/viewed',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==1){
+			wrapper_sendAction(
+				{
+					"tasks_264": true,
+					"tasks_287": 1463564993,
+				},
+				'post',
+				'data/noticed',
 				wrapper_test_display
 			);
 		}

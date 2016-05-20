@@ -1309,9 +1309,9 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 		}
 	}
 
-	if(condition_alert){
+	if(wrapper_show_error && condition_alert){
 		console.log(conditions);
-		console.log('The parameters request has an issue.');
+		console.log('The parameters requested have an issue.');
 	}
 
 	if(array_items.length>0){
