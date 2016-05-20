@@ -291,11 +291,8 @@ Submenu.prototype.Add_taskdetail = function() {
 	
 
 	/*---taskcomments--*/
-	var elem_submenu_taskdetail_comments = $('#-submenu_taskdetail_comments').clone().prop('id','submenu_taskdetail_comments');
+	var elem_submenu_taskdetail_comments = $('#-submenu_taskdetail_comments').clone().prop('id','submenu_taskdetail_comments_'+that.md5id);
 	submenu_taskdetail.append(elem_submenu_taskdetail_comments);
-
-	elem_commentbubble = $('#-submenu_taskdetail_commentbubble').clone().prop('id','');
-	var elem_tmp;
 
 
 	var commentWithID = function(array, id){
@@ -319,7 +316,7 @@ Submenu.prototype.Add_taskdetail = function() {
 
 	for( var i in comments_all ){
 		comment = comments_all[i];
-		if( comment['_parent'][0] == 'tasks' ){
+		if( comment['_parent'][0] != 'comments' ){
 			comments_primary.push(comment);
 		}
 	}
@@ -335,6 +332,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			comments_sorted.push(val);
 		});
 	}
+	console.log(comments_sorted);
 	
 
 	/*
@@ -358,17 +356,17 @@ Submenu.prototype.Add_taskdetail = function() {
 		}
 	}
 	*/
-	//var comments = Lincko.storage.list('comments',null,null,'tasks',taskid,true).reverse();
-	var commentCount = 0;
-	for ( var i in comments_sorted ){
-		comment = comments_sorted[i];
-		elem = elem_commentbubble.clone();
-		elem.find('[find=comment_id]').html(comment['_id']);
+
+	var generateCommentBubble = function(comment){
+		//comment is a Lincko.storage.data comment object
+		var elem = $('#-submenu_taskdetail_commentbubble').clone().prop('id','');
+		elem.find('[find=comment_id]').attr('comment_id', comment['_id']);
 		elem.find('[find=text]').html(comment['+comment']);
-		created_by = Lincko.storage.get("users", comment['created_by'],"username");
+
+		var created_by = Lincko.storage.get("users", comment['created_by'],"username");
 		elem.find('[find=name]').html(created_by);
-		submenu_taskdetail.find('.submenu_taskdetail_comments_main').append(elem);
-		created_at = new wrapper_date(comment['created_at']);
+
+		var created_at = new wrapper_date(comment['created_at']);
 		created_at = created_at.display('date_very_short');
 		elem.find('[find=date]').html(created_at);
 
@@ -379,6 +377,36 @@ Submenu.prototype.Add_taskdetail = function() {
 			elem.addClass('submenu_taskdetail_commentbubble_sub');
 		}
 
+		elem.find('[find=replyBtn]').click(function(){
+			var elem_click = $(this);
+			var elem_replyTo = elem_click.closest('.submenu_taskdetail_commentbubble');
+			var elem_replyBubble = $('#-submenu_taskdetail_commentbubble').clone().prop('id','')
+				.addClass('submenu_taskdetail_commentbubble_sub submenu_taskdetail_commentbubble_me submenu_taskdetail_commentbubble_addNew');
+			elem_replyBubble.find('[find=name]').html(Lincko.storage.get("users", wrapper_localstorage.uid,"username"));
+			elem_replyBubble.find('[find=comment_id]').attr('comment_id','new');
+			var elem_addNewComment_text = elem_replyBubble.find('[find=addNewComment_text]');
+
+			elem_addNewComment_text.keyup(function(event) {
+			    if (event.keyCode == 13) {
+			    	sendAction_newComment('comments', elem_replyTo.find('[find=comment_id]').attr('comment_id'), elem_replyBubble.find('[find=addNewComment_text]').val());
+			    	elem_addNewComment_text.blur();	    	
+			    }
+			});
+			elem_addNewComment_text.focusout(function(){
+				elem_replyBubble.remove();
+			});
+
+			elem_replyTo.after(elem_replyBubble);
+			elem_addNewComment_text.focus();
+		});
+
+		return elem;
+	}
+
+	var commentCount = 0;
+	for ( var i in comments_sorted ){
+		comment = comments_sorted[i];
+		submenu_taskdetail.find('.submenu_taskdetail_comments_main').append(generateCommentBubble(comment));
 		commentCount++;
 	}
 	submenu_taskdetail.find('[find=commentCount]').html(commentCount);
@@ -393,15 +421,49 @@ Submenu.prototype.Add_taskdetail = function() {
 	var toggleNewComment = function(){
 		elem_addNewComment_btn.toggleClass('display_none');
 		elem_addNewComment_bubble_wrapper.toggleClass('display_none').toggleClass('submenu_taskdetail_commentbubble_addNew');
+		elem_addNewComment_text.val('');
 	}
+
 	var sendAction_newComment = function(parent_type, parent_id, comment){
+		var tmpID = null;
 		var param = {
     		"parent_type": parent_type,
     		"parent_id": parent_id,
     		"comment": comment,
     	}
-    	wrapper_sendAction(param, 'post', 'comment/create');
-	}
+		var cb_success = function(msg, data_error, data_status, data_msg){
+			console.log('cb_success');
+			var comment = Lincko.storage.list('comments',1,{temp_id: tmpID})[0];
+			var elem = generateCommentBubble(comment);
+			var elem_toReplace = submenu_taskdetail.find('[comment_id='+tmpID+']').closest('.submenu_taskdetail_commentbubble');
+			elem_toReplace.replaceWith(elem);
+			tmpID = null;
+		}
+		var cb_error = function(xhr_err, ajaxOptions, thrownError){
+			var elem_toRemove = submenu_taskdetail.find('[comment_id='+tmpID+']').closest('.submenu_taskdetail_commentbubble');
+			elem_toRemove.remove();
+			tmpID = null;
+		}
+		var cb_begin = function(jqXHR, settings, temp_id){
+			tmpID = temp_id;
+			var commentObj = {};
+			commentObj['_id'] = tmpID;
+			commentObj['+comment'] = comment;
+			commentObj['created_by'] = wrapper_localstorage.uid;
+			commentObj['created_at'] = $.now()/1000;
+			commentObj['_parent'] = [];
+			commentObj['_parent'][0] = parent_type;
+			if( commentObj['_parent'][0] == that.param.type ){
+				submenu_taskdetail.find('.submenu_taskdetail_comments_main').append(generateCommentBubble(commentObj));
+			}
+			else{
+				submenu_taskdetail.find('[comment_id=new]').closest('.submenu_taskdetail_commentbubble').replaceWith(generateCommentBubble(commentObj));
+			}
+			myIScrollList[submenu_content.prop('id')].refresh();
+		}
+    	wrapper_sendAction(param, 'post', 'comment/create', cb_success, cb_error, cb_begin);
+	} // END OF sendAction_newComment
+
 	elem_addNewComment_btn.click(function(){
 		elem_addNewComment_text.empty();
 		toggleNewComment();
@@ -409,41 +471,13 @@ Submenu.prototype.Add_taskdetail = function() {
 	});
 	elem_addNewComment_text.keyup(function (event) {
 	    if (event.keyCode == 13) {
-	    	sendAction_newComment(that.param.type, taskid, elem_addNewComment_text.val());
+			sendAction_newComment(that.param.type, taskid, elem_addNewComment_text.val());
 	    	elem_addNewComment_text.blur();	    	
 	    }
 	});
 	elem_addNewComment_text.focusout(function(event){
 		toggleNewComment();
 	});
-
-
-	elem_submenu_taskdetail_comments.find('[find=replyBtn]').click(function(){
-		var elem_click = $(this);
-		var elem_replyTo = elem_click.closest('.submenu_taskdetail_commentbubble');
-		var elem_commentbubble = $('#-submenu_taskdetail_commentbubble').clone().prop('id','').addClass('submenu_taskdetail_commentbubble_sub').addClass('submenu_taskdetail_commentbubble_me').addClass('submenu_taskdetail_commentbubble_addNew');
-		elem_commentbubble.find('[find=name]').html(Lincko.storage.get("users", wrapper_localstorage.uid,"username"));
-		var elem_addNewComment_text = elem_commentbubble.find('[find=addNewComment_text]');
-
-		elem_addNewComment_text.keyup(function(event) {
-		    if (event.keyCode == 13) {
-		    	sendAction_newComment(
-		    		"comments",
-		    		elem_replyTo.find('[find=comment_id]').html(),
-		    		elem_commentbubble.find('[find=addNewComment_text]').val()
-		    	);
-		    	elem_addNewComment_text.blur();	    	
-		    }
-		});
-		elem_addNewComment_text.focusout(function(){
-			elem_commentbubble.remove();
-		});
-
-
-		elem_replyTo.after(elem_commentbubble);
-		elem_addNewComment_text.focus();
-	});
-
 
 	/*attach collapsable_fn*/
 	var submenu_taskdetail_collapsable_fn = function(){
@@ -537,6 +571,8 @@ Submenu.prototype.Add_taskdetail = function() {
 	});
 
 
+
+
 	app_application_lincko.add(
 		'submenu_taskdetail_meta_'+that.md5id,
 		that.param.type+'_'+item['_id'],
@@ -555,6 +591,12 @@ Submenu.prototype.Add_taskdetail = function() {
 			});
 		}
 	);
+
+	/*
+	app_application_lincko.add(
+		)
+		*/
+
 
 
 

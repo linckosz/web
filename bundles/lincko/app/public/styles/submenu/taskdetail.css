@@ -224,6 +224,7 @@ td.submenu_taskdetail_share .fa{
 */
 .submenu_taskdetail_comments [find=addNewComment_text] {
 	display: block;
+	width: 100%;
 
 }
 .submeu_taskdetail_blueButton {
