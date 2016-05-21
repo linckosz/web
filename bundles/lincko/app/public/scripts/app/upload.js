@@ -79,6 +79,18 @@ function app_upload_prepare_log(){
 	$('#app_upload_fingerprint').val(fingerprint);
 }
 
+function app_upload_open_files(){
+	$('#app_project_quick_upload_files').click();
+}
+
+function app_upload_open_photo(){
+	$('#app_project_quick_upload_photo').click();
+}
+
+function app_upload_open_video(){
+	$('#app_project_quick_upload_video').click();
+}
+
 $(function () {
 	//Do not use 'use strict', it makes the code heavier, even if it's better for conventional coding
 

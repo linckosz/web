@@ -281,8 +281,7 @@ function wrapper_test(type, RCUD){
 					//"title": "项目 "+Math.floor(Math.random() * 20), //OPTIONAL
 					//"description": "It's a project content"+Math.floor(Math.random() * 20), //OPTIONAL
 					"users>access": {
-						6:  true,//[true,false][Math.round(Math.random())],
-						12:  true,//[true,false][Math.round(Math.random())],
+						15:  true,//[true,false][Math.round(Math.random())],
 					},
 				},
 				'post',
@@ -592,8 +591,7 @@ function wrapper_test(type, RCUD){
 		if(RCUD==0){
 			wrapper_sendAction(
 				{
-					"tasks_264": true,
-					"tasks_287": true,
+					"tasks_313": true,
 				},
 				'post',
 				'data/viewed',

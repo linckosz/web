@@ -5,7 +5,8 @@ $('#app_content_top_project').click(function(){
 });
 
 $('#app_content_top_note').click(function(){
-	submenu_Build("test", true, false);
+	//submenu_Build("test", true, false);
+	app_upload_open_files()
 });
 
 function app_content_menu_position() {
