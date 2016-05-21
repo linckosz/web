@@ -175,8 +175,6 @@ Submenu.prototype.Add_taskdetail = function() {
 			else{
 				approved = false;
 			}
-			console.log('checkbox wrapper_sendAction------------------');
-			console.log(item['_id']);
 			wrapper_sendAction(
 				{
 		    		"id": item['_id'],
@@ -314,35 +312,41 @@ Submenu.prototype.Add_taskdetail = function() {
 		return false;
 	}
 
-	var comment;
-	var comments_all = [];
-	if( $.isNumeric(taskid) ){
-		comments_all = Lincko.storage.list('comments',null, null, this.param.type, taskid, true).reverse();
-	}
-	var comments_primary = [];
-	var tree;
-	var comments_sorted = [];
-	var comments_sub = [];
-
-	for( var i in comments_all ){
-		comment = comments_all[i];
-		if( comment['_parent'][0] != 'comments' ){
-			comments_primary.push(comment);
+	var generateCommentsArray = function(){
+		var comment;
+		var comments_all = [];
+		if( $.isNumeric(taskid) ){
+			comments_all = Lincko.storage.list('comments',null, null, that.param.type, taskid, true).reverse();
 		}
+		var comments_primary = [];
+		var tree;
+		var comments_sorted = [];
+		var comments_sub = [];
+
+		for( var i in comments_all ){
+			comment = comments_all[i];
+			if( comment['_parent'][0] != 'comments' ){
+				comments_primary.push(comment);
+			}
+		}
+
+		for( var j in comments_primary ){
+			comments_sub = [];
+			tree = Lincko.storage.tree('comments', comments_primary[j]['_id'], 'children', true, true);
+			for( var id in tree['comments'] ){
+				comments_sub.push(commentWithID(comments_all, id));
+			}
+			comments_sub = Lincko.storage.sort_items(comments_sub, 'created_at', 0, -1, true);
+			$.each(comments_sub, function(i,val){
+				comments_sorted.push(val);
+			});
+		}
+
+		return comments_sorted;
 	}
 
-	for( var j in comments_primary ){
-		comments_sub = [];
-		tree = Lincko.storage.tree('comments', comments_primary[j]['_id'], 'children', true, true);
-		for( var id in tree['comments'] ){
-			comments_sub.push(commentWithID(comments_all, id));
-		}
-		comments_sub = Lincko.storage.sort_items(comments_sub, 'created_at', 0, -1, true);
-		$.each(comments_sub, function(i,val){
-			comments_sorted.push(val);
-		});
-	}
-	console.log(comments_sorted);
+	var comments_sorted = generateCommentsArray();
+	
 	
 
 	/*
@@ -412,14 +416,17 @@ Submenu.prototype.Add_taskdetail = function() {
 
 		return elem;
 	}
-
+	var param_viewed = {};
 	var commentCount = 0;
 	for ( var i in comments_sorted ){
 		comment = comments_sorted[i];
 		submenu_taskdetail.find('.submenu_taskdetail_comments_main').append(generateCommentBubble(comment));
+		param_viewed['comments_'+comment['_id']] = true;
 		commentCount++;
 	}
 	submenu_taskdetail.find('[find=commentCount]').html(commentCount);
+	wrapper_sendAction(param_viewed, 'post', 'data/viewed');
+	param_viewed = {};
 
 
 	/*addNewComment*/
@@ -447,12 +454,18 @@ Submenu.prototype.Add_taskdetail = function() {
 			var elem = generateCommentBubble(comment);
 			var elem_toReplace = submenu_taskdetail.find('[comment_id='+tmpID+']').closest('.submenu_taskdetail_commentbubble');
 			elem_toReplace.replaceWith(elem);
+			var param = {};
+			param['comments_'+comment['_id']] = true;
+			wrapper_sendAction(param, 'post', 'data/viewed');
 			tmpID = null;
 		}
 		var cb_error = function(xhr_err, ajaxOptions, thrownError){
 			var elem_toRemove = submenu_taskdetail.find('[comment_id='+tmpID+']').closest('.submenu_taskdetail_commentbubble');
 			elem_toRemove.remove();
 			tmpID = null;
+			var elem_commentCount = elem_submenu_taskdetail_comments.find('[find=commentCount]');
+			var commentCount = parseInt(elem_commentCount.html(),10);
+			elem_commentCount.html(commentCount-1);
 		}
 		var cb_begin = function(jqXHR, settings, temp_id){
 			tmpID = temp_id;
@@ -469,6 +482,14 @@ Submenu.prototype.Add_taskdetail = function() {
 			else{
 				submenu_taskdetail.find('[comment_id=new]').closest('.submenu_taskdetail_commentbubble').replaceWith(generateCommentBubble(commentObj));
 			}
+			var elem_commentCount = elem_submenu_taskdetail_comments.find('[find=commentCount]');
+			var commentCount = parseInt(elem_commentCount.html(),10);
+			elem_commentCount.velocity('fadeOut',{
+				duration: 200,
+				complete: function(){
+					$(this).html(commentCount+1).attr('style','');
+				}
+			});
 			myIScrollList[submenu_content.prop('id')].refresh();
 		}
     	wrapper_sendAction(param, 'post', 'comment/create', cb_success, cb_error, cb_begin);
@@ -536,7 +557,6 @@ Submenu.prototype.Add_taskdetail = function() {
 
 	/*----create/save on previewHide----*/
 	$(document).on("previewHide.skylist", function(){
-		console.log('previewHide'+taskid);
 		var contactServer = false;
 		var param = {};
 
@@ -556,7 +576,6 @@ Submenu.prototype.Add_taskdetail = function() {
 		if( that.param.type == "tasks" && duration_timestamp != item['duration'] ){
 			contactServer = true;
 			param['duration'] = duration_timestamp;
-			console.log(param['duration']);
 		}
 
 		if( contactServer ){
@@ -602,10 +621,34 @@ Submenu.prototype.Add_taskdetail = function() {
 		}
 	);
 
-	/*
+
 	app_application_lincko.add(
-		)
-		*/
+		'submenu_taskdetail_comments_'+that.md5id,
+		that.param.type+'_'+item['_id'],
+		function(){
+			var param = {};
+			param.created_by = ['!=', wrapper_localstorage.uid];
+			param.new = true;
+			var newComments = Lincko.storage.list('comments', null, param, that.param.type, taskid, true);
+			if( newComments.length < 1){ return false; } //continue function only if there are new comments
+
+			var comments_array = generateCommentsArray();
+			var elem_commentBubbles = $('#'+this.id).find('.submenu_taskdetail_commentbubble');
+
+			var i_bubble = 0;
+			for( var i_array =0; i_array < comments_array.length; i_array++ ){
+				var newComment_id = comments_array[i_array]['_id'];
+				var elem_id = $(elem_commentBubbles[i_bubble]).find('[find=comment_id]').attr('comment_id');
+				if( elem_id != newComment_id ){
+					$(elem_commentBubbles[i_bubble]).before(generateCommentBubble(comments_array[i_array]));
+				}
+				else { i_bubble++;	}
+			}
+			$('#'+this.id).find('[find=commentCount]').html(comments_array.length);
+			myIScrollList[submenu_content.prop('id')].refresh();
+		}
+	);
+
 
 
 
