@@ -162,6 +162,9 @@ skylist.prototype.construct = function(){
 		console.log('add subConstruct');
 		that.subConstruct();
 	}
+	else{
+		that.subConstruct_default();
+	}
 
 	$(window).on("resize.skylist_"+that.md5id, function(){
 		clearTimeout(that.window_resize_timeout);
@@ -214,6 +217,58 @@ skylist.prototype.construct = function(){
 		}
 	);*/
 }//end of construct
+
+skylist.prototype.subConstruct_default = function(){
+	var that = this;
+	that.elem_newcardCircle.click(function(){
+		submenu_Build('taskdetail', null, null, 
+			{
+				"type":that.list_type,
+				"id": 'new', 
+			}, true);
+	})
+	.appendTo(that.list_wrapper);
+
+	app_application_lincko.add(
+		that.list.prop('id'),
+		'projects_'+app_content_menu.projects_id,
+		function(){
+			console.log('projects_'+app_content_menu.projects_id);
+			var param = {};
+			param.new = true;
+			var newTasks = Lincko.storage.list(that.list_type, null, param, 'projects', app_content_menu.projects_id, false);
+
+			var itemlist_new = that.list_filter();
+			var elem_cards = $('#'+this.id).find('[find=card]');
+			if( itemlist_new.length > elem_cards.length ){
+				console.log('card created');
+
+				var i_old = 0;
+				for( var i_new =0; i_new < itemlist_new.length; i_new++ ){
+					var newItem_id = itemlist_new[i_new]['_id'];
+					var oldItem_id = $(elem_cards[i_old]).data('item_id');
+					if( oldItem_id != newItem_id ){
+						var elem_newCard = that.addCard(itemlist_new[i_new]).css('display','none');
+						$(elem_cards[i_old]).before(elem_newCard);
+						elem_newCard.velocity('slideDown',{
+							complete: function(){
+								$(this).attr('style','');
+								that.DOM_updated();
+							}
+						});
+					}
+					else{
+						i_old++;
+					}
+				}
+			}
+			else if(itemlist_new.length < elem_cards.length){
+				console.log('card deleted');
+			}
+		}
+	);
+
+}//END OF subConstruct_default
 
 skylist.prototype.destroy = function(){
 	console.log('skylist.destroy');
@@ -312,7 +367,6 @@ skylist.prototype.window_resize = function(){
 
 	if( myIScrollList['skylist_'+that.md5id] ){
 		myIScrollList['skylist_'+that.md5id].refresh();
-		
 	}
 }
 
@@ -443,37 +497,10 @@ skylist.prototype.filter_by_search = function(items, filter){
 	}
 }
 
-skylist.prototype.tasklist_update = function(type, filter_by){
-	console.log('--------tasklist_update---------');
+skylist.prototype.list_filter = function(){
 	var that = this;
 	that.generate_Lincko_itemsList();
-	var items = that.Lincko_itemsList;
-	var items_filtered = items;
-	var item;
-	var iscroll_elem;
-
-	if( !type ){
-		console.log('type: '+type);
-	}
-	else{
-		that.Lincko_itemsList_filter[type] = filter_by;
-	}
-/*
-	if( type=='duedate' ){
-		that.Lincko_itemsList_filter.duedate = filter_by;
-	}
-	else if( type == 'search'){
-		that.Lincko_itemsList_filter.search = filter_by;
-	}
-	else if( type == 'people' ){
-		that.Lincko_itemsList_filter.people = filter_by;
-	}
-	else if( type == 'sort_alt' ){
-		that.Lincko_itemsList_filter.sort_alt = filter_by;
-	}
-	else if( type == 'hide_completed' ){
-		that.Lincko_itemsList_filter.hide_completed = filter_by;
-	}*/
+	var items_filtered = that.Lincko_itemsList;
 
 	if( that.list_type == "tasks" || that.list_type == "notes" ){
 		items_filtered = that.filter_by_search( items_filtered, that.Lincko_itemsList_filter.search );
@@ -482,7 +509,23 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 		items_filtered = that.filter_by_sort_alt( items_filtered, that.Lincko_itemsList_filter.sort_alt );
 		items_filtered = that.filter_by_hide_completed( items_filtered, that.Lincko_itemsList_filter.hide_completed );
 	}
+	return items_filtered;
+}
 
+skylist.prototype.tasklist_update = function(type, filter_by){
+	console.log('--------tasklist_update---------');
+	var that = this;
+
+	if( !type ){
+		console.log('type: '+type);
+	}
+	else{
+		that.Lincko_itemsList_filter[type] = filter_by;
+	}
+	var items_filtered = that.list_filter();
+
+
+	var iscroll_elem;
 	that.list.velocity("fadeOut",{
 		duration: 200,
 		complete: function(){
@@ -522,6 +565,14 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 	});
 }
 
+skylist.prototype.DOM_updated = function(){
+	var that = this;
+	that.store_all_elem();
+	if( myIScrollList['skylist_'+that.md5id] ){
+		myIScrollList['skylist_'+that.md5id].refresh();
+	}
+}
+
 skylist.prototype.addCard_all = function(){
 	var that = this;
 	var items;
@@ -538,40 +589,45 @@ skylist.prototype.addCard = function(item){
 	var that = this;
 	var elem_card;
 	if( that.list_type == 'tasks' ){
-		elem_card = that.addTask(item);
-		elem_card.find('[find=card_spacestick]').removeClass('display_none');
-
-		app_application_lincko.add(
-			elem_card.prop('id'),
-			that.list_type+'_'+item['_id'],
-			function(){
-				var elem = $('#'+this.id);
-				elem.velocity('fadeOut',{
-					duration: 200,
-					complete: function(){
-						var item_new = Lincko.storage.get('tasks', item['_id']);
-						if( item_new ){
-							elem.replaceWith(that.addCard(Lincko.storage.get('tasks', item['_id'])));
-						}
-						else{
-							elem.remove();
-						}
-						that.store_all_elem();
-
-					}
-				});
-				//elem.replaceWith(that.addCard(item));
-				//elem.after(that.addCard(item));
-			}
-		);
+		elem_card = that.addTask(item);	
 	}
 	else if( that.list_type == 'notes' ){
 		elem_card = that.addNote(item);
-		elem_card.find('[find=card_spacestick]').removeClass('display_none');
+		
 	}
     else if (that.list_type == 'chats' || that.list_type == 'global_chats') {
         elem_card = that.addChat(item);
     }
+
+    if( that.list_type == 'tasks' || that.list_type == 'notes' ){
+    	elem_card.find('[find=card_spacestick]').removeClass('display_none');
+    	app_application_lincko.add(
+			elem_card.prop('id'),
+			that.list_type+'_'+item['_id'],
+			function(){
+				var elem = $('#'+this.id);
+				var item_new = Lincko.storage.get(that.list_type , item['_id']);
+				if( item_new ){ //for update
+					elem.velocity('fadeOut',{
+						duration: 200,
+						complete: function(){
+							elem.replaceWith(that.addCard(Lincko.storage.get(that.list_type , item['_id'])));
+							that.DOM_updated();
+						}
+					});
+				}
+				else{ //for deletion
+					elem.velocity('slideUp',{
+						complete: function(){
+							console.log('card delete animation complete');
+							$(this).remove();
+							that.DOM_updated();
+						}
+					});
+				}
+			}
+		);
+    } //END OF 'tasks' || 'notes'
 	return elem_card;
 }
 

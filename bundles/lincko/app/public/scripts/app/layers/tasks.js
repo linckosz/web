@@ -37,28 +37,7 @@ var app_layers_tasks_feedPage = function(param){
 	Elem.prop('id','app_layers_tasks_tasklist');
 	Elem.appendTo(position);
 
-	var tasklist_subConstruct = function(){
-		var that = this;
-		that.elem_newcardCircle.click(function(){
-			submenu_Build('taskdetail', null, null, 
-				{
-					"type":that.list_type,
-					"id": 'new', 
-				}, true);
-		})
-		.appendTo(that.list_wrapper);
-
-
-		app_application_lincko.add(
-			that.list.prop('id'),
-			'projects_'+app_content_menu.projects_id,
-			function(){
-				console.log('projects_'+app_content_menu.projects_id);
-			}
-		);
-
-	}//END OF tasklist_subConstruct
-
+	
 	app_layers_tasks_tasklist = new skylist(
 		'tasks',
 		$('#app_layers_tasks_tasklist'),
@@ -67,8 +46,7 @@ var app_layers_tasks_feedPage = function(param){
 			Lincko.Translation.get('app', 3302, 'html').toUpperCase(),/*today*/
 			Lincko.Translation.get('app', 3303, 'html').toUpperCase(),/*tomorrow*/
 			'Spaces'
-		],
-		tasklist_subConstruct
+		]
 	);
 
 	app_layers_tasks_tasklist.skylist_update = app_layers_tasks_tasklist.tasklist_update;
