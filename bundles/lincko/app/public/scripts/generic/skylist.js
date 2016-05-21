@@ -159,6 +159,7 @@ skylist.prototype.construct = function(){
 
 	/*functions that are specific to each module*/
 	if( that.subConstruct ){
+		console.log('add subConstruct');
 		that.subConstruct();
 	}
 
@@ -202,16 +203,16 @@ skylist.prototype.construct = function(){
 	enquire.register(responsive.isMobile,	that.isMobile);
 	/*--------------Enquire.JS------------------------------*/
 
-	app_application_lincko.add(
+	/*app_application_lincko.add(
 		that.list.prop('id'),
-		that.list_type,
+		'projects',
 		function(){
 			console.log('app_application_lincko.add '+that.list_type);
 			if( that.skylist_update ){
 				//that.skylist_update();
 			}
 		}
-	);
+	);*/
 }//end of construct
 
 skylist.prototype.destroy = function(){
@@ -548,7 +549,13 @@ skylist.prototype.addCard = function(item){
 				elem.velocity('fadeOut',{
 					duration: 200,
 					complete: function(){
-						elem.replaceWith(that.addCard(Lincko.storage.get('tasks', item['_id'])));
+						var item_new = Lincko.storage.get('tasks', item['_id']);
+						if( item_new ){
+							elem.replaceWith(that.addCard(Lincko.storage.get('tasks', item['_id'])));
+						}
+						else{
+							elem.remove();
+						}
 						that.store_all_elem();
 
 					}
@@ -689,7 +696,7 @@ skylist.prototype.addTask = function(item){
 	*/
 	var contenteditable = false;
 	var elem_title = Elem.find('[find=title]');
-	if(item['_perm'][0] > 1 || true ){ //RCU and beyond
+	if(true || item['_perm'][0] > 1 ){ //RCU and beyond
 		contenteditable = true; 
 	}
 	elem_title.html(item['+title']);

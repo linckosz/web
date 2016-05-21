@@ -47,7 +47,17 @@ var app_layers_tasks_feedPage = function(param){
 				}, true);
 		})
 		.appendTo(that.list_wrapper);
-	}
+
+
+		app_application_lincko.add(
+			that.list.prop('id'),
+			'projects_'+app_content_menu.projects_id,
+			function(){
+				console.log('projects_'+app_content_menu.projects_id);
+			}
+		);
+
+	}//END OF tasklist_subConstruct
 
 	app_layers_tasks_tasklist = new skylist(
 		'tasks',
