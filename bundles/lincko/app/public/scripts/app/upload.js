@@ -91,6 +91,18 @@ function app_upload_open_video(){
 	$('#app_project_quick_upload_video').click();
 }
 
+var app_upload_auto_launcher_timeout;
+var app_upload_auto_launcher = {
+	submenu: true,
+	start: false,
+	init: function(){
+		this.submenu = true;
+		this.start = false;
+	},
+};
+
+
+
 $(function () {
 	//Do not use 'use strict', it makes the code heavier, even if it's better for conventional coding
 
@@ -172,8 +184,25 @@ $(function () {
 
 			app_upload_files.lincko_files_index++;
 			that.progressall(e, this);
-			//I should change the line below accoridng to the UI experience
-			submenu_Build("app_upload_all", true, false);
+
+			//Open submenu by default
+			if(app_upload_auto_launcher.submenu){
+				submenu_Build("app_upload_all", true, false);
+			}
+			//Do not auto start by default
+			if(app_upload_auto_launcher.start){
+				var temp_index = app_upload_files.lincko_files_index-1;
+				setTimeout(function() {
+					app_upload_files.lincko_files[temp_index].submit();
+				}, 300);
+			}
+
+			clearTimeout(app_upload_auto_launcher_timeout);
+			app_upload_auto_launcher_timeout = setTimeout(function() {
+				app_upload_auto_launcher.init();
+			}, 500);
+			
+
 			//This is used to force the preview to appear because the preview variable is not available at once right after the object creation
 			setTimeout(function() {
 				$('#app_upload_fileupload').fileupload('option').progressall(e, this);
