@@ -1035,6 +1035,23 @@ skylist.prototype.add_cardEvents = function(Elem){
 		Elem.find('[find=comments]').click();
 	});
 
+	Elem.find('.skylist_leftOptionBox').click(function(){
+		var route;
+		if( that.list_type == "tasks" ){
+			route = "task/delete";
+		}
+		else if( that.list_type == "notes" ){
+			route = "note/delete";
+		}
+		wrapper_sendAction(
+		    {
+		        "id": Elem.data('item_id'),
+		    },
+		    'post',
+		    route
+		);
+	});
+
 	//event actions for swipe left and right on the task
 	Elem.on('mousedown touchstart', function(event){ //for firefox, event must be passed as the parameter of this fn
 		//console.log(e);
@@ -1577,7 +1594,10 @@ skylist.prototype.minTablet = function(){
 	console.log('skylist.minTablet');
 	var that = this;
 	if(!that.list_wrapper){return;}
-	//that.elem_newcardCircle.removeAttr("style");
+
+	that.list_subwrapper.find('input[find=card_time_calendar_timestamp]').prop('disabled',false);
+	that.list_subwrapper.find('input[find=name]').prop('disabled',false);
+
 
 	var simpleDesktopWidth = 1000;
 	var simpleDesktopWidth2 = 800;
@@ -1609,6 +1629,8 @@ skylist.prototype.maxMobileL = function(){
 	console.log('skylist.maxMobileL');
 	var that = this;
 	if(!that.list_wrapper){return;}
+	that.list_subwrapper.find('input[find=card_time_calendar_timestamp]').prop('disabled',true);
+	that.list_subwrapper.find('input[find=name]').prop('disabled',true);
 	if(that.elem_Jsorts ){
 		that.elem_Jsorts.not('.skylist_menu_timesort_dot').addClass('display_none');
 	}
