@@ -240,6 +240,10 @@ skylist.prototype.subConstruct_default = function(){
 
 			var itemlist_new = that.list_filter();
 			var elem_cards = $('#'+this.id).find('[find=card]');
+			if(elem_cards.length < 1){//if nothing on the list
+				that.tasklist_update();
+				return false;
+			}
 			if( itemlist_new.length > elem_cards.length ){
 				console.log('card created');
 
@@ -247,9 +251,15 @@ skylist.prototype.subConstruct_default = function(){
 				for( var i_new =0; i_new < itemlist_new.length; i_new++ ){
 					var newItem_id = itemlist_new[i_new]['_id'];
 					var oldItem_id = $(elem_cards[i_old]).data('item_id');
-					if( oldItem_id != newItem_id ){
+					if( oldItem_id != newItem_id || !oldItem_id ){
 						var elem_newCard = that.addCard(itemlist_new[i_new]).css('display','none');
-						$(elem_cards[i_old]).before(elem_newCard);
+						if( oldItem_id ){
+							$(elem_cards[i_old]).before(elem_newCard);
+						}
+						else{//if new card should be attached at the end
+							i_old--;
+							$(elem_cards[i_old]).after(elem_newCard);
+						}
 						elem_newCard.velocity('slideDown',{
 							complete: function(){
 								$(this).attr('style','');
@@ -621,7 +631,12 @@ skylist.prototype.addCard = function(item){
 						complete: function(){
 							console.log('card delete animation complete');
 							$(this).remove();
-							that.DOM_updated();
+							if( that.list_subwrapper.find('[find=card]').length < 1 ){
+								that.tasklist_update();
+							}
+							else{
+								that.DOM_updated();
+							}
 						}
 					});
 				}
