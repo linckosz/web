@@ -40,6 +40,9 @@
 .skylist_menu_selected {
 	color: #FBA026;
 }
+.skylist_menu_timesort_selected {
+	color: #FBA026 !important;
+}
 .skylist_menu_timesort_text_wrapper {
 	cursor: pointer; cursor: hand;
 	position: relative;
@@ -482,9 +485,6 @@
 		margin: 0px 120px 0px 0px;
 		padding: 0;
 		*/
-	}
-	.skylist_menu_timesort_selected {
-		color: #FBA026;
 	}
 	.skylist_menu_timesort_text_wrapper {
 		left:0;

@@ -425,7 +425,7 @@ skylist.prototype.filter_by_duedate = function(items, filter){
 
 		for( var i in items ){
 			item = items[i];
-			duedate = app_layers_dev_skytasks_calcDuedate(item);
+			duedate = skylist_calcDuedate(item);
 			if(duedate.happensSomeday(filter)){
 				items_filtered.push(item);
 			}
@@ -1521,11 +1521,22 @@ skylist.prototype.menu_makeSelection = function(selection){
 	console.log('makeSelection: '+selection);
 	var that = this;
 	if(that.elem_sorts[selection]){
-		that.elem_Jsorts.find('[find=indicator]').removeClass('icon-Indicator');
-		that.elem_sorts[selection].find('[find=indicator]').addClass('icon-Indicator');
+		//that.elem_Jsorts.find('[find=indicator]').removeClass('icon-Indicator');
+		//that.elem_sorts[selection].find('[find=indicator]').addClass('icon-Indicator');
+
+		that.elem_Jsorts.removeClass('skylist_menu_timesort_selected');
+		that.elem_sorts[selection].addClass('skylist_menu_timesort_selected');
+
 		that.active_sort = selection;
 	}
 	if (responsive.test("maxMobileL")){
+		$.each(that.elem_sorts_text, function(name,value){
+			value.addClass('display_none');//.removeClass('skylist_menu_selected');
+		});
+		that.elem_sorts[selection].removeClass('display_none');
+		
+		that.elem_Jsorts.removeAttr("style");
+		/*
 		$.each(that.elem_sorts_text, function(name,value){
 			value.addClass('display_none');//.removeClass('skylist_menu_selected');
 		});
@@ -1533,10 +1544,14 @@ skylist.prototype.menu_makeSelection = function(selection){
 		that.elem_sorts[selection].removeClass('display_none').addClass('skylist_menu_timesort_selected');
 		
 		that.elem_Jsorts.removeAttr("style");
+		*/
 	}
 	else{
 		console.log('selection does not exist.');
 	}
+
+	
+
 }//makeSelection END
 
 skylist.prototype.menu_sortnum_fn = function(){
@@ -1621,8 +1636,6 @@ skylist.prototype.minTablet = function(){
 	if( that.elem_Jsorts ){
 		that.elem_Jsorts.removeClass('display_none');
 	}
-
-
 }
 
 skylist.prototype.maxMobileL = function(){
@@ -1632,9 +1645,12 @@ skylist.prototype.maxMobileL = function(){
 	that.list_subwrapper.find('input[find=card_time_calendar_timestamp]').prop('disabled',true);
 	that.list_subwrapper.find('input[find=name]').prop('disabled',true);
 	if(that.elem_Jsorts ){
+		var selection = that.elem_Jsorts.find('.skylist_menu_timesort_text_wrapper').not('.display_none').html();
+		console.log(selection);
 		that.elem_Jsorts.not('.skylist_menu_timesort_dot').addClass('display_none');
 	}
-	that.elem_navbar.find('.icon-Indicator').closest('.skylist_menu_timesort_text_wrapper').removeClass('display_none');
+	//that.elem_navbar.find('.icon-Indicator').closest('.skylist_menu_timesort_text_wrapper').removeClass('display_none');
+	that.elem_navbar.find('.skylist_menu_timesort_selected').removeClass('display_none');
 }
 
 skylist.prototype.minMobileL = function(){
