@@ -1,10 +1,10 @@
 @font-face {
     font-family: 'icomoon';
-    src:    url('fonts/icomoon.eot?g7wpvj');
-    src:    url('fonts/icomoon.eot?g7wpvj#iefix') format('embedded-opentype'),
-        url('fonts/icomoon.ttf?g7wpvj') format('truetype'),
-        url('fonts/icomoon.woff?g7wpvj') format('woff'),
-        url('fonts/icomoon.svg?g7wpvj#icomoon') format('svg');
+    src:    url('fonts/icomoon.eot?y6lx57');
+    src:    url('fonts/icomoon.eot?y6lx57#iefix') format('embedded-opentype'),
+        url('fonts/icomoon.ttf?y6lx57') format('truetype'),
+        url('fonts/icomoon.woff?y6lx57') format('woff'),
+        url('fonts/icomoon.svg?y6lx57#icomoon') format('svg');
     font-weight: normal;
     font-style: normal;
 }
@@ -24,8 +24,26 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-AddPerson:before {
+.icon-Pencil:before {
     content: "\e902";
+}
+.icon-AddPerson:before {
+    content: "\e90e";
+}
+.icon-ExclamationCloud:before {
+    content: "\e90f";
+}
+.icon-PauseCloud:before {
+    content: "\e919";
+}
+.icon-ResumeCloud:before {
+    content: "\e91d";
+}
+.icon-SmallPersonaiconBlack:before {
+    content: "\e921";
+}
+.icon-SpacesHash:before {
+    content: "\e922";
 }
 .icon-Forward:before {
     content: "\e903";
@@ -60,12 +78,6 @@
 .icon-Chat:before {
     content: "\e90d";
 }
-.icon-Cloud:before {
-    content: "\e90e";
-}
-.icon-Cloud-Download:before {
-    content: "\e90f";
-}
 .icon-Cloud-Files:before {
     content: "\e910";
 }
@@ -99,9 +111,6 @@
 .icon-Notes-3:before {
     content: "\e918";
 }
-.icon-Pencil:before {
-    content: "\e919";
-}
 .icon-Settings:before {
     content: "\e91a";
 }
@@ -111,9 +120,6 @@
 .icon-Single-Person-Selected:before {
     content: "\e91c";
 }
-.icon-Small-Persona:before {
-    content: "\e91d";
-}
 .icon-Tasks:before {
     content: "\e91e";
 }
@@ -122,5 +128,8 @@
 }
 .icon-Tasks-unchecked:before {
     content: "\e920";
+}
+.icon-pencil:before {
+    content: "\e923";
 }
 
