@@ -13,33 +13,75 @@ var chatFeed = (function() {
                   'target': 'dodolong_1.jpeg'},
     };
     var SHORTCUT_HANDLERS = {
-        'pic': function(event) {
-            var popout = $('#-pic_preview_full_screen').clone();
-            popout.attr('id', 'pic_preview_full_screen');
-            popout.find('img').attr('src', event.url);
-            var names = event.url.split('/');
-            var basename = names[names.length-1];
-            popout.find('.pic_preview_name').html(basename);
-            popout.find('img').attr('src', event.url);
-            popout.find('.pic_preview_icon').attr("href", event.url);
-            $("body").append(popout);
-            $('.close', '#pic_preview_full_screen').click(function() {
-                $('#pic_preview_full_screen').remove();
-            });
+        'files': function() {
+            var extension = checkExtension(category, id);
+            if (extension) {
+                //var file = Lincko.storage.get('files', id);
+                var file = getFakeFile(id);
+                if (extension == "pic") {
+                    var popout = $('#-pic_preview_full_screen').clone();
+                    popout.attr('id', 'pic_preview_full_screen');
+                    popout.find('img').attr('src', event.url);
+                    var names = event.url.split('/');
+                    var basename = names[names.length-1];
+                    popout.find('.pic_preview_name').html(basename);
+                    popout.find('img').attr('src', event.url);
+                    popout.find('.pic_preview_icon').attr("href", event.url);
+                    $("body").append(popout);
+                    $('.close', '#pic_preview_full_screen').click(function() {
+                        $('#pic_preview_full_screen').remove();
+                    });
             
+                    return false;
+                }
+                else if(extension == "video") {
+                    var popout = $('#-player_preview_full_screen').clone();
+                    popout.attr('id', 'player_preview_full_screen');
+                    $("body").append(popout);
+                    $("#player_preview_full_screen .player_preview_wrapper").attr('id', 'player_preview_container');
+                    $("#player_preview_container").setupPlayer(event.url, event.thumbnail);
+                    $('.close', '#player_preview_full_screen').click(function() {
+                        $('#player_preview_full_screen').remove();
+                    });
+                    return false;
+                }
+            }
+        },
+        'uploading_file': function(id, elem) {
+            //var file = $("#uploading_file_" + id);
+            var file = app_upload_files.lincko_files[id];
+            file.abort();
+            file.lincko_status = 'abort';
+            $(elem).parents(".models_history_wrapper").removeClass("uploading_file").addClass("upload_stopped_file").attr("category", "upload_stopped_file");
             return false;
         },
-        'video': function(event) {
-            var popout = $('#-player_preview_full_screen').clone();
-            popout.attr('id', 'player_preview_full_screen');
-            $("body").append(popout);
-            $("#player_preview_full_screen .player_preview_wrapper").attr('id', 'player_preview_container');
-            $("#player_preview_container").setupPlayer(event.url, event.thumbnail);
-            $('.close', '#player_preview_full_screen').click(function() {
-                $('#player_preview_full_screen').remove();
-            });
+        'upload_stopped_file': function(id, elem) {
+            var file = app_upload_files.lincko_files[id];
+            file.submit();
+            file.lincko_status = 'uploading';
+            $(elem).parents(".models_history_wrapper").removeClass("upload_stopped_file").addClass("uploading_file").attr("category", "uploading_file");
             return false;
-        }
+        },
+    };
+    var RESOURCE_ID = {
+        'tasks': function(raw_id) {
+            return raw_id.split('models_thistory_')[1];
+        },
+        'files': function(raw_id) {
+            return raw_id.split('models_thistory_')[1];
+        },
+        'uploading_file': function(raw_id) {
+            return raw_id.split("uploading_file_")[1];
+        },
+        'upload_stopped_file': function(raw_id) {
+            return raw_id.split("uploading_file_")[1];
+        },
+        'comments': function(raw_id) {
+            return raw_id.split('models_thistory_')[1];
+        },
+        'notes': function(raw_id) {
+            return raw_id.split('models_thistory_')[1];
+        },
     };
     var RESOURCE_HANDLERS = {
         'tasks': function(taskid, elem) {
@@ -48,6 +90,24 @@ var chatFeed = (function() {
         },
         'files': function(fileid, elem) {
             //submenu_Build('filedetail', null, null, fileid, true);
+            return false;
+        },
+        'uploading_file': function(id, elem) {
+            if (event.target.className == "uploading_action") {
+                var file = app_upload_files.lincko_files[id];
+                file.lincko_status = 'abort';
+                file.abort();
+                $(elem).parents(".models_history_wrapper").remove();
+            }
+            return false;
+        },
+        'upload_stopped_file': function(id, elem) {
+            if (event.target.className == "uploading_action") {
+                var file = app_upload_files.lincko_files[id];
+                file.lincko_status = 'abort';
+                file.abort();
+                $(elem).parents(".models_history_wrapper").remove();
+            }
             return false;
         },
         'comments': function(commentid, elem) {
@@ -124,10 +184,15 @@ var chatFeed = (function() {
     BaseHistoryCls.prototype.renderChatTemplate = function(index) {
         var target;
         var action;
+        var progress;
         var Elem = $("#" + this.templateType).clone();
-        Elem.prop('id', 'models_thistory_' + this.item.id);
+        if (this.item._type == "uploading_file") {
+            Elem.prop('id', "uploading_file_"+this.item.index);
+        } else {
+            Elem.prop('id', 'models_thistory_' + this.item.id);     
+        }
         Elem.addClass(this.decoratorClass);
-        Elem.addClass(this.item.type);
+        Elem.addClass(this.item._type);
         Elem.attr('index', index);
 
         var uname = Lincko.storage.get('users', this.item.created_by)['-username'];
@@ -136,6 +201,11 @@ var chatFeed = (function() {
         var date = new wrapper_date(this.item.timestamp);
         Elem.find(".time", "[find=timestamp]").html(date.display('time_short'));
         Elem.find(".date", "[find=timestamp]").html(date.display('date_short'));
+        Elem.find("[find=target]").html(this.item.name);
+
+        Elem.find("[find=progress_bar]").width("0%"); 
+        Elem.find("[find=progress_text]").html("0/0");
+        Elem.find(".uploading_action").html(Lincko.Translation.get('app', 7, 'js'));
 
         Elem.attr('category', this.item._type);
         return Elem;
@@ -196,24 +266,32 @@ var chatFeed = (function() {
 
 
     BaseHistoryCls.prototype.getTemplate = function(type) {
-        if (type=='history')
+        if (type=='history') {
             this.decoratorClass = wrapper_localstorage.uid === parseInt(this.item.by, 10) ? "models_history_self" : "models_history_others";
-        else
-            this.decoratorClass = wrapper_localstorage.uid === parseInt(this.item.created_by, 10) ? "models_history_self" : "models_history_others";
-
-        if (this.item.type === "comments") {
-            var parent = Lincko.storage.getParent('comments', this.item.id);
-            if (parent._type === 'projects') {
-                this.templateType = '-models_history_comment_short';
-            } else {
-                this.templateType = '-models_history_comment_long';
+            if (this.item.type === "comments") {
+                var parent = Lincko.storage.getParent('comments', this.item.id);
+                if (parent._type === 'projects') {
+                    this.templateType = '-models_history_comment_short';
+                } else {
+                    this.templateType = '-models_history_comment_long';
+                }
+                return;
             }
-            return;
-        }
-        if (type == 'history')
             this.templateType = "-models_history_" + this.item.type;
-        else
-            this.templateType = "-models_history_comment_short"; //TODO: fix this hard code
+        }
+        else {
+            this.decoratorClass = wrapper_localstorage.uid === parseInt(this.item.created_by, 10) ? "models_history_self" : "models_history_others";
+            switch(this.item._type) {
+                case "comments":
+                    this.templateType = "-models_history_comment_short";
+                    break;
+                case "uploading_files":
+                    this.templateType = "-models_history_uploading_files";
+                    break;
+                default:
+                    this.templateType = "-models_history_" + this.item._type;
+            }
+        }
     };
 
 
@@ -263,22 +341,22 @@ var chatFeed = (function() {
     }
 
     function getHistoryPaging(type, position, parentId) {
-        debugger;
         var firstIndex = parseInt(position.find('.models_history_wrapper').first().attr('index'),10) +1;
         var lastIndex = firstIndex + 20;
         var newRange = firstIndex + "-" + lastIndex;
 
         var items = getRawContents(type, parentId, newRange);
+        v$('<div>').addClass('chat_contents_wrapper').attr('id', 'chat_contents_wrapper').appendTo(position);
         format_items(type, items, position);
     }
 
     function app_layers_history_feedPage(position, type, parentId) {
-        debugger;
         var items = getRawContents(type, parentId, "0-20");
+        $('<div>').addClass('chat_contents_wrapper').attr('id', 'chat_contents_wrapper').appendTo(position);
         format_items(type, items, position);
     }
 
-    function format_items(type, items, position) {
+    function format_items(type, items, position, after) {
        // var items = getRawContents(type, parentId, "0-50");
         /* Structure of item:
             att: "created_at"
@@ -288,7 +366,7 @@ var chatFeed = (function() {
             timestamp: "1458629345"
             type: "tasks"
         */
-        var wrapper = $('<div>').addClass('chat_contents_wrapper').attr('id', 'chat_contents_wrapper').appendTo(position);
+        
         for (var i in items) {
             var item = new BaseHistoryCls(items[i]);
             var newItem = fake_history_generator_for_multimedia(items[i]);
@@ -298,8 +376,14 @@ var chatFeed = (function() {
                     var Elem = item.renderHistoryTemplate(i);
                 else
                     var Elem = item.renderChatTemplate(i);
-                if (Elem)
-                        Elem.prependTo(wrapper);
+                if (Elem) {
+                    if (after) {
+                        Elem.appendTo(position.find(".chat_contents_wrapper"));    
+                    }
+                    else {
+                        Elem.prependTo(position.find(".chat_contents_wrapper"));              
+                    }
+                }
 
                 var dateStamp = checkRecentDate(item.item.timestamp, i);
                 if (dateStamp) {
@@ -330,22 +414,19 @@ var chatFeed = (function() {
 
         $(position).delegate('.models_history_standard_shortcut', 'click', function() {
             var parent = $(this).parents('.models_history_wrapper');
-            var id = parent.attr('id').split('models_thistory_')[1];
             var category = parent.attr('category');
-            var extension = checkExtension(category, id);
-            if (extension) {
-                //var file = Lincko.storage.get('files', id);
-                var file = getFakeFile(id);
-                SHORTCUT_HANDLERS[extension](file);
-                return false;
-            }
-            return true;
+            var id = RESOURCE_ID[category](parent.attr('id'));
+            var that = this;
+            SHORTCUT_HANDLERS[category](id, that);
+
+            return false;
         });
 
         $(position).delegate('.models_history_content_wrapper', 'click', function() {
             var parent = $(this).parents('.models_history_wrapper');
-            var id = parent.attr('id').split('models_thistory_')[1];
             var category = parent.attr('category');
+            var id = RESOURCE_ID[category](parent.attr('id'));
+
             var that = this;
             RESOURCE_HANDLERS[category](id, that);
             return false;
@@ -355,5 +436,6 @@ var chatFeed = (function() {
     return {
         'feedHistory': app_layers_history_launchPage,
         'feedPaging': getHistoryPaging,
+        'appendItem': format_items,
     }
 })();

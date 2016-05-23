@@ -65,7 +65,6 @@ submenu_list['contacts'] = {
                         'post',
                         'chat/create',
                         function() {
-                            debugger;
                             var chat = Lincko.storage.list('chats', 1, {'temp_id': comment_id})[0];
                             submenu_Build("newchat", false, false, {
                                 type: 'chats',

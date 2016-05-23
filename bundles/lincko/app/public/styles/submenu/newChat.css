@@ -41,11 +41,19 @@
 	padding-bottom: 50px;
 }
 
-.chat_bottom {
+[find="submenu_wrapper_bottom"] .chat_bottom {
 	text-align: left;
 	color: #FB7D23;
 	position: relative;
 	height: 100%;
+}
+
+[find="submenu_wrapper_bottom"] .attachment {
+	cursor: pointer;
+}
+
+[find="submenu_wrapper_bottom"] .send {
+	cursor: pointer;
 }
 
 .v_pos {

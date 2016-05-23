@@ -34,6 +34,22 @@
     cursor: pointer;
 }
 
+.upload_stopped_file .models_history_content {
+    cursor: default;
+}
+
+.comments .models_history_content {
+    cursor: default;
+}
+
+.uploading_file .models_history_content {
+    cursor: default;
+}
+
+.models_history_standard_shortcut {
+    cursor: pointer;
+}
+
 .models_history_self .models_history_content {
     background-color: rgba(103, 158, 82, 0.22);
 }
@@ -115,6 +131,7 @@
 .models_history_standard_shortcut_wrapper {
     padding: 6px 20px;
     margin: 6px auto;
+    position: relative;
 }
 
 .models_history_standard_shortcut_wrapper > span{
@@ -145,6 +162,95 @@
 .comments .models_history_standard_target {
     color: #FB7D23;
 }
+
+.uploading_file .models_history_standard_shortcut_wrapper {
+    height: 100px;
+    line-height: 100px;
+}
+.upload_stopped_file .models_history_standard_shortcut_wrapper {
+    height: 100px;
+    line-height: 100px;
+}
+.upload_failed_file .models_history_standard_shortcut_wrapper {
+    height: 100px;
+    line-height: 100px;
+}
+.models_history_standard_target_wrapper {
+    text-align: center;
+}
+
+.models_history_standard_shortcut_wrapper > .models_history_standard_shortcut {
+    vertical-align: middle;
+}
+
+.models_history_standard_shortcut_wrapper .icon-PauseCloud,.icon-ResumeCloud {
+    display: block;
+    font-size: 50px;
+}
+
+.uploading_file, .models_history_standard_shortcut_wrapper .uploading_action:before {
+    content: "X ";
+}
+.upload_stopped_file .models_history_standard_shortcut_wrapper .uploading_action:before {
+    content: "X ";
+}
+.uploading_file .models_history_standard_shortcut_wrapper .uploading_action {
+    color: #BE2B1F;
+}
+
+.upload_stopped_file .models_history_standard_shortcut_wrapper .uploading_action {
+    color: #BE2B1F;
+}
+
+.uploading_file .models_history_standard_shortcut_wrapper .icon-ResumeCloud {
+    display: none;
+}
+
+.upload_failed_file .models_history_standard_shortcut_wrapper .uploading_action {
+    color: #53ADD2;
+}
+
+.upload_stopped_file .models_history_standard_shortcut_wrapper .icon-PauseCloud {
+    display: none;
+}
+
+.uploading_file .models_history_standard_shortcut_wrapper .icon-ResumeCloud {
+    display: none;
+}
+
+.upload_failed_file .models_history_standard_shortcut_wrapper .icon-PauseCloud {
+    display: none;
+}
+
+.upload_failed_file .models_history_standard_shortcut_wrapper .icon-ResumeCloud {
+    display: none;
+}
+
+.models_history_standard_shortcut_wrapper .progress_bar {
+    height: 2px;
+    background-color: #FBA026;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 70%;
+}
+
+.models_history_standard_shortcut_wrapper .progress_bar_wrapper {
+    height: 2px;
+    background-color: #979797;
+    position: relative;
+    margin: 20px 0 10px 0;
+}
+
+.models_history_standard_target_wrapper p {
+    margin: 0;
+}
+
+.models_history_standard_target_wrapper {
+    float: right;
+    line-height: 2;
+}
+
 /* Mobile phone in Portrait */
 
 @media only screen and (max-width: 479px) {

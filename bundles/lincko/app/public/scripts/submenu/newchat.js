@@ -1,4 +1,3 @@
-console.log("submenu newchat");
 submenu_list['newchat'] = {
     //Set the title of the top
     "_title": {
@@ -68,16 +67,17 @@ Submenu.prototype.Add_ChatMenu = function() {
     }
     submenu_wrapper.find("[find=submenu_wrapper_bottom]").append(Elem);
     //Elem.find("[find=select_chats]").click();
-    Elem.find("input").focus(function() {
-        Elem.find(".send").show();
-        Elem.find(".attachment").hide();
-    });
-    Elem.find("input").blur(function() {
+    Elem.find(".comments_input").blur(function() {
         if (!Elem.find('.comments_input').val()) {
             Elem.find(".send").hide();
             Elem.find(".attachment").show();
         }
     });
+    Elem.find(".comments_input").focus(function() {
+        Elem.find(".send").show();
+        Elem.find(".attachment").hide();
+    });
+
     $('.comments_input', submenu_wrapper).keypress(function(e) {
         if(e.which == 13) {
             var content = Elem.find('.comments_input').val();
@@ -95,6 +95,41 @@ Submenu.prototype.Add_ChatMenu = function() {
             );
         }
     });
+    $('.attachment', submenu_wrapper).on("click", function() {
+        var position = $(this).parents(".submenu_wrapper");
+        app_upload_open_files('chats', that.param.id, false, true);
+
+        app_application_lincko.add(position.attr("id"), 'upload', function(){ //We cannot simplify because Elem is not the HTML object, it's a JS Submenu object
+            var files = app_upload_files.lincko_files;
+            for(var i in files)
+            {
+                //FIXME: Only filters files inside this chats.
+                if (!files[i].presented) {
+                    item = {
+                        'name': files[i].lincko_name,
+                        '_type': 'uploading_file',
+                        'id': 'md5(Math.random())',
+                        'timestamp': $.now()/1000,
+                        'created_by': wrapper_localstorage.uid,
+                        'index': i,
+                    };
+                    app_application_lincko.add("uploading_file_"+i, 'upload', function() {
+                        //change each item status
+                        var tmp = this.id.split("_");
+                        var index = tmp[tmp.length-1];
+                        var file = app_upload_files.lincko_files[index];
+                        var downloaded = file.lincko_progress * file.lincko_size/100;
+                        $("#"+this.id).find("[find=progress_bar]").width(file.lincko_progress+"%"); 
+                        $("#"+this.id).find("[find=progress_text]").html(downloaded+"/"+file.lincko_size);
+                        $("#"+this.id).find(".uploading_action").html(Lincko.Translation.get('app', 7, 'js'));
+                    });
+                    chatFeed.appendItem("chats", [item], position, true);
+                    files[i].presented = true;
+                }
+            }
+        });
+
+    });
     $('.send', submenu_wrapper).on("click", function() {
         var content = Elem.find('.comments_input').val();
         var type = that.param.type == 'history' ? "projects":'chats';
@@ -107,18 +142,16 @@ Submenu.prototype.Add_ChatMenu = function() {
             'comment/create',
             function() {
                 Elem.find('.comments_input').val('');
+                app_application_lincko.update("chat_contents_wrapper", type+"_" + that.param.id);
             }
         ); //TODO: fix the error handling logic
     });
     if (that.param.type == 'history') {
-            debugger;
             app_application_lincko.add("chat_contents_wrapper","projects_" + that.param.id, function() {
-                debugger;
                 var id = Object.keys(this.range)[0].split("_")[1];
                 var type = Object.keys(this.range)[0].split("_")[0];
                 //Lincko.storage.list("chats", null, {"new": true}, 'chats', id, false);
                 var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
-                debugger;
                 chatFeed.feedHistory(position, "history", id);
             });
     }
@@ -135,33 +168,3 @@ Submenu.prototype.Add_ChatMenu = function() {
     delete submenu_wrapper;
     return true;
 };
-
-/*
-JSfiles.finish(function() {
-    app_application_lincko.add(function() {
-
-
-        for (var menu in submenu_list['newchat']) {
-            if (menu != "_title" && menu != "chat_menu") {
-                delete submenu_list['newchat'][menu];
-            }
-        }
-
-        var chats = Lincko.storage.list('chats');
-
-        for (var i in chats) {
-            if (chats[i].url) {
-                submenu_list['newchat'][chats[i].url] = {
-                    "style": "button",
-                    "title": chats[i]['+title'],
-                    "action_param": { chat_id: chats[i].url, },
-                    "action": function(event) {
-                        console.log(event.data.chat_id);
-                    },
-                };
-            }
-        }
-
-    }, 'chats');
-});
-*/

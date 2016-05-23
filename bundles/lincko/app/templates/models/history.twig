@@ -39,7 +39,6 @@
                                 <div class="models_history_content">
                                         <span find="content" class="models_history_standard_content"></span>
                                 </div>
-
                         </div>
 
         </li>
@@ -54,7 +53,6 @@
                                         <span find="action" class="models_history_standard_action"></span>
                                         <span find="target" class="models_history_standard_target"></span>
                                 </div>
-
                         </div>
         </li>
         <li id="-models_history_projects" class="clear models_history_wrapper">
@@ -83,10 +81,34 @@
                                         <div class="models_history_standard_shortcut_wrapper">
                                                 <img find="shortcut" class="models_history_standard_shortcut"></img>
                                                 <span find="target" class="models_history_standard_target"></span>
-
                                         </div>
                                 </div>
 
                         </div>
+        </li>
+        <li id="-models_history_uploading_file" class="clear models_history_wrapper">
+            {% include "/bundles/lincko/app/templates/models/include/history_base.twig" %}
+            <div class="models_history_content_wrapper">
+                <div find="timestamp" class="models_history_standard_timestamp">
+                    <p class="date"></p>
+                    <p class="time"></p>
+                </div>
+                <div class="models_history_content">
+                    <div class="models_history_standard_shortcut_wrapper clear">
+                        <span find="shortcut" class="models_history_standard_shortcut">
+                            <i class="icon-PauseCloud"></i>
+                            <i class="icon-ResumeCloud"></i>
+                        </span>
+                        <div class="models_history_standard_target_wrapper">
+                            <span find="target" class=""></span>
+                            <div class="progress_bar_wrapper">
+                                <div find="progress_bar" class="progress_bar"></div>
+                            </div>
+                            <p find="progress_text"></p>
+                            <p class="uploading_action"></p>                   
+                        </div>
+                    </div>
+                </div>
+            </div>
         </li>
 </div>
