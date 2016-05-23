@@ -165,6 +165,7 @@ td.submenu_taskdetail_share .fa{
     bottom: 0px;
     left: 0px;
     width: 100px;
+    opacity: 0;
 }
 .submenu_taskdetail_meta_box {
 	position: relative;
@@ -184,6 +185,21 @@ td.submenu_taskdetail_share .fa{
     font-size: 18px;
     color: #53ADD2;
     cursor: pointer; cursor: hand;
+}
+.submenu_taskdetail_meta_actions [find=action_menu] {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    padding: 6px 0px;
+    right: 25px;
+	/*background-color: #BE2C1F;
+    color: #FBA026;
+    */
+    font-size: 18px;
+    width: 0px;
+    display:none;
+    overflow: hidden;
+    text-align: center;
 }
 
 /* old design with 3 blocks with huge icons

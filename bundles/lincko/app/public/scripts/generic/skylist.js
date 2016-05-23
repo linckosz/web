@@ -791,9 +791,9 @@ skylist.prototype.addTask = function(item){
 			in_charge += Lincko.storage.get("users", i ,"username");
 		}
 	}
-	Elem.find('[find=name]').toggleClass('display_none');
-	Elem.find('input[find=name]').val(in_charge);
-	burger(Elem.find('input[find=name]'), '_users', item);
+	//Elem.find('[find=name_hidden]').toggleClass('display_none');
+	Elem.find('[find=name]').html(in_charge);
+	burger(Elem.find('input[find=name_hidden]'), '_users', item);
 	
 	/*
 	rightOptions - in_charge
@@ -1071,7 +1071,6 @@ skylist.prototype.add_cardEvents = function(Elem){
 		}
 	});
 	$('body').on("mouseleave.skylist_"+that.md5id, function(){
-		console.log('mouseleave');
 		Elem.mouseup();//trigger mouseup
 	});
 }
@@ -1645,8 +1644,6 @@ skylist.prototype.maxMobileL = function(){
 	that.list_subwrapper.find('input[find=card_time_calendar_timestamp]').prop('disabled',true);
 	that.list_subwrapper.find('input[find=name]').prop('disabled',true);
 	if(that.elem_Jsorts ){
-		var selection = that.elem_Jsorts.find('.skylist_menu_timesort_text_wrapper').not('.display_none').html();
-		console.log(selection);
 		that.elem_Jsorts.not('.skylist_menu_timesort_dot').addClass('display_none');
 	}
 	//that.elem_navbar.find('.icon-Indicator').closest('.skylist_menu_timesort_text_wrapper').removeClass('display_none');

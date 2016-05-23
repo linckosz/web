@@ -302,6 +302,19 @@
     background-color: initial;
     border: none;
     color: inherit;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.skylist_card_bottom [find=name_hidden] {
+	position: absolute;
+    opacity: 0;
+    right: 50px;
+    width: 110px;
+}
+.skylist_card_bottom [find=comments] {
+	width: 20px;
+    display: inline-block;
+    text-align: left;
 }
 
 .skylist_card_leftOptions, .skylist_card_rightOptions {

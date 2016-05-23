@@ -119,8 +119,12 @@ Submenu.prototype.Add_taskdetail = function() {
 	submenu_content.prop('id','taskdetail_'+that.md5id);
 	var submenu_taskdetail = $('#-submenu_taskdetail').clone().prop('id','submenu_taskdetail');
 	var contactServer = false;
+	var action_menu_opened = false;
 	var param_sendAction = {};
 	var taskid = this.param.id;
+	var newTitle = 'Enter Your Title Here!'; //toto
+	var newDescription = 'Enter Your Description Here.'; //toto
+	var approved = false;
 	var elem;
 	var duedate;
 	var duration_timestamp = 86400;
@@ -129,15 +133,20 @@ Submenu.prototype.Add_taskdetail = function() {
 	var updated_by;
 	var updated_at;
 	var in_charge = '';
+	var in_charge_id = null;
 	var item = {};
 
+	var route = '';
+	var route_delete = false;
+
 	if(taskid == 'new' ){
-		var newTitle = 'Enter Your Title Here!'; //toto
-		var newDescription = 'Enter Your Description Here.'; //toto
 		item['+title'] = newTitle;
 		item['-comment'] = newDescription;
 		item['created_by'] = wrapper_localstorage.uid;
 		item['updated_by'] = wrapper_localstorage.uid;
+		item['_users'] = {};
+		item['_users'][wrapper_localstorage.uid] = {};
+		item['_users'][wrapper_localstorage.uid]['in_charge'] = true;
 		item.start = $.now()/1000;
 		item.duration = duration_timestamp;
 		item['_type'] = that.param.type;
@@ -151,11 +160,20 @@ Submenu.prototype.Add_taskdetail = function() {
 
 	/*---tasktitle---*/
 	elem = $('#-submenu_taskdetail_tasktitle').clone().prop('id','submenu_taskdetail_tasktitle');
-	elem.find('[find=title_text]').html(item['+title']).click(function(){
+	var elem_title_text = elem.find('[find=title_text]');
+	elem_title_text.html(item['+title']).click(function(){
 		if( $(this).html() == newTitle ){
-			$(this).html('');
+			$(this).html('').attr('style','');
 		}
 	});
+	elem_title_text.blur(function(){
+		if( $(this).html() == '' ){
+			$(this).html(newTitle).css('opacity',0.4);
+		}
+	});
+	if( item['+title'] == newTitle ){
+		elem_title_text.css('opacity',0.4);
+	}
 
 	elem.find("[find=taskid]").html(taskid);
 	if( item['_type'] == "tasks" ){
@@ -168,19 +186,21 @@ Submenu.prototype.Add_taskdetail = function() {
 			event.stopPropagation();
 			var elem_title = $(this).closest('table');
 			elem_title.toggleClass('skylist_card_checked');
-			var approved = false;
 			if( elem_title.hasClass('skylist_card_checked') ){
 				approved = true;
 			}
 			else{
 				approved = false;
 			}
-			wrapper_sendAction(
-				{
-		    		"id": item['_id'],
-		    		"approved": approved,
-				},
-				'post', 'task/update');
+
+			if(taskid != 'new'){
+				wrapper_sendAction(
+					{
+			    		"id": item['_id'],
+			    		"approved": approved,
+					},
+					'post', 'task/update');
+				}
 		});
 	}
 	/* OLD CHECKBOX METHOD
@@ -204,14 +224,38 @@ Submenu.prototype.Add_taskdetail = function() {
 
 	/*meta (general)*/
 	elem = $('#-submenu_taskdetail_meta').clone().prop('id','submenu_taskdetail_meta_'+that.md5id);
+	var elem_action_menu = elem.find('[find=action_menu]');
 	elem.find('.submenu_taskdetail_meta_actions').click(function(){
-		var route;
+		console.log('meta_actions clicked '+action_menu_opened);
+		if(action_menu_opened){
+			elem_action_menu.velocity({width:0},{
+				begin: function(){
+					elem_action_menu.css('display','initial');
+				},
+				complete: function(){
+					action_menu_opened = false;
+					elem_action_menu.attr('style','');
+				},
+			});
+		}
+		else{
+			elem_action_menu.velocity({width:25},{
+				begin: function(){
+					elem_action_menu.css('display','initial');
+				},
+				complete: function(){
+					action_menu_opened = true;
+				}
+			});
+		}
+		/*
 		if( that.param.type == "tasks" ){
 			route = "task/delete";
 		}
 		else if( that.param.type == "notes" ){
 			route = "note/delete";
 		}
+		/*
 		wrapper_sendAction(
 		    {
 		        "id": taskid,
@@ -219,6 +263,10 @@ Submenu.prototype.Add_taskdetail = function() {
 		    'post',
 		    route
 		);
+		*/
+	});
+	elem_action_menu.find('[find=delete]').click(function(){
+		route_delete = true;
 		submenu_Clean(null,null,true);
 	});
 
@@ -243,7 +291,9 @@ Submenu.prototype.Add_taskdetail = function() {
 				elem_in_charge_hidden.click();
 			});
 			elem_in_charge_hidden.change(function(){
-				elem_in_charge.html(elem_in_charge_hidden.val());
+				in_charge_id = $(this).val();
+				var username = Lincko.storage.get("users", in_charge_id, "username");
+				elem_in_charge.html(username);
 			});
 
 			//---duedate calenar
@@ -257,6 +307,9 @@ Submenu.prototype.Add_taskdetail = function() {
 					console.log(item['start']+' duedate cant be before start date.');
 				}
 				else{
+					if(taskid == 'new'){
+						return false;
+					}
 					var route = '';
 					if( that.param.type == "tasks" ){
 						route = 'task/update';
@@ -290,11 +343,18 @@ Submenu.prototype.Add_taskdetail = function() {
 
 	/*---description---*/
 	elem = $('#-submenu_taskdetail_description').clone().prop('id','submenu_taskdetail_description');
-	elem.find('[find=description_text]').html(item['-comment']).click(function(){
+	var elem_description_text = elem.find('[find=description_text]');
+	elem_description_text.html(item['-comment']).click(function(){
 		if( $(this).html() == newDescription ){
-			$(this).html('');
+			$(this).html('').attr('style','');
 		}
 	});
+	if( taskid == 'new' ){
+		elem_description_text.css('opacity',0.4);
+	}
+
+
+
 	submenu_taskdetail.append(elem);
 	
 
@@ -555,8 +615,12 @@ Submenu.prototype.Add_taskdetail = function() {
 	submenu_content.append(submenu_taskdetail);
 
 
+
 	/*----create/save on previewHide----*/
 	$(document).on("previewHide.skylist", function(){
+		if( taskid == 'new' && route_delete ){
+			return false;
+		}
 		var contactServer = false;
 		var param = {};
 
@@ -564,14 +628,24 @@ Submenu.prototype.Add_taskdetail = function() {
 		param['id'] = taskid;
 		param['parent_id'] = app_content_menu['projects_id'];
 		param['title'] = submenu_taskdetail.find('[find=title_text]').html();
-		if( param['title'] == '' ){
-			param['title'] = newTitle;
-		}
 		param['comment'] = submenu_taskdetail.find('[find=description_text]').html();
+		if( taskid == 'new' ){
+			if(in_charge_id){
+	        	param['users>in_charge'] = {};
+	        	param['users>in_charge'][in_charge_id] = true;
+	        }
+	        if(approved){
+	        	param['approved'] = approved;
+	        }
+	        if( param['comment'] == newDescription ){
+	        	param['comment'] = '';
+	        }
+		}
 
-		if( taskid == 'new' || param['title'] != item['+title'] || param['comment'] != item['-comment'] ){
+		if( taskid == 'new' || route_delete || param['title'] != item['+title'] || param['comment'] != item['-comment'] ){
 			contactServer = true;
 		}
+
 
 		if( that.param.type == "tasks" && duration_timestamp != item['duration'] ){
 			contactServer = true;
@@ -589,6 +663,9 @@ Submenu.prototype.Add_taskdetail = function() {
 
 			if( taskid == 'new' ){
 				route += '/create';
+			}
+			else if( route_delete ){
+				route += '/delete';
 			}
 			else{
 				route += '/update';
@@ -665,6 +742,13 @@ Submenu.prototype.Add_taskdetail = function() {
 	/*
 	if(that.param.type == 'notes' ){
 		submenu_wrapper.find('[find=description_text]').easyEditor();
+	}
+	*/
+
+	console.log(elem_title_text);
+	/*
+		if( taskid == 'new' ){
+		elem_title_text.click();
 	}
 	*/
 

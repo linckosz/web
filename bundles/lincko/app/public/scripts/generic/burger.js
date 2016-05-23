@@ -130,7 +130,13 @@ var burger = function(elem, burger_mode, item){
                 var elem_option = $('#-burger_option').clone().prop('id','').addClass('burger_option'+burger_mode);
                 var elem_option_clone;
                 //$.each(item[burger_mode], function(key, value){
-                var accessList = Lincko.storage.whoHasAccess(item['_type'], item['_id']);
+                if(!item['_id'] || item['_id'] == 'new'){
+                    var accessList = Lincko.storage.whoHasAccess('projects', app_content_menu.projects_id);
+                }
+                else{
+                    var accessList = Lincko.storage.whoHasAccess(item['_type'], item['_id']);
+                }
+                
                 for (var i = 0; i < accessList.length; i++) {
                     var userid = accessList[i];
                     username = Lincko.storage.get("users", userid,"username");
@@ -146,6 +152,11 @@ var burger = function(elem, burger_mode, item){
                     if( item['_type'] == 'tasks'){
                         elem_option_clone.click(function(){
                             var userid = $(this).attr('userid');
+                            elem.val(userid);
+                            elem.change();
+                             if(!item['_id'] || item['_id'] == 'new'){
+                                return false;
+                             }
                             var param = {};
                             param['id'] = item['_id'];
                             param['users>in_charge'] = {};

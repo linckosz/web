@@ -5,6 +5,7 @@
 		<td find='leftbox'></td>
 		<td class="skylist_card_textwrapper">
 			<div find="title_text" contenteditable="true" tabIndex="1"></div>
+			{#<textarea find="title_text"></textarea>#}
 		</td>
 	</tr>
 	<tr>
@@ -45,7 +46,11 @@
 			</td>
 		</tr>
 	</table>
-	<span class="icon-Actions submenu_taskdetail_meta_actions"></span>
+	<span class="icon-Actions submenu_taskdetail_meta_actions">
+		<span find='action_menu'>
+			<div find="delete" class="icon-Trash"></div>
+		</span>
+	</span>
 </div>
 
 <div id="-submenu_taskdetail_comments" class="submenu_taskdetail_comments">
