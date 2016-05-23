@@ -1,4 +1,3 @@
-console.log("phylosofer stone");
 submenu_list['contacts'] = {
     //Set the title of the top
     "_title": {

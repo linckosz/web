@@ -81,6 +81,14 @@ textarea:focus, input:focus{
 	cursor: pointer;
 }
 
+[find="submenu_wrapper_bottom"] .attachment {
+	cursor: pointer;
+}
+
+[find="submenu_wrapper_bottom"] .send {
+	cursor: pointer;
+}
+
 .v_pos {
 	position: absolute;
 	width: 100%;

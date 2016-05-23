@@ -119,7 +119,6 @@ Submenu.prototype.New_Add_ChatMenu = function() {
                         var tmp = this.id.split("_");
                         var index = tmp[tmp.length-1];
                         var file = app_upload_files.lincko_files[index];
-
                         var size  = $('#app_upload_fileupload').fileupload('option')._formatFileSize(file.lincko_size);
                         var downloaded = $('#app_upload_fileupload').fileupload(
                             'option')._formatFileSize(file.lincko_progress * file.lincko_size/100);
