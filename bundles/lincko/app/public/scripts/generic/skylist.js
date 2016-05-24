@@ -159,7 +159,6 @@ skylist.prototype.construct = function(){
 
 	/*functions that are specific to each module*/
 	if( that.subConstruct ){
-		console.log('add subConstruct');
 		that.subConstruct();
 	}
 	else{
@@ -178,7 +177,6 @@ skylist.prototype.construct = function(){
 
 	//$(document).on("previewHide.skylist_"+that.md5id, function(){
 	$(document).on("submenuHide.skylist_"+that.md5id, function(){
-		console.log('submenuHide');
 		that.submenuHide();
 	});
 
@@ -235,7 +233,6 @@ skylist.prototype.subConstruct_default = function(){
 		that.list.prop('id'),
 		'projects_'+app_content_menu.projects_id,
 		function(){
-			console.log('projects_'+app_content_menu.projects_id);
 			var param = {};
 			param.new = true;
 			var newTasks = Lincko.storage.list(that.list_type, null, param, 'projects', app_content_menu.projects_id, false);
@@ -248,7 +245,6 @@ skylist.prototype.subConstruct_default = function(){
 			}
 			if( itemlist_new.length > elem_cards.length ){
 				console.log('card created');
-
 				var i_old = 0;
 				for( var i_new =0; i_new < itemlist_new.length; i_new++ ){
 					var newItem_id = itemlist_new[i_new]['_id'];
@@ -330,14 +326,6 @@ skylist.prototype.generate_Lincko_itemsList = function(){
 			}
 			that.Lincko_itemsList = Lincko.storage.sort_items(that.Lincko_itemsList, 'duedate', 0, -1, true);
 		}
-
-		/*
-		if(app_content_menu.projects_id == Lincko.storage.getMyPlaceholder()['_id']){
-			that.Lincko_itemsList = Lincko.storage.list(that.list_type, null, true);
-		} else {
-			that.Lincko_itemsList = Lincko.storage.list(that.list_type, null, {'_parent': ['projects', app_content_menu.projects_id]});
-		}
-		*/
 	}
 }
 
@@ -526,13 +514,9 @@ skylist.prototype.list_filter = function(){
 }
 
 skylist.prototype.tasklist_update = function(type, filter_by){
-	console.log('--------tasklist_update---------');
 	var that = this;
 
-	if( !type ){
-		console.log('type: '+type);
-	}
-	else{
+	if( type ){
 		that.Lincko_itemsList_filter[type] = filter_by;
 	}
 	var items_filtered = that.list_filter();
@@ -632,7 +616,6 @@ skylist.prototype.addCard = function(item){
 				else{ //for deletion
 					elem.velocity('slideUp',{
 						complete: function(){
-							console.log('card delete animation complete');
 							$(this).remove();
 							if( that.list_subwrapper.find('[find=card]').length < 1 ){
 								that.tasklist_update();
@@ -1066,7 +1049,6 @@ skylist.prototype.add_cardEvents = function(Elem){
 	});
 	Elem.on('mousemove touchmove', function(event){ //for firefox, event must be passed as the parameter of this fn
 		if( responsive.test("maxMobileL") && that.mousedown ){
-			console.log('elem.on mousemove');
 			that.on_mousemove(event);
 		}
 	});
@@ -1085,7 +1067,6 @@ skylist.prototype.on_mousedown = function(event, task_elem){
 	/*
 		task_elem must be JQuery object of the task element at hand
 	*/
-	console.log('on_mousedown');
 	var that = this;
 	that.actiontask = task_elem;
 	
@@ -1097,12 +1078,10 @@ skylist.prototype.on_mousedown = function(event, task_elem){
 	that.delX_now = that.delX_ini;
 	that.delY_ini = event.pageY || event.originalEvent.touches[0].pageY || event.touches[0].pageY;
 	that.mousedown = true;
-	console.log(that.mousedown);
 
 }
 
 skylist.prototype.on_mousemove = function(event){
-	console.log('on_mousemove');
 	var that = this;
 	var elem_options;
 
@@ -1342,34 +1321,6 @@ skylist.prototype.menu_construct = function(){
 	}
 
 
-	/*
-	that.elem_navbar.find('[find=search_icon]').click(function(){
-		old code for slideout searchbar
-		var textbox = $(this).prev('[find=search_textbox]');
-		if( textbox.hasClass('display_none')){
-			textbox.velocity({width:150},
-				{
-					begin: function(){
-						textbox.removeClass('display_none');
-					},
-					complete: function(){
-						textbox.focus();
-					}
-				}
-			);
-		}
-		else{
-			textbox.velocity({width:0},
-				{
-					complete: function(){
-						textbox.addClass('display_none');
-					},
-				}
-			);
-		}
-
-	});
-	*/
 	//burger(that.elem_navbar.find('[find=search_textbox]'), 'regex');
 	var elem_search_input = that.elem_navbar.find('[find=search_textbox]');
 	var elem_search_overlay = that.elem_navbar.find('.skylist_menu_navbar_search_overlay');
@@ -1528,7 +1479,6 @@ skylist.prototype.menu_construct = function(){
 } //construct END
 
 skylist.prototype.menu_makeSelection = function(selection){
-	console.log('makeSelection: '+selection);
 	var that = this;
 	if(that.elem_sorts[selection]){
 		//that.elem_Jsorts.find('[find=indicator]').removeClass('icon-Indicator');
@@ -1556,12 +1506,6 @@ skylist.prototype.menu_makeSelection = function(selection){
 		that.elem_Jsorts.removeAttr("style");
 		*/
 	}
-	else{
-		console.log('selection does not exist.');
-	}
-
-	
-
 }//makeSelection END
 
 skylist.prototype.menu_sortnum_fn = function(){
@@ -1616,14 +1560,13 @@ skylist.prototype.addFilter_tasks = function(elem_filter_pane){
 
 
 skylist.prototype.minTablet = function(){
-	console.log('skylist.minTablet');
 	var that = this;
 	if(!that.list_wrapper){return;}
 
 	that.list_subwrapper.find('input[find=card_time_calendar_timestamp]').prop('disabled',false);
 	that.list_subwrapper.find('input[find=name]').prop('disabled',false);
 
-
+	/*
 	var simpleDesktopWidth = 1000;
 	var simpleDesktopWidth2 = 800;
 	var list_width = that.list_wrapper.width();
@@ -1642,6 +1585,7 @@ skylist.prototype.minTablet = function(){
 			.removeClass('skylist_simpleDesktop')
 			.removeClass('skylist_simpleDesktop2');
 	}
+	*/
 
 	if( that.elem_Jsorts ){
 		that.elem_Jsorts.removeClass('display_none');
@@ -1649,7 +1593,6 @@ skylist.prototype.minTablet = function(){
 }
 
 skylist.prototype.maxMobileL = function(){
-	console.log('skylist.maxMobileL');
 	var that = this;
 	if(!that.list_wrapper){return;}
 	that.list_subwrapper.find('input[find=card_time_calendar_timestamp]').prop('disabled',true);
@@ -1662,7 +1605,6 @@ skylist.prototype.maxMobileL = function(){
 }
 
 skylist.prototype.minMobileL = function(){
-	console.log('skylist.minMobileL');
 	var that = this;
 	if(!that.list_wrapper){return;}
 	that.list.find('[find=task_rightOptions]').removeAttr("style").removeClass('display_none');
@@ -1678,7 +1620,6 @@ skylist.prototype.minMobileL = function(){
 }
 
 skylist.prototype.isMobile = function(){
-	console.log('skylist.isMobile');
 	var that = this;
 	if(!that.list_wrapper){return;}
 	//that.list.find('[find=task_rightOptions]').addClass('display_none');

@@ -236,8 +236,6 @@ Submenu.prototype.Add_taskdetail = function() {
 					in_charge += Lincko.storage.get("users", i ,"username");
 				}
 			}
-			console.log('in_charge');
-			console.log(in_charge);
 			if( !in_charge ){
 				in_charge = 'Not Assigned'; //toto
 			}
@@ -299,7 +297,6 @@ Submenu.prototype.Add_taskdetail = function() {
 		/*---action_menu---*/
 		var elem_action_menu = elem.find('[find=action_menu]');
 		elem.find('.submenu_taskdetail_meta_actions').click(function(){
-			console.log('meta_actions clicked '+action_menu_opened);
 			if(action_menu_opened){
 				elem_action_menu.velocity({width:0},{
 					begin: function(){

@@ -302,8 +302,10 @@
     background-color: initial;
     border: none;
     color: inherit;
+    /*
     overflow: hidden;
     text-overflow: ellipsis;
+    */
 }
 .skylist_card_bottom [find=name_hidden] {
 	position: absolute;
