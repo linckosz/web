@@ -65,6 +65,10 @@ td.app_layers_dev_skytasks_checkbox {
     box-sizing: border-box;
     color:#475577;
     font-size: 20px;
+    opacity: 0.7;
+}
+.submenu_taskdetail_tasktitle [find=title_text]:focus {
+	opacity: 1;
 }
 .submenu_taskdetail_tasktitle .app_layers_dev_skytasks_checkbox_visual {
 	margin: 4px;
