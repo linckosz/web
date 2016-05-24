@@ -61,6 +61,10 @@
 	border-style: none;
 }
 
+.base_pointer {
+	cursor: pointer; cursor: hand;
+}
+
 html, body {
 	height: 100%;
 	overflow: hidden;
@@ -329,7 +333,7 @@ html, .font_sans_serif {
 .base_MainElementText { color: #475577; }
 .base_SettingsText { color: #3270A0; }
 .base_DayText { color: #53ADD2; }
-.base_DescriptionText { color: #000000; }
+.base_DescriptionText { color: #131313; }
 .base_MyCommentText { color: #437CA8; }
 .base_MainMenuItemsText { color: #444444; }
 .base_MainMenuHeaderText { color: #000000; }

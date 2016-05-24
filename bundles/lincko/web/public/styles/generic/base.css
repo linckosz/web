@@ -61,6 +61,10 @@
 	border-style: none;
 }
 
+.base_pointer {
+	cursor: pointer; cursor: hand;
+}
+
 body {
 	background-image: url('/lincko/web/images/generic/base/pattern.jpg');
 	background-repeat: repeat;

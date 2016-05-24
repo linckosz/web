@@ -18,7 +18,7 @@ var app_application_lincko = {
 		var object = false;
 		//Assign id
 		var item = {
-			id: null,
+			id: null,							//Inside a callback we can get the id by doing this.id
 			range: {},							//React to which category (all for empty)
 			action: function(){},				//If HTML exists and its related objects, we take action
 				/*

@@ -62,7 +62,7 @@ var app_content_menu = {
 		
 		//We do not allow to display anything until the personal project is available
 		if(typeof projects_id === 'undefined'){ return false; }
-		if(typeof menu === 'undefined'){ menu = 'dashboard'; }
+		if(typeof menu === 'undefined'){ menu = 'tasks'; }
 		if(typeof param === 'undefined'){ param = null; }
 
 		var list = [];
@@ -71,8 +71,7 @@ var app_content_menu = {
 		if(projects_id < 0){ //Workspace
 			title = Lincko.storage.WORKNAME;
 			list = [
-				'statistics',
-				'chat',
+				'projects',
 			];
 		} else if(
 			   $.type(Lincko.storage.data['projects']) === 'object'
@@ -83,18 +82,14 @@ var app_content_menu = {
 			title = Lincko.storage.data['projects'][projects_id]['+title'];
 			list = [
 				'tasks',
-				'statistics',
+				'notes',
 				'chat',
 			];
 		} else { //My placeholder (default)
 			title = base_myplaceholder;
 			list = [
-				//'dashboard',
-				'projects',
 				'tasks',
 				'notes',
-				'calendar',
-				//'statistics',
 				'chat',
 			];
 		}
@@ -140,7 +135,7 @@ var app_content_menu = {
 }
 
 $('#app_content_top_home, #app_content_top_title_menu').click(function(){
-	app_content_menu.selection(Lincko.storage.getMyPlaceholder()['_id'], 'dashboard');
+	app_content_menu.selection(-1);
 });
 
 var app_content_menu_first_launch = true;

@@ -23,6 +23,7 @@
 .submenu_top {
 	display: table;
 	table-layout: fixed;
+	line-height: 48px;
 	height: 48px;
 	width: 100%;
 	text-align: center;
@@ -52,7 +53,7 @@
 .submenu_content {
 	width: 100%;
 	top: 48px;
-	bottom: 0px;
+	/*bottom: 0px;*/
 	position: absolute;
 	overflow: hidden;
 }
@@ -100,6 +101,10 @@
 	height: 100%;
 	vertical-align: middle;
 	text-align: center;
+	width: auto;
+}
+
+.submenu_title_center {
 	width: 100%;
 }
 
@@ -338,11 +343,23 @@
 }
 
 .submenu_top .submenu_top_side_left {
-	float: left;
+	position: absolute;
+	left: 0;
+	height: 48px;
+	line-height: 48px;
+	overflow: hidden;
+	z-index: 2;
+	font-size: 14px;
 }
 
 .submenu_top .submenu_top_side_right {
-	float: right;
+	position: absolute;
+	right: 0;
+	height: 48px;
+	line-height: 48px;
+	overflow: hidden;
+	z-index: 2;
+	font-size: 14px;
 }
 
 #app_application_submenu_block .submenu_wrapper {
@@ -359,6 +376,9 @@
 		border: 1px solid #DFDFDF;
 		position: relative;
 		float: left;
+	}
+	.submenu_wrapper_preview {
+		    border-width: 0px 0px 0px 1px !important;
 	}
 	.submenu_top {
 		background-color: #DFDFDF;

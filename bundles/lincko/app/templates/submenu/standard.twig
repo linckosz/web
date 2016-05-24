@@ -6,6 +6,9 @@
 	</div>
 </div>
 
+<span id="-submenu_top_button" class="submenu_title">
+</span>
+
 <div id="-submenu_button" class="base_optionTab submenu_deco">
 	<span class="submenu_padding" find="submenu_button_title"></span>
 	<span class="submenu_padding submenu_value" find="submenu_button_value"></span>
@@ -17,21 +20,17 @@
 	<span class="submenu_padding submenu_value" find="submenu_next_value"></span>
 </div>
 
-<div id="-submenu_customized_top" class="base_menu submenu_top">
-	<div class="submenu_top_side_left">
-	</div>
-	<span class="submenu_title font_sans_serif ellipsis" find="submenu_title"></span>
-	<div class="submenu_top_side_right">
-	</div>
+<div id="-submenu_customized_top" class="base_menu submenu_top" find="submenu_wrapper_top">
+	<span class="submenu_title submenu_title_center font_sans_serif ellipsis" find="submenu_title"></span>
 </div>
 
-<div id="-submenu_top" class="base_menu submenu_top">
+<div id="-submenu_top" class="base_menu submenu_top" find="submenu_wrapper_top">
 	<span class="submenu_top_side submenu_back font_sans_serif submenu_hide maxTablet" find="submenu_wrapper_back">
 		<div class="base_button submenu_back_image" title="{{ _trans('app', 1, 2, 'html') }}{# Back #}"></div>
 	</span>
 	<span class="submenu_top_side font_sans_serif minDesktop" find="submenu_wrapper_side_left"></span>
 	<span class="submenu_title font_sans_serif ellipsis" find="submenu_wrapper_title"></span>
-	<span class="submenu_top_side font_sans_serif maxTablet" find="submenu_wrapper_side_rigth"></span>
+	<span class="submenu_top_side font_sans_serif maxTablet" find="submenu_wrapper_side_right"></span>
 	<span class="submenu_top_side submenu_close font_sans_serif submenu_hide minDesktop" find="submenu_wrapper_back">
 		<img class="base_button submenu_close_image" src="{{ _filelatest('/lincko/app/images/submenu/close.png') }}" alt="{{ _trans('app', 1, 3, 'html') }}{# Close #}" title="{{ _trans('app', 1, 3, 'html') }}{# Close #}" />
 	</span>

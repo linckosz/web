@@ -83,7 +83,7 @@ Submenu.prototype.Add_MenuAppUploadAllForm = function() {
 		Elem_bt.click(function(){
 			submenu_app_upload_display($(this));
 		});
-		Elem_bt.appendTo(submenu_wrapper.find("[find=submenu_wrapper_side_rigth]"));
+		Elem_bt.appendTo(submenu_wrapper.find("[find=submenu_wrapper_side_right]"));
 
 		submenu_wrapper.find("[find=submenu_wrapper_bottom]").append(Elem);
 	}

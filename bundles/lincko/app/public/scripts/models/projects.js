@@ -4,6 +4,12 @@ submenu_list['app_project_new'] = {
 		"style": "title",
 		"title": Lincko.Translation.get('app', 2001, 'html'), //New project
 	},
+	"_pre_action": {
+		"style": "preAction",
+		"action": function(){
+			app_users_contacts_init();
+		},
+	},
 	//Add HTML/JS checking input format
 	"_input": {
 		"style": "prefix",
@@ -31,10 +37,6 @@ submenu_list['app_project_new'] = {
 		"title": Lincko.Translation.get('app', 7, 'html'), //Cancel
 		"hide": true,
 	},
-	"required_fields": {
-		"style": "title_small",
-		"title": Lincko.Translation.get('app', 27, 'html'), //Required
-	},
 	"title": {
 		"style": "input_text",
 		"title": Lincko.Translation.get('app', 28, 'html'), //Title
@@ -49,11 +51,6 @@ submenu_list['app_project_new'] = {
 		"value": "",
 		"class": "submenu_input_select_multiple",
 		"next": "app_users_contacts",
-	},
-	"optional_fields": {
-		"style": "title_small",
-		"title": Lincko.Translation.get('app', 29, 'html'), //Optional
-		"class": "submenu_title_small_top",
 	},
 	"description": {
 		"style": "input_textarea",

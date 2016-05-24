@@ -10,16 +10,13 @@ submenu_list['taskdetail'] = {
 			var className = 'submenu_wrapper_taskdetail_'+that.param.type;
 			return className;
 		},
-		"left": [{
-            "style": "button",
-            "title": "Close", //toto
-            //"action": function() {
-            //    console.log('close');
-            //}
-            'hide': true,
-        }],
 	},
-
+	"left_button": {
+        "style": "title_left_button",
+        "title": Lincko.Translation.get('app', 25, 'html'), //Close
+        'hide': true,
+        "class": "base_pointer",
+    },
 	"taskdetail": {
 		"style": "taskdetail",
 		"title": "taskdetail",

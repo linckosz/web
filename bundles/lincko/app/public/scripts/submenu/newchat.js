@@ -6,16 +6,6 @@ submenu_list['newchat'] = {
         "title": function(elem){
             return elem.param.title;
         }, //chat room you are in
-        "left": [{
-            "style": "button",
-            "title": "Close",
-            'hide': true,
-        }],
-        "right": [{
-            "style": "button",
-            "title": "",
-            "class": "icon-Small-Persona",
-        }],
         "class": "submenu_newchat_header",
     },
     "chat_contents": {
@@ -25,6 +15,17 @@ submenu_list['newchat'] = {
     "chat_menu": {
         "style": "chat_menu",
         "title": "",
+    },
+    "left_button": {
+        "style": "title_left_button",
+        "title": Lincko.Translation.get('app', 25, 'html'), //Close
+        'hide': true,
+        "class": "base_pointer submenu_newchat_header_close",
+    },
+    "right_button": {
+        "style": "title_right_button",
+        "title": "",
+        "class": "icon-Small-Persona base_pointer",
     },
 };
 

@@ -4,21 +4,25 @@
 		JSfiles.later("{{ _filelatest('/lincko/app/scripts/app/content.js') }}");
 	</script>
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/app/content.css') }}" type="text/css" />
+	<style>
+		#app_content_submenu_preview {
+			background-image: url('{{ _filelatest('/lincko/app/images/submenu/background_01.jpg') }}');
+		}
+	</style>
 </div>
 
 <table id="app_content_top">
 	<tr>
 		<td class="app_content_top_cell">
-			<img class="app_content_top_img" id="app_content_top_project" src="{{ _filelatest('/lincko/app/images/app/content/menu.png') }}" alt="{{ _trans('app', 4, 1, 'html') }}{# Projects #}" title="{{ _trans('app', 4, 1, 'html') }}{# Projects #}" />
+			<img class="app_content_top_img base_pointer" id="app_content_top_project" src="{{ _filelatest('/lincko/app/images/app/content/menu.png') }}" alt="{{ _trans('app', 1, 1, 'html') }}{# Projects #}" title="{{ _trans('app', 1, 1, 'html') }}{# Projects #}" />
 		</td>
 		<td class="app_content_top_cell app_content_top_title">
 			<div id="app_content_top_title">
-				<img id="app_content_top_home" class="minMobileL" src="{{ _filelatest('/lincko/app/images/app/content/home.png') }}" />
-				<span id="app_content_top_title_menu"></span>
+				<span id="app_content_top_title_menu" class="base_pointer" alt="{{ _trans('app', 4, 11, 'html') }}{# Select project #}" title="{{ _trans('app', 4, 11, 'html') }}{# select project #}"></span>
 			</div>
 		</td>
 		<td class="app_content_top_cell">
-			<img class="app_content_top_img" id="app_content_top_note" src="{{ _filelatest('/lincko/app/images/app/content/quick_note.png') }}" alt="{{ _trans('app', 4, 2, 'html') }}{# Setting #}" title="{{ _trans('app', 4, 2, 'html') }}{# Add a note #}" />
+			<img class="app_content_top_img base_pointer visibility_hidden" id="app_content_top_note" src="{{ _filelatest('/lincko/app/images/app/content/quick_note.png') }}" alt="{{ _trans('app', 4, 2, 'html') }}{# Setting #}" title="{{ _trans('app', 4, 2, 'html') }}{# Add a note #}" />
 		</td>
 	</tr>
 </table>
@@ -28,11 +32,6 @@
 		<div class="app_content_menu_cell" id="app_content_menu_dashboard">
 			<div class="base_color_bd_third app_content_menu_icon" title="{{ _trans('app', 4, 4, 'html') }}{# dashboard #}">
 				<img class="base_color_bg_third" src="{{ _filelatest('/lincko/app/images/app/content/menu/dashboard.png') }}" alt="{{ _trans('app', 4, 4, 'html') }}{# dashboard #}" />
-			</div>
-		</div>
-		<div class="app_content_menu_cell" id="app_content_menu_projects">
-			<div class="base_color_bd_third app_content_menu_icon" title="{{ _trans('app', 4, 5, 'html') }}{# projects #}">
-				<img class="base_color_bg_third" src="{{ _filelatest('/lincko/app/images/app/content/menu/projects.png') }}" alt="{{ _trans('app', 4, 5, 'html') }}{# projects #}" />
 			</div>
 		</div>
 		<div class="app_content_menu_cell" id="app_content_menu_tasks">
@@ -45,6 +44,11 @@
 				<img class="base_color_bg_third" src="{{ _filelatest('/lincko/app/images/app/content/menu/notes.png') }}" alt="{{ _trans('app', 4, 7, 'html') }}{# notes #}" />
 			</div>
 		</div>
+		<div class="app_content_menu_cell" id="app_content_menu_chat">
+			<div class="base_color_bd_third app_content_menu_icon" title="{{ _trans('app', 4, 3, 'html') }}{# recent activity #}">
+				<img class="base_color_bg_third" src="{{ _filelatest('/lincko/app/images/app/content/menu/chat.png') }}" alt="{{ _trans('app', 4, 3, 'html') }}{# project wall #}" />
+			</div>
+		</div>
 		<div class="app_content_menu_cell" id="app_content_menu_calendar">
 			<div class="base_color_bd_third app_content_menu_icon" title="{{ _trans('app', 4, 8, 'html') }}{# calendar #}">
 				<img class="base_color_bg_third" src="{{ _filelatest('/lincko/app/images/app/content/menu/calendar.png') }}" alt="{{ _trans('app', 4, 8, 'html') }}{# calendar #}" />
@@ -55,9 +59,9 @@
 				<img class="base_color_bg_third" src="{{ _filelatest('/lincko/app/images/app/content/menu/statistics.png') }}" alt="{{ _trans('app', 4, 9, 'html') }}{# statistics #}" />
 			</div>
 		</div>
-		<div class="app_content_menu_cell" id="app_content_menu_chat">
-			<div class="base_color_bd_third app_content_menu_icon" title="{{ _trans('app', 4, 3, 'html') }}{# recent activity #}">
-				<img class="base_color_bg_third" src="{{ _filelatest('/lincko/app/images/app/content/menu/chat.png') }}" alt="{{ _trans('app', 4, 3, 'html') }}{# project wall #}" />
+		<div class="app_content_menu_cell" id="app_content_menu_projects">
+			<div class="base_color_bd_third app_content_menu_icon" title="{{ _trans('app', 4, 5, 'html') }}{# projects #}">
+				<img class="base_color_bg_third" src="{{ _filelatest('/lincko/app/images/app/content/menu/projects.png') }}" alt="{{ _trans('app', 4, 5, 'html') }}{# projects #}" />
 			</div>
 		</div>
 	</div>

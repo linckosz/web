@@ -16,6 +16,10 @@
        color:#525252;
 }
 
+.submenu_newchat_header_close {
+       color:#525252;
+}
+
 .submenu_newchat_header .submenu_title {
        color: #f8f8f8;
 }
@@ -23,9 +27,9 @@
 .submenu_newchat_header .icon-Small-Persona {
        font-size: 25px;
        text-align: center;
-       line-height: 2;
+       /*line-height: 2;*/
        vertical-align: middle;
-       margin-right: 10px;
+       /*margin-right: 10px;*/
        color: #FB7D23;
 }
 
