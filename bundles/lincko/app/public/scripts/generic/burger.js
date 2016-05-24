@@ -233,7 +233,6 @@ function burger_calendar (elem_timestamp, elem_display){
         timestamp += 86399000; //adds 23hrs59min59sec to make it end of the day
         $(this).val(timestamp);
         var date = new wrapper_date(timestamp/1000);
-        console.log(date);
         if(skylist_textDate(date)){
             date = skylist_textDate(date);
         }
@@ -250,7 +249,6 @@ function burger_calendar (elem_timestamp, elem_display){
             $('#ui-datepicker-div').removeClass('burger_calendar');
         }
     });
-
 }
 
 function burger_regex_getCaretOffset(elem) {

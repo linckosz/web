@@ -158,6 +158,7 @@ td.submenu_taskdetail_share .fa{
     left: 0px;
     opacity: 0;
     width: 75px;
+    z-index: -1;
 }
 .submenu_taskdetail_meta_text[find=user_text_hidden]{
 	position: absolute;

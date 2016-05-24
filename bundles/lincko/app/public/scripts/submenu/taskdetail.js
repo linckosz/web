@@ -224,52 +224,7 @@ Submenu.prototype.Add_taskdetail = function() {
 
 	/*meta (general)*/
 	elem = $('#-submenu_taskdetail_meta').clone().prop('id','submenu_taskdetail_meta_'+that.md5id);
-	var elem_action_menu = elem.find('[find=action_menu]');
-	elem.find('.submenu_taskdetail_meta_actions').click(function(){
-		console.log('meta_actions clicked '+action_menu_opened);
-		if(action_menu_opened){
-			elem_action_menu.velocity({width:0},{
-				begin: function(){
-					elem_action_menu.css('display','initial');
-				},
-				complete: function(){
-					action_menu_opened = false;
-					elem_action_menu.attr('style','');
-				},
-			});
-		}
-		else{
-			elem_action_menu.velocity({width:25},{
-				begin: function(){
-					elem_action_menu.css('display','initial');
-				},
-				complete: function(){
-					action_menu_opened = true;
-				}
-			});
-		}
-		/*
-		if( that.param.type == "tasks" ){
-			route = "task/delete";
-		}
-		else if( that.param.type == "notes" ){
-			route = "note/delete";
-		}
-		/*
-		wrapper_sendAction(
-		    {
-		        "id": taskid,
-		    },
-		    'post',
-		    route
-		);
-		*/
-	});
-	elem_action_menu.find('[find=delete]').click(function(){
-		route_delete = true;
-		submenu_Clean(null,null,true);
-	});
-
+	
 	var update_meta = function(elem_meta){
 		var elem = elem_meta;
 		in_charge = '';
@@ -280,6 +235,11 @@ Submenu.prototype.Add_taskdetail = function() {
 					in_charge += ' ';
 					in_charge += Lincko.storage.get("users", i ,"username");
 				}
+			}
+			console.log('in_charge');
+			console.log(in_charge);
+			if( !in_charge ){
+				in_charge = 'Not Assigned'; //toto
 			}
 
 			//----in_charge
@@ -299,8 +259,8 @@ Submenu.prototype.Add_taskdetail = function() {
 			//---duedate calenar
 			var elem_timestamp = elem.find('[find=duedate_timestamp]');
 			var elem_display = elem.find("[find=duedate_text]");
-			burger_calendar( elem_timestamp, elem_display );
 			elem_timestamp.val((item['start'] + duration_timestamp)*1000);
+			burger_calendar( elem_timestamp, elem_display );
 			elem_timestamp.change(function(){
 				duration_timestamp = $(this).val()/1000 - item['start'];
 				if( duration_timestamp < 0 ){
@@ -335,6 +295,42 @@ Submenu.prototype.Add_taskdetail = function() {
 			var date = new wrapper_date(item['updated_at']);
 			elem.find("[find=duedate_text]").html(date.display('date_very_short'));
 		}
+
+		/*---action_menu---*/
+		var elem_action_menu = elem.find('[find=action_menu]');
+		elem.find('.submenu_taskdetail_meta_actions').click(function(){
+			console.log('meta_actions clicked '+action_menu_opened);
+			if(action_menu_opened){
+				elem_action_menu.velocity({width:0},{
+					begin: function(){
+						elem_action_menu.css('display','initial');
+					},
+					complete: function(){
+						action_menu_opened = false;
+						elem_action_menu.attr('style','');
+					},
+				});
+			}
+			else{
+				elem_action_menu.velocity({width:25},{
+					begin: function(){
+						elem_action_menu.css('display','initial');
+					},
+					complete: function(){
+						action_menu_opened = true;
+					}
+				});
+			}
+		});
+		elem_action_menu.find('[find=delete]').click(function(){
+			route_delete = true;
+			var preview = true;
+			if (responsive.test("maxMobileL")){
+				preview = false;
+			}
+			submenu_Clean(null,null,preview);
+		});
+
 		return elem;
 	}// end of update_meta function
 	
@@ -617,7 +613,8 @@ Submenu.prototype.Add_taskdetail = function() {
 
 
 	/*----create/save on previewHide----*/
-	$(document).on("previewHide.skylist", function(){
+	//$(document).on("previewHide.skylist", function(){
+	$(document).on("submenuHide.skylist", function(){
 		if( taskid == 'new' && route_delete ){
 			return false;
 		}
@@ -640,16 +637,13 @@ Submenu.prototype.Add_taskdetail = function() {
 	        if( param['comment'] == newDescription ){
 	        	param['comment'] = '';
 	        }
+	        if( that.param.type == "tasks" && duration_timestamp != item['duration'] ){
+				param['duration'] = duration_timestamp;
+			}
 		}
 
 		if( taskid == 'new' || route_delete || param['title'] != item['+title'] || param['comment'] != item['-comment'] ){
 			contactServer = true;
-		}
-
-
-		if( that.param.type == "tasks" && duration_timestamp != item['duration'] ){
-			contactServer = true;
-			param['duration'] = duration_timestamp;
 		}
 
 		if( contactServer ){
@@ -673,7 +667,8 @@ Submenu.prototype.Add_taskdetail = function() {
 			}
 			wrapper_sendAction( param,'post',route );
 		}
-		$(document).off('previewHide.skylist');
+		//$(document).off('previewHide.skylist');
+		$(document).off('submenuHide.skylist');
 	});
 
 
@@ -684,7 +679,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		that.param.type+'_'+item['_id'],
 		function(){
 			var elem = $('#'+this.id);
-			var elem_new = elem.clone();
+			var elem_new = $('#-submenu_taskdetail_meta').clone().prop('id','submenu_taskdetail_meta_'+that.md5id);
 			elem.velocity('fadeOut',{
 				duration: 200,
 				complete: function(){
@@ -742,13 +737,6 @@ Submenu.prototype.Add_taskdetail = function() {
 	/*
 	if(that.param.type == 'notes' ){
 		submenu_wrapper.find('[find=description_text]').easyEditor();
-	}
-	*/
-
-	console.log(elem_title_text);
-	/*
-		if( taskid == 'new' ){
-		elem_title_text.click();
 	}
 	*/
 

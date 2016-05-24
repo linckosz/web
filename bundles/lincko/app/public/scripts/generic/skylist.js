@@ -176,8 +176,10 @@ skylist.prototype.construct = function(){
 	that.window_resize();
 	that.elem_navbar.find('[people=1]').click();
 
-	$(document).on("previewHide.skylist_"+that.md5id, function(){
-		that.previewHide();
+	//$(document).on("previewHide.skylist_"+that.md5id, function(){
+	$(document).on("submenuHide.skylist_"+that.md5id, function(){
+		console.log('submenuHide');
+		that.submenuHide();
 	});
 
 	wrapper_IScroll_options_new['skylist_'+that.md5id] = { 
@@ -293,7 +295,8 @@ skylist.prototype.destroy = function(){
 	that.list_wrapper.empty();
 	$(window).off("resize.skylist_"+that.md5id);
 	$('body').off("mouseleave.skylist_"+that.md5id);
-	$(document).off("previewHide.skylist_"+that.md5id);
+	//$(document).off("previewHide.skylist_"+that.md5id);
+	$(document).off("submenuHide.skylist_"+that.md5id);
 	for( var g in that ){
 		that[g] = null;
 		delete that[g];
@@ -303,7 +306,7 @@ skylist.prototype.destroy = function(){
 	delete that;
 }
 
-skylist.prototype.previewHide = function(){
+skylist.prototype.submenuHide = function(){
 	this.elem_task_all.removeClass('skylist_card_hover');
 	//this.list.addClass('skylist_noPreviewLayer');
 	$(window).resize();
@@ -791,6 +794,9 @@ skylist.prototype.addTask = function(item){
 			in_charge += Lincko.storage.get("users", i ,"username");
 		}
 	}
+	if( !in_charge ){
+		in_charge = 'Not Assigned'; //toto
+	}
 	//Elem.find('[find=name_hidden]').toggleClass('display_none');
 	Elem.find('[find=name]').html(in_charge);
 	burger(Elem.find('input[find=name_hidden]'), '_users', item);
@@ -850,7 +856,6 @@ skylist.prototype.addTask = function(item){
 	elem_calendar.html(duedate);
 	elem_calendar_timestamp.val((item['start']+item['duration'])*1000);
 	burger_calendar(elem_calendar_timestamp, elem_calendar );
-
 	elem_calendar_timestamp.change(function(){
 		var duration_timestamp = $(this).val()/1000 - item['start'];
 		if( duration_timestamp < 0 ){
@@ -1266,8 +1271,6 @@ skylist.prototype.taskClick = function(event,task_elem){
 		that.clearOptions(task_elem);
 		return;
 	}
-	that.elem_task_all.removeClass('skylist_card_hover');
-	task_elem.addClass('skylist_card_hover');
 	this.openDetail(task_elem);
 
 }
@@ -1275,11 +1278,19 @@ skylist.prototype.taskClick = function(event,task_elem){
 skylist.prototype.openDetail = function(/*open,*/ task_elem){
 	var that = this;
 	//that.list.removeClass('skylist_noPreviewLayer');
-	submenu_Build(
-		'taskdetail', null, null, {
-			"type":that.list_type, 
-			"id":task_elem.data('item_id'),
-		}, true);
+	var preview = true;
+	if (responsive.test("maxMobileL")){
+		preview = false;
+	}
+	var openSuccess = submenu_Build(
+	'taskdetail', null, null, {
+		"type":that.list_type, 
+		"id":task_elem.data('item_id'),
+	}, preview);
+	if( openSuccess ){
+		that.elem_task_all.removeClass('skylist_card_hover');
+		task_elem.addClass('skylist_card_hover');
+	}
 }
 
 
