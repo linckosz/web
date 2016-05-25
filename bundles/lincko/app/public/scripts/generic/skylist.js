@@ -117,7 +117,7 @@ var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct){
 	this.Lincko_itemsList;
 	this.Lincko_itemsList_filter = 
 	{
-		'people': null,
+		'people': wrapper_localstorage.uid,
 		'duedate': null,
 		//'timesort': null,
 		'search': '',
@@ -155,7 +155,7 @@ skylist.prototype.construct = function(){
 
 	that.generate_Lincko_itemsList();
 	that.addCard_all();
-	that.setHeight();
+	//that.setHeight();
 
 	/*functions that are specific to each module*/
 	if( that.subConstruct ){
@@ -172,8 +172,8 @@ skylist.prototype.construct = function(){
 		},100);
 	});
 
-	that.window_resize();
-	that.elem_navbar.find('[people=1]').click();
+	$(window).resize();
+	//that.window_resize();
 
 	//$(document).on("previewHide.skylist_"+that.md5id, function(){
 	$(document).on("submenuHide.skylist_"+that.md5id, function(){
@@ -346,7 +346,7 @@ skylist.prototype.window_resize = function(){
 	that.editing_focus = false;
 	that.setHeight();
 	that.clearOptions();
-
+/*
 	if( responsive.test("isMobile") ){
 		that.isMobile();
 	}
@@ -365,6 +365,7 @@ skylist.prototype.window_resize = function(){
 			.removeClass('app_layers_dev_skytasks_simpleDesktop')
 			.removeClass('app_layers_dev_skytasks_simpleDesktop2');
 	}
+	*/
 
 	if( myIScrollList['skylist_'+that.md5id] ){
 		myIScrollList['skylist_'+that.md5id].refresh();
@@ -404,10 +405,11 @@ skylist.prototype.filter_by_duedate = function(items, filter){
 	var item;
 	var duedate;
 	var filter_num;
+
 	if( filter == null || filter == -1 ){ 
-		return items; 
+		items_filtered = items; 
 	}
-	else{
+	else if( filter < 2 ){
 		/*
 		if 		( filter == Lincko.Translation.get('app', 3302, 'html').toUpperCase() ){filter = 0}
 		else if ( filter == Lincko.Translation.get('app', 3303, 'html').toUpperCase() ){filter = 1}
@@ -521,7 +523,6 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 	}
 	var items_filtered = that.list_filter();
 
-
 	var iscroll_elem;
 	that.list.velocity("fadeOut",{
 		duration: 200,
@@ -573,7 +574,7 @@ skylist.prototype.DOM_updated = function(){
 skylist.prototype.addCard_all = function(){
 	var that = this;
 	var items;
-	items = that.Lincko_itemsList;
+	items = that.list_filter();
 	var item;
 	for (var i in items){
 		item = items[i];

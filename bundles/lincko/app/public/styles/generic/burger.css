@@ -44,6 +44,141 @@
     color: #3F84B0;
 }
 
+
+
+/*----------burger_calendar----------------------*/
+
 .burger_calendar {
     z-index: 5000 !important;
+    height: 352px;
+    width: 402px;
+    background: #FFFFFF;
+    box-shadow: 0px 0px 4px 0px #3F84B0;
+    border-radius: 3px;
+    text-align: center;
 }
+
+.burger_calendar .ui-widget-header{
+    margin-top: 80px;
+}
+.burger_calendar .ui-datepicker-year{
+    display: none;
+}
+.burger_calendar .ui-datepicker-calendar{
+    height: 185px;
+    width: 267px;
+    border: 1px solid #FBA026;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.burger_calendar_prepend{
+    position: absolute;
+    text-align: center;
+}
+.burger_calendar_prepend [find=row1], .burger_calendar_prepend [find=row2]{
+    display: inline-block;
+    border: 1px solid #FFFFFF;
+    width: 200px;
+}
+.burger_calendar_prepend [find=today_info]{
+    text-align: center;
+    font-size: 18px;
+    color: #000000;
+    padding: 10px;
+}
+.burger_calendar_prepend [find=today_btn],
+.burger_calendar_prepend [find=twoDays_btn],
+.burger_calendar_prepend [find=tomorrow_btn],
+.burger_calendar_prepend [find=oneWeek_btn]{
+    width: 90px;
+    display: inline-block;
+    font-size: 14px;
+    color: #3F84B0;
+}
+.burger_calendar_prepend [find=today_btn], .burger_calendar_prepend [find=twoDays_btn]{
+    text-align: right;
+    padding-right: 5px;
+}
+.burger_calendar_prepend [find=tomorrow_btn], .burger_calendar_prepend [find=oneWeek_btn]{
+    text-align: left;
+    padding-left: 5px;
+}
+.burger_calenar_prepend_active {
+    color: #FBA026 !important;
+}
+
+.burger_calendar .ui-widget-header {
+    background: none;
+    border: none;
+}
+.burger_calendar .ui-datepicker-title{
+    font-size: 16px;
+    color: #3F84B0;
+}
+
+.burger_calendar .ui-datepicker-prev,
+.burger_calendar .ui-datepicker-prev:hover,
+.burger_calendar .ui-datepicker-next, 
+.burger_calendar .ui-datepicker-next:hover {
+    font-weight: normal;
+    top: 6px;
+    line-height: 25px;
+    font-size: 13px;
+    color: #FBA026;
+    border: none;
+}
+.burger_calendar .ui-datepicker-next, .burger_calendar .ui-datepicker-next:hover{
+    right: 130px;
+}
+.burger_calendar .ui-datepicker-prev, .burger_calendar .ui-datepicker-prev:hover{
+    left: 130px;
+}
+
+.burger_calendar .ui-datepicker-calendar th {
+    font-size: 13px;
+    color: #A29F9F;
+    padding: 4px 0px;
+    font-weight: normal;
+}
+
+
+.burger_calendar .ui-datepicker-calendar td{
+    height: 27px;
+    width: 38px;
+    padding: 0px;
+    text-align: center;
+    box-sizing: border-box;
+}
+.burger_calendar .ui-datepicker-calendar td span, .burger_calendar .ui-datepicker-calendar td a{
+    padding: 0px;
+    text-align: center;
+    line-height: 25px;
+    display: inline-block;
+}
+
+.burger_calendar .ui-state-default{
+    height: 100%;
+    border: 0px;
+    background: none;
+    font-size: 13px;
+    color: #000000;
+    font-weight: normal !important;
+}
+.burger_calendar .ui-state-highlight {
+    color: #FBA026;
+    text-decoration: underline;
+}
+.burger_calendar .ui-state-active {
+    background: #FBA026;
+    height: 27px;
+    width: 27px;
+    border: none;
+    border-radius: 27px;
+    color: #FFFFFF;
+}
+
+
+
+
+/*------END OF burger_calendar----------------------*/

@@ -49,27 +49,6 @@ var app_layers_tasks_feedPage = function(param){
 		]
 	);
 
-	app_layers_tasks_tasklist.skylist_update = app_layers_tasks_tasklist.tasklist_update;
-
-
-	//update tasklist when database is changed
-	/*
-	app_application_lincko.add(
-		'app_layers_tasks_tasklist',
-		'projects_'+app_content_menu.projects_id,
-		function(){
-			app_layers_tasks_tasklist.tasklist_update();
-		}
-		*/
-		
-		//app_layers_dev_skytasks_tasklist.tasklist_update
-		//app_layers_dev_skytasks_tasklist[app_layers_dev_skytasks_tasklist_id].tasklist_update
-		/*
-		function(){
-			//console.log('dev_skytasks lincko.add task update');
-			app_layers_dev_skytasks_tasklist.tasklist_update('all');
-		}
-
-	);*/
+	//app_layers_tasks_tasklist.skylist_update = app_layers_tasks_tasklist.tasklist_update;
 
 };//end of app_layers_tasks_feedPage()

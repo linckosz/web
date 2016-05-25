@@ -18,7 +18,7 @@
 	cursor: pointer; cursor: hand;
     font-size: 30px;
     float: left;
-    line-height: 55px;
+    line-height: 48px;
 }
 
 /*
@@ -34,8 +34,8 @@
 .skylist_menu_timesort {
     position: relative;
     overflow: hidden;
-    height: 55px;
-    line-height: 55px;
+    height: 48px;
+    line-height: 48px;
 }
 .skylist_menu_selected {
 	color: #FBA026;
@@ -82,7 +82,7 @@
     right: 0;
     font-size: 25px;
     padding: 0px 15px;
-    line-height: 55px;
+    line-height: 48px;
     color: #FBA026;
 }
 .skylist_menu_navbar_filter_pane {
@@ -492,8 +492,8 @@
 	.skylist_menu_timesort {
 	    text-align: center;
 	    overflow: hidden;
-	    margin: 0px 55px 0px 67px;
-	    line-height: 30px;
+	    margin: 0px 67px 0px 67px;
+	    line-height: 25px;
    		/*
 		text-align:center;
 		overflow: hidden;

@@ -161,7 +161,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	/*---tasktitle---*/
 	elem = $('#-submenu_taskdetail_tasktitle').clone().prop('id','submenu_taskdetail_tasktitle');
 	var elem_title_text = elem.find('[find=title_text]');
-	elem_title_text.html(item['+title']).click(function(){
+	elem_title_text.html(item['+title']).focus(function(){
 		if( $(this).html() == newTitle ){
 			$(this).html('').attr('style','');
 		}
@@ -337,10 +337,16 @@ Submenu.prototype.Add_taskdetail = function() {
 	/*---description---*/
 	elem = $('#-submenu_taskdetail_description').clone().prop('id','submenu_taskdetail_description');
 	var elem_description_text = elem.find('[find=description_text]');
-	elem_description_text.html(item['-comment']).click(function(){
+	elem_description_text.html(item['-comment']).focus(function(){
 		if( $(this).html() == newDescription ){
 			$(this).html('').attr('style','');
 		}
+	});
+	elem_description_text.focus(function(){
+		//myIScrollList['taskdetail_'+that.md5id].disable();
+	});
+	elem_description_text.blur(function(){
+		//myIScrollList['taskdetail_'+that.md5id].enable();
 	});
 	if( taskid == 'new' ){
 		elem_description_text.css('opacity',0.4);
@@ -726,6 +732,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	/*---IScroll options---*/
 	wrapper_IScroll_options_new['taskdetail_'+that.md5id] = { 
 		click: false,
+		//preventDefaultException:{ tagName: /^(DIV|INPUT|TEXTAREA|BUTTON|SELECT|P)$/ },
 	};	
 
 
@@ -736,6 +743,26 @@ Submenu.prototype.Add_taskdetail = function() {
 		submenu_wrapper.find('[find=description_text]').easyEditor();
 	}
 	*/
+	submenu_wrapper.find('[title=bold]').addClass('icon-Single-Person');
+
+
+
+
+	//set the focus upon opening detail pane
+	if(taskid == 'new'){
+		if(that.param.type == 'tasks'){
+			setTimeout(function(){
+				elem_title_text.focus();
+			},100);
+		}
+		else if(that.param.type == 'notes'){
+			console.log('notes');
+			setTimeout(function(){
+				elem_description_text.focus();
+			},100);
+		}
+	}
+
 
 	//Free memory
 	delete submenu_wrapper;

@@ -132,6 +132,7 @@ td.submenu_taskdetail_share .fa{
 	height: 30px;
 	background: #F7FAFC;
 	position: relative;
+    box-shadow: 0px 1px 0px 0px #B5B5B5;
 }
 .submenu_taskdetail_meta_icons{
     font-size: 21px;
