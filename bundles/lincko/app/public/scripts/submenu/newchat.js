@@ -66,11 +66,14 @@ Submenu.prototype.Add_ChatMenu = function() {
         Elem.addClass(attribute['class']);
     }
     submenu_wrapper.find("[find=submenu_wrapper_bottom]").append(Elem);
+
     //Elem.find("[find=select_chats]").click();
     Elem.find(".comments_input").blur(function() {
         if (!Elem.find('.comments_input').val()) {
-            Elem.find(".send").hide();
-            Elem.find(".attachment").show();
+            if (that.param.type != "history") {
+                Elem.find(".send").hide();
+                Elem.find(".attachment").show();
+            }
         }
     });
     Elem.find(".comments_input").focus(function() {
