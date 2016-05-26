@@ -1,91 +1,86 @@
+console.log("phylosofer stone");
 submenu_list['contacts'] = {
     //Set the title of the top
     "_title": {
         "style": "customized_title",
-        //"title": function(elem){
-        //    return elem.param.title;
-        //}, //chat room you are in
         "title": "Start New Chat",
-        "left": [{
-            "style": "button",
-            "title": "Close",
-            'hide': true,
-        }],
-        "right": [{
-            "style": "button",
-            "title": "Select",
-            //"class": "icon-Small-Persona",
-            "action": function() {
-                var userList = {};
-                var nameList = "";
-                var items = $(this).parents(".submenu_wrapper").find(".submenu_contact_item .checked");
-                if (items.length == 1) {
-                    return;
-                }
-                for (var i=0;i<items.length; i++) {
-                    userList[$(items[i]).parent().find(".id").val()] = true;
-                    nameList = nameList + " " + $(items[i]).parent().find(".username").html();
-                }
-                var tmp = $(this).parents('.submenu_newchat_header').attr('class').split(" ");
-                for (var t in tmp) {
-                    if (tmp[t].startsWith("project")) {
-                        var id = tmp[t].slice(7);
-                    }
-                }
-                var comment_id;
-                if (id) {
-                    wrapper_sendAction({
-                        'parent_type':'projects',
-                        "parent_id": id,
-                        "title": nameList,
-                        "users>access": userList,
-                        },
-                        'post',
-                        'chat/create',
-                        function() {
-                            var chat = Lincko.storage.list('chats', 1, {'temp_id': comment_id})[0];
-                            submenu_Build("newchat", false, false, {
-                                type: 'chats',
-                                id: chat['_id'],
-                                title: chat['+title']}, true);
-                        },
-                        null,
-                        function(jqXHR, settings, temp_id) {
-                            comment_id = temp_id;
-                        }
-                    );
-                }
-                else {
-                    wrapper_sendAction({
-                            'parent_type': null,
-                            "parent_id": null,
-                            "title": nameList,
-                            "users>access": userList,
-                        },
-                        'post',
-                        'chat/create',
-                        function() {
-                            var chat = Lincko.storage.list('chats', 1, {'temp_id': comment_id})[0];
-                            submenu_Build("newchat", false, false, {
-                                type: 'chats',
-                                id: chat['_id'],
-                                title: chat['+title']}, true);
-                        },
-                        null,
-                        function(jqXHR, settings, temp_id) {
-                            comment_id = temp_id;
-                        }
-                    );
-                }
-
-            },
-        }],
         "class": function(elem) {
             if (elem.param.id) {
                 return "project" + elem.param.id + " submenu_newchat_header";
             }
-
-        }
+        },
+    },
+    "left_button": {
+        "style": "title_left_button",
+        "title": Lincko.Translation.get('app', 25, 'html'), //Close
+        'hide': true,
+        "class": "base_pointer",
+    },
+    "right_button": {
+        "style": "title_right_button",
+        "title": "Select",
+        "class": "base_pointer",
+        "action": function() {
+            var userList = {};
+            var nameList = "";
+            var items = $(this).parents(".submenu_wrapper").find(".submenu_contact_item .checked");
+            if (items.length == 1) {
+                return;
+            }
+            for (var i=0;i<items.length; i++) {
+                userList[$(items[i]).parent().find(".id").val()] = true;
+                nameList = nameList + " " + $(items[i]).parent().find(".username").html();
+            }
+            var tmp = $(this).parents('.submenu_newchat_header').attr('class').split(" ");
+            for (var t in tmp) {
+                if (tmp[t].startsWith("project")) {
+                    var id = tmp[t].slice(7);
+                }
+            }
+            var comment_id;
+            if (id) {
+                wrapper_sendAction({
+                    'parent_type':'projects',
+                    "parent_id": id,
+                    "title": nameList,
+                    "users>access": userList,
+                    },
+                    'post',
+                    'chat/create',
+                    function() {
+                        var chat = Lincko.storage.list('chats', 1, {'temp_id': comment_id})[0];
+                        submenu_Build("newchat", false, false, {
+                            type: 'chats',
+                            id: chat['_id'],
+                            title: chat['+title']}, true);
+                    },
+                    null,
+                    function(jqXHR, settings, temp_id) {
+                        comment_id = temp_id;
+                    });
+            }
+            else {
+                wrapper_sendAction({
+                    'parent_type': null,
+                    "parent_id": null,
+                    "title": nameList,
+                    "users>access": userList,
+                },
+                'post',
+                'chat/create',
+                function() {
+                    var chat = Lincko.storage.list('chats', 1, {'temp_id': comment_id})[0];
+                    submenu_Build("newchat", false, false, {
+                        type: 'chats',
+                        id: chat['_id'],
+                        title: chat['+title']}, true);
+                },
+                null,
+                function(jqXHR, settings, temp_id) {
+                    comment_id = temp_id;
+                });
+            }
+        },
     },
     'contacts': {
         "style": "contacts",
