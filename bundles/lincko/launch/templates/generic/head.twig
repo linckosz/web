@@ -1,0 +1,27 @@
+{# category 1 #}
+{% set route = _route_name() %}
+<div id="begin_head" class="visibility_hidden">
+<script>
+	JSfiles.later("{{ _filelatest('/lincko/launch/scripts/generic/head.js') }}");
+	var head_link = [];
+	head_link['root'] = "{{ urlFor('root') }}";
+	head_link['home'] = "{{ urlFor('home') }}";
+</script>
+<link rel="stylesheet" href="{{ _filelatest('/lincko/launch/styles/generic/head.css') }}" type="text/css" />
+</div>
+<nav class="base_menu head_nav">
+	
+	<div class="DIVcenter head_ul">
+		<div class="head_div floatleft"><span class="table_cell_center" id="head_lincko"><span>Lincko</span></span></div>
+		<div class="head_div floatleft"><span class="table_cell_center" id="head_beta"><span>{{ _trans('web', 1, 10, 'html') }}{# Beta coming soon #}</span></span></div>
+		{% if logged %}
+			<div class="head_div floatright"><span class="table_cell_center minTablet" id="head_signout"><span>{{ _trans('web', 1, 6, 'html') }}{# Sign out #}</span></span></div>
+			<div class="head_div floatright"><span class="table_cell_center" id="head_account"><span>{{ _trans('web', 1, 7, 'html') }}{# My account #}</span></span></div>
+		{% else %}
+			<div class="head_div floatright"><span class="table_cell_center" id="head_signin"><span>{{ _trans('web', 1, 9, 'html') }}{# Sign in #}</span></span></div>
+		{% endif %}
+	</div>
+
+</nav>
+
+<div id="end_head" class="visibility_hidden"></div>

@@ -246,12 +246,6 @@ $('#app_project_quick_upload').children().mouseleave(function(){
 	app_project_quick_upload = false;
 });
 
-function app_project_prepare_log(){
-	if(typeof app_upload_prepare_log === 'function'){
-		app_upload_prepare_log();
-	}
-}
-
 $('#app_project_quick_upload_video').click(function(){
 	$('#app_upload_shangzai_puk').val(wrapper_get_shangzai('puk'));
 	$('#app_upload_shangzai_cs').val(wrapper_get_shangzai('cs'));

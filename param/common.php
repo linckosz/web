@@ -94,6 +94,7 @@ $app->lincko->bundles = array(
 	//'bundle name'
 	'lincko/wrapper', //Must for front end server
 	'lincko/web',
+	//'lincko/launch',
 	'lincko/app',
 );
 

@@ -73,29 +73,56 @@ submenu_list['app_upload_destination'] = {
 	},
 };
 
-function app_upload_prepare_log(){
+//This function is called only at the file submit moment because it can be different per file
+function app_upload_prepare_log(parent_type, parent_id){
+	if(typeof parent_type != 'string' && !$.isNumeric(parent_id)){
+		parent_type = 'projects';
+		parent_id = Lincko.storage.getMyPlaceholder()['_id'];
+	}
 	$('#app_upload_shangzai_puk').val(wrapper_get_shangzai('puk'));
 	$('#app_upload_shangzai_cs').val(wrapper_get_shangzai('cs'));
+	$('#app_upload_parent_type').val(parent_type);
+	$('#app_upload_parent_id').val(parseInt(parent_id, 10));
 	$('#app_upload_fingerprint').val(fingerprint);
 }
 
-function app_upload_open_files(){
+function app_upload_set_launcher(parent_type, parent_id, submenu, start){
+	if(typeof parent_type != 'string' && !$.isNumeric(parent_id)){
+		parent_type = 'projects';
+		parent_id = Lincko.storage.getMyPlaceholder()['_id'];
+	}
+	if(typeof submenu == 'undefined'){ submenu = true; }
+	if(typeof start == 'undefined'){ start = false; }
+	app_upload_auto_launcher.parent_type = parent_type;
+	app_upload_auto_launcher.parent_id = parent_id;
+	app_upload_auto_launcher.submenu = submenu;
+	app_upload_auto_launcher.start = start;
+}
+
+function app_upload_open_files(parent_type, parent_id, submenu, start){
+	app_upload_set_launcher(parent_type, parent_id, submenu, start);
 	$('#app_project_quick_upload_files').click();
 }
 
-function app_upload_open_photo(){
+function app_upload_open_photo(parent_type, parent_id, submenu, start){
+	app_upload_set_launcher(parent_type, parent_id, submenu, start);
 	$('#app_project_quick_upload_photo').click();
 }
 
-function app_upload_open_video(){
+function app_upload_open_video(parent_type, parent_id, submenu, start){
+	app_upload_set_launcher(parent_type, parent_id, submenu, start);
 	$('#app_project_quick_upload_video').click();
 }
 
 var app_upload_auto_launcher_timeout;
 var app_upload_auto_launcher = {
+	parent_type: 'projects',
+	parent_id: parseInt(Lincko.storage.getMyPlaceholder()['_id'], 10),
 	submenu: true,
 	start: false,
 	init: function(){
+		this.parent_type = 'projects';
+		this.parent_id = parseInt(Lincko.storage.getMyPlaceholder()['_id'], 10);
 		this.submenu = true;
 		this.start = false;
 	},
@@ -126,6 +153,7 @@ $(function () {
 		loadImageFileTypes: /^image\/.*$/, //Bruno update
 		previewMaxWidth: 360,
 		previewMaxHeight: 180,
+		//maxChunkSize: 10000, //100KB [toto] Chunk will help to manage the Pause function but need a modification on back side
 		messages: {
 			maxNumberOfFiles: Lincko.Translation.get('app', 13, 'html'), //Maximum number of files exceeded
 			acceptFileTypes: Lincko.Translation.get('app', 14, 'html'), //File type not allowed
@@ -163,6 +191,8 @@ $(function () {
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_progress = 0;
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_name = data.files[0].name;
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_size = data.files[0].size;
+			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_parent_id = app_upload_auto_launcher.parent_id;
+			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_parent_type = app_upload_auto_launcher.parent_type;
 
 			//Reinitialise display information
 			that.lincko_bitrate.length = [];
@@ -227,23 +257,26 @@ $(function () {
 		//data => File object
 		submit: function (e, data) {
 			app_upload_files.lincko_files[data.lincko_files_index].lincko_status = 'uploading';
-			app_upload_prepare_log();
+			var parent_type = app_upload_files.lincko_files[data.lincko_files_index].lincko_parent_type;
+			var parent_id = app_upload_files.lincko_files[data.lincko_files_index].lincko_parent_id;
+			app_upload_prepare_log(parent_type, parent_id);
+			app_application_lincko.prepare('upload', true);
 		},
 		
 		//data => File object
 		done: function (e, data) {
 			if (typeof e !== 'undefined' && e.isDefaultPrevented()) { return false; }
 			var that = $('#app_upload_fileupload').fileupload('option');
-			if(data.result.error){
+			if(data.result && data.result.error){
 				app_upload_files.lincko_files[data.lincko_files_index].lincko_status = 'error';
 				app_upload_files.lincko_files[data.lincko_files_index].lincko_error = Lincko.Translation.get('app', 18, 'html'); //Server error
 				if(typeof data.result.msg === 'string'){
 					app_upload_files.lincko_files[data.lincko_files_index].lincko_error = data.result.msg;
 				}
-				if(data.result.flash.resignin){
+				if(data.result.flash && data.result.flash.resignin){
 					wrapper_force_resign();
 				}
-				data.fail(e, data);
+				that.fail(e, data);
 			} else {
 				app_upload_files.lincko_files[data.lincko_files_index].lincko_status = 'done';
 				$('#app_upload_fileupload').fileupload('option').progressall(e, this);

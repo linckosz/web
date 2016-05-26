@@ -926,13 +926,13 @@ skylist.prototype.addNote = function(item){
 	return Elem;
 }
 
-
 skylist.prototype.add_rightOptionsBox = function(text, icon_class){
 	var Elem_rightOptionsBox = $('#-skylist_rightOptionBox').clone().prop('id','');
 	Elem_rightOptionsBox.find('[find=text]').html(text);
 	Elem_rightOptionsBox.find('[find=icon]').addClass(icon_class);
 	return Elem_rightOptionsBox;
 }
+
 skylist.prototype.add_cardEvents = function(Elem){
 	var that = this;
 	//event actions for swipe left and right on the task

@@ -1,0 +1,111 @@
+.head_nav {
+	z-index: 999;
+	width: 100%;
+	text-align: center;
+	background-color: #313335;
+	background-image: url('/lincko/launch/images/generic/head/head_nav.png');
+	background-repeat: repeat-x;
+	position: fixed;
+	overflow: hidden;
+}
+
+.head_ul {
+	display: table;
+	height: 100%;
+	list-style: none;
+	white-space: nowrap;
+	width: 100%;
+	max-width: 1280px;
+	font-size: 14px;
+}
+
+.table_cell_center {
+	display: table-cell;
+	padding: 0 16px 0 16px;
+	color: #F8F8F8;
+	white-space: nowrap;
+	height: 100%;
+	vertical-align: middle;
+	text-align: center;
+}
+
+.table_cell_center > span {
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+}
+
+#head_lincko {
+	color: #FBA026;
+	font-size: 30px;
+	font-family: Roboto;
+	font-weight: 200;
+}
+
+#head_beta {
+	padding-left: 0px;
+	padding-top: 10px;
+	color: #FBA026;
+	font-size: 14px;
+	font-family: Roboto;
+	font-weight: 200;
+}
+
+.head_div {
+	display: table;
+	height: 100%;
+}
+
+/*
+ * MY ACCOUNT
+ */
+
+#head_account {
+	cursor: default;
+}
+
+#head_account > span:hover {
+	border-bottom: 2px solid currentColor;
+	padding-top: 2px;
+	cursor: pointer; cursor: hand;
+}
+
+
+/*
+ * SIGN OUT
+ */
+
+#head_signout {
+	cursor: default;
+	font-weight: normal;
+	font-size: 13px;
+	color: #E0BC8D;
+}
+
+#head_signout > span:hover {
+	border-bottom: 1px solid currentColor;
+	padding-top: 1px;
+	cursor: pointer; cursor: hand;
+}
+
+
+/*
+ * SIGN IN
+ */
+
+#head_signin {
+	cursor: default;
+}
+
+#head_signin > span:hover {
+	border-bottom: 2px solid currentColor;
+	padding-top: 2px;
+	cursor: pointer; cursor: hand;
+}
+
+/* Mobile phone in Portrait */
+@media only screen and (max-width: 479px){
+	.table_cell_center > span {
+		line-height: 24px;
+	}
+}

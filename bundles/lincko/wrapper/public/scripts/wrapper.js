@@ -397,12 +397,14 @@ supportsTouch = false;
 function wrapper_IScroll(){
 	// We do not allow iScroll for mobile device, native scroll helps to make things running smoothly, but we need to careful the callback
 	var overthrow = $('.overthrow');
+	/*
 	if(supportsTouch && responsive.test("maxTablet")){ //Keep using iScroll for desktop, even if touch support is activated, CPU is fast enough
 		console.log('supportsTouch');
 		//overthrow.css('overflow','auto');
 		overthrow.css('overflow', 'hidden').css('overflow-x', 'hidden').css('overflow-y', 'auto');
 		return true;
 	}
+	*/
 	overthrow.css('overflow', 'hidden').css('overflow-x', 'hidden').css('overflow-y', 'hidden');
 	//Create new
 	overthrow.each(function(){

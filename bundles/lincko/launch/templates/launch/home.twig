@@ -1,0 +1,21 @@
+{# category 4 #}
+{% extends '/bundles/lincko/launch/templates/generic/base.twig' %}
+
+{% block content %}
+<div id="begin_home" class="visibility_hidden">
+	<script>
+		JSfiles.later("{{ _filelatest('/lincko/launch/scripts/launch/home.js') }}");
+	</script>
+	<link rel="stylesheet" href="{{ _filelatest('/lincko/launch/styles/launch/home.css') }}" type="text/css" />
+</div>
+<div id="home_main_image"></div>
+<div id="home_great_projects">
+	<div>
+		<span>{{ _trans('web', 4, 8, 'html') }}{# All great projects #}</span><br />
+		<span>{{ _trans('web', 4, 9, 'html') }}{# begin with a single task #}</span>
+	</div>
+</div>
+<div id="end_home" class="visibility_hidden">
+	{% include '/bundles/lincko/launch/templates/launch/scripts/home.js.twig' %}
+</div>
+{% endblock %}
