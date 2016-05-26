@@ -23,16 +23,17 @@ var mainMenu = (function() {
         */
         if (data.type == "history") {
             name = Lincko.storage.get("projects", data.id, "+title") + " Activity";
-            item.find('img.logo').attr('src', 'icon-MultiplePeople');
-            item.find('span.logo').remove();
+            //item.find('img.logo').attr('src', 'icon-Multiple-People');
+            item.find('span.logo').addClass('fa fa-globe');
         } else if (data.type == 'chats') {
             var users = Object.keys(Lincko.storage.get('chats', data.id, '_perm'));
             name = Lincko.storage.get('chats', data.id, '+title');
-            if (users.length > 1) {
-                item.find('span.logo').addClass('icon-MultiplePeople');
+
+            if (users.length > 2) {
+                item.find('span.logo').addClass('icon-Multiple-People');
                 item.find('img').remove();
             } else {
-                item.find('span.logo').addClass('icon-SinglePerson_Selected');
+                item.find('span.logo').addClass('icon-Single-Person');
                 item.find('img').remove();
             }
         }
@@ -183,7 +184,7 @@ var mainMenu = (function() {
     };
 })();
 JSfiles.finish(function() {
-    //mainMenu.init();
+    mainMenu.init();
 });
 
 function app_project_quick_upload_display(Elem, show) {
@@ -596,10 +597,6 @@ $("#app_project_search").on({
 	},
 });
 
-$('#app_project_project_all').click(function(){
-	app_content_menu.selection(Lincko.storage.getMyPlaceholder()['_id'], 'projects');
-});
-
 $('#app_project_placeholder').click(function(){
 	app_content_menu.selection(Lincko.storage.getMyPlaceholder()['_id'], 'dashboard');
 });
@@ -666,4 +663,3 @@ JSfiles.finish(function(){
 	
 	app_application_lincko.prepare(true, true); //Update everything
 });
-

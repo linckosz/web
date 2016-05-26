@@ -1,132 +1,66 @@
 {# category 2 #}
 <div id="begin_app_project" class="visibility_hidden">
 	<script>
+        JSfiles.later("{{ _filelatest('/lincko/app/scripts/models/notification.js') }}", 30);
 		JSfiles.later("{{ _filelatest('/lincko/app/scripts/app/project.js') }}");
-		app_project_img_user_male_src = "{{ _filelatest('/lincko/app/images/app/project/user_male.png') }}";
-		app_project_img_user_female_src = "{{ _filelatest('/lincko/app/images/app/project/user_female.png') }}";
 	</script>
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/app/project.css') }}" type="text/css" />
 </div>
-<div id="app_project_content" class="app_project_content app_application_width_child base_color_bg_main base_color_bg_main_gradient base_color_text_white">
-	<img id="app_project_close" class="maxMobileL" src="{{ _filelatest('/lincko/app/images/app/project/menu.png') }}" alt="{{ _trans('app', 2, 1, 'html') }}{# Close #}" title="{{ _trans('app', 2, 1, 'html') }}{# Close #}" />
-	<div class="app_project_div_content app_application_width_child overthrow">
-		<div id="app_project_top">
-			<div id="app_project_user">
-				<img id="app_project_user_image" src="{{ _filelatest('/lincko/app/images/app/project/user_male.png') }}" />
-				<div>
-					<div id="app_project_user_name">{{ yonghu|capitalize }}</div>
-					<div id="app_project_user_email">{{ youjian|lower }}</div>
-				</div>
-			</div>
-			<div class="app_project_line"><div></div></div>
-			<div class="app_project_space"></div>
-			<div>
-				<label class="" for="app_project_search">
-					<input type="text" id="app_project_search" name="base_search_text" title="{{ _trans('app', 2, 3, 'html') }}{# Search #}"/>
-					<img id="app_project_search_img" src="{{ _filelatest('/lincko/app/images/app/project/search.png') }}" />
-				</label>
-				
-				<img id="app_project_settings_img" src="{{ _filelatest('/lincko/app/images/app/project/settings.png') }}" alt="{{ _trans('app', 2, 2, 'html') }}{# Settings #}" title="{{ _trans('app', 2, 2, 'html') }}{# Settings #}" />
-			</div>
-			<div class="app_project_space"></div>
-			<div class="app_project_line"><div></div></div>
-			<div class="app_project_space"></div>
-			{% if workspace %}
-				<div id="app_project_user_workspace_mobile" class="app_project_tab_title isMobile">
-					<img src="{{ _filelatest('/lincko/app/images/app/project/project.png') }}" />
-					{{ _trans('app', 2, 7, 'html') }}{# Projects #}
-				</div>
-				<div class="app_project_space"></div>
-			{% endif %}
-			<div class="app_project_tab">
-				<div id="app_project_placeholder">
-					<div>
-						{{ _trans('app', 2, 4, 'html') }}{# My Placeholder #}
-					</div>
-				</div>
-				{% if workspace %}
-				<div id="app_project_workspace">
-					<div id="app_project_workspace_title">
-						{{ _trans('app', 2, 11, 'html') }}{# Overview #}
-					</div>
-				</div>
-				{% endif %}
-			</div>
-			<div class="app_project_space"></div>
-			<div class="app_project_line noMobile"><div></div></div>
-			<div class="app_project_space"></div>
-			{% if workspace %}
-				<div id="app_project_user_workspace" class="app_project_tab_title noMobile">
-					<img src="{{ _filelatest('/lincko/app/images/app/project/project.png') }}" />
-					{{ _trans('app', 2, 7, 'html') }}{# Projects #}
-				</div>
-				<div class="app_project_space"></div>
-			{% else %}
-				<div class="app_project_tab_title noMobile">
-					<img src="{{ _filelatest('/lincko/app/images/app/project/project.png') }}" />
-					{{ _trans('app', 2, 7, 'html') }}{# Projects #}
-				</div>
-			{% endif %}
-			<div id="app_project_tab" class="app_project_tab">
-				<div id="app_project_project_all">
-					<div>
-						<img class="app_project_project_all_img" src="{{ _filelatest('/lincko/app/images/app/project/arrow_right.png') }}" />
-						{{ _trans('app', 2, 5, 'html') }}{# All #}
-					</div>
-				</div>
-				<div id="app_project_project_new">
-					<div>
-						<img class="app_project_project_new_img" src="{{ _filelatest('/lincko/app/images/app/project/new.png') }}" />
-					</div>
-				</div>
-			</div>
-			<div class="app_project_space"></div>
-			<div id="app_project_recent" class="minMobileL">
-				<div class="app_project_line"><div></div></div>
-				<div class="app_project_space"></div>
-				<div class="app_project_tab_title">
-					<img src="{{ _filelatest('/lincko/app/images/app/project/latest.png') }}" />
-					{{ _trans('app', 2, 6, 'html') }}{# Recent updates #}
-				</div>
-				<div id="app_project_info" class="app_project_info">
-					<div id="app_project_info_title"></div>
-					<div id="app_project_info_content"></div>
-				</div>
-			</div>
-		</div>
-		<div id="app_project_quick_access">
-			<div id="app_project_quick_access_title">
-				<div find="app_project_progress_all" class="app_project_progress_all"></div>
-				<div find="app_project_upload" class="app_project_upload_text">{{ _trans('app', 2, 10, 'html') }}{# Uploads #}</div>
-				<div find="app_project_quick_access" class="app_project_quick_access_text">{{ _trans('app', 2, 8, 'html') }}{# Quick access #}</div>
-			</div>
-			<img id="app_project_quick_access_notes" class="app_project_quick_access_img" src="{{ _filelatest('/lincko/app/images/app/project/quick_notes.png') }}" />
-			<img id="app_project_quick_access_tasks" class="app_project_quick_access_img" src="{{ _filelatest('/lincko/app/images/app/project/quick_tasks.png') }}" />
-			<img id="app_project_quick_access_upload" class="app_project_quick_access_img" src="{{ _filelatest('/lincko/app/images/app/project/quick_upload.png') }}" />
-			<img id="app_project_quick_access_calendar" class="app_project_quick_access_img" src="{{ _filelatest('/lincko/app/images/app/project/quick_calendar.png') }}" />
-			<img id="app_project_quick_access_chat" class="app_project_quick_access_img" src="{{ _filelatest('/lincko/app/images/app/project/quick_chat.png') }}" />
-		</div>
-		<div id="app_project_quick_upload_block">
-		</div>
-		<div id="app_project_quick_upload" class="accelerated">
-			<div class="app_project_quick_upload_icons accelerated">
-
-					<img id="app_project_quick_upload_video" class="app_project_quick_upload_img app_project_quick_upload_img_side accelerated" src="{{ _filelatest('/lincko/app/images/app/project/quick_video.png') }}" />
-
-					<img id="app_project_quick_upload_photo" class="app_project_quick_upload_img accelerated" src="{{ _filelatest('/lincko/app/images/app/project/quick_photo.png') }}" />
-
-					<img id="app_project_quick_upload_files" class="app_project_quick_upload_img app_project_quick_upload_img_side accelerated" src="{{ _filelatest('/lincko/app/images/app/project/quick_files.png') }}" />
-
-			</div>
-			<img class="app_project_quick_upload_band accelerated" src="{{ _filelatest('/lincko/app/images/app/project/quick_band.png') }}" />
-		</div>
-	</div>
-</div>
-
-<div class="display_none">
-	<div id="-app_project_project_open" timestamp="0" projectid="0" projectvisible="1">
-		<div find="app_project_project_title"></div>
-	</div>
-</div>
+    <div id="app_project_content">
+        <header id="app_project_top" class="clear">
+            <aside class="icon-Settings"></aside>
+            <article>Lincko</article>
+        </header>
+        <section id="app_project_placeholder">
+            Personal Space
+        </section>
+        <section id="app_project_tab">
+            <span class="app_project_header_add icon-Plus-no-circle"></span>
+            <header class="clear">
+                <div class="app_project_header_stats">
+                    <span>All</span>
+                    <span>(4)</span>
+                    <span class="icon-Forward"></span>
+                </div>
+                <p class="sub_header">My Projects</p>
+            </header>
+            <section style="display: none" id="-app_project_item" class="app_project_item">
+                <div class="app_project_item_stats clear">
+                    <span>100</span>
+                    <span class="icon-Tasks"></span>
+                    <span>100</span>
+                    <span class="icon-New-Notes"></span>
+                    <span>100</span>
+                    <span class="icon-Cloud-Files"></span>
+                </div>
+                <p></p>
+            </section>
+        </section>
+        <section id="app_project_chat">
+            <header>
+                <div class="app_project_header_stats">
+                    All
+                    <span class="icon-Forward"></span>
+                </div>
+                <p class="sub_header">Chat</p>
+            </header>
+            <section style="display: none" id="-app_project_chat_item" class="app_project_chat_item clear">
+		    <div class="logo_wrapper">
+                <!--<img src="" class="logo">-->
+                <span class="logo"></span>
+                <div class="notification"></div> 
+            </div>
+            <div class="app_project_chat_item_content">
+                    <header></header>
+                    <article></article>
+            </div>
+            </section>
+        </section>
+        <section id="quick_access">
+            <span class="icon-Tasks" id="app_project_quick_access_tasks"></span><!--TODO: dangling link-->
+            <span class="icon-New-Notes" id="app_project_quick_access_notes"></span><!--TODO: dangling link-->
+            <span class="icon-Chat" id="app_project_quick_access_chat"></span>
+        </section>
+    </div>
 
 <div id="end_app_project" class="visibility_hidden"></div>
