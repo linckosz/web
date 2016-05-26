@@ -746,7 +746,7 @@ Submenu.prototype.FocusForm = function() {
 	if (!supportsTouch) {
 		setTimeout(function() {
 			submenu_wrapper = that.Wrapper();
-			var ElemFocus = submenu_wrapper.find("input:enabled:visible:first");
+			var ElemFocus = submenu_wrapper.find("input:enabled:visible:first:not(.no_focus)");
 			if (ElemFocus.length >= 1) {
 				ElemFocus.focus();
 				return true;

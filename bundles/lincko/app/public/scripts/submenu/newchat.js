@@ -93,7 +93,7 @@ Submenu.prototype.Add_ChatMenu = function() {
             'post',
             'comment/create',
             function() {
-                Elem.find('.comments_input').val('');
+                Elem.find('.comments_input').val('').blur();
             }
             );
         }
@@ -144,7 +144,7 @@ Submenu.prototype.Add_ChatMenu = function() {
             'post',
             'comment/create',
             function() {
-                Elem.find('.comments_input').val('');
+                Elem.find('.comments_input').val('').blur();
                 app_application_lincko.update("chat_contents_wrapper", type+"_" + that.param.id);
             }
         ); //TODO: fix the error handling logic
