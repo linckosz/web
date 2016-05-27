@@ -495,12 +495,34 @@ skylist.prototype.filter_by_hide_completed = function(items, filter){
 skylist.prototype.filter_by_search = function(items, filter){
 	var that = this;
 	var items_filtered = [];
+
 	if( filter == null || filter == "" ){
 		return items;
 	}
 	else{
+		var filter_array = filter.split(' ');
+	}
+
+	if( that.search_chat ){
+		items_filtered = that.search_chat(items, filter_array);
+	}
+	else{
 		items_filtered = Lincko.storage.searchArray('word', filter, items);
-		return items_filtered;
+	}
+	return items_filtered;
+}
+
+skylist.prototype.search_by_username = function(username){
+	var userid_array = [];
+	var result = Lincko.storage.search('word', username, 'users');
+	if(!$.isEmptyObject(result)){
+		return false;
+	}
+	else{
+		$.each( result.users, function( key, value ) {
+			userid_array.push(key);
+		});
+		return userid_array;
 	}
 }
 
