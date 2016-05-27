@@ -56,6 +56,7 @@
     box-shadow: 0px 0px 4px 0px #3F84B0;
     border-radius: 3px;
     text-align: center;
+    box-sizing: border-box;
 }
 
 .burger_calendar .ui-widget-header{
@@ -79,7 +80,8 @@
 .burger_calendar_prepend [find=row1], .burger_calendar_prepend [find=row2]{
     display: inline-block;
     border: 1px solid #FFFFFF;
-    width: 200px;
+    width: 300px;
+    font-size: 14px;
 }
 .burger_calendar_prepend [find=today_info]{
     text-align: center;
@@ -91,9 +93,8 @@
 .burger_calendar_prepend [find=twoDays_btn],
 .burger_calendar_prepend [find=tomorrow_btn],
 .burger_calendar_prepend [find=oneWeek_btn]{
-    width: 90px;
+    width: 130px;
     display: inline-block;
-    font-size: 14px;
     color: #3F84B0;
 }
 .burger_calendar_prepend [find=today_btn], .burger_calendar_prepend [find=twoDays_btn]{
@@ -129,10 +130,10 @@
     border: none;
 }
 .burger_calendar .ui-datepicker-next, .burger_calendar .ui-datepicker-next:hover{
-    right: 130px;
+    right: 30%;
 }
 .burger_calendar .ui-datepicker-prev, .burger_calendar .ui-datepicker-prev:hover{
-    left: 130px;
+    left: 30%;
 }
 
 .burger_calendar .ui-datepicker-calendar th {

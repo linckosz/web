@@ -204,57 +204,81 @@ var burger = function(elem, burger_mode, item){
     }
 }
 
+var burger_calendar_linckofy_timeout;
+
+function burger_calendar_linckofy(inst, inline_datepicker){
+    
+    clearTimeout(burger_calendar_linckofy_timeout);
+    burger_calendar_linckofy_timeout = setTimeout(function(){
+        var elem_calendarPrepend = $('#-burger_calendar_prepend').clone().prop('id','burger_calendar_prepend');
+        var elem_attached = $(inst.input[0]);
+        var elem_datepicker = null;
+        if(inline_datepicker){
+            elem_datepicker = inline_datepicker;
+        }
+        else{
+            elem_datepicker = $('#ui-datepicker-div');
+        }
+        /*
+        console.log(elem_datepicker);
+        if( elem_datepicker.find('#burger_calendar_prepend') ){
+            console.log(elem_datepicker.has('#burger_calendar_prepend'));
+            return false;
+        }
+        */
+
+        elem_datepicker.prepend(elem_calendarPrepend);
+        elem_datepicker.find('.ui-datepicker-next').empty().addClass('icon-Forward');
+        elem_datepicker.find('.ui-datepicker-prev').empty().addClass('icon-Forward fa-flip-horizontal');
+        var elem_prepend_today = elem_datepicker.find('[find=today_btn]');
+        var elem_prepend_tomorrow =  elem_datepicker.find('[find=tomorrow_btn]');
+        var elem_prepend_twoDays = elem_datepicker.find('[find=twoDays_btn]');
+        var elem_prepend_oneWeek = elem_datepicker.find('[find=oneWeek_btn]');
+
+        var prepend_select = function(){
+            elem_datepicker.find('.burger_calendar_prepend_active').removeClass('burger_calendar_prepend_active');
+            $(this).addClass('burger_calendar_prepend_active');
+            elem_datepicker.find('.ui-state-active').click();
+        }
+
+        elem_prepend_today.click(function(){
+            elem_attached.datepicker('setDate',0);
+            prepend_select();
+        });
+        elem_prepend_tomorrow.click(function(){
+            elem_attached.datepicker('setDate',1);
+            prepend_select();
+        });
+        elem_prepend_twoDays.click(function(){
+            elem_attached.datepicker('setDate',2);
+            prepend_select();
+        });
+         elem_prepend_oneWeek.click(function(){
+            elem_attached.datepicker('setDate',7);
+            prepend_select();
+        });
+
+        var date = new wrapper_date(parseInt(inst.lastVal,10)/1000);
+        if( date.happensSomeday(0) ){
+            elem_prepend_today.addClass('burger_calenar_prepend_active');
+        }
+        else if( date.happensSomeday(1) ){
+            elem_prepend_tomorrow.addClass('burger_calenar_prepend_active');
+        }
+        else if( date.happensSomeday(2) ){
+            elem_prepend_twoDays.addClass('burger_calenar_prepend_active');
+        }
+        else if( date.happensSomeday(7) ){
+            elem_prepend_oneWeek.addClass('burger_calenar_prepend_active');
+        }           
+    },10);
+
+}   
+
+
+
 function burger_calendar (elem_timestamp, elem_display){
-
-    var elem_calendarPrepend = $('#-burger_calendar_prepend').clone().prop('id','burger_calendar_prepend');
     var elem_input;
-
-    var linckofyDatepicker = function(inst){
-        setTimeout(function(){
-            $('#ui-datepicker-div').prepend(elem_calendarPrepend);
-            $('#ui-datepicker-div').find('.ui-datepicker-next').empty().addClass('icon-Forward');
-            $('#ui-datepicker-div').find('.ui-datepicker-prev').empty().addClass('icon-Forward fa-flip-horizontal');
-            var elem_prepend_today = $('#ui-datepicker-div').find('[find=today_btn]');
-            var elem_prepend_tomorrow =  $('#ui-datepicker-div').find('[find=tomorrow_btn]');
-            var elem_prepend_twoDays = $('#ui-datepicker-div').find('[find=twoDays_btn]');
-            var elem_prepend_oneWeek = $('#ui-datepicker-div').find('[find=oneWeek_btn]');
-
-            elem_prepend_today.click(function(){
-                elem_timestamp.datepicker('setDate',0);
-                $('#ui-datepicker-div').find('.ui-state-active').click();
-            });
-            elem_prepend_tomorrow.click(function(){
-                elem_timestamp.datepicker('setDate',1);
-                $('#ui-datepicker-div').find('.ui-state-active').click();
-            });
-            elem_prepend_twoDays.click(function(){
-                elem_timestamp.datepicker('setDate',2);
-                $('#ui-datepicker-div').find('.ui-state-active').click();
-            });
-             elem_prepend_oneWeek.click(function(){
-                elem_timestamp.datepicker('setDate',7);
-                $('#ui-datepicker-div').find('.ui-state-active').click();
-            });
-
-            console.log(inst);
-            var date = new wrapper_date(parseInt(inst.lastVal,10)/1000);
-            console.log(date);
-            if( date.happensSomeday(0) ){
-                elem_prepend_today.addClass('burger_calenar_prepend_active');
-            }
-            else if( date.happensSomeday(1) ){
-                elem_prepend_tomorrow.addClass('burger_calenar_prepend_active');
-            }
-            else if( date.happensSomeday(2) ){
-                elem_prepend_twoDays.addClass('burger_calenar_prepend_active');
-            }
-            else if( date.happensSomeday(7) ){
-                elem_prepend_oneWeek.addClass('burger_calenar_prepend_active');
-            }
-
-            
-        },10);
-    }
 
     elem_timestamp.datepicker(
     {
@@ -270,15 +294,23 @@ function burger_calendar (elem_timestamp, elem_display){
         beforeShow: function(input, inst){
             $('#ui-datepicker-div').addClass('burger_calendar');
             elem_input = input;
-            linckofyDatepicker(inst);
+            burger_calendar_linckofy(inst);
         },
         onChangeMonthYear: function(year, month, inst){
-            linckofyDatepicker(inst);
+            burger_calendar_linckofy(inst);
         },
     });
 
     elem_display.click(function(){
         event.stopPropagation();
+        if( responsive.test("maxMobileL")){
+            var param = {elem_inputOrig:elem_timestamp };
+            console.log(param);
+            submenu_Build('calendar',null,null,param,false);
+            return false;
+        }
+
+
         if( $('#ui-datepicker-div').length > 0 && $('#ui-datepicker-div').css('display') == 'block' ){
             elem_timestamp.blur();
         }

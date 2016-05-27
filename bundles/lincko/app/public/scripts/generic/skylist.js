@@ -200,10 +200,15 @@ skylist.prototype.construct = function(){
 	}
 
 	/*--------------Enquire.JS------------------------------*/
-	enquire.register(responsive.minTablet,	that.minTablet);
-	enquire.register(responsive.maxMobileL,	that.maxMobileL);
-	enquire.register(responsive.minMobileL,	that.minMobileL);
-	enquire.register(responsive.isMobile,	that.isMobile);
+	var minTablet = function(){ that.minTablet(); }
+	var maxMobileL = function(){ that.maxMobileL(); }
+	var minMobileL = function(){ that.minMobileL(); }
+	var isMobile = function(){ that.isMobile(); }
+
+	enquire.register(responsive.minTablet, minTablet);
+	enquire.register(responsive.maxMobileL, maxMobileL);
+	enquire.register(responsive.minMobileL,	minMobileL);
+	enquire.register(responsive.isMobile, isMobile);
 	/*--------------Enquire.JS------------------------------*/
 
 	/*app_application_lincko.add(
@@ -341,7 +346,6 @@ skylist.prototype.store_all_elem = function(){
 
 skylist.prototype.window_resize = function(){
 	var that = this;
-
 	that.window_width = $(window).width();
 	that.editing_focus = false;
 	that.setHeight();
@@ -841,6 +845,7 @@ skylist.prototype.addTask = function(item){
 	elem_calendar_timestamp.val((item['start']+item['duration'])*1000);
 	burger_calendar(elem_calendar_timestamp, elem_calendar );
 	elem_calendar_timestamp.change(function(){
+		console.log('timestamp change');
 		var duration_timestamp = $(this).val()/1000 - item['start'];
 		if( duration_timestamp < 0 ){
 			console.log(item['start']+' duedate cant be before start date.');
@@ -1596,7 +1601,7 @@ skylist.prototype.minTablet = function(){
 skylist.prototype.maxMobileL = function(){
 	var that = this;
 	if(!that.list_wrapper){return;}
-	that.list_subwrapper.find('input[find=card_time_calendar_timestamp]').prop('disabled',true);
+	//that.list_subwrapper.find('input[find=card_time_calendar_timestamp]').prop('disabled',true);
 	that.list_subwrapper.find('input[find=name]').prop('disabled',true);
 	if(that.elem_Jsorts ){
 		that.elem_Jsorts.not('.skylist_menu_timesort_dot').addClass('display_none');

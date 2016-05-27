@@ -71,7 +71,7 @@ Submenu.prototype.Add_MenuTasklistButton = function() {
         console.log('task_create');
     }
     var attribute = this.attribute;
-    submenu_wrapper = this.Wrapper();
+    var submenu_wrapper = this.Wrapper();
     var Elem = $('#-submenu_form').clone();
     Elem.prop("id", '');
     submenu_wrapper.find("[find=submenu_wrapper_bottom]").addClass('submenu_bottom');
@@ -114,7 +114,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	var that = this;
 	var attribute = this.attribute;
 	this.md5id = md5(Math.random());
-	submenu_wrapper = this.Wrapper();
+	var submenu_wrapper = this.Wrapper();
 	var submenu_content = submenu_wrapper.find("[find=submenu_wrapper_content]");
 	submenu_content.prop('id','taskdetail_'+that.md5id);
 	var submenu_taskdetail = $('#-submenu_taskdetail').clone().prop('id','submenu_taskdetail');
