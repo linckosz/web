@@ -211,16 +211,6 @@ skylist.prototype.construct = function(){
 	enquire.register(responsive.isMobile, isMobile);
 	/*--------------Enquire.JS------------------------------*/
 
-	/*app_application_lincko.add(
-		that.list.prop('id'),
-		'projects',
-		function(){
-			console.log('app_application_lincko.add '+that.list_type);
-			if( that.skylist_update ){
-				//that.skylist_update();
-			}
-		}
-	);*/
 }//end of construct
 
 skylist.prototype.subConstruct_default = function(){
@@ -500,14 +490,57 @@ skylist.prototype.filter_by_search = function(items, filter){
 		return items;
 	}
 	else{
-		var filter_array = filter.split(' ');
+		filter = $.trim(filter);
+		var filter_array = filter.split(/\s+/);
 	}
 
 	if( that.search_chat ){
 		items_filtered = that.search_chat(items, filter_array);
 	}
 	else{
-		items_filtered = Lincko.storage.searchArray('word', filter, items);
+		var item = null;
+		var push = false;
+		var word = null;
+		var userid_array = null;
+		var userid = null;
+		for( var i=0; i < items.length; i++){ //for each item
+			item = items[i];
+			push = false;
+
+			for( var j=0; j < filter_array.length; j++){ //for each word
+				word = filter_array[j];
+				userid_array = that.search_by_username(word);
+				if(Lincko.storage.searchArray('word', word, [item]).length > 0){
+					push = true;
+					break;
+				}
+				else if( userid_array.length ){
+					for( var k=0; k < userid_array.length; k++){
+						userid = userid_array[k];
+						if( that.list_type == 'tasks' ){
+							if( item['_users'][userid] && item['_users'][userid]['in_charge'] ){
+								push = true;
+								break;
+							}
+						}
+						else if( that.list_type == 'notes' ){
+							if( item['updated_by'] == userid ){
+								push = true;
+								break;
+							}
+						}
+					}//END OF for each userid_array
+					if(push){
+						break;
+					}
+				}
+			}//END OF for word
+
+			if(push){
+				items_filtered.push(item);
+			}
+
+		}//END OF for items
 	}
 	return items_filtered;
 }
@@ -515,7 +548,7 @@ skylist.prototype.filter_by_search = function(items, filter){
 skylist.prototype.search_by_username = function(username){
 	var userid_array = [];
 	var result = Lincko.storage.search('word', username, 'users');
-	if(!$.isEmptyObject(result)){
+	if($.isEmptyObject(result)){
 		return false;
 	}
 	else{
