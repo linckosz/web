@@ -211,6 +211,7 @@ function burger_calendar_linckofy(inst, inline_datepicker){
     clearTimeout(burger_calendar_linckofy_timeout);
     burger_calendar_linckofy_timeout = setTimeout(function(){
         var elem_calendarPrepend = $('#-burger_calendar_prepend').clone().prop('id','burger_calendar_prepend');
+        elem_calendarPrepend.find('[find=today_info]').html('Today is '+ new wrapper_date().display('date_medium_simple'));//toto
         var elem_attached = $(inst.input[0]);
         var elem_datepicker = null;
         if(inline_datepicker){
