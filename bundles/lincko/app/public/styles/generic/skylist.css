@@ -468,8 +468,11 @@
 
 
 
-/*MobileL to mobile*/
+/*MobileL and down */
 @media only screen and (max-width: 900px) {
+	.skylist {
+		margin-left: 5px;
+	}
 
 	.skylist_menu_navbar {
 		display: table;
