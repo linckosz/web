@@ -7,7 +7,7 @@ $('#app_content_top_project').click(function(){
 
 $('#app_content_top_note').click(function(){
 	//submenu_Build("test", true, false);
-	//app_upload_open_files('tasks', 130);
+	app_upload_open_files(null, null, true, true);
 });
 
 function app_content_menu_position() {

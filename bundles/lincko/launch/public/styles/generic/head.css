@@ -7,6 +7,7 @@
 	background-repeat: repeat-x;
 	position: fixed;
 	overflow: hidden;
+	box-shadow: 		0 20px 15px -15px #202020 inset, 0 -20px 15px -15px #202020 inset;
 }
 
 .head_ul {
@@ -53,7 +54,7 @@
 
 .head_div {
 	display: table;
-	height: 100%;
+	height: 48px;
 }
 
 /*
@@ -64,10 +65,13 @@
 	cursor: default;
 }
 
-#head_account > span:hover {
-	border-bottom: 2px solid currentColor;
+#head_account > span {
+	border-bottom: 2px solid transparent;
 	padding-top: 2px;
 	cursor: pointer; cursor: hand;
+}
+#head_account > span:hover {
+	border-color: currentColor;
 }
 
 
@@ -82,10 +86,13 @@
 	color: #E0BC8D;
 }
 
-#head_signout > span:hover {
-	border-bottom: 1px solid currentColor;
+#head_signout > span {
+	border-bottom: 1px solid transparent;
 	padding-top: 1px;
 	cursor: pointer; cursor: hand;
+}
+#head_signout > span:hover {
+	border-color: currentColor;
 }
 
 
@@ -97,15 +104,11 @@
 	cursor: default;
 }
 
-#head_signin > span:hover {
-	border-bottom: 2px solid currentColor;
+#head_signin > span {
+	border-bottom: 2px solid transparent;
 	padding-top: 2px;
 	cursor: pointer; cursor: hand;
 }
-
-/* Mobile phone in Portrait */
-@media only screen and (max-width: 479px){
-	.table_cell_center > span {
-		line-height: 24px;
-	}
+#head_signin > span:hover {
+	border-color: currentColor;
 }

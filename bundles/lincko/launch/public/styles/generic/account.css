@@ -66,6 +66,23 @@
 	cursor: pointer; cursor: hand;
 }
 
+#account_tab_lincko {
+	padding: 0;
+	padding-bottom: 3px;
+}
+
+#account_tab_lincko > div {
+	border-radius: 4px;
+	background-color: rgba(251, 160, 38, 0.5) !important;
+	font-size: 30px;
+	font-family: Roboto;
+	font-weight: 200;
+}
+
+#account_tab_joinus {
+	padding-top: 0 !important;
+	padding-left: 0 !important;
+}
 .account_tab_joinus {
 	background-color: rgba(255, 167, 0, 0.5) !important;
 }
@@ -76,6 +93,10 @@
 	background-color: #E89700 !important;
 }
 
+#account_tab_signin {
+	padding-top: 0 !important;
+	padding-right: 0 !important;
+}
 .account_tab_signin {
 	background-color: rgba(40, 149, 242, 0.5) !important;
 }
@@ -104,10 +125,12 @@
 
 .account_joinus_box_div {
 	border-top-left-radius: 0px !important;
+	text-align: left;
 }
 
 .account_signin_box_div {
 	border-top-right-radius: 0px !important;
+	text-align: left;
 }
 
 .account_label_inside {
@@ -238,3 +261,22 @@
 #account_joinus_captcha {
 	width: 80px;
 }
+
+
+
+@media only screen and (max-height: 350px){
+	.account_wrapper > div {
+		top: 3px;
+	}
+	.account_close {
+		top: 1px;
+	}
+}
+
+/* Mobile phone in Portrait */
+@media only screen and (max-width: 479px){
+	.account_close {
+		right: 1px;
+	}
+}
+

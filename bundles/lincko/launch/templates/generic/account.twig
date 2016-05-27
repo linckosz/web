@@ -11,10 +11,15 @@
 <div id="account_wrapper" class="account_wrapper">
 	<img class="account_close" id="account_close" src="{{ _filelatest('/lincko/launch/images/generic/account/close.png') }}" alt="{{ _trans('web', 5, 10, 'html') }}{# Close #}" title="{{ _trans('web', 5, 10, 'html') }}{# Close #}" />
 	<div>
-		<div class="account_tab">
-			<div class="account_trans" id="account_tab_joinus"><div class="account_tab_joinus">{{ _trans('web', 5, 8, 'html') }}{# creation #}</div></div>
-			<div class="account_trans" id="account_tab_signin"><div class="account_tab_signin">{{ _trans('web', 5, 9, 'html') }}{# connection #}</div></div>
+		<div class="account_tab" id="account_tab_lincko">
+			<div>Lincko</div>
 		</div>
+		{% if beta_code %}
+			<div class="account_tab">
+				<div class="account_trans" id="account_tab_joinus"><div class="account_tab_joinus">{{ _trans('web', 5, 1, 'html') }}{# Join Us #}</div></div>
+				<div class="account_trans" id="account_tab_signin"><div class="account_tab_signin">{{ _trans('web', 5, 4, 'html') }}{# Sign In #}</div></div>
+			</div>
+		{% endif %}
 		<div id="account_joinus_box">
 			<form class="account_form" id="account_joinus_form" action="user/create" method="post" onsubmit="return wrapper_sendForm(this, account_joinus_cb_success, account_joinus_cb_error, account_joinus_cb_begin, account_joinus_cb_complete);">
 				<div class="account_joinus_box_div">
@@ -35,7 +40,7 @@
 							<input type="hidden" name="captcha_name" value="account_joinus_form" autocomplete="off" />
 						</label>
 					{% endif %}
-					<input id="account_joinus_submit" type='button' value="{{ _trans('web', 5, 1, 'input') }}{# Join us #}" onclick="$(this.form).submit();" />
+					<input id="account_joinus_submit" type='button' value="{{ _trans('web', 5, 1, 'input') }}{# Join Us #}" onclick="$(this.form).submit();" />
 					<img class="submit_progress_bar" id="account_joinus_submit_progress" src="{{ _filelatest('/lincko/launch/images/generic/base/generic/loading_bar.gif') }}"/>
 				</div>
 				<div id="account_joinus_tos_div" onclick="window.open('{{ terms }}', '_blank');">
@@ -55,7 +60,7 @@
 						<span>{{ _trans('web', 5, 3, 'html') }}{# Password #}</span>
 						<input type="password" id="account_signin_password" name="password" value="" autocomplete="off" />
 					</label>
-					<input id="account_signin_submit" type='button' value="{{ _trans('web', 5, 4, 'input') }}{# Sign in #}" onclick="$(this.form).submit();" />
+					<input id="account_signin_submit" type='button' value="{{ _trans('web', 5, 4, 'input') }}{# Sign In #}" onclick="$(this.form).submit();" />
 					<img class="submit_progress_bar" id="account_signin_submit_progress" src="{{ _filelatest('/lincko/launch/images/generic/base/generic/loading_bar.gif') }}"/>
 				</div>
 				<div>
@@ -63,7 +68,7 @@
 						<input type="checkbox" id="account_signin_remember" name="remember" {% if jizhu %}checked="checked"{% endif %} />
 						{{ _trans('web', 5, 5, 'html') }}{# Remember me #}
 					</label>
-					<div id="account_signin_forgot">
+					<div id="account_signin_forgot" class="display_none">
 						{{ _trans('web', 5, 7, 'html') }}{# Forgot your password? #}
 					</div>
 				</div>

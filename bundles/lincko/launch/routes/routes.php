@@ -22,10 +22,16 @@ $app->get('/home', function () use($app) {
 $app->get('/beta/:beta_code', function ($beta_code) use ($app) {
 	$app = \Slim\Slim::getInstance();
 	//We need to insure we are working outside a workspace
-	$_SESSION['beta_code'] = $beta_code;
+	$app->lincko->data['beta_code'] = $_SESSION['beta_code'] = $beta_code;
 	$app->router->getNamedRoute('home')->dispatch();
 })
 ->conditions(array(
 	'total_num' => '[a-z0-9]{6}',
 ))
 ->name('beta');
+
+$app->get(
+	'/mailchimp',
+	'\bundles\lincko\launch\controllers\ControllerMailchimp:subscribe'
+)
+->name('mailchimp');

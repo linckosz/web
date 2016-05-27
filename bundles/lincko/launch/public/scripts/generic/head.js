@@ -21,40 +21,12 @@ var head_signout_cb_complete = function(){
 	window.location.href = head_link['home'];
 }
 
-$('[id^="head_menu_"]').click(function(){
-	Mobile_menu_Build("nav");
+$('#head_signout').click(function(){
+	wrapper_sendAction('','post','user/signout', null, null, head_signout_cb_begin, head_signout_cb_complete);
 });
-$('[id^="head_logo_"]').click(function(){
-	window.location.href = head_link['home'];
-});
-$('[id^="head_home_"]').click(function(){
-	window.location.href = head_link['home'];
-});
-$('[id^="head_features_"]').click(function(){
-	window.location.href = head_link['features'];
-});
-$('[id^="head_price_"]').click(function(){
-	window.location.href = head_link['price'];
-});
-$('[id^="head_download_"]').click(function(){
-	window.location.href = head_link['download'];
-});
-$('[id^="head_help_"]').click(function(){
-	window.location.href = head_link['help'];
-});
-$('[id^="head_signout_"]').click(function(){
-	wrapper_sendAction('','post','user/signout', head_signout_cb_success, head_signout_cb_error, head_signout_cb_begin, head_signout_cb_complete);
-});
-$('[id^="head_signin_"]').click(function(){
+$('#head_signin').click(function(){
 	if(typeof account_show !== 'undefined') { account_show(true); }
 });
-$('[id^="head_joinus_"]').click(function(){
-	if(typeof account_show !== 'undefined') { account_show(false); }
-});
-$('[id^="head_account_"]').click(function(){
+$('#head_account').click(function(){
 	window.location.href = head_link['root'];
 });
-
-
-//Delete the click event from activated menu
-$('.head_menu.active').off('click');
