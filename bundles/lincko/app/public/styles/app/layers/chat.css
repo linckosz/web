@@ -4,6 +4,15 @@
 .app_layers_chat .skylist_menu_people {
 	display: none;
 }
+
+.app_layers_chat .skylist_menu_timesort {
+	display: none;
+}
+
+.app_layers_chat .skylist_menu_navbar_filter_icon {
+	display: none;
+}
+
 .app_layers_chat .skylist_card {
 	cursor: pointer;
 }
