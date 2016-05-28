@@ -87,6 +87,7 @@
 
 .chat_bottom .emoji {
 	margin-right: 5px;
+	display: none;
 }
 
 .chat_bottom .send {
