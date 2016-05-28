@@ -25,18 +25,18 @@
 				<div class="account_joinus_box_div">
 					<label class="account_label_inside" for="account_joinus_email">
 						<span>{{ _trans('web', 5, 2, 'html') }}{# Email #}</span>
-						<input type="email" id="account_joinus_email" name="email" value="" />
+						<input type="email" id="account_joinus_email" name="email" value="" class="selectable" />
 					</label>
 					<input type="password" name="foilautofill" value="" autocomplete="off" style="display:none;" />{# It avoids a behavior in Firefox which does not know Autocomplete tag, FF fulfill by default the first field #}
 					<label class="account_label_inside" for="account_joinus_password">
 						<span>{{ _trans('web', 5, 3, 'html') }}{# Password #}</span>
-						<input type="password" id="account_joinus_password" name="password" value="" autocomplete="off" />
+						<input type="password" id="account_joinus_password" name="password" value="" autocomplete="off" class="selectable" />
 					</label>
 					{% if wrapper_user_created %}
 						<label class="account_label_inside" for="account_joinus_captcha">
 							<img name="captcha" id="account_captcha" src="" title="{{ _trans('web', 5, 12, 'brut') }}{# Refresh the captcha #}"/>
 							<span>{{ _trans('web', 5, 11, 'html') }}{# Captcha #}</span>
-							<input type="text" id="account_joinus_captcha" name="captcha" value="" autocomplete="off" />
+							<input type="text" id="account_joinus_captcha" name="captcha" value="" autocomplete="off" class="selectable" />
 							<input type="hidden" name="captcha_name" value="account_joinus_form" autocomplete="off" />
 						</label>
 					{% endif %}
@@ -53,12 +53,12 @@
 				<div class="account_signin_box_div">
 					<label class="account_label_inside" for="account_signin_email">
 						<span>{{ _trans('web', 5, 2, 'html') }}{# Email #}</span>
-						<input type="email" id="account_signin_email" name="email" value="{{ youjian|lower }}" />
+						<input type="email" id="account_signin_email" name="email" value="{{ youjian|lower }}" class="selectable" />
 					</label>
 					<input type="password" name="foilautofill" value="" autocomplete="off" style="display:none;" />{# It avoids a behavior in Firefox which does not know Autocomplete tag, FF fulfill by default the first field #}
 					<label class="account_label_inside" for="account_signin_password">
 						<span>{{ _trans('web', 5, 3, 'html') }}{# Password #}</span>
-						<input type="password" id="account_signin_password" name="password" value="" autocomplete="off" />
+						<input type="password" id="account_signin_password" name="password" value="" autocomplete="off" class="selectable" />
 					</label>
 					<input id="account_signin_submit" type='button' value="{{ _trans('web', 5, 4, 'input') }}{# Sign In #}" onclick="$(this.form).submit();" />
 					<img class="submit_progress_bar" id="account_signin_submit_progress" src="{{ _filelatest('/lincko/launch/images/generic/base/generic/loading_bar.gif') }}"/>

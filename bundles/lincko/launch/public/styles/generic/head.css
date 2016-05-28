@@ -7,7 +7,9 @@
 	background-repeat: repeat-x;
 	position: fixed;
 	overflow: hidden;
-	box-shadow: 		0 20px 15px -15px #202020 inset, 0 -20px 15px -15px #202020 inset;
+	box-shadow: 0px 0px 4px 0px #3F84B0;
+	-moz-box-shadow: 0px 0px 4px 0px #3F84B0;
+	-webkit-box-shadow: 0px 0px 4px 0px #3F84B0;
 }
 
 .head_ul {

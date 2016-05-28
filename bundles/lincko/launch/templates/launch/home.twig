@@ -21,22 +21,21 @@
 	</span>
 </div>
 <div class="home_footer">
-	<img class="icons_diamond maxMobile" src="{{ _filelatest('/lincko/launch/images/launch/icons_diamond.png') }}" />
+	<img class="icons_diamond maxMobile" src="{{ _filelatest('/lincko/launch/images/launch/icons_diamond_02.png') }}" />
 	<img class="icons_horizontal minMobileL" src="{{ _filelatest('/lincko/launch/images/launch/icons_horizontal_05.png') }}" />
 	<div class="home_all_projects">
-		All great projects start<span class="maxMobile"><br /></span><span class="minMobileL"> </span>with a single task.
+		{# All great projects start with a single task. #}
+		<span>{{ _trans('web', 4, 22, 'html') }}</span>
 	</div>
 	<div class="home_news">
-		<form id="home_form" action="//lincko.us13.list-manage.com/subscribe/post?u=ac02b0f4fb881d157df6d3209&amp;id=050321d5ad" method="post" target="_blank" novalidate>
-			<label class="home_label_inside" for="home_news_email">
-				<span>{{ _trans('web', 4, 21, 'html') }}{# e-mail #}</span>
-				<input type="email" id="home_news_email" name="email" value="" />
-			</label>
-			<label class="minTablet" for="home_news_submit">
-				<span id="home_news_submit" onclick="$('#home_form').submit();" />{{ _trans('web', 4, 18, 'input') }}{# Register #}</span>
-				<img class="submit_progress_bar" id="home_news_submit_progress" src="{{ _filelatest('/lincko/launch/images/generic/base/generic/loading_bar.gif') }}"/>
-			</label>
-		</form>
+		<label class="home_label_inside" for="home_news_email">
+			<span>{{ _trans('web', 4, 21, 'html') }}{# e-mail #}</span>
+			<input type="email" id="home_news_email" name="email" value="" class="selectable" />
+		</label>
+		<label class="minTablet" for="home_news_submit">
+			<span id="home_news_submit" >{{ _trans('web', 4, 18, 'input') }}{# Register #}</span>
+			<img class="submit_progress_bar" id="home_news_submit_progress" src="{{ _filelatest('/lincko/launch/images/generic/base/generic/loading_bar.gif') }}"/>
+		</label>
 	</div>
 	<div id="home_error" class="display_none"></div>
 	<div class="home_accomplish">

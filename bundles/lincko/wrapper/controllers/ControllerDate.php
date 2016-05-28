@@ -39,32 +39,39 @@ class ControllerDate extends Controller {
 	
 			day: [";
 			for($i=0; $i<=6; $i++){
-				echo '"'.strftime('%A', strtotime('Sunday +'.$i.' days'))."\", ";
+				echo '"'.$app->trans->getJS('wrapper', 2, 1000+$i).'", ';
 			}
 		echo "],
 			
 			day_short: [";
 			for($i=0; $i<=6; $i++){
-				echo '"'.strftime('%a', strtotime('Sunday +'.$i.' days'))."\", ";
+				echo '"'.$app->trans->getJS('wrapper', 2, 1010+$i).'", ';
+			}
+		echo "],
+			
+			day_very_short: [";
+			for($i=0; $i<=6; $i++){
+				echo '"'.$app->trans->getJS('wrapper', 2, 1020+$i).'", ';
 			}
 		echo "],
 			
 			month: [";
 			for($i=0; $i<=11; $i++){
-				echo '"'.strftime('%B', strtotime('January +'.$i.' months'))."\", ";
+				echo '"'.$app->trans->getJS('wrapper', 2, 1030+$i).'", ';
 			}
 		echo "],
 			
 			month_short: [";
 			for($i=0; $i<=11; $i++){
-				echo '"'.strftime('%b', strtotime('January +'.$i.' months'))."\", ";
+				echo '"'.$app->trans->getJS('wrapper', 2, 1050+$i).'", ';
 			}
 		echo "],
 
 			//The first key '0' is actually 31st of last month because JS table start from 0, not 1.
 			ordinal: [";
 			for($i=-1; $i<=30; $i++){
-				echo '"'.date('S', strtotime($i.' days', 0))."\", ";
+				//echo '"'.date('S', strtotime($i.' days', 0))."\", ";
+				echo '"", '; //[toto] don't use cardinal because PHP setlocal has issue, it keeps to english
 			}
 		echo "],
 

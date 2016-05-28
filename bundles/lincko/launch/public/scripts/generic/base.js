@@ -30,6 +30,49 @@ function base_format_form(prefix){
 }
 base_format_form();
 
+var base_error_timing;
+
+function base_show_error(msg, error) {
+	if(typeof error === 'undefined'){ error = false; }
+	if(error && $('#base_error').hasClass('base_message')){
+		$('#base_error').removeClass('base_message');
+	} else if(!error && !$('#base_error').hasClass('base_message')){
+		$('#base_error').addClass('base_message');
+	}
+	clearTimeout(base_error_timing);
+	//This avoid a double call
+	msg = wrapper_to_html(msg); //Escape the whole string for HTML displaying
+	if(php_nl2br(php_br2nl(msg)) != php_nl2br(php_br2nl($('#base_error').html()))){
+		$('#base_error').html(msg);
+		if($('#base_error').is(':hidden')){
+			$("#base_error").velocity("transition.slideRightBigIn", {
+				duration: 260,
+				delay: 120,
+			});
+		} else {
+			$("#base_error").fadeTo( 80 , 0.8).fadeTo( 150 , 1);
+		}
+	}
+	base_error_timing = setTimeout(function(){ base_hide_error(); }, 4000);
+}
+
+function base_hide_error() {
+	clearTimeout(base_error_timing);
+	if($('#base_error').is(':visible')){
+		$("#base_error").velocity("transition.slideRightBigOut", {
+			duration: 160,
+			delay: 80,
+			complete: function(){
+				$('#base_error').empty();
+			},
+		});
+	}
+}
+
+$('#base_error').click(function(){
+	base_hide_error();
+});
+
 var IMGcaptcha = new Image();
 IMGcaptcha.src = "/captcha/4/320/120";
 

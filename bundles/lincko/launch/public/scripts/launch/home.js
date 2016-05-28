@@ -66,6 +66,24 @@ function home_display_label(input, hide_error, force) {
 	}
 }
 
+function home_valid_email(email){
+	var valid = true;
+	if(typeof base_input_field === 'object'){
+		if("email" in base_input_field){
+			if(typeof base_input_field["email"].valid === "function" && typeof base_input_field["email"].error_msg === "function"){
+				if(!base_input_field["email"].valid(email)){
+					var data = base_input_field["email"].error_msg();
+					if(typeof base_show_error === 'function'){
+						base_show_error(data.msg, true);
+					}
+					valid = false;
+				}
+			}
+		}
+	}
+	return valid;
+}
+
 $("#home_signin_link").click(function(){
 	if(typeof account_show !== 'undefined') { account_show(true); }
 });
@@ -84,23 +102,26 @@ $("#home_news_email").on({
 	},
 	keypress: function(e) {
 		if (e.which == 13) {
-			$(this.form).submit();
+			$("#home_news_submit").click();
 		} else {
 			home_display_label(this, true, true);
 		}
 	},
 });
 
-$("#home_joinus_submit").keypress(function (e) {
-	if (e.which == 13) {
-		$(this.form).submit();
+$("#home_news_submit").click(function(){
+	var email = $("#home_news_email").val();
+	email = email.toLowerCase();
+	if(home_valid_email(email)){
+		mailchimp_ajax(email);
 	}
 });
-$("#home_joinus_submit").keydown(function(){
-	$('#home_joinus_submit').addClass('home_joinus_submit_active');
+
+$("#home_news_submit").keydown(function(){
+	$('#home_news_submit').addClass('home_news_submit');
 });
-$("#home_joinus_submit").keyup(function(){
-	$('#home_joinus_submit').removeClass('home_joinus_submit_active');
+$("#home_news_submit").keyup(function(){
+	$('#home_news_submit').removeClass('home_news_submit');
 });
 
 $("#home_main_image").css("background-image","url("+home_img['home_main_image']+")");

@@ -34,4 +34,5 @@ $app->get(
 	'/mailchimp',
 	'\bundles\lincko\launch\controllers\ControllerMailchimp:subscribe'
 )
+->via('POST')
 ->name('mailchimp');

@@ -240,6 +240,7 @@
 
 #account_error {
 	display: none;
+	text-align: left;
 	background-color: rgba(255, 68, 68, 0.8);
 	width: 222px;
 	padding: 10px 20px 10px 20px;

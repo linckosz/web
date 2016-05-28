@@ -287,6 +287,7 @@ html, .font_sans_serif {
 #base_error {
 	display: none;
 	position: fixed;
+	text-align: left;
 	box-sizing: border-box;
 	z-index: 99999;
 	background-color: rgba(255, 68, 68, 0.8);
