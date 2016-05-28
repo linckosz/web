@@ -135,8 +135,17 @@ var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct){
 	this.elem_newcardBox;
 	this.detail;
 	this.construct();
-
 }
+
+/* enquire.js
+ * can't use that.function to register enquire.js ('that' reference to the instance seems to be lost
+ * during unregister, must also match the same function as during register. 
+ * solution: store the function in a global object (skylist_enquire)
+ *           each instance will be a new key within skylist_enquire (using that.md5id), each skylist to work independently
+ *           skylist_instance.destroy() function must be called when list is no longer used
+ *           at .destroy() call, enquire.unregister will remove the handlers inside skylist_enquire
+ */
+var skylist_enquire = {};
 
 skylist.prototype.construct = function(){
 	var that = this;
@@ -173,9 +182,7 @@ skylist.prototype.construct = function(){
 	});
 
 	$(window).resize();
-	//that.window_resize();
 
-	//$(document).on("previewHide.skylist_"+that.md5id, function(){
 	$(document).on("submenuHide.skylist_"+that.md5id, function(){
 		that.submenuHide();
 	});
@@ -200,15 +207,16 @@ skylist.prototype.construct = function(){
 	}
 
 	/*--------------Enquire.JS------------------------------*/
-	var minTablet = function(){ that.minTablet(); }
-	var maxMobileL = function(){ that.maxMobileL(); }
-	var minMobileL = function(){ that.minMobileL(); }
-	var isMobile = function(){ that.isMobile(); }
+	skylist_enquire[that.md5id] = {};
+	skylist_enquire[that.md5id].minTablet = function(){ that.minTablet(); }
+	skylist_enquire[that.md5id].maxMobileL = function(){ that.maxMobileL(); }
+	skylist_enquire[that.md5id].minMobileL = function(){ that.minMobileL(); }
+	skylist_enquire[that.md5id].isMobile = function(){ that.isMobile(); }
 
-	enquire.register(responsive.minTablet, minTablet);
-	enquire.register(responsive.maxMobileL, maxMobileL);
-	enquire.register(responsive.minMobileL,	minMobileL);
-	enquire.register(responsive.isMobile, isMobile);
+	enquire.register(responsive.minTablet, skylist_enquire[that.md5id].minTablet);
+	enquire.register(responsive.maxMobileL, skylist_enquire[that.md5id].maxMobileL);
+	enquire.register(responsive.minMobileL, skylist_enquire[that.md5id].minMobileL);
+	enquire.register(responsive.isMobile, skylist_enquire[that.md5id].isMobile);
 	/*--------------Enquire.JS------------------------------*/
 
 }//end of construct
@@ -277,16 +285,16 @@ skylist.prototype.destroy = function(){
 	console.log('skylist.destroy');
 	var that = this;
 
-	enquire.unregister(responsive.minTablet,	that.minTablet);
-	enquire.unregister(responsive.maxMobileL,	that.maxMobileL);
-	enquire.unregister(responsive.minMobileL,	that.minMobileL);
-	enquire.unregister(responsive.isMobile,		that.isMobile);
+	enquire.unregister(responsive.minTablet, skylist_enquire[that.md5id].minTablet);
+	enquire.unregister(responsive.maxMobileL, skylist_enquire[that.md5id].maxMobileL);
+	enquire.unregister(responsive.minMobileL, skylist_enquire[that.md5id].minMobileL);
+	enquire.unregister(responsive.isMobile, skylist_enquire[that.md5id].isMobile);
+	delete skylist_enquire[that.md5id];
 
 
 	that.list_wrapper.empty();
 	$(window).off("resize.skylist_"+that.md5id);
 	$('body').off("mouseleave.skylist_"+that.md5id);
-	//$(document).off("previewHide.skylist_"+that.md5id);
 	$(document).off("submenuHide.skylist_"+that.md5id);
 	for( var g in that ){
 		that[g] = null;

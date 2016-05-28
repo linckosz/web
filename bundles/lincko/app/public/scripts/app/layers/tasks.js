@@ -15,15 +15,7 @@ function app_layers_tasks_launchPage(param){
 
 function app_layers_tasks_closePage(){
 	console.log('skytasks_closePage');
-	/*
-	enquire.unregister(responsive.minTablet, app_layers_tasks_minTablet);
-	enquire.unregister(responsive.maxMobileL, app_layers_tasks_maxMobileL);
-	enquire.unregister(responsive.minMobileL, app_layers_tasks_minMobileL);
-	enquire.unregister(responsive.isMobile, app_layers_tasks_isMobile);
-	*/
-
-	//app_layers_tasks_tasklist.destroy();
-
+	app_layers_tasks_tasklist.destroy();
 };
 
 var app_layers_tasks_feedPage = function(param){
