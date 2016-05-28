@@ -14,16 +14,16 @@ function mailchimp_ajax(email){
 		timeout: 10000,
 		success: function(data){
 			if(data.status=="subscribed"){
-				base_show_error(Lincko.Translation.get('web', 11, 'html'), false);
+				base_show_error(Lincko.Translation.get('web', 11, 'js'), false);
 			} else if(data.title=="Member Exists"){
-				base_show_error(Lincko.Translation.get('web', 10, 'html'), false);
+				base_show_error(Lincko.Translation.get('web', 10, 'js'), false);
 			} else {
-				base_show_error(Lincko.Translation.get('web', 9, 'html'), true);
+				base_show_error(Lincko.Translation.get('web', 9, 'js'), true);
 			}
 			
 		},
 		error: function(xhr_err, ajaxOptions, thrownError){
-			base_show_error(Lincko.Translation.get('web', 9, 'html'), true);
+			base_show_error(Lincko.Translation.get('web', 9, 'js'), true);
 		},
 	});
 }
