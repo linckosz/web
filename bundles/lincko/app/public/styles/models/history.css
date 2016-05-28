@@ -53,6 +53,9 @@
 .models_history_self .models_history_content {
     background-color: rgba(103, 158, 82, 0.22);
 }
+.models_history_self .time {
+    text-align: right;
+}
 
 .models_history_others .models_history_content {
     background-color: rgba(182, 214, 232, 0.20);
