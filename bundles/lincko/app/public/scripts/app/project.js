@@ -81,6 +81,10 @@ var mainMenu = (function() {
             if (maxHeight > itemHeight) {
                 var item = $("#-app_project_item").clone();
                 $('#app_project_tab').append(item);
+                var pid = projectList[p]._id;
+                item.click(pid, function(event){
+					app_content_menu.selection(event.data, 'tasks');
+				});
                 item.removeAttr('id', '');
                 item.removeAttr('style', '');
                 item.find('p').text(projectList[p]['+title']);
@@ -95,8 +99,7 @@ var mainMenu = (function() {
             submenu_Build("settings");
         });
 
-        $("#app_project_chat .app_project_header_stats").on("click", function() {
-            //render
+        $("#app_project_chat header").on("click", function() {
             submenu_Build('mainchat');
         });
 
@@ -219,60 +222,6 @@ $('#app_project_close').click(function(){
 	}
 });
 
-$('#app_project_quick_access_upload').click(function(){
-	if(responsive.test("maxTablet")){
-		app_project_quick_upload_display($(this));
-	} else {
-		$('#app_project_quick_upload_files').click();
-	}
-});
-
-$('#app_project_quick_upload_block').click(function(){
-	if($('#app_project_quick_upload').is(':visible') && !app_project_quick_upload){
-		app_project_quick_upload_display(null, false);
-	}
-});
-
-$('#app_project_quick_upload').click(function(){
-	if($('#app_project_quick_upload').is(':visible') && !app_project_quick_upload){
-		app_project_quick_upload_display(null, false);
-	}
-});
-
-var app_project_quick_upload = false;
-$('#app_project_quick_upload').children().hover(function(){
-	app_project_quick_upload = true;
-});
-$('#app_project_quick_upload').children().mouseleave(function(){
-	app_project_quick_upload = false;
-});
-
-$('#app_project_quick_upload_video').click(function(){
-	$('#app_upload_shangzai_puk').val(wrapper_get_shangzai('puk'));
-	$('#app_upload_shangzai_cs').val(wrapper_get_shangzai('cs'));
-	$('#app_upload_fingerprint').val(fingerprint);
-	app_project_quick_upload_display(null, false);
-	var input = $('#app_upload_form_video');
-	input.click();
-});
-
-$('#app_project_quick_upload_photo').click(function(){
-	$('#app_upload_shangzai_puk').val(wrapper_get_shangzai('puk'));
-	$('#app_upload_shangzai_cs').val(wrapper_get_shangzai('cs'));
-	$('#app_upload_fingerprint').val(fingerprint);
-	app_project_quick_upload_display(null, false);
-	var input = $('#app_upload_form_photo');
-	input.click();
-});
-
-$('#app_project_quick_upload_files').click(function(){
-	$('#app_upload_shangzai_puk').val(wrapper_get_shangzai('puk'));
-	$('#app_upload_shangzai_cs').val(wrapper_get_shangzai('cs'));
-	$('#app_upload_fingerprint').val(fingerprint);
-	app_project_quick_upload_display(null, false);
-	var input = $('#app_upload_form_files');
-	input.click();
-});
 
 $('#app_project_settings_img').click(function(){
 	submenu_Build("settings");

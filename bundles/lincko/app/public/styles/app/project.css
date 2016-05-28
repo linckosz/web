@@ -102,6 +102,7 @@
         border-left: 1px solid #ffffff;
         font-size: 20px;
         vertical-align: middle;
+        z-index: 1048;
     }
     .app_project_item_stats {
         font-size: 11px;
