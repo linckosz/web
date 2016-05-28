@@ -3,6 +3,7 @@ submenu_list['mainchat'] = {
     "_title": {
         "style": "title",
         "title": "All Chats", //Chat room
+        "class": "submenu_newchat_header",
     },
     //It will create a form with a validation button
     "chat_content": {
@@ -27,7 +28,11 @@ Submenu.prototype.Add_ChatContent = function() {
 
     var app_layers_chatlist = new skylist(
         'global_chats',
-        position
+        position,
+        null,
+        function() {
+            this.list_wrapper.addClass("skylist_maxMobileL_force");
+        }
     );
     /*
     for (var item in chatList) {

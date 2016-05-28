@@ -40,9 +40,29 @@ textarea:focus, input:focus{
 .submenu_newchat_header .icon-SmallPersonaiconBlack [find='submenu_button_title'] {
        display: none;
 }
+.submenu_wrapper .skylist_logo >span {
+		font-size: 35px;
+		color: #FBA026;
+}
 
+.submenu_wrapper .skylist_menu_people {
+       display: none;
+}
+.submenu_wrapper .skylist_card_bottom {
+ 	display: none;
+}
+.submenu_wrapper .skylist_menu_timesort {
+       display: none;
+}
+.submenu_wrapper .skylist_menu_navbar_filter_icon {
+       display: none;
+}
 .chat_contents_wrapper {
 	padding-bottom: 50px;
+}
+
+.submenu_wrapper .skylist {
+	margin-left: 5px;
 }
 
 [find="submenu_wrapper_bottom"] .chat_bottom {
