@@ -1,3 +1,7 @@
+textarea:focus, input:focus{
+    outline: none;
+}
+
 .submenu_newchat_header {
        background-color: #679E52;
        background-image: none;
