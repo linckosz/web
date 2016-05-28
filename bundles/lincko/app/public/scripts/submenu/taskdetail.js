@@ -61,50 +61,6 @@ submenu_list['taskdetail'] = {
 	},
 };
 
-Submenu_select.tasklist_button = function(Elem) {
-	Elem.Add_MenuTasklistButton();
-}
-
-Submenu.prototype.Add_MenuTasklistButton = function() {
-    var that = this;
-    var task_create = function(){
-        console.log('task_create');
-    }
-    var attribute = this.attribute;
-    var submenu_wrapper = this.Wrapper();
-    var Elem = $('#-submenu_form').clone();
-    Elem.prop("id", '');
-    submenu_wrapper.find("[find=submenu_wrapper_bottom]").addClass('submenu_bottom');
-    submenu_wrapper.find("[find=submenu_wrapper_content]").css('bottom', submenu_wrapper.find("[find=submenu_wrapper_bottom]").height());
-    if ("hide" in attribute) {
-        if (attribute.hide) {
-            Elem.find("[find=submenu_form_button]").click(function() { submenu_Hideall(this.preview); });
-        }
-    }
-    if ("action" in attribute) {
-        if ("action_param" in attribute) {
-            Elem.find("[find=submenu_form_button]").click(attribute.action_param, attribute.action);
-        } else {
-            Elem.find("[find=submenu_form_button]").click(attribute.action);
-        }
-    }
-    Elem.find('img').remove();
-    Elem.find("[find=submenu_form_title]").html(attribute.title(this))
-    if ("class" in attribute) {
-        Elem.addClass(attribute['class']);
-    }
-    if ("now" in attribute && typeof attribute.now === "function") {
-        attribute.now(this, Elem);
-    }
-    if (submenu_wrapper.find("[find=submenu_wrapper_bottom]").find(".submenu_bottom_cell").length == 0) {
-        submenu_wrapper.find("[find=submenu_wrapper_bottom]").html(Elem);
-    } else {
-        submenu_wrapper.find("[find=submenu_wrapper_bottom]").find(".submenu_bottom_cell").append(Elem.children());
-    }
-    //Free memory
-    delete submenu_wrapper;
-    return true;
-}
 
 Submenu_select.taskdetail = function(Elem){
 	Elem.Add_taskdetail();
@@ -736,15 +692,8 @@ Submenu.prototype.Add_taskdetail = function() {
 	};	
 
 
-	/*---easyEditor---*/
-	submenu_wrapper.find('[find=description_text]').easyEditor();
-	/*
-	if(that.param.type == 'notes' ){
-		submenu_wrapper.find('[find=description_text]').easyEditor();
-	}
-	*/
-	submenu_wrapper.find('[title=bold]').addClass('icon-Single-Person');
-
+	/*---linckoEditor---*/
+	submenu_wrapper.find('[find=description_text]').linckoEditor();
 
 
 
@@ -768,3 +717,75 @@ Submenu.prototype.Add_taskdetail = function() {
 	delete submenu_wrapper;
 	return true;
 };
+
+
+/*-----linckoEditor------------------------------------*/
+$.fn.linckoEditor = function () {
+	var options = {
+	    buttons: ['font', 'calibri', 'georgia', 'bold', 'italic', 'link', 'h2', 'h3', 'h4', 'alignleft', 'aligncenter', 'alignright', 'image', 'x'],
+	    buttonsHtml: {
+	        'bold': '<i class="fa fa-bold"></i>',
+	        'italic': '<i class="fa fa-italic"></i>',
+	        'link': '<i class="fa fa-link"></i>',
+	        'header-2': '<i class="fa fa-header"></i>2',
+	        'header-3': '<i class="fa fa-header"></i>3',
+	        'header-4': '<i class="fa fa-header"></i>4',
+	        'align-left': '<i class="fa fa-align-left"></i>',
+	        'align-center': '<i class="fa fa-align-center"></i>',
+	        'align-right': '<i class="fa fa-align-right"></i>',
+	        'insert-image': '<i class="fa fa-picture-o"></i>',
+	        'remove-formatting': '<i class="fa fa-ban"></i>'
+	    }
+	};
+
+    return this.each(function () {
+    	this.addClass('linckoEditor');
+        if (!$.data(this, 'plugin_easyEditor')) {
+            $.data(this, 'plugin_easyEditor',
+            new EasyEditor( this, options ));
+        }
+    });
+};
+
+EasyEditor.prototype.font = function(){
+    var _this = this;
+    var settings = {
+        buttonIdentifier: 'font',
+        buttonHtml: 'Font',
+        clickHandler: function(){
+            _this.openDropdownOf('font');
+        },
+        hasChild: true
+    };
+
+    _this.injectButton(settings);
+};
+
+EasyEditor.prototype.calibri = function(){
+    var _this = this;
+    var settings = {
+        buttonIdentifier: 'calibri',
+        buttonHtml: 'Calibri',
+        clickHandler: function(){
+            _this.wrapSelectionWithNodeName({ nodeName: 'span', style: 'font-family: Calibri,sans-serif', keepHtml: true });
+        },
+        childOf: 'font'
+    };
+
+    _this.injectButton(settings);
+};
+
+EasyEditor.prototype.georgia = function(){
+    var _this = this;
+    var settings = {
+        buttonIdentifier: 'georgia',
+        buttonHtml: 'Georgia',
+        clickHandler: function(){
+            _this.wrapSelectionWithNodeName({ nodeName: 'span', style: 'font-family: Georgia,serif', keepHtml: true });
+        },
+        childOf: 'font'
+    };
+
+    _this.injectButton(settings);
+};
+/*------END OF linckoEditor---------------------------*/

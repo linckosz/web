@@ -30,6 +30,24 @@
 }
 */
 
+.skylist_menu_people [people]{
+	padding: 0px 18px;
+    background-size: 28px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.skylist_menu_people [people='1']{
+    background-image: url('/lincko/app/images/app/icons/Single_Person_Blue.png');
+}
+.skylist_menu_people [people='1'].skylist_menu_selected{
+    background-image: url('/lincko/app/images/app/icons/Single_Person_Orange.png');
+}
+.skylist_menu_people [people='2']{
+    background-image: url('/lincko/app/images/app/icons/Multiple_People_Blue.png');
+}
+.skylist_menu_people [people='2'].skylist_menu_selected{
+	background-image: url('/lincko/app/images/app/icons/Multiple_People_Orange.png');
+}
 
 .skylist_menu_timesort {
     position: relative;

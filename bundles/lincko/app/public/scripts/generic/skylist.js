@@ -139,9 +139,9 @@ var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct){
 
 /* enquire.js
  * can't use that.function to register enquire.js ('that' reference to the instance seems to be lost
- * during unregister, must also match the same function as during register. 
+ * during enquire.unregister, must also match the same function as during enquire.register. 
  * solution: store the function in a global object (skylist_enquire)
- *           each instance will be a new key within skylist_enquire (using that.md5id), each skylist to work independently
+ *           each instance will be a new key(that.md5id) within skylist_enquire, each skylist to work independently
  *           skylist_instance.destroy() function must be called when list is no longer used
  *           at .destroy() call, enquire.unregister will remove the handlers inside skylist_enquire
  */
@@ -1354,6 +1354,9 @@ skylist.prototype.menu_construct = function(){
 	//individual or group selection in navbar
 	that.elem_navbar.find('[people]').on('click', function(){
 		var selection = $(this);
+		if(selection.hasClass('skylist_menu_selected')){
+			return false;
+		}
 		$('#skylist_menu_navbar [people]').removeClass('skylist_menu_selected');
 		selection.addClass('skylist_menu_selected');
 		if( selection.attr('people') == 1 ){
