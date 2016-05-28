@@ -53,6 +53,9 @@ var mainMenu = (function() {
                 itemHeight = item.height();
                 maxHeight = maxHeight - itemHeight;
             }
+            else {
+            	return;
+            }
             var data = chatHistoryList[c];
 
             item.on("click", data, function(event) {
