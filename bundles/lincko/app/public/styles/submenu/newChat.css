@@ -50,6 +50,7 @@ textarea:focus, input:focus{
 	color: #FBA026;
 	position: relative;
 	height: 100%;
+	background-color: #EFEFEF;
 }
 
 [find="submenu_wrapper_bottom"] .attachment {
