@@ -28,16 +28,16 @@ textarea:focus, input:focus{
        color: #f8f8f8;
 }
 
-.submenu_newchat_header .icon-Small-Persona {
+.submenu_newchat_header .icon-SmallPersonaiconBlack {
        font-size: 25px;
        text-align: center;
        /*line-height: 2;*/
        vertical-align: middle;
        /*margin-right: 10px;*/
-       color: #FB7D23;
+       color: #FBA026;
 }
 
-.submenu_newchat_header .icon-Small-Persona [find='submenu_button_title'] {
+.submenu_newchat_header .icon-SmallPersonaiconBlack [find='submenu_button_title'] {
        display: none;
 }
 
@@ -47,7 +47,7 @@ textarea:focus, input:focus{
 
 [find="submenu_wrapper_bottom"] .chat_bottom {
 	text-align: left;
-	color: #FB7D23;
+	color: #FBA026;
 	position: relative;
 	height: 100%;
 }

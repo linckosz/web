@@ -24,7 +24,7 @@ submenu_list['newchat'] = {
     "right_button": {
         "style": "title_right_button",
         "title": "",
-        "class": "icon-Small-Persona base_pointer",
+        "class": "icon-SmallPersonaiconBlack base_pointer",
     },
 };
 
