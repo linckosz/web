@@ -739,7 +739,7 @@ $.fn.linckoEditor = function () {
 	};
 
     return this.each(function () {
-    	this.addClass('linckoEditor');
+    	$(this).addClass('linckoEditor');
         if (!$.data(this, 'plugin_easyEditor')) {
             $.data(this, 'plugin_easyEditor',
             new EasyEditor( this, options ));
