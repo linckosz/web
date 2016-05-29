@@ -3,7 +3,10 @@
 var chatlist_subConstruct = function(){
         var that = this;
         that.elem_newcardCircle.click( function() {
-            submenu_Build("contacts", false, false, {id:app_content_menu.projects_id}, true);
+            submenu_Build("contacts", false, false,
+                {id:app_content_menu.projects_id,
+                'contactsID': _app_contacts_gen_chatcontacts(),
+                }, true);
             return false;
         })
         .appendTo(that.list_wrapper);
@@ -18,7 +21,10 @@ function app_layers_chat_feedChat(parent, handler) {
     );
     parent.delegate(".skylist_card", "click", handler);
     parent.delegate(".skylist_newcardCircle", "click", function() {
-        submenu_Build("contacts", false, false, {id:app_content_menu.projects_id}, true);
+        submenu_Build("contacts", false, false, {
+            'id': app_content_menu.projects_id,
+            'contactsID': _app_contacts_gen_chatcontacts(),
+        }, true);
         return false;
     });
 }

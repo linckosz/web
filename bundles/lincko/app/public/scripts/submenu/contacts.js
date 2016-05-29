@@ -23,13 +23,15 @@ submenu_list['contacts'] = {
         "action": function() {
             var userList = {};
             var nameList = "";
-            var items = $(this).parents(".submenu_wrapper").find(".submenu_contact_item .checked");
-            if (items.length == 1) {
+
+            var IDList = _submenu_get_contacts(this);
+            IDList.push(wrapper_localstorage.uid);
+            if (IDList.length == 1) {
                 return;
             }
-            for (var i=0;i<items.length; i++) {
-                userList[$(items[i]).parent().find(".id").val()] = true;
-                nameList = nameList + " " + $(items[i]).parent().find(".username").html();
+            for (var i=0;i<IDList.length; i++) {
+                userList[IDList[i]] = true;
+                nameList = nameList + " " + Lincko.storage.data.users[IDList[i]]['-username'];
             }
             var tmp = $(this).parents('.submenu_newchat_header').attr('class').split(" ");
             for (var t in tmp) {
@@ -88,18 +90,28 @@ submenu_list['contacts'] = {
     }
 };
 
-function _app_submenu_contacts_getContactList(projectId) {
-    // TOTO: this part need to be change
-    var logoList = ['envira', 'anchor','balance-scale', 'bomb', 'cubes', 'gavel', 'hand-spock-o', 'heartbeat', 'soccer-ball-o','heart'];
+/*This is for outside usage to generate contacts list for chat*/
+function _app_contacts_gen_chatcontacts(type, id) {
+    var projectId = app_content_menu.projects_id;
     if (projectId) {
         var contactsID = Object.keys(Lincko.storage.data.projects[projectId]._perm);
     }
     else {
         var contactsID = Object.keys(Lincko.storage.data.users);
     }
+    var self_index = contactsID.indexOf(wrapper_localstorage.uid.toString());
+    if (self_index > -1) {
+        contactsID.splice(self_index, 1);
+    }
+    return contactsID;
+}
+
+Submenu.prototype._prepare_contactsList = function() {
+	var logoList = ['envira', 'anchor','balance-scale', 'bomb', 'cubes', 'gavel', 'hand-spock-o', 'heartbeat', 'soccer-ball-o','heart'];
+
     var contactList = [];
-    for (var c in contactsID) {
-        var id = contactsID[c];
+    for (var c in this.param.contactsID) {
+        var id = this.param.contactsID[c];
         contactList.push({
             'username': Lincko.storage.data.users[id]['-username'],
             'id': id,
@@ -109,14 +121,29 @@ function _app_submenu_contacts_getContactList(projectId) {
     return contactList;
 }
 
-function _app_submenu_contacts_genContacts(position) {
-    var projectId = app_content_menu.projects_id;
-	var contacts = _app_submenu_contacts_getContactList(projectId);
-	for(c in contacts) {
-		var Elem = $('#-submenu_app_contacts').clone();
-		Elem.prop('id', 'contact'+c);
-		Elem.find('.username').text(contacts[c].username);
-		Elem.find('.contact_icon').addClass('fa').addClass( "fa-"+contacts[c].logo);
+
+Submenu_select.contacts = function(Elem) {
+	Elem.Add_ContactContents();
+}
+
+/*This "getContacts" method needs to be used in submit acction*/
+function _submenu_get_contacts(elem) {
+    var items = $(elem).parents(".submenu_wrapper").find(".submenu_contact_item .checked").parent().find("input.id");
+    var keys = [];
+    for (var i = 0; i < items.length; i++) {
+        keys.push($(items[i]).val());
+    }
+    return keys;
+
+}
+
+Submenu.prototype._displayContacts = function(position, contacts) {
+    var submenuInst = this;
+    for(c in contacts) {
+        var Elem = $('#-submenu_app_contacts').clone();
+        Elem.prop('id', 'contact'+c);
+        Elem.find('.username').text(contacts[c].username);
+        Elem.find('.contact_icon').addClass('fa').addClass( "fa-"+contacts[c].logo);
         Elem.find('.id').val(contacts[c].id);
         Elem.click(function() {
             if ($(this).find('.checked').length != 0) {
@@ -124,18 +151,13 @@ function _app_submenu_contacts_genContacts(position) {
                 return -1;
             }
             $(this).find('.check').addClass('checked');
+            if ('type' in submenuInst.param && submenuInst.param.type == "projects") {
+                $(this).siblings().find(".check").removeClass("checked");
+            }
             return -1;
         });
-        if (contacts[c].id == wrapper_localstorage.uid) {
-            Elem.hide();
-            Elem.find('.check').addClass('checked');
-        }
-		position.append(Elem);
-	}
-}
-
-Submenu_select.contacts = function(Elem) {
-	Elem.Add_ContactContents();
+        position.append(Elem);
+    }
 }
 
 Submenu.prototype.Add_ContactContents = function() {
@@ -146,5 +168,6 @@ Submenu.prototype.Add_ContactContents = function() {
     position.addClass('overthrow');
     position.empty();
     //var Elem = $("[find=submenu_wrapper_title]", '#-submenu_app_chat_chatmenu').clone();
-    _app_submenu_contacts_genContacts(position);
+    //_app_submenu_contacts_genContacts(position);
+    this._displayContacts(position, this._prepare_contactsList());
 }
