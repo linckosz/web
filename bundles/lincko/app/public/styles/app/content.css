@@ -39,10 +39,18 @@
     font-size: 25px;
     margin: 12px 12px;
 }
+
 #app_content_top_title {
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
+}
+
+.app_content_top_img {
+	height: 24px;
+	margin: 12px 0 0 12px;
+	padding: 0;
+	cursor: pointer; cursor: hand;
 }
 
 #app_content_top_arrow {

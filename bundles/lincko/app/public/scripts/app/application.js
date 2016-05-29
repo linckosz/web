@@ -296,13 +296,6 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 		$.each(Elem.find('.app_application_width_child'), function() {
 			$(this).removeClass('app_application_width').css('width', width_child);
 		});
-		Button.velocity(
-			{ rotateZ: 0, },
-			{
-				duration: time,
-				delay: delay,
-			}
-		);
 		//The blur is hard to calculate, it creates some flickering
 		if(wrapper_browser('webkit')){
 			Blur.velocity(
@@ -353,7 +346,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 					setTimeout(function(){
 						$(window).trigger('resize');
 						app_application_submenu_position();
-
+						//Elem.removeClass('app_application_visible');
 						Blur.removeClass('app_application_blur');
 						Block.removeClass('app_application_block_visible');
 					},50);
@@ -367,21 +360,12 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 		if(responsive.test("maxTablet")){
 			time = Math.floor(2*time);
 		}
-
+		//Elem.addClass('app_application_visible');
 		Block.addClass('app_application_block_visible');
 		$.each(Elem.find('.app_application_width_child'), function() {
 			$(this).css('width', width_child);
 		});
 
-		/*if(responsive.test("minTablet")){
-			Button.velocity(
-				{ rotateZ: 90, },
-				{
-					duration: time,
-					delay: delay,
-				}
-			);
-		}*/
 		if(responsive.test("isMobileL") || force_blur){
 			//The blur is hard to calculate, it creates some flickering
 			if(wrapper_browser('webkit')){
