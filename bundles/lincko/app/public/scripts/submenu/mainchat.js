@@ -68,7 +68,8 @@ Submenu.prototype.Add_ChatContent = function() {
                 var title = Lincko.storage.get('chats', id, '+title');
             }
             else {
-                var id = app_content_menu.projects_id;
+                var tmp = $(this).attr("id").split("_");
+                var id = tmp[tmp.length-1];
                 var title = Lincko.storage.get("projects", id, "+title") + " Activity";
             }
             submenu_Build("newchat", true, false, {

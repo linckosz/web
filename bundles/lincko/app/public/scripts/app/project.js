@@ -11,16 +11,7 @@ var mainMenu = (function() {
         $(position).append(item);
         item.removeAttr('id', '');
         item.removeAttr('style', '');
-        /*
-        var cnt = notifier[data.type]['get'](data.id);
-        if (cnt) {
-            if (cnt > 99) {
-                item.find('.notification').text('...').show();
-            } else {
-                item.find('.notification').text(cnt).show();
-            }
-        }
-        */
+
         if (data.type == "history") {
             name = Lincko.storage.get("projects", data.id, "+title") + " Activity";
             //item.find('img.logo').attr('src', 'icon-Multiple-People');
