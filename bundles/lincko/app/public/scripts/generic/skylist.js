@@ -1340,15 +1340,11 @@ skylist.prototype.taskClick = function(event,task_elem){
 skylist.prototype.openDetail = function(/*open,*/ task_elem){
 	var that = this;
 	//that.list.removeClass('skylist_noPreviewLayer');
-	var preview = true;
-	if (responsive.test("maxMobileL")){
-		preview = false;
-	}
 	var openSuccess = submenu_Build(
 	'taskdetail', null, null, {
 		"type":that.list_type, 
 		"id":task_elem.data('item_id'),
-	}, preview);
+	}, true);
 	if( openSuccess ){
 		that.elem_task_all.removeClass('skylist_card_hover');
 		task_elem.addClass('skylist_card_hover');
@@ -1369,7 +1365,7 @@ skylist.prototype.menu_construct = function(){
 	that.elem_navbar.find('[people]').on('click', function(){
 		var selection = $(this);
 		if(selection.hasClass('skylist_menu_selected')){
-			return false;
+			//return false;
 		}
 		$('#skylist_menu_navbar [people]').removeClass('skylist_menu_selected');
 		selection.addClass('skylist_menu_selected');
@@ -1417,7 +1413,7 @@ skylist.prototype.menu_construct = function(){
 		elem_search_input.focus();
 	});
 
-	elem_search_clear.on('mousedown', function(event){
+	elem_search_clear.on('mousedown touchstart', function(event){
 		event.preventDefault();
 		elem_search_input.val('');
 		elem_search_input.keyup();
@@ -1624,23 +1620,26 @@ skylist.prototype.addFilter_tasks = function(elem_filter_pane){
 	$('#-skylist_filter_tasks_divider').clone().prop('id','').appendTo(elem_filter_pane);
 	$('#-skylist_filter_tasks_checkbox_wrapper').clone().prop('id','').appendTo(elem_filter_pane);
 
+	var elem_filterIcon = that.elem_navbar.find('.skylist_menu_navbar_filter_icon');
+
 	that.elem_navbar.find('[find=radio_wrapper] .skylist_menu_navbar_filter_pane_optionWrapper').click(function(){
 		var elem_radio = $(this).closest('[find=radio_wrapper]').find('.skylist_menu_navbar_filter_pane_optionWrapper [find=radio]');
 		if( $(this).find('[find=radio]').hasClass('fa-circle') ){
-			that.elem_navbar.find('.skylist_menu_navbar_filter_icon').click();
+			that.tasklist_update('sort_alt', !that.Lincko_itemsList_filter.sort_alt );
+			elem_filterIcon.click();
 			return false;
 		}
 		else{
 			elem_radio.removeClass('fa-circle');
 			$(this).find('[find=radio]').toggleClass('fa-circle');
 			that.tasklist_update('sort_alt', !that.Lincko_itemsList_filter.sort_alt );
-			that.elem_navbar.find('.skylist_menu_navbar_filter_icon').click();
+			elem_filterIcon.click();
 		}
 	});
 	that.elem_navbar.find('[find=checkbox_wrapper] .skylist_menu_navbar_filter_pane_optionWrapper').click(function(){
 		$(this).find('[find=checkbox]').toggleClass('fa-check');
 		that.tasklist_update('hide_completed', !that.Lincko_itemsList_filter.hide_completed );
-		that.elem_navbar.find('.skylist_menu_navbar_filter_icon').click();
+		elem_filterIcon.click();
 	});
 }
 

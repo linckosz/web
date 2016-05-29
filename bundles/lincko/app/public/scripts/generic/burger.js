@@ -280,13 +280,12 @@ function burger_calendar_linckofy(inst, inline_datepicker){
 
 function burger_calendar (elem_timestamp, elem_display){
     var elem_input;
-
     elem_timestamp.datepicker(
     {
         //altFormat: "M d",
         //altField: elem_alt,
-        dayNamesMin: [ "S", "M", "T", "W", "T", "F", "S" ],//toto translation
-        monthNames: [ "Januar", "Februar", "Marts", "April", "Maj", "Juni", "Juli", "August", "September", "Oktober", "November", "December" ],//toto translation
+        dayNamesMin: (new wrapper_date()).day_very_short,
+        monthNames: (new wrapper_date()).month,
         showOtherMonths: true,
         dateFormat: '@',
         gotoCurrent: true,
