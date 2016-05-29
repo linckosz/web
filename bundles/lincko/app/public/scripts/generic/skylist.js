@@ -531,8 +531,13 @@ skylist.prototype.filter_by_search = function(items, filter){
 
 			for( var j=0; j < filter_array.length; j++){ //for each word
 				word = filter_array[j];
+				var userOnly = false;
+				if( word[0] == '@'){
+					word = word.slice(1);
+					userOnly = true;
+				}
 				userid_array = that.search_by_username(word);
-				if(Lincko.storage.searchArray('word', word, [item]).length > 0){
+				if(Lincko.storage.searchArray('word', word, [item]).length > 0 && !userOnly){
 					push = true;
 					break;
 				}
