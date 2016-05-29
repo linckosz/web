@@ -85,7 +85,9 @@ var chatFeed = (function() {
     };
     var RESOURCE_HANDLERS = {
         'tasks': function(taskid, elem) {
-            submenu_Build('taskdetail', null, null, {'type': 'tasks', 'id': taskid}, true);
+            var tmp = $(elem).parents(".submenu_wrapper").attr("id").split("_");
+            var preview = JSON.parse(tmp[tmp.length-1]);
+            submenu_Build('taskdetail', true, null, {'type': 'tasks', 'id': taskid}, preview);
             return false;
         },
         'files': function(fileid, elem) {

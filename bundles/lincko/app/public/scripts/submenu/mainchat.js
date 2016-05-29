@@ -55,6 +55,22 @@ Submenu.prototype.Add_ChatContent = function() {
         );
     }
     */
+    position.delegate(".skylist_card", "click", function() {
+            if ($(this).attr('type') != 'history') {
+                var tmp = $(this).attr("id").split("_");
+                var id = tmp[tmp.length-1];
+                var title = Lincko.storage.get('chats', id, '+title');
+            }
+            else {
+                var id = app_content_menu.projects_id;
+                var title = Lincko.storage.get("projects", id, "+title") + " Activity";
+            }
+            submenu_Build("newchat", true, false, {
+                type: $(this).attr('type'),
+                id: id,
+                title: title }, false);
+            return false;
+        });
     //Free memory
     delete submenu_wrapper;
     return true;

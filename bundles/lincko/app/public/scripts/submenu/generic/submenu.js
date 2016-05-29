@@ -174,7 +174,7 @@ function Submenu(menu, next, param, preview) {
 	//this.id = this.layer+"_submenu_wrapper_"+md5(Math.random());
 
 	//The creation or reuse of HTML element seems to have some display problem, and DIV deletion issue
-	this.id = this.layer + "_submenu_wrapper_" + menu + "_" + parseInt(this.preview, 10);
+	this.id = this.layer + "_submenu_wrapper_" + menu + "_" + this.preview;
 
 	this.zIndex = submenu_zindex[this.preview] + this.layer;
 	this.display = true;
