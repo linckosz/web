@@ -12,6 +12,12 @@ function mailchimp_ajax(email){
 		contentType: 'application/json; charset=UTF-8',
 		dataType: 'json',
 		timeout: 10000,
+		beforeSend: function(jqXHR, settings){
+			$(document.body).css('cursor', 'progress');
+			$('#home_news_submit_progress').css("display", "block");
+			$('#home_news_submit_progress').show();
+			base_format_form_single($('#home_news_submit_progress'));
+		},
 		success: function(data){
 			if(data.status=="subscribed"){
 				base_show_error(Lincko.Translation.get('web', 11, 'js'), false);
@@ -20,10 +26,13 @@ function mailchimp_ajax(email){
 			} else {
 				base_show_error(Lincko.Translation.get('web', 9, 'js'), true);
 			}
-			
 		},
 		error: function(xhr_err, ajaxOptions, thrownError){
 			base_show_error(Lincko.Translation.get('web', 9, 'js'), true);
+		},
+		complete: function(){
+			$(document.body).css('cursor', '');
+			$('#home_news_submit_progress').hide();
 		},
 	});
 }

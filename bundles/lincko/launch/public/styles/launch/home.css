@@ -162,6 +162,10 @@ body {
 	background-color: #EF9829 !important;
 }
 
+#home_news_submit_progress {
+	margin-top: 2px;
+}
+
 /* Mobile phone in Portrait */
 @media only screen and (max-width: 1279px){
 	.home_table_center {

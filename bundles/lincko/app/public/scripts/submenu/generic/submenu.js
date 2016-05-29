@@ -1222,6 +1222,7 @@ var submenu_form_cb_begin = function() {
 		var submit_progress_bar = wrapper_objForm.parent().find("[find=submit_progress_bar]");
 		base_form_field_hide_error();
 		base_format_form_single(submit_progress_bar);
+		submit_progress_bar.css("display", "block");
 		submit_progress_bar.show();
 	}
 };
@@ -1235,6 +1236,7 @@ var submenu_form_cb_hide_progress = function() {
 	if (wrapper_objForm) {
 		var submit_progress_bar = wrapper_objForm.parent().find("[find=submit_progress_bar]");
 		base_format_form_single(submit_progress_bar);
+		submit_progress_bar.css("display", "none");
 		submit_progress_bar.hide();
 	}
 }

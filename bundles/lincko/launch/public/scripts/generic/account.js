@@ -50,6 +50,7 @@ var account_joinus_cb_begin = function(){
 	account_hide_error();
 	$(document.body).css('cursor', 'progress');
 	$('#account_joinus_submit_progress').show();
+	$('#account_joinus_submit_progress').css("display", "block");
 	base_format_form_single($('#account_joinus_submit_progress'));
 };
 
@@ -62,6 +63,7 @@ var account_signin_cb_begin = function(){
 	account_hide_error();
 	$(document.body).css('cursor', 'progress');
 	$('#account_signin_submit_progress').show();
+	$('#account_signin_submit_progress').css("display", "block");
 	base_format_form_single($('#account_signin_submit_progress'));
 };
 

@@ -31,10 +31,10 @@
 		<label class="home_label_inside" for="home_news_email">
 			<span>{{ _trans('web', 4, 21, 'html') }}{# e-mail #}</span>
 			<input type="email" id="home_news_email" name="email" value="" class="selectable" />
+			<img class="submit_progress_bar" id="home_news_submit_progress" src="{{ _filelatest('/lincko/launch/images/generic/base/generic/loading_bar.gif') }}"/>
 		</label>
 		<label class="minTablet" for="home_news_submit">
 			<span id="home_news_submit" >{{ _trans('web', 4, 18, 'input') }}{# Register #}</span>
-			<img class="submit_progress_bar" id="home_news_submit_progress" src="{{ _filelatest('/lincko/launch/images/generic/base/generic/loading_bar.gif') }}"/>
 		</label>
 	</div>
 	<div id="home_error" class="display_none"></div>

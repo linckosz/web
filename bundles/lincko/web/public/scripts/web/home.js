@@ -28,6 +28,7 @@ var home_cb_begin = function(){
 	home_hide_error();
 	$(document.body).css('cursor', 'progress');
 	base_format_form_single($('#home_joinus_submit_progress'));
+	$('#home_joinus_submit_progress').css("display", "block");
 	$('#home_joinus_submit_progress').show();
 };
 
