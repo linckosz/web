@@ -189,9 +189,11 @@ var mainMenu = (function() {
         'feed': feedChatItem,
     };
 })();
+
 JSfiles.finish(function() {
     mainMenu.init();
-});
+}, 50);
+
 
 function app_project_quick_upload_display(Elem, show) {
 	var Obj_div = $('#app_project_quick_upload');
