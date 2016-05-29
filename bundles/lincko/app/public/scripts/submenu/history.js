@@ -402,7 +402,7 @@ var chatFeed = (function() {
                         Elem = item.renderHistoryTemplate();
                     else
                         Elem = item.renderChatTemplate();
-                    Elem.prependTo(wrapper);
+                    Elem.prependTo(position.find(".chat_contents_wrapper"));
 
                     dateStamp = checkRecentDate(item.item.timestamp, i);
                     if (dateStamp) {
