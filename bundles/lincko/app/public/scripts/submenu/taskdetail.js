@@ -710,8 +710,8 @@ Submenu.prototype.Add_taskdetail = function() {
 	elem_description_text.blur(function(){
 		console.log('destroyEditor: '+destroyEditor_onBlur);
 		if(editorInst instanceof EasyEditor === true && destroyEditor_onBlur) {
-			editorInst.detachEvents();
-			editorInst = null;
+			//editorInst.detachEvents();
+			//editorInst = null;
 		}
 		else if(!destroyEditor_onBlur){
 			destroyEditor_onBlur = true;
@@ -747,11 +747,13 @@ Submenu.prototype.Add_taskdetail = function() {
 /*-----linckoEditor------------------------------------*/
 function linckoEditor(elem){
 	var options = {
-	    buttons: ['font', 'calibri', 'georgia', 'bold', 'italic', 'link', 'h2', 'h3', 'h4', 'alignleft', 'aligncenter', 'alignright', 'image', 'x'],
+	    buttons: ['font', 'calibri', 'georgia', 'bold', 'italic', 'link','h', 'h1', 'h2', 'h3', 'h4', 'alignleft', 'aligncenter', 'alignright', 'image', 'x'],
 	    buttonsHtml: {
-	        'bold': '<i class="fa fa-bold"></i>',
+	        //'bold': '<i class="fa fa-bold"></i>',
 	        'italic': '<i class="fa fa-italic"></i>',
 	        'link': '<i class="fa fa-link"></i>',
+	        'header': '<i class="fa fa-header"></i>',
+	        'header-1': '<i class="fa fa-header"></i>1',
 	        'header-2': '<i class="fa fa-header"></i>2',
 	        'header-3': '<i class="fa fa-header"></i>3',
 	        'header-4': '<i class="fa fa-header"></i>4',
@@ -760,11 +762,22 @@ function linckoEditor(elem){
 	        'align-right': '<i class="fa fa-align-right"></i>',
 	        'insert-image': '<i class="fa fa-picture-o"></i>',
 	        'remove-formatting': '<i class="fa fa-ban"></i>'
+	    },
+	    overwriteButtonSettings: {
+	    	'header-2': {
+	    		childOf: 'header',
+	    	},
+	    	'header-3': {
+	    		childOf: 'header',
+	    	},
+	    	'header-4': {
+	    		childOf: 'header',
+	    	},
 	    }
 	};
 
 	var editorInst = new EasyEditor(elem, options);
-
+	console.log(editorInst);
 	return editorInst;
 }
 
@@ -805,6 +818,34 @@ EasyEditor.prototype.georgia = function(){
             _this.wrapSelectionWithNodeName({ nodeName: 'span', style: 'font-family: Georgia,serif', keepHtml: true });
         },
         childOf: 'font'
+    };
+
+    _this.injectButton(settings);
+};
+
+EasyEditor.prototype.h = function(){
+    var _this = this;
+    var settings = {
+        buttonIdentifier: 'header',
+        buttonHtml: 'H',
+        clickHandler: function(){
+            _this.openDropdownOf('header');
+        },
+        hasChild: true
+    };
+
+    _this.injectButton(settings);
+};
+
+EasyEditor.prototype.h1 = function(){
+    var _this = this;
+    var settings = {
+        buttonIdentifier: 'header-1',
+        buttonHtml: 'H1',
+        clickHandler: function(){
+            _this.wrapSelectionWithNodeName({ nodeName: 'h1', blockElement: true });
+        },
+        childOf: 'header'
     };
 
     _this.injectButton(settings);
