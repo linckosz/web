@@ -306,8 +306,7 @@ function burger_calendar (elem_timestamp, elem_display){
         event.stopPropagation();
         if( responsive.test("maxMobileL")){
             var param = {elem_inputOrig:elem_timestamp };
-            console.log(param);
-            submenu_Build('calendar',null,null,param,false);
+            submenu_Build('calendar',true,false,param);
             return false;
         }
 

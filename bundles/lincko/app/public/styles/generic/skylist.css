@@ -486,7 +486,58 @@
 
 
 
+
+/*
+ * ----------skylist_maxMobileL---------------------------
+ */
+ /*.skylist_maxMobileL_force .skylist,*/
+.skylist_maxMobileL .skylist {
+	margin-left: 5px;
+	width: initial;
+}
+/*.skylist_maxMobileL_force .skylist_menu_navbar,*/
+.skylist_maxMobileL .skylist_menu_navbar {
+	display: table;
+	padding:0;
+}
+/*.skylist_maxMobileL_force .skylist_menu_active:before,*/
+.skylist_maxMobileL .skylist_menu_active:before {
+	display:none;
+}
+/*.skylist_maxMobileL_force .skylist_menu_timesort,*/
+.skylist_maxMobileL .skylist_menu_timesort {
+    text-align: center;
+    overflow: hidden;
+    margin: 0px 67px 0px 67px;
+    line-height: 25px;
+}
+/*.skylist_maxMobileL_force .skylist_menu_timesort_text_wrapper,*/
+.skylist_maxMobileL .skylist_menu_timesort_text_wrapper {
+	left:0;
+	right:0;
+	margin:0 auto;
+	margin-top: 5px;
+	position:absolute !important;
+}
+/*.skylist_maxMobileL_force .skylist_menu_timesort span,*/
+.skylist_maxMobileL .skylist_menu_timesort span{
+	position: relative; /*toto*/
+	text-align: center;
+}
+/*.skylist_maxMobileL_force .skylist_menu_navbar_filter_pane,*/
+.skylist_maxMobileL .skylist_menu_navbar_filter_pane {
+	left: 0px;
+	width: initial;
+}
+
+/*
+ * ----------END OF skylist_maxMobileL--------------------
+ */
+
+
+
 /*MobileL and down */
+/*
 @media only screen and (max-width: 900px) {
 	.skylist {
 		margin-left: 5px;
@@ -507,6 +558,7 @@
     	padding-bottom: 5px !important;
 	}
 	*/
+	/*
 	.skylist_menu_active:before {
 		display:none;
 	}
@@ -521,7 +573,8 @@
 		margin: 0px 120px 0px 0px;
 		padding: 0;
 		*/
-	}
+	/*}
+	/*
 	.skylist_menu_timesort_text_wrapper {
 		left:0;
 		right:0;
@@ -531,7 +584,7 @@
 	}
 	.skylist_menu_timesort span{
 		position: relative; /*toto*/
-		text-align: center;
+		/*text-align: center;
 	}
 	/*
 	.skylist_menu_navbar_search {
@@ -543,7 +596,7 @@
 	}
 	*/
 
-
+/*
 	.skylist {
 		width: initial;
 	}

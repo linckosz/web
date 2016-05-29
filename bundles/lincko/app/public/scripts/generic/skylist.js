@@ -174,6 +174,10 @@ skylist.prototype.construct = function(){
 		that.subConstruct_default();
 	}
 
+	if(that.list_wrapper.hasClass('skylist_maxMobileL_force')){
+		that.list_wrapper.addClass('skylist_maxMobileL');
+	}
+
 	$(window).on("resize.skylist_"+that.md5id, function(){
 		clearTimeout(that.window_resize_timeout);
 		that.window_resize_timeout = setTimeout(function(){
@@ -209,7 +213,17 @@ skylist.prototype.construct = function(){
 	/*--------------Enquire.JS------------------------------*/
 	skylist_enquire[that.md5id] = {};
 	skylist_enquire[that.md5id].minTablet = function(){ that.minTablet(); }
-	skylist_enquire[that.md5id].maxMobileL = function(){ that.maxMobileL(); }
+	skylist_enquire[that.md5id].maxMobileL = {
+		match: function(){
+			that.list_wrapper.addClass('skylist_maxMobileL');
+			that.maxMobileL();
+		},
+		unmatch: function(){
+			if(!that.list_wrapper.hasClass('skylist_maxMobileL_force')){
+				that.list_wrapper.removeClass('skylist_maxMobileL');
+			}
+		}
+	};
 	skylist_enquire[that.md5id].minMobileL = function(){ that.minMobileL(); }
 	skylist_enquire[that.md5id].isMobile = function(){ that.isMobile(); }
 

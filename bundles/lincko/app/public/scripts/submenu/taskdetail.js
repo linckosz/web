@@ -693,7 +693,31 @@ Submenu.prototype.Add_taskdetail = function() {
 
 
 	/*---linckoEditor---*/
-	submenu_wrapper.find('[find=description_text]').linckoEditor();
+	var editorInst = null;
+
+	submenu_wrapper.find('[find=description_text]').focus(function(){
+		if(editorInst instanceof EasyEditor === false) {
+			//editorInst = submenu_wrapper.find('[find=description_text]').linckoEditor().data('plugin_easyEditor');
+			editorInst = new EasyEditor(this);
+			console.log(editorInst);
+			//editorInst = linckoEditor(submenu_wrapper.find('[find=description_text]'));
+		}
+		/*
+		if (!$.data(this, 'plugin_easyEditor')) {
+            $.data(this, 'plugin_easyEditor',
+            editorInst = linckoEditor(this));
+        }
+        */
+	});
+	submenu_wrapper.find('[find=description_text]').blur(function(){
+		console.log('blur');
+
+		if(editorInst instanceof EasyEditor === true) {
+					console.log(editorInst);
+                editorInst.detachEvents();
+                editorInst = null;
+            }
+	});
 
 
 
@@ -720,6 +744,30 @@ Submenu.prototype.Add_taskdetail = function() {
 
 
 /*-----linckoEditor------------------------------------*/
+function linckoEditor(elem){
+	var options = {
+	    buttons: ['font', 'calibri', 'georgia', 'bold', 'italic', 'link', 'h2', 'h3', 'h4', 'alignleft', 'aligncenter', 'alignright', 'image', 'x'],
+	    buttonsHtml: {
+	        'bold': '<i class="fa fa-bold"></i>',
+	        'italic': '<i class="fa fa-italic"></i>',
+	        'link': '<i class="fa fa-link"></i>',
+	        'header-2': '<i class="fa fa-header"></i>2',
+	        'header-3': '<i class="fa fa-header"></i>3',
+	        'header-4': '<i class="fa fa-header"></i>4',
+	        'align-left': '<i class="fa fa-align-left"></i>',
+	        'align-center': '<i class="fa fa-align-center"></i>',
+	        'align-right': '<i class="fa fa-align-right"></i>',
+	        'insert-image': '<i class="fa fa-picture-o"></i>',
+	        'remove-formatting': '<i class="fa fa-ban"></i>'
+	    }
+	};
+
+	var editorInst = new EasyEditor(elem, options);
+
+	return editorInst;
+}
+
+
 $.fn.linckoEditor = function () {
 	var options = {
 	    buttons: ['font', 'calibri', 'georgia', 'bold', 'italic', 'link', 'h2', 'h3', 'h4', 'alignleft', 'aligncenter', 'alignright', 'image', 'x'],
