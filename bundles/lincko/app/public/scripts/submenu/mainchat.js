@@ -1,7 +1,7 @@
 submenu_list['mainchat'] = {
     //Set the title of the top
     "_title": {
-        "style": "title",
+        "style": "customized_title",
         "title": "All Chats", //Chat room
         "class": "submenu_newchat_header",
     },
@@ -9,6 +9,12 @@ submenu_list['mainchat'] = {
     "chat_content": {
         "style": "chat_content",
         "title": "",
+    },
+    "left_button": {
+        "style": "title_left_button",
+        "title": Lincko.Translation.get('app', 25, 'html'), //Close
+        'hide': true,
+        "class": "base_pointer submenu_newchat_header_close",
     },
 };
 
