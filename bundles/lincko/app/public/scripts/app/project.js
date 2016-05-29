@@ -227,7 +227,6 @@ $('#app_project_close').click(function(){
 	}
 });
 
-
 $('#app_project_settings_img').click(function(){
 	submenu_Build("settings");
 });

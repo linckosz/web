@@ -22,7 +22,7 @@
 		{% endif %}
 		<div id="account_joinus_box">
 			<form class="account_form" id="account_joinus_form" action="user/create" method="post" onsubmit="return wrapper_sendForm(this, account_joinus_cb_success, account_joinus_cb_error, account_joinus_cb_begin, account_joinus_cb_complete);">
-				<div class="account_joinus_box_div">
+				<div class="{% if beta_code %}account_joinus_box_div{% endif %}">
 					<label class="account_label_inside" for="account_joinus_email">
 						<span>{{ _trans('web', 5, 2, 'html') }}{# Email #}</span>
 						<input type="email" id="account_joinus_email" name="email" value="" class="selectable" />
@@ -50,7 +50,7 @@
 		</div>
 		<div id="account_signin_box">
 			<form class="account_form" id="account_signin_form" action="user/signin" method="post" onsubmit="return wrapper_sendForm(this, account_signin_cb_success, account_signin_cb_error, account_signin_cb_begin, account_signin_cb_complete);">
-				<div class="account_signin_box_div">
+				<div class="{% if beta_code %}account_signin_box_div{% endif %}">
 					<label class="account_label_inside" for="account_signin_email">
 						<span>{{ _trans('web', 5, 2, 'html') }}{# Email #}</span>
 						<input type="email" id="account_signin_email" name="email" value="{{ youjian|lower }}" class="selectable" />
@@ -63,7 +63,7 @@
 					<input id="account_signin_submit" type='button' value="{{ _trans('web', 5, 4, 'input') }}{# Sign In #}" onclick="$(this.form).submit();" />
 					<img class="submit_progress_bar" id="account_signin_submit_progress" src="{{ _filelatest('/lincko/launch/images/generic/base/generic/loading_bar.gif') }}"/>
 				</div>
-				<div>
+				<div class="account_signin_appendix">
 					<label for="account_signin_remember" id="account_signin_remember_label">
 						<input type="checkbox" id="account_signin_remember" name="remember" {% if jizhu %}checked="checked"{% endif %} />
 						{{ _trans('web', 5, 5, 'html') }}{# Remember me #}

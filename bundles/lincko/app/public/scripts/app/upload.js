@@ -101,17 +101,17 @@ function app_upload_set_launcher(parent_type, parent_id, submenu, start){
 
 function app_upload_open_files(parent_type, parent_id, submenu, start){
 	app_upload_set_launcher(parent_type, parent_id, submenu, start);
-	$('#app_project_quick_upload_files').click();
+	$('#app_upload_form_files').click();
 }
 
 function app_upload_open_photo(parent_type, parent_id, submenu, start){
 	app_upload_set_launcher(parent_type, parent_id, submenu, start);
-	$('#app_project_quick_upload_photo').click();
+	$('#app_upload_form_photo').click();
 }
 
 function app_upload_open_video(parent_type, parent_id, submenu, start){
 	app_upload_set_launcher(parent_type, parent_id, submenu, start);
-	$('#app_project_quick_upload_video').click();
+	$('#app_upload_form_video').click();
 }
 
 var app_upload_auto_launcher_timeout;
