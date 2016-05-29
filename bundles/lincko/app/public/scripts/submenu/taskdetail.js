@@ -693,31 +693,32 @@ Submenu.prototype.Add_taskdetail = function() {
 
 
 	/*---linckoEditor---*/
+	var elem_description_text = submenu_wrapper.find('[find=description_text]');
 	var editorInst = null;
+	var destroyEditor_onBlur = true;
 
-	submenu_wrapper.find('[find=description_text]').focus(function(){
+	elem_description_text.focus(function(){
 		if(editorInst instanceof EasyEditor === false) {
-			//editorInst = submenu_wrapper.find('[find=description_text]').linckoEditor().data('plugin_easyEditor');
-			editorInst = new EasyEditor(this);
-			console.log(editorInst);
-			//editorInst = linckoEditor(submenu_wrapper.find('[find=description_text]'));
+			editorInst = new linckoEditor(this);
+			editorInst.$toolbarContainer.on('mousedown touchdown', function(){
+				console.log('toolbar clicked');
+				destroyEditor_onBlur = false;
+			});
+			$(this).focus();
 		}
-		/*
-		if (!$.data(this, 'plugin_easyEditor')) {
-            $.data(this, 'plugin_easyEditor',
-            editorInst = linckoEditor(this));
-        }
-        */
 	});
-	submenu_wrapper.find('[find=description_text]').blur(function(){
-		console.log('blur');
-
-		if(editorInst instanceof EasyEditor === true) {
-					console.log(editorInst);
-                editorInst.detachEvents();
-                editorInst = null;
-            }
+	elem_description_text.blur(function(){
+		console.log('destroyEditor: '+destroyEditor_onBlur);
+		if(editorInst instanceof EasyEditor === true && destroyEditor_onBlur) {
+			editorInst.detachEvents();
+			editorInst = null;
+		}
+		else if(!destroyEditor_onBlur){
+			destroyEditor_onBlur = true;
+			elem_description_text.focus();
+		}
 	});
+	
 
 
 
@@ -766,34 +767,6 @@ function linckoEditor(elem){
 
 	return editorInst;
 }
-
-
-$.fn.linckoEditor = function () {
-	var options = {
-	    buttons: ['font', 'calibri', 'georgia', 'bold', 'italic', 'link', 'h2', 'h3', 'h4', 'alignleft', 'aligncenter', 'alignright', 'image', 'x'],
-	    buttonsHtml: {
-	        'bold': '<i class="fa fa-bold"></i>',
-	        'italic': '<i class="fa fa-italic"></i>',
-	        'link': '<i class="fa fa-link"></i>',
-	        'header-2': '<i class="fa fa-header"></i>2',
-	        'header-3': '<i class="fa fa-header"></i>3',
-	        'header-4': '<i class="fa fa-header"></i>4',
-	        'align-left': '<i class="fa fa-align-left"></i>',
-	        'align-center': '<i class="fa fa-align-center"></i>',
-	        'align-right': '<i class="fa fa-align-right"></i>',
-	        'insert-image': '<i class="fa fa-picture-o"></i>',
-	        'remove-formatting': '<i class="fa fa-ban"></i>'
-	    }
-	};
-
-    return this.each(function () {
-    	$(this).addClass('linckoEditor');
-        if (!$.data(this, 'plugin_easyEditor')) {
-            $.data(this, 'plugin_easyEditor',
-            new EasyEditor( this, options ));
-        }
-    });
-};
 
 EasyEditor.prototype.font = function(){
     var _this = this;
