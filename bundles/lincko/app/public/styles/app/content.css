@@ -33,7 +33,7 @@
 }
 
 #app_content_top_project {
-    z-index:2666;
+    z-index: 1101;
     position: fixed;
     left: 0;
     font-size: 25px;
