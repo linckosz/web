@@ -49,8 +49,8 @@ var account_joinus_cb_error = account_signin_cb_error = function(xhr_err, ajaxOp
 var account_joinus_cb_begin = function(){
 	account_hide_error();
 	$(document.body).css('cursor', 'progress');
-	base_format_form_single($('#account_joinus_submit_progress'));
 	$('#account_joinus_submit_progress').show();
+	base_format_form_single($('#account_joinus_submit_progress'));
 };
 
 var account_joinus_cb_complete = function(){
@@ -61,8 +61,8 @@ var account_joinus_cb_complete = function(){
 var account_signin_cb_begin = function(){
 	account_hide_error();
 	$(document.body).css('cursor', 'progress');
-	base_format_form_single($('#account_signin_submit_progress'));
 	$('#account_signin_submit_progress').show();
+	base_format_form_single($('#account_signin_submit_progress'));
 };
 
 var account_signin_cb_complete = function(){
