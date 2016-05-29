@@ -378,7 +378,9 @@
 		float: left;
 	}
 	.submenu_wrapper_preview {
-		    border-width: 0px 0px 0px 1px !important;
+		border-width: 0px 0px 0px 1px !important;
+		left: 0;
+		top: 0;
 	}
 	.submenu_top {
 		background-color: #DFDFDF;
