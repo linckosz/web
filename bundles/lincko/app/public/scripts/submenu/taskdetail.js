@@ -701,14 +701,12 @@ Submenu.prototype.Add_taskdetail = function() {
 		if(editorInst instanceof EasyEditor === false) {
 			editorInst = new linckoEditor(this);
 			editorInst.$toolbarContainer.on('mousedown touchdown', function(){
-				console.log('toolbar clicked');
 				destroyEditor_onBlur = false;
 			});
 			$(this).focus();
 		}
 	});
 	elem_description_text.blur(function(){
-		console.log('destroyEditor: '+destroyEditor_onBlur);
 		if(editorInst instanceof EasyEditor === true && destroyEditor_onBlur) {
 			//editorInst.detachEvents();
 			//editorInst = null;
@@ -777,7 +775,6 @@ function linckoEditor(elem){
 	};
 
 	var editorInst = new EasyEditor(elem, options);
-	console.log(editorInst);
 	return editorInst;
 }
 
