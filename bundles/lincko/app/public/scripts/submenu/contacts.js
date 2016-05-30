@@ -114,6 +114,7 @@ Submenu.prototype._prepare_contactsList = function() {
         contactList.push({
             'username': Lincko.storage.data.users[id]['-username'],
             'id': id,
+            'checked': this.param.contactsID[c].checked,
             'logo': logoList[parseInt(id, 10)%10],
         });
     }
@@ -144,13 +145,16 @@ Submenu.prototype._displayContacts = function(position, contacts) {
         Elem.find('.username').text(contacts[c].username);
         Elem.find('.contact_icon').addClass('fa').addClass( "fa-"+contacts[c].logo);
         Elem.find('.id').val(contacts[c].id);
+        if (contacts.checked == true) {
+            Elem.find('.check').addClass('checked');
+        }
         Elem.click(function() {
             if ($(this).find('.checked').length != 0) {
                 $(this).find('.checked').removeClass('checked');
                 return -1;
             }
             $(this).find('.check').addClass('checked');
-            if ('type' in submenuInst.param && submenuInst.param.type == "projects") {
+            if ('type' in submenuInst.param && submenuInst.param.type == "tasks") {
                 $(this).siblings().find(".check").removeClass("checked");
             }
             return -1;
