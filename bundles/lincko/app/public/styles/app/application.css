@@ -34,6 +34,20 @@
 	vertical-align: top;
 }
 
+#app_application_lincko_action {
+	position: fixed;
+	display: none;
+	z-index: 2000;
+	width: 26px;
+	height: 26px;
+	font-size: 20px;
+	vertical-align: middle;
+	text-align: center;
+	color: #FFFFFF;
+	background-color: rgba(251,160,38,0.75);
+	border-radius: 3px;
+}
+
 #app_application_menu {
 	display: table;
 	table-layout: fixed;

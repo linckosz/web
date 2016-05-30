@@ -437,6 +437,48 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 $('#app_application_project_block').click(function(){
 	app_application.move('project');
 });
+var globalWordSelect;
+function handle_select() {
+	if (supportsTouch) {
+	//debugger;
+	/*
+	$(".selectable").hammer().on("press", function() {
+		var scroll = myIScrollList[$(this).parents(".overthrow").attr("id")];//find iScroll
+		scroll.disable();//disables the iScroll
+	}); */
+		$("body").delegate(".selectable", "mousedown", function() {
+			$("#app_application_lincko_action").hide();
+			var scroll = myIScrollList[$(this).parents(".overthrow").attr("id")];//find iScroll
+			scroll.disable();//disables the iScroll
+		});
+	}
+	else {
+		$("body").delegate(".selectable", "mousedown", function() {
+			$("#app_application_lincko_action").hide();
+			var scroll = myIScrollList[$(this).parents(".overthrow").attr("id")];//find iScroll
+			scroll.disable();//disables the iScroll
+		});
+	}
+}
+handle_select();
+
+/*
+$(".selectable").on('touchend', function() {
+	var scroll = myIScrollList($(this).parents(".overthrow").attr("id")) ;//find iScroll
+	scroll.disable();//disables the iScroll
+});
+*/
+$("body").delegate(".selectable", "mouseup", function(e){
+	var scroll = myIScrollList[$(this).parents(".overthrow").attr("id")];//find iScroll
+	scroll.enable();//disables the iScroll
+	$("#app_application_lincko_action").css({"left":e.pageX, "top":e.pageY}).show();
+	globalWordSelect = $.selection();
+});
+
+$("#app_application_lincko_action").click(function() {
+	$(this).hide();
+  	submenu_Build("taskdetail", true, false, {'id':'new', 'title': globalWordSelect, 'type':'tasks'}, true);
+});
 
 function app_application_dev_link(){
 	//Used for development site only

@@ -24,7 +24,14 @@ submenu_list['newchat'] = {
     "right_button": {
         "style": "title_right_button",
         "title": "",
-        "class": "icon-SmallPersonaiconBlack base_pointer",
+        "class": "icon-SmallPersonaiconBlack base_pointer chat_add_person",
+        "action": function() {
+            var preview = true;
+            var all_users = [];
+            var checked_users = [];
+            var userList = [];
+            submenu_Build('contacts', true, false, {type: 'chats', }, preview);
+        }
     },
 };
 
