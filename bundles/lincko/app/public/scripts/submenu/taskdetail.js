@@ -96,7 +96,12 @@ Submenu.prototype.Add_taskdetail = function() {
 	var route_delete = false;
 
 	if(taskid == 'new' ){
-		item['+title'] = newTitle;
+		if(that.param.title){
+			item['+title'] = that.param.title;
+		}
+		else{
+			item['+title'] = newTitle;
+		}
 		item['-comment'] = newDescription;
 		item['created_by'] = wrapper_localstorage.uid;
 		item['updated_by'] = wrapper_localstorage.uid;
@@ -698,6 +703,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	var destroyEditor_onBlur = true;
 
 	elem_description_text.focus(function(){
+		console.log('elem_description_text focus');
 		if(editorInst instanceof EasyEditor === false) {
 			editorInst = new linckoEditor(this);
 			editorInst.$toolbarContainer.on('mousedown touchdown', function(){
@@ -747,14 +753,13 @@ function linckoEditor(elem){
 	var options = {
 	    buttons: ['font', 'calibri', 'georgia', 'bold', 'italic', 'link','h', 'h1', 'h2', 'h3', 'h4', 'alignleft', 'aligncenter', 'alignright', 'image', 'x'],
 	    buttonsHtml: {
-	        //'bold': '<i class="fa fa-bold"></i>',
 	        'italic': '<i class="fa fa-italic"></i>',
 	        'link': '<i class="fa fa-link"></i>',
 	        'header': '<i class="fa fa-header"></i>',
-	        'header-1': '<i class="fa fa-header"></i>1',
-	        'header-2': '<i class="fa fa-header"></i>2',
-	        'header-3': '<i class="fa fa-header"></i>3',
-	        'header-4': '<i class="fa fa-header"></i>4',
+	        'header-1': '<h1>header 1</h1>',
+	        'header-2': '<h2>header 2</h2>',
+	        'header-3': '<h3>header 3</h3>',
+	        'header-4': '<h4>header 4</h4>',
 	        'align-left': '<i class="fa fa-align-left"></i>',
 	        'align-center': '<i class="fa fa-align-center"></i>',
 	        'align-right': '<i class="fa fa-align-right"></i>',
@@ -775,6 +780,7 @@ function linckoEditor(elem){
 	};
 
 	var editorInst = new EasyEditor(elem, options);
+	editorInst.$toolbarContainer.addClass('submenu_taskdetail_paddingLeft');
 	return editorInst;
 }
 
@@ -826,7 +832,13 @@ EasyEditor.prototype.h = function(){
         buttonIdentifier: 'header',
         buttonHtml: 'H',
         clickHandler: function(){
-            _this.openDropdownOf('header');
+        	if($(this).next('ul').css('display') != 'none'){
+        		$(_this.elem).click();
+        	}
+        	else {
+        		console.log('dropdown');
+        		_this.openDropdownOf('header');
+        	}
         },
         hasChild: true
     };

@@ -100,14 +100,50 @@ td.submenu_taskdetail_share .fa{
 
 /*------easyEditor------*/
 .submenu_taskdetail_description .easyeditor-toolbar {
-	padding: 0px;
+	padding-top: 0px;
+    padding-bottom: 0px;
+    background: #F7FAFC;
 }
 .submenu_taskdetail_description ul {
 	margin: 0px;
+    padding: 0px;
 }
-.submenu_taskdetail_description button {
-	margin: 0px;
+.submenu_taskdetail_description .easyeditor-toolbar > ul > li > button {
+    margin: 0px !important;
+    background: none !important;
+    border: none !important;
+    font-size: 18px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    line-height: 18px;
 }
+.submenu_taskdetail_description .easyeditor-toolbar ul  ul {
+    background: #FFFFFF;
+    box-shadow: 0px 0px 4px 0px #3F84B0;
+    border-radius: 3px;
+}
+.submenu_taskdetail_description .easyeditor-toolbar ul ul button {
+    background: none;
+    border: none;
+    width: 150px;
+    margin: 0px;
+    padding: 0px 0px 0px 5px;
+    text-align: left; 
+}
+.submenu_taskdetail_description .easyeditor-toolbar ul ul button:hover {
+    background: #DBEBF4;
+    border: none !important;
+    box-shadow: none !important;
+    width: 150px;
+    margin: 0px;
+    padding: 0px 0px 0px 5px;
+    text-align: left;
+}
+
+/*----END OF easyEditor--------------*/
+
+
+
 
 
 .submenu_taskdetail_collapsable_button {
