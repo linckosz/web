@@ -163,14 +163,13 @@
 #app_content_submenu_preview {
 	position: relative;
 	width: 55%;
-	color: red;
 	background-color: #FFFFFF;
 	background-repeat: no-repeat;
-	background-position: 50% 50%;
+	background-position: 100% 20%;
 	background-size: cover;
 	float: right;
 	height: 100%;
-	font-size: large;
+	font-size: 24px;
 }
 
 #app_content_submenu_preview .submenu_wrapper{

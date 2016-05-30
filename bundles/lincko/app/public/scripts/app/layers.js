@@ -4,7 +4,7 @@ var app_layers_changePage = function(menu, param){
 	if(typeof param === 'undefined'){ param = null; }
 	var timing = 150;
 	var delay = 60;
-	var layer = $('#app_content_dynamic_sub');
+	var layer = $('#app_layers_content');
 	if(!layer.html()){ timing = 0; }
 	var Sequence = [
 		{ e: layer, p: { opacity: 0, }, o: { duration: timing, delay: delay, } },
