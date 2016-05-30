@@ -384,11 +384,11 @@ Submenu.prototype.Add_TitleRightButton = function() {
 	if ("action" in attribute) {
 		if ("action_param" in attribute) {
 			Elem.click(function(){
-				attribute.action(submenuInst, attribute.action_param);
+				attribute.action(this, submenuInst, attribute.action_param);
 			});
 		} else {
 			Elem.click(function(){
-				attribute.action(submenuInst);
+				attribute.action(this, submenuInst);
 			});
 		}
 	}

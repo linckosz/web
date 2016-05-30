@@ -16,7 +16,7 @@ var burger = function(elem, burger_mode, item){
 	 			elem_dropdown.remove();
 	 		}
 	 	});
-	 	console.log('current caret: '+burger_regex_getCaretOffset(elem).caretOffset);
+	 	//console.log('current caret: '+burger_regex_getCaretOffset(elem).caretOffset);
 	}
 
 
@@ -120,65 +120,75 @@ var burger = function(elem, burger_mode, item){
                 burger_destroy();
             }
             else{
-                //elem_dropdown.empty().insertAfter(elem);
-                //elem_dropdown.empty().appendTo('#app_layers_content');
-                elem_dropdown.empty().appendTo('#app_content_dynamic_sub');
-                burger_on = true;
-                //var coord = $(this).position();
-                var coord = $(this).offset();
-                var username;
-                var elem_option = $('#-burger_option').clone().prop('id','').addClass('burger_option'+burger_mode);
-                var elem_option_clone;
-                //$.each(item[burger_mode], function(key, value){
+                //generate list of userid
                 if(!item['_id'] || item['_id'] == 'new'){
                     var accessList = Lincko.storage.whoHasAccess('projects', app_content_menu.projects_id);
                 }
                 else{
                     var accessList = Lincko.storage.whoHasAccess(item['_type'], item['_id']);
                 }
-                
+
+                var contactsID_obj = {};
                 for (var i = 0; i < accessList.length; i++) {
                     var userid = accessList[i];
+                    if( userid in item['_users'] && item['_users'][userid]['in_charge'] ){
+                        contactsID_obj[userid] = { check: true };
+                    }
+                    else{
+                        contactsID_obj[userid] = { check: false };
+                    }
+                }
+
+                //use the submenu for mobile
+                if(responsive.test("maxMobileL")){
+                    var param = {};
+                    param.elem_input = elem;
+                    param.type = 'projects';//item['_type'];
+                    param.item_obj = item;
+                    param.contactsID = accessList;
+                    //param.contactsID = contactsID_obj;
+                    submenu_Build('burger_contacts', true, null, param);
+                    return false;
+                }
+
+
+                //elem_dropdown.empty().insertAfter(elem);
+                //elem_dropdown.empty().appendTo('#app_layers_content');
+                elem_dropdown.empty().appendTo('#app_content_dynamic_sub');
+                burger_on = true;
+                //var coord = $(this).position();
+                var coord = $(this).offset();
+                var username = null;
+                var in_charge = null;
+                var elem_option = $('#-burger_option').clone().prop('id','').addClass('burger_option'+burger_mode);
+                var elem_option_clone;
+                //$.each(item[burger_mode], function(key, value){
+                
+                
+                $.each(contactsID_obj, function(userid, obj){
+                    in_charge = obj.check;
+                    console.log(userid+' '+in_charge);
+
                     username = Lincko.storage.get("users", userid,"username");
                     elem_option_clone = elem_option.clone().attr('userid',userid);
                     elem_option_clone.find('[find=username]').html(username);
-                    if( item['_type'] == 'tasks' && userid in item['_users'] && item['_users'][userid]['in_charge'] ){
-                        elem_option_clone.addClass('burger_option_selected');
-                    }
-                    if( item['_type'] == 'notes' && item['updated_by'] == userid ){
+                    if( in_charge ){
                         elem_option_clone.addClass('burger_option_selected');
                     }
 
-                    if( item['_type'] == 'tasks'){
-                        elem_option_clone.click(function(){
+                    elem_option_clone.on('mousedown touchdown', function(){
                             var userid = $(this).attr('userid');
                             elem.val(userid);
                             elem.change();
-                             if(!item['_id'] || item['_id'] == 'new'){
+                            if(!item['_id'] || item['_id'] == 'new'){
                                 return false;
-                             }
-                            var param = {};
-                            param['id'] = item['_id'];
-                            param['users>in_charge'] = {};
-                            for (var i = 0; i < accessList.length; ++i){
-                                //for beta, only one person can be in_charge. so first set all users to false
-                                param['users>in_charge'][accessList[i]] = false;
                             }
-                            if( userid in item['_users'] && item['_users'][userid]['in_charge'] ){
-                                //if user is already in charge
-                                param['users>in_charge'][userid] = false;
-                            }
-                            else {
-                                param['users>in_charge'][userid] = true;
-                            }
-                            wrapper_sendAction( param, 'post', 'task/update');
-                            burger_destroy();
+                            burger_contacts_sendAction(contactsID_obj, [userid], item, true);
                         });
-                        
-                    }
 
-                     elem_dropdown.append(elem_option_clone);
-                };
+                    elem_dropdown.append(elem_option_clone);
+
+                });
 
                 var left = coord.left;
                 var top = coord.top - $('#app_content_top').outerHeight() + $(this).closest('table').outerHeight();
@@ -199,10 +209,43 @@ var burger = function(elem, burger_mode, item){
             }
         });
         elem.blur(function(){
+            console.log('burger blur');
             burger_destroy();
         });
     }
 }
+
+
+function burger_contacts_sendAction(users, selectArray, item, popup){
+    if(!popup){
+        popup = null;
+    }
+    var param = {};
+    param['id'] = item['_id'];
+    param['users>in_charge'] = {};
+
+
+    $.each(users, function(userid, obj){
+        in_charge = obj.check;
+        if( typeof userid != 'string'){ userid = userid.toString(); }
+        var selected = $.inArray(userid, selectArray);
+        if(selected == -1){ selected = false; }
+        else{ selected = true; }
+
+        if( selected && in_charge==false){
+            param['users>in_charge'][userid] = true;
+        }
+        else if( (/*!popup && (commented out for the beta)*/ !selected && in_charge==true) || (popup && selected && in_charge==true) ){
+            param['users>in_charge'][userid] = false;
+        }
+    });
+
+    if(item['_type'] == 'tasks'){
+        wrapper_sendAction( param, 'post', 'task/update');
+    }
+
+}
+
 
 var burger_calendar_linckofy_timeout;
 
