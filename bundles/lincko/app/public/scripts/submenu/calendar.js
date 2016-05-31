@@ -48,7 +48,7 @@ Submenu.prototype.Add_calendar = function() {
 	var that = this;
 	var submenu_wrapper = this.Wrapper();
 	var submenu_content = submenu_wrapper.find("[find=submenu_wrapper_content]").addClass('submenu_calendar');
-	var elem_timestamp = $('<input find="timestamp" type="text" />');
+	var elem_timestamp = $('<input find="timestamp" type="text" readonly="readonly"/>');
 	var elem_datepicker = $('<div>AAAAAAA</div>');
 	var elem_datepicker_inline = null;
 

@@ -362,7 +362,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			});
 		}
 
-		return comments_sorted;
+		return comments_sorted.reverse();
 	}
 
 	var comments_sorted = generateCommentsArray();
@@ -436,17 +436,98 @@ Submenu.prototype.Add_taskdetail = function() {
 
 		return elem;
 	}
+
+
+	var elem_comments_main = submenu_taskdetail.find('.submenu_taskdetail_comments_main');
+	var elem_seePrev = submenu_taskdetail.find('[find=seePrev_btn]');
+	var commentCount_ini = 5; if( responsive.test("maxMobileL")){ commentCount_ini = 3; }
+	var commentCount_seePrev = 10;
+	var pageComments = function(comments, toShow, animation){
+		if(!animation){ animation = false; }
+		var elem_toShow_wrapper = $('<div></div>');
+		var comments_hidden = [];
+		var param_viewed = {};
+		var commentCount = 0;
+		for ( var i = 0; i < comments.length; i++ ){
+			commentCount++;
+			comment = comments[i];
+			if(commentCount > toShow){
+				comments_hidden.push(comment);
+			}
+			else{
+				var elem_newComment_bubble = generateCommentBubble(comment);
+				if(animation){
+					elem_toShow_wrapper.prepend(elem_newComment_bubble);
+				}
+				else{
+					elem_comments_main.prepend(elem_newComment_bubble);
+				}				
+				param_viewed['comments_'+comment['_id']] = true;
+			}
+		}
+		if(animation){
+			elem_comments_main.prepend(elem_toShow_wrapper);
+			elem_toShow_wrapper.velocity('slideDown',{
+				duration: 500,
+				complete: function(){
+					elem_toShow_wrapper.children().unwrap();
+					if(submenu_content.prop('id') in myIScrollList){
+						myIScrollList[submenu_content.prop('id')].refresh();
+					}
+				}
+			});
+		}
+		wrapper_sendAction(param_viewed, 'post', 'data/viewed');
+		
+
+		if(comments_hidden.length > 0){
+			elem_seePrev.removeClass('display_none');
+			return comments_hidden;
+		}
+		else{
+			elem_seePrev.addClass('display_none');
+			return false;
+		}
+	}
+	submenu_taskdetail.find('[find=commentCount]').html(comments_sorted.length);
+	var comments_hidden = pageComments(comments_sorted, commentCount_ini);
+
+		/*seePrev_btn logic*/
+	elem_seePrev.click(function(){
+		comments_hidden = pageComments(comments_hidden, commentCount_seePrev, true);
+	});
+
+/*
+	var elem_seePrev = submenu_taskdetail.find('[find=seePrev_btn]');
+	var commentCount_ini = 5; if( responsive.test("maxMobileL")){ commentCount_ini = 3; }
+	var commentCount_seePrev = 10;
+	var comments_hidden = [];
 	var param_viewed = {};
 	var commentCount = 0;
-	for ( var i in comments_sorted ){
-		comment = comments_sorted[i];
-		submenu_taskdetail.find('.submenu_taskdetail_comments_main').append(generateCommentBubble(comment));
-		param_viewed['comments_'+comment['_id']] = true;
+	for ( var i = 0; i < comments_sorted.length; i++ ){
 		commentCount++;
+		comment = comments_sorted[i];
+		console.log(comment['+comment']+' '+comment['created_at']);
+		if(commentCount > commentCount_ini){
+			comments_hidden.push(comment);
+		}
+		else{
+			submenu_taskdetail.find('.submenu_taskdetail_comments_main').prepend(generateCommentBubble(comment));
+			param_viewed['comments_'+comment['_id']] = true;
+		}
+	}
+	if(comments_hidden.length > 0){
+		elem_seePrev.removeClass('display_none');
 	}
 	submenu_taskdetail.find('[find=commentCount]').html(commentCount);
 	wrapper_sendAction(param_viewed, 'post', 'data/viewed');
 	param_viewed = {};
+	*/
+
+
+
+
+
 
 
 	/*addNewComment*/

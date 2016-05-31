@@ -205,6 +205,10 @@ skylist.prototype.construct = function(){
 			
 		});//scrollStart
 
+		IScroll.on('onScroll', function(){
+			console.log('scrollMove');
+		});
+
 		IScroll.on('scrollEnd', function(){
 
 		});//scrollEnd
@@ -1367,6 +1371,25 @@ skylist.prototype.menu_construct = function(){
 	that.elem_navbar = $('#-skylist_menu_navbar').clone().prop('id','skylist_menu_navbar');
 
 	//individual or group selection in navbar
+	var elem_people1 = that.elem_navbar.find('[people=1]');
+	var elem_people2 = that.elem_navbar.find('[people=2]');
+
+	elem_people1.click(function(){
+		if( !$(this).hasClass('skylist_menu_selected')){
+			elem_people1.toggleClass('skylist_menu_selected');
+			elem_people2.toggleClass('skylist_menu_selected');
+		}
+		that.tasklist_update( 'people', wrapper_localstorage.uid );
+	});
+	elem_people2.click(function(){
+		if( !$(this).hasClass('skylist_menu_selected')){
+			elem_people1.toggleClass('skylist_menu_selected');
+			elem_people2.toggleClass('skylist_menu_selected');
+		}
+		that.tasklist_update( 'people', null );
+	});
+
+/*
 	that.elem_navbar.find('[people]').on('click', function(){
 		var selection = $(this);
 		if(selection.hasClass('skylist_menu_selected')){
@@ -1381,6 +1404,8 @@ skylist.prototype.menu_construct = function(){
 			that.tasklist_update( 'people', null );
 		}
 	});
+	*/
+	
 
 	/*
 		filter
