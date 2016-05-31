@@ -19,11 +19,12 @@ submenu_list['contacts'] = {
         "style": "title_right_button",
         "title": "Select",
         "class": "base_pointer",
-        "action": function() {
+        "action": function(elem, submenu, param) {
+            debugger;
             var userList = {};
             var nameList = "";
 
-            var IDList = _submenu_get_contacts(this);
+            var IDList = _submenu_get_contacts(elem);
             IDList.push(wrapper_localstorage.uid);
             if (IDList.length == 1) {
                 return;
@@ -32,7 +33,7 @@ submenu_list['contacts'] = {
                 userList[IDList[i]] = true;
                 nameList = nameList + " " + Lincko.storage.data.users[IDList[i]]['-username'];
             }
-            var tmp = $(this).parents('.submenu_newchat_header').attr('class').split(" ");
+            var tmp = $(elem).parents('.submenu_newchat_header').attr('class').split(" ");
             for (var t in tmp) {
                 if (tmp[t].startsWith("project")) {
                     var id = tmp[t].slice(7);
@@ -128,6 +129,7 @@ Submenu_select.contacts = function(Elem) {
 
 /*This "getContacts" method needs to be used in submit acction*/
 function _submenu_get_contacts(elem) {
+    debugger;
     var items = $(elem).parents(".submenu_wrapper").find(".submenu_contact_item .checked").parent().find("input.id");
     var keys = [];
     for (var i = 0; i < items.length; i++) {
