@@ -771,8 +771,8 @@ Submenu.prototype.Add_taskdetail = function() {
 	});
 	elem_description_text.blur(function(){
 		if(editorInst instanceof EasyEditor === true && destroyEditor_onBlur) {
-			//editorInst.detachEvents();
-			//editorInst = null;
+			editorInst.detachEvents();
+			editorInst = null;
 		}
 		else if(!destroyEditor_onBlur){
 			destroyEditor_onBlur = true;
