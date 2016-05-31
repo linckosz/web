@@ -415,7 +415,10 @@ Submenu.prototype.Add_MenuButton = function(position) {
 	}
 	if ("hide" in attribute) {
 		if (attribute.hide) {
-			Elem.click(function() { submenu_Hideall(preview); });
+			Elem.click(function() {
+				//submenu_Hideall(preview); //We should not close all tabs
+				submenu_Clean(this.layer, false, preview);
+			});
 		}
 	}
 	if ("action" in attribute) {
@@ -523,7 +526,10 @@ Submenu.prototype.Add_MenuRadio = function() {
 
 	if ("hide" in attribute) {
 		if (attribute.hide) {
-			Elem.click(function() { submenu_Hideall(this.preview); });
+			Elem.click(function() {
+				//submenu_Hideall(this.preview);
+				submenu_Clean(this.layer, false, preview);
+			});
 		}
 	}
 	if (!selected) {
@@ -671,7 +677,7 @@ Submenu.prototype.Add_SelectMultiple = function() {
 	return true;
 };
 
-Submenu.prototype.Add_MenuForm = function() {
+Submenu.prototype.Add_MenuForm_old = function() {
 	var attribute = this.attribute;
 	submenu_wrapper = this.Wrapper();
 	var Elem = $('#-submenu_form').clone();
@@ -681,10 +687,13 @@ Submenu.prototype.Add_MenuForm = function() {
 	//submenu_wrapper.find("[find=submenu_wrapper_content]").css('bottom', submenu_wrapper.find("[find=submenu_wrapper_bottom]").height());
 	if ("hide" in attribute) {
 		if (attribute.hide) {
-			Elem.find("[find=submenu_form_button]").click(function() { submenu_Hideall(this.preview); });
+			Elem.find("[find=submenu_form_button]").click(function() {
+				//submenu_Hideall(this.preview);
+				submenu_Clean(this.layer, false, preview);
+			});
 		}
 	}
-	Elem.find("[find=submenu_form_title]").html(attribute.title)
+	Elem.find("[find=submenu_form_title]").html(attribute.title);
 	Elem.find("[find=submenu_form_button]").click(function() {
 		$('#' + that.id + '_submenu_form').submit();
 	});
@@ -717,6 +726,30 @@ Submenu.prototype.Add_MenuForm = function() {
 	return true;
 };
 
+Submenu.prototype.Add_MenuForm = function() {
+	var attribute = this.attribute;
+	submenu_wrapper = this.Wrapper();
+	var that = this;
+	var ElemForm = $("<form method='post' action='' submit='e.preventDefault(); return false;'></form>");
+	ElemForm.prop("id", this.id + '_submenu_form');
+	if ("action" in attribute) {
+		ElemForm.prop("action", attribute.action);
+	}
+	if ("submit" in attribute) {
+		ElemForm.on('submit', function(e) {
+			e.preventDefault();
+			attribute.submit(that);
+		});
+	}
+	//submenu_wrapper.find("[find=submenu_wrapper_content]").wrap(ElemForm);
+	//submenu_wrapper.children().wrapAll(ElemForm);
+	submenu_wrapper.wrapInner(ElemForm);
+	//toto = submenu_wrapper;
+	//Free memory
+	delete submenu_wrapper;
+	return true;
+};
+
 Submenu.prototype.Add_MenuFormButton = function() {
 	var attribute = this.attribute;
 	submenu_wrapper = this.Wrapper();
@@ -726,7 +759,10 @@ Submenu.prototype.Add_MenuFormButton = function() {
 	//submenu_wrapper.find("[find=submenu_wrapper_content]").css('bottom', submenu_wrapper.find("[find=submenu_wrapper_bottom]").height());
 	if ("hide" in attribute) {
 		if (attribute.hide) {
-			Elem.find("[find=submenu_form_button]").click(function() { submenu_Hideall(this.preview); });
+			Elem.find("[find=submenu_form_button]").click(function() {
+				//submenu_Hideall(this.preview);
+				submenu_Clean(this.layer, false, preview);
+			});
 		}
 	}
 	if ("action" in attribute) {

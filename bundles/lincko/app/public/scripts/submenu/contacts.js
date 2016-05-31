@@ -2,7 +2,7 @@ submenu_list['contacts'] = {
     //Set the title of the top
     "_title": {
         "style": "customized_title",
-        "title": "Start New Chat",
+        "title": "Start New Chat", //toto
         "class": function(elem) {
             if (elem.param.id) {
                 return "project" + elem.param.id + " submenu_newchat_header";
