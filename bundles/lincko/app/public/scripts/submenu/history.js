@@ -191,7 +191,7 @@ var chatFeed = (function() {
         if (this.item._type == "uploading_file") {
             Elem.prop('id', "uploading_file_"+this.item.index);
         } else {
-            Elem.prop('id', 'models_thistory_' + this.item.id);     
+            Elem.prop('id', 'models_thistory_' + this.item.id);
         }
         Elem.addClass(this.decoratorClass);
         Elem.addClass(this.item._type);
@@ -236,7 +236,7 @@ var chatFeed = (function() {
 
         Elem.find("[find=author]").text(php_nl2br(this.item.par.un));
         //Elem.find("[find=icon]").attr('src', l''); //TODO: change this logo to each others logo
-        Elem.find("[find=action]").html(action);
+        Elem.find("[find=action]").html($.trim(action).ucfirst());
 
         if (this.item.type === "comments") {
             var root = Lincko.storage.getCommentRoot(this.item.id);
