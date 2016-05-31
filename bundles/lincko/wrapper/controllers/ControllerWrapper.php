@@ -91,7 +91,6 @@ class ControllerWrapper extends Controller {
 			if($reset_shangzai){
 				if(!isset($json_result->shangzai)){ $json_result->shangzai = new \stdClass; }
 				$json_result->shangzai->puk = NULL;
-				$json_result->shangzai->cs = NULL;
 			}
 
 			if(isset($json_result->flash)){
@@ -110,7 +109,6 @@ class ControllerWrapper extends Controller {
 					$_SESSION['private_key'] = $json_result->flash->private_key;
 					if(!isset($json_result->shangzai)){ $json_result->shangzai = new \stdClass; }
 					$json_result->shangzai->puk = Datassl::encrypt($_SESSION['public_key'], $app->lincko->security['private_key']);
-					$json_result->shangzai->cs = Datassl::encrypt(md5($_SESSION['private_key'].$_SESSION['public_key']), $app->lincko->security['public_key']);
 				}
 
 				//"username_sha1" is a password used to encrypt data

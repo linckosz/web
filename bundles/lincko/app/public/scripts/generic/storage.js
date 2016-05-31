@@ -1418,7 +1418,7 @@ Lincko.storage.sort_items = function(array_items, att, page_start, page_end, asc
 //setup a check timing procedure to not overload the backend server
 var storage_check_timing_interval;
 var storage_check_timing_timeout;
-var storage_check_timing_speed = 2; //Default = 1, use 4 for demo purpose only
+var storage_check_timing_speed = 3; //Default = 1, use 4 for demo purpose only
 var storage_check_timing = {
 	slow: Math.floor(60000/storage_check_timing_speed), //60s
 	medium: Math.floor(30000/storage_check_timing_speed), //30s

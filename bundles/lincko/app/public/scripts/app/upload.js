@@ -80,10 +80,10 @@ function app_upload_prepare_log(parent_type, parent_id){
 		parent_id = Lincko.storage.getMyPlaceholder()['_id'];
 	}
 	$('#app_upload_shangzai_puk').val(wrapper_get_shangzai('puk'));
-	$('#app_upload_shangzai_cs').val(wrapper_get_shangzai('cs'));
 	$('#app_upload_parent_type').val(parent_type);
 	$('#app_upload_parent_id').val(parseInt(parent_id, 10));
 	$('#app_upload_fingerprint').val(fingerprint);
+	$('#app_upload_workspace').val(Lincko.storage.getWORKID());
 }
 
 function app_upload_set_launcher(parent_type, parent_id, submenu, start){

@@ -40,10 +40,11 @@
 <div id="app_upload_hidden">
 	<form id="app_upload_fileupload" action="" target="app_upload_fileupload_iframe" method="POST" enctype="multipart/form-data" onsubmit="return false;">
 		<input type="hidden" tabindex="-1" value="" id="app_upload_shangzai_puk" name="shangzai_puk" readonly/>
-		<input type="hidden" tabindex="-1" value="" id="app_upload_shangzai_cs" name="shangzai_cs" readonly/>
 		<input type="hidden" tabindex="-1" value="" id="app_upload_parent_type" name="parent_type" readonly/>
 		<input type="hidden" tabindex="-1" value="" id="app_upload_parent_id" name="parent_id" readonly/>
+		<input type="hidden" tabindex="-1" value="" id="app_upload_workspace" name="workspace" readonly/>
 		<input type="hidden" tabindex="-1" value="" id="app_upload_fingerprint" name="fingerprint" readonly/>
+		<input type="hidden" tabindex="-1" value="{{ api_upload }}" id="app_upload_api_upload" name="api_upload" readonly/>
 		<input type="file" name="files[]" multiple="" tabindex="-1" accept="video/*" capture="camcoder" id="app_upload_form_video" />
 		<input type="file" name="files[]" multiple="" tabindex="-1" accept="image/*" capture="camera" id="app_upload_form_photo" />
 		<input type="file" name="files[]" multiple="" tabindex="-1" id="app_upload_form_files" />
@@ -53,4 +54,3 @@
 <div id="end_app_upload" class="visibility_hidden">
 	<iframe id="app_upload_fileupload_iframe" name="app_upload_fileupload_iframe" src=""></iframe>
 </div>
-

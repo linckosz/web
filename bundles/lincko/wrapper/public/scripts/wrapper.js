@@ -4,7 +4,6 @@ var wrapper_totalxhr = 0;
 var wrapper_objForm = null;
 var wrapper_shangzai = {
 		puk: null,
-		cs: null,
 };
 var wrapper_set_shangzai = true;
 
@@ -107,7 +106,7 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 				JSerror.sendError(JSON.stringify(data), '/wrapper.js/wrapper_ajax().success()', 0);
 				console.log(data);
 			}
-			if(data.shangzai && data.shangzai.puk && data.shangzai.cs){
+			if(data.shangzai && data.shangzai.puk){
 				wrapper_shangzai = data.shangzai;
 				wrapper_localstorage.encrypt('shangzai', JSON.stringify(data.shangzai));
 				wrapper_set_shangzai = false;

@@ -20,3 +20,14 @@ $app->get('/', function () use ($app) {
 	}
 })
 ->name('root');
+
+$app->get(
+	'/file/:type/:id/:name',
+	'\bundles\lincko\app\controllers\ControllerFile:file_open_get'
+)
+->conditions(array(
+	'type' => 'link|thumbnail',
+	'id' => '\d+',
+	'name' => '.+\.\w+',
+))
+->name('file_open_get');
