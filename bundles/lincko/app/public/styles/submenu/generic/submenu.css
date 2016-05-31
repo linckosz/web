@@ -128,7 +128,7 @@
 	width: 100%;
 }
 
-.submenu_form_valid {
+.submenu_bottom_valid {
 	position: relative;
 	padding: 6px 30px;
 	border-radius: 5px;
@@ -141,11 +141,11 @@
 	background-color: transparent;
 }
 
-.submenu_form_valid:hover {
+.submenu_bottom_valid:hover {
 	background-color: #181A15;
 }
 
-.submenu_form_valid:active {
+.submenu_bottom_valid:active {
 	background-color: #969696;
 }
 
@@ -397,10 +397,10 @@
 		background-color: #BCBCBC;
 		background-image: none;
 	}
-	.submenu_form_valid:hover {
+	.submenu_bottom_valid:hover {
 		background-color: #A9A9AA;
 	}
-	.submenu_form_valid:active {
+	.submenu_bottom_valid:active {
 		background-color: #969696;
 	}
 	.submenu_app_upload_progress_full {

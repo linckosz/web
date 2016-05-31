@@ -1,4 +1,5 @@
 var storage_first_request = true; //Help to launch getSchema within getLatest only once at the beginning to insure nothing is missing
+var storage_first_launch = true;
 /* PRIVATE METHOD */
 /*
 	NOTE: Do not add this callback to wrapper_sendAction, because wrapper_ajax already launches it internally
@@ -121,7 +122,6 @@ Lincko.storage.display = function(prepare, force){
 		setTimeout(function(){
 			wrapper_load_progress.move(100);
 		},200);
-
 	}
 };
 
@@ -228,6 +228,13 @@ Lincko.storage.update = function(partial, info){
 		wrapper_localstorage.encrypt('data', JSON.stringify(Lincko.storage.data));
 		if(!info){
 			Lincko.storage.getSchema();
+		}
+		if(storage_first_launch){
+			storage_first_launch = false; //Help to trigger some action once the database is downloaded
+			app_application_lincko.prepare('first_launch', true);
+			setTimeout(function(){
+				wrapper_load_progress.move(100);
+			},200);
 		}
 		return true;
 	}
@@ -1486,6 +1493,9 @@ JSfiles.finish(function(){
 	Lincko.storage.data_favorite = JSON.parse(wrapper_localstorage.decrypt('data_favorite'));
 	if(!Lincko.storage.data_favorite){
 		Lincko.storage.data_favorite = {};
+	} else {
+		storage_first_launch = false; //Help to trigger some action once the database is downloaded
+		app_application_lincko.prepare('first_launch', true);
 	}
 	wrapper_load_progress.move(65);
 	Lincko.storage.childrenList(Lincko.storage.data);

@@ -6,15 +6,18 @@ submenu_list['app_project_new'] = {
 	},
 	"left_button": {
 		"style": "title_left_button",
-		"title": Lincko.Translation.get('app', 25, 'html'), //Close
+		"title": Lincko.Translation.get('app', 7, 'html'), //Cancel
 		'hide': true,
 		"class": "base_pointer",
 	},
 	"right_button": {
 		"style": "title_right_button",
-		"title": "Select",
+		"title": Lincko.Translation.get('app', 41, 'html'), //Create
 		"class": "base_pointer",
-		"action": function() {
+		"action": function(Elem, that) {
+			console.log(Elem);
+			console.log(that);
+			$('#' + that.id + '_submenu_form').submit();
 		},
 	},
 	"_pre_action": {
@@ -45,13 +48,6 @@ submenu_list['app_project_new'] = {
 				}
 			);
 		},
-	},
-	
-	
-	"form_cancel": {
-		"style": "form_button",
-		"title": Lincko.Translation.get('app', 7, 'html'), //Cancel
-		"hide": true,
 	},
 	
 	"title": {

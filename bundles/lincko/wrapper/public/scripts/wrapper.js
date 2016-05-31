@@ -226,7 +226,7 @@ function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete, 
 		
 		wrapper_ajax(arr, method, action, cb_success, cb_error, cb_begin, cb_complete, ajax_objForm);
 	} else {
-		cb_success(Lincko.Translation.get('wrapper', 2, 'html'), true, 400); //The form does not exist!
+		cb_success(Lincko.Translation.get('wrapper', 2, 'html'), true, 400, null); //The form does not exist!
 		return false; //Disable submit action
 	}
 	return false; //Disable submit action
