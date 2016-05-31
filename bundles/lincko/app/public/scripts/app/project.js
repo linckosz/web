@@ -1,7 +1,7 @@
 var mainMenu = (function() {
     function orderList(list) {
         return list.sort(function(a, b) {
-            return a.timestamp - b.timestamp;
+            return b.timestamp - a.timestamp;
         });
     }
 
