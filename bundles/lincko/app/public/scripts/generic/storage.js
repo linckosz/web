@@ -222,6 +222,7 @@ Lincko.storage.update = function(partial, info){
 
 		}
 	}
+	app_application_lincko.prepare("royce",true);
 	if(update){
 		//Lincko.storage.childrenList(partial, children_list);
 		Lincko.storage.childrenList(Lincko.storage.data); //We should not scan the whole database, it slows down the list but Sky had an issue of getting _children visible for notes when adding a comment
@@ -1588,7 +1589,6 @@ JSfiles.finish(function(){
 		}, 1000);
 		wrapper_load_progress.move(100);
 	}
-
 	//Launch the time interval for back server data check
 	storage_check_timing.launch();
 

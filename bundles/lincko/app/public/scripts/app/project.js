@@ -181,9 +181,11 @@ var mainMenu = (function() {
     };
 })();
 
-JSfiles.finish(function() {
-    mainMenu.init();
-}, 50);
+app_application_lincko.add(function() {
+		console.log("receive launch");
+		debugger;
+        mainMenu.init();
+}, 'first_launch');
 
 
 function app_project_quick_upload_display(Elem, show) {
