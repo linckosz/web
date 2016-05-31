@@ -64,13 +64,39 @@ textarea:focus, input:focus{
 .submenu_wrapper .skylist {
 	margin-left: 5px;
 }
-
+.submenu_chats .submenu_bottom{
+	height: 100px; /*three lines for desktop, one line(48px) for mobile*/
+	background-image: none;
+}
+.submenu_chats input.comments_input {
+	display: none;
+}
 [find="submenu_wrapper_bottom"] .chat_bottom {
+	border-top: 1px solid #FBA026;
 	text-align: left;
 	color: #FBA026;
 	position: relative;
 	height: 100%;
-	background-color: #EFEFEF;
+	background-color: #FFFFFF;
+}
+
+[find="submenu_wrapper_bottom"] .chat_bottom {
+	border-top: 1px solid #FBA026;
+	text-align: left;
+	color: #FBA026;
+	position: relative;
+	height: 100%;
+	background-color: #FFFFFF;
+}
+
+[find="submenu_wrapper_bottom"] .attachment {
+	font-size: 30px;
+	cursor: pointer;
+}
+
+[find="submenu_wrapper_bottom"] .send {
+	font-size: 30px;
+	cursor: pointer;
 }
 
 [find="submenu_wrapper_bottom"] .attachment {
@@ -81,12 +107,37 @@ textarea:focus, input:focus{
 	cursor: pointer;
 }
 
-[find="submenu_wrapper_bottom"] .attachment {
-	cursor: pointer;
-}
+/* Tablet in Landscape */
+@media only screen and (max-width: 1279px){
+	.submenu_chats .submenu_bottom{
+		height: 48px; /*three lines for desktop, one line(48px) for mobile*/
+		background-image: url('/lincko/app/images/submenu/top.png');
+        background-repeat: repeat-x;
+	}
+	.submenu_chats .comments_input{
+		height: 24px;
+	}
+	[find="submenu_wrapper_bottom"] .chat_bottom  {
+		border-top: none;
+		background-color: #EFEFEF;
+		border-radius: 3px;
+	}
+	[find="submenu_wrapper_bottom"] .attachment {
+		font-size: 24px;
+		cursor: pointer;
+	}
 
-[find="submenu_wrapper_bottom"] .send {
-	cursor: pointer;
+	[find="submenu_wrapper_bottom"] .send {
+		font-size: 24px;
+		cursor: pointer;
+	}
+	.submenu_chats textarea.comments_input {
+		display: none;
+	}
+	.submenu_chats input.comments_input {
+		display: block;
+		font-size: 24px;
+	}
 }
 
 .v_pos {
@@ -104,13 +155,16 @@ textarea:focus, input:focus{
 	overflow: hidden;
 	display: block;
 	padding: 0 10px;
+
 }
 
 .chat_bottom .comments_input {
 	font-size: 18px;
-	border-radius: 5px;
+	/*border-radius: 5px;*//*only have borders for mobile*/
+	border: 0px;
 	width: 100%;
 	display: block;
+	resize: none;
 }
 
 .chat_bottom .icons {
