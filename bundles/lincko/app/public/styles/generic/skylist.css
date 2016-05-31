@@ -1,6 +1,9 @@
 .skylist_wrapper {
 	font-weight: 200;
 }
+.skylist_wrapper :focus{
+    outline: none;
+}
 
 .skylist_menu_navbar {
 	width:100%;
@@ -252,10 +255,13 @@
 	background-color: #FFFFFF;
 }
 .skylist_card_center [find=title], .skylist_card_center [find=description] {
-	white-space: nowrap;
+	/*white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    width: 80%;
+    width: 80%;*/
+    padding-right: 70px;
+    max-height: 54px;
+    overflow: hidden;
 }
 .skylist_card_center [find=description] {
 	height: 24px;

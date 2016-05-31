@@ -39,6 +39,9 @@
 .submenu_taskdetail [contenteditable=true]{
 	cursor: text;
 }
+.submenu_taskdetail :focus{
+    outline: none;
+}
 
 
 .submenu_taskdetail_tasktitle {
@@ -104,7 +107,7 @@ td.submenu_taskdetail_share .fa{
     padding-bottom: 0px;
     background: #F7FAFC;
 }
-.submenu_taskdetail_description ul {
+.submenu_taskdetail_description .easyeditor-toolbar ul {
 	margin: 0px;
     padding: 0px;
 }

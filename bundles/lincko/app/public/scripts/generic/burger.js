@@ -114,7 +114,6 @@ var burger = function(elem, burger_mode, item){
     else if( burger_mode == '_users' ){
         elem.click(function(event){
             elem.focus();
-            console.log('click focus');
             event.stopPropagation();
             if( burger_on ){
                 burger_destroy();
@@ -166,8 +165,7 @@ var burger = function(elem, burger_mode, item){
                 
                 
                 $.each(contactsID_obj, function(userid, obj){
-                    in_charge = obj.check;
-                    console.log(userid+' '+in_charge);
+                    in_charge = obj.check;;
 
                     username = Lincko.storage.get("users", userid,"username");
                     elem_option_clone = elem_option.clone().attr('userid',userid);
@@ -209,7 +207,6 @@ var burger = function(elem, burger_mode, item){
             }
         });
         elem.blur(function(){
-            console.log('burger blur');
             burger_destroy();
         });
     }

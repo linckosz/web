@@ -82,10 +82,10 @@ var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct){
 
 	//all elem group storage
 	this.elem_taskblur_all;
-	this.elem_taskcenter_all;
+	this.elem_cardcenter_all;
 	this.elem_leftOptions_all;
 	this.elem_rightOptions_all;
-	this.elem_task_all;
+	this.elem_card_all;
 
 	this.editing_focus = false;
 	this.editing_timeout;
@@ -324,7 +324,7 @@ skylist.prototype.destroy = function(){
 }
 
 skylist.prototype.submenuHide = function(){
-	this.elem_task_all.removeClass('skylist_card_hover');
+	this.elem_card_all.removeClass('skylist_card_hover');
 	//this.list.addClass('skylist_noPreviewLayer');
 	$(window).resize();
 }
@@ -353,11 +353,12 @@ skylist.prototype.generate_Lincko_itemsList = function(){
 skylist.prototype.store_all_elem = function(){
 	//should be lanunched when all DOM is loaded
 	//this.elem_taskblur_all = this.tasklist.find('.app_layers_dev_skytasks_taskblur');
-	this.elem_taskcenter_all = this.list.find('[find=task_center]');
+	this.elem_cardcenter_all = this.list.find('[find=card_center]');
+	console.log(this);
 	this.elem_leftOptions_all = this.list.find('[find=card_leftOptions]');
 	this.elem_rightOptions_all = this.list.find('[find=card_leftOptions]');
 
-	this.elem_task_all = this.list.find('[find=card]');
+	this.elem_card_all = this.list.find('[find=card]');
 }
 
 skylist.prototype.window_resize = function(){
@@ -844,22 +845,25 @@ skylist.prototype.addTask = function(item){
 	*/
 	var contenteditable = false;
 	var elem_title = Elem.find('[find=title]');
-	if(true || item['_perm'][0] > 1 ){ //RCU and beyond
+	if( wrapper_localstorage.uid in item['_perm'] && item['_perm'][wrapper_localstorage.uid][0] > 1 ){ //RCU and beyond
 		contenteditable = true; 
 	}
 	elem_title.html(item['+title']);
-	elem_title.on('mousedown touchstart', function(event){ 
-		that.editing_target = $(this);
-		clearTimeout(that.editing_timeout);
-		that.editing_timeout = setTimeout(function(){
-			that.editing_target.attr('contenteditable',contenteditable);
-			that.editing_target.focus();
-		},1000);
-	});
-	elem_title.on('mouseup touchend', function(event){
-		clearTimeout(that.editing_timeout);
-	});
-	burger(Elem.find('[find=title]'), 'regex');
+	if(contenteditable){
+		elem_title.on('mousedown touchstart', function(event){ 
+			if( responsive.test("maxMobileL") ){ return false; }
+			that.editing_target = $(this);
+			clearTimeout(that.editing_timeout);
+			that.editing_timeout = setTimeout(function(){
+				that.editing_target.attr('contenteditable',contenteditable);
+				that.editing_target.focus();
+			},1000);
+		});
+		elem_title.on('mouseup touchend', function(event){
+			clearTimeout(that.editing_timeout);
+		});
+		burger(Elem.find('[find=title]'), 'regex');
+	}
 
 
 	/*in_charge*/
@@ -1271,8 +1275,8 @@ skylist.prototype.on_mouseup = function(){
 skylist.prototype.clearOptions = function(task){
 	var that = this;
 	if( !task ){
-		that.elem_task_all.removeAttr('style');
-		that.elem_task_all.data('options',false);
+		that.elem_card_all.removeAttr('style');
+		that.elem_card_all.data('options',false);
 	}
 	else{
 		that.actiontask.data('options',false);
@@ -1355,7 +1359,7 @@ skylist.prototype.openDetail = function(/*open,*/ task_elem){
 		"id":task_elem.data('item_id'),
 	}, true);
 	if( openSuccess ){
-		that.elem_task_all.removeClass('skylist_card_hover');
+		that.elem_card_all.removeClass('skylist_card_hover');
 		task_elem.addClass('skylist_card_hover');
 	}
 }
@@ -1705,6 +1709,8 @@ skylist.prototype.minTablet = function(){
 	if( that.elem_Jsorts ){
 		that.elem_Jsorts.removeClass('display_none');
 	}
+
+	that.elem_cardcenter_all.find('input').prop('disabled',true);
 }
 
 skylist.prototype.maxMobileL = function(){
@@ -1717,15 +1723,19 @@ skylist.prototype.maxMobileL = function(){
 	}
 	//that.elem_navbar.find('.icon-Indicator').closest('.skylist_menu_timesort_text_wrapper').removeClass('display_none');
 	that.elem_navbar.find('.skylist_menu_timesort_selected').removeClass('display_none');
+
+	console.log(that.elem_cardcenter_all);
+	that.elem_cardcenter_all.find('input').prop('disabled',false);
+
 }
 
 skylist.prototype.minMobileL = function(){
 	var that = this;
 	if(!that.list_wrapper){return;}
-	that.list.find('[find=task_rightOptions]').removeAttr("style").removeClass('display_none');
-	that.list.find('[find=task_center]').removeAttr('style');
+	that.list.find('[find=card_rightOptions]').removeAttr("style").removeClass('display_none');
+	that.list.find('[find=card_center]').removeAttr('style');
 
-	that.elem_taskcenter_all.find('[find=title]').prop('contenteditable',true);
+	that.elem_cardcenter_all.find('[find=title]').prop('contenteditable',true);
 
 /*
 	that.elem_leftOptions_all.width(that.window_width*2)
@@ -1739,5 +1749,5 @@ skylist.prototype.isMobile = function(){
 	if(!that.list_wrapper){return;}
 	//that.list.find('[find=task_rightOptions]').addClass('display_none');
 
-	that.elem_taskcenter_all.find('[find=title]').prop('contenteditable',false);
+	that.elem_cardcenter_all.find('[find=title]').prop('contenteditable',false);
 }

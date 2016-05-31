@@ -37,7 +37,7 @@ var app_layers_tasks_feedPage = function(param){
 			Lincko.Translation.get('app', 3301, 'html').toUpperCase(),/*all*/
 			Lincko.Translation.get('app', 3302, 'html').toUpperCase(),/*today*/
 			Lincko.Translation.get('app', 3303, 'html').toUpperCase(),/*tomorrow*/
-			'Spaces'
+			//'Spaces'
 		]
 	);
 

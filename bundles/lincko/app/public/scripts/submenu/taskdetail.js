@@ -771,8 +771,8 @@ Submenu.prototype.Add_taskdetail = function() {
 	});
 	elem_description_text.blur(function(){
 		if(editorInst instanceof EasyEditor === true && destroyEditor_onBlur) {
-			editorInst.detachEvents();
-			editorInst = null;
+			//editorInst.detachEvents();
+			//editorInst = null;
 		}
 		else if(!destroyEditor_onBlur){
 			destroyEditor_onBlur = true;
@@ -808,15 +808,15 @@ Submenu.prototype.Add_taskdetail = function() {
 /*-----linckoEditor------------------------------------*/
 function linckoEditor(elem){
 	var options = {
-	    buttons: ['font', 'calibri', 'georgia', 'bold', 'italic', 'link','h', 'h1', 'h2', 'h3', 'h4', 'alignleft', 'aligncenter', 'alignright', 'image', 'x'],
+	    buttons: [ 'h', 'h1', 'h2', 'h3', 'h4', 'p', 'bold', 'italic', 'list', 'alignleft', 'aligncenter', 'alignright', 'image', 'x'],
 	    buttonsHtml: {
 	        'italic': '<i class="fa fa-italic"></i>',
-	        'link': '<i class="fa fa-link"></i>',
 	        'header': '<i class="fa fa-header"></i>',
 	        'header-1': '<h1>header 1</h1>',
 	        'header-2': '<h2>header 2</h2>',
 	        'header-3': '<h3>header 3</h3>',
 	        'header-4': '<h4>header 4</h4>',
+	        'paragraph': '<p>paragraph</p>',
 	        'align-left': '<i class="fa fa-align-left"></i>',
 	        'align-center': '<i class="fa fa-align-center"></i>',
 	        'align-right': '<i class="fa fa-align-right"></i>',
@@ -916,4 +916,32 @@ EasyEditor.prototype.h1 = function(){
 
     _this.injectButton(settings);
 };
+
+EasyEditor.prototype.p = function(){
+    var _this = this;
+    var settings = {
+        buttonIdentifier: 'paragraph',
+        buttonHtml: 'p',
+        clickHandler: function(){
+            _this.wrapSelectionWithNodeName({ nodeName: 'p'});
+        },
+        childOf: 'header'
+    };
+
+    _this.injectButton(settings);
+};
+
+EasyEditor.prototype.image = function(){
+    var _this = this;
+    var settings = {
+        buttonIdentifier: 'insert-image',
+        buttonHtml: 'Insert image',
+        clickHandler: function(){
+            _this.openModal('#easyeditor-modal-1');
+        }
+    };
+
+    _this.injectButton(settings);
+};
+
 /*------END OF linckoEditor---------------------------*/

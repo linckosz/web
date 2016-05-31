@@ -108,16 +108,6 @@ Submenu.prototype.Add_calendar = function() {
 	});
 
 
-
-
-
-
-
-
-
-
-
-
 	//Free memory
 	delete submenu_wrapper;
 	return true;
