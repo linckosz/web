@@ -448,13 +448,17 @@ Submenu.prototype.Add_taskdetail = function() {
 		var comments_hidden = [];
 		var param_viewed = {};
 		var commentCount = 0;
+		var showToParent = false;
 		for ( var i = 0; i < comments.length; i++ ){
 			commentCount++;
 			comment = comments[i];
-			if(commentCount > toShow){
-				comments_hidden.push(comment);
-			}
-			else{
+			if( commentCount <= toShow || showToParent ){
+				if(comment['_parent'][0] == 'comments'){
+					showToParent = true;
+				}
+				else{
+					showToParent = false;
+				}
 				var elem_newComment_bubble = generateCommentBubble(comment);
 				if(animation){
 					elem_toShow_wrapper.prepend(elem_newComment_bubble);
@@ -463,6 +467,9 @@ Submenu.prototype.Add_taskdetail = function() {
 					elem_comments_main.prepend(elem_newComment_bubble);
 				}				
 				param_viewed['comments_'+comment['_id']] = true;
+			}
+			else{
+				comments_hidden.push(comment);
 			}
 		}
 		if(animation){
@@ -496,37 +503,6 @@ Submenu.prototype.Add_taskdetail = function() {
 	elem_seePrev.click(function(){
 		comments_hidden = pageComments(comments_hidden, commentCount_seePrev, true);
 	});
-
-/*
-	var elem_seePrev = submenu_taskdetail.find('[find=seePrev_btn]');
-	var commentCount_ini = 5; if( responsive.test("maxMobileL")){ commentCount_ini = 3; }
-	var commentCount_seePrev = 10;
-	var comments_hidden = [];
-	var param_viewed = {};
-	var commentCount = 0;
-	for ( var i = 0; i < comments_sorted.length; i++ ){
-		commentCount++;
-		comment = comments_sorted[i];
-		console.log(comment['+comment']+' '+comment['created_at']);
-		if(commentCount > commentCount_ini){
-			comments_hidden.push(comment);
-		}
-		else{
-			submenu_taskdetail.find('.submenu_taskdetail_comments_main').prepend(generateCommentBubble(comment));
-			param_viewed['comments_'+comment['_id']] = true;
-		}
-	}
-	if(comments_hidden.length > 0){
-		elem_seePrev.removeClass('display_none');
-	}
-	submenu_taskdetail.find('[find=commentCount]').html(commentCount);
-	wrapper_sendAction(param_viewed, 'post', 'data/viewed');
-	param_viewed = {};
-	*/
-
-
-
-
 
 
 
