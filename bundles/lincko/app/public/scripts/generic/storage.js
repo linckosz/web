@@ -1079,13 +1079,15 @@ Lincko.storage.tree = function(category, id, direction, include, extend){
 	Lincko.storage.hist('tasks', -1, [{att: 'created_at'}, {timestamp: ['<', 1449451377]}, {timestamp: ['>', 1449107022]}], 'projects', 3);
 	Lincko.storage.hist('tasks', '2-5', [{att: 'created_at'}, {timestamp: ['<', 1449451377]}, {timestamp: ['>', 1449107022]}], 'projects', 3, false);
 */
-Lincko.storage.list = function(category, page_end, conditions, parent_type, parent_id, children){
-	return Lincko.storage.list_multi(null, category, page_end, conditions, parent_type, parent_id, children);
+Lincko.storage.list = function(category, page_end, conditions, parent_type, parent_id, children, deleted){
+	if(typeof deleted != 'boolean'){ deleted = false; } //By default, exclude deleted items
+	return Lincko.storage.list_multi(null, category, page_end, conditions, parent_type, parent_id, children, deleted);
 }
-Lincko.storage.hist = function(category, page_end, conditions, parent_type, parent_id, children){
-	return Lincko.storage.list_multi('notifications', category, page_end, conditions, parent_type, parent_id, children);
+Lincko.storage.hist = function(category, page_end, conditions, parent_type, parent_id, children, deleted){
+	if(typeof deleted != 'boolean'){ deleted = true; } //By default, include deleted items
+	return Lincko.storage.list_multi('notifications', category, page_end, conditions, parent_type, parent_id, children, deleted);
 }
-Lincko.storage.list_multi = function(type, category, page_end, conditions, parent_type, parent_id, children){
+Lincko.storage.list_multi = function(type, category, page_end, conditions, parent_type, parent_id, children, deleted){
 
 	var temp;
 	var attribute;
@@ -1107,6 +1109,7 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 	if(typeof parent_type != 'string'){ parent_type = null; } else { parent_type = parent_type.toLowerCase(); }
 	if(!$.isNumeric(parent_id)){ parent_id = null; } else { parent_id = parseInt(parent_id, 10); }
 	if(typeof children != 'boolean'){ children = null; }
+	if(typeof deleted != 'boolean'){ deleted = false; }
 
 	if(parent_type!=null && parent_id!=null){
 		if(children){
@@ -1167,6 +1170,12 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 					if(only_items && typeof only_items[cat][id]=='undefined'){
 						save = false;
 						continue;
+					}
+					if(!deleted){ //If at false we exclude deleted items
+						if(typeof items[id]['deleted_at'] != 'undefined' && $.isNumeric(items[id]['deleted_at'])){
+							save = false;
+							continue;
+						}
 					}
 					if(typeof history_items[cat] == 'undefined'){ history_items[cat] = {};}
 					history_items[cat][id] = items[id];
@@ -1257,6 +1266,12 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 					if(only_items && typeof only_items[cat][id]=='undefined'){
 						save = false;
 						continue;
+					}
+					if(!deleted){ //If at false we exclude deleted items
+						if(typeof items[id]['deleted_at'] != 'undefined' && $.isNumeric(items[id]['deleted_at'])){
+							save = false;
+							continue;
+						}
 					}
 					item = items[id];
 					//Add info to element, use "_" to recognize that it has been added by JS

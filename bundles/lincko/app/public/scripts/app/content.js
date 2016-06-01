@@ -8,7 +8,7 @@ $('#app_content_top_project').click(function(){
 $('#app_content_top_note').click(function(){
 	//submenu_Build("test", true, false);
 	//app_upload_open_files(null, null, true, true);
-	app_upload_open_files();
+	app_upload_open_files('notes', 61);
 });
 
 function app_content_menu_position() {

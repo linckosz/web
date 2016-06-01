@@ -43,10 +43,6 @@ $.fn.hasScrollBar = function() {
 };
 
 
-
-
-
-
 function wrapper_test(type, RCUD){
 	if(typeof type==="undefined"){ type = null; }
 	if(typeof RCUD==="undefined"){ RCUD = -1; }

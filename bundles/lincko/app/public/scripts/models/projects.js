@@ -15,8 +15,6 @@ submenu_list['app_project_new'] = {
 		"title": Lincko.Translation.get('app', 41, 'html'), //Create
 		"class": "base_pointer",
 		"action": function(Elem, that) {
-			console.log(Elem);
-			console.log(that);
 			$('#' + that.id + '_submenu_form').submit();
 		},
 	},

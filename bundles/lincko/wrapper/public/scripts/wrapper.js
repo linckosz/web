@@ -191,7 +191,9 @@ function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete, 
 	if(!valid){
 		return false;
 	}
-
+console.log(objForm);
+console.log(objForm.length);
+console.log(objForm.is('form'));
 	if (objForm.length>0 && objForm.is('form')){
 		objForm.on('submit', function(e) {
 			 e.preventDefault(); //Disable submit action
