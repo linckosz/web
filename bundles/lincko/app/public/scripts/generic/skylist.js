@@ -354,7 +354,6 @@ skylist.prototype.store_all_elem = function(){
 	//should be lanunched when all DOM is loaded
 	//this.elem_taskblur_all = this.tasklist.find('.app_layers_dev_skytasks_taskblur');
 	this.elem_cardcenter_all = this.list.find('[find=card_center]');
-	console.log(this);
 	this.elem_leftOptions_all = this.list.find('[find=card_leftOptions]');
 	this.elem_rightOptions_all = this.list.find('[find=card_leftOptions]');
 
@@ -1693,27 +1692,6 @@ skylist.prototype.minTablet = function(){
 	that.list_subwrapper.find('input[find=card_time_calendar_timestamp]').prop('disabled',false);
 	that.list_subwrapper.find('input[find=name]').prop('disabled',false);
 
-	/*
-	var simpleDesktopWidth = 1000;
-	var simpleDesktopWidth2 = 800;
-	var list_width = that.list_wrapper.width();
-	if( list_width < simpleDesktopWidth2 ){
-		that.list_wrapper
-			.addClass('skylist_simpleDesktop')
-			.addClass('skylist_simpleDesktop2');
-	}
-	else if( list_width < simpleDesktopWidth ){
-		that.list_wrapper
-			.addClass('skylist_simpleDesktop')
-			.removeClass('skylist_simpleDesktop2');
-	}
-	else if( list_width >= simpleDesktopWidth ){
-		that.list_wrapper
-			.removeClass('skylist_simpleDesktop')
-			.removeClass('skylist_simpleDesktop2');
-	}
-	*/
-
 	if( that.elem_Jsorts ){
 		that.elem_Jsorts.removeClass('display_none');
 	}
@@ -1732,7 +1710,6 @@ skylist.prototype.maxMobileL = function(){
 	//that.elem_navbar.find('.icon-Indicator').closest('.skylist_menu_timesort_text_wrapper').removeClass('display_none');
 	that.elem_navbar.find('.skylist_menu_timesort_selected').removeClass('display_none');
 
-	console.log(that.elem_cardcenter_all);
 	that.elem_cardcenter_all.find('input').prop('disabled',false);
 
 }
@@ -1742,17 +1719,9 @@ skylist.prototype.minMobileL = function(){
 	if(!that.list_wrapper){return;}
 	that.list.find('[find=card_rightOptions]').removeAttr("style").removeClass('display_none');
 	that.list.find('[find=card_center]').removeAttr('style');
-
-/*
-	that.elem_leftOptions_all.width(that.window_width*2)
-					.css('left',-that.window_width*2)
-					.removeClass('display_none');
-*/
 }
 
 skylist.prototype.isMobile = function(){
 	var that = this;
 	if(!that.list_wrapper){return;}
-	//that.list.find('[find=task_rightOptions]').addClass('display_none');
-
 }

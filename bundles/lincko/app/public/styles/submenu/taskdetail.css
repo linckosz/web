@@ -102,8 +102,10 @@ td.submenu_taskdetail_share .fa{
 }
 .submenu_taskdetail_description [find=description_text] {
 	/*min-height: 60%;*/
-	padding-top: 20px;
+	padding-top: 40px;
     padding-bottom: 50px;
+    margin: 0px;
+    border: none;
 }
 
 /*------easyEditor------*/
@@ -111,6 +113,9 @@ td.submenu_taskdetail_share .fa{
 	padding-top: 0px;
     padding-bottom: 0px;
     background: #F7FAFC;
+    position: absolute;
+    right: 0px;
+    left: 0px;
 }
 .submenu_taskdetail_description .easyeditor-toolbar ul {
 	margin: 0px;

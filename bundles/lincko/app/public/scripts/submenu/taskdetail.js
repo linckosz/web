@@ -645,7 +645,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		//param values that are common to all
 		param['id'] = taskid;
 		param['parent_id'] = app_content_menu['projects_id'];
-		param['title'] = wrapper_to_html(submenu_taskdetail.find('[find=title_text]').html());
+		param['title'] = submenu_taskdetail.find('[find=title_text]').html();
 		param['comment'] = submenu_taskdetail.find('[find=description_text]').html();
 		if( taskid == 'new' ){
 			if(in_charge_id){
@@ -781,8 +781,6 @@ Submenu.prototype.Add_taskdetail = function() {
 		}
 	});
 	
-
-
 
 	//set the focus upon opening detail pane
 	if(taskid == 'new'){
