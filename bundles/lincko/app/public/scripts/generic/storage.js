@@ -1349,18 +1349,17 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 	
 };
 
-Lincko.storage.getLink(19); //Auto generate the link for the real file
-Lincko.storage.getLinkThumbnail(19); //Auto generate the link for the thumbnail
-
 Lincko.storage.getLink = function(id){
 	var file = Lincko.storage.get('files', id);
 	if(file){
 		var workid = Lincko.storage.getWORKID();
+		var uid = wrapper_localstorage.uid;
 		var puk = wrapper_get_shangzai('puk');
 		var type = "link";
 		var name = Lincko.storage.get('files', id, 'name');
+		var updated_at = Lincko.storage.get('files', id, 'updated_at');
 		var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':8443/file';
-		return url+"/"+workid+"/"+puk+"/"+type+"/"+id+"/"+name;
+		return url+"/"+workid+"/"+uid+"/"+type+"/"+id+"/"+name+"?"+updated_at;
 	}
 	return false;
 }
@@ -1373,11 +1372,13 @@ Lincko.storage.getLinkThumbnail = function(id){
 		thumbnail = Lincko.storage.thumbnail[file['category']];
 		if((file['category']=='image' || file['category']=='video') && file['thu_type']!=null){
 			var workid = Lincko.storage.getWORKID();
+			var uid = wrapper_localstorage.uid;
 			var puk = wrapper_get_shangzai('puk');
 			var type = "thumbnail";
 			var name = Lincko.storage.get('files', id, 'name');
+			var updated_at = Lincko.storage.get('files', id, 'updated_at');
 			var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':8443/file';
-			thumbnail = url+"/"+workid+"/"+puk+"/"+type+"/"+id+"/"+name;
+			thumbnail = url+"/"+workid+"/"+uid+"/"+type+"/"+id+"/"+name+"?"+updated_at;
 		}
 
 	}
