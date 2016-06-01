@@ -386,7 +386,7 @@ Lincko.storage.childrenList = function(data, children_list){
 	Lincko.storage.get("tasks", 4); => get full item
 	Lincko.storage.get("tasks", 4, "created_at"); => get item attribute
 */
-Lincko.storage.get = function(category, id, attribute){
+Lincko.storage.get = function(category, id, attribute, deleted){
 	if(typeof category === 'string' && category.indexOf('_')!==0){
 		category = category.toLowerCase();
 	} else {
@@ -394,9 +394,19 @@ Lincko.storage.get = function(category, id, attribute){
 	}
 	if(typeof id === 'string'){ id = parseInt(id, 10); }
 	if(typeof id !== 'number'){ return false; }
+	if(typeof deleted != 'boolean'){ deleted = false; }
 
 	if($.type(Lincko.storage.data) === 'object' && $.type(Lincko.storage.data[category]) === 'object' && $.type(Lincko.storage.data[category][id]) === 'object'){
 		var result = Lincko.storage.data[category][id];
+		
+		/*
+		toto => to not allow to get an deleted element by default creates several issue to fix
+		if(!deleted && typeof result['deleted_at'] != 'undefined' && $.isNumeric(result['deleted_at'])){
+			//Don't get deleted elements
+			return false;
+		}
+		*/
+		
 		//Add info to element, use "_" to recognize that it has been added by JS
 		result['_id'] = parseInt(id, 10);
 		result['_type'] = category;
@@ -1356,6 +1366,22 @@ Lincko.storage.getLink = function(id){
 		var uid = wrapper_localstorage.uid;
 		var puk = wrapper_get_shangzai('puk');
 		var type = "link";
+		var name = Lincko.storage.get('files', id, 'name');
+		var updated_at = Lincko.storage.get('files', id, 'updated_at');
+		var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':8443/file';
+		return url+"/"+workid+"/"+uid+"/"+type+"/"+id+"/"+name+"?"+updated_at;
+	}
+	return false;
+}
+
+//Force download
+Lincko.storage.getDownload = function(id){
+	var file = Lincko.storage.get('files', id);
+	if(file){
+		var workid = Lincko.storage.getWORKID();
+		var uid = wrapper_localstorage.uid;
+		var puk = wrapper_get_shangzai('puk');
+		var type = "download";
 		var name = Lincko.storage.get('files', id, 'name');
 		var updated_at = Lincko.storage.get('files', id, 'updated_at');
 		var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':8443/file';
