@@ -223,7 +223,8 @@ Lincko.storage.update = function(partial, info){
 		}
 	}
 	if(update){
-		Lincko.storage.childrenList(partial, children_list);
+		//Lincko.storage.childrenList(partial, children_list);
+		Lincko.storage.childrenList(Lincko.storage.data); //We should not scan the whole database, it slows down the list but Sky had an issue of getting _children visible for notes when adding a comment
 		Lincko.storage.display();
 		wrapper_localstorage.encrypt('data', JSON.stringify(Lincko.storage.data));
 		if(!info){
@@ -1347,6 +1348,41 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 	return results;
 	
 };
+
+Lincko.storage.getLink(19); //Auto generate the link for the real file
+Lincko.storage.getLinkThumbnail(19); //Auto generate the link for the thumbnail
+
+Lincko.storage.getLink = function(id){
+	var file = Lincko.storage.get('files', id);
+	if(file){
+		var workid = Lincko.storage.getWORKID();
+		var puk = wrapper_get_shangzai('puk');
+		var type = "link";
+		var name = Lincko.storage.get('files', id, 'name');
+		var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':8443/file';
+		return url+"/"+workid+"/"+puk+"/"+type+"/"+id+"/"+name;
+	}
+	return false;
+}
+
+//A thumbnail is always 
+Lincko.storage.getLinkThumbnail = function(id){
+	var file = Lincko.storage.get('files', id);
+	var thumbnail = false;
+	if(file){
+		thumbnail = Lincko.storage.thumbnail[file['category']];
+		if((file['category']=='image' || file['category']=='video') && file['thu_type']!=null){
+			var workid = Lincko.storage.getWORKID();
+			var puk = wrapper_get_shangzai('puk');
+			var type = "thumbnail";
+			var name = Lincko.storage.get('files', id, 'name');
+			var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':8443/file';
+			thumbnail = url+"/"+workid+"/"+puk+"/"+type+"/"+id+"/"+name;
+		}
+
+	}
+	return thumbnail;
+}
 
 /*
 	Sort items by an attribute, reject items that doesn't have the attribute

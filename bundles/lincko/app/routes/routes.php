@@ -21,6 +21,8 @@ $app->get('/', function () use ($app) {
 })
 ->name('root');
 
+/*
+toto => only use this way if user complain about speed or access to HK DC
 $app->get(
 	'/file/:type/:id/:name',
 	'\bundles\lincko\app\controllers\ControllerFile:file_open_get'
@@ -31,3 +33,4 @@ $app->get(
 	'name' => '.+\.\w+',
 ))
 ->name('file_open_get');
+*/
