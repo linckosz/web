@@ -700,6 +700,7 @@ skylist.prototype.addCard = function(item){
 		elem_card = that.addFile(item);
 	}
     else if (that.list_type == 'chats' || that.list_type == 'global_chats') {
+    	debugger;
         elem_card = that.addChat(item);
     }
 
@@ -744,6 +745,31 @@ skylist.prototype.addChat = function(item){
         var Elem = $('#-skylist_card').clone();
         var Elem_rightOptions = Elem.find('[find=card_rightOptions]').empty();
         var Elem_logo = $('#-skylist_logo').clone().prop('id','');
+        var cnt = notifier[item.type]['get'](item.id);
+        debugger;
+        if (cnt) {
+            if (cnt > 999) {
+                Elem_logo.find('.notification').text('...').show();
+            } else {
+                Elem_logo.find('.notification').text(cnt).show();
+            }
+        }
+        app_application_lincko.add("skylist_card_"+this.md5id+"_"+item.id, item.type + "_" + item.id, function() {
+        	var range = Object.keys(this.range)[0].split("_");
+        	var type = range[0];
+        	var id = range[1];
+        	var cnt = notifier[type]['get'](id);
+        	if (cnt) {
+                if (cnt > 999) {
+                    $("#"+this.id).find('.notification').text('...').show();
+                } else {
+                    $("#"+this.id).find('.notification').text(cnt).show();
+                }
+            }
+            else {
+            	$("#"+this.id).find('.notification').hide();
+            }
+        });
         Elem.find('[find=card_leftbox]').html(Elem_logo);
         var name = '';
         //var created_by;

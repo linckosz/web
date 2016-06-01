@@ -177,7 +177,7 @@
     .app_project_chat_item .logo_wrapper {
         position: absolute;
         color: #E98723;
-        left: 10px; /*TODO: change;*/
+        left: 10px;
         top: 50%;
         transform: translateY(-50%);
         -webkit-transform: translateY(-50%);
@@ -186,6 +186,7 @@
         -o-transform: translateY(-50%);
         width: 40px;
         height: 40px;
+        margin-right: 10px; 
     }
 
     .app_project_chat_item .logo_wrapper .notification {
@@ -195,18 +196,13 @@
             position: absolute;
             right: 0;
             top: 0;
-            width: 15px;
             height: 15px;
+            min-width: 15px;
             line-height: 1;
             border-radius: 8px;
             font-size: 4px;
             text-align: center;
             vertical-align: middle;
-            transform: translate(50%, -50%);
-            -webkit-transform: translate(50%, -50%);
-            -moz-transform: translate(50%, -50%);
-            -ms-transform: translate(50%, -50%);
-            -o-transform: translate(50%, -50%);
     }
     .app_project_chat_item .logo {
         width: 28px;
@@ -221,7 +217,7 @@
     .app_project_chat_item_content {
         line-height: 1.5;
         overflow: hidden;
-        margin-left: 45px;
+        margin-left: 50px;
     }
     
     .app_project_chat_item_content header {

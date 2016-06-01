@@ -16,16 +16,19 @@
 .app_layers_chat .skylist_card {
 	cursor: pointer;
 }
-.app_layers_chat .skylist_card_center [find=description] {
+.skylist .skylist_card_center [find=description] {
 	font-size: 14px;
 	color: #3270A0;
 }
 
-.app_layers_chat .skylist_logo >span {
+.skylist .skylist_logo >span {
 	display: inline-block;
 	width: 60px;
 	font-size: 55px;
 	color: #FBA026;
+}
+.submenu_wrapper .skylist .skylist_logo >span {
+    width: 45px;
 }
 
 .app_layers_chat .skylist_card_center [find=title] {
@@ -39,6 +42,28 @@
 .app_layers_chat .skylist_newcardCircle:hover {
 	opacity: 0.5;
 }
+
+.skylist .logo_wrapper {
+    color: #E98723;
+    position: relative;
+}
+
+.skylist .logo_wrapper .notification {
+    display: none;
+    background-color: red;
+    color: white;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 15px;
+    min-width: 15px;
+    line-height: 1;
+    border-radius: 8px;
+    font-size: 4px;
+    text-align: center;
+    vertical-align: middle;
+}
+
 /* Mobile phone in Portrait */
 @media only screen and (max-width: 479px){
 	.app_layers_chat {

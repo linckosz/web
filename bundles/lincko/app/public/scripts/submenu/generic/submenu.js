@@ -183,7 +183,6 @@ function Submenu(menu, next, param, preview) {
 	var self = this;
 
 	function Constructor(Elem) {
-
 		Elem.changeState();
 		//First we have to empty the element if it exists
 

@@ -57,6 +57,7 @@ Submenu.prototype.Add_ChatContents = function() {
     chatScroll.on('scrollEnd', function() {
     //chatFeed.feedPaging(type, position, id);
     });
+    notifier[type]['clear'](id);
 }
 
 Submenu.prototype.New_Add_ChatMenu = function() {

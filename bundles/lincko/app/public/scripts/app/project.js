@@ -11,6 +11,15 @@ var mainMenu = (function() {
         $(position).append(item);
         item.removeAttr('id', '');
         item.removeAttr('style', '');
+        var cnt = notifier[data.type]['get'](data.id);
+        debugger;
+        if (cnt) {
+            if (cnt > 999) {
+                item.find('.notification').text('...').show();
+            } else {
+                item.find('.notification').text(cnt).show();
+            }
+        }
 
         if (data.type == "history") {
             name = Lincko.storage.get("projects", data.id, "+title") + " Activity";
