@@ -4,12 +4,10 @@
 	<tr>
 		<td find='leftbox'></td>
 		<td class="skylist_card_textwrapper">
-			<div find="title_text" contenteditable="true" tabIndex="1" class="selectable"></div>
+			<div find="title_text" tabIndex="1" class="selectable"></div>
 			{#<textarea find="title_text"></textarea>#}
+			<div find="taskid" class="display_none"></div>
 		</td>
-	</tr>
-	<tr>
-		<div find="taskid"></div>
 	</tr>
 </table>
 
@@ -94,3 +92,10 @@
 		<input type="textarea" find="addNewComment_text" placeholder="enter comment here..."{#toto#}>
 	</td>
 </table>
+
+<div id="-submenu_taskdetail_tasktitle_fileInfo" class="submenu_taskdetail_tasktitle_fileInfo">
+	<div find="fileSize">
+		<span>File Size: {#toto#}</span><span find="val"></span><span find="unit"></span>
+	</div>
+	<span find="downloadIcon" class="icon-ExclamationCloud"></span>
+</div>

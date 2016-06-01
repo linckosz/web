@@ -677,8 +677,8 @@ skylist.prototype.addCard_all = function(){
 			item['duedate'];
 			that.list.append(that.addCard(item));
 		}
-		that.store_all_elem();
 	}
+	that.store_all_elem();
 }
 skylist.prototype.addCard = function(item){
 	var that = this;
@@ -1171,33 +1171,10 @@ skylist.prototype.addFile = function(item){
 	/*
 	updated_by (quickInfo)
 	*/
-	var sizeUnit = 'Bit';
-	var sizeNum = item['size'];
-	if(sizeNum > 8*Math.pow(10,12)){
-		sizeNum = Math.round(sizeNum/8*Math.pow(10,12));
-		sizeUnit = 'TB';
-	}
-	else if( sizeNum > 8*Math.pow(10,9) ){
-		sizeNum = Math.round(sizeNum/8*Math.pow(10,9));
-		sizeUnit = 'GB';
-	}
-	else if( sizeNum > 8*Math.pow(10,6) ){
-		sizeNum = Math.round(sizeNum/8*Math.pow(10,6));
-		sizeUnit = 'MB';
-	}
-	else if( sizeNum > 8000 ){
-		sizeNum = Math.round(sizeNum/8000);
-		sizeUnit = 'KB';
-	}
-	else if( sizeNum > 8 ){
-		sizeNum = Math.round(sizeNum/8000);
-		sizeUnit = 'Byte';
-		if(sizeNum>1){ sizeUnit += 's'; }
-	}
-	else{
-		sizeNum = Math.round(sizeNum);
-		if(sizeNum>1){ sizeUnit += 's'; }
-	}
+	var fileSize = app_layers_files_bitConvert(item['size']);
+	var sizeUnit = fileSize.unit;
+	var sizeNum = fileSize.val;
+
 	Elem.find('[find=quickInfo1]').html('File Size:&nbsp;');//toto
 	Elem.find('[find=quickInfo2]').html(sizeNum+' '+sizeUnit);
 

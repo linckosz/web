@@ -1,19 +1,17 @@
-.submenu_wrapper_taskdetail_tasks.submenu_top,
-.submenu_wrapper_taskdetail_notes.submenu_top {
+.submenu_wrapper_title.submenu_top {
     background-image: none;
 }
-.submenu_wrapper_taskdetail_tasks .submenu_title,
-.submenu_wrapper_taskdetail_notes .submenu_title {
+.submenu_wrapper_title .submenu_title {
     text-transform: capitalize;
 }
-.submenu_wrapper_taskdetail_tasks .submenu_title {
+.submenu_wrapper_taskdetail_tasks .submenu_title,
+.submenu_wrapper_taskdetail_files .submenu_title {
     color: #FFFFFF;
 }
 .submenu_wrapper_taskdetail_notes .submenu_title {
     color: #000000;
 }
-.submenu_wrapper_taskdetail_tasks .submenu_deco,
-.submenu_wrapper_taskdetail_notes .submenu_deco {
+.submenu_wrapper_title .submenu_deco {
 	background-color: inherit;
 	color: #FFFFFF;
 }
@@ -22,6 +20,9 @@
 }
 .submenu_wrapper_taskdetail_notes.submenu_top, .submenu_wrapper_taskdetail_notes [find=submenu_button_title] {
 	background-color: #F0EB4E;
+}
+.submenu_wrapper_taskdetail_files.submenu_top, .submenu_wrapper_taskdetail_files [find=submenu_button_title] {
+    background-color: #4E2A84;
 }
 
 .submenu_taskdetail {
@@ -425,6 +426,38 @@ styling for sub comments
 .submenu_taskdetail_commentbubble_sub [find=seeAll] {
 	display: none;
 }
+
+
+
+
+
+
+
+/*
+ * styling for files
+ */
+.submenu_content_taskdetail_files .submenu_taskdetail_tasktitle {
+    height: 120px;
+}
+.submenu_content_taskdetail_files [find=downloadIcon] {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    margin-right: 50px;
+    line-height: 120px;
+    font-size: 40px;
+}
+
+/*
+ * END OF files
+ */
+
+
+
+
+
+
+
 
 /*MobileL to mobile*/
 @media only screen and (max-width: 900px) {

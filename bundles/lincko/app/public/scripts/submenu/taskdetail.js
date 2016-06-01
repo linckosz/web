@@ -7,7 +7,7 @@ submenu_list['taskdetail'] = {
 			return title;
 		},
 		"class": function(that){
-			var className = 'submenu_wrapper_taskdetail_'+that.param.type;
+			var className = 'submenu_wrapper_title submenu_wrapper_taskdetail_'+that.param.type;
 			return className;
 		},
 	},
@@ -72,7 +72,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	this.md5id = md5(Math.random());
 	var submenu_wrapper = this.Wrapper();
 	var submenu_content = submenu_wrapper.find("[find=submenu_wrapper_content]");
-	submenu_content.prop('id','taskdetail_'+that.md5id);
+	submenu_content.prop('id','taskdetail_'+that.md5id).addClass('submenu_content_taskdetail_'+that.param.type);
 	var submenu_taskdetail = $('#-submenu_taskdetail').clone().prop('id','submenu_taskdetail');
 	var contactServer = false;
 	var action_menu_opened = false;
@@ -120,23 +120,41 @@ Submenu.prototype.Add_taskdetail = function() {
 	}
 
 	/*---tasktitle---*/
-	elem = $('#-submenu_taskdetail_tasktitle').clone().prop('id','submenu_taskdetail_tasktitle');
+	elem = $('#-submenu_taskdetail_tasktitle').clone().prop('id','');
+	elem.find("[find=taskid]").html(taskid);
 	var elem_title_text = elem.find('[find=title_text]');
-	elem_title_text.html(item['+title']).focus(function(){
-		if( $(this).html() == newTitle ){
-			$(this).html('').attr('style','');
+	if(that.param.type == 'files'){
+		elem_title_text.html(item['+name']);
+		var elem_title_fileInfo = $('#-submenu_taskdetail_tasktitle_fileInfo').clone().prop('id','');
+		var fileSize = app_layers_files_bitConvert(item['size']);
+		var sizeUnit = fileSize.unit;
+		var sizeNum = fileSize.val;
+		elem_title_fileInfo.find('[find=val]').html(sizeNum);
+		elem_title_fileInfo.find('[find=unit]').html(sizeUnit);
+		elem_title_text.after(elem_title_fileInfo);
+
+	}
+	else{
+		elem_title_text.html(item['+title']);
+		if(wrapper_localstorage.uid in item['_perm'] && item['_perm'][wrapper_localstorage.uid][0] > 1){
+			elem_title_text.prop('contenteditable',true);
+			elem_title_text.focus(function(){
+				if( $(this).html() == newTitle ){
+					$(this).html('').attr('style','');
+				}
+			});
+			elem_title_text.blur(function(){
+				if( $(this).html() == '' ){
+					$(this).html(newTitle).css('opacity',0.4);
+				}
+			});
+			if( item['+title'] == newTitle ){
+				elem_title_text.css('opacity',0.4);
+			}
 		}
-	});
-	elem_title_text.blur(function(){
-		if( $(this).html() == '' ){
-			$(this).html(newTitle).css('opacity',0.4);
-		}
-	});
-	if( item['+title'] == newTitle ){
-		elem_title_text.css('opacity',0.4);
 	}
 
-	elem.find("[find=taskid]").html(taskid);
+	/*----leftbox----*/
 	if( item['_type'] == "tasks" ){
 		var elem_checkbox = $('#-skylist_checkbox').clone().prop('id','');
 		elem.find('[find=leftbox]').html(elem_checkbox);
@@ -248,8 +266,8 @@ Submenu.prototype.Add_taskdetail = function() {
 				elem.find("[find=duedate_text]").html(duedate.display('date_very_short'));
 			}
 			
-		}/*---notesmeta---*/
-		else if( that.param.type == "notes" ){
+		}/*---notesmeta || filesmeta---*/
+		else if( that.param.type == "notes" || that.param.type == 'files'){
 			elem.find('[find=user_text]').html(Lincko.storage.get("users", item['updated_by'],"username"));
 			var date = new wrapper_date(item['updated_at']);
 			elem.find("[find=duedate_text]").html(date.display('date_very_short'));
@@ -314,8 +332,9 @@ Submenu.prototype.Add_taskdetail = function() {
 	}
 
 
-
-	submenu_taskdetail.append(elem);
+	if(that.param.type != 'files'){ //no file description for beta
+		submenu_taskdetail.append(elem);
+	}
 	
 
 	/*---taskcomments--*/
@@ -499,7 +518,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	submenu_taskdetail.find('[find=commentCount]').html(comments_sorted.length);
 	var comments_hidden = pageComments(comments_sorted, commentCount_ini);
 
-		/*seePrev_btn logic*/
+	/*seePrev_btn logic*/
 	elem_seePrev.click(function(){
 		comments_hidden = pageComments(comments_hidden, commentCount_seePrev, true);
 	});
