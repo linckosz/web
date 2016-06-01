@@ -861,6 +861,20 @@ skylist.prototype.addTask = function(item){
 		elem_title.on('mouseup touchend', function(event){
 			clearTimeout(that.editing_timeout);
 		});
+		elem_title.blur(function(){
+			var new_text = $(this).html();
+			if(new_text != item['+title']){
+				wrapper_sendAction({
+				id: item['_id'],
+				title: new_text,
+				}, 'post', 'task/update', 
+				function(msg, data_error, data_status, data_msg){ 
+					if(data_error){
+						app_application_lincko.prepare('tasks_'+item['_id']);
+					}
+				}, function(){ app_application_lincko.prepare('tasks_'+item['_id']); });
+			}
+		});
 		burger(Elem.find('[find=title]'), 'regex');
 	}
 
