@@ -13,7 +13,9 @@ function app_layers_tasks_launchPage(param){
 }
 
 function app_layers_tasks_closePage(){
-	app_layers_tasks_tasklist.destroy();
+	if(app_layers_tasks_tasklist){
+		app_layers_tasks_tasklist.destroy();
+	}
 };
 
 var app_layers_tasks_feedPage = function(param){

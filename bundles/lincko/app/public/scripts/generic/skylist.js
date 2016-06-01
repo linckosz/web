@@ -125,6 +125,7 @@ var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct){
 		'hide_completed': false,
 	};
 	this.searchTimeout;
+	this.noResult_str = '<div class="skylist_card_noCard">There are no '+that.list_type+'.</div>';
 
 	//variables for construct
 	this.list_wrapper = list_wrapper;
@@ -399,18 +400,19 @@ skylist.prototype.filter_by_people = function(items,filter){
 	if( filter == null ){
 		return items;
 	}
-	else{
+	else if( that.list_type == "tasks" || that.list_type == "notes" || that.list_type == "files"){
 		for( var i in items ){
 			item = items[i];
-			if( that.list_type == "tasks" && item['_users'][filter] && item['_users'][filter]['in_charge']){
+			if( that.list_type == "tasks" && item['_users'] && item['_users'][filter] && item['_users'][filter]['in_charge']){
 				items_filtered.push(item);
 			}
-			else if( that.list_type == "notes" && item['updated_by'] == filter ){
+			else if( that.list_type != "tasks" && item['updated_by'] && item['updated_by'] == filter ){
 				items_filtered.push(item);
 			}
 		}
 	}
-	this.Lincko_itemsList_filter.people = filter;
+
+	that.Lincko_itemsList_filter.people = filter;
 
 	return items_filtered;
 }
@@ -512,7 +514,7 @@ skylist.prototype.filter_by_search = function(items, filter){
 	var that = this;
 	var items_filtered = [];
 
-	if( filter == null || filter == "" ){
+	if( true || filter == null || filter == "" ){
 		return items;
 	}
 	else{
@@ -595,7 +597,7 @@ skylist.prototype.list_filter = function(){
 	that.generate_Lincko_itemsList();
 	var items_filtered = that.Lincko_itemsList;
 
-	if( that.list_type == "tasks" || that.list_type == "notes" ){
+	if( that.list_type == "tasks" || that.list_type == "notes" || that.list_type == "files"){
 		items_filtered = that.filter_by_search( items_filtered, that.Lincko_itemsList_filter.search );
 		items_filtered = that.filter_by_people( items_filtered, that.Lincko_itemsList_filter.people );
 		items_filtered = that.filter_by_duedate( items_filtered, that.Lincko_itemsList_filter.duedate );
@@ -624,7 +626,7 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 			}
 
 			if( items_filtered.length < 1 ){
-				var noResultString = '<div class="skylist_card_noCard">There are no '+that.list_type+'.</div>';
+				var noResultString = that.noResult_str;
 				if( that.list_type == 'tasks' ){
 					noResultString += '<div class="skylist_card_noCard">(Filter: ';
 					$.each(that.Lincko_itemsList_filter, function(key, val){
@@ -665,13 +667,18 @@ skylist.prototype.addCard_all = function(){
 	var that = this;
 	var items;
 	items = that.list_filter();
-	var item;
-	for (var i in items){
-		item = items[i];
-		item['duedate'];
-		that.list.append(that.addCard(item));
+	if( items.length < 1 ){
+		that.list.append(that.noResult_str);
 	}
-	that.store_all_elem();
+	else{
+		var item;
+		for (var i in items){
+			item = items[i];
+			item['duedate'];
+			that.list.append(that.addCard(item));
+		}
+		that.store_all_elem();
+	}
 }
 skylist.prototype.addCard = function(item){
 	var that = this;
@@ -681,7 +688,9 @@ skylist.prototype.addCard = function(item){
 	}
 	else if( that.list_type == 'notes' ){
 		elem_card = that.addNote(item);
-		
+	}
+	else if( that.list_type == 'files' ){
+		elem_card = that.addFile(item);
 	}
     else if (that.list_type == 'chats' || that.list_type == 'global_chats') {
         elem_card = that.addChat(item);
@@ -862,6 +871,7 @@ skylist.prototype.addTask = function(item){
 			clearTimeout(that.editing_timeout);
 		});
 		elem_title.blur(function(){
+			that.editing_target.attr('contenteditable',false);
 			var new_text = $(this).html();
 			if(new_text != item['+title']){
 				wrapper_sendAction({
@@ -982,34 +992,13 @@ skylist.prototype.addTask = function(item){
 			that.taskClick(event,this);
 		}
 	});
-	Elem.find('[find=title]').focus(function(){
-		clearTimeout(that.editing_timeout);
-		that.editing_focus = true;
-	});
-	Elem.find('[find=title]').blur(function(){
-		that.editing_timeout = setTimeout(function(){
-			that.editing_focus = false;
-			that.editing_target.attr('contenteditable',false);
-		},200);
-	});
 
 	that.add_cardEvents(Elem);
 
 	return Elem;
 }
 
-skylist.prototype.addNote_all = function(){
-	var that = this;
-	var items;
-	//var items = Lincko.storage.list('tasks');
-	items = that.Lincko_itemsList;
-	var item;
-	for (var i in items){
-		item = items[i];
-		that.list.append(that.addNote(item));
-	}
-	that.store_all_elem();
-}
+
 skylist.prototype.addNote = function(item){
 	var that = this;
 	var Elem = $('#-skylist_card').clone();
@@ -1106,16 +1095,123 @@ skylist.prototype.addNote = function(item){
 			that.taskClick(event,this);
 		}
 	});
-	Elem.find('[find=title]').focus(function(){
-		clearTimeout(that.editing_timeout);
-		that.editing_focus = true;
+
+	that.add_cardEvents(Elem);
+
+	return Elem;
+}
+
+skylist.prototype.addFile = function(item){
+	var that = this;
+	var Elem = $('#-skylist_card').clone();
+	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').empty();
+	var updated_by;
+	var updated_at;
+
+	if(item == null){
+		item = {};
+		item['_id'] = 'new';
+
+	}
+	Elem.prop('id','skylist_card_'+that.md5id+'_'+item['_id']);
+
+	/*
+	title
+	*/
+	var elem_title = Elem.find('[find=title]');
+	elem_title.html(item['+name']);
+
+	/*
+	 note description
+	 */
+	 var fileType = null;
+	 var fileType_class = 'fa fa-file-o';
+	 if(item['ori_ext'] == 'png' || item['ori_ext'] == 'jpeg' || item['ori_ext'] == 'jpg'){
+	 	fileType = 'Image, ';//toto
+	 	fileType_class = 'fa fa-file-image-o';
+	 }
+	 else{
+	 	fileType = '';
+	 }
+	 var elem_fileType = $('<div>'+'File Type'/*toto*/+': '+fileType+item['ori_ext'].toUpperCase()+'</div>');
+	Elem.find('[find=description]').html(elem_fileType);
+
+	/*
+	 files preview image
+	*/
+	var elem_leftbox = $('<span></span>').addClass('skylist_card_leftbox_fileIcon '+fileType_class);
+	Elem.find('[find=card_leftbox]').append(elem_leftbox);
+
+
+
+	/*updated_by*/
+	updated_by = item['updated_by'];
+	updated_by = Lincko.storage.get("users", updated_by,"username");
+	Elem.find('[find=name]').html(updated_by);
+	
+
+	/*
+	comments
+	*/
+	var commentCount = 0;
+	var comments = Lincko.storage.list('comments',null, null, that.list_type, item['_id'], true);
+	commentCount = comments.length;
+	Elem.find('[find=commentCount]').html(commentCount);
+
+	updated_at = new wrapper_date(item['updated_at']);
+	if(skylist_textDate(updated_at)){
+		updated_at = skylist_textDate(updated_at);
+	}
+	else{
+		updated_at = updated_at.display('date_very_short');
+	}
+	Elem.find('[find=card_time]').html(updated_at);
+
+
+	/*
+	updated_by (quickInfo)
+	*/
+	var sizeUnit = 'Bit';
+	var sizeNum = item['size'];
+	if(sizeNum > 8*Math.pow(10,12)){
+		sizeNum = Math.round(sizeNum/8*Math.pow(10,12));
+		sizeUnit = 'TB';
+	}
+	else if( sizeNum > 8*Math.pow(10,9) ){
+		sizeNum = Math.round(sizeNum/8*Math.pow(10,9));
+		sizeUnit = 'GB';
+	}
+	else if( sizeNum > 8*Math.pow(10,6) ){
+		sizeNum = Math.round(sizeNum/8*Math.pow(10,6));
+		sizeUnit = 'MB';
+	}
+	else if( sizeNum > 8000 ){
+		sizeNum = Math.round(sizeNum/8000);
+		sizeUnit = 'KB';
+	}
+	else if( sizeNum > 8 ){
+		sizeNum = Math.round(sizeNum/8000);
+		sizeUnit = 'Byte';
+		if(sizeNum>1){ sizeUnit += 's'; }
+	}
+	else{
+		sizeNum = Math.round(sizeNum);
+		if(sizeNum>1){ sizeUnit += 's'; }
+	}
+	Elem.find('[find=quickInfo1]').html('File Size:&nbsp;');//toto
+	Elem.find('[find=quickInfo2]').html(sizeNum+' '+sizeUnit);
+
+
+	Elem.data('item_id',item['_id']);
+	Elem.data('options',false);
+
+	
+	Elem.on('click', function(event){
+		if( that.panyes == false ){
+			that.taskClick(event,this);
+		}
 	});
-	Elem.find('[find=title]').blur(function(){
-		that.editing_timeout = setTimeout(function(){
-			that.editing_focus = false;
-			that.editing_target.attr('contenteditable',false);
-		},200);
-	});
+
 
 	that.add_cardEvents(Elem);
 
@@ -1295,7 +1391,7 @@ skylist.prototype.on_mouseup = function(){
 
 skylist.prototype.clearOptions = function(task){
 	var that = this;
-	if( !task ){
+	if( !task && that.elem_card_all){
 		that.elem_card_all.removeAttr('style');
 		that.elem_card_all.data('options',false);
 	}

@@ -4,3 +4,11 @@
 .app_layers_tasks_tasklist .skylist_card [find=description] {
 	display: none;
 }
+
+
+/*MobileL and down */
+@media only screen and (max-width: 900px) {
+	.app_layers_tasks_tasklist .skylist_card_center [find=title]{
+		font-size: 14px;
+	}
+}

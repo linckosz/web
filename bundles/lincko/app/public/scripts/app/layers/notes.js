@@ -13,7 +13,9 @@ function app_layers_notes_launchPage(param){
 }
 
 function app_layers_notes_closePage(){
-	app_layers_notes_noteslist.destroy();
+	if(app_layers_notes_noteslist){
+		app_layers_notes_noteslist.destroy();
+	}
 };
 
 var app_layers_notes_feedPage = function(param){
