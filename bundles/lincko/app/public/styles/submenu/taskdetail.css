@@ -4,8 +4,13 @@
 }
 .submenu_wrapper_taskdetail_tasks .submenu_title,
 .submenu_wrapper_taskdetail_notes .submenu_title {
-    color: #FFFFFF;
     text-transform: capitalize;
+}
+.submenu_wrapper_taskdetail_tasks .submenu_title {
+    color: #FFFFFF;
+}
+.submenu_wrapper_taskdetail_notes .submenu_title {
+    color: #000000;
 }
 .submenu_wrapper_taskdetail_tasks .submenu_deco,
 .submenu_wrapper_taskdetail_notes .submenu_deco {

@@ -4,7 +4,7 @@
 	<tr>
 		<td find='leftbox'></td>
 		<td class="skylist_card_textwrapper">
-			<div find="title_text" contenteditable="true" tabIndex="1"></div>
+			<div find="title_text" contenteditable="true" tabIndex="1" class="selectable"></div>
 			{#<textarea find="title_text"></textarea>#}
 		</td>
 	</tr>
@@ -18,7 +18,7 @@
 		<td find="icon_arrow" class="icon-Accordion base_color_text_linckoOrange"></td>
 		<td>{{ _trans('app', 10, 4, 'html') }}{#description#}</td>
 	</table>
-	<div find="description_text" contenteditable="true" class="needsclick submenu_taskdetail_collapsable_content submenu_taskdetail_paddingLeft" tabindex="2"></div>
+	<div find="description_text" contenteditable="true" class="needsclick selectable submenu_taskdetail_collapsable_content submenu_taskdetail_paddingLeft" tabindex="2"></div>
 </div>
 <div id="-submenu_taskdetail_meta" class="submenu_taskdetail_meta submenu_taskdetail_paddingLeft">
 	<table>
@@ -37,7 +37,7 @@
 				<span find="user_text" class="submenu_taskdetail_meta_text"></span>
 				<input type="text" find="user_text_hidden" class="submenu_taskdetail_meta_text" readonly="readonly"/>
 			</td>
-			<td find="spaces" class="submenu_taskdetail_meta_box">
+			<td find="spaces" class="submenu_taskdetail_meta_box display_none">
 				{#<img src="{{_filelatest('/lincko/app/images/app/icons/Time-3.png') }}"/>#}
 				<span class="submenu_taskdetail_meta_icons icon-Hash"></span>
 				<span find="spaces_text" class="submenu_taskdetail_meta_text">Spaces</span>
@@ -85,7 +85,7 @@
 		<div find="name"></div>
 	</td>
 	<td class="submenu_taskdetail_commentbubble_text">
-		<div find="text"></div>
+		<div find="text" class="selectable"></div>
 		<div class="submenu_taskdetail_commentbubble_quickAction">
 			<span find="replyBtn" class="base_color_text_linckoOrange">Reply{#toto#}</span>
 			<span find="seeAllBtn" class="base_color_text_linckoOrange">{{ _trans('app', 10, 2, 'html') }}{#see all toto#}</span>

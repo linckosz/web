@@ -645,7 +645,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		//param values that are common to all
 		param['id'] = taskid;
 		param['parent_id'] = app_content_menu['projects_id'];
-		param['title'] = submenu_taskdetail.find('[find=title_text]').html();
+		param['title'] = wrapper_to_html(submenu_taskdetail.find('[find=title_text]').html());
 		param['comment'] = submenu_taskdetail.find('[find=description_text]').html();
 		if( taskid == 'new' ){
 			if(in_charge_id){
@@ -686,6 +686,7 @@ Submenu.prototype.Add_taskdetail = function() {
 				route += '/update';
 
 			}
+			console.log(param);
 			wrapper_sendAction( param,'post',route );
 		}
 		//$(document).off('previewHide.skylist');
@@ -838,6 +839,12 @@ function linckoEditor(elem){
 
 	var editorInst = new EasyEditor(elem, options);
 	editorInst.$toolbarContainer.addClass('submenu_taskdetail_paddingLeft');
+	console.log(editorInst);
+	
+	$(editorInst.elem).on('paste', function(){
+		$(window).resize();
+	});
+
 	return editorInst;
 }
 

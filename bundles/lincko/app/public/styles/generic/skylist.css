@@ -536,6 +536,14 @@
 	width: initial;
 }
 
+.skylist_maxMobileL .skylist_card_time{
+	font-size: 11px;
+}
+
+.skylist_maxMobileL .skylist_card_bottom {
+	font-size: 10px;
+	height: 18px;
+}
 /*
  * ----------END OF skylist_maxMobileL--------------------
  */

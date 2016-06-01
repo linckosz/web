@@ -689,7 +689,7 @@ skylist.prototype.addCard = function(item){
     }
 
     if( that.list_type == 'tasks' || that.list_type == 'notes' ){
-    	elem_card.find('[find=card_spacestick]').removeClass('display_none');
+    	//elem_card.find('[find=card_spacestick]').removeClass('display_none');
     	app_application_lincko.add(
 			elem_card.prop('id'),
 			that.list_type+'_'+item['_id'],
@@ -1000,7 +1000,6 @@ skylist.prototype.addNote_all = function(){
 skylist.prototype.addNote = function(item){
 	var that = this;
 	var Elem = $('#-skylist_card').clone();
-	Elem.find('[find=card_leftbox]').addClass('skylist_card_leftbox_empty');
 	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').empty();
 	var updated_by;
 	var updated_at;
@@ -1021,11 +1020,12 @@ skylist.prototype.addNote = function(item){
 	*/
 	var contenteditable = false;
 	var elem_title = Elem.find('[find=title]');
-	if(item['_perm'][0] > 1 ){ //RCU and beyond
+	if( wrapper_localstorage.uid in item['_perm'] && item['_perm'][wrapper_localstorage.uid][0] > 1 ){ //RCU and beyond
 		contenteditable = true; 
 	}
 	elem_title.html(item['+title']);
 	elem_title.on('mousedown touchstart', function(event){ 
+		if( responsive.test("maxMobileL") ){ return false; }
 		that.editing_target = $(this);
 		clearTimeout(that.editing_timeout);
 		that.editing_timeout = setTimeout(function(){
@@ -1041,7 +1041,15 @@ skylist.prototype.addNote = function(item){
 	/*
 	 note description
 	 */
-	Elem.find('[find=description]').html(item['-comment']);
+	Elem.find('[find=description]').html($('<div>'+item['-comment']+'</div>').text());
+
+
+	/*
+	 note preview image
+	*/
+	var elem_leftbox = $('<span></span>').addClass('skylist_card_leftbox_abc');
+	Elem.find('[find=card_leftbox]').append(elem_leftbox);
+
 
 
 	/*updated_by*/
@@ -1735,8 +1743,6 @@ skylist.prototype.minMobileL = function(){
 	that.list.find('[find=card_rightOptions]').removeAttr("style").removeClass('display_none');
 	that.list.find('[find=card_center]').removeAttr('style');
 
-	that.elem_cardcenter_all.find('[find=title]').prop('contenteditable',true);
-
 /*
 	that.elem_leftOptions_all.width(that.window_width*2)
 					.css('left',-that.window_width*2)
@@ -1749,5 +1755,4 @@ skylist.prototype.isMobile = function(){
 	if(!that.list_wrapper){return;}
 	//that.list.find('[find=task_rightOptions]').addClass('display_none');
 
-	that.elem_cardcenter_all.find('[find=title]').prop('contenteditable',false);
 }
