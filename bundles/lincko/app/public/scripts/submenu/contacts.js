@@ -102,7 +102,11 @@ function _app_contacts_gen_chatcontacts(type, id) {
     if (self_index > -1) {
         contactsID.splice(self_index, 1);
     }
-    return contactsID;
+    var tmp = {};
+    for (var c in contactsID) {
+        tmp[contactsID[c]] = {'checked': false};
+    }
+    return tmp;
 }
 
 Submenu.prototype._prepare_contactsList = function() {
@@ -110,12 +114,11 @@ Submenu.prototype._prepare_contactsList = function() {
 
     var contactList = [];
     for (var c in this.param.contactsID) {
-        var id = this.param.contactsID[c];
         contactList.push({
-            'username': Lincko.storage.data.users[id]['-username'],
-            'id': id,
+            'username': Lincko.storage.data.users[c]['-username'],
+            'id': c,
             'checked': this.param.contactsID[c].checked,
-            'logo': logoList[parseInt(id, 10)%10],
+            'logo': logoList[parseInt(c, 10)%10],
         });
     }
     return contactList;
