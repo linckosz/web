@@ -242,14 +242,21 @@ skylist.prototype.construct = function(){
 
 skylist.prototype.subConstruct_default = function(){
 	var that = this;
-	that.elem_newcardCircle.click(function(){
-		submenu_Build('taskdetail', null, null, 
-			{
-				"type":that.list_type,
-				"id": 'new', 
-			}, true);
-	})
-	.appendTo(that.list_wrapper);
+	if(that.list_type == 'files'){
+		that.elem_newcardCircle.click(function(){
+			app_upload_open_files('projects', app_content_menu.projects_id);
+		});
+	}
+	else{
+		that.elem_newcardCircle.click(function(){
+			submenu_Build('taskdetail', null, null, 
+				{
+					"type":that.list_type,
+					"id": 'new', 
+				}, true);
+		});
+	}
+	that.elem_newcardCircle.appendTo(that.list_wrapper);
 
 	app_application_lincko.add(
 		that.list.prop('id'),
@@ -514,7 +521,7 @@ skylist.prototype.filter_by_search = function(items, filter){
 	var that = this;
 	var items_filtered = [];
 
-	if( true || filter == null || filter == "" ){
+	if( filter == null || filter == "" ){
 		return items;
 	}
 	else{
@@ -1122,25 +1129,21 @@ skylist.prototype.addFile = function(item){
 	elem_title.html(item['+name']);
 
 	/*
-	 note description
+	 file description and preview image
 	 */
-	 var fileType = null;
 	 var fileType_class = 'fa fa-file-o';
-	 if(item['ori_ext'] == 'png' || item['ori_ext'] == 'jpeg' || item['ori_ext'] == 'jpg'){
-	 	fileType = 'Image, ';//toto
+	 var elem_leftbox = $('<span></span>').addClass('skylist_card_leftbox_fileIcon '+fileType_class);
+	 var thumb_url = null;
+	 if(item['category'] == 'image'){
 	 	fileType_class = 'fa fa-file-image-o';
+	 	thumb_url = Lincko.storage.getLinkThumbnail(item['_id']);
+		elem_leftbox = $('<img />').prop('src',thumb_url);
 	 }
-	 else{
-	 	fileType = '';
-	 }
-	 var elem_fileType = $('<div>'+'File Type'/*toto*/+': '+fileType+item['ori_ext'].toUpperCase()+'</div>');
-	Elem.find('[find=description]').html(elem_fileType);
 
-	/*
-	 files preview image
-	*/
-	var elem_leftbox = $('<span></span>').addClass('skylist_card_leftbox_fileIcon '+fileType_class);
+	 var elem_fileType = $('<div>'+'File Type'/*toto*/+': '+item['category']+', '+item['ori_ext'].toUpperCase()+'</div>');
+	Elem.find('[find=description]').html(elem_fileType);
 	Elem.find('[find=card_leftbox]').append(elem_leftbox);
+
 
 
 

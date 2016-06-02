@@ -203,10 +203,8 @@ Submenu.prototype.Add_taskdetail = function() {
 		var elem_file_thumb = $('<span class="fa fa-file-o"></span>');
 		var thumb_url = null;
 		if(item['category'] == 'image'){
-			console.log(item['_id']);
 			thumb_url = Lincko.storage.getLinkThumbnail(item['_id']);
-			console.log(thumb_url);
-			elem_file_thumb = $('<img src="'+thumb_url+'/>');
+			elem_file_thumb = $('<img />').prop('src',thumb_url);
 		}
 		elem.find('[find=leftbox]').html(elem_file_thumb);
 	}

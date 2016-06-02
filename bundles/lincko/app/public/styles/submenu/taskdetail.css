@@ -439,10 +439,27 @@ styling for sub comments
 .submenu_content_taskdetail_files .submenu_taskdetail_tasktitle {
     height: 120px;
 }
+.submenu_content_taskdetail_files .skylist_card_textwrapper {
+    width: initial;
+}
+.submenu_content_taskdetail_files [find=title_text]{
+    opacity: 1;
+}
+.submenu_content_taskdetail_files .submenu_taskdetail_tasktitle_fileInfo{
+    font-size: 14px;
+}
 .submenu_content_taskdetail_files [find=leftbox]{
-    font-size: 40px;
-    padding: 15px;
-    padding-left: 0px;
+    font-size: 54px;
+    height: 100%;
+    width: 120px;
+    text-align: center;
+    padding-right: 15px;
+    box-sizing: border-box;
+}
+.submenu_content_taskdetail_files [find=leftbox] img {
+    vertical-align: middle;
+    max-width: 100%;
+    max-height: 100%;
 }
 
 .submenu_content_taskdetail_files [find=downloadIcon] {

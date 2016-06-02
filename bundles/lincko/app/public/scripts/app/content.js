@@ -83,6 +83,7 @@ var app_content_menu = {
 				'tasks',
 				'notes',
 				'chat',
+				'files',
 			];
 		} else { //My placeholder (default)
 			title = base_myplaceholder;
@@ -90,6 +91,7 @@ var app_content_menu = {
 				'tasks',
 				'notes',
 				'chat',
+				'files',
 			];
 		}
 
