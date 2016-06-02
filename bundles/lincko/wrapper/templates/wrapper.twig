@@ -55,7 +55,13 @@ window.name = 'brunomartin';
 document.domain = '{{ domain }}';
 document.linckoBack = '{{ lincko_back }}';
 document.linckoFront = '{{ lincko_front }}';
-wrapper_show_error = {{ lincko_show_error }};
+wrapper_show_error = {{ lincko_show_dev }};
+document.linckoBackPort = 8443;
+{% if lincko_show_dev %}
+	if(top.location.protocol.indexOf('https')==-1){
+		document.linckoBackPort = 8080;
+	}
+{% endif %}
 
 var wrapper_link = [];
 wrapper_link['home'] = "{{ urlFor('home') }}";

@@ -1368,7 +1368,7 @@ Lincko.storage.getLink = function(id){
 		var type = "link";
 		var name = Lincko.storage.get('files', id, 'name');
 		var updated_at = Lincko.storage.get('files', id, 'updated_at');
-		var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':8443/file';
+		var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':'+document.linckoBackPort+'/file';
 		return url+"/"+workid+"/"+uid+"/"+type+"/"+id+"/"+name+"?"+updated_at;
 	}
 	return false;
@@ -1384,7 +1384,7 @@ Lincko.storage.getDownload = function(id){
 		var type = "download";
 		var name = Lincko.storage.get('files', id, 'name');
 		var updated_at = Lincko.storage.get('files', id, 'updated_at');
-		var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':8443/file';
+		var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':'+document.linckoBackPort+'/file';
 		return url+"/"+workid+"/"+uid+"/"+type+"/"+id+"/"+name+"?"+updated_at;
 	}
 	return false;
@@ -1403,7 +1403,7 @@ Lincko.storage.getLinkThumbnail = function(id){
 			var type = "thumbnail";
 			var name = Lincko.storage.get('files', id, 'name');
 			var updated_at = Lincko.storage.get('files', id, 'updated_at');
-			var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':8443/file';
+			var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':'+document.linckoBackPort+'/file';
 			thumbnail = url+"/"+workid+"/"+uid+"/"+type+"/"+id+"/"+name+"?"+updated_at;
 		}
 
