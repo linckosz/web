@@ -1,4 +1,5 @@
 var mainMenu = (function() {
+	var init = false;
     function orderList(list) {
         return list.sort(function(a, b) {
             return b.timestamp - a.timestamp;
@@ -12,7 +13,6 @@ var mainMenu = (function() {
         item.removeAttr('id', '');
         item.removeAttr('style', '');
         var cnt = notifier[data.type]['get'](data.id);
-        debugger;
         if (cnt) {
             if (cnt > 999) {
                 item.find('.notification').text('...').show();
@@ -179,20 +179,23 @@ var mainMenu = (function() {
         }
         return orderList(merge_list);
     }
-    return {
-        'init': function() {
-            initProjectTab();
+    function initTabs() {
+    	if (!init) {
+    		initProjectTab();
             initChatTab();
             initMainMenuEvents();
-        },
+            init = true;
+    	}
+    	return;
+    }
+    return {
+        'init': initTabs,
         'getlist': orderChatList,
         'feed': feedChatItem,
     };
 })();
 
 app_application_lincko.add(function() {
-		console.log("receive launch");
-		debugger;
         mainMenu.init();
 }, 'first_launch');
 

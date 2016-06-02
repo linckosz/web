@@ -700,7 +700,6 @@ skylist.prototype.addCard = function(item){
 		elem_card = that.addFile(item);
 	}
     else if (that.list_type == 'chats' || that.list_type == 'global_chats') {
-    	debugger;
         elem_card = that.addChat(item);
     }
 
@@ -746,7 +745,6 @@ skylist.prototype.addChat = function(item){
         var Elem_rightOptions = Elem.find('[find=card_rightOptions]').empty();
         var Elem_logo = $('#-skylist_logo').clone().prop('id','');
         var cnt = notifier[item.type]['get'](item.id);
-        debugger;
         if (cnt) {
             if (cnt > 999) {
                 Elem_logo.find('.notification').text('...').show();

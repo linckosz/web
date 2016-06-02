@@ -20,7 +20,6 @@ submenu_list['contacts'] = {
         "title": "Select",
         "class": "base_pointer",
         "action": function(elem, submenu, param) {
-            debugger;
             var userList = {};
             var nameList = "";
 
@@ -129,7 +128,6 @@ Submenu_select.contacts = function(Elem) {
 
 /*This "getContacts" method needs to be used in submit acction*/
 function _submenu_get_contacts(elem) {
-    debugger;
     var items = $(elem).parents(".submenu_wrapper").find(".submenu_contact_item .checked").parent().find("input.id");
     var keys = [];
     for (var i = 0; i < items.length; i++) {
