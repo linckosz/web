@@ -136,7 +136,7 @@ var app_content_menu = {
 }
 
 $('#app_content_top_home, #app_content_top_title_menu').click(function(){
-	app_content_menu.selection(-1);
+	submenu_Build('projects_list');
 });
 
 var app_content_menu_first_launch = true;
