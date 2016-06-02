@@ -199,6 +199,17 @@ Submenu.prototype.Add_taskdetail = function() {
 			});
 	elem.find('.app_layers_dev_skytasks_checkbox label').prop('for','app_layers_dev_skytasks_checkbox_'+taskid);
 	*/
+	else if( item['_type'] == "files" ){
+		var elem_file_thumb = $('<span class="fa fa-file-o"></span>');
+		var thumb_url = null;
+		if(item['category'] == 'image'){
+			console.log(item['_id']);
+			thumb_url = Lincko.storage.getLinkThumbnail(item['_id']);
+			console.log(thumb_url);
+			elem_file_thumb = $('<img src="'+thumb_url+'/>');
+		}
+		elem.find('[find=leftbox]').html(elem_file_thumb);
+	}
 	submenu_taskdetail.append(elem);
 
 	/*meta (general)*/

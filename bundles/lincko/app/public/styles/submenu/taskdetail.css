@@ -439,6 +439,12 @@ styling for sub comments
 .submenu_content_taskdetail_files .submenu_taskdetail_tasktitle {
     height: 120px;
 }
+.submenu_content_taskdetail_files [find=leftbox]{
+    font-size: 40px;
+    padding: 15px;
+    padding-left: 0px;
+}
+
 .submenu_content_taskdetail_files [find=downloadIcon] {
     position: absolute;
     top: 0px;
