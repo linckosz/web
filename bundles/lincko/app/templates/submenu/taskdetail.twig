@@ -2,7 +2,7 @@
 
 <table id="-submenu_taskdetail_tasktitle" class="submenu_taskdetail_tasktitle submenu_taskdetail_paddingLeft">
 	<tr>
-		<td find='leftbox'></td>
+		<td find='leftbox' class="skylist_card_center_leftbox"></td>
 		<td class="skylist_card_textwrapper">
 			<div find="title_text" tabIndex="1" class="selectable"></div>
 			{#<textarea find="title_text"></textarea>#}
@@ -96,6 +96,9 @@
 <div id="-submenu_taskdetail_tasktitle_fileInfo" class="submenu_taskdetail_tasktitle_fileInfo">
 	<div find="fileSize">
 		<span>File Size: {#toto#}</span><span find="val"></span><span find="unit"></span>
+	</div>
+	<div find="fileSize">
+		<span>File Type: {#toto#}</span><span find="category"></span><span>, </span><span find="ori_ext"></span>
 	</div>
 	<span find="downloadIcon" class="icon-ExclamationCloud"></span>
 </div>

@@ -444,6 +444,9 @@ styling for sub comments
 }
 .submenu_content_taskdetail_files [find=title_text]{
     opacity: 1;
+    padding-right: 120px;
+    max-height: 30px;
+    width: 100%;
 }
 .submenu_content_taskdetail_files .submenu_taskdetail_tasktitle_fileInfo{
     font-size: 14px;

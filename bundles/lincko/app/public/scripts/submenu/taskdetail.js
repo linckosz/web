@@ -102,6 +102,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		else{
 			item['+title'] = newTitle;
 		}
+		item['_id'] = taskid;
 		item['-comment'] = newDescription;
 		item['created_by'] = wrapper_localstorage.uid;
 		item['updated_by'] = wrapper_localstorage.uid;
@@ -131,12 +132,14 @@ Submenu.prototype.Add_taskdetail = function() {
 		var sizeNum = fileSize.val;
 		elem_title_fileInfo.find('[find=val]').html(sizeNum);
 		elem_title_fileInfo.find('[find=unit]').html(sizeUnit);
+		elem_title_fileInfo.find('[find=category]').html(item['category']);
+		elem_title_fileInfo.find('[find=ori_ext]').html(item['ori_ext'].toUpperCase());
 		elem_title_text.after(elem_title_fileInfo);
-
 	}
 	else{
 		elem_title_text.html(item['+title']);
-		if(wrapper_localstorage.uid in item['_perm'] && item['_perm'][wrapper_localstorage.uid][0] > 1){
+		console.log(item);
+		if(taskid == 'new' || (wrapper_localstorage.uid in item['_perm'] && item['_perm'][wrapper_localstorage.uid][0] > 1)){
 			elem_title_text.prop('contenteditable',true);
 			elem_title_text.focus(function(){
 				if( $(this).html() == newTitle ){

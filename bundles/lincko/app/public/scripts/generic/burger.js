@@ -142,10 +142,9 @@ var burger = function(elem, burger_mode, item){
                 if(responsive.test("maxMobileL")){
                     var param = {};
                     param.elem_input = elem;
-                    param.type = 'projects';//item['_type'];
+                    param.type = 'tasks';//item['_type'];
                     param.item_obj = item;
-                    param.contactsID = accessList;
-                    //param.contactsID = contactsID_obj;
+                    param.contactsID = burger_generate_contactsID(item);
                     submenu_Build('burger_contacts', true, null, param);
                     return false;
                 }
@@ -165,7 +164,7 @@ var burger = function(elem, burger_mode, item){
                 
                 
                 $.each(contactsID_obj, function(userid, obj){
-                    in_charge = obj.check;;
+                    in_charge = obj.check;
 
                     username = Lincko.storage.get("users", userid,"username");
                     elem_option_clone = elem_option.clone().attr('userid',userid);
@@ -210,6 +209,28 @@ var burger = function(elem, burger_mode, item){
             burger_destroy();
         });
     }
+}
+
+function burger_generate_contactsID(item){
+    var accessList = [];
+    if( item['_id'] == 'new' || item == 'new' || !item){
+        accessList = Lincko.storage.whoHasAccess('projects', app_content_menu.projects_id);
+    }
+    else{
+        accessList = Lincko.storage.whoHasAccess(item['_type'], item['_id']);
+    }
+    var contactsID_obj = {};
+    for (var i = 0; i < accessList.length; i++) {
+        var userid = accessList[i];
+        if( '_users' in item && userid in item['_users'] && item['_users'][userid]['in_charge'] ){
+            contactsID_obj[userid] = { check: true };
+        }
+        else{
+            contactsID_obj[userid] = { check: false };
+        }
+    }
+
+    return contactsID_obj;
 }
 
 
@@ -342,7 +363,9 @@ function burger_calendar (elem_timestamp, elem_display){
     });
 
     elem_display.click(function(){
-        event.stopPropagation();
+        elem_timestamp.click();
+    });
+    elem_timestamp.click(function(){
         if( responsive.test("maxMobileL")){
             var param = {elem_inputOrig:elem_timestamp };
             submenu_Build('calendar',true,false,param);
@@ -356,7 +379,10 @@ function burger_calendar (elem_timestamp, elem_display){
         else{
             elem_timestamp.focus();
         }
+
     });
+
+
     elem_timestamp.change(function(){
         var timestamp = $(this).val();
         timestamp = parseInt(timestamp,10); 

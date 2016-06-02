@@ -1,7 +1,7 @@
 submenu_list['burger_contacts'] = {
 	"_title": {
         "style": "customized_title",
-        "title": "Start New Chat",
+        "title": "Task Assignment",//toto
         "class": function(elem) {
                 return 'submenu_wrapper_taskdetail_tasks';
         },

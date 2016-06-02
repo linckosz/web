@@ -23,8 +23,7 @@ submenu_list['calendar'] = {
         "title": 'Select', //toto
         'hide': true,
         "class": "base_pointer",
-        'action': function(submenuInst){
-        	console.log(submenuInst);
+        'action': function(elem, submenuInst){
         	submenuInst.param.elem_inputOrig.val(submenuInst.param.elem_inputTarget.val()-86399000).change(); //subtract 23hrs59min59sec
         },
     },
@@ -49,7 +48,7 @@ Submenu.prototype.Add_calendar = function() {
 	var submenu_wrapper = this.Wrapper();
 	var submenu_content = submenu_wrapper.find("[find=submenu_wrapper_content]").addClass('submenu_calendar');
 	var elem_timestamp = $('<input find="timestamp" type="text" readonly="readonly"/>');
-	var elem_datepicker = $('<div>AAAAAAA</div>');
+	var elem_datepicker = $('<div>elem_datepicker</div>');
 	var elem_datepicker_inline = null;
 
 	elem_timestamp.val(that.param.elem_inputOrig.val());

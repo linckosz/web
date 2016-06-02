@@ -282,6 +282,9 @@
 }
 
 .skylist_card_center [find=card_leftbox]{ /*check with royce*/
+
+}
+.skylist_card_center_leftbox{
 	width: 1px;
     white-space: nowrap;
 }
@@ -420,7 +423,7 @@
     right: -4px;
     top: -4px;
 }
-.app_layers_tasks_tasklist .skylist_newcardCircle:hover {
+.skylist_newcardCircle:hover {
     opacity: 0.5;
 }
 

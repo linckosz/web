@@ -1,5 +1,9 @@
+.app_layers_notes_noteslist .skylist_menu_navbar_filter_icon{
+	display: none;
+}
+
 .app_layers_notes_noteslist .skylist_newcardCircle {
-	color: #475577;
+	color: #F0EB4E;
 }
 
 .app_layers_notes_noteslist .skylist_card_center {

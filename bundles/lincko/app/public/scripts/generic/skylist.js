@@ -32,7 +32,7 @@ var skylist_textDate = function(date){
 	}
 }
 
-var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct){
+var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct, rightOptionCount, leftOptionCount){
 	this.that = this;
 	var that = this;
 
@@ -100,12 +100,17 @@ var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct){
 	this.delX_now;
 	this.delY;
 	this.delY_ini;
+
 	this.elem_leftOptions = null;
-	this.elem_leftOptions_count = 1;
 	this.elem_leftOptions_width = 80;
+	if(!leftOptionCount){ leftOptionCount = 1; }
+	this.elem_leftOptions_count = leftOptionCount;
+
 	this.elem_rightOptions = null;
-	this.elem_rightOptions_count = 2;
 	this.elem_rightOptions_width = 80;
+	if(!rightOptionCount){rightOptionCount = 0; }
+	this.elem_rightOptions_count = rightOptionCount;
+
 	this.elem_leftOptionsL;
 	this.elem_rightOptionsL;
 	this.mousedown = false;
@@ -711,16 +716,7 @@ skylist.prototype.addCard = function(item){
 			function(){
 				var elem = $('#'+this.id);
 				var item_new = Lincko.storage.get(that.list_type , item['_id']);
-				if( item_new ){ //for update
-					elem.velocity('fadeOut',{
-						duration: 200,
-						complete: function(){
-							elem.replaceWith(that.addCard(Lincko.storage.get(that.list_type , item['_id'])));
-							that.DOM_updated();
-						}
-					});
-				}
-				else{ //for deletion
+				if( 'deleted_at' in item_new && item_new['deleted_at'] ){ //for delete
 					elem.velocity('slideUp',{
 						complete: function(){
 							$(this).remove();
@@ -730,6 +726,15 @@ skylist.prototype.addCard = function(item){
 							else{
 								that.DOM_updated();
 							}
+						}
+					});
+				}
+				else{ //for update
+					elem.velocity('fadeOut',{
+						duration: 200,
+						complete: function(){
+							elem.replaceWith(that.addCard(Lincko.storage.get(that.list_type , item['_id'])));
+							that.DOM_updated();
 						}
 					});
 				}
@@ -890,7 +895,7 @@ skylist.prototype.addTask = function(item){
 	elem_title.html(item['+title']);
 	if(contenteditable){
 		elem_title.on('mousedown touchstart', function(event){ 
-			if( responsive.test("maxMobileL") ){ return false; }
+			if( responsive.test("maxMobileL") ){ return true; }
 			that.editing_target = $(this);
 			clearTimeout(that.editing_timeout);
 			that.editing_timeout = setTimeout(function(){
@@ -936,7 +941,15 @@ skylist.prototype.addTask = function(item){
 	/*
 	rightOptions - in_charge
 	*/
-	Elem_rightOptions.append(that.add_rightOptionsBox(in_charge,'fa-user'));
+	var elem_rightOptions_inCharge = that.add_rightOptionsBox(in_charge,'fa-user');
+	elem_rightOptions_inCharge.click(function(){
+		var param = {};
+        param.type = 'tasks';
+        param.item_obj = item;
+        param.contactsID = burger_generate_contactsID(item);
+        submenu_Build('burger_contacts', true, null, param);
+	});
+	Elem_rightOptions.append(elem_rightOptions_inCharge);
 
 	/*
 	comments
@@ -1009,7 +1022,12 @@ skylist.prototype.addTask = function(item){
 	/*
 	rightOptions - duedate
 	*/
-	Elem_rightOptions.append(that.add_rightOptionsBox(duedate,'fa-calendar'));
+	var elem_rightOptions_duedate = that.add_rightOptionsBox(duedate,'fa-calendar');
+	elem_rightOptions_duedate.click(function(){
+		var param = {elem_inputOrig:elem_calendar_timestamp };
+        submenu_Build('calendar',true,false,param);
+	});
+	Elem_rightOptions.append(elem_rightOptions_duedate);
 
 	Elem.data('item_id',item['_id']);
 	Elem.data('options',false);
@@ -1318,6 +1336,9 @@ skylist.prototype.on_mousemove = function(event){
 	else if ( Math.abs(that.delX) > that.pan_threshold.valX && Math.abs(that.delY) < that.pan_threshold.valY){		
 		console.log('initialize...');
 		that.options_startL = parseInt(that.actiontask.css('left'),10);
+		if(!that.options_startL){
+			that.options_startL = 0;
+		}
 		/*
 		if( !that.actiontask.data('options') ){
 			console.log('delX: '+that.delX);
@@ -1699,11 +1720,18 @@ skylist.prototype.menu_construct = function(){
 				that.menu_sortnum_fn_rev();
 			}
 			
-			that.elem_sorts_text[that.sort_array[that.sortnum_new]].velocity({left: 0});
-			//that.elem_sorts_text[that.sort_array[that.sortnum]].velocity({opacity:0},500); 
-
+			that.elem_sorts_text[that.sort_array[that.sortnum_new]].velocity({left: 0},{
+				complete: function(){
+					if( that.Lincko_itemsList_filter.duedate == null){
+						that.Lincko_itemsList_filter.duedate = -1;
+					}
+					if(that.sort_array[that.sortnum_new] != that.Lincko_itemsList_filter.duedate){
+						that.sort_fn('duedate',that.sort_array[that.sortnum_new]);
+					}
+				}
+			});
 			that.menu_makeSelection(that.sort_array[that.sortnum_new]);
-			that.sort_fn('duedate',that.sort_array[that.sortnum_new]);
+			//that.elem_sorts_text[that.sort_array[that.sortnum]].velocity({opacity:0},500); 
 		
 		}
 
@@ -1810,7 +1838,7 @@ skylist.prototype.minTablet = function(){
 		that.elem_Jsorts.removeClass('display_none');
 	}
 
-	that.elem_cardcenter_all.find('input').prop('disabled',true);
+	that.elem_card_all.find('input').prop('disabled',false);
 }
 
 skylist.prototype.maxMobileL = function(){
@@ -1824,7 +1852,7 @@ skylist.prototype.maxMobileL = function(){
 	//that.elem_navbar.find('.icon-Indicator').closest('.skylist_menu_timesort_text_wrapper').removeClass('display_none');
 	that.elem_navbar.find('.skylist_menu_timesort_selected').removeClass('display_none');
 
-	that.elem_cardcenter_all.find('input').prop('disabled',false);
+	that.elem_card_all.find('input').prop('disabled',true);
 
 }
 
