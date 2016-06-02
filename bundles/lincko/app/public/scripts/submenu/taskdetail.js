@@ -868,7 +868,8 @@ function linckoEditor(elem){
 
 	var editorInst = new EasyEditor(elem, options);
 	editorInst.$toolbarContainer.addClass('submenu_taskdetail_paddingLeft');
-	console.log(editorInst);
+	$(editorInst.elem).addClass('base_DescriptionText');
+
 	
 	$(editorInst.elem).on('paste', function(){
 		$(window).resize();
