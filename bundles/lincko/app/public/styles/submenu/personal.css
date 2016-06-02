@@ -1,0 +1,26 @@
+.submenu_personal_next_picture {
+	text-align: center;
+}
+
+.submenu_personal_next_picture_image {
+	height: 60px;
+	width: 60px;
+	border-radius: 100%;
+	border: 2px solid #FBA026;
+	margin: 10px;
+	padding: 0;
+}
+
+.submenu_personal_next_picture_image:hover {
+	box-shadow: 0px 0px 4px 2px rgba(251, 125, 35, 0.4);
+}
+
+.submenu_personal_next_user {
+	font-size: 24px;
+	line-height: 20px;
+	vertical-align: middle;
+}
+
+.submenu_personal_next_deco {
+	height: 100px;
+}

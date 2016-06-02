@@ -55,14 +55,13 @@ submenu_list['settings'] = {
 	//Set the title of the top
 	"_title": {
 		"style": "title",
-		"title": Lincko.Translation.get('app', 2, 'html'), //Settings
+		"title": Lincko.Translation.get('app', 2, 'html'), //Lincko Settings
 	},
-	//Change the workspace
-	"workspace": {
-		"style": "next",
-		"title": Lincko.Translation.get('app', 39, 'html'), //Workspace
-		"next": "workspace",
-		"value": function(){ return Lincko.storage.WORKNAME; },
+	//Profile
+	"personal_settings": {
+		"style": "profile_next",
+		"title": "",//Lincko.storage.get('users',  wrapper_localstorage.uid, 'username').ucfirst(),
+		"next": "personal_settings",
 		"class": "",
 	},
 	//Change the language
@@ -73,9 +72,19 @@ submenu_list['settings'] = {
 		"value": submenu_language_full,
 		"class": "",
 	},
+	/*
+	//Change the workspace
+	"workspace": {
+		"style": "next",
+		"title": Lincko.Translation.get('app', 39, 'html'), //Workspace
+		"next": "workspace",
+		"value": function(){ return Lincko.storage.WORKNAME; },
+		"class": "",
+	},
+	*/
 	"home": {
 		"style": "button",
-		"title": Lincko.Translation.get('app', 43, 'html'), //Home page
+		"title": Lincko.Translation.get('app', 43, 'html'), //Visit Lincko Web Site
 		"action": function(){
 			window.location.href = wrapper_link['home'];
 		},

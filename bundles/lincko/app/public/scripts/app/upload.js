@@ -74,7 +74,7 @@ submenu_list['app_upload_destination'] = {
 };
 
 //This function is called only at the file submit moment because it can be different per file
-function app_upload_prepare_log(parent_type, parent_id){
+function app_upload_prepare_log(parent_type, parent_id, temp_id){
 	if(typeof parent_type != 'string' && !$.isNumeric(parent_id)){
 		parent_type = 'projects';
 		parent_id = Lincko.storage.getMyPlaceholder()['_id'];
@@ -84,6 +84,7 @@ function app_upload_prepare_log(parent_type, parent_id){
 	$('#app_upload_parent_id').val(parseInt(parent_id, 10));
 	$('#app_upload_fingerprint').val(fingerprint);
 	$('#app_upload_workspace').val(Lincko.storage.getWORKID());
+	$('#app_upload_temp_id').val(temp_id);
 }
 
 function app_upload_set_launcher(parent_type, parent_id, submenu, start){
@@ -107,6 +108,11 @@ function app_upload_open_files(parent_type, parent_id, submenu, start){
 function app_upload_open_photo(parent_type, parent_id, submenu, start){
 	app_upload_set_launcher(parent_type, parent_id, submenu, start);
 	$('#app_upload_form_photo').click();
+}
+
+function app_upload_open_photo_single(parent_type, parent_id, submenu, start){
+	app_upload_set_launcher(parent_type, parent_id, submenu, start);
+	$('#app_upload_form_photo_single').click();
 }
 
 function app_upload_open_video(parent_type, parent_id, submenu, start){
@@ -193,6 +199,8 @@ $(function () {
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_size = data.files[0].size;
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_parent_id = app_upload_auto_launcher.parent_id;
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_parent_type = app_upload_auto_launcher.parent_type;
+			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_temp_id = md5(Math.random());
+			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_start = app_upload_auto_launcher.start;
 
 			//Reinitialise display information
 			that.lincko_bitrate.length = [];
@@ -222,9 +230,13 @@ $(function () {
 			//Do not auto start by default
 			if(app_upload_auto_launcher.start){
 				var temp_index = app_upload_files.lincko_files_index-1;
-				setTimeout(function() {
-					app_upload_files.lincko_files[temp_index].submit();
-				}, 300);
+				app_application_lincko.add(Elem.prop('id'), 'upload', function() {
+					var temp_index = this.action_param[0];
+					if(app_upload_files.lincko_files[temp_index].start){
+						app_upload_files.lincko_files[temp_index].start = false;
+						app_upload_files.lincko_files[temp_index].submit();
+					}
+				}, temp_index);
 			}
 
 			clearTimeout(app_upload_auto_launcher_timeout);
@@ -259,7 +271,8 @@ $(function () {
 			app_upload_files.lincko_files[data.lincko_files_index].lincko_status = 'uploading';
 			var parent_type = app_upload_files.lincko_files[data.lincko_files_index].lincko_parent_type;
 			var parent_id = app_upload_files.lincko_files[data.lincko_files_index].lincko_parent_id;
-			app_upload_prepare_log(parent_type, parent_id);
+			var temp_id = app_upload_files.lincko_files[data.lincko_files_index].lincko_temp_id;
+			app_upload_prepare_log(parent_type, parent_id, temp_id);
 			app_application_lincko.prepare('upload', true);
 		},
 		

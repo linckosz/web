@@ -225,7 +225,7 @@ Lincko.storage.update = function(partial, info){
 	app_application_lincko.prepare("royce",true);
 	if(update){
 		//Lincko.storage.childrenList(partial, children_list);
-		Lincko.storage.childrenList(Lincko.storage.data); //We should not scan the whole database, it slows down the list but Sky had an issue of getting _children visible for notes when adding a comment
+		Lincko.storage.childrenList(); //We should not scan the whole database, it slows down the list but Sky had an issue of getting _children visible for notes when adding a comment
 		Lincko.storage.display();
 		wrapper_localstorage.encrypt('data', JSON.stringify(Lincko.storage.data));
 		if(!info){
@@ -294,7 +294,7 @@ Lincko.storage.schema = function(schema){
 	}
 
 	if(update){
-		Lincko.storage.childrenList(Lincko.storage.data);
+		Lincko.storage.childrenList();
 		Lincko.storage.display();
 		return true;
 	}
@@ -317,6 +317,7 @@ Lincko.storage.firstLatest = function(){
 };
 
 /* PRIVATE METHOD */
+//toto => we are not using data here, so for any update we are rebuilding the whole children list
 Lincko.storage.childrenList = function(data, children_list){
 	var parent_type = null;
 	var parent_id = 0;
@@ -341,13 +342,15 @@ Lincko.storage.childrenList = function(data, children_list){
 			if(typeof Lincko.storage.data[category][id]['_parent']!='undefined' && typeof Lincko.storage.data[category][id]['_parent'][0]=='string' && Lincko.storage.data[category][id]['_parent'][1]){
 				parent_type = Lincko.storage.data[category][id]['_parent'][0];
 				parent_id = Lincko.storage.data[category][id]['_parent'][1];
-				if(!Lincko.storage.data[parent_type][parent_id]['_children']){
-					Lincko.storage.data[parent_type][parent_id]['_children'] = {};
+				if(Lincko.storage.data[parent_type] && Lincko.storage.data[parent_type][parent_id]){
+					if(!Lincko.storage.data[parent_type][parent_id]['_children']){
+						Lincko.storage.data[parent_type][parent_id]['_children'] = {};
+					}
+					if(!Lincko.storage.data[parent_type][parent_id]['_children'][category]){
+						Lincko.storage.data[parent_type][parent_id]['_children'][category] = {};
+					}
+					Lincko.storage.data[parent_type][parent_id]['_children'][category][id] = true;
 				}
-				if(!Lincko.storage.data[parent_type][parent_id]['_children'][category]){
-					Lincko.storage.data[parent_type][parent_id]['_children'][category] = {};
-				}
-				Lincko.storage.data[parent_type][parent_id]['_children'][category][id] = true;
 			}
 			delete Lincko.storage.data[category][id]['_children'];
 		}
@@ -1577,7 +1580,7 @@ JSfiles.finish(function(){
 		app_application_lincko.prepare('first_launch', true);
 	}
 	wrapper_load_progress.move(65);
-	Lincko.storage.childrenList(Lincko.storage.data);
+	Lincko.storage.childrenList();
 	wrapper_load_progress.move(70);
 	if($.isEmptyObject(Lincko.storage.data)){
 		Lincko.storage.setLastVisit(0);
