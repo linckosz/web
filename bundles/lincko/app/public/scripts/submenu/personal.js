@@ -22,7 +22,6 @@ submenu_list['personal_settings'] = {
 			if(val_new != val_old){
 				clearTimeout(submenu_profile_timer['username']);
 				submenu_profile_timer['username'] = setTimeout(function(){
-					console.log("username: "+val_new);
 					wrapper_sendAction(
 						{
 							"id": wrapper_localstorage.uid,
@@ -235,8 +234,7 @@ Submenu.prototype.Add_ProfileNext = function() {
 		var username = Lincko.storage.get('users',  wrapper_localstorage.uid, "username").ucfirst();
 		$("#"+this.id).html(username);
 	});
-	
-	$("<img class='submenu_icon submenu_icon_next floatright' src='/lincko/app/images/submenu/next.png' />").appendTo(Elem.find("[find=submenu_next_user]"));
+
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
 	return true;
 }
