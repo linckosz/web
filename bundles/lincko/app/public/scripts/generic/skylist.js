@@ -1219,6 +1219,16 @@ skylist.prototype.addFile = function(item){
 	 else{
 	 	elem_leftbox.addClass(fileType_class);
 	 }
+	 else if(item['category'] == 'video'){
+	 	fileType_class = 'fa fa-file-video-o';
+	 }
+
+	 console.log(item);
+	 console.log(fileType_class);
+
+	 if(!elem_leftbox.is('img')){
+	 	elem_leftbox.addClass(fileType_class);
+	 }
 
 	var elem_fileType = $('<div>'+'File Type'/*toto*/+': '+item['category']+', '+item['ori_ext'].toUpperCase()+'</div>');
 	Elem.find('[find=description]').html(elem_fileType);
