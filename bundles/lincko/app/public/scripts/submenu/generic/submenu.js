@@ -836,6 +836,7 @@ Submenu.prototype.showSubmenu = function(time, delay) {
 					submenu_resize_content();
 					submenu_content_unblur();
 					that.FocusForm();
+					app_application_lincko.prepare("submenu_show", true);
 				}
 			}
 		);
@@ -861,6 +862,7 @@ Submenu.prototype.showSubmenu = function(time, delay) {
 					submenu_resize_content();
 					submenu_content_unblur();
 					that.FocusForm();
+					app_application_lincko.prepare("submenu_show", true);
 				}
 			}
 		);
@@ -892,6 +894,7 @@ Submenu.prototype.showPreview = function(time, delay) {
 					app_application_submenu_position();
 					submenu_resize_content();
 					that.FocusForm();
+					app_application_lincko.prepare("submenu_show", true);
 				}
 			}
 		);
@@ -913,6 +916,7 @@ Submenu.prototype.showPreview = function(time, delay) {
 					app_application_submenu_position();
 					submenu_resize_content();
 					that.FocusForm();
+					app_application_lincko.prepare("submenu_show", true);
 				}
 			}
 		);
@@ -950,6 +954,7 @@ Submenu.prototype.hideSubmenu = function(time, delay) {
 				easing: [.38, .1, .13, .9],
 				complete: function() {
 					that.Remove();
+					app_application_lincko.prepare("submenu_hide", true);
 				}
 			}
 		);
@@ -965,6 +970,7 @@ Submenu.prototype.hideSubmenu = function(time, delay) {
 				easing: [.38, .1, .13, .9],
 				complete: function() {
 					that.Remove();
+					app_application_lincko.prepare("submenu_hide", true);
 				}
 			}
 		);
@@ -989,6 +995,7 @@ Submenu.prototype.hidePreview = function(time, delay) {
 				easing: [.38, .1, .13, .9],
 				complete: function() {
 					that.Remove();
+					app_application_lincko.prepare("submenu_hide", true); //toto => doesn't trigger
 				}
 			}
 		);
@@ -1001,6 +1008,7 @@ Submenu.prototype.hidePreview = function(time, delay) {
 				easing: [.38, .1, .13, .9],
 				complete: function() {
 					that.Remove();
+					app_application_lincko.prepare("submenu_hide", true); //toto => doesn't trigger
 				}
 			}
 		);
