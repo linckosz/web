@@ -195,9 +195,14 @@ var mainMenu = (function() {
     };
 })();
 
-app_application_lincko.add(function() {
+var project_garbage = app_application_garbage.add();
+app_application_lincko.add(project_garbage, 'first_launch', function() {
+   if(!$.isEmptyObject(Lincko.storage.data)){
         mainMenu.init();
-}, 'first_launch');
+        app_application_garbage.remove(project_garbage);
+        delete project_garbage;
+    }
+});
 
 
 function app_project_quick_upload_display(Elem, show) {
