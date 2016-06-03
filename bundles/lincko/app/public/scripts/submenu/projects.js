@@ -37,7 +37,7 @@ var submenu_projects_build_list = function(){
 		title = projects[i]['+title'].ucfirst();
 		projects_id = projects[i]['_id'];
 		if(typeof submenu_list['projects_list'][projects_id] == 'undefined'){
-			submenu_list['projects_list'][projects_id] = {
+			submenu_list['projects_list']['projects_'+i+'_'+projects_id] = {
 				"style": "button",
 				"title": title,
 				"hide": true,

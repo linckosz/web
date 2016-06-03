@@ -115,6 +115,7 @@ var app_application_lincko = {
 				if(match = field.match(/^([a-z_]+)_(\d+)$/, '')){
 					if(temp = Lincko.storage.tree(match[1], match[2], "parents")){
 						for(var type in temp){
+							temp_fields[type] = true;
 							for(var id in temp[type]){
 								temp_fields[type+"_"+id] = true;
 							}
