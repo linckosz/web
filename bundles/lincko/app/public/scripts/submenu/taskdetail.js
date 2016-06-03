@@ -202,14 +202,38 @@ Submenu.prototype.Add_taskdetail = function() {
 	elem.find('.app_layers_dev_skytasks_checkbox label').prop('for','app_layers_dev_skytasks_checkbox_'+taskid);
 	*/
 	else if( item['_type'] == "files" ){
-		var elem_file_thumb = $('<span class="fa fa-file-o"></span>');
+		var fileType_class = 'fa fa-file-o';
+		var elem_leftbox = $('<span></span>').addClass('skylist_card_leftbox_fileIcon');
+		var real_url = null;
 		var thumb_url = null;
 		if(item['category'] == 'image'){
+			fileType_class = 'fa fa-file-image-o';
 			thumb_url = Lincko.storage.getLinkThumbnail(item['_id']);
-			elem_file_thumb = $('<img />').prop('src',thumb_url);
+			real_url = Lincko.storage.getLink(item['_id']);
+			elem_leftbox = $('<img />').prop('src',thumb_url).click(function(event){
+				event.stopPropagation();
+				previewer.pic(item['+name'],real_url,thumb_url);
+			});
 		}
-		elem.find('[find=leftbox]').html(elem_file_thumb);
+		else if(item['category'] == 'video'){
+			fileType_class = 'fa fa-file-video-o';
+			thumb_url = Lincko.storage.getLinkThumbnail(item['_id']);
+			real_url = Lincko.storage.getLink(item['_id']);
+			elem_leftbox = $('<img />').prop('src',thumb_url).click(function(event){
+				event.stopPropagation();
+				previewer.video(item['+name'],real_url,thumb_url);
+			});
+		}
+
+		if(elem_leftbox.is('img')){
+
+		}
+		else{
+			elem_leftbox.addClass(fileType_class);
+		}
+		elem.find('[find=leftbox]').html(elem_leftbox);
 	}
+
 	submenu_taskdetail.append(elem);
 
 	/*meta (general)*/
@@ -820,9 +844,13 @@ Submenu.prototype.Add_taskdetail = function() {
 	//set the focus upon opening detail pane
 	if(taskid == 'new'){
 		if(that.param.type == 'tasks'){
-			setTimeout(function(){
+			app_application_lincko.add(submenu_taskdetail, 'submenu_show', function(){
+				console.log('submenu_show tasklist');
 				elem_title_text.focus();
-			},300);
+			});
+			/*setTimeout(function(){
+				elem_title_text.focus();
+			},300);*/
 		}
 		else if(that.param.type == 'notes'){
 			console.log('notes');

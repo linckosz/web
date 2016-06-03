@@ -1193,24 +1193,35 @@ skylist.prototype.addFile = function(item){
 	 */
 	 var fileType_class = 'fa fa-file-o';
 	 var elem_leftbox = $('<span></span>').addClass('skylist_card_leftbox_fileIcon');
+	 var real_url = null;
 	 var thumb_url = null;
 	 if(item['category'] == 'image'){
 	 	fileType_class = 'fa fa-file-image-o';
 	 	thumb_url = Lincko.storage.getLinkThumbnail(item['_id']);
-		elem_leftbox = $('<img />').prop('src',thumb_url);
+	 	real_url = Lincko.storage.getLink(item['_id']);
+		elem_leftbox = $('<img />').prop('src',thumb_url).click(function(event){
+			event.stopPropagation();
+			previewer.pic(item['+name'],real_url,thumb_url);
+		});
 	 }
 	 else if(item['category'] == 'video'){
 	 	fileType_class = 'fa fa-file-video-o';
+	 	thumb_url = Lincko.storage.getLinkThumbnail(item['_id']);
+	 	real_url = Lincko.storage.getLink(item['_id']);
+		elem_leftbox = $('<img />').prop('src',thumb_url).click(function(event){
+			event.stopPropagation();
+			previewer.video(item['+name'],real_url,thumb_url);
+		});
 	 }
 
-	 console.log(item);
-	 console.log(fileType_class);
+	 if(elem_leftbox.is('img')){
 
-	 if(!elem_leftbox.is('img')){
+	 }
+	 else{
 	 	elem_leftbox.addClass(fileType_class);
 	 }
 
-	 var elem_fileType = $('<div>'+'File Type'/*toto*/+': '+item['category']+', '+item['ori_ext'].toUpperCase()+'</div>');
+	var elem_fileType = $('<div>'+'File Type'/*toto*/+': '+item['category']+', '+item['ori_ext'].toUpperCase()+'</div>');
 	Elem.find('[find=description]').html(elem_fileType);
 	Elem.find('[find=card_leftbox]').append(elem_leftbox);
 
