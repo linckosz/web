@@ -461,7 +461,6 @@ $('#app_application_project_block').click(function(){
 var globalWordSelect;
 function handle_select() {
 	if (supportsTouch) {
-	//debugger;
 	/*
 	$(".selectable").hammer().on("press", function() {
 		var scroll = myIScrollList[$(this).parents(".overthrow").attr("id")];//find iScroll

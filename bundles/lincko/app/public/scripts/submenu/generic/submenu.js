@@ -183,7 +183,6 @@ function Submenu(menu, next, param, preview) {
 	var self = this;
 
 	function Constructor(Elem) {
-		debugger;
 		Elem.changeState();
 		//First we have to empty the element if it exists
 
@@ -805,7 +804,6 @@ Submenu.prototype.FocusForm = function() {
 };
 
 Submenu.prototype.showSubmenu = function(time, delay) {
-	debugger;
 	var submenu_wrapper = this.Wrapper();
 	var that = this;
 	if (responsive.test("minDesktop")) {
@@ -873,7 +871,6 @@ Submenu.prototype.showSubmenu = function(time, delay) {
 }
 
 Submenu.prototype.showPreview = function(time, delay) {
-	debugger;
 	var submenu_wrapper = this.Wrapper();
 	var that = this;
 	var animation;
@@ -1147,7 +1144,6 @@ function submenu_Clean(layer, animate, preview) {
 }
 
 function submenu_Build(menu, next, hide, param, preview) {
-	debugger;
 	if (typeof next === 'undefined') { next = 1; }
 	if (typeof hide === 'undefined') { hide = true; }
 	if (typeof param === 'undefined') { param = null; }
