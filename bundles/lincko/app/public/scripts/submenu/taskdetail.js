@@ -430,6 +430,12 @@ Submenu.prototype.Add_taskdetail = function() {
 		var created_by = Lincko.storage.get("users", comment['created_by'],"username");
 		elem.find('[find=name]').html(created_by);
 
+		var picID  = Lincko.storage.get("users", comment['created_by'], 'profile_pic');
+		if(picID){
+			var thumb_url = Lincko.storage.getLinkThumbnail(picID);
+			elem.find('[find=profile_pic]').removeClass('icon-SmallPersonaiconBlack').css('background-image','url("'+thumb_url+'")');
+		}
+
 		var created_at = new wrapper_date(comment['created_at']);
 		created_at = created_at.display('date_very_short');
 		elem.find('[find=date]').html(created_at);
@@ -801,8 +807,8 @@ Submenu.prototype.Add_taskdetail = function() {
 	});
 	elem_description_text.blur(function(){
 		if(editorInst instanceof EasyEditor === true && destroyEditor_onBlur) {
-			//editorInst.detachEvents();
-			//editorInst = null;
+			editorInst.detachEvents();
+			editorInst = null;
 		}
 		else if(!destroyEditor_onBlur){
 			destroyEditor_onBlur = true;
@@ -816,13 +822,13 @@ Submenu.prototype.Add_taskdetail = function() {
 		if(that.param.type == 'tasks'){
 			setTimeout(function(){
 				elem_title_text.focus();
-			},100);
+			},300);
 		}
 		else if(that.param.type == 'notes'){
 			console.log('notes');
 			setTimeout(function(){
 				elem_description_text.focus();
-			},2000);
+			},300);
 		}
 	}
 

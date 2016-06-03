@@ -1,3 +1,10 @@
+.skylist_clickable { 
+	cursor: pointer;
+	cursor: hand;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -moz-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
 .skylist_wrapper {
 	font-weight: 200;
 }

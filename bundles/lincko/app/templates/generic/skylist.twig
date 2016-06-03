@@ -9,8 +9,8 @@
 <div class="display_none">
 
 	<div id="-skylist_menu_navbar" class="skylist_menu_navbar">
-		<span class = "skylist_menu_people">
-			<span people="1" class="skylist_menu_selected">
+		<span class = "skylist_menu_people skylist_clickable">
+			<span people="1" class="skylist_menu_selected skylist_clickable">
 				{#<i find="noSelect" class="icon-Single-Person"></i>  uncomment this to use icons #} 
 				{#<i find="Select" class="icon-Single-Person-Selected"></i>#}
 			</span>
@@ -20,7 +20,7 @@
 			</span>
 		</span>
 		<div class="skylist_menu_timesort"></div>
-		<span class="skylist_menu_navbar_filter_icon icon-Filter"></span>
+		<span class="skylist_menu_navbar_filter_icon icon-Filter skylist_clickable "></span>
 		<div class="skylist_menu_navbar_filter_pane" tabindex="1">
 			<div find="filter_header_1">Filter:{#toto#}</div>
 		</div>
@@ -60,7 +60,7 @@
 	<div id='-skylist_subwrapper' class="skylist_subwrapper"></div>
 	<div id="-skylist" class="skylist overthrow"></div>
 
-	<div id="-skylist_card" find="card" class="skylist_card needsclick">
+	<div id="-skylist_card" find="card" class="skylist_card needsclick skylist_clickable">
 		<div find='card_leftOptions' class="skylist_card_leftOptions maxMobileL">
 			<div class="skylist_leftOptionBox">
 				<div class="icon-Trash"></div>

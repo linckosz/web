@@ -311,6 +311,7 @@ td.submenu_taskdetail_share .fa{
 }
 .submenu_taskdetail_comments_seePrev {
 	text-align: center;
+    height: 46px;
 }
 .submenu_taskdetail_text {
 	font-size: 20px;
@@ -343,6 +344,8 @@ td.submenu_taskdetail_share .fa{
     border: 2px solid #FBA026;
     border-radius: 40px;
     display: inline-block;
+    background-size: 40px 40px;
+    background-repeat: no-repeat;
 }
 .submenu_taskdetail_commentbubble_profile [find=name] {
 	color: #3677A7;
@@ -419,6 +422,7 @@ styling for sub comments
 	font-size: 20px;
 	width: 23px;
 	height: 23px;
+    background-size: 23px 23px;
 }
 .submenu_taskdetail_commentbubble_sub [find=text], .submenu_taskdetail_commentbubble_sub [find=name] {
 	font-size: 12px;
@@ -453,7 +457,7 @@ styling for sub comments
 }
 .submenu_content_taskdetail_files [find=leftbox]{
     font-size: 54px;
-    height: 100%;
+    height: 115px;
     width: 120px;
     text-align: center;
     padding-right: 15px;

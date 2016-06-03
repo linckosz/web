@@ -848,6 +848,7 @@ skylist.prototype.addTask = function(item){
 	if(item == null){
 		item = {};
 		item['_id'] = 'new';
+		item['_type'] = "tasks"
 		item['+title'] = 'blankTask';
 		item['_perm'][0] = 3; //RCUD
 		item['created_by'] = wrapper_localstorage.uid;
@@ -916,9 +917,9 @@ skylist.prototype.addTask = function(item){
 				}, 'post', 'task/update', 
 				function(msg, data_error, data_status, data_msg){ 
 					if(data_error){
-						app_application_lincko.prepare('tasks_'+item['_id']);
+						app_application_lincko.prepare(item['_type']+'_'+item['_id']);
 					}
-				}, function(){ app_application_lincko.prepare('tasks_'+item['_id']); });
+				}, function(){ app_application_lincko.prepare(item['_type']+'_'+item['_id']); });
 			}
 		});
 		burger(Elem.find('[find=title]'), 'regex');
@@ -1075,19 +1076,36 @@ skylist.prototype.addNote = function(item){
 		contenteditable = true; 
 	}
 	elem_title.html(item['+title']);
-	elem_title.on('mousedown touchstart', function(event){ 
-		if( responsive.test("maxMobileL") ){ return false; }
-		that.editing_target = $(this);
-		clearTimeout(that.editing_timeout);
-		that.editing_timeout = setTimeout(function(){
-			that.editing_target.attr('contenteditable',contenteditable);
-			that.editing_target.focus();
-		},1000);
-	});
-	elem_title.on('mouseup touchend', function(event){
-		clearTimeout(that.editing_timeout);
-	});
-	burger(Elem.find('[find=title]'), 'regex');
+	if(contenteditable){
+		elem_title.on('mousedown touchstart', function(event){ 
+			if( responsive.test("maxMobileL") ){ return true; }
+			that.editing_target = $(this);
+			clearTimeout(that.editing_timeout);
+			that.editing_timeout = setTimeout(function(){
+				that.editing_target.attr('contenteditable',contenteditable);
+				that.editing_target.focus();
+			},1000);
+		});
+		elem_title.on('mouseup touchend', function(event){
+			clearTimeout(that.editing_timeout);
+		});
+		elem_title.blur(function(){
+			that.editing_target.attr('contenteditable',false);
+			var new_text = $(this).html();
+			if(new_text != item['+title']){
+				wrapper_sendAction({
+				id: item['_id'],
+				title: new_text,
+				}, 'post', 'note/update', 
+				function(msg, data_error, data_status, data_msg){ 
+					if(data_error){
+						app_application_lincko.prepare(item['_type']+'_'+item['_id']);
+					}
+				}, function(){ app_application_lincko.prepare(item['_type']+'_'+item['_id']); });
+			}
+		});
+	}
+
 
 	/*
 	 note description
@@ -1174,12 +1192,22 @@ skylist.prototype.addFile = function(item){
 	 file description and preview image
 	 */
 	 var fileType_class = 'fa fa-file-o';
-	 var elem_leftbox = $('<span></span>').addClass('skylist_card_leftbox_fileIcon '+fileType_class);
+	 var elem_leftbox = $('<span></span>').addClass('skylist_card_leftbox_fileIcon');
 	 var thumb_url = null;
 	 if(item['category'] == 'image'){
 	 	fileType_class = 'fa fa-file-image-o';
 	 	thumb_url = Lincko.storage.getLinkThumbnail(item['_id']);
 		elem_leftbox = $('<img />').prop('src',thumb_url);
+	 }
+	 else if(item['category'] == 'video'){
+	 	fileType_class = 'fa fa-file-video-o';
+	 }
+
+	 console.log(item);
+	 console.log(fileType_class);
+
+	 if(!elem_leftbox.is('img')){
+	 	elem_leftbox.addClass(fileType_class);
 	 }
 
 	 var elem_fileType = $('<div>'+'File Type'/*toto*/+': '+item['category']+', '+item['ori_ext'].toUpperCase()+'</div>');

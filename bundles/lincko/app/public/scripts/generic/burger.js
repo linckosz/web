@@ -168,6 +168,7 @@ var burger = function(elem, burger_mode, item){
                 console.log(coordP);
                 var username = null;
                 var in_charge = null;
+                var picID = null;
                 var elem_option = $('#-burger_option').clone().prop('id','').addClass('burger_option'+burger_mode);
                 var elem_option_clone;
                 //$.each(item[burger_mode], function(key, value){
@@ -179,6 +180,11 @@ var burger = function(elem, burger_mode, item){
                     username = Lincko.storage.get("users", userid,"username");
                     elem_option_clone = elem_option.clone().attr('userid',userid);
                     elem_option_clone.find('[find=username]').html(username);
+                    picID  = Lincko.storage.get("users", userid, 'profile_pic');
+                    if(picID){
+                        var thumb_url = Lincko.storage.getLinkThumbnail(picID);
+                        elem_option_clone.find('[find=profile_pic]').removeClass('icon-SmallPersonaiconBlack').css('background-image','url("'+thumb_url+'")');
+                    }
                     if( in_charge ){
                         elem_option_clone.addClass('burger_option_selected');
                     }
