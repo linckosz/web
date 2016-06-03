@@ -191,7 +191,7 @@ var chatFeed = (function() {
         if (this.item._type == "uploading_file") {
             Elem.prop('id', "uploading_file_"+this.item.index);
         } else {
-            Elem.prop('id', 'models_thistory_' + this.item.id);
+            Elem.prop('id', 'models_thistory_' + this.item._id);
         }
         Elem.addClass(this.decoratorClass);
         Elem.addClass(this.item._type);
@@ -298,20 +298,10 @@ var chatFeed = (function() {
 
 
     function app_layers_history_launchPage(position, type, projectId) {
-        //var parentId = position.parent().attr('id');
-        var update = function() {
-                position.addClass('overthrow').addClass("submenu_chat_contents");
-                position.empty();
-                app_layers_history_feedPage(position, type, projectId);
-                wrapper_IScroll();
-        }
-        update();
-        if (type != 'history'){
-            app_application_lincko.add("chats", update);
-        }
-        else {
-            app_application_lincko.add("projects", update);
-        }
+            position.addClass('overthrow').addClass("submenu_chat_contents");
+            position.empty();
+            app_layers_history_feedPage(position, type, projectId);
+            wrapper_IScroll();
     }
 
     function fake_history_generator_for_multimedia(item) {
@@ -353,7 +343,7 @@ var chatFeed = (function() {
     }
 
     function app_layers_history_feedPage(position, type, parentId) {
-        var items = getRawContents(type, parentId, "0-20");
+        var items = getRawContents(type, parentId, null);
         $('<div>').addClass('chat_contents_wrapper').attr('id', 'chat_contents_wrapper').appendTo(position);
         format_items(type, items, position);
     }

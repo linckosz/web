@@ -1,3 +1,4 @@
+console.log("newchat");
 submenu_list['newchat'] = {
     //Set the title of the top
     "_title": {
@@ -58,6 +59,28 @@ Submenu.prototype.Add_ChatContents = function() {
     //chatFeed.feedPaging(type, position, id);
     });
     notifier[type]['clear'](id);
+    if (type == 'history') {
+            app_application_lincko.add("chat_contents_wrapper","projects_" + id, function() {
+                var id = Object.keys(this.range)[0].split("_")[1];
+                var type = Object.keys(this.range)[0].split("_")[0];
+                //Lincko.storage.list("chats", null, {"new": true}, 'chats', id, false);
+                var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
+                //chatFeed.feedHistory(position, "history", id);
+                //var items = Lincko.storage.hist(null, -1, {"not": true}, 'projects', id, true);
+                //chatFeed.appendItem(type, items, position, true);
+            });
+    }
+    else {
+        app_application_lincko.add("chat_contents_wrapper", "chats_" + id, function() {
+            var id = Object.keys(this.range)[0].split("_")[1];
+            var type = Object.keys(this.range)[0].split("_")[0];
+            var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
+            var latest_id = $(".submenu_wrapper").find(".models_history_wrapper:last-of-type").attr("id").split("models_thistory_")[1];
+            var latest = Lincko.storage.get("comments", latest_id).created_at;
+            var items = Lincko.storage.list('comments', -1, {'created_at': [">", latest]}, 'chats', id, false);
+            chatFeed.appendItem(type, items, position, true);
+        });
+    }
 }
 
 Submenu.prototype.New_Add_ChatMenu = function() {
@@ -158,23 +181,6 @@ Submenu.prototype.New_Add_ChatMenu = function() {
             }
         ); //TODO: fix the error handling logic
     });
-    if (that.param.type == 'history') {
-            app_application_lincko.add("chat_contents_wrapper","projects_" + that.param.id, function() {
-                var id = Object.keys(this.range)[0].split("_")[1];
-                var type = Object.keys(this.range)[0].split("_")[0];
-                //Lincko.storage.list("chats", null, {"new": true}, 'chats', id, false);
-                var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
-                chatFeed.feedHistory(position, "history", id);
-            });
-    }
-    else {
-        app_application_lincko.add("chat_contents_wrapper", "chats_" + that.param.id, function() {
-            var id = Object.keys(this.range)[0].split("_")[1];
-            var type = Object.keys(this.range)[0].split("_")[0];
-            var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
-            chatFeed.feedHistory(position, type, id);
-        });
-    }
 
     //Free memory
     delete submenu_wrapper;
