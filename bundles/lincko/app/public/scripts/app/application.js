@@ -494,6 +494,9 @@ $("body").delegate(".selectable", "mouseup", function(e){
 	scroll.enable();//disables the iScroll
 	$("#app_application_lincko_action").css({"left":e.pageX, "top":e.pageY}).show();
 	globalWordSelect = $.selection();
+	if(globalWordSelect=="") {
+		$("#app_application_lincko_action").hide();
+	}
 });
 
 $("#app_application_lincko_action").click(function() {
