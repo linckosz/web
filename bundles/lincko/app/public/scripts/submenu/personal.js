@@ -314,7 +314,7 @@ Submenu.prototype.Add_ProfileInfo = function() {
 		Elem.addClass(attribute['class']);
 	}
 	Elem.find("[find=submenu_title]").html(attribute.title);
-	Elem.find("[find=submenu_value]").html(attribute.title);
+	Elem.find("[find=submenu_value]").html(attribute.value);
 	
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
 	return true;
