@@ -805,6 +805,7 @@ Submenu.prototype.FocusForm = function() {
 };
 
 Submenu.prototype.showSubmenu = function(time, delay) {
+	debugger;
 	var submenu_wrapper = this.Wrapper();
 	var that = this;
 	if (responsive.test("minDesktop")) {
@@ -872,6 +873,7 @@ Submenu.prototype.showSubmenu = function(time, delay) {
 }
 
 Submenu.prototype.showPreview = function(time, delay) {
+	debugger;
 	var submenu_wrapper = this.Wrapper();
 	var that = this;
 	var animation;

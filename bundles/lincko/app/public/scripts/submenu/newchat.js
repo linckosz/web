@@ -56,6 +56,7 @@ Submenu.prototype.Add_ChatContents = function() {
     //position.find(".iScrollVerticalScrollbar").height(height);
     app_application_lincko.add(this.Wrapper().attr("id"), "submenu_show", function() {
         var chatScroll = myIScrollList[submenu_wrapper.find("[find=submenu_wrapper_content]").attr("id")];
+        chatScroll.refresh();
         chatScroll.scrollToElement($("#"+this.id).find(".models_history_wrapper:last-of-type")[0], 0);
     //chatScroll.on('scrollEnd', function() {
         //This is the event we need to handle when do pagination
@@ -127,6 +128,7 @@ Submenu.prototype.New_Add_ChatMenu = function() {
             'comment/create',
             function() {
                 Elem.find('.comments_input').val('').blur();
+                app_application_lincko.prepare("submenu_show");
             }
             );
         }
@@ -181,6 +183,7 @@ Submenu.prototype.New_Add_ChatMenu = function() {
             function() {
                 Elem.find('.comments_input').val('').blur();
                 app_application_lincko.update("chat_contents_wrapper", type+"_" + that.param.id);
+                app_application_lincko.prepare("submenu_show");
             }
         ); //TODO: fix the error handling logic
     });
