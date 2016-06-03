@@ -1,32 +1,22 @@
 /* Category 31 */
+console.log("history loaded");
 var chatFeed = (function() {
-    //  toto: fixme, these fake links need to be removed for production
-    var fakeMedias = {
-            '64':{'thumbnail': 'http://cdn.duitang.com/uploads/item/201311/08/20131108161501_BMkku.thumb.700_0.jpeg',
-                  'url': 'http://cdn.duitang.com/uploads/item/201311/08/20131108161501_BMkku.thumb.700_0.jpeg',
-                  'target': 'dodolong_1.jpeg'},
-            '124': {'thumbnail': 'http://img4.yytcdn.com/video/mv/150612/2308579/-M-8929f5ae099185010c48b930c829479b_240x135.jpg',
-                  'url': 'http://download.wavetlan.com/SVV/Media/HTTP/H264/Talkinghead_Media/H264_test1_Talkinghead_mp4_480x360.mp4',
-                  'target': 'dodolong_video.mp4'},
-            '126': {'thumbnail': 'http://cdn.duitang.com/uploads/item/201311/12/20131112153049_JFvE4.thumb.700_0.jpeg',
-                  'url': 'http://cdn.duitang.com/uploads/item/201311/12/20131112153049_JFvE4.thumb.700_0.jpeg',
-                  'target': 'dodolong_1.jpeg'},
-    };
     var SHORTCUT_HANDLERS = {
-        'files': function() {
-            var extension = checkExtension(category, id);
+        'files': function(id, elem) {
+            debugger;
+            var file = Lincko.storage.get('files', id);
+            var name = Lincko.storage.get('files', id, "+name");
+            var url = Lincko.storage.getLink(id);
+            var thumbnail = Lincko.storage.getLinkThumbnail(id);
+            var extension = checkExtension(id);
             if (extension) {
-                //var file = Lincko.storage.get('files', id);
-                var file = getFakeFile(id);
                 if (extension == "pic") {
                     var popout = $('#-pic_preview_full_screen').clone();
                     popout.attr('id', 'pic_preview_full_screen');
-                    popout.find('img').attr('src', event.url);
-                    var names = event.url.split('/');
-                    var basename = names[names.length-1];
-                    popout.find('.pic_preview_name').html(basename);
-                    popout.find('img').attr('src', event.url);
-                    popout.find('.pic_preview_icon').attr("href", event.url);
+                    popout.find('img').attr('src', url);
+                    popout.find('.pic_preview_name').html(name);
+                    popout.find('img').attr('src', url);
+                    popout.find('.pic_preview_icon').attr("href", url);
                     $("body").append(popout);
                     $('.close', '#pic_preview_full_screen').click(function() {
                         $('#pic_preview_full_screen').remove();
@@ -39,12 +29,15 @@ var chatFeed = (function() {
                     popout.attr('id', 'player_preview_full_screen');
                     $("body").append(popout);
                     $("#player_preview_full_screen .player_preview_wrapper").attr('id', 'player_preview_container');
-                    $("#player_preview_container").setupPlayer(event.url, event.thumbnail);
+                    $("#player_preview_container").setupPlayer(url, thumbnail);
                     $('.close', '#player_preview_full_screen').click(function() {
                         $('#player_preview_full_screen').remove();
                     });
                     return false;
                 }
+            }
+            else {
+                return true;
             }
         },
         'uploading_file': function(id, elem) {
@@ -91,7 +84,10 @@ var chatFeed = (function() {
             return false;
         },
         'files': function(fileid, elem) {
-            //submenu_Build('filedetail', null, null, fileid, true);
+            debugger;
+            var tmp = $(elem).parents(".submenu_wrapper").attr("id").split("_");
+            var preview = JSON.parse(tmp[tmp.length-1]);
+            submenu_Build('taskdetail', null, null, {'type':'files', 'id':fileid}, preview);
             return false;
         },
         'uploading_file': function(id, elem) {
@@ -162,17 +158,12 @@ var chatFeed = (function() {
         return line;
     }
 
-    function checkExtension(type, id) {
+    function checkExtension(id) {
         var PIC_EXTENSION = ['bmp', 'gif', 'png', 'apng', 'jpg', 'jpeg', 'svg', 'svgz', 'tif', 'tiff'];
         var VIDEO_EXTENSION = ['mp4', 'mkv', 'mov', 'xvid', 'x264', 'wmv', 'avi'];
-        if (type != 'files') {
-            return null;
-        }
-        var file = Lincko.storage.get('files', id);
-        if (!file) {
-            file = getFakeFile(id);
-        }
-        var tmp = file.url.split(".");
+
+        var file_name = Lincko.storage.get('files', id, "+name");
+        var tmp = file_name.split(".");
         var extension = tmp[tmp.length - 1].toLowerCase();
         if ($.inArray(extension, PIC_EXTENSION)>-1) {
             return 'pic';
@@ -216,17 +207,13 @@ var chatFeed = (function() {
     BaseHistoryCls.prototype.renderHistoryTemplate = function(index) {
         var target;
         var action;
+        var thumbnail;
         var Elem = $("#" + this.templateType).clone();
         Elem.prop('id', 'models_thistory_' + this.item.id);
         Elem.attr('index', index);
         Elem.addClass(this.decoratorClass);
         Elem.addClass(this.item.type);
         var history = Lincko.storage.getHistoryInfo(this.item);
-        if (history.title === null || history.title ==='') {
-            //history.root.title
-            //return null;
-            action = php_nl2br("上传新的文件:");
-        }
         // We don't need to use wrapper_to_html for 'history' because the text is already protected in history format method
 
         if (!action) {
@@ -245,9 +232,12 @@ var chatFeed = (function() {
             if (root._type == 'chats')
                 return null;
         } else {
-            target = Lincko.storage.get(this.item.type, this.item.id, "+title");
-            if (!target) {
-                target = getFakeTarget(this.item.id);
+            if (this.item.type != 'files') {
+                target = Lincko.storage.get(this.item.type, this.item.id, "+title");
+            }
+            else{
+                target = Lincko.storage.get(this.item.type, this.item.id, "+name");
+                thumbnail = Lincko.storage.getLinkThumbnail(this.item.id);
             }
         }
         if (root) {
@@ -260,7 +250,7 @@ var chatFeed = (function() {
         var date = new wrapper_date(this.item.timestamp);
         Elem.find(".time", "[find=timestamp]").html(date.display('time_short'));
         Elem.find(".date", "[find=timestamp]").html(date.display('date_short'));
-        Elem.find("[find=shortcut]").attr('src', this.item.thumbnail);
+        Elem.find("[find=shortcut]").attr('src', thumbnail);
 
         Elem.attr('category', this.item.type);
         return Elem;
@@ -304,25 +294,6 @@ var chatFeed = (function() {
             wrapper_IScroll();
     }
 
-    function fake_history_generator_for_multimedia(item) {
-        if (item.id in fakeMedias) {
-            var newItem = $.extend(true, {}, item);
-            newItem.type = "files";
-            newItem.thumbnail = fakeMedias[item.id]['thumbnail'];
-            newItem.par = {'ut':'文件', 'un': item.par.un};
-            return newItem;
-        }
-        return false;
-    }
-
-    function getFakeFile(id) {
-        return fakeMedias[id];
-    }
-
-    function getFakeTarget(id) {
-        return fakeMedias[id]['target'];
-    }
-
     function getRawContents(type, id, range) {
         if (type == 'history') {
             return Lincko.storage.hist(null, range, null, 'projects', id, true);
@@ -361,7 +332,6 @@ var chatFeed = (function() {
         
         for (var i in items) {
             var item = new BaseHistoryCls(items[i]);
-            var newItem = fake_history_generator_for_multimedia(items[i]);
             if (item) {
                 item.getTemplate(type);
                 if (type =='history')
@@ -383,24 +353,6 @@ var chatFeed = (function() {
                     if (Elem)
                         Elem.after(line);
                 }
-            }
-            if (newItem) {
-                item = new BaseHistoryCls(newItem);
-                if (item) {
-                    item.getTemplate(type);
-                    if (type =='history')
-                        Elem = item.renderHistoryTemplate();
-                    else
-                        Elem = item.renderChatTemplate();
-                    Elem.prependTo(position.find(".chat_contents_wrapper"));
-
-                    dateStamp = checkRecentDate(item.item.timestamp, i);
-                    if (dateStamp) {
-                        line = renderLine(dateStamp);
-                        Elem.after(line);
-                    }
-                }
-
             }
         }
 

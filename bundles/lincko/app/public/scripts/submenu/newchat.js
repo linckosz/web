@@ -56,7 +56,7 @@ Submenu.prototype.Add_ChatContents = function() {
     var chatScroll = myIScrollList[submenu_wrapper.find("[find=submenu_wrapper_content]").attr("id")];
     chatScroll.scrollTo(0, 0-height, 100);
     chatScroll.on('scrollEnd', function() {
-    //chatFeed.feedPaging(type, position, id);
+        //This is the event we need to handle when do pagination
     });
     notifier[type]['clear'](id);
     if (type == 'history') {
@@ -65,7 +65,6 @@ Submenu.prototype.Add_ChatContents = function() {
                 var type = Object.keys(this.range)[0].split("_")[0];
                 //Lincko.storage.list("chats", null, {"new": true}, 'chats', id, false);
                 var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
-                //chatFeed.feedHistory(position, "history", id);
                 //var items = Lincko.storage.hist(null, -1, {"not": true}, 'projects', id, true);
                 //chatFeed.appendItem(type, items, position, true);
             });
