@@ -26,8 +26,8 @@ $app->configureMode('development', function () use ($app) {
 	));
 	ini_set('display_errors', '1');
 	ini_set('opcache.enable', '0');
-	$app->lincko->showError = true; //Force to see Error message
-	$app->lincko->data['lincko_show_dev'] = 'true'; //Show some errors for Front end developpers (NOTE: it has to be a string because of Twig conversion to JS)
+	//$app->lincko->showError = true; //Force to see Error message
+	//$app->lincko->data['lincko_show_dev'] = 'true'; //Show some errors for Front end developpers (NOTE: it has to be a string because of Twig conversion to JS)
 	//Only useful in rendering mode, useless in JSON mode
 	//$debugbar = new \Slim\Middleware\DebugBar();
 	//$app->add($debugbar);
