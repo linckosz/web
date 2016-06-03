@@ -243,6 +243,9 @@ $('#app_project_quick_access_chat').click(function(){
 $('#app_project_project_new').click(function(){
 	submenu_Build("app_project_new");
 });
+$('#app_project_tab > header').click(function(){
+	submenu_Build("projects_list");
+});
 
 $('#app_project_quick_access_title').click(function(){
 	if($('#app_project_quick_access_title').find("[find=app_project_progress_all]").is(':visible')){
