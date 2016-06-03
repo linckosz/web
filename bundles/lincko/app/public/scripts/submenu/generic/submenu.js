@@ -183,6 +183,7 @@ function Submenu(menu, next, param, preview) {
 	var self = this;
 
 	function Constructor(Elem) {
+		debugger;
 		Elem.changeState();
 		//First we have to empty the element if it exists
 
@@ -1144,6 +1145,7 @@ function submenu_Clean(layer, animate, preview) {
 }
 
 function submenu_Build(menu, next, hide, param, preview) {
+	debugger;
 	if (typeof next === 'undefined') { next = 1; }
 	if (typeof hide === 'undefined') { hide = true; }
 	if (typeof param === 'undefined') { param = null; }

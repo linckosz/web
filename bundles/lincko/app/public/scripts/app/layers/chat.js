@@ -31,9 +31,6 @@ function app_layers_chat_feedChat(parent, handler) {
 
 function app_layers_chat_launchPage(param) {
     if (typeof param === 'undefined') { param = null; }
-    app_application_lincko.add("app_layers_chat", 'chats', function() {
-        app_layers_chat_feedPage();
-    });
     app_layers_chat_feedPage();
 }
 

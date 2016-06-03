@@ -44,20 +44,19 @@ Submenu_select.new_chat_menu = function(Elem) {
 };
 
 Submenu.prototype.Add_ChatContents = function() {
-    debugger;
     var attribute = this.attribute;
     var id = this.param.id;
     var type = this.param.type;
     submenu_wrapper = this.Wrapper();
     var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
     position.addClass('overthrow').addClass("submenu_chat_contents");
+
     chatFeed.feedHistory(position, type, id);
     //var height = submenu_wrapper.height() - 48 - 48;
     //position.find(".iScrollVerticalScrollbar").height(height);
     app_application_lincko.add(this.Wrapper().attr("id"), "submenu_show", function() {
-        debugger;
         var chatScroll = myIScrollList[submenu_wrapper.find("[find=submenu_wrapper_content]").attr("id")];
-        chatScroll.scrollToElement($(".models_history_wrapper:last-of-type")[0]);
+        chatScroll.scrollToElement($("#"+this.id).find(".models_history_wrapper:last-of-type")[0], 0);
     //chatScroll.on('scrollEnd', function() {
         //This is the event we need to handle when do pagination
     //});
