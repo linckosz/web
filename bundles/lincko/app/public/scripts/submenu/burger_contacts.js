@@ -20,7 +20,6 @@ submenu_list['burger_contacts'] = {
             var userList = {};
             var nameList = "";
             var IDList = _submenu_get_contacts(elem);
-            console.log(IDList);
             burger_contacts_sendAction(submenuInst.param.contactsID, IDList, submenuInst.param.item_obj);
         },
         hide: true,

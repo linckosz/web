@@ -126,6 +126,8 @@
 	opacity:0.30;
 	-moz-opacity:0.30;
 	-khtml-opacity:0.30;
+	/*Jim's change*/
+	border: none;
 }
 
 .app_content_menu_icon:hover {
@@ -154,6 +156,8 @@
 .app_content_menu_icon > img {
 	width: 24px;
 	display: block;
+	/*Jim's change*/
+	width: 32px;
 }
 
 #app_content_dynamic_layers {

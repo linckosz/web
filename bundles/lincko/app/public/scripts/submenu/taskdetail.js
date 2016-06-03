@@ -138,7 +138,6 @@ Submenu.prototype.Add_taskdetail = function() {
 	}
 	else{
 		elem_title_text.html(item['+title']);
-		console.log(item);
 		if(taskid == 'new' || (wrapper_localstorage.uid in item['_perm'] && item['_perm'][wrapper_localstorage.uid][0] > 1)){
 			elem_title_text.prop('contenteditable',true);
 			elem_title_text.focus(function(){
@@ -717,7 +716,6 @@ Submenu.prototype.Add_taskdetail = function() {
 				route += '/update';
 
 			}
-			console.log(param);
 			wrapper_sendAction( param,'post',route );
 		}
 		//$(document).off('previewHide.skylist');
@@ -930,7 +928,6 @@ EasyEditor.prototype.h = function(){
         		$(_this.elem).click();
         	}
         	else {
-        		console.log('dropdown');
         		_this.openDropdownOf('header');
         	}
         },

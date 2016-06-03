@@ -11,11 +11,13 @@ var burger = function(elem, burger_mode, item){
 	 	burger_str = "";
 	 	burger_type = null;
 	 	burger_startIndex = null;
-	 	elem_dropdown.velocity('slideUp',{
-	 		complete: function(){
-	 			elem_dropdown.remove();
-	 		}
-	 	});
+        if(elem_dropdown){
+    	 	elem_dropdown.velocity('slideUp',{
+    	 		complete: function(){
+    	 			elem_dropdown.remove();
+    	 		}
+    	 	});
+         }
 	 	//console.log('current caret: '+burger_regex_getCaretOffset(elem).caretOffset);
 	}
 
@@ -131,10 +133,10 @@ var burger = function(elem, burger_mode, item){
                 for (var i = 0; i < accessList.length; i++) {
                     var userid = accessList[i];
                     if( userid in item['_users'] && item['_users'][userid]['in_charge'] ){
-                        contactsID_obj[userid] = { check: true };
+                        contactsID_obj[userid] = { checked: true };
                     }
                     else{
-                        contactsID_obj[userid] = { check: false };
+                        contactsID_obj[userid] = { checked: false };
                     }
                 }
 
@@ -156,6 +158,7 @@ var burger = function(elem, burger_mode, item){
                 burger_on = true;
                 //var coord = $(this).position();
                 var coord = $(this).offset();
+                var coordP = $(this).position();
                 var username = null;
                 var in_charge = null;
                 var elem_option = $('#-burger_option').clone().prop('id','').addClass('burger_option'+burger_mode);
@@ -164,7 +167,7 @@ var burger = function(elem, burger_mode, item){
                 
                 
                 $.each(contactsID_obj, function(userid, obj){
-                    in_charge = obj.check;
+                    in_charge = obj.checked;
 
                     username = Lincko.storage.get("users", userid,"username");
                     elem_option_clone = elem_option.clone().attr('userid',userid);
@@ -187,10 +190,10 @@ var burger = function(elem, burger_mode, item){
 
                 });
 
-                var left = coord.left;
+                var left = coordP.left;
                 var top = coord.top - $('#app_content_top').outerHeight() + $(this).closest('table').outerHeight();
                 if( responsive.test("minTablet")){
-                    left -= $('#app_content_menu').outerWidth();
+                    //left -= $('#app_content_menu').outerWidth();
                 }
                  
                 elem_dropdown
@@ -223,10 +226,10 @@ function burger_generate_contactsID(item){
     for (var i = 0; i < accessList.length; i++) {
         var userid = accessList[i];
         if( '_users' in item && userid in item['_users'] && item['_users'][userid]['in_charge'] ){
-            contactsID_obj[userid] = { check: true };
+            contactsID_obj[userid] = { checked: true };
         }
         else{
-            contactsID_obj[userid] = { check: false };
+            contactsID_obj[userid] = { checked: false };
         }
     }
 
@@ -242,9 +245,8 @@ function burger_contacts_sendAction(users, selectArray, item, popup){
     param['id'] = item['_id'];
     param['users>in_charge'] = {};
 
-
     $.each(users, function(userid, obj){
-        in_charge = obj.check;
+        in_charge = obj.checked;
         if( typeof userid != 'string'){ userid = userid.toString(); }
         var selected = $.inArray(userid, selectArray);
         if(selected == -1){ selected = false; }

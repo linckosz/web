@@ -1,0 +1,38 @@
+.app_layers_files_fileslist .skylist_menu_navbar_filter_icon{
+	display: none;
+}
+
+.app_layers_files_fileslist .skylist_card_leftbox_fileIcon{
+    font-size: 30px;
+    padding: 10px;
+}
+
+.app_layers_files_fileslist .skylist_card_center{
+	height: 85px;
+}
+
+.app_layers_files_fileslist .skylist_card_center [find=card_leftbox]{
+	height: 100%;
+    width: 120px;
+    text-align: center;
+    padding-right: 15px;
+    box-sizing: border-box;
+}
+.app_layers_files_fileslist .skylist_card_center [find=title]{
+	font-size: 18px;
+}
+.app_layers_files_fileslist .skylist_card_center [find=description] {
+    font-size: 14px;
+    height: initial;
+}
+
+.app_layers_files_fileslist [find=card_leftbox] img{
+	vertical-align: middle;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+
+.app_layers_files_fileslist .skylist_newcardCircle{
+	color: #4E2A84;;
+}
