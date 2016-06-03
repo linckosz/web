@@ -185,7 +185,9 @@ var chatFeed = (function() {
         Elem.addClass(this.decoratorClass);
         Elem.addClass(this.item._type);
         Elem.attr('index', index);
+        var img = Lincko.storage.getLink(Lincko.storage.get("users", this.item.created_by, 'profile_pic'));
 
+        Elem.find("[find=icon]").attr('src', img);
         var uname = Lincko.storage.get('users', this.item.created_by)['-username'];
         Elem.find("[find=author]").text(php_nl2br(uname));
         Elem.find("[find=content]").html(php_nl2br(this.item['+comment']));
@@ -220,7 +222,10 @@ var chatFeed = (function() {
         }
 
         Elem.find("[find=author]").text(php_nl2br(this.item.par.un));
-        //Elem.find("[find=icon]").attr('src', l''); //TODO: change this logo to each others logo
+        //var user = this.item.type == "history" ? this.item.by: this.item.created_by;
+        var img = Lincko.storage.getLink(Lincko.storage.get("users", this.item.by, 'profile_pic'));
+
+        Elem.find("[find=icon]").attr('src', img);
         Elem.find("[find=action]").html($.trim(action).ucfirst());
 
         if (this.item.type === "comments") {
