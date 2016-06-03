@@ -159,6 +159,9 @@ var burger = function(elem, burger_mode, item){
                 //var coord = $(this).position();
                 var coord = $(this).offset();
                 var coordP = $(this).position();
+                console.log($(this));
+                console.log(coord);
+                console.log(coordP);
                 var username = null;
                 var in_charge = null;
                 var elem_option = $('#-burger_option').clone().prop('id','').addClass('burger_option'+burger_mode);
@@ -191,11 +194,17 @@ var burger = function(elem, burger_mode, item){
                 });
 
                 var left = coordP.left;
+                if(left == 0){ 
+                    left = coord.left;
+                    if( responsive.test("minTablet")){
+                        left -= $('#app_content_menu').outerWidth();
+                        if( $('#app_application_project').outerWidth() > 0){
+                            left -= $('#app_application_project').outerWidth();
+                        }
+                    }
+                };
                 var top = coord.top - $('#app_content_top').outerHeight() + $(this).closest('table').outerHeight();
-                if( responsive.test("minTablet")){
-                    //left -= $('#app_content_menu').outerWidth();
-                }
-                 
+                
                 elem_dropdown
                     .css('left',left)
                     .css('top',top)
