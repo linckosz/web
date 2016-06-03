@@ -9,31 +9,8 @@ var chatFeed = (function() {
             var thumbnail = Lincko.storage.getLinkThumbnail(id);
             var extension = checkExtension(id);
             if (extension) {
-                if (extension == "pic") {
-                    var popout = $('#-pic_preview_full_screen').clone();
-                    popout.attr('id', 'pic_preview_full_screen');
-                    popout.find('img').attr('src', url);
-                    popout.find('.pic_preview_name').html(name);
-                    popout.find('img').attr('src', url);
-                    popout.find('.pic_preview_icon').attr("href", url);
-                    $("body").append(popout);
-                    $('.close', '#pic_preview_full_screen').click(function() {
-                        $('#pic_preview_full_screen').remove();
-                    });
-            
-                    return false;
-                }
-                else if(extension == "video") {
-                    var popout = $('#-player_preview_full_screen').clone();
-                    popout.attr('id', 'player_preview_full_screen');
-                    $("body").append(popout);
-                    $("#player_preview_full_screen .player_preview_wrapper").attr('id', 'player_preview_container');
-                    $("#player_preview_container").setupPlayer(url, thumbnail);
-                    $('.close', '#player_preview_full_screen').click(function() {
-                        $('#player_preview_full_screen').remove();
-                    });
-                    return false;
-                }
+                previewer[extension](name, url, thumbnail);
+                return false;
             }
             else {
                 return true;
