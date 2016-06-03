@@ -44,6 +44,7 @@ Submenu_select.new_chat_menu = function(Elem) {
 };
 
 Submenu.prototype.Add_ChatContents = function() {
+    debugger;
     var attribute = this.attribute;
     var id = this.param.id;
     var type = this.param.type;
@@ -51,13 +52,17 @@ Submenu.prototype.Add_ChatContents = function() {
     var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
     position.addClass('overthrow').addClass("submenu_chat_contents");
     chatFeed.feedHistory(position, type, id);
-    var height = submenu_wrapper.height() - 48 - 48;
-    position.find(".iScrollVerticalScrollbar").height(height);
-    var chatScroll = myIScrollList[submenu_wrapper.find("[find=submenu_wrapper_content]").attr("id")];
-    chatScroll.scrollTo(0, 0-height, 100);
-    chatScroll.on('scrollEnd', function() {
+    //var height = submenu_wrapper.height() - 48 - 48;
+    //position.find(".iScrollVerticalScrollbar").height(height);
+    app_application_lincko.add(this.Wrapper().attr("id"), "submenu_show", function() {
+        debugger;
+        var chatScroll = myIScrollList[submenu_wrapper.find("[find=submenu_wrapper_content]").attr("id")];
+        chatScroll.scrollToElement($(".models_history_wrapper:last-of-type")[0]);
+    //chatScroll.on('scrollEnd', function() {
         //This is the event we need to handle when do pagination
+    //});
     });
+
     notifier[type]['clear'](id);
     if (type == 'history') {
             app_application_lincko.add("chat_contents_wrapper","projects_" + id, function() {
