@@ -844,13 +844,14 @@ Submenu.prototype.Add_taskdetail = function() {
 	//set the focus upon opening detail pane
 	if(taskid == 'new'){
 		if(that.param.type == 'tasks'){
-			app_application_lincko.add(submenu_taskdetail, 'submenu_show', function(){
+			/*app_application_lincko.add(submenu_taskdetail.prop('id'), 'submenu_show', function(){
 				console.log('submenu_show tasklist');
+				console.log(elem_title_text);
 				elem_title_text.focus();
-			});
-			/*setTimeout(function(){
+			});*/
+			setTimeout(function(){
 				elem_title_text.focus();
-			},300);*/
+			},300);
 		}
 		else if(that.param.type == 'notes'){
 			console.log('notes');

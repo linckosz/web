@@ -304,9 +304,6 @@ skylist.prototype.subConstruct_default = function(){
 					}
 				}
 			}
-			else if(itemlist_new.length < elem_cards.length){
-				console.log('card deleted');
-			}
 		}
 	);
 
