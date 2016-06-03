@@ -161,8 +161,8 @@ function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete, 
 	if(typeof cb_begin==="undefined" || cb_begin===null){ cb_begin = function(){}; }
 	if(typeof cb_complete==="undefined" || cb_complete===null){ cb_complete = function(){}; }
 	if(typeof param==="undefined"){ param = null; }
-	
-	if($.type(objForm)==="string"){
+
+	if($.type(objForm)=="string"){
 		objForm = $("#"+objForm);
 	} else {
 		objForm = $(objForm);
@@ -191,9 +191,7 @@ function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete, 
 	if(!valid){
 		return false;
 	}
-console.log(objForm);
-console.log(objForm.length);
-console.log(objForm.is('form'));
+	
 	if (objForm.length>0 && objForm.is('form')){
 		objForm.on('submit', function(e) {
 			 e.preventDefault(); //Disable submit action
@@ -225,7 +223,7 @@ console.log(objForm.is('form'));
 				arr.push({name:val, value:param[val]});
 			}
 		}
-		
+
 		wrapper_ajax(arr, method, action, cb_success, cb_error, cb_begin, cb_complete, ajax_objForm);
 	} else {
 		cb_success(Lincko.Translation.get('wrapper', 2, 'html'), true, 400, null); //The form does not exist!

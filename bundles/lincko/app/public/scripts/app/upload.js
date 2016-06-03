@@ -91,7 +91,7 @@ function app_upload_prepare_log(parent_type, parent_id, temp_id){
 	$('#app_upload_temp_id').val(temp_id);
 }
 
-function app_upload_set_launcher(parent_type, parent_id, submenu, start, temp_id){console.log('AAA: '+start)
+function app_upload_set_launcher(parent_type, parent_id, submenu, start, temp_id){
 	if(typeof parent_type != 'string' && !$.isNumeric(parent_id)){
 		parent_type = 'projects';
 		parent_id = Lincko.storage.getMyPlaceholder()['_id'];

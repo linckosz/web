@@ -21,7 +21,7 @@ submenu_list['app_project_new'] = {
 	"_pre_action": {
 		"style": "preAction",
 		"action": function(){
-			app_users_contacts_init();
+			app_projects_users_contacts_init();
 		},
 	},
 	//Add HTML/JS checking input format
@@ -35,23 +35,32 @@ submenu_list['app_project_new'] = {
 		"title": Lincko.Translation.get('app', 41, 'html'), //Create
 		"action": "project/create",
 		"submit": function(that){
+			var param = {
+				//"lastvisit": Lincko.storage.getLastVisit(),
+				"parent_id": Lincko.storage.getWORKID(),
+				"users>access": {},
+			};
+			var users_access = {};
+			param["users>access"][wrapper_localstorage.uid] = true;
+			for(var users_id in app_projects_users_contacts_list){
+				param["users>access"][users_id] = true;
+			}
 			return wrapper_sendForm(
-				that,
+				$('#'+that.id+'_submenu_form'),
 				submenu_form_cb_success,
 				submenu_form_cb_error,
 				submenu_form_cb_begin,
 				submenu_form_cb_complete,
-				{
-					'lastvisit': Lincko.storage.getLastVisit(),
-				}
+				param
 			);
+			
 		},
 	},
 	
 	"title": {
 		"style": "input_text",
 		"title": Lincko.Translation.get('app', 28, 'html'), //Title
-		"name": "project_title_text",
+		"name": "title",
 		"value": "",
 		"class": "submenu_input_text",
 	},
@@ -61,12 +70,12 @@ submenu_list['app_project_new'] = {
 		"name": "project_team_select_multiple",
 		"value": "",
 		"class": "submenu_input_select_multiple",
-		"next": "app_users_contacts",
+		"next": "app_projects_users_contacts",
 	},
 	"description": {
 		"style": "input_textarea",
 		"title": Lincko.Translation.get('app', 30, 'html'), //Short description
-		"name": "project_description_textarea",
+		"name": "description",
 		"value": "",
 		"class": "submenu_input_textarea",
 	},

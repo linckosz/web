@@ -12,6 +12,13 @@ var submenu_projects_build_list = function(){
 	var projects_id;
 	var title;
 
+	//Clear the list to rebuild it then
+	for(var key in submenu_list['projects_list']){
+		if(key != "_title"){
+			delete submenu_list['projects_list'][i];
+		}
+	}
+
 	projects = Lincko.storage.getMyPlaceholder();
 	var MyPlaceholderID = projects['_id'];
 	//My personal space
@@ -20,7 +27,7 @@ var submenu_projects_build_list = function(){
 		"title": Lincko.Translation.get('app', 2502, 'html'), //Personal Space
 		"hide": true,
 		"action": function(){
-			app_content_menu.selection(-1, 'tasks');
+			app_content_menu.selection(MyPlaceholderID, 'tasks');
 		},
 		"selected": false,
 	};

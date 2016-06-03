@@ -488,15 +488,16 @@ Submenu.prototype.Add_MenuNext = function() {
 
 Submenu.prototype.Add_MenuRadio = function() {
 	var attribute = this.attribute;
+	var that = this;
 	var Elem = $('#-submenu_radio').clone();
 	var selected = false;
 	Elem.prop("id", '');
 	Elem.find("[find=submenu_radio_title]").html(attribute.title);
 	if ("selected" in attribute) {
 		if (attribute.selected) {
-			selected = true;
 			Elem.find("[find=submenu_radio_value]").html("<img class='submenu_icon' src='/lincko/app/images/submenu/check.png' />");
-			Elem.addClass('submenu_deco_info');
+		} else {
+			Elem.find("[find=submenu_radio_value]").html("");
 		}
 	}
 
@@ -504,24 +505,14 @@ Submenu.prototype.Add_MenuRadio = function() {
 	var select_elem = Elem.find("[find=submenu_radio_value]");
 	select_elem.prop("id", select_id);
 	app_application_lincko.add(select_id, "form_radio", function(){
-		var Num = 0;
-		for (var att in this.action_param) {
-			var next_attribute = this.action_param[att];
-			if ("style" in next_attribute && "title" in next_attribute) {
-				if (next_attribute.style == "title") {
-					attribute.title = next_attribute.title;
-				}
-			}
-			if ("selected" in next_attribute) {
-				if (next_attribute.selected) {
-					Num++;
-				}
-			}
+		var Elem = this.action_param[0];
+		var attribute = this.action_param[1];
+		if (attribute.selected) {
+			Elem.find("[find=submenu_radio_value]").html("<img class='submenu_icon' src='/lincko/app/images/submenu/check.png' />");
+		} else {
+			Elem.find("[find=submenu_radio_value]").html("");
 		}
-		var select_id = $('#'+this.id);
-		select_id.html(Num);
-		$("<img class='submenu_icon submenu_icon_next' src='/lincko/app/images/submenu/next.png' />").appendTo(next_id);
-	}, submenu_list[attribute.next])
+	}, [Elem, attribute] )
 
 	if ("hide" in attribute) {
 		if (attribute.hide) {
@@ -531,15 +522,18 @@ Submenu.prototype.Add_MenuRadio = function() {
 			});
 		}
 	}
-	if (!selected) {
-		if ("action" in attribute) {
-			if ("action_param" in attribute) {
-				Elem.click(attribute.action_param, attribute.action);
-			} else {
-				Elem.click(attribute.action);
-			}
+	if ("action" in attribute) {
+		if ("action_param" in attribute) {
+			Elem.click(function(){
+				attribute.action(Elem, that, attribute.action_param);
+			});
+		} else {
+			Elem.click(function(){
+				attribute.action(Elem, that);
+			});
 		}
 	}
+
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
@@ -676,7 +670,7 @@ Submenu.prototype.Add_SelectMultiple = function() {
 	return true;
 };
 
-Submenu.prototype.Add_SubmitForm = function() {console.log('Add_SubmitForm');
+Submenu.prototype.Add_SubmitForm = function() {
 	var attribute = this.attribute;
 	submenu_wrapper = this.Wrapper();
 	var Elem = $('#-submenu_bottom').clone();

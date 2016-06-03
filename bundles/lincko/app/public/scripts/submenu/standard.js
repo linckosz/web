@@ -121,7 +121,7 @@ JSfiles.finish(function(){
 			"title": Lincko.Translation.get('app', 40, 'html'), //My workspace
 			"hide": true,
 			"action_param": null,
-			"action": function(event){
+			"action": function(Elem, that, event){
 				app_application_change_private();
 			},
 			"selected": false,
@@ -140,7 +140,7 @@ JSfiles.finish(function(){
 						"title": name,
 						"hide": true,
 						"action_param": { workspace:url, },
-						"action": function(event){
+						"action": function(Elem, that, event){
 							app_application_change_workspace(event.data.workspace);
 						},
 						"selected": false,
