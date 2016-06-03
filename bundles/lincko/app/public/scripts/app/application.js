@@ -219,6 +219,26 @@ var app_application_lincko = {
 
 };
 
+var app_application_garbage = {
+	add: function(id){ //Better to be unique
+		if(typeof id == 'undefined'){ id = md5(Math.random()); }
+		if($("#app_application_garbage_"+id).length > 0){
+			return false;
+		}
+		var span = $('<span/>');
+		span.prop("id", "app_application_garbage_"+id);
+		span.appendTo($("#app_application_garbage"));
+		return "app_application_garbage_"+id;
+	},
+
+	remove: function(garbage_id){
+		//Check that it's a garbage before to remove
+		if(garbage_id.indexOf('app_application_garbage_')===0){
+			$("#"+garbage_id).remove();
+		}
+	},
+}
+
 
 var app_application = {
 	project: function(force_blur){

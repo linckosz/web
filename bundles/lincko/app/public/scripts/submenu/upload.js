@@ -72,11 +72,11 @@ Submenu.prototype.Add_MenuAppUploadAllForm = function() {
 		Elem.append(Elem_bt);
 
 		Elem_bt = $('#-submenu_app_upload_add_corner').clone();
-		Elem_bt.prop('id', this.id+'submenu_app_upload_add_corner');
+		Elem_bt.prop('id', this.id+'_submenu_app_upload_add_corner');
 		Elem_bt.click(function(){
-			$('#app_project_quick_upload_files').click();
+			app_upload_open_files();
 		});
-		Elem_bt.appendTo(submenu_wrapper.find("[find=submenu_wrapper_content]"));
+		Elem_bt.appendTo(submenu_wrapper);
 
 		Elem_bt = $('#-submenu_app_upload_add_top').clone();
 		Elem_bt.prop('id', this.id+'submenu_app_upload_add_top');
@@ -154,9 +154,18 @@ Submenu.prototype.Add_MenuAppUploadAllFile = function(e) {
 						Elem.find("[find=submenu_app_upload_size]").html(
 							$('#app_upload_fileupload').fileupload('option')._formatFileSize(data.lincko_size)
 						);
-						Elem.find("[find=submenu_app_upload_where]").html(
-							'My placeholder'
-						);
+						destination = "";
+						parent = Lincko.storage.get(data.lincko_parent_type, data.lincko_parent_id);
+						if(parent){
+							for (var i in parent){
+								if(i.indexOf('+')===0){
+									destination = parent[i].ucfirst();
+								} else if(destination=="" && i=="-username"){
+									destination = parent[i].ucfirst();
+								}
+							}
+						}
+						Elem.find("[find=submenu_app_upload_where]").html(destination);
 						Elem.find("[find=submenu_app_upload_single_cancel]").click(function(e){
 							e.stopPropagation();
 							if(typeof data.lincko_type !== 'undefined' && data.lincko_type === 'file' && data.lincko_status !== 'deleted'){

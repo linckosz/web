@@ -60,7 +60,7 @@ submenu_list['settings'] = {
 	//Profile
 	"personal_settings": {
 		"style": "profile_next",
-		"title": "",//Lincko.storage.get('users',  wrapper_localstorage.uid, 'username').ucfirst(),
+		"title": "",
 		"next": "personal_settings",
 		"class": "",
 	},

@@ -1,5 +1,6 @@
 .submenu_personal_next_picture {
 	text-align: center;
+	width: 40%;
 }
 
 .submenu_personal_next_picture_image {
@@ -23,4 +24,58 @@
 
 .submenu_personal_next_deco {
 	height: 100px;
+}
+
+
+.submenu_personal_profile_picture {
+	text-align: center;
+	width: 40%;
+}
+
+.submenu_personal_profile_picture_image {
+	height: 60px;
+	width: 60px;
+	border-radius: 100%;
+	border: 2px solid #FBA026;
+	margin: 10px;
+	padding: 0;
+}
+
+.submenu_personal_profile_picture_image:hover {
+	box-shadow: 0px 0px 4px 2px rgba(251, 125, 35, 0.4);
+}
+
+.submenu_personal_profile_user {
+	font-size: 24px;
+	line-height: 20px;
+	vertical-align: middle;
+}
+
+.submenu_personal_profile_deco {
+	height: 100px;
+}
+
+
+.submenu_personal_input_span_left {
+	width: 40%;
+	text-align: left;
+}
+
+.submenu_personal_input_span_right {
+	text-align: left;
+}
+
+.submenu_personal_input_value {
+	width: 100%;
+	border-color: transparent;
+	background-color: transparent;
+	font-size: 14px;
+}
+
+.submenu_personal_input_value:hover {
+	background-color: rgba(255, 255, 255, 0.2);
+}
+
+.submenu_personal_info_value {
+	color: #ABABAB;
 }

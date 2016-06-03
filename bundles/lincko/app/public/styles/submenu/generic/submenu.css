@@ -149,6 +149,17 @@
 	background-color: #969696;
 }
 
+.submenu_deco_read {
+	display: table;
+	white-space: nowrap;
+	color: #6F7377;
+	background-color: #FAFBFC;
+	border-bottom: solid 1px #EBEFF3;
+	cursor: default;
+	overflow: hidden;
+	text-align: left;
+}
+
 .submenu_deco {
 	display: table;
 	white-space: nowrap;
@@ -159,14 +170,15 @@
 	overflow: hidden;
 	text-align: left;
 }
+.submenu_deco:hover {
+	background-color: #FFFFFF;
+}
 
 .submenu_deco_info {
 	cursor: default !important;
 }
 
-.submenu_deco:hover {
-	background-color: #FFFFFF;
-}
+
 
 .submenu_deco_fix {
 	background-color: #FFFFFF !important;

@@ -4,6 +4,7 @@ submenu_list['app_upload_all'] = {
 		"style": "title",
 		"title": Lincko.Translation.get('app', 4, 'html'), //Uploads
 	},
+	/*
 	"destination": {
 		"style": "next",
 		"title": Lincko.Translation.get('app', 26, 'html'), //Destination
@@ -11,6 +12,7 @@ submenu_list['app_upload_all'] = {
 		"value": "<b>Customized</b>",
 		"class": "",
 	},
+	*/
 	"app_upload_all": {
 		"style": "app_upload_all",
 		"title": "Upload all", //This title will be not used
@@ -22,6 +24,7 @@ submenu_list['app_upload_sub'] = {
 		"style": "title",
 		"title": Lincko.Translation.get('app', 21, 'html'), //Unknown
 	},
+	/*
 	"destination": {
 		"style": "next",
 		"title": Lincko.Translation.get('app', 26, 'html'), //Destination
@@ -29,6 +32,7 @@ submenu_list['app_upload_sub'] = {
 		"value": base_myplaceholder,
 		"class": "",
 	},
+	*/
 	"app_upload_sub": {
 		"style": "app_upload_sub",
 		"title": "Upload single", //This title will be not used
@@ -87,17 +91,19 @@ function app_upload_prepare_log(parent_type, parent_id, temp_id){
 	$('#app_upload_temp_id').val(temp_id);
 }
 
-function app_upload_set_launcher(parent_type, parent_id, submenu, start){
+function app_upload_set_launcher(parent_type, parent_id, submenu, start, temp_id){console.log('AAA: '+start)
 	if(typeof parent_type != 'string' && !$.isNumeric(parent_id)){
 		parent_type = 'projects';
 		parent_id = Lincko.storage.getMyPlaceholder()['_id'];
 	}
 	if(typeof submenu == 'undefined'){ submenu = true; }
 	if(typeof start == 'undefined'){ start = false; }
+	if(typeof temp_id != 'string'){ temp_id = md5(Math.random()); }
 	app_upload_auto_launcher.parent_type = parent_type;
 	app_upload_auto_launcher.parent_id = parent_id;
 	app_upload_auto_launcher.submenu = submenu;
 	app_upload_auto_launcher.start = start;
+	app_upload_auto_launcher.temp_id = temp_id;
 }
 
 function app_upload_open_files(parent_type, parent_id, submenu, start){
@@ -111,8 +117,10 @@ function app_upload_open_photo(parent_type, parent_id, submenu, start){
 }
 
 function app_upload_open_photo_single(parent_type, parent_id, submenu, start){
-	app_upload_set_launcher(parent_type, parent_id, submenu, start);
+	var temp_id = md5(Math.random());
+	app_upload_set_launcher(parent_type, parent_id, submenu, start, temp_id);
 	$('#app_upload_form_photo_single').click();
+	return temp_id;
 }
 
 function app_upload_open_video(parent_type, parent_id, submenu, start){
@@ -199,7 +207,7 @@ $(function () {
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_size = data.files[0].size;
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_parent_id = app_upload_auto_launcher.parent_id;
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_parent_type = app_upload_auto_launcher.parent_type;
-			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_temp_id = md5(Math.random());
+			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_temp_id = app_upload_auto_launcher.temp_id;
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_start = app_upload_auto_launcher.start;
 
 			//Reinitialise display information
@@ -230,11 +238,15 @@ $(function () {
 			//Do not auto start by default
 			if(app_upload_auto_launcher.start){
 				var temp_index = app_upload_files.lincko_files_index-1;
-				app_application_lincko.add(Elem.prop('id'), 'upload', function() {
-					var temp_index = this.action_param[0];
-					if(app_upload_files.lincko_files[temp_index].start){
-						app_upload_files.lincko_files[temp_index].start = false;
-						app_upload_files.lincko_files[temp_index].submit();
+				var garbage = app_application_garbage.add(app_upload_auto_launcher.temp_id);
+				app_application_lincko.add(garbage, 'upload', function() {
+					var temp_index = this.action_param;
+					if(app_upload_files.lincko_files[temp_index].lincko_start){
+						app_upload_files.lincko_files[temp_index].lincko_start = false;
+						app_upload_auto_launcher_timeout = setTimeout(function() {
+							app_upload_files.lincko_files[temp_index].submit();
+						}, 300);
+						app_application_garbage.remove(this.id);
 					}
 				}, temp_index);
 			}
