@@ -3,7 +3,6 @@ console.log("history loaded");
 var chatFeed = (function() {
     var SHORTCUT_HANDLERS = {
         'files': function(id, elem) {
-            debugger;
             var file = Lincko.storage.get('files', id);
             var name = Lincko.storage.get('files', id, "+name");
             var url = Lincko.storage.getLink(id);
@@ -84,10 +83,9 @@ var chatFeed = (function() {
             return false;
         },
         'files': function(fileid, elem) {
-            debugger;
             var tmp = $(elem).parents(".submenu_wrapper").attr("id").split("_");
             var preview = JSON.parse(tmp[tmp.length-1]);
-            submenu_Build('taskdetail', null, null, {'type':'files', 'id':fileid}, preview);
+            submenu_Build('taskdetail', true, null, {'type':'files', 'id':fileid}, preview);
             return false;
         },
         'uploading_file': function(id, elem) {
@@ -115,7 +113,7 @@ var chatFeed = (function() {
             return false;
         },
         'notes': function(noteid, elem) {
-            submenu_Build('taskdetail', null, null,  {'type': 'notes', 'id': noteid}, true);
+            submenu_Build('taskdetail', true, null,  {'type': 'notes', 'id': noteid}, true);
             return false;
         }
     };
