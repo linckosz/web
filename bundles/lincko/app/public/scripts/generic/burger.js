@@ -4,6 +4,7 @@
 var burger = function(elem, burger_mode, item){
 	var elem_dropdown = $('#-burger_dropdown').clone().prop('id','burger_dropdown');
     var burger_on = false;
+    var dropdown_duration = 200;
 
 	var burger_destroy = function(){
 		console.log('burger_destroy');
@@ -13,6 +14,7 @@ var burger = function(elem, burger_mode, item){
 	 	burger_startIndex = null;
         if(elem_dropdown){
     	 	elem_dropdown.velocity('slideUp',{
+                duration: dropdown_duration,
     	 		complete: function(){
     	 			elem_dropdown.remove();
     	 		}
@@ -101,7 +103,9 @@ var burger = function(elem, burger_mode, item){
 
 
 	 		 	$('#app_content_dynamic_sub').append(elem_dropdown);
-	 		 	elem_dropdown.velocity("slideDown");
+	 		 	elem_dropdown.velocity("slideDown",{
+                    duration: dropdown_duration,
+                });
 	 		 	
 	 		 }
 	 		 else if( char == ' ' ){
@@ -209,7 +213,9 @@ var burger = function(elem, burger_mode, item){
                     .css('left',left)
                     .css('top',top)
                     .css('position','absolute')
-                    .velocity("slideDown");
+                    .velocity("slideDown", {
+                        duration: dropdown_duration,
+                    });
                     /*
                     .css('left', coord.left)
                     .css('top', coord.top + $(this).closest('table').outerHeight() )

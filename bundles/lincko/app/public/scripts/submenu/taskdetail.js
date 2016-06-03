@@ -822,7 +822,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			console.log('notes');
 			setTimeout(function(){
 				elem_description_text.focus();
-			},100);
+			},2000);
 		}
 	}
 
