@@ -141,7 +141,12 @@ var app_application_lincko = {
 								   typeof this._elements[Elem_id].range[field] != 'undefined'
 								|| typeof this._elements[Elem_id].range[field.replace(/_\d+$/, '')] != 'undefined'
 							){
-								this._elements[Elem_id].action();
+								try {
+									this._elements[Elem_id].action();
+								} catch(e) {
+									JSerror.sendError(this._elements[Elem_id].action, 'app_application_lincko.update => this._elements[Elem_id].action()', 0);
+									JSerror.sendError(e, 'app_application_lincko.update => e', 0);
+								}
 								break; //Do not launch more than one time if ever launched
 							}
 						}
@@ -156,7 +161,12 @@ var app_application_lincko = {
 			for(var field in this._fields){
 				if(typeof this._functions.fields[field] === 'object'){
 					for(var i in this._functions.fields[field]){
-						this._functions.fields[field][i]();
+						try {
+							this._functions.fields[field][i]();
+						} catch(e) {
+							JSerror.sendError(this._elements[Elem_id].action, 'app_application_lincko.update => this._functions.fields[field][i]()', 0);
+							JSerror.sendError(e, 'app_application_lincko.update => e', 0);
+						}
 					}
 				}
 			}
@@ -164,7 +174,12 @@ var app_application_lincko = {
 			//Only then we launch all functions registered in all
 			//But do it only if the local database has been updated, if not there is no use to launch those functions
 			for(var i in this._functions.all){
-				this._functions.all[i]();
+				try {
+					this._functions.all[i]();
+				} catch(e) {
+					JSerror.sendError(this._elements[Elem_id].action, 'app_application_lincko.update => this._functions.all[i]()', 0);
+					JSerror.sendError(e, 'app_application_lincko.update => e', 0);
+				}
 			}
 		}
 
