@@ -188,7 +188,7 @@ function Submenu(menu, next, param, preview) {
 
 		submenu_Clean(Elem.layer, false, preview);
 
-		submenu_wrapper = $('#-submenu_wrapper').clone();
+		var submenu_wrapper = $('#-submenu_wrapper').clone();
 		submenu_wrapper.prop("id", Elem.id);
 		if(Elem.preview){
 			submenu_wrapper.addClass('submenu_wrapper_preview');
@@ -255,7 +255,7 @@ function Submenu(menu, next, param, preview) {
 Submenu.prototype.Add_CustomisedTitle = function() {
 	var attribute = this.attribute;
 	var that = this;
-	submenu_wrapper = this.Wrapper();
+	var submenu_wrapper = this.Wrapper();
 
 	var Elem = $('#-submenu_customized_top').clone();
 	Elem.prop("id", '');
@@ -313,7 +313,7 @@ Submenu.prototype.Add_CustomisedTitle = function() {
 
 Submenu.prototype.Add_TitleSmall = function() {
 	var attribute = this.attribute;
-	submenu_wrapper = this.Wrapper();
+	var submenu_wrapper = this.Wrapper();
 	var Elem = $('#-submenu_title_small').clone();
 	Elem.prop("id", '');
 	Elem.find("[find=submenu_title]").html(attribute.title);
@@ -672,7 +672,7 @@ Submenu.prototype.Add_SelectMultiple = function() {
 
 Submenu.prototype.Add_SubmitForm = function() {
 	var attribute = this.attribute;
-	submenu_wrapper = this.Wrapper();
+	var submenu_wrapper = this.Wrapper();
 	var Elem = $('#-submenu_bottom').clone();
 	var that = this;
 	Elem.prop("id", '');
@@ -721,7 +721,7 @@ Submenu.prototype.Add_SubmitForm = function() {
 
 Submenu.prototype.Add_MenuForm = function() {
 	var attribute = this.attribute;
-	submenu_wrapper = this.Wrapper();
+	var submenu_wrapper = this.Wrapper();
 	var that = this;
 	var ElemForm = $("<form method='post' action='' submit='e.preventDefault(); return false;'></form>");
 	ElemForm.prop("id", this.id + '_submenu_form');
@@ -742,7 +742,7 @@ Submenu.prototype.Add_MenuForm = function() {
 
 Submenu.prototype.Add_MenuBottomButton = function() {
 	var attribute = this.attribute;
-	submenu_wrapper = this.Wrapper();
+	var submenu_wrapper = this.Wrapper();
 	var Elem = $('#-submenu_bottom').clone();
 	Elem.prop("id", '');
 	submenu_wrapper.find("[find=submenu_wrapper_bottom]").addClass('submenu_bottom');

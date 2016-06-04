@@ -10,7 +10,7 @@ var mainMenu = (function() {
         var item = $("#-app_project_chat_item").clone();
         var name = '';
         $(position).append(item);
-        item.removeAttr('id', '');
+        item.attr('id', 'app_project_chat_item_'+data.id);
         item.removeAttr('style', '');
         var cnt = notifier[data.type]['get'](data.id);
         if (cnt) {
@@ -37,6 +37,22 @@ var mainMenu = (function() {
                 item.find('img').remove();
             }
         }
+        app_application_lincko.add('app_project_chat_item_'+data.id, data.type + "_" + data.id, function() {
+        	var range = Object.keys(this.range)[0].split("_");
+        	var type = range[0];
+        	var id = range[1];
+        	var cnt = notifier[type]['get'](id);
+        	if (cnt) {
+                if (cnt > 999) {
+                    $("#"+this.id).find('.notification').text('...').show();
+                } else {
+                    $("#"+this.id).find('.notification').text(cnt).show();
+                }
+            }
+            else {
+            	$("#"+this.id).find('.notification').hide();
+            }
+        });
         item.find('header').text(name);
         item.find('article').text(data.comment);
         return item;

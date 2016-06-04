@@ -23,7 +23,7 @@ Submenu_select.chat_content = function(Elem) {
 };
 
 Submenu.prototype.Add_ChatContent = function() {
-    submenu_wrapper = this.Wrapper();
+    var submenu_wrapper = this.Wrapper();
     var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
     //position.addClass('overthrow').addClass("submenu_chat_contents");
     position.addClass('overthrow');

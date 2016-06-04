@@ -21,7 +21,7 @@ Submenu_select.chat_chats = function(Elem){
 
 Submenu.prototype.Add_ChatMenu = function() {
 	var attribute = this.attribute;
-	submenu_wrapper = this.Wrapper();
+	var submenu_wrapper = this.Wrapper();
 	var Elem = $('#-submenu_app_chat_chatmenu').clone();
 	var that = this;
 	Elem.prop("id", '');

@@ -184,7 +184,7 @@ Submenu.prototype._displayContacts = function(position, contacts) {
 
 Submenu.prototype.Add_ContactContents = function() {
     var attribute = this.attribute;
-    submenu_wrapper = this.Wrapper();
+    var submenu_wrapper = this.Wrapper();
     var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
     //position.addClass('overthrow').addClass("submenu_chat_contents");
     position.addClass('overthrow');
