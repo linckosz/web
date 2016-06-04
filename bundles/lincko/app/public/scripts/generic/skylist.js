@@ -766,6 +766,12 @@ skylist.prototype.addChat = function(item){
         	var type = range[0];
         	var id = range[1];
         	var cnt = notifier[type]['get'](id);
+        	if (type == "chats") {
+        		var name = Lincko.storage.get('chats', id, '+title');
+        		$("#"+this.id).find('[find=title]').html(name);
+        		var comment = Lincko.storage.list("comments", 1, null, "chats", id)[0]["+comment"];
+        		$("#"+this.id).find('[find=description]').html(comment);
+        	}
         	if (cnt) {
                 if (cnt > 999) {
                     $("#"+this.id).find('.notification').text('...').show();

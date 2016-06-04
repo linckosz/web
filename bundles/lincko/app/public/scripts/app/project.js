@@ -42,6 +42,12 @@ var mainMenu = (function() {
         	var type = range[0];
         	var id = range[1];
         	var cnt = notifier[type]['get'](id);
+        	if (type == "chats") {
+        		var name = Lincko.storage.get('chats', id, '+title');
+        		$("#"+this.id).find('header').html(name);
+        		var comment = Lincko.storage.list("comments", 1, null, "chats", id)[0]["+comment"];
+        		$("#"+this.id).find('article').html(comment);
+        	}
         	if (cnt) {
                 if (cnt > 999) {
                     $("#"+this.id).find('.notification').text('...').show();
@@ -53,8 +59,8 @@ var mainMenu = (function() {
             	$("#"+this.id).find('.notification').hide();
             }
         });
-        item.find('header').text(name);
-        item.find('article').text(data.comment);
+        item.find('header').html(name);
+        item.find('article').html(data.comment);
         return item;
     }
     function initChatTab() {
