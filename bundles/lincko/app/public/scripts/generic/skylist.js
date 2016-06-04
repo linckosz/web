@@ -753,9 +753,7 @@ skylist.prototype.addChat = function(item){
         var Elem = $('#-skylist_card').clone();
         var Elem_rightOptions = Elem.find('[find=card_rightOptions]').empty();
         var Elem_logo = $('#-skylist_logo').clone().prop('id','');
-        var type = item.type? item.type:item._type;
-        var id = item.id? item.id:item._id;
-        var cnt = notifier[type]['get'](id);
+        var cnt = notifier[item.type]['get'](item.id);
         if (cnt) {
             if (cnt > 999) {
                 Elem_logo.find('.notification').text('...').show();
@@ -763,7 +761,7 @@ skylist.prototype.addChat = function(item){
                 Elem_logo.find('.notification').text(cnt).show();
             }
         }
-        app_application_lincko.add("skylist_card_"+this.md5id+"_"+id, type + "_" + id, function() {
+        app_application_lincko.add("skylist_card_"+this.md5id+"_"+item.id, item.type + "_" + item.id, function() {
         	var range = Object.keys(this.range)[0].split("_");
         	var type = range[0];
         	var id = range[1];
@@ -795,22 +793,22 @@ skylist.prototype.addChat = function(item){
                 item.duration = "86400";
         }
         */
-        Elem.prop('id','skylist_card_'+that.md5id+'_'+id);
+        Elem.prop('id','skylist_card_'+that.md5id+'_'+item['id']);
 
 
         /*
         title
         */
         burger(Elem.find('[find=title]'), 'regex');
-        Elem.attr('type', type);
+        Elem.attr('type', item.type);
         var elem_title = Elem.find('[find=title]');
-        if (type == "history") {
-            name = Lincko.storage.get("projects", id, "+title") + " Activity";
+        if (item.type == "history") {
+            name = Lincko.storage.get("projects", item.id, "+title") + " Activity";
             Elem_logo.find('span').addClass('fa fa-globe');
 
-        } else if (type == 'chats') {
-            var users = Object.keys(Lincko.storage.get('chats', id, '_perm'));
-            name = Lincko.storage.get('chats', id, '+title');
+        } else if (item.type == 'chats') {
+            var users = Object.keys(Lincko.storage.get('chats', item.id, '_perm'));
+            name = Lincko.storage.get('chats', item.id, '+title');
             if (users.length > 2) {
                 Elem_logo.find('span').addClass('icon-Multiple-People');
             } else {
@@ -1230,16 +1228,6 @@ skylist.prototype.addFile = function(item){
 
 	 }
 	 else{
-	 	elem_leftbox.addClass(fileType_class);
-	 }
-	 else if(item['category'] == 'video'){
-	 	fileType_class = 'fa fa-file-video-o';
-	 }
-
-	 console.log(item);
-	 console.log(fileType_class);
-
-	 if(!elem_leftbox.is('img')){
 	 	elem_leftbox.addClass(fileType_class);
 	 }
 
