@@ -4,7 +4,7 @@ namespace bundles\lincko\wrapper\controllers;
 
 use \libs\Controller;
 use \libs\STR;
-use \libs\SimpleImage;
+use \libs\SimpleImageCaptcha;
 use \libs\File;
 
 class ControllerCaptcha extends Controller {
@@ -18,19 +18,19 @@ class ControllerCaptcha extends Controller {
 		$wrapper_captcha = rand(pow(10,$total_num-1),pow(10,$total_num)-1);
 
 		//Background picture
-		$src = new SimpleImage();
+		$src = new SimpleImageCaptcha();
 		$src->load(File::getLocalFile('/lincko/wrapper/images/captcha/bg/'.rand(1,5).'.png'));
 		
 		$src->resize($width, $height);
 		for($i=1; $i<=$total_num; $i++){
 			$num = mb_substr($wrapper_captcha, $i-1, 1);
-			$src->addcaptcha(File::getLocalFile("/lincko/wrapper/images/captcha/$num/$num".rand(0,9).'.png'), $i, $total_num);
+			$src->lincko_addcaptcha(File::getLocalFile("/lincko/wrapper/images/captcha/$num/$num".rand(0,9).'.png'), $i, $total_num);
 		}
 		
 		$_SESSION['wrapper_captcha'] = $wrapper_captcha;
 		
 		$src->output(IMAGETYPE_JPEG);
-		$src->destroy();
+		unset($src);
 		
 	}
 

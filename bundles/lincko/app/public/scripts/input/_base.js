@@ -1,12 +1,12 @@
 base_input_field.firstname = {
 	format: Lincko.Translation.get('app', 4, 'js'), //First name format: - 104 characters max
 	tags: {
-		pattern: "^.{1,104}$",
+		pattern: "^.{0,104}$",
 		required: "required",
 		maxlength: 104,
 	},
 	valid: function(text){
-		var regex_1 = /^.{1,104}$/g;
+		var regex_1 = /^.{0,104}$/g;
 		return regex_1.test(text);
 	},
 	error_msg: function(){
@@ -17,12 +17,12 @@ base_input_field.firstname = {
 base_input_field.lastname = {
 	format: Lincko.Translation.get('app', 5, 'js'), //Last name format: - 104 characters max
 	tags: {
-		pattern: "^.{1,104}$",
+		pattern: "^.{0,104}$",
 		required: "required",
 		maxlength: 104,
 	},
 	valid: function(text){
-		var regex_1 = /^.{1,104}$/g;
+		var regex_1 = /^.{0,104}$/g;
 		return regex_1.test(text);
 	},
 	error_msg: function(){
@@ -33,12 +33,12 @@ base_input_field.lastname = {
 base_input_field.username = {
 	format: Lincko.Translation.get('app', 3, 'js'), //Username format: - 104 characters max - Without space
 	tags: {
-		pattern: "^\\S{1,104}$",
+		pattern: "^\\S{0,104}$",
 		required: "required",
 		maxlength: 104,
 	},
 	valid: function(text){
-		var regex_1 = /^\S{1,104}$/g;
+		var regex_1 = /^\S{0,104}$/g;
 		return regex_1.test(text);
 	},
 	error_msg: function(){
