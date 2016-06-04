@@ -768,7 +768,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			}
 		}
 
-		if( taskid == 'new' || route_delete || ('+title' in item && param['title'] != item['+title']) || param['comment'] != item['-comment'] ){
+		if( taskid == 'new' || route_delete || param['title'] != item['+title'] || param['comment'] != item['-comment'] ){
 			contactServer = true;
 		}
 
