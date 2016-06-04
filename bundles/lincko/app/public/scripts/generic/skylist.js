@@ -746,7 +746,9 @@ skylist.prototype.addChat = function(item){
         var Elem = $('#-skylist_card').clone();
         var Elem_rightOptions = Elem.find('[find=card_rightOptions]').empty();
         var Elem_logo = $('#-skylist_logo').clone().prop('id','');
-        var cnt = notifier[item.type]['get'](item.id);
+        var type = item.type? item.type:item._type;
+        var id = item.id? item.id:item._id;
+        var cnt = notifier[type]['get'](id);
         if (cnt) {
             if (cnt > 999) {
                 Elem_logo.find('.notification').text('...').show();
@@ -754,7 +756,7 @@ skylist.prototype.addChat = function(item){
                 Elem_logo.find('.notification').text(cnt).show();
             }
         }
-        app_application_lincko.add("skylist_card_"+this.md5id+"_"+item.id, item.type + "_" + item.id, function() {
+        app_application_lincko.add("skylist_card_"+this.md5id+"_"+id, type + "_" + id, function() {
         	var range = Object.keys(this.range)[0].split("_");
         	var type = range[0];
         	var id = range[1];
@@ -786,22 +788,22 @@ skylist.prototype.addChat = function(item){
                 item.duration = "86400";
         }
         */
-        Elem.prop('id','skylist_card_'+that.md5id+'_'+item['id']);
+        Elem.prop('id','skylist_card_'+that.md5id+'_'+id);
 
 
         /*
         title
         */
         burger(Elem.find('[find=title]'), 'regex');
-        Elem.attr('type', item.type);
+        Elem.attr('type', type);
         var elem_title = Elem.find('[find=title]');
-        if (item.type == "history") {
-            name = Lincko.storage.get("projects", item.id, "+title") + " Activity";
+        if (type == "history") {
+            name = Lincko.storage.get("projects", id, "+title") + " Activity";
             Elem_logo.find('span').addClass('fa fa-globe');
 
-        } else if (item.type == 'chats') {
-            var users = Object.keys(Lincko.storage.get('chats', item.id, '_perm'));
-            name = Lincko.storage.get('chats', item.id, '+title');
+        } else if (type == 'chats') {
+            var users = Object.keys(Lincko.storage.get('chats', id, '_perm'));
+            name = Lincko.storage.get('chats', id, '+title');
             if (users.length > 2) {
                 Elem_logo.find('span').addClass('icon-Multiple-People');
             } else {
