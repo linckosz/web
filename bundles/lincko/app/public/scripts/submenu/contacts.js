@@ -54,6 +54,7 @@ submenu_list['contacts'] = {
                             type: 'chats',
                             id: chat['_id'],
                             title: chat['+title']}, true);
+                        app_application_lincko.prepare("chats");
                     },
                     null,
                     function(jqXHR, settings, temp_id) {
