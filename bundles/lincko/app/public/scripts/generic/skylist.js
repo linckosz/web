@@ -413,7 +413,7 @@ skylist.prototype.filter_by_people = function(items,filter){
 			if( that.list_type == "tasks" && item['_users'] && item['_users'][filter] && item['_users'][filter]['in_charge']){
 				items_filtered.push(item);
 			}
-			else if( that.list_type != "tasks" && item['updated_by'] && item['updated_by'] == filter ){
+			else if( that.list_type != "tasks" && 'updated_by' in item && item['updated_by'] && item['updated_by'] == filter ){
 				items_filtered.push(item);
 			}
 		}
@@ -604,7 +604,7 @@ skylist.prototype.list_filter = function(){
 	that.generate_Lincko_itemsList();
 	var items_filtered = that.Lincko_itemsList;
 
-	if( that.list_type == "tasks" || that.list_type == "notes" || that.list_type == "files"){
+	if( that.list_type == "tasks" || that.list_type == "notes" || that.list_type == "files" ){
 		items_filtered = that.filter_by_search( items_filtered, that.Lincko_itemsList_filter.search );
 		items_filtered = that.filter_by_people( items_filtered, that.Lincko_itemsList_filter.people );
 		items_filtered = that.filter_by_duedate( items_filtered, that.Lincko_itemsList_filter.duedate );
