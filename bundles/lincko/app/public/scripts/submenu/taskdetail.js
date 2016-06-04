@@ -135,6 +135,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		elem_title_fileInfo.find('[find=category]').html(item['category']);
 		elem_title_fileInfo.find('[find=ori_ext]').html(item['ori_ext'].toUpperCase());
 		elem_title_text.after(elem_title_fileInfo);
+		elem_title_fileInfo.find('[find=downloadIcon]').prop('href',Lincko.storage.getLink(item['_id']));
 	}
 	else{
 		elem_title_text.html(item['+title']);
@@ -155,6 +156,19 @@ Submenu.prototype.Add_taskdetail = function() {
 			}
 		}
 	}
+	elem_title_text.on('paste', function(){
+		setTimeout(function(){
+			elem_title_text.html($('<div>'+elem_title_text.html()+'</div>').text());
+		},10);
+		
+	});
+	elem_title_text.keydown(function(event){
+		if(event.keyCode == 13){
+			event.preventDefault();
+			$(this).focusout();
+			$(this).blur();
+		}
+	});
 
 	/*----leftbox----*/
 	if( item['_type'] == "tasks" ){
@@ -256,7 +270,7 @@ Submenu.prototype.Add_taskdetail = function() {
 
 			//----in_charge
 			var elem_in_charge = elem.find('[find=user_text]');
-			var elem_in_charge_hidden = elem.find('[find=user_text_hidden]');
+			var elem_in_charge_hidden = elem.find('[find=user_text_hidden]').addClass('skylist_clickable');
 			elem_in_charge.html(in_charge);
 			burger(elem_in_charge_hidden, '_users', item);
 			elem_in_charge.click(function(){
@@ -270,7 +284,7 @@ Submenu.prototype.Add_taskdetail = function() {
 
 			//---duedate calenar
 			var elem_timestamp = elem.find('[find=duedate_timestamp]');
-			var elem_display = elem.find("[find=duedate_text]");
+			var elem_display = elem.find("[find=duedate_text]").addClass('skylist_clickable');
 			elem_timestamp.val((item['start'] + duration_timestamp)*1000);
 			burger_calendar( elem_timestamp, elem_display );
 			elem_timestamp.change(function(){
@@ -572,6 +586,16 @@ Submenu.prototype.Add_taskdetail = function() {
 	var elem_addNewComment_bubble_wrapper = elem_addNewComment_wrapper.find('[find=addNewComment_bubble_wrapper]');
 	var elem_addNewComment_text = elem_addNewComment_wrapper.find('[find=addNewComment_text]');
 	elem_addNewComment_bubble_wrapper.find('[find=name]').html(Lincko.storage.get("users", wrapper_localstorage.uid,"username"));
+	var picID  = Lincko.storage.get("users", wrapper_localstorage.uid, 'profile_pic');
+	if(picID){
+		elem_addNewComment_bubble_wrapper.find('[find=profile_pic]')
+		.removeClass('icon-SmallPersonaiconBlack')
+		.css('background-image','url("'+Lincko.storage.getLinkThumbnail(picID)+'")');
+	}
+
+	//array to hold comments entered to a new item(use it in sendAction after item is created)
+	var param_newItemComments = [];
+
 	var toggleNewComment = function(){
 		elem_addNewComment_btn.toggleClass('display_none');
 		elem_addNewComment_bubble_wrapper.toggleClass('display_none').toggleClass('submenu_taskdetail_commentbubble_addNew');
@@ -586,7 +610,7 @@ Submenu.prototype.Add_taskdetail = function() {
     		"comment": comment,
     	}
 		var cb_success = function(msg, data_error, data_status, data_msg){
-			console.log('cb_success');
+			if(!document.getElementById('taskdetail_'+that.md5id)){ return; }
 			var comment = Lincko.storage.list('comments',1,{temp_id: tmpID})[0];
 			var elem = generateCommentBubble(comment);
 			var elem_toReplace = submenu_taskdetail.find('[comment_id='+tmpID+']').closest('.submenu_taskdetail_commentbubble');
@@ -597,6 +621,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			tmpID = null;
 		}
 		var cb_error = function(xhr_err, ajaxOptions, thrownError){
+			if(!document.getElementById('taskdetail_'+that.md5id)){ return; }
 			var elem_toRemove = submenu_taskdetail.find('[comment_id='+tmpID+']').closest('.submenu_taskdetail_commentbubble');
 			elem_toRemove.remove();
 			tmpID = null;
@@ -605,6 +630,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			elem_commentCount.html(commentCount-1);
 		}
 		var cb_begin = function(jqXHR, settings, temp_id){
+			if(!document.getElementById('taskdetail_'+that.md5id)){ return; }
 			tmpID = temp_id;
 			var commentObj = {};
 			commentObj['_id'] = tmpID;
@@ -628,6 +654,11 @@ Submenu.prototype.Add_taskdetail = function() {
 				}
 			});
 			myIScrollList[submenu_content.prop('id')].refresh();
+		}
+		if(parent_id == 'new'){ 
+			cb_begin(null, null, 'new');
+			param_newItemComments.push(param);
+			return false; 
 		}
     	wrapper_sendAction(param, 'post', 'comment/create', cb_success, cb_error, cb_begin);
 	} // END OF sendAction_newComment
@@ -701,6 +732,20 @@ Submenu.prototype.Add_taskdetail = function() {
 		}
 		var contactServer = false;
 		var param = {};
+		var tmpID = null;
+
+		var cb_begin = function(jqXHR, settings, temp_id){
+			tmpID = temp_id;
+		}
+		var cb_success = function(msg, data_error, data_status, data_msg){
+			var itemID_real = Lincko.storage.list(that.param.type,1,{temp_id: tmpID})[0]['_id'];
+			$.each(param_newItemComments, function(i,param){
+				sendAction_newComment(that.param.type, itemID_real, param.comment);
+			});
+			tmpID = null;
+		}
+
+
 
 		//param values that are common to all
 		param['id'] = taskid;
@@ -735,6 +780,9 @@ Submenu.prototype.Add_taskdetail = function() {
 			else if( that.param.type == "notes" ){
 				route += 'note';
 			}
+			else if( that.param.type == "files" ){
+				route += 'file';
+			}
 
 			if( taskid == 'new' ){
 				route += '/create';
@@ -746,7 +794,7 @@ Submenu.prototype.Add_taskdetail = function() {
 				route += '/update';
 
 			}
-			wrapper_sendAction( param,'post',route );
+			wrapper_sendAction( param,'post',route, cb_success, null, cb_begin);
 		}
 		//$(document).off('previewHide.skylist');
 		$(document).off('submenuHide.skylist');
@@ -761,13 +809,16 @@ Submenu.prototype.Add_taskdetail = function() {
 		function(){
 			var elem = $('#'+this.id);
 			var elem_new = $('#-submenu_taskdetail_meta').clone().prop('id','submenu_taskdetail_meta_'+that.md5id);
-			elem.velocity('fadeOut',{
+			elem.velocity('fadeIn',{
 				duration: 200,
 				complete: function(){
 					item = Lincko.storage.get(that.param.type, item['_id']);
 					if( that.list_type == "tasks" ){
 						duration_timestamp = item['duration'];
 					}
+					//update_meta(elem);
+					elem.find('input').blur();
+					elem.find('[find=duedate_timestamp]').datepicker('hide');
 					elem.replaceWith(update_meta(elem_new));
 				}
 			});
@@ -820,7 +871,6 @@ Submenu.prototype.Add_taskdetail = function() {
 	var destroyEditor_onBlur = true;
 
 	elem_description_text.focus(function(){
-		console.log('elem_description_text focus');
 		if(editorInst instanceof EasyEditor === false) {
 			editorInst = new linckoEditor(this);
 			editorInst.$toolbarContainer.on('mousedown touchdown', function(){
@@ -854,7 +904,6 @@ Submenu.prototype.Add_taskdetail = function() {
 			},300);
 		}
 		else if(that.param.type == 'notes'){
-			console.log('notes');
 			setTimeout(function(){
 				elem_description_text.focus();
 			},300);

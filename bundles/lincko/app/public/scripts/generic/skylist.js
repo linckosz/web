@@ -212,7 +212,7 @@ skylist.prototype.construct = function(){
 		});//scrollStart
 
 		IScroll.on('onScroll', function(){
-			console.log('scrollMove');
+
 		});
 
 		IScroll.on('scrollEnd', function(){
@@ -278,7 +278,6 @@ skylist.prototype.subConstruct_default = function(){
 				return false;
 			}
 			if( itemlist_new.length > elem_cards.length ){
-				console.log('card created');
 				var i_old = 0;
 				for( var i_new =0; i_new < itemlist_new.length; i_new++ ){
 					var newItem_id = itemlist_new[i_new]['_id'];
@@ -310,7 +309,6 @@ skylist.prototype.subConstruct_default = function(){
 }//END OF subConstruct_default
 
 skylist.prototype.destroy = function(){
-	console.log('skylist.destroy');
 	var that = this;
 
 	enquire.unregister(responsive.minTablet, skylist_enquire[that.md5id].minTablet);
@@ -565,7 +563,7 @@ skylist.prototype.filter_by_search = function(items, filter){
 								break;
 							}
 						}
-						else if( that.list_type == 'notes' ){
+						else if( that.list_type == 'notes' || that.list_type == 'files' ){
 							if( item['updated_by'] == userid ){
 								push = true;
 								break;
@@ -705,7 +703,7 @@ skylist.prototype.addCard = function(item){
         elem_card = that.addChat(item);
     }
 
-    if( that.list_type == 'tasks' || that.list_type == 'notes' ){
+    if( that.list_type == 'tasks' || that.list_type == 'notes' || that.list_type == 'files' ){
     	//elem_card.find('[find=card_spacestick]').removeClass('display_none');
     	app_application_lincko.add(
 			elem_card.prop('id'),
@@ -713,7 +711,7 @@ skylist.prototype.addCard = function(item){
 			function(){
 				var elem = $('#'+this.id);
 				var item_new = Lincko.storage.get(that.list_type , item['_id']);
-				if( 'deleted_at' in item_new && item_new['deleted_at'] ){ //for delete
+				if( typeof item_new == 'object' && 'deleted_at' in item_new && item_new['deleted_at'] ){ //for delete
 					elem.velocity('slideUp',{
 						complete: function(){
 							$(this).remove();
@@ -730,7 +728,13 @@ skylist.prototype.addCard = function(item){
 					elem.velocity('fadeOut',{
 						duration: 200,
 						complete: function(){
-							elem.replaceWith(that.addCard(Lincko.storage.get(that.list_type , item['_id'])));
+							var elem_toReplace = that.addCard(Lincko.storage.get(that.list_type , item['_id']));
+							if(elem.hasClass('skylist_card_hover')){
+								elem_toReplace.addClass('skylist_card_hover');
+							}
+							elem.find('input').blur();
+							$(elem.find('[find=card_time_calendar_timestamp]')).datepicker('hide');
+							elem.replaceWith(elem_toReplace);
 							that.DOM_updated();
 						}
 					});
@@ -738,6 +742,9 @@ skylist.prototype.addCard = function(item){
 			}
 		);
     } //END OF 'tasks' || 'notes'
+    if(that.elem_rightOptions_count < 1){    	
+    	elem_card.find('[find=card_rightOptions]').addClass('display_none');
+    }
 	return elem_card;
 }
 
@@ -906,6 +913,13 @@ skylist.prototype.addTask = function(item){
 		elem_title.on('mouseup touchend', function(event){
 			clearTimeout(that.editing_timeout);
 		});
+		elem_title.keydown(function(event){
+			if(event.keyCode == 13){
+				event.preventDefault();
+				$(this).focusout();
+				$(this).blur();
+			}
+		});
 		elem_title.blur(function(){
 			that.editing_target.attr('contenteditable',false);
 			var new_text = $(this).html();
@@ -1002,7 +1016,6 @@ skylist.prototype.addTask = function(item){
 	elem_calendar_timestamp.val((item['start']+item['duration'])*1000);
 	burger_calendar(elem_calendar_timestamp, elem_calendar );
 	elem_calendar_timestamp.change(function(){
-		console.log('timestamp change');
 		var duration_timestamp = $(this).val()/1000 - item['start'];
 		if( duration_timestamp < 0 ){
 			console.log(item['start']+' duedate cant be before start date.');
@@ -1314,6 +1327,9 @@ skylist.prototype.add_cardEvents = function(Elem){
 		else if( that.list_type == "notes" ){
 			route = "note/delete";
 		}
+		else if( that.list_type == "files" ){
+			route = "file/delete";
+		}
 		wrapper_sendAction(
 		    {
 		        "id": Elem.data('item_id'),
@@ -1376,13 +1392,14 @@ skylist.prototype.on_mousemove = function(event){
 
 	//if past threshold, slide left or right options
 	if ( that.pan_threshold.bool && Math.abs(that.delY) < that.pan_threshold.valY ){
-		console.log('sliding...');
 			if(Math.abs(parseInt(that.actiontask.css('left'),10)) >= $(window).width()/2 ){return;}
 			that.actiontask.css('left', that.options_startL + that.delX);
 	}
 	//if just past threshold, initialize
 	else if ( Math.abs(that.delX) > that.pan_threshold.valX && Math.abs(that.delY) < that.pan_threshold.valY){		
-		console.log('initialize...');
+		if( that.elem_rightOptions_count < 1 && that.delX < 0 ){
+			return;
+		}
 		that.options_startL = parseInt(that.actiontask.css('left'),10);
 		if(!that.options_startL){
 			that.options_startL = 0;
@@ -1907,7 +1924,7 @@ skylist.prototype.maxMobileL = function(){
 skylist.prototype.minMobileL = function(){
 	var that = this;
 	if(!that.list_wrapper){return;}
-	that.list.find('[find=card_rightOptions]').removeAttr("style").removeClass('display_none');
+	that.list.find('[find=card_rightOptions]').removeAttr("style");
 	that.list.find('[find=card_center]').removeAttr('style');
 }
 

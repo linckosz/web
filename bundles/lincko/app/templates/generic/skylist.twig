@@ -61,12 +61,12 @@
 	<div id="-skylist" class="skylist overthrow"></div>
 
 	<div id="-skylist_card" find="card" class="skylist_card needsclick skylist_clickable">
-		<div find='card_leftOptions' class="skylist_card_leftOptions maxMobileL">
+		<div find='card_leftOptions' class="skylist_card_leftOptions maxMobileL skylist_clickable">
 			<div class="skylist_leftOptionBox">
 				<div class="icon-Trash"></div>
 			</div>
 		</div>
-		<div find='card_rightOptions' class="skylist_card_rightOptions maxMobileL"></div>
+		<div find='card_rightOptions' class="skylist_card_rightOptions maxMobileL skylist_clickable"></div>
 		<table find='card_center' class="skylist_card_center">
 			<tr>
 				<td find='card_spacestick' class="skylist_card_spacestick display_none">&nbsp;</td>
@@ -75,7 +75,7 @@
 					<div find='title' contenteditable="false"></div><!--<span find='dash'>-</span>-->
 					<div find='description'></div>
 				</td>
-				<input type="text" find="card_time_calendar_timestamp" class="skylist_card_time_hidden display_none" readonly="readonly"/>
+				<input type="text" find="card_time_calendar_timestamp" class="skylist_card_time_hidden skylist_clickable display_none" readonly="readonly"/>
 				<span find='card_time' class="skylist_card_time floatright skylist_paddingRight"></span>
 			</tr>
 		</table>

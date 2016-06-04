@@ -23,8 +23,8 @@ var burger = function(elem, burger_mode, item){
 	 	//console.log('current caret: '+burger_regex_getCaretOffset(elem).caretOffset);
 	}
 
-
 	if( burger_mode == 'regex' ){
+        return false;
 		var burger_str = "";
 		var burger_type = null;
 		var elem_burger_tag = $('#-burger_tag').clone().prop('id','');
@@ -163,9 +163,6 @@ var burger = function(elem, burger_mode, item){
                 //var coord = $(this).position();
                 var coord = $(this).offset();
                 var coordP = $(this).position();
-                console.log($(this));
-                console.log(coord);
-                console.log(coordP);
                 var username = null;
                 var in_charge = null;
                 var picID = null;
@@ -176,7 +173,6 @@ var burger = function(elem, burger_mode, item){
                 
                 $.each(contactsID_obj, function(userid, obj){
                     in_charge = obj.checked;
-
                     username = Lincko.storage.get("users", userid,"username");
                     elem_option_clone = elem_option.clone().attr('userid',userid);
                     elem_option_clone.find('[find=username]').html(username);
@@ -194,13 +190,11 @@ var burger = function(elem, burger_mode, item){
                             elem.val(userid);
                             elem.change();
                             if(!item['_id'] || item['_id'] == 'new'){
-                                return false;
+                                return;
                             }
                             burger_contacts_sendAction(contactsID_obj, [userid], item, true);
                         });
-
                     elem_dropdown.append(elem_option_clone);
-
                 });
 
                 var left = coordP.left;

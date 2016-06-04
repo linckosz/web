@@ -1,6 +1,9 @@
 .app_layers_tasks_tasklist .skylist_newcardCircle {
 	color: #475577;
 }
+.app_layers_tasks_tasklist .skylist_card_center [find=title]{
+	max-height: 58px;
+}
 .app_layers_tasks_tasklist .skylist_card [find=description] {
 	display: none;
 }
