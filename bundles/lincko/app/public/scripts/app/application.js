@@ -511,6 +511,10 @@ $("body").delegate(".selectable", "mouseup", function(e){
 	if(globalWordSelect=="") {
 		$("#app_application_lincko_action").hide();
 	}
+	setTimeout(function(){
+		$("#app_application_lincko_action").hide();
+	}, 1500);
+	return false;
 });
 
 $("#app_application_lincko_action").click(function() {
