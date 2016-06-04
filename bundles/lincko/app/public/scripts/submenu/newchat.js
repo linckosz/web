@@ -115,7 +115,7 @@ Submenu.prototype.New_Add_ChatMenu = function() {
         Elem.find(".attachment").hide();
     });
     function send_comments() {
-        var content = Elem.find('.comments_input').val();
+        var content = Elem.find('.comments_input:visible').val();
         var type = that.param.type == 'history' ? "projects":'chats';
         wrapper_sendAction({
                 'comment': content,
