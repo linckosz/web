@@ -28,7 +28,6 @@ function app_layers_chat_feedChat(parent, handler) {
         return false;
     });
     app_application_lincko.add("skylist_"+app_layers_chatlist.md5id, "chats", function() {
-        debugger;
         var id_list = [];
         var iscroll_elem = $("#"+this.id).find(".iscroll_sub_div");
         $.each($("#"+this.id).find(".skylist_card"), function() {
@@ -36,10 +35,9 @@ function app_layers_chat_feedChat(parent, handler) {
         })
         var new_chats = Lincko.storage.list("chats", -1, null, 'projects',app_content_menu.projects_id, false);
         for(c in new_chats) {
-            if (id_list.indexOf(new_chats[c]._id)>-1) {
+            if (id_list.indexOf(new_chats[c]._id.toString())>-1) {
                 return;
             }
-            debugger;
             iscroll_elem.prepend(app_layers_chatlist.addCard(new_chats[c]));
             
         }

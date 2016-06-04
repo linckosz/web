@@ -68,8 +68,14 @@ Submenu.prototype.Add_ChatContents = function() {
             app_application_lincko.add("chat_contents_wrapper","projects_" + id, function() {
                 var id = Object.keys(this.range)[0].split("_")[1];
                 var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
-                var latest_id = $(".submenu_wrapper").find(".models_history_wrapper:last-of-type").attr("id").split("models_thistory_")[1];
-                var latest = Lincko.storage.hist(null, 1, {id: latest_id}, null,null,false)[0].timestamp;
+                var last_elem = $(".submenu_wrapper").find(".models_history_wrapper:last-of-type");
+                if (last_elem.length > 0){
+                    var latest_id = last_elem.attr("id").split("models_thistory_")[1];
+                    var latest = Lincko.storage.hist(null, 1, {id: latest_id}, null,null,false)[0].timestamp;
+                }
+                else {
+                    var latest = 0;
+                }
                 var items = Lincko.storage.hist(null, -1, {'timestamp': [">", latest]}, 'projects', id, false);
                 chatFeed.appendItem("history", items, position, true);
             });
@@ -79,8 +85,15 @@ Submenu.prototype.Add_ChatContents = function() {
             var id = Object.keys(this.range)[0].split("_")[1];
             var type = Object.keys(this.range)[0].split("_")[0];
             var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
-            var latest_id = $(".submenu_wrapper").find(".models_history_wrapper:last-of-type").attr("id").split("models_thistory_")[1];
-            var latest = Lincko.storage.get("comments", latest_id).created_at;
+            var last_elem = $(".submenu_wrapper").find(".models_history_wrapper:last-of-type");
+            if (last_elem.length > 0){
+                    var latest_id = last_elem.attr("id").split("models_thistory_")[1];
+                    var latest = Lincko.storage.get("comments", latest_id).created_at;
+            }
+            else {
+                    var latest = 0;
+            }
+
             var items = Lincko.storage.list('comments', -1, {'created_at': [">", latest]}, 'chats', id, false);
             chatFeed.appendItem(type, items, position, true);
         });
