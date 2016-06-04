@@ -67,11 +67,11 @@ Submenu.prototype.Add_ChatContents = function() {
     if (type == 'history') {
             app_application_lincko.add("chat_contents_wrapper","projects_" + id, function() {
                 var id = Object.keys(this.range)[0].split("_")[1];
-                var type = Object.keys(this.range)[0].split("_")[0];
-                //Lincko.storage.list("chats", null, {"new": true}, 'chats', id, false);
                 var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
-                //var items = Lincko.storage.hist(null, -1, {"not": true}, 'projects', id, true);
-                //chatFeed.appendItem(type, items, position, true);
+                var latest_id = $(".submenu_wrapper").find(".models_history_wrapper:last-of-type").attr("id").split("models_thistory_")[1];
+                var latest = Lincko.storage.hist(null, 1, {id: latest_id}, null,null,false)[0].timestamp;
+                var items = Lincko.storage.hist(null, -1, {'timestamp': [">", latest]}, 'projects', id, false);
+                chatFeed.appendItem("history", items, position, true);
             });
     }
     else {
@@ -89,7 +89,7 @@ Submenu.prototype.Add_ChatContents = function() {
 
 Submenu.prototype.New_Add_ChatMenu = function() {
     var attribute = this.attribute;
-    submenu_wrapper = this.Wrapper();
+    var submenu_wrapper = this.Wrapper();
     submenu_wrapper.addClass("submenu_chats");
     var Elem = $('#-submenu_app_chat_bottom').clone();
     var that = this;
@@ -114,12 +114,10 @@ Submenu.prototype.New_Add_ChatMenu = function() {
         Elem.find(".send").show();
         Elem.find(".attachment").hide();
     });
-
-    $('.comments_input', submenu_wrapper).keypress(function(e) {
-        if(e.which == 13) {
-            var content = Elem.find('.comments_input').val();
-            var type = that.param.type == 'history' ? "projects":'chats';
-            wrapper_sendAction({
+    function send_comments() {
+        var content = Elem.find('.comments_input').val();
+        var type = that.param.type == 'history' ? "projects":'chats';
+        wrapper_sendAction({
                 'comment': content,
                 'parent_type': type,
                 'parent_id': that.param.id,
@@ -128,10 +126,17 @@ Submenu.prototype.New_Add_ChatMenu = function() {
             'comment/create',
             function() {
                 Elem.find('.comments_input').val('').blur();
+                app_application_lincko.prepare("chat_contents_wrapper", type+"_" + that.param.id);
                 app_application_lincko.prepare("submenu_show");
-            }
-            );
+        });
+    }
+    $('.comments_input', submenu_wrapper).keypress(function(e) {
+        if(e.which == 13) {
+            send_comments();
         }
+    });
+    $('.send', submenu_wrapper).on("click", function() {
+        send_comments();
     });
     $('.attachment', submenu_wrapper).on("click", function() {
         var position = $(this).parents(".submenu_wrapper");
@@ -169,23 +174,6 @@ Submenu.prototype.New_Add_ChatMenu = function() {
             }
         });
 
-    });
-    $('.send', submenu_wrapper).on("click", function() {
-        var content = Elem.find('.comments_input').val();
-        var type = that.param.type == 'history' ? "projects":'chats';
-        wrapper_sendAction({
-                'comment': content,
-                'parent_type': type,
-                'parent_id': that.param.id,
-            },
-            'post',
-            'comment/create',
-            function() {
-                Elem.find('.comments_input').val('').blur();
-                app_application_lincko.update("chat_contents_wrapper", type+"_" + that.param.id);
-                app_application_lincko.prepare("submenu_show");
-            }
-        ); //TODO: fix the error handling logic
     });
 
     //Free memory

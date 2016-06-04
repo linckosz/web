@@ -27,6 +27,16 @@ function app_layers_chat_feedChat(parent, handler) {
         }, true);
         return false;
     });
+    application_lincko.add("skylist_"+app_layers_chatlist.md5id, "chats", function() {
+        var tmp = {};
+        var new_chats = Lincko.storage.list("chats", -1, {"new": true}, 'projects',app_content_menu.projects_id, false);
+        for(c in new_chats) {
+            tmp['chats_'+new_chats[i]._id] = true;
+            app_layers_chatlist.addCard(new_chats[c]);
+            wrapper_sendAction(tmp,'post','data/viewed');
+        }
+    });
+
 }
 
 function app_layers_chat_launchPage(param) {
