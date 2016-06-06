@@ -62,3 +62,86 @@
 	width: 24px;
 	display: block;
 }
+
+.submenu_app_chat_title_right_button {
+	font-size: 32px !important;
+}
+
+.submenu_app_chat_top {
+	background-image: unset;
+}
+
+.submenu_app_chat_top .submenu_title, .submenu_app_chat_top .submenu_top_side_left, .submenu_app_chat_top .submenu_top_side_left {
+	color: #FFFFFF !important;
+}
+
+.submenu_app_chat_profile {
+	width: 58px;
+}
+
+.submenu_app_chat_profile_picture {
+	background-image: unset;
+	height: 48px;
+	width: 48px;
+	border-radius: 100%;
+	border: 2px solid #FBA026;
+	box-sizing: border-box;
+	margin: 5px;
+	vertical-align: middle;
+}
+
+.submenu_app_chat_who {
+	text-align: left;
+	width: 100%;
+}
+
+.submenu_app_chat_invitation_accept {
+	background-color: #679E52;
+	padding: 4px 20px;
+	color: #FFFFFF;
+	margin: 5px;
+	font-size: 12px;
+	border: 2px solid transparent;
+	border-radius: 3px;
+	box-sizing: border-box;
+}
+.submenu_app_chat_invitation_accept:hover {
+	border-color: #7DB169;
+}
+.submenu_app_chat_invitation_accept:active {
+	background-color: #7DB169;
+	border-color: #7DB169;
+}
+
+.submenu_app_chat_invitation_reject {
+	background-color: #BE2B1E;
+	padding: 4px 20px;
+	color: #FFFFFF;
+	margin: 5px;
+	font-size: 12px;
+	border: 2px solid transparent;
+	border-radius: 3px;
+	box-sizing: border-box;
+}
+.submenu_app_chat_invitation_reject:hover {
+	border-color: #E14A3E;
+}
+.submenu_app_chat_invitation_reject:active {
+	background-color: #E14A3E;
+	border-color: #E14A3E;
+}
+
+.submenu_deco.submenu_app_chat_deco {
+	display: table;
+	table-layout: fixed;
+	white-space: nowrap;
+	color: unset;
+	background-color: #FFFFFF;
+	border-width: 0;
+	cursor: pointer; cursor: hand;
+	overflow: hidden;
+	text-align: left;
+}
+.submenu_deco:hover {
+	background-color: #FAFBFC;
+}

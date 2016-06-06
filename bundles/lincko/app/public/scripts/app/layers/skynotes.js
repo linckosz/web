@@ -89,40 +89,40 @@ app_layers_dev_skynotes_ClassTextEditor.prototype.construct = function(){
 		//myIScrollList['app_layers_skynotes_wrapper_inner'].refresh();
 /*
 		// Create a cloned input element below the original one
-        if (!that.elem_wrapper_inner_clone) {
-            var zIndex = that.elem_wrapper_inner.css('zIndex');
-            if (parseInt(zIndex, 10) == NaN) {
-                zIndex = 10;
-                that.elem_wrapper_inner.css({zIndex: zIndex});
-            }    
-                          
-            that.elem_wrapper_inner_clone = that.elem_wrapper_inner.clone().prop('id','app_layers_skynotes_wrapper_inner_clone');
-            that.elem_wrapper_inner_clone.css({
-                zIndex: zIndex-1,
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                overflow: 'hidden',
-                height:500,
-            });
-            that.elem_wrapper_inner.before(that.elem_wrapper_inner_clone);
-        } else {
-            // Update contents of the cloned element from the original one
-            that.elem_wrapper_inner_clone.html(that.elem_wrapper_inner.html());
-        }
+		if (!that.elem_wrapper_inner_clone) {
+			var zIndex = that.elem_wrapper_inner.css('zIndex');
+			if (parseInt(zIndex, 10) == NaN) {
+				zIndex = 10;
+				that.elem_wrapper_inner.css({zIndex: zIndex});
+			}
+						  
+			that.elem_wrapper_inner_clone = that.elem_wrapper_inner.clone().prop('id','app_layers_skynotes_wrapper_inner_clone');
+			that.elem_wrapper_inner_clone.css({
+				zIndex: zIndex-1,
+				position: 'absolute',
+				top: 0,
+				left: 0,
+				overflow: 'hidden',
+				height:500,
+			});
+			that.elem_wrapper_inner.before(that.elem_wrapper_inner_clone);
+		} else {
+			// Update contents of the cloned element from the original one
+			that.elem_wrapper_inner_clone.html(that.elem_wrapper_inner.html());
+		}
 
 		// Here comes the hack:
-        //   - set overflow visible but hide element via opactity.
-        //   - show cloned element in the meantime
-        that.elem_wrapper_inner_clone.css({opacity: 1});
-        that.elem_wrapper_inner.css({overflow: 'visible', opacity: 0});
-        
-        // Immediately turn of overflow and show element again.
-        setTimeout(function() {
-            that.elem_wrapper_inner.css({overflow: 'hidden', opacity: 1});
-            that.elem_wrapper_inner_clone.css({opacity: 0});
-         }, 1);
-        myIScrollList['app_layers_skynotes_wrapper_inner'].refresh();
+		//   - set overflow visible but hide element via opactity.
+		//   - show cloned element in the meantime
+		that.elem_wrapper_inner_clone.css({opacity: 1});
+		that.elem_wrapper_inner.css({overflow: 'visible', opacity: 0});
+		
+		// Immediately turn of overflow and show element again.
+		setTimeout(function() {
+			that.elem_wrapper_inner.css({overflow: 'hidden', opacity: 1});
+			that.elem_wrapper_inner_clone.css({opacity: 0});
+		 }, 1);
+		myIScrollList['app_layers_skynotes_wrapper_inner'].refresh();
 
 
 		/*

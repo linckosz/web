@@ -276,7 +276,7 @@ var app_application = {
 	}
 };
 
-enquire.register(responsive.noMobileL, function() { 
+enquire.register(responsive.noMobileL, function() {
 	//The blur is hard to calculate, it creates some flickering
 	if(wrapper_browser('webkit') && $('#app_application_project').hasClass('app_application_visible')){
 		$('#app_application_content').velocity(
@@ -289,7 +289,7 @@ enquire.register(responsive.noMobileL, function() {
 		);
 	}
 });
-enquire.register(responsive.isMobileL, function() { 
+enquire.register(responsive.isMobileL, function() {
 	//The blur is hard to calculate, it creates some flickering
 	if(wrapper_browser('webkit') && $('#app_application_project').hasClass('app_application_visible')){
 		$('#app_application_content').velocity(
@@ -478,19 +478,19 @@ function handle_select() {
 	if (supportsTouch) {
 	/*
 	$(".selectable").hammer().on("press", function() {
-		var scroll = myIScrollList[$(this).parents(".overthrow").attr("id")];//find iScroll
+		var scroll = myIScrollList[$(this).parents(".overthrow").prop("id")];//find iScroll
 		scroll.disable();//disables the iScroll
 	}); */
 		$("body").delegate(".selectable", "mousedown", function() {
 			$("#app_application_lincko_action").hide();
-			var scroll = myIScrollList[$(this).parents(".overthrow").attr("id")];//find iScroll
+			var scroll = myIScrollList[$(this).parents(".overthrow").prop("id")];//find iScroll
 			scroll.disable();//disables the iScroll
 		});
 	}
 	else {
 		$("body").delegate(".selectable", "mousedown", function() {
 			$("#app_application_lincko_action").hide();
-			var scroll = myIScrollList[$(this).parents(".overthrow").attr("id")];//find iScroll
+			var scroll = myIScrollList[$(this).parents(".overthrow").prop("id")];//find iScroll
 			scroll.disable();//disables the iScroll
 		});
 	}
@@ -499,12 +499,12 @@ handle_select();
 
 /*
 $(".selectable").on('touchend', function() {
-	var scroll = myIScrollList($(this).parents(".overthrow").attr("id")) ;//find iScroll
+	var scroll = myIScrollList($(this).parents(".overthrow").prop("id")) ;//find iScroll
 	scroll.disable();//disables the iScroll
 });
 */
 $("body").delegate(".selectable", "mouseup", function(e){
-	var scroll = myIScrollList[$(this).parents(".overthrow").attr("id")];//find iScroll
+	var scroll = myIScrollList[$(this).parents(".overthrow").prop("id")];//find iScroll
 	scroll.enable();//disables the iScroll
 	$("#app_application_lincko_action").css({"left":e.pageX, "top":e.pageY}).show();
 	globalWordSelect = $.selection();
@@ -519,7 +519,7 @@ $("body").delegate(".selectable", "mouseup", function(e){
 
 $("#app_application_lincko_action").click(function() {
 	$(this).hide();
-  	submenu_Build("taskdetail", true, false, {'id':'new', 'title': globalWordSelect, 'type':'tasks'}, true);
+  	submenu_Build("taskdetail", true, false, {'id':'new', 'title': globalWordSelect, 'type':'tasks'}, false);
 });
 
 function app_application_dev_link(){

@@ -363,18 +363,18 @@ html, .font_sans_serif {
 .base_AccordionBackground { background-color: #B6D6E8; }
 .base_DeleteBackground { background-color: #BE2B1F; }
 .base_ListBackground { background-color: #EFEFEF; } 
-.base_ChatMenuHeader { background-color: #679E52; }
+.base_ChatMenuHeader { background-color: #679E52 !important; }
 .base_MyChatBubble {
 	background-color: #679E52;
 	filter:alpha(opacity=22); opacity:0.22; -moz-opacity:0.22; -khtml-opacity:0.22;
 }
-.base_NoteMenuHeader { background-color: #F0EB4E; }
-.base_FileMenuHeader { background-color: #6526CB; }
+.base_NoteMenuHeader { background-color: #F0EB4E !important; }
+.base_FileMenuHeader { background-color: #6526CB !important; }
 .base_DetailBackground { background-color: #FFFFFF; }
-.base_TaskMenuHeader { background-color: #475577; }
+.base_TaskMenuHeader { background-color: #475577 !important; }
 .base_NotCurrentlyUsed01 { background-color: #437CA8; }
 .base_NotCurrentlyUsed02 { background-color: #53ADD2; }
-.base_SettingsMenuHeader { background-color: #000000; }
+.base_SettingsMenuHeader { background-color: #000000 !important; }
 .base_PrimaryMainMenu {
 	background: #FBA026;
 	background-color: #FBA026;

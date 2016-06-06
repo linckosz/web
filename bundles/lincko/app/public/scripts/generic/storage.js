@@ -36,14 +36,14 @@ var storage_cb_success = function(msg, err, status, data){
 };
 
 Lincko.storage.getParent = function(type, id, attr) {
-    var elem = Lincko.storage.get(type, id);
-    var parent;
-    var parent_type = elem._parent[0];
-    var parent_id = elem._parent[1];
-    if (elem && parent_type && parent_id) {
-        parent = Lincko.storage.get(parent_type, parent_id, attr);
-    }
-    return parent;
+	var elem = Lincko.storage.get(type, id);
+	var parent;
+	var parent_type = elem._parent[0];
+	var parent_id = elem._parent[1];
+	if (elem && parent_type && parent_id) {
+		parent = Lincko.storage.get(parent_type, parent_id, attr);
+	}
+	return parent;
 };
 
 /* PRIVATE METHOD */
@@ -935,37 +935,37 @@ Lincko.storage.getMyPlaceholder = function(){
 };
 
 Lincko.storage.makeChain = function(type, id) {
-       var ascendants = Lincko.storage.tree(type, id , 'parents', true, true);
-       var child = Lincko.storage.get(type, id);
-       var parent = child;
+	   var ascendants = Lincko.storage.tree(type, id , 'parents', true, true);
+	   var child = Lincko.storage.get(type, id);
+	   var parent = child;
 
-       while (parent != undefined) {
-       	   type = child['_type'];
-           id = child['_id'];
-           parent = Lincko.storage.getParent(type, id);
-           ascendants[type][id] = parent;
-           child = parent;
+	   while (parent != undefined) {
+		   type = child['_type'];
+		   id = child['_id'];
+		   parent = Lincko.storage.getParent(type, id);
+		   ascendants[type][id] = parent;
+		   child = parent;
 
-       }
-       return ascendants;
+	   }
+	   return ascendants;
 
 }
 
 Lincko.storage.getCommentRoot = function(id) {
 	 var ascendants = Lincko.storage.makeChain('comments', id);
-     var parent = Lincko.storage.get('comments', id);
-     var child = parent;
+	 var parent = Lincko.storage.get('comments', id);
+	 var child = parent;
 
-     while (parent != undefined) {
-   	    type = child['_type'];
-        id = child['_id'];
-        parent = ascendants[type][id];
-        if (parent['_type'] != 'comments') {
-           	break;
-        }
-        child = parent;
-     }
-     return parent;
+	 while (parent != undefined) {
+		type = child['_type'];
+		id = child['_id'];
+		parent = ascendants[type][id];
+		if (parent['_type'] != 'comments') {
+			break;
+		}
+		child = parent;
+	 }
+	 return parent;
 }
 
 // "include" [default: true] at true it includes the object itself
@@ -1218,7 +1218,8 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 							}
 							save = true;
 							for(var i in conditions) {
-								for(var att in conditions[i]) {
+								save = true;
+								for(var att in conditions[i]) { //And condition
 									if(typeof item[att] == 'undefined'){
 										condition_alert = true;
 										save = false;
@@ -1249,6 +1250,9 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 											break;
 										} 
 									}
+								}
+								if(save){ //Or condition
+									break;
 								}
 							}
 							if(save){
@@ -1299,8 +1303,10 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 						timestamp = item['updated_at'];
 						item['created_at'] = timestamp; //This should never happen, but it's just in case, we need it to sort items
 					}
+					save = true;
 					for(var i in conditions) {
-						for(var att in conditions[i]) {
+						save = true;
+						for(var att in conditions[i]) { //And condition
 							if(typeof item[att] != 'undefined'){
 								attribute = att;
 							} else if(typeof item["+"+att] != 'undefined'){
@@ -1336,6 +1342,9 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 									break;
 								} 
 							}
+						}
+						if(save){ //Or condition
+							break;
 						}
 					}
 					if(save){
@@ -1421,10 +1430,11 @@ Lincko.storage.getLinkThumbnail = function(id){
 */
 Lincko.storage.sort_items = function(array_items, att, page_start, page_end, ascendant){
 	var results = [];
-	var temp = [];
+	var temp = {};
 	var item;
 	var value;
 	var save = false;
+	var type = "number";
 	
 	if(typeof page_start == 'undefined'){ page_start = 0 } else { page_start = parseInt(page_start, 10); }
 	if(typeof page_end == 'undefined'){ page_end = -1 } else { page_end = parseInt(page_end, 10); }
@@ -1459,6 +1469,9 @@ Lincko.storage.sort_items = function(array_items, att, page_start, page_end, asc
 			break;
 		}
 		if(save){
+			if(typeof value != 'number'){
+				var type = "string";
+			}
 			if(typeof value == 'boolean'){
 				value = value ? 1 : 0;
 			} else if(!value){
@@ -1469,7 +1482,8 @@ Lincko.storage.sort_items = function(array_items, att, page_start, page_end, asc
 					value = 0;
 				}
 			}
-			if(typeof temp[value] === 'undefined'){ temp[value] = [];}
+			value = value.toString().toLowerCase();
+			if(typeof temp[value] == 'undefined'){ temp[value] = [];}
 			temp[value].push(item);
 		}
 	}
@@ -1478,17 +1492,32 @@ Lincko.storage.sort_items = function(array_items, att, page_start, page_end, asc
 	if(!$.isEmptyObject(temp)){
 		if(ascendant){
 			//Sort by key value (attribute), Object.keys gets only an array of the keys, sort() sorts the array from small to big
-			var desc_att = Object.keys(temp).sort(function(a, b) { return a - b; });
+			var desc_att = Object.keys(temp).sort(function(a, b) {
+				if(type=="string"){
+					return a.localeCompare(b);
+				} else {
+					return a - b;
+				}
+			});
 		} else {
 			//Sort by key value (attribute), Object.keys gets only an array of the keys, sort() sorts the array from big to small
-			var desc_att = Object.keys(temp).sort(function(a, b) { return b - a; });
+			var desc_att = Object.keys(temp).sort(function(a, b) {
+				if(type=="string"){
+					return b.localeCompare(a);
+				} else {
+					return b - a;
+				}
+			});
 		}
 		var asc_id;
 		var item_id;
+		//Pagination
 		for(var i in desc_att){
 			attribute = desc_att[i]
 			//Sort IDs from smallest to bigger
-			asc_id = Object.keys(temp[attribute]).sort(function(a, b) { return a - b; });
+			asc_id = Object.keys(temp[attribute]).sort(function(a, b) {
+				return a - b;
+			});
 			for(var j in asc_id){
 				item_id = asc_id[j];
 				if(pagination >= page_start){
@@ -1507,7 +1536,7 @@ Lincko.storage.sort_items = function(array_items, att, page_start, page_end, asc
 //setup a check timing procedure to not overload the backend server
 var storage_check_timing_interval;
 var storage_check_timing_timeout;
-var storage_check_timing_speed = 3; //Default = 1, use 4 for demo purpose only
+var storage_check_timing_speed = 1; //Default = 1, use 4 for demo purpose only
 var storage_check_timing = {
 	slow: Math.floor(60000/storage_check_timing_speed), //60s
 	medium: Math.floor(30000/storage_check_timing_speed), //30s

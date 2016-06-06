@@ -16,6 +16,6 @@
 */
 [contenteditable] {
 /*fix for iOS 7 and up, for typing in contenteditable*/
-    -webkit-user-select: text;
-    user-select: text;
+	-webkit-user-select: text;
+	user-select: text;
 }

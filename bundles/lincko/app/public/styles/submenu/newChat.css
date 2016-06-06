@@ -1,61 +1,59 @@
 textarea:focus, input:focus{
-    outline: none;
+	outline: none;
 }
 
 .submenu_newchat_header {
-       background-color: #679E52;
-       background-image: none;
+	background-color: #679E52;
+	background-image: none;
 }
 
 .submenu_newchat_header .submenu_deco {
-       background-color: #679E52;
+	background-color: #679E52;
 }
 
 .submenu_newchat_header .submenu_deco {
-       border-bottom: none;
+	border-bottom: none;
 }
 
 .submenu_newchat_header .submenu_deco {
-       background-color: #679E52;
-       color:#525252;
+	background-color: #679E52;
+	color:#525252;
 }
 
 .submenu_newchat_header_close {
-       color:#525252;
+	color:#525252;
 }
 
 .submenu_newchat_header .submenu_title {
-       color: #f8f8f8;
+	color: #f8f8f8;
 }
 
 .submenu_newchat_header .icon-SmallPersonaiconBlack {
-       font-size: 25px;
-       text-align: center;
-       /*line-height: 2;*/
-       vertical-align: middle;
-       /*margin-right: 10px;*/
-       color: #FBA026;
+	font-size: 25px;
+	text-align: center;
+	vertical-align: middle;
+	color: #FFFFFF;
 }
 
 .submenu_newchat_header .icon-SmallPersonaiconBlack [find='submenu_button_title'] {
-       display: none;
+	display: none;
 }
 .submenu_wrapper .skylist_logo >span {
-		font-size: 35px;
-		color: #FBA026;
+	font-size: 35px;
+	color: #FBA026;
 }
 
 .submenu_wrapper .skylist_menu_people {
-       display: none;
+	display: none;
 }
 .submenu_wrapper .skylist_card_bottom {
- 	display: none;
+	display: none;
 }
 .submenu_wrapper .skylist_menu_timesort {
-       display: none;
+	display: none;
 }
 .submenu_wrapper .skylist_menu_navbar_filter_icon {
-       display: none;
+	display: none;
 }
 .chat_contents_wrapper {
 	padding-bottom: 50px;
@@ -71,6 +69,7 @@ textarea:focus, input:focus{
 .submenu_chats input.comments_input {
 	display: none;
 }
+
 [find="submenu_wrapper_bottom"] .chat_bottom {
 	border-top: 1px solid #FBA026;
 	text-align: left;
@@ -112,7 +111,7 @@ textarea:focus, input:focus{
 	.submenu_chats .submenu_bottom{
 		height: 48px; /*three lines for desktop, one line(48px) for mobile*/
 		background-image: url('/lincko/app/images/submenu/top.png');
-        background-repeat: repeat-x;
+		background-repeat: repeat-x;
 	}
 	.submenu_chats .comments_input{
 		height: 24px;
@@ -146,9 +145,9 @@ textarea:focus, input:focus{
 	top: 50%;
 	transform: translateY(-50%);
 	-webkit-transform: translateY(-50%);
-    -moz-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    -o-transform: translateY(-50%);
+	-moz-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	-o-transform: translateY(-50%);
 }
 
 .chat_bottom span.input {
@@ -160,7 +159,6 @@ textarea:focus, input:focus{
 
 .chat_bottom .comments_input {
 	font-size: 18px;
-	/*border-radius: 5px;*//*only have borders for mobile*/
 	border: 0px;
 	width: 100%;
 	display: block;

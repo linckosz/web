@@ -113,7 +113,7 @@ var app_layers_dev_skytasks_feedPage = function(){
 		console.log('tasklist_search');
 		var filter_by = ['word', term, 'tasks'];
 		console.log(filter_by);
-        app_layers_dev_skytasks_tasklist.tasklist_update('search',filter_by);
+		app_layers_dev_skytasks_tasklist.tasklist_update('search',filter_by);
 	}
 
 	Elem.find('[find=search_textbox]').keyup(function(event){
@@ -487,7 +487,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.construct = function(){
 		.prop('id','app_layers_dev_skytasks_newtaskCircle_'+that.md5id)
 		.click(function(){
 			//submenu_Build("app_task_new");
-			submenu_Build('taskdetail', null, null, 'new', true);
+			submenu_Build('taskdetail', null, null, 'new', that.preview);
 		})
 		.appendTo(that.tasklist_wrapper);
 
@@ -823,7 +823,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.add_newtaskBox = function(elem_a
 		}
 		else{
 			//submenu_Build("app_task_new");	
-			submenu_Build('taskdetail', null, null, 'new', trued);
+			submenu_Build('taskdetail', null, null, 'new', that.preview);
 		}
 	});
 	that.elem_newtaskBox = Elem;
@@ -1052,7 +1052,7 @@ app_layers_dev_skytasks_ClassTasklist.prototype.taskClick = function(event,task_
 app_layers_dev_skytasks_ClassTasklist.prototype.openDetail = function(/*open,*/ task_elem){
 	var that = this;
 	var taskid = task_elem.data('taskid');
-	submenu_Build('taskdetail', null, null, taskid, true);
+	submenu_Build('taskdetail', null, null, taskid, that.preview);
 
 	/*
 		open == true : open detail pane

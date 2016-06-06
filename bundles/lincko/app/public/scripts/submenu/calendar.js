@@ -13,20 +13,20 @@ submenu_list['calendar'] = {
 		"title": "calendar",
 	},
 	"left_button": {
-        "style": "title_left_button",
-        "title": 'Cancel', //toto
-        'hide': true,
-        "class": "base_pointer",
-    },
-    "right_button": {
-    	"style": "title_right_button",
-        "title": 'Select', //toto
-        'hide': true,
-        "class": "base_pointer",
-        'action': function(elem, submenuInst){
-        	submenuInst.param.elem_inputOrig.val(submenuInst.param.elem_inputTarget.val()-86399000).change(); //subtract 23hrs59min59sec
-        },
-    },
+		"style": "title_left_button",
+		"title": 'Cancel', //toto
+		'hide': true,
+		"class": "base_pointer",
+	},
+	"right_button": {
+		"style": "title_right_button",
+		"title": 'Select', //toto
+		'hide': true,
+		"class": "base_pointer",
+		'action': function(elem, submenuInst){
+			submenuInst.param.elem_inputOrig.val(submenuInst.param.elem_inputTarget.val()-86399000).change(); //subtract 23hrs59min59sec
+		},
+	},
 	"projects_id": {
 		"style": "input_hidden",
 		"title": "",
@@ -60,36 +60,36 @@ Submenu.prototype.Add_calendar = function() {
 	calendar_inst.lastVal = elem_timestamp.val();
 	
 	elem_datepicker.datepicker(
-    {
-        //altFormat: "M d",
-        //altField: elem_alt,
-        dayNamesMin: (new wrapper_date()).day_very_short,
-        monthNames: (new wrapper_date()).month,
-        showOtherMonths: true,
-        dateFormat: '@',
-        gotoCurrent: true,
-        minDate: 0,
-        showAnim: "slideDown",
-        beforeShow: function(input, inst){
-        	console.log('beforeShow');
-        	//console.log(inst);
-           // submenu_content.find('.ui-datepicker-inline').addClass('burger_calendar');
-            //burger_calendar_linckofy(inst);
-        },
-        onChangeMonthYear: function(year, month, inst){
-        	elem_datepicker_inline.addClass('burger_calendar');
-            burger_calendar_linckofy(calendar_inst, elem_datepicker_inline);
-        },
-        onSelect: function(dateText, inst){
-        	var year = inst.selectedYear;
-        	var month = inst.selectedMonth;
-        	var day = inst.selectedDay;
-        	var timestamp = new Date(year, month, day).getTime() + 86399000;
-        	elem_timestamp.val(timestamp);
-        	calendar_inst.lastVal = timestamp;
-        	burger_calendar_linckofy(calendar_inst, elem_datepicker_inline);
-        },
-    });
+	{
+		//altFormat: "M d",
+		//altField: elem_alt,
+		dayNamesMin: (new wrapper_date()).day_very_short,
+		monthNames: (new wrapper_date()).month,
+		showOtherMonths: true,
+		dateFormat: '@',
+		gotoCurrent: true,
+		minDate: 0,
+		showAnim: "slideDown",
+		beforeShow: function(input, inst){
+			console.log('beforeShow');
+			//console.log(inst);
+			// submenu_content.find('.ui-datepicker-inline').addClass('burger_calendar');
+			//burger_calendar_linckofy(inst);
+		},
+		onChangeMonthYear: function(year, month, inst){
+			elem_datepicker_inline.addClass('burger_calendar');
+			burger_calendar_linckofy(calendar_inst, elem_datepicker_inline);
+		},
+		onSelect: function(dateText, inst){
+			var year = inst.selectedYear;
+			var month = inst.selectedMonth;
+			var day = inst.selectedDay;
+			var timestamp = new Date(year, month, day).getTime() + 86399000;
+			elem_timestamp.val(timestamp);
+			calendar_inst.lastVal = timestamp;
+			burger_calendar_linckofy(calendar_inst, elem_datepicker_inline);
+		},
+	});
 
 	submenu_content.append(elem_timestamp).append(elem_datepicker);
 

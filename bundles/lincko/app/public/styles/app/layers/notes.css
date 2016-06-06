@@ -12,10 +12,10 @@
 
 .app_layers_notes_noteslist .skylist_card_leftbox_abc {
 	background-image: url('/lincko/app/images/app/abc.png');
-    background-size: 45px;
-    background-repeat: no-repeat;
-    background-position: center;
-    padding: 40px 40px;
+	background-size: 45px;
+	background-repeat: no-repeat;
+	background-position: center;
+	padding: 40px 40px;
 }
 
 .app_layers_notes_noteslist .skylist_card_center [find=title]{
@@ -25,7 +25,7 @@
 .app_layers_notes_noteslist .skylist_card_center [find=description] {
 	font-size: 14px;
 	max-height: 40px;
-    height: initial;
+	height: initial;
 }
 
 

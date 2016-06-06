@@ -1,27 +1,27 @@
 .submenu_calendar .burger_calendar {
-    position: absolute;
-    top: 0px;
-    width: 100%;
-    height: 100%;
+	position: absolute;
+	top: 0px;
+	width: 100%;
+	height: 100%;
 }
 .submenu_calendar .burger_calendar_prepend {
 	margin: 0 auto;
-    width: 300px;
-    position: relative;
+	width: 300px;
+	position: relative;
 }
 .submenu_calendar .burger_calendar_prepend [find=today_info]{
-    padding:15px 0px 0px 0px;
+	padding:15px 0px 0px 0px;
 }
 
 .submenu_calendar .burger_calendar_prepend [find=row1], 
 .submenu_calendar .burger_calendar_prepend [find=row2]{
-    font-size: 18px;
+	font-size: 18px;
 }
 .submenu_calendar .burger_calendar_prepend [find=today_btn],
 .submenu_calendar .burger_calendar_prepend [find=twoDays_btn],
 .submenu_calendar .burger_calendar_prepend [find=tomorrow_btn],
 .submenu_calendar .burger_calendar_prepend [find=oneWeek_btn]{
-    padding-top: 20px;
+	padding-top: 20px;
 }
 
 .submenu_calendar .burger_calendar .ui-widget-header{
@@ -30,18 +30,18 @@
 
 .submenu_calendar .burger_calendar .ui-datepicker-calendar {
 	width: 80%;
-    height: 47%;
-    display: table;
-    margin: 0 auto;
+	height: 47%;
+	display: table;
+	margin: 0 auto;
 }
 
 .submenu_calendar .burger_calendar .ui-datepicker-calendar td span, 
 .submenu_calendar .burger_calendar .ui-datepicker-calendar td a {
-    /*
-    display: initial;
-    padding: 5px;
-    */
-    height: 27px;
-    width: 27px;
-    display: inline-block;
+	/*
+	display: initial;
+	padding: 5px;
+	*/
+	height: 27px;
+	width: 27px;
+	display: inline-block;
 }

@@ -56,7 +56,6 @@ var app_layers_projects_options = {
 	pointHitDetectionRadius : 10,
 	multiTooltipKeyBackground: "rgba(250,250,250,0.2)",
 	datasetStrokeWidth : 1,
-
 };
 
 var app_layers_projects_charts = {};

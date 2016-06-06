@@ -12,11 +12,11 @@ submenu_list['taskdetail'] = {
 		},
 	},
 	"left_button": {
-        "style": "title_left_button",
-        "title": Lincko.Translation.get('app', 25, 'html'), //Close
-        'hide': true,
-        "class": "base_pointer",
-    },
+		"style": "title_left_button",
+		"title": Lincko.Translation.get('app', 25, 'html'), //Close
+		'hide': true,
+		"class": "base_pointer",
+	},
 	"taskdetail": {
 		"style": "taskdetail",
 		"title": "taskdetail",
@@ -35,7 +35,7 @@ submenu_list['taskdetail'] = {
 		},
 		"action": function(){
 			var title = submenu_wrapper.find('[find=title_text]').html();
-	  		var description = submenu_wrapper.find('[find=description_text]').html();
+			var description = submenu_wrapper.find('[find=description_text]').html();
 			var proj_id = app_content_menu.projects_id.toString();
 			var param = 
 			{
@@ -191,8 +191,8 @@ Submenu.prototype.Add_taskdetail = function() {
 			if(taskid != 'new'){
 				wrapper_sendAction(
 					{
-			    		"id": item['_id'],
-			    		"approved": approved,
+						"id": item['_id'],
+						"approved": approved,
 					},
 					'post', 'task/update');
 				}
@@ -495,10 +495,10 @@ Submenu.prototype.Add_taskdetail = function() {
 			var elem_addNewComment_text = elem_replyBubble.find('[find=addNewComment_text]');
 
 			elem_addNewComment_text.keyup(function(event) {
-			    if (event.keyCode == 13) {
-			    	sendAction_newComment('comments', elem_replyTo.find('[find=comment_id]').attr('comment_id'), elem_replyBubble.find('[find=addNewComment_text]').val());
-			    	elem_addNewComment_text.blur();	    	
-			    }
+				if (event.keyCode == 13) {
+					sendAction_newComment('comments', elem_replyTo.find('[find=comment_id]').attr('comment_id'), elem_replyBubble.find('[find=addNewComment_text]').val());
+					elem_addNewComment_text.blur();
+				}
 			});
 			elem_addNewComment_text.focusout(function(){
 				elem_replyBubble.remove();
@@ -605,10 +605,10 @@ Submenu.prototype.Add_taskdetail = function() {
 	var sendAction_newComment = function(parent_type, parent_id, comment){
 		var tmpID = null;
 		var param = {
-    		"parent_type": parent_type,
-    		"parent_id": parent_id,
-    		"comment": comment,
-    	}
+			"parent_type": parent_type,
+			"parent_id": parent_id,
+			"comment": comment,
+		}
 		var cb_success = function(msg, data_error, data_status, data_msg){
 			if(!document.getElementById('taskdetail_'+that.md5id)){ return; }
 			var comment = Lincko.storage.list('comments',1,{temp_id: tmpID})[0];
@@ -660,7 +660,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			param_newItemComments.push(param);
 			return false; 
 		}
-    	wrapper_sendAction(param, 'post', 'comment/create', cb_success, cb_error, cb_begin);
+		wrapper_sendAction(param, 'post', 'comment/create', cb_success, cb_error, cb_begin);
 	} // END OF sendAction_newComment
 
 	elem_addNewComment_btn.click(function(){
@@ -669,10 +669,10 @@ Submenu.prototype.Add_taskdetail = function() {
 		elem_addNewComment_text.focus();
 	});
 	elem_addNewComment_text.keyup(function (event) {
-	    if (event.keyCode == 13) {
+		if (event.keyCode == 13) {
 			sendAction_newComment(that.param.type, taskid, elem_addNewComment_text.val());
-	    	elem_addNewComment_text.blur();	    	
-	    }
+			elem_addNewComment_text.blur();
+		}
 	});
 	elem_addNewComment_text.focusout(function(event){
 		toggleNewComment();
@@ -754,16 +754,16 @@ Submenu.prototype.Add_taskdetail = function() {
 		param['comment'] = submenu_taskdetail.find('[find=description_text]').html();
 		if( taskid == 'new' ){
 			if(in_charge_id){
-	        	param['users>in_charge'] = {};
-	        	param['users>in_charge'][in_charge_id] = true;
-	        }
-	        if(approved){
-	        	param['approved'] = approved;
-	        }
-	        if( param['comment'] == newDescription ){
-	        	param['comment'] = '';
-	        }
-	        if( that.param.type == "tasks" && duration_timestamp != item['duration'] ){
+				param['users>in_charge'] = {};
+				param['users>in_charge'][in_charge_id] = true;
+			}
+			if(approved){
+				param['approved'] = approved;
+			}
+			if( param['comment'] == newDescription ){
+				param['comment'] = '';
+			}
+			if( that.param.type == "tasks" && duration_timestamp != item['duration'] ){
 				param['duration'] = duration_timestamp;
 			}
 		}
@@ -920,32 +920,32 @@ Submenu.prototype.Add_taskdetail = function() {
 /*-----linckoEditor------------------------------------*/
 function linckoEditor(elem){
 	var options = {
-	    buttons: [ 'h', 'h1', 'h2', 'h3', 'h4', 'p', 'bold', 'italic', 'list', 'alignleft', 'aligncenter', 'alignright', 'image', 'x'],
-	    buttonsHtml: {
-	        'italic': '<i class="fa fa-italic"></i>',
-	        'header': '<i class="fa fa-header"></i>',
-	        'header-1': '<h1>header 1</h1>',
-	        'header-2': '<h2>header 2</h2>',
-	        'header-3': '<h3>header 3</h3>',
-	        'header-4': '<h4>header 4</h4>',
-	        'paragraph': '<p>paragraph</p>',
-	        'align-left': '<i class="fa fa-align-left"></i>',
-	        'align-center': '<i class="fa fa-align-center"></i>',
-	        'align-right': '<i class="fa fa-align-right"></i>',
-	        'insert-image': '<i class="fa fa-picture-o"></i>',
-	        'remove-formatting': '<i class="fa fa-ban"></i>'
-	    },
-	    overwriteButtonSettings: {
-	    	'header-2': {
-	    		childOf: 'header',
-	    	},
-	    	'header-3': {
-	    		childOf: 'header',
-	    	},
-	    	'header-4': {
-	    		childOf: 'header',
-	    	},
-	    }
+		buttons: [ 'h', 'h1', 'h2', 'h3', 'h4', 'p', 'bold', 'italic', 'list', 'alignleft', 'aligncenter', 'alignright', 'image', 'x'],
+		buttonsHtml: {
+			'italic': '<i class="fa fa-italic"></i>',
+			'header': '<i class="fa fa-header"></i>',
+			'header-1': '<h1>header 1</h1>',
+			'header-2': '<h2>header 2</h2>',
+			'header-3': '<h3>header 3</h3>',
+			'header-4': '<h4>header 4</h4>',
+			'paragraph': '<p>paragraph</p>',
+			'align-left': '<i class="fa fa-align-left"></i>',
+			'align-center': '<i class="fa fa-align-center"></i>',
+			'align-right': '<i class="fa fa-align-right"></i>',
+			'insert-image': '<i class="fa fa-picture-o"></i>',
+			'remove-formatting': '<i class="fa fa-ban"></i>'
+		},
+		overwriteButtonSettings: {
+			'header-2': {
+				childOf: 'header',
+			},
+			'header-3': {
+				childOf: 'header',
+			},
+			'header-4': {
+				childOf: 'header',
+			},
+		}
 	};
 
 	var editorInst = new EasyEditor(elem, options);
@@ -961,105 +961,105 @@ function linckoEditor(elem){
 }
 
 EasyEditor.prototype.font = function(){
-    var _this = this;
-    var settings = {
-        buttonIdentifier: 'font',
-        buttonHtml: 'Font',
-        clickHandler: function(){
-            _this.openDropdownOf('font');
-        },
-        hasChild: true
-    };
+	var _this = this;
+	var settings = {
+		buttonIdentifier: 'font',
+		buttonHtml: 'Font',
+		clickHandler: function(){
+			_this.openDropdownOf('font');
+		},
+		hasChild: true
+	};
 
-    _this.injectButton(settings);
+	_this.injectButton(settings);
 };
 
 EasyEditor.prototype.calibri = function(){
-    var _this = this;
-    var settings = {
-        buttonIdentifier: 'calibri',
-        buttonHtml: 'Calibri',
-        clickHandler: function(){
-            _this.wrapSelectionWithNodeName({ nodeName: 'span', style: 'font-family: Calibri,sans-serif', keepHtml: true });
-        },
-        childOf: 'font'
-    };
+	var _this = this;
+	var settings = {
+		buttonIdentifier: 'calibri',
+		buttonHtml: 'Calibri',
+		clickHandler: function(){
+			_this.wrapSelectionWithNodeName({ nodeName: 'span', style: 'font-family: Calibri,sans-serif', keepHtml: true });
+		},
+		childOf: 'font'
+	};
 
-    _this.injectButton(settings);
+	_this.injectButton(settings);
 };
 
 EasyEditor.prototype.georgia = function(){
-    var _this = this;
-    var settings = {
-        buttonIdentifier: 'georgia',
-        buttonHtml: 'Georgia',
-        clickHandler: function(){
-            _this.wrapSelectionWithNodeName({ nodeName: 'span', style: 'font-family: Georgia,serif', keepHtml: true });
-        },
-        childOf: 'font'
-    };
+	var _this = this;
+	var settings = {
+		buttonIdentifier: 'georgia',
+		buttonHtml: 'Georgia',
+		clickHandler: function(){
+			_this.wrapSelectionWithNodeName({ nodeName: 'span', style: 'font-family: Georgia,serif', keepHtml: true });
+		},
+		childOf: 'font'
+	};
 
-    _this.injectButton(settings);
+	_this.injectButton(settings);
 };
 
 EasyEditor.prototype.h = function(){
-    var _this = this;
-    var settings = {
-        buttonIdentifier: 'header',
-        buttonHtml: 'H',
-        clickHandler: function(){
-        	if($(this).next('ul').css('display') != 'none'){
-        		$(_this.elem).click();
-        	}
-        	else {
-        		_this.openDropdownOf('header');
-        	}
-        },
-        hasChild: true
-    };
+	var _this = this;
+	var settings = {
+		buttonIdentifier: 'header',
+		buttonHtml: 'H',
+		clickHandler: function(){
+			if($(this).next('ul').css('display') != 'none'){
+				$(_this.elem).click();
+			}
+			else {
+				_this.openDropdownOf('header');
+			}
+		},
+		hasChild: true
+	};
 
-    _this.injectButton(settings);
+	_this.injectButton(settings);
 };
 
 EasyEditor.prototype.h1 = function(){
-    var _this = this;
-    var settings = {
-        buttonIdentifier: 'header-1',
-        buttonHtml: 'H1',
-        clickHandler: function(){
-            _this.wrapSelectionWithNodeName({ nodeName: 'h1', blockElement: true });
-        },
-        childOf: 'header'
-    };
+	var _this = this;
+	var settings = {
+		buttonIdentifier: 'header-1',
+		buttonHtml: 'H1',
+		clickHandler: function(){
+			_this.wrapSelectionWithNodeName({ nodeName: 'h1', blockElement: true });
+		},
+		childOf: 'header'
+	};
 
-    _this.injectButton(settings);
+	_this.injectButton(settings);
 };
 
 EasyEditor.prototype.p = function(){
-    var _this = this;
-    var settings = {
-        buttonIdentifier: 'paragraph',
-        buttonHtml: 'p',
-        clickHandler: function(){
-            _this.wrapSelectionWithNodeName({ nodeName: 'p'});
-        },
-        childOf: 'header'
-    };
+	var _this = this;
+	var settings = {
+		buttonIdentifier: 'paragraph',
+		buttonHtml: 'p',
+		clickHandler: function(){
+			_this.wrapSelectionWithNodeName({ nodeName: 'p'});
+		},
+		childOf: 'header'
+	};
 
-    _this.injectButton(settings);
+	_this.injectButton(settings);
 };
 
 EasyEditor.prototype.image = function(){
-    var _this = this;
-    var settings = {
-        buttonIdentifier: 'insert-image',
-        buttonHtml: 'Insert image',
-        clickHandler: function(){
-            _this.openModal('#easyeditor-modal-1');
-        }
-    };
+	var _this = this;
+	var settings = {
+		buttonIdentifier: 'insert-image',
+		buttonHtml: 'Insert image',
+		clickHandler: function(){
+			_this.openModal('#easyeditor-modal-1');
+		}
+	};
 
-    _this.injectButton(settings);
+	_this.injectButton(settings);
 };
 
 /*------END OF linckoEditor---------------------------*/

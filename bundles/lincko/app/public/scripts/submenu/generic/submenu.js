@@ -569,7 +569,7 @@ Submenu.prototype.Add_InputHidden = function() {
 Submenu.prototype.Add_InputText = function() {
 	var attribute = this.attribute;
 	var Elem = $('#-submenu_input').clone();
-	var Input = $('<input type="text" find="submenu_input" />');
+	var Input = $('<input type="text" find="submenu_input" class="selectable" />');
 	Elem.prop("id", '');
 	Elem.find("[find=submenu_title]").html(attribute.title);
 	Elem.prop('for', attribute.name);
@@ -595,7 +595,8 @@ Submenu.prototype.Add_InputTextarea = function() {
 	if ("value" in attribute) {
 		Value = attribute.value;
 	}
-	var Input = $('<textarea>' + Value + '</textarea>');
+	var Input = $('<textarea find="submenu_input_textarea" class="selectable"></textarea>'); //toto
+	Input.html(Value); //toto
 	Elem.prop("id", '');
 	Elem.find("[find=submenu_title]").html(attribute.title);
 	Elem.prop('for', attribute.name);
@@ -1018,34 +1019,34 @@ Submenu.prototype.hidePreview = function(time, delay) {
 }
 
 Submenu.prototype.Hide = function(animate) {
-    var that = this;
-    var time = 160;
-    var delay = 60;
-    var stack = this.preview ? submenu_obj['preview'] : submenu_obj['submenu'];
-    var preview = this.preview ? "preview" : "submenu";
-    if (responsive.test("minDesktop")) {
-        delay = 60;
-    }
-    submenu_show[preview][this.id] = false;
-    submenu_content_unblur();
-    if (typeof animate === 'undefined') { animate = false; }
-    //Reset menu selection if(menu in submenu_list){
-    if ((that.layer - 1) in stack) {
-        $.each(stack[that.layer - 1].Wrapper().find('.submenu_deco_next'), function() {
-            $(this).removeClass('submenu_deco_next');
-        });
-    }
-    if (animate) {
-        if (this.preview) {
-            this.hidePreview(time, delay);
-        } else {
-            this.hideSubmenu(time, delay);
-        }
-    } else {
-        time = 0;
-        that.Remove();
-    }
-    $(document).trigger("submenuHide");
+	var that = this;
+	var time = 160;
+	var delay = 60;
+	var stack = this.preview ? submenu_obj['preview'] : submenu_obj['submenu'];
+	var preview = this.preview ? "preview" : "submenu";
+	if (responsive.test("minDesktop")) {
+		delay = 60;
+	}
+	submenu_show[preview][this.id] = false;
+	submenu_content_unblur();
+	if (typeof animate === 'undefined') { animate = false; }
+	//Reset menu selection if(menu in submenu_list){
+	if ((that.layer - 1) in stack) {
+		$.each(stack[that.layer - 1].Wrapper().find('.submenu_deco_next'), function() {
+			$(this).removeClass('submenu_deco_next');
+		});
+	}
+	if (animate) {
+		if (this.preview) {
+			this.hidePreview(time, delay);
+		} else {
+			this.hideSubmenu(time, delay);
+		}
+	} else {
+		time = 0;
+		that.Remove();
+	}
+	$(document).trigger("submenuHide");
 };
 
 // http://stackoverflow.com/questions/19469881/javascript-remove-all-event-listeners-of-specific-type

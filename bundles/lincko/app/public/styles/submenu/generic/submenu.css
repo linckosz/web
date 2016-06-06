@@ -4,6 +4,7 @@
 
 .submenu_wrapper {
 	background-color: #FFFFFF;
+	box-sizing: border-box;
 	position: absolute;
 	font-size: 14px;
 	width: 320px;
@@ -102,6 +103,7 @@
 	vertical-align: middle;
 	text-align: center;
 	width: auto;
+	font-size: 16px;
 }
 
 .submenu_title_center {
@@ -151,6 +153,7 @@
 
 .submenu_deco_read {
 	display: table;
+	/*table-layout: fixed;*/
 	white-space: nowrap;
 	color: #6F7377;
 	background-color: #FAFBFC;
@@ -162,6 +165,7 @@
 
 .submenu_deco {
 	display: table;
+	/*table-layout: fixed;*/
 	white-space: nowrap;
 	color: #6F7377;
 	background-color: #FAFBFC;
@@ -375,7 +379,7 @@
 }
 
 #app_application_submenu_block .submenu_wrapper {
-    width: 33.33%;
+	width: 33.33%;
 }
 
 /* Start app_project */
@@ -385,7 +389,8 @@
 /* Minimum Desktop */
 @media only screen and (min-width: 1280px) {
 	.submenu_wrapper {
-		border: 1px solid #DFDFDF;
+		border: 0 solid #DFDFDF;
+		border-width: 0 1px 0 0;
 		position: relative;
 		float: left;
 	}
@@ -400,7 +405,6 @@
 	}
 	.submenu_title {
 		color: #6F7377;
-		font-size: 15px;
 	}
 	.submenu_top_side {
 		width: 46px;
@@ -440,5 +444,8 @@
 @media only screen and (max-width: 1279px) {
 	.submenu_wrapper {
 		width: 100% !important; 
+	}
+	.submenu_title {
+		font-size: 15px;
 	}
 }

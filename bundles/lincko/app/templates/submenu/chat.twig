@@ -7,14 +7,15 @@
 	<div>
 		<img find="select_contacts" class="submenu_app_chat_chatmenu_icon" src="{{ _filelatest('/lincko/app/images/submenu/chat/contacts.png') }}" alt="{{ _trans('app', 8, 2, 'html') }}{# contacts #}" title="{{ _trans('app', 8, 2, 'html') }}{# contacts #}" />
 	</div>
-	<div>
-		<img find="select_search" class="submenu_app_chat_chatmenu_icon" src="{{ _filelatest('/lincko/app/images/submenu/chat/search.png') }}" alt="{{ _trans('app', 8, 3, 'html') }}{# search #}" title="{{ _trans('app', 8, 3, 'html') }}{# search #}" />
-	</div>
 </div>
 
-<div id="-submenu_app_chat_chatchats" class="base_optionTab submenu_deco">
-	<span class="submenu_padding" find="picture"></span>
-	<span class="submenu_padding" find="who"></span>
-	<span class="submenu_padding" find="message"></span>
-	<span class="submenu_padding" find="date"></span>
+<div id="-submenu_app_chat_chat_contact" class="base_optionTab submenu_deco submenu_app_chat_deco">
+	<span class="submenu_padding submenu_app_chat_profile" find="picture">
+		<img find="picture_src" class="submenu_app_chat_profile_picture" src="" />
+	</span>
+	<span class="submenu_padding submenu_app_chat_who base_MenuListText ellipsis" find="who"></span>
+	<span class="submenu_padding display_none" find="invitation">
+		<span class="submenu_app_chat_invitation_accept base_pointer" find="accept">{{ _trans('app', 8, 4, 'html') }}{# Accept #}</span>
+		<span class="submenu_app_chat_invitation_reject base_pointer" find="reject">{{ _trans('app', 8, 5, 'html') }}{# Reject #}</span>
+	</span>
 </div>

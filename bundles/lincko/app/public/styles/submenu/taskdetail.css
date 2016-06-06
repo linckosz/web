@@ -1,15 +1,15 @@
 .submenu_wrapper_title.submenu_top {
-    background-image: none;
+	background-image: none;
 }
 .submenu_wrapper_title .submenu_title {
-    text-transform: capitalize;
+	text-transform: capitalize;
 }
 .submenu_wrapper_taskdetail_tasks .submenu_title,
 .submenu_wrapper_taskdetail_files .submenu_title {
-    color: #FFFFFF;
+	color: #FFFFFF;
 }
 .submenu_wrapper_taskdetail_notes .submenu_title {
-    color: #000000;
+	color: #000000;
 }
 .submenu_wrapper_title .submenu_deco {
 	background-color: inherit;
@@ -22,7 +22,7 @@
 	background-color: #F0EB4E;
 }
 .submenu_wrapper_taskdetail_files.submenu_top, .submenu_wrapper_taskdetail_files [find=submenu_button_title] {
-    background-color: #4E2A84;
+	background-color: #4E2A84;
 }
 
 .submenu_taskdetail {
@@ -46,7 +46,7 @@
 	cursor: text;
 }
 .submenu_taskdetail :focus{
-    outline: none;
+	outline: none;
 }
 
 
@@ -66,15 +66,15 @@ td.app_layers_dev_skytasks_checkbox {
 	margin-right: 10px;
 }
 .submenu_taskdetail_tasktitle [find=title_text] {
-    max-height: 50px;
-    overflow: hidden;
-    word-wrap: break-word;
-    word-break: break-all;
-    text-overflow: ellipsis;
-    box-sizing: border-box;
-    color:#475577;
-    font-size: 20px;
-    opacity: 0.7;
+	max-height: 50px;
+	overflow: hidden;
+	word-wrap: break-word;
+	word-break: break-all;
+	text-overflow: ellipsis;
+	box-sizing: border-box;
+	color:#475577;
+	font-size: 20px;
+	opacity: 0.7;
 }
 .submenu_taskdetail_tasktitle [find=title_text]:focus {
 	opacity: 1;
@@ -84,7 +84,7 @@ td.app_layers_dev_skytasks_checkbox {
 }
 .submenu_taskdetail_tasktitle .app_layers_dev_skytasks_checkbox label{
 	top: 5px;
-    left: 5px;
+	left: 5px;
 }
 
 td.submenu_taskdetail_share {
@@ -104,54 +104,54 @@ td.submenu_taskdetail_share .fa{
 .submenu_taskdetail_description [find=description_text] {
 	/*min-height: 60%;*/
 	padding-top: 40px;
-    padding-bottom: 50px;
-    margin: 0px;
-    border: none;
+	padding-bottom: 50px;
+	margin: 0px;
+	border: none;
 }
 
 /*------easyEditor------*/
 .submenu_taskdetail_description .easyeditor-toolbar {
 	padding-top: 0px;
-    padding-bottom: 0px;
-    background: #F7FAFC;
-    position: absolute;
-    right: 0px;
-    left: 0px;
+	padding-bottom: 0px;
+	background: #F7FAFC;
+	position: absolute;
+	right: 0px;
+	left: 0px;
 }
 .submenu_taskdetail_description .easyeditor-toolbar ul {
 	margin: 0px;
-    padding: 0px;
+	padding: 0px;
 }
 .submenu_taskdetail_description .easyeditor-toolbar > ul > li > button {
-    margin: 0px !important;
-    background: none !important;
-    border: none !important;
-    font-size: 18px;
-    padding-top: 8px;
-    padding-bottom: 8px;
-    line-height: 18px;
+	margin: 0px !important;
+	background: none !important;
+	border: none !important;
+	font-size: 18px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	line-height: 18px;
 }
 .submenu_taskdetail_description .easyeditor-toolbar ul  ul {
-    background: #FFFFFF;
-    box-shadow: 0px 0px 4px 0px #3F84B0;
-    border-radius: 3px;
+	background: #FFFFFF;
+	box-shadow: 0px 0px 4px 0px #3F84B0;
+	border-radius: 3px;
 }
 .submenu_taskdetail_description .easyeditor-toolbar ul ul button {
-    background: none;
-    border: none;
-    width: 150px;
-    margin: 0px;
-    padding: 0px 0px 0px 5px;
-    text-align: left; 
+	background: none;
+	border: none;
+	width: 150px;
+	margin: 0px;
+	padding: 0px 0px 0px 5px;
+	text-align: left; 
 }
 .submenu_taskdetail_description .easyeditor-toolbar ul ul button:hover {
-    background: #DBEBF4;
-    border: none !important;
-    box-shadow: none !important;
-    width: 150px;
-    margin: 0px;
-    padding: 0px 0px 0px 5px;
-    text-align: left;
+	background: #DBEBF4;
+	border: none !important;
+	box-shadow: none !important;
+	width: 150px;
+	margin: 0px;
+	padding: 0px 0px 0px 5px;
+	text-align: left;
 }
 
 /*----END OF easyEditor--------------*/
@@ -161,18 +161,18 @@ td.submenu_taskdetail_share .fa{
 
 
 .submenu_taskdetail_collapsable_button {
-    border-bottom: 1px solid #FBA026;
-    width: 100%;
-    height: 34px;
-    cursor: pointer;
-    background: #F7FAFC;
+	border-bottom: 1px solid #FBA026;
+	width: 100%;
+	height: 34px;
+	cursor: pointer;
+	background: #F7FAFC;
 	font-size: 14px;
 	color: #3F84B0;
 	text-transform: capitalize;
 }
 .submenu_taskdetail_collapsable_button [find=icon_arrow] {
-    width: 20px;
-    font-size: 25px;
+	width: 20px;
+	font-size: 25px;
 }
 .submenu_taskdetail_collapsable_content {
 
@@ -182,46 +182,46 @@ td.submenu_taskdetail_share .fa{
 	height: 30px;
 	background: #F7FAFC;
 	position: relative;
-    box-shadow: 0px 1px 0px 0px #B5B5B5;
+	box-shadow: 0px 1px 0px 0px #B5B5B5;
 }
 .submenu_taskdetail_meta_icons{
-    font-size: 21px;
-    color: #53ADD2;
-    padding: 0px 3px;
-    display: inline-block;
-    vertical-align: bottom;
+	font-size: 21px;
+	color: #53ADD2;
+	padding: 0px 3px;
+	display: inline-block;
+	vertical-align: bottom;
 }
 .submenu_taskdetail_meta_text {
 	padding: 0px 5px;
-    background-color: inherit;
-    border: none;
-    color: inherit;
+	background-color: inherit;
+	border: none;
+	color: inherit;
 }
 .submenu_taskdetail_meta_text[find=duedate_text] {
 	border: 0px;
-    width: 45px;
-    background-color: initial;
-    color: inherit;
+	width: 45px;
+	background-color: initial;
+	color: inherit;
 }
 .submenu_taskdetail_meta_text[find=user_text] {
 	width: 80px;
 }
 .submenu_taskdetail_meta_text[find=duedate_timestamp]{
 	position: absolute;
-    top: 0px;
-    bottom: 0px;
-    left: 0px;
-    opacity: 0;
-    width: 75px;
-    z-index: -1;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	opacity: 0;
+	width: 75px;
+	z-index: -1;
 }
 .submenu_taskdetail_meta_text[find=user_text_hidden]{
 	position: absolute;
-    top: 0px;
-    bottom: 0px;
-    left: 0px;
-    width: 100px;
-    opacity: 0;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	width: 100px;
+	opacity: 0;
 }
 .submenu_taskdetail_meta_box {
 	position: relative;
@@ -234,28 +234,28 @@ td.submenu_taskdetail_share .fa{
 }
 .submenu_taskdetail_meta_actions {
 	position: absolute;
-    right: 0px;
-    top: 0px;
-    bottom: 0px;
-    padding: 6px;
-    font-size: 18px;
-    color: #53ADD2;
-    cursor: pointer; cursor: hand;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+	padding: 6px;
+	font-size: 18px;
+	color: #53ADD2;
+	cursor: pointer; cursor: hand;
 }
 .submenu_taskdetail_meta_actions [find=action_menu] {
-    position: absolute;
-    top: 0px;
-    bottom: 0px;
-    padding: 6px 0px;
-    right: 25px;
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	padding: 6px 0px;
+	right: 25px;
 	/*background-color: #BE2C1F;
-    color: #FBA026;
-    */
-    font-size: 18px;
-    width: 0px;
-    display:none;
-    overflow: hidden;
-    text-align: center;
+	color: #FBA026;
+	*/
+	font-size: 18px;
+	width: 0px;
+	display:none;
+	overflow: hidden;
+	text-align: center;
 }
 
 /* old design with 3 blocks with huge icons
@@ -263,16 +263,16 @@ td.submenu_taskdetail_share .fa{
 	width: 100%;
 }
 .submenu_taskdetail_meta_box {
-    text-align: center;
+	text-align: center;
 }
 .submenu_taskdetail_meta_box div{
-    width: 87px;
-    margin: 0px auto;
+	width: 87px;
+	margin: 0px auto;
 }
 
 .submenu_taskdetail_meta img {
 	width: 25%;
-    max-width: 100px;
+	max-width: 100px;
 }
 .submenu_taskdetail_meta .fa {
 	font-size: 40px;
@@ -287,8 +287,8 @@ td.submenu_taskdetail_share .fa{
 .submenu_taskdetail_comments_header {
 	height: 25px;
 	border-bottom: 2px solid orange;
-    margin: 10px;
-    padding: 5px;
+	margin: 10px;
+	padding: 5px;
 }
 .submenu_taskdetail_comments_header img {
 	height:100%;
@@ -300,18 +300,18 @@ td.submenu_taskdetail_share .fa{
 
 }
 .submeu_taskdetail_blueButton {
-    font-size: 12px;
-    color: #54ADD2;
-    background: #F7FAFC;
-    border-radius: 5px;
-    padding: 5px;
-    margin: 10px 10px;
-    display: inline-block;
-    cursor: pointer;
+	font-size: 12px;
+	color: #54ADD2;
+	background: #F7FAFC;
+	border-radius: 5px;
+	padding: 5px;
+	margin: 10px 10px;
+	display: inline-block;
+	cursor: pointer;
 }
 .submenu_taskdetail_comments_seePrev {
 	text-align: center;
-    height: 46px;
+	height: 46px;
 }
 .submenu_taskdetail_text {
 	font-size: 20px;
@@ -319,44 +319,44 @@ td.submenu_taskdetail_share .fa{
 	color: #3677A7;
 }
 .submenu_taskdetail_plusminus {
-    float: right;
-    padding: 2px;
+	float: right;
+	padding: 2px;
 }
 
 .submenu_taskdetail_commentbubble {
 	width: 100%;
-    padding-top: 10px;
+	padding-top: 10px;
 }
 .submenu_taskdetail_commentbubble_bar{
 	display: none;
-    padding: 0px;
-    padding-left: 1px;
+	padding: 0px;
+	padding-left: 1px;
 }
 .submenu_taskdetail_commentbubble_profile {
-    text-align: center;
-    float: left;
-    width: 58px;
+	text-align: center;
+	float: left;
+	width: 58px;
 }
 .submenu_taskdetail_commentbubble_profile [find=profile_pic] {
-    font-size: 35px;
-    height: 40px;
-    width: 40px;
-    border: 2px solid #FBA026;
-    border-radius: 40px;
-    display: inline-block;
-    background-size: 40px 40px;
-    background-repeat: no-repeat;
+	font-size: 35px;
+	height: 40px;
+	width: 40px;
+	border: 2px solid #FBA026;
+	border-radius: 40px;
+	display: inline-block;
+	background-size: 40px 40px;
+	background-repeat: no-repeat;
 }
 .submenu_taskdetail_commentbubble_profile [find=name] {
 	color: #3677A7;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: 12px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-size: 12px;
 }
 .submenu_taskdetail_commentbubble_text {
-    width: 100%;
-    vertical-align: middle;
-    padding:0px 5px;
+	width: 100%;
+	vertical-align: middle;
+	padding:0px 5px;
 }
 .submenu_taskdetail_commentbubble_text [type=textarea] {
 	display:none;
@@ -409,7 +409,7 @@ styling for sub comments
 */
 .submenu_taskdetail_commentbubble_sub {
 	padding: 0px 0px;
-    padding-left: 70px;
+	padding-left: 70px;
 }
 .submenu_taskdetail_commentbubble_sub .submenu_taskdetail_commentbubble_bar {
 	display: table-cell;
@@ -422,7 +422,7 @@ styling for sub comments
 	font-size: 20px;
 	width: 23px;
 	height: 23px;
-    background-size: 23px 23px;
+	background-size: 23px 23px;
 }
 .submenu_taskdetail_commentbubble_sub [find=text], .submenu_taskdetail_commentbubble_sub [find=name] {
 	font-size: 12px;
@@ -441,43 +441,43 @@ styling for sub comments
  * styling for files
  */
 .submenu_content_taskdetail_files .submenu_taskdetail_tasktitle {
-    height: 120px;
+	height: 120px;
 }
 .submenu_content_taskdetail_files .skylist_card_textwrapper {
-    width: initial;
+	width: initial;
 }
 .submenu_content_taskdetail_files [find=title_text]{
-    opacity: 1;
-    padding-right: 120px;
-    max-height: 30px;
-    width: 100%;
+	opacity: 1;
+	padding-right: 120px;
+	max-height: 30px;
+	width: 100%;
 }
 .submenu_content_taskdetail_files .submenu_taskdetail_tasktitle_fileInfo{
-    font-size: 14px;
+	font-size: 14px;
 }
 .submenu_content_taskdetail_files [find=leftbox]{
-    font-size: 54px;
-    height: 115px;
-    width: 120px;
-    text-align: center;
-    padding-right: 15px;
-    box-sizing: border-box;
+	font-size: 54px;
+	height: 115px;
+	width: 120px;
+	text-align: center;
+	padding-right: 15px;
+	box-sizing: border-box;
 }
 .submenu_content_taskdetail_files [find=leftbox] img {
-    vertical-align: middle;
-    max-width: 100%;
-    max-height: 100%;
+	vertical-align: middle;
+	max-width: 100%;
+	max-height: 100%;
 }
 
 .submenu_content_taskdetail_files [find=downloadIcon] {
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    margin-right: 50px;
-    line-height: 120px;
-    font-size: 40px;
-    color: #4E2A84;
-    text-decoration: none;
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	margin-right: 50px;
+	line-height: 120px;
+	font-size: 40px;
+	color: #4E2A84;
+	text-decoration: none;
 }
 
 /*
@@ -493,12 +493,12 @@ styling for sub comments
 
 /*MobileL to mobile*/
 @media only screen and (max-width: 900px) {
-    .submenu_taskdetail_paddingLeft {
-        padding-left:5px;
-    }
-    .submenu_taskdetail_description [find=description_text].submenu_taskdetail_paddingLeft{
-        padding-left: 20px;
-    }
+	.submenu_taskdetail_paddingLeft {
+		padding-left:5px;
+	}
+	.submenu_taskdetail_description [find=description_text].submenu_taskdetail_paddingLeft{
+		padding-left: 20px;
+	}
 	.submenu_taskdetail_tasktitle .app_layers_dev_skytasks_checkbox label{
 		top: 0px;
 		left:0px;

@@ -13,9 +13,9 @@ div#player_preview_full_screen {
 	left: 50%;
 	transform: translate(-50%,-50%);
 	-webkit-transform: translate(-50%,-50%);
-    -moz-transform: translate(-50%,-50%);
-    -ms-transform: translate(-50%,-50%);
-    -o-transform: translate(-50%,-50%);
+	-moz-transform: translate(-50%,-50%);
+	-ms-transform: translate(-50%,-50%);
+	-o-transform: translate(-50%,-50%);
 	width: 70%;
 	height: 70%;
 	background-color: rgba(0, 0, 0, 0.6);
@@ -28,8 +28,8 @@ div#player_preview_full_screen {
 	right: 0;
 	transform: translate(50%, -50%);
 	-webkit-transform: translate(50%,-50%);
-    -moz-transform: translate(50%,-50%);
-    -ms-transform: translate(50%,-50%);
-    -o-transform: translate(50%,-50%);
+	-moz-transform: translate(50%,-50%);
+	-ms-transform: translate(50%,-50%);
+	-o-transform: translate(50%,-50%);
 	cursor: pointer;
 }

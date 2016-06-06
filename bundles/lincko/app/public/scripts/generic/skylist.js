@@ -699,13 +699,13 @@ skylist.prototype.addCard = function(item){
 	else if( that.list_type == 'files' ){
 		elem_card = that.addFile(item);
 	}
-    else if (that.list_type == 'chats' || that.list_type == 'global_chats') {
-        elem_card = that.addChat(item);
-    }
+	else if (that.list_type == 'chats' || that.list_type == 'global_chats') {
+		elem_card = that.addChat(item);
+	}
 
-    if( that.list_type == 'tasks' || that.list_type == 'notes' || that.list_type == 'files' ){
-    	//elem_card.find('[find=card_spacestick]').removeClass('display_none');
-    	app_application_lincko.add(
+	if( that.list_type == 'tasks' || that.list_type == 'notes' || that.list_type == 'files' ){
+		//elem_card.find('[find=card_spacestick]').removeClass('display_none');
+		app_application_lincko.add(
 			elem_card.prop('id'),
 			that.list_type+'_'+item['_id'],
 			function(){
@@ -741,108 +741,111 @@ skylist.prototype.addCard = function(item){
 				}
 			}
 		);
-    } //END OF 'tasks' || 'notes'
-    if(that.elem_rightOptions_count < 1){    	
-    	elem_card.find('[find=card_rightOptions]').addClass('display_none');
-    }
+	} //END OF 'tasks' || 'notes'
+	if(that.elem_rightOptions_count < 1){
+		elem_card.find('[find=card_rightOptions]').addClass('display_none');
+	}
 	return elem_card;
 }
 
 skylist.prototype.addChat = function(item){
-        var that = this;
-        var Elem = $('#-skylist_card').clone();
-        var Elem_rightOptions = Elem.find('[find=card_rightOptions]').empty();
-        var Elem_logo = $('#-skylist_logo').clone().prop('id','');
-        var cnt = notifier[item.type]['get'](item.id);
-        if (cnt) {
-            if (cnt > 999) {
-                Elem_logo.find('.notification').text('...').show();
-            } else {
-                Elem_logo.find('.notification').text(cnt).show();
-            }
-        }
-        app_application_lincko.add("skylist_card_"+this.md5id+"_"+item.id, item.type + "_" + item.id, function() {
-        	var range = Object.keys(this.range)[0].split("_");
-        	var type = range[0];
-        	var id = range[1];
-        	var cnt = notifier[type]['get'](id);
-        	if (type == "chats") {
-        		var name = Lincko.storage.get('chats', id, '+title');
-        		$("#"+this.id).find('[find=title]').html(name);
-        		var comment = Lincko.storage.list("comments", 1, null, "chats", id)[0]["+comment"];
-        		$("#"+this.id).find('[find=description]').html(comment);
-        	}
-        	if (cnt) {
-                if (cnt > 999) {
-                    $("#"+this.id).find('.notification').text('...').show();
-                } else {
-                    $("#"+this.id).find('.notification').text(cnt).show();
-                }
-            }
-            else {
-            	$("#"+this.id).find('.notification').hide();
-            }
-        });
-        Elem.find('[find=card_leftbox]').html(Elem_logo);
-        var name = '';
-        //var created_by;
-        //var timestamp;
+		var that = this;
+		var Elem = $('#-skylist_card').clone();
+		var Elem_rightOptions = Elem.find('[find=card_rightOptions]').empty();
+		var Elem_logo = $('#-skylist_logo').clone().prop('id','');
+		var cnt = notifier[item.type]['get'](item.id);
+		if (cnt) {
+			if (cnt > 999) {
+				Elem_logo.find('.notification').html('...').show();
+			} else {
+				Elem_logo.find('.notification').html(cnt).show();
+			}
+		}
+		app_application_lincko.add("skylist_card_"+this.md5id+"_"+item.id, item.type + "_" + item.id, function() {
+			var range = Object.keys(this.range)[0].split("_");
+			var type = range[0];
+			var id = range[1];
+			var cnt = notifier[type]['get'](id);
+			if (type == "chats") {
+				var name = Lincko.storage.get('chats', id, '+title');
+				$("#"+this.id).find('[find=title]').html(name);
+				var comment = Lincko.storage.list("comments", 1, null, "chats", id);
+				if(typeof comment[0] == "object"){
+					$("#"+this.id).find('[find=description]').html(comment[0]["+comment"]);
+				}
+				$("#"+this.id).find('[find=description]').html('');
+			}
+			if (cnt) {
+				if (cnt > 999) {
+					$("#"+this.id).find('.notification').html('...').show();
+				} else {
+					$("#"+this.id).find('.notification').html(cnt).show();
+				}
+			}
+			else {
+				$("#"+this.id).find('.notification').hide();
+			}
+		});
+		Elem.find('[find=card_leftbox]').html(Elem_logo);
+		var name = '';
+		//var created_by;
+		//var timestamp;
 
 /*
-        if(item == null){
-                item = {};
-                item['_id'] = 'blankTask';
-                item['+title'] = 'blankTask';
-                item['_perm'][0] = 3; //RCUD
-                item['created_by'] = wrapper_localstorage.uid;
-                item.start = $.now()/1000;
-                item.duration = "86400";
-        }
-        */
-        Elem.prop('id','skylist_card_'+that.md5id+'_'+item['id']);
+		if(item == null){
+				item = {};
+				item['_id'] = 'blankTask';
+				item['+title'] = 'blankTask';
+				item['_perm'][0] = 3; //RCUD
+				item['created_by'] = wrapper_localstorage.uid;
+				item.start = $.now()/1000;
+				item.duration = "86400";
+		}
+		*/
+		Elem.prop('id','skylist_card_'+that.md5id+'_'+item['id']);
 
 
-        /*
-        title
-        */
-        burger(Elem.find('[find=title]'), 'regex');
-        Elem.attr('type', item.type);
-        var elem_title = Elem.find('[find=title]');
-        if (item.type == "history") {
-            name = Lincko.storage.get("projects", item.id, "+title") + " Activity";
-            Elem_logo.find('span').addClass('fa fa-globe');
+		/*
+		title
+		*/
+		burger(Elem.find('[find=title]'), 'regex');
+		Elem.attr('type', item.type);
+		var elem_title = Elem.find('[find=title]');
+		if (item.type == "history") {
+			name = Lincko.storage.get("projects", item.id, "+title") + " Activity";
+			Elem_logo.find('span').addClass('fa fa-globe');
 
-        } else if (item.type == 'chats') {
-            var users = Object.keys(Lincko.storage.get('chats', item.id, '_perm'));
-            name = Lincko.storage.get('chats', item.id, '+title');
-            if (users.length > 2) {
-                Elem_logo.find('span').addClass('icon-Multiple-People');
-            } else {
-                Elem_logo.find('span').addClass('icon-Single-Person');
-            }
-        }
-        var contenteditable = false;
-        var elem_title = Elem.find('[find=title]');
-        elem_title.html(name);
+		} else if (item.type == 'chats') {
+			var users = Object.keys(Lincko.storage.get('chats', item.id, '_perm'));
+			name = Lincko.storage.get('chats', item.id, '+title');
+			if (users.length > 2) {
+				Elem_logo.find('span').addClass('icon-Multiple-People');
+			} else {
+				Elem_logo.find('span').addClass('icon-Single-Person');
+			}
+		}
+		var contenteditable = false;
+		var elem_title = Elem.find('[find=title]');
+		elem_title.html(name);
 
-        Elem.find('[find=description]').html(item['comment']);
+		Elem.find('[find=description]').html(item['comment']);
 
-        var latest_update = new wrapper_date(item.timestamp);
+		var latest_update = new wrapper_date(item.timestamp);
 
-        if( latest_update.happensSomeday(0) ){
-                latest_update = Lincko.Translation.get('app', 3302, 'html').toUpperCase();
-        }
-        else if( latest_update.happensSomeday(-1) ){
-                latest_update = Lincko.Translation.get('app', 3303, 'html').toUpperCase();
-        }
-        else{
-                latest_update = latest_update.display('date_very_short');
-        }
-        Elem.find('[find=card_time]').html(latest_update);
-        Elem.data('options',false);
-        that.add_cardEvents(Elem);
+		if( latest_update.happensSomeday(0) ){
+				latest_update = Lincko.Translation.get('app', 3302, 'html').toUpperCase();
+		}
+		else if( latest_update.happensSomeday(-1) ){
+				latest_update = Lincko.Translation.get('app', 3303, 'html').toUpperCase();
+		}
+		else{
+				latest_update = latest_update.display('date_very_short');
+		}
+		Elem.find('[find=card_time]').html(latest_update);
+		Elem.data('options',false);
+		that.add_cardEvents(Elem);
 
-        return Elem;
+		return Elem;
 }
 
 skylist.prototype.addTask = function(item){
@@ -962,10 +965,10 @@ skylist.prototype.addTask = function(item){
 	var elem_rightOptions_inCharge = that.add_rightOptionsBox(in_charge,'fa-user');
 	elem_rightOptions_inCharge.click(function(){
 		var param = {};
-        param.type = 'tasks';
-        param.item_obj = item;
-        param.contactsID = burger_generate_contactsID(item);
-        submenu_Build('burger_contacts', true, null, param);
+		param.type = 'tasks';
+		param.item_obj = item;
+		param.contactsID = burger_generate_contactsID(item);
+		submenu_Build('burger_contacts', true, null, param);
 	});
 	Elem_rightOptions.append(elem_rightOptions_inCharge);
 
@@ -1042,7 +1045,7 @@ skylist.prototype.addTask = function(item){
 	var elem_rightOptions_duedate = that.add_rightOptionsBox(duedate,'fa-calendar');
 	elem_rightOptions_duedate.click(function(){
 		var param = {elem_inputOrig:elem_calendar_timestamp };
-        submenu_Build('calendar',true,false,param);
+		submenu_Build('calendar',true,false,param);
 	});
 	Elem_rightOptions.append(elem_rightOptions_duedate);
 
@@ -1212,18 +1215,18 @@ skylist.prototype.addFile = function(item){
 	 var real_url = null;
 	 var thumb_url = null;
 	 if(item['category'] == 'image'){
-	 	fileType_class = 'fa fa-file-image-o';
-	 	thumb_url = Lincko.storage.getLinkThumbnail(item['_id']);
-	 	real_url = Lincko.storage.getLink(item['_id']);
+		fileType_class = 'fa fa-file-image-o';
+		thumb_url = Lincko.storage.getLinkThumbnail(item['_id']);
+		real_url = Lincko.storage.getLink(item['_id']);
 		elem_leftbox = $('<img />').prop('src',thumb_url).click(function(event){
 			event.stopPropagation();
 			previewer.pic(item['+name'],real_url,thumb_url);
 		});
 	 }
 	 else if(item['category'] == 'video'){
-	 	fileType_class = 'fa fa-file-video-o';
-	 	thumb_url = Lincko.storage.getLinkThumbnail(item['_id']);
-	 	real_url = Lincko.storage.getLink(item['_id']);
+		fileType_class = 'fa fa-file-video-o';
+		thumb_url = Lincko.storage.getLinkThumbnail(item['_id']);
+		real_url = Lincko.storage.getLink(item['_id']);
 		elem_leftbox = $('<img />').prop('src',thumb_url).click(function(event){
 			event.stopPropagation();
 			previewer.video(item['+name'],real_url,thumb_url);
@@ -1234,7 +1237,7 @@ skylist.prototype.addFile = function(item){
 
 	 }
 	 else{
-	 	elem_leftbox.addClass(fileType_class);
+		elem_leftbox.addClass(fileType_class);
 	 }
 
 	var elem_fileType = $('<div>'+'File Type'/*toto*/+': '+item['category']+', '+item['ori_ext'].toUpperCase()+'</div>');
@@ -1325,11 +1328,11 @@ skylist.prototype.add_cardEvents = function(Elem){
 			route = "file/delete";
 		}
 		wrapper_sendAction(
-		    {
-		        "id": Elem.data('item_id'),
-		    },
-		    'post',
-		    route
+			{
+				"id": Elem.data('item_id'),
+			},
+			'post',
+			route
 		);
 	});
 
@@ -1514,8 +1517,8 @@ skylist.prototype.checkboxClick = function(event,elem_checkbox){
 	}
 	wrapper_sendAction(
 		{
-    		"id": elem_task.data('item_id'),
-    		"approved": approved,
+			"id": elem_task.data('item_id'),
+			"approved": approved,
 		},
 		'post', 'task/update');
 
@@ -1690,7 +1693,7 @@ skylist.prototype.menu_construct = function(){
 	 * TIMESORT-----------------------------------------------------------------------------------------
 	 */
 	 if( !that.sort_arrayText ){
-	 	return false;
+		return false;
 	 }
 	var sort;
 	that.elem_timesort = that.elem_navbar.find('.skylist_menu_timesort');

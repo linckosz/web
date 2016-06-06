@@ -1,0 +1,39 @@
+.submenu_deco.submenu_projects {
+	color: #FFFFFF;
+	cursor: pointer; cursor: hand;
+	width: 100%;
+	margin: 0px;
+	background-color: #7BB1A9;
+}
+
+.submenu_deco.submenu_projects:hover {
+	filter:alpha(opacity=90);
+	opacity:0.90;
+	-moz-opacity:0.90;
+	-khtml-opacity:0.90;
+}
+.submenu_projects_title {
+	width: 100%;
+}
+
+.submenu_projects_chart {
+	vertical-align: middle;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+.submenu_projects_statistics {
+	font-size: 10px;	
+}
+
+.submenu_projects_chart {
+	width: 100px;
+}
+
+.submenu_projects_settings {
+	font-size: 24px;
+}
+
+.submenu_projects_settings:hover {
+	color: #FEFF9A;
+}

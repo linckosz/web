@@ -1,229 +1,232 @@
 var mainMenu = (function() {
 	var init = false;
-    function orderList(list) {
-        return list.sort(function(a, b) {
-            return b.timestamp - a.timestamp;
-        });
-    }
+	function orderList(list) {
+		return list.sort(function(a, b) {
+			return b.timestamp - a.timestamp;
+		});
+	}
 
-    function feedChatItem(position, data) {
-        var item = $("#-app_project_chat_item").clone();
-        var name = '';
-        $(position).append(item);
-        item.attr('id', 'app_project_chat_item_'+data.id);
-        item.removeAttr('style', '');
-        var cnt = notifier[data.type]['get'](data.id);
-        if (cnt) {
-            if (cnt > 999) {
-                item.find('.notification').text('...').show();
-            } else {
-                item.find('.notification').text(cnt).show();
-            }
-        }
+	function feedChatItem(position, data) {
+		var item = $("#-app_project_chat_item").clone();
+		var name = '';
+		$(position).append(item);
+		item.prop("id", 'app_project_chat_item_'+data.id);
+		item.removeAttr('style', '');
+		var cnt = notifier[data.type]['get'](data.id);
+		if (cnt) {
+			if (cnt > 999) {
+				item.find('.notification').html('...').show();
+			} else {
+				item.find('.notification').html(cnt).show();
+			}
+		}
 
-        if (data.type == "history") {
-            name = Lincko.storage.get("projects", data.id, "+title") + " Activity";
-            //item.find('img.logo').attr('src', 'icon-Multiple-People');
-            item.find('span.logo').addClass('fa fa-globe');
-        } else if (data.type == 'chats') {
-            var users = Object.keys(Lincko.storage.get('chats', data.id, '_perm'));
-            name = Lincko.storage.get('chats', data.id, '+title');
+		if (data.type == "history") {
+			name = Lincko.storage.get("projects", data.id, "+title") + " Activity";
+			//item.find('img.logo').attr('src', 'icon-Multiple-People');
+			item.find('span.logo').addClass('fa fa-globe');
+		} else if (data.type == 'chats') {
+			var users = Object.keys(Lincko.storage.get('chats', data.id, '_perm'));
+			name = Lincko.storage.get('chats', data.id, '+title');
 
-            if (users.length > 2) {
-                item.find('span.logo').addClass('icon-Multiple-People');
-                item.find('img').remove();
-            } else {
-                item.find('span.logo').addClass('icon-Single-Person');
-                item.find('img').remove();
-            }
-        }
-        app_application_lincko.add('app_project_chat_item_'+data.id, data.type + "_" + data.id, function() {
-        	var range = Object.keys(this.range)[0].split("_");
-        	var type = range[0];
-        	var id = range[1];
-        	var cnt = notifier[type]['get'](id);
-        	if (type == "chats") {
-        		var name = Lincko.storage.get('chats', id, '+title');
-        		$("#"+this.id).find('header').html(name);
-        		var comment = Lincko.storage.list("comments", 1, null, "chats", id)[0]["+comment"];
-        		$("#"+this.id).find('article').html(comment);
-        	}
-        	if (cnt) {
-                if (cnt > 999) {
-                    $("#"+this.id).find('.notification').text('...').show();
-                } else {
-                    $("#"+this.id).find('.notification').text(cnt).show();
-                }
-            }
-            else {
-            	$("#"+this.id).find('.notification').hide();
-            }
-        });
-        item.find('header').html(name);
-        item.find('article').html(data.comment);
-        return item;
-    }
-    function initChatTab() {
-        //get list
-        var chatHistoryList = orderChatList(4);
-        var maxHeight = parseInt($("#app_project_chat").css("max-height").slice(0, -2)) - $("#app_project_chat").height();
-        var itemHeight = 0;
-        //caculate
-        for (var c in chatHistoryList) {
-            if (maxHeight > itemHeight) {
-                var item = feedChatItem('#app_project_chat', chatHistoryList[c]);
-                itemHeight = item.height();
-                maxHeight = maxHeight - itemHeight;
-            }
-            else {
-            	return;
-            }
-            var data = chatHistoryList[c];
+			if (users.length > 2) {
+				item.find('span.logo').addClass('icon-Multiple-People');
+				item.find('img').remove();
+			} else {
+				item.find('span.logo').addClass('icon-Single-Person');
+				item.find('img').remove();
+			}
+		}
+		app_application_lincko.add('app_project_chat_item_'+data.id, data.type + "_" + data.id, function() {
+			var range = Object.keys(this.range)[0].split("_");
+			var type = range[0];
+			var id = range[1];
+			var cnt = notifier[type]['get'](id);
+			if (type == "chats") {
+				var name = Lincko.storage.get('chats', id, '+title');
+				$("#"+this.id).find('header').html(name);
+				var comment = Lincko.storage.list("comments", 1, null, "chats", id);
+				if(typeof comment[0] == "object"){
+					$("#"+this.id).find('[find=description]').html(comment[0]["+comment"]);
+				}
+				$("#"+this.id).find('[find=description]').html('');
+			}
+			if (cnt) {
+				if (cnt > 999) {
+					$("#"+this.id).find('.notification').html('...').show();
+				} else {
+					$("#"+this.id).find('.notification').html(cnt).show();
+				}
+			}
+			else {
+				$("#"+this.id).find('.notification').hide();
+			}
+		});
+		item.find('header').html(name);
+		item.find('article').html(data.comment);
+		return item;
+	}
+	function initChatTab() {
+		//get list
+		var chatHistoryList = orderChatList(4);
+		var maxHeight = parseInt($("#app_project_chat").css("max-height").slice(0, -2)) - $("#app_project_chat").height();
+		var itemHeight = 0;
+		//caculate
+		for (var c in chatHistoryList) {
+			if (maxHeight > itemHeight) {
+				var item = feedChatItem('#app_project_chat', chatHistoryList[c]);
+				itemHeight = item.height();
+				maxHeight = maxHeight - itemHeight;
+			}
+			else {
+				return;
+			}
+			var data = chatHistoryList[c];
 
-            item.on("click", data, function(event) {
-                var title;
-                if (event.data.type == 'chats') {
-                    title = $(this).find('header').text();
-                } else {
-                    title = Lincko.storage.get("projects", event.data.id, "+title") + " Activity";
-                }
-                //render
-                submenu_Build("newchat", false, false, {
-                    type: event.data.type,
-                    id: event.data.id,
-                    title: title,
-                });
-            });
-        }
-    }
+			item.on("click", data, function(event) {
+				var title;
+				if (event.data.type == 'chats') {
+					title = $(this).find('header').text();
+				} else {
+					title = Lincko.storage.get("projects", event.data.id, "+title") + " Activity";
+				}
+				//render
+				submenu_Build("newchat", false, false, {
+					type: event.data.type,
+					id: event.data.id,
+					title: title,
+				});
+			});
+		}
+	}
 
-    function initProjectTab() {
-        var projectList = Lincko.storage.list('projects', 4);
-        var maxHeight = parseInt($("#app_project_tab").css("max-height").slice(0, -2));
-        var itemHeight = 0;
-        //caculate
-        for (var p in projectList) {
-            if (maxHeight > itemHeight) {
-                var item = $("#-app_project_item").clone();
-                $('#app_project_tab').append(item);
-                var pid = projectList[p]._id;
-                item.click(pid, function(event){
+	function initProjectTab() {
+		var projectList = Lincko.storage.list('projects', 4);
+		var maxHeight = parseInt($("#app_project_tab").css("max-height").slice(0, -2));
+		var itemHeight = 0;
+		//caculate
+		for (var p in projectList) {
+			if (maxHeight > itemHeight) {
+				var item = $("#-app_project_item").clone();
+				$('#app_project_tab').append(item);
+				var pid = projectList[p]._id;
+				item.click(pid, function(event){
 					app_content_menu.selection(event.data, 'tasks');
 				});
-                item.removeAttr('id', '');
-                item.removeAttr('style', '');
-                item.find('p').text(projectList[p]['+title']);
-                itemHeight = item.height();
-                maxHeight = maxHeight - itemHeight;
-            }
-        }
-    }
+				item.removeAttr('id', '');
+				item.removeAttr('style', '');
+				item.find('p').text(projectList[p]['+title']);
+				itemHeight = item.height();
+				maxHeight = maxHeight - itemHeight;
+			}
+		}
+	}
 
-    function initMainMenuEvents() {
-        $("#app_project_content .icon-Settings").on("click", function() {
-            submenu_Build("settings");
-        });
+	function initMainMenuEvents() {
+		$("#app_project_content .icon-Settings").on("click", function() {
+			submenu_Build("settings");
+		});
 
-        $("#app_project_chat header").on("click", function() {
-            submenu_Build('mainchat');
-        });
+		$("#app_project_chat header").on("click", function() {
+			submenu_Build('mainchat');
+		});
 
-    }
+	}
 
-    /*
-        Get an ordered chat history list for unlimited number
-        or limited number.
-        number: limit of rows of items which will report
-        project_id: given if just target a specific project not the main menu
-    */
-    function orderChatList(number, project_id) {
-        var merge_list = [];
-        // each item should be:
-        // {'type': ['history'|'chat'], 'id': ['project_id'|'chat_id'], 'timestamp': 'the_latest_update_history_or_chat'}
-        //get project list
-        var project_list = Lincko.storage.list('projects', number);
+	/*
+		Get an ordered chat history list for unlimited number
+		or limited number.
+		number: limit of rows of items which will report
+		project_id: given if just target a specific project not the main menu
+	*/
+	function orderChatList(number, project_id) {
+		var merge_list = [];
+		// each item should be:
+		// {'type': ['history'|'chat'], 'id': ['project_id'|'chat_id'], 'timestamp': 'the_latest_update_history_or_chat'}
+		//get project list
+		var project_list = Lincko.storage.list('projects', number);
 
-        //get the most recent history for each project
-        for (var p in project_list) {
-            if (project_id && project_list[p]._id != project_id) {
-                continue;
-            }
-            //var e1 = Lincko.storage.hist('recent', project_list[p]._id, 1)[0];
-            var e1 = Lincko.storage.hist(null, 1, null, 'projects', project_list[p]._id, true)[0];
-            var e2 = Lincko.storage.list('comments', 1, null, 'projects', project_list[p]._id, false)[0];
-            if (e1) {
-                var timestamp = e1.timestamp;
-                var txt = Lincko.storage.getHistoryInfo(e1).title;
-            }
-            if (e2 && e1.timestamp < e2.created_at) {
-                var timestamp = e2.created_at;
-                var txt = e2['+comment'];
-            }
-            if (e1) {
-            	merge_list.push({
-                    'type': 'history',
-                    'id': project_list[p]._id,
-                    'timestamp': timestamp,
-                    'comment': txt,
-                });
-            }
+		//get the most recent history for each project
+		for (var p in project_list) {
+			if (project_id && project_list[p]._id != project_id) {
+				continue;
+			}
+			//var e1 = Lincko.storage.hist('recent', project_list[p]._id, 1)[0];
+			var e1 = Lincko.storage.hist(null, 1, null, 'projects', project_list[p]._id, true)[0];
+			var e2 = Lincko.storage.list('comments', 1, null, 'projects', project_list[p]._id, false)[0];
+			if (e1) {
+				var timestamp = e1.timestamp;
+				var txt = Lincko.storage.getHistoryInfo(e1).title;
+			}
+			if (e2 && e1.timestamp < e2.created_at) {
+				var timestamp = e2.created_at;
+				var txt = e2['+comment'];
+			}
+			if (e1) {
+				merge_list.push({
+					'type': 'history',
+					'id': project_list[p]._id,
+					'timestamp': timestamp,
+					'comment': txt,
+				});
+			}
 
-        }
-        if (project_id) {
-        	 // Get chats belong to specific project
-        	var chat_list = Lincko.storage.list('chats', null, null, 'projects', project_id, false);
-        }
-        else {
-        	 // Get all chats
-        	var chat_list = Lincko.storage.list('chats', number, null, null, null, false);
-        }
+		}
+		if (project_id) {
+			 // Get chats belong to specific project
+			var chat_list = Lincko.storage.list('chats', null, null, 'projects', project_id, false);
+		}
+		else {
+			 // Get all chats
+			var chat_list = Lincko.storage.list('chats', number, null, null, null, false);
+		}
 
-        //get the most recent comment for each project
-        for (var c in chat_list) {
-            var timestamp = chat_list[c].updated_at;
-            var comment = Lincko.storage.list('comments', 1, null, 'chats', chat_list[c]._id);
-            if(comment.length>0){
-                merge_list.push({
-                    'type': 'chats',
-                    'id': chat_list[c]._id,
-                    'timestamp': timestamp,
-                    'comment': comment[0]['+comment'],
-                });
-            }
-            else {
-                merge_list.push({
-                    'type': 'chats',
-                    'id': chat_list[c]._id,
-                    'timestamp': timestamp,
-                    'comment': "",
-                });
-            }
-        }
-        return orderList(merge_list);
-    }
-    function initTabs() {
-    	if (!init) {
-    		initProjectTab();
-            initChatTab();
-            initMainMenuEvents();
-            init = true;
-    	}
-    	return;
-    }
-    return {
-        'init': initTabs,
-        'getlist': orderChatList,
-        'feed': feedChatItem,
-    };
+		//get the most recent comment for each project
+		for (var c in chat_list) {
+			var timestamp = chat_list[c].updated_at;
+			var comment = Lincko.storage.list('comments', 1, null, 'chats', chat_list[c]._id);
+			if(comment.length>0){
+				merge_list.push({
+					'type': 'chats',
+					'id': chat_list[c]._id,
+					'timestamp': timestamp,
+					'comment': comment[0]['+comment'],
+				});
+			}
+			else {
+				merge_list.push({
+					'type': 'chats',
+					'id': chat_list[c]._id,
+					'timestamp': timestamp,
+					'comment': "",
+				});
+			}
+		}
+		return orderList(merge_list);
+	}
+	function initTabs() {
+		if (!init) {
+			initProjectTab();
+			initChatTab();
+			initMainMenuEvents();
+			init = true;
+		}
+		return;
+	}
+	return {
+		'init': initTabs,
+		'getlist': orderChatList,
+		'feed': feedChatItem,
+	};
 })();
 
 var project_garbage = app_application_garbage.add();
 app_application_lincko.add(project_garbage, 'first_launch', function() {
-   if(!$.isEmptyObject(Lincko.storage.data)){
-        mainMenu.init();
-        app_application_garbage.remove(project_garbage);
-        delete project_garbage;
-    }
+	if(!$.isEmptyObject(Lincko.storage.data)){
+		mainMenu.init();
+		app_application_garbage.remove(project_garbage);
+		delete project_garbage;
+	}
 });
 
 

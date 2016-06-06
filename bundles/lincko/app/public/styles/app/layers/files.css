@@ -3,8 +3,8 @@
 }
 
 .app_layers_files_fileslist .skylist_card_leftbox_fileIcon{
-    font-size: 30px;
-    padding: 10px;
+	font-size: 30px;
+	padding: 10px;
 }
 
 .app_layers_files_fileslist .skylist_card_center{
@@ -13,24 +13,24 @@
 
 .app_layers_files_fileslist .skylist_card_center [find=card_leftbox]{
 	height: 85px;
-    width: 120px;
-    text-align: center;
-    padding-right: 15px;
-    box-sizing: border-box;
+	width: 120px;
+	text-align: center;
+	padding-right: 15px;
+	box-sizing: border-box;
 }
 .app_layers_files_fileslist .skylist_card_center [find=title]{
 	font-size: 18px;
 	max-height: 24px;
 }
 .app_layers_files_fileslist .skylist_card_center [find=description] {
-    font-size: 14px;
-    height: initial;
+	font-size: 14px;
+	height: initial;
 }
 
 .app_layers_files_fileslist [find=card_leftbox] img{
 	vertical-align: middle;
-    max-width: 100%;
-    max-height: 100%;
+	max-width: 100%;
+	max-height: 100%;
 }
 
 
@@ -45,7 +45,7 @@
 	max-height: 20px;
 	}
 	.app_layers_files_fileslist .skylist_card_center [find=description] {
-	    font-size: 12px;
+		font-size: 12px;
 	}
 
 }

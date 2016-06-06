@@ -39,13 +39,13 @@
 .app_layers_dev_skytasks_tasklist_icon {
 	max-width:20px;
 	background-position: center;
-    background-size: contain;
-    background-repeat: no-repeat;
-    height: 100%;
-    width: 15px;
-    display: inline-block;
-    font-size: 35px;
-    text-align: center;
+	background-size: contain;
+	background-repeat: no-repeat;
+	height: 100%;
+	width: 15px;
+	display: inline-block;
+	font-size: 35px;
+	text-align: center;
 }
 
 .app_layers_dev_skytasks_task {
@@ -54,12 +54,12 @@
 	position: relative;
 	/*
 	border-top-color: #3F84B0;
-    border-top-style: dashed;
-    border-top-width: 2px;
+	border-top-style: dashed;
+	border-top-width: 2px;
 	border-top-color: #FFFFFF;
 	*/
 	margin-bottom: 2px;
-    background-color: #CBE6F8;
+	background-color: #CBE6F8;
 }
 .app_layers_dev_skytasks_task:hover {
 	background-color: #FFFFFF;
@@ -79,36 +79,36 @@
 }
 .app_layers_dev_skytasks_task [find=title]{
 	font-size: 20px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: inline-block;
-    max-width: 50%;
-    vertical-align: text-bottom;
-    text-decoration: inherit;
-    width: 50%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: inline-block;
+	max-width: 50%;
+	vertical-align: text-bottom;
+	text-decoration: inherit;
+	width: 50%;
 }
 .app_layers_dev_skytasks_task [find=title]:focus {
-    background-color: #FBFBFB;
+	background-color: #FBFBFB;
 }
 .app_layers_dev_skytasks_task_comments {
 	float:right;
 	margin: 3px 0px;
 }
 .app_layers_dev_skytasks_task [find=description] {
-    font-size: smaller;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: inline-block;
-    width: 20%;
-    vertical-align: text-bottom;
-    text-decoration: inherit;
-    opacity: 0.6;
+	font-size: smaller;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: inline-block;
+	width: 20%;
+	vertical-align: text-bottom;
+	text-decoration: inherit;
+	opacity: 0.6;
 }
 .app_layers_dev_skytasks_task_rightOptions [find=time] {
 	width:110px;
 }
 .app_layers_dev_skytasks_tasklist_icon_text {
-    display: inline-block;
+	display: inline-block;
 }
 
 .app_layers_dev_skytasks_checkbox [type="checkbox"]{
@@ -118,31 +118,31 @@
 .app_layers_dev_skytasks_checkbox_visual{
 	/*
 	content: "";
-    background-color: #EFEFEF;
-    font-family: Times New Roman;
-    overflow: visible;
-    border: 2px solid #3F84B0;
-    height: 5px;
-    width: 5px;
-    padding: 9px;
-    display: inline-block;
-    border-radius: 6px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    vertical-align: middle;
-    */
+	background-color: #EFEFEF;
+	font-family: Times New Roman;
+	overflow: visible;
+	border: 2px solid #3F84B0;
+	height: 5px;
+	width: 5px;
+	padding: 9px;
+	display: inline-block;
+	border-radius: 6px;
+	background-size: contain;
+	background-repeat: no-repeat;
+	vertical-align: middle;
+	*/
 
-    background-color: #EFEFEF;
-    overflow: visible;
-    border: 2px solid #3F84B0;
-    height: 23px;
-    width: 23px;
-    display: inline-block;
-    border-radius: 6px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    vertical-align: middle;
-    font-size: 24px !important;
+	background-color: #EFEFEF;
+	overflow: visible;
+	border: 2px solid #3F84B0;
+	height: 23px;
+	width: 23px;
+	display: inline-block;
+	border-radius: 6px;
+	background-size: contain;
+	background-repeat: no-repeat;
+	vertical-align: middle;
+	font-size: 24px !important;
 }
 .app_layers_dev_skytasks_checkbox label {
 	cursor: pointer;
@@ -199,19 +199,19 @@
 
 .app_layers_dev_skytasks_newtaskCircle {
 	z-index: 200;
-    font-size: 50px;
-    font-weight: bold;
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    text-align: center;
-    width: 50px;
-    padding: 8px;
-    border-radius: 100px;
-    /*color: #FBA026;*/
-    opacity: 0.3;
-    cursor: pointer;
-    cursor: hand;
+	font-size: 50px;
+	font-weight: bold;
+	position: absolute;
+	bottom: 20px;
+	right: 20px;
+	text-align: center;
+	width: 50px;
+	padding: 8px;
+	border-radius: 100px;
+	/*color: #FBA026;*/
+	opacity: 0.3;
+	cursor: pointer;
+	cursor: hand;
 }
 .app_layers_dev_skytasks_newtaskCircle_fixed {
 	position: fixed;
@@ -227,23 +227,23 @@
 	background-color: rgba(63,132,176,0.1);
 	/*opacity: 0.5;*/
 	height: 55%;
-    min-height: 300px;
+	min-height: 300px;
 	bottom:0;
 	left:0;
 	right:0;
 	position:fixed;
-    z-index:100;
-    _position:absolute;
+	z-index:100;
+	_position:absolute;
 }
 .app_layers_dev_skytasks_closedetail{
 	font-size: 30px;
-    cursor: pointer;
-    z-index: 10;
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    border-radius: 8px;
-    padding: 0px 5px;
+	cursor: pointer;
+	z-index: 10;
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	border-radius: 8px;
+	padding: 0px 5px;
 }
 .app_layers_dev_skytasks_closedetail:hover{
 	background-color: grey;
@@ -251,19 +251,19 @@
 .app_layers_dev_skytasks_detail_block{
 	border: 1px solid lightgrey;
 	box-sizing: border-box;
-    width: 50%;
-    height: 100%;
-    float: left;
-    position: relative;
-    overflow: hidden;
+	width: 50%;
+	height: 100%;
+	float: left;
+	position: relative;
+	overflow: hidden;
 }
 .app_layers_dev_skytasks_detail_block:first-child:after {
- 	content: "";
-    border: 1px solid #3F84B0;
-    position: absolute;
-    top: 10%;
-    bottom: 10%;
-    right: 0px;
+	content: "";
+	border: 1px solid #3F84B0;
+	position: absolute;
+	top: 10%;
+	bottom: 10%;
+	right: 0px;
 }
 .app_layers_dev_skytasks_detail_block_title{
 	display:table-row;
@@ -288,41 +288,41 @@
 }
 .app_layers_dev_skytasks_detail [find=taskid]{
 	position: absolute;
-    bottom: 0;
-    right:0;
+	bottom: 0;
+	right:0;
 }
 .app_layers_dev_skytasks_detail_usericon{
-    padding: 10px 0px 0 25px;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
+	padding: 10px 0px 0 25px;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: contain;
 }
 .app_layers_dev_skytasks_detail_commentbox{
 	border: 1px lightgrey solid;
-    display: table;
-    margin: 20px 10px;
+	display: table;
+	margin: 20px 10px;
 }
 .app_layers_dev_skytasks_detail_commentbox_icon{
 	display: table-cell;
-    vertical-align: middle;
-    padding: 10px;
+	vertical-align: middle;
+	padding: 10px;
 }
 .app_layers_dev_skytasks_detail_commentbox .app_layers_dev_skytasks_detail_usericon{
 	border: 1px black solid;
-    border-radius: 25px;
-    width: 50px;
-    height: 50px;
-    padding: 0px;
-    display: inline-block;
+	border-radius: 25px;
+	width: 50px;
+	height: 50px;
+	padding: 0px;
+	display: inline-block;
 }
 .app_layers_dev_skytasks_detail_penicon{
 	width:20px;
 }
 .app_layers_dev_skytasks_detail_okcancel{
 	position: absolute;
-    bottom: 0;
-    right: 0;
-    padding: 10px;
+	bottom: 0;
+	right: 0;
+	padding: 10px;
 }
 .app_layers_dev_skytasks_detail_okcancel span{
 	margin:10px;
@@ -332,19 +332,19 @@
 	padding:10px;
 	width:100%;
 	background-color: #99c2ff;
-    position:fixed;
-    z-index:150;
-    _position:absolute;
-    min-height:100px;
-    bottom:0;
+	position:fixed;
+	z-index:150;
+	_position:absolute;
+	min-height:100px;
+	bottom:0;
 }
 .app_layers_dev_skytasks_navbar {
 	width:100%;
 	padding: 0px 10px;
 	position: absolute;
-    background-color: rgba(247, 247, 247, 0.8);
-    z-index: 5;
-    box-sizing: border-box;
+	background-color: rgba(247, 247, 247, 0.8);
+	z-index: 5;
+	box-sizing: border-box;
 }
 .app_layers_dev_skytasks_navbar span{
 	padding: 0px 10px;
@@ -376,10 +376,10 @@
 
 .app_layers_dev_skytasks_navbar_search{
 	float: right;
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 7px 32px !important;
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 7px 32px !important;
 }
 .app_layers_dev_skytasks_navbar_search [find='search_textbox']{
 	width:0px;
@@ -395,15 +395,15 @@
 	opacity:1 !important;
 }
 .app_layers_dev_skytasks_active:before {
-    content: "";
-    width: 0;
-    height: 0;
-    border-top: 3px solid transparent;
-    border-bottom: 3px solid transparent;
-    border-left: 10px solid #FBA026;
-    position: absolute;
-    top: 18px;
-    margin-left: -10px;
+	content: "";
+	width: 0;
+	height: 0;
+	border-top: 3px solid transparent;
+	border-bottom: 3px solid transparent;
+	border-left: 10px solid #FBA026;
+	position: absolute;
+	top: 18px;
+	margin-left: -10px;
 }
 .app_layers_dev_skytasks_menuicon {
 	max-width: 35px;
@@ -433,9 +433,9 @@
 	background-image: url('/lincko/app/images/app/icons/Time-3.png');
 }
 .app_layers_dev_skytasks_spacesstick {
-    background-color: purple;
-    padding: 18px 2px;
-    /*visibility:hidden;*/
+	background-color: purple;
+	padding: 18px 2px;
+	/*visibility:hidden;*/
 }
 
 /*-------------------simpleDesktop-----------------------*/
@@ -471,7 +471,7 @@
 		width: 100px;
 		float:none;
 		padding-top: 5px !important;
-    	padding-bottom: 5px !important;
+		padding-bottom: 5px !important;
 	}
 	.app_layers_dev_skytasks_active:before {
 		display:none;
@@ -495,7 +495,7 @@
 	}
 	.app_layers_dev_skytasks_navbar_search {
 		padding: 13px 14px !important;
-    	font-size: 25px;
+		font-size: 25px;
 	}
 	.app_layers_dev_skytasks_navbar_search [find='search_textbox'] {
 		font-size: 18px;
@@ -540,45 +540,45 @@
 		width: 35%;
 	}
 	.app_layers_dev_skytasks_task_comments {
-	    font-size: smaller;
-	    text-align: right;
-	    width: 35%;
-	    min-width:120px;
-	    position:absolute;
-	    bottom:0px;
-	    right:0px;
+		font-size: smaller;
+		text-align: right;
+		width: 35%;
+		min-width:120px;
+		position:absolute;
+		bottom:0px;
+		right:0px;
 	}
 
 	.app_layers_dev_skytasks_spacesstick {
 		background-color: purple;
 		padding: 25px 3px;
-    	margin: 5px 0;
-    	margin-left: 3px;
+		margin: 5px 0;
+		margin-left: 3px;
 	}
 
 	.app_layers_dev_skytasks_checkbox label {
-	    padding: 30px;
-	    top: 0px;
-	    bottom: 0px;
-	    left: 0;
+		padding: 30px;
+		top: 0px;
+		bottom: 0px;
+		left: 0;
 	}
 	.app_layers_dev_skytasks_checkbox .app_layers_dev_skytasks_checkbox_visual {
-	    /*
-	    font-size: 63px;
-	    text-align: center;
-	    height: 10px;
-	    width: 10px;
-	    padding: 10px;
-	    margin: 11px 0px;
-	    border-radius: 10px;
-	    */
+		/*
+		font-size: 63px;
+		text-align: center;
+		height: 10px;
+		width: 10px;
+		padding: 10px;
+		margin: 11px 0px;
+		border-radius: 10px;
+		*/
 
-	    font-size: 31px !important;
-	    text-align: center;
-	    height: 30px;
-	    width: 30px;
-	    margin: 11px 0px;
-	    border-radius: 10px;
+		font-size: 31px !important;
+		text-align: center;
+		height: 30px;
+		width: 30px;
+		margin: 11px 0px;
+		border-radius: 10px;
 	}
 	.app_layers_dev_skytasks_menuicon {
 		max-width:40px;
@@ -593,17 +593,17 @@
 
 	.app_layers_dev_skytasks_tasklist_icon {
 		max-width: 50px;
-   		height: 34px;
-	    width: 100%;
-	    margin: 0px auto;
- 	   	display: block;
+		height: 34px;
+		width: 100%;
+		margin: 0px auto;
+		display: block;
 	}
 	.app_layers_dev_skytasks_tasklist_icon_text{
 		display: block;
-    	font-size: 15px;
-    	color: white;
-    	text-align: center;
-    	overflow:hidden;
+		font-size: 15px;
+		color: white;
+		text-align: center;
+		overflow:hidden;
 		text-overflow: ellipsis;
 		width: initial !important;
 		padding: 0px !important;
@@ -631,18 +631,18 @@
 	}
 	.app_layers_dev_skytasks_leftOptions {
 		position: absolute;
-	    top: 0;
-	    bottom: 0;
-	    left: 0;
-	    /*background-color:#FBA026; /*lincko orange*/
-	    background-color: #D83A3A; /*red*/
-    	color: white;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		/*background-color:#FBA026; /*lincko orange*/
+		background-color: #D83A3A; /*red*/
+		color: white;
 	}
 	.app_layers_dev_skytasks_delete {
-	    height: 100%;
-	    float: right;
-	    width: 75px;
-	    text-align: center;
+		height: 100%;
+		float: right;
+		width: 75px;
+		text-align: center;
 	}
 	.app_layers_dev_skytasks_taskblur {
 		/*
@@ -650,7 +650,7 @@
 		-webkit-filter: blur(1px); /*chrome safari opera*/
 
 		-webkit-box-shadow: 0 20px 15px -15px #202020 inset, 0 -20px 15px -15px #202020 inset;
-	   	-moz-box-shadow: 	0 20px 15px -15px #202020 inset, 0 -20px 15px -15px #202020 inset;
+		-moz-box-shadow: 	0 20px 15px -15px #202020 inset, 0 -20px 15px -15px #202020 inset;
 		box-shadow: 		0 20px 15px -15px #202020 inset, 0 -20px 15px -15px #202020 inset;
 
 		/*box-shadow:#888888 inset;*/
@@ -658,13 +658,13 @@
 		background-image: url('/lincko/app/images/app/blur22.png');
 		background-repeat: repeat;
 		position: absolute;
-	    top: 0;
-	    bottom: 0;
-	    left: 0;
-	    right: 0;
-	    opacity:0.8;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		opacity:0.8;
 
-	    display:none;
+		display:none;
 	}
 
 	.app_layers_dev_skytasks_detail{
@@ -680,9 +680,9 @@
 	.app_layers_dev_skytasks_detail{
 		top:0;
 		left:0;
-   		margin-top: 48px;
-   		height:initial;
-   		background-color: #3F84B0;
+		margin-top: 48px;
+		height:initial;
+		background-color: #3F84B0;
 	}
 	.app_layers_dev_skytasks_detail_block{
 		width:100%;
@@ -697,51 +697,51 @@
 		border: 1px solid green;
 		*/
 		position: absolute;
-	    height: 100%;
-	    right: 70px;
-	    left: 60px;
-	    height: 60px;
-	    line-height: 60px;
-	    overflow: hidden;
+		height: 100%;
+		right: 70px;
+		left: 60px;
+		height: 60px;
+		line-height: 60px;
+		overflow: hidden;
 	}
 	.app_layers_dev_skytasks_mobileQuickInfo {
-	    position: absolute;
-	    right: 0;
-	    top: 0;
-	    bottom: 0;
-	    width: 70px;
-	    font-size:12px;
-	    padding:0px !important;
+		position: absolute;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		width: 70px;
+		font-size:12px;
+		padding:0px !important;
 	}
 	.app_layers_dev_skytasks_mobileQuickInfo img {
 		width: 12px;
 	}
 	.app_layers_dev_skytasks_mobileQuickInfo div {
-	    width: 100%;
-	    overflow: hidden;
-	    text-overflow: ellipsis;
+		width: 100%;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 	.app_layers_dev_skytasks_mobileQuickInfo div[find="time"] {
 		text-align: center;
 		font-size:15px;
 	}
 	.app_layers_dev_skytasks_task [find=title] {
-	    /*
-	    border: 1px solid red;
-   		height: 100%;
-	    width: initial;
-	    max-width: initial;
-	    position: absolute;
-	    right: 70px;
-	    left: 0;
-	    */
-	    max-height: 100%;
-	    width: 100%;
-	    max-width: initial;
-	    word-wrap: normal;
-	    white-space: initial;
-	    display: inline-block;
-	    line-height: normal;
+		/*
+		border: 1px solid red;
+		height: 100%;
+		width: initial;
+		max-width: initial;
+		position: absolute;
+		right: 70px;
+		left: 0;
+		*/
+		max-height: 100%;
+		width: 100%;
+		max-width: initial;
+		word-wrap: normal;
+		white-space: initial;
+		display: inline-block;
+		line-height: normal;
 	}
 	.app_layers_dev_skytasks_task_rightOptions {
 		position:absolute;
@@ -764,11 +764,11 @@
 	}
 	.app_layers_dev_skytasks_taskpress {
 		position: absolute;
-	    top: 0;
-	    bottom: 0;
-	    left: 0;
-	    right: 0;
-	    opacity:0.8;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		opacity:0.8;
 	}
 	.app_layers_dev_skytasks_taskpress_status {
 		left: 0;
