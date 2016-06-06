@@ -90,6 +90,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	var updated_at;
 	var in_charge = '';
 	var in_charge_id = null;
+
 	var item = {};
 
 	var route = '';
@@ -107,8 +108,13 @@ Submenu.prototype.Add_taskdetail = function() {
 		item['created_by'] = wrapper_localstorage.uid;
 		item['updated_by'] = wrapper_localstorage.uid;
 		item['_users'] = {};
-		item['_users'][wrapper_localstorage.uid] = {};
+		var accessList = Lincko.storage.whoHasAccess('projects', app_content_menu.projects_id);
+		$.each(accessList, function(i,val){
+			item['_users'][val] = {};
+			item['_users'][val]['in_charge'] = false;
+		});
 		item['_users'][wrapper_localstorage.uid]['in_charge'] = true;
+		in_charge_id = wrapper_localstorage.uid;
 		item.start = $.now()/1000;
 		item.duration = duration_timestamp;
 		item['_type'] = that.param.type;
@@ -280,6 +286,10 @@ Submenu.prototype.Add_taskdetail = function() {
 				in_charge_id = $(this).val();
 				var username = Lincko.storage.get("users", in_charge_id, "username");
 				elem_in_charge.html(username);
+				$.each(item['_users'], function(key,val){
+					item['_users'][key]['in_charge'] = false;
+				});
+				item['_users'][in_charge_id]['in_charge'] = true;
 			});
 
 			//---duedate calenar
