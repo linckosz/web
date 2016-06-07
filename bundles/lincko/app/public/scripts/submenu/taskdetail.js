@@ -16,6 +16,9 @@ submenu_list['taskdetail'] = {
 		"title": Lincko.Translation.get('app', 25, 'html'), //Close
 		'hide': true,
 		"class": "base_pointer",
+		"action": function(elem, submenuInst) {
+
+		},
 	},
 	"taskdetail": {
 		"style": "taskdetail",
@@ -55,7 +58,11 @@ submenu_list['taskdetail'] = {
 		"name": "task_parent_id_hidden",
 		"value": "",
 		"now": function(that, Elem){
-			Elem.find("[find=submenu_input]").prop('value', app_content_menu.projects_id);
+			var currentProjID = app_content_menu.projects_id;
+			if(that.param.projID){
+				currentProjID = that.param.projID;
+			}
+			Elem.find("[find=submenu_input]").prop('value', currentProjID);
 		},
 		"class": "",
 	},
@@ -73,13 +80,16 @@ Submenu.prototype.Add_taskdetail = function() {
 	var submenu_wrapper = this.Wrapper();
 	var submenu_content = submenu_wrapper.find("[find=submenu_wrapper_content]");
 	submenu_content.prop('id','taskdetail_'+that.md5id).addClass('submenu_content_taskdetail_'+that.param.type);
-	var submenu_taskdetail = $('#-submenu_taskdetail').clone().prop('id','submenu_taskdetail');
+	var submenu_taskdetail = $('#-submenu_taskdetail').clone().prop('id','submenu_taskdetail_'+that.md5id);
+	var currentProjID = app_content_menu.projects_id;
+	if(that.param.projID){
+		currentProjID = that.param.projID;
+	}
 	var contactServer = false;
 	var action_menu_opened = false;
 	var param_sendAction = {};
 	var taskid = this.param.id;
-	var newTitle = 'Enter Your Title Here!'; //toto
-	var newDescription = 'Enter Your Description Here.'; //toto
+	var newTitle = '';
 	var approved = false;
 	var elem;
 	var duedate;
@@ -96,6 +106,14 @@ Submenu.prototype.Add_taskdetail = function() {
 	var route = '';
 	var route_delete = false;
 
+	if(that.param.type == 'tasks'){
+		newTitle = Lincko.Translation.get('app', 3509, 'html'); //New Task
+	}
+	else if( that.param.type == 'notes'){
+		newTitle = Lincko.Translation.get('app', 3510, 'html'); //New Note
+	}
+
+
 	if(taskid == 'new' ){
 		if(that.param.title){
 			item['+title'] = that.param.title;
@@ -104,11 +122,10 @@ Submenu.prototype.Add_taskdetail = function() {
 			item['+title'] = newTitle;
 		}
 		item['_id'] = taskid;
-		item['-comment'] = newDescription;
 		item['created_by'] = wrapper_localstorage.uid;
 		item['updated_by'] = wrapper_localstorage.uid;
 		item['_users'] = {};
-		var accessList = Lincko.storage.whoHasAccess('projects', app_content_menu.projects_id);
+		var accessList = Lincko.storage.whoHasAccess('projects', currentProjID);
 		$.each(accessList, function(i,val){
 			item['_users'][val] = {};
 			item['_users'][val]['in_charge'] = false;
@@ -284,12 +301,18 @@ Submenu.prototype.Add_taskdetail = function() {
 			});
 			elem_in_charge_hidden.change(function(){
 				in_charge_id = $(this).val();
-				var username = Lincko.storage.get("users", in_charge_id, "username");
-				elem_in_charge.html(username);
+				in_charge_id = parseInt(in_charge_id,10);
 				$.each(item['_users'], function(key,val){
 					item['_users'][key]['in_charge'] = false;
 				});
-				item['_users'][in_charge_id]['in_charge'] = true;
+				if(in_charge_id){
+					var username = Lincko.storage.get("users", in_charge_id, "username");
+					elem_in_charge.html(username);
+					item['_users'][in_charge_id]['in_charge'] = true;
+				}
+				else{ //nobody in charnge
+					elem_in_charge.html('Not Assigned');//toto
+				}
 			});
 
 			//---duedate calenar
@@ -359,11 +382,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		});
 		elem_action_menu.find('[find=delete]').click(function(){
 			route_delete = true;
-			var preview = true;
-			if (responsive.test("maxMobileL")){
-				preview = false;
-			}
-			submenu_Clean(null,null,preview);
+			submenu_Clean(null,null,that.preview);
 		});
 
 		return elem;
@@ -376,9 +395,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	elem = $('#-submenu_taskdetail_description').clone().prop('id','submenu_taskdetail_description');
 	var elem_description_text = elem.find('[find=description_text]');
 	elem_description_text.html(item['-comment']).focus(function(){
-		if( $(this).html() == newDescription ){
-			$(this).html('').attr('style','');
-		}
+
 	});
 	elem_description_text.focus(function(){
 		//myIScrollList['taskdetail_'+that.md5id].disable();
@@ -386,9 +403,6 @@ Submenu.prototype.Add_taskdetail = function() {
 	elem_description_text.blur(function(){
 		//myIScrollList['taskdetail_'+that.md5id].enable();
 	});
-	if( taskid == 'new' ){
-		elem_description_text.css('opacity',0.4);
-	}
 
 
 	if(that.param.type != 'files'){ //no file description for beta
@@ -495,28 +509,33 @@ Submenu.prototype.Add_taskdetail = function() {
 			elem.addClass('submenu_taskdetail_commentbubble_sub');
 		}
 
-		elem.find('[find=replyBtn]').click(function(){
-			var elem_click = $(this);
-			var elem_replyTo = elem_click.closest('.submenu_taskdetail_commentbubble');
-			var elem_replyBubble = $('#-submenu_taskdetail_commentbubble').clone().prop('id','')
-				.addClass('submenu_taskdetail_commentbubble_sub submenu_taskdetail_commentbubble_me submenu_taskdetail_commentbubble_addNew');
-			elem_replyBubble.find('[find=name]').html(Lincko.storage.get("users", wrapper_localstorage.uid,"username"));
-			elem_replyBubble.find('[find=comment_id]').attr('comment_id','new');
-			var elem_addNewComment_text = elem_replyBubble.find('[find=addNewComment_text]');
+		if(item['_id'] == 'new' || taskid == 'new' ){
+			elem.find('[find=replyBtn]').addClass('display_none');
+		}
+		else{
+			elem.find('[find=replyBtn]').click(function(){
+				var elem_click = $(this);
+				var elem_replyTo = elem_click.closest('.submenu_taskdetail_commentbubble');
+				var elem_replyBubble = $('#-submenu_taskdetail_commentbubble').clone().prop('id','')
+					.addClass('submenu_taskdetail_commentbubble_sub submenu_taskdetail_commentbubble_me submenu_taskdetail_commentbubble_addNew');
+				elem_replyBubble.find('[find=name]').html(Lincko.storage.get("users", wrapper_localstorage.uid,"username"));
+				elem_replyBubble.find('[find=comment_id]').attr('comment_id','new');
+				var elem_addNewComment_text = elem_replyBubble.find('[find=addNewComment_text]');
 
-			elem_addNewComment_text.keyup(function(event) {
-				if (event.keyCode == 13) {
-					sendAction_newComment('comments', elem_replyTo.find('[find=comment_id]').attr('comment_id'), elem_replyBubble.find('[find=addNewComment_text]').val());
-					elem_addNewComment_text.blur();
-				}
-			});
-			elem_addNewComment_text.focusout(function(){
-				elem_replyBubble.remove();
-			});
+				elem_addNewComment_text.keyup(function(event) {
+					if (event.keyCode == 13) {
+						sendAction_newComment('comments', elem_replyTo.find('[find=comment_id]').attr('comment_id'), elem_replyBubble.find('[find=addNewComment_text]').val());
+						elem_addNewComment_text.blur();
+					}
+				});
+				elem_addNewComment_text.focusout(function(){
+					elem_replyBubble.remove();
+				});
 
-			elem_replyTo.after(elem_replyBubble);
-			elem_addNewComment_text.focus();
-		});
+				elem_replyTo.after(elem_replyBubble);
+				elem_addNewComment_text.focus();
+			});
+		}
 
 		return elem;
 	}
@@ -734,9 +753,22 @@ Submenu.prototype.Add_taskdetail = function() {
 
 
 
+/*
+	that.param.saveParam = {};
+	that.param.saveParam.item = item;
+	that.param.saveParam.submenu_taskdetail = submenu_taskdetail;
+	that.param.saveParam.route_delete = route_delete;
+	that.param.saveParam.itemID = taskid;
+	that.param.saveParam.param_newItemComments = param_newItemComments;
+*/
+
+
 	/*----create/save on previewHide----*/
 	//$(document).on("previewHide.skylist", function(){
 	$(document).on("submenuHide.skylist", function(){
+		if(document.getElementById(submenu_wrapper.prop('id'))){
+			return false;
+		}
 		if( taskid == 'new' && route_delete ){
 			return false;
 		}
@@ -759,22 +791,25 @@ Submenu.prototype.Add_taskdetail = function() {
 
 		//param values that are common to all
 		param['id'] = taskid;
-		param['parent_id'] = app_content_menu['projects_id'];
+		param['parent_id'] = currentProjID;
 		param['title'] = submenu_taskdetail.find('[find=title_text]').html();
 		param['comment'] = submenu_taskdetail.find('[find=description_text]').html();
 		if( taskid == 'new' ){
-			if(in_charge_id){
-				param['users>in_charge'] = {};
-				param['users>in_charge'][in_charge_id] = true;
+			if(param['+title'] == newTitle){
+				delete param['+title'];
 			}
-			if(approved){
-				param['approved'] = approved;
-			}
-			if( param['comment'] == newDescription ){
-				param['comment'] = '';
-			}
-			if( that.param.type == "tasks" && duration_timestamp != item['duration'] ){
-				param['duration'] = duration_timestamp;
+
+			if(that.param.type == 'tasks'){
+				if(in_charge_id){
+					param['users>in_charge'] = {};
+					param['users>in_charge'][in_charge_id] = true;
+				}
+				if(approved){
+					param['approved'] = approved;
+				}
+				if(duration_timestamp != item['duration']){
+					param['duration'] = duration_timestamp;
+				}
 			}
 		}
 
@@ -802,7 +837,6 @@ Submenu.prototype.Add_taskdetail = function() {
 			}
 			else{
 				route += '/update';
-
 			}
 			wrapper_sendAction( param,'post',route, cb_success, null, cb_begin);
 		}
@@ -930,7 +964,7 @@ Submenu.prototype.Add_taskdetail = function() {
 /*-----linckoEditor------------------------------------*/
 function linckoEditor(elem){
 	var options = {
-		buttons: [ 'h', 'h1', 'h2', 'h3', 'h4', 'p', 'bold', 'italic', 'list', 'alignleft', 'aligncenter', 'alignright', 'image', 'x'],
+		buttons: [ 'h', 'h1', 'h2', 'h3', 'h4', 'p', 'bold', 'italic', 'list', 'alignleft', 'aligncenter', 'alignright', 'x'],
 		buttonsHtml: {
 			'italic': '<i class="fa fa-italic"></i>',
 			'header': '<i class="fa fa-header"></i>',

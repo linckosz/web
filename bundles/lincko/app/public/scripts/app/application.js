@@ -514,7 +514,7 @@ $("body").delegate(".selectable", "mouseup", function(e){
 	setTimeout(function(){
 		$("#app_application_lincko_action").hide();
 	}, 1500);
-	return false;
+	return true;
 });
 
 $("#app_application_lincko_action").click(function() {

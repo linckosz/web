@@ -100,6 +100,10 @@
 	display: inline-block;
 	color: #3F84B0;
 }
+.burger_calendar_prepend [find=today_btn],
+.burger_calendar_prepend [find=tomorrow_btn]{
+	text-transform: capitalize;
+}
 .burger_calendar_prepend [find=today_btn], .burger_calendar_prepend [find=twoDays_btn]{
 	text-align: right;
 	padding-right: 5px;

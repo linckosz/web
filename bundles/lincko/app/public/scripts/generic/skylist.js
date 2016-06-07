@@ -711,7 +711,7 @@ skylist.prototype.addCard = function(item){
 			function(){
 				var elem = $('#'+this.id);
 				var item_new = Lincko.storage.get(that.list_type , item['_id']);
-				if( typeof item_new == 'object' && 'deleted_at' in item_new && item_new['deleted_at'] ){ //for delete
+				if( !item_new || (typeof item_new == 'object' && 'deleted_at' in item_new && item_new['deleted_at']) ){ //for delete
 					elem.velocity('slideUp',{
 						complete: function(){
 							$(this).remove();
@@ -1581,6 +1581,9 @@ skylist.prototype.menu_construct = function(){
 	//individual or group selection in navbar
 	var elem_people1 = that.elem_navbar.find('[people=1]');
 	var elem_people2 = that.elem_navbar.find('[people=2]');
+	if( Lincko.storage.get("projects", app_content_menu.projects_id, 'personal_private') ){
+		elem_people2.addClass('display_none');
+	}
 
 	elem_people1.click(function(){
 		if( !$(this).hasClass('skylist_menu_selected')){

@@ -55,6 +55,9 @@ textarea:focus, input:focus{
 .submenu_wrapper .skylist_menu_navbar_filter_icon {
 	display: none;
 }
+.submenu_wrapper .skylist_menu_navbar_search {
+	display: none;
+}
 .chat_contents_wrapper {
 	padding-bottom: 50px;
 }

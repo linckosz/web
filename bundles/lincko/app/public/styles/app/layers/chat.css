@@ -9,8 +9,16 @@
 	display: none;
 }
 
+.app_layers_chat .skylist_menu_navbar_search {
+	display: none;
+}
+
 .app_layers_chat .skylist_menu_navbar_filter_icon {
 	display: none;
+}
+
+.app_layers_chat  .skylist_subwrapper {
+	padding-top: 5px;
 }
 
 .app_layers_chat .skylist_card {

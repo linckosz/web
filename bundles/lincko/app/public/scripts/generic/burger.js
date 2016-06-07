@@ -133,24 +133,14 @@ var burger = function(elem, burger_mode, item){
 					var accessList = Lincko.storage.whoHasAccess(item['_type'], item['_id']);
 				}
 
-				var contactsID_obj = {};
-				for (var i = 0; i < accessList.length; i++) {
-					var userid = accessList[i];
-					if( userid in item['_users'] && item['_users'][userid]['in_charge'] ){
-						contactsID_obj[userid] = { checked: true };
-					}
-					else{
-						contactsID_obj[userid] = { checked: false };
-					}
-				}
-
+                var contactsID_obj = burger_generate_contactsID(item);
 				//use the submenu for mobile
 				if(responsive.test("maxMobileL")){
 					var param = {};
 					param.elem_input = elem;
 					param.type = 'tasks';//item['_type'];
 					param.item_obj = item;
-					param.contactsID = burger_generate_contactsID(item);
+					param.contactsID = contactsID_obj;
 					submenu_Build('burger_contacts', true, null, param);
 					return false;
 				}
@@ -186,14 +176,19 @@ var burger = function(elem, burger_mode, item){
 					}
 
 					elem_option_clone.on('mousedown touchdown', function(){
-							var userid = $(this).attr('userid');
-							elem.val(userid);
-							elem.change();
-							if(!item['_id'] || item['_id'] == 'new'){
-								return;
-							}
-							burger_contacts_sendAction(contactsID_obj, [userid], item, true);
-						});
+						var userid = $(this).attr('userid');
+                        if(elem.val() == userid){
+                            elem.val('');
+                        }
+                        else{
+                            elem.val(userid);
+                        }
+						elem.change();
+						if(!item['_id'] || item['_id'] == 'new'){
+							return;
+						}
+						burger_contacts_sendAction(contactsID_obj, [userid], item, true);
+					});
 					elem_dropdown.append(elem_option_clone);
 				});
 

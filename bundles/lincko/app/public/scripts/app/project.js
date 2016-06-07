@@ -260,6 +260,34 @@ $('#app_project_settings_img').click(function(){
 	submenu_Build("settings");
 });
 
+$('#app_project_quick_access_tasks').click(function(){
+	var personalSpace = Lincko.storage.list('projects',1,{personal_private: wrapper_localstorage.uid});
+	if(personalSpace){
+		personalSpace = personalSpace[0]['_id'];
+		submenu_Build('taskdetail', null, null, 
+			{
+				type:'tasks',
+				id: 'new', 
+				projID: personalSpace,
+
+			}, false);
+	}
+});
+
+$('#app_project_quick_access_notes').click(function(){
+	var personalSpace = Lincko.storage.list('projects',1,{personal_private: wrapper_localstorage.uid});
+	if(personalSpace){
+		personalSpace = personalSpace[0]['_id'];
+		submenu_Build('taskdetail', null, null, 
+			{
+				type:'notes',
+				id: 'new', 
+				projID: personalSpace,
+
+			}, false);
+	}
+});
+
 $('#app_project_quick_access_chat').click(function(){
 	submenu_Build("chat");
 });

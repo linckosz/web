@@ -17,10 +17,18 @@ submenu_list['burger_contacts'] = {
 		"title": "Select", //toto
 		"class": "base_pointer",
 		"action": function(elem, submenuInst) {
+			var param = submenuInst.param;
 			var userList = {};
 			var nameList = "";
 			var IDList = _submenu_get_contacts(elem);
-			burger_contacts_sendAction(submenuInst.param.contactsID, IDList, submenuInst.param.item_obj);
+			param.elem_input.val('');
+			$.each(IDList, function(i,val){
+				param.elem_input.val(param.elem_input.val()+val+' ');
+			});				
+			param.elem_input.change();
+			if(param.item_obj['_id'] != 'new'){
+				burger_contacts_sendAction(param.contactsID, IDList, param.item_obj);
+			}
 		},
 		hide: true,
 	},
