@@ -220,14 +220,14 @@ Submenu.prototype.Add_ChatAddUser = function() {
 			e.stopPropagation(); 
 			if (e.which != 13) {
 				submenu_chat_label(this);
-				submenu_chat_search.find();
+				//submenu_chat_search.find();
 			}
 		},
 		keypress: function(e) {
 			e.stopPropagation(); 
 			if (e.which == 13) {
 				submenu_chat_label(this);
-				submenu_chat_search.find(0, true);
+				//submenu_chat_search.find(0, true);
 			}
 		},
 	});

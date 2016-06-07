@@ -260,7 +260,11 @@ Lincko.storage.schema = function(schema){
 		} else {
 			for(var j in Lincko.storage.data[i]) {
 				category = false;
-				if(typeof schema[i][j] == 'undefined'){
+				if(
+					   typeof schema[i][j] == 'undefined'
+					|| (typeof Lincko.storage.data[i][j]['deleted_at'] != 'undefined' && Lincko.storage.data[i][j]['deleted_at']==null && schema[i][j]==false)
+					|| (typeof Lincko.storage.data[i][j]['deleted_at'] != 'undefined' && $.isNumeric(Lincko.storage.data[i][j]['deleted_at']) && schema[i][j]==true)
+				){
 					delete Lincko.storage.data[i][j];
 					update = true;
 					app_application_lincko.prepare(i+"_"+j);
@@ -280,7 +284,7 @@ Lincko.storage.schema = function(schema){
 		} else {
 			for(var j in schema[i]) {
 				if(!Lincko.storage.data[i][j]){
-					if(typeof missing[i]==='undefined'){ missing[i] = {}; }
+					if(typeof missing[i]=='undefined'){ missing[i] = {}; }
 					missing[i][j] = schema[i][j];
 					app_application_lincko.prepare(i+"_"+j);
 					continue;
