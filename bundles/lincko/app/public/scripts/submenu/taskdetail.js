@@ -126,6 +126,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		item['updated_by'] = wrapper_localstorage.uid;
 		item['_users'] = {};
 		var accessList = Lincko.storage.whoHasAccess('projects', currentProjID);
+		if($.inArray(wrapper_localstorage.uid, accessList)<0){ return false; }
 		$.each(accessList, function(i,val){
 			item['_users'][val] = {};
 			item['_users'][val]['in_charge'] = false;
