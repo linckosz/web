@@ -519,7 +519,7 @@ $("body").delegate(".selectable", "mouseup", function(e){
 
 $("#app_application_lincko_action").click(function() {
 	$(this).hide();
-  	submenu_Build("taskdetail", true, false, {'id':'new', 'title': globalWordSelect, 'type':'tasks'}, false);
+  	submenu_Build("taskdetail", true, false, {'id':'new', 'title': globalWordSelect, 'type':'tasks'}, true); //This is no way to know if we are in preview or submenu
 });
 
 function app_application_dev_link(){

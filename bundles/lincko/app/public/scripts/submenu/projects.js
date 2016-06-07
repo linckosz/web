@@ -169,7 +169,7 @@ var submenu_projects_charts = {};
 
 var submenu_projects_charts_resize_timing = false;
 function submenu_projects_charts_resize(){
-	clearTimeout(submenu_projects_chart_resize_timing);
+	clearTimeout(submenu_projects_charts_resize_timing);
 	submenu_projects_charts_resize_timing = setTimeout(function(){
 		var instance;
 		wrapper_clean_chart();

@@ -260,7 +260,7 @@ Lincko.storage.schema = function(schema){
 		} else {
 			for(var j in Lincko.storage.data[i]) {
 				category = false;
-				if(!schema[i][j]){
+				if(typeof schema[i][j] == 'undefined'){
 					delete Lincko.storage.data[i][j];
 					update = true;
 					app_application_lincko.prepare(i+"_"+j);

@@ -413,7 +413,11 @@ function wrapper_IScroll(){
 			if(!this.id){
 				this.id = "overthrow_"+md5(Math.random());
 			}
-			if(!myIScrollList[this.id] || Child.hasClass('iscroll_destroyed')){
+			if(
+				   !myIScrollList[this.id]
+				|| Child.hasClass('iscroll_destroyed')
+				|| (myIScrollList[this.id] && !Child.hasClass('iscroll_sub_div'))
+			){
 				Child.removeClass('iscroll_destroyed');
 				//Merge with optional options
 				var wrapper_IScroll_options_temp = {};

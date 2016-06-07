@@ -954,8 +954,8 @@ Submenu.prototype.hideSubmenu = function(time, delay) {
 				delay: delay,
 				easing: [.38, .1, .13, .9],
 				complete: function() {
-					that.Remove();
 					app_application_lincko.prepare("submenu_hide", true);
+					that.Remove();
 				}
 			}
 		);
@@ -970,8 +970,8 @@ Submenu.prototype.hideSubmenu = function(time, delay) {
 				delay: delay,
 				easing: [.38, .1, .13, .9],
 				complete: function() {
-					that.Remove();
 					app_application_lincko.prepare("submenu_hide", true);
+					that.Remove();
 				}
 			}
 		);
@@ -995,8 +995,8 @@ Submenu.prototype.hidePreview = function(time, delay) {
 				delay: delay,
 				easing: [.38, .1, .13, .9],
 				complete: function() {
+					app_application_lincko.prepare("submenu_hide", true);
 					that.Remove();
-					app_application_lincko.prepare("submenu_hide", true); //toto => doesn't trigger
 				}
 			}
 		);
@@ -1008,8 +1008,8 @@ Submenu.prototype.hidePreview = function(time, delay) {
 				delay: delay,
 				easing: [.38, .1, .13, .9],
 				complete: function() {
+					app_application_lincko.prepare("submenu_hide", true);
 					that.Remove();
-					app_application_lincko.prepare("submenu_hide", true); //toto => doesn't trigger
 				}
 			}
 		);
@@ -1036,16 +1036,16 @@ Submenu.prototype.Hide = function(animate) {
 			$(this).removeClass('submenu_deco_next');
 		});
 	}
-	if (animate) {
+	//if (animate) {
 		if (this.preview) {
 			this.hidePreview(time, delay);
 		} else {
 			this.hideSubmenu(time, delay);
 		}
-	} else {
-		time = 0;
-		that.Remove();
-	}
+	//} else {
+	//	time = 0;
+	//	that.Remove();
+	//}
 	$(document).trigger("submenuHide");
 };
 

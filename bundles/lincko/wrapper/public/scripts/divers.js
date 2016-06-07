@@ -494,9 +494,12 @@ function wrapper_test(type, RCUD){
 				{
 					"id": 3,
 					//"username": "test"+Math.floor(Math.random() * 20), //OPTIONAL
-					"firstname": "Bruno"+Math.floor(Math.random() * 20), //OPTIONAL
+					//"firstname": "Bruno"+Math.floor(Math.random() * 20), //OPTIONAL
 					//"lastname": "Martin", //OPTIONAL
 					//"gender": 1, //OPTIONAL
+					"usersLinked>access": {
+						6: true,
+					},
 				},
 				'post',
 				'user/update',

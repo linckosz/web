@@ -131,9 +131,20 @@
 	border-color: #E14A3E;
 }
 
+.submenu_deco_read.submenu_app_chat_deco {
+	display: table;
+	white-space: nowrap;
+	color: unset;
+	border-width: 0;
+	overflow: hidden;
+	text-align: left;
+}
+.submenu_deco_read.submenu_app_chat_deco:last-child {
+	background-color: red;
+}
+
 .submenu_deco.submenu_app_chat_deco {
 	display: table;
-	table-layout: fixed;
 	white-space: nowrap;
 	color: unset;
 	background-color: #FFFFFF;
@@ -144,4 +155,66 @@
 }
 .submenu_deco:hover {
 	background-color: #FAFBFC;
+}
+
+.submenu_app_chat_new_contact {
+	width: 100%;
+	border-style: none;
+	font-size: 12px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+
+.submenu_app_chat_search_text {
+	position: absolute;
+	box-sizing: border-box;
+	height: 20px;
+	padding: 2px 4px 2px 4px;
+	margin-top: 6px;
+	margin-bottom: 6px;
+	width: 90%;
+	outline: 0;
+	color: #CDCDCD;
+	z-index: 2;
+	font-size: 12px;
+	cursor: text;
+}
+
+.submenu_app_chat_search {
+	background-color: #FFFFFF;
+	box-sizing: border-box;
+	height: 20px;
+	padding: 2px 4px 2px 4px;
+	margin-top: 6px;
+	margin-bottom: 6px;
+	width: 90%;
+	border: 1px solid;
+	border-radius: 4px;
+	border-color: #E7E7E7;
+	outline: 0;
+	z-index: 1;
+	font-size: 12px;
+	cursor: text;
+}
+
+.submenu_app_chat_search:hover, .submenu_app_chat_search:active, .submenu_app_chat_search:focus {
+	/*background-color: rgba(255, 255, 255, 0.3);*/
+}
+
+.submenu_app_chat_search:active, .submenu_app_chat_search:focus {
+	/*border-color: rgba(255, 255, 255, 0.6);*/
+}
+
+.submenu_app_chat_search_img {
+	margin-left: 5%;
+	height: 20px;
+	padding: 4px;
+	padding-left: 6px;
+	cursor: text;
+}
+
+.submenu_app_chat_add_user {
+	width: 100%;
+	background-color: #EFEFEF;
+	text-align: center;
 }
