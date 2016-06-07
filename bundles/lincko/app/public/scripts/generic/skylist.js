@@ -901,12 +901,13 @@ skylist.prototype.addTask = function(item){
 	/*
 	title
 	*/
-	var contenteditable = false;
 	var elem_title = Elem.find('[find=title]');
-	if( wrapper_localstorage.uid in item['_perm'] && item['_perm'][wrapper_localstorage.uid][0] > 1 ){ //RCU and beyond
+	elem_title.html(item['+title']);
+	
+	var contenteditable = false;
+	if( typeof item == 'object' && '_perm' in item && wrapper_localstorage.uid in item['_perm'] && item['_perm'][wrapper_localstorage.uid][0] > 1 ){ //RCU and beyond
 		contenteditable = true; 
 	}
-	elem_title.html(item['+title']);
 	if(contenteditable){
 		elem_title.on('mousedown touchstart', function(event){ 
 			if( responsive.test("maxMobileL") ){ return true; }

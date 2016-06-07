@@ -7,7 +7,6 @@ var burger = function(elem, burger_mode, item){
 	var dropdown_duration = 200;
 
 	var burger_destroy = function(){
-		console.log('burger_destroy');
 		burger_on = false;
 		burger_str = "";
 		burger_type = null;

@@ -74,8 +74,6 @@ Submenu_select.taskdetail = function(Elem){
 };
 
 Submenu.prototype.Add_taskdetail = function() {
-	console.log(this.id);
-	console.log(this.param.id);
 	var that = this;
 	var attribute = this.attribute;
 	this.md5id = md5(Math.random());
@@ -383,8 +381,12 @@ Submenu.prototype.Add_taskdetail = function() {
 			}
 		});
 		elem_action_menu.find('[find=delete]').click(function(){
-			route_delete = true;
-			submenu_Clean(null,null,that.preview);
+			if(Lincko.storage.canI('delete', that.param.type, taskid)){
+				route_delete = true;
+				delete Lincko.storage.data.tasks[taskid];
+				app_application_lincko.prepare('tasks_'+taskid, true);
+				submenu_Clean(null,null,that.preview);
+			}
 		});
 
 		return elem;
@@ -538,7 +540,6 @@ Submenu.prototype.Add_taskdetail = function() {
 				elem_addNewComment_text.focus();
 			});
 		}
-
 		return elem;
 	}
 
@@ -766,9 +767,8 @@ Submenu.prototype.Add_taskdetail = function() {
 
 	app_application_lincko.add(
 		submenu_wrapper.prop('id'),
-		['submenu_hide', 'submenu_hide_'+submenu_wrapper.prop('id')],
+		'submenu_hide_'+submenu_wrapper.prop('id'),
 		function(){
-			console.log(submenu_wrapper.prop('id')+' toto');
 			if( taskid == 'new' && route_delete ){
 				return false;
 			}
@@ -810,7 +810,6 @@ Submenu.prototype.Add_taskdetail = function() {
 					}
 				}
 			}
-
 			if( taskid == 'new' || route_delete || ('+title' in item && param['title'] != item['+title']) || param['comment'] != item['-comment'] ){
 				contactServer = true;
 			}
