@@ -158,6 +158,7 @@ $('#account_error').click(function(){
 
 $("#account_joinus_email, #account_joinus_password, #account_joinus_captcha, #account_signin_email, #account_signin_password").on({
 	focus: function(){ account_display_label(this, false); },
+	click: function(){ account_display_label(this, false); },
 	blur: function(){ account_display_label(this, false); },
 	change: function(){ account_display_label(this, false); },
 	copy: function(){ account_display_label(this, true); },

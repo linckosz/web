@@ -1051,6 +1051,7 @@ Submenu.prototype.Hide = function(animate) {
 
 // http://stackoverflow.com/questions/19469881/javascript-remove-all-event-listeners-of-specific-type
 Submenu.prototype.Remove = function() {
+	app_application_lincko.prepare("submenu_hide_"+this.id, true);
 	var stack = this.preview ? submenu_obj["preview"] : submenu_obj["submenu"];
 	$('#' + this.id).hide().remove();
 	stack[this.layer] = null;

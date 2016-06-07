@@ -200,7 +200,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 	$(window).resize();
 	return true;
 };
-var toto;
+
 Submenu.prototype.Add_ChatAddUser = function() {
 	var attribute = this.attribute;
 	var Elem = $('#-submenu_app_chat_add_user').clone();
@@ -208,21 +208,23 @@ Submenu.prototype.Add_ChatAddUser = function() {
 	if("class" in attribute){
 		Elem.addClass(attribute['class']);
 	}
-	toto = Elem.find("[find=submenu_app_chat_search]");
 	Elem.find("[find=submenu_app_chat_search]").on({
-		focus: function(){ submenu_chat_label(this); },
-		blur: function(){ submenu_chat_label(this); },
-		change: function(){ submenu_chat_label(this); },
-		copy: function(){ submenu_chat_label(this); },
-		past: function(){ submenu_chat_label(this); },
-		cut: function(){ submenu_chat_label(this); },
+		focus: function(e){ e.stopPropagation(); submenu_chat_label(this, true); },
+		click: function(e){ e.stopPropagation(); submenu_chat_label(this, true); },
+		blur: function(e){ e.stopPropagation(); submenu_chat_label(this); },
+		change: function(e){ e.stopPropagation(); submenu_chat_label(this); },
+		copy: function(e){ e.stopPropagation(); submenu_chat_label(this); },
+		past: function(e){ e.stopPropagation(); submenu_chat_label(this); },
+		cut: function(e){ e.stopPropagation(); submenu_chat_label(this); },
 		keyup: function(e) {
+			e.stopPropagation(); 
 			if (e.which != 13) {
 				submenu_chat_label(this);
 				submenu_chat_search.find();
 			}
 		},
 		keypress: function(e) {
+			e.stopPropagation(); 
 			if (e.which == 13) {
 				submenu_chat_label(this);
 				submenu_chat_search.find(0, true);
@@ -232,17 +234,21 @@ Submenu.prototype.Add_ChatAddUser = function() {
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
 	return true;
 };
-
-function submenu_chat_label(input) {
-	if($(input).val().length<=0){
-		if($(input).prev().is(':hidden')){
-			$(input).prev().velocity("transition.fadeIn", { duration: 300, delay: 100, });
+var toto;
+function submenu_chat_label(that) {
+	Elem = $(that);
+	var input = Elem.find("[find=submenu_app_chat_search_input]");
+	var text_help = Elem.find("[find=submenu_app_chat_search_text_help]");
+	if(input.val().length<=0){
+		if(text_help.is(':hidden')){
+			text_help.velocity("transition.fadeIn", { duration: 300, delay: 100, });
 		}
 	} else {
-		if($(input).prev().is(':visible')){
-			$(input).prev().velocity("transition.fadeOut", { duration: 300, delay: 100, });
+		if(text_help.is(':visible')){
+			text_help.velocity("transition.fadeOut", { duration: 300, delay: 100, });
 		}
 	}
+	input.focus();
 }
 
 function submenu_chat_select(opt, Elem){
