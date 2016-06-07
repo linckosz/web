@@ -522,6 +522,12 @@ $("#app_application_lincko_action").click(function() {
   	submenu_Build("taskdetail", true, false, {'id':'new', 'title': globalWordSelect, 'type':'tasks'}, true); //This is no way to know if we are in preview or submenu
 });
 
+$('#app_application_menu_icon').click(function(){
+	if(typeof app_application !== 'undefined'){
+		app_application.move('project');
+	}
+});
+
 function app_application_dev_link(){
 	//Used for development site only
 	var dev_front = "";
@@ -551,6 +557,9 @@ function app_application_change_private(){
 	top.location.replace(top.location.protocol+'//'+app_application_dev_link()+document.domain); //Personal workspace
 }
 
+$('#app_application_submenu_block').click(function(){
+	//submenu_Hideall(false); //Only hide submenu
+});
 
 function app_application_submenu_position() {
 	var Elem = $('#app_application_submenu_block');

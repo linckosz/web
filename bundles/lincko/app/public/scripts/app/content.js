@@ -1,10 +1,3 @@
-$('#app_content_top_project').click(function(){
-	if(typeof app_application !== 'undefined'){
-		app_application.move('project');
-	}
-});
-
-
 $('#app_content_top_note').click(function(){
 	//submenu_Build("test", true, false);
 	//app_upload_open_files(null, null, true, true);

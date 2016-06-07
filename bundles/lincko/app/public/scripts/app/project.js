@@ -256,12 +256,6 @@ function app_project_quick_upload_display(Elem, show) {
 	}
 }
 
-$('#app_project_close').click(function(){
-	if(typeof app_application !== 'undefined'){
-		app_application.move('project');
-	}
-});
-
 $('#app_project_settings_img').click(function(){
 	submenu_Build("settings");
 });

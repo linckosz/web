@@ -222,7 +222,7 @@ Lincko.storage.update = function(partial, info){
 
 		}
 	}
-	app_application_lincko.prepare("royce",true);
+	
 	if(update){
 		//Lincko.storage.childrenList(partial, children_list);
 		Lincko.storage.childrenList(); //We should not scan the whole database, it slows down the list but Sky had an issue of getting _children visible for notes when adding a comment

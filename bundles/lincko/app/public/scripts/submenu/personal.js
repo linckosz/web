@@ -179,7 +179,7 @@ Submenu.prototype.Add_ProfileNext = function() {
 		Elem.find("[find=submenu_next_upload_picture]").prop("src", src);
 	}
 	Elem.click(function(){
-		submenu_Build("personal_settings", true, false, null, that.preview); //toto => why close all if hide at true?
+		submenu_Build("personal_settings", that.layer + 1, true, null, that.preview); //toto => why close all if hide at true?
 	});
 	Elem.find("[find=submenu_next_upload_picture]").click(function(e){
 		e.stopPropagation();

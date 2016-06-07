@@ -63,6 +63,16 @@
 	vertical-align: top;
 }
 
+#app_application_menu_icon {
+	position: fixed;
+	top: 0;
+	left: 0;
+	margin: 12px;
+	height: 24px;
+	width: 24px;
+	z-index: 1200;
+}
+
 .app_application_width {
 	width: 320px !important;
 }

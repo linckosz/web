@@ -61,6 +61,7 @@ submenu_list['settings'] = {
 	"personal_settings": {
 		"style": "profile_next",
 		"title": "",
+		"hide": true,
 		"next": "personal_settings",
 		"class": "",
 	},

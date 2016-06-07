@@ -214,7 +214,7 @@ Submenu.prototype.Add_ChatAddUser = function() {
 		blur: function(e){ e.stopPropagation(); submenu_chat_label(this); },
 		change: function(e){ e.stopPropagation(); submenu_chat_label(this); },
 		copy: function(e){ e.stopPropagation(); submenu_chat_label(this); },
-		past: function(e){ e.stopPropagation(); submenu_chat_label(this); },
+		past: function(e){ e.stopPropagation(); submenu_chat_label(this, true); },
 		cut: function(e){ e.stopPropagation(); submenu_chat_label(this); },
 		keyup: function(e) {
 			e.stopPropagation(); 
@@ -235,7 +235,8 @@ Submenu.prototype.Add_ChatAddUser = function() {
 	return true;
 };
 var toto;
-function submenu_chat_label(that) {
+function submenu_chat_label(that, focus) {
+	if(typeof focus == 'undefined'){ focus = false; }
 	Elem = $(that);
 	var input = Elem.find("[find=submenu_app_chat_search_input]");
 	var text_help = Elem.find("[find=submenu_app_chat_search_text_help]");
@@ -248,7 +249,9 @@ function submenu_chat_label(that) {
 			text_help.velocity("transition.fadeOut", { duration: 300, delay: 100, });
 		}
 	}
-	input.focus();
+	if(focus){
+		input.focus();
+	}
 }
 
 function submenu_chat_select(opt, Elem){
