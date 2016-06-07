@@ -74,6 +74,8 @@ Submenu_select.taskdetail = function(Elem){
 };
 
 Submenu.prototype.Add_taskdetail = function() {
+	console.log(this.id);
+	console.log(this.param.id);
 	var that = this;
 	var attribute = this.attribute;
 	this.md5id = md5(Math.random());
@@ -762,9 +764,87 @@ Submenu.prototype.Add_taskdetail = function() {
 	that.param.saveParam.param_newItemComments = param_newItemComments;
 */
 
+	app_application_lincko.add(
+		submenu_wrapper.prop('id'),
+		['submenu_hide', 'submenu_hide_'+submenu_wrapper.prop('id')],
+		function(){
+			console.log(submenu_wrapper.prop('id')+' toto');
+			if( taskid == 'new' && route_delete ){
+				return false;
+			}
+			var contactServer = false;
+			var param = {};
+			var tmpID = null;
+
+			var cb_begin = function(jqXHR, settings, temp_id){
+				tmpID = temp_id;
+			}
+			var cb_success = function(msg, data_error, data_status, data_msg){
+				var itemID_real = Lincko.storage.list(that.param.type,1,{temp_id: tmpID})[0]['_id'];
+				$.each(param_newItemComments, function(i,param){
+					sendAction_newComment(that.param.type, itemID_real, param.comment);
+				});
+				tmpID = null;
+			}
+
+			//param values that are common to all
+			param['id'] = taskid;
+			param['parent_id'] = currentProjID;
+			param['title'] = submenu_taskdetail.find('[find=title_text]').html();
+			param['comment'] = submenu_taskdetail.find('[find=description_text]').html();
+			if( taskid == 'new' ){
+				if(param['+title'] == newTitle){
+					delete param['+title'];
+				}
+
+				if(that.param.type == 'tasks'){
+					if(in_charge_id){
+						param['users>in_charge'] = {};
+						param['users>in_charge'][in_charge_id] = true;
+					}
+					if(approved){
+						param['approved'] = approved;
+					}
+					if(duration_timestamp != item['duration']){
+						param['duration'] = duration_timestamp;
+					}
+				}
+			}
+
+			if( taskid == 'new' || route_delete || ('+title' in item && param['title'] != item['+title']) || param['comment'] != item['-comment'] ){
+				contactServer = true;
+			}
+
+			if( contactServer ){
+				var route = '';
+				if( that.param.type == "tasks" ){
+					route += 'task';
+				}
+				else if( that.param.type == "notes" ){
+					route += 'note';
+				}
+				else if( that.param.type == "files" ){
+					route += 'file';
+				}
+
+				if( taskid == 'new' ){
+					route += '/create';
+				}
+				else if( route_delete ){
+					route += '/delete';
+				}
+				else{
+					route += '/update';
+				}
+				wrapper_sendAction( param,'post',route);//, cb_success, null, cb_begin);
+			}
+		}
+	);
+
 
 	/*----create/save on previewHide----*/
 	//$(document).on("previewHide.skylist", function(){
+		/*
 	$(document).on("submenuHide.skylist", function(){
 		if(document.getElementById(submenu_wrapper.prop('id'))){
 			return false;
@@ -842,7 +922,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		}
 		//$(document).off('previewHide.skylist');
 		$(document).off('submenuHide.skylist');
-	});
+	});*/
 
 
 
