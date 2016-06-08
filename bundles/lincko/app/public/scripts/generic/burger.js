@@ -147,7 +147,7 @@ var burger = function(elem, burger_mode, item){
 
 				//elem_dropdown.empty().insertAfter(elem);
 				//elem_dropdown.empty().appendTo('#app_layers_content');
-				elem_dropdown.empty().appendTo('#app_content_dynamic_sub');
+				elem_dropdown.empty().appendTo('#app_application_main');
 				burger_on = true;
 				//var coord = $(this).position();
 				var coord = $(this).offset();
@@ -191,7 +191,7 @@ var burger = function(elem, burger_mode, item){
 					elem_dropdown.append(elem_option_clone);
 				});
 
-				var left = coordP.left;
+				var left = coord.left;
 				if(left == 0){ 
 					left = coord.left;
 					if( responsive.test("minTablet")){
@@ -201,7 +201,7 @@ var burger = function(elem, burger_mode, item){
 						}
 					}
 				};
-				var top = coord.top - $('#app_content_top').outerHeight() + $(this).closest('table').outerHeight();
+				var top = coord.top + $(this).closest('table').outerHeight(); //- $('#app_content_top').outerHeight();
 				
 				elem_dropdown
 					.css('left',left)
