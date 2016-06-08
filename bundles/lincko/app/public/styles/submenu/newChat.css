@@ -65,6 +65,9 @@ textarea:focus, input:focus{
 .submenu_wrapper .skylist {
 	margin-left: 5px;
 }
+.submenu_wrapper .skylist .iscroll_sub_div.scrollY {
+	padding-bottom: 0px;
+}
 .submenu_chats .submenu_bottom{
 	height: 100px; /*three lines for desktop, one line(48px) for mobile*/
 	background-image: none;

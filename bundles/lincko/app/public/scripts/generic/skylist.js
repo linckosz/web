@@ -1491,12 +1491,52 @@ skylist.prototype.clearOptions = function(task){
 
 skylist.prototype.setHeight = function(){
 	var that = this;
-	var height = $(window).height() - $('#app_content_top').outerHeight() /*- $('#app_layers_dev_skytasks_navbar').outerHeight()*/;
-	if(responsive.test("maxMobileL")){
-		height -= $('#app_content_menu').outerHeight();
+
+	var parentH = 0;
+	var elem_parent = that.list_wrapper.parent();
+	if(elem_parent.hasClass('submenu_wrapper')){ //inside a submenu
+		parentH = elem_parent.height();
+		var elem_submenu_bottom = elem_parent.find('[find=submenu_wrapper_bottom]');
+		if(elem_submenu_bottom){
+			parentH -= elem_submenu_bottom.outerHeight();
+		}
 	}
+	else{ //not inside a submenu
+		parentH = $(window).height();
+		if(responsive.test("maxMobileL")){
+			parentH -= $('#app_content_menu').outerHeight();
+		}
+	}
+	parentH -= $('#app_content_top').outerHeight();
+
+	that.list_wrapper.height(parentH);
+	that.list_subwrapper.height(parentH - that.list_subwrapper.position()['top']);
+
+	
+
+/*
+
+	var parentH = 0;
+	var elem_parent = that.list_wrapper.parent();
+	if(elem_parent.hasClass('submenu_wrapper')){
+		parentH = elem_parent.height();
+		var elem_submenu_bottom = elem_parent.find('[find=submenu_wrapper_bottom]');
+		if(elem_submenu_bottom){
+			parentH -= elem_submenu_bottom.outerHeight();
+		}
+	}
+	else{
+		parentH = $(window).height();
+		if(responsive.test("maxMobileL")){
+			height -= $('#app_content_menu').outerHeight();
+		}
+	}
+
+	var height = parentH - $('#app_content_top').outerHeight(); /*- $('#app_layers_dev_skytasks_navbar').outerHeight()*/
+/*	
 	that.list_wrapper.height(height);
 	that.list_subwrapper.height(height - that.elem_navbar.outerHeight());
+	*/
 	//[toto] Bruno => a proposal to make it compatible with submenu/preview
 	//that.list_subwrapper.height(that.list_wrapper.parent().height() - that.list_subwrapper.position()['top']);
 }
