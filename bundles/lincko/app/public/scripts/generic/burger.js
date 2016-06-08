@@ -117,6 +117,9 @@ var burger = function(elem, burger_mode, item){
 		});
 	}//END OF burger_mode == regex
 	else if( burger_mode == '_users' ){
+		if(Lincko.storage.get("projects", app_content_menu.projects_id, "personal_private")){
+			return false;
+		}    
 		elem.click(function(event){
 			elem.focus();
 			event.stopPropagation();
@@ -166,10 +169,12 @@ var burger = function(elem, burger_mode, item){
 					elem_option_clone = elem_option.clone().attr('userid',userid);
 					elem_option_clone.find('[find=username]').html(username);
 					picID  = Lincko.storage.get("users", userid, 'profile_pic');
+					var thumb_url = app_application_icon_single_user.src;
 					if(picID){
-						var thumb_url = Lincko.storage.getLinkThumbnail(picID);
-						elem_option_clone.find('[find=profile_pic]').removeClass('icon-SmallPersonaiconBlack').css('background-image','url("'+thumb_url+'")');
+						thumb_url = Lincko.storage.getLinkThumbnail(picID);
 					}
+					elem_option_clone.find('[find=profile_pic]').css('background-image','url("'+thumb_url+'")');
+
 					if( in_charge ){
 						elem_option_clone.addClass('burger_option_selected');
 					}

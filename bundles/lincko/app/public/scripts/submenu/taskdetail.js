@@ -498,10 +498,12 @@ Submenu.prototype.Add_taskdetail = function() {
 		elem.find('[find=name]').html(created_by);
 
 		var picID  = Lincko.storage.get("users", comment['created_by'], 'profile_pic');
+		var thumb_url = app_application_icon_single_user.src;
 		if(picID){
-			var thumb_url = Lincko.storage.getLinkThumbnail(picID);
-			elem.find('[find=profile_pic]').removeClass('icon-SmallPersonaiconBlack').css('background-image','url("'+thumb_url+'")');
+			thumb_url = Lincko.storage.getLinkThumbnail(picID);
+			
 		}
+		elem.find('[find=profile_pic]').css('background-image','url("'+thumb_url+'")');
 
 		var created_at = new wrapper_date(comment['created_at']);
 		created_at = created_at.display('date_very_short');
@@ -620,11 +622,13 @@ Submenu.prototype.Add_taskdetail = function() {
 	var elem_addNewComment_text = elem_addNewComment_wrapper.find('[find=addNewComment_text]');
 	elem_addNewComment_bubble_wrapper.find('[find=name]').html(Lincko.storage.get("users", wrapper_localstorage.uid,"username"));
 	var picID  = Lincko.storage.get("users", wrapper_localstorage.uid, 'profile_pic');
+	var thumb_url = app_application_icon_single_user.src;
 	if(picID){
-		elem_addNewComment_bubble_wrapper.find('[find=profile_pic]')
-		.removeClass('icon-SmallPersonaiconBlack')
-		.css('background-image','url("'+Lincko.storage.getLinkThumbnail(picID)+'")');
+		thumb_url = Lincko.storage.getLinkThumbnail(picID);
+		
 	}
+	elem_addNewComment_bubble_wrapper.find('[find=profile_pic]')
+	.css('background-image','url("'+thumb_url+'")');
 
 	//array to hold comments entered to a new item(use it in sendAction after item is created)
 	var param_newItemComments = [];
