@@ -1497,6 +1497,8 @@ skylist.prototype.setHeight = function(){
 	}
 	that.list_wrapper.height(height);
 	that.list_subwrapper.height(height - that.elem_navbar.outerHeight());
+	//[toto] Bruno => a proposal to make it compatible with submenu/preview
+	//that.list_subwrapper.height(that.list_wrapper.parent().height() - that.list_subwrapper.position()['top']);
 }
 
 skylist.prototype.checkboxClick = function(event,elem_checkbox){

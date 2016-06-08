@@ -8,7 +8,7 @@ use \libs\STR;
 // To use it, we need to activate it on setData.php with in the merge: 'translation_list_js' => TranslationListJS::setList(),
 // This can be used as bellow to get JS translation file in a Twig file
 // {{ translation_list_js|raw }}
-// We do use ControllerTranslation because it gives a better feeling to load list.js than seeing all code in HTML code, but teh result is same
+// We do use ControllerTranslation because it gives a better feeling to load list.js than seeing all code in HTML code, but the result is same
 
 class TranslationListJS {
 

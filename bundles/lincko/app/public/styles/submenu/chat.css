@@ -96,6 +96,7 @@
 }
 
 .submenu_app_chat_invitation_accept {
+	display: inline-block;
 	background-color: #679E52;
 	padding: 4px 20px;
 	color: #FFFFFF;
@@ -114,6 +115,7 @@
 }
 
 .submenu_app_chat_invitation_reject {
+	display: inline-block;
 	background-color: #BE2B1E;
 	padding: 4px 20px;
 	color: #FFFFFF;
@@ -129,6 +131,25 @@
 .submenu_app_chat_invitation_reject:active {
 	background-color: #E14A3E;
 	border-color: #E14A3E;
+}
+
+.submenu_app_chat_invitation_invite {
+	display: inline-block;
+	background-color: #F99F25;
+	padding: 4px 20px;
+	color: #FFFFFF;
+	margin: 5px;
+	font-size: 12px;
+	border: 2px solid transparent;
+	border-radius: 3px;
+	box-sizing: border-box;
+}
+.submenu_app_chat_invitation_invite:hover {
+	border-color: #FBC479;
+}
+.submenu_app_chat_invitation_invite:active {
+	background-color: #FBC479;
+	border-color: #FBC479;
 }
 
 .submenu_deco_read.submenu_app_chat_deco {
@@ -168,33 +189,36 @@
 .submenu_app_chat_search_text_help {
 	position: absolute;
 	box-sizing: border-box;
-	height: 20px;
+	height: 24px;
 	padding: 2px 4px 2px 4px;
-	margin-top: 6px;
-	margin-bottom: 6px;
-	width: 90%;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	width: 94%;
 	outline: 0;
-	color: #CDCDCD;
+	color: #FBA026;
 	z-index: 2;
-	font-size: 12px;
+	font-size: 14px;
+	font-weight: 200;
 	cursor: text;
 }
 
 .submenu_app_chat_search {
 	background-color: #FFFFFF;
 	box-sizing: border-box;
-	height: 20px;
+	height: 24px;
 	padding: 2px 4px 2px 4px;
-	margin-top: 6px;
-	margin-bottom: 6px;
-	width: 90%;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	width: 94%;
 	border: 1px solid;
-	border-radius: 4px;
-	border-color: #E7E7E7;
+	border-radius: 3px;
+	border-color: #B5B5B5;
 	outline: 0;
 	z-index: 1;
-	font-size: 12px;
+	font-size: 14px;
+	font-weight: 200;
 	cursor: text;
+	text-align: left;
 }
 
 .submenu_app_chat_search:hover, .submenu_app_chat_search:active, .submenu_app_chat_search:focus {
@@ -217,4 +241,44 @@
 	width: 100%;
 	background-color: #EFEFEF;
 	text-align: center;
+}
+
+.submenu_app_chat_user_view {
+	margin-top: 10px;
+	background-color: #B6D6E8 !important;
+	cursor: default !important;
+}
+
+.submenu_deco_read.submenu_app_chat_invitation_deco {
+	background-color: transparent !important;
+}
+
+.submenu_padding.submenu_app_chat_invitation_sentence {
+	white-space: normal;
+}
+
+.submenu_app_chat_invitation_button {
+	text-align: center;
+	padding: 20px;
+}
+
+.submenu_deco_read.submenu_app_chat_user_searching {
+	width: 100%;
+	text-align: center;
+	height: 48px;
+	background-color: transparent;
+	border: none;
+}
+
+.submenu_app_chat_user_searching > img {
+	position: relative;
+	display: inline;
+	width: 25%;
+	height: 4px;
+	background-color: #B6D6E8;
+	border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.submenu_app_chat_block {
+	display: block !important;
 }

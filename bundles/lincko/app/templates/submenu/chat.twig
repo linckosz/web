@@ -15,8 +15,9 @@
 	</span>
 	<span class="submenu_padding submenu_app_chat_who base_MenuListText ellipsis" find="who"></span>{# toto: Issue if the username is very long, it hide the 2 buttons #}
 	<span class="submenu_padding display_none" find="invitation">
-		<span class="submenu_app_chat_invitation_accept base_pointer" find="accept">{{ _trans('app', 8, 4, 'html') }}{# Accept #}</span>
-		<span class="submenu_app_chat_invitation_reject base_pointer" find="reject">{{ _trans('app', 8, 5, 'html') }}{# Reject #}</span>
+		<span class="submenu_app_chat_invitation_accept base_pointer display_none" find="invitation_accept">{{ _trans('app', 8, 4, 'html') }}{# Accept #}</span>
+		<span class="submenu_app_chat_invitation_reject base_pointer display_none" find="invitation_reject">{{ _trans('app', 8, 5, 'html') }}{# Reject #}</span>
+		<span class="submenu_app_chat_invitation_invite base_pointer display_none" find="invitation_invite">{{ _trans('app', 8, 6, 'html') }}{# Invite #}</span>
 	</span>
 </div>
 
@@ -24,12 +25,23 @@
 	<span class="submenu_padding" find="submenu_title"></span>
 </div>
 
+<div id="-submenu_app_chat_new_email" class="submenu_deco_read submenu_app_chat_new_contact base_MainMenuItemsText">
+	<div class="submenu_padding submenu_app_chat_block submenu_app_chat_invitation_sentence" find="submenu_title"></div>
+	<div class="submenu_padding submenu_app_chat_block submenu_app_chat_invitation_button" find="invitation">
+		<span class="submenu_app_chat_invitation_invite base_pointer" find="invitation_invite">{{ _trans('app', 8, 6, 'html') }}{# Invite #}</span>
+	</div>
+</div>
+
+<div id="-submenu_app_chat_user_searching" class="submenu_deco_read submenu_app_chat_user_searching">
+	<img class="submit_progress_bar" src="{{ _filelatest('/lincko/launch/images/generic/base/generic/loading_bar.gif') }}"/>
+</div>
+
 <div id="-submenu_app_chat_add_user" class="submenu_app_chat_add_user">
-	<label class="" for="submenu_app_chat_search" find="submenu_app_chat_search">
+	<label for="submenu_app_chat_search" find="submenu_app_chat_search">
 		<span class="submenu_app_chat_search_text_help" find="submenu_app_chat_search_text_help">
 			<span>
 				<span class="icon-Search"></span>
-				<span>{{ _trans('app', 2, 3, 'html') }}{# Search #}</span>
+				<span>{{ _trans('app', 2, 12, 'html') }}{# E-mail address #}</span>
 			</span>
 		</span>
 		<input type="text" find="submenu_app_chat_search_input" class="submenu_app_chat_search base_MainMenuItemsText selectable" name="base_search_text" title="{{ _trans('app', 2, 3, 'html') }}{# Search #}"/>

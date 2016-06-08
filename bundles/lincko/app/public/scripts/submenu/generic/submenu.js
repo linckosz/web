@@ -789,12 +789,12 @@ Submenu.prototype.FocusForm = function() {
 				ElemFocus.focus();
 				return true;
 			}
-			ElemFocus = submenu_wrapper.find("textarea:enabled:visible:first");
+			ElemFocus = submenu_wrapper.find("textarea:enabled:visible:first:not(.no_focus)");
 			if (ElemFocus.length >= 1) {
 				ElemFocus.focus();
 				return true;
 			}
-			ElemFocus = submenu_wrapper.find("select:enabled:visible:first");
+			ElemFocus = submenu_wrapper.find("select:enabled:visible:first:not(.no_focus)");
 			if (ElemFocus.length >= 1) {
 				ElemFocus.focus();
 				return true;

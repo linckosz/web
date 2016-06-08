@@ -24,7 +24,7 @@ submenu_list['newchat'] = {
 	"right_button": {
 		"style": "title_right_button",
 		"title": "",
-		"class": "icon-SmallPersonaiconBlack base_pointer chat_add_person",
+		"class": "icon-SmallPersonaiconBlack base_pointer chat_add_person display_none",
 		"action": function(Elem, that) {
 			var all_users = [];
 			var checked_users = [];

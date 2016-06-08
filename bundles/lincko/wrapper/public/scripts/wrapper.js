@@ -132,7 +132,7 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 				+'ajaxOptions => '+ajaxOptions
 				+'\n'
 				+'thrownError => '+thrownError;
-			if(ajaxOptions!='abort' && ajaxOptions!='timeout'){
+			if(wrapper_show_error && ajaxOptions!='abort' && ajaxOptions!='timeout'){
 				JSerror.sendError(msg, '/wrapper.js/wrapper_ajax().error()', 0);
 			}
 			if(ajaxOptions!='abort'){

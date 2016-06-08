@@ -128,7 +128,7 @@ var mainMenu = (function() {
 		});
 
 		$("#app_project_chat header").on("click", function() {
-			submenu_Build('mainchat');
+			submenu_Build('chat');
 		});
 
 	}
