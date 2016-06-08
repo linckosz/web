@@ -428,8 +428,8 @@
 }
 .skylist_newcardCircle:before {
 	position: absolute;
-	right: -4px;
-	top: -4px;
+	right: -5px;
+	top: -5px;
 }
 .skylist_newcardCircle:hover {
 	opacity: 0.5;
