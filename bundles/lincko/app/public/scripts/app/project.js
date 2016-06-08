@@ -261,9 +261,9 @@ $('#app_project_settings_img').click(function(){
 });
 
 $('#app_project_quick_access_tasks').click(function(){
-	var personalSpace = Lincko.storage.list('projects',1,{personal_private: wrapper_localstorage.uid});
+	var personalSpace = Lincko.storage.getMyPlaceholder();
 	if(personalSpace){
-		personalSpace = personalSpace[0]['_id'];
+		personalSpace = personalSpace['_id'];
 		submenu_Build('taskdetail', null, null, 
 			{
 				type:'tasks',
@@ -275,9 +275,9 @@ $('#app_project_quick_access_tasks').click(function(){
 });
 
 $('#app_project_quick_access_notes').click(function(){
-	var personalSpace = Lincko.storage.list('projects',1,{personal_private: wrapper_localstorage.uid});
+	var personalSpace = Lincko.storage.getMyPlaceholder();
 	if(personalSpace){
-		personalSpace = personalSpace[0]['_id'];
+		personalSpace = personalSpace['_id'];
 		submenu_Build('taskdetail', null, null, 
 			{
 				type:'notes',
