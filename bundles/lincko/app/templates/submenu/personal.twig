@@ -1,17 +1,17 @@
 {# category 11 #}
 <div id="-submenu_app_personal_next" class="base_optionTab submenu_deco submenu_personal_next_deco">
 	<span class="submenu_padding submenu_personal_next_picture base_SortMenuSelectedText" find="submenu_next_picture">
-		<img class="submenu_icon submenu_personal_next_picture_image base_pointer" find="submenu_next_upload_picture" preview="0" src="/lincko/app/images/submenu/settings/user.png">
+		<img class="submenu_icon submenu_personal_next_picture_image base_pointer" find="submenu_next_upload_picture" preview="0" src="{{ _filelatest('/lincko/app/images/submenu/settings/user.png') }}">
 	</span>
 	<span class="submenu_padding submenu_personal_next_user">
 		<span find="submenu_next_user"></span>
-		<img class="submenu_icon submenu_icon_next floatright" src="/lincko/app/images/submenu/next.png">
+		<img class="submenu_icon submenu_icon_next floatright" src="{{ _filelatest('/lincko/app/images/submenu/next.png') }}">
 	</span>
 </div>
 
 <div id="-submenu_app_personal_profile" class="base_optionTab submenu_deco_read submenu_personal_profile_deco">
 	<span class="submenu_padding submenu_personal_profile_picture base_SortMenuSelectedText" find="submenu_profile_picture">
-		<img class="submenu_icon submenu_personal_profile_picture_image base_pointer" find="submenu_profile_upload_picture" preview="0" src="/lincko/app/images/submenu/settings/user.png">
+		<img class="submenu_icon submenu_personal_profile_picture_image base_pointer" find="submenu_profile_upload_picture" preview="0" src="{{ _filelatest('/lincko/app/images/submenu/settings/user.png') }}">
 	</span>
 	<span class="submenu_padding submenu_personal_profile_user" find="submenu_profile_user">
 		{{ _trans('app', 11, 1, 'html') }}{# Profile Photo #}

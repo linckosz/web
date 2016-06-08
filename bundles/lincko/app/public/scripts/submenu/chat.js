@@ -96,7 +96,8 @@ Submenu.prototype.Add_ChatMenu = function() {
 		if(!$(this).hasClass('submenu_app_chat_chatmenu_icon_active')){
 			submenu_chat_select('chats', Elem);
 			submenu_Clean(that.layer+1, true);
-			that.Wrapper().find("[find=submenu_title]").html(Lincko.Translation.get('app', 2301, 'html')); //Chat room
+			$("#"+that.id+"_submenu_top_button_right").addClass("display_none");
+			that.Wrapper().find("[find=submenu_wrapper_top]").find("[find=submenu_title]").html(Lincko.Translation.get('app', 2301, 'html')); //Chats
 			that.Add_ChatContent();
 		}
 	});
@@ -104,7 +105,8 @@ Submenu.prototype.Add_ChatMenu = function() {
 		if(!$(this).hasClass('submenu_app_chat_chatmenu_icon_active')){
 			submenu_chat_select('contacts', Elem);
 			submenu_Clean(that.layer+1, true);
-			that.Wrapper().find("[find=submenu_title]").html(Lincko.Translation.get('app', 2302, 'html')); //Contacts list
+			$("#"+that.id+"_submenu_top_button_right").removeClass("display_none");
+			that.Wrapper().find("[find=submenu_wrapper_top]").find("[find=submenu_title]").html(Lincko.Translation.get('app', 2302, 'html')); //Contacts list
 			that.Add_ChatContacts();
 		}
 	});
@@ -115,7 +117,12 @@ Submenu.prototype.Add_ChatMenu = function() {
 		Elem.addClass(attribute['class']);
 	}
 	submenu_wrapper.find("[find=submenu_wrapper_bottom]").append(Elem);
-	Elem.find("[find=select_chats]").click();
+	if(this.param){
+		Elem.find("[find=select_contacts]").click();
+	} else {
+		Elem.find("[find=select_chats]").click();
+	}
+	
 	//Free memory
 	delete submenu_wrapper;
 	return true;
@@ -162,6 +169,8 @@ Submenu.prototype.Add_ChatContacts = function() {
 		thumbnail = Lincko.storage.getLinkThumbnail(contacts[i]['profile_pic']);
 		if(thumbnail){
 			Elem.find("[find=picture_src]").prop("src", thumbnail);
+		} else {
+			Elem.find("[find=picture_src]").prop("src", app_application_icon_single_user.src);
 		}
 		Elem.find("[find=who]").html(contacts[i]['-username'].ucfirst());
 		Elem.find("[find=invitation]").removeClass("display_none");
@@ -215,6 +224,8 @@ Submenu.prototype.Add_ChatContacts = function() {
 		thumbnail = Lincko.storage.getLinkThumbnail(contacts[i]['profile_pic']);
 		if(thumbnail){
 			Elem.find("[find=picture_src]").prop("src", thumbnail);
+		} else {
+			Elem.find("[find=picture_src]").prop("src", app_application_icon_single_user.src);
 		}
 		Elem.find("[find=who]").html(contacts[i]['-username'].ucfirst());
 		Elem.click(function(){
@@ -236,30 +247,30 @@ Submenu.prototype.Add_ChatAddUser = function() {
 	var Elem = $('#-submenu_app_chat_add_user').clone();
 	Elem.prop("id", "");
 	Elem.find("[find=submenu_app_chat_search]").on({
-		focus: function(e){ e.stopPropagation(); submenu_chat_label(this, true); },
-		click: function(e){ e.stopPropagation(); submenu_chat_label(this, true); },
-		blur: function(e){ e.stopPropagation(); submenu_chat_label(this); },
-		change: function(e){ e.stopPropagation(); submenu_chat_label(this); },
-		copy: function(e){ e.stopPropagation(); submenu_chat_label(this); },
-		past: function(e){ e.stopPropagation(); submenu_chat_label(this, true); },
-		cut: function(e){ e.stopPropagation(); submenu_chat_label(this); },
+		focus: function(e){ e.stopPropagation(); submenu_chat_label(this, that, true); },
+		click: function(e){ e.stopPropagation(); submenu_chat_label(this, that, true); },
+		blur: function(e){ e.stopPropagation(); submenu_chat_label(this, that); },
+		change: function(e){ e.stopPropagation(); submenu_chat_label(this, that); },
+		copy: function(e){ e.stopPropagation(); submenu_chat_label(this, that); },
+		past: function(e){ e.stopPropagation(); submenu_chat_label(this, that, true); },
+		cut: function(e){ e.stopPropagation(); submenu_chat_label(this, that); },
 		keyup: function(e) {
 			e.stopPropagation(); 
 			if (e.which != 13) {
-				submenu_chat_label(this);
+				submenu_chat_label(this, that);
 			}
 		},
 		keypress: function(e) {
 			e.stopPropagation(); 
 			if (e.which == 13) {
-				submenu_chat_label(this, false, true);
+				submenu_chat_label(this, that, false, true);
 			}
 		},
 	});
 	Elem.find("[find=submenu_app_chat_search_input]").addClass('no_focus');
 	submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
 
-	/*
+	
 	//User card
 	var Elem = $('#-submenu_app_chat_chat_contact').clone();
 	Elem.prop("id", this.id+"_user");
@@ -272,7 +283,7 @@ Submenu.prototype.Add_ChatAddUser = function() {
 	var Elem = $('#-submenu_app_chat_new_contact').clone();
 	Elem.prop("id", this.id+"_info");
 	Elem.addClass('submenu_app_chat_invitation_deco display_none');
-	Elem.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2308, 'js')); //No result
+	Elem.find("[find=submenu_title]").html('');
 	Elem.find("[find=submenu_title]").addClass('submenu_app_chat_invitation_sentence');
 	submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
 
@@ -280,7 +291,7 @@ Submenu.prototype.Add_ChatAddUser = function() {
 	var Elem = $('#-submenu_app_chat_new_email').clone();
 	Elem.prop("id", this.id+"_email");
 	Elem.addClass('submenu_app_chat_invitation_deco display_none');
-	Elem.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2307, 'js', {email: 'toto@toto.com',})); //[{email}] is not currently using Lincko. Would you like to send an invitation to sign up?
+	Elem.find("[find=submenu_title]").html("");
 	submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
 
 	//Loading bar
@@ -288,67 +299,65 @@ Submenu.prototype.Add_ChatAddUser = function() {
 	Elem.prop("id", this.id+"_searching");
 	Elem.addClass('display_none');
 	submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
-	*/
+	
+	submenu_chat_new_user_result(that);
 
 	delete submenu_wrapper;
 	return true;
 };
 
-var submenu_chat_new_user_result = function(that) {
+var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) {
+	if(typeof data == "undefined"){ data = ""; }
+	if(typeof chat_status == "string"){ sub_that.chat_status = chat_status; }
+	chat_status = sub_that.chat_status;
+	if(typeof param == "undefined"){ param = null; }
 
-	//Elem = $("#"+that.id);
-	//console.log(that.chat_status);
-	//Elem.find("[find=_user]").addClass("display_none");
+	Elem = $("#"+sub_that.id);
+	Elem_user = $("#"+sub_that.id+"_user");
+	Elem_info = $("#"+sub_that.id+"_info");
+	Elem_email = $("#"+sub_that.id+"_email");
+	Elem_searching = $("#"+sub_that.id+"_searching");
 
-	/*
-	//User card
-	var Elem = $('#-submenu_app_chat_chat_contact').clone();
-	Elem.prop("id", this.id+"_user");
-	Elem.addClass("submenu_app_chat_user_view display_nonee");
-	Elem.find("[find=invitation]").removeClass("display_none");
-	Elem.find("[find=invitation_invite]").removeClass("display_none").on("click", 0, function(event) {
-		event.stopPropagation();
-		console.log('invite: '+event.data);
-		
-		var users_id = event.data[0];
-		var param = {
-			id: wrapper_localstorage.uid,
-			"users>access": {},
-		};
-		param["users>access"][users_id] = false;
-		wrapper_sendAction(
-			param,
-			'post',
-			'user/update',
-			function(){
-				app_application_lincko.prepare('contacts_list', true);
-			}
-		);
-		
-	});
-	submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
+	Elem_user.addClass("display_none");
+	Elem_info.addClass("display_none");
+	Elem_email.addClass("display_none");
+	Elem_searching.addClass("display_none");
 
-	var Elem = $('#-submenu_app_chat_new_contact').clone();
-	Elem.prop("id", this.id+"_info");
-	Elem.addClass('submenu_app_chat_invitation_deco display_nonee');
-	Elem.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2308, 'js')); //No result
-	Elem.find("[find=submenu_title]").addClass('submenu_app_chat_invitation_sentence');
-	submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
-
-	var Elem = $('#-submenu_app_chat_new_email').clone();
-	Elem.prop("id", this.id+"_email");
-	Elem.addClass('submenu_app_chat_invitation_deco display_nonee');
-	Elem.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2307, 'js', {email: 'toto@toto.com',})); //[{email}] is not currently using Lincko. Would you like to send an invitation to sign up?
-	submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
-
-	var Elem = $('#-submenu_app_chat_user_searching').clone();
-	Elem.prop("id", this.id+"_searching");
-	Elem.addClass('display_nonee');
-	submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
-	*/
+	if(chat_status == "invited"){
+		Elem_info.removeClass("display_none");
+		Elem_info.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2309, 'js', {email: data,})); //Your invitation has been sent to [{email}].
+	}
+	else if(chat_status == "invitation"){
+		Elem_email.removeClass("display_none");
+		Elem_email.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2307, 'js', {email: data,})); //[{email}] is not currently using Lincko. Would you like to send an invitation to sign up?
+	}
+	else if(chat_status == "searching"){
+		Elem_searching.removeClass("display_none");
+	}
+	else if(chat_status == "found" && data && data['id'] && typeof data['profile_pic']!="undefined" && typeof data['username']!="undefined"){
+		Elem_user.removeClass("display_none");
+		console.log(data);
+		console.log(data['profile_pic']);
+		console.log ( Lincko.storage.get("files", data['profile_pic']) );
+		if(Lincko.storage.get("files", data['profile_pic'])){
+			Elem_user.find("[find=picture_src]").prop("src", Lincko.storage.getLinkThumbnail(data['profile_pic']));
+		} else {
+			Elem.find("[find=picture_src]").prop("src", app_application_icon_single_user.src);
+		}
+		Elem_user.find("[find=who]").html(data['username'].ucfirst());
+	}
+	else if(chat_status == "myself"){
+		Elem_info.removeClass("display_none");
+		Elem_info.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2310, 'js', {email: data,})); //This is your account.
+	}
+	else { //noresult
+		Elem_info.removeClass("display_none");
+		Elem_info.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2308, 'js')); //No result
+	}
+	
 }
 
-var submenu_chat_label = function(that, focus, force) {
+var submenu_chat_label = function(that, sub_that, focus, force) {
 	if(typeof focus == 'undefined'){ focus = false; }
 	if(typeof force == 'undefined'){ force = false; }
 	Elem = $(that);
@@ -367,9 +376,9 @@ var submenu_chat_label = function(that, focus, force) {
 		input.focus();
 	}
 	if(force){
-		submenu_chat_search.find(that, 0, true);
+		submenu_chat_search.find(sub_that, 0, true);
 	} else {
-		submenu_chat_search.find(that);
+		submenu_chat_search.find(sub_that);
 	}
 	
 }
@@ -382,54 +391,46 @@ var submenu_chat_select = function(opt, Elem){
 	Elem.find("[find=select_"+opt+"]").addClass('submenu_app_chat_chatmenu_icon_active');
 }
 
-var valid = function(text){
-	var regex_1 = /^.{1,191}$/g;
-	var regex_2 = /^.{1,100}@.*\..{2,4}$/gi;
-	var regex_3 = /^[_a-z0-9-%+]+(\.[_a-z0-9-%+]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/gi;
-	return regex_1.test(text) && regex_2.test(text) && regex_3.test(text);
-}
-var submenu_chat_searchTiming = null;
-var submenu_chat_searchValue = '';
 var submenu_chat_search = {
 
 	timing: null,
 
 	value: null,
 
+	data: {
+		sub_that: null,
+		email: null,
+		users_id: null,
+	},
+
 	find: function(sub_that, timer, force){
-		var that = this;
-		var Elem = $(sub_that);
+		var Elem = $("#"+sub_that.id);
 		var input = Elem.find("[find=submenu_app_chat_search_input]");
 		var param = input.val();
 		if(typeof timer !== 'number'){ timer = 600; } //Add a small timeout of 600ms to let the use be able to finish 
 		if(typeof force !== 'boolean'){ force = false; }
 		
-		if((responsive.test("minTablet") || force) && param.length>=2 && this.value !== param && this.valid_email(param)){
-			clearTimeout(this.timing);
-			this.timing = setTimeout(function(){
-				that.value = param;
-				console.log(param);
-				submenu_chat_new_user_result(sub_that);
-				/*
-				var users_id = event.data[0];
-				var param = {
-					id: wrapper_localstorage.uid,
-					"users>access": {},
-				};
-				param["users>access"][users_id] = false;
+		if((responsive.test("minTablet") || force) && param.length>=2 && submenu_chat_search.value !== param && submenu_chat_search.valid_email(param)){
+			clearTimeout(submenu_chat_search.timing);
+			submenu_chat_search.timing = setTimeout(function(){
+				var email = param;
+				submenu_chat_search.value = param;
+				submenu_chat_search.data = {
+					sub_that: sub_that,
+					email: email,
+					users_id: null,
+				}
 				wrapper_sendAction(
-					param,
+					email,
 					'post',
-					'user/update',
-					function(){
-						app_application_lincko.prepare('contacts_list', true);
-					}
+					'user/find',
+					submenu_chat_search_cb_success,
+					submenu_chat_search_cb_error,
+					submenu_chat_search_cb_begin
 				);
-				*/
-
 			}, timer);
 		} else if(param.length<2){
-			clearTimeout(this.timing);
+			clearTimeout(submenu_chat_search.timing);
 		}
 	},
 
@@ -439,6 +440,33 @@ var submenu_chat_search = {
 		var regex_3 = /^[_a-z0-9-%+]+(\.[_a-z0-9-%+]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/gi;
 		return regex_1.test(text) && regex_2.test(text) && regex_3.test(text);
 	}
+};
+
+var submenu_chat_search_cb_success = function(msg, error, status, data){
+	if(data.data){
+		data = data.data;
+	} else {
+		data = false;
+	}
+	if(typeof data == "object"){
+		if(data.myself){
+			submenu_chat_new_user_result(submenu_chat_search.data.sub_that, data, "myself");
+		} else {
+			submenu_chat_new_user_result(submenu_chat_search.data.sub_that, data, "found");
+		}
+	} else if(data){
+		submenu_chat_new_user_result(submenu_chat_search.data.sub_that, submenu_chat_search.data.email, "invitation");
+	} else {
+		submenu_chat_new_user_result(submenu_chat_search.data.sub_that, null, "noresult");
+	}
+};
+
+var submenu_chat_search_cb_error = function(){
+	submenu_chat_new_user_result(submenu_chat_search.data.sub_that, null, "noresult");
+};
+
+var submenu_chat_search_cb_begin = function(){
+	submenu_chat_new_user_result(submenu_chat_search.data.sub_that, submenu_chat_search.data.email, "searching");
 };
 
 Submenu.prototype.Add_ChatContent = function() {
@@ -459,7 +487,7 @@ Submenu.prototype.Add_ChatContent = function() {
 			this.list_wrapper.addClass("skylist_maxMobileL_force");
 		}
 	);
-toto = app_layers_chatlist;
+
 	submenu_wrapper.find("[find=search_textbox]").addClass('no_focus');
 
 	/*

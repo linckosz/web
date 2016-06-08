@@ -289,7 +289,7 @@ $('#app_project_quick_access_notes').click(function(){
 });
 
 $('#app_project_quick_access_chat').click(function(){
-	submenu_Build("chat");
+	submenu_Build('chat', 1, true, true);
 });
 
 $('#app_project_project_new').click(function(){
@@ -553,12 +553,6 @@ var app_project_info = {
 	},
 }
 
-/*
-	Lincko.storage.searchTimer('word', 'autocut');
-	Lincko.storage.searchTimer('word', 'a', 'projects');
-*/
-var app_project_searchTiming = null;
-var app_project_searchValue = '';
 var app_project_search = {
 
 	timing: null,

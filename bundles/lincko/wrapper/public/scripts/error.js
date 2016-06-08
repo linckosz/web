@@ -21,6 +21,8 @@ var JSerror = new function() {
 			that.setup();
 		}
 
+		message = JSON.stringify(message, null, 4)
+
 		var log = "COMP: "+this.yourplatform+" / "+this.youroscpu+" / "+this.colourbits+" / "+this.yourscreen+" / Javascript "+this.jsversion+" / "+this.javasupport+"\nBROW: "+this.yourappalt+"\nLINE: "+linenumber;
 		if(typeof colnumber!=='undefined' && colnumber!==null){
 			log = log+"\nCOL : "+colnumber;

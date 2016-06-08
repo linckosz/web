@@ -333,7 +333,7 @@ Submenu.prototype.Add_TitleLeftButton = function() {
 	var attribute = this.attribute;
 	var Elem = $('#-submenu_top_button').clone();
 	var preview = this.preview;
-	Elem.prop("id", '');
+	Elem.prop("id", this.id+"_submenu_top_button_left");
 	Elem.html(attribute.title);
 	if ("hide" in attribute) {
 		if (attribute.hide) {
@@ -370,7 +370,7 @@ Submenu.prototype.Add_TitleRightButton = function() {
 	var attribute = this.attribute;
 	var Elem = $('#-submenu_top_button').clone();
 	var preview = this.preview;
-	Elem.prop("id", '');
+	Elem.prop("id", this.id+"_submenu_top_button_right");
 	Elem.html(attribute.title);
 	if ("hide" in attribute) {
 		if (attribute.hide) {

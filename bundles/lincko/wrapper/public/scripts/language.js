@@ -47,7 +47,7 @@ Translation_filter = function(text, param){
 					continue;
 				}
 			}
-			text = text.replaceAll(search, '"'+Lincko.Translation.get('app', 21, 'html')+'"');
+			text = text.replaceAll(search, Lincko.Translation.get('app', 21, 'js')); //Unknown
 		}
 	}
 	return wrapper_to_html(text);

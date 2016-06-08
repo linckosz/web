@@ -43,7 +43,11 @@ class TranslationListJS {
 				}
 				return text;
 			} else {
-				return \"[".$app->trans->getJS('wrapper', 1, 2)."]\"; //[unknown value]  
+				if(format_tp=='html'){
+					return \"&quot;".$app->trans->getJS('wrapper', 1, 2)."&quot;\"; //[unknown value]  
+				} else {
+					return \"[".$app->trans->getBRUT('wrapper', 1, 2)."]\"; //[unknown value]  
+				}
 			}
 		};\n";
 

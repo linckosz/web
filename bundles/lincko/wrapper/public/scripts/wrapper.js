@@ -6,6 +6,7 @@ var wrapper_shangzai = {
 		puk: null,
 };
 var wrapper_set_shangzai = true;
+var wrapper_xhr_error = false;
 
 // Because "const" seems to not work in some browsers
 // http://stackoverflow.com/questions/24370447/the-const-keyword-in-javascript
@@ -103,7 +104,7 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 				msg = '';
 			}
 			if(data.error){
-				JSerror.sendError(JSON.stringify(data), '/wrapper.js/wrapper_ajax().success()', 0);
+				JSerror.sendError(JSON.stringify(data, null, 4), '/wrapper.js/wrapper_ajax().success()', 0);
 				console.log(data);
 			}
 			if(data.shangzai && data.shangzai.puk){
@@ -132,8 +133,11 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 				+'ajaxOptions => '+ajaxOptions
 				+'\n'
 				+'thrownError => '+thrownError;
-			if(wrapper_show_error && ajaxOptions!='abort' && ajaxOptions!='timeout'){
+			//if(wrapper_show_error && ajaxOptions!='abort' && ajaxOptions!='timeout'){
+			//if(false){ //[toto] Temporary avoid to display so many connexion error logs
+			if(!wrapper_xhr_error && ajaxOptions!='abort' && ajaxOptions!='timeout'){
 				JSerror.sendError(msg, '/wrapper.js/wrapper_ajax().error()', 0);
+				wrapper_xhr_error = true;
 			}
 			if(ajaxOptions!='abort'){
 				console.log(msg);

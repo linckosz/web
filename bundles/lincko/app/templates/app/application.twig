@@ -10,6 +10,8 @@
 		JSfiles.later("{{ _filelatest('/lincko/app/scripts/generic/velocity.js') }}");
 		JSfiles.later("{{ _filelatest('/lincko/app/scripts/generic/previewer.js') }}");
 		JSfiles.later("{{ _filelatest('/lincko/app/scripts/app/users.js') }}");
+		var app_application_icon_single_user = new Image();
+		app_application_icon_single_user.src = "{{ _filelatest('/lincko/app/images/submenu/settings/user.png') }}";
 	</script>
 	{% include '/bundles/lincko/app/templates/generic/scripts/storage.js.twig' %}
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/app/application.css') }}" type="text/css" />
