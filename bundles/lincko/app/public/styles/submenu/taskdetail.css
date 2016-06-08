@@ -154,6 +154,16 @@ td.submenu_taskdetail_share .fa{
 	text-align: left;
 }
 
+.submenu_taskdetail_description button.toolbar-insert-image{
+	opacity: 0.4;
+	cursor: initial;
+}
+.submenu_taskdetail_description button.toolbar-insert-image:hover{
+	box-shadow: none;
+}
+
+
+
 /*----END OF easyEditor--------------*/
 
 

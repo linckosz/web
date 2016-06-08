@@ -1044,7 +1044,7 @@ Submenu.prototype.Add_taskdetail = function() {
 /*-----linckoEditor------------------------------------*/
 function linckoEditor(elem){
 	var options = {
-		buttons: [ 'h', 'h1', 'h2', 'h3', 'h4', 'p', 'bold', 'italic', 'list', 'alignleft', 'aligncenter', 'alignright', 'x'],
+		buttons: [ 'h', 'h1', 'h2', 'h3', 'h4', 'p', 'bold', 'italic', 'list', 'alignleft', 'aligncenter', 'alignright', 'x', 'image'],
 		buttonsHtml: {
 			'italic': '<i class="fa fa-italic"></i>',
 			'header': '<i class="fa fa-header"></i>',
@@ -1056,7 +1056,7 @@ function linckoEditor(elem){
 			'align-left': '<i class="fa fa-align-left"></i>',
 			'align-center': '<i class="fa fa-align-center"></i>',
 			'align-right': '<i class="fa fa-align-right"></i>',
-			'insert-image': '<i class="fa fa-picture-o"></i>',
+			'insert-image': '<i class="fa fa-picture-o" title="Coming Soon!"></i>',
 			'remove-formatting': '<i class="fa fa-ban"></i>'
 		},
 		overwriteButtonSettings: {
@@ -1179,6 +1179,7 @@ EasyEditor.prototype.image = function(){
 		buttonIdentifier: 'insert-image',
 		buttonHtml: 'Insert image',
 		clickHandler: function(){
+			return;
 			_this.openModal('#easyeditor-modal-1');
 		}
 	};
