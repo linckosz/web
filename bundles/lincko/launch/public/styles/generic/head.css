@@ -114,3 +114,21 @@
 #head_signin > span:hover {
 	border-color: currentColor;
 }
+
+
+/*
+ * JOIN US
+ */
+
+#head_joinus {
+	cursor: default;
+}
+
+#head_joinus > span {
+	border-bottom: 2px solid transparent;
+	padding-top: 2px;
+	cursor: pointer; cursor: hand;
+}
+#head_joinus > span:hover {
+	border-color: currentColor;
+}

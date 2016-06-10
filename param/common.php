@@ -61,7 +61,7 @@ $app->config(array(
 	'mode' => 'production',
 	'cookies.encrypt' => true, //Must use $app->getCookie('foo', false);
 	'cookies.secret_key' => 'au6G7dbSh87Ws',
-	'cookies.lifetime' => '365 days',
+	'cookies.lifetime' => '90 days',
 	'cookies.secure' => true,
 	'cookies.path' => '/',
 	'cookies.httponly' => true,

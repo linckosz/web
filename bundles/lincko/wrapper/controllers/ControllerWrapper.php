@@ -40,6 +40,9 @@ class ControllerWrapper extends Controller {
 		if(isset($_SESSION['workspace'])){
 			$this->json['workspace'] = $_SESSION['workspace'];
 		}
+		if(isset($_SESSION['invitation_code'])){
+			$this->json['data']['invitation_code'] = $_SESSION['invitation_code'];
+		}
 		if(!OneSeventySeven::get('yuyan')) {
 			OneSeventySeven::set(array('yuyan' => $this->json['language']));
 		}

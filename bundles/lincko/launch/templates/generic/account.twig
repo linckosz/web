@@ -14,7 +14,7 @@
 		<div class="account_tab" id="account_tab_lincko">
 			<div>Lincko</div>
 		</div>
-		{% if beta_code %}
+		{% if invitation_code %}
 			<div class="account_tab">
 				<div class="account_trans" id="account_tab_joinus"><div class="account_tab_joinus">{{ _trans('web', 5, 1, 'html') }}{# Join Us #}</div></div>
 				<div class="account_trans" id="account_tab_signin"><div class="account_tab_signin">{{ _trans('web', 5, 4, 'html') }}{# Sign In #}</div></div>
@@ -22,7 +22,7 @@
 		{% endif %}
 		<div id="account_joinus_box">
 			<form class="account_form" id="account_joinus_form" action="user/create" method="post" onsubmit="return wrapper_sendForm(this, account_joinus_cb_success, account_joinus_cb_error, account_joinus_cb_begin, account_joinus_cb_complete);">
-				<div class="{% if beta_code %}account_joinus_box_div{% endif %}">
+				<div class="{% if invitation_code %}account_joinus_box_div{% endif %}">
 					<label class="account_label_inside" for="account_joinus_email">
 						<span>{{ _trans('web', 5, 2, 'html') }}{# Email #}</span>
 						<input type="email" id="account_joinus_email" name="email" value="" class="selectable" />
@@ -50,7 +50,7 @@
 		</div>
 		<div id="account_signin_box">
 			<form class="account_form" id="account_signin_form" action="user/signin" method="post" onsubmit="return wrapper_sendForm(this, account_signin_cb_success, account_signin_cb_error, account_signin_cb_begin, account_signin_cb_complete);">
-				<div class="{% if beta_code %}account_signin_box_div{% endif %}">
+				<div class="{% if invitation_code %}account_signin_box_div{% endif %}">
 					<label class="account_label_inside" for="account_signin_email">
 						<span>{{ _trans('web', 5, 2, 'html') }}{# Email #}</span>
 						<input type="email" id="account_signin_email" name="email" value="{{ youjian|lower }}" class="selectable" />

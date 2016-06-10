@@ -63,6 +63,15 @@ document.linckoBackPort = 8443;
 	}
 {% endif %}
 
+//In IE console is undefined if the dev tool is closed
+if(!window.console){
+	console = {
+		log: function() {
+			return true;
+		}
+	};
+}
+
 var wrapper_link = [];
 wrapper_link['home'] = "{{ urlFor('home') }}";
 

@@ -616,12 +616,6 @@ $('#app_project_workspace').click(function(){
 	app_content_menu.selection(-1, 'statistics');
 });
 
-var app_project_img_user_male = new Image();
-app_project_img_user_male.src = app_project_img_user_male_src;
-var app_project_img_user_female = new Image();
-app_project_img_user_female.src = app_project_img_user_female_src;
-$('#app_project_user_image').attr('src', app_project_img_user_male.src);
-
 var app_project_tab_timer;
 JSfiles.finish(function(){
 	$('#app_project_recent').hide();

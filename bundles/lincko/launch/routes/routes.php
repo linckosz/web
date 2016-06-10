@@ -19,16 +19,15 @@ $app->get('/home', function () use($app) {
 })
 ->name('home');
 
-$app->get('/beta/:beta_code', function ($beta_code) use ($app) {
+$app->get('/invitation/:invitation_code', function ($invitation_code) use ($app) {
 	$app = \Slim\Slim::getInstance();
-	//We need to insure we are working outside a workspace
-	$app->lincko->data['beta_code'] = $_SESSION['beta_code'] = $beta_code;
+	$app->lincko->data['invitation_code'] = $_SESSION['invitation_code'] = $invitation_code;
 	$app->router->getNamedRoute('home')->dispatch();
 })
 ->conditions(array(
-	'total_num' => '[a-z0-9]{6}',
+	'invitation_code' => '[a-z0-9]{8}',
 ))
-->name('beta');
+->name('invitation');
 
 $app->get(
 	'/mailchimp',

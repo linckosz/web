@@ -14,7 +14,6 @@ function getFingerprint(){
 function SetData(){
 	$app = \Slim\Slim::getInstance();
 	$logged = false;
-
 	
 	if(
 		   //Minimum fields required to display offline
