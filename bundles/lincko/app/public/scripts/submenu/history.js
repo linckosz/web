@@ -1,5 +1,6 @@
 /* Category 31 */
 var chatFeed = (function() {
+	var subm = null;
 	var SHORTCUT_HANDLERS = {
 		'files': function(id, elem) {
 			var file = Lincko.storage.get('files', id);
@@ -266,7 +267,8 @@ var chatFeed = (function() {
 	};
 
 
-	function app_layers_history_launchPage(position, type, projectId) {
+	function app_layers_history_launchPage(position, type, projectId, subm) {
+			chatFeed.subm = subm;
 			position.addClass('overthrow').addClass("submenu_chat_contents");
 			position.empty();
 			app_layers_history_feedPage(position, type, projectId);
@@ -288,13 +290,13 @@ var chatFeed = (function() {
 		var newRange = firstIndex + "-" + lastIndex;
 
 		var items = getRawContents(type, parentId, newRange);
-		v$('<div>').addClass('chat_contents_wrapper').prop("id", this.id+'_chat_contents_wrapper').appendTo(position);
+		$('<div>').addClass('chat_contents_wrapper').prop("id", chatFeed.subm.id+'_chat_contents_wrapper').appendTo(position);
 		format_items(type, items, position);
 	}
 
 	function app_layers_history_feedPage(position, type, parentId) {
 		var items = getRawContents(type, parentId, null);
-		$('<div>').addClass('chat_contents_wrapper').prop("id", this.id+'_chat_contents_wrapper').appendTo(position);
+		$('<div>').addClass('chat_contents_wrapper').prop("id", chatFeed.subm.id+'_chat_contents_wrapper').appendTo(position);
 		format_items(type, items, position);
 	}
 
@@ -349,11 +351,13 @@ var chatFeed = (function() {
 			var parent = $(this).parents('.models_history_wrapper');
 			var category = parent.attr('category');
 			var id = RESOURCE_ID[category](parent.prop("id"));
-
 			var that = this;
 			RESOURCE_HANDLERS[category](id, that);
 			return false;
 		});
+
+		setTimeout(function(){ app_application_lincko.prepare("submenu_show", true); }, 600);
+
 	}
 
 	return {

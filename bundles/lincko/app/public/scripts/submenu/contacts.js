@@ -128,8 +128,8 @@ Submenu.prototype._prepare_contactsList = function() {
 }
 
 
-Submenu_select.contacts = function(Elem) {
-	Elem.Add_ContactContents();
+Submenu_select.contacts = function(subm) {
+	subm.Add_ContactContents();
 }
 
 /*This "getContacts" method needs to be used in submit acction*/

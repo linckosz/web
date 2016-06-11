@@ -9,6 +9,7 @@
 }
 
 #app_application_project {
+	position: relative; /* toto does allow animation of main menu */
 	display: table-cell;
 	width: 0;
 	height: 100%;

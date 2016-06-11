@@ -32,95 +32,69 @@ var animation_map_preview = {
 }
 
 var Submenu_select = {
-	prefix: function(Elem) {
-		Elem.prefix = Elem.attribute.title;
+	prefix: function(subm) {
+		subm.prefix = subm.attribute.title;
 	},
 
-	title: function(Elem) {
-		Elem.Add_MenuTitle();
+	title: function(subm) {
+		subm.Add_MenuTitle();
 	},
 
-	title_left_button: function(Elem) {
-		Elem.Add_TitleLeftButton();
+	title_left_button: function(subm) {
+		subm.Add_TitleLeftButton();
 	},
 
-	title_right_button: function(Elem) {
-		Elem.Add_TitleRightButton();
+	title_right_button: function(subm) {
+		subm.Add_TitleRightButton();
 	},
 
-	customized_title: function(Elem) {
-		Elem.Add_CustomisedTitle();
+	customized_title: function(subm) {
+		subm.Add_CustomisedTitle();
 	},
 
-	button: function(Elem, position) {
-		Elem.Add_MenuButton(position);
+	button: function(subm, position) {
+		subm.Add_MenuButton(position);
 	},
 
-	next: function(Elem) {
-		Elem.Add_MenuNext();
+	next: function(subm) {
+		subm.Add_MenuNext();
 	},
 
-	radio: function(Elem) {
-		Elem.Add_MenuRadio();
+	radio: function(subm) {
+		subm.Add_MenuRadio();
 	},
 
-	form: function(Elem) {
-		if (!Elem.prefix) { Elem.prefix = ''; }
-		Elem.Add_MenuForm();
+	form: function(subm) {
+		if (!subm.prefix) { subm.prefix = ''; }
+		subm.Add_MenuForm();
 	},
 
-	bottom_button: function(Elem) {
-		if (!Elem.prefix) { Elem.prefix = ''; }
-		Elem.Add_MenuBottomButton();
+	bottom_button: function(subm) {
+		if (!subm.prefix) { subm.prefix = ''; }
+		subm.Add_MenuBottomButton();
 	},
 
-	title_small: function(Elem) {
-		Elem.Add_TitleSmall();
+	title_small: function(subm) {
+		subm.Add_TitleSmall();
 	},
 
-	input_hidden: function(Elem) {
-		Elem.Add_InputHidden();
+	input_hidden: function(subm) {
+		subm.Add_InputHidden();
 	},
 
-	input_text: function(Elem) {
-		Elem.Add_InputText();
+	input_text: function(subm) {
+		subm.Add_InputText();
 	},
 
-	input_textarea: function(Elem) {
-		Elem.Add_InputTextarea();
+	input_textarea: function(subm) {
+		subm.Add_InputTextarea();
 	},
 
-	select_multiple: function(Elem) {
-		Elem.Add_SelectMultiple();
+	select_multiple: function(subm) {
+		subm.Add_SelectMultiple();
 	},
 
 }
-
-Submenu.prototype.Add_MenuTitle = function() {
-	var attribute = this.attribute;
-	var submenu_wrapper = this.Wrapper();
-	var title;
-	var className;
-	var Elem = $('#-submenu_top').clone();
-	Elem.prop("id", '');
-	submenu_wrapper.prepend(Elem);
-	if( typeof attribute.title === "function" ){
-		title = attribute.title(this);
-	}
-	else{
-		title = attribute.title;
-	}
-	if ("class" in attribute && typeof attribute.class === "function") {
-		submenu_wrapper.find('.submenu_top').addClass(attribute.class(this));
-	}
-	else if( "class" in attribute ){
-		submenu_wrapper.find('.submenu_top').addClass(attribute['class']);
-	}
-	submenu_wrapper.find("[find=submenu_wrapper_title]").html(title);
-	//Free memory
-	delete submenu_wrapper;
-	return true;
-};
 
 Submenu.prototype.changeState = function() {
 	// to check what animation this submenu should use.
@@ -156,12 +130,12 @@ function Submenu(menu, next, param, preview) {
 	this.preview = preview ? true : false;
 	if (typeof next === 'number') {
 		if (next === 0) {
-			this.layer = submenu_Getfull(preview);
+			this.layer = submenu_Getfull(this.preview);
 		} else {
 			this.layer = next;
 		}
 	} else if (typeof next !== 'undefined' && next === true) {
-		this.layer = submenu_Getposition(menu, preview);
+		this.layer = submenu_Getposition(menu, this.preview);
 	}
 	if (typeof param === 'undefined') {
 		this.param = null;
@@ -179,13 +153,12 @@ function Submenu(menu, next, param, preview) {
 	this.display = true;
 	this.prefix = false;
 	this.attribute = null;
-	var self = this;
 
 	function Constructor(Elem) {
 		Elem.changeState();
 		//First we have to empty the element if it exists
 
-		submenu_Clean(Elem.layer, false, preview);
+		submenu_Clean(Elem.layer, false, Elem.preview);
 
 		var submenu_wrapper = $('#-submenu_wrapper').clone();
 		submenu_wrapper.prop("id", Elem.id);
@@ -194,15 +167,15 @@ function Submenu(menu, next, param, preview) {
 		}
 		//Back button
 		submenu_wrapper.on('click', "[find=submenu_wrapper_back]", function() {
-			submenu_Clean(Elem.layer, true, self.preview);
+			submenu_Clean(Elem.layer, true, Elem.preview);
 		});
 		submenu_wrapper.css('z-index', Elem.zIndex);
 		//Do not not add "overthrow" in twig template, if not the scrollbar will not work
-		submenu_wrapper.find("[find=submenu_wrapper_content]").addClass('overthrow');
+		submenu_wrapper.find("[find=submenu_wrapper_content]").addClass('overthrow').prop("id", "overthrow_"+Elem.id);
 		//This is because we can only place 3 menus on Desktop mode, so after 3 layers we switch to full width mode
 		if (Elem.layer > 3) { submenu_wrapper.addClass('submenu_wrapper_important'); }
 
-		if (preview) {
+		if (Elem.preview) {
 			submenu_wrapper.appendTo('#app_content_submenu_preview');
 		} else {
 			submenu_wrapper.appendTo('#app_application_submenu_block');
@@ -250,6 +223,32 @@ function Submenu(menu, next, param, preview) {
 	}
 	Constructor(this);
 }
+
+Submenu.prototype.Add_MenuTitle = function() {
+	var attribute = this.attribute;
+	var submenu_wrapper = this.Wrapper();
+	var title;
+	var className;
+	var Elem = $('#-submenu_top').clone();
+	Elem.prop("id", '');
+	submenu_wrapper.prepend(Elem);
+	if( typeof attribute.title === "function" ){
+		title = attribute.title(this);
+	}
+	else{
+		title = attribute.title;
+	}
+	if ("class" in attribute && typeof attribute.class === "function") {
+		submenu_wrapper.find('.submenu_top').addClass(attribute.class(this));
+	}
+	else if( "class" in attribute ){
+		submenu_wrapper.find('.submenu_top').addClass(attribute['class']);
+	}
+	submenu_wrapper.find("[find=submenu_wrapper_title]").html(title);
+	//Free memory
+	delete submenu_wrapper;
+	return Elem;
+};
 
 Submenu.prototype.Add_CustomisedTitle = function() {
 	var attribute = this.attribute;
@@ -307,7 +306,7 @@ Submenu.prototype.Add_CustomisedTitle = function() {
 
 	//Free memory
 	delete submenu_wrapper;
-	return true;
+	return Elem;
 }
 
 Submenu.prototype.Add_TitleSmall = function() {
@@ -325,7 +324,7 @@ Submenu.prototype.Add_TitleSmall = function() {
 	submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
 	//Free memory
 	delete submenu_wrapper;
-	return true;
+	return Elem;
 };
 
 Submenu.prototype.Add_TitleLeftButton = function() {
@@ -362,7 +361,7 @@ Submenu.prototype.Add_TitleLeftButton = function() {
 		attribute.now(this, Elem);
 	}
 	this.Wrapper().find("[find=submenu_wrapper_top]").prepend(Elem);
-	return true;
+	return Elem;
 };
 
 Submenu.prototype.Add_TitleRightButton = function() {
@@ -399,7 +398,7 @@ Submenu.prototype.Add_TitleRightButton = function() {
 		attribute.now(this, Elem);
 	}
 	this.Wrapper().find("[find=submenu_wrapper_top]").append(Elem);
-	return true;
+	return Elem;
 };
 
 Submenu.prototype.Add_MenuButton = function(position) {
@@ -415,7 +414,7 @@ Submenu.prototype.Add_MenuButton = function(position) {
 		if (attribute.hide) {
 			Elem.click(function() {
 				//submenu_Hideall(preview); //We should not close all tabs
-				submenu_Clean(this.layer, false, preview);
+				submenu_Clean(this.layer, false, that.preview);
 			});
 		}
 	}
@@ -438,7 +437,7 @@ Submenu.prototype.Add_MenuButton = function(position) {
 	else {
 		position.append(Elem);
 	}
-	return true;
+	return Elem;
 };
 
 Submenu.prototype.Add_MenuNext = function() {
@@ -462,12 +461,11 @@ Submenu.prototype.Add_MenuNext = function() {
 					}
 				}
 			}
-			$("<img class='submenu_icon submenu_icon_next' src='/lincko/app/images/submenu/next.png' />").appendTo(Elem.find("[find=submenu_next_value]"));
 			Elem.click(function() {
 				$.each(that.Wrapper().find('.submenu_deco_next'), function() {
 					$(this).removeClass('submenu_deco_next');
 				});
-				if (submenu_Build(attribute.next, that.layer + 1)) {
+				if(submenu_Build(attribute.next, that.layer + 1, true, null, that.preview)) {
 					$(this).addClass('submenu_deco_next');
 				}
 
@@ -482,7 +480,7 @@ Submenu.prototype.Add_MenuNext = function() {
 		attribute.now(this, Elem);
 	}
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
-	return true;
+	return Elem;
 };
 
 Submenu.prototype.Add_MenuRadio = function() {
@@ -517,7 +515,7 @@ Submenu.prototype.Add_MenuRadio = function() {
 		if (attribute.hide) {
 			Elem.click(function() {
 				//submenu_Hideall(this.preview);
-				submenu_Clean(this.layer, false, preview);
+				submenu_Clean(this.layer, false, that.preview);
 			});
 		}
 	}
@@ -540,7 +538,7 @@ Submenu.prototype.Add_MenuRadio = function() {
 		attribute.now(this, Elem);
 	}
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
-	return true;
+	return Elem;
 };
 
 Submenu.prototype.Add_InputHidden = function() {
@@ -562,7 +560,7 @@ Submenu.prototype.Add_InputHidden = function() {
 		attribute.now(this, Elem);
 	}
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
-	return true;
+	return Elem;
 };
 
 Submenu.prototype.Add_InputText = function() {
@@ -584,19 +582,19 @@ Submenu.prototype.Add_InputText = function() {
 		attribute.now(this, Elem);
 	}
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
-	return true;
+	return Elem;
 };
 
 Submenu.prototype.Add_InputTextarea = function() {
 	var attribute = this.attribute;
 	var Elem = $('#-submenu_input').clone();
+	Elem.prop("id", '');
 	var Value = '';
 	if ("value" in attribute) {
 		Value = attribute.value;
 	}
 	var Input = $('<textarea find="submenu_input_textarea" class="selectable"></textarea>'); //toto
 	Input.html(Value); //toto
-	Elem.prop("id", '');
 	Elem.find("[find=submenu_title]").html(attribute.title);
 	Elem.prop('for', attribute.name);
 	Input.prop('name', attribute.name);
@@ -608,7 +606,7 @@ Submenu.prototype.Add_InputTextarea = function() {
 		attribute.now(this, Elem);
 	}
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
-	return true;
+	return Elem;
 };
 
 Submenu.prototype.Add_SelectMultiple = function() {
@@ -618,6 +616,9 @@ Submenu.prototype.Add_SelectMultiple = function() {
 	Elem.prop("id", '');
 	if ("value" in attribute) {
 		Elem.find("[find=submenu_select_value]").html(attribute.value);
+	}
+	if (!attribute["param"]) {
+		attribute.param = null;
 	}
 	if ("next" in attribute) {
 		if (attribute.next in submenu_list) {
@@ -646,13 +647,12 @@ Submenu.prototype.Add_SelectMultiple = function() {
 				}
 				var next_id = $('#'+this.id);
 				next_id.html(Num);
-				$("<img class='submenu_icon submenu_icon_next' src='/lincko/app/images/submenu/next.png' />").appendTo(next_id);
 			}, submenu_list[attribute.next])
 			Elem.click(function() {
 				$.each(that.Wrapper().find('.submenu_deco_next'), function() {
 					$(this).removeClass('submenu_deco_next');
 				});
-				if (submenu_Build(attribute.next, that.layer + 1)) {
+				if (submenu_Build(attribute.next, that.layer + 1, true, attribute.param, that.preview)) {
 					$(this).addClass('submenu_deco_next');
 				}
 			});
@@ -667,7 +667,7 @@ Submenu.prototype.Add_SelectMultiple = function() {
 	}
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
 	app_application_lincko.prepare("select_multiple", true);
-	return true;
+	return Elem;
 };
 
 Submenu.prototype.Add_SubmitForm = function() {
@@ -682,7 +682,7 @@ Submenu.prototype.Add_SubmitForm = function() {
 		if (attribute.hide) {
 			Elem.find("[find=submenu_bottom_button]").click(function() {
 				//submenu_Hideall(this.preview);
-				submenu_Clean(this.layer, false, preview);
+				submenu_Clean(this.layer, false, that.preview);
 			});
 		}
 	}
@@ -716,7 +716,7 @@ Submenu.prototype.Add_SubmitForm = function() {
 	submenu_wrapper.find("[find=submenu_wrapper_content]").wrap(ElemForm);
 	//Free memory
 	delete submenu_wrapper;
-	return true;
+	return ElemForm;
 };
 
 Submenu.prototype.Add_MenuForm = function() {
@@ -737,7 +737,7 @@ Submenu.prototype.Add_MenuForm = function() {
 	submenu_wrapper.wrapInner(ElemForm);
 	//Free memory
 	delete submenu_wrapper;
-	return true;
+	return ElemForm;
 };
 
 Submenu.prototype.Add_MenuBottomButton = function() {
@@ -749,7 +749,7 @@ Submenu.prototype.Add_MenuBottomButton = function() {
 	if ("hide" in attribute) {
 		if (attribute.hide) {
 			Elem.find("[find=submenu_bottom_button]").click(function() {
-				submenu_Clean(this.layer, false, preview);
+				submenu_Clean(this.layer, false, that.preview);
 			});
 		}
 	}
@@ -775,7 +775,7 @@ Submenu.prototype.Add_MenuBottomButton = function() {
 	}
 	//Free memory
 	delete submenu_wrapper;
-	return true;
+	return Elem;
 };
 
 
@@ -820,7 +820,8 @@ Submenu.prototype.showSubmenu = function(time, delay, animate) {
 		submenu_content_unblur();
 		submenu_wrapper_width();
 		that.FocusForm();
-		app_application_lincko.prepare("submenu_show", true);
+		$(window).resize();
+		setTimeout(function(){ app_application_lincko.prepare("submenu_show", true); }, 1);
 	} else if (responsive.test("minDesktop")) {
 		if (that.layer <= 3) { submenu_wrapper.css('z-index', submenu_zindex[this.preview]); } //This insure for the 1/3 version to go below the previous one
 		submenu_wrapper.velocity(
@@ -852,7 +853,8 @@ Submenu.prototype.showSubmenu = function(time, delay, animate) {
 					submenu_content_unblur();
 					submenu_wrapper_width();
 					that.FocusForm();
-					app_application_lincko.prepare("submenu_show", true);
+					$(window).resize();
+					setTimeout(function(){ app_application_lincko.prepare("submenu_show", true); }, 1);
 				}
 			}
 		);
@@ -879,7 +881,8 @@ Submenu.prototype.showSubmenu = function(time, delay, animate) {
 					submenu_content_unblur();
 					submenu_wrapper_width();
 					that.FocusForm();
-					app_application_lincko.prepare("submenu_show", true);
+					$(window).resize();
+					setTimeout(function(){ app_application_lincko.prepare("submenu_show", true); }, 1);
 				}
 			}
 		);
@@ -903,7 +906,8 @@ Submenu.prototype.showPreview = function(time, delay, animate) {
 		app_application_submenu_position();
 		submenu_resize_content();
 		that.FocusForm();
-		app_application_lincko.prepare("submenu_show", true);
+		$(window).resize();
+		setTimeout(function(){ app_application_lincko.prepare("submenu_show", true); }, 1);
 	} else if (responsive.test("minDesktop")) {
 		animation = animation_map_preview[this.inAnimation]['desktop'];
 		submenu_wrapper.velocity("stop", true).velocity(
@@ -923,7 +927,8 @@ Submenu.prototype.showPreview = function(time, delay, animate) {
 					app_application_submenu_position();
 					submenu_resize_content();
 					that.FocusForm();
-					app_application_lincko.prepare("submenu_show", true);
+					$(window).resize();
+					setTimeout(function(){ app_application_lincko.prepare("submenu_show", true); }, 1);
 				}
 			}
 		);
@@ -945,7 +950,8 @@ Submenu.prototype.showPreview = function(time, delay, animate) {
 					app_application_submenu_position();
 					submenu_resize_content();
 					that.FocusForm();
-					app_application_lincko.prepare("submenu_show", true);
+					$(window).resize();
+					setTimeout(function(){ app_application_lincko.prepare("submenu_show", true); }, 1);
 				}
 			}
 		);
@@ -1061,8 +1067,8 @@ Submenu.prototype.Hide = function(animate) {
 	var that = this;
 	var time = 160;
 	var delay = 60;
-	var stack = this.preview ? submenu_obj['preview'] : submenu_obj['submenu'];
 	var preview = this.preview ? "preview" : "submenu";
+	var stack = preview ? submenu_obj['preview'] : submenu_obj['submenu'];
 	submenu_show[preview][this.id] = false;
 	submenu_content_unblur();
 	//Reset menu selection if(menu in submenu_list){
@@ -1123,9 +1129,10 @@ $(window).resize(function(){
 });
 
 function submenu_Hideall(preview) {
+	if(typeof preview == 'undefined'){ preview = false; }
 	var stack = preview ? submenu_obj['preview'] : submenu_obj['submenu'];
 	for (var index in stack) {
-		submenu_Clean(1, false, preview);
+		submenu_Clean(true, false, preview);
 	}
 }
 
@@ -1185,6 +1192,12 @@ function submenu_Build(menu, next, hide, param, preview) {
 	}
 	
 	var stack = preview ? submenu_obj["preview"] : submenu_obj["submenu"];
+
+	if(next === true){
+		next = submenu_Getposition(menu, preview);
+	} else if(next === false){
+		next = 1;
+	}
 
 	//If the tab already exists, just close it if we launch again the action
 	if (hide) {

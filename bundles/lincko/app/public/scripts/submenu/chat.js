@@ -7,7 +7,7 @@ submenu_list['chat'] = {
 	},
 	"left_button": {
 		"style": "title_left_button",
-		"title": Lincko.Translation.get('app', 7, 'html'), //Cancel
+		"title": Lincko.Translation.get('app', 25, 'html'), //Close
 		'hide': true,
 		"class": "base_pointer",
 	},
@@ -35,7 +35,7 @@ submenu_list['chat_add_user'] = {
 	},
 	"left_button": {
 		"style": "title_left_button",
-		"title": Lincko.Translation.get('app', 7, 'html'), //Cancel
+		"title": Lincko.Translation.get('app', 25, 'html'), //Close
 		'hide': true,
 		"class": "base_pointer",
 	},
@@ -66,20 +66,20 @@ submenu_list['mainchat'] = {
 	},
 };
 
-Submenu_select.chat_content = function(Elem) {
-	Elem.Add_ChatContent();
+Submenu_select.chat_content = function(subm) {
+	subm.Add_ChatContent();
 };
 
-Submenu_select.chat_menu = function(Elem){
-	Elem.Add_ChatMenu();
+Submenu_select.chat_menu = function(subm){
+	subm.Add_ChatMenu();
 };
 
-Submenu_select.chat_chats = function(Elem){
-	Elem.Add_ChatChats();
+Submenu_select.chat_chats = function(subm){
+	subm.Add_ChatChats();
 };
 
-Submenu_select.chat_add_user = function(Elem){
-	Elem.Add_ChatAddUser();
+Submenu_select.chat_add_user = function(subm){
+	subm.Add_ChatAddUser();
 };
 
 Submenu.prototype.Add_ChatMenu = function() {
@@ -419,7 +419,7 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 	}
 	else { //noresult
 		Elem_info.removeClass("display_none");
-		Elem_info.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2308, 'js')); //No result
+		Elem_info.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2308, 'js')); //Please enter an Email address.
 	}
 	$(window).resize();
 	
@@ -503,6 +503,7 @@ var submenu_chat_search = {
 		} else if(param.length<2 || submenu_chat_search.value !== param || force){
 			submenu_chat_new_user_result(sub_that, null, "noresult");
 			clearTimeout(submenu_chat_search.timing);
+			submenu_chat_search.value = param;
 		}
 	},
 

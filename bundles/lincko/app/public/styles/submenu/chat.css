@@ -75,8 +75,9 @@
 	color: #FFFFFF !important;
 }
 
-.submenu_app_chat_profile {
+.submenu_padding.submenu_app_chat_profile {
 	width: 58px;
+	padding-right: 4px;
 }
 
 .submenu_app_chat_profile_picture {
@@ -90,16 +91,23 @@
 	vertical-align: middle;
 }
 
-.submenu_app_chat_who {
+.submenu_padding.submenu_app_chat_who {
 	text-align: left;
 	width: 100%;
 	font-size: 16px;
+	padding-left: 4px;
+}
+
+.submenu_padding.submenu_app_chat_invitation {
+	position: absolute;
+	right: 0;
+	padding: 10px 0 0 0;
 }
 
 .submenu_app_chat_invitation_accept {
 	display: inline-block;
 	background-color: #679E52;
-	padding: 4px 20px;
+	padding: 4px 12px;
 	color: #FFFFFF;
 	margin: 5px;
 	font-size: 12px;
@@ -118,7 +126,7 @@
 .submenu_app_chat_invitation_reject {
 	display: inline-block;
 	background-color: #BE2B1E;
-	padding: 4px 20px;
+	padding: 4px 12px;
 	color: #FFFFFF;
 	margin: 5px;
 	font-size: 12px;
@@ -253,7 +261,7 @@
 .submenu_padding.submenu_app_chat_invitation_sentence {
 	white-space: normal;
 	padding-top: 10px;
-	font-size: 14px;
+	font-size: 12px;
 }
 
 .submenu_app_chat_invitation_button {

@@ -102,7 +102,7 @@ var app_application_lincko = {
 		It updates all elements and functions that are linked to any _fields
 	*/
 	update: function(){
-		var temp_fields = {};
+		var temp_fields = {'*': true};
 		var temp;
 		var Elem;
 
@@ -324,7 +324,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 	//Close
 	if(Elem.hasClass('app_application_visible')){
 		time = 200;
-		if(responsive.test("maxTablet")){
+		if(true || responsive.test("maxTablet")){
 			time = Math.floor(2.5*time);
 		}
 		width = Elem.width();
@@ -343,6 +343,15 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				}
 			);
 		}
+		$("#app_project_top").velocity(
+			{ opacity: 0 },
+			{
+				duration: time-Math.floor(2*time/3),
+				delay: delay,
+				easing: [ 4 ],
+				visibility: "hidden",
+			}
+		);
 		/*
 		TweenLite.to(
 			Elem,
@@ -372,7 +381,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				duration: time,
 				delay: delay,
 				progress: function(){
-					Elem.removeClass('app_application_visible');
+					//Elem.removeClass('app_application_visible'); //toto [ko- main menu animation]
 					if(responsive.test("minTablet")){
 						app_content_dynamic_position();
 						app_application_submenu_position();
@@ -382,7 +391,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 					setTimeout(function(){
 						$(window).trigger('resize');
 						app_application_submenu_position();
-						//Elem.removeClass('app_application_visible');
+						Elem.removeClass('app_application_visible'); //toto [bruno - main menu animation]
 						Blur.removeClass('app_application_blur');
 						Block.removeClass('app_application_block_visible');
 					},50);
@@ -393,10 +402,10 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 	//Open
 	} else {
 		time = 300;
-		if(responsive.test("maxTablet")){
+		if(true || responsive.test("maxTablet")){
 			time = Math.floor(2*time);
 		}
-		//Elem.addClass('app_application_visible');
+		Elem.addClass('app_application_visible');  //toto [bruno - main menu animation]
 		Block.addClass('app_application_block_visible');
 		$.each(Elem.find('.app_application_width_child'), function() {
 			$(this).css('width', width_child);
@@ -415,6 +424,18 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				);
 			}
 		}
+		$("#app_project_top")
+		.css("visibility", "hidden")
+		.css("opacity", 0)
+		.velocity(
+			{ opacity: 1 },
+			{
+				duration: time-Math.floor(2*time/3),
+				delay: delay+Math.floor(2*time/3),
+				easing: [ 4 ],
+				visibility: "visible",
+			}
+		);
 		/*
 		TweenLite.to(
 			Elem,
@@ -452,7 +473,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 					}
 				},
 				complete: function(){
-					Elem.addClass('app_application_visible');
+					//Elem.addClass('app_application_visible');  //toto [ko - main menu animation]
 					setTimeout(function(){
 						$(window).trigger('resize');
 						app_application_submenu_position();

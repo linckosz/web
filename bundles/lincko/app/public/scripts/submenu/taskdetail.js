@@ -69,8 +69,8 @@ submenu_list['taskdetail'] = {
 };
 
 
-Submenu_select.taskdetail = function(Elem){
-	Elem.Add_taskdetail();
+Submenu_select.taskdetail = function(subm){
+	subm.Add_taskdetail();
 };
 
 Submenu.prototype.Add_taskdetail = function() {

@@ -62,6 +62,7 @@ Submenu.prototype.Add_MenuProjects = function() {
 	var attribute = this.attribute;
 	var that = this;
 	var Elem = $('#-submenu_projects').clone();
+	Elem.prop("id", '');
 	var preview = this.preview;
 
 	var tasks = Lincko.storage.list('tasks', null, {approved: false,}, 'projects', attribute.action_param.projects_id, true).length;
@@ -72,12 +73,19 @@ Submenu.prototype.Add_MenuProjects = function() {
 	Elem.find("[find=submenu_projects_statistics_notes]").html(notes);
 	Elem.find("[find=submenu_projects_statistics_files]").html(files);
 
-	Elem.find("[find=submenu_projects_settings]").click(function(event){
-		event.stopPropagation();
-		submenu_Build("app_project_edit", true, true, attribute.action_param.projects_id, preview);
-	});
+	var project = Lincko.storage.get("projects", attribute.action_param.projects_id);
+	var MyPlaceholderID = Lincko.storage.getMyPlaceholder()['_id'];
 
-	Elem.prop("id", '');
+	if(attribute.action_param.projects_id != MyPlaceholderID && project){
+		Elem.find("[find=submenu_projects_settings]").click(attribute.action_param.projects_id, function(event){
+			event.stopPropagation();
+			submenu_Build("app_project_edit", true, true, event.data, preview);
+		});
+	} else {
+		Elem.find("[find=submenu_projects_settings]").css("visibility", "hidden");
+	}
+
+	
 	Elem.find("[find=submenu_projects_title]").html(attribute.title);
 	if ("hide" in attribute) {
 		if (attribute.hide) {

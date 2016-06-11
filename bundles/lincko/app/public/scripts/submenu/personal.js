@@ -99,20 +99,20 @@ submenu_list['personal_settings'] = {
 	},
 };
 
-Submenu_select.profile_next = function(Elem) {
-	Elem.Add_ProfileNext();
+Submenu_select.profile_next = function(subm) {
+	subm.Add_ProfileNext();
 };
 
-Submenu_select.profile_photo = function(Elem) {
-	Elem.Add_ProfilePhoto();
+Submenu_select.profile_photo = function(subm) {
+	subm.Add_ProfilePhoto();
 };
 
-Submenu_select.profile_input = function(Elem) {
-	Elem.Add_ProfileInput();
+Submenu_select.profile_input = function(subm) {
+	subm.Add_ProfileInput();
 };
 
-Submenu_select.profile_info = function(Elem) {
-	Elem.Add_ProfileInfo();
+Submenu_select.profile_info = function(subm) {
+	subm.Add_ProfileInfo();
 };
 
 var submenu_profile_timer = [];

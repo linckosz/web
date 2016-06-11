@@ -67,28 +67,25 @@ var mainMenu = (function() {
 		return item;
 	}
 	function initChatTab() {
+		$("#app_project_chat").find(".app_project_chat_item").remove();
 		//get list
 		var chatHistoryList = orderChatList(4);
-		var maxHeight = parseInt($("#app_project_chat").css("max-height").slice(0, -2)) - $("#app_project_chat").height();
-		var itemHeight = 0;
+
 		//caculate
 		for (var c in chatHistoryList) {
-			if (maxHeight > itemHeight) {
-				var item = feedChatItem('#app_project_chat', chatHistoryList[c]);
-				itemHeight = item.height();
-				maxHeight = maxHeight - itemHeight;
-			}
-			else {
-				return;
-			}
+			var item = feedChatItem('#app_project_chat', chatHistoryList[c]);
 			var data = chatHistoryList[c];
-
+			if(data.type == "chats"){
+				item.addClass("app_project_chat_item_chats");
+			} else if(data.type == "history"){
+				item.addClass("app_project_chat_item_history");
+			}
 			item.on("click", data, function(event) {
 				var title;
 				if (event.data.type == 'chats') {
 					title = $(this).find('header').text();
 				} else {
-					title = Lincko.storage.get("projects", event.data.id, "+title") + " Activity";
+					title = Lincko.storage.get("projects", event.data.id, "+title");
 				}
 				//render
 				submenu_Build("newchat", false, false, {
@@ -101,13 +98,19 @@ var mainMenu = (function() {
 	}
 
 	function initProjectTab() {
+		$("#app_project_tab").find(".app_project_item").remove();
 		var projectList = Lincko.storage.list('projects', 4);
-		var maxHeight = parseInt($("#app_project_tab").css("max-height").slice(0, -2));
-		var itemHeight = 0;
+		var tasks;
+		var notes;
+		var files;
+
+		var projects_all = Lincko.storage.list('projects', null, {_id:['!=', Lincko.storage.getMyPlaceholder()['_id']]}).length;
+		$("#app_project_tab").find("[find=app_project_all_number]").html("("+projects_all+")");
+
 		//caculate
 		for (var p in projectList) {
-			if (maxHeight > itemHeight) {
 				var item = $("#-app_project_item").clone();
+				item.prop("id", '');
 				$('#app_project_tab').append(item);
 				var pid = projectList[p]._id;
 				item.click(pid, function(event){
@@ -116,9 +119,14 @@ var mainMenu = (function() {
 				item.removeAttr('id', '');
 				item.removeAttr('style', '');
 				item.find('p').text(projectList[p]['+title']);
-				itemHeight = item.height();
-				maxHeight = maxHeight - itemHeight;
-			}
+
+				tasks = Lincko.storage.list('tasks', null, {approved: false,}, 'projects', pid, true).length;
+				notes = Lincko.storage.list('notes', null, null, 'projects', pid, true).length;
+				files = Lincko.storage.list('files', null, null, 'projects', pid, true).length;
+
+				item.find("[find=submenu_projects_statistics_tasks]").html(tasks);
+				item.find("[find=submenu_projects_statistics_notes]").html(notes);
+				item.find("[find=submenu_projects_statistics_files]").html(files);
 		}
 	}
 
@@ -144,7 +152,7 @@ var mainMenu = (function() {
 		// each item should be:
 		// {'type': ['history'|'chat'], 'id': ['project_id'|'chat_id'], 'timestamp': 'the_latest_update_history_or_chat'}
 		//get project list
-		var project_list = Lincko.storage.list('projects', number);
+		var project_list = Lincko.storage.list('projects', Math.floor(number/2));
 
 		//get the most recent history for each project
 		for (var p in project_list) {
@@ -174,13 +182,12 @@ var mainMenu = (function() {
 		}
 		if (project_id) {
 			 // Get chats belong to specific project
-			var chat_list = Lincko.storage.list('chats', null, null, 'projects', project_id, false);
+			var chat_list = Lincko.storage.list('chats', Math.floor(number/2), null, 'projects', project_id, false);
 		}
 		else {
 			 // Get all chats
-			var chat_list = Lincko.storage.list('chats', number, null, null, null, false);
+			var chat_list = Lincko.storage.list('chats', Math.floor(number/2), null, null, null, false);
 		}
-
 		//get the most recent comment for each project
 		for (var c in chat_list) {
 			var timestamp = chat_list[c].updated_at;
@@ -217,6 +224,8 @@ var mainMenu = (function() {
 		'init': initTabs,
 		'getlist': orderChatList,
 		'feed': feedChatItem,
+		'initProjectTab': initProjectTab,
+		'initChatTab': initChatTab,
 	};
 })();
 
@@ -227,6 +236,14 @@ app_application_lincko.add(project_garbage, 'first_launch', function() {
 		app_application_garbage.remove(project_garbage);
 		delete project_garbage;
 	}
+});
+
+app_application_lincko.add("app_project_tab", 'projects', function() {
+	mainMenu.initProjectTab();
+});
+
+app_application_lincko.add("app_project_chat", '*', function() {
+	mainMenu.initChatTab();
 });
 
 

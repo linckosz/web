@@ -39,8 +39,8 @@ submenu_list['calendar'] = {
 	},
 };
 
-Submenu_select.calendar = function(Elem){
-	Elem.Add_calendar();
+Submenu_select.calendar = function(subm){
+	subm.Add_calendar();
 };
 
 Submenu.prototype.Add_calendar = function() {

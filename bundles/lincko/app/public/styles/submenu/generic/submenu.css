@@ -97,6 +97,7 @@
 .submenu_title {
 	display: table-cell;
 	padding: 0 16px 0 16px;
+	margin: 0;
 	color: #F8F8F8;
 	white-space: nowrap;
 	height: 100%;
@@ -152,6 +153,7 @@
 }
 
 .submenu_deco_read {
+	position: relative;
 	display: table;
 	/*table-layout: fixed;*/
 	white-space: nowrap;
@@ -164,6 +166,7 @@
 }
 
 .submenu_deco {
+	position: relative;
 	display: table;
 	/*table-layout: fixed;*/
 	white-space: nowrap;

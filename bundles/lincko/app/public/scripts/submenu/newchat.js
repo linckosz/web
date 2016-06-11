@@ -7,14 +7,6 @@ submenu_list['newchat'] = {
 		}, //chat room you are in
 		"class": "submenu_newchat_header",
 	},
-	"chat_contents": {
-		"style": "chat_contents",
-		"title": "",
-	},
-	"new_chat_menu": {
-		"style": "new_chat_menu",
-		"title": "",
-	},
 	"left_button": {
 		"style": "title_left_button",
 		"title": Lincko.Translation.get('app', 25, 'html'), //Close
@@ -32,55 +24,67 @@ submenu_list['newchat'] = {
 			submenu_Build('contacts', true, false, {type: 'chats', }, that.preview);
 		}
 	},
+	"new_chat_menu": {
+		"style": "new_chat_menu",
+		"title": "",
+	},
+	"chat_contents": {
+		"style": "chat_contents",
+		"title": "",
+	},
 };
 
-Submenu_select.chat_contents = function(Elem) {
-	Elem.Add_ChatContents();
+Submenu_select.chat_contents = function(subm) {
+	subm.Add_ChatContents();
 }
-Submenu_select.new_chat_menu = function(Elem) {
-	Elem.New_Add_ChatMenu();
+Submenu_select.new_chat_menu = function(subm) {
+	subm.New_Add_ChatMenu();
 };
 
 Submenu.prototype.Add_ChatContents = function() {
 	var attribute = this.attribute;
+	var that = this;
 	var id = this.param.id;
 	var type = this.param.type;
 	submenu_wrapper = this.Wrapper();
 	var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
 	position.addClass('overthrow').addClass("submenu_chat_contents");
 
-	chatFeed.feedHistory(position, type, id);
+	chatFeed.feedHistory(position, type, id, that);
+
 	//var height = submenu_wrapper.height() - 48 - 48;
 	//position.find(".iScrollVerticalScrollbar").height(height);
-	app_application_lincko.add(this.Wrapper().prop("id"), "submenu_show", function() {
-		var chatScroll = myIScrollList[submenu_wrapper.find("[find=submenu_wrapper_content]").prop("id")];
-		//console.log(chatScroll);
-		//chatScroll.refresh();
-		//chatScroll.scrollToElement($("#"+this.id).find(".models_history_wrapper:last-of-type")[0], 0);
-	//chatScroll.on('scrollEnd', function() {
-		//This is the event we need to handle when do pagination
-	//});
-	});
+	app_application_lincko.add("overthrow_"+this.id, "submenu_show", function() {
+		var bottom = $("#"+this.action_param).find("[find=submenu_wrapper_content]");
+		var last = $("#overthrow_"+this.action_param).find('li').last();
+		myIScrollList["overthrow_"+this.action_param].refresh();
+		myIScrollList["overthrow_"+this.action_param].scrollToElement("#"+last.prop("id"), 0);
+	}, that.id);
 
 	notifier[type]['clear'](id);
 	if (type == 'history') {
-			app_application_lincko.add("chat_contents_wrapper","projects_" + id, function() {
-				var id = Object.keys(this.range)[0].split("_")[1];
-				var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
-				var last_elem = $(".submenu_wrapper").find(".models_history_wrapper:last-of-type");
-				if (last_elem.length > 0){
-					var latest_id = last_elem.prop("id").split("models_thistory_")[1];
-					var latest = Lincko.storage.hist(null, 1, {id: latest_id}, null,null,false)[0].timestamp;
-				}
-				else {
-					var latest = 0;
-				}
-				var items = Lincko.storage.hist(null, -1, {'timestamp': [">", latest]}, 'projects', id, false);
-				chatFeed.appendItem("history", items, position, true);
-			});
+		app_application_lincko.add(this.id+"_chat_contents_wrapper","projects_" + id, function() {
+			console.log('history');
+			
+			var id = Object.keys(this.range)[0].split("_")[1];
+			var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
+			var last_elem = $(".submenu_wrapper").find(".models_history_wrapper:last-of-type");
+			if (last_elem.length > 0){
+				var latest_id = last_elem.prop("id").split("models_thistory_")[1];
+				var latest = Lincko.storage.hist(null, 1, {id: latest_id}, null,null,false)[0].timestamp;
+			}
+			else {
+				var latest = 0;
+			}
+			var items = Lincko.storage.hist(null, -1, {'timestamp': [">", latest]}, 'projects', id, false);
+			chatFeed.appendItem("history", items, position, true);
+			
+		});
 	}
 	else {
-		app_application_lincko.add("chat_contents_wrapper", "chats_" + id, function() {
+		app_application_lincko.add(this.id+"_chat_contents_wrapper", "chats_" + id, function() {
+			console.log('chats');
+			
 			var id = Object.keys(this.range)[0].split("_")[1];
 			var type = Object.keys(this.range)[0].split("_")[0];
 			var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
@@ -92,9 +96,9 @@ Submenu.prototype.Add_ChatContents = function() {
 			else {
 					var latest = 0;
 			}
-
 			var items = Lincko.storage.list('comments', -1, {'created_at': [">", latest]}, 'chats', id, false);
 			chatFeed.appendItem(type, items, position, true);
+			
 		});
 	}
 }
@@ -113,19 +117,6 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 	}
 	submenu_wrapper.find("[find=submenu_wrapper_bottom]").append(Elem);
 
-	//Elem.find("[find=select_chats]").click();
-	Elem.find(".comments_input").blur(function() {
-		if (!Elem.find('.comments_input').val()) {
-			if (that.param.type != "history") {
-				Elem.find(".send").hide();
-				Elem.find(".attachment").show();
-			}
-		}
-	});
-	Elem.find(".comments_input").focus(function() {
-		Elem.find(".send").show();
-		Elem.find(".attachment").hide();
-	});
 	function send_comments() {
 		var content = Elem.find('.comments_input:visible').val();
 		var type = that.param.type == 'history' ? "projects":'chats';
@@ -188,7 +179,25 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 
 	});
 
+	/*
+	toto => enable it to allow file uploading
+	Elem.find(".comments_input").blur(function() {
+		if (!Elem.find('.comments_input').val()) {
+			if (that.param.type != "history") {
+				Elem.find(".send").hide();
+				Elem.find(".attachment").show();
+			}
+		}
+	});
+	*/
+	Elem.find(".comments_input").focus(function() {
+		Elem.find(".send").show();
+		Elem.find(".attachment").hide();
+	});
+	Elem.find(".send").show();
+	Elem.find(".attachment").hide();
+
 	//Free memory
 	delete submenu_wrapper;
-	return true;
+	return Elem;
 };

@@ -59,7 +59,7 @@ textarea:focus, input:focus{
 	display: none;
 }
 .chat_contents_wrapper {
-	padding-bottom: 50px;
+	padding-bottom: 12px;
 }
 
 .submenu_wrapper .skylist {
@@ -96,20 +96,20 @@ textarea:focus, input:focus{
 
 [find="submenu_wrapper_bottom"] .attachment {
 	font-size: 30px;
-	cursor: pointer;
+	cursor: pointer; cursor: hand;
 }
 
 [find="submenu_wrapper_bottom"] .send {
 	font-size: 30px;
-	cursor: pointer;
+	cursor: pointer; cursor: hand;
 }
 
 [find="submenu_wrapper_bottom"] .attachment {
-	cursor: pointer;
+	cursor: pointer; cursor: hand;
 }
 
 [find="submenu_wrapper_bottom"] .send {
-	cursor: pointer;
+	cursor: pointer; cursor: hand;
 }
 
 /* Tablet in Landscape */
@@ -129,19 +129,19 @@ textarea:focus, input:focus{
 	}
 	[find="submenu_wrapper_bottom"] .attachment {
 		font-size: 24px;
-		cursor: pointer;
+		cursor: pointer; cursor: hand;
 	}
 
 	[find="submenu_wrapper_bottom"] .send {
 		font-size: 24px;
-		cursor: pointer;
+		cursor: pointer; cursor: hand;
 	}
 	.submenu_chats textarea.comments_input {
 		display: none;
 	}
 	.submenu_chats input.comments_input {
 		display: block;
-		font-size: 24px;
+		font-size: 16px;
 	}
 }
 
@@ -164,11 +164,13 @@ textarea:focus, input:focus{
 }
 
 .chat_bottom .comments_input {
-	font-size: 18px;
+	font-size: 16px;
 	border: 0px;
 	width: 100%;
 	display: block;
 	resize: none;
+	padding: 4px;
+	box-sizing: border-box;
 }
 
 .chat_bottom .icons {

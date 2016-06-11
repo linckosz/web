@@ -23,17 +23,26 @@
 }
 
 .submenu_projects_statistics {
-	font-size: 10px;	
+	font-size: 10px;
+	padding: 0 8px 0 8px;
 }
 
 .submenu_projects_chart {
 	width: 100px;
 }
 
-.submenu_projects_settings {
+.submenu_padding.submenu_projects_settings {
 	font-size: 24px;
+	padding: 0 8px 0 8px;
 }
 
-.submenu_projects_settings:hover {
+.submenu_padding.submenu_projects_settings  [find=submenu_projects_settings]:hover {
 	color: #FEFF9A;
+}
+
+.submenu_projects_right {
+	position: absolute;
+	right: 0;
+	height: 48px;
+	line-height: 48px;
 }

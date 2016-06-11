@@ -21,7 +21,7 @@
 	font-size: 14px;
 	line-height: 1.6;
 	text-align: left;
-	margin: 10px auto;
+	margin: 0px auto;
 }
 
 .models_history_content_wrapper {
@@ -110,7 +110,7 @@
 }
 
 .models_history_id {
-	margin: 12px;
+	margin: 12px 12px 6px 12px;
 }
 
 .models_history_id > h5 {
