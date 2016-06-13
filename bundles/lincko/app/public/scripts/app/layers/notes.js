@@ -32,7 +32,11 @@ var app_layers_notes_feedPage = function(param){
 	app_layers_notes_noteslist = new skylist(
 		'notes',
 		$('#app_layers_notes_noteslist'),
-		null
+		null,
+		false,
+		false,
+		false,
+		'layer_files'
 	);
 
 

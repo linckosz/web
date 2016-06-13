@@ -334,13 +334,6 @@ Submenu.prototype.Add_TitleLeftButton = function() {
 	var preview = this.preview;
 	Elem.prop("id", this.id+"_submenu_top_button_left");
 	Elem.html(attribute.title);
-	if ("hide" in attribute) {
-		if (attribute.hide) {
-			Elem.click(function() {
-				submenu_Clean(that.layer, false, that.preview);
-			});
-		}
-	}
 	if ("action" in attribute) {
 		if ("action_param" in attribute) {
 			Elem.click(function(){
@@ -349,6 +342,13 @@ Submenu.prototype.Add_TitleLeftButton = function() {
 		} else {
 			Elem.click(function(){
 				attribute.action(this, that);
+			});
+		}
+	}
+	if ("hide" in attribute) {
+		if (attribute.hide) {
+			Elem.click(function() {
+				submenu_Clean(that.layer, false, that.preview);
 			});
 		}
 	}
@@ -371,13 +371,6 @@ Submenu.prototype.Add_TitleRightButton = function() {
 	var preview = this.preview;
 	Elem.prop("id", this.id+"_submenu_top_button_right");
 	Elem.html(attribute.title);
-	if ("hide" in attribute) {
-		if (attribute.hide) {
-			Elem.click(function() {
-				submenu_Clean(that.layer, false, that.preview);
-			});
-		}
-	}
 	if ("action" in attribute) {
 		if ("action_param" in attribute) {
 			Elem.click(function(){
@@ -386,6 +379,13 @@ Submenu.prototype.Add_TitleRightButton = function() {
 		} else {
 			Elem.click(function(){
 				attribute.action(this, that);
+			});
+		}
+	}
+	if ("hide" in attribute) {
+		if (attribute.hide) {
+			Elem.click(function() {
+				submenu_Clean(that.layer, false, that.preview);
 			});
 		}
 	}
@@ -410,19 +410,19 @@ Submenu.prototype.Add_MenuButton = function(position) {
 	if ("value" in attribute) {
 		Elem.find("[find=submenu_button_value]").html(attribute.value);
 	}
+	if ("action" in attribute) {
+		if ("action_param" in attribute) {
+			Elem.click(attribute.action_param, attribute.action);
+		} else {
+			Elem.click(attribute.action);
+		}
+	}
 	if ("hide" in attribute) {
 		if (attribute.hide) {
 			Elem.click(function() {
 				//submenu_Hideall(preview); //We should not close all tabs
 				submenu_Clean(this.layer, false, that.preview);
 			});
-		}
-	}
-	if ("action" in attribute) {
-		if ("action_param" in attribute) {
-			Elem.click(attribute.action_param, attribute.action);
-		} else {
-			Elem.click(attribute.action);
 		}
 	}
 	if ("class" in attribute) {
@@ -511,14 +511,6 @@ Submenu.prototype.Add_MenuRadio = function() {
 		}
 	}, [Elem, attribute] )
 
-	if ("hide" in attribute) {
-		if (attribute.hide) {
-			Elem.click(function() {
-				//submenu_Hideall(this.preview);
-				submenu_Clean(this.layer, false, that.preview);
-			});
-		}
-	}
 	if ("action" in attribute) {
 		if ("action_param" in attribute) {
 			Elem.click(function(){
@@ -527,6 +519,14 @@ Submenu.prototype.Add_MenuRadio = function() {
 		} else {
 			Elem.click(function(){
 				attribute.action(Elem, that);
+			});
+		}
+	}
+	if ("hide" in attribute) {
+		if (attribute.hide) {
+			Elem.click(function() {
+				//submenu_Hideall(this.preview);
+				submenu_Clean(this.layer, false, that.preview);
 			});
 		}
 	}
@@ -678,14 +678,6 @@ Submenu.prototype.Add_SubmitForm = function() {
 	Elem.prop("id", '');
 	submenu_wrapper.find("[find=submenu_wrapper_bottom]").addClass('submenu_bottom');
 	//submenu_wrapper.find("[find=submenu_wrapper_content]").css('bottom', submenu_wrapper.find("[find=submenu_wrapper_bottom]").height());
-	if ("hide" in attribute) {
-		if (attribute.hide) {
-			Elem.find("[find=submenu_bottom_button]").click(function() {
-				//submenu_Hideall(this.preview);
-				submenu_Clean(this.layer, false, that.preview);
-			});
-		}
-	}
 	Elem.find("[find=submenu_bottom_title]").html(attribute.title);
 	Elem.find("[find=submenu_bottom_button]").click(function() {
 		$('#' + that.id + '_submenu_form').submit();
@@ -712,6 +704,14 @@ Submenu.prototype.Add_SubmitForm = function() {
 			e.preventDefault();
 			attribute.submit(this);
 		});
+	}
+	if ("hide" in attribute) {
+		if (attribute.hide) {
+			Elem.find("[find=submenu_bottom_button]").click(function() {
+				//submenu_Hideall(this.preview);
+				submenu_Clean(this.layer, false, that.preview);
+			});
+		}
 	}
 	submenu_wrapper.find("[find=submenu_wrapper_content]").wrap(ElemForm);
 	//Free memory
@@ -746,18 +746,18 @@ Submenu.prototype.Add_MenuBottomButton = function() {
 	var Elem = $('#-submenu_bottom').clone();
 	Elem.prop("id", '');
 	submenu_wrapper.find("[find=submenu_wrapper_bottom]").addClass('submenu_bottom');
-	if ("hide" in attribute) {
-		if (attribute.hide) {
-			Elem.find("[find=submenu_bottom_button]").click(function() {
-				submenu_Clean(this.layer, false, that.preview);
-			});
-		}
-	}
 	if ("action" in attribute) {
 		if ("action_param" in attribute) {
 			Elem.find("[find=submenu_bottom_button]").click(attribute.action_param, attribute.action);
 		} else {
 			Elem.find("[find=submenu_bottom_button]").click(attribute.action);
+		}
+	}
+	if ("hide" in attribute) {
+		if (attribute.hide) {
+			Elem.find("[find=submenu_bottom_button]").click(function() {
+				submenu_Clean(this.layer, false, that.preview);
+			});
 		}
 	}
 	Elem.find('img').remove();

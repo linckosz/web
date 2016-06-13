@@ -32,7 +32,7 @@ var skylist_textDate = function(date){
 	}
 }
 
-var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct, rightOptionCount, leftOptionCount){
+var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct, rightOptionCount, leftOptionCount, id){
 	this.that = this;
 	var that = this;
 
@@ -42,7 +42,12 @@ var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct, ri
 		this.subConstruct = subConstruct;
 	}
 	
-	this.md5id = md5(Math.random());
+	if(typeof id == 'undefined'){
+		this.md5id = md5(Math.random());
+	} else {
+		this.md5id = id;
+	}
+	
 	this.window_resize_timeout = null;
 
 

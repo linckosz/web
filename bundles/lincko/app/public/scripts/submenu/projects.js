@@ -89,18 +89,18 @@ Submenu.prototype.Add_MenuProjects = function() {
 
 	
 	Elem.find("[find=submenu_projects_title]").html(attribute.title);
-	if ("hide" in attribute) {
-		if (attribute.hide) {
-			Elem.click(function() {
-				submenu_Clean(this.layer, false, preview);
-			});
-		}
-	}
 	if ("action" in attribute) {
 		if ("action_param" in attribute) {
 			Elem.click(attribute.action_param, attribute.action);
 		} else {
 			Elem.click(attribute.action);
+		}
+	}
+	if ("hide" in attribute) {
+		if (attribute.hide) {
+			Elem.click(function() {
+				submenu_Clean(this.layer, false, preview);
+			});
 		}
 	}
 	if ("class" in attribute) {

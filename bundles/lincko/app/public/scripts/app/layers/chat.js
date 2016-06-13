@@ -18,7 +18,10 @@ function app_layers_chat_feedChat(parent) {
 		'chats',
 		parent,
 		null,
-		chatlist_subConstruct
+		chatlist_subConstruct,
+		false,
+		false,
+		'layer_chats'
 	);
 	parent.delegate(".skylist_newcardCircle", "click", function() {
 		submenu_Build("contacts", false, false, {

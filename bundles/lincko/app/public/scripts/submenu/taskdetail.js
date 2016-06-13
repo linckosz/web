@@ -68,6 +68,58 @@ submenu_list['taskdetail'] = {
 	},
 };
 
+/*
+toto => use this to create new tasks
+submenu_list['task_new'] = {
+	//Set the title of the top
+	"_title": {
+		"style": "customized_title",
+		"title": function(that){
+			var title = that.param.type.slice(0,-1) + ' Information';
+			return title;
+		},
+		"class": function(that){
+			var className = 'submenu_wrapper_title submenu_wrapper_taskdetail_'+that.param.type;
+			return className;
+		},
+	},
+	"left_button": {
+		"style": "title_left_button",
+		"title": Lincko.Translation.get('app', 7, 'html'), //Close
+		'hide': true,
+		"class": "base_pointer",
+	},
+	"right_button": {
+		"style": "title_right_button",
+		"title": Lincko.Translation.get('app', 41, 'html'), //Create
+		"class": "base_pointer",
+		'hide': true,
+		"action": function(Elem, that) {
+			console.log('A function to save')
+		},
+	},
+	"taskdetail": {
+		"style": "taskdetail",
+		"title": "taskdetail",
+		"class": "",
+	},
+	"projects_id": {
+		"style": "input_hidden",
+		"title": "",
+		"name": "task_parent_id_hidden",
+		"value": "",
+		"now": function(that, Elem){
+			var currentProjID = app_content_menu.projects_id;
+			if(that.param.projID){
+				currentProjID = that.param.projID;
+			}
+			Elem.find("[find=submenu_input]").prop('value', currentProjID);
+		},
+		"class": "",
+	},
+};
+*/
+
 
 Submenu_select.taskdetail = function(subm){
 	subm.Add_taskdetail();
@@ -76,7 +128,7 @@ Submenu_select.taskdetail = function(subm){
 Submenu.prototype.Add_taskdetail = function() {
 	var that = this;
 	var attribute = this.attribute;
-	this.md5id = md5(Math.random());
+	this.md5id = this.id;//md5(Math.random()); //This help to avoid memory leak
 	var submenu_wrapper = this.Wrapper();
 	var submenu_content = submenu_wrapper.find("[find=submenu_wrapper_content]");
 	submenu_content.prop('id','taskdetail_'+that.md5id).addClass('submenu_content_taskdetail_'+that.param.type);

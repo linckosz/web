@@ -38,7 +38,10 @@ var app_layers_tasks_feedPage = function(param){
 			Lincko.Translation.get('app', 3303, 'html').toUpperCase(),/*tomorrow*/
 			//'Spaces'
 		],
-		null, 2, null
+		null,
+		2,
+		null,
+		'layer_tasks'
 	);
 
 	//app_layers_tasks_tasklist.skylist_update = app_layers_tasks_tasklist.tasklist_update;

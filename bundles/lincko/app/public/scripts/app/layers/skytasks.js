@@ -9,6 +9,8 @@ var app_layers_skytasks_tasklist_id = 1;
 
 /*GLOBAL VARIABLES END----------------------------------------------------------------------*/
 
+/*
+toto => this should not be used anymore
 var app_layers_skytasks_memoryTest = function(){
 	for( var i=0; i<200; i++){
 		app_layers_skytasks_tasklist = new skylist($('#app_layers_skytasks_tasklist_wrapper'));
@@ -20,7 +22,7 @@ var app_layers_skytasks_memoryTest2 = function(){
 		app_layers_skytasks_tasklist.destroy();
 	}
 }
-
+*/
 
 function app_layers_skytasks_launchPage(){
 	console.log('app_layers_skytasks_launchPage');
@@ -57,8 +59,13 @@ var app_layers_skytasks_feedPage = function(){
 			Lincko.Translation.get('app', 3302, 'html').toUpperCase(),/*today*/
 			Lincko.Translation.get('app', 3303, 'html').toUpperCase(),/*tomorrow*/
 			'Spaces'
-		]
-		);
+		],
+		null,
+		false,
+		false,
+		false,
+		'layer_skytasks'
+	);
 
 
 

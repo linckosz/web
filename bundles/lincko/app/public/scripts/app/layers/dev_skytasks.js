@@ -421,7 +421,7 @@ var app_layers_dev_skytasks_ClassTasklist = function(tasklist_wrapper){
 	this.that = this;
 	var that = this;
 	
-	this.md5id = md5(Math.random());
+	this.md5id = md5(Math.random()); //toto => Important md5 can lead to memory leak
 	this.window_resize_timeout = null;
 
 	//all elem group storage

@@ -31,7 +31,11 @@ var app_layers_files_feedPage = function(param){
 	app_layers_files_fileslist = new skylist(
 		'files',
 		$('#app_layers_files_fileslist'),
-		null
+		null,
+		false,
+		false,
+		false,
+		'layer_files'
 	);
 
 

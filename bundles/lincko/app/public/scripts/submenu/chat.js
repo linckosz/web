@@ -566,6 +566,7 @@ var submenu_chat_invite_cb_begin = function(){
 };
 
 Submenu.prototype.Add_ChatContent = function() {
+	var that = this;
 	var submenu_wrapper = this.Wrapper();
 	var position = submenu_wrapper.find("[find=submenu_wrapper_content]");
 	//position.addClass('overthrow').addClass("submenu_chat_contents");
@@ -581,7 +582,10 @@ Submenu.prototype.Add_ChatContent = function() {
 		null,
 		function() {
 			this.list_wrapper.addClass("skylist_maxMobileL_force");
-		}
+		},
+		false,
+		false,
+		that.id
 	);
 
 	submenu_wrapper.find("[find=search_textbox]").addClass('no_focus');
