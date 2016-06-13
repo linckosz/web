@@ -13,14 +13,13 @@ var chatlist_subConstruct = function(){
 		.appendTo(that.list_wrapper);
 }
 
-function app_layers_chat_feedChat(parent, handler) {
+function app_layers_chat_feedChat(parent) {
 	var app_layers_chatlist = new skylist(
 		'chats',
 		parent,
 		null,
 		chatlist_subConstruct
 	);
-	parent.delegate(".skylist_card", "click", handler);
 	parent.delegate(".skylist_newcardCircle", "click", function() {
 		submenu_Build("contacts", false, false, {
 			'id': app_content_menu.projects_id,
@@ -28,30 +27,61 @@ function app_layers_chat_feedChat(parent, handler) {
 		}, that.preview);
 		return false;
 	});
-	console.log('ok2');
-	app_application_lincko.add("skylist_"+app_layers_chatlist.md5id, "chats", function() {console.log('ok3');
+	app_application_lincko.add("skylist_"+app_layers_chatlist.md5id, "chats", function() {
+		var Elem;
 		var id_list = [];
 		var iscroll_elem = $("#"+this.id).find(".iscroll_sub_div");
-		$.each($("#"+this.id).find(".skylist_card"), function() {
+		iscroll_elem.empty();
+		$.each($("#"+this.id).find(".skylist_card"), function() { //toto => what's the use? I could not call it
 			id_list.push($(this).prop("id").split("skylist_card_"+app_layers_chatlist.md5id+"_")[1]);
 		})
 		var new_chats = Lincko.storage.list("chats", -1, null, 'projects', app_content_menu.projects_id, false);
-		console.log(new_chats);
+		new_chats.push(Lincko.storage.get("projects", app_content_menu.projects_id));
+		new_chats = Lincko.storage.sort_items(new_chats, 'updated_at', 0, -1, true);
+
 		for(c in new_chats) {
 			if (id_list.indexOf(new_chats[c]._id.toString())>-1) {
 				return;
 			}
-			iscroll_elem.prepend(app_layers_chatlist.addCard(new_chats[c]));
-			
+			Elem = app_layers_chatlist.addCard(new_chats[c]);
+			iscroll_elem.prepend(Elem);
+
+			if(new_chats[c]["_type"]=="chats"){
+				Elem.click(new_chats[c]["_id"], function(event){
+					var id = event.data;
+					var title = Lincko.storage.get('chats', id, '+title');
+					submenu_Build("newchat", false, false, {
+						type: 'chats',
+						id: id,
+						title: title,
+					}, true);
+				});
+			} else if(new_chats[c]["_type"]=="projects"){
+				Elem.click(new_chats[c]["_id"], function(event){
+					var id = event.data;
+					var title = Lincko.storage.get("projects", id, "+title");
+					if(id == Lincko.storage.getMyPlaceholder()['_id']){
+						title = Lincko.Translation.get('app', 2502, 'html'); //Personal Space
+					}
+					submenu_Build("newchat", false, false, {
+						type: 'history',
+						id: id,
+						title: title,
+					}, true);
+				});
+			}
 		}
+		
 	});
-	app_application_lincko.prepare("chats", true);
+	setTimeout(function(){
+		app_application_lincko.prepare("chats", true);
+	}, 50);
 
 }
 
 function app_layers_chat_launchPage(param) {
 	if (typeof param === 'undefined') { param = null; }
-	app_layers_chat_feedPage();
+	app_layers_chat_feedPage(param);
 }
 
 var app_layers_chat_feedPage = function(param) {
@@ -59,23 +89,5 @@ var app_layers_chat_feedPage = function(param) {
 	var position = $('#app_layers_chat');
 	position.addClass('overthrow');
 	position.empty();
-	console.log('ok1');
-	app_layers_chat_feedChat(position,
-		function() {
-			if ($(this).attr('type') != 'history') {
-				var tmp = $(this).prop("id").split("_");
-				var id = tmp[tmp.length-1];
-				var title = Lincko.storage.get('chats', id, '+title');
-			}
-			else {
-				var id = app_content_menu.projects_id;
-				var title = Lincko.storage.get("projects", id, "+title") + " Activity";
-			}
-			submenu_Build("newchat", false, false, {
-				type: $(this).attr('type'),
-				id: id,
-				title: title,
-			}, true);
-			return false;
-		});
+	app_layers_chat_feedChat(position);
 }

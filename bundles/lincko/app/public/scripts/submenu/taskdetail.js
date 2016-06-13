@@ -248,18 +248,18 @@ Submenu.prototype.Add_taskdetail = function() {
 			fileType_class = 'fa fa-file-image-o';
 			thumb_url = Lincko.storage.getLinkThumbnail(item['_id']);
 			real_url = Lincko.storage.getLink(item['_id']);
-			elem_leftbox = $('<img />').prop('src',thumb_url).click(function(event){
+			elem_leftbox = $('<img />').prop('src',thumb_url).click(item['_id'], function(event){
 				event.stopPropagation();
-				previewer.pic(item['+name'],real_url,thumb_url);
+				previewer.pic(event.data);
 			});
 		}
 		else if(item['category'] == 'video'){
 			fileType_class = 'fa fa-file-video-o';
 			thumb_url = Lincko.storage.getLinkThumbnail(item['_id']);
 			real_url = Lincko.storage.getLink(item['_id']);
-			elem_leftbox = $('<img />').prop('src',thumb_url).click(function(event){
+			elem_leftbox = $('<img />').prop('src',thumb_url).click(item['_id'], function(event){
 				event.stopPropagation();
-				previewer.video(item['+name'],real_url,thumb_url);
+				previewer.video(event.data);
 			});
 		}
 
@@ -387,8 +387,13 @@ Submenu.prototype.Add_taskdetail = function() {
 				delete Lincko.storage.data.tasks[taskid];
 				app_application_lincko.prepare('tasks_'+taskid, true);
 				submenu_Clean(null,null,that.preview);
+			} else {
+				base_show_error(Lincko.Translation.get('app', 51, 'html'), true); //Operation not allowed
 			}
 		});
+		if(!Lincko.storage.canI('delete', that.param.type, taskid)){
+			elem_action_menu.find('[find=delete]').addClass("display_none");
+		}
 
 		return elem;
 	}// end of update_meta function
@@ -397,7 +402,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	/*---END OF all meta---*/
 
 	/*---description---*/
-	elem = $('#-submenu_taskdetail_description').clone().prop('id','submenu_taskdetail_description');
+	elem = $('#-submenu_taskdetail_description').clone().prop('id',that.id+'_submenu_taskdetail_description');
 	var elem_description_text = elem.find('[find=description_text]');
 	elem_description_text.html(item['-comment']).focus(function(){
 

@@ -34,6 +34,31 @@ var notifier = (
 					tmp[t_id] = true;
 				}
 			}
+			//toto => not clearing notifications
+			wrapper_sendAction(tmp, 'post', 'data/noticed', function() {
+				app_application_lincko.prepare("history_"+id);
+			});
+		}
+
+		function getHistoryNotification(id) {
+			var cnt = Lincko.storage.hist(null, -1, {not: true}, 'projects', id, true).length;
+			return cnt;
+		}
+
+		function clearHistoryNotification(id) {
+			var tmp = {};
+			tmp["projects_"+ id] = true;
+
+			var children = Lincko.storage.tree('projects', id, 'children');
+			for (var c_type in children)
+			{
+				for (var c_id in children[c_type])
+				{
+					var t_id = c_type + "_" + c_id;
+					tmp[t_id] = true;
+				}
+			}
+			//toto => not clearing notifications
 			wrapper_sendAction(tmp, 'post', 'data/noticed', function() {
 				app_application_lincko.prepare("history_"+id);
 			});
@@ -44,9 +69,13 @@ var notifier = (
 				'get': getChatNotification,
 				'clear': clearChatNotification,
 			},
-			'history': {
+			'projects': {
 				'get': getProjectNotification,
 				'clear': clearProjectNotification,
+			},
+			'history': {
+				'get': getHistoryNotification,
+				'clear': clearHistoryNotification,
 			}
 		};
 	}

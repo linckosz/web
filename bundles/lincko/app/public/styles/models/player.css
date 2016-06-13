@@ -1,4 +1,4 @@
-div#player_preview_full_screen {
+.player_preview_full_screen {
 	position:fixed !important;
 	top:0;
 	right:0;
@@ -7,7 +7,7 @@ div#player_preview_full_screen {
 	z-index: 2006;
 }
 
-#player_preview_style_wrapper {
+.player_preview_style_wrapper {
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -21,7 +21,7 @@ div#player_preview_full_screen {
 	background-color: rgba(0, 0, 0, 0.6);
 }
 
-#player_preview_style_wrapper .close {
+.player_preview_style_wrapper .close {
 	color: rgba(0, 0, 0, 0.6);
 	position: absolute;
 	top: 0;

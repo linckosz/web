@@ -595,7 +595,7 @@ Submenu.prototype.Add_ChatContent = function() {
 				if (event.data.type == 'chats') {
 					title = $(this).find('header').html();
 				} else {
-					title = Lincko.storage.get("projects", event.data.id, "+title") + " Activity";
+					title = Lincko.storage.get("projects", event.data.id, "+title");
 				}
 				//render
 				submenu_Build("newchat", true, false, {
@@ -616,7 +616,7 @@ Submenu.prototype.Add_ChatContent = function() {
 		else {
 			var tmp = $(this).prop("id").split("_");
 			var id = tmp[tmp.length-1];
-			var title = Lincko.storage.get("projects", id, "+title") + " Activity";
+			var title = Lincko.storage.get("projects", id, "+title");
 		}
 		submenu_Build("newchat", true, false, {
 			type: $(this).attr('type'),

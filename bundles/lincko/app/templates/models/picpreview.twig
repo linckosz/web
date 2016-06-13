@@ -6,16 +6,17 @@
 </div>
 <div id="end_models_projects" class="visibility_hidden"></div>
 
+<iframe id="my_iframe" style="display:none;"></iframe>
+<script>
+	function app_models_download(url) {
+		document.getElementById('my_iframe').src = url;
+	};
+</script>
+
 <div class="display_none">
-	<div id="-pic_preview_full_screen">
-		<iframe id="my_iframe" style="display:none;"></iframe>
-		<script>
-			function Download(url) {
-				document.getElementById('my_iframe').src = url;
-			};
-		</script>
-		<div id="pic_preview_wrapper">
-			<label class="fa fa-2x fa-times-circle close" aria-hidden="true"></label>
+	<div id="-pic_preview_full_screen" class="pic_preview_full_screen">
+		<div class="pic_preview_wrapper">
+			<label class="fa fa-2x fa-times-circle close" find="close" aria-hidden="true"></label>
 			<div class="pic_wrapper">
 				<img src="">
 				<label class="label">

@@ -22,7 +22,7 @@ var mainMenu = (function() {
 		}
 
 		if (data.type == "history") {
-			name = Lincko.storage.get("projects", data.id, "+title") + " Activity";
+			name = Lincko.storage.get("projects", data.id, "+title");
 			//item.find('img.logo').attr('src', 'icon-Multiple-People');
 			item.find('span.logo').addClass('fa fa-globe');
 		} else if (data.type == 'chats') {

@@ -9,7 +9,7 @@ var chatFeed = (function() {
 			var thumbnail = Lincko.storage.getLinkThumbnail(id);
 			var extension = checkExtension(id);
 			if (extension) {
-				previewer[extension](name, url, thumbnail);
+				previewer[extension](id);
 				return false;
 			}
 			else {
@@ -343,7 +343,6 @@ var chatFeed = (function() {
 			var id = RESOURCE_ID[category](parent.prop("id"));
 			var that = this;
 			SHORTCUT_HANDLERS[category](id, that);
-
 			return false;
 		});
 
