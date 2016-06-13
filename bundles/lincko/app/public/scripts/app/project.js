@@ -104,7 +104,7 @@ var mainMenu = (function() {
 		var notes;
 		var files;
 
-		var projects_all = Lincko.storage.list('projects', null, {_id:['!=', Lincko.storage.getMyPlaceholder()['_id']]}).length;
+		var projects_all = Lincko.storage.list('projects').length;
 		$("#app_project_tab").find("[find=app_project_all_number]").html("("+projects_all+")");
 
 		//caculate
