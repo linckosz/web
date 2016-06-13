@@ -169,12 +169,52 @@
 	float: right;
 	height: 100%;
 	font-size: 24px;
+	text-align: center;
+	vertical-align: middle;
 }
 
 #app_content_submenu_preview .submenu_wrapper{
 	width: 100%;
 	position: absolute;
 }
+
+#app_content_submenu_preview_logo {
+	color: #FFFFFF;
+	background-color: #FBA026;
+	position: absolute;
+	top: 20%;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+	width: 128px;
+	height: 128px;
+	line-height: 128px;
+	text-align: center;
+	vertical-align: middle;
+	font-size: 28px;
+	font-weight: 200;
+	border-radius: 3px;
+}
+
+#app_content_submenu_preview_statistics {
+	position: absolute;
+	text-align: left;
+	top: 24px;
+	right: 24px;
+	padding: 20px 30px;
+	color: rgba(255, 255, 255, 0.70);
+	background-color: rgba(68, 68, 68, 0.25);
+	font-size: 20px;
+	font-weight: 200;
+	border-radius: 3px;
+}
+
+.app_content_statistics_stats > span {
+	vertical-align: middle;
+	padding: 8px 4px;
+}
+
 /* Mobile phone in Portrait maximum */
 @media only screen and (max-width: 479px){
 	#app_content_top {

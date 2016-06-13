@@ -2,7 +2,6 @@
 	#app_project_content {
 		position: absolute;
 		right: 0;
-		color: #4385AE;;
 		font-size: 16px;
 		width: 320px;
 		line-height: 2.5;
@@ -58,7 +57,6 @@
 		background-color: rgba(255, 255, 255, 0.5); 
 		border-radius: 3px;
 		cursor: pointer; cursor: hand;
-		color: #4385AE;
 		padding-left: 10px;
 		overflow: hidden;
 	}
@@ -130,7 +128,6 @@
 	.app_project_item {
 		border-bottom: 1px solid #EB8B26;
 		position: relative;
-		color: #4385AE;
 		background-color: rgba(255, 255, 255, 0.5);
 		padding: 0 10px;
 		/*display: table-cell;*/

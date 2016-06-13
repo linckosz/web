@@ -17,9 +17,13 @@
 }
 
 .submenu_projects_chart {
-	vertical-align: middle;
 	padding: 0;
-	box-sizing: border-box;
+	padding-right: 20px;
+	line-height: 0;
+}
+.submenu_projects_chart > canvas {
+	width: 200px !important;
+	height: 34px !important;
 }
 
 .submenu_projects_statistics {
@@ -27,9 +31,6 @@
 	padding: 0 8px 0 8px;
 }
 
-.submenu_projects_chart {
-	width: 100px;
-}
 
 .submenu_padding.submenu_projects_settings {
 	font-size: 24px;
@@ -46,3 +47,27 @@
 	height: 48px;
 	line-height: 48px;
 }
+
+@media only screen and (max-width: 479px){
+	.submenu_projects_chart {
+		padding-right: 6px;
+	}
+	.submenu_projects_chart > canvas {
+		width: 100px !important;
+		height: 34px !important;
+	}
+	.submenu_projects_statistics {
+		padding-right: 0;
+	}
+}
+
+@media only screen and (min-width: 1280px){
+	.submenu_projects_chart {
+		padding-right: 12px;
+	}
+	.submenu_projects_chart > canvas {
+		width: 100px !important;
+		height: 34px !important;
+	}
+}
+

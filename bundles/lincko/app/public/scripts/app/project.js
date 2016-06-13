@@ -99,7 +99,7 @@ var mainMenu = (function() {
 
 	function initProjectTab() {
 		$("#app_project_tab").find(".app_project_item").remove();
-		var projectList = Lincko.storage.list('projects', 4);
+		var projectList = Lincko.storage.list('projects', 4, {_id:['!=', Lincko.storage.getMyPlaceholder()['_id']]});
 		var tasks;
 		var notes;
 		var files;

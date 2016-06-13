@@ -207,3 +207,177 @@ Submenu.prototype.Add_ProjectTeamEdit = function() {
 
 	return Elem;
 };
+
+var app_models_projects_chart_tasks_data = function(Elem_id, id, chart_display_replace, chart_options_replace){
+	if(typeof chart_display_replace != "object"){ chart_display_replace = false; }
+	if(typeof chart_options_replace != "object"){ chart_options_replace = false; }
+	wrapper_clean_chart();
+
+	//Chart default
+	var chart_display = {
+		labels: [],
+		datasets: [
+			{
+				label: Lincko.Translation.get('app', 2101, 'html'), //total
+				fillColor: "rgba(250,250,250,0.2)",
+				strokeColor: "rgba(250,250,250,0.35)",
+				pointColor: "rgba(250,250,250,0)",
+				pointStrokeColor: "rgba(250,250,250,0)",
+				pointHighlightFill: "#FFFFFF",
+				pointHighlightStroke: "rgba(230,230,230,0.8)",
+				data: [],
+			},
+			{
+				label: Lincko.Translation.get('app', 2102, 'html'), //me
+				fillColor: "rgba(250,250,250,0.5)",
+				strokeColor: "rgba(250,250,250,1)",
+				pointColor: "rgba(250,250,250,0)",
+				pointStrokeColor: "rgba(250,250,250,0)",
+				pointHighlightFill: "#FFFFFF",
+				pointHighlightStroke: "rgba(230,230,230,0.8)",
+				data: [],
+			}
+		]
+	};
+	if(chart_display_replace){
+		chart_display = $.extend(true, {}, chart_display, chart_display_replace);
+	}
+
+	var chart_options = {
+		animation: true,
+		animationSteps: 12,
+		animationEasing: "easeInOutCirc",
+		responsive: false,
+		maintainAspectRatio: false,
+		showScale: false,
+		scaleBeginAtZero: true,
+		tooltipFontSize: 10,
+		tooltipTitleFontSize: 10,
+		tooltipTitleFontStyle: "normal",
+		tooltipTemplate: "<%= value %> ( <%=datasetLabel%> )",
+		multiTooltipTemplate: "<%= value %> ( <%=datasetLabel%> )",
+		tooltipFillColor: "rgba(0,0,0,0.2)",
+		tooltipCornerRadius: 3,
+		scaleShowGridLines : false,
+		pointDotRadius : 2,
+		pointDotStrokeWidth : 1,
+		datasetStroke : true,
+		pointHitDetectionRadius : 10,
+		multiTooltipKeyBackground: "rgba(250,250,250,0.2)",
+		datasetStrokeWidth : 1,
+	};
+	if(chart_options_replace){
+		chart_options = $.extend(true, {}, chart_options, chart_options_replace);
+	}
+
+	var chart_data = {
+		labels: [],
+		data_total: [],
+		data_me: [],
+	};
+	var label = Lincko.storage.data["_history_title"]["tasks"][0].ucfirst(); //Tasks
+	var data_total = 0;
+	var data_me = 0;
+	var created_at;
+	var approved_at;
+	var deleted_at;
+	var in_charge = false;
+	var project = Lincko.storage.get("projects", id);
+	var tasks = Lincko.storage.list('tasks', -1, null, 'projects', id);
+
+	if(tasks.length<=0){
+		return false;
+	}
+	//Cut in 10 slices the time to make a curve smooth
+	var start = false;
+	var end = Math.floor((new Date()).getTime() / 1000);
+	for(var i in tasks){
+		created_at = tasks[i]["created_at"];
+		approved_at = tasks[i]["approved_at"];
+		deleted_at = tasks[i]["deleted_at"];
+		if(created_at!=null && (!start || created_at<start)){
+			start = created_at;
+		}
+	}
+
+	var range_total = {}
+	var range_me = {}
+	range_total[start] = 0;
+	range_me[start] = 0;
+	if(start){
+		var cut = 10;
+		var range_cut = Math.floor((end-start)/cut);
+		for(var i=1; i<cut; i++){
+			range_total[start+(i*range_cut)] = 0;
+			range_me[start+(i*range_cut)] = 0;
+		}
+		range_total[end] = 0;
+		range_me[end] = 0;
+	}
+
+	var plus;
+	var less = false;
+	for(var i in tasks){
+		plus = tasks[i]["created_at"];
+		approved_at = tasks[i]["approved_at"];
+		deleted_at = tasks[i]["deleted_at"];
+		in_charge = false;
+		if(tasks[i]["_users"] && tasks[i]["_users"][wrapper_localstorage.uid] && tasks[i]["_users"][wrapper_localstorage.uid]["in_charge"]==true){
+			in_charge = true;
+		}
+		less = false;
+		if(deleted_at!=null){
+			less = deleted_at;
+		}
+		if(approved_at!=null){
+			less = approved_at;
+		}
+		if(plus){
+			for(var timestamp in range_total){
+				if(plus<=timestamp){
+					range_total[timestamp]++;
+					if(in_charge){
+						range_me[timestamp]++;
+					}
+				}
+			}
+		}
+		if(less){
+			for(var timestamp in range_total){
+				if(less<=timestamp){
+					range_total[timestamp]--;
+					if(in_charge){
+						range_me[timestamp]--;
+					}
+				}
+			}
+		}
+	}
+
+	var date = new wrapper_date();
+	var temp = 0;
+	for(var i in range_total){
+		date.setTime(i);
+		label = date.display("date_very_short");
+		chart_data.labels.push(label);
+		temp = range_total[i];
+		if(temp<0){ temp = 0; }
+		chart_data.data_total.push(temp);
+		temp = range_me[i];
+		if(temp<0){ temp = 0; }
+		chart_data.data_me.push(temp);
+	}
+
+	Elem = $('#'+Elem_id);
+	if(Elem.length>0 && Elem.find("[find=tasks_statistics]")){
+		//Chart generator
+		var ctx = Elem.find("[find=tasks_statistics]").get(0).getContext("2d");
+		chart_display.labels = chart_data.labels;
+		chart_display.datasets[0].data = chart_data.data_total;
+		chart_display.datasets[1].data = chart_data.data_me;
+		var chart = new Chart(ctx).Line(chart_display, chart_options);
+		return chart;
+	}
+	return false;
+}
+

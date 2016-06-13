@@ -74,6 +74,24 @@
 	{# this absolute DIV is important, it help to fixed absolute elements position to this DIV and not the page itsel. #}
 	<div id="app_content_dynamic_sub">{# DO NOT DELETE #}
 		<div id="app_content_submenu_preview">
+			<div id="app_content_submenu_preview_statistics">
+				<div class="app_content_statistics_stats">
+					<span class="icon-Tasks"></span>
+					<span find="app_content_statistics_stats_tasks">0</span>
+				</div>
+				<div class="app_content_statistics_stats">
+					<span class="icon-New-Notes"></span>
+					<span find="app_content_statistics_stats_notes">0</span>
+				</div>
+				<div class="app_content_statistics_stats">
+					<span class="icon-Cloud-Files"></span>
+					<span find="app_content_statistics_stats_files">0</span>
+				</div>
+				<div class="app_content_statistics_chart">
+					<canvas find="tasks_statistics" width="200" height="80" ></canvas>
+				</div>
+			</div>
+			<div id="app_content_submenu_preview_logo">Lincko</div>
 		</div>
 		<div id="app_content_dynamic_layers">
 			{% include '/bundles/lincko/app/templates/app/layers.twig' %}

@@ -124,12 +124,31 @@ var app_content_menu = {
 
 		app_layers_changePage(menu, param);
 
+		app_application_lincko.prepare("projects", true);
+
 		if(responsive.test("maxMobileL")){ app_application.forceClose(); }
 	},
 }
 
 $('#app_content_top_home, #app_content_top_title_menu').click(function(){
 	submenu_Build('projects_list');
+});
+
+app_application_lincko.add("app_content_submenu_preview_statistics", "projects", function() {
+	var Elem = $("#"+this.id);
+	var projects_id = app_content_menu.projects_id;
+	if(projects_id){
+		var project = Lincko.storage.get("projects", projects_id);
+		if(project){
+			app_models_projects_chart_tasks_data("app_content_submenu_preview_statistics", projects_id);
+			var tasks = Lincko.storage.list('tasks', null, {approved: false,}, 'projects', projects_id, true).length;
+			var notes = Lincko.storage.list('notes', null, null, 'projects', projects_id, true).length;
+			var files = Lincko.storage.list('files', null, null, 'projects', projects_id, true).length;
+			Elem.find("[find=app_content_statistics_stats_tasks]").html(tasks);
+			Elem.find("[find=app_content_statistics_stats_notes]").html(notes);
+			Elem.find("[find=app_content_statistics_stats_files]").html(files);
+		}
+	}
 });
 
 var app_content_menu_first_launch = true;

@@ -28,13 +28,15 @@ function app_layers_chat_feedChat(parent, handler) {
 		}, that.preview);
 		return false;
 	});
-	app_application_lincko.add("skylist_"+app_layers_chatlist.md5id, "chats", function() {
+	console.log('ok2');
+	app_application_lincko.add("skylist_"+app_layers_chatlist.md5id, "chats", function() {console.log('ok3');
 		var id_list = [];
 		var iscroll_elem = $("#"+this.id).find(".iscroll_sub_div");
 		$.each($("#"+this.id).find(".skylist_card"), function() {
 			id_list.push($(this).prop("id").split("skylist_card_"+app_layers_chatlist.md5id+"_")[1]);
 		})
-		var new_chats = Lincko.storage.list("chats", -1, null, 'projects',app_content_menu.projects_id, false);
+		var new_chats = Lincko.storage.list("chats", -1, null, 'projects', app_content_menu.projects_id, false);
+		console.log(new_chats);
 		for(c in new_chats) {
 			if (id_list.indexOf(new_chats[c]._id.toString())>-1) {
 				return;
@@ -43,6 +45,7 @@ function app_layers_chat_feedChat(parent, handler) {
 			
 		}
 	});
+	app_application_lincko.prepare("chats", true);
 
 }
 
@@ -56,6 +59,7 @@ var app_layers_chat_feedPage = function(param) {
 	var position = $('#app_layers_chat');
 	position.addClass('overthrow');
 	position.empty();
+	console.log('ok1');
 	app_layers_chat_feedChat(position,
 		function() {
 			if ($(this).attr('type') != 'history') {
