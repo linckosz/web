@@ -57,7 +57,7 @@
 		<td>{{ _trans('app', 10, 3, 'html') }}{#comments#} (<span find="commentCount"></span>)</td>
 	</table>
 	<div class="submenu_taskdetail_comments_seePrev">
-		<span find="seePrev_btn" class="submeu_taskdetail_blueButton display_none">See previous comments...{#toto#}</span>
+		<span find="seePrev_btn" class="submeu_taskdetail_blueButton display_none">{{ _trans('app', 14, 1, 'html') }}...{#See previous comments#}</span>
 	</div>
 	<div class="submenu_taskdetail_comments_main submenu_taskdetail_paddingLeft"></div>
 	<div class="submenu_taskdetail_addNewComment_wrapper submenu_taskdetail_paddingLeft">
@@ -67,10 +67,10 @@
 				<div find="name"></div>
 			</td>
 			<td class="submenu_taskdetail_commentbubble_text">
-				<input type="textarea" find="addNewComment_text" placeholder="enter comment here..."{#toto#}>
+				<input type="textarea" find="addNewComment_text">
 			</td>
 		</table>
-		<span find='addNewComment_btn' class="submeu_taskdetail_blueButton">Add new comment {#toto#}</span>
+		<span find='addNewComment_btn' class="submeu_taskdetail_blueButton">{{ _trans('app', 14, 2, 'html') }}{#Add new comment#}</span>
 	</div>
 </div>
 
@@ -85,20 +85,20 @@
 	<td class="submenu_taskdetail_commentbubble_text">
 		<div find="text" class="selectable"></div>
 		<div class="submenu_taskdetail_commentbubble_quickAction">
-			<span find="replyBtn" class="base_color_text_linckoOrange">Reply{#toto#}</span>
-			<span find="seeAllBtn" class="base_color_text_linckoOrange display_none">{{ _trans('app', 10, 2, 'html') }}{#see all toto#}</span>
+			<span find="replyBtn" class="base_color_text_linckoOrange">{{ _trans('app', 14, 3, 'html') }}{#Reply#}</span>
+			<span find="seeAllBtn" class="base_color_text_linckoOrange display_none">{{ _trans('app', 14, 4, 'html') }}{#see all toto#}</span>
 			<span find="date"></span>
 		</div>
-		<input type="textarea" find="addNewComment_text" placeholder="enter comment here..."{#toto#}>
+		<input type="textarea" find="addNewComment_text">
 	</td>
 </table>
 
 <div id="-submenu_taskdetail_tasktitle_fileInfo" class="submenu_taskdetail_tasktitle_fileInfo">
 	<div find="fileSize">
-		<span>File Size: {#toto#}</span><span find="val"></span><span find="unit"></span>
+		<span>{{ _trans('app', 8000, 3603, 'html') }}: {#File Size#}</span><span find="val"></span><span find="unit"></span>
 	</div>
 	<div find="fileSize">
-		<span>File Type: {#toto#}</span><span find="category"></span><span>, </span><span find="ori_ext"></span>
+		<span>{{ _trans('app', 8000, 3602, 'html') }}: {#File Type#}</span><span find="category"></span><span>, </span><span find="ori_ext"></span>
 	</div>
 	<a download find="downloadIcon" class="icon-Cloud-Download minTablet .skylist_clickable"></a>
 </div>

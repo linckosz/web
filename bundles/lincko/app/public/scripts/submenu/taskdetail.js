@@ -585,8 +585,10 @@ Submenu.prototype.Add_taskdetail = function() {
 					.addClass('submenu_taskdetail_commentbubble_sub submenu_taskdetail_commentbubble_me submenu_taskdetail_commentbubble_addNew');
 				elem_replyBubble.find('[find=name]').html(Lincko.storage.get("users", wrapper_localstorage.uid,"username"));
 				elem_replyBubble.find('[find=comment_id]').attr('comment_id','new');
+				var thumb_url = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", wrapper_localstorage.uid, 'profile_pic'));
+				
 				var elem_addNewComment_text = elem_replyBubble.find('[find=addNewComment_text]');
-
+				elem_replyBubble.find('[find=profile_pic]').css('background-image','url("'+thumb_url+'")');
 				elem_addNewComment_text.keyup(function(event) {
 					if (event.keyCode == 13) {
 						sendAction_newComment('comments', elem_replyTo.find('[find=comment_id]').attr('comment_id'), elem_replyBubble.find('[find=addNewComment_text]').val());

@@ -23,7 +23,7 @@
 		<div class="skylist_menu_timesort"></div>
 		<span class="skylist_menu_navbar_filter_icon icon-Filter skylist_clickable "></span>
 		<div class="skylist_menu_navbar_filter_pane" tabindex="1">
-			<div find="filter_header_1">Filter:{#toto#}</div>
+			<div find="filter_header_1">{{ _trans('app', 13, 1, 'html') }}{#Filter#}:</div>
 		</div>
 		<div class="skylist_menu_navbar_search">
 			<input find='search_textbox' type='textbox'/>
@@ -43,18 +43,18 @@
 	<div id="-skylist_filter_tasks_radio_wrapper" find="radio_wrapper">
 		<table find="option1" class="skylist_menu_navbar_filter_pane_optionWrapper">
 			<td find="radio" class="skylist_menu_navbar_filter_pane_radio fa fa-circle"></td>
-			<td find="text">Sort by due date{#toto#}</td>
+			<td find="text">{{ _trans('app', 13, 3, 'html') }}{#sort by due date#}</td>
 		</table>
 		<table find="option2" class="skylist_menu_navbar_filter_pane_optionWrapper">
 			<td find="radio" class="skylist_menu_navbar_filter_pane_radio fa"></td>
-			<td find="text">Sort by most recently updated{#toto#}</td>
+			<td find="text">{{ _trans('app', 13, 4, 'html') }}{#Sort by most recently updated#}</td>
 		</table>
 	</div>
 	<div id="-skylist_filter_tasks_divider" class="skylist_menu_navbar_filter_pane_divider"></div>
 	<div id="-skylist_filter_tasks_checkbox_wrapper" find="checkbox_wrapper">
 		<table class="skylist_menu_navbar_filter_pane_optionWrapper">
 			<td find="checkbox" class="skylist_menu_navbar_filter_pane_checkbox fa fa-check"></td>
-			<td find="text">Show completed tasks{#toto#}</td>
+			<td find="text">{{ _trans('app', 13, 5, 'html') }}{#Show completed tasks#}</td>
 		</table>
 	</div>
 
@@ -82,14 +82,14 @@
 		</table>
 		<table find="card_bottom" class="skylist_card_bottom skylist_paddingRight">
 			<td>
-				<span style="float: left" find="quickInfo1"></span>
-				<span style="float: left" find="quickInfo2"></span>
-				<span style="float: left" find="quickInfo3"></span>
+				<span find="quickInfo1" class="floatleft"></span>
+				<span find="quickInfo2" class="floatleft"></span>
+				<span find="quickInfo3" class="floatleft"></span>
 				<span find="name_icon" class="icon-SmallPersonaiconBlack"></span>
 				<input type="text" find='name_hidden' class="skylist_icon_text" readonly="readonly"/>
-				<span find='name' class="skylist_icon_text">Name{# toto #}</span>
+				<span find='name' class="skylist_icon_text"></span>
 				<span find="comments_icon" class="icon-Pencil"></span>
-				<span find='comments' class="skylist_icon_text">(<span find="commentCount"></span>){# toto #}</span>
+				<span find='comments' class="skylist_icon_text">(<span find="commentCount"></span>)</span>
 			</td>
 		</table>
 	</div>
@@ -99,7 +99,7 @@
 	{#rightOptionBox, goes inside <div find='card_rightOptions' #}
 	<div id="-skylist_rightOptionBox" class="skylist_rightOptionBox">
 		<div find='icon' class="fa"></div>
-		<div find='text' class="skylist_rightOptionBox_text">Name{# toto #}</div>
+		<div find='text' class="skylist_rightOptionBox_text"></div>
 	</div>
 
 	{#for tasklist, goes inside <td find='card_leftbox'></td> #}

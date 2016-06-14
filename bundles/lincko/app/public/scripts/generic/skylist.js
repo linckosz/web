@@ -15,7 +15,7 @@ var skylist_textDate = function(date){
 		return Lincko.Translation.get('app', 3303, 'html').toUpperCase()/*tomorrow*/;
 	}
 	else if(date.happensSomeday(-1)  ){
-		return 'yesterday'.toUpperCase()/*yesterday toto*/;
+		return Lincko.Translation.get('app', 3304, 'html').toUpperCase()/*yesterday*/;
 	}
 	else{
 		false;
@@ -1009,7 +1009,7 @@ skylist.prototype.addTask = function(item){
 	/*
 	updated_at
 	*/
-	Elem.find('[find=quickInfo1]').html('Updated: '/*toto*/);
+	Elem.find('[find=quickInfo1]').html(Lincko.Translation.get('app', 53, 'html')+': ');
 	var updated_at = new wrapper_date(item['updated_at']);
 	if( skylist_textDate(updated_at) ){
 		updated_at = skylist_textDate(updated_at);
@@ -1266,7 +1266,7 @@ skylist.prototype.addFile = function(item){
 		elem_leftbox.addClass(fileType_class);
 	 }
 
-	var elem_fileType = $('<div>'+'File Type'/*toto*/+': '+item['category']+', '+item['ori_ext'].toUpperCase()+'</div>');
+	var elem_fileType = $('<div>'+Lincko.Translation.get('app', 3602, 'html')+': '+item['category']+', '+item['ori_ext'].toUpperCase()+'</div>');
 	Elem.find('[find=description]').html(elem_fileType);
 	Elem.find('[find=card_leftbox]').append(elem_leftbox);
 
@@ -1304,7 +1304,7 @@ skylist.prototype.addFile = function(item){
 	var sizeUnit = fileSize.unit;
 	var sizeNum = fileSize.val;
 
-	Elem.find('[find=quickInfo1]').html('File Size:&nbsp;');//toto
+	Elem.find('[find=quickInfo1]').html(Lincko.Translation.get('app', 3603, 'html')+': ');
 	Elem.find('[find=quickInfo2]').html(sizeNum+' '+sizeUnit);
 
 

@@ -2,20 +2,20 @@
 submenu_list['burger_contacts'] = {
 	"_title": {
 		"style": "customized_title",
-		"title": "Task Assignment",//toto
+		"title": Lincko.Translation.get('app', 3601, 'html'),//   "Task Assignment",
 		"class": function(elem) {
 				return 'submenu_wrapper_taskdetail_tasks';
 		},
 	},
 	"left_button": {
 		"style": "title_left_button",
-		"title": 'Cancel',//toto
+		"title": Lincko.Translation.get('app', 7, 'html'), //'Cancel',
 		'hide': true,
 		"class": "base_pointer",
 	},
 	"right_button": {
 		"style": "title_right_button",
-		"title": "Select", //toto
+		"title": Lincko.Translation.get('app', 52, 'html'), //"Select", 
 		"class": "base_pointer",
 		"action": function(elem, submenuInst) {
 			var param = submenuInst.param;
