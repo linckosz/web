@@ -576,13 +576,25 @@ Submenu.prototype.Add_ChatContent = function() {
 
 	//submenu_wrapper.find("[find=submenu_wrapper_title]").html(this.param['title']);
 
+	var chatlist_subConstruct = function(){
+		var that = this;
+		that.list_wrapper.addClass("skylist_maxMobileL_force");
+		that.elem_newcardCircle.click( function() {
+			submenu_Build("contacts", false, false,
+				{
+					id:null,
+					'contactsID': _app_contacts_gen_chatcontacts(null,null,true),
+				}, false);
+			return false;
+		})
+		.appendTo(that.list_wrapper);
+	}
+
 	var app_layers_chatlist = new skylist(
 		'global_chats',
 		position,
 		null,
-		function() {
-			this.list_wrapper.addClass("skylist_maxMobileL_force");
-		},
+		chatlist_subConstruct,
 		false,
 		false,
 		that.id

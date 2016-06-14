@@ -7,6 +7,9 @@ submenu_list['contacts'] = {
 			if (elem.param.id) {
 				return "project" + elem.param.id + " submenu_newchat_header";
 			}
+			else{
+				return "submenu_newchat_header";
+			}
 		},
 	},
 	"left_button": {
@@ -65,7 +68,7 @@ submenu_list['contacts'] = {
 			else {
 				wrapper_sendAction({
 					'parent_type': null,
-					"parent_id": null,
+					"parent_id": -1,
 					"title": nameList,
 					"users>access": userList,
 				},
@@ -82,7 +85,8 @@ submenu_list['contacts'] = {
 				null,
 				function(jqXHR, settings, temp_id) {
 					comment_id = temp_id;
-				});
+				}
+				);
 			}
 		},
 	},
@@ -93,13 +97,21 @@ submenu_list['contacts'] = {
 };
 
 /*This is for outside usage to generate contacts list for chat*/
-function _app_contacts_gen_chatcontacts(type, id) {
-	var projectId = app_content_menu.projects_id;
+function _app_contacts_gen_chatcontacts(type, id, global_chat) {
+	var projectId = null;
+	if(!global_chat){
+		projectId = app_content_menu.projects_id;
+	}
 	if (projectId) {
 		var contactsID = Object.keys(Lincko.storage.data.projects[projectId]._perm);
 	}
 	else {
-		var contactsID = Object.keys(Lincko.storage.data.users);
+		var contactsID_obj = Lincko.storage.list('users',null,{_visible:true});
+		var contactsID = [];
+		$.each(contactsID_obj,function(key,val){
+			contactsID.push(contactsID_obj[key]['_id']);
+		});
+		//var contactsID = Object.keys(Lincko.storage.data.users);
 	}
 	var self_index = contactsID.indexOf(wrapper_localstorage.uid.toString());
 	if (self_index > -1) {
