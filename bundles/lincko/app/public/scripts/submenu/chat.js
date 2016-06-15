@@ -578,7 +578,7 @@ Submenu.prototype.Add_ChatContent = function() {
 
 	var chatlist_subConstruct = function(){
 		var that = this;
-		that.list_wrapper.addClass("skylist_maxMobileL_force");
+		that.list_wrapper.addClass("skylist_maxMobileL_force").addClass('submenu_content_chat');
 		that.elem_newcardCircle.click( function() {
 			submenu_Build("contacts", false, false,
 				{
