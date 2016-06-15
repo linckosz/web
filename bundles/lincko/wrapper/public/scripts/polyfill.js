@@ -14,3 +14,14 @@ if (!Object.create) {
 if (!Date.now) {
 	Date.now = function() { return new Date().getTime(); }
 }
+
+
+if (!Math.sign) {
+	Math.sign = function (x) {
+		x = +x;
+		if (x === 0 || isNaN(x)) {
+			return x;  
+		}
+		return x > 0 ? 1 : -1;
+	};
+}

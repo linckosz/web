@@ -9,30 +9,30 @@
 	<div id="app_project_content" class="base_PrimaryMainMenu base_MainElementText app_application_width_child">
 		<header id="app_project_top" class="clear">
 			<aside class="icon-Settings"></aside>
-			<article>Lincko</article>
+			<article>{{ title|ucfirst }}</article>
 		</header>
 		<section id="app_project_placeholder">
-			Personal Space
+			{{ _trans('app', 2, 4, 'html')|ucfirst }}{# Personal Space #}
 		</section>
 		<section id="app_project_tab">
 			<span id="app_project_project_new" class="app_project_header_add icon-Plus-no-circle"></span>
 			<header class="clear">
 				<div class="app_project_header_stats">
-					<span>All</span>
+					<span>{{ _trans('app', 2, 5, 'html') }}{# All #}</span>
 					<span find="app_project_all_number"></span>
 					<span class="icon-Forward"></span>
 				</div>
-				<p class="sub_header">My Projects</p>
+				<p class="sub_header">{{ _trans('app', 2, 13, 'html') }}{# My Projects #}</p>
 			</header>
 		</section>
 		<section id="app_project_chat">
 			<header>
 				<div class="app_project_header_stats">
-					<span>All</span>
+					<span>{{ _trans('app', 2, 5, 'html') }}{# All #}</span>
 					<span find="app_chat_all_number"></span>
 					<span class="icon-Forward"></span>
 				</div>
-				<p class="sub_header">Chat</p>
+				<p class="sub_header">{{ _trans('app', 2, 14, 'html') }}{# Chats #}</p>
 			</header>
 		</section>
 		<section id="quick_access">

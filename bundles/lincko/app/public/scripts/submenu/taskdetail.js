@@ -1,3 +1,4 @@
+//Category 36
 submenu_list['taskdetail'] = {
 	//Set the title of the top
 	"_title": {
