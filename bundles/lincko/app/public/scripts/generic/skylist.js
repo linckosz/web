@@ -125,7 +125,16 @@ var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct, ri
 		'hide_completed': false,
 	};
 	this.searchTimeout;
-	this.noResult_str = '<div class="skylist_card_noCard">There are no '+that.list_type+'.</div>';
+	this.noResult_str = $('<div class="skylist_card_noCard"></div>');
+	if(that.list_type == 'tasks'){
+		this.noResult_str.html(Lincko.Translation.get('app', 3611, 'html'));
+	}
+	else if(that.list_type == 'notes'){
+		this.noResult_str.html(Lincko.Translation.get('app', 3610, 'html'));
+	}
+	else if(that.list_type == 'files'){
+		this.noResult_str.html(Lincko.Translation.get('app', 3609, 'html'));
+	}
 
 	//variables for construct
 	this.list_wrapper = list_wrapper;
@@ -629,6 +638,7 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 
 			if( items_filtered.length < 1 ){
 				var noResultString = that.noResult_str;
+				/*
 				if( that.list_type == 'tasks' ){
 					noResultString += '<div class="skylist_card_noCard">(Filter: ';
 					$.each(that.Lincko_itemsList_filter, function(key, val){
@@ -636,6 +646,7 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 					});
 					noResultString += ')';
 				}
+				*/
 				iscroll_elem.append(noResultString);
 			}
 			else{
@@ -979,7 +990,7 @@ skylist.prototype.addTask = function(item){
 		}
 	}
 	if( !in_charge ){
-		in_charge = 'Not Assigned'; //toto
+		in_charge = Lincko.Translation.get('app', 3608, 'html'); //'Not Assigned'
 	}
 	//Elem.find('[find=name_hidden]').toggleClass('display_none');
 	Elem.find('[find=name]').html(in_charge);

@@ -4,7 +4,16 @@ submenu_list['taskdetail'] = {
 	"_title": {
 		"style": "customized_title",
 		"title": function(that){
-			var title = that.param.type.slice(0,-1) + ' Information';/*toto*/
+			var title = 'Information';
+			if(that.param.type == "tasks"){
+				title = Lincko.Translation.get('app', 3605, 'html');
+			}
+			if(that.param.type == "notes"){
+				title = Lincko.Translation.get('app', 3606, 'html');
+			}
+			if(that.param.type == "files"){
+				title = Lincko.Translation.get('app', 3607, 'html');
+			}
 			return title;
 		},
 		"class": function(that){
@@ -216,7 +225,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	}
 	else{
 		elem_title_text.html(item['+title']);
-		if(taskid == 'new' || (wrapper_localstorage.uid in item['_perm'] && item['_perm'][wrapper_localstorage.uid][0] > 1)){
+		if(true || taskid == 'new' || (wrapper_localstorage.uid in item['_perm'] && item['_perm'][wrapper_localstorage.uid][0] > 1)){
 			elem_title_text.prop('contenteditable',true);
 			elem_title_text.focus(function(){
 				if( $(this).html() == newTitle ){
@@ -342,7 +351,7 @@ Submenu.prototype.Add_taskdetail = function() {
 				}
 			}
 			if( !in_charge ){
-				in_charge = 'Not Assigned'; //toto
+				in_charge = Lincko.Translation.get('app', 3608, 'html'); //Not Assigned
 			}
 
 			//----in_charge
@@ -365,7 +374,7 @@ Submenu.prototype.Add_taskdetail = function() {
 					item['_users'][in_charge_id]['in_charge'] = true;
 				}
 				else{ //nobody in charnge
-					elem_in_charge.html('Not Assigned');//toto
+					elem_in_charge.html(Lincko.Translation.get('app', 3608, 'html'));//Not Assigned
 				}
 			});
 
@@ -586,9 +595,8 @@ Submenu.prototype.Add_taskdetail = function() {
 				elem_replyBubble.find('[find=name]').html(Lincko.storage.get("users", wrapper_localstorage.uid,"username"));
 				elem_replyBubble.find('[find=comment_id]').attr('comment_id','new');
 				var thumb_url = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", wrapper_localstorage.uid, 'profile_pic'));
-				
-				var elem_addNewComment_text = elem_replyBubble.find('[find=addNewComment_text]');
 				elem_replyBubble.find('[find=profile_pic]').css('background-image','url("'+thumb_url+'")');
+				var elem_addNewComment_text = elem_replyBubble.find('[find=addNewComment_text]');
 				elem_addNewComment_text.keyup(function(event) {
 					if (event.keyCode == 13) {
 						sendAction_newComment('comments', elem_replyTo.find('[find=comment_id]').attr('comment_id'), elem_replyBubble.find('[find=addNewComment_text]').val());
