@@ -2,12 +2,13 @@
 
 var chatlist_subConstruct = function(){
 		var that = this;
+		console.log(that);
 		that.elem_newcardCircle.click( function() {
 			submenu_Build("contacts", false, false,
 				{
 					id:app_content_menu.projects_id,
 					'contactsID': _app_contacts_gen_chatcontacts(),
-				}, that.preview);
+				}, true);
 			return false;
 		})
 		.appendTo(that.list_wrapper);
@@ -27,7 +28,7 @@ function app_layers_chat_feedChat(parent) {
 		submenu_Build("contacts", false, false, {
 			'id': app_content_menu.projects_id,
 			'contactsID': _app_contacts_gen_chatcontacts(),
-		}, that.preview);
+		}, true);
 		return false;
 	});
 	app_application_lincko.add("skylist_"+app_layers_chatlist.md5id, "chats", function() {

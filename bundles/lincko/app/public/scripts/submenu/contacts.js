@@ -24,6 +24,7 @@ submenu_list['contacts'] = {
 		"title": "Select",
 		"class": "base_pointer",
 		"action": function(elem, submenu, param) {
+			var that = submenu;
 			var userList = {};
 			var nameList = "";
 
@@ -52,13 +53,13 @@ submenu_list['contacts'] = {
 					},
 					'post',
 					'chat/create',
-					function() {console.log(1);console.log(this);
+					function() {
 						var chat = Lincko.storage.list('chats', 1, {'temp_id': comment_id})[0];
 						submenu_Build("newchat", false, false, {
 							type: 'chats',
 							id: chat['_id'],
 							title: chat['+title'],
-						}, true);
+						}, that.preview);
 						app_application_lincko.prepare("chats");
 					},
 					null,
@@ -75,13 +76,13 @@ submenu_list['contacts'] = {
 				},
 				'post',
 				'chat/create',
-				function() {console.log(2);console.log(this);
+				function() {
 					var chat = Lincko.storage.list('chats', 1, {'temp_id': comment_id})[0];
 					submenu_Build("newchat", false, false, {
 						type: 'chats',
 						id: chat['_id'],
 						title: chat['+title'],
-					}, true);
+					}, that.preview);
 				},
 				null,
 				function(jqXHR, settings, temp_id) {
