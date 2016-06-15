@@ -95,7 +95,6 @@ Submenu.prototype.Add_ChatContents = function() {
 					var latest = 0;
 			}
 			var items = Lincko.storage.list('comments', -1, {'created_at': [">", latest]}, 'chats', id, false);
-			console.log(items);
 			chatFeed.appendItem(type, items, position, true);
 			
 		});

@@ -23,16 +23,10 @@ var notifier = (
 
 		function clearProjectNotification(id) {
 			var tmp = {};
-			tmp["projects_"+ id] = true;
-
-			var children = Lincko.storage.tree('projects', id, 'children');
-			for (var c_type in children)
+			var children = Lincko.storage.hist(null, -1, {not: true}, 'projects', id, true);
+			for (var i in children)
 			{
-				for (var c_id in children[c_type])
-				{
-					var t_id = c_type + "_" + c_id;
-					tmp[t_id] = true;
-				}
+				tmp[children[i]["type"]+"_"+children[i]["id"]] = true;
 			}
 			//toto => not clearing notifications
 			wrapper_sendAction(tmp, 'post', 'data/noticed', function() {
@@ -47,16 +41,10 @@ var notifier = (
 
 		function clearHistoryNotification(id) {
 			var tmp = {};
-			tmp["projects_"+ id] = true;
-
-			var children = Lincko.storage.tree('projects', id, 'children');
-			for (var c_type in children)
+			var children = Lincko.storage.hist(null, -1, {not: true}, 'projects', id, true);
+			for (var i in children)
 			{
-				for (var c_id in children[c_type])
-				{
-					var t_id = c_type + "_" + c_id;
-					tmp[t_id] = true;
-				}
+				tmp[children[i]["type"]+"_"+children[i]["id"]] = true;
 			}
 			//toto => not clearing notifications
 			wrapper_sendAction(tmp, 'post', 'data/noticed', function() {

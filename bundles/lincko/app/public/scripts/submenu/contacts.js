@@ -26,7 +26,7 @@ submenu_list['contacts'] = {
 		"action": function(elem, submenu, param) {
 			var that = submenu;
 			var userList = {};
-			var nameList = "";
+			var nameList = $.trim( $("#"+submenu.id).find("[name=title]").val() );
 
 			var IDList = _submenu_get_contacts(elem);
 			IDList.push(wrapper_localstorage.uid);
@@ -35,7 +35,6 @@ submenu_list['contacts'] = {
 			}
 			for (var i=0;i<IDList.length; i++) {
 				userList[IDList[i]] = true;
-				nameList = nameList + " " + Lincko.storage.data.users[IDList[i]]['-username'];
 			}
 			var tmp = $(elem).parents('.submenu_newchat_header').attr('class').split(" ");
 			for (var t in tmp) {
@@ -92,10 +91,20 @@ submenu_list['contacts'] = {
 			}
 		},
 	},
+
+	"title": {
+		"style": "input_text",
+		"title": Lincko.Translation.get('app', 28, 'html'), //Title
+		"name": "title",
+		"value": "",
+		"class": "submenu_input_text",
+	},
+
 	'contacts': {
 		"style": "contacts",
 		"title": "contacts", //toto
-	}
+	},
+	
 };
 
 /*This is for outside usage to generate contacts list for chat*/
@@ -213,7 +222,7 @@ Submenu.prototype.Add_ContactContents = function() {
 	var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
 	//position.addClass('overthrow').addClass("submenu_chat_contents");
 	position.addClass('overthrow');
-	position.empty();
+	//position.empty();
 	//var Elem = $("[find=submenu_wrapper_title]", '#-submenu_app_chat_chatmenu').clone();
 	//_app_submenu_contacts_genContacts(position);
 	this._displayContacts(position, this._prepare_contactsList());
