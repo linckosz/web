@@ -128,8 +128,11 @@ Lincko.storage.display = function(prepare, force){
 //Function that check for latest updates
 /* PRIVATE METHOD */
 var storage_ajax_latest = {};
-Lincko.storage.getLatest = function(){
+Lincko.storage.getLatest = function(force){
 	var lastvisit = Lincko.storage.getLastVisit();
+	if(typeof force == 'boolean' && force == true){
+		lastvisit = 0; //Force to get the whole database
+	}
 	var arr = {
 		'lastvisit': lastvisit,
 		'show_error': false,
