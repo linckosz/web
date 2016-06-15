@@ -104,6 +104,8 @@ function account_select(select) {
 		$('#account_joinus_box').show();
 		$('#account_tab_signin').addClass('account_trans');
 		$('#account_tab_signin > div').addClass('account_tab_signin');
+		//This helps to refresh the captcha image to avoid it appear unlinked
+		$("#account_captcha").prop("src", $("#account_captcha").prop("src"));
 		$('#account_joinus_email').focus();
 	}
 }
