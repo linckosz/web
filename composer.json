@@ -7,6 +7,7 @@
         "twig/extensions": "1.*",
         "smarty/smarty": "3.*",
         "yusukezzz/slim-debugbar": "1.*",
-        "phpmailer/phpmailer": "5.*"
+        "phpmailer/phpmailer": "5.*",
+        "html2text/html2text": "*.*"
     }
 }

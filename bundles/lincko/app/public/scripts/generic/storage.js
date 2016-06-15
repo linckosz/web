@@ -359,7 +359,6 @@ Lincko.storage.childrenList = function(data, children_list){
 					Lincko.storage.data[parent_type][parent_id]['_children'][category][id] = true;
 				}
 			}
-			delete Lincko.storage.data[category][id]['_children'];
 		}
 	}
 

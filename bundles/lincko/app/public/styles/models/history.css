@@ -122,8 +122,9 @@
 .models_history_id > .icon {
 	margin: 0 auto;
 	width: 48px;
+	height: 48px;
 	display: block;
-	border-radius: 30px;
+	border-radius: 100%;
 	border: 2px solid #FBA026;
 }
 
