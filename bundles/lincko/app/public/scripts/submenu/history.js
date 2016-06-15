@@ -162,7 +162,11 @@ var chatFeed = (function() {
 		Elem.addClass(this.decoratorClass);
 		Elem.addClass(this.item._type);
 		Elem.attr('index', index);
+
 		var img = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", this.item.created_by, 'profile_pic'));
+		if(!img){
+			img = app_application_icon_single_user.src;
+		}
 
 		Elem.find("[find=icon]").attr('src', img);
 		var uname = Lincko.storage.get('users', this.item.created_by)['-username'];
@@ -201,6 +205,9 @@ var chatFeed = (function() {
 		Elem.find("[find=author]").html(php_nl2br(this.item.par.un));
 		//var user = this.item.type == "history" ? this.item.by: this.item.created_by;
 		var img = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", this.item.by, 'profile_pic'));
+		if(!img){
+			img = app_application_icon_single_user.src;
+		}
 
 		Elem.find("[find=icon]").attr('src', img);
 		Elem.find("[find=action]").html($.trim(action).ucfirst());

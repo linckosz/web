@@ -124,7 +124,7 @@
 	width: 48px;
 	display: block;
 	border-radius: 30px;
-	background-color: #FBA026;
+	border: 2px solid #FBA026;
 }
 
 .models_history_standard_target {
