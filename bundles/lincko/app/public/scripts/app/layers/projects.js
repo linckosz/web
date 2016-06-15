@@ -3,9 +3,9 @@
 function app_layers_projects_launchPage(param){
 	if(typeof param === 'undefined'){ param = null; }
 	app_application_lincko.add("app_layers_projects", "projects", function(){
-		app_layers_projects_feedPage();
-	});
-	app_layers_projects_feedPage();
+		app_layers_projects_feedPage(this.action_param, false);
+	}, param);
+	app_layers_projects_feedPage(param, true);
 }
 
 var app_layers_projects_data = {
@@ -96,8 +96,8 @@ $(window).resize(function(){
 
 
 var app_layers_projects_feedPage = function(param, animation){
-	if(typeof param === 'undefined'){ param = null; }
-	if(typeof animation === 'undefined'){ animation = true; } //Animate te graph by default
+	if(typeof param == 'undefined'){ param = null; }
+	if(typeof animation == 'undefined'){ animation = true; } //Animate te graph by default
 	var position = $('#app_layers_projects');
 	position.addClass('overthrow');
 	position.empty();
@@ -206,12 +206,16 @@ var app_layers_projects_feedPage = function(param, animation){
 		for(var Elem_id in app_layers_projects_charts){
 			Elem = $('#'+Elem_id);
 			if(Elem.length>0){
+				Elem.find("[find=tasks_statistics]").removeClass("display_none");
 				ctx = Elem.find("[find=tasks_statistics]").get(0).getContext("2d");
 				var data = app_layers_projects_data;
 				data.labels = app_layers_projects_charts[Elem_id].labels;
 				data.datasets[0].data = app_layers_projects_charts[Elem_id].data_total;
 				data.datasets[1].data = app_layers_projects_charts[Elem_id].data_me;
 				projectChart = new Chart(ctx).Line(data, app_layers_projects_options);
+				if(!projectChart){
+					Elem.find("[find=tasks_statistics]").addClass("display_none");
+				}
 			}
 		}
 	}, 100); //Must be after app_layers_changePage timing (50ms)

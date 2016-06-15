@@ -62,10 +62,9 @@ Submenu.prototype.Add_MenuProjects = function() {
 	var attribute = this.attribute;
 	var that = this;
 	var Elem = $('#-submenu_projects').clone();
-	Elem.prop("id", '');
 	var preview = this.preview;
-
 	var projects_id = attribute.action_param.projects_id;
+	Elem.prop("id", "submenu_projects_title_"+projects_id);
 
 	var tasks = Lincko.storage.list('tasks', null, {approved: false,}, 'projects', projects_id, true).length;
 	var notes = Lincko.storage.list('notes', null, null, 'projects', projects_id, true).length;
@@ -87,8 +86,7 @@ Submenu.prototype.Add_MenuProjects = function() {
 		Elem.find("[find=submenu_projects_settings]").css("visibility", "hidden");
 	}
 
-	
-	Elem.find("[find=submenu_projects_title]").html(attribute.title);
+	Elem.find("[find=submenu_projects_title]").html(project["+title"]);
 	if ("action" in attribute) {
 		if ("action_param" in attribute) {
 			Elem.click(attribute.action_param, attribute.action);
@@ -111,8 +109,21 @@ Submenu.prototype.Add_MenuProjects = function() {
 	var statistics_id = this.id+"_tasks_statistics_container_"+projects_id;
 	Elem.find("[find=tasks_statistics_container]").prop("id", statistics_id);
 
-	app_application_lincko.add(statistics_id, 'submenu_show', function() {
+	app_application_lincko.add(statistics_id, ['projects_'+projects_id, 'submenu_show_'+that.preview+'_'+that.id], function() {
 		app_models_projects_chart_tasks_data(this.id, this.action_param, null, submenu_projects_charts_options);
+	}, projects_id);
+
+	app_application_lincko.add("submenu_projects_title_"+projects_id, 'projects_'+projects_id, function() {
+		var Elem = $("#"+this.id);
+		var projects_id = this.action_param;
+		var project = Lincko.storage.get("projects", projects_id);
+		Elem.find("[find=submenu_projects_title]").html(project["+title"]);
+		var tasks = Lincko.storage.list('tasks', null, {approved: false,}, 'projects', projects_id, true).length;
+		var notes = Lincko.storage.list('notes', null, null, 'projects', projects_id, true).length;
+		var files = Lincko.storage.list('files', null, null, 'projects', projects_id, true).length;
+		Elem.find("[find=submenu_projects_statistics_tasks]").html(tasks);
+		Elem.find("[find=submenu_projects_statistics_notes]").html(notes);
+		Elem.find("[find=submenu_projects_statistics_files]").html(files);
 	}, projects_id);
 
 	return true;

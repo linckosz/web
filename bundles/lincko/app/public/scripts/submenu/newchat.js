@@ -64,7 +64,6 @@ Submenu.prototype.Add_ChatContents = function() {
 	notifier[type]['clear'](id);
 	if (type == 'history') {
 		app_application_lincko.add(this.id+"_chat_contents_wrapper","projects_" + id, function() {
-			console.log('history');
 			
 			var id = Object.keys(this.range)[0].split("_")[1];
 			var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
@@ -83,7 +82,6 @@ Submenu.prototype.Add_ChatContents = function() {
 	}
 	else {
 		app_application_lincko.add(this.id+"_chat_contents_wrapper", "chats_" + id, function() {
-			console.log('chats');
 			
 			var id = Object.keys(this.range)[0].split("_")[1];
 			var type = Object.keys(this.range)[0].split("_")[0];

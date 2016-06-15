@@ -2,7 +2,6 @@
 
 var chatlist_subConstruct = function(){
 		var that = this;
-		console.log(that);
 		that.elem_newcardCircle.click( function() {
 			submenu_Build("contacts", false, false,
 				{

@@ -154,6 +154,23 @@ Submenu.prototype.Add_ProjectTitleEdit = function(subm) {
 					'project/update'
 				);
 			}
+		)
+		.keypress(
+			[project["_id"], input],
+			function(event){
+				event.stopPropagation();
+				if (event.which == 13) {
+					var param = {
+						id: event.data[0],
+						title: event.data[1].val(),
+					}
+					wrapper_sendAction(
+						param,
+						'post',
+						'project/update'
+					);
+				}
+			}
 		);
 	return Elem;
 };
@@ -285,6 +302,7 @@ var app_models_projects_chart_tasks_data = function(Elem_id, id, chart_display_r
 	var project = Lincko.storage.get("projects", id);
 	var tasks = Lincko.storage.list('tasks', -1, null, 'projects', id);
 
+
 	if(tasks.length<=0){
 		return false;
 	}
@@ -297,6 +315,12 @@ var app_models_projects_chart_tasks_data = function(Elem_id, id, chart_display_r
 		deleted_at = tasks[i]["deleted_at"];
 		if(created_at!=null && (!start || created_at<start)){
 			start = created_at;
+		}
+		if(approved_at!=null && (!end || approved_at>end)){
+			end = approved_at;
+		}
+		if(deleted_at!=null && (!end || deleted_at>end)){
+			end = deleted_at;
 		}
 	}
 

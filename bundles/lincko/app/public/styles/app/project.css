@@ -264,18 +264,18 @@
 			margin-bottom: 6px;
 			margin-top: 0px;
 		}
-		.app_project_item:last-of-type, .app_project_item:nth-last-of-type(2) {
+		.app_project_item:nth-of-type(4), .app_project_item:nth-of-type(3) {
 			display: none;
 		}
-		.app_project_chat_item:last-of-type, .app_project_chat_item:nth-of-type(2) {
+		.app_project_chat_item:nth-of-type(4), .app_project_chat_item:nth-of-type(2) {
 			display: none;
 		}
 	}
 	@media only screen and (min-width: 960px) and (max-width: 1279px) {
-		.app_project_item:last-of-type {
+		.app_project_item:nth-of-type(4) {
 			display: none;
 		}
-		.app_project_chat_item:last-of-type {
+		.app_project_chat_item:nth-of-type(4) {
 			display: none;
 		}
 	}

@@ -837,10 +837,9 @@ Submenu.prototype.Add_taskdetail = function() {
 	that.param.saveParam.itemID = taskid;
 	that.param.saveParam.param_newItemComments = param_newItemComments;
 */
-
 	app_application_lincko.add(
-		submenu_wrapper.prop('id'),
-		'submenu_hide_'+submenu_wrapper.prop('id'),
+		that.id,
+		'submenu_hide_'+that.preview+'_'+that.id,
 		function(){
 			if( taskid == 'new' && route_delete ){
 				return false;

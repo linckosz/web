@@ -121,6 +121,10 @@ var app_content_menu = {
 		$('#app_content_menu_'+menu).find(".app_content_menu_icon").off('click');
 
 		$('#app_content_top_title_menu').html(title);
+		app_application_lincko.add('app_content_top_title_menu', 'projects_'+projects_id, function() {
+			var title = Lincko.storage.get("projects", this.action_param, "title");
+			$('#app_content_top_title_menu').html(title);
+		}, projects_id);
 
 		app_layers_changePage(menu, param);
 
@@ -140,7 +144,13 @@ app_application_lincko.add("app_content_submenu_preview_statistics", "projects",
 	if(projects_id){
 		var project = Lincko.storage.get("projects", projects_id);
 		if(project){
-			app_models_projects_chart_tasks_data("app_content_submenu_preview_statistics", projects_id);
+			var chart_options = {
+				animation: false,
+			}
+			Elem.find("[find=tasks_statistics]").css("visibility", "visible");
+			if(!app_models_projects_chart_tasks_data("app_content_submenu_preview_statistics", projects_id, false, chart_options)){
+				Elem.find("[find=tasks_statistics]").css("visibility", "hidden");
+			}
 			var tasks = Lincko.storage.list('tasks', null, {approved: false,}, 'projects', projects_id, true).length;
 			var notes = Lincko.storage.list('notes', null, null, 'projects', projects_id, true).length;
 			var files = Lincko.storage.list('files', null, null, 'projects', projects_id, true).length;
