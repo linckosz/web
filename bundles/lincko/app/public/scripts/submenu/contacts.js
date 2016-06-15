@@ -1,8 +1,9 @@
+//Category 
 submenu_list['contacts'] = {
 	//Set the title of the top
 	"_title": {
 		"style": "customized_title",
-		"title": "Start New Chat", //toto
+		"title": Lincko.Translation.get('app', 3701, 'html'), //Start New Chat
 		"class": function(elem) {
 			if (elem.param.id) {
 				return "project" + elem.param.id + " submenu_newchat_header";
@@ -157,12 +158,21 @@ function _submenu_get_contacts(elem) {
 
 Submenu.prototype._displayContacts = function(position, contacts) {
 	var submenuInst = this;
+	var profile_pic;
 	this.Wrapper().find(".submenu_top_side_right").hide();
 	for(c in contacts) {
 		var Elem = $('#-submenu_app_contacts').clone();
 		Elem.prop('id', this.id+'_contact_'+c);
 		Elem.find('.username').html(contacts[c].username);
-		Elem.find('.contact_icon').addClass('fa').addClass( "fa-"+contacts[c].logo);
+
+		profile_pic = Lincko.storage.get("users", contacts[c]["id"], "profile_pic");
+		thumbnail = Lincko.storage.getLinkThumbnail(profile_pic);
+		if(thumbnail){
+			Elem.find("[find=picture_src]").prop("src", thumbnail);
+		} else {
+			Elem.find("[find=picture_src]").prop("src", app_application_icon_single_user.src);
+		}
+
 		Elem.find('.id').val(contacts[c].id);
 		if (contacts[c].checked == true) {
 			Elem.find('.check').addClass('checked');
