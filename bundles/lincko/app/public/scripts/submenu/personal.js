@@ -127,7 +127,7 @@ Submenu.prototype.Add_ProfileInput = function() {
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
-	Elem.find("[find=submenu_title]").html(attribute.title);
+	Elem.find("[find=submenu_title]").html(wrapper_to_html(attribute.title));
 	Elem.find("[find=submenu_value]").val(attribute.value);
 
 	if ("action" in attribute) {
@@ -227,12 +227,12 @@ Submenu.prototype.Add_ProfileNext = function() {
 	});
 	
 
-	Elem.find("[find=submenu_next_user]").html(perso['-username'].ucfirst());
+	Elem.find("[find=submenu_next_user]").html(wrapper_to_html(perso['-username'].ucfirst()));
 	
 	Elem.find("[find=submenu_next_user]").prop("id", this.id+"_submenu_next_user");
 	app_application_lincko.add(this.id+"_submenu_next_user", "users_"+wrapper_localstorage.uid, function() {
 		var username = Lincko.storage.get('users',  wrapper_localstorage.uid, "username").ucfirst();
-		$("#"+this.id).html(username);
+		$("#"+this.id).html(wrapper_to_html(username));
 	});
 
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
@@ -313,8 +313,8 @@ Submenu.prototype.Add_ProfileInfo = function() {
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
-	Elem.find("[find=submenu_title]").html(attribute.title);
-	Elem.find("[find=submenu_value]").html(attribute.value);
+	Elem.find("[find=submenu_title]").html(wrapper_to_html(attribute.title));
+	Elem.find("[find=submenu_value]").html(wrapper_to_html(attribute.value));
 	
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
 	return true;

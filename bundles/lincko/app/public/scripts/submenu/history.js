@@ -170,16 +170,16 @@ var chatFeed = (function() {
 
 		Elem.find("[find=icon]").attr('src', img);
 		var uname = Lincko.storage.get('users', this.item.created_by)['-username'];
-		Elem.find("[find=author]").text(php_nl2br(uname));
-		Elem.find("[find=content]").html(php_nl2br(this.item['+comment']));
+		Elem.find("[find=author]").text(wrapper_to_html(uname));
+		Elem.find("[find=content]").html(wrapper_to_html(this.item['+comment']));
 		var date = new wrapper_date(this.item.timestamp);
 		Elem.find(".time", "[find=timestamp]").html(date.display('time_short'));
 		Elem.find(".date", "[find=timestamp]").html(date.display('date_short'));
-		Elem.find("[find=target]").html(this.item.name);
+		Elem.find("[find=target]").html(wrapper_to_html(this.item.name));
 
 		Elem.find("[find=progress_bar]").width("0%"); 
 		Elem.find("[find=progress_text]").html("0/0");
-		Elem.find(".uploading_action").html(Lincko.Translation.get('app', 7, 'js'));
+		Elem.find(".uploading_action").html(Lincko.Translation.get('app', 7, 'html'));
 
 		Elem.attr('category', this.item._type);
 		return Elem;
@@ -210,7 +210,7 @@ var chatFeed = (function() {
 		}
 
 		Elem.find("[find=icon]").attr('src', img);
-		Elem.find("[find=action]").html($.trim(action).ucfirst());
+		Elem.find("[find=action]").html(wrapper_to_html($.trim(action).ucfirst()));
 
 		if (this.item.type === "comments") {
 			var root = Lincko.storage.getCommentRoot(this.item.id);
@@ -230,9 +230,9 @@ var chatFeed = (function() {
 		if (root) {
 			Elem.find("[find=target_type]").attr('parent', target_type)
 				.attr("parent_id", root['_id'])
-				.html(php_nl2br(Lincko.storage.data._history_title[target_type][0]));
+				.html(wrapper_to_html(Lincko.storage.data._history_title[target_type][0]));
 		}
-		Elem.find("[find=target]").html(php_nl2br(target));
+		Elem.find("[find=target]").html(wrapper_to_html(target));
 		Elem.find("[find=content]").html(php_nl2br(history.content));
 		var date = new wrapper_date(this.item.timestamp);
 		Elem.find(".time", "[find=timestamp]").html(date.display('time_short'));

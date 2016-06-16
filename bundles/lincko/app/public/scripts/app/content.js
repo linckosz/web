@@ -120,10 +120,10 @@ var app_content_menu = {
 		$('#app_content_menu_'+menu+' div:first-child').addClass('app_content_menu_icon_active');
 		$('#app_content_menu_'+menu).find(".app_content_menu_icon").off('click');
 
-		$('#app_content_top_title_menu').html(title);
+		$('#app_content_top_title_menu').html(wrapper_to_html(title));
 		app_application_lincko.add('app_content_top_title_menu', 'projects_'+projects_id, function() {
 			var title = Lincko.storage.get("projects", this.action_param, "title");
-			$('#app_content_top_title_menu').html(title);
+			$('#app_content_top_title_menu').html(wrapper_to_html(title));
 		}, projects_id);
 
 		app_layers_changePage(menu, param);
@@ -154,9 +154,9 @@ app_application_lincko.add("app_content_submenu_preview_statistics", "projects",
 			var tasks = Lincko.storage.list('tasks', null, {approved: false,}, 'projects', projects_id, true).length;
 			var notes = Lincko.storage.list('notes', null, null, 'projects', projects_id, true).length;
 			var files = Lincko.storage.list('files', null, null, 'projects', projects_id, true).length;
-			Elem.find("[find=app_content_statistics_stats_tasks]").html(tasks);
-			Elem.find("[find=app_content_statistics_stats_notes]").html(notes);
-			Elem.find("[find=app_content_statistics_stats_files]").html(files);
+			Elem.find("[find=app_content_statistics_stats_tasks]").html(wrapper_to_html(tasks));
+			Elem.find("[find=app_content_statistics_stats_notes]").html(wrapper_to_html(notes));
+			Elem.find("[find=app_content_statistics_stats_files]").html(wrapper_to_html(files));
 		}
 	}
 });

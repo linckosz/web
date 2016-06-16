@@ -167,7 +167,7 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 							'option')._formatFileSize(file.lincko_progress * file.lincko_size/100);
 						$("#"+this.id).find("[find=progress_bar]").width(file.lincko_progress+"%"); 
 						$("#"+this.id).find("[find=progress_text]").html(downloaded+"/"+size);
-						$("#"+this.id).find(".uploading_action").html(Lincko.Translation.get('app', 7, 'js'));
+						$("#"+this.id).find(".uploading_action").html(Lincko.Translation.get('app', 7, 'html'));
 					});
 					chatFeed.appendItem("chats", [item], position, true);
 					files[i].presented = true;

@@ -9,7 +9,7 @@ var previewer = (function() {
 		var Elem_id = 'pic_preview_full_screen_'+id;
 		popout.prop("id", Elem_id);
 		popout.find('img').attr('src', url);
-		popout.find('.pic_preview_name').html(name);
+		popout.find('.pic_preview_name').html(wrapper_to_html(name));
 		popout.find('img').attr('src', url);
 		popout.find('.pic_preview_icon').attr("href", download);
 		$("body").append(popout);

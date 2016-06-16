@@ -175,7 +175,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 		} else {
 			Elem.find("[find=picture_src]").prop("src", app_application_icon_single_user.src);
 		}
-		Elem.find("[find=who]").html(contacts[i]['-username'].ucfirst());
+		Elem.find("[find=who]").html(wrapper_to_html(contacts[i]['-username'].ucfirst()));
 		Elem.find("[find=invitation]").removeClass("display_none");
 		Elem.find("[find=invitation_accept]").removeClass("display_none").on("click", [contacts[i]['_id'], Elem_id], function(event) {
 			event.stopPropagation();
@@ -230,7 +230,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 		} else {
 			Elem.find("[find=picture_src]").prop("src", app_application_icon_single_user.src);
 		}
-		Elem.find("[find=who]").html(contacts[i]['-username'].ucfirst());
+		Elem.find("[find=who]").html(wrapper_to_html(contacts[i]['-username'].ucfirst()));
 		Elem.click(function(){
 
 		});
@@ -364,7 +364,7 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 		} else {
 			Elem_user.find("[find=picture_src]").prop("src", app_application_icon_single_user.src);
 		}
-		Elem_user.find("[find=who]").html(data['username'].ucfirst());
+		Elem_user.find("[find=who]").html(wrapper_to_html(data['username'].ucfirst()));
 		var param = data;
 		Elem_user.find("[find=invitation_invite]").click(param, function(event){
 			var param = {
@@ -392,7 +392,7 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 			} else {
 				Elem_user.find("[find=picture_src]").prop("src", app_application_icon_single_user.src);
 			}
-			Elem_user.find("[find=who]").html(data['username'].ucfirst());
+			Elem_user.find("[find=who]").html(wrapper_to_html(data['username'].ucfirst()));
 		}
 	}
 	else if(chat_status == "exists"){
@@ -406,7 +406,7 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 			} else {
 				Elem_user.find("[find=picture_src]").prop("src", app_application_icon_single_user.src);
 			}
-			Elem_user.find("[find=who]").html(data['username'].ucfirst());
+			Elem_user.find("[find=who]").html(wrapper_to_html(data['username'].ucfirst()));
 		}
 	}
 	else if(chat_status == "invitationfailed"){
@@ -574,7 +574,7 @@ Submenu.prototype.Add_ChatContent = function() {
 	position.empty();
 	//var Elem = $("[find=submenu_wrapper_title]", '#-submenu_app_chat_chatmenu').clone();
 
-	//submenu_wrapper.find("[find=submenu_wrapper_title]").html(this.param['title']);
+	//submenu_wrapper.find("[find=submenu_wrapper_title]").html(wrapper_to_html(this.param['title']));
 
 	var chatlist_subConstruct = function(){
 		var that = this;

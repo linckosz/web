@@ -22,10 +22,12 @@ var mainMenu = (function() {
 		}
 
 		if (data.type == "history") {
+			data.comment = php_nl2br(data.comment);
 			name = Lincko.storage.get("projects", data.id, "+title");
 			//item.find('img.logo').attr('src', 'icon-Multiple-People');
 			item.find('span.logo').addClass('fa fa-globe');
 		} else if (data.type == 'chats') {
+			data.comment = wrapper_to_html(data.comment);
 			var users = Object.keys(Lincko.storage.get('chats', data.id, '_perm'));
 			name = Lincko.storage.get('chats', data.id, '+title');
 
@@ -44,10 +46,10 @@ var mainMenu = (function() {
 			var cnt = notifier[type]['get'](id);
 			if (type == "chats") {
 				var name = Lincko.storage.get('chats', id, '+title');
-				$("#"+this.id).find('header').html(name);
+				$("#"+this.id).find('header').html(wrapper_to_html(name));
 				var comment = Lincko.storage.list("comments", 1, null, "chats", id);
 				if(typeof comment[0] == "object"){
-					$("#"+this.id).find('[find=description]').html(comment[0]["+comment"]);
+					$("#"+this.id).find('[find=description]').html(wrapper_to_html(comment[0]["+comment"]));
 				}
 				$("#"+this.id).find('[find=description]').html('');
 			}
@@ -62,7 +64,7 @@ var mainMenu = (function() {
 				$("#"+this.id).find('.notification').hide();
 			}
 		});
-		item.find('header').html(name);
+		item.find('header').html(wrapper_to_html(name));
 		item.find('article').html(data.comment);
 		return item;
 	}
@@ -124,9 +126,9 @@ var mainMenu = (function() {
 				notes = Lincko.storage.list('notes', null, null, 'projects', pid, true).length;
 				files = Lincko.storage.list('files', null, null, 'projects', pid, true).length;
 
-				item.find("[find=submenu_projects_statistics_tasks]").html(tasks);
-				item.find("[find=submenu_projects_statistics_notes]").html(notes);
-				item.find("[find=submenu_projects_statistics_files]").html(files);
+				item.find("[find=submenu_projects_statistics_tasks]").html(wrapper_to_html(tasks));
+				item.find("[find=submenu_projects_statistics_notes]").html(wrapper_to_html(notes));
+				item.find("[find=submenu_projects_statistics_files]").html(wrapper_to_html(files));
 		}
 	}
 

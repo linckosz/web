@@ -173,7 +173,7 @@ Submenu.prototype._displayContacts = function(position, contacts) {
 	for(c in contacts) {
 		var Elem = $('#-submenu_app_contacts').clone();
 		Elem.prop('id', this.id+'_contact_'+c);
-		Elem.find('.username').html(contacts[c].username);
+		Elem.find('.username').html(wrapper_to_html(contacts[c].username));
 
 		profile_pic = Lincko.storage.get("users", contacts[c]["id"], "profile_pic");
 		thumbnail = Lincko.storage.getLinkThumbnail(profile_pic);
