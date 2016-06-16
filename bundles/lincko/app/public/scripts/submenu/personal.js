@@ -127,7 +127,7 @@ Submenu.prototype.Add_ProfileInput = function() {
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
-	Elem.find("[find=submenu_title]").html(wrapper_to_html(attribute.title));
+	Elem.find("[find=submenu_title]").html(attribute.title);
 	Elem.find("[find=submenu_value]").val(attribute.value);
 
 	if ("action" in attribute) {
@@ -313,8 +313,8 @@ Submenu.prototype.Add_ProfileInfo = function() {
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
-	Elem.find("[find=submenu_title]").html(wrapper_to_html(attribute.title));
-	Elem.find("[find=submenu_value]").html(wrapper_to_html(attribute.value));
+	Elem.find("[find=submenu_title]").html(attribute.title);
+	Elem.find("[find=submenu_value]").html(attribute.value);
 	
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
 	return true;

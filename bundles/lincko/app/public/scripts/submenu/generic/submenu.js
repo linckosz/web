@@ -244,7 +244,7 @@ Submenu.prototype.Add_MenuTitle = function() {
 	else if( "class" in attribute ){
 		submenu_wrapper.find('.submenu_top').addClass(attribute['class']);
 	}
-	submenu_wrapper.find("[find=submenu_wrapper_title]").html(wrapper_to_html(title));
+	submenu_wrapper.find("[find=submenu_wrapper_title]").html(title);
 	//Free memory
 	delete submenu_wrapper;
 	return Elem;
@@ -274,7 +274,7 @@ Submenu.prototype.Add_CustomisedTitle = function() {
 	else if( "class" in attribute ){
 		Elem.addClass(attribute['class']);
 	}
-	Elem.find("[find=submenu_title]").html(wrapper_to_html(title));
+	Elem.find("[find=submenu_title]").html(title);
 
 	if ("now" in attribute && typeof attribute.now === "function") {
 		attribute.now(this, Elem);
@@ -314,7 +314,7 @@ Submenu.prototype.Add_TitleSmall = function() {
 	var submenu_wrapper = this.Wrapper();
 	var Elem = $('#-submenu_title_small').clone();
 	Elem.prop("id", '');
-	Elem.find("[find=submenu_title]").html(wrapper_to_html(attribute.title));
+	Elem.find("[find=submenu_title]").html(attribute.title);
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
@@ -370,7 +370,7 @@ Submenu.prototype.Add_TitleRightButton = function() {
 	var Elem = $('#-submenu_top_button').clone();
 	var preview = this.preview;
 	Elem.prop("id", this.id+"_submenu_top_button_right");
-	Elem.html(wrapper_to_html(attribute.title));
+	Elem.html(attribute.title);
 	if ("action" in attribute) {
 		if ("action_param" in attribute) {
 			Elem.click(function(){
@@ -406,9 +406,9 @@ Submenu.prototype.Add_MenuButton = function(position) {
 	var Elem = $('#-submenu_button').clone();
 	var preview = this.preview;
 	Elem.prop("id", '');
-	Elem.find("[find=submenu_button_title]").html(wrapper_to_html(attribute.title));
+	Elem.find("[find=submenu_button_title]").html(attribute.title);
 	if ("value" in attribute) {
-		Elem.find("[find=submenu_button_value]").html(wrapper_to_html(attribute.value));
+		Elem.find("[find=submenu_button_value]").html(attribute.value);
 	}
 	if ("action" in attribute) {
 		if ("action_param" in attribute) {
@@ -446,7 +446,7 @@ Submenu.prototype.Add_MenuNext = function() {
 	var that = this;
 	Elem.prop("id", '');
 	if ("value" in attribute) {
-		Elem.find("[find=submenu_next_value]").html(wrapper_to_html(attribute.value));
+		Elem.find("[find=submenu_next_value]").html(attribute.value);
 	}
 	if ("next" in attribute) {
 		if (attribute.next in submenu_list) {
@@ -472,7 +472,7 @@ Submenu.prototype.Add_MenuNext = function() {
 			});
 		}
 	}
-	Elem.find("[find=submenu_next_title]").html(wrapper_to_html(attribute.title));
+	Elem.find("[find=submenu_next_title]").html(attribute.title);
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
@@ -489,7 +489,7 @@ Submenu.prototype.Add_MenuRadio = function() {
 	var Elem = $('#-submenu_radio').clone();
 	var selected = false;
 	Elem.prop("id", '');
-	Elem.find("[find=submenu_radio_title]").html(wrapper_to_html(attribute.title));
+	Elem.find("[find=submenu_radio_title]").html(attribute.title);
 	if ("selected" in attribute) {
 		if (attribute.selected) {
 			Elem.find("[find=submenu_radio_value]").html("<img class='submenu_icon' src='/lincko/app/images/submenu/check.png' />");
@@ -546,7 +546,7 @@ Submenu.prototype.Add_InputHidden = function() {
 	var Elem = $('#-submenu_input').clone();
 	var Input = $('<input type="hidden" find="submenu_input" />');
 	Elem.prop("id", '');
-	Elem.find("[find=submenu_title]").html(wrapper_to_html(attribute.title));
+	Elem.find("[find=submenu_title]").html(attribute.title);
 	Elem.prop('for', attribute.name);
 	Input.prop('name', attribute.name);
 	Elem.append(Input);
@@ -568,7 +568,7 @@ Submenu.prototype.Add_InputText = function() {
 	var Elem = $('#-submenu_input').clone();
 	var Input = $('<input type="text" find="submenu_input" class="selectable" />');
 	Elem.prop("id", '');
-	Elem.find("[find=submenu_title]").html(wrapper_to_html(attribute.title));
+	Elem.find("[find=submenu_title]").html(attribute.title);
 	Elem.prop('for', attribute.name);
 	Input.prop('name', attribute.name);
 	Elem.append(Input);
@@ -594,8 +594,8 @@ Submenu.prototype.Add_InputTextarea = function() {
 		Value = attribute.value;
 	}
 	var Input = $('<textarea find="submenu_input_textarea" class="selectable"></textarea>'); //toto
-	Input.html(wrapper_to_html(Value)); //toto
-	Elem.find("[find=submenu_title]").html(wrapper_to_html(attribute.title));
+	Input.html(Value); //toto
+	Elem.find("[find=submenu_title]").html(attribute.title);
 	Elem.prop('for', attribute.name);
 	Input.prop('name', attribute.name);
 	Elem.append(Input);
@@ -615,7 +615,7 @@ Submenu.prototype.Add_SelectMultiple = function() {
 	var that = this;
 	Elem.prop("id", '');
 	if ("value" in attribute) {
-		Elem.find("[find=submenu_select_value]").html(wrapper_to_html(attribute.value));
+		Elem.find("[find=submenu_select_value]").html(attribute.value);
 	}
 	if (!attribute["param"]) {
 		attribute.param = null;
@@ -658,7 +658,7 @@ Submenu.prototype.Add_SelectMultiple = function() {
 			});
 		}
 	}
-	Elem.find("[find=submenu_select_title]").html(wrapper_to_html(attribute.title));
+	Elem.find("[find=submenu_select_title]").html(attribute.title);
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
@@ -678,7 +678,7 @@ Submenu.prototype.Add_SubmitForm = function() {
 	Elem.prop("id", '');
 	submenu_wrapper.find("[find=submenu_wrapper_bottom]").addClass('submenu_bottom');
 	//submenu_wrapper.find("[find=submenu_wrapper_content]").css('bottom', submenu_wrapper.find("[find=submenu_wrapper_bottom]").height());
-	Elem.find("[find=submenu_bottom_title]").html(wrapper_to_html(attribute.title));
+	Elem.find("[find=submenu_bottom_title]").html(attribute.title);
 	Elem.find("[find=submenu_bottom_button]").click(function() {
 		$('#' + that.id + '_submenu_form').submit();
 	});
@@ -761,7 +761,7 @@ Submenu.prototype.Add_MenuBottomButton = function() {
 		}
 	}
 	Elem.find('img').remove();
-	Elem.find("[find=submenu_bottom_title]").html(wrapper_to_html(attribute.title));
+	Elem.find("[find=submenu_bottom_title]").html(attribute.title);
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
