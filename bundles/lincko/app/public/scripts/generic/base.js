@@ -70,7 +70,7 @@ function base_show_error(msg, error) {
 	//This avoid a double call
 	msg = wrapper_to_html(msg); //Escape the whole string for HTML displaying
 	if(php_nl2br(php_br2nl(msg)) != php_nl2br(php_br2nl($('#base_error').html()))){
-		$('#base_error').html(wrapper_to_html(msg));
+		$('#base_error').html(msg);
 		if($('#base_error').is(':hidden')){
 			$("#base_error").velocity("transition.slideRightBigIn", {
 				duration: 260,
