@@ -41,17 +41,17 @@
 
 	{# for tasklist, goes inside skylist_menu_navbar_filter_pane #}
 	<div id="-skylist_filter_tasks_radio_wrapper" find="radio_wrapper">
-		<table find="option1" class="skylist_menu_navbar_filter_pane_optionWrapper">
+		<table find="option1" class="skylist_menu_navbar_filter_pane_optionWrapper skylist_clickable">
 			<td find="radio" class="skylist_menu_navbar_filter_pane_radio fa fa-circle"></td>
 			<td find="text">{{ _trans('app', 13, 3, 'html') }}{#sort by due date#}</td>
 		</table>
-		<table find="option2" class="skylist_menu_navbar_filter_pane_optionWrapper">
+		<table find="option2" class="skylist_menu_navbar_filter_pane_optionWrapper skylist_clickable">
 			<td find="radio" class="skylist_menu_navbar_filter_pane_radio fa"></td>
 			<td find="text">{{ _trans('app', 13, 4, 'html') }}{#Sort by most recently updated#}</td>
 		</table>
 	</div>
 	<div id="-skylist_filter_tasks_divider" class="skylist_menu_navbar_filter_pane_divider"></div>
-	<div id="-skylist_filter_tasks_checkbox_wrapper" find="checkbox_wrapper">
+	<div id="-skylist_filter_tasks_checkbox_wrapper" find="checkbox_wrapper" class="skylist_clickable">
 		<table class="skylist_menu_navbar_filter_pane_optionWrapper">
 			<td find="checkbox" class="skylist_menu_navbar_filter_pane_checkbox fa fa-check"></td>
 			<td find="text">{{ _trans('app', 13, 5, 'html') }}{#Show completed tasks#}</td>
@@ -97,7 +97,7 @@
 	<span id="-skylist_newcardCircle" class="skylist_newcardCircle icon-Big-Add"></span>
 
 	{#rightOptionBox, goes inside <div find='card_rightOptions' #}
-	<div id="-skylist_rightOptionBox" class="skylist_rightOptionBox">
+	<div id="-skylist_rightOptionBox" class="skylist_rightOptionBox skylist_clickable">
 		<div find='icon' class="fa"></div>
 		<div find='text' class="skylist_rightOptionBox_text"></div>
 	</div>
