@@ -1005,6 +1005,7 @@ skylist.prototype.addTask = function(item){
 		param.type = 'tasks';
 		param.item_obj = item;
 		param.contactsID = burger_generate_contactsID(item);
+		param.elem_input = Elem.find('input[find=name_hidden]');
 		submenu_Build('burger_contacts', true, null, param);
 	});
 	Elem_rightOptions.append(elem_rightOptions_inCharge);

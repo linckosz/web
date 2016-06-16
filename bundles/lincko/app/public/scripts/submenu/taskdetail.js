@@ -849,10 +849,12 @@ Submenu.prototype.Add_taskdetail = function() {
 				tmpID = temp_id;
 			}
 			var cb_success = function(msg, data_error, data_status, data_msg){
-				var itemID_real = Lincko.storage.list(that.param.type,1,{temp_id: tmpID})[0]['_id'];
-				$.each(param_newItemComments, function(i,param){
-					sendAction_newComment(that.param.type, itemID_real, param.comment);
-				});
+				if(tmpID){
+					var itemID_real = Lincko.storage.list(that.param.type,1,{temp_id: tmpID})[0]['_id'];
+					$.each(param_newItemComments, function(i,param){
+						sendAction_newComment(that.param.type, itemID_real, param.comment);
+					});
+				}
 				tmpID = null;
 			}
 
