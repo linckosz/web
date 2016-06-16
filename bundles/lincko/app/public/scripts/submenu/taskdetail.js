@@ -211,7 +211,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	elem.find("[find=taskid]").html(taskid);
 	var elem_title_text = elem.find('[find=title_text]');
 	if(that.param.type == 'files'){
-		elem_title_text.html(item['+name']);
+		elem_title_text.html(wrapper_to_html(item['+name']));
 		var elem_title_fileInfo = $('#-submenu_taskdetail_tasktitle_fileInfo').clone().prop('id','');
 		var fileSize = app_layers_files_bitConvert(item['size']);
 		var sizeUnit = fileSize.unit;
@@ -224,7 +224,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		elem_title_fileInfo.find('[find=downloadIcon]').prop('href',Lincko.storage.getDownload(item['_id']));
 	}
 	else{
-		elem_title_text.html(item['+title']);
+		elem_title_text.html(wrapper_to_html(item['+title']));
 		if(true || taskid == 'new' || (wrapper_localstorage.uid in item['_perm'] && item['_perm'][wrapper_localstorage.uid][0] > 1)){
 			elem_title_text.prop('contenteditable',true);
 			elem_title_text.focus(function(){
@@ -556,7 +556,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		//comment is a Lincko.storage.data comment object
 		var elem = $('#-submenu_taskdetail_commentbubble').clone().prop('id','');
 		elem.find('[find=comment_id]').attr('comment_id', comment['_id']);
-		elem.find('[find=text]').html(comment['+comment']);
+		elem.find('[find=text]').html(wrapper_to_html(comment['+comment']));
 
 		var created_by = Lincko.storage.get("users", comment['created_by'],"username");
 		elem.find('[find=name]').html(created_by);
@@ -861,6 +861,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			//param values that are common to all
 			param['id'] = taskid;
 			param['parent_id'] = currentProjID;
+			submenu_taskdetail.find('[find=title_text]');
 			param['title'] = submenu_taskdetail.find('[find=title_text]').html();
 			param['comment'] = submenu_taskdetail.find('[find=description_text]').html();
 			if( taskid == 'new' ){
