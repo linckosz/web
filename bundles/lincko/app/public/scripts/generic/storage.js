@@ -89,10 +89,10 @@ Lincko.storage.searchWORKID = function(){
 /* PRIVATE METHOD */
 Lincko.storage.getLastVisit = function(){
 	//We parse the value to insure it will be an integer
-	if(wrapper_localstorage.decrypt('lastvisit')){
-		return Lincko.storage.last_visit = parseInt(wrapper_localstorage.decrypt('lastvisit'), 10);
-	} else if(typeof Lincko.storage.last_visit != 'undefined' && Lincko.storage.last_visit !== null){
+	if(typeof Lincko.storage.last_visit != 'undefined' && Lincko.storage.last_visit !== null){
 		return Lincko.storage.last_visit;
+	} else if(wrapper_localstorage.decrypt('lastvisit')){
+		return Lincko.storage.last_visit = parseInt(wrapper_localstorage.decrypt('lastvisit'), 10);
 	} else {
 		return Lincko.storage.last_visit = 0;
 	}

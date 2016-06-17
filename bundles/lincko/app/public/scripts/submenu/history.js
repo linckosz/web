@@ -90,7 +90,9 @@ var chatFeed = (function() {
 			return false;
 		},
 		'notes': function(noteid, elem) {
-			submenu_Build('taskdetail', true, null,  {'type': 'notes', 'id': noteid}, true);
+			var tmp = $(elem).parents(".submenu_wrapper").prop("id").split("_");
+			var preview = JSON.parse(tmp[tmp.length-1]);
+			submenu_Build('taskdetail', true, null,  {'type': 'notes', 'id': noteid}, preview);
 			return false;
 		}
 	};
@@ -219,7 +221,7 @@ var chatFeed = (function() {
 
 		if (!action) {
 			action = php_nl2br(Lincko.storage.formatHistoryInfo(
-				history.root.title, { 'par': { 'un': ' ', 'nt': history.root.history.par.nt } }) + ":");
+			history.root.title, { 'par': { 'un': ' ', 'nt': history.root.history.par.nt } }) + ":");
 		}
 
 		Elem.find("[find=author]").html(php_nl2br(this.item.par.un));
@@ -337,6 +339,7 @@ var chatFeed = (function() {
 			timestamp: "1458629345"
 			type: "tasks"
 		*/
+		console.log(type);
 		for (var i in items) {
 			var item = new BaseHistoryCls(items[i]);
 			if (item) {

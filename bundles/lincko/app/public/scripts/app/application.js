@@ -144,7 +144,7 @@ var app_application_lincko = {
 								try {
 									this._elements[Elem_id].action();
 								} catch(e) {
-									JSerror.sendError(this._elements[Elem_id].action, 'app_application_lincko.update => this._elements[Elem_id].action()', 0);
+									JSerror.sendError(this._elements[Elem_id].action, 'app_application_lincko.update => this._elements["'+Elem_id+'"].action()', 0);
 									JSerror.sendError(e, 'app_application_lincko.update => message', 0);
 								}
 								break; //Do not launch more than one time if ever launched
@@ -164,7 +164,7 @@ var app_application_lincko = {
 						try {
 							this._functions.fields[field][i]();
 						} catch(e) {
-							JSerror.sendError(this._elements[Elem_id].action, 'app_application_lincko.update => this._functions.fields[field][i]()', 0);
+							JSerror.sendError(this._functions.fields[field][i], 'app_application_lincko.update => this._functions.fields["'+field+'"]['+i+']()', 0);
 							JSerror.sendError(e, 'app_application_lincko.update => message', 0);
 						}
 					}
@@ -177,7 +177,7 @@ var app_application_lincko = {
 				try {
 					this._functions.all[i]();
 				} catch(e) {
-					JSerror.sendError(this._elements[Elem_id].action, 'app_application_lincko.update => this._functions.all[i]()', 0);
+					JSerror.sendError(this._functions.all[i], 'app_application_lincko.update => this._functions.all['+i+']()', 0);
 					JSerror.sendError(e, 'app_application_lincko.update => message', 0);
 				}
 			}
