@@ -78,7 +78,7 @@ var app_content_menu = {
 				'chat',
 				'files',
 			];
-		} else { //My placeholder (default)
+		} else { //Personal space (default)
 			title = base_myplaceholder;
 			list = [
 				'tasks',
@@ -123,6 +123,9 @@ var app_content_menu = {
 		$('#app_content_top_title_menu').html(wrapper_to_html(title));
 		app_application_lincko.add('app_content_top_title_menu', 'projects_'+projects_id, function() {
 			var title = Lincko.storage.get("projects", this.action_param, "title");
+			if(projects_id == Lincko.storage.getMyPlaceholder()['_id']){
+				title = base_myplaceholder;
+			}
 			$('#app_content_top_title_menu').html(wrapper_to_html(title));
 		}, projects_id);
 

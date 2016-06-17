@@ -27,25 +27,27 @@
 		{# All great projects start with a single task. #}
 		<span>{{ _trans('web', 4, 22, 'html') }}</span>
 	</div>
-	<div class="home_news">
-		<label class="home_label_inside" for="home_news_email">
-			<span>{{ _trans('web', 4, 21, 'html') }}{# e-mail #}</span>
-			<input type="email" id="home_news_email" name="email" value="" class="selectable" />
-			<img class="submit_progress_bar" id="home_news_submit_progress" src="{{ _filelatest('/lincko/launch/images/generic/base/generic/loading_bar.gif') }}"/>
-		</label>
-		<label class="minTablet" for="home_news_submit">
-			<span id="home_news_submit" >{{ _trans('web', 4, 18, 'input') }}{# Register #}</span>
-		</label>
-	</div>
-	<div id="home_error" class="display_none"></div>
-	<div class="home_accomplish">
-		<div class="minDesktop">
-			{{ _trans('web', 4, 19, 'html') }}{# Lincko helps you accomplish great things by connecting your team in new ways. #}
+	{% if not invitation_code %}
+		<div class="home_news">
+			<label class="home_label_inside" for="home_news_email">
+				<span>{{ _trans('web', 4, 21, 'html') }}{# e-mail #}</span>
+				<input type="email" id="home_news_email" name="email" value="" class="selectable" />
+				<img class="submit_progress_bar" id="home_news_submit_progress" src="{{ _filelatest('/lincko/launch/images/generic/base/generic/loading_bar.gif') }}"/>
+			</label>
+			<label class="minTablet" for="home_news_submit">
+				<span id="home_news_submit" >{{ _trans('web', 4, 18, 'input') }}{# Register #}</span>
+			</label>
 		</div>
-		<div>
-			{{ _trans('web', 4, 20, 'html') }}{# Register now to receive news and early access. #}
+		<div id="home_error" class="display_none"></div>
+		<div class="home_accomplish">
+			<div class="minDesktop">
+				{{ _trans('web', 4, 19, 'html') }}{# Lincko helps you accomplish great things by connecting your team in new ways. #}
+			</div>
+			<div>
+				{{ _trans('web', 4, 20, 'html') }}{# Register now to receive news and early access. #}
+			</div>
 		</div>
-	</div>
+	{% endif %}
 </div>
 <div id="end_home" class="visibility_hidden">
 	{% include '/bundles/lincko/launch/templates/launch/scripts/home.js.twig' %}

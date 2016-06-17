@@ -52,14 +52,18 @@ Submenu.prototype.Add_ChatContents = function() {
 
 	chatFeed.feedHistory(position, type, id, that);
 
-	//var height = submenu_wrapper.height() - 48 - 48;
-	//position.find(".iScrollVerticalScrollbar").height(height);
-	app_application_lincko.add("overthrow_"+this.id, "submenu_show", function() {
-		var bottom = $("#"+this.action_param).find("[find=submenu_wrapper_content]");
-		var last = $("#overthrow_"+this.action_param).find('li').last();
-		myIScrollList["overthrow_"+this.action_param].refresh();
-		myIScrollList["overthrow_"+this.action_param].scrollToElement("#"+last.prop("id"), 0);
-	}, that.id);
+	app_application_lincko.add("overthrow_"+this.id, ["submenu_show", "submenu_show_"+that.id], function() {
+		var submenu_id = this.action_param[0];
+		var scroll_time = this.action_param[1];
+		var overthrow_id = "overthrow_"+submenu_id;
+		var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
+		if(last){
+			myIScrollList[overthrow_id].refresh();
+			myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
+		}
+		this.action_param[1] = 300; 
+		notifier[this.action_param[2]]['clear'](this.action_param[3]);
+	}, [that.id, 0, type, id]);
 
 	notifier[type]['clear'](id);
 	if (type == 'history') {
@@ -67,18 +71,29 @@ Submenu.prototype.Add_ChatContents = function() {
 			
 			var id = Object.keys(this.range)[0].split("_")[1];
 			var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
-			var last_elem = $(".submenu_wrapper").find(".models_history_wrapper:last-of-type");
+			var last_elem = submenu_wrapper.find(".models_history_wrapper:last-of-type");
+			var latest = 0;
 			if (last_elem.length > 0){
 				var latest_id = last_elem.prop("id").split("models_thistory_")[1];
-				var latest = Lincko.storage.hist(null, 1, {id: latest_id}, null,null,false)[0].timestamp;
-			}
-			else {
-				var latest = 0;
+				var list = Lincko.storage.hist(null, 1, {id: latest_id}, null,null,false);
+				if(list[0]){
+					latest = list[0].timestamp;
+				} else {
+					latest = Math.floor((new Date()).getTime() / 1000);
+				}
 			}
 			var items = Lincko.storage.hist(null, -1, {'timestamp': [">", latest]}, 'projects', id, false);
 			chatFeed.appendItem("history", items, position, true);
-			
-		});
+			var overthrow_id = "overthrow_"+this.id;
+			var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
+			if(last){
+				myIScrollList[overthrow_id].refresh();
+				var scroll_time = 0;
+				if(!supportsTouch || responsive.test("minDesktop")){ scroll_time = 300; }
+				myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
+				notifier['history']['clear'](this.action_param);
+			}
+		}, id);
 	}
 	else {
 		app_application_lincko.add(this.id+"_chat_contents_wrapper", "chats_" + id, function() {
@@ -86,18 +101,29 @@ Submenu.prototype.Add_ChatContents = function() {
 			var id = Object.keys(this.range)[0].split("_")[1];
 			var type = Object.keys(this.range)[0].split("_")[0];
 			var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
-			var last_elem = $(".submenu_wrapper").find(".models_history_wrapper:last-of-type");
+			var last_elem = submenu_wrapper.find(".models_history_wrapper:last-of-type");
+			var latest = 0;
 			if (last_elem.length > 0){
 					var latest_id = last_elem.prop("id").split("models_thistory_")[1];
-					var latest = Lincko.storage.get("comments", latest_id).created_at;
-			}
-			else {
-					var latest = 0;
+					var item = Lincko.storage.get("comments", latest_id);
+					if(item){
+						latest = item.created_at;
+					} else {
+						latest = Math.floor((new Date()).getTime() / 1000);
+					}
 			}
 			var items = Lincko.storage.list('comments', -1, {'created_at': [">", latest]}, 'chats', id, false);
 			chatFeed.appendItem(type, items, position, true);
-			
-		});
+			var overthrow_id = "overthrow_"+this.id;
+			var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
+			if(last){
+				myIScrollList[overthrow_id].refresh();
+				var scroll_time = 0;
+				if(!supportsTouch || responsive.test("minDesktop")){ scroll_time = 300; }
+				myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
+				notifier['history']['clear'](this.action_param);
+			}
+		}, id);
 	}
 }
 
@@ -113,11 +139,17 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
-	submenu_wrapper.find("[find=submenu_wrapper_bottom]").append(Elem);
+	submenu_wrapper.find("[find=submenu_wrapper_bottom]").addClass("submenu_chats_no_background_image").append(Elem);
 
 	function send_comments() {
 		var content = Elem.find('.comments_input:visible').val();
 		var type = that.param.type == 'history' ? "projects":'chats';
+		var sub_that = that;
+		var visible_input = $("#"+that.id).find('.comments_input:visible');
+		var textarea = $("#"+that.id).find("[find=chat_textarea]");
+		var input = $("#"+sub_that.id).find("[find=chat_input]");
+		textarea.val('');
+		input.val('');
 		wrapper_sendAction({
 				'comment': content,
 				'parent_type': type,
@@ -125,15 +157,66 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 			},
 			'post',
 			'comment/create',
-			function() {
-				Elem.find('.comments_input').val('').blur();
-				app_application_lincko.prepare("chat_contents_wrapper", type+"_" + that.param.id);
+			function(msg, error) {
+				app_application_lincko.prepare(["chat_contents_wrapper", type+"_" + sub_that.param.id]);
 				app_application_lincko.prepare("submenu_show");
-		});
+				var overthrow_id = "overthrow_"+sub_that.id;
+				var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
+				if(last){
+					myIScrollList[overthrow_id].refresh();
+					var scroll_time = 0;
+					if(!supportsTouch || responsive.test("minDesktop")){ scroll_time = 200; }
+					myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
+				}
+			},
+			null,
+			function(jqXHR, settings, temp_id) {
+				if($.trim(content)==''){ return false; }
+				var position = $("[find='submenu_wrapper_content']", submenu_wrapper);	
+				//Display a temp comment				
+				var fake_comment = {
+					"+comment": content,
+					"_id": temp_id,
+					"_type": "comments",
+					"created_at":  Math.floor((new Date()).getTime() / 1000),
+					"created_by": wrapper_localstorage.uid,
+					"new": false,
+				};
+				chatFeed.appendItem('comments', [fake_comment], position, true);
+				var overthrow_id = "overthrow_"+sub_that.id;
+				var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
+				if(last){
+					myIScrollList[overthrow_id].refresh();
+					var scroll_time = 0;
+					if(!supportsTouch || responsive.test("minDesktop")){ scroll_time = 200; }
+					myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
+				}
+				
+				var visible_input = $("#"+sub_that.id).find('.comments_input:visible');
+				var textarea = $("#"+sub_that.id).find("[find=chat_textarea]");
+				var input = $("#"+sub_that.id).find("[find=chat_input]");
+				textarea.val('');
+				input.val('');
+				app_application_lincko.prepare(["chat_contents_wrapper", "chats_" + sub_that.param.id]);
+				if(!supportsTouch || responsive.test("minDesktop")){
+					visible_input.focus();
+				} else {
+					visible_input.blur();
+				}
+			}
+		);
 	}
-	$('.comments_input', submenu_wrapper).keypress(function(e) {
+	$('.comments_input', submenu_wrapper).keyup(function(e) {
+		e.stopPropagation();
+		if(e.which == 13) {
+			$(this).val('');
+		}
+	});
+	$('.comments_input', submenu_wrapper).keydown(function(e) {
+		e.stopPropagation();
 		if(e.which == 13) {
 			send_comments();
+			$(this).val('');
 		}
 	});
 	$('.send', submenu_wrapper).on("click", function() {

@@ -155,10 +155,18 @@ var chatFeed = (function() {
 		var progress;
 		var Elem = $("#" + this.templateType).clone();
 		if (this.item._type == "uploading_file") {
-			Elem.prop('id', this.id+"_uploading_file_"+this.item.index);
+			var Elem_id = chatFeed.subm.id+"_uploading_file_"+this.item.index;
 		} else {
-			Elem.prop('id', this.id+'_models_thistory_' + this.item._id);
+			var Elem_id = chatFeed.subm.id+"_"+this.item._type+'_models_thistory_' + this.item._id;
 		}
+
+		//Do not duplicate chat messages
+		if($("#"+Elem_id).length>0){
+			return false;
+		}
+
+		Elem.prop('id', Elem_id);
+
 		Elem.addClass(this.decoratorClass);
 		Elem.addClass(this.item._type);
 		Elem.attr('index', index);
@@ -168,11 +176,16 @@ var chatFeed = (function() {
 			img = app_application_icon_single_user.src;
 		}
 
-		Elem.find("[find=icon]").attr('src', img);
+		Elem.find("[find=icon]").attr('src', img); //toto => this slow down the paint of submenu, make the page deformed because of image size, and 
 		var uname = Lincko.storage.get('users', this.item.created_by)['-username'];
 		Elem.find("[find=author]").text(wrapper_to_html(uname));
 		Elem.find("[find=content]").html(wrapper_to_html(this.item['+comment']));
-		var date = new wrapper_date(this.item.timestamp);
+		if(this.item["timestamp"]){
+			var timestamp = this.item["timestamp"];
+		} else if(this.item["created_at"]){
+			var timestamp = this.item["created_at"];
+		}
+		var date = new wrapper_date(timestamp);
 		Elem.find(".time", "[find=timestamp]").html(date.display('time_short'));
 		Elem.find(".date", "[find=timestamp]").html(date.display('date_short'));
 		Elem.find("[find=target]").html(wrapper_to_html(this.item.name));
@@ -190,7 +203,14 @@ var chatFeed = (function() {
 		var action;
 		var thumbnail;
 		var Elem = $("#" + this.templateType).clone();
-		Elem.prop('id', this.id+'_models_thistory_' + this.item.id);
+		var Elem_id = chatFeed.subm.id+"_"+this.item.type+'_models_thistory_' + this.item.id;
+
+		//Do not duplicate chat messages
+		if($("#"+Elem_id).length>0){
+			return false;
+		}
+
+		Elem.prop('id', Elem_id);
 		Elem.attr('index', index);
 		Elem.addClass(this.decoratorClass);
 		Elem.addClass(this.item.type);
@@ -317,15 +337,16 @@ var chatFeed = (function() {
 			timestamp: "1458629345"
 			type: "tasks"
 		*/
-		
 		for (var i in items) {
 			var item = new BaseHistoryCls(items[i]);
 			if (item) {
 				item.getTemplate(type);
-				if (type =='history')
+				if (type =='history'){
 					var Elem = item.renderHistoryTemplate(i);
-				else
+				}
+				else {
 					var Elem = item.renderChatTemplate(i);
+				}
 				if (Elem) {
 					if (after) {
 						Elem.appendTo(position.find(".chat_contents_wrapper"));
@@ -333,13 +354,26 @@ var chatFeed = (function() {
 					else {
 						Elem.prependTo(position.find(".chat_contents_wrapper"));
 					}
+					if (type =='history'){
+						var temp_id = Lincko.storage.get(items[i]["type"], items[i]["id"], "temp_id");
+						if (temp_id){
+							var Elem_id = chatFeed.subm.id+"_"+items[i]["type"]+'_models_thistory_' + temp_id;
+							$("#"+Elem_id).remove();
+						}
+					} else {
+						if (typeof items[i]["temp_id"] != "undefined"){
+							var Elem_id = chatFeed.subm.id+"_"+items[i]["_type"]+'_models_thistory_' + items[i]["temp_id"];
+							$("#"+Elem_id).remove();
+						}
+					}
 				}
 
 				var dateStamp = checkRecentDate(item.item.timestamp, i);
 				if (dateStamp) {
 					var line = renderLine(dateStamp);
-					if (Elem)
+					if (Elem){
 						Elem.after(line);
+					}
 				}
 			}
 		}
