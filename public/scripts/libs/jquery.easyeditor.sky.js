@@ -1,3 +1,8 @@
+/*
+    SKY: relevant method: EasyEditor.prototype.removeFormatting
+        - fixe the issue when removing formatting on a selection that already has no formatting, the entire DOM of the whole document is erased
+*/
+
 (function($, document, window){
     'use strict';
 

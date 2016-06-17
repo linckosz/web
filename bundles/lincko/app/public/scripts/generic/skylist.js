@@ -819,27 +819,14 @@ skylist.prototype.addChat = function(item){
 		});
 		Elem.find('[find=card_leftbox]').html(Elem_logo);
 		var name = '';
-		//var created_by;
-		//var timestamp;
 
-/*
-		if(item == null){
-				item = {};
-				item['_id'] = 'blankTask';
-				item['+title'] = 'blankTask';
-				item['_perm'][0] = 3; //RCUD
-				item['created_by'] = wrapper_localstorage.uid;
-				item.start = $.now()/1000;
-				item.duration = "86400";
-		}
-		*/
+
 		Elem.prop('id','skylist_card_'+that.md5id+'_'+item['id']);
 
 
 		/*
 		title
 		*/
-		burger(Elem.find('[find=title]'), 'regex');
 		Elem.attr('type', item_type);
 		var elem_title = Elem.find('[find=title]');
 		if (item_type == "projects" || item_type == "history") {
@@ -864,7 +851,11 @@ skylist.prototype.addChat = function(item){
 		var elem_title = Elem.find('[find=title]');
 		elem_title.html(name);
 
-		Elem.find('[find=description]').html(item['comment']);
+		var commentText = (item['comment']);
+		if(item.type != 'history'){
+			commentText =  wrapper_to_html(item['comment']);
+		}
+		Elem.find('[find=description]').html(commentText);
 
 		var latest_update = new wrapper_date(item_timestamp);
 
