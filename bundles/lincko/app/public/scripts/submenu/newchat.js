@@ -60,7 +60,7 @@ Submenu.prototype.Add_ChatContents = function() {
 		var scroll_time = this.action_param[1];
 		var overthrow_id = "overthrow_"+submenu_id;
 		var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
-		if(myIScrollList[overthrow_id] && last){
+		if(myIScrollList[overthrow_id] && last && last[0]){
 			myIScrollList[overthrow_id].refresh();
 			myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
 		}
@@ -71,7 +71,7 @@ Submenu.prototype.Add_ChatContents = function() {
 	notifier[type]['clear'](id);
 	if (type == 'history') {
 		app_application_lincko.add(this.id+"_chat_contents_wrapper","projects_" + id, function() {
-			
+			//toto => there is an undefined somewhere
 			var id = Object.keys(this.range)[0].split("_")[1];
 			var position = submenu_wrapper.find("[find='submenu_wrapper_content']");
 			var items = Lincko.storage.hist(null, -1, {'by': ["!=", wrapper_localstorage.uid], 'timestamp': [">=", latest_history]}, 'projects', id, false);
@@ -84,7 +84,7 @@ Submenu.prototype.Add_ChatContents = function() {
 			chatFeed.appendItem("history", items, position, true);
 			var overthrow_id = "overthrow_"+this.action_param[0];
 			var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
-			if(myIScrollList[overthrow_id] && last){
+			if(myIScrollList[overthrow_id] && last && last[0]){
 				if(myIScrollList[overthrow_id].maxScrollY - myIScrollList[overthrow_id].y > -100){
 					myIScrollList[overthrow_id].refresh();
 					var scroll_time = 0;
@@ -93,17 +93,18 @@ Submenu.prototype.Add_ChatContents = function() {
 				}
 			}
 			notifier['history']['clear'](this.action_param[1]);
+			
 		}, [that.id, id]);
 	}
 	else {
 		app_application_lincko.add(this.id+"_chat_contents_wrapper", "chats_" + id, function() {
-			
+			//toto => there is an undefined somewhere
 			var id = Object.keys(this.range)[0].split("_")[1];
 			var type = Object.keys(this.range)[0].split("_")[0];
 			var position = submenu_wrapper.find("[find='submenu_wrapper_content']");
 			var items = Lincko.storage.list('comments', -1, {'created_by': ["!=", wrapper_localstorage.uid], 'created_at': [">=", latest_comment]}, 'chats', id, false);
 			for(var i in items){
-				if(items[i]["created_at"] > latest_comment && latest_history < Lincko.storage.getLastVisit()){
+				if(items[i]["created_at"] > latest_comment && latest_comment < Lincko.storage.getLastVisit()){
 					latest_comment = items[i]["created_at"];
 				}
 			}
@@ -111,7 +112,7 @@ Submenu.prototype.Add_ChatContents = function() {
 			chatFeed.appendItem(type, items, position, true);
 			var overthrow_id = "overthrow_"+this.action_param[0];
 			var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
-			if(myIScrollList[overthrow_id] && last){
+			if(myIScrollList[overthrow_id] && last && last[0]){
 				if(myIScrollList[overthrow_id].maxScrollY - myIScrollList[overthrow_id].y > -100){
 					myIScrollList[overthrow_id].refresh();
 					var scroll_time = 0;
@@ -119,7 +120,9 @@ Submenu.prototype.Add_ChatContents = function() {
 					myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
 				}
 			}
+			
 			notifier['chats']['clear'](this.action_param[1]);
+			
 		}, [that.id, id]);
 	}
 }
@@ -159,7 +162,7 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 				app_application_lincko.prepare("submenu_show");
 				var overthrow_id = "overthrow_"+sub_that.id;
 				var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
-				if(myIScrollList[overthrow_id] && last){
+				if(myIScrollList[overthrow_id] && last && last[0]){
 					myIScrollList[overthrow_id].refresh();
 					var scroll_time = 0;
 					if(!supportsTouch || responsive.test("minDesktop")){ scroll_time = 200; }
@@ -182,7 +185,7 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 				chatFeed.appendItem('comments', [fake_comment], position, true);
 				var overthrow_id = "overthrow_"+sub_that.id;
 				var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
-				if(myIScrollList[overthrow_id] && last){
+				if(myIScrollList[overthrow_id] && last && last[0]){
 					myIScrollList[overthrow_id].refresh();
 					var scroll_time = 0;
 					if(!supportsTouch || responsive.test("minDesktop")){ scroll_time = 200; }

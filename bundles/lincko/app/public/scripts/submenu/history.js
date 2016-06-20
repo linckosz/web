@@ -178,6 +178,10 @@ var chatFeed = (function() {
 			img = app_application_icon_single_user.src;
 		}
 
+		Elem.find("[find=icon]").click(this.item.created_by, function(event){
+			submenu_Build("personal_info", chatFeed.subm.layer+1, true, event.data, chatFeed.subm.preview);
+		});
+
 		Elem.find("[find=icon]").attr('src', img); //toto => this slow down the paint of submenu, make the page deformed because of image size, and 
 		var uname = Lincko.storage.get('users', this.item.created_by)['-username'];
 		Elem.find("[find=author]").text(wrapper_to_html(uname));
@@ -230,6 +234,10 @@ var chatFeed = (function() {
 		if(!img){
 			img = app_application_icon_single_user.src;
 		}
+
+		Elem.find("[find=icon]").click(this.item.by, function(event){
+			submenu_Build("personal_info", chatFeed.subm.layer+1, true, event.data, chatFeed.subm.preview);
+		});
 
 		Elem.find("[find=icon]").attr('src', img);
 		Elem.find("[find=action]").html(wrapper_to_html($.trim(action).ucfirst()));
@@ -339,7 +347,6 @@ var chatFeed = (function() {
 			timestamp: "1458629345"
 			type: "tasks"
 		*/
-		console.log(type);
 		for (var i in items) {
 			var item = new BaseHistoryCls(items[i]);
 			if (item) {

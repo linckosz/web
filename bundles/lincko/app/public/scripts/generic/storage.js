@@ -530,7 +530,7 @@ Lincko.storage.getHistoryInfo = function(history){
 		}
 
 		var date = new wrapper_date(history.timestamp);
-		result.title = '[ '+date.display('date_short')+' ] '+result.title.ucfirst();
+		result.title = '[ '+date.display('date_very_short')+' ] '+result.title.ucfirst();
 		
 		var item = Lincko.storage.data[history.type][history.id];
 		//Add to the content the main title (such as "project name")

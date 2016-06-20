@@ -206,6 +206,14 @@
 		display: block;
 	}
 
+	.app_project_chat_item .logo_img {
+		width: 28px;
+		height: 28px;
+		border-radius: 100%;
+		border: 1px solid #FBA026;
+		display: block;
+	}
+
 	.app_project_chat_item span.logo {
 		font-size: 35px;
 	}

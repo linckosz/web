@@ -35,8 +35,23 @@
 	font-size: 55px;
 	color: #FBA026;
 }
+
+.skylist .skylist_logo.logo_width {
+	width: 48px;
+	max-width: 48px;
+}
+
 .submenu_wrapper .skylist .skylist_logo >span {
 	width: 45px;
+}
+
+.skylist .skylist_logo > .logo_img {
+	margin-left: 4px;
+	width: 28px;
+	height: 28px;
+	border-radius: 100%;
+	border: 1px solid #FBA026;
+	display: block;
 }
 
 .app_layers_chat .skylist_card_center [find=title] {

@@ -54,7 +54,7 @@ submenu_list['contacts'] = {
 					'chat/create',
 					function() {
 						var chat = Lincko.storage.list('chats', 1, {'temp_id': comment_id})[0];
-						submenu_Build("newchat", false, false, {
+						submenu_Build("newchat", that.layer, true, {
 							type: 'chats',
 							id: chat['_id'],
 							title: chat['+title'],
@@ -77,7 +77,7 @@ submenu_list['contacts'] = {
 				'chat/create',
 				function() {
 					var chat = Lincko.storage.list('chats', 1, {'temp_id': comment_id})[0];
-					submenu_Build("newchat", false, false, {
+					submenu_Build("newchat", that.layer, true, {
 						type: 'chats',
 						id: chat['_id'],
 						title: chat['+title'],
@@ -163,11 +163,10 @@ function _submenu_get_contacts(elem) {
 		keys.push($(items[i]).val());
 	}
 	return keys;
-
 }
 
 Submenu.prototype._displayContacts = function(position, contacts) {
-	var submenuInst = this;
+	var that = this;
 	var profile_pic;
 	this.Wrapper().find(".submenu_top_side_right").hide();
 	for(c in contacts) {
@@ -182,6 +181,10 @@ Submenu.prototype._displayContacts = function(position, contacts) {
 		} else {
 			Elem.find("[find=picture_src]").prop("src", app_application_icon_single_user.src);
 		}
+		Elem.find("[find=picture_src]").click([that.layer+1, contacts[c]["id"], that.preview], function(event){
+			event.stopPropagation();
+			submenu_Build("personal_info", event.data[0], true, event.data[1], event.data[2]);
+		});
 
 		Elem.find('.id').val(contacts[c].id);
 		if (contacts[c].checked == true) {
@@ -200,7 +203,7 @@ Submenu.prototype._displayContacts = function(position, contacts) {
 				return -1;
 			}
 			$(this).find('.check').addClass('checked');
-			if ('type' in submenuInst.param && submenuInst.param.type == "tasks") {
+			if ('type' in that.param && that.param.type == "tasks") {
 				$(this).siblings().find(".check").removeClass("checked");
 			}
 			if ($(this).parents(".submenu_wrapper").find(".checked").length > 0)

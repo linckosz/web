@@ -24,28 +24,104 @@ var mainMenu = (function() {
 		if (data.type == "history") {
 			data.comment = php_nl2br(data.comment);
 			name = Lincko.storage.get("projects", data.id, "+title");
-			//item.find('img.logo').attr('src', 'icon-Multiple-People');
+			item.find('img.logo_img').remove();
 			item.find('span.logo').addClass('fa fa-globe');
 		} else if (data.type == 'chats') {
 			data.comment = wrapper_to_html(data.comment);
-			var users = Object.keys(Lincko.storage.get('chats', data.id, '_perm'));
-			name = Lincko.storage.get('chats', data.id, '+title');
-
-			if (users.length > 2) {
-				item.find('span.logo').addClass('icon-Multiple-People');
-				item.find('img').remove();
+			var chat = Lincko.storage.get('chats', data.id);
+			if(chat["single"]){
+				name = "";
+				user_icon = false;
+				var src = app_application_icon_single_user.src;
+				if(chat["_perm"][wrapper_localstorage.uid]){
+					var perso = Lincko.storage.get('users', wrapper_localstorage.uid);
+					name = perso["-username"];
+					src = Lincko.storage.getLinkThumbnail(perso['profile_pic']);
+					if(!src){
+						src = app_application_icon_single_user.src;
+					} else {
+						user_icon = true;
+					}
+				}
+				for(var i in chat["_perm"]){
+					if(i!=wrapper_localstorage.uid){
+						var perso = Lincko.storage.get('users', i);
+						name = perso["-username"];
+						src = Lincko.storage.getLinkThumbnail(perso['profile_pic']);
+						if(!src){
+							src = app_application_icon_single_user.src;
+						} else {
+							user_icon = true;
+						}
+						break;
+					}
+				}
+				if(user_icon){
+					item.find('img.logo_img').removeClass("display_none");
+					item.find('img.logo_img').attr('src', src);
+					item.find('span.logo').addClass("display_none");
+				} else {
+					item.find('span.logo').removeClass("display_none");
+					item.find('span.logo').addClass('icon-Single-Person');
+					item.find('img.logo_img').addClass("display_none");
+				}
 			} else {
-				item.find('span.logo').addClass('icon-Single-Person');
-				item.find('img').remove();
+				name = Lincko.storage.get('chats', data.id, '+title');
+				item.find('span.logo').removeClass("display_none");
+				item.find('span.logo').addClass('icon-Multiple-People');
+				item.find('img.logo_img').addClass("display_none");
 			}
 		}
 		app_application_lincko.add('app_project_chat_item_'+data.id, data.type + "_" + data.id, function() {
 			var range = Object.keys(this.range)[0].split("_");
 			var type = range[0];
 			var id = range[1];
+			var item = $("#"+this.id);
 			var cnt = notifier[type]['get'](id);
 			if (type == "chats") {
-				var name = Lincko.storage.get('chats', id, '+title');
+				var chat = Lincko.storage.get('chats', id);
+				if(chat["single"]){
+					name = "";
+					user_icon = false;
+					var src = app_application_icon_single_user.src;
+					if(chat["_perm"][wrapper_localstorage.uid]){
+						var perso = Lincko.storage.get('users', wrapper_localstorage.uid);
+						name = perso["-username"];
+						src = Lincko.storage.getLinkThumbnail(perso['profile_pic']);
+						if(!src){
+							src = app_application_icon_single_user.src;
+						} else {
+							user_icon = true;
+						}
+					}
+					for(var i in chat["_perm"]){
+						if(i!=wrapper_localstorage.uid){
+							var perso = Lincko.storage.get('users', i);
+							name = perso["-username"];
+							src = Lincko.storage.getLinkThumbnail(perso['profile_pic']);
+							if(!src){
+								src = app_application_icon_single_user.src;
+							} else {
+								user_icon = true;
+							}
+							break;
+						}
+					}
+					if(user_icon){
+						item.find('img.logo_img').removeClass("display_none");
+						item.find('img.logo_img').attr('src', src);
+						item.find('span.logo').addClass("display_none");
+					} else {
+						item.find('span.logo').removeClass("display_none");
+						item.find('span.logo').addClass('icon-Single-Person');
+						item.find('img.logo_img').addClass("display_none");
+					}
+				} else {
+					name = Lincko.storage.get('chats', data.id, '+title');
+					item.find('span.logo').removeClass("display_none");
+					item.find('span.logo').addClass('icon-Multiple-People');
+					item.find('img.logo_img').addClass("display_none");
+				}
 				$("#"+this.id).find('header').html(wrapper_to_html(name));
 				var comment = Lincko.storage.list("comments", 1, null, "chats", id);
 				if(typeof comment[0] == "object"){
@@ -133,11 +209,11 @@ var mainMenu = (function() {
 	}
 
 	function initMainMenuEvents() {
-		$("#app_project_content .icon-Settings").on("click", function() {
+		$("#app_project_content .icon-Settings").off("click").on("click", function() {
 			submenu_Build("settings");
 		});
 
-		$("#app_project_chat header").on("click", function() {
+		$("#app_project_chat header").off("click").on("click", function() {
 			submenu_Build('chat');
 		});
 
@@ -154,7 +230,12 @@ var mainMenu = (function() {
 		// each item should be:
 		// {'type': ['history'|'chat'], 'id': ['project_id'|'chat_id'], 'timestamp': 'the_latest_update_history_or_chat'}
 		//get project list
-		var project_list = Lincko.storage.list('projects', Math.floor(number/2));
+		if(typeof number == "undefined"){
+			number = null;
+		} else {
+			number = Math.floor(number/2);
+		}
+		var project_list = Lincko.storage.list('projects', number);
 
 		//get the most recent history for each project
 		for (var p in project_list) {
@@ -180,15 +261,14 @@ var mainMenu = (function() {
 					'comment': txt,
 				});
 			}
-
 		}
 		if (project_id) {
 			 // Get chats belong to specific project
-			var chat_list = Lincko.storage.list('chats', Math.floor(number/2), null, 'projects', project_id, false);
+			var chat_list = Lincko.storage.list('chats', number, null, 'projects', project_id, false);
 		}
 		else {
 			 // Get all chats
-			var chat_list = Lincko.storage.list('chats', Math.floor(number/2), null, null, null, false);
+			var chat_list = Lincko.storage.list('chats', number, null, null, null, false);
 		}
 		//get the most recent comment for each project
 		for (var c in chat_list) {
@@ -234,7 +314,7 @@ var mainMenu = (function() {
 var project_garbage = app_application_garbage.add();
 app_application_lincko.add(project_garbage, 'first_launch', function() {
 	if(!$.isEmptyObject(Lincko.storage.data)){
-		mainMenu.init();
+		mainMenu.init(); //toto => mainMenu.init() has an issue, thereis an undefined variable somewhere
 		app_application_garbage.remove(project_garbage);
 		delete project_garbage;
 	}
@@ -283,7 +363,7 @@ $('#app_project_quick_access_tasks').click(function(){
 	var personalSpace = Lincko.storage.getMyPlaceholder();
 	if(personalSpace){
 		personalSpace = personalSpace['_id'];
-		submenu_Build('taskdetail', null, null, 
+		submenu_Build('taskdetail', false, false, 
 			{
 				type:'tasks',
 				id: 'new', 
@@ -297,7 +377,7 @@ $('#app_project_quick_access_notes').click(function(){
 	var personalSpace = Lincko.storage.getMyPlaceholder();
 	if(personalSpace){
 		personalSpace = personalSpace['_id'];
-		submenu_Build('taskdetail', null, null, 
+		submenu_Build('taskdetail', false, false, 
 			{
 				type:'notes',
 				id: 'new', 
@@ -308,7 +388,7 @@ $('#app_project_quick_access_notes').click(function(){
 });
 
 $('#app_project_quick_access_chat').click(function(){
-	submenu_Build('chat', 1, true, true);
+	submenu_Build('chat', false, true, true);
 });
 
 $('#app_project_project_new').click(function(){

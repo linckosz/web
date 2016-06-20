@@ -1,11 +1,13 @@
 $.extend(wrapper_date.prototype, {
 	
 	time: false,
+	timestamp: false,
 
 	Constructor: function(timestamp){
-		if(typeof timestamp !== 'number' && typeof timestamp !== 'string'){
-			timestamp = Math.floor((new Date()).getTime() / 1000);
-
+		if(typeof timestamp != 'number' && typeof timestamp != 'string'){
+			this.timestamp = Math.floor((new Date()).getTime() / 1000);
+		} else {
+			this.timestamp = timestamp;
 		}
 		this.time = new Date(1000*parseInt(timestamp, 10)); //Convert in milliseconds
 	},
@@ -149,8 +151,7 @@ $.extend(wrapper_date.prototype, {
 	happensToday: function() {
 		var dateStampToday = Math.floor(Date.now() / 86400000) * 86400000;
 		var dateStampTomorrow = dateStampToday + 86400000;
-		var timestamp = this.getTime().getTime();
-		if ((timestamp >= dateStampToday) && (timestamp < dateStampTomorrow))
+		if ((this.timestamp*1000 >= dateStampToday) && (this.timestamp*1000 < dateStampTomorrow))
 			return true;
 		else
 			return false;
@@ -162,8 +163,7 @@ $.extend(wrapper_date.prototype, {
 			dateStampPrev += int*86400000;
 		}
 		var dateStampNext = dateStampPrev + 86400000;
-		var timestamp = this.getTime().getTime();
-		if ((timestamp >= dateStampPrev) && (timestamp < dateStampNext))
+		if ((this.timestamp*1000 >= dateStampPrev) && (this.timestamp*1000 < dateStampNext))
 			return true;
 		else
 			return false;

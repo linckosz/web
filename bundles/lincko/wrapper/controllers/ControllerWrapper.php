@@ -54,6 +54,9 @@ class ControllerWrapper extends Controller {
 			$this->show_error = $this->json['data']['show_error'];
 			unset($this->json['data']['show_error']);
 		}
+		if(isset($this->json['data']['foilautofill'])){
+			unset($this->json['data']['foilautofill']);
+		}
 		return true;
 	}
 

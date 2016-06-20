@@ -92,7 +92,9 @@ Submenu.prototype.Add_ChatMenu = function() {
 	submenu_wrapper.find("[find=submenu_wrapper_bottom]").addClass('submenu_bottom');
 	submenu_wrapper.find("[find=submenu_wrapper_content]").css('bottom', submenu_wrapper.find("[find=submenu_wrapper_bottom]").height());
 	submenu_wrapper.find("[find=submenu_wrapper_content]").prop("id", '');
-	Elem.find("[find=select_chats]").click(function(){
+	Elem.find("[find=select_chats]").click(that, function(event){
+		var that = event.data;
+		var Elem = that.Wrapper().find("[find=submenu_wrapper_bottom]");
 		if(!$(this).hasClass('submenu_app_chat_chatmenu_icon_active')){
 			submenu_chat_select('chats', Elem);
 			submenu_Clean(that.layer+1, true);
@@ -101,7 +103,9 @@ Submenu.prototype.Add_ChatMenu = function() {
 			that.Add_ChatContent();
 		}
 	});
-	Elem.find("[find=select_contacts]").click(function(){
+	Elem.find("[find=select_contacts]").click(that, function(event){
+		var that = event.data;
+		var Elem = that.Wrapper().find("[find=submenu_wrapper_bottom]");
 		if(!$(this).hasClass('submenu_app_chat_chatmenu_icon_active')){
 			submenu_chat_select('contacts', Elem);
 			submenu_Clean(that.layer+1, true);
@@ -110,9 +114,15 @@ Submenu.prototype.Add_ChatMenu = function() {
 			that.Add_ChatContacts();
 		}
 	});
-	app_application_lincko.add(that.id+"_submenu_app_chat_chatmenu", "contacts_list", function(){
-		that.Add_ChatContacts();
-	});
+	app_application_lincko.add(that.id+"_submenu_app_chat_chatmenu", ["projects", "chats", "users", "contacts_list"], function(){
+		var that = this.action_param;
+		var Elem = that.Wrapper().find("[find=submenu_wrapper_bottom]");
+		if(Elem.find("[find=select_chats]").hasClass('submenu_app_chat_chatmenu_icon_active')){
+			//that.Add_ChatContent(); //toto => make scroll resert to beginning
+		} else if(Elem.find("[find=select_contacts]").hasClass('submenu_app_chat_chatmenu_icon_active')){
+			that.Add_ChatContacts(); //toto => make scroll resert to beginning, but less important if the list is short
+		}
+	}, that);
 	if("class" in attribute){
 		Elem.addClass(attribute['class']);
 	}
@@ -223,7 +233,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 	contacts = Lincko.storage.sort_items(visible, 'username');
 	for(var i in contacts){
 		var Elem = $('#-submenu_app_chat_chat_contact').clone();
-		Elem.prop("id", "");
+		Elem.prop("id", that.id+"_submenu_app_chat_chat_contact_"+contacts[i]['_id']);
 		thumbnail = Lincko.storage.getLinkThumbnail(contacts[i]['profile_pic']);
 		if(thumbnail){
 			Elem.find("[find=picture_src]").prop("src", thumbnail);
@@ -231,20 +241,92 @@ Submenu.prototype.Add_ChatContacts = function() {
 			Elem.find("[find=picture_src]").prop("src", app_application_icon_single_user.src);
 		}
 		Elem.find("[find=who]").html(wrapper_to_html(contacts[i]['-username'].ucfirst()));
-		Elem.click(function(){
-
+		Elem.off("click");
+		Elem.click([that, contacts[i]['_id']], function(event){ //toto => why this is called multiple time when when switch few times from Contact list adn Chats list?
+			console.log('ok');
+			event.stopPropagation();
+			submenu_chat_open_single(event.data[0], event.data[1]);
 		});
 		submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
+		delete Elem;
 	}
 	$(window).resize();
 	delete submenu_wrapper;
 
-	app_application_lincko.add(wrapper_content_id, "users", function(){
-		that.Add_ChatContacts();
-	});
-
 	return true;
 };
+
+var submenu_chat_open_single_timer;
+var submenu_chat_open_single_running = false; //toto => bad pattern because we should avoid running multiple times at the source
+var submenu_chat_open_single = function(subm, users_id){
+	if(submenu_chat_open_single_running){
+		//Do nothing because already launch previously
+		return true;
+	}
+	submenu_chat_open_single_running = true;
+	var chats = Lincko.storage.list('chats', null, {'single': true});
+	var chat_id = null;
+	for(var i in chats){
+		count = 0;
+		if(chats[i]["_perm"]){
+			for(var j in chats[i]["_perm"]){
+				count++;
+			}
+		}
+		if(chats[i]["_perm"] && count>=2 && users_id!=wrapper_localstorage.uid && chats[i]["_perm"][users_id] && chats[i]["_perm"][wrapper_localstorage.uid]){
+			chat_id = chats[i]["_id"];
+			break;
+		} else if(chats[i]["_perm"] && count==1 && users_id==wrapper_localstorage.uid && chats[i]["_perm"][wrapper_localstorage.uid]){
+			chat_id = chats[i]["_id"];
+			break;
+		}
+	}
+	var title = Lincko.storage.get('users', users_id, 'username');
+	var chat_temp_id;
+	if(chat_id){
+		submenu_Build("newchat", subm.layer+1, false, {
+			type: "chats",
+			id: chat_id,
+			title: title,
+		});
+		clearTimeout(submenu_chat_open_single_timer);
+		submenu_chat_open_single_timer = setTimeout(function(){
+			submenu_chat_open_single_running = false;
+		}, 300);
+	} else {
+		
+		wrapper_sendAction(
+		{
+			'parent_type': null,
+			"parent_id": -1,
+			"title": "",
+			"single": users_id
+		},
+		'post',
+		'chat/create',
+		function() {console.log(chat_temp_id);
+			var chat = Lincko.storage.list('chats', 1, {'temp_id': chat_temp_id})[0];
+			if(chat){
+				var title = Lincko.storage.get('users', users_id, 'username');
+				submenu_Build("newchat", subm.layer+1, false, {
+					type: "chats",
+					id: chat["_id"],
+					title: title,
+				});
+			}
+		},
+		null,
+		function(jqXHR, settings, temp_id) {
+			chat_temp_id = temp_id;
+		},
+		function(){
+			submenu_chat_open_single_running = false;
+		}
+		);
+		
+	}
+};
+
 
 Submenu.prototype.Add_ChatAddUser = function() {
 	var that = this;
@@ -577,17 +659,16 @@ Submenu.prototype.Add_ChatContent = function() {
 	//submenu_wrapper.find("[find=submenu_wrapper_title]").html(wrapper_to_html(this.param['title']));
 
 	var chatlist_subConstruct = function(){
-		var that = this;
-		that.list_wrapper.addClass("skylist_maxMobileL_force").addClass('submenu_content_chat');
-		that.elem_newcardCircle.click( function() {
-			submenu_Build("contacts", false, false,
+		this.list_wrapper.addClass("skylist_maxMobileL_force").addClass('submenu_content_chat');
+		this.elem_newcardCircle.click([that.layer+1, that.preview], function(event) {
+			submenu_Build("contacts", event.data[0], false,
 				{
 					id:null,
 					'contactsID': _app_contacts_gen_chatcontacts(null,null,true),
-				}, false);
+				}, event.data[1]);
 			return false;
 		})
-		.appendTo(that.list_wrapper);
+		.appendTo(this.list_wrapper);
 	}
 
 	var app_layers_chatlist = new skylist(
@@ -634,10 +715,10 @@ Submenu.prototype.Add_ChatContent = function() {
 			var id = tmp[tmp.length-1];
 			var title = Lincko.storage.get("projects", id, "+title");
 		}
-		submenu_Build("newchat", true, false, {
+		submenu_Build("newchat", that.layer+1, false, {
 			type: $(this).attr('type'),
 			id: id,
-			title: title }, false);
+			title: title }, that.preview);
 		return false;
 	});
 	//Free memory

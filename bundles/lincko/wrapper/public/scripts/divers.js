@@ -305,6 +305,14 @@ function wrapper_test(type, RCUD){
 				wrapper_test_display
 			);
 		}
+		else if(RCUD==5){
+			wrapper_sendAction(
+				null,
+				'get',
+				'project/my_project',
+				wrapper_test_display
+			);
+		}
 	}
 
 	if(type=='*' || type=='roles'){
@@ -605,6 +613,19 @@ function wrapper_test(type, RCUD){
 				},
 				'post',
 				'data/noticed',
+				wrapper_test_display
+			);
+		}
+	}
+
+	if(type=='*' || type=='translate'){
+		if(RCUD==0){
+			wrapper_sendAction(
+				{
+					"text": "Я наступил на Cornflake, \nи теперь я зерновых убийца!",
+				},
+				'post',
+				'translation/auto',
 				wrapper_test_display
 			);
 		}

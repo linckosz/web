@@ -199,6 +199,7 @@
 
 #app_content_submenu_preview_statistics {
 	position: absolute;
+	z-index: 3;
 	text-align: left;
 	top: 24px;
 	right: 24px;

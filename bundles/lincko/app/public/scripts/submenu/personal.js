@@ -6,18 +6,17 @@ submenu_list['personal_settings'] = {
 	"profile_picture": {
 		"style": "profile_photo",
 		"title": "",
-		"class": "",
 	},
 	"nickname": {
 		"style": "profile_input",
 		"title": Lincko.Translation.get('app', 47, 'html'), //Nickname
 		"value": function(){
-			var val = Lincko.storage.get('users',  wrapper_localstorage.uid, 'username');
+			var val = Lincko.storage.get('users', wrapper_localstorage.uid, 'username');
 			if(!val){ return ""; }
-			return val;
+			return wrapper_to_html(val);
 		},
 		"action": function(Elem, that){
-			var val_old = Lincko.storage.get('users',  wrapper_localstorage.uid, 'username');
+			var val_old = Lincko.storage.get('users', wrapper_localstorage.uid, 'username');
 			var val_new = Elem.find("[find=submenu_value]").val();
 			if(val_new != val_old){
 				clearTimeout(submenu_profile_timer['username']);
@@ -39,12 +38,12 @@ submenu_list['personal_settings'] = {
 		"title": Lincko.Translation.get('app', 48, 'html'), //Given Name
 		"input": "firstname",
 		"value": function(){
-			var val = Lincko.storage.get('users',  wrapper_localstorage.uid, 'firstname');
+			var val = Lincko.storage.get('users', wrapper_localstorage.uid, 'firstname');
 			if(!val){ return ""; }
-			return val;
+			return wrapper_to_html(val);
 		},
 		"action": function(Elem, that){
-			var val_old = Lincko.storage.get('users',  wrapper_localstorage.uid, 'firstname');
+			var val_old = Lincko.storage.get('users', wrapper_localstorage.uid, 'firstname');
 			var val_new = Elem.find("[find=submenu_value]").val();
 			if(val_new != val_old){
 				clearTimeout(submenu_profile_timer['firstname']);
@@ -66,9 +65,9 @@ submenu_list['personal_settings'] = {
 		"title": Lincko.Translation.get('app', 49, 'html'), //Family Name
 		"input": "lastname",
 		"value": function(){
-			var val = Lincko.storage.get('users',  wrapper_localstorage.uid, 'lastname');
+			var val = Lincko.storage.get('users', wrapper_localstorage.uid, 'lastname');
 			if(!val){ return ""; }
-			return val;
+			return wrapper_to_html(val);
 		},
 		"action": function(Elem, that){
 			var val_old = Lincko.storage.get('users',  wrapper_localstorage.uid, 'lastname');
@@ -92,10 +91,57 @@ submenu_list['personal_settings'] = {
 		"style": "profile_info",
 		"title": Lincko.Translation.get('app', 50, 'html'), //E-mail
 		"value": function(){
-			var val = Lincko.storage.get('users',  wrapper_localstorage.uid, 'email');
+			var val = Lincko.storage.get('users', wrapper_localstorage.uid, 'email');
 			if(!val){ return ""; }
-			return val;
+			return wrapper_to_html(val);
 		},
+	},
+};
+
+submenu_list['personal_info'] = {
+	"_title": {
+		"style": "title",
+		"title": Lincko.Translation.get('app', 55, 'html'), //User Profile
+	},
+	"profile_picture": {
+		"style": "profile_photo",
+		"title": "",
+		"value": function(Elem, subm){
+			var val = Lincko.storage.get('users', subm.param, 'username');
+			if(!val){ return ""; }
+			return wrapper_to_html(val);
+		},
+	},
+	"given_name": {
+		"style": "profile_info",
+		"title": Lincko.Translation.get('app', 48, 'html'), //Given Name
+		"input": "firstname",
+		"value": function(Elem, subm){
+			var val = Lincko.storage.get('users', subm.param, 'firstname');
+			if(!val){ return ""; }
+			return wrapper_to_html(val);
+		},
+	},
+	"family_name": {
+		"style": "profile_info",
+		"title": Lincko.Translation.get('app', 49, 'html'), //Family Name
+		"input": "lastname",
+		"value": function(Elem, subm){
+			var val = Lincko.storage.get('users', subm.param, 'lastname');
+			if(!val){ return ""; }
+			return wrapper_to_html(val);
+		},
+	},
+	"message": {
+		"style": "profile_info",
+		"title": Lincko.Translation.get('app', 54, 'html'), //Send a message
+		"class": "submenu_deco",
+		"action": function(Elem, subm){
+			submenu_chat_open_single(subm, subm.param);
+		},
+		"postAction": function(Elem){
+			Elem.removeClass("submenu_deco_read");
+		}
 	},
 };
 
@@ -118,7 +164,7 @@ Submenu_select.profile_info = function(subm) {
 var submenu_profile_timer = [];
 
 Submenu.prototype.Add_ProfileInput = function() {
-	var perso = Lincko.storage.get('users',  wrapper_localstorage.uid);
+	var perso = Lincko.storage.get('users', wrapper_localstorage.uid);
 	var that = this;
 	var attribute = this.attribute;
 	var Elem = $('#-submenu_app_personal_input').clone();
@@ -157,7 +203,7 @@ Submenu.prototype.Add_ProfileInput = function() {
 }
 
 Submenu.prototype.Add_ProfileNext = function() {
-	var perso = Lincko.storage.get('users',  wrapper_localstorage.uid);
+	var perso = Lincko.storage.get('users', wrapper_localstorage.uid);
 	var that = this;
 	var attribute = this.attribute;
 	var Elem = $('#-submenu_app_personal_next').clone();
@@ -241,7 +287,8 @@ Submenu.prototype.Add_ProfileNext = function() {
 
 
 Submenu.prototype.Add_ProfilePhoto = function() {
-	var perso = Lincko.storage.get('users',  wrapper_localstorage.uid);
+	var users_id = this.param;
+	var perso = Lincko.storage.get('users', users_id);
 	var that = this;
 	var attribute = this.attribute;
 	var Elem = $('#-submenu_app_personal_profile').clone();
@@ -250,61 +297,71 @@ Submenu.prototype.Add_ProfilePhoto = function() {
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
+	if ("value" in attribute) {
+		if(typeof attribute.value == "function"){
+			var value = attribute.value(Elem, that);
+			Elem.find("[find=submenu_profile_user]").html(value);
+		} else {
+			Elem.find("[find=submenu_profile_user]").html(attribute.value);
+		}
+	}
 	Elem.find("[find=submenu_profile_upload_picture]").attr("preview", "0");
 	if(perso['profile_pic'] && $.isNumeric(perso['profile_pic'])){
 		var src = Lincko.storage.getLinkThumbnail(perso['profile_pic']);
 		Elem.find("[find=submenu_profile_upload_picture]").prop("src", src);
 	}
-	Elem.find("[find=submenu_profile_upload_picture]").click(function(e){
-		e.stopPropagation();
-		var temp_id = app_upload_open_photo_single('users', wrapper_localstorage.uid, false, true);
-		var picture = Elem.find("[find=submenu_profile_upload_picture]");
-		Elem.find("[find=submenu_profile_upload_picture]").prop("id", temp_id);
-		app_application_lincko.add(temp_id, ['files', 'upload'], function() {
-			var temp_id = this.id;
-			var file = Lincko.storage.list('files', 1, {temp_id:temp_id,});
-			if(file.length==1){
-				var file_id = file[0]['_id'];
-				var src = Lincko.storage.getLinkThumbnail(file_id);
-				Elem.find("[find=submenu_profile_upload_picture]").prop("src", src);
-				Elem.find("[find=submenu_profile_upload_picture]").attr("preview", "0");
-				Elem.find("[find=submenu_profile_upload_picture]").prop("id", "");
-				wrapper_sendAction(
-					{
-						"id": wrapper_localstorage.uid,
-						"profile_pic": file_id,
-
-					},
-					'post',
-					'user/update'
-				);
-			} else {
-				var data = false;
-				for(var i in app_upload_files.lincko_files){
-					if(app_upload_files.lincko_files[i].lincko_temp_id == temp_id){
-						data = app_upload_files.lincko_files[i];
-						Elem.find("[find=submenu_profile_upload_picture]").attr("preview", "0");
-						break;
+	if(users_id == wrapper_localstorage.uid){
+		Elem.find("[find=submenu_profile_upload_picture]").click(function(e){
+			e.stopPropagation();
+			var temp_id = app_upload_open_photo_single('users', wrapper_localstorage.uid, false, true);
+			var picture = Elem.find("[find=submenu_profile_upload_picture]");
+			Elem.find("[find=submenu_profile_upload_picture]").prop("id", temp_id);
+			app_application_lincko.add(temp_id, ['files', 'upload'], function() {
+				var temp_id = this.id;
+				var file = Lincko.storage.list('files', 1, {temp_id:temp_id,});
+				if(file.length==1){
+					var file_id = file[0]['_id'];
+					var src = Lincko.storage.getLinkThumbnail(file_id);
+					Elem.find("[find=submenu_profile_upload_picture]").prop("src", src);
+					Elem.find("[find=submenu_profile_upload_picture]").attr("preview", "0");
+					Elem.find("[find=submenu_profile_upload_picture]").prop("id", "");
+					wrapper_sendAction(
+						{
+							"id": wrapper_localstorage.uid,
+							"profile_pic": file_id,
+						},
+						'post',
+						'user/update'
+					);
+				} else {
+					var data = false;
+					for(var i in app_upload_files.lincko_files){
+						if(app_upload_files.lincko_files[i].lincko_temp_id == temp_id){
+							data = app_upload_files.lincko_files[i];
+							Elem.find("[find=submenu_profile_upload_picture]").attr("preview", "0");
+							break;
+						}
 					}
-				}
-				if(data){
-					if(data.files[0].preview && Elem.find("[find=submenu_profile_upload_picture]").attr("preview")=="0"){
-						console.log(data.files[0]); //[toto] File staying in cache, memory not cleared?
-						if(typeof data.files[0].preview.tagName !== 'undefined' && data.files[0].preview.tagName.toLowerCase() === 'canvas'){
-							Elem.find("[find=submenu_profile_upload_picture]").prop("src", data.files[0].preview.toDataURL());
-							Elem.find("[find=submenu_profile_upload_picture]").attr("preview", "1");
+					if(data){
+						if(data.files[0].preview && Elem.find("[find=submenu_profile_upload_picture]").attr("preview")=="0"){
+							console.log(data.files[0]); //[toto] File staying in cache, memory not cleared?
+							if(typeof data.files[0].preview.tagName !== 'undefined' && data.files[0].preview.tagName.toLowerCase() === 'canvas'){
+								Elem.find("[find=submenu_profile_upload_picture]").prop("src", data.files[0].preview.toDataURL());
+								Elem.find("[find=submenu_profile_upload_picture]").attr("preview", "1");
+							}
 						}
 					}
 				}
-			}
+			});
 		});
-	});
+	} else {
+		Elem.find("[find=submenu_profile_upload_picture]").addClass("no_shadow");
+	}
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
 	return true;
 }
 
 Submenu.prototype.Add_ProfileInfo = function() {
-	var perso = Lincko.storage.get('users',  wrapper_localstorage.uid);
 	var that = this;
 	var attribute = this.attribute;
 	var Elem = $('#-submenu_app_personal_info').clone();
@@ -313,8 +370,26 @@ Submenu.prototype.Add_ProfileInfo = function() {
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
+	if ("action" in attribute) {
+		if ("action_param" in attribute) {
+			Elem.click(function(){
+				attribute.action(this, that, attribute.action_param);
+			});
+		} else {
+			Elem.click(function(){
+				attribute.action(this, that);
+			});
+		}
+	}
 	Elem.find("[find=submenu_title]").html(attribute.title);
-	Elem.find("[find=submenu_value]").html(attribute.value);
+	if ("value" in attribute) {
+		if(typeof attribute.value == "function"){
+			var value = attribute.value(Elem, that);
+			Elem.find("[find=submenu_value]").html(value);
+		} else {
+			Elem.find("[find=submenu_value]").html(attribute.value);
+		}
+	}
 	
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
 	return true;
