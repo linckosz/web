@@ -506,6 +506,9 @@ styling for sub comments
 	.submenu_taskdetail_paddingLeft {
 		padding-left:5px;
 	}
+	.submenu_taskdetail_description .easyeditor-toolbar{
+		padding-right: 0px;
+	}
 	.submenu_taskdetail_description [find=description_text].submenu_taskdetail_paddingLeft{
 		padding-left: 20px;
 	}
