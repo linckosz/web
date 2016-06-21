@@ -32,6 +32,7 @@
 	border-radius: 8px;
 	padding: 5px 8px;
 	cursor: pointer;
+	position: relative;/*added this to position chat bubble actionMenu*/
 }
 
 .upload_stopped_file .models_history_content {
