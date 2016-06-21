@@ -580,6 +580,41 @@ Submenu.prototype.Add_taskdetail = function() {
 			elem.addClass('submenu_taskdetail_commentbubble_sub');
 		}
 
+
+		elem_translateBtn = elem.find('[find=translateBtn]').html('Translate'); //toto
+		elem_translateBtn.click(function(){
+			var elem = $(this).closest('.submenu_taskdetail_commentbubble');
+			var elem_translateBtn = $(this);
+			var elem_textTranslated = elem.find('[find=text_translated]');
+
+			var translate_str = 'Translate'; //toto
+			var untranslate_str = 'Untranslate'; //toto
+			var textToTranslate = elem.find('[find=text]').text();
+			wrapper_sendAction( 
+			    { 
+			        "text": textToTranslate,
+			    }, 
+			    'post', 
+			    'translation/auto', 
+			    function(data){ 
+			    	if(elem_textTranslated.hasClass('display_none')){
+			    		elem_textTranslated.html(data).removeClass('display_none');
+			    		elem_translateBtn.html(untranslate_str);
+			    		elem_textTranslated.velocity('slideDown');
+			    	}
+			    	else{
+			    		elem_translateBtn.html(translate_str);
+			    		elem_textTranslated.velocity('slideUp',{
+			    			complete: function(){
+			    				elem_textTranslated.html('').addClass('display_none');
+			    			}
+			    		});
+			    	}
+			    } 
+			);
+		});
+
+
 		if(item['_id'] == 'new' || taskid == 'new' ){
 			elem.find('[find=replyBtn]').addClass('display_none');
 		}

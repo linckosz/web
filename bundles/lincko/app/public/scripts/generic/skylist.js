@@ -359,6 +359,9 @@ skylist.prototype.generate_Lincko_itemsList = function(){
 			}
 			that.Lincko_itemsList = Lincko.storage.sort_items(that.Lincko_itemsList, 'duedate', 0, -1, true);
 		}
+		else if( that.list_type == 'notes'){
+			that.Lincko_itemsList = Lincko.storage.sort_items(that.Lincko_itemsList, 'updated_at', 0, -1, false);
+		}
 	}
 }
 
