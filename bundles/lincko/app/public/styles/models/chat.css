@@ -1,0 +1,23 @@
+.app_models_chat_bubble_actionMenu{
+    position: absolute;
+    top: -20px;
+    left: 0px;
+    right: 0px;
+    text-align: center;
+    white-space: nowrap;
+}
+.app_models_chat_actionBtn{
+    background-color: rgba(251,160,38,0.75);
+    border-radius: 5px;
+    line-height: 26px;
+    font-size: 12px;
+    display: inline-block;
+    padding: 0px 7px;
+}
+.app_models_chat_bubble_chatTranslation [find=divider]{
+    background: #53ADD2;
+    padding-top: 1px;
+    opacity: 0.5;
+    margin: 4px auto;
+    width: 80%;
+}
