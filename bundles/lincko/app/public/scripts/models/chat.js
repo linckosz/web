@@ -65,7 +65,6 @@ function app_models_chat_bubble_actionMenu(){
 				    	if(that.find('[find=translated_text]').length){
 				    		return false;
 				    	}
-			    		//var elem_translated = $('<div find="translated_text">').text(data);
 			    		var elem_translated = $('#-app_models_chat_bubble_chatTranslation').clone().prop('id','');
 			    		elem_translated.find('[find=text]').text(data);
 			    		that.append(elem_translated);
@@ -79,11 +78,10 @@ function app_models_chat_bubble_actionMenu(){
 		/*------------create task action----------------*/
 		var elem_taskBtn = elem_actionMenu.find('[find=task_btn]');
 		elem_taskBtn.on("mousedown touchstart", function(){
-			var preview = true;
-			if(that.closest('.submenu_content', $('#app_application_submenu_block')).length){
-				preview = false;
+			var preview = false;
+			if($('#app_content_submenu_preview').has(that).length){
+				preview = true;
 			}
-
 			submenu_Build("taskdetail", true, false, {'id':'new', 'title': textToAction, projID: projectID, 'type':'tasks'}, preview);
 			that.blur();
 		});

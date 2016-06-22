@@ -6,7 +6,7 @@
     text-align: center;
     white-space: nowrap;
 }
-.app_models_chat_actionBtn{
+.app_models_chat_actionBtn {
     background-color: rgba(251,160,38,0.75);
     color: #FFFFFF;
     border-radius: 3px;
@@ -14,7 +14,12 @@
     font-size: 12px;
     display: inline-block;
     padding: 0px 7px;
+    vertical-align: bottom;
 }
+.app_models_chat_actionBtn [find=task_btn]{
+    font-size: 20px;
+}
+
 .app_models_chat_bubble_chatTranslation [find=divider]{
     background: #53ADD2;
     padding-top: 1px;
