@@ -224,7 +224,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		elem_title_fileInfo.find('[find=downloadIcon]').prop('href',Lincko.storage.getDownload(item['_id']));
 	}
 	else{
-		elem_title_text.html(wrapper_to_html(item['+title']));
+		elem_title_text.html(item['+title']);
 		if(true || taskid == 'new' || (wrapper_localstorage.uid in item['_perm'] && item['_perm'][wrapper_localstorage.uid][0] > 1)){
 			elem_title_text.prop('contenteditable',true);
 			elem_title_text.focus(function(){
@@ -1117,8 +1117,8 @@ Submenu.prototype.Add_taskdetail = function() {
 	});
 	elem_description_text.blur(function(){
 		if(editorInst instanceof EasyEditor === true && destroyEditor_onBlur) {
-			//editorInst.detachEvents();
-			//editorInst = null;
+			editorInst.detachEvents();
+			editorInst = null;
 		}
 		else if(!destroyEditor_onBlur){
 			destroyEditor_onBlur = true;
