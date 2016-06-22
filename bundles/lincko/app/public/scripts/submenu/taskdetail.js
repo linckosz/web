@@ -581,37 +581,43 @@ Submenu.prototype.Add_taskdetail = function() {
 		}
 
 
-		elem_translateBtn = elem.find('[find=translateBtn]').html('Translate'); //toto
+		elem_translateBtn = elem.find('[find=translateBtn]').html(Lincko.Translation.get('app', 56, 'html')); //translate
 		elem_translateBtn.click(function(){
 			var elem = $(this).closest('.submenu_taskdetail_commentbubble');
 			var elem_translateBtn = $(this);
+			elem_translateBtn.css('opacity','0.5');
 			var elem_textTranslated = elem.find('[find=text_translated]');
 
-			var translate_str = 'Translate'; //toto
-			var untranslate_str = 'Untranslate'; //toto
-			var textToTranslate = elem.find('[find=text]').text();
-			wrapper_sendAction( 
-			    { 
-			        "text": textToTranslate,
-			    }, 
-			    'post', 
-			    'translation/auto', 
-			    function(data){ 
-			    	if(elem_textTranslated.hasClass('display_none')){
+			var translate_str = Lincko.Translation.get('app', 56, 'html'); //translate
+			var untranslate_str = Lincko.Translation.get('app', 57, 'html'); //untranslate
+			if(elem_textTranslated.hasClass('display_none')){
+				var textToTranslate = elem.find('[find=text]').text();
+				wrapper_sendAction( 
+				    { 
+				        "text": textToTranslate,
+				    }, 
+				    'post', 
+				    'translation/auto', 
+				    function(data){ 
 			    		elem_textTranslated.html(data).removeClass('display_none');
 			    		elem_translateBtn.html(untranslate_str);
-			    		elem_textTranslated.velocity('slideDown');
-			    	}
-			    	else{
-			    		elem_translateBtn.html(translate_str);
-			    		elem_textTranslated.velocity('slideUp',{
+			    		elem_textTranslated.velocity('slideDown',{
 			    			complete: function(){
-			    				elem_textTranslated.html('').addClass('display_none');
+			    				elem_translateBtn.removeAttr('style');
 			    			}
 			    		});
-			    	}
-			    } 
-			);
+				    } 
+				);
+			}
+			else{
+	    		elem_translateBtn.html(translate_str);
+	    		elem_textTranslated.velocity('slideUp',{
+	    			complete: function(){
+	    				elem_textTranslated.html('').addClass('display_none');
+	    				elem_translateBtn.removeAttr('style');
+	    			}
+	    		});
+	    	}
 		});
 
 
@@ -1111,8 +1117,8 @@ Submenu.prototype.Add_taskdetail = function() {
 	});
 	elem_description_text.blur(function(){
 		if(editorInst instanceof EasyEditor === true && destroyEditor_onBlur) {
-			editorInst.detachEvents();
-			editorInst = null;
+			//editorInst.detachEvents();
+			//editorInst = null;
 		}
 		else if(!destroyEditor_onBlur){
 			destroyEditor_onBlur = true;

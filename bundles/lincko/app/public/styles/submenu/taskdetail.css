@@ -118,6 +118,9 @@ td.submenu_taskdetail_share .fa{
 	right: 0px;
 	left: 0px;
 }
+.submenu_taskdetail_description .easyeditor ul {
+	margin-left: 0px;
+}
 .submenu_taskdetail_description .easyeditor-toolbar ul {
 	margin: 0px;
 	padding: 0px;
