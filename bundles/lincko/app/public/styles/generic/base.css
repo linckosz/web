@@ -153,6 +153,9 @@ html, .font_sans_serif {
 	user-select: initial;
 	cursor: initial;
 }
+.selectable:focus {
+	outline: 0;
+}
 
 .floatleft {
 	float: left;

@@ -34,6 +34,9 @@
 	cursor: pointer;
 	position: relative;/*added this to position chat bubble actionMenu*/
 }
+.models_history_content:focus {
+	outline: 0;
+}
 
 .upload_stopped_file .models_history_content {
 	cursor: default;
