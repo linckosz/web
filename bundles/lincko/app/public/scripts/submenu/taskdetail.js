@@ -901,11 +901,11 @@ Submenu.prototype.Add_taskdetail = function() {
 
 			//param values that are common to all
 			param['id'] = taskid;
-			param['parent_id'] = currentProjID;
 			submenu_taskdetail.find('[find=title_text]');
 			param['title'] = submenu_taskdetail.find('[find=title_text]').html();
 			param['comment'] = submenu_taskdetail.find('[find=description_text]').html();
 			if( taskid == 'new' ){
+				param['parent_id'] = currentProjID;
 				if(param['+title'] == newTitle){
 					delete param['+title'];
 				}
