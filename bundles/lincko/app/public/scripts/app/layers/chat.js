@@ -2,6 +2,10 @@
 
 var chatlist_subConstruct = function(){
 		var that = this;
+		if($('#app_layers_content').has(that.list_wrapper).length && Lincko.storage.get('projects', app_content_menu.projects_id)['personal_private']){
+			return false;
+		}
+
 		that.elem_newcardCircle.click( function() {
 			submenu_Build("contacts", false, false,
 				{
