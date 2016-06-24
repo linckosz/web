@@ -1227,7 +1227,7 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 								save = true;
 								for(var att in conditions[i]) { //And condition
 									if(typeof item[att] == 'undefined'){
-										condition_alert = true;
+										//condition_alert = true;
 										save = false;
 										break;
 									}
@@ -1320,7 +1320,7 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 							} else if(typeof item["-"+att] != 'undefined'){
 								attribute = "-"+att;
 							} else {
-								condition_alert = true;
+								//condition_alert = true;
 								save = false;
 								break;
 							}

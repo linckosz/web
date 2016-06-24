@@ -18,6 +18,22 @@
 <!-- End SEO -->
 
 <link rel="stylesheet" href="{{ _filelatest('/styles/libs/jquery-ui.min.css') }}" type="text/css" />
+<style type="text/css">
+	{% set language = _language() %}
+	{% if language == 'ko' %}
+		html, .font_sans_serif {
+			font-family: "나눔고딕", NanumGothic, "맑은 고딕", Malgun Gothic, "San Francisco", Roboto, "Helvetica Neue", Helvetica, Tahoma, Verdana, "Nimbus Sans L", "URW Gothic L", "Lucida Grande", Geneva, "DejaVu Sans", "Microsoft Sans Serif", sans-serif !important;
+		}
+	{% elseif language == 'zh-chs' %}
+		html, .font_sans_serif {
+			font-family: "微软雅黑", "冬青黑体", "华文细黑", "Microsoft Yahei", "宋体", "San Francisco", Roboto, "Helvetica Neue", Helvetica, Tahoma, Verdana, "Nimbus Sans L", "URW Gothic L", "Lucida Grande", Geneva, "DejaVu Sans", "Microsoft Sans Serif", sans-serif !important;
+		}
+	{% elseif language == 'zh-cht' %}
+		html, .font_sans_serif {
+			font-family: "微软雅黑", "冬青黑体", "华文细黑", "Microsoft Yahei", "宋体", "San Francisco", Roboto, "Helvetica Neue", Helvetica, Tahoma, Verdana, "Nimbus Sans L", "URW Gothic L", "Lucida Grande", Geneva, "DejaVu Sans", "Microsoft Sans Serif", sans-serif !important;
+		}
+	{% endif %}
+</style>
 
 <script src="{{ _filelatest('/lincko/wrapper/scripts/polyfill.js') }}" type="text/javascript"></script>
 <!--[if lte IE 8]>
@@ -50,7 +66,6 @@
 <script src="{{ _filelatest('/scripts/libs/jquery.selection.js') }}" type="text/javascript"></script>
 
 <script>
-
 window.name = 'brunomartin';
 document.domain = '{{ domain }}';
 document.linckoBack = '{{ lincko_back }}';

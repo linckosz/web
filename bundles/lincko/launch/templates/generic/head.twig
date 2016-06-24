@@ -22,6 +22,20 @@
 		{% else %}
 			<div class="head_div floatright"><span class="table_cell_center" id="head_signin"><span>{{ _trans('web', 1, 9, 'html') }}{# Sign in #}</span></span></div>
 		{% endif %}
+		<div class="head_div floatright">
+			<span class="table_cell_center" id="head_language">
+				<form id="head_translation" action="{{ _language_uri() }}" method="post">
+					<img id="head_language_image" src="{{ _filelatest('/lincko/launch/images/generic/head/earth16.png') }}" />
+					<select id="head_language_select" name="translation_language" class="head_language_select" onchange="$('#head_translation').submit();" >
+						{% set language = _language() %}
+						{% set languages = _languages('web') %}
+						{% for key, value in languages %}
+							<option value="{{ key }}" title="{{ value }}" {% if key == language %}selected="selected"{% endif %} >{{ value }}</option>
+						{% endfor %}
+					</select>
+				</form>
+			</span>
+		</div>
 	</div>
 
 </nav>

@@ -144,8 +144,32 @@ var app_application_lincko = {
 								try {
 									this._elements[Elem_id].action();
 								} catch(e) {
-									JSerror.sendError(this._elements[Elem_id].action, 'app_application_lincko.update => this._elements["'+Elem_id+'"].action()', 0);
-									JSerror.sendError(e, 'app_application_lincko.update => message', 0);
+									var instance = "Other";
+									if (e instanceof TypeError) {
+										instance = "TypeError";
+									} else if (e instanceof RangeError) {
+										instance = "RangeError";
+									} else if (e instanceof EvalError) {
+										instance = "EvalError";
+									} else if (e instanceof ReferenceError) {
+										instance = "ReferenceError";
+									}
+									var message = "";
+									if(e.message){ message = e.message; }
+									var name = "";
+									if(e.name){ name = e.name; }
+									var fileName = "";
+									if(e.fileName){ fileName = e.fileName; }
+									var lineNumber = 0;
+									if(e.lineNumber){ lineNumber = e.lineNumber; }
+									var columnNumber = 0;
+									if(e.columnNumber){ columnNumber = e.columnNumber; }
+									var stack = "";
+									if(e.stack){
+										stack = e.stack;
+									}
+									JSerror.sendError(this._elements[Elem_id].action, 'app_application_lincko.update => this._elements["'+Elem_id+'"].action() => '+field, 0);
+									JSerror.sendError(stack, fileName+" "+message, lineNumber, columnNumber, instance+" "+name);
 								}
 								break; //Do not launch more than one time if ever launched
 							}
@@ -164,8 +188,32 @@ var app_application_lincko = {
 						try {
 							this._functions.fields[field][i]();
 						} catch(e) {
+							var instance = "Other";
+							if (e instanceof TypeError) {
+								instance = "TypeError";
+							} else if (e instanceof RangeError) {
+								instance = "RangeError";
+							} else if (e instanceof EvalError) {
+								instance = "EvalError";
+							} else if (e instanceof ReferenceError) {
+								instance = "ReferenceError";
+							}
+							var message = "";
+							if(e.message){ message = e.message; }
+							var name = "";
+							if(e.name){ name = e.name; }
+							var fileName = "";
+							if(e.fileName){ fileName = e.fileName; }
+							var lineNumber = 0;
+							if(e.lineNumber){ lineNumber = e.lineNumber; }
+							var columnNumber = 0;
+							if(e.columnNumber){ columnNumber = e.columnNumber; }
+							var stack = "";
+							if(e.stack){
+								stack = e.stack;
+							}
 							JSerror.sendError(this._functions.fields[field][i], 'app_application_lincko.update => this._functions.fields["'+field+'"]['+i+']()', 0);
-							JSerror.sendError(e, 'app_application_lincko.update => message', 0);
+							JSerror.sendError(stack, fileName+" "+message, lineNumber, columnNumber, instance+" "+name);
 						}
 					}
 				}
@@ -177,8 +225,32 @@ var app_application_lincko = {
 				try {
 					this._functions.all[i]();
 				} catch(e) {
+					var instance = "Other";
+					if (e instanceof TypeError) {
+						instance = "TypeError";
+					} else if (e instanceof RangeError) {
+						instance = "RangeError";
+					} else if (e instanceof EvalError) {
+						instance = "EvalError";
+					} else if (e instanceof ReferenceError) {
+						instance = "ReferenceError";
+					}
+					var message = "";
+					if(e.message){ message = e.message; }
+					var name = "";
+					if(e.name){ name = e.name; }
+					var fileName = "";
+					if(e.fileName){ fileName = e.fileName; }
+					var lineNumber = 0;
+					if(e.lineNumber){ lineNumber = e.lineNumber; }
+					var columnNumber = 0;
+					if(e.columnNumber){ columnNumber = e.columnNumber; }
+					var stack = "";
+					if(e.stack){
+						stack = e.stack;
+					}
 					JSerror.sendError(this._functions.all[i], 'app_application_lincko.update => this._functions.all['+i+']()', 0);
-					JSerror.sendError(e, 'app_application_lincko.update => message', 0);
+					JSerror.sendError(stack, fileName+" "+message, lineNumber, columnNumber, instance+" "+name);
 				}
 			}
 		}
@@ -540,7 +612,7 @@ $("body").delegate(".selectable", "mouseup", function(e){
 
 $("#app_application_lincko_action").click(function() {
 	$(this).hide();
-  	submenu_Build("taskdetail", true, false, {'id':'new', 'title': globalWordSelect, 'type':'tasks'}, true); //This is no way to know if we are in preview or submenu
+	submenu_Build("taskdetail", true, false, {'id':'new', 'title': globalWordSelect, 'type':'tasks'}, true); //This is no way to know if we are in preview or submenu
 });
 
 $('#app_application_menu_icon').click(function(){

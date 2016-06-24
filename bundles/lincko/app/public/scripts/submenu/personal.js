@@ -202,12 +202,15 @@ Submenu.prototype.Add_ProfileInput = function() {
 	return true;
 }
 
+var submenu_app_personal_temp_id = false;
+
 Submenu.prototype.Add_ProfileNext = function() {
 	var perso = Lincko.storage.get('users', wrapper_localstorage.uid);
 	var that = this;
 	var attribute = this.attribute;
 	var Elem = $('#-submenu_app_personal_next').clone();
 	var preview = this.preview;
+	var range = ['users_'+wrapper_localstorage.uid, 'upload'];
 	Elem.prop("id", '');
 	if ("action" in attribute) {
 		if ("action_param" in attribute) {
@@ -219,58 +222,65 @@ Submenu.prototype.Add_ProfileNext = function() {
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
-	Elem.find("[find=submenu_next_upload_picture]").attr("preview", "0");
+	var Elem_pic = Elem.find("[find=submenu_next_upload_picture]");
+	Elem_pic
+		.attr("preview", "0")
+		.prop("id", that.id+"_submenu_next_upload_picture");
 	if(perso['profile_pic'] && $.isNumeric(perso['profile_pic'])){
 		var src = Lincko.storage.getLinkThumbnail(perso['profile_pic']);
-		Elem.find("[find=submenu_next_upload_picture]").prop("src", src);
+		Elem_pic.prop("src", src);
 	}
 	Elem.click(function(){
-		submenu_Build("personal_settings", that.layer + 1, true, null, that.preview); //toto => why close all if hide at true?
+		submenu_Build("personal_settings", that.layer + 1, true, wrapper_localstorage.uid, that.preview);
 	});
-	Elem.find("[find=submenu_next_upload_picture]").click(function(e){
-		e.stopPropagation();
-		var temp_id = app_upload_open_photo_single('users', wrapper_localstorage.uid, false, true);
-		var picture = Elem.find("[find=submenu_next_upload_picture]");
-		Elem.find("[find=submenu_next_upload_picture]").prop("id", temp_id);
-		app_application_lincko.add(temp_id, ['files', 'upload'], function() {
-			var temp_id = this.id;
-			var file = Lincko.storage.list('files', 1, {temp_id:temp_id,});
-			if(file.length==1){
-				var file_id = file[0]['_id'];
-				var src = Lincko.storage.getLinkThumbnail(file_id);
-				Elem.find("[find=submenu_next_upload_picture]").prop("src", src);
-				Elem.find("[find=submenu_next_upload_picture]").attr("preview", "0");
-				Elem.find("[find=submenu_next_upload_picture]").prop("id", "");
-				wrapper_sendAction(
-					{
-						"id": wrapper_localstorage.uid,
-						"profile_pic": file_id,
+	Elem_pic.click(function(event){
+		event.stopPropagation();
+		submenu_app_personal_temp_id = app_upload_open_photo_single('users', wrapper_localstorage.uid, false, true);
+	});
 
-					},
-					'post',
-					'user/update'
-				);
-			} else {
-				var data = false;
-				for(var i in app_upload_files.lincko_files){
-					if(app_upload_files.lincko_files[i].lincko_temp_id == temp_id){
-						data = app_upload_files.lincko_files[i];
-						Elem.find("[find=submenu_next_upload_picture]").attr("preview", "0");
-						break;
-					}
+	app_application_lincko.add(that.id+"_submenu_next_upload_picture", range, function() {
+		var Elem_pic = $("#"+this.id);
+		var file = Lincko.storage.list('files', 1, {temp_id:submenu_app_personal_temp_id,});
+		if(submenu_app_personal_temp_id && file.length==1){
+			var file_id = file[0]['_id'];
+			var src = Lincko.storage.getLinkThumbnail(file_id);
+			Elem_pic.prop("src", src).attr("preview", "0");
+			wrapper_sendAction(
+				{
+					"id": wrapper_localstorage.uid,
+					"profile_pic": file_id,
+				},
+				'post',
+				'user/update',
+				function(){
+					submenu_app_personal_temp_id = false;
 				}
-				if(data){
-					if(data.files[0].preview && Elem.find("[find=submenu_next_upload_picture]").attr("preview")=="0"){
-						console.log(data.files[0]); //[toto] File staying in cache, memory not cleared?
-						if(typeof data.files[0].preview.tagName !== 'undefined' && data.files[0].preview.tagName.toLowerCase() === 'canvas'){
-							Elem.find("[find=submenu_next_upload_picture]").prop("src", data.files[0].preview.toDataURL());
-							Elem.find("[find=submenu_next_upload_picture]").attr("preview", "1");
-						}
+			);
+		} else if(submenu_app_personal_temp_id===false){
+			var perso = Lincko.storage.get('users', this.action_param);
+			if(perso["profile_pic"]){
+				var src = Lincko.storage.getLinkThumbnail(perso["profile_pic"]);
+				Elem_pic.prop("src", src);
+			}
+		} else {
+			var data = false;
+			for(var i in app_upload_files.lincko_files){
+				if(app_upload_files.lincko_files[i].lincko_temp_id == submenu_app_personal_temp_id){
+					data = app_upload_files.lincko_files[i];
+					Elem_pic.attr("preview", "0");
+					break;
+				}
+			}
+			if(data){
+				if(data.files[0].preview && Elem_pic.attr("preview")=="0"){
+					if(typeof data.files[0].preview.tagName !== 'undefined' && data.files[0].preview.tagName.toLowerCase() === 'canvas'){
+						Elem_pic.prop("src", data.files[0].preview.toDataURL());
+						Elem_pic.attr("preview", "1");
 					}
 				}
 			}
-		});
-	});
+		}
+	}, wrapper_localstorage.uid);
 	
 
 	Elem.find("[find=submenu_next_user]").html(wrapper_to_html(perso['-username'].ucfirst()));
@@ -293,6 +303,8 @@ Submenu.prototype.Add_ProfilePhoto = function() {
 	var attribute = this.attribute;
 	var Elem = $('#-submenu_app_personal_profile').clone();
 	var preview = this.preview;
+	var range = 'users_'+users_id;
+	var temp_id = false;
 	Elem.prop("id", '');
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
@@ -305,58 +317,69 @@ Submenu.prototype.Add_ProfilePhoto = function() {
 			Elem.find("[find=submenu_profile_user]").html(attribute.value);
 		}
 	}
-	Elem.find("[find=submenu_profile_upload_picture]").attr("preview", "0");
+	var Elem_pic = Elem.find("[find=submenu_profile_upload_picture]");
+	Elem_pic
+		.attr("preview", "0")
+		.prop("id", that.id+"_submenu_profile_upload_picture");
 	if(perso['profile_pic'] && $.isNumeric(perso['profile_pic'])){
 		var src = Lincko.storage.getLinkThumbnail(perso['profile_pic']);
-		Elem.find("[find=submenu_profile_upload_picture]").prop("src", src);
+		Elem_pic.prop("src", src);
 	}
+
 	if(users_id == wrapper_localstorage.uid){
-		Elem.find("[find=submenu_profile_upload_picture]").click(function(e){
-			e.stopPropagation();
-			var temp_id = app_upload_open_photo_single('users', wrapper_localstorage.uid, false, true);
-			var picture = Elem.find("[find=submenu_profile_upload_picture]");
-			Elem.find("[find=submenu_profile_upload_picture]").prop("id", temp_id);
-			app_application_lincko.add(temp_id, ['files', 'upload'], function() {
-				var temp_id = this.id;
-				var file = Lincko.storage.list('files', 1, {temp_id:temp_id,});
-				if(file.length==1){
-					var file_id = file[0]['_id'];
-					var src = Lincko.storage.getLinkThumbnail(file_id);
-					Elem.find("[find=submenu_profile_upload_picture]").prop("src", src);
-					Elem.find("[find=submenu_profile_upload_picture]").attr("preview", "0");
-					Elem.find("[find=submenu_profile_upload_picture]").prop("id", "");
-					wrapper_sendAction(
-						{
-							"id": wrapper_localstorage.uid,
-							"profile_pic": file_id,
-						},
-						'post',
-						'user/update'
-					);
-				} else {
-					var data = false;
-					for(var i in app_upload_files.lincko_files){
-						if(app_upload_files.lincko_files[i].lincko_temp_id == temp_id){
-							data = app_upload_files.lincko_files[i];
-							Elem.find("[find=submenu_profile_upload_picture]").attr("preview", "0");
-							break;
-						}
-					}
-					if(data){
-						if(data.files[0].preview && Elem.find("[find=submenu_profile_upload_picture]").attr("preview")=="0"){
-							console.log(data.files[0]); //[toto] File staying in cache, memory not cleared?
-							if(typeof data.files[0].preview.tagName !== 'undefined' && data.files[0].preview.tagName.toLowerCase() === 'canvas'){
-								Elem.find("[find=submenu_profile_upload_picture]").prop("src", data.files[0].preview.toDataURL());
-								Elem.find("[find=submenu_profile_upload_picture]").attr("preview", "1");
-							}
-						}
-					}
-				}
-			});
+		range = ['users_'+users_id, 'upload'];
+		Elem_pic.click(function(event){
+			event.stopPropagation();
+			submenu_app_personal_temp_id = app_upload_open_photo_single('users', wrapper_localstorage.uid, false, true);
 		});
 	} else {
-		Elem.find("[find=submenu_profile_upload_picture]").addClass("no_shadow");
+		Elem_pic.addClass("no_shadow");
 	}
+
+	app_application_lincko.add(that.id+"_submenu_profile_upload_picture", range, function() {
+		var Elem_pic = $("#"+this.id);
+		var file = Lincko.storage.list('files', 1, {temp_id:submenu_app_personal_temp_id,});
+		if(Elem_pic.attr("preview")=="1" && file.length==1){
+			var file_id = file[0]['_id'];
+			var src = Lincko.storage.getLinkThumbnail(file_id);
+			Elem_pic.prop("src", src).attr("preview", "0");
+			wrapper_sendAction(
+				{
+					"id": wrapper_localstorage.uid,
+					"profile_pic": file_id,
+				},
+				'post',
+				'user/update',
+				function(){
+					submenu_app_personal_temp_id = false;
+				}
+			);
+		} else if(submenu_app_personal_temp_id===false){
+			var perso = Lincko.storage.get('users', this.action_param);
+			if(perso["profile_pic"]){
+				var src = Lincko.storage.getLinkThumbnail(perso["profile_pic"]);
+				Elem_pic.prop("src", src);
+			}
+		} else {
+			var data = false;
+			for(var i in app_upload_files.lincko_files){
+				if(app_upload_files.lincko_files[i].lincko_temp_id == submenu_app_personal_temp_id){
+					data = app_upload_files.lincko_files[i];
+					Elem_pic.attr("preview", "0");
+					break;
+				}
+			}
+			if(data){
+				if(data.files[0].preview && Elem_pic.attr("preview")=="0"){
+					if(typeof data.files[0].preview.tagName !== 'undefined' && data.files[0].preview.tagName.toLowerCase() === 'canvas'){
+						Elem_pic.prop("src", data.files[0].preview.toDataURL());
+						Elem_pic.attr("preview", "1");
+					}
+				}
+			}
+		}
+	}, users_id);
+	
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
 	return true;
 }

@@ -132,3 +132,66 @@
 #head_joinus > span:hover {
 	border-color: currentColor;
 }
+
+
+#head_language_image {
+	z-index: -1;
+	height: 24px;
+	width: 24px;
+	margin-left: 4px;
+	margin-top: 4px;
+	position: absolute;
+}
+
+.head_language_select {
+	padding: 4px 8px 4px 28px;
+	min-height: 32px;
+	background-color: transparent;
+	color: #FFFFFF;
+	border-color: #FFFFFF;
+	border-width: 1px;
+	background: transparent;
+	max-width: 160px;
+	overflow:hidden;
+	white-space:nowrap;
+	text-overflow: ellipsis;
+}
+
+.head_language_select option {
+	color: #696F79;
+}
+
+.head_language_select:hover {
+	color: #D4D4D4;
+	border-color: #D4D4D4;
+}
+
+/* Mobile phone in Portrait */
+@media only screen and (max-width: 479px){
+	.head_language_select {
+		width: 32px;
+		height: 32px;
+		padding: 4px;
+		cursor: pointer; cursor: hand;
+		color: transparent !important;
+		border-color: transparent !important;
+	}
+}
+
+/* Mobile phone in Landscape and Tablet in Portrait */
+@media only screen and (min-width: 480px) and (max-width: 900px){
+	#head_language_image {
+		display: none;
+	}
+	.head_language_select {
+		padding-left: 4px;
+		max-width: 140px;
+	}
+}
+
+/* Tablet in Landscape */
+@media only screen and (min-width: 901px) and (max-width: 1279px){
+	.head_language_select {
+		max-width: 160px;
+	}
+}
