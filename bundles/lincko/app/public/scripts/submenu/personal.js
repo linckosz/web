@@ -203,6 +203,26 @@ Submenu.prototype.Add_ProfileInput = function() {
 }
 
 var submenu_app_personal_temp_id = false;
+var submenu_app_personal_garbage = app_application_garbage.add();
+app_application_lincko.add(submenu_app_personal_garbage, 'users_'+wrapper_localstorage.uid, function() {
+	if(submenu_app_personal_temp_id){
+		var file = Lincko.storage.list('files', 1, {temp_id:submenu_app_personal_temp_id,});
+		if(file.length==1){
+			var file_id = file[0]['_id'];
+			wrapper_sendAction(
+				{
+					"id": wrapper_localstorage.uid,
+					"profile_pic": file_id,
+				},
+				'post',
+				'user/update',
+				function(){
+					submenu_app_personal_temp_id = false;
+				}
+			);
+		}
+	}
+});
 
 Submenu.prototype.Add_ProfileNext = function() {
 	var perso = Lincko.storage.get('users', wrapper_localstorage.uid);
@@ -240,29 +260,21 @@ Submenu.prototype.Add_ProfileNext = function() {
 
 	app_application_lincko.add(that.id+"_submenu_next_upload_picture", range, function() {
 		var Elem_pic = $("#"+this.id);
-		var file = Lincko.storage.list('files', 1, {temp_id:submenu_app_personal_temp_id,});
-		if(submenu_app_personal_temp_id && file.length==1){
+		var file = [];
+		if(this.action_param == wrapper_localstorage.uid && submenu_app_personal_temp_id){
+			file = Lincko.storage.list('files', 1, {temp_id:submenu_app_personal_temp_id,});
+		}
+		if(file.length==1){
 			var file_id = file[0]['_id'];
 			var src = Lincko.storage.getLinkThumbnail(file_id);
 			Elem_pic.prop("src", src).attr("preview", "0");
-			wrapper_sendAction(
-				{
-					"id": wrapper_localstorage.uid,
-					"profile_pic": file_id,
-				},
-				'post',
-				'user/update',
-				function(){
-					submenu_app_personal_temp_id = false;
-				}
-			);
 		} else if(submenu_app_personal_temp_id===false){
 			var perso = Lincko.storage.get('users', this.action_param);
 			if(perso["profile_pic"]){
 				var src = Lincko.storage.getLinkThumbnail(perso["profile_pic"]);
 				Elem_pic.prop("src", src);
 			}
-		} else {
+		} else if(this.action_param == wrapper_localstorage.uid){
 			var data = false;
 			for(var i in app_upload_files.lincko_files){
 				if(app_upload_files.lincko_files[i].lincko_temp_id == submenu_app_personal_temp_id){
@@ -338,29 +350,21 @@ Submenu.prototype.Add_ProfilePhoto = function() {
 
 	app_application_lincko.add(that.id+"_submenu_profile_upload_picture", range, function() {
 		var Elem_pic = $("#"+this.id);
-		var file = Lincko.storage.list('files', 1, {temp_id:submenu_app_personal_temp_id,});
-		if(Elem_pic.attr("preview")=="1" && file.length==1){
+		var file = [];
+		if(this.action_param == wrapper_localstorage.uid && submenu_app_personal_temp_id){
+			file = Lincko.storage.list('files', 1, {temp_id:submenu_app_personal_temp_id,});
+		}
+		if(file.length==1){
 			var file_id = file[0]['_id'];
 			var src = Lincko.storage.getLinkThumbnail(file_id);
 			Elem_pic.prop("src", src).attr("preview", "0");
-			wrapper_sendAction(
-				{
-					"id": wrapper_localstorage.uid,
-					"profile_pic": file_id,
-				},
-				'post',
-				'user/update',
-				function(){
-					submenu_app_personal_temp_id = false;
-				}
-			);
 		} else if(submenu_app_personal_temp_id===false){
 			var perso = Lincko.storage.get('users', this.action_param);
 			if(perso["profile_pic"]){
 				var src = Lincko.storage.getLinkThumbnail(perso["profile_pic"]);
 				Elem_pic.prop("src", src);
 			}
-		} else {
+		} else if(this.action_param == wrapper_localstorage.uid){
 			var data = false;
 			for(var i in app_upload_files.lincko_files){
 				if(app_upload_files.lincko_files[i].lincko_temp_id == submenu_app_personal_temp_id){
