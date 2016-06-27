@@ -9,7 +9,7 @@ $.extend(wrapper_date.prototype, {
 		} else {
 			this.timestamp = timestamp;
 		}
-		this.time = new Date(1000*parseInt(timestamp, 10)); //Convert in milliseconds
+		this.time = new Date(1000*parseInt(this.timestamp, 10)); //Convert in milliseconds
 	},
 
 	setTime: function(timestamp){
