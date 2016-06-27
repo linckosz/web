@@ -45,15 +45,15 @@ var app_layers_files_feedPage = function(param){
 function app_layers_files_bitConvert(value){
 	var sizeUnit = 'Bit';
 	if(value > 8*Math.pow(10,12)){
-		value = Math.round(value/8*Math.pow(10,12));
+		value = Math.round(value/(8*Math.pow(10,12)));
 		sizeUnit = 'TB';
 	}
 	else if( value > 8*Math.pow(10,9) ){
-		value = Math.round(value/8*Math.pow(10,9));
+		value = Math.round(value/(8*Math.pow(10,9)));
 		sizeUnit = 'GB';
 	}
 	else if( value > 8*Math.pow(10,6) ){
-		value = Math.round(value/8*Math.pow(10,6));
+		value = Math.round(value/(8*Math.pow(10,6)));
 		sizeUnit = 'MB';
 	}
 	else if( value > 8000 ){

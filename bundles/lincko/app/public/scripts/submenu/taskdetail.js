@@ -242,6 +242,15 @@ Submenu.prototype.Add_taskdetail = function() {
 			}
 		}
 	}
+	elem_title_text.mousedown(function(){
+		var scroll = myIScrollList[$(this).parents(".overthrow").prop("id")];//find iScroll
+		scroll.disable();//disables the iScroll
+	});
+	elem_title_text.mouseup(function(){
+		var scroll = myIScrollList[$(this).parents(".overthrow").prop("id")];//find iScroll
+		scroll.enable();//disables the iScroll
+	});
+
 	elem_title_text.on('paste', function(){
 		setTimeout(function(){
 			elem_title_text.html($('<div>'+elem_title_text.html()+'</div>').text());

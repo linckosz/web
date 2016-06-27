@@ -75,6 +75,8 @@ td.app_layers_dev_skytasks_checkbox {
 	color:#475577;
 	font-size: 20px;
 	opacity: 0.7;
+	-webkit-touch-callout: initial;
+	-webkit-user-select: initial;
 }
 .submenu_taskdetail_tasktitle [find=title_text]:focus {
 	opacity: 1;
