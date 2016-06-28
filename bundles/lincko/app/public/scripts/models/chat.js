@@ -95,12 +95,14 @@ function app_models_chat_bubble_actionMenu(){
 
 
 		$("body").on("mousedown touchstart", '.models_history_content', function(event) {
-			event.preventDefault();
 			var that = $(this);
-			that.find('[contenteditable]').focus();
-			app_models_chat_bubble_timeout = setTimeout(function(){
-				timeout_fn(that);
-			}, 1000);
+			if(that.has('[contenteditable]').length){
+				event.preventDefault();
+				that.find('[contenteditable]').focus();
+				app_models_chat_bubble_timeout = setTimeout(function(){
+					timeout_fn(that);
+				}, 1000);
+			}
 		});
 		$("body").on("mouseup touchend", '.models_history_content', function() {
 			clearTimeout(app_models_chat_bubble_timeout);
