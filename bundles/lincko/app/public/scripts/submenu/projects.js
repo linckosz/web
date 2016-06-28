@@ -1,8 +1,14 @@
 
 submenu_list['projects_list'] = {
 	"_title": {
-		"style": "title",
+		"style": "customized_title",
 		"title": Lincko.Translation.get('app', 2501, 'html'), //Projects list
+	},
+	"left_button": {
+		"style": "title_left_button",
+		"title": Lincko.Translation.get('app', 25, 'html'), //Close
+		'hide': true,
+		"class": "base_pointer",
 	},
 };
 
@@ -15,9 +21,16 @@ var submenu_projects_build_list = function(){
 	app_layers_projects_charts = {};
 
 	//Clear the list to rebuild it then
-	for(var key in submenu_list['projects_list']){
-		if(key != "_title"){
-			delete submenu_list['projects_list'][key];
+	for(var i in submenu_list['projects_list']){
+		if(
+			   submenu_list['projects_list'][i]["style"] != "title"
+			&& submenu_list['projects_list'][i]["style"] != "customized_title"
+			&& submenu_list['projects_list'][i]["style"] != "title_left_button"
+			&& submenu_list['projects_list'][i]["style"] != "title_right_button"
+			&& submenu_list['projects_list'][i]["style"] != "preAction"
+			&& submenu_list['projects_list'][i]["style"] != "postAction"
+		){
+			delete submenu_list['projects_list'][i];
 		}
 	}
 

@@ -1,7 +1,13 @@
 submenu_list['personal_settings'] = {
 	"_title": {
-		"style": "title",
+		"style": "customized_title",
 		"title": Lincko.Translation.get('app', 46, 'html'), //Personal Settings
+	},
+	"left_button": {
+		"style": "title_left_button",
+		"title": Lincko.Translation.get('app', 25, 'html'), //Close
+		'hide': true,
+		"class": "base_pointer",
 	},
 	"profile_picture": {
 		"style": "profile_photo",
@@ -100,8 +106,14 @@ submenu_list['personal_settings'] = {
 
 submenu_list['personal_info'] = {
 	"_title": {
-		"style": "title",
+		"style": "customized_title",
 		"title": Lincko.Translation.get('app', 55, 'html'), //User Profile
+	},
+	"left_button": {
+		"style": "title_left_button",
+		"title": Lincko.Translation.get('app', 25, 'html'), //Close
+		'hide': true,
+		"class": "base_pointer",
 	},
 	"profile_picture": {
 		"style": "profile_photo",

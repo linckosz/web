@@ -1,8 +1,14 @@
 
 submenu_list['app_upload_all'] = {
 	"_title": {
-		"style": "title",
+		"style": "customized_title",
 		"title": Lincko.Translation.get('app', 4, 'html'), //Uploads
+	},
+	"left_button": {
+		"style": "title_left_button",
+		"title": Lincko.Translation.get('app', 25, 'html'), //Close
+		'hide': true,
+		"class": "base_pointer",
 	},
 	/*
 	"destination": {
@@ -21,8 +27,14 @@ submenu_list['app_upload_all'] = {
 
 submenu_list['app_upload_sub'] = {
 	"_title": {
-		"style": "title",
+		"style": "customized_title",
 		"title": Lincko.Translation.get('app', 21, 'html'), //Unknown
+	},
+	"left_button": {
+		"style": "title_left_button",
+		"title": Lincko.Translation.get('app', 25, 'html'), //Close
+		'hide': true,
+		"class": "base_pointer",
 	},
 	/*
 	"destination": {
@@ -42,8 +54,14 @@ submenu_list['app_upload_sub'] = {
 
 submenu_list['app_upload_destination'] = {
 	"_title": {
-		"style": "title",
+		"style": "customized_title",
+		"title": Lincko.Translation.get('app', 2001, 'html'), //New project
+	},
+	"left_button": {
+		"style": "title_left_button",
 		"title": Lincko.Translation.get('app', 26, 'html'), //Destination
+		'hide': true,
+		"class": "base_pointer",
 	},
 	"destination_0": {
 		"style": "radio",

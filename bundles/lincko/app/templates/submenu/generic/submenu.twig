@@ -17,8 +17,14 @@
 		{% set languages = _languages('app') %}
 		submenu_list['language'] = {
 			"_title": {
-				"style": "title",
+				"style": "customized_title",
 				"title": Lincko.Translation.get('app', 1, 'html'), //Language
+			},
+			"left_button": {
+				"style": "title_left_button",
+				"title": Lincko.Translation.get('app', 25, 'html'), //Close
+				'hide': true,
+				"class": "base_pointer",
 			},
 			
 			{% for key, value in languages %}

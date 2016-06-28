@@ -69,8 +69,6 @@ class ControllerFile extends Controller {
 			$json_result = json_decode($result);
 		}
 		@curl_close($ch);
-
-		echo 'ok';
 		
 		return false;
 	}

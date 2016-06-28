@@ -3,8 +3,14 @@
 
 	mobile_menu_list['nav'] = {
 		"_title": {
-			"style": "title",
+			"style": "customized_title",
 			"title": "{{ _trans('web', 2, 10, 'js') }}", //Menu
+		},
+		"left_button": {
+			"style": "title_left_button",
+			"title": Lincko.Translation.get('app', 25, 'html'), //Close
+			'hide': true,
+			"class": "base_pointer",
 		},
 		"account": {
 			"style": "button",
@@ -102,8 +108,14 @@
 	{% set languages = _languages('web') %}
 	mobile_menu_list['language'] = {
 		"_title": {
-			"style": "title",
+			"style": "customized_title",
 			"title": "{{ _trans('web', 2, 12, 'js') }}", //Language
+		},
+		"left_button": {
+			"style": "title_left_button",
+			"title": Lincko.Translation.get('app', 25, 'html'), //Close
+			'hide': true,
+			"class": "base_pointer",
 		},
 		
 		{% for key, value in languages %}

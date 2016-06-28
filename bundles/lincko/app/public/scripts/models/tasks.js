@@ -1,8 +1,14 @@
 submenu_list['app_task_new'] = {
 	//Set the title of the top
 	"_title": {
-		"style": "title",
+		"style": "customized_title",
 		"title": Lincko.Translation.get('app', 2201, 'html'), //New task
+	},
+	"left_button": {
+		"style": "title_left_button",
+		"title": Lincko.Translation.get('app', 25, 'html'), //Close
+		'hide': true,
+		"class": "base_pointer",
 	},
 	//Add HTML/JS checking input format
 	"_input": {

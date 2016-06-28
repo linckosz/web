@@ -315,7 +315,7 @@ var project_garbage = app_application_garbage.add();
 app_application_lincko.add(project_garbage, 'first_launch', function() {
 	if(typeof project_garbage != 'undefined' && !$.isEmptyObject(Lincko.storage.data)){
 		mainMenu.init(); //toto => mainMenu.init() has an issue, thereis an undefined variable somewhere
-		app_application_garbage.remove(project_garbage);
+		app_application_garbage.remove(this.id);
 		delete project_garbage;
 	}
 });

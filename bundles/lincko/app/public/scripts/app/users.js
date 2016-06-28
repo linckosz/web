@@ -1,7 +1,13 @@
 submenu_list['app_projects_users_contacts'] = {
 	"_title": {
-		"style": "title",
+		"style": "customized_title",
 		"title": Lincko.Translation.get('app', 31, 'html'), //Team
+	},
+	"left_button": {
+		"style": "title_left_button",
+		"title": Lincko.Translation.get('app', 25, 'html'), //Close
+		'hide': true,
+		"class": "base_pointer",
 	},
 	"_pre_action": {
 		"style": "preAction",
@@ -15,7 +21,14 @@ var app_projects_users_contacts_list = {}; //toto => this is a bad design to sto
 
 var app_projects_users_contacts_init = function(subm){
 	for(var i in submenu_list['app_projects_users_contacts']){
-		if(submenu_list['app_projects_users_contacts'][i]["style"] != "title" && submenu_list['app_projects_users_contacts'][i]["style"] != "preAction"){
+		if(
+			   submenu_list['app_projects_users_contacts'][i]["style"] != "title"
+			&& submenu_list['app_projects_users_contacts'][i]["style"] != "customized_title"
+			&& submenu_list['app_projects_users_contacts'][i]["style"] != "title_left_button"
+			&& submenu_list['app_projects_users_contacts'][i]["style"] != "title_right_button"
+			&& submenu_list['app_projects_users_contacts'][i]["style"] != "preAction"
+			&& submenu_list['app_projects_users_contacts'][i]["style"] != "postAction"
+		){
 			delete submenu_list['app_projects_users_contacts'][i];
 		}
 	}

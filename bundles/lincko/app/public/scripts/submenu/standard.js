@@ -3,8 +3,14 @@
 submenu_list['sample'] = {
 	//Set the title of the top
 	"_title": {
-		"style": "title",
+		"style": "customized_title",
 		"title": "Sample",
+	},
+	"left_button": {
+		"style": "title_left_button",
+		"title": Lincko.Translation.get('app', 25, 'html'), //Close
+		'hide': true,
+		"class": "base_pointer",
 	},
 	//Add HTML/JS checking input format
 	"_input": {
@@ -46,16 +52,28 @@ submenu_list['sample'] = {
 submenu_list['test'] = {
 	//Set the title of the top
 	"_title": {
-		"style": "title",
+		"style": "customized_title",
+		"title": Lincko.Translation.get('app', 2001, 'html'), //New project
+	},
+	"left_button": {
+		"style": "title_left_button",
 		"title": 'Test', //Settings
+		'hide': true,
+		"class": "base_pointer",
 	},
 };
 
 submenu_list['settings'] = {
 	//Set the title of the top
 	"_title": {
-		"style": "title",
+		"style": "customized_title",
 		"title": Lincko.Translation.get('app', 2, 'html'), //Lincko Settings
+	},
+	"left_button": {
+		"style": "title_left_button",
+		"title": Lincko.Translation.get('app', 25, 'html'), //Close
+		'hide': true,
+		"class": "base_pointer",
 	},
 	//Profile
 	"personal_settings": {
@@ -103,8 +121,14 @@ submenu_list['settings'] = {
 
 submenu_list['workspace'] = {
 	"_title": {
-		"style": "title",
+		"style": "customized_title",
 		"title": Lincko.Translation.get('app', 39, 'html'), //Workspace
+	},
+	"left_button": {
+		"style": "title_left_button",
+		"title": Lincko.Translation.get('app', 25, 'html'), //Close
+		'hide': true,
+		"class": "base_pointer",
 	},
 };
 
