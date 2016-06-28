@@ -452,8 +452,8 @@ Submenu.prototype.Add_taskdetail = function() {
 		elem_action_menu.find('[find=delete]').click(function(){
 			if(Lincko.storage.canI('delete', that.param.type, taskid)){
 				route_delete = true;
-				delete Lincko.storage.data.tasks[taskid];
-				app_application_lincko.prepare('tasks_'+taskid, true);
+				delete Lincko.storage.data[that.param.type][taskid];
+				app_application_lincko.prepare(that.param.type+'_'+taskid, true);
 				submenu_Clean(null,null,that.preview);
 			} else {
 				base_show_error(Lincko.Translation.get('app', 51, 'html'), true); //Operation not allowed
