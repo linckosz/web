@@ -205,9 +205,9 @@ class ControllerWrapper extends Controller {
 	protected function signOut($clear=false){
 		$app = $this->app;
 		if($clear){ //Do not keep user info
-			OneSeventySeven::unsetAll(array('jizhu'));
+			OneSeventySeven::unsetAll(array('jizhu', 'yuyan'));
 		} else {
-			OneSeventySeven::unsetAll(array('jizhu', 'youjian'));
+			OneSeventySeven::unsetAll(array('jizhu', 'yuyan', 'youjian'));
 		}
 		unset($_SESSION['public_key']);
 		unset($_SESSION['private_key']);

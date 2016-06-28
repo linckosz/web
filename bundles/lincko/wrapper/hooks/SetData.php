@@ -30,7 +30,7 @@ function SetData(){
 	} else {
 		//If there is a record for 'remember me', we keep it to check the box or not as user defaut selection
 		//Also Keep at least the email address force quicker completion (even if set to off the 'remember me')
-		OneSeventySeven::unsetAll(array('jizhu', 'youjian'));
+		OneSeventySeven::unsetAll(array('jizhu', 'yuyan', 'youjian'));
 	}
 	
 
