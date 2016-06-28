@@ -36,7 +36,7 @@ var app_layers_notes_feedPage = function(param){
 		false,
 		false,
 		false,
-		'layer_files'
+		'layer_notes'
 	);
 
 
