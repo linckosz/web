@@ -90,13 +90,14 @@ function app_models_chat_bubble_actionMenu(){
 
 	if(supportsTouch){
 		$('.models_history_content .selectable').removeClass('selectable').addClass('unselectable');
-		$('.models_history_content [contenteditable]').prop('contenteditable','false');
-		$('.models_history_content').prop('tabindex','1');
+		$('.models_history_content [contenteditable]').prop('contenteditable','false').prop('tabindex','1');
+		//$('.models_history_content').prop('tabindex','1');
 
 
 		$("body").on("mousedown touchstart", '.models_history_content', function(event) {
 			event.preventDefault();
 			var that = $(this);
+			that.find('[contenteditable]').focus();
 			app_models_chat_bubble_timeout = setTimeout(function(){
 				timeout_fn(that);
 			}, 1000);

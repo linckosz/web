@@ -37,6 +37,9 @@
 .models_history_content:focus {
 	outline: 0;
 }
+.models_history_content [contenteditable]:focus {
+	outline: 0;
+}
 
 .upload_stopped_file .models_history_content {
 	cursor: default;
