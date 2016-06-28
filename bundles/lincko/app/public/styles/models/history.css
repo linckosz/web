@@ -26,6 +26,7 @@
 
 .models_history_content_wrapper {
 	max-width: 60%;
+	word-wrap: break-word;
 }
 
 .models_history_content {

@@ -2,7 +2,6 @@ textarea:focus, input:focus{
 	outline: none;
 }
 
-
 .textarea{
 	-webkit-appearance: textarea;
     background-color: white;
@@ -20,9 +19,8 @@ textarea:focus, input:focus{
     word-wrap: break-word;
     overflow-x: hidden;
     overflow-y: auto;
-    color: #6F7377;
+    color: initial;;
 }
-
 
 .submenu_newchat_header {
 	background-color: #679E52;
@@ -104,12 +102,21 @@ textarea:focus, input:focus{
 	padding: 4px;
 	box-sizing: border-box;
 	height:72px;
+	cursor: text;
 }
 
 .submenu_app_chat_v_pos {
      padding-top:14px;
      padding-bottom:14px;
+     position: relative;
 }
+
+.chat_bottom .icons {
+    position: absolute;
+    right: 10px;
+	bottom:52px;
+}
+
 
 .submenu_chats_no_background_image {
 	background-image: none !important;
@@ -152,9 +159,6 @@ textarea:focus, input:focus{
 	cursor: pointer; cursor: hand;
 }
 
-
-
-
 /* Tablet in Landscape */
 @media only screen and (max-width: 1279px){
 	.submenu_app_chat_v_pos {
@@ -167,6 +171,13 @@ textarea:focus, input:focus{
 		background-image: url('/lincko/app/images/submenu/top.png');
 		background-repeat: repeat-x;
 	}
+
+	.chat_bottom .icons {
+		position: absolute;
+		right: 10px;
+		bottom:10px;
+		top:none;
+    }
 
 	[find="submenu_wrapper_bottom"] .chat_bottom  {
 		border-top: none;
@@ -189,18 +200,14 @@ textarea:focus, input:focus{
 	}
 }
 
-
 .chat_bottom span.input {
 	overflow: hidden;
 	display: block;
 	padding: 0 10px;
-
 }
 
-
-.chat_bottom .icons {
-	float: right;
-	margin: 0 10px;
+.chat_bottom .input {
+	margin-right:40px;
 }
 
 .chat_bottom .emoji {

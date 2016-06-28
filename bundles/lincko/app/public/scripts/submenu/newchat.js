@@ -142,14 +142,13 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 	submenu_wrapper.find("[find=submenu_wrapper_bottom]").addClass("submenu_chats_no_background_image").append(Elem);
 
 	function send_comments() {
-		var content = Elem.find('.comments_input:visible').val();
+		var textarea = $("#"+that.id).find("[find=chat_textarea]");
+		var content = textarea.text();
 		var type = that.param.type == 'history' ? "projects":'chats';
 		var sub_that = that;
-		var visible_input = $("#"+that.id).find('.comments_input:visible');
-		var textarea = $("#"+that.id).find("[find=chat_textarea]");
-		var input = $("#"+sub_that.id).find("[find=chat_input]");
-		textarea.val('');
-		input.val('');
+
+		textarea.text('');
+
 		wrapper_sendAction({
 				'comment': content,
 				'parent_type': type,
@@ -192,19 +191,17 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 					myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
 				}
 				
-				var visible_input = $("#"+sub_that.id).find('.comments_input:visible');
 				var textarea = $("#"+sub_that.id).find("[find=chat_textarea]");
-				var input = $("#"+sub_that.id).find("[find=chat_input]");
-				textarea.val('');
-				input.val('');
+				textarea.text('');
 				app_application_lincko.prepare(["chat_contents_wrapper", "chats_" + sub_that.param.id]);
 				if(!supportsTouch || responsive.test("minDesktop")){
-					visible_input.focus();
+					textarea.focus();
 				} else {
-					visible_input.blur();
+					textarea.blur();
 				}
 			}
 		);
+
 	}
 	$('.comments_input', submenu_wrapper).on('paste', function(){
 		var that = $(this);
@@ -221,14 +218,15 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 	$('.comments_input', submenu_wrapper).keyup(function(e) {
 		e.stopPropagation();
 		if(e.which == 13) {
-			$(this).val('');
+			$(this).text('');
 		}
 	});
 	$('.comments_input', submenu_wrapper).keydown(function(e) {
 		e.stopPropagation();
 		if(e.which == 13) {
+			e.preventDefault();
 			send_comments();
-			$(this).val('');
+			$(this).text('');
 		}
 	});
 	$('.send', submenu_wrapper).on("click", function() {
@@ -289,6 +287,16 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 	});
 	Elem.find(".send").show();
 	Elem.find(".attachment").hide();
+
+
+	setTimeout(function(){
+		if(!supportsTouch || responsive.test("minDesktop")){
+			Elem.find(".comments_input").focus();
+		}
+		else {
+			Elem.find(".comments_input").blur();
+		}
+	},500);
 
 	//Free memory
 	delete submenu_wrapper;
