@@ -162,7 +162,7 @@ $(function () {
 		disableImageResize: true, //Bruno update
 		imageOrientation: true, //Bruno update
 		singleFileUploads: true, //Bruno update
-		minFileSize: 1, //Bruno update
+		minFileSize: 0, //Bruno update
 		autoUpload: false, //Bruno update
 		maxFileSize: 1000000000, //Bruno update (limit to 1GB)
 		bitrateInterval: 1000, //Bruno update (display every second, which is more readable)

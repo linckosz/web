@@ -22,8 +22,8 @@ class Json {
 		//optional parameters for front end server
 		if($signout || $resignin){
 			$this->json['flash'] = array(
-					'signout' => (boolean)$signout,
-					'resignin' => (boolean)$resignin,
+					'signout' => (bool) $signout,
+					'resignin' => (bool) $resignin,
 			);
 		}
 		if(count($files)){
@@ -32,9 +32,10 @@ class Json {
 		return true;
 	}
 
-	public function render(){
+	public function render($status=200){
 		ob_clean();
 		header("Content-type: application/json; charset=UTF-8");
+		http_response_code($status);
 		echo json_encode($this->json);
 		return exit(0);
 	}
