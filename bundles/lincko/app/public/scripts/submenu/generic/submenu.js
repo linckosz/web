@@ -1111,6 +1111,7 @@ function submenu_resize_content() {
 	var top;
 	var content;
 	var bottom;
+	var iscroll = false;
 	for(var stack in submenu_obj){
 		for(var index in submenu_obj[stack]){
 			submenu_wrapper = $("#"+submenu_obj[stack][index]['id']);
@@ -1120,9 +1121,12 @@ function submenu_resize_content() {
 			content = total-top-bottom;
 			if(content){
 				submenu_wrapper.find("[find=submenu_wrapper_content]").height(content);
-				wrapper_IScroll();
+				iscroll = true;
 			}
 		}
+	}
+	if(iscroll){
+		wrapper_IScroll();
 	}
 	return true;
 }

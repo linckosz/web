@@ -64,7 +64,7 @@ Submenu.prototype.Add_ChatContents = function() {
 			myIScrollList[overthrow_id].refresh();
 			myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
 		}
-		this.action_param[1] = 300; 
+		this.action_param[1] = 300;
 		notifier[this.action_param[2]]['clear'](this.action_param[3]);
 	}, [that.id, 0, type, id]);
 

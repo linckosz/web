@@ -8,6 +8,7 @@
         "smarty/smarty": "3.*",
         "yusukezzz/slim-debugbar": "1.*",
         "phpmailer/phpmailer": "5.*",
-        "html2text/html2text": "4.*"
+        "html2text/html2text": "4.*",
+        "smottt/wideimage": "*"
     }
 }

@@ -6,7 +6,7 @@ var mainMenu = (function() {
 		});
 	}
 
-	function feedChatItem(position, data) {
+	function feedChatItem(position, data) { //This function is called too many times
 		var item = $("#-app_project_chat_item").clone();
 		var name = '';
 		$(position).append(item);
@@ -313,7 +313,7 @@ var mainMenu = (function() {
 
 var project_garbage = app_application_garbage.add();
 app_application_lincko.add(project_garbage, 'first_launch', function() {
-	if(!$.isEmptyObject(Lincko.storage.data)){
+	if(typeof project_garbage != 'undefined' && !$.isEmptyObject(Lincko.storage.data)){
 		mainMenu.init(); //toto => mainMenu.init() has an issue, thereis an undefined variable somewhere
 		app_application_garbage.remove(project_garbage);
 		delete project_garbage;

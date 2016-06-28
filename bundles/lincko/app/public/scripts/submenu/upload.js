@@ -497,33 +497,3 @@ Submenu.prototype.Add_MenuAppUploadSubFile = function() {
 	delete submenu_wrapper;
 	return true;
 };
-
-//[toto] Finish to add plus button action
-function submenu_app_upload_display(Elem, show) {
-	console.log(Elem);
-	/*
-	var Obj_div = $('#app_project_quick_upload');
-	var Obj_img = $('#app_project_quick_upload > div > img');
-	var timing = 300;
-	var delay = 100;
-	if(typeof show === 'undefined') { show = true; }
-	if(Elem !== null) {
-		if(Elem.length > 0){
-			Obj_div.css('margin-bottom', $(window).height() - Elem.offset().top);
-		}
-	}
-	if(Obj_div.is(':visible')){
-		$('#app_project_quick_upload_block').hide();
-		$.Velocity.RunSequence([
-			{ e: Obj_img, p: "transition.expandOut", o: { duration: timing, delay: delay } },
-			{ e: Obj_div, p: "transition.slideDownOut", o: { duration: timing, sequenceQueue: false } },
-		]);
-	} else if(Obj_div.is(':hidden') && show){
-		$('#app_project_quick_upload_block').show();
-		$.Velocity.RunSequence([
-			{ e: Obj_img, p: "transition.expandIn", o: { duration: timing, delay: delay } },
-			{ e: Obj_div, p: "transition.slideUpIn", o: { duration: timing, sequenceQueue: false } },
-		]);
-	}
-	*/
-}

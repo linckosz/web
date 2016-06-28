@@ -217,7 +217,7 @@ function wrapper_test(type, RCUD){
 					"id": 46,
 					//"parent_id": 4, //OPTIONAL
 					//"title": "It's a note title"+Math.floor(Math.random() * 20), //OPTIONAL
-					"comment": "It's a note content"+Math.floor(Math.random() * 20),
+					"comment": "It's a note content"+Math.floor(Math.random() * 20), //OPTIONAL
 				},
 				'post',
 				'note/update',
@@ -241,6 +241,56 @@ function wrapper_test(type, RCUD){
 				},
 				'post',
 				'note/restore',
+				wrapper_test_display
+			);
+		}
+	}
+
+	if(type=='*' || type=='files'){
+		if(RCUD==0){
+			wrapper_sendAction(
+				{
+					"id": 10,
+				},
+				'post',
+				'file/read',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==1){
+			console.log("Cannot create, have to use form upload.");
+		}
+		else if(RCUD==2){
+			wrapper_sendAction(
+				{
+					"id": 493,
+					//"parent_id": 3, //OPTIONAL
+					//"parent_id": "projects", //OPTIONAL
+					//"name": "It's a file name"+Math.floor(Math.random() * 20), //OPTIONAL
+					"comment": "It's a file description"+Math.floor(Math.random() * 20), //OPTIONAL
+				},
+				'post',
+				'file/update',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==3){
+			wrapper_sendAction(
+				{
+					"id": 493,
+				},
+				'post',
+				'file/delete',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==4){
+			wrapper_sendAction(
+				{
+					"id": 493,
+				},
+				'post',
+				'file/restore',
 				wrapper_test_display
 			);
 		}
@@ -531,6 +581,14 @@ function wrapper_test(type, RCUD){
 				},
 				'post',
 				'user/restore',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==5){
+			wrapper_sendAction(
+				null,
+				'get',
+				'user/my_user',
 				wrapper_test_display
 			);
 		}

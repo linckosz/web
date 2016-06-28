@@ -155,8 +155,11 @@ $(function () {
 		// Enable image resizing, except for Android and Opera,
 		// which actually support image resizing, but fail to
 		// send Blob objects via XHR requests:
+		/*
 		disableImageResize: /Android(?!.*Chrome)|Opera/
 			.test(window.navigator.userAgent),
+		*/
+		disableImageResize: true, //Bruno update
 		imageOrientation: true, //Bruno update
 		singleFileUploads: true, //Bruno update
 		minFileSize: 1, //Bruno update
