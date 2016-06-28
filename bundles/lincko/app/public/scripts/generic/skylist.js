@@ -1452,7 +1452,8 @@ skylist.prototype.add_cardEvents = function(Elem){
 		Elem.find('[find=comments]').click();
 	});
 
-	Elem.find('.skylist_leftOptionBox').click(function(){
+	Elem.find('.skylist_leftOptionBox').click(function(event){
+		var itemID = Elem.data('item_id');
 		var route = '';
 		if( that.list_type == "tasks" ){
 			route = "task/delete";
@@ -1463,13 +1464,28 @@ skylist.prototype.add_cardEvents = function(Elem){
 		else if( that.list_type == "files" ){
 			route = "file/delete";
 		}
-		wrapper_sendAction(
-			{
-				"id": Elem.data('item_id'),
-			},
-			'post',
-			route
-		);
+		
+		if(route && Lincko.storage.canI('delete', that.list_type, itemID)){
+			event.stopPropagation();
+			event.preventDefault();
+			var begin_fn = function(){
+				wrapper_sendAction(
+					{
+						"id": itemID,
+					},
+					'post',
+					route
+				);
+			};
+			var complete_fn = function(){
+				delete Lincko.storage.data[that.list_type][itemID];
+				app_application_lincko.prepare(that.list_type+'_'+itemID, true);
+			};
+			that.clearOptions(Elem, begin_fn, complete_fn);
+			
+		} else {
+			base_show_error(Lincko.Translation.get('app', 51, 'html'), true); //Operation not allowed
+		}
 	});
 
 	//event actions for swipe left and right on the task
@@ -1612,15 +1628,20 @@ skylist.prototype.on_mouseup = function(){
 	that.pan_threshold.bool = false;
 }
 
-skylist.prototype.clearOptions = function(task){
+skylist.prototype.clearOptions = function(elem_task, begin_fn, complete_fn){
 	var that = this;
-	if( !task && that.elem_card_all){
+	if(!begin_fn){ var begin_fn = function(){}; }
+	if(!complete_fn){ var complete_fn = function(){}; }
+	if( !elem_task && that.elem_card_all){
 		that.elem_card_all.removeAttr('style');
 		that.elem_card_all.data('options',false);
 	}
 	else{
 		that.actiontask.data('options',false);
-		task.velocity( {left: 0});
+		elem_task.velocity( {left: 0},{
+			begin: begin_fn,
+			complete: complete_fn,
+		});
 	}
 }
 
