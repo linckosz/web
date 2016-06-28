@@ -232,18 +232,6 @@
 .skylist_paddingRight {
 	padding-right: 10px !important;
 }
-.skylist_card_leftOptions {
-	position: absolute;
-	height: 100%;
-	background-color: #BE2B1F;
-	color: #FBA026;
-}
-
-.skylist_card_rightOptions {
-	position: absolute;
-	height: 100%;
-	right: 0px;
-}
 
 .skylist_card {
 	/*border: 2px solid blue;*/
@@ -369,7 +357,7 @@
 	z-index: 100;
 	height: 100%;
 	width: 450px;
-	box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.50);
+	/*box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.50);*/
 }
 .skylist_card_leftOptions {
 	background-color: #BE2C1F;
@@ -380,6 +368,7 @@
 	background-color: #437CA8;
 	color: #FBA026;
 	right:-450px;
+	box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.50);
 }
 .skylist_leftOptionBox, .skylist_rightOptionBox {
 	width: 80px;

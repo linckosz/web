@@ -1553,6 +1553,9 @@ skylist.prototype.on_mousemove = function(event){
 		if(!that.options_startL){
 			that.options_startL = 0;
 		}
+		if(that.delX > 0){//if start sliding right (leftOptions)
+			that.actiontask.find('[find=card_leftOptions]').css('box-shadow','0px 1px 4px 0px rgba(0,0,0,0.50)');
+		}
 		/*
 		if( !that.actiontask.data('options') ){
 			console.log('delX: '+that.delX);
@@ -1634,13 +1637,17 @@ skylist.prototype.clearOptions = function(elem_task, begin_fn, complete_fn){
 	if(!complete_fn){ var complete_fn = function(){}; }
 	if( !elem_task && that.elem_card_all){
 		that.elem_card_all.removeAttr('style');
+		that.elem_card_all.find('[find=card_leftOptions]').removeAttr('style');
 		that.elem_card_all.data('options',false);
 	}
 	else{
 		that.actiontask.data('options',false);
 		elem_task.velocity( {left: 0},{
 			begin: begin_fn,
-			complete: complete_fn,
+			complete: function(){
+				that.actiontask.find('[find=card_leftOptions]').removeAttr('style');
+				complete_fn();
+			},
 		});
 	}
 }
