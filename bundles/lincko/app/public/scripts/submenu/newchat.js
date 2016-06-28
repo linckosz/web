@@ -206,6 +206,18 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 			}
 		);
 	}
+	$('.comments_input', submenu_wrapper).on('paste', function(){
+		var that = $(this);
+		setTimeout(function(){
+			that.html(that.text());
+		},10);
+	});
+
+
+	$('.comments_input', submenu_wrapper).on("resize",function(e) {
+		submenu_resize_content();
+	});
+
 	$('.comments_input', submenu_wrapper).keyup(function(e) {
 		e.stopPropagation();
 		if(e.which == 13) {

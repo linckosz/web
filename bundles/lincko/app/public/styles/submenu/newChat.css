@@ -2,6 +2,28 @@ textarea:focus, input:focus{
 	outline: none;
 }
 
+
+.textarea{
+	-webkit-appearance: textarea;
+    background-color: white;
+    width: 400px; 
+    min-height: 20px; 
+    max-height: 300px;
+    margin-left: auto; 
+    margin-right: auto; 
+    padding: 3px; 
+    outline: 0; 
+    border: 1px solid #a0b3d6; 
+    font-size: 12px; 
+    line-height: 24px;
+    padding: 2px;
+    word-wrap: break-word;
+    overflow-x: hidden;
+    overflow-y: auto;
+    color: #6F7377;
+}
+
+
 .submenu_newchat_header {
 	background-color: #679E52;
 	background-image: none;
@@ -72,8 +94,21 @@ textarea:focus, input:focus{
 	height: 100px; /*three lines for desktop, one line(48px) for mobile*/
 	background-image: none;
 }
-.submenu_chats input.comments_input {
-	display: none;
+
+.chat_bottom .comments_input {
+	font-size: 16px;
+	border: 0px;
+	width: 100%;
+	display: block;
+	resize: none;
+	padding: 4px;
+	box-sizing: border-box;
+	height:72px;
+}
+
+.submenu_app_chat_v_pos {
+     padding-top:14px;
+     padding-bottom:14px;
 }
 
 .submenu_chats_no_background_image {
@@ -117,16 +152,22 @@ textarea:focus, input:focus{
 	cursor: pointer; cursor: hand;
 }
 
+
+
+
 /* Tablet in Landscape */
 @media only screen and (max-width: 1279px){
+	.submenu_app_chat_v_pos {
+         padding-top:8px;
+         padding-bottom:8px;
+    }
+
 	.submenu_chats .submenu_bottom{
 		height: 48px; /*three lines for desktop, one line(48px) for mobile*/
 		background-image: url('/lincko/app/images/submenu/top.png');
 		background-repeat: repeat-x;
 	}
-	.submenu_chats .comments_input{
-		height: 24px;
-	}
+
 	[find="submenu_wrapper_bottom"] .chat_bottom  {
 		border-top: none;
 		background-color: #EFEFEF;
@@ -141,25 +182,13 @@ textarea:focus, input:focus{
 		font-size: 24px;
 		cursor: pointer; cursor: hand;
 	}
-	.submenu_chats textarea.comments_input {
-		display: none;
-	}
-	.submenu_chats input.comments_input {
-		display: block;
+	.submenu_chats .comments_input {
 		font-size: 16px;
+		height: auto;
+		max-height:72px;
 	}
 }
 
-.v_pos {
-	position: absolute;
-	width: 100%;
-	top: 50%;
-	transform: translateY(-50%);
-	-webkit-transform: translateY(-50%);
-	-moz-transform: translateY(-50%);
-	-ms-transform: translateY(-50%);
-	-o-transform: translateY(-50%);
-}
 
 .chat_bottom span.input {
 	overflow: hidden;
@@ -168,15 +197,6 @@ textarea:focus, input:focus{
 
 }
 
-.chat_bottom .comments_input {
-	font-size: 16px;
-	border: 0px;
-	width: 100%;
-	display: block;
-	resize: none;
-	padding: 4px;
-	box-sizing: border-box;
-}
 
 .chat_bottom .icons {
 	float: right;

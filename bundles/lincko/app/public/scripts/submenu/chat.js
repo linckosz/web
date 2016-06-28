@@ -243,7 +243,6 @@ Submenu.prototype.Add_ChatContacts = function() {
 		Elem.find("[find=who]").html(wrapper_to_html(contacts[i]['-username'].ucfirst()));
 		Elem.off("click");
 		Elem.click([that, contacts[i]['_id']], function(event){ //toto => why this is called multiple time when when switch few times from Contact list adn Chats list?
-			console.log('ok');
 			event.stopPropagation();
 			submenu_chat_open_single(event.data[0], event.data[1]);
 		});
