@@ -44,20 +44,26 @@ var app_layers_files_feedPage = function(param){
 
 function app_layers_files_bitConvert(value){
 	var sizeUnit = 'Bit';
-	if(value > 8*Math.pow(10,12)){
-		value = Math.round(value/(8*Math.pow(10,12)));
+	var kilo = 1024;
+	var oneKB = 8*kilo;
+	var oneMB = 8*Math.pow(kilo,2);
+	var oneGB = 8*Math.pow(kilo,3);
+	var oneTB = 8*Math.pow(kilo,4);
+
+	if(value > oneTB){
+		value = Math.round(value/oneTB);
 		sizeUnit = 'TB';
 	}
-	else if( value > 8*Math.pow(10,9) ){
-		value = Math.round(value/(8*Math.pow(10,9)));
+	else if( value > oneGB ){
+		value = Math.round(value/oneGB);
 		sizeUnit = 'GB';
 	}
-	else if( value > 8*Math.pow(10,6) ){
-		value = Math.round(value/(8*Math.pow(10,6)));
+	else if( value > oneMB ){
+		value = Math.round(value/oneMB);
 		sizeUnit = 'MB';
 	}
-	else if( value > 8000 ){
-		value = Math.round(value/8000);
+	else if( value > oneKB ){
+		value = Math.round(value/oneKB);
 		sizeUnit = 'KB';
 	}
 	else if( value > 8 ){
@@ -69,6 +75,5 @@ function app_layers_files_bitConvert(value){
 		value = Math.round(value);
 		if(value>1){ sizeUnit += 's'; }
 	}
-
 	return {val: value, unit: sizeUnit};
 }
