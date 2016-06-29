@@ -242,7 +242,7 @@ $(function () {
 				.fail(function () {
 					if (data.files[0].error) {
 						data.lincko_status = 'failed';
-						data.errorThrown === 'failed'
+						data.errorThrown = 'failed';
 						data.lincko_error = data.files[0].error;
 						data.abort();
 					}
@@ -328,6 +328,7 @@ $(function () {
 				$('#app_upload_fileupload').fileupload('option').progressall(e, this);
 				delete app_upload_files.lincko_files[data.lincko_files_index];
 				that.reindex(e, this);
+				app_application_lincko.prepare('files');
 			}
 		},
 
