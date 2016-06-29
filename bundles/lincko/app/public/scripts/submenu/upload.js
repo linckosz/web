@@ -353,6 +353,7 @@ Submenu.prototype.Add_MenuAppUploadSubFile = function() {
 					app_upload_files.lincko_files[lincko_files_index].lincko_status = 'abort';
 					app_upload_files.lincko_files[lincko_files_index].abort();
 				}
+				app_application_lincko.prepare('upload', true);
 			});
 			Elem_bt.hide();
 			Elem.append(Elem_bt);

@@ -329,7 +329,12 @@ $(function () {
 				delete app_upload_files.lincko_files[data.lincko_files_index];
 				that.reindex(e, this);
 				app_application_lincko.prepare('files');
+				//Force to update elements if the function is available
+				if(data.result && data.result.msg && typeof storage_cb_success === 'function'){
+					storage_cb_success('', false, 200, data.result.msg);
+				}
 			}
+			app_application_lincko.prepare('upload', true);
 		},
 
 		//data => File object
