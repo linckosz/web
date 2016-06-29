@@ -1369,7 +1369,7 @@ skylist.prototype.addFile = function(item){
 		});
 	 }
 	 else{
-	 	fileType_class = app_models_returnFileFontClass(item.ori_ext);
+	 	fileType_class = app_models_fileType.getClass(item.ori_ext);
 	 	elem_leftbox.addClass(fileType_class);
 	 }
 
