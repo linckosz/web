@@ -496,7 +496,6 @@ var  getSelectionCoords = function(win) {
 	var sel = doc.selection, range, rects, rect;
 	var x = 0, y = 0, caretOffset = null;
 	if (sel) {	//for IE 4-10
-		console.log("for IE 4-10...");
 		if (sel.type != "Control") {
 			range = sel.createRange();
 			range.collapse(true);
@@ -504,7 +503,6 @@ var  getSelectionCoords = function(win) {
 			y = range.boundingTop;	//IE 4-10
 		}
 	} else if (win.getSelection) { 
-		console.log('for IE>=9 and nonIE...');
 	//In IE >= 9 and non-IE browsers (Firefox 4+, WebKit browsers released since early 2009, Opera 11, maybe earlier), you can use the getClientRects() method of Range
 		sel = win.getSelection();
 		if (sel.rangeCount) {
