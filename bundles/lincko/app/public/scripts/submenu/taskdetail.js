@@ -330,13 +330,11 @@ Submenu.prototype.Add_taskdetail = function() {
 				previewer.video(event.data);
 			});
 		}
-
-		if(elem_leftbox.is('img')){
-
-		}
 		else{
-			elem_leftbox.addClass(fileType_class);
-		}
+		 	fileType_class = app_models_returnFileFontClass(item.ori_ext);
+		 	elem_leftbox.addClass(fileType_class);
+		 }
+
 		elem.find('[find=leftbox]').html(elem_leftbox);
 	}
 

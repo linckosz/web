@@ -1368,12 +1368,9 @@ skylist.prototype.addFile = function(item){
 			previewer.video(event.data);
 		});
 	 }
-
-	 if(elem_leftbox.is('img')){
-
-	 }
 	 else{
-		elem_leftbox.addClass(fileType_class);
+	 	fileType_class = app_models_returnFileFontClass(item.ori_ext);
+	 	elem_leftbox.addClass(fileType_class);
 	 }
 
 	var elem_fileType = $('<div>'+Lincko.Translation.get('app', 3602, 'html')+': '+item['category']+', '+item['ori_ext'].toUpperCase()+'</div>');
