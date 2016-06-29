@@ -54,12 +54,20 @@ var chatFeed = (function() {
 	};
 	var RESOURCE_HANDLERS = {
 		'tasks': function(taskid, elem) {
+			var item_obj = Lincko.storage.get('tasks',taskid);
+			if(typeof item_obj == 'object' && item_obj.deleted_at){
+				return false;
+			}
 			var tmp = $(elem).parents(".submenu_wrapper").prop("id").split("_");
 			var preview = JSON.parse(tmp[tmp.length-1]);
 			submenu_Build('taskdetail', true, null, {'type': 'tasks', 'id': taskid}, preview);
 			return false;
 		},
 		'files': function(fileid, elem) {
+			var item_obj = Lincko.storage.get('files',fileid);
+			if(typeof item_obj == 'object' && item_obj.deleted_at){
+				return false;
+			}
 			var tmp = $(elem).parents(".submenu_wrapper").prop("id").split("_");
 			var preview = JSON.parse(tmp[tmp.length-1]);
 			submenu_Build('taskdetail', true, null, {'type':'files', 'id':fileid}, preview);
@@ -90,6 +98,10 @@ var chatFeed = (function() {
 			return false;
 		},
 		'notes': function(noteid, elem) {
+			var item_obj = Lincko.storage.get('notes',noteid);
+			if(typeof item_obj == 'object' && item_obj.deleted_at){
+				return false;
+			}
 			var tmp = $(elem).parents(".submenu_wrapper").prop("id").split("_");
 			var preview = JSON.parse(tmp[tmp.length-1]);
 			submenu_Build('taskdetail', true, null,  {'type': 'notes', 'id': noteid}, preview);
