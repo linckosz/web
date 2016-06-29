@@ -911,7 +911,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			//param values that are common to all
 			param['id'] = taskid;
 			submenu_taskdetail.find('[find=title_text]');
-			param['title'] = submenu_taskdetail.find('[find=title_text]').html();
+			param['title'] = $('<div>').html(submenu_taskdetail.find('[find=title_text]').html()).text();
 			param['comment'] = submenu_taskdetail.find('[find=description_text]').html();
 			if( taskid == 'new' ){
 				param['parent_id'] = currentProjID;
