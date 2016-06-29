@@ -27,10 +27,14 @@ var app_models_fileType = {
  			return fileType_class;
  		}
 
+	 	var isMatch = false;
 	 	$.each(that.extensions, function(key, val){
-	 		if($.inArray(ext, that.extensions[key]) > -1){
+	 		if(isMatch){
+	 			return;
+	 		}
+	 		else if($.inArray(ext, that.extensions[key]) > -1){
 	 			fileType_class = that.class[key];
-	 			return false;
+	 			isMatch = true;
 	 		}
 	 	});
 	 	return fileType_class;
