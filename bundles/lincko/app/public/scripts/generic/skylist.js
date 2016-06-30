@@ -630,7 +630,7 @@ skylist.prototype.isDueThisTime = function(item, time){
 	var dueMonthIndex = new Date((item.start + item.duration)*1000).getMonth();
 
 	$.each(months_obj, function(key,val){
-		if(months_obj[key][dueMonthIndex].toLowerCase() == time){
+		if(val[dueMonthIndex].toLowerCase() == time){
 			isDueThisTime = true;
 			return false;
 		}
