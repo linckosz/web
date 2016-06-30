@@ -619,7 +619,6 @@ skylist.prototype.isDueThisTime = function(item, time){
 	if(typeof item != 'object' || item._type != 'tasks' || !item.duration || !item.start || !time){
 		return false;
 	}
-	time = time.toLowerCase();
 
 	var isDueThisTime = false;
 	var months_obj = {
@@ -631,7 +630,7 @@ skylist.prototype.isDueThisTime = function(item, time){
 	var dueMonthIndex = new Date((item.start + item.duration)*1000).getMonth();
 
 	$.each(months_obj, function(key,val){
-		if(val[dueMonthIndex].toLowerCase() == time){
+		if(val[dueMonthIndex].toLowerCase().includes(time.toLowerCase())){
 			isDueThisTime = true;
 			return false;
 		}
