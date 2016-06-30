@@ -551,17 +551,22 @@ skylist.prototype.filter_by_search = function(items, filter){
 
 			for( var j=0; j < filter_array.length; j++){ //for each word
 				word = filter_array[j];
-				var userOnly = false;
+				var burgerOnly = false;
 				if( word[0] == '@'){
 					word = word.slice(1);
-					userOnly = true;
+					burgerOnly = '@';
 				}
+				else if(word.substring(0,2) == '++'){
+					word = word.slice(2);
+					burgerOnly = '++';
+				}
+
 				userid_array = that.search_by_username(word);
-				if(Lincko.storage.searchArray('word', word, [item]).length > 0 && !userOnly){
+				if(!word.length || (Lincko.storage.searchArray('word', word, [item]).length > 0 && !burgerOnly) ){
 					push = true;
 					break;
 				}
-				else if( userid_array.length ){
+				else if( userid_array.length && (burgerOnly == false || burgerOnly == '@') ){ //userOnly both true/false
 					for( var k=0; k < userid_array.length; k++){
 						userid = userid_array[k];
 						if( that.list_type == 'tasks' ){
@@ -580,6 +585,10 @@ skylist.prototype.filter_by_search = function(items, filter){
 					if(push){
 						break;
 					}
+				}
+				else if( that.isDueThisTime(item, word) && (burgerOnly == false || burgerOnly == '++') ){
+					push = true;
+					break;
 				}
 			}//END OF for word
 
@@ -604,6 +613,30 @@ skylist.prototype.search_by_username = function(username){
 		});
 		return userid_array;
 	}
+}
+
+skylist.prototype.isDueThisTime = function(item, time){
+	if(typeof item != 'object' || item._type != 'tasks' || !item.duration || !item.start || !time){
+		return false;
+	}
+	time = time.toLowerCase();
+
+	var isDueThisTime = false;
+	var months_obj = {
+		long: (new wrapper_date()).month,
+		short:(new wrapper_date()).month_short,
+	};
+
+	var dueMonthIndex = new Date((item.start + item.duration)*1000).getMonth();
+
+	$.each(months_obj, function(key,val){
+		if(months_obj[key][dueMonthIndex].toLowerCase() == time){
+			isDueThisTime = true;
+			return false;
+		}
+	});
+	
+	return isDueThisTime;
 }
 
 skylist.prototype.list_filter = function(){
