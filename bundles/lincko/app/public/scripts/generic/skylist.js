@@ -624,7 +624,8 @@ skylist.prototype.isDueThisTime = function(item, time){
 	var isDueThisTime = false;
 	var months_obj = {
 		long: (new wrapper_date()).month,
-		short:(new wrapper_date()).month_short,
+		short: (new wrapper_date()).month_short,
+		shortNum: (new wrapper_date()).month_short_num,
 	};
 
 	var dueMonthIndex = new Date((item.start + item.duration)*1000).getMonth();
