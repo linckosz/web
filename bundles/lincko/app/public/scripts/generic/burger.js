@@ -515,9 +515,9 @@ var  getSelectionCoords = function(win) {
 				rects = range.getClientRects();
 				if (rects.length > 0) {
 					rect = rects[0];
+					x = rect.left;
+					y = rect.top;
 				}
-				x = rect.left;
-				y = rect.top;
 			}
 			// Fall back to inserting a temporary element
 			if (x == 0 && y == 0) {
@@ -537,17 +537,22 @@ var  getSelectionCoords = function(win) {
 					spanParent.normalize();
 				}
 			}
+			//to get coordinate at the end of the selection
+			var range = window.getSelection().getRangeAt(0);
+			range.collapse(false);
+			var dummy = document.createElement("span");
+			range.insertNode(dummy);
+			var rect = dummy.getBoundingClientRect();
+			var x2 = rect.left, width = rect.width, height = rect.height;
+			dummy.parentNode.removeChild(dummy);
 		}
+		else{ //if sel.rangeCount == 0 (nothing selected)
+			return false;
+		}
+		
+
 	}
-	//to get coordinate at the end of the selection
-	var range = window.getSelection().getRangeAt(0);
-	range.collapse(false);
-	var dummy = document.createElement("span");
-	range.insertNode(dummy);
-	var rect = dummy.getBoundingClientRect();
-	var x2 = rect.left, width = rect.width, height = rect.height;
-	dummy.parentNode.removeChild(dummy);
-	/*
+		/*
 	var content_top_height = $('#app_content_top').outerHeight();
 	y = y - content_top_height + elem.outerHeight();
 	if( responsive.test('minTablet') ){

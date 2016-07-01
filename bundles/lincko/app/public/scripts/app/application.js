@@ -598,14 +598,20 @@ $(".selectable").on('touchend', function() {
 */
 $("body").delegate(".selectable", "mouseup", function(e){
 	var scroll = myIScrollList[$(this).parents(".overthrow").prop("id")];//find iScroll
-	scroll.enable();//disables the iScroll
-	var coords = getSelectionCoords();
-	$("#app_application_lincko_action").css({"left":coords.x2, "top":coords.y+coords.height}).show(); //bottom right corder of selected text
-	//$("#app_application_lincko_action").css({"left":e.pageX, "top":e.pageY}).show();
+	if(scroll){
+		scroll.enable();//disables the iScroll
+	}
+	
 	globalWordSelect = $.selection();
 	if(globalWordSelect=="") {
 		$("#app_application_lincko_action").hide();
 	}
+	else{
+		var coords = getSelectionCoords();
+		$("#app_application_lincko_action").css({"left":coords.x2, "top":coords.y+coords.height}).show(); //bottom right corder of selected text
+		//$("#app_application_lincko_action").css({"left":e.pageX, "top":e.pageY}).show();
+	}
+	
 	setTimeout(function(){
 		$("#app_application_lincko_action").hide();
 	}, 3000);
