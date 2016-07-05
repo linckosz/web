@@ -66,6 +66,12 @@ class ControllerDate extends Controller {
 				echo '"'.$app->trans->getJS('wrapper', 2, 1050+$i).'", ';
 			}
 		echo "],
+			
+			month_short_num: [";
+			for($i=0; $i<=11; $i++){
+				echo '"'.$app->trans->getJS('wrapper', 2, 1070+$i).'", ';
+			}
+		echo "],
 
 			//The first key '0' is actually 31st of last month because JS table start from 0, not 1.
 			ordinal: [";

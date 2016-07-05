@@ -155,13 +155,18 @@ Submenu.prototype.Add_MenuAppUploadAllFile = function(e) {
 							$('#app_upload_fileupload').fileupload('option')._formatFileSize(data.lincko_size)
 						);
 						destination = "";
-						parent = Lincko.storage.get(data.lincko_parent_type, data.lincko_parent_id);
-						if(parent){
-							for (var i in parent){
-								if(i.indexOf('+')===0){
-									destination = parent[i].ucfirst();
-								} else if(destination=="" && i=="-username"){
-									destination = parent[i].ucfirst();
+						if(data.lincko_parent_type=="projects" && data.lincko_parent_id==Lincko.storage.getMyPlaceholder()['_id']){
+							destination = Lincko.Translation.get('app', 2502, 'html'); //Personal Space
+							destination = destination.ucfirst();
+						} else {
+							parent = Lincko.storage.get(data.lincko_parent_type, data.lincko_parent_id);
+							if(parent){
+								for (var i in parent){
+									if(i.indexOf('+')===0){
+										destination = parent[i].ucfirst();
+									} else if(destination=="" && i=="-username"){
+										destination = parent[i].ucfirst();
+									}
 								}
 							}
 						}

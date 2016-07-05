@@ -265,7 +265,7 @@ function wrapper_test(type, RCUD){
 				{
 					"id": 493,
 					//"parent_id": 3, //OPTIONAL
-					//"parent_id": "projects", //OPTIONAL
+					//"parent_type": "projects", //OPTIONAL
 					//"name": "It's a file name"+Math.floor(Math.random() * 20), //OPTIONAL
 					"comment": "It's a file description"+Math.floor(Math.random() * 20), //OPTIONAL
 				},

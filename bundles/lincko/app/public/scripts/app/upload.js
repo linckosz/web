@@ -322,7 +322,6 @@ $(function () {
 				if(data.result.flash && data.result.flash.resignin){
 					wrapper_force_resign();
 				}
-				that.fail(e, data);
 			} else {
 				app_upload_files.lincko_files[data.lincko_files_index].lincko_status = 'done';
 				$('#app_upload_fileupload').fileupload('option').progressall(e, this);
@@ -406,8 +405,11 @@ $(function () {
 		//data => File object
 		fail: function (e, data) {
 			if (typeof e !== 'undefined' && e.isDefaultPrevented()) { return false; }
-			if (data.lincko_status === 'failed') {
+			if (data.lincko_status == 'failed') {
 				data.lincko_error = data.files[0].error || data.errorThrown || Lincko.Translation.get('app', 9, 'html'); //Unknown error
+			} else if (data.lincko_status != 'error') {
+				app_upload_files.lincko_files[data.lincko_files_index].lincko_status = 'error';
+				app_upload_files.lincko_files[data.lincko_files_index].lincko_error = Lincko.Translation.get('app', 18, 'html'); //Server error
 			}
 			$('#app_upload_fileupload').fileupload('option').progressall(e, this);
 		},
