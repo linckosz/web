@@ -46,6 +46,8 @@ function app_models_chat_bubble_actionMenu(){
 				elem_translatedText.velocity('slideUp',{
 					complete: function(){
 						elem_translatedText.remove();
+						var iscroll_id = that.closest('.overthrow').prop('id');
+	    				myIScrollList[iscroll_id].refresh();
 					}
 				});
 			});
@@ -68,10 +70,23 @@ function app_models_chat_bubble_actionMenu(){
 			    		var elem_translated = $('#-app_models_chat_bubble_chatTranslation').clone().prop('id','');
 			    		elem_translated.find('[find=text]').text(data);
 			    		that.append(elem_translated);
-			    		elem_translated.velocity('slideDown');
+			    		elem_translated.velocity('slideDown',{
+			    			complete: function(){
+			    				var iscroll_id = that.closest('.overthrow').prop('id');
+			    				myIScrollList[iscroll_id].refresh();
+
+			    				var elem_wrapper = that.closest('.models_history_wrapper');
+			    				var coord_wrapper = elem_wrapper.offset().top + elem_wrapper.outerHeight(true);
+			    				var coord_iscroll = Math.abs(myIScrollList[iscroll_id].wrapperOffset.top) + myIScrollList[iscroll_id].wrapperHeight;
+
+			    				if(coord_wrapper > coord_iscroll){
+			    					myIScrollList[iscroll_id].scrollBy(0, coord_iscroll - coord_wrapper - 10/*bit of padding*/ );
+			    				}
+			    			}
+			    		});//end of velocity
 				    } 
 				);
-			});
+			});//end of mousedown/touchstart event
 		}
 		/*------END OF translate action----------------*/
 
@@ -85,6 +100,20 @@ function app_models_chat_bubble_actionMenu(){
 			submenu_Build("taskdetail", true, false, {'id':'new', 'title': textToAction, projID: projectID, 'type':'tasks'}, preview);
 			that.blur();
 		});
+		/*------------recall chat action----------------*/
+		var elem_recallBtn = elem_actionMenu.find('[find=recall_btn]');
+		elem_recallBtn.on("mousedown touchstart", function(){
+			console.log(commentID);
+			wrapper_sendAction(
+				{
+					"id": commentID,
+				},
+				'post',
+				'comment/recall'
+			);
+			that.blur();
+		});
+
 	}//end of timeout_fn
 
 
