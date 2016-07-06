@@ -23,7 +23,7 @@ submenu_list['taskdetail'] = {
 	},
 	"left_button": {
 		"style": "title_left_button",
-		"title": Lincko.Translation.get('app', 7, 'html'), //cancel
+		"title": Lincko.Translation.get('app', 7, 'html'), //Cancel
 		'hide': true,
 		"class": "base_pointer",
 		"action": function(elem, submenuInst) {
@@ -32,7 +32,7 @@ submenu_list['taskdetail'] = {
 	},
 	"right_button": {
 		"style": "title_right_button",
-		"title": 'Save', //toto
+		"title": Lincko.Translation.get('app', 58, 'html'), //Save
 		'hide': true,
 		"class": "base_pointer",
 		"action": function(elem, submenuInst) {
@@ -895,7 +895,6 @@ Submenu.prototype.Add_taskdetail = function() {
 		that.id,
 		'submenu_hide_'+that.preview+'_'+that.id,
 		function(){
-			console.log(this.action_param);
 			if( (taskid == 'new' && route_delete) || this.action_param.cancel ){
 				return false;
 			}
