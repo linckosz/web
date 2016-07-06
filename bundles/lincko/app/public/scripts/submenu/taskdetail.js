@@ -23,11 +23,20 @@ submenu_list['taskdetail'] = {
 	},
 	"left_button": {
 		"style": "title_left_button",
-		"title": Lincko.Translation.get('app', 25, 'html'), //Close
+		"title": Lincko.Translation.get('app', 7, 'html'), //cancel
 		'hide': true,
 		"class": "base_pointer",
 		"action": function(elem, submenuInst) {
-
+			submenuInst.cancel = true;
+		},
+	},
+	"right_button": {
+		"style": "title_right_button",
+		"title": 'Save', //toto
+		'hide': true,
+		"class": "base_pointer",
+		"action": function(elem, submenuInst) {
+			
 		},
 	},
 	"taskdetail": {
@@ -886,7 +895,8 @@ Submenu.prototype.Add_taskdetail = function() {
 		that.id,
 		'submenu_hide_'+that.preview+'_'+that.id,
 		function(){
-			if( taskid == 'new' && route_delete ){
+			console.log(this.action_param);
+			if( (taskid == 'new' && route_delete) || this.action_param.cancel ){
 				return false;
 			}
 			var contactServer = false;
@@ -957,7 +967,7 @@ Submenu.prototype.Add_taskdetail = function() {
 				}
 				wrapper_sendAction( param,'post',route, cb_success, null, cb_begin);
 			}
-		}
+		}, this
 	);
 
 
