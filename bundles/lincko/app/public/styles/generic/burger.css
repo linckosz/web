@@ -16,6 +16,8 @@
 }
 .burger_option {
 	padding: 5px 10px;
+	width: 200px;
+	overflow: hidden;
 }
 .burger_option:hover, .burger_option_selected {
 	background: #B6D6E8;
@@ -45,6 +47,7 @@
 	vertical-align: middle;
 	font-size: 20px;
 	color: #3F84B0;
+	width: 100px;
 }
 
 

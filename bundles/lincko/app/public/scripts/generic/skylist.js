@@ -1125,7 +1125,8 @@ skylist.prototype.addTask = function(item){
 	}
 	//Elem.find('[find=name_hidden]').toggleClass('display_none');
 	Elem.find('[find=name]').html(in_charge);
-	burger(Elem.find('input[find=name_hidden]'), '_users', item);
+	//burger(Elem.find('input[find=name_hidden]'), '_users', item);
+	burgerN.assignTask(Elem.find('input[find=name_hidden]'), item);
 	
 	/*
 	rightOptions - in_charge

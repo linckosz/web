@@ -4,6 +4,9 @@
  var burgerN = {
 	elem_dropdown: $('#-burger_dropdown').clone().prop('id',''),
 	dropdownTime: 200,
+	dropdownMax: 5,
+	dropdownWidth: 200,
+	optionHeight: 50,
 };
 
 burgerN.destroy = function(elem_dropdown){
@@ -18,7 +21,21 @@ burgerN.destroy = function(elem_dropdown){
 	 }
 }
 
+burgerN.slideDown = function(elem_dropdown){
+	var that = this;
+	elem_dropdown.velocity("slideDown",{
+		duration: that.dropdownTime,
+		complete:function(){
+			if(elem_dropdown.find('.overthrow')){
+				console.log('burgerN velocity');
+				wrapper_IScroll();
+			}
+		}
+	});
+}
+
 burgerN.regex = function(elem, item, param){
+	var that = this;
 	/*
 		param = {
 			elem_input:----,
@@ -117,9 +134,8 @@ burgerN.regex = function(elem, item, param){
 			elem_dropdown = burgerN.draw_contacts(contactsID_obj, userClick_fn).css({'top':coord.y, 'left':coord.x});
 
 			$('#app_content_dynamic_sub').append(elem_dropdown);
-			elem_dropdown.velocity("slideDown",{
-				duration: burgerN.dropdownTime,
-			});
+			that.slideDown(elem_dropdown);
+
 		}
 		else if((event.which || event.keyCode) == 13 && param.elem_input){ //if enter is pressed
 			event.preventDefault();
@@ -152,6 +168,7 @@ burgerN.regex = function(elem, item, param){
 }
 
 burgerN.draw_contacts = function(contacts,option_fn){
+	var that = this;
 	/* contacts = {
 			userID1: {checked: true/false},
 			userID2: {checked: true/false},
@@ -182,12 +199,19 @@ burgerN.draw_contacts = function(contacts,option_fn){
 		if(typeof option_fn == 'function' ){
 			elem_option_clone.on('mousedown touchdown click', option_fn);
 		}
-		elem_dropdown.append(elem_option_clone);
+		elem_dropdown.find('[find=wrapper]').append(elem_option_clone);
 	});
+
+	if(Object.keys(contacts).length > that.dropdownMax){
+		elem_dropdown.css({'height': that.optionHeight*that.dropdownMax, 'width': that.dropdownWidth});
+		elem_dropdown.find('[find=wrapper]').addClass('overthrow');
+	}
+
 	return elem_dropdown;
 }
 
 burgerN.assignTask = function(elem, item){
+	var that = this;
 	var burger_destroy = burgerN.destroy;
 	var elem_dropdown = null;
 	var dropdown_duration = burgerN.dropdownTime;
@@ -248,10 +272,8 @@ burgerN.assignTask = function(elem, item){
 			elem_dropdown
 				.css('left',left)
 				.css('top',top)
-				.css('position','absolute')
-				.velocity("slideDown", {
-					duration: dropdown_duration,
-				});				
+				.css('position','absolute');
+			that.slideDown(elem_dropdown);
 		}
 	});
 	elem.blur(function(){
