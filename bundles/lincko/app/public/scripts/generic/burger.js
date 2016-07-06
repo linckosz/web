@@ -1,6 +1,294 @@
 /*
  * the ultimate Lincko Burger
  */
+ var burgerN = {
+	elem_dropdown: $('#-burger_dropdown').clone().prop('id',''),
+	dropdownTime: 200,
+};
+
+burgerN.destroy = function(elem_dropdown){
+	var duration = burgerN.dropdownTime;
+	if(elem_dropdown){
+		elem_dropdown.velocity('slideUp',{
+			duration: duration,
+			complete: function(){
+				elem_dropdown.remove();
+			}
+		});
+	 }
+}
+
+burgerN.regex = function(elem, item, param){
+	/*
+		param = {
+			elem_input:----,
+			enter_fn:----,
+		}	
+	*/
+	if(!item){
+		item = {};
+		item['_id'] = 'new';
+	}
+	var elem_dropdown = null;
+	var burger_str = "";
+	var burger_type = null;
+	var elem_burger_tag = $('#-burger_tag').clone().prop('id','');
+	var burger_startIndex = null;
+
+	var destroy = function(){
+		console.log('burgerN.regex destroy');
+		burgerN.destroy(elem_dropdown);
+		elem_dropdown = null;
+		var burger_str = "";
+		var burger_startIndex = null;
+	}
+
+	var contactsID_obj = {};
+	var userClick_fn = function(){
+		var userid = $(this).attr('userid');
+		var str = elem.text().replace('@'+burger_str, '');
+		elem.text(str);
+		if(param.elem_input){
+			param.elem_input.val(userid);
+		}
+		else{
+			burger_contacts_sendAction(contactsID_obj, [userid], item, true);
+		}
+		destroy();
+	}
+	
+	elem.keypress(function(event){
+		var char = event.which || event.keyCode;
+		char = String.fromCharCode(char);
+		console.log('char: '+char);
+
+		if( elem_dropdown ){
+			if( char == ' ' ){
+				destroy();
+			}
+			if((event.which || event.keyCode) == 13){ //if enter is pressed
+				event.preventDefault();
+				if(elem_dropdown.children('.burger_option_users').length){
+					var caret = burger_regex_getCaretOffset(elem).caretOffset - ('@'+burger_str).length;
+					elem_dropdown.children('.burger_option_users')[0].click();
+
+					var textNode = elem[0].firstChild;
+					var range = document.createRange();
+					range.setStart(textNode, caret);
+					range.setEnd(textNode, caret);
+					var sel = window.getSelection();
+					sel.removeAllRanges();
+					sel.addRange(range);
+					
+					return false;
+				}
+			}
+			elem_dropdown.empty();
+			burger_str = elem.text().substring(burger_startIndex+1,burger_regex_getCaretOffset(elem).caretOffset)+char;
+			console.log('burger_startIndex: '+burger_startIndex);
+			console.log('burger_str: '+burger_str);
+			console.log('current caret: '+burger_regex_getCaretOffset(elem).caretOffset);	
+
+			var search_result = Lincko.storage.search('word',burger_str,'users')['users'];
+			var contactsID_obj_search = {};
+			if(typeof search_result == 'object'){
+				search_result = Object.keys(search_result);
+				$.each(contactsID_obj, function(key,val){
+					if( $.inArray(key,search_result) > -1){
+						console.log('match: '+key);
+						contactsID_obj_search[key] = contactsID_obj[key];
+					}
+				});
+			}
+
+			if( !$.isEmptyObject(contactsID_obj_search) ){
+				elem_dropdown.empty().html(burgerN.draw_contacts(contactsID_obj_search, userClick_fn).children());
+			}
+			else{
+				elem_dropdown.html('<div>no match</div>');/*toto*/
+			} 
+		}
+		else if( char == '@' ){
+			contactsID_obj = burgerN.generate_contacts(Lincko.storage.get(item['_type'], item['_id']));
+			var coord = burger_regex_getCaretOffset(elem);
+			//var coord = getSelectionCoords();
+			burger_startIndex = coord.caretOffset;
+			console.log('burger_startIndex: '+burger_startIndex);
+			elem_dropdown = burgerN.draw_contacts(contactsID_obj, userClick_fn).css({'top':coord.y, 'left':coord.x});
+
+			$('#app_content_dynamic_sub').append(elem_dropdown);
+			elem_dropdown.velocity("slideDown",{
+				duration: burgerN.dropdownTime,
+			});
+		}
+		else if((event.which || event.keyCode) == 13 && param.elem_input){ //if enter is pressed
+			event.preventDefault();
+			param.enter_fn();
+
+			/*
+			var sendAction_param = {
+				parent_id: app_content_menu.projects_id,
+				title: elem.text(),
+				comment: '',
+			};
+			var in_charge =  parseInt(param.elem_input.val(),10);
+			console.log(in_charge);
+			if(in_charge && typeof in_charge == 'number'){
+				sendAction_param['users>in_charge'] = {};
+				sendAction_param['users>in_charge'][in_charge] = true;
+				sendAction_param['users>approver'] = {};
+				sendAction_param['users>approver'][in_charge] = true;
+			}
+			console.log(sendAction_param);
+			wrapper_sendAction( sendAction_param, 'post', 'task/create');
+			*/
+		}
+		 
+		 
+	});
+	elem.focusout(function(){
+		destroy();
+	});
+}
+
+burgerN.draw_contacts = function(contacts,option_fn){
+	/* contacts = {
+			userID1: {checked: true/false},
+			userID2: {checked: true/false},
+			.
+			.
+		}
+	*/
+	var username = null;
+	var in_charge = null;
+	var picID = null;
+	var elem_dropdown = burgerN.elem_dropdown.clone();
+	var elem_option = $('#-burger_option').clone().prop('id','').addClass('burger_option_users');
+	var elem_option_clone;
+	$.each(contacts, function(userid, obj){
+		in_charge = obj.checked;
+		username = Lincko.storage.get("users", userid,"username");
+		elem_option_clone = elem_option.clone().attr('userid',userid);
+		elem_option_clone.find('[find=username]').html(username);
+		picID  = Lincko.storage.get("users", userid, 'profile_pic');
+		if(picID){
+			var thumb_url = Lincko.storage.getLinkThumbnail(picID);
+			elem_option_clone.find('[find=profile_pic]').removeClass('icon-SmallPersonaiconBlack').css('background-image','url("'+thumb_url+'")');
+		}
+		if( in_charge ){
+			elem_option_clone.addClass('burger_option_selected');
+		}
+
+		if(typeof option_fn == 'function' ){
+			elem_option_clone.on('mousedown touchdown click', option_fn);
+		}
+		elem_dropdown.append(elem_option_clone);
+	});
+	return elem_dropdown;
+}
+
+burgerN.assignTask = function(elem, item){
+	var burger_destroy = burgerN.destroy;
+	var elem_dropdown = null;
+	var dropdown_duration = burgerN.dropdownTime;
+
+	elem.click(function(event){
+		console.log(elem_dropdown);
+		elem.focus();
+		event.stopPropagation();
+		if( elem_dropdown ){
+			burger_destroy(elem_dropdown);
+			elem_dropdown = null;
+		}
+		else{
+            var contactsID_obj = burgerN.generate_contacts(item);
+			//use the submenu for mobile
+			if(responsive.test("maxMobileL")){
+				var param = {};
+				param.elem_input = elem;
+				param.type = 'tasks';//item['_type'];
+				param.item_obj = item;
+				param.contactsID = contactsID_obj;
+				submenu_Build('burger_contacts', true, null, param);
+				return false;
+			}
+
+			var userClick_fn = function(){
+				var userid = $(this).attr('userid');
+                if(elem.val() == userid){
+                    elem.val('');
+                }
+                else{
+                    elem.val(userid);
+                }
+				elem.change();
+				if(!item['_id'] || item['_id'] == 'new'){
+					return;
+				}
+				burger_contacts_sendAction(contactsID_obj, [userid], item, true);
+			}
+
+			elem_dropdown = burgerN.draw_contacts(contactsID_obj, userClick_fn);
+			elem_dropdown.appendTo('#app_application_main');
+
+			var coord = $(this).offset();
+			var coordP = $(this).position();
+			var left = coord.left;
+			if(left == 0){ 
+				left = coord.left;
+				if( responsive.test("minTablet")){
+					left -= $('#app_content_menu').outerWidth();
+					if( $('#app_application_project').outerWidth() > 0){
+						left -= $('#app_application_project').outerWidth();
+					}
+				}
+			};
+			var top = coord.top + $(this).closest('table').outerHeight(); //- $('#app_content_top').outerHeight();
+			
+			elem_dropdown
+				.css('left',left)
+				.css('top',top)
+				.css('position','absolute')
+				.velocity("slideDown", {
+					duration: dropdown_duration,
+				});				
+		}
+	});
+	elem.blur(function(){
+		burger_destroy(elem_dropdown);
+		elem_dropdown = null;
+	});
+}
+
+burgerN.generate_contacts = function(item){
+	var accessList = [];
+	if( item['_id'] == 'new' || item == 'new' || !item){
+		accessList = Lincko.storage.whoHasAccess('projects', app_content_menu.projects_id);
+	}
+	else{
+		accessList = Lincko.storage.whoHasAccess(item['_type'], item['_id']);
+	}
+	var contacts = {};
+	for (var i = 0; i < accessList.length; i++) {
+		var userid = accessList[i];
+		if( typeof item == 'object' && '_users' in item && userid in item['_users'] && item['_users'][userid]['in_charge'] ){
+			contacts[userid] = { checked: true };
+		}
+		else{
+			contacts[userid] = { checked: false };
+		}
+	}
+
+	return contacts;
+	/* contacts = {
+			userID1: {checked: true/false},
+			userID2: {checked: true/false},
+			.
+			.
+		}
+	*/
+}
+
 var burger = function(elem, burger_mode, item){
 	var elem_dropdown = $('#-burger_dropdown').clone().prop('id','burger_dropdown');
 	var burger_on = false;
