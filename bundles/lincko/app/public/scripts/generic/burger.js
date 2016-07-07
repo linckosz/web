@@ -4,7 +4,7 @@
  var burgerN = {
 	elem_dropdown: $('#-burger_dropdown').clone().prop('id',''),
 	dropdownTime: 200,
-	dropdownMax: 5,
+	dropdownCount: 5,
 	dropdownWidth: 200,
 	optionHeight: 50,
 };
@@ -23,11 +23,18 @@ burgerN.destroy = function(elem_dropdown){
 
 burgerN.slideDown = function(elem_dropdown){
 	var that = this;
+	var top = parseInt(elem_dropdown.css('top'),10);
+	if( top+that.optionHeight*elem_dropdown.find('.burger_option_users').length > $(window).height() ){
+		elem_dropdown.css('top','');
+	}
+	else{
+		elem_dropdown.css('bottom','');
+	}
+	
 	elem_dropdown.velocity("slideDown",{
 		duration: that.dropdownTime,
 		complete:function(){
 			if(elem_dropdown.find('.overthrow')){
-				console.log('burgerN velocity');
 				wrapper_IScroll();
 			}
 		}
@@ -202,8 +209,8 @@ burgerN.draw_contacts = function(contacts,option_fn){
 		elem_dropdown.find('[find=wrapper]').append(elem_option_clone);
 	});
 
-	if(Object.keys(contacts).length > that.dropdownMax){
-		elem_dropdown.css({'height': that.optionHeight*that.dropdownMax, 'width': that.dropdownWidth});
+	if(Object.keys(contacts).length > that.dropdownCount){
+		elem_dropdown.css({'height': that.optionHeight*that.dropdownCount, 'width': that.dropdownWidth});
 		elem_dropdown.find('[find=wrapper]').addClass('overthrow');
 	}
 
@@ -267,12 +274,16 @@ burgerN.assignTask = function(elem, item){
 					}
 				}
 			};
-			var top = coord.top + $(this).closest('table').outerHeight(); //- $('#app_content_top').outerHeight();
+			var table_height = $(this).closest('table').outerHeight();
+			var top = coord.top + table_height; //- $('#app_content_top').outerHeight();
+			var bottom = $(window).height() - top + table_height +3/*some padding*/;
 			
-			elem_dropdown
-				.css('left',left)
-				.css('top',top)
-				.css('position','absolute');
+			elem_dropdown.css({
+				position: 'absolute',
+				left: left,
+				top: top,
+				bottom: bottom,
+			});
 			that.slideDown(elem_dropdown);
 		}
 	});
