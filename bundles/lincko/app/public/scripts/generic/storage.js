@@ -1385,7 +1385,7 @@ Lincko.storage.getLink = function(id){
 		var uid = wrapper_localstorage.uid;
 		var puk = wrapper_get_shangzai('puk');
 		var type = "link";
-		var name = Lincko.storage.get('files', id, 'name');
+		var name = wrapper_to_url(Lincko.storage.get('files', id, 'name'));
 		var updated_at = Lincko.storage.get('files', id, 'updated_at');
 		var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':'+document.linckoBackPort+'/file';
 		return url+"/"+workid+"/"+uid+"/"+type+"/"+id+"/"+name+"?"+updated_at;
@@ -1401,7 +1401,7 @@ Lincko.storage.getDownload = function(id){
 		var uid = wrapper_localstorage.uid;
 		var puk = wrapper_get_shangzai('puk');
 		var type = "download";
-		var name = Lincko.storage.get('files', id, 'name');
+		var name = wrapper_to_url(Lincko.storage.get('files', id, 'name'));
 		var updated_at = Lincko.storage.get('files', id, 'updated_at');
 		var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':'+document.linckoBackPort+'/file';
 		return url+"/"+workid+"/"+uid+"/"+type+"/"+id+"/"+name+"?"+updated_at;
@@ -1420,7 +1420,7 @@ Lincko.storage.getLinkThumbnail = function(id){
 			var uid = wrapper_localstorage.uid;
 			var puk = wrapper_get_shangzai('puk');
 			var type = "thumbnail";
-			var name = Lincko.storage.get('files', id, 'name');
+			var name = wrapper_to_url(Lincko.storage.get('files', id, 'name'));
 			var updated_at = Lincko.storage.get('files', id, 'updated_at');
 			var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':'+document.linckoBackPort+'/file';
 			thumbnail = url+"/"+workid+"/"+uid+"/"+type+"/"+id+"/"+name+"?"+updated_at;

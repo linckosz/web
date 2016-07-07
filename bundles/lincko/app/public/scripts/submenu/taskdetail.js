@@ -927,6 +927,7 @@ Submenu.prototype.Add_taskdetail = function() {
 
 			if(that.param.type == 'files'){
 				param['name'] = $('<div>').html(submenu_taskdetail.find('[find=title_text]').html()).text();
+				/*
 				if(param['name'] != item['+name']){
 					var regex = /^(?:(.+)\.(\.+))$/;
 					var filename_regex = param['name'].match(regex);
@@ -935,6 +936,7 @@ Submenu.prototype.Add_taskdetail = function() {
 					}
 					param['name'] = param['name']+'.'+item.ori_ext;
 				}
+				*/
 			}
 			else{
 				param['title'] = $('<div>').html(submenu_taskdetail.find('[find=title_text]').html()).text();

@@ -23,6 +23,12 @@ var wrapper_to_html = function(text){
 	return text;
 };
 
+var wrapper_to_url = function(text){
+	// based on the rules here: http://www.mtu.edu/umc/services/web/cms/characters-avoid/
+	text = text.replace(/[#%&{}\/\\<>*? $!'":@+`|=_]/g,'-');
+	return text;
+}
+
 var supportsTouch = 'ontouchstart' in window || navigator.msMaxTouchPoints;
 
 String.prototype.ucfirst = function() {
