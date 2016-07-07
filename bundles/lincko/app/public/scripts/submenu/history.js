@@ -152,6 +152,12 @@ var chatFeed = (function() {
 	}
 
 	BaseHistoryCls.prototype.renderChatTemplate = function(index) {
+
+		if(this.item.recalled_by){ //if comment was recalled
+			var Elem = $('#-models_history_comment_recalled').clone().prop('id','');
+			return Elem;
+		}
+
 		var target;
 		var action;
 		var progress;
