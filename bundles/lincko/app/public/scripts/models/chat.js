@@ -97,7 +97,7 @@ function app_models_chat_bubble_actionMenu(){
 			if($('#app_content_submenu_preview').has(that).length){
 				preview = true;
 			}
-			submenu_Build("taskdetail", true, false, {'id':'new', 'title': textToAction, projID: projectID, 'type':'tasks'}, preview);
+			submenu_Build("taskdetail", submenu_Getnext(preview), false, {'id':'new', 'title': textToAction, projID: projectID, 'type':'tasks'}, preview);
 			that.blur();
 		});
 		/*------------recall chat action----------------*/

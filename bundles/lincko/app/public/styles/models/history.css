@@ -50,6 +50,17 @@
 	cursor: default;
 }
 
+.models_history_comment_recalled {
+    text-align: center;
+    padding-top: 8px;
+    padding-bottom: 5px;
+    font-weight: 200;
+    color: #333333;
+}
+.models_history_comment_recalled [find=timestamp] {
+    font-weight: 400;
+}
+
 .uploading_file .models_history_content {
 	cursor: default;
 }

@@ -155,6 +155,15 @@ var chatFeed = (function() {
 
 		if(this.item.recalled_by){ //if comment was recalled
 			var Elem = $('#-models_history_comment_recalled').clone().prop('id','');
+			if(this.item["timestamp"]){
+				var timestamp = this.item["timestamp"];
+			} else if(this.item["created_at"]){
+				var timestamp = this.item["created_at"];
+			}
+			timestamp = new wrapper_date(timestamp);
+			Elem.find("[find=timestamp]").html(timestamp.display('time_short'));
+			var uname = wrapper_to_html(Lincko.storage.get('users', this.item.created_by)['-username']);
+			Elem.find("[find=msg]").text(Lincko.Translation.get('app', 3101, 'html', {username: uname }));
 			return Elem;
 		}
 
