@@ -12,6 +12,7 @@ function app_models_chat_bubble_actionMenu(){
 		}
 
 		var commentID = elem_historyWrapper.prop('id').split('_').slice(-1)[0];
+		var item_comment = Lincko.storage.get('comments', commentID);
 		var projectID = Lincko.storage.get('comments', commentID, '_parent');
 		if(projectID[0] == 'projects'){
 			projectID = projectID[1];
@@ -27,7 +28,6 @@ function app_models_chat_bubble_actionMenu(){
 		}
 
 		elem_actionMenu = $('#-app_models_chat_bubble_actionMenu').clone().prop('id','');
-		var item_comment = Lincko.storage.get('comments', commentID);
 		if(item_comment.created_by != wrapper_localstorage.uid || $.now()/1000 - item_comment.created_at > 60*2/*2 minutes*/){
 			elem_actionMenu.find('[find=recall_btn]').addClass('visibility_hidden');
 		}
@@ -114,6 +114,8 @@ function app_models_chat_bubble_actionMenu(){
 				'post',
 				'comment/recall'
 			);
+			Lincko.storage.data.comments[commentID].recalled_by = wrapper_localstorage.uid;
+			app_application_lincko.prepare('chats_'+item_comment['_parent'][1], true);
 			that.blur();
 		});
 

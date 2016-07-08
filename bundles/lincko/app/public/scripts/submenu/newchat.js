@@ -108,9 +108,8 @@ Submenu.prototype.Add_ChatContents = function() {
 					latest_comment = items[i]["created_at"];
 				}
 			}
-
+			console.log('chat sync '+id);
 			chatFeed.appendItem(type, items, position, true);
-			//recall logic
 			chatFeed.updateRecalled(id,position);
 			chatFeed.updateTempComments(id,position);
 
