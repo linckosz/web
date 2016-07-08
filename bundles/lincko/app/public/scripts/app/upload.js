@@ -116,12 +116,15 @@ function app_upload_set_launcher(parent_type, parent_id, submenu, start, temp_id
 	}
 	if(typeof submenu == 'undefined'){ submenu = true; }
 	if(typeof start == 'undefined'){ start = false; }
-	if(typeof temp_id != 'string'){ temp_id = md5(Math.random()); }
+	if(typeof temp_id != 'string'){
+		app_upload_auto_launcher.temp_id = md5(Math.random()); //can only be used for single selection
+	} else {
+		app_upload_auto_launcher.temp_id = false;
+	}
 	app_upload_auto_launcher.parent_type = parent_type;
 	app_upload_auto_launcher.parent_id = parent_id;
 	app_upload_auto_launcher.submenu = submenu;
 	app_upload_auto_launcher.start = start;
-	app_upload_auto_launcher.temp_id = temp_id;
 }
 
 function app_upload_open_files(parent_type, parent_id, submenu, start){
@@ -152,11 +155,13 @@ var app_upload_auto_launcher = {
 	parent_id: parseInt(Lincko.storage.getMyPlaceholder()['_id'], 10),
 	submenu: true,
 	start: false,
+	temp_id: false,
 	init: function(){
 		this.parent_type = 'projects';
 		this.parent_id = parseInt(Lincko.storage.getMyPlaceholder()['_id'], 10);
 		this.submenu = true;
 		this.start = false;
+		this.temp_id = false;
 	},
 };
 
@@ -228,8 +233,13 @@ $(function () {
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_size = data.files[0].size;
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_parent_id = app_upload_auto_launcher.parent_id;
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_parent_type = app_upload_auto_launcher.parent_type;
-			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_temp_id = app_upload_auto_launcher.temp_id;
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_start = app_upload_auto_launcher.start;
+
+			if(app_upload_auto_launcher.temp_id){
+				app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_temp_id = app_upload_auto_launcher.temp_id;
+			} else {
+				app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_temp_id = md5(Math.random());
+			}
 
 			//Reinitialise display information
 			that.lincko_bitrate.length = [];

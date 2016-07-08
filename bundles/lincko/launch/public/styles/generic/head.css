@@ -133,6 +133,23 @@
 	border-color: currentColor;
 }
 
+/*
+ * BLOG
+ */
+
+#head_blog {
+	cursor: default;
+}
+
+#head_blog > span {
+	border-bottom: 2px solid transparent;
+	padding-top: 2px;
+	cursor: pointer; cursor: hand;
+}
+#head_blog > span:hover {
+	border-color: currentColor;
+}
+
 
 #head_language_image {
 	z-index: -1;
@@ -176,6 +193,12 @@
 		cursor: pointer; cursor: hand;
 		color: transparent !important;
 		border-color: transparent !important;
+	}
+	.table_cell_center {
+		padding: 0 8px 0 8px;
+	}
+	.head_lincko_div {
+		position: absolute;
 	}
 }
 

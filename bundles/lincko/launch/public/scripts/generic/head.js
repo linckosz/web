@@ -22,3 +22,8 @@ $('#head_joinus').click(function(){
 $('#head_account').click(function(){
 	window.location.href = head_link['root'];
 });
+
+$('#head_blog').click(function(){
+	window.location.href = head_link['blog'];
+});
+

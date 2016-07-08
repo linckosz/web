@@ -21,7 +21,7 @@ var wrapper_to_html = function(text){
 	text = php_htmlentities(text, true); //Need to enable double encoding
 	text = php_nl2br(text);
 	return text;
-}
+};
 
 var supportsTouch = 'ontouchstart' in window || navigator.msMaxTouchPoints;
 
