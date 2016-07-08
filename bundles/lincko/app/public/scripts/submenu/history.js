@@ -151,7 +151,7 @@ var chatFeed = (function() {
 		}
 	}
 	
-	BaseHistoryCls.prototype.renderChatTemplate = function(index, recallReplace) {
+	BaseHistoryCls.prototype.renderChatTemplate = function(index, replace) {
 		var target;
 		var action;
 		var progress;
@@ -166,7 +166,7 @@ var chatFeed = (function() {
 		}
 
 		//Do not duplicate chat messages (unless it is trying to replace the existing element e.g. during updateRecall)
-		if($("#"+Elem_id).length>0 && !recallReplace){
+		if($("#"+Elem_id).length>0 && !replace){
 			return false;
 		}
 
@@ -439,10 +439,28 @@ var chatFeed = (function() {
 			});
 	}
 
+	function updateTempComments(chatGroup_id, position){
+		var elem_comments = position.find('[comment_id]');
+		$.each(elem_comments, function(i,val){
+			var elem = $(val);
+			var comment_id = elem.attr('comment_id');
+			var item = Lincko.storage.get('comments', comment_id);
+			if(!item){
+				var item_real = Lincko.storage.list('comments',1,{temp_id:comment_id},'chats',chatGroup_id,false)[0];
+				if(!item_real) return;
+				var replaceWith = (new BaseHistoryCls(item_real));
+				replaceWith.getTemplate("chats");
+				replaceWith = replaceWith.renderChatTemplate(null,true);
+				elem.replaceWith(replaceWith);
+			}
+		});
+	}
+
 	return {
 		'feedHistory': app_layers_history_launchPage,
 		'feedPaging': getHistoryPaging,
 		'appendItem': format_items,
 		'updateRecalled': updateRecalled,
+		'updateTempComments': updateTempComments,
 	}
 })();

@@ -112,6 +112,7 @@ Submenu.prototype.Add_ChatContents = function() {
 			chatFeed.appendItem(type, items, position, true);
 			//recall logic
 			chatFeed.updateRecalled(id,position);
+			chatFeed.updateTempComments(id,position);
 
 
 			var overthrow_id = "overthrow_"+this.action_param[0];

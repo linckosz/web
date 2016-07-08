@@ -107,7 +107,6 @@ function app_models_chat_bubble_actionMenu(){
 		/*------------recall chat action----------------*/
 		var elem_recallBtn = elem_actionMenu.find('[find=recall_btn]');
 		elem_recallBtn.on("mousedown touchstart", function(){
-			console.log(commentID);
 			wrapper_sendAction(
 				{
 					"id": commentID,
