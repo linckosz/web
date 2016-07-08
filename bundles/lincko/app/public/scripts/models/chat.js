@@ -27,6 +27,10 @@ function app_models_chat_bubble_actionMenu(){
 		}
 
 		elem_actionMenu = $('#-app_models_chat_bubble_actionMenu').clone().prop('id','');
+		var item_comment = Lincko.storage.get('comments', commentID);
+		if(item_comment.created_by != wrapper_localstorage.uid || $.now()/1000 - item_comment.created_at > 60*2/*2 minutes*/){
+			elem_actionMenu.find('[find=recall_btn]').addClass('visibility_hidden');
+		}
 		that.prepend(elem_actionMenu);
 
 		var that_clone = that.clone();
