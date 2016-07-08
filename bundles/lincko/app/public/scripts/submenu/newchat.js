@@ -110,6 +110,10 @@ Submenu.prototype.Add_ChatContents = function() {
 			}
 
 			chatFeed.appendItem(type, items, position, true);
+			//recall logic
+			chatFeed.updateRecalled(id,position);
+
+
 			var overthrow_id = "overthrow_"+this.action_param[0];
 			var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
 			if(myIScrollList[overthrow_id] && last && last[0]){

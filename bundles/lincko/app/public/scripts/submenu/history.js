@@ -150,11 +150,30 @@ var chatFeed = (function() {
 			return null;
 		}
 	}
+	
+	BaseHistoryCls.prototype.renderChatTemplate = function(index, recallReplace) {
+		var target;
+		var action;
+		var progress;
+		if(this.item.recalled_by){ //if comment was recalled
+			this.templateType = '-models_history_comment_recalled';
+		}
+		var Elem = $("#" + this.templateType).clone();
+		if (this.item._type == "uploading_file") {
+			var Elem_id = chatFeed.subm.id+"_uploading_file_"+this.item.index;
+		} else {
+			var Elem_id = chatFeed.subm.id+"_"+this.item._type+'_models_thistory_' + this.item._id;
+		}
 
-	BaseHistoryCls.prototype.renderChatTemplate = function(index) {
+		//Do not duplicate chat messages (unless it is trying to replace the existing element e.g. during updateRecall)
+		if($("#"+Elem_id).length>0 && !recallReplace){
+			return false;
+		}
+
+		Elem.prop('id', Elem_id);
+		Elem.attr('comment_id',this.item._id);
 
 		if(this.item.recalled_by){ //if comment was recalled
-			var Elem = $('#-models_history_comment_recalled').clone().prop('id','');
 			if(this.item["timestamp"]){
 				var timestamp = this.item["timestamp"];
 			} else if(this.item["created_at"]){
@@ -164,58 +183,41 @@ var chatFeed = (function() {
 			Elem.find("[find=timestamp]").html(timestamp.display('time_short'));
 			var uname = wrapper_to_html(Lincko.storage.get('users', this.item.created_by)['-username']);
 			Elem.find("[find=msg]").text(Lincko.Translation.get('app', 3101, 'html', {username: uname }));
-			return Elem;
 		}
+		else{
+			Elem.addClass(this.decoratorClass);
+			Elem.addClass(this.item._type);
+			Elem.attr('index', index);
 
-		var target;
-		var action;
-		var progress;
-		var Elem = $("#" + this.templateType).clone();
-		if (this.item._type == "uploading_file") {
-			var Elem_id = chatFeed.subm.id+"_uploading_file_"+this.item.index;
-		} else {
-			var Elem_id = chatFeed.subm.id+"_"+this.item._type+'_models_thistory_' + this.item._id;
+			var img = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", this.item.created_by, 'profile_pic'));
+			if(!img){
+				img = app_application_icon_single_user.src;
+			}
+
+			Elem.find("[find=icon]").click(this.item.created_by, function(event){
+				submenu_Build("personal_info", chatFeed.subm.layer+1, true, event.data, chatFeed.subm.preview);
+			});
+
+			Elem.find("[find=icon]").attr('src', img); //toto => this slow down the paint of submenu, make the page deformed because of image size, and 
+			var uname = Lincko.storage.get('users', this.item.created_by)['-username'];
+			Elem.find("[find=author]").text(wrapper_to_html(uname));
+			Elem.find("[find=content]").html(wrapper_to_html(this.item['+comment']));
+			if(this.item["timestamp"]){
+				var timestamp = this.item["timestamp"];
+			} else if(this.item["created_at"]){
+				var timestamp = this.item["created_at"];
+			}
+			var date = new wrapper_date(timestamp);
+			Elem.find(".time", "[find=timestamp]").html(date.display('time_short'));
+			Elem.find(".date", "[find=timestamp]").html(date.display('date_short'));
+			Elem.find("[find=target]").html(wrapper_to_html(this.item.name));
+
+			Elem.find("[find=progress_bar]").width("0%"); 
+			Elem.find("[find=progress_text]").html("0/0");
+			Elem.find(".uploading_action").html(Lincko.Translation.get('app', 7, 'html'));
+
+			Elem.attr('category', this.item._type);
 		}
-
-		//Do not duplicate chat messages
-		if($("#"+Elem_id).length>0){
-			return false;
-		}
-
-		Elem.prop('id', Elem_id);
-
-		Elem.addClass(this.decoratorClass);
-		Elem.addClass(this.item._type);
-		Elem.attr('index', index);
-
-		var img = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", this.item.created_by, 'profile_pic'));
-		if(!img){
-			img = app_application_icon_single_user.src;
-		}
-
-		Elem.find("[find=icon]").click(this.item.created_by, function(event){
-			submenu_Build("personal_info", chatFeed.subm.layer+1, true, event.data, chatFeed.subm.preview);
-		});
-
-		Elem.find("[find=icon]").attr('src', img); //toto => this slow down the paint of submenu, make the page deformed because of image size, and 
-		var uname = Lincko.storage.get('users', this.item.created_by)['-username'];
-		Elem.find("[find=author]").text(wrapper_to_html(uname));
-		Elem.find("[find=content]").html(wrapper_to_html(this.item['+comment']));
-		if(this.item["timestamp"]){
-			var timestamp = this.item["timestamp"];
-		} else if(this.item["created_at"]){
-			var timestamp = this.item["created_at"];
-		}
-		var date = new wrapper_date(timestamp);
-		Elem.find(".time", "[find=timestamp]").html(date.display('time_short'));
-		Elem.find(".date", "[find=timestamp]").html(date.display('date_short'));
-		Elem.find("[find=target]").html(wrapper_to_html(this.item.name));
-
-		Elem.find("[find=progress_bar]").width("0%"); 
-		Elem.find("[find=progress_text]").html("0/0");
-		Elem.find(".uploading_action").html(Lincko.Translation.get('app', 7, 'html'));
-
-		Elem.attr('category', this.item._type);
 		return Elem;
 	};
 
@@ -425,9 +427,22 @@ var chatFeed = (function() {
 
 	}
 
+	function updateRecalled(chatGroup_id, position){
+		var items_recalled = Lincko.storage.list('comments',null,{recalled_by:['>',null]},'chats',chatGroup_id,false);
+			$.each(items_recalled, function(i, val){
+				var item = val;
+				var toReplace = position.find('[comment_id='+item._id+']');
+				if(toReplace && !toReplace.hasClass('models_history_comment_recalled')){
+					var replaceWith = (new BaseHistoryCls(item)).renderChatTemplate(null,true);
+					toReplace.replaceWith(replaceWith);
+				}
+			});
+	}
+
 	return {
 		'feedHistory': app_layers_history_launchPage,
 		'feedPaging': getHistoryPaging,
 		'appendItem': format_items,
+		'updateRecalled': updateRecalled,
 	}
 })();
