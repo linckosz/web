@@ -1,6 +1,6 @@
 .app_models_chat_bubble_actionMenu{
     position: absolute;
-    top: -20px;
+    top: -26px;
     left: 0px;
     right: 0px;
     text-align: center;
@@ -10,13 +10,13 @@
     background-color: rgba(251,160,38,0.75);
     color: #FFFFFF;
     border-radius: 3px;
-    line-height: 26px;
-    font-size: 12px;
+    line-height: 30px;
+    font-size: 18px;
     display: inline-block;
     padding: 0px 7px;
     vertical-align: bottom;
 }
-.app_models_chat_actionBtn [find=task_btn]{
+.app_models_chat_actionBtn[find=task_btn]{
     font-size: 20px;
 }
 

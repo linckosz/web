@@ -155,7 +155,7 @@ function app_models_chat_bubble_actionMenu(){
 
 	$("body").on("blur", '.models_history_content', function() {
 		var that = $(this);
-		that.find('[find=actionMenu]').remove();
+		//that.find('[find=actionMenu]').remove();
 	});
 
 
