@@ -1,10 +1,13 @@
 .app_models_chat_bubble_actionMenu{
     position: absolute;
     top: -26px;
-    left: 0px;
+    /*left: 0px;*/
     right: 0px;
     text-align: center;
     white-space: nowrap;
+}
+.app_models_chat_bubble_actionMenu_leftZero{
+    left: 0px;
 }
 .app_models_chat_actionBtn {
     background-color: rgba(251,160,38,0.75);

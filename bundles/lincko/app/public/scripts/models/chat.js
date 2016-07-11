@@ -28,10 +28,14 @@ function app_models_chat_bubble_actionMenu(){
 		}
 
 		elem_actionMenu = $('#-app_models_chat_bubble_actionMenu').clone().prop('id','');
-		if(item_comment.created_by != wrapper_localstorage.uid || $.now()/1000 - item_comment.created_at > 60*2/*2 minutes*/){
+		if(item_comment && (item_comment.created_by != wrapper_localstorage.uid || $.now()/1000 - item_comment.created_at > 60*2/*2 minutes*/)){
 			elem_actionMenu.find('[find=recall_btn]').addClass('visibility_hidden');
 		}
 		that.prepend(elem_actionMenu);
+		//center if chat bubble is long enough, align to right side of chat bubble if chat bubble is too small
+		if(elem_actionMenu.outerWidth() < that.outerWidth()){
+			elem_actionMenu.addClass('app_models_chat_bubble_actionMenu_leftZero');
+		}
 
 		var that_clone = that.clone();
 		that_clone.find('[find=translated_text]').remove();
@@ -107,16 +111,21 @@ function app_models_chat_bubble_actionMenu(){
 		/*------------recall chat action----------------*/
 		var elem_recallBtn = elem_actionMenu.find('[find=recall_btn]');
 		elem_recallBtn.on("mousedown touchstart", function(){
-			wrapper_sendAction(
-				{
-					"id": commentID,
-				},
-				'post',
-				'comment/recall'
-			);
-			Lincko.storage.data.comments[commentID].recalled_by = wrapper_localstorage.uid;
-			app_application_lincko.prepare('chats_'+item_comment['_parent'][1], true);
-			that.blur();
+			if(!item_comment && !app_moels_chat_recallQueue[commentID]){
+				app_moels_chat_recallQueue[commentID] = true;
+			}
+			else{
+				wrapper_sendAction(
+					{
+						"id": commentID,
+					},
+					'post',
+					'comment/recall'
+				);
+				Lincko.storage.data.comments[commentID].recalled_by = wrapper_localstorage.uid;
+				app_application_lincko.prepare('chats_'+item_comment['_parent'][1], true);
+				that.blur();
+			}
 		});
 
 	}//end of timeout_fn
@@ -155,9 +164,22 @@ function app_models_chat_bubble_actionMenu(){
 
 	$("body").on("blur", '.models_history_content', function() {
 		var that = $(this);
-		//that.find('[find=actionMenu]').remove();
+		that.find('[find=actionMenu]').remove();
 	});
 
 
 }
 app_models_chat_bubble_actionMenu();
+
+
+app_moels_chat_recallQueue = {
+	sendAction: function(commentID){
+		wrapper_sendAction(
+				{
+					"id": commentID,
+				},
+				'post',
+				'comment/recall'
+			);
+	}
+}

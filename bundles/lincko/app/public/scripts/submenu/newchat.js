@@ -108,7 +108,6 @@ Submenu.prototype.Add_ChatContents = function() {
 					latest_comment = items[i]["created_at"];
 				}
 			}
-			console.log('chat sync '+id);
 			chatFeed.appendItem(type, items, position, true);
 			chatFeed.updateRecalled(id,position);
 			chatFeed.updateTempComments(id,position);
@@ -150,6 +149,7 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 		var content = textarea.text();
 		var type = that.param.type == 'history' ? "projects":'chats';
 		var sub_that = that;
+		var tmpID = [];
 
 		textarea.text('');
 
@@ -160,7 +160,7 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 			},
 			'post',
 			'comment/create',
-			function(msg, error) {
+			function(msg, data_error, data_status, data_msg) {
 				app_application_lincko.prepare(["chat_contents_wrapper", type+"_" + sub_that.param.id]);
 				app_application_lincko.prepare("submenu_show");
 				var overthrow_id = "overthrow_"+sub_that.id;
@@ -171,9 +171,17 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 					if(!supportsTouch || responsive.test("minDesktop")){ scroll_time = 200; }
 					myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
 				}
+
+				//recall comment if in queue
+				$.each(data_msg.partial[wrapper_localstorage.uid].comments, function(id, item){
+					if(app_moels_chat_recallQueue[item.temp_id]){
+						app_moels_chat_recallQueue.sendAction(id);
+					}
+				});
 			},
 			null,
 			function(jqXHR, settings, temp_id) {
+				tmpID.push(temp_id);
 				if($.trim(content)==''){ return false; }
 				var position = $("[find='submenu_wrapper_content']", submenu_wrapper);	
 				//Display a temp comment				
@@ -203,6 +211,12 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 				} else {
 					textarea.blur();
 				}
+			},
+			function(){
+				$.each(tmpID,function(i,val){
+					delete app_moels_chat_recallQueue[val];
+				});
+				tmpID = [];
 			}
 		);
 
