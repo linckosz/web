@@ -1376,6 +1376,50 @@ skylist.prototype.addFile = function(item){
 	*/
 	var elem_title = Elem.find('[find=title]');
 	elem_title.html(item['+name']);
+	
+	var contenteditable = false;
+	if( typeof item == 'object' && '_perm' in item && wrapper_localstorage.uid in item['_perm'] && item['_perm'][wrapper_localstorage.uid][0] > 1 ){ //RCU and beyond
+		contenteditable = true; 
+	}
+	if(contenteditable){
+		elem_title.on('mousedown touchstart', function(event){ 
+			if( responsive.test("maxMobileL") ){ return true; }
+			that.editing_target = $(this);
+			clearTimeout(that.editing_timeout);
+			that.editing_timeout = setTimeout(function(){
+				that.editing_target.attr('contenteditable',contenteditable);
+				that.editing_target.focus();
+			},1000);
+		});
+		elem_title.on('mouseup touchend', function(event){
+			clearTimeout(that.editing_timeout);
+		});
+		elem_title.keydown(function(event){
+			if(event.keyCode == 13){
+				event.preventDefault();
+				$(this).focusout();
+				$(this).blur();
+			}
+		});
+		elem_title.blur(function(){
+			that.editing_target.attr('contenteditable',false);
+			var new_text = $(this).html();
+			if(new_text != item['+name']){
+				wrapper_sendAction({
+				id: item['_id'],
+				name: new_text,
+				}, 'post', 'file/update', 
+				function(msg, data_error, data_status, data_msg){ 
+					if(data_error){
+						app_application_lincko.prepare(item['_type']+'_'+item['_id']);
+					}
+				}, function(){ app_application_lincko.prepare(item['_type']+'_'+item['_id']); });
+			}
+		});
+	}
+
+
+
 
 	/*
 	 file description and preview image
