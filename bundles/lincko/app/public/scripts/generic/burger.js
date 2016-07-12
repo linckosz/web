@@ -204,7 +204,7 @@ burgerN.draw_contacts = function(contacts,option_fn){
 		}
 
 		if(typeof option_fn == 'function' ){
-			elem_option_clone.on('mousedown touchdown click', option_fn);
+			elem_option_clone.on('mousedown', option_fn);
 		}
 		elem_dropdown.find('[find=wrapper]').append(elem_option_clone);
 	});
@@ -224,7 +224,6 @@ burgerN.assignTask = function(elem, item){
 	var dropdown_duration = burgerN.dropdownTime;
 
 	elem.click(function(event){
-		console.log(elem_dropdown);
 		elem.focus();
 		event.stopPropagation();
 		if( elem_dropdown ){
@@ -245,7 +244,7 @@ burgerN.assignTask = function(elem, item){
 			}
 
 			var userClick_fn = function(){
-				var userid = $(this).attr('userid');
+				var userid = $(this).attr('userid'); 
                 if(elem.val() == userid){
                     elem.val('');
                 }
