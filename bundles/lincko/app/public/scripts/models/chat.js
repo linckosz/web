@@ -124,7 +124,7 @@ function app_models_chat_bubble_actionMenu(){
 					'comment/recall'
 				);
 				Lincko.storage.data.comments[commentID].recalled_by = wrapper_localstorage.uid;
-				app_application_lincko.prepare('chats_'+item_comment['_parent'][1], true);
+				app_application_lincko.prepare(item_comment['_parent'][0]+'_'+item_comment['_parent'][1], true);
 				that.blur();
 			}
 		});

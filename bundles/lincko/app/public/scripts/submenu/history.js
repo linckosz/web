@@ -155,9 +155,7 @@ var chatFeed = (function() {
 		var target;
 		var action;
 		var progress;
-		if(this.item.recalled_by){ //if comment was recalled
-			this.templateType = '-models_history_comment_recalled';
-		}
+
 		var Elem = $("#" + this.templateType).clone();
 		if (this.item._type == "uploading_file") {
 			var Elem_id = chatFeed.subm.id+"_uploading_file_"+this.item.index;
@@ -225,6 +223,9 @@ var chatFeed = (function() {
 		var target;
 		var action;
 		var thumbnail;
+		if(this.item.att == 'recalled_by'){ //if comment was recalled
+			this.templateType = '-models_history_comment_recalled';
+		}
 		var Elem = $("#" + this.templateType).clone();
 		var Elem_id = chatFeed.subm.id+"_"+this.item.type+'_models_thistory_' + this.item.id;
 
@@ -235,6 +236,31 @@ var chatFeed = (function() {
 
 		Elem.prop('id', Elem_id);
 		Elem.attr('index', index);
+		Elem.attr('comment_id',this.item._id);
+
+		if (this.item.type === "comments") {
+			var root = Lincko.storage.getCommentRoot(this.item.id);
+			target = root['+title'];
+			var target_type = root['_type'];
+			if (root._type == 'chats'){
+				return null;
+			}
+			else if(this.item.att = 'recalled_by'){ //if comment was recalled
+				 console.log(this.item);
+				if(this.item["timestamp"]){
+					var timestamp = this.item["timestamp"];
+				} else if(this.item["created_at"]){
+					var timestamp = this.item["created_at"];
+				}
+				timestamp = new wrapper_date(timestamp);
+				Elem.find("[find=timestamp]").html(timestamp.display('time_short'));
+				var uname = wrapper_to_html(Lincko.storage.get('users', this.item.by)['-username']);
+				Elem.find("[find=msg]").text(Lincko.Translation.get('app', 3101, 'html', {username: uname }));
+
+				return Elem;
+			}
+		}
+
 		Elem.addClass(this.decoratorClass);
 		Elem.addClass(this.item.type);
 		var history = Lincko.storage.getHistoryInfo(this.item);
@@ -309,7 +335,12 @@ var chatFeed = (function() {
 			this.decoratorClass = wrapper_localstorage.uid === parseInt(this.item.created_by, 10) ? "models_history_self" : "models_history_others";
 			switch(this.item._type) {
 				case "comments":
-					this.templateType = "-models_history_comment_short";
+					if(this.item.recalled_by){
+						this.templateType = '-models_history_comment_recalled';
+					}
+					else{
+						this.templateType = "-models_history_comment_short";
+					}
 					break;
 				case "uploading_files":
 					this.templateType = "-models_history_uploading_files";
@@ -427,13 +458,16 @@ var chatFeed = (function() {
 
 	}
 
-	function updateRecalled(chatGroup_id, position){
-		var items_recalled = Lincko.storage.list('comments',null,{recalled_by:['>',null]},'chats',chatGroup_id,false);
+	function updateRecalled(parentType, parentID, position){
+		var items_recalled = Lincko.storage.list('comments', null, {recalled_by:['>',null]}, parentType, parentID, false);
 			$.each(items_recalled, function(i, val){
 				var item = val;
 				var toReplace = position.find('[comment_id='+item._id+']');
 				if(toReplace && !toReplace.hasClass('models_history_comment_recalled')){
-					var replaceWith = (new BaseHistoryCls(item)).renderChatTemplate(null,true);
+					var replaceWith = new BaseHistoryCls(item);
+					if(parentType == 'projects') replaceWith.getTemplate('history');
+					else replaceWith.getTemplate();
+					replaceWith = replaceWith.renderChatTemplate(null,true);
 					toReplace.replaceWith(replaceWith);
 				}
 			});

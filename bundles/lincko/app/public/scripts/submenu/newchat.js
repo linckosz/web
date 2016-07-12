@@ -82,6 +82,9 @@ Submenu.prototype.Add_ChatContents = function() {
 			}
 
 			chatFeed.appendItem("history", items, position, true);
+			chatFeed.updateRecalled('projects', id, position);
+
+
 			var overthrow_id = "overthrow_"+this.action_param[0];
 			var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
 			if(myIScrollList[overthrow_id] && last && last[0]){
@@ -109,7 +112,7 @@ Submenu.prototype.Add_ChatContents = function() {
 				}
 			}
 			chatFeed.appendItem(type, items, position, true);
-			chatFeed.updateRecalled(id,position);
+			chatFeed.updateRecalled('chats', id, position);
 			chatFeed.updateTempComments(id,position);
 
 
