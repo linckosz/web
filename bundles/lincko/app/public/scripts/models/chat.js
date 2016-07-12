@@ -132,9 +132,9 @@ function app_models_chat_bubble_actionMenu(){
 	}//end of timeout_fn
 
 
+	$('.models_history_content [contenteditable]').prop('contenteditable','false').prop('tabindex','1');
 	if(supportsTouch){
 		$('.models_history_content .selectable').removeClass('selectable').addClass('unselectable');
-		$('.models_history_content [contenteditable]').prop('contenteditable','false').prop('tabindex','1');
 		//$('.models_history_content').prop('tabindex','1');
 
 
