@@ -468,8 +468,6 @@ var chatFeed = (function() {
 				var item = val;
 				var toReplace = position.find('[comment_id='+item._id+']');
 				if(toReplace && !toReplace.hasClass('models_history_comment_recalled')){
-					console.log('updateRecalled');
-					console.log(toReplace);
 					var replaceWith = new BaseHistoryCls(item);
 					replaceWith.getTemplate();
 					replaceWith = replaceWith.renderChatTemplate(null,true);
