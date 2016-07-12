@@ -243,8 +243,8 @@ var mainMenu = (function() {
 				continue;
 			}
 			//var e1 = Lincko.storage.hist('recent', project_list[p]._id, 1)[0];
-			var e1 = Lincko.storage.hist(null, 1, null, 'projects', project_list[p]._id, true)[0];
-			var e2 = Lincko.storage.list('comments', 1, null, 'projects', project_list[p]._id, false)[0];
+			var e1 = Lincko.storage.hist(null, 1, {cod:['!=', 203]}, 'projects', project_list[p]._id, true)[0];
+			var e2 = Lincko.storage.list('comments', 1, {recalled_by: ['<',1]}, 'projects', project_list[p]._id, false)[0];
 			if (e1) {
 				var timestamp = e1.timestamp;
 				var txt = Lincko.storage.getHistoryInfo(e1).title;
@@ -273,7 +273,7 @@ var mainMenu = (function() {
 		//get the most recent comment for each project
 		for (var c in chat_list) {
 			var timestamp = chat_list[c].updated_at;
-			var comment = Lincko.storage.list('comments', 1, null, 'chats', chat_list[c]._id);
+			var comment = Lincko.storage.list('comments', 1, {recalled_by: null}, 'chats', chat_list[c]._id);
 			if(comment.length>0){
 				merge_list.push({
 					'type': 'chats',
