@@ -33,7 +33,8 @@ function app_models_chat_bubble_actionMenu(){
 		}
 		that.prepend(elem_actionMenu);
 		//center if chat bubble is long enough, align to right side of chat bubble if chat bubble is too small
-		if(elem_actionMenu.outerWidth() < that.outerWidth()){
+		//if comment is not your comment (e.g. on the left side), always center/align to left
+		if(elem_actionMenu.outerWidth() < that.outerWidth() || (item_comment && item_comment.created_by != wrapper_localstorage.uid) ){
 			elem_actionMenu.addClass('app_models_chat_bubble_actionMenu_leftZero');
 		}
 
