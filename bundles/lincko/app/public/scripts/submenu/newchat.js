@@ -83,6 +83,7 @@ Submenu.prototype.Add_ChatContents = function() {
 
 			chatFeed.appendItem("history", items, position, true);
 			chatFeed.updateRecalled('projects', id, position);
+			chatFeed.updateTempComments('projects',id,position);
 
 
 			var overthrow_id = "overthrow_"+this.action_param[0];
@@ -113,7 +114,7 @@ Submenu.prototype.Add_ChatContents = function() {
 			}
 			chatFeed.appendItem(type, items, position, true);
 			chatFeed.updateRecalled('chats', id, position);
-			chatFeed.updateTempComments(id,position);
+			chatFeed.updateTempComments('chats',id,position);
 
 
 			var overthrow_id = "overthrow_"+this.action_param[0];
