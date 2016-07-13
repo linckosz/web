@@ -1,17 +1,18 @@
 var notifier = (
 	function() {
 		function getChatNotification(id) {
-			var cnt = Lincko.storage.list('comments',-1, {"new": true}, 'chats', id, false).length;
+			var cnt = Lincko.storage.list(null,-1, {"new": true}, 'chats', id, false).length;
 			return cnt;
 		}
 
 		function clearChatNotification(id) {
-			var comments = Lincko.storage.list('comments', -1, {'new': true}, 'chats', id, false); //toto => clearing so many at a time on backend can crash the SQL query
-			if(comments.length>0){
-				var tmp = {};
-				for(var i in comments) {
-					tmp["comments_" + comments[i]._id] = true;
-				}
+			var notifications = Lincko.storage.list(null, -1, {'new': true}, 'chats', id, false); //toto => clearing so many at a time on backend can crash the SQL 
+			if(notifications.length>0)
+			{
+				for(var i in notifications) {
+					var tmp = {};
+					tmp[notifications[i]["_type"]+"_" + notifications[i]._id] = true;
+				}			
 				wrapper_sendAction(tmp,'post','data/viewed', function() {
 					app_application_lincko.prepare("chats_"+id); //toto => sync loop
 				});

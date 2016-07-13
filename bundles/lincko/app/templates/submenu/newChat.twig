@@ -1,9 +1,18 @@
+
 <div id="-submenu_app_chat_bottom" class="chat_bottom">
 	<div class="submenu_app_chat_v_pos">
 		<div class="icons">
-			<span class="emoji fa fa-2x fa-smile-o"></span>
-			<span class="attachment icon-Add"></span>
-			<span class="send fa fa-send-o"></span>
+			<div class="submenu_app_chat_button_group">
+				<div class="emoji fa fa-2x fa-smile-o submenu_app_chat_button"></div>
+			</div>
+			<div find="submenu_app_chat_button_desktop" class="submenu_app_chat_button_group">
+				<div class="send fa fa-send-o submenu_app_chat_button"></div>
+				<div class="attachment icon-Add submenu_app_chat_button"></div>
+			</div>
+			<div find="submenu_app_chat_button_mobile" class="submenu_app_chat_button_group">
+				<div class="send fa fa-send-o submenu_app_chat_button"></div>
+				<div class="attachment icon-Add submenu_app_chat_button"></div>
+			</div>
 		</div>
 		<span class="input"><div find="chat_textarea" contenteditable class="textarea comments_input" autofocus="autofocus"></div></span>
 	</div>

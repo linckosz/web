@@ -81,8 +81,8 @@
 }
 
 .files .models_history_content {
-	//border-color: rgba(151, 151, 151, 0.26);
 	border: 1px solid rgba(151, 151, 151, 0.26);
+	background-color: rgba(182, 214, 232, 0.20);
 }
 
 .clear:after {
@@ -152,8 +152,7 @@
 }
 
 .models_history_standard_shortcut_wrapper {
-	padding: 6px 20px;
-	margin: 6px auto;
+	padding: 6px 10px;
 	position: relative;
 }
 
@@ -187,17 +186,36 @@
 }
 
 .uploading_file .models_history_standard_shortcut_wrapper {
-	height: 100px;
-	line-height: 100px;
+	padding: 6px 10px;
+	margin:0;
+	height: auto;
 }
-.upload_stopped_file .models_history_standard_shortcut_wrapper {
-	height: 100px;
-	line-height: 100px;
-}
+
 .upload_failed_file .models_history_standard_shortcut_wrapper {
-	height: 100px;
-	line-height: 100px;
+	padding: 6px 10px;
+	margin: 0;
+	height: auto;
 }
+
+
+.uploading_file .upload_file_title,.uploaded_file .upload_file_title
+{
+	color: black;
+}
+
+
+.uploading_file .uploading_file_progress_size
+{
+	color:gray;
+	font-size: 10px;
+	margin:0 0 8px 0;
+}
+
+.uploaded_file .uploading_file_progress_size
+{
+	display: none;
+}
+
 .models_history_standard_target_wrapper {
 	text-align: center;
 }
@@ -206,63 +224,53 @@
 	vertical-align: middle;
 }
 
-.models_history_standard_shortcut_wrapper .icon-PauseCloud,.icon-ResumeCloud {
+.models_history_standard_shortcut_wrapper .icon-PauseCloud,
+.models_history_standard_shortcut_wrapper .icon-ResumeCloud,
+.models_history_standard_shortcut_wrapper .icon-Docs {
 	display: block;
 	font-size: 50px;
+}
+
+.models_history_standard_shortcut_wrapper .icon-Docs{
+	color: #885AD6;
 }
 
 .uploading_file, .models_history_standard_shortcut_wrapper .uploading_action:before {
 	content: "X ";
 }
-.upload_stopped_file .models_history_standard_shortcut_wrapper .uploading_action:before {
-	content: "X ";
-}
+
 .uploading_file .models_history_standard_shortcut_wrapper .uploading_action {
 	color: #BE2B1F;
+	cursor: pointer;
+	cursor: hand;
 }
 
-.upload_stopped_file .models_history_standard_shortcut_wrapper .uploading_action {
-	color: #BE2B1F;
-}
-
-.uploading_file .models_history_standard_shortcut_wrapper .icon-ResumeCloud {
-	display: none;
+.uploaded_file .models_history_standard_shortcut_wrapper .uploading_action{
+	display: none
 }
 
 .upload_failed_file .models_history_standard_shortcut_wrapper .uploading_action {
 	color: #53ADD2;
 }
 
-.upload_stopped_file .models_history_standard_shortcut_wrapper .icon-PauseCloud {
-	display: none;
-}
-
-.uploading_file .models_history_standard_shortcut_wrapper .icon-ResumeCloud {
-	display: none;
-}
-
-.upload_failed_file .models_history_standard_shortcut_wrapper .icon-PauseCloud {
-	display: none;
-}
-
-.upload_failed_file .models_history_standard_shortcut_wrapper .icon-ResumeCloud {
-	display: none;
-}
 
 .models_history_standard_shortcut_wrapper .progress_bar {
-	height: 2px;
+	height: 1px;
 	background-color: #FBA026;
 	position: absolute;
 	left: 0;
 	top: 0;
-	width: 70%;
 }
 
 .models_history_standard_shortcut_wrapper .progress_bar_wrapper {
-	height: 2px;
+	height: 1px;
 	background-color: #979797;
 	position: relative;
-	margin: 20px 0 10px 0;
+	margin: 8px 0 6px 0;
+}
+
+.uploaded_file .progress_bar_wrapper {
+	display:none;
 }
 
 .models_history_standard_target_wrapper p {
@@ -271,7 +279,15 @@
 
 .models_history_standard_target_wrapper {
 	float: right;
-	line-height: 2;
+	line-height: 1;
+}
+
+.models_history_standard_shortcut_ico{
+	display: inline-block;
+}
+
+.models_history_standard_shortcut_pic{
+	display:none;
 }
 
 /* Mobile phone in Portrait */

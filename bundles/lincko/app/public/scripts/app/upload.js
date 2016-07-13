@@ -1,4 +1,3 @@
-
 submenu_list['app_upload_all'] = {
 	"_title": {
 		"style": "customized_title",
@@ -171,7 +170,6 @@ $(function () {
 	//Do not use 'use strict', it makes the code heavier, even if it's better for conventional coding
 
 	$('#app_upload_fileupload').fileupload({
-		
 		dataType: 'json',
 		url: top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':'+document.linckoBackPort+'/file/create', //Bruno update
 		url_result: top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':'+document.linckoBackPort+'/file/result?%s',

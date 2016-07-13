@@ -39,7 +39,7 @@ class TranslationListJS {
 				}
 				var text = Lincko.Translation._list[bundle+'_'+category+'_'+phrase][format_tp];
 				if(typeof param == 'object'){
-					text = Translation_filter(text, param);
+					text = Translation_filter(text, param,false);
 				}
 				return text;
 			} else {

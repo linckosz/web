@@ -252,7 +252,7 @@ skylist.prototype.construct = function(){
 skylist.prototype.subConstruct_default = function(){
 	var that = this;
 	if(that.list_type == 'files'){
-		that.elem_newcardCircle.click(function(){
+		that.elem_newcardCircle.click(function(){debugger;
 			app_upload_open_files('projects', app_content_menu.projects_id);
 		});
 	}

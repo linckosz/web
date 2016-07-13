@@ -107,7 +107,26 @@
 			</div>
 		</div>
 	</li>
-
+	<li id="-models_history_uploaded_file" class="clear models_history_wrapper">
+		{% include "/bundles/lincko/app/templates/models/include/history_base.twig" %}
+		<div class="models_history_content_wrapper">
+			<div find="timestamp" class="models_history_standard_timestamp">
+				<p class="date"></p>
+				<p class="time"></p>
+			</div>
+			<div class="models_history_content">
+				<div class="models_history_standard_shortcut_wrapper clear">
+					<span find="shortcut" class="models_history_standard_shortcut models_history_standard_shortcut_ico">
+						<i class="icon-Docs"></i>
+					</span>
+					<img find="shortcut" class="models_history_standard_shortcut  models_history_standard_shortcut_pic"></img>
+					<div class="models_history_standard_target_wrapper">
+						<span find="target" class=""></span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</li>
 	<li id="-models_history_uploading_file" class="clear models_history_wrapper">
 		{% include "/bundles/lincko/app/templates/models/include/history_base.twig" %}
 		<div class="models_history_content_wrapper">
@@ -117,10 +136,10 @@
 			</div>
 			<div class="models_history_content">
 				<div class="models_history_standard_shortcut_wrapper clear">
-					<span find="shortcut" class="models_history_standard_shortcut">
-						<i class="icon-PauseCloud"></i>
-						<i class="icon-ResumeCloud"></i>
+					<span find="shortcut" class="models_history_standard_shortcut models_history_standard_shortcut_ico">
+						<i class="icon-Docs"></i>
 					</span>
+					<img find="shortcut" class="models_history_standard_shortcut  models_history_standard_shortcut_pic"></img>
 					<div class="models_history_standard_target_wrapper">
 						<span find="target" class=""></span>
 						<div class="progress_bar_wrapper">

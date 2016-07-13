@@ -526,7 +526,7 @@ Lincko.storage.getHistoryInfo = function(history){
 		};
 
 		if(history.par){
-			result.title = Translation_filter(result.title, history.par);
+			result.title = Translation_filter(result.title, history.par,true);
 		}
 
 		var date = new wrapper_date(history.timestamp);
@@ -555,7 +555,7 @@ Lincko.storage.getHistoryInfo = function(history){
 		}
 		
 		if(history.par){
-			result.content = Translation_filter(result.content, history.par);
+			result.content = Translation_filter(result.content, history.par,false);
 		}
 		
 	}
@@ -1109,7 +1109,6 @@ Lincko.storage.hist = function(category, page_end, conditions, parent_type, pare
 	return Lincko.storage.list_multi('notifications', category, page_end, conditions, parent_type, parent_id, children, deleted);
 }
 Lincko.storage.list_multi = function(type, category, page_end, conditions, parent_type, parent_id, children, deleted){
-
 	var temp;
 	var attribute;
 	var only_items = false;

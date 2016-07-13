@@ -9,7 +9,7 @@ function ChangeLanguage(language){
 	);
 }
 
-Translation_filter = function(text, param){
+Translation_filter = function(text, param,to_html){
 	if(typeof text != 'string'){ return ''; }
 	var search;
 	var replacement;
@@ -50,5 +50,12 @@ Translation_filter = function(text, param){
 			text = text.replaceAll(search, Lincko.Translation.get('app', 21, 'js')); //Unknown
 		}
 	}
-	return wrapper_to_html(text);
+	if(to_html)
+	{
+		return wrapper_to_html(text);
+	}
+	else
+	{
+		return text;
+	}	
 };

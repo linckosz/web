@@ -17,19 +17,34 @@ var chatFeed = (function() {
 			}
 		},
 		'uploading_file': function(id, elem) {
+			
 			//var file = $("#uploading_file_" + id);
-			var file = app_upload_files.lincko_files[id];
+			/*var file = app_upload_files.lincko_files[id];
 			file.abort();
 			file.lincko_status = 'abort';
 			$(elem).parents(".models_history_wrapper").removeClass("uploading_file").addClass("upload_stopped_file").attr("category", "upload_stopped_file");
-			return false;
+			return false;*/
+			//todo:show preview
+
 		},
 		'upload_stopped_file': function(id, elem) {
-			var file = app_upload_files.lincko_files[id];
+			/*var file = app_upload_files.lincko_files[id];
 			file.submit();
 			file.lincko_status = 'uploading';
 			$(elem).parents(".models_history_wrapper").removeClass("upload_stopped_file").addClass("uploading_file").attr("category", "uploading_file");
-			return false;
+			return false;*/
+			var file = Lincko.storage.get('files', id);
+			var name = Lincko.storage.get('files', id, "+name");
+			var url = Lincko.storage.getLink(id);
+			var thumbnail = Lincko.storage.getLinkThumbnail(id);
+			var extension = checkExtension(id);
+			if (extension) {
+				previewer[extension](id);
+				return false;
+			}
+			else {
+				return true;
+			}
 		},
 	};
 	var RESOURCE_ID = {
@@ -65,12 +80,20 @@ var chatFeed = (function() {
 			submenu_Build('taskdetail', true, null, {'type':'files', 'id':fileid}, preview);
 			return false;
 		},
-		'uploading_file': function(id, elem) {
+		'uploading_file': function(id, elem,e) {
 			if (event.target.className == "uploading_action") {
-				var file = app_upload_files.lincko_files[id];
-				file.lincko_status = 'abort';
-				file.abort();
-				$(elem).parents(".models_history_wrapper").remove();
+				var files=app_upload_files.lincko_files;
+				for(var i in files)
+				{
+					if(files[i].lincko_temp_id==id)
+					{
+						var file = app_upload_files.lincko_files[i];
+						file.lincko_status = 'deleted';
+						$('#app_upload_fileupload').fileupload('option').destroy(e, file);
+						$(elem).parents(".models_history_wrapper").remove();
+						break;
+					}
+				}
 			}
 			return false;
 		},
@@ -115,6 +138,25 @@ var chatFeed = (function() {
 		return false;
 	}
 
+	function cutFileTitle(title,prefixLength,suffixLength){
+		if(title===undefined)
+		{
+			return title;
+		}
+
+		var dotIndex = title.lastIndexOf(".");
+		var fileName=title.substring(0,dotIndex);
+		var extName=title.substring(dotIndex+1,title.length);
+		if(prefixLength+suffixLength>=fileName.length)
+		{
+			return title;
+		}
+
+		var prefix=fileName.substring(0,prefixLength);
+		var suffix=fileName.substring(fileName.length-suffixLength,fileName.length);
+		title=prefix+"..."+suffix+"."+extName;
+		return title;
+	}
 
 	function renderLine(timestamp) {
 		var lineTemplate = "-models_history_line";
@@ -136,7 +178,7 @@ var chatFeed = (function() {
 	}
 
 	function checkExtension(id) {
-		var PIC_EXTENSION = ['bmp', 'gif', 'png', 'apng', 'jpg', 'jpeg', 'svg', 'svgz', 'tif', 'tiff'];
+		var PIC_EXTENSION = ['bmp', 'gif', 'png', 'apng', 'jpg', 'jpeg'];
 		var VIDEO_EXTENSION = ['mp4', 'mkv', 'mov', 'xvid', 'x264', 'wmv', 'avi'];
 
 		var file_name = Lincko.storage.get('files', id, "+name");
@@ -157,6 +199,7 @@ var chatFeed = (function() {
 		var progress;
 
 		var Elem = $("#" + this.templateType).clone();
+
 		if (this.item._type == "uploading_file") {
 			var Elem_id = chatFeed.subm.id+"_uploading_file_"+this.item.index;
 		} else {
@@ -167,9 +210,9 @@ var chatFeed = (function() {
 		if($("#"+Elem_id).length>0 && !replace){
 			return false;
 		}
-
 		Elem.prop('id', Elem_id);
 		Elem.attr('comment_id',this.item._id);
+
 
 		if(this.item.recalled_by){ //if comment was recalled
 			if(this.item["timestamp"]){
@@ -183,6 +226,13 @@ var chatFeed = (function() {
 			Elem.find("[find=msg]").text(Lincko.Translation.get('app', 3101, 'html', {username: uname }));
 		}
 		else{
+			if (this.item._type == "uploading_file") {
+					Elem.addClass("files");
+			}
+			else if (this.item._type == "files") {
+				Elem.addClass("uploaded_file");
+			}
+
 			Elem.addClass(this.decoratorClass);
 			Elem.addClass(this.item._type);
 			Elem.attr('index', index);
@@ -199,7 +249,7 @@ var chatFeed = (function() {
 			Elem.find("[find=icon]").attr('src', img); //toto => this slow down the paint of submenu, make the page deformed because of image size, and 
 			var uname = Lincko.storage.get('users', this.item.created_by)['-username'];
 			Elem.find("[find=author]").text(wrapper_to_html(uname));
-			Elem.find("[find=content]").html(wrapper_to_html(this.item['+comment']));
+			Elem.find("[find=content]").html(php_nl2br(this.item['+comment']));
 			if(this.item["timestamp"]){
 				var timestamp = this.item["timestamp"];
 			} else if(this.item["created_at"]){
@@ -208,12 +258,17 @@ var chatFeed = (function() {
 			var date = new wrapper_date(timestamp);
 			Elem.find(".time", "[find=timestamp]").html(date.display('time_short'));
 			Elem.find(".date", "[find=timestamp]").html(date.display('date_short'));
-			Elem.find("[find=target]").html(wrapper_to_html(this.item.name));
 
+			Elem.find("[find=target]").addClass("upload_file_title").html(cutFileTitle(this.item[(this.item._type == "files"?"+name":"name")],5,5));
 			Elem.find("[find=progress_bar]").width("0%"); 
-			Elem.find("[find=progress_text]").html("0/0");
+			Elem.find("[find=progress_text]").addClass("uploading_file_progress_size").html("0K of 0 MB");
 			Elem.find(".uploading_action").html(Lincko.Translation.get('app', 7, 'html'));
 
+			if (this.item._type == 'files' && this.item.category=='image') {
+				var thumbnail = Lincko.storage.getLinkThumbnail(this.item._id);
+				Elem.find(".models_history_standard_shortcut_ico").hide();
+				Elem.find(".models_history_standard_shortcut_pic").show().prop("src", thumbnail);
+			}
 			Elem.attr('category', this.item._type);
 		}
 		return Elem;
@@ -228,6 +283,7 @@ var chatFeed = (function() {
 		}
 		var Elem = $("#" + this.templateType).clone();
 		var Elem_id = chatFeed.subm.id+"_"+this.item.type+'_models_thistory_' + this.item.id;
+
 
 		//Do not duplicate chat messages
 		if($("#"+Elem_id).length>0){
@@ -304,7 +360,8 @@ var chatFeed = (function() {
 				.attr("parent_id", root['_id'])
 				.html(wrapper_to_html(Lincko.storage.data._history_title[target_type][0]));
 		}
-		Elem.find("[find=target]").html(wrapper_to_html(target));
+
+		Elem.find("[find=target]").html(cutFileTitle(target,5,5));
 		Elem.find("[find=content]").html(php_nl2br(history.content));
 		var date = new wrapper_date(this.item.timestamp);
 		Elem.find(".time", "[find=timestamp]").html(date.display('time_short'));
@@ -315,7 +372,7 @@ var chatFeed = (function() {
 		return Elem;
 	};
 
-
+	//toto:I think it's fit to name the funcion as "setTemplate".by Evan
 	BaseHistoryCls.prototype.getTemplate = function(type) {
 		if (type=='history') {
 			this.decoratorClass = wrapper_localstorage.uid === parseInt(this.item.by, 10) ? "models_history_self" : "models_history_others";
@@ -347,7 +404,10 @@ var chatFeed = (function() {
 					}
 					break;
 				case "uploading_files":
-					this.templateType = "-models_history_uploading_files";
+					this.templateType = "-models_history_uploading_file";
+					break;
+				case "files":
+					this.templateType = "-models_history_uploaded_file";
 					break;
 				default:
 					this.templateType = "-models_history_" + this.item._type;
@@ -364,12 +424,62 @@ var chatFeed = (function() {
 			wrapper_IScroll();
 	}
 
+	function app_layers_uploading_files(position,type,id,submenu_wrapper_id){
+		var files = app_upload_files.lincko_files;
+		var _type=type=="history"?"projects":"chats";
+		for(var i in files)
+		{
+			if(files[i].lincko_parent_type!=_type||files[i].lincko_parent_id != id) {continue;}
+			if(files[i].lincko_status=="deleted")
+			{
+				$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id).remove();
+			}
+			else{
+			//FIXME: Only filters files inside this chats.
+			
+				item = {
+					'name': files[i].lincko_name,
+					'_type': 'uploading_file',
+					'id': files[i].lincko_temp_id,
+					'timestamp': $.now()/1000,
+					'created_by': wrapper_localstorage.uid,
+					'index': files[i].lincko_temp_id
+				};
+				format_items(_type, [item], position, true);	
+				if(files[i].lincko_progress>=100 && files[i].lincko_status === 'done'){
+					$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id)
+						.removeClass("uploading_file")
+						.addClass("uploaded_file");
+				} 
+				else {
+					$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id)
+						.find("[find=progress_bar]")
+						.css('width',Math.floor(files[i].lincko_progress) + '%');
+					$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id)
+						.find("[find=progress_text]")
+						.html(files[i].lincko_progress * files[i].lincko_size +" K of "+files[i].lincko_size+" KB");
+				}	
+				try{
+					if(typeof files[i].files[0].preview.tagName !== 'undefined' && files[i].files[0].preview.tagName.toLowerCase() === 'canvas'){
+					$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id).find(".models_history_standard_shortcut_ico").hide();
+					$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id).find(".models_history_standard_shortcut_pic")
+						.show()
+						.prop("src", files[i].files[0].preview.toDataURL())
+						.attr("preview", "1");
+					}
+				}catch(e){}
+			}
+		}
+		wrapper_IScroll();
+	}
+
+
 	function getRawContents(type, id, range) {
 		if (type == 'history') {
 			return Lincko.storage.hist(null, range, null, 'projects', id, true);
 		}
 		else {
-			return Lincko.storage.list('comments', range, null, 'chats', id, false);
+			return Lincko.storage.list(null, range, null, 'chats', id, false);
 		}
 	}
 
@@ -399,6 +509,7 @@ var chatFeed = (function() {
 			timestamp: "1458629345"
 			type: "tasks"
 		*/
+
 		for (var i in items) {
 			var item = new BaseHistoryCls(items[i]);
 			if (item) {
@@ -429,7 +540,6 @@ var chatFeed = (function() {
 						}
 					}
 				}
-
 				var dateStamp = checkRecentDate(item.item.timestamp, i);
 				if (dateStamp) {
 					var line = renderLine(dateStamp);
@@ -449,12 +559,12 @@ var chatFeed = (function() {
 			return false;
 		});
 
-		$(position).delegate('.models_history_content_wrapper', 'click', function() {
+		$(position).delegate('.models_history_content_wrapper', 'click', function(e) {
 			var parent = $(this).parents('.models_history_wrapper');
 			var category = parent.attr('category');
 			var id = RESOURCE_ID[category](parent.prop("id"));
 			var that = this;
-			RESOURCE_HANDLERS[category](id, that);
+			RESOURCE_HANDLERS[category](id, that, e);
 			return false;
 		});
 
@@ -495,6 +605,7 @@ var chatFeed = (function() {
 
 	return {
 		'feedHistory': app_layers_history_launchPage,
+		'feedUploadingFiles':app_layers_uploading_files,
 		'feedPaging': getHistoryPaging,
 		'appendItem': format_items,
 		'updateRecalled': updateRecalled,

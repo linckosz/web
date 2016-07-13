@@ -52,28 +52,15 @@ Submenu.prototype.Add_ChatContents = function() {
 	submenu_wrapper = this.Wrapper();
 	var position = submenu_wrapper.find("[find='submenu_wrapper_content']");
 	position.addClass('overthrow').addClass("submenu_chat_contents");
-
+	var submenu_wrapper_id=submenu_wrapper.prop("id");
 	chatFeed.feedHistory(position, type, id, that);
-
-	app_application_lincko.add("overthrow_"+that.id, "submenu_show_"+that.preview+"_"+that.id, function() {
-		var submenu_id = this.action_param[0];
-		var scroll_time = this.action_param[1];
-		var overthrow_id = "overthrow_"+submenu_id;
-		var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
-		if(myIScrollList[overthrow_id] && last && last[0]){
-			myIScrollList[overthrow_id].refresh();
-			myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
-		}
-		this.action_param[1] = 300;
-		notifier[this.action_param[2]]['clear'](this.action_param[3]);
-	}, [that.id, 0, type, id]);
+	chatFeed.feedUploadingFiles(position,type,id,submenu_wrapper_id);
 
 	notifier[type]['clear'](id);
 	if (type == 'history') {
 		app_application_lincko.add(this.id+"_chat_contents_wrapper","projects_" + id, function() {
 			//toto => there is an undefined somewhere
 			var id = Object.keys(this.range)[0].split("_")[1];
-			var position = submenu_wrapper.find("[find='submenu_wrapper_content']");
 			var items = Lincko.storage.hist(null, -1, {'by': ["!=", wrapper_localstorage.uid], 'timestamp': [">=", latest_history]}, 'projects', id, false);
 			for(var i in items){
 				if(items[i]["timestamp"] > latest_history && latest_history < Lincko.storage.getLastVisit()){
@@ -101,12 +88,12 @@ Submenu.prototype.Add_ChatContents = function() {
 		}, [that.id, id]);
 	}
 	else {
+
 		app_application_lincko.add(this.id+"_chat_contents_wrapper", "chats_" + id, function() {
 			//toto => there is an undefined somewhere
 			var id = Object.keys(this.range)[0].split("_")[1];
 			var type = Object.keys(this.range)[0].split("_")[0];
-			var position = submenu_wrapper.find("[find='submenu_wrapper_content']");
-			var items = Lincko.storage.list('comments', -1, {'created_by': ["!=", wrapper_localstorage.uid], 'created_at': [">=", latest_comment]}, 'chats', id, false);
+			var items = Lincko.storage.list(null, -1, {'created_by': ["!=", wrapper_localstorage.uid], 'created_at': [">=", latest_comment]}, 'chats', id, false);
 			for(var i in items){
 				if(items[i]["created_at"] > latest_comment && latest_comment < Lincko.storage.getLastVisit()){
 					latest_comment = items[i]["created_at"];
@@ -127,11 +114,90 @@ Submenu.prototype.Add_ChatContents = function() {
 					myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
 				}
 			}
-			
 			notifier['chats']['clear'](this.action_param[1]);
 			
 		}, [that.id, id]);
 	}
+
+	app_application_lincko.add(submenu_wrapper_id, 'upload', function(){ //We cannot simplify because Elem is not the HTML object, it's a JS Submenu object
+		var files = app_upload_files.lincko_files;
+		var _type=type=="history"?"projects":"chats";
+		for(var i in files)
+		{
+			if(files[i].lincko_parent_type!=_type||files[i].lincko_parent_id != id) {continue;}
+			if(files[i].lincko_status=="deleted")
+			{
+				$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id).remove();
+			}
+			else{
+			//FIXME: Only filters files inside this chats.
+			
+				item = {
+					'name': files[i].lincko_name,
+					'_type': 'uploading_file',
+					'id': files[i].lincko_temp_id,
+					'timestamp': $.now()/1000,
+					'created_by': wrapper_localstorage.uid,
+					'index': files[i].lincko_temp_id
+				};
+				chatFeed.appendItem(_type, [item], position, true);	
+				if(files[i].lincko_progress>=100 && files[i].lincko_status === 'done'){
+					$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id)
+						.removeClass("uploading_file")
+						.addClass("uploaded_file");
+				} 
+				else {
+					$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id)
+						.find("[find=progress_bar]")
+						.css('width',Math.floor(files[i].lincko_progress) + '%');
+					$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id)
+						.find("[find=progress_text]")
+						.html(files[i].lincko_progress * files[i].lincko_size +" K of "+files[i].lincko_size+" KB");
+				}	
+				setTimeout(function(){
+					try{
+						if(typeof files[i].files[0].preview.tagName !== 'undefined' && files[i].files[0].preview.tagName.toLowerCase() === 'canvas'){
+						$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id).find(".models_history_standard_shortcut_ico").hide();
+						$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id).find(".models_history_standard_shortcut_pic")
+							.show()
+							.prop("src", files[i].files[0].preview.toDataURL())
+							.attr("preview", "1");
+						}
+					}catch(e)
+					{
+
+					}
+				},500);
+					
+				
+			}
+		}
+		var overthrow_id = "overthrow_"+this.action_param[0];
+		var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
+		if(myIScrollList[overthrow_id] && last && last[0]){
+			if(myIScrollList[overthrow_id].maxScrollY - myIScrollList[overthrow_id].y > -100){
+				myIScrollList[overthrow_id].refresh();
+				var scroll_time = 0;
+				if(!supportsTouch || responsive.test("minDesktop")){ scroll_time = 300; }
+				myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
+			}
+		}
+	}, [that.id, id]);
+
+
+	app_application_lincko.add("overthrow_"+that.id, "submenu_show_"+that.preview+"_"+that.id, function() {
+		var submenu_id = this.action_param[0];
+		var scroll_time = this.action_param[1];
+		var overthrow_id = "overthrow_"+submenu_id;
+		var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
+		if(myIScrollList[overthrow_id] && last && last[0]){
+			myIScrollList[overthrow_id].refresh();
+			myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
+		}
+		this.action_param[1] = 300;
+		notifier[this.action_param[2]]['clear'](this.action_param[3]);
+	}, [that.id, 0, type, id]);
+
 }
 
 Submenu.prototype.New_Add_ChatMenu = function() {
@@ -147,10 +213,24 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 		Elem.addClass(attribute['class']);
 	}
 	submenu_wrapper.find("[find=submenu_wrapper_bottom]").addClass("submenu_chats_no_background_image").append(Elem);
+    
+    function show_button(){
+    	if($("#"+that.id).find("[find=chat_textarea]").text().length>0)
+		{
+			$("[find=submenu_app_chat_button_mobile] .send").show();
+			$("[find=submenu_app_chat_button_mobile] .attachment").hide();
+		}
+		else
+		{
+			$("[find=submenu_app_chat_button_mobile] .send").hide();
+			$("[find=submenu_app_chat_button_mobile] .attachment").show();
+		}
+    }
 
+	
 	function send_comments() {
 		var textarea = $("#"+that.id).find("[find=chat_textarea]");
-		var content = textarea.text();
+		var content = textarea.html().replace("<div>","<br/>").replace("</div>","");
 		var type = that.param.type == 'history' ? "projects":'chats';
 		var sub_that = that;
 		var tmpID = [];
@@ -239,58 +319,54 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 
 	$('.comments_input', submenu_wrapper).keyup(function(e) {
 		e.stopPropagation();
+		show_button();
+		if(e.ctrlKey&&e.keyCode==13)
+		{
+			return;
+		}
+		if(e.shiftKey&&e.keyCode==13)
+		{
+			return;
+		}
 		if(e.which == 13) {
 			$(this).text('');
 		}
 	});
+
 	$('.comments_input', submenu_wrapper).keydown(function(e) {
 		e.stopPropagation();
+		if(e.ctrlKey&&e.keyCode==13)
+		{
+			return;
+		}
+		if(e.shiftKey&&e.keyCode==13){
+      		e.returnValue=false;
+			return;
+		}
 		if(e.which == 13) {
 			e.preventDefault();
 			send_comments();
 			$(this).text('');
 		}
 	});
-	$('.send', submenu_wrapper).on("click", function() {
+
+
+	$('.send', submenu_wrapper).on("click", function(e) {
 		send_comments();
+		show_button();
 	});
-	$('.attachment', submenu_wrapper).on("click", function() {
-		var position = $(this).parents(".submenu_wrapper");
-		app_upload_open_files('chats', that.param.id, false, true);
 
-		app_application_lincko.add(position.prop("id"), 'upload', function(){ //We cannot simplify because Elem is not the HTML object, it's a JS Submenu object
-			var files = app_upload_files.lincko_files;
-			for(var i in files)
-			{
-				//FIXME: Only filters files inside this chats.
-				if (!files[i].presented) {
-					item = {
-						'name': files[i].lincko_name,
-						'_type': 'uploading_file',
-						'id': 'md5(Math.random())',
-						'timestamp': $.now()/1000,
-						'created_by': wrapper_localstorage.uid,
-						'index': i,
-					};
-					app_application_lincko.add("uploading_file_"+i, 'upload', function() {
-						//change each item status
-						var tmp = this.id.split("_");
-						var index = tmp[tmp.length-1];
-						var file = app_upload_files.lincko_files[index];
-						var size  = $('#app_upload_fileupload').fileupload('option')._formatFileSize(file.lincko_size);
-						var downloaded = $('#app_upload_fileupload').fileupload(
-							'option')._formatFileSize(file.lincko_progress * file.lincko_size/100);
-						$("#"+this.id).find("[find=progress_bar]").width(file.lincko_progress+"%"); 
-						$("#"+this.id).find("[find=progress_text]").html(downloaded+"/"+size);
-						$("#"+this.id).find(".uploading_action").html(Lincko.Translation.get('app', 7, 'html'));
-					});
-					chatFeed.appendItem("chats", [item], position, true);
-					files[i].presented = true;
-				}
-			}
-		});
 
+    
+
+	$('.attachment',submenu_wrapper).on("click",function(e) {
+		e.stopPropagation();
+		var type = that.param.type == 'history' ? "projects":'chats';
+		var id=that.param.id;
+		app_upload_open_files(type, id,false,true);
 	});
+
+
 
 	/*
 	toto => enable it to allow file uploading
@@ -303,13 +379,6 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 		}
 	});
 	*/
-	Elem.find(".comments_input").focus(function() {
-		Elem.find(".send").show();
-		Elem.find(".attachment").hide();
-	});
-	Elem.find(".send").show();
-	Elem.find(".attachment").hide();
-
 
 	setTimeout(function(){
 		if(!supportsTouch || responsive.test("minDesktop")){

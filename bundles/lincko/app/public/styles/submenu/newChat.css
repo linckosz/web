@@ -1,25 +1,28 @@
+body{cursor:pointer}
+*{ursor:pointer}
+
 textarea:focus, input:focus{
 	outline: none;
 }
 
 .textarea{
 	-webkit-appearance: textarea;
-    background-color: white;
-    width: 400px; 
-    min-height: 20px; 
-    max-height: 300px;
-    margin-left: auto; 
-    margin-right: auto; 
-    padding: 3px; 
-    outline: 0; 
-    border: 1px solid #a0b3d6; 
-    font-size: 12px; 
-    line-height: 24px;
-    padding: 2px;
-    word-wrap: break-word;
-    overflow-x: hidden;
-    overflow-y: auto;
-    color: initial;;
+	background-color: white;
+	width: 400px; 
+	min-height: 20px; 
+	max-height: 300px;
+	margin-left: auto; 
+	margin-right: auto; 
+	padding: 3px; 
+	outline: 0; 
+	border: 1px solid #a0b3d6; 
+	font-size: 12px; 
+	line-height: 24px;
+	padding: 2px;
+	word-wrap: break-word;
+	overflow-x: hidden;
+	overflow-y: auto;
+	color: initial;;
 }
 
 .submenu_newchat_header {
@@ -29,15 +32,8 @@ textarea:focus, input:focus{
 
 .submenu_newchat_header .submenu_deco {
 	background-color: #679E52;
-}
-
-.submenu_newchat_header .submenu_deco {
-	border-bottom: none;
-}
-
-.submenu_newchat_header .submenu_deco {
-	background-color: #679E52;
 	color:#525252;
+	border-bottom: none;
 }
 
 .submenu_newchat_header_close {
@@ -58,7 +54,7 @@ textarea:focus, input:focus{
 .submenu_newchat_header .icon-SmallPersonaiconBlack [find='submenu_button_title'] {
 	display: none;
 }
-.submenu_wrapper .skylist_logo >span {
+.submenu_wrapper .skylist_logo  span {
 	font-size: 35px;
 	color: #FBA026;
 }
@@ -106,24 +102,24 @@ textarea:focus, input:focus{
 }
 
 .submenu_app_chat_v_pos {
-     padding-top:14px;
-     padding-bottom:14px;
-     position: relative;
+	padding-top:14px;
+	padding-bottom:14px;
+	position: relative;
 }
 
 .chat_bottom .icons {
     position: absolute;
-    right: 10px;
-	bottom:52px;
+    right:0;
+	bottom:8px;
+	z-index:999999999;
 }
-
 
 .submenu_chats_no_background_image {
 	background-image: none !important;
 	background-color: inherit;
 }
 
-[find="submenu_wrapper_bottom"] .chat_bottom {
+.chat_bottom {
 	border-top: 1px solid #FBA026;
 	text-align: left;
 	color: #FBA026;
@@ -132,39 +128,81 @@ textarea:focus, input:focus{
 	background-color: #FFFFFF;
 }
 
-[find="submenu_wrapper_bottom"] .chat_bottom {
-	border-top: 1px solid #FBA026;
-	text-align: left;
-	color: #FBA026;
-	position: relative;
-	height: 100%;
-	background-color: #FFFFFF;
+.chat_bottom .input {
+	overflow: hidden;
+	display: block;
+	padding: 0 10px;
+	margin-right:40px;
 }
 
-[find="submenu_wrapper_bottom"] .attachment {
+.submenu_app_chat_button_group{
+	margin:8px 8px 0 0;
+	float:left;
+}
+
+[find=submenu_app_chat_button_desktop] 
+{
+	display: block;
+}
+
+
+[find=submenu_app_chat_button_mobile]
+{
+	display: none;
+}
+
+
+
+.submenu_app_chat_button{
+	display:block;
+	margin-bottom: 10px;
+}
+
+.attachment {
 	font-size: 30px;
-	cursor: pointer; cursor: hand;
+	cursor: pointer; 
+	cursor: hand;
 }
 
-[find="submenu_wrapper_bottom"] .send {
+
+.emoji {
+	display: none;
+}
+
+.send {
 	font-size: 30px;
-	cursor: pointer; cursor: hand;
+	cursor: pointer; 
+	cursor: hand;
 }
 
-[find="submenu_wrapper_bottom"] .attachment {
-	cursor: pointer; cursor: hand;
-}
 
-[find="submenu_wrapper_bottom"] .send {
-	cursor: pointer; cursor: hand;
-}
 
 /* Tablet in Landscape */
 @media only screen and (max-width: 1279px){
+	[find=submenu_app_chat_button_desktop]
+	{
+		display: none;
+	}
+
+	[find=submenu_app_chat_button_mobile]
+	{
+		display: block;
+	}
+
+	.submenu_app_chat_button_group{
+		margin:0 0 0 8px;
+	}
+
+
+	.chat_bottom  {
+		border-top: none;
+		background-color: #EFEFEF;
+		border-radius: 3px;
+	}
+
 	.submenu_app_chat_v_pos {
-         padding-top:8px;
-         padding-bottom:8px;
-    }
+		padding:8px 0;
+	}
 
 	.submenu_chats .submenu_bottom{
 		height: 48px; /*three lines for desktop, one line(48px) for mobile*/
@@ -172,49 +210,27 @@ textarea:focus, input:focus{
 		background-repeat: repeat-x;
 	}
 
-	.chat_bottom .icons {
-		position: absolute;
-		right: 10px;
-		bottom:10px;
-		top:none;
-    }
-
-	[find="submenu_wrapper_bottom"] .chat_bottom  {
-		border-top: none;
-		background-color: #EFEFEF;
-		border-radius: 3px;
-	}
-	[find="submenu_wrapper_bottom"] .attachment {
-		font-size: 24px;
-		cursor: pointer; cursor: hand;
-	}
-
-	[find="submenu_wrapper_bottom"] .send {
-		font-size: 24px;
-		cursor: pointer; cursor: hand;
-	}
 	.submenu_chats .comments_input {
 		font-size: 16px;
-		height: auto;
 		max-height:72px;
+		height: auto;
 	}
-}
 
-.chat_bottom span.input {
-	overflow: hidden;
-	display: block;
-	padding: 0 10px;
-}
+	.chat_bottom .icons {
+		position: absolute;
+		right: 0;
+		bottom:2px;
+	}
 
-.chat_bottom .input {
-	margin-right:40px;
-}
+	.attachment {
+		font-size: 24px;
+		display: block;	
+		cursor: pointer;
+	}
 
-.chat_bottom .emoji {
-	margin-right: 5px;
-	display: none;
-}
-
-.chat_bottom .send {
-	display: none;
+	.send {
+		font-size: 24px;
+		display: none;
+	}
+	
 }
