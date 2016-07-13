@@ -600,6 +600,9 @@ var chatFeed = (function() {
 				elem.replaceWith(replaceWith);
 			}
 		});
+
+
+
 	}
 
 	return {

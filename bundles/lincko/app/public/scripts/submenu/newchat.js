@@ -175,7 +175,7 @@ Submenu.prototype.Add_ChatContents = function() {
 
 					}finally
 					{
-						drawImageTimeout=drawImageTimeout+1;
+						drawImageTimeout++;
 					}
 				},300);
 					
@@ -360,6 +360,12 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 		}
 	});
 
+	$('.comments_input', submenu_wrapper).on("focus",function(){
+		if(responsive.test("isMobile"))
+		{
+			app_application_submenu_position();
+		}
+	});
 
 	$('.send', submenu_wrapper).on("click", function(e) {
 		send_comments();
@@ -384,7 +390,6 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 		}
 	});
 	*/
-
 	setTimeout(function(){
 		if(!supportsTouch || responsive.test("minDesktop")){
 			Elem.find(".comments_input").focus();

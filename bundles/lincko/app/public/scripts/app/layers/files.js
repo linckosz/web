@@ -35,7 +35,7 @@ var app_layers_files_feedPage = function(param){
 		false,
 		false,
 		false,
-		'layer_files',
+		'layer_files'
 	);
 
 
@@ -69,7 +69,7 @@ function app_layers_files_bitConvert(value){
 	else{
 		if(value>1){ sizeUnit += 's'; }
 	}
-	return {val: Math.round(value), unit: sizeUnit};
+	return {val:value, unit: sizeUnit};
 }
 
 
