@@ -156,8 +156,12 @@ Submenu.prototype.Add_ChatContents = function() {
 						.find("[find=progress_text]")
 						.html(senting_size_obj.val + " " + senting_size_obj.unit + " of " + total_size_obj.val + " " + total_size_obj.unit);
 				}	
+				var drawImageTimeout=0;
 				var drawImageInterval = setInterval(function(){
 					try{
+						if(drawImageTimeout==33){/*10s=33*300*/
+							clearInterval(drawImageInterval);
+						}
 						if(typeof files[i].files[0].preview.tagName !== 'undefined' && files[i].files[0].preview.tagName.toLowerCase() === 'canvas'){
 						$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id).find(".models_history_standard_shortcut_ico").hide();
 						$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id).find(".models_history_standard_shortcut_pic")
@@ -169,8 +173,11 @@ Submenu.prototype.Add_ChatContents = function() {
 					}catch(e)
 					{
 
+					}finally
+					{
+						drawImageTimeout=drawImageTimeout+1;
 					}
-				},100);
+				},300);
 					
 				
 			}
