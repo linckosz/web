@@ -303,7 +303,7 @@ var submenu_chat_open_single = function(subm, users_id){
 		},
 		'post',
 		'chat/create',
-		function() {console.log(chat_temp_id);
+		function() {
 			var chat = Lincko.storage.list('chats', 1, {'temp_id': chat_temp_id})[0];
 			if(chat){
 				var title = Lincko.storage.get('users', users_id, 'username');

@@ -51,24 +51,54 @@ function app_layers_files_bitConvert(value){
 	var oneTB = Math.pow(kilo,4);
 
 	if(value > oneTB){
-		value = Math.round(value/oneTB);
+		value = value/oneTB;
 		sizeUnit = 'TB';
 	}
 	else if( value > oneGB ){
-		value = Math.round(value/oneGB);
+		value = value/oneGB;
 		sizeUnit = 'GB';
 	}
 	else if( value > oneMB ){
-		value = Math.round(value/oneMB);
+		value = value/oneMB;
 		sizeUnit = 'MB';
 	}
 	else if( value > oneKB ){
-		value = Math.round(value/oneKB);
+		value = value/oneKB;
 		sizeUnit = 'KB';
 	}
 	else{
-		value = Math.round(value);
 		if(value>1){ sizeUnit += 's'; }
 	}
-	return {val: value, unit: sizeUnit};
+	return {val: Math.round(value), unit: sizeUnit};
+}
+
+
+function app_layers_files_size_convert(value,unit){
+	var sizeUnit = 'Bit';
+	var kilo = 1024;
+	var oneKB = kilo;
+	var oneMB = Math.pow(kilo,2);
+	var oneGB = Math.pow(kilo,3);
+	var oneTB = Math.pow(kilo,4);
+
+	if(unit=="TB"){
+		value = value/oneTB;
+		sizeUnit = 'TB';
+	}
+	else if(unit=="GB"){
+		value =value/oneGB;
+		sizeUnit = 'GB';
+	}
+	else if(unit=="MB"){
+		value =value/oneMB;
+		sizeUnit = 'MB';
+	}
+	else if(unit=="KB"){
+		value = value/oneKB;
+		sizeUnit = 'KB';
+	}
+	else{
+		if(value>1){ sizeUnit += 's'; }
+	}
+	return {val: Math.round(value), unit: sizeUnit};
 }

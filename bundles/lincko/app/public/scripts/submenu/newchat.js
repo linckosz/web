@@ -150,9 +150,12 @@ Submenu.prototype.Add_ChatContents = function() {
 					$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id)
 						.find("[find=progress_bar]")
 						.css('width',Math.floor(files[i].lincko_progress) + '%');
+						debugger;
+					var totol_size_obj=app_layers_files_bitConvert(files[i].lincko_size);
+					var senting_size_obj=app_layers_files_size_convert(0.01 * files[i].lincko_progress * files[i].lincko_size ,totol_size_obj.unit);
 					$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id)
 						.find("[find=progress_text]")
-						.html(files[i].lincko_progress * files[i].lincko_size +" K of "+files[i].lincko_size+" KB");
+						.html(senting_size_obj.val + " " + senting_size_obj.unit + " of " + totol_size_obj.val + " " + totol_size_obj.unit);
 				}	
 				setTimeout(function(){
 					try{
@@ -356,16 +359,11 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 		show_button();
 	});
 
-
-    
-
 	$('.attachment',submenu_wrapper).on("click",function(e) {
-		e.stopPropagation();
 		var type = that.param.type == 'history' ? "projects":'chats';
 		var id=that.param.id;
 		app_upload_open_files(type, id,false,true);
 	});
-
 
 
 	/*
