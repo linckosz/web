@@ -35,7 +35,7 @@ var app_layers_files_feedPage = function(param){
 		false,
 		false,
 		false,
-		'layer_files'
+		'layer_files',
 	);
 
 

@@ -136,9 +136,9 @@ Submenu.prototype.Add_ChatContents = function() {
 					'name': files[i].lincko_name,
 					'_type': 'uploading_file',
 					'id': files[i].lincko_temp_id,
-					'timestamp': $.now()/1000,
+					'timestamp': Math.floor($.now()/1000),
 					'created_by': wrapper_localstorage.uid,
-					'index': files[i].lincko_temp_id
+					'index': files[i].lincko_temp_id,
 				};
 				chatFeed.appendItem(_type, [item], position, true);	
 				if(files[i].lincko_progress>=100 && files[i].lincko_status === 'done'){
@@ -150,14 +150,13 @@ Submenu.prototype.Add_ChatContents = function() {
 					$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id)
 						.find("[find=progress_bar]")
 						.css('width',Math.floor(files[i].lincko_progress) + '%');
-						debugger;
-					var totol_size_obj=app_layers_files_bitConvert(files[i].lincko_size);
-					var senting_size_obj=app_layers_files_size_convert(0.01 * files[i].lincko_progress * files[i].lincko_size ,totol_size_obj.unit);
+					var total_size_obj=app_layers_files_bitConvert(files[i].lincko_size);
+					var senting_size_obj=app_layers_files_size_convert(0.01 * files[i].lincko_progress * files[i].lincko_size ,total_size_obj.unit);
 					$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id)
 						.find("[find=progress_text]")
-						.html(senting_size_obj.val + " " + senting_size_obj.unit + " of " + totol_size_obj.val + " " + totol_size_obj.unit);
+						.html(senting_size_obj.val + " " + senting_size_obj.unit + " of " + total_size_obj.val + " " + total_size_obj.unit);
 				}	
-				setTimeout(function(){
+				var drawImageInterval = setInterval(function(){
 					try{
 						if(typeof files[i].files[0].preview.tagName !== 'undefined' && files[i].files[0].preview.tagName.toLowerCase() === 'canvas'){
 						$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id).find(".models_history_standard_shortcut_ico").hide();
@@ -166,11 +165,12 @@ Submenu.prototype.Add_ChatContents = function() {
 							.prop("src", files[i].files[0].preview.toDataURL())
 							.attr("preview", "1");
 						}
+						clearInterval(drawImageInterval);
 					}catch(e)
 					{
 
 					}
-				},500);
+				},100);
 					
 				
 			}
@@ -323,11 +323,11 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 	$('.comments_input', submenu_wrapper).keyup(function(e) {
 		e.stopPropagation();
 		show_button();
-		if(e.ctrlKey&&e.keyCode==13)
+		if(e.ctrlKey && e.keyCode==13)
 		{
 			return;
 		}
-		if(e.shiftKey&&e.keyCode==13)
+		if(e.shiftKey && e.keyCode==13)
 		{
 			return;
 		}
@@ -338,11 +338,11 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 
 	$('.comments_input', submenu_wrapper).keydown(function(e) {
 		e.stopPropagation();
-		if(e.ctrlKey&&e.keyCode==13)
+		if(e.ctrlKey && e.keyCode==13)
 		{
 			return;
 		}
-		if(e.shiftKey&&e.keyCode==13){
+		if(e.shiftKey && e.keyCode==13){
       		e.returnValue=false;
 			return;
 		}

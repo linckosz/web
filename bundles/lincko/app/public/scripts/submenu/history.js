@@ -82,10 +82,10 @@ var chatFeed = (function() {
 		},
 		'uploading_file': function(id, elem,e) {
 			if (event.target.className == "uploading_action") {
-				var files=app_upload_files.lincko_files;
+				var files = app_upload_files.lincko_files;
 				for(var i in files)
 				{
-					if(files[i].lincko_temp_id==id)
+					if(files[i].lincko_temp_id == id)
 					{
 						var file = app_upload_files.lincko_files[i];
 						file.lincko_status = 'deleted';
@@ -139,22 +139,22 @@ var chatFeed = (function() {
 	}
 
 	function cutFileTitle(title,prefixLength,suffixLength){
-		if(title===undefined)
+		if(typeof title == 'undefined')
 		{
 			return title;
 		}
 
 		var dotIndex = title.lastIndexOf(".");
-		var fileName=title.substring(0,dotIndex);
-		var extName=title.substring(dotIndex+1,title.length);
-		if(prefixLength+suffixLength>=fileName.length)
+		var fileName = title.substring(0,dotIndex);
+		var extName = title.substring(dotIndex + 1,title.length);
+		if(prefixLength + suffixLength >= fileName.length)
 		{
 			return title;
 		}
 
 		var prefix=fileName.substring(0,prefixLength);
 		var suffix=fileName.substring(fileName.length-suffixLength,fileName.length);
-		title=prefix+"..."+suffix+"."+extName;
+		title = prefix + "..." + suffix + "." + extName;
 		return title;
 	}
 
@@ -372,8 +372,7 @@ var chatFeed = (function() {
 		return Elem;
 	};
 
-	//toto:I think it's fit to name the funcion as "setTemplate".by Evan
-	BaseHistoryCls.prototype.getTemplate = function(type) {
+	BaseHistoryCls.prototype.setTemplate = function(type) {
 		if (type=='history') {
 			this.decoratorClass = wrapper_localstorage.uid === parseInt(this.item.by, 10) ? "models_history_self" : "models_history_others";
 			if (this.item.type === "comments") {
@@ -441,7 +440,7 @@ var chatFeed = (function() {
 					'name': files[i].lincko_name,
 					'_type': 'uploading_file',
 					'id': files[i].lincko_temp_id,
-					'timestamp': $.now()/1000,
+					'timestamp': Math.floor($.now()/1000),
 					'created_by': wrapper_localstorage.uid,
 					'index': files[i].lincko_temp_id
 				};
@@ -513,7 +512,7 @@ var chatFeed = (function() {
 		for (var i in items) {
 			var item = new BaseHistoryCls(items[i]);
 			if (item) {
-				item.getTemplate(type);
+				item.setTemplate(type);
 				if (type =='history'){
 					var Elem = item.renderHistoryTemplate(i);
 				}
@@ -579,7 +578,7 @@ var chatFeed = (function() {
 				var toReplace = position.find('[comment_id='+item._id+']');
 				if(toReplace && !toReplace.hasClass('models_history_comment_recalled')){
 					var replaceWith = new BaseHistoryCls(item);
-					replaceWith.getTemplate();
+					replaceWith.setTemplate();
 					replaceWith = replaceWith.renderChatTemplate(null,true);
 					toReplace.replaceWith(replaceWith);
 				}
@@ -596,7 +595,7 @@ var chatFeed = (function() {
 				var item_real = Lincko.storage.list('comments',1,{temp_id:comment_id},parentType,parentID,false)[0];
 				if(!item_real) return;
 				var replaceWith = (new BaseHistoryCls(item_real));
-				replaceWith.getTemplate("chats");
+				replaceWith.setTemplate("chats");
 				replaceWith = replaceWith.renderChatTemplate(null,true);
 				elem.replaceWith(replaceWith);
 			}
