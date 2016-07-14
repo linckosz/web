@@ -1729,7 +1729,7 @@ skylist.prototype.clearOptions = function(elem_task, begin_fn, complete_fn){
 
 skylist.prototype.setHeight = function(){
 	var that = this;
-
+	if(!that.list_wrapper) return false;
 	var parentH = 0;
 	var elem_parent = that.list_wrapper.parent();
 	if(elem_parent.hasClass('submenu_wrapper')){ //inside a submenu

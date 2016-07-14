@@ -570,6 +570,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	*/
 
 	var generateCommentBubble = function(comment){
+		if(!comment || typeof comment != 'object') return;
 		//if(!comment) return false;
 		//comment is a Lincko.storage.data comment object
 		var elem = $('#-submenu_taskdetail_commentbubble').clone().prop('id','');
@@ -782,13 +783,16 @@ Submenu.prototype.Add_taskdetail = function() {
 		}
 		var cb_success = function(msg, data_error, data_status, data_msg){
 			if(!document.getElementById('taskdetail_'+that.md5id)){ return; }
-			var comment = Lincko.storage.list('comments',1,{temp_id: tmpID})[0];
-			var elem = generateCommentBubble(comment);
-			var elem_toReplace = submenu_taskdetail.find('[comment_id='+tmpID+']').closest('.submenu_taskdetail_commentbubble');
-			elem_toReplace.replaceWith(elem);
-			var param = {};
-			param['comments_'+comment['_id']] = true;
-			wrapper_sendAction(param, 'post', 'data/viewed');
+			var comment = Lincko.storage.list('comments',1,{temp_id: tmpID});
+			if(comment){
+				comment = comment[0];
+				var elem = generateCommentBubble(comment);
+				var elem_toReplace = submenu_taskdetail.find('[comment_id='+tmpID+']').closest('.submenu_taskdetail_commentbubble');
+				elem_toReplace.replaceWith(elem);
+				var param = {};
+				param['comments_'+comment['_id']] = true;
+				wrapper_sendAction(param, 'post', 'data/viewed');
+			}
 			tmpID = null;
 		}
 		var cb_error = function(xhr_err, ajaxOptions, thrownError){
@@ -919,10 +923,13 @@ Submenu.prototype.Add_taskdetail = function() {
 			}
 			var cb_success = function(msg, data_error, data_status, data_msg){
 				if(tmpID){
-					var itemID_real = Lincko.storage.list(that.param.type,1,{temp_id: tmpID})[0]['_id'];
-					$.each(param_newItemComments, function(i,param){
-						sendAction_newComment(that.param.type, itemID_real, param.comment);
-					});
+					var itemID_real = Lincko.storage.list(that.param.type,1,{temp_id: tmpID});
+					if(itemID_real){
+						itemID_real = itemID_real[0]['_id'];
+						$.each(param_newItemComments, function(i,param){
+							sendAction_newComment(that.param.type, itemID_real, param.comment);
+						});
+					}
 				}
 				tmpID = null;
 			}
