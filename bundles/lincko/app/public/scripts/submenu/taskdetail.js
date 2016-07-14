@@ -570,6 +570,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	*/
 
 	var generateCommentBubble = function(comment){
+		//if(!comment) return false;
 		//comment is a Lincko.storage.data comment object
 		var elem = $('#-submenu_taskdetail_commentbubble').clone().prop('id','');
 		elem.find('[find=comment_id]').attr('comment_id', comment['_id']);
@@ -649,6 +650,12 @@ Submenu.prototype.Add_taskdetail = function() {
 			elem.find('[find=replyBtn]').click(function(){
 				var elem_click = $(this);
 				var elem_replyTo = elem_click.closest('.submenu_taskdetail_commentbubble');
+				var parentID = elem_replyTo.find('[find=comment_id]').attr('comment_id');
+				if(!Lincko.storage.get('comments',parentID)){
+					console.log(parentID);
+					return false;
+				}
+
 				var elem_replyBubble = $('#-submenu_taskdetail_commentbubble').clone().prop('id','')
 					.addClass('submenu_taskdetail_commentbubble_sub submenu_taskdetail_commentbubble_me submenu_taskdetail_commentbubble_addNew');
 				elem_replyBubble.find('[find=name]').html(Lincko.storage.get("users", wrapper_localstorage.uid,"username"));
@@ -658,7 +665,7 @@ Submenu.prototype.Add_taskdetail = function() {
 				var elem_addNewComment_text = elem_replyBubble.find('[find=addNewComment_text]');
 				elem_addNewComment_text.keyup(function(event) {
 					if (event.keyCode == 13) {
-						sendAction_newComment('comments', elem_replyTo.find('[find=comment_id]').attr('comment_id'), elem_replyBubble.find('[find=addNewComment_text]').val());
+						sendAction_newComment('comments', parentID, elem_replyBubble.find('[find=addNewComment_text]').val());
 						elem_addNewComment_text.blur();
 					}
 				});
