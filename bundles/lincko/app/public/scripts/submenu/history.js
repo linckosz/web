@@ -3,6 +3,7 @@ var chatFeed = (function() {
 	var subm = null;
 	var SHORTCUT_HANDLERS = {
 		'files': function(id, elem) {
+			debugger;
 			var file = Lincko.storage.get('files', id);
 			var name = Lincko.storage.get('files', id, "+name");
 			var url = Lincko.storage.getLink(id);
@@ -17,7 +18,6 @@ var chatFeed = (function() {
 			}
 		},
 		'uploading_file': function(id, elem) {
-			
 			//var file = $("#uploading_file_" + id);
 			/*var file = app_upload_files.lincko_files[id];
 			file.abort();
@@ -25,7 +25,6 @@ var chatFeed = (function() {
 			$(elem).parents(".models_history_wrapper").removeClass("uploading_file").addClass("upload_stopped_file").attr("category", "upload_stopped_file");
 			return false;*/
 			//todo:show preview
-
 		},
 		'upload_stopped_file': function(id, elem) {
 			/*var file = app_upload_files.lincko_files[id];
@@ -547,25 +546,28 @@ var chatFeed = (function() {
 					}
 				}
 			}
+			if(Elem)
+			{
+				Elem.find('.models_history_standard_shortcut').on('click', function(e) {
+					var parent = $(this).parents('.models_history_wrapper');
+					var category = parent.attr('category');
+					var id = RESOURCE_ID[category](parent.prop("id"));
+					var that = this;
+					SHORTCUT_HANDLERS[category](id, that);
+					return false;
+				});
+
+				Elem.find('.models_history_content_wrapper').on('click', function(e) {
+					var parent = $(this).parents('.models_history_wrapper');
+					var category = parent.attr('category');
+					var id = RESOURCE_ID[category](parent.prop("id"));
+					var that = this;
+					RESOURCE_HANDLERS[category](id, that, e);
+					return false;
+				});
+			}
+
 		}
-
-		$(position).delegate('.models_history_standard_shortcut', 'click', function() {
-			var parent = $(this).parents('.models_history_wrapper');
-			var category = parent.attr('category');
-			var id = RESOURCE_ID[category](parent.prop("id"));
-			var that = this;
-			SHORTCUT_HANDLERS[category](id, that);
-			return false;
-		});
-
-		$(position).delegate('.models_history_content_wrapper', 'click', function(e) {
-			var parent = $(this).parents('.models_history_wrapper');
-			var category = parent.attr('category');
-			var id = RESOURCE_ID[category](parent.prop("id"));
-			var that = this;
-			RESOURCE_HANDLERS[category](id, that, e);
-			return false;
-		});
 
 		setTimeout(function(){ app_application_lincko.prepare("submenu_show", true); }, 600);
 
@@ -600,9 +602,6 @@ var chatFeed = (function() {
 				elem.replaceWith(replaceWith);
 			}
 		});
-
-
-
 	}
 
 	return {

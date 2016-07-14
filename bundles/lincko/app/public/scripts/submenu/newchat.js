@@ -322,7 +322,6 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 		},10);
 	});
 
-
 	$('.comments_input', submenu_wrapper).on("resize",function(e) {
 		submenu_resize_content();
 	});
@@ -360,12 +359,6 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 		}
 	});
 
-	$('.comments_input', submenu_wrapper).on("focus",function(){
-		if(responsive.test("isMobile"))
-		{
-			app_application_submenu_position();
-		}
-	});
 
 	$('.send', submenu_wrapper).on("click", function(e) {
 		send_comments();
