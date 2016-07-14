@@ -10,22 +10,36 @@ function app_models_chat_bubble_actionMenu(){
 		if(elem_actionMenu.length || elem_historyWrapper.length < 1){
 			return false;
 		}
-
 		var commentID = elem_historyWrapper.prop('id').split('_').slice(-1)[0];
 		var item_comment = Lincko.storage.get('comments', commentID);
-		var projectID = Lincko.storage.get('comments', commentID, '_parent');
-		if(projectID[0] == 'projects'){
-			projectID = projectID[1];
+
+		var projectID = Lincko.storage.getMyPlaceholder()['_id']; //default is personal space
+		var parent = Lincko.storage.get('comments', commentID, '_parent');
+		if(!parent){ //comment doesnt exist (e.g. has tempID)
+			var submenuID = that.closest('.submenu_wrapper').prop('id');
+			$.each(submenu_obj,function(submenuType, submenus){
+				$.each(submenus, function(index, submenu){
+					if(submenu.id == submenuID){
+						parent = Lincko.storage.get(submenu.param.type, submenu.param.id, '_parent');
+						if(parent[0] == 'projects'){ //if comment is child of a chat that is child of a project
+							projectID = parent[1];
+						}
+						return false;
+					}
+				})
+					
+			});
 		}
-		else{
-			projectID = Lincko.storage.get('chats', Lincko.storage.get('comments', commentID, '_parent')[1], '_parent');
-			if(projectID[0] == 'projects'){
-				projectID = projectID[1];
-			}
-			else{
-				projectID = Lincko.storage.getMyPlaceholder()['_id'];
+		else if(parent[0] == 'projects'){ //if comment's direct parent is project
+			projectID = parent[1];
+		}
+		else if(parent[0] == 'chats'){ //if comment's parent is chats
+			parent = Lincko.storage.get('chats', parent[1], '_parent');
+			if(parent[0] == 'projects'){
+				projectID = parent[1];
 			}
 		}
+
 
 		elem_actionMenu = $('#-app_models_chat_bubble_actionMenu').clone().prop('id','');
 		if(item_comment && (item_comment.created_by != wrapper_localstorage.uid || $.now()/1000 - item_comment.created_at > 60*2/*2 minutes*/)){
