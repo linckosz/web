@@ -15,7 +15,7 @@ var chatFeed = (function() {
 			else {
 				var tmp = $(elem).parents(".submenu_wrapper").prop("id").split("_");
 				var preview = JSON.parse(tmp[tmp.length-1]);
-				submenu_Build('taskdetail', true, null, {'type':'files', 'id':fileid}, preview);
+				submenu_Build('taskdetail', true, null, {'type':'files', 'id':id}, preview);
 				return false;
 			}
 		},
