@@ -13,7 +13,10 @@ var chatFeed = (function() {
 				return false;
 			}
 			else {
-				return true;
+				var tmp = $(elem).parents(".submenu_wrapper").prop("id").split("_");
+				var preview = JSON.parse(tmp[tmp.length-1]);
+				submenu_Build('taskdetail', true, null, {'type':'files', 'id':fileid}, preview);
+				return false;
 			}
 		},
 		'uploading_file': function(id, elem) {
@@ -104,12 +107,12 @@ var chatFeed = (function() {
 			}
 			return false;
 		},
-		'comments': function(commentid, elem) {
+		/*'comments': function(commentid, elem) {
 			var type = $(elem).find("[find=target_type]").attr('parent');
 			var p_id = $(elem).find("[find=target_type]").attr('parent_id');
 			RESOURCE_HANDLERS[type](p_id, elem);
 			return false;
-		},
+		},*/
 		'notes': function(noteid, elem) {
 			var tmp = $(elem).parents(".submenu_wrapper").prop("id").split("_");
 			var preview = JSON.parse(tmp[tmp.length-1]);
