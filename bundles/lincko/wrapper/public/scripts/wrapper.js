@@ -15,7 +15,7 @@ var fingerprint = wrapper_fp;
 
 //toto => this is a dirty fix to solve the Input offset on Huawei P9
 setInterval(function(){
-	$(window).resize();
+	//$(window).resize();
 }, 1000);
 
 var wrapper_signout_cb_begin = function(){
