@@ -69,7 +69,7 @@ function app_layers_files_bitConvert(value){
 	else{
 		if(value>1){ sizeUnit += 's'; }
 	}
-	return {val:value, unit: sizeUnit};
+	return {val: Math.round(value), unit: sizeUnit};
 }
 
 

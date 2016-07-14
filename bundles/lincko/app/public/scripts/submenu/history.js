@@ -3,7 +3,6 @@ var chatFeed = (function() {
 	var subm = null;
 	var SHORTCUT_HANDLERS = {
 		'files': function(id, elem) {
-			debugger;
 			var file = Lincko.storage.get('files', id);
 			var name = Lincko.storage.get('files', id, "+name");
 			var url = Lincko.storage.getLink(id);
