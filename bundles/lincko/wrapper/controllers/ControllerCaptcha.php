@@ -18,7 +18,7 @@ class ControllerCaptcha extends Controller {
 		$wrapper_captcha = rand(pow(10,$total_num-1),pow(10,$total_num)-1);
 
 		//Background picture
-		$src = new SimpleImageCaptcha(File::getLocalFile('/lincko/wrapper/images/captcha/bg/'.rand(1,5).'.png'));
+		$src = new SimpleImageCaptcha(File::getLocalFile('/lincko/wrapper/images/captcha/bg/'.rand(1,4).'.png'));
 		
 		$src->resize($width, $height);
 		for($i=1; $i<=$total_num; $i++){

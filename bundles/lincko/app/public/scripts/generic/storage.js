@@ -1211,12 +1211,15 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 							// 1) Get Old from item itself
 							// 2) Old is not available offline, so we download it before displaying (POST | 'data/history')
 							item = history_items[cat][id]['history'][timestamp][history_id];
+							item.type = cat;
+							item.id = id;
+							item.timestamp = parseInt(timestamp, 10);
 							if(
 								   item['by']<=0
 								|| typeof Lincko.storage.data['users'][item['by']]=='undefined'
-								|| item['timestamp']<=0 || item['timestamp']==null
-								|| typeof Lincko.storage.data['_history_title'][item['type']]=='undefined'
-								|| typeof Lincko.storage.data['_history_title'][item['type']][item['cod']]=='undefined'
+								|| timestamp<=0
+								|| typeof Lincko.storage.data['_history_title'][cat]=='undefined'
+								|| typeof Lincko.storage.data['_history_title'][cat][item['cod']]=='undefined'
 							){
 								save = false;
 								break;

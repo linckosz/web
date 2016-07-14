@@ -496,12 +496,12 @@ $(function () {
 		_formatFileSize: function (bytes) {
 			if (typeof bytes !== 'number') {
 				return '?';
-			} else if (bytes >= 1000000000) {
-				return (bytes / 1000000000).toFixed(2) + ' GB';
-			} else if (bytes >= 1000000) {
-				return (bytes / 1000000).toFixed(2) + ' MB';
+			} else if (bytes >= 1073741824) {
+				return (bytes / 1073741824).toFixed(2) + ' GB';
+			} else if (bytes >= 1048576) {
+				return (bytes / 1048576).toFixed(2) + ' MB';
 			} else {
-				return (bytes / 1000).toFixed(0) + ' KB';
+				return (bytes / 1024).toFixed(0) + ' KB';
 			}
 		},
 
@@ -537,12 +537,12 @@ $(function () {
 				bits = sum / divide;
 			}
 
-			if (bits >= 1000000000) {
-				return (bits / 1000000000).toFixed(1) + ' Gbit/s';
-			} else if (bits >= 1000000) {
-				return (bits / 1000000).toFixed(1) + ' Mbit/s';
-			} else if (bits >= 1000) {
-				return (bits / 1000).toFixed(0) + ' kbit/s';
+			if (bits >= 1073741824) {
+				return (bits / 1073741824).toFixed(1) + ' Gbit/s';
+			} else if (bits >= 1048576) {
+				return (bits / 1048576).toFixed(1) + ' Mbit/s';
+			} else if (bits >= 1024) {
+				return (bits / 1024).toFixed(0) + ' kbit/s';
 			} else {
 				return bits.toFixed(0) + ' bit/s';
 			}
@@ -551,12 +551,12 @@ $(function () {
 		_formatComplete: function (loaded, total) {
 			if (typeof loaded !== 'number' || typeof total !== 'number') {
 				return '?';
-			} else if (total >= 1000000000) {
-				return (loaded / 1000000000).toFixed(2) + ' GB / ' + (total / 1000000000).toFixed(2) + ' GB';
-			} else if (total >= 1000000) {
-				return (loaded / 1000000).toFixed(2) + ' MB / ' + (total / 1000000).toFixed(2) + ' MB';
+			} else if (total >= 1073741824) {
+				return (loaded / 1073741824).toFixed(2) + ' GB / ' + (total / 1073741824).toFixed(2) + ' GB';
+			} else if (total >= 1048576) {
+				return (loaded / 1048576).toFixed(2) + ' MB / ' + (total / 1048576).toFixed(2) + ' MB';
 			} else {
-				return (loaded / 1000).toFixed(0) + ' KB / ' + (total / 1000).toFixed(0) + ' KB';
+				return (loaded / 1024).toFixed(0) + ' KB / ' + (total / 1024).toFixed(0) + ' KB';
 			}
 		},
 

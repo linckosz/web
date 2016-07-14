@@ -242,18 +242,15 @@ var mainMenu = (function() {
 			if (project_id && project_list[p]._id != project_id) {
 				continue;
 			}
-			//var e1 = Lincko.storage.hist('recent', project_list[p]._id, 1)[0];
 			var e1 = Lincko.storage.hist(null, 1, {cod:['!=', 203]}, 'projects', project_list[p]._id, true)[0];
 			var e2 = Lincko.storage.list('comments', 1, {recalled_by: ['<',1]}, 'projects', project_list[p]._id, false)[0];
 			if (e1) {
 				var timestamp = e1.timestamp;
 				var txt = Lincko.storage.getHistoryInfo(e1).title;
-			}
-			if (e2 && e1.timestamp < e2.created_at) {
-				var timestamp = e2.created_at;
-				var txt = e2['+comment'];
-			}
-			if (e1) {
+				if (e2 && e1.timestamp < e2.created_at) {
+					var timestamp = e2.created_at;
+					var txt = e2['+comment'];
+				}
 				merge_list.push({
 					'type': 'history',
 					'id': project_list[p]._id,
