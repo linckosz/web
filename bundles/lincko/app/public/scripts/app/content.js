@@ -134,6 +134,14 @@ var app_content_menu = {
 		app_application_lincko.prepare("projects", true);
 
 		if(responsive.test("maxMobileL")){ app_application.forceClose(); }
+
+		//Keep a record offline for future page opening
+		var old_page = {
+			projects_id: projects_id,
+			menu: menu,
+			param: param,
+		};
+		wrapper_localstorage.encrypt('old_page', JSON.stringify(old_page));
 	},
 }
 
@@ -170,6 +178,15 @@ var app_content_menu_default = function(){
 	if(app_content_menu_first_launch && Lincko.storage.getMyPlaceholder() !== false){
 		app_content_menu_first_launch = false;
 		app_content_menu.selection(Lincko.storage.getMyPlaceholder()['_id']);
+		/*
+		var old_page = JSON.parse(wrapper_localstorage.decrypt('old_page'));
+		if(old_page){
+			console.log(old_page);
+			app_content_menu.selection(old_page.projects_id, old_page.menu, old_page.param);
+		} else {
+			app_content_menu.selection(Lincko.storage.getMyPlaceholder()['_id']);
+		}
+		*/
 		return false;
 	}
 	return true;
@@ -178,7 +195,7 @@ var app_content_menu_default = function(){
 //Scroll additional parameters
 wrapper_IScroll_options_new['app_content_menu'] = {
 	scrollX: true,
-}
+};
 
 JSfiles.finish(function(){
 	app_application_lincko.add("body_lincko", "projects", null, null, app_content_menu_default);

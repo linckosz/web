@@ -410,7 +410,7 @@ Lincko.storage.get = function(category, id, attribute, deleted){
 		var result = Lincko.storage.data[category][id];
 		
 		/*
-		toto => to not allow to get an deleted element by default creates several issue to fix
+		toto => If we do not allow to get a deleted element by default creates several issue to fix
 		if(!deleted && typeof result['deleted_at'] != 'undefined' && $.isNumeric(result['deleted_at'])){
 			//Don't get deleted elements
 			return false;
@@ -434,6 +434,30 @@ Lincko.storage.get = function(category, id, attribute, deleted){
 			}
 		}
 		return result;
+	}
+	return false;
+};
+
+//Return the main information of the file like +title, +name, etcc
+/*
+	Lincko.storage.getPlus("projects", 5);
+*/
+Lincko.storage.getPlus = function(category, id){
+	if(typeof category === 'string' && category.indexOf('_')!==0){
+		category = category.toLowerCase();
+	} else {
+		return false;
+	}
+	if(typeof id === 'string'){ id = parseInt(id, 10); }
+	if(typeof id !== 'number'){ return false; }
+
+	if($.type(Lincko.storage.data) === 'object' && $.type(Lincko.storage.data[category]) === 'object' && $.type(Lincko.storage.data[category][id]) === 'object'){
+		var result = Lincko.storage.data[category][id];
+		for(var att in result){
+			if(att.indexOf('+')===0){
+				return result[att];
+			}
+		}
 	}
 	return false;
 };
@@ -526,7 +550,7 @@ Lincko.storage.getHistoryInfo = function(history){
 		};
 
 		if(history.par){
-			result.title = Translation_filter(result.title, history.par,true);
+			result.title = Translation_filter(result.title, history.par, true);
 		}
 
 		var date = new wrapper_date(history.timestamp);
@@ -1212,7 +1236,7 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 							// 2) Old is not available offline, so we download it before displaying (POST | 'data/history')
 							item = history_items[cat][id]['history'][timestamp][history_id];
 							item.type = cat;
-							item.id = id;
+							item.id = parseInt(id, 10);
 							item.timestamp = parseInt(timestamp, 10);
 							if(
 								   item['by']<=0

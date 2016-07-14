@@ -243,7 +243,7 @@ var mainMenu = (function() {
 				continue;
 			}
 			var e1 = Lincko.storage.hist(null, 1, {cod:['!=', 203]}, 'projects', project_list[p]._id, true)[0];
-			var e2 = Lincko.storage.list('comments', 1, {recalled_by: ['<',1]}, 'projects', project_list[p]._id, false)[0];
+			var e2 = Lincko.storage.list(['comments', 'files'], 1, [{recalled_by: ['<',1]}, {_type: 'files'}], 'projects', project_list[p]._id, false)[0];
 			if (e1) {
 				var timestamp = e1.timestamp;
 				var txt = Lincko.storage.getHistoryInfo(e1).title;
@@ -270,13 +270,17 @@ var mainMenu = (function() {
 		//get the most recent comment for each project
 		for (var c in chat_list) {
 			var timestamp = chat_list[c].updated_at;
-			var comment = Lincko.storage.list('comments', 1, {recalled_by: null}, 'chats', chat_list[c]._id);
-			if(comment.length>0){
+			var item = Lincko.storage.list(['comments', 'files'], 1, [{recalled_by: ['<',1]}, {_type: 'files'}], 'chats', chat_list[c]._id);
+			if(item.length>0){
+				var comment = Lincko.storage.getPlus(item[0]['_type'], item[0]['_id']);
+				if(item[0]['_type']=='files' && Lincko.storage.data && Lincko.storage.data['_history_title'] && Lincko.storage.data['_history_title']['files']){
+					comment = Translation_filter(Lincko.storage.data['_history_title']['files'][901], {un: Lincko.storage.get('users', item[0]['created_by'], 'username')}, true);
+				}
 				merge_list.push({
 					'type': 'chats',
 					'id': chat_list[c]._id,
 					'timestamp': timestamp,
-					'comment': comment[0]['+comment'],
+					'comment': comment,
 				});
 			}
 			else {

@@ -46,11 +46,12 @@ submenu_list['app_project_new'] = {
 			for(var users_id in app_projects_users_contacts_list){
 				param["users>access"][users_id] = true;
 			}
+			var tmpID = null;
 			return wrapper_sendForm(
 				$('#'+that.id+'_submenu_form'),
-				submenu_form_cb_success,
+				app_models_projects_create_cb_success,
 				submenu_form_cb_error,
-				submenu_form_cb_begin,
+				app_models_projects_create_cb_begin,
 				submenu_form_cb_complete,
 				param
 			);
@@ -81,7 +82,6 @@ submenu_list['app_project_new'] = {
 		"class": "submenu_input_textarea",
 	},
 };
-
 
 submenu_list['app_project_edit'] = {
 	//Set the title of the top
@@ -223,6 +223,21 @@ Submenu.prototype.Add_ProjectTeamEdit = function() {
 	app_application_lincko.prepare("projects_"+project["_id"], true);
 
 	return Elem;
+};
+
+var app_models_projects_create_cb_begin = function(jqXHR, settings, temp_id){
+	submenu_form_cb_begin();
+	tmpID = temp_id;
+};
+var app_models_projects_create_cb_success = function(){
+	submenu_form_cb_success();
+	if(tmpID){
+		var item = Lincko.storage.list("projects", 1 , {temp_id: tmpID});
+		if(item){
+			app_content_menu.selection(item[0]['_id']);
+		}
+		tmpID = null;
+	}
 };
 
 var app_models_projects_chart_tasks_data = function(Elem_id, id, chart_display_replace, chart_options_replace){
