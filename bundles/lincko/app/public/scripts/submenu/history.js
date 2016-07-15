@@ -250,7 +250,7 @@ var chatFeed = (function() {
 			Elem.find("[find=icon]").attr('src', img); //toto => this slow down the paint of submenu, make the page deformed because of image size, and 
 			var uname = Lincko.storage.get('users', this.item.created_by)['-username'];
 			Elem.find("[find=author]").text(wrapper_to_html(uname));
-			Elem.find("[find=content]").html(php_nl2br(this.item['+comment']));
+			Elem.find("[find=content]").html(wrapper_to_html(this.item['+comment']));
 			if(this.item["timestamp"]){
 				var timestamp = this.item["timestamp"];
 			} else if(this.item["created_at"]){
@@ -363,7 +363,7 @@ var chatFeed = (function() {
 		}
 
 		Elem.find("[find=target]").html(cutFileTitle(target,5,5));
-		Elem.find("[find=content]").html(php_nl2br(history.content));
+		Elem.find("[find=content]").html(wrapper_to_html(history.content));
 		var date = new wrapper_date(this.item.timestamp);
 		Elem.find(".time", "[find=timestamp]").html(date.display('time_short'));
 		Elem.find(".date", "[find=timestamp]").html(date.display('date_short'));

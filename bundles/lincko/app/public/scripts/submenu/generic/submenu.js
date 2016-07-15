@@ -161,6 +161,9 @@ function Submenu(menu, next, param, preview) {
 		submenu_Clean(Elem.layer, false, Elem.preview);
 
 		var submenu_wrapper = $('#-submenu_wrapper').clone();
+		if($('#'+Elem.id).length>0){
+			$('#'+Elem.id).remove();
+		}
 		submenu_wrapper.prop("id", Elem.id);
 		if(Elem.preview){
 			submenu_wrapper.addClass('submenu_wrapper_preview');

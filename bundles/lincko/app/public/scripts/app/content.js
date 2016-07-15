@@ -177,16 +177,12 @@ var app_content_menu_first_launch = true;
 var app_content_menu_default = function(){
 	if(app_content_menu_first_launch && Lincko.storage.getMyPlaceholder() !== false){
 		app_content_menu_first_launch = false;
-		app_content_menu.selection(Lincko.storage.getMyPlaceholder()['_id']);
-		/*
 		var old_page = JSON.parse(wrapper_localstorage.decrypt('old_page'));
 		if(old_page){
-			console.log(old_page);
 			app_content_menu.selection(old_page.projects_id, old_page.menu, old_page.param);
 		} else {
 			app_content_menu.selection(Lincko.storage.getMyPlaceholder()['_id']);
 		}
-		*/
 		return false;
 	}
 	return true;

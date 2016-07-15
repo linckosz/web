@@ -18,7 +18,11 @@ var wrapper_itemExists = function(haystack, needle) {
 };
 
 var wrapper_to_html = function(text){
-	text = php_htmlentities(text, true); //Need to enable double encoding
+	//text = php_htmlentities(text, true); //Need to enable double encoding
+	if(typeof text == 'undefined'){
+		text = '';
+	}
+	text = parseHTML(text);
 	text = php_nl2br(text);
 	return text;
 };
@@ -30,6 +34,17 @@ var wrapper_to_url = function(text){
 }
 
 var supportsTouch = 'ontouchstart' in window || navigator.msMaxTouchPoints;
+
+var parseHTML = function(text) {
+	text = ''+text;
+	return text
+		.replaceAll('<', '&lt;')
+		.replaceAll('>', '&gt;')
+		.replaceAll('"', '&quot;')
+		.replaceAll("'", '&#39;')
+		.replaceAll(' ', '&nbsp;')
+	;
+};
 
 String.prototype.ucfirst = function() {
 	if(this.length > 0){

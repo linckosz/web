@@ -22,7 +22,7 @@ textarea:focus, input:focus{
 	word-wrap: break-word;
 	overflow-x: hidden;
 	overflow-y: auto;
-	color: initial;;
+	color: initial;
 }
 
 .submenu_newchat_header {
@@ -32,12 +32,12 @@ textarea:focus, input:focus{
 
 .submenu_newchat_header .submenu_deco {
 	background-color: #679E52;
-	color:#525252;
+	color: #525252;
 	border-bottom: none;
 }
 
 .submenu_newchat_header_close {
-	color:#525252;
+	color: #525252;
 }
 
 .submenu_newchat_header .submenu_title {

@@ -987,10 +987,14 @@ skylist.prototype.addChat = function(item){
 		var elem_title = Elem.find('[find=title]');
 		elem_title.html(wrapper_to_html(name));
 
-		var commentText = item['comment'];
-		if(item.type != 'history'){
-			commentText =  wrapper_to_html(item['comment']);
+		var commentText = '';
+		if(item['comment']){
+			var commentText = item['comment'];
+			if(item.type != 'history'){
+				commentText =  wrapper_to_html(item['comment']);
+			}
 		}
+
 		Elem.find('[find=description]').html(commentText);
 
 		var latest_update = new wrapper_date(item_timestamp);
