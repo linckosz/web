@@ -372,25 +372,33 @@ Submenu.prototype.Add_taskdetail = function() {
 			var elem_in_charge_hidden = elem.find('[find=user_text_hidden]').addClass('skylist_clickable');
 			elem_in_charge.html(in_charge);
 			//burger(elem_in_charge_hidden, '_users', item);
-			burgerN.assignTask(elem_in_charge_hidden, item);
-			elem_in_charge.click(function(){
-				elem_in_charge_hidden.click();
-			});
-			elem_in_charge_hidden.change(function(){
-				in_charge_id = $(this).val();
-				in_charge_id = parseInt(in_charge_id,10);
-				$.each(item['_users'], function(key,val){
-					item['_users'][key]['in_charge'] = false;
+
+			
+			if( !Lincko.storage.get("projects", currentProjID, 'personal_private') ){
+				burgerN.assignTask(elem_in_charge_hidden, item);
+				elem_in_charge.click(function(){
+					elem_in_charge_hidden.click();
 				});
-				if(in_charge_id){
-					var username = Lincko.storage.get("users", in_charge_id, "username");
-					elem_in_charge.html(username);
-					item['_users'][in_charge_id]['in_charge'] = true;
-				}
-				else{ //nobody in charnge
-					elem_in_charge.html(Lincko.Translation.get('app', 3608, 'html'));//Not Assigned
-				}
-			});
+				elem_in_charge_hidden.change(function(){
+					in_charge_id = $(this).val();
+					in_charge_id = parseInt(in_charge_id,10);
+					$.each(item['_users'], function(key,val){
+						item['_users'][key]['in_charge'] = false;
+					});
+					if(in_charge_id){
+						var username = Lincko.storage.get("users", in_charge_id, "username");
+						elem_in_charge.html(username);
+						item['_users'][in_charge_id]['in_charge'] = true;
+					}
+					else{ //nobody in charnge
+						elem_in_charge.html(Lincko.Translation.get('app', 3608, 'html'));//Not Assigned
+					}
+				});
+			}
+			else{
+				elem_in_charge_hidden.removeClass('skylist_clickable');
+			}
+			
 
 			//---duedate calenar
 			var elem_timestamp = elem.find('[find=duedate_timestamp]');

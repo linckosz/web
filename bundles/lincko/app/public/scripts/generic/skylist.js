@@ -1144,21 +1144,27 @@ skylist.prototype.addTask = function(item){
 	//Elem.find('[find=name_hidden]').toggleClass('display_none');
 	Elem.find('[find=name]').html(in_charge);
 	//burger(Elem.find('input[find=name_hidden]'), '_users', item);
-	burgerN.assignTask(Elem.find('input[find=name_hidden]'), item);
+	if( !Lincko.storage.get("projects", app_content_menu.projects_id, 'personal_private') ){
+		burgerN.assignTask(Elem.find('input[find=name_hidden]'), item);
+	}
+	
 	
 	/*
 	rightOptions - in_charge
 	*/
-	var elem_rightOptions_inCharge = that.add_rightOptionsBox(in_charge,'fa-user');
-	elem_rightOptions_inCharge.click(function(){
-		var param = {};
-		param.type = 'tasks';
-		param.item_obj = item;
-		param.contactsID = burger_generate_contactsID(item);
-		param.elem_input = Elem.find('input[find=name_hidden]');
-		submenu_Build('burger_contacts', true, null, param);
-	});
-	Elem_rightOptions.append(elem_rightOptions_inCharge);
+	if( !Lincko.storage.get("projects", app_content_menu.projects_id, 'personal_private') ){
+		var elem_rightOptions_inCharge = that.add_rightOptionsBox(in_charge,'fa-user');
+		elem_rightOptions_inCharge.click(function(){
+			var param = {};
+			param.type = 'tasks';
+			param.item_obj = item;
+			param.contactsID = burger_generate_contactsID(item);
+			param.elem_input = Elem.find('input[find=name_hidden]');
+			submenu_Build('burger_contacts', true, null, param);
+		});
+		Elem_rightOptions.append(elem_rightOptions_inCharge);
+	}
+	
 
 	/*
 	comments

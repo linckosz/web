@@ -7,10 +7,7 @@ var tempfunctiontoto = function(){
 
 
 	elem_description_text.focus(function(){
-		console.log('focus');
 		if(!editorInst){
-			console.log('here');
-
 			var param = {};
 			param.itemID = item['_id'];
 			param.submenuInst = that;

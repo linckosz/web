@@ -28,6 +28,11 @@ var app_layers_tasks_feedPage = function(param){
 	Elem.prop('id','app_layers_tasks_tasklist');
 	Elem.appendTo(position);
 
+	var rightOptionCount = 2;
+	if( Lincko.storage.get("projects", app_content_menu.projects_id, 'personal_private') ){
+		rightOptionCount = 1;
+	}
+
 	
 	app_layers_tasks_tasklist = new skylist(
 		'tasks',
@@ -39,7 +44,7 @@ var app_layers_tasks_feedPage = function(param){
 			//'Spaces'
 		],
 		null,
-		2,
+		rightOptionCount,
 		null,
 		'layer_tasks'
 	);
