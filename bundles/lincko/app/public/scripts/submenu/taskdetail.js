@@ -1072,14 +1072,45 @@ Submenu.prototype.Add_taskdetail = function() {
 	};	
 
 
-	/*---linckoEditor---*/
-	var elem_description_text = submenu_wrapper.find('[find=description_text]');
+
+	/*----------CKEDITOR SETUP--------------------------------------------------*/
+
+	var elem_description_text = submenu_wrapper.find('[find=description_text]').prop('contenteditable','true').prop('id','submenu_taskdetail_description_text_'+that.md5id);
+
+	//div for the toolbar
+	elem_description_text.before($('<div>').prop('id','submenu_taskdetail_description_toolbar_'+that.md5id));
+	var editorInst = null;
+
+
+	elem_description_text.focus(function(){
+		console.log('focus');
+		if(!editorInst){
+			console.log('here');
+
+			var param = {};
+			param.itemID = item['_id'];
+			param.submenuInst = that;
+
+			editorInst = linckoEditor('submenu_taskdetail_description_text_'+that.md5id, 'submenu_taskdetail_description_toolbar_'+that.md5id, param );
+		}
+	});
+
+
+
+
+
+
+
+	/*----------END OF CKEDITOR SETUP--------------------------------------------*/
+
+	/*--------EASY EDITOR SETUP--------------------------------------------------*/
+	/*var elem_description_text = submenu_wrapper.find('[find=description_text]');
 	var editorInst = null;
 	var destroyEditor_onBlur = true;
 
 	elem_description_text.focus(function(){
 		if(editorInst instanceof EasyEditor === false) {
-			editorInst = new linckoEditor(this);
+			editorInst = new linckoEditorEasy(this);
 			editorInst.$toolbarContainer.on('mousedown touchdown', function(){
 				destroyEditor_onBlur = false;
 			});
@@ -1095,8 +1126,8 @@ Submenu.prototype.Add_taskdetail = function() {
 			destroyEditor_onBlur = true;
 			elem_description_text.focus();
 		}
-	});
-	
+	});*/
+	/*----------END OF EASY EDITOR SETUP---------------------------------------------*/
 
 	//set the focus upon opening detail pane
 	if(taskid == 'new'){
@@ -1124,8 +1155,8 @@ Submenu.prototype.Add_taskdetail = function() {
 };
 
 
-/*-----linckoEditor------------------------------------*/
-function linckoEditor(elem){
+/*-----linckoEditorEasy------------------------------------*/
+function linckoEditorEasy(elem){
 	var options = {
 		buttons: [ 'h', 'h1', 'h2', 'h3', 'h4', 'p', 'bold', 'italic', 'list', 'alignleft', 'aligncenter', 'alignright', 'x', 'image'],
 		buttonsHtml: {
