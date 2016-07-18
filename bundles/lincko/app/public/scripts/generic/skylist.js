@@ -1,5 +1,15 @@
 //Category 36
 
+var clear8 = function(){
+	var A = Lincko.storage.list('tasks', null, null, 'projects', 8);
+	$.each(A, function(i, item){
+		var param = {
+			'id': item['_id']
+		};
+		wrapper_sendAction(param, 'post', 'task/delete');
+	});
+}
+
 var skylist_calcDuedate = function(task_obj){
 	var duedate = new wrapper_date(parseInt(task_obj.start,10) + parseInt(task_obj.duration,10));
 	return duedate;
@@ -124,6 +134,10 @@ var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct, ri
 		'sort_alt': false,
 		'hide_completed': false,
 	};
+	if( Lincko.storage.get("projects", app_content_menu.projects_id, 'personal_private') ){
+		this.Lincko_itemsList_filter.people = null;
+	}
+
 	this.searchTimeout;
 	this.noResult_str = $('<div class="skylist_card_noCard"></div>');
 	if(that.list_type == 'tasks'){
@@ -1868,6 +1882,7 @@ skylist.prototype.menu_construct = function(){
 	var elem_people2 = that.elem_navbar.find('[people=2]');
 	if( Lincko.storage.get("projects", app_content_menu.projects_id, 'personal_private') ){
 		elem_people2.addClass('display_none');
+		elem_people1.addClass('display_none');
 	}
 
 	elem_people1.click(function(){

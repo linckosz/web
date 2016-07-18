@@ -1,4 +1,3 @@
-
 var tempfunctiontoto = function(){
 	/*---linckoEditor---*/
 	var elem_description_text = submenu_wrapper.find('[find=description_text]').prop('contenteditable','true').prop('id','submenu_taskdetail_description_text_'+that.md5id);
