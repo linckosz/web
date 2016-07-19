@@ -42,7 +42,7 @@ var parseHTML = function(text) {
 		.replaceAll('>', '&gt;')
 		.replaceAll('"', '&quot;')
 		.replaceAll("'", '&#39;')
-		.replaceAll(' ', '&nbsp;')
+		.replaceAll('  ', '&nbsp;&nbsp;')
 	;
 };
 
