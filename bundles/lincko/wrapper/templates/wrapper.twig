@@ -68,7 +68,6 @@
 <script src="{{ _filelatest('/scripts/libs/DomResize.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/ckeditor/ckeditor.js') }}" type="text/javascript"></script>
 
-
 <script>
 window.name = 'brunomartin';
 document.domain = '{{ domain }}';
@@ -299,6 +298,15 @@ JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/divers.js') }}", 1);
 JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/language.js') }}", 30);
 JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/date.js') }}", 30);
 JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/wrapper.js') }}", 40);
+
+
+//must run before DOM load, but after ckeditor.js library load
+if(CKEDITOR){
+	CKEDITOR.disableAutoInline = true;
+	CKEDITOR.config.allowedContent = true;
+	//CKEDITOR.config.extraAllowedContent = 'img[src,alt,width,height];h1[*]';
+	//CKEDITOR.config.extraAllowedContent = 'h1[src,alt,width,height]';
+}
 
 </script>
 

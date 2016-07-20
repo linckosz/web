@@ -1026,7 +1026,7 @@ Lincko.storage.tree = function(category, id, direction, include, extend){
 		results[category] = {};
 		results[category][id] = true;
 	}
-
+	//if(id == 8) debugger;
 	//Include all children (level 1)
 	if(direction=='all' || direction=='children'){
 		if(Lincko.storage.data[category][id]['_children']){
@@ -1312,6 +1312,7 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 			if((category==null || cat==category) && cat.indexOf('_')!==0){
 				items = Lincko.storage.data[cat];
 				for(var id in items) {
+					//if(id.length > 5 && parent_id == 8)debugger;
 					save = true;
 					if(only_items && typeof only_items[cat][id]=='undefined'){
 						save = false;
@@ -1497,7 +1498,7 @@ Lincko.storage.sort_items = function(array_items, att, page_start, page_end, asc
 			save = true;
 			value = item["-"+att];
 		} else {
-			break;
+			continue;
 		}
 		if(save){
 			if(typeof value != 'number'){

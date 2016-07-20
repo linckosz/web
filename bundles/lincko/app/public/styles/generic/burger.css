@@ -194,3 +194,16 @@
 
 
 /*------END OF burger_calendar----------------------*/
+
+
+
+/*--------burger_typeTask----------------------------*/
+.burger_typeTask {
+	height: 60px;
+}
+.burger_typeTask table{
+	width: 100%;
+}
+.burger_typeTask [find=checkbox_td]{
+	width: 1px;
+}

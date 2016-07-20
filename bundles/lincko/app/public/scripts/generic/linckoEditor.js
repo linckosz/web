@@ -31,13 +31,6 @@ var tempfunctiontoto = function(){
 	
 
 /*-----linckoEditor------------------------------------*/
-if(CKEDITOR){
-	CKEDITOR.disableAutoInline = true;
-	//CKEDITOR.config.extraAllowedContent = 'img[src,alt,width,height];h1[*]';
-	//CKEDITOR.config.extraAllowedContent = 'h1[src,alt,width,height]';
-	CKEDITOR.config.allowedContent = true;
-}
-
 function linckoEditor(elem, toolbarID, param){
 	//editorInst = CKEDITOR.replace(elem);
 	editorInst = CKEDITOR.inline( elem, {

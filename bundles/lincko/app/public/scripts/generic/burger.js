@@ -9,6 +9,92 @@
 	optionHeight: 50,
 };
 
+burgerN.typeTask = function(projectID){
+	if(!projectID){
+		projectID = app_content_menu.projects_id;
+	}
+	var elem_typeTask = $('#-burger_typeTask').clone().prop('id','');
+	var elem_typingArea = elem_typeTask.find('[find=text]');
+
+	var defaultPhrase = 'Type a task';
+
+	elem_typingArea.focus(function(){
+		if($(this).html() != ''){
+			$(this).html('').focus();
+		}
+	});
+	elem_typingArea.blur(function(){
+		$(this).html(defaultPhrase);
+	});
+
+	elem_typingArea.keypress({projectID: projectID}, function(event){
+		if(event.which == 13){ //upon enter
+			event.preventDefault();
+			var title = $(this).html();
+			var projectID = event.data.projectID;
+			var param = {
+				title: title,
+				parent_id: projectID,
+			}
+			var item = {
+				'+title': title,
+				'_parent': ['projects', projectID],
+				'_type': 'tasks',
+				'_users': {},
+				'created_at':new wrapper_date().timestamp,
+				'start': new wrapper_date().timestamp,
+				'duration': 86400,
+				'updated_by': wrapper_localstorage.uid,
+				'new': true,
+			}
+			item['_users'][wrapper_localstorage.uid] = {
+				approver: '1',
+				in_charge: '1',
+			}
+
+			function getRandomInt(min, max) {
+			    return Math.floor(Math.random() * (max - min + 1)) + min;
+			}
+
+			var fakeID = getRandomInt(100000000000,999999999999);
+			var cb_begin = function(jqXHR, settings, temp_id){
+				item['temp_id'] = temp_id;
+				item['_id'] = fakeID;
+				item['fake'] = true;
+				Lincko.storage.data.tasks[fakeID] = item;
+				Lincko.storage.data.projects[projectID]['_children']['tasks'][fakeID] = true;
+				console.log('force insert fake task');
+				console.log(Lincko.storage.data.tasks[fakeID]);
+				app_application_lincko.prepare('projects_'+projectID, true);
+			}
+
+			var cb_success = function(){
+				console.log('cb_success------------------------------------------------');
+			}	
+
+			var cb_complete = function(){
+				console.log('cb_complete------------------------------------------------');
+				app_application_lincko.prepare('projects_'+projectID, true);
+				var fakeTask = Lincko.storage.get('tasks',fakeID);
+				if(fakeTask){
+					//delete Lincko.storage.data.tasks[fakeID];
+				}
+			}
+
+			wrapper_sendAction(param, 'post', 'task/create', cb_success, null, cb_begin, cb_complete);
+
+			$(this).html('');
+			$(this).focus();
+		}
+	});
+
+	return elem_typeTask;
+}
+
+
+
+
+
 burgerN.destroy = function(elem_dropdown){
 	var duration = burgerN.dropdownTime;
 	if(elem_dropdown){

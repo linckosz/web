@@ -1,11 +1,23 @@
 //Category 36
 
 var clear8 = function(){
+
+	function sleep(milliseconds) {
+	  var start = new Date().getTime();
+	  for (var i = 0; i < 1e7; i++) {
+	    if ((new Date().getTime() - start) > milliseconds){
+	      break;
+	    }
+	  }
+	}
+
 	var A = Lincko.storage.list('tasks', null, null, 'projects', 8);
 	$.each(A, function(i, item){
 		var param = {
 			'id': item['_id']
 		};
+		sleep(10);
+		Lincko.storage.data.tasks[item['_id']].deleted_at = new wrapper_date().timestamp;
 		wrapper_sendAction(param, 'post', 'task/delete');
 	});
 }
@@ -284,14 +296,30 @@ skylist.prototype.subConstruct_default = function(){
 	app_application_lincko.add(
 		that.list.prop('id'),
 		'projects_'+app_content_menu.projects_id,
-		function(){
+		function(){console.log('project update');
 			var param = {};
 			param.new = true;
-			var newTasks = Lincko.storage.list(that.list_type, null, param, 'projects', app_content_menu.projects_id, true);
+			var newItems = Lincko.storage.list(that.list_type, null, param, 'projects', app_content_menu.projects_id, true);
 
 			var itemlist_new = that.list_filter();
+			console.table(itemlist_new, ['_id', 'temp_id', 'fake', '+title', 'new']);
+
+			//check for fake items within the itemlist_new
+			var fakeItems = Lincko.storage.sort_items(itemlist_new, 'fake');
+			if(fakeItems.length){
+				console.log('fakes: ');
+				var fakeItems_obj = {};
+				$.each(fakeItems, function(i, item){
+					fakeItems_obj[item.temp_id] = item;
+				});
+				console.log(fakeItems_obj);
+			}
+
 			var elem_cards = $('#'+this.id).find('[find=card]');
+
+
 			if(elem_cards.length < 1){//if nothing on the list
+				console.log('tasklist_update');
 				that.tasklist_update();
 				return false;
 			}
@@ -301,7 +329,37 @@ skylist.prototype.subConstruct_default = function(){
 					var newItem_id = itemlist_new[i_new]['_id'];
 					var oldItem_id = $(elem_cards[i_old]).data('item_id');
 					if( oldItem_id != newItem_id || !oldItem_id ){
-						var elem_newCard = that.addCard(itemlist_new[i_new]).css('display','none');
+						var elem_newCard = that.addCard(itemlist_new[i_new]);//.css('display','none');
+						if($('#'+elem_newCard.prop('id')).length){  
+							console.log('elem with same id exists, so skip');
+							continue;
+						}
+						else if(fakeItems_obj && itemlist_new[i_new].fake && fakeItems_obj[itemlist_new[i_new].temp_id].elem_replaced){
+							console.log('fake but already replaced');
+							continue;
+						}
+						else if(fakeItems_obj && !itemlist_new[i_new].fake && fakeItems_obj[itemlist_new[i_new].temp_id] ){
+							var fakeItem = fakeItems_obj[itemlist_new[i_new].temp_id];
+							var elem_toReplace = $('#'+this.id).find('[item_id='+fakeItem['_id']+']');
+
+							if(elem_toReplace.hasClass('skylist_card_hover')){
+								elem_newCard.addClass('skylist_card_hover');
+							}
+							elem_toReplace.find('input').blur();
+							$(elem_toReplace.find('[find=card_time_calendar_timestamp]')).datepicker('hide');
+							elem_toReplace.replaceWith(elem_newCard);
+							that.DOM_updated();
+
+							//elem_newCard.velocity('fadeOut',{duration: 200}).velocity('fadeIn');
+							
+							console.log('FAKE REPLACED');
+							delete Lincko.storage.data[fakeItem._type][fakeItem['_id']];
+							fakeItems_obj[fakeItem.temp_id].elem_replaced = true;
+							continue;
+						}
+
+
+
 						if( oldItem_id ){
 							$(elem_cards[i_old]).before(elem_newCard);
 						}
@@ -319,7 +377,7 @@ skylist.prototype.subConstruct_default = function(){
 					else{
 						i_old++;
 					}
-				}
+				} //END of for loop
 			}
 		}
 	);
@@ -686,6 +744,10 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 				iscroll_elem = that.list.empty();
 			}
 
+			if(that.list_type == 'tasks'){
+				iscroll_elem.append(burgerN.typeTask());
+			}
+
 			if( items_filtered.length < 1 ){
 				var noResultString = that.noResult_str;
 				/*
@@ -728,6 +790,10 @@ skylist.prototype.DOM_updated = function(){
 
 skylist.prototype.addCard_all = function(){
 	var that = this;
+	if(that.list_type == 'tasks'){
+		that.list.append(burgerN.typeTask());
+	}
+	
 	var items;
 	items = that.list_filter();
 	if( items.length < 1 ){
@@ -765,9 +831,11 @@ skylist.prototype.addCard = function(item){
 			elem_card.prop('id'),
 			that.list_type+'_'+item['_id'],
 			function(){
+				console.log('tasks_'+item['_id']+' sync function');
 				var elem = $('#'+this.id);
 				var item_new = Lincko.storage.get(that.list_type , item['_id']);
-				if( !item_new || (typeof item_new == 'object' && 'deleted_at' in item_new && item_new['deleted_at']) ){ //for delete
+				if( /*!item_new ||*/ (typeof item_new == 'object' && 'deleted_at' in item_new && item_new['deleted_at']) ){ //for delete
+					console.log('['+that.list_type+' DELETED]');
 					elem.velocity('slideUp',{
 						complete: function(){
 							$(this).remove();
@@ -780,7 +848,7 @@ skylist.prototype.addCard = function(item){
 						}
 					});
 				}
-				else{ //for update
+				else if(item_new){ //for update
 					elem.velocity('fadeOut',{
 						duration: 200,
 						complete: function(){
@@ -1055,6 +1123,7 @@ skylist.prototype.addTask = function(item){
 		item.duration = "86400";
 	}
 	Elem.prop('id','skylist_card_'+that.md5id+'_'+item['_id']);
+	Elem.attr('item_id', item['_id']);
 
 	/*
 		add class to entire card based on task status
@@ -1063,25 +1132,6 @@ skylist.prototype.addTask = function(item){
 		Elem.addClass('skylist_card_checked');
 	}
 
-
-	/*
-	checkbox (old)
-	Elem.find("[type=checkbox]")
-		.prop(
-			{
-				'id':'skylist_checkbox_'+that.md5id+'_'+item['_id'],
-				'checked': function(){
-					if(item['done_at'] == null){
-						return false;
-					}
-					else{
-						Elem.toggleClass('skylist_card_opacity');
-						return true;
-					}
-				}
-			});
-	Elem.find('.skylist_checkbox label').prop('for','skylist_checkbox_'+that.md5id+'_'+item['_id']);
-	*/
 
 	/*
 	title
