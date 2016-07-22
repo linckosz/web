@@ -1012,7 +1012,13 @@ Submenu.prototype.Add_taskdetail = function() {
 				else{
 					route += '/update';
 				}
-				wrapper_sendAction( param,'post',route, cb_success, null, cb_begin);
+
+				if(taskid != 'new' && route == 'task/update'){
+					skylist.sendAction.tasks(param, item, route, cb_success, null, cb_begin);
+				}
+				else{
+					wrapper_sendAction( param,'post',route, cb_success, null, cb_begin);
+				}
 			}
 		}, this
 	);

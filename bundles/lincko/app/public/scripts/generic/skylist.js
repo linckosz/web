@@ -347,6 +347,7 @@ skylist.prototype.subConstruct_default = function(){
 							}
 							elem_toReplace.find('input').blur();
 							$(elem_toReplace.find('[find=card_time_calendar_timestamp]')).datepicker('hide');
+							console.log(elem_toReplace.prop('id')+' to '+elem_newCard.prop('id'));
 							elem_toReplace.replaceWith(elem_newCard);
 							that.DOM_updated();
 
@@ -379,7 +380,9 @@ skylist.prototype.subConstruct_default = function(){
 					}
 				} //END of for loop
 			}
-		}
+			//one last check to update any fake cards
+			that.updateFakeCards();
+		}//end of the function attached to this project range
 	);
 
 }//END OF subConstruct_default
@@ -1124,6 +1127,8 @@ skylist.prototype.addTask = function(item){
 	}
 	Elem.prop('id','skylist_card_'+that.md5id+'_'+item['_id']);
 	Elem.attr('item_id', item['_id']);
+	Elem.attr('temp_id', item.temp_id);
+	if(item.fake){ Elem.attr('fake',true); }
 
 	/*
 		add class to entire card based on task status
@@ -1167,7 +1172,8 @@ skylist.prototype.addTask = function(item){
 			that.editing_target.attr('contenteditable',false);
 			var new_text = $(this).html();
 			if(new_text != item['+title']){
-				wrapper_sendAction({
+
+				/*wrapper_sendAction({
 				id: item['_id'],
 				title: new_text,
 				}, 'post', 'task/update', 
@@ -1175,7 +1181,23 @@ skylist.prototype.addTask = function(item){
 					if(data_error){
 						app_application_lincko.prepare(item['_type']+'_'+item['_id']);
 					}
-				}, function(){ app_application_lincko.prepare(item['_type']+'_'+item['_id']); });
+				}, function(){ app_application_lincko.prepare(item['_type']+'_'+item['_id']); });*/
+
+
+				skylist.sendAction.tasks(
+					{
+						id: item['_id'],
+						title: new_text,
+					}, 
+					item, 'task/update',
+					function(msg, data_error, data_status, data_msg){ 
+						if(data_error){
+							app_application_lincko.prepare(item['_type']+'_'+item['_id']);
+						}
+					},
+					function(){ app_application_lincko.prepare(item['_type']+'_'+item['_id']); }
+				);
+
 			}
 		});
 		burger(Elem.find('[find=title]'), 'regex');
@@ -1276,10 +1298,17 @@ skylist.prototype.addTask = function(item){
 			if( that.list_type == "tasks" ){
 				route = 'task/update';
 			}
-			wrapper_sendAction({
+
+			/*wrapper_sendAction({
 				id: item['_id'],
 				duration: duration_timestamp,
-			}, 'post', route);
+			}, 'post', route);*/
+
+			skylist.sendAction.tasks(
+				{
+					id: item['_id'],
+					duration: duration_timestamp,
+				}, item, route);
 		}
 	});
 
@@ -1626,8 +1655,15 @@ skylist.prototype.add_cardEvents = function(Elem){
 					route
 				);
 			};
+
+			if(Elem.attr('fake') && that.list_type == "tasks" ){ //fake then queue
+				begin_fn = function(){
+					skylist.sendAction.tasks({ "id": itemID }, null, route);
+				};
+			}
+
 			var complete_fn = function(){
-				delete Lincko.storage.data[that.list_type][itemID];
+				Lincko.storage.data[that.list_type][itemID].deleted_at = new wrapper_date().timestamp;
 				app_application_lincko.prepare(that.list_type+'_'+itemID, true);
 			};
 			that.clearOptions(Elem, begin_fn, complete_fn);
@@ -1854,6 +1890,8 @@ skylist.prototype.setHeight = function(){
 }
 
 skylist.prototype.checkboxClick = function(event,elem_checkbox){
+	console.log('checkbox click');
+	var that = this;
 	event.stopPropagation();
 
 	var elem_task = elem_checkbox.closest('.skylist_card');
@@ -1870,12 +1908,14 @@ skylist.prototype.checkboxClick = function(event,elem_checkbox){
 	else{
 		approved = true;
 	}
-	wrapper_sendAction(
-		{
-			"id": elem_task.data('item_id'),
-			"approved": approved,
-		},
-		'post', 'task/update');
+
+	var param = {
+		"id": elem_task.data('item_id'),
+		"approved": approved,
+	};
+
+	skylist.sendAction.tasks(param, task, 'task/update');
+	//wrapper_sendAction( param, 'post', 'task/update');
 
 /*
 	var detail = $('#app_layers_skytasks_detail');
@@ -2287,4 +2327,112 @@ skylist.prototype.minMobileL = function(){
 skylist.prototype.isMobile = function(){
 	var that = this;
 	if(!that.list_wrapper){return;}
+}
+
+
+skylist.prototype.updateFakeCards = function(){
+	console.log('updateFakeCards begin');
+	var that = this;
+	var updated = false;
+	elem_fakes = that.list.find('[fake]');
+
+	$.each(elem_fakes, function(i,elem){
+		elem = $(elem);
+		var temp_id = elem.attr('temp_id');
+		var param = {
+			temp_id: temp_id,
+		}
+		var item_real = Lincko.storage.list(that.list_type, 1, param, 'projects', app_content_menu.projects_id, false);
+		$.each(item_real, function(j, item){
+			if(!item.fake){
+				var elem_newCard = that.addCard(item);
+				elem.find('input').blur();
+				if($(elem.find('[find=card_time_calendar_timestamp]'))){
+					$(elem.find('[find=card_time_calendar_timestamp]')).datepicker('hide');
+				}
+				elem.replaceWith(elem_newCard);
+				elem_newCard.velocity('fadeOut',{duration: 200}).velocity('fadeIn');
+				updated = true;
+			}
+		});
+	});
+
+	if(updated){ console.log('updated FakeCards'); that.DOM_updated(); }
+}
+
+
+
+
+
+
+/*
+ *	skylist sendActionQueue system
+ *	
+ *
+ *
+ */
+skylist.sendActionQueue = {
+	tasks: {
+		run: function(temp_id){
+			if(!skylist.sendActionQueue.tasks[temp_id]){ return; }
+			var items = Lincko.storage.list('tasks', null, {temp_id: temp_id}, 'projects', app_content_menu.projects_id, false);
+			var id_real = null;
+			$.each(items, function(i,item){
+				if(!item.fake){
+					id_real = item._id;
+				}
+			});
+			$.each(skylist.sendActionQueue.tasks[temp_id], function(i, val){
+				if(typeof val == 'function'){ val(id_real); }
+			});
+			delete skylist.sendActionQueue.tasks[temp_id];
+		},
+		//'tempid33gdkflsf':[function1, function2, function3],
+	}, //this object must hold objects with temp_id as key and array of functions as value
+}
+
+skylist.sendAction = {
+
+	//note the second parameter is 'item' not 'method'
+	tasks: function(param, item, action, cb_success, cb_error, cb_begin, cb_complete){
+		if(typeof cb_success==="undefined") { cb_success = null; }
+		if(typeof cb_error==="undefined") { cb_error = null; }
+		if(typeof cb_begin==="undefined") { cb_begin = null; }
+		if(typeof cb_complete==="undefined") { cb_complete = null; }
+
+		var id = param.id || param._id;
+		if(!item){ var item = Lincko.storage.get('tasks',id); }
+		var temp_id = item.temp_id;
+
+		var sendActionFN = function(id){
+			if(id){
+				delete param.id, delete param._id;
+				param.id = id;
+			}
+			wrapper_sendAction(param, 'post', action, cb_success, cb_error, cb_begin, cb_complete);
+		}
+
+
+		if(!item.fake || !temp_id){ //if item is not fake, or temp_id doesnt exist, then just sendAction anyway and see what happens
+			sendActionFN();
+		}
+		else{//if item is fake
+			if(typeof skylist.sendActionQueue.tasks[temp_id] != 'undefined'){ //if fake item has been registered in the queue
+				skylist.sendActionQueue.tasks[temp_id].push(sendActionFN);//add to queue
+			}
+			else{ //if fake item is not already reigstered in queue
+				var item_real = Lincko.storage.list('tasks', null, {temp_id:temp_id}, null, null, false);
+				if(item_real.length){ 
+					$.each(item_real, function(i,item){
+						if(!item.fake){
+							sendActionFN(item._id); 
+						}
+					});
+				}
+				else{ skylist.sendActionQueue.tasks[temp_id].push(sendActionFN); /*add to queue, but this is probably ERROR*/ }
+			}
+		}
+		
+	},//end of tasks
+
 }

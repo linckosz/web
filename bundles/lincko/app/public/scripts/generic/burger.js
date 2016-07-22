@@ -32,13 +32,21 @@ burgerN.typeTask = function(projectID){
 			event.preventDefault();
 			var title = $(this).html();
 			var projectID = event.data.projectID;
+			var tempID = null;
 			var param = {
 				title: title,
 				parent_id: projectID,
 			}
+
+			//default to current user
+			var in_charge_id = wrapper_localstorage.uid;
+			param['users>in_charge'] = {};
+			param['users>in_charge'][in_charge_id] = true;
+
 			var item = {
 				'+title': title,
 				'_parent': ['projects', projectID],
+				'_perm': Lincko.storage.get('projects',projectID, '_perm'),
 				'_type': 'tasks',
 				'_users': {},
 				'created_at':new wrapper_date().timestamp,
@@ -58,6 +66,7 @@ burgerN.typeTask = function(projectID){
 
 			var fakeID = getRandomInt(100000000000,999999999999);
 			var cb_begin = function(jqXHR, settings, temp_id){
+				tempID = temp_id;
 				item['temp_id'] = temp_id;
 				item['_id'] = fakeID;
 				item['fake'] = true;
@@ -66,11 +75,17 @@ burgerN.typeTask = function(projectID){
 				console.log('force insert fake task');
 				console.log(Lincko.storage.data.tasks[fakeID]);
 				app_application_lincko.prepare('projects_'+projectID, true);
+				skylist.sendActionQueue.tasks[temp_id] = [];
 			}
 
 			var cb_success = function(){
 				console.log('cb_success------------------------------------------------');
+				skylist.sendActionQueue.tasks.run(tempID);
 			}	
+
+			var cb_error = function(){
+				delete skylist.sendActionQueue.tasks[tempID];
+			}
 
 			var cb_complete = function(){
 				console.log('cb_complete------------------------------------------------');
@@ -81,6 +96,8 @@ burgerN.typeTask = function(projectID){
 				}
 			}
 
+			console.log('TYPE TASK SENDACTION');
+			console.log(param);
 			wrapper_sendAction(param, 'post', 'task/create', cb_success, null, cb_begin, cb_complete);
 
 			$(this).html('');
@@ -681,7 +698,8 @@ function burger_contacts_sendAction(users, selectArray, item, popup){
 	});
 
 	if(item['_type'] == 'tasks'){
-		wrapper_sendAction( param, 'post', 'task/update');
+		//wrapper_sendAction( param, 'post', 'task/update');
+		skylist.sendAction.tasks(param, item, 'task/update');
 	}
 
 }
