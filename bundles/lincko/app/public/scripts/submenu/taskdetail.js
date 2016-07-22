@@ -981,6 +981,7 @@ Submenu.prototype.Add_taskdetail = function() {
 					}
 					if(duration_timestamp != item['duration']){
 						param['duration'] = duration_timestamp;
+						param['start'] = item['start'];
 					}
 				}
 			}
