@@ -36,15 +36,30 @@ function linckoEditor(elem, toolbarID, param){
 	editorInst = CKEDITOR.inline( elem, {
 			// To enable source code editing in a dialog window, inline editors require the "sourcedialog" plugin.
 			extraPlugins: 'sharedspace,imageuploader',//,timestamp',
-			removePlugins: 'floatingspace,maximize,resize',
+			removePlugins: 'floatingspace,maximize,resize,about',
 			sharedSpaces: {
 				top: toolbarID,
 			}
 		} );
 
+
 	editorInst.Lincko_param = {};
 	editorInst.Lincko_param = param;
 	editorInst.Lincko_param.files = {};
+
+	console.log(editorInst.Lincko_param);
+
+	var submenu_content = $('#'+editorInst.Lincko_param.submenuInst.id).find("[find=submenu_wrapper_content]");
+	if(submenu_content.length && submenu_content.hasClass('overthrow')){
+
+		submenu_content.on('paste cut', function(event){
+			wrapper_IScroll();
+			//editorInst.Lincko_param.iscrollInst.refresh();
+		});
+		
+	}
+
+
 
 	editorInst.addCommand("mySimpleCommand", { // create named command
 	    exec: function(editor) {
@@ -138,7 +153,7 @@ function linckoEditor(elem, toolbarID, param){
 	    label: "Click me",
 	    command: 'mySimpleCommand',
 	    toolbar: 'insert',
-	    icon: 'https://avatars1.githubusercontent.com/u/5500999?v=2&s=16'
+	    icon: "/lincko/app/images/app/linckoeditor/imageupload.png",
 	});
 
 
