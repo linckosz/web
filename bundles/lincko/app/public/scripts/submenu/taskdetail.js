@@ -204,7 +204,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		});
 		item['_users'][wrapper_localstorage.uid]['in_charge'] = true;
 		in_charge_id = wrapper_localstorage.uid;
-		item.start = $.now()/1000;
+		item.start = new wrapper_date().timestamp;
 		item.duration = duration_timestamp;
 		item['_type'] = that.param.type;
 	} 
@@ -981,7 +981,7 @@ Submenu.prototype.Add_taskdetail = function() {
 					}
 					if(duration_timestamp != item['duration']){
 						param['duration'] = duration_timestamp;
-						param['start'] = item['start'];
+						param['start'] = item['start'];console.log(item['start']);
 					}
 				}
 			}

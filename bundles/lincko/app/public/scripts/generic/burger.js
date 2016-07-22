@@ -127,7 +127,8 @@ burgerN.destroy = function(elem_dropdown){
 burgerN.slideDown = function(elem_dropdown){
 	var that = this;
 	var top = parseInt(elem_dropdown.css('top'),10);
-	if( top+that.optionHeight*elem_dropdown.find('.burger_option_users').length > $(window).height() ){
+	//if( top+that.optionHeight*elem_dropdown.find('.burger_option_users').length > $(window).height() ){
+	if( top+that.optionHeight*that.dropdownCount > $(window).height() ){
 		elem_dropdown.css('top','');
 	}
 	else{
