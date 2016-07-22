@@ -47,16 +47,18 @@ function linckoEditor(elem, toolbarID, param){
 	editorInst.Lincko_param = param;
 	editorInst.Lincko_param.files = {};
 
-	console.log(editorInst.Lincko_param);
 
 	var submenu_content = $('#'+editorInst.Lincko_param.submenuInst.id).find("[find=submenu_wrapper_content]");
 	if(submenu_content.length && submenu_content.hasClass('overthrow')){
 
+		//use fixed position
+		editorInst.Lincko_param.iscrollInst = myIScrollList[submenu_content.prop('id')];
+		$('#'+editorInst.Lincko_param.submenuInst.id).find('.submenu_top').css('z-index',100);
+		$(editorInst.Lincko_param.iscrollInst.scroller).css('position','fixed');
+
 		submenu_content.on('paste cut', function(event){
 			wrapper_IScroll();
-			//editorInst.Lincko_param.iscrollInst.refresh();
 		});
-		
 	}
 
 
