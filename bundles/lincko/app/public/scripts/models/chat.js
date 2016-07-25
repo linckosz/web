@@ -168,11 +168,13 @@ function app_models_chat_bubble_actionMenu(){
 	}
 	else{
 		$("body").on("click", '.models_history_content', function(event) {
-			var sel = getSelection().toString();
 			var that = $(this);
-			that.find('[find=actionMenu]').remove();
-			if(!sel){
-				timeout_fn(that);
+			if(that.has('[contenteditable]').length){
+				var sel = getSelection().toString();
+				that.find('[find=actionMenu]').remove();
+				if(!sel){
+					timeout_fn(that);
+				}
 			}
 		});
 	}
