@@ -14,13 +14,13 @@ submenu_list['calendar'] = {
 	},
 	"left_button": {
 		"style": "title_left_button",
-		"title": 'Cancel', //toto
+		"title": Lincko.Translation.get('app', 7, 'html'), //Cancel
 		'hide': true,
 		"class": "base_pointer",
 	},
 	"right_button": {
 		"style": "title_right_button",
-		"title": 'Select', //toto
+		"title": Lincko.Translation.get('app', 52, 'html'), //Select
 		'hide': true,
 		"class": "base_pointer",
 		'action': function(elem, submenuInst){
