@@ -152,6 +152,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	var submenu_content = submenu_wrapper.find("[find=submenu_wrapper_content]");
 	submenu_content.prop('id','taskdetail_'+that.md5id).addClass('submenu_content_taskdetail_'+that.param.type);
 	var submenu_taskdetail = $('#-submenu_taskdetail').clone().prop('id','submenu_taskdetail_'+that.md5id);
+
 	var currentProjID = app_content_menu.projects_id;
 	if(that.param.projID){
 		currentProjID = that.param.projID;
@@ -212,8 +213,11 @@ Submenu.prototype.Add_taskdetail = function() {
 		item = Lincko.storage.get(this.param.type, taskid);
 		if( that.param.type == "tasks" ){
 			duration_timestamp = item['duration'];
-		}
+		}		
 	}
+
+	
+
 
 	/*---tasktitle---*/
 	elem = $('#-submenu_taskdetail_tasktitle').clone().prop('id','');
@@ -901,6 +905,22 @@ Submenu.prototype.Add_taskdetail = function() {
 	submenu_taskdetail.find('.submenu_taskdetail_collapsable_button').click(submenu_taskdetail_collapsable_fn);
 	
 	//submenu_wrapper.find('[find=submenu_wrapper_content]').removeClass('overthrow');
+
+
+
+	//control appearance of 'save' button
+	if(taskid != 'new'){
+		var canSave = false;
+		var elem_save = submenu_wrapper.find('.submenu_title.submenu_top_side_right');
+		elem_save.addClass('display_none');
+		elem_title_text.add(elem_description_text).keypress(function(event){
+			if(!canSave){
+				elem_save.removeClass('display_none');
+				canSave = true;
+			}
+		});
+	}
+
 
 	/*---append to submenu_content---*/
 	submenu_content.append(submenu_taskdetail);
