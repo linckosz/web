@@ -524,6 +524,9 @@ styling for sub comments
 		left:0px;
 		padding: 22px;
 	}
+	.submenu_content_taskdetail_files [find=title_text]{
+		padding-right: 0px;
+	}
 }
 
 /*mobile only*/
