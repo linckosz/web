@@ -27,7 +27,7 @@
 	display: none;
 }
 .burger_dropdown .burger_latestvisitProjects_border {
-	border-bottom: 1px solid #3F84B0;
+	border-bottom: 1px solid rgba(63,132,176,.5);
 }
 
 .burger_option_users [find=image] {
