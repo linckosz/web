@@ -142,6 +142,15 @@ var app_content_menu = {
 			param: param,
 		};
 		wrapper_localstorage.encrypt('old_page', JSON.stringify(old_page));
+
+		//keep track of visited projects
+		if(!Lincko.storage.settings.latestvisitProjects.length || Lincko.storage.settings.latestvisitProjects[0] != projects_id){
+			var i = $.inArray(projects_id, Lincko.storage.settings.latestvisitProjects);
+			if(i > -1){ Lincko.storage.settings.latestvisitProjects.splice(i,1) }
+
+			Lincko.storage.settings.latestvisitProjects.unshift(projects_id);
+			wrapper_localstorage.encrypt('settings', JSON.stringify(Lincko.storage.settings));
+		}
 	},
 }
 

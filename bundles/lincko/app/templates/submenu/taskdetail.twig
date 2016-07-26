@@ -21,11 +21,16 @@
 <div id="-submenu_taskdetail_meta" class="submenu_taskdetail_meta submenu_taskdetail_paddingLeft">
 	<table>
 		<tr>
+			<td find="projects" class="submenu_taskdetail_meta_box">
+				<span class="submenu_taskdetail_meta_icons icon-Calendar"></span>
+				<input class="visibility_hidden"/>
+				<span find="projects_text" class="submenu_taskdetail_meta_text"></span>
+				<input type="text" find="projects_id" class="submenu_taskdetail_meta_text" readonly="readonly"/>
+			</td>
 			<td find="calendar" class="submenu_taskdetail_meta_box">
 				{#<img src="{{_filelatest('/lincko/app/images/app/icons/Time-3.png') }}"/>#}
 				<span class="submenu_taskdetail_meta_icons icon-Calendar"></span>
 				{#<span find="duedate_text" class="submenu_taskdetail_meta_text"></span>#}
-				<input class="visibility_hidden"/>
 				<span find="duedate_text" class="submenu_taskdetail_meta_text"></span>
 				<input type="text" find="duedate_timestamp" class="submenu_taskdetail_meta_text" readonly="readonly"/>
 			</td>

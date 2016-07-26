@@ -278,6 +278,148 @@ burgerN.regex = function(elem, item, param){
 	});
 }
 
+
+burgerN.draw_projects = function(projects,option_fn){
+	var that = this;
+	var elem_dropdown = burgerN.elem_dropdown.clone();
+	var elem_option = $('#-burger_option').clone().prop('id','').addClass('burger_option_users');
+	var elem_option_clone;
+
+	var latest_projects = [];
+	$.each(Lincko.storage.settings.latestvisitProjects, function(i, id){
+		latest_projects.push(Lincko.storage.get('projects',id));
+	});
+
+	var personalSpace = Lincko.storage.getMyPlaceholder();
+	personalSpace['+title'] = Lincko.Translation.get('app', 2502, 'html'); //Personal Space
+	latest_projects.unshift(personalSpace);
+
+	$.each(latest_projects, function(i, project){
+		elem_option_clone = elem_option.clone().attr('projects_id',project['_id']);
+		if(i == latest_projects.length-1){
+			elem_option_clone.addClass('burger_latestvisitProjects_border');
+		}
+		elem_option_clone.find('[find=image]').addClass('display_none');
+		elem_option_clone.find('[find=text]').html(project['+title']);
+		elem_dropdown.find('[find=wrapper]').append(elem_option_clone);
+		if(typeof option_fn == 'function' ){
+			elem_option_clone.on('mousedown', option_fn);
+		}
+	});
+
+	$.each(projects, function(i, project){
+		//return if it is one of the latest
+		if(!$.inArray(project['_id'], Lincko.storage.settings.latestvisitProjects)){ return; }
+
+		elem_option_clone = elem_option.clone().attr('projects_id',project['_id']);
+		elem_option_clone.find('[find=image]').addClass('display_none');
+		elem_option_clone.find('[find=text]').html(project['+title']);
+		elem_dropdown.find('[find=wrapper]').append(elem_option_clone);
+		if(typeof option_fn == 'function' ){
+			elem_option_clone.on('mousedown', option_fn);
+		}
+	});
+	if(projects.length > that.dropdownCount){
+		elem_dropdown.css({'height': that.optionHeight*that.dropdownCount, 'width': that.dropdownWidth});
+		elem_dropdown.find('[find=wrapper]').addClass('overthrow');
+	}
+	return elem_dropdown;
+}
+
+burgerN.assignProject = function(elem, item){
+	var that = this;
+	var burger_destroy = burgerN.destroy;
+	var elem_dropdown = null;
+	var dropdown_duration = burgerN.dropdownTime;
+
+	var route = null;
+	if(item['_type'] == 'tasks'){
+		route = 'task/update';
+	}
+	else if(item['_type'] == 'notes'){
+		route = 'note/update';
+	}
+	else if(item['_type'] == 'files'){
+		route = 'file/update';
+	}
+
+	elem.click(function(event){
+		elem.focus();
+		event.stopPropagation();
+		if( elem_dropdown ){
+			burger_destroy(elem_dropdown);
+			elem_dropdown = null;
+		}
+		else{
+            var projects_list = Lincko.storage.list('projects', null, {personal_private: ['==',null]}, null, null, false);
+            console.log(projects_list);
+           	projects_list = Lincko.storage.sort_items(projects_list,'+title');
+			//use the submenu for mobile
+			if(responsive.test("maxMobileL")){
+				submenu_Build('projects_list');
+				return false;
+			}
+
+			var userClick_fn = function(){
+				var projects_id = $(this).attr('projects_id'); 
+                if(elem.val() == projects_id){
+                    return;
+                }
+                else{
+                    elem.val(projects_id);
+                }
+				elem.change();
+				if(!item['_id'] || item['_id'] == 'new'){
+					return;
+				}
+				var param = {
+					id: item['_id'],
+					parent_id: projects_id,
+				}
+				if(item['_type'] == 'tasks'){
+					//skylist.sendAction.tasks(param,item,route);
+				}
+				else{
+					//wrapper_sendAction(param, 'post', route);
+				}
+				
+			}
+
+			elem_dropdown = burgerN.draw_projects(projects_list, userClick_fn);
+			elem_dropdown.appendTo('#app_application_main');
+
+			var coord = $(this).offset();
+			var coordP = $(this).position();
+			var left = coord.left;
+			if(left == 0){ 
+				left = coord.left;
+				if( responsive.test("minTablet")){
+					left -= $('#app_content_menu').outerWidth();
+					if( $('#app_application_project').outerWidth() > 0){
+						left -= $('#app_application_project').outerWidth();
+					}
+				}
+			};
+			var table_height = $(this).closest('table').outerHeight();
+			var top = coord.top + table_height; //- $('#app_content_top').outerHeight();
+			var bottom = $(window).height() - top + table_height +3/*some padding*/;
+			
+			elem_dropdown.css({
+				position: 'absolute',
+				left: left,
+				top: top,
+				bottom: bottom,
+			});
+			that.slideDown(elem_dropdown);
+		}
+	});
+	elem.blur(function(){
+		burger_destroy(elem_dropdown);
+		elem_dropdown = null;
+	});
+}
+
+
 burgerN.draw_contacts = function(contacts,option_fn){
 	var that = this;
 	/* contacts = {
@@ -297,11 +439,11 @@ burgerN.draw_contacts = function(contacts,option_fn){
 		in_charge = obj.checked;
 		username = Lincko.storage.get("users", userid,"username");
 		elem_option_clone = elem_option.clone().attr('userid',userid);
-		elem_option_clone.find('[find=username]').html(username);
+		elem_option_clone.find('[find=text]').html(username);
 		picID  = Lincko.storage.get("users", userid, 'profile_pic');
 		if(picID){
 			var thumb_url = Lincko.storage.getLinkThumbnail(picID);
-			elem_option_clone.find('[find=profile_pic]').removeClass('icon-SmallPersonaiconBlack').css('background-image','url("'+thumb_url+'")');
+			elem_option_clone.find('[find=image]').removeClass('icon-SmallPersonaiconBlack').css('background-image','url("'+thumb_url+'")');
 		}
 		if( in_charge ){
 			elem_option_clone.addClass('burger_option_selected');

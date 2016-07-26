@@ -1640,6 +1640,13 @@ JSfiles.finish(function(){
 		storage_first_launch = false; //Help to trigger some action once the database is downloaded
 		app_application_lincko.prepare('first_launch', true);
 	}
+	Lincko.storage.settings = JSON.parse(wrapper_localstorage.decrypt('settings'));
+	if(!Lincko.storage.settings){
+		Lincko.storage.settings = {
+			latestvisitProjects: [],
+		}
+	}
+
 	wrapper_load_progress.move(65);
 	Lincko.storage.childrenList();
 	wrapper_load_progress.move(70);

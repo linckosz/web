@@ -153,6 +153,8 @@ Submenu.prototype.Add_taskdetail = function() {
 	submenu_content.prop('id','taskdetail_'+that.md5id).addClass('submenu_content_taskdetail_'+that.param.type);
 	var submenu_taskdetail = $('#-submenu_taskdetail').clone().prop('id','submenu_taskdetail_'+that.md5id);
 
+	var elem_save = submenu_wrapper.find('.submenu_title.submenu_top_side_right');
+
 	var currentProjID = app_content_menu.projects_id;
 	if(that.param.projID){
 		currentProjID = that.param.projID;
@@ -354,10 +356,30 @@ Submenu.prototype.Add_taskdetail = function() {
 	submenu_taskdetail.append(elem);
 
 	/*meta (general)*/
-	elem = $('#-submenu_taskdetail_meta').clone().prop('id','submenu_taskdetail_meta_'+that.md5id);
+	var elem_meta = $('#-submenu_taskdetail_meta').clone().prop('id','submenu_taskdetail_meta_'+that.md5id);
 	
 	var update_meta = function(elem_meta){
 		var elem = elem_meta;
+
+		/*---projects meta-----*/
+		var elem_projects = elem.find('[find=projects_text]');
+		var elem_projects_input = elem.find('[find=projects_id]').addClass('skylist_clickable');
+		if(taskid != 'new'){
+			currentProjID = item['_parent'][1];
+		}
+		elem_projects.html(Lincko.storage.get('projects',currentProjID,'+title'));
+		burgerN.assignProject(elem_projects_input, item);
+		elem_projects_input.change(function(){
+			elem_projects.html(Lincko.storage.get('projects',$(this).val(),'+title'));
+			if(elem_save.hasClass('display_none')){
+				elem_save.removeClass('display_none');
+			}
+		});
+
+
+
+
+
 		in_charge = '';
 		/*---taskmeta---*/
 		if( that.param.type == "tasks" ){
@@ -397,6 +419,9 @@ Submenu.prototype.Add_taskdetail = function() {
 					else{ //nobody in charnge
 						elem_in_charge.html(Lincko.Translation.get('app', 3608, 'html'));//Not Assigned
 					}
+					if(elem_save.hasClass('display_none')){
+						elem_save.removeClass('display_none');
+					}
 				});
 			}
 			else{
@@ -422,10 +447,14 @@ Submenu.prototype.Add_taskdetail = function() {
 					if( that.param.type == "tasks" ){
 						route = 'task/update';
 					}
-					wrapper_sendAction({
+
+					if(elem_save.hasClass('display_none')){
+						elem_save.removeClass('display_none');
+					}
+					/*wrapper_sendAction({
 						id: item['_id'],
 						duration: duration_timestamp,
-					}, 'post', route);
+					}, 'post', route);*/
 				}
 			});
 
@@ -486,7 +515,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		return elem;
 	}// end of update_meta function
 	
-	submenu_taskdetail.append(update_meta(elem));
+	submenu_taskdetail.append(update_meta(elem_meta));
 	/*---END OF all meta---*/
 
 	/*---description---*/
@@ -796,7 +825,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		var cb_success = function(msg, data_error, data_status, data_msg){
 			if(!document.getElementById('taskdetail_'+that.md5id)){ return; }
 			var comment = Lincko.storage.list('comments',1,{temp_id: tmpID});
-			if(comment){
+			if(comment.length){
 				comment = comment[0];
 				var elem = generateCommentBubble(comment);
 				var elem_toReplace = submenu_taskdetail.find('[comment_id='+tmpID+']').closest('.submenu_taskdetail_commentbubble');
@@ -910,7 +939,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	
 	var textChanged = function(key){
 		if(
-			(key > 7 && key < 14) || 	//7<key<14 : backspace, tab, enter
+			(key > 7 && key < 14) || 	//backspace, tab, enter
 			key == 32 || 				//space
 			key == 46 || 				//delete
 			(key > 47 && key < 58) ||	//0 to 9
@@ -925,14 +954,11 @@ Submenu.prototype.Add_taskdetail = function() {
 		else{
 			return false;
 		}
-
-
 	}
 
 	//control appearance of 'save' button
 	if(taskid != 'new'){
 		var canSave = false;
-		var elem_save = submenu_wrapper.find('.submenu_title.submenu_top_side_right');
 		elem_save.addClass('display_none');
 		elem_title_text.add(elem_description_text).keydown(function(event){
 			if(!canSave && textChanged(event.which)){
@@ -973,7 +999,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			var cb_success = function(msg, data_error, data_status, data_msg){
 				if(tmpID){
 					var itemID_real = Lincko.storage.list(that.param.type,1,{temp_id: tmpID});
-					if(itemID_real){
+					if(itemID_real.length){
 						itemID_real = itemID_real[0]['_id'];
 						$.each(param_newItemComments, function(i,param){
 							sendAction_newComment(that.param.type, itemID_real, param.comment);
@@ -988,6 +1014,25 @@ Submenu.prototype.Add_taskdetail = function() {
 			submenu_taskdetail.find('[find=title_text]');
 			param['comment'] = submenu_taskdetail.find('[find=description_text]').html();
 
+
+			var new_projectID = elem_meta.find('[find=projects_id]').val();
+			if(new_projectID){
+				param['parent_id'] = new_projectID;
+				contactServer = true;
+			}
+
+			//for calendar and assignment (only for tasks)
+			if(that.param.type == 'tasks'){
+				var new_duedate = elem_meta.find('[find=duedate_stamp]').val();
+				if(duration_timestamp != item['duration']){
+					param['duration'] = duration_timestamp;
+					param['start'] = item['start'];
+					contactServer = true;
+				}
+			}
+
+
+			//name or title
 			if(that.param.type == 'files'){
 				param['name'] = $('<div>').html(submenu_taskdetail.find('[find=title_text]').html()).text();
 				/*
@@ -1007,7 +1052,9 @@ Submenu.prototype.Add_taskdetail = function() {
 
 
 			if( taskid == 'new' ){
-				param['parent_id'] = currentProjID;
+				if(!param['parent_id']){
+					param['parent_id'] = currentProjID;
+				}
 				if(param['+title'] == newTitle){
 					delete param['+title'];
 				}
@@ -1020,10 +1067,7 @@ Submenu.prototype.Add_taskdetail = function() {
 					if(approved){
 						param['approved'] = approved;
 					}
-					if(duration_timestamp != item['duration']){
-						param['duration'] = duration_timestamp;
-						param['start'] = item['start'];console.log(item['start']);
-					}
+					
 				}
 			}
 			if( taskid == 'new' || route_delete 

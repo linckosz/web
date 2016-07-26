@@ -22,12 +22,15 @@
 .burger_option:hover, .burger_option_selected {
 	background: #B6D6E8;
 }
-.burger_option [find=profile_pic], 
-.burger_option [find=username] {
+.burger_option [find=image], 
+.burger_option [find=text] {
 	display: none;
 }
+.burger_dropdown .burger_latestvisitProjects_border {
+	border-bottom: 1px solid #3F84B0;
+}
 
-.burger_option_users [find=profile_pic] {
+.burger_option_users [find=image] {
 	display: inline-block;
 	font-size: 28px;
 	text-align: center;
@@ -41,7 +44,7 @@
 	background-repeat: no-repeat;
 
 }
-.burger_option_users [find=username] {
+.burger_option_users [find=text] {
 	display: inline-block;
 	line-height: 40px;
 	vertical-align: middle;

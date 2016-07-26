@@ -240,6 +240,22 @@ td.submenu_taskdetail_share .fa{
 	width: 100px;
 	opacity: 0;
 }
+.submenu_taskdetail_meta_text[find=projects_text]{
+	max-width: 80px;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    vertical-align: top;
+    text-overflow: ellipsis;
+}
+.submenu_taskdetail_meta_text[find=projects_id]{
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	width: 150px;
+	opacity: 0;
+}
 .submenu_taskdetail_meta_box {
 	position: relative;
 }
