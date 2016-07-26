@@ -245,7 +245,7 @@ td.submenu_taskdetail_share .fa{
     display: inline-block;
     overflow: hidden;
     white-space: nowrap;
-    vertical-align: top;
+    vertical-align: bottom;
     text-overflow: ellipsis;
 }
 .submenu_taskdetail_meta_text[find=projects_id]{

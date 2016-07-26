@@ -367,16 +367,28 @@ Submenu.prototype.Add_taskdetail = function() {
 		if(taskid != 'new'){
 			currentProjID = item['_parent'][1];
 		}
-		elem_projects.html(Lincko.storage.get('projects',currentProjID,'+title'));
+		var project = Lincko.storage.get('projects',currentProjID);
+		if(project.personal_private){
+			elem_projects.html(Lincko.Translation.get('app', 2502, 'html')); //Personal Space
+		}
+		else{
+			elem_projects.html(project['+title']);
+		}
+		
 		burgerN.assignProject(elem_projects_input, item);
 		elem_projects_input.change(function(){
-			elem_projects.html(Lincko.storage.get('projects',$(this).val(),'+title'));
+			var project = Lincko.storage.get('projects',$(this).val());
+			if(project.personal_private){
+				elem_projects.html(Lincko.Translation.get('app', 2502, 'html')); //Personal Space
+			}
+			else{
+				elem_projects.html(project['+title']);
+			}
+
 			if(elem_save.hasClass('display_none')){
 				elem_save.removeClass('display_none');
 			}
 		});
-
-
 
 
 

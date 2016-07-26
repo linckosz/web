@@ -837,7 +837,9 @@ skylist.prototype.addCard = function(item){
 				console.log('tasks_'+item['_id']+' sync function');
 				var elem = $('#'+this.id);
 				var item_new = Lincko.storage.get(that.list_type , item['_id']);
-				if( /*!item_new ||*/ (typeof item_new == 'object' && 'deleted_at' in item_new && item_new['deleted_at']) ){ //for delete
+				console.log(item_new._parent[1]);
+				console.log(app_content_menu.projects_id);
+				if( /*!item_new ||*/ (typeof item_new == 'object' && 'deleted_at' in item_new && item_new['deleted_at']) || (typeof item_new == 'object' && item_new._parent[1] != app_content_menu.projects_id) ){ //for delete
 					console.log('['+that.list_type+' DELETED]');
 					elem.velocity('slideUp',{
 						complete: function(){

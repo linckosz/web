@@ -287,12 +287,14 @@ burgerN.draw_projects = function(projects,option_fn){
 
 	var latest_projects = [];
 	$.each(Lincko.storage.settings.latestvisitProjects, function(i, id){
-		latest_projects.push(Lincko.storage.get('projects',id));
+		var project = Lincko.storage.get('projects',id);
+		if(project.personal_private){ return; }
+		else{
+			latest_projects.push(project);
+		}
 	});
 
-	var personalSpace = Lincko.storage.getMyPlaceholder();
-	personalSpace['+title'] = Lincko.Translation.get('app', 2502, 'html'); //Personal Space
-	latest_projects.unshift(personalSpace);
+	latest_projects.unshift(Lincko.storage.getMyPlaceholder());
 
 	$.each(latest_projects, function(i, project){
 		elem_option_clone = elem_option.clone().attr('projects_id',project['_id']);
@@ -300,7 +302,14 @@ burgerN.draw_projects = function(projects,option_fn){
 			elem_option_clone.addClass('burger_latestvisitProjects_border');
 		}
 		elem_option_clone.find('[find=image]').addClass('display_none');
-		elem_option_clone.find('[find=text]').html(project['+title']);
+		
+		if(project.personal_private){
+			elem_option_clone.find('[find=text]').html(Lincko.Translation.get('app', 2502, 'html')); //Personal Space)
+		}
+		else{
+			elem_option_clone.find('[find=text]').html(project['+title']);
+		}
+
 		elem_dropdown.find('[find=wrapper]').append(elem_option_clone);
 		if(typeof option_fn == 'function' ){
 			elem_option_clone.on('mousedown', option_fn);
@@ -377,10 +386,10 @@ burgerN.assignProject = function(elem, item){
 					parent_id: projects_id,
 				}
 				if(item['_type'] == 'tasks'){
-					//skylist.sendAction.tasks(param,item,route);
+					skylist.sendAction.tasks(param,item,route);
 				}
 				else{
-					//wrapper_sendAction(param, 'post', route);
+					wrapper_sendAction(param, 'post', route);
 				}
 				
 			}
