@@ -123,7 +123,12 @@ function linckoEditor(elem, toolbarID, param){
 	            		var tmp = editor.Lincko_param.files[elem_img_id].temp_id;
 		            	var file = Lincko.storage.list('files',1,{temp_id: tmp})[0];
 	            		var file_url = Lincko.storage.getLink(file['_id']);
-	            		var elem_replace = $('<img>').prop('src',file_url).addClass('submenu_taskdetail_description_img');
+	            		var elem_replace = $('<img>')
+	            				.prop('src',file_url)
+	            				.addClass('submenu_taskdetail_description_img')
+	            				.css({
+	            					'max-width': $(editor.element.$).width(),
+	            				});										
 	            		$('#'+elem_img_id).replaceWith(elem_replace);
 	            	}
 	            	else{
