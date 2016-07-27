@@ -385,9 +385,6 @@ Submenu.prototype.Add_taskdetail = function() {
 				elem_projects.html(project['+title']);
 			}
 
-			if(elem_save.hasClass('display_none')){
-				elem_save.removeClass('display_none');
-			}
 		});
 
 
@@ -426,13 +423,11 @@ Submenu.prototype.Add_taskdetail = function() {
 					if(in_charge_id){
 						var username = Lincko.storage.get("users", in_charge_id, "username");
 						elem_in_charge.html(username);
+						if(!item['_users'][in_charge_id]){ item['_users'][in_charge_id] = {}; }
 						item['_users'][in_charge_id]['in_charge'] = true;
 					}
 					else{ //nobody in charnge
 						elem_in_charge.html(Lincko.Translation.get('app', 3608, 'html'));//Not Assigned
-					}
-					if(elem_save.hasClass('display_none')){
-						elem_save.removeClass('display_none');
 					}
 				});
 			}
@@ -460,13 +455,10 @@ Submenu.prototype.Add_taskdetail = function() {
 						route = 'task/update';
 					}
 
-					if(elem_save.hasClass('display_none')){
-						elem_save.removeClass('display_none');
-					}
-					/*wrapper_sendAction({
+					wrapper_sendAction({
 						id: item['_id'],
 						duration: duration_timestamp,
-					}, 'post', route);*/
+					}, 'post', route);
 				}
 			});
 
@@ -706,7 +698,6 @@ Submenu.prototype.Add_taskdetail = function() {
 				var elem_replyTo = elem_click.closest('.submenu_taskdetail_commentbubble');
 				var parentID = elem_replyTo.find('[find=comment_id]').attr('comment_id');
 				if(!Lincko.storage.get('comments',parentID)){
-					console.log(parentID);
 					return false;
 				}
 
@@ -1195,9 +1186,7 @@ Submenu.prototype.Add_taskdetail = function() {
 
 
 	elem_description_text.focus(function(){
-		console.log('focus');
 		if(!editorInst){
-			console.log('here');
 
 			var param = {};
 			param.itemID = item['_id'];

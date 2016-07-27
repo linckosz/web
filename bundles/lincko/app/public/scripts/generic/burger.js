@@ -72,14 +72,11 @@ burgerN.typeTask = function(projectID){
 				item['fake'] = true;
 				Lincko.storage.data.tasks[fakeID] = item;
 				Lincko.storage.data.projects[projectID]['_children']['tasks'][fakeID] = true;
-				console.log('force insert fake task');
-				console.log(Lincko.storage.data.tasks[fakeID]);
 				app_application_lincko.prepare('projects_'+projectID, true);
 				skylist.sendActionQueue.tasks[temp_id] = [];
 			}
 
 			var cb_success = function(){
-				console.log('cb_success------------------------------------------------');
 				skylist.sendActionQueue.tasks.run(tempID);
 			}	
 
@@ -88,7 +85,6 @@ burgerN.typeTask = function(projectID){
 			}
 
 			var cb_complete = function(){
-				console.log('cb_complete------------------------------------------------');
 				app_application_lincko.prepare('projects_'+projectID, true);
 				var fakeTask = Lincko.storage.get('tasks',fakeID);
 				if(fakeTask){
@@ -96,8 +92,6 @@ burgerN.typeTask = function(projectID){
 				}
 			}
 
-			console.log('TYPE TASK SENDACTION');
-			console.log(param);
 			wrapper_sendAction(param, 'post', 'task/create', cb_success, null, cb_begin, cb_complete);
 
 			$(this).html('');
@@ -365,7 +359,6 @@ burgerN.assignProject = function(elem, item){
            	projects_list = Lincko.storage.sort_items(projects_list,'+title');
 			//use the submenu for mobile
 			if(responsive.test("maxMobileL")){
-				console.log('here');
 				submenu_Build('burger_projects',true,false,{ input:elem, projects_list: projects_list, item: item });
 				return false;
 			}

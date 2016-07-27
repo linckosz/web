@@ -302,24 +302,20 @@ skylist.prototype.subConstruct_default = function(){
 			var newItems = Lincko.storage.list(that.list_type, null, param, 'projects', app_content_menu.projects_id, true);
 
 			var itemlist_new = that.list_filter();
-			console.table(itemlist_new, ['_id', 'temp_id', 'fake', '+title', 'new']);
 
 			//check for fake items within the itemlist_new
 			var fakeItems = Lincko.storage.sort_items(itemlist_new, 'fake');
 			if(fakeItems.length){
-				console.log('fakes: ');
 				var fakeItems_obj = {};
 				$.each(fakeItems, function(i, item){
 					fakeItems_obj[item.temp_id] = item;
 				});
-				console.log(fakeItems_obj);
 			}
 
 			var elem_cards = $('#'+this.id).find('[find=card]');
 
 
 			if(elem_cards.length < 1){//if nothing on the list
-				console.log('tasklist_update');
 				that.tasklist_update();
 				return false;
 			}
@@ -330,12 +326,11 @@ skylist.prototype.subConstruct_default = function(){
 					var oldItem_id = $(elem_cards[i_old]).data('item_id');
 					if( oldItem_id != newItem_id || !oldItem_id ){
 						var elem_newCard = that.addCard(itemlist_new[i_new]);//.css('display','none');
-						if($('#'+elem_newCard.prop('id')).length){  
-							console.log('elem with same id exists, so skip');
+						if($('#'+elem_newCard.prop('id')).length){ //elem with same id exists, so skip' 
 							continue;
 						}
 						else if(fakeItems_obj && itemlist_new[i_new].fake && fakeItems_obj[itemlist_new[i_new].temp_id].elem_replaced){
-							console.log('fake but already replaced');
+							//fake but already replaced
 							continue;
 						}
 						else if(fakeItems_obj && !itemlist_new[i_new].fake && fakeItems_obj[itemlist_new[i_new].temp_id] ){
@@ -347,13 +342,11 @@ skylist.prototype.subConstruct_default = function(){
 							}
 							elem_toReplace.find('input').blur();
 							$(elem_toReplace.find('[find=card_time_calendar_timestamp]')).datepicker('hide');
-							console.log(elem_toReplace.prop('id')+' to '+elem_newCard.prop('id'));
 							elem_toReplace.replaceWith(elem_newCard);
 							that.DOM_updated();
 
 							//elem_newCard.velocity('fadeOut',{duration: 200}).velocity('fadeIn');
-							
-							console.log('FAKE REPLACED');
+
 							delete Lincko.storage.data[fakeItem._type][fakeItem['_id']];
 							fakeItems_obj[fakeItem.temp_id].elem_replaced = true;
 							continue;
@@ -834,13 +827,10 @@ skylist.prototype.addCard = function(item){
 			elem_card.prop('id'),
 			that.list_type+'_'+item['_id'],
 			function(){
-				console.log('tasks_'+item['_id']+' sync function');
+				console.log(that.list_type+'_'+item['_id']+' sync function');
 				var elem = $('#'+this.id);
 				var item_new = Lincko.storage.get(that.list_type , item['_id']);
-				console.log(item_new._parent[1]);
-				console.log(app_content_menu.projects_id);
 				if( /*!item_new ||*/ (typeof item_new == 'object' && 'deleted_at' in item_new && item_new['deleted_at']) || (typeof item_new == 'object' && item_new._parent[1] != app_content_menu.projects_id) ){ //for delete
-					console.log('['+that.list_type+' DELETED]');
 					elem.velocity('slideUp',{
 						complete: function(){
 							$(this).remove();
@@ -1892,7 +1882,6 @@ skylist.prototype.setHeight = function(){
 }
 
 skylist.prototype.checkboxClick = function(event,elem_checkbox){
-	console.log('checkbox click');
 	var that = this;
 	event.stopPropagation();
 
@@ -2333,7 +2322,6 @@ skylist.prototype.isMobile = function(){
 
 
 skylist.prototype.updateFakeCards = function(){
-	console.log('updateFakeCards begin');
 	var that = this;
 	var updated = false;
 	elem_fakes = that.list.find('[fake]');
@@ -2359,7 +2347,7 @@ skylist.prototype.updateFakeCards = function(){
 		});
 	});
 
-	if(updated){ console.log('updated FakeCards'); that.DOM_updated(); }
+	if(updated){ that.DOM_updated(); }
 }
 
 
