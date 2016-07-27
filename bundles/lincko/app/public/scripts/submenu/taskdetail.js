@@ -153,7 +153,6 @@ Submenu.prototype.Add_taskdetail = function() {
 	submenu_content.prop('id','taskdetail_'+that.md5id).addClass('submenu_content_taskdetail_'+that.param.type);
 	var submenu_taskdetail = $('#-submenu_taskdetail').clone().prop('id','submenu_taskdetail_'+that.md5id);
 
-	var elem_save = submenu_wrapper.find('.submenu_title.submenu_top_side_right');
 
 	var currentProjID = app_content_menu.projects_id;
 	if(that.param.projID){
@@ -938,35 +937,42 @@ Submenu.prototype.Add_taskdetail = function() {
 	
 	//submenu_wrapper.find('[find=submenu_wrapper_content]').removeClass('overthrow');
 
-
 	
-	var textChanged = function(key){
-		if(
-			(key > 7 && key < 14) || 	//backspace, tab, enter
-			key == 32 || 				//space
-			key == 46 || 				//delete
-			(key > 47 && key < 58) ||	//0 to 9
-			(key > 64 && key < 91) ||	//a to z
-			(key > 95 && key < 106) ||	//numpad 0 to 9
-			(key > 105 && key < 112) ||	//math calc symbols
-			(key > 185 && key < 193) || //text notations
-			(key > 218 && key < 223)	//text notations2
-		){
-			return true;
-		}
-		else{
-			return false;
-		}
-	}
 
 	//control appearance of 'save' button
 	if(taskid != 'new'){
-		var canSave = false;
+
+		var textChanged = function(key){
+			if(
+				(key > 7 && key < 14) || 	//backspace, tab, enter
+				key == 32 || 				//space
+				key == 46 || 				//delete
+				(key > 47 && key < 58) ||	//0 to 9
+				(key > 64 && key < 91) ||	//a to z
+				(key > 95 && key < 106) ||	//numpad 0 to 9
+				(key > 105 && key < 112) ||	//math calc symbols
+				(key > 185 && key < 193) || //text notations
+				(key > 218 && key < 223)	//text notations2
+			){
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+
+		var elem_save = submenu_wrapper.find('.submenu_title.submenu_top_side_right');
 		elem_save.addClass('display_none');
-		elem_title_text.add(elem_description_text).keydown(function(event){
-			if(!canSave && textChanged(event.which)){
+
+		submenu_wrapper.on('canSave', function(event){
+			if(elem_save.hasClass('display_none')){
 				elem_save.removeClass('display_none');
-				canSave = true;
+			}
+		});
+
+		elem_title_text.add(elem_description_text).keydown(function(event){
+			if(textChanged(event.which)){
+				submenu_wrapper.trigger('canSave');
 			}
 		});
 	}
