@@ -269,8 +269,12 @@ function wrapper_sendAction(param, method, action, cb_success, cb_error, cb_begi
 	return false; //Disable submit action
 }
 
-function wrapper_force_resign(){
-	wrapper_sendAction('','get','user/resign');
+function wrapper_force_resign(cb_success, cb_error, cb_begin, cb_complete){
+	if(typeof cb_success==="undefined" || cb_success===null){ cb_success = function(){}; }
+	if(typeof cb_error==="undefined" || cb_error===null){ cb_error = function(){}; }
+	if(typeof cb_begin==="undefined" || cb_begin===null){ cb_begin = function(){}; }
+	if(typeof cb_complete==="undefined" || cb_complete===null){ cb_complete = function(){}; }
+	wrapper_sendAction('', 'get', 'user/resign', cb_success, cb_error, cb_begin, cb_complete);
 	return true;
 }
 

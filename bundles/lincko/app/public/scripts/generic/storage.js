@@ -215,14 +215,12 @@ Lincko.storage.update = function(partial, info){
 			} else {
 				update_real = true;
 			}
-			
 			Lincko.storage.data[i][j] = partial[i][j];
 			if(update_real){
 				//console.log("update ==> "+i+'_'+j);
 				app_application_lincko.prepare(i+'_'+j);
 			}
 			update = true;
-
 		}
 	}
 	
@@ -232,7 +230,7 @@ Lincko.storage.update = function(partial, info){
 		Lincko.storage.display();
 		wrapper_localstorage.encrypt('data', JSON.stringify(Lincko.storage.data));
 		if(!info){
-			Lincko.storage.getSchema();
+			//Lincko.storage.getSchema(); //toto => is it usefull to check the schema here?
 		}
 		if(storage_first_launch){
 			storage_first_launch = false; //Help to trigger some action once the database is downloaded
@@ -1240,6 +1238,7 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 							item.timestamp = parseInt(timestamp, 10);
 							if(
 								   item['by']<=0
+								|| typeof Lincko.storage.data['users']=='undefined'
 								|| typeof Lincko.storage.data['users'][item['by']]=='undefined'
 								|| timestamp<=0
 								|| typeof Lincko.storage.data['_history_title'][cat]=='undefined'

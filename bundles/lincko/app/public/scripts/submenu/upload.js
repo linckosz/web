@@ -221,7 +221,12 @@ Submenu.prototype.Add_MenuAppUploadAllFile = function(e) {
 						);
 					}
 
-					if(data.lincko_status === 'abort'){
+					if(data.lincko_status === 'restart'){
+						Elem.find("[find=submenu_app_upload_progress_full]").addClass('submenu_app_upload_progress_full_info');
+						Elem.find("[find=submenu_app_upload_progress_pc_text]").html(
+							data.lincko_error
+						);
+					} else if(data.lincko_status === 'abort'){
 						Elem.find("[find=submenu_app_upload_progress_full]").addClass('submenu_app_upload_progress_full_abort');
 						Elem.find("[find=submenu_app_upload_progress_pc_text]").html(
 							Lincko.Translation.get('app', 11, 'html') //Stopped
@@ -243,11 +248,12 @@ Submenu.prototype.Add_MenuAppUploadAllFile = function(e) {
 							Lincko.Translation.get('app', 23, 'html') //Canceled
 						);
 					} else {
+						Elem.find("[find=submenu_app_upload_progress_full]").removeClass('submenu_app_upload_progress_full_info');
 						Elem.find("[find=submenu_app_upload_progress_full]").removeClass('submenu_app_upload_progress_full_abort');
 						Elem.find("[find=submenu_app_upload_progress_full]").removeClass('submenu_app_upload_progress_full_failed');
 					}
 
-					if(data.lincko_status === 'uploading'){
+					if(data.lincko_status === 'uploading' || data.lincko_status === 'restart' ){
 						pause = false;
 					}
 
