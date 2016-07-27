@@ -1,0 +1,26 @@
+.submenu_wrapper_burger_projects{
+	background-color: #fba026;
+    background-image: none;
+}
+.submenu_burger_projects .iscroll_sub_div.scrollY {
+	padding-top: 5px;
+	padding-bottom: 20px;
+}
+.submenu_burger_projects .burger_option_projects {
+    color: #475577 !important;
+    font-size: 20px;
+    width: 85%;
+    padding: 8px 20px;
+    border-bottom: 1px solid #eb8b26;
+    margin: auto;
+}
+.submenu_burger_projects .burger_latestvisitProjects{
+	border-bottom: 1px solid #54add2;
+}
+
+.submenu_burger_projects .burger_latestvisitProjects_border {
+	border-bottom: 2px solid #54add2;
+}
+.submenu_burger_projects .burger_option_projects [find=text] {
+	display: initial;
+}

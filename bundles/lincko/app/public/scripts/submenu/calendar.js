@@ -2,7 +2,7 @@ submenu_list['calendar'] = {
 	//Set the title of the top
 	"_title": {
 		"style": "customized_title",
-		"title": 'Due Date', //toto
+		"title": Lincko.Translation.get('app', 2202, 'html'), //Due Date
 		"class": function(that){
 			var className = 'submenu_wrapper_taskdetail_'+'tasks';
 			return className;

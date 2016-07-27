@@ -298,6 +298,7 @@ burgerN.draw_projects = function(projects,option_fn){
 
 	$.each(latest_projects, function(i, project){
 		elem_option_clone = elem_option.clone().attr('projects_id',project['_id']);
+		elem_option_clone.addClass('burger_latestvisitProjects');
 		if(i == latest_projects.length-1){
 			elem_option_clone.addClass('burger_latestvisitProjects_border');
 		}
@@ -365,7 +366,7 @@ burgerN.assignProject = function(elem, item){
 			//use the submenu for mobile
 			if(responsive.test("maxMobileL")){
 				console.log('here');
-				submenu_Build('burger_projects',true,false,{ input:elem, projects_list: projects_list });
+				submenu_Build('burger_projects',true,false,{ input:elem, projects_list: projects_list, item: item });
 				return false;
 			}
 
@@ -826,9 +827,9 @@ function burger_generate_contactsID(item){
 }
 
 
-function burger_contacts_sendAction(users, selectArray, item, popup){
-	if(!popup){
-		popup = null;
+function burger_contacts_sendAction(users, selectArray, item, multiselect){
+	if(!multiselect){
+		multiselect = null;
 	}
 	var param = {};
 	param['id'] = item['_id'];
@@ -844,7 +845,7 @@ function burger_contacts_sendAction(users, selectArray, item, popup){
 		if( selected && in_charge==false){
 			param['users>in_charge'][userid] = true;
 		}
-		else if( (/*!popup && (commented out for the beta)*/ !selected && in_charge==true) || (popup && selected && in_charge==true) ){
+		else if( (/*!multiselect && (commented out for the beta)*/ !selected && in_charge==true) || (multiselect && selected && in_charge==true) ){
 			param['users>in_charge'][userid] = false;
 		}
 	});
