@@ -1,27 +1,5 @@
 //Category 36
 
-var clear8 = function(){
-
-	function sleep(milliseconds) {
-	  var start = new Date().getTime();
-	  for (var i = 0; i < 1e7; i++) {
-	    if ((new Date().getTime() - start) > milliseconds){
-	      break;
-	    }
-	  }
-	}
-
-	var A = Lincko.storage.list('tasks', null, null, 'projects', 8);
-	$.each(A, function(i, item){
-		var param = {
-			'id': item['_id']
-		};
-		sleep(10);
-		Lincko.storage.data.tasks[item['_id']].deleted_at = new wrapper_date().timestamp;
-		wrapper_sendAction(param, 'post', 'task/delete');
-	});
-}
-
 var skylist_calcDuedate = function(task_obj){
 	var duedate = new wrapper_date(parseInt(task_obj.start,10) + parseInt(task_obj.duration,10));
 	return duedate;
@@ -296,7 +274,6 @@ skylist.prototype.subConstruct_default = function(){
 	app_application_lincko.add(
 		that.list.prop('id'),
 		'projects_'+app_content_menu.projects_id,
-		function(){console.log('project update');
 			var param = {};
 			param.new = true;
 			var newItems = Lincko.storage.list(that.list_type, null, param, 'projects', app_content_menu.projects_id, true);
@@ -827,7 +804,7 @@ skylist.prototype.addCard = function(item){
 			elem_card.prop('id'),
 			that.list_type+'_'+item['_id'],
 			function(){
-				console.log(that.list_type+'_'+item['_id']+' sync function');
+				//console.log(that.list_type+'_'+item['_id']+' sync function');
 				var elem = $('#'+this.id);
 				var item_new = Lincko.storage.get(that.list_type , item['_id']);
 				if( /*!item_new ||*/ (typeof item_new == 'object' && 'deleted_at' in item_new && item_new['deleted_at']) || (typeof item_new == 'object' && item_new._parent[1] != app_content_menu.projects_id) ){ //for delete

@@ -35,12 +35,19 @@ function linckoEditor(elem, toolbarID, param){
 	//editorInst = CKEDITOR.replace(elem);
 	editorInst = CKEDITOR.inline( elem, {
 			// To enable source code editing in a dialog window, inline editors require the "sourcedialog" plugin.
-			extraPlugins: 'sharedspace,imageuploader',//,timestamp',
+			extraPlugins: 'sharedspace,imageuploader,indentblock,autolink',//,timestamp',
 			removePlugins: 'floatingspace,maximize,resize,about',
 			sharedSpaces: {
 				top: toolbarID,
 			}
 		} );
+
+	//clicking on links will open in new tab/window
+    $(editorInst.element.$).click(function(event) {
+        if(typeof event.target.href != 'undefined') {
+        	window.open(event.target.href, '_blank');
+        }
+    });
 
 
 	editorInst.Lincko_param = {};
