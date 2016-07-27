@@ -100,23 +100,40 @@
 .models_history_line {
 	font-size: 14px;
 	text-align: center;
-	width: 128px;
-	margin: 0 auto;
+	width: auto;
+	margin:0 auto;
 	color: #679e52;
 }
 
-.models_history_line .separator:first-child {
-	float: left;
+.models_history_line .models_history_line_box{
+	display:inline-block;
+	position: relative;
+	width: auto;
+	margin:0 auto;
+}
+
+.models_history_line_box .separator_left{
+	position:absolute;
+	top:0;
+	left: 0;
 	width: 30px;
 	border-bottom: 1px solid #679e52;
 	height: 9px;
 }
 
-.models_history_line .separator:nth-child(2) {
-	float: right;
-	width: 30px;
+.models_history_line_box .separator_right{
+	position:absolute;
+	top:0;
+	right:0;
+	width:30px;
 	border-bottom: 1px solid #679e52;
 	height: 9px;
+}
+
+.models_history_line .history_time{
+	margin:0 40px;
+	width:auto;
+	display: inline-block;
 }
 
 .models_history_others > * {

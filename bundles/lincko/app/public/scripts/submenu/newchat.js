@@ -71,6 +71,7 @@ Submenu.prototype.Add_ChatContents = function() {
 			chatFeed.appendItem("history", items, position, true);
 			chatFeed.updateRecalled('projects', id, position);
 			chatFeed.updateTempComments('projects',id,position);
+			chatFeed.updateTempUploads('projects',id,position);
 
 
 			var overthrow_id = "overthrow_"+this.action_param[0];
@@ -102,6 +103,7 @@ Submenu.prototype.Add_ChatContents = function() {
 			chatFeed.appendItem(type, items, position, true);
 			chatFeed.updateRecalled('chats', id, position);
 			chatFeed.updateTempComments('chats',id,position);
+			chatFeed.updateTempUploads('chats',id,position);
 
 
 			var overthrow_id = "overthrow_"+this.action_param[0];
@@ -240,11 +242,10 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 	
 	function send_comments() {
 		var textarea = $("#"+that.id).find("[find=chat_textarea]");
-		var content = textarea.html().replace("<div>","<br/>").replace("</div>","");
+		var content = textarea.html().replace(/<div>/g,"<br>").replace(/<\/div>/g,"");
 		var type = that.param.type == 'history' ? "projects":'chats';
 		var sub_that = that;
 		var tmpID = [];
-
 		textarea.text('');
 
 		wrapper_sendAction({
@@ -282,7 +283,7 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 				var position = $("[find='submenu_wrapper_content']", submenu_wrapper);	
 				//Display a temp comment				
 				var fake_comment = {
-					"+comment": content,
+					"+comment": content.replace(/<(br).*?>/g,"\n"),
 					"_id": temp_id,
 					"_type": "comments",
 					"created_at":  Math.floor((new Date()).getTime() / 1000),
@@ -302,11 +303,8 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 				var textarea = $("#"+sub_that.id).find("[find=chat_textarea]");
 				textarea.text('');
 				app_application_lincko.prepare(["chat_contents_wrapper", "chats_" + sub_that.param.id]);
-				if(!supportsTouch || responsive.test("minDesktop")){
-					textarea.focus();
-				} else {
-					textarea.blur();
-				}
+				textarea.focus();
+				
 			},
 			function(){
 				$.each(tmpID,function(i,val){
@@ -317,16 +315,19 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 		);
 
 	}
+
 	$('.comments_input', submenu_wrapper).on('paste', function(){
 		var that = $(this);
 		setTimeout(function(){
-			that.html(that.text());
-		},10);
+			that.html(that.html().replace(/<(br).*?>/g,"<br/>").replace(/<(?!br).*?>/g,""));
+		},100);
 	});
 
 	$('.comments_input', submenu_wrapper).on("resize",function(e) {
 		submenu_resize_content();
 	});
+
+	
 
 	$('.comments_input', submenu_wrapper).keyup(function(e) {
 		e.stopPropagation();

@@ -107,12 +107,14 @@ var chatFeed = (function() {
 			}
 			return false;
 		},
-		/*'comments': function(commentid, elem) {
+		'comments': function(commentid, elem) {
 			var type = $(elem).find("[find=target_type]").attr('parent');
 			var p_id = $(elem).find("[find=target_type]").attr('parent_id');
-			RESOURCE_HANDLERS[type](p_id, elem);
+			if(typeof type !== "undefined" && typeof p_id !== "undefined"){
+				RESOURCE_HANDLERS[type](p_id, elem);
+			}
 			return false;
-		},*/
+		},
 		'notes': function(noteid, elem) {
 			var tmp = $(elem).parents(".submenu_wrapper").prop("id").split("_");
 			var preview = JSON.parse(tmp[tmp.length-1]);
@@ -203,6 +205,7 @@ var chatFeed = (function() {
 
 		if (this.item._type == "uploading_file") {
 			var Elem_id = chatFeed.subm.id+"_uploading_file_"+this.item.index;
+			Elem.attr('_file_id',this.item.id);
 		} else {
 			var Elem_id = chatFeed.subm.id+"_"+this.item._type+'_models_thistory_' + this.item._id;
 		}
@@ -272,6 +275,33 @@ var chatFeed = (function() {
 			}
 			Elem.attr('category', this.item._type);
 		}
+
+		if(Elem)
+		{
+			Elem.find('.models_history_standard_shortcut').on('click', function(e) {
+				e.stopPropagation();
+				var parent = $(this).parents('.models_history_wrapper');
+				var category = parent.attr('category');
+				var id = RESOURCE_ID[category](parent.prop("id"));
+				var that = this;
+				SHORTCUT_HANDLERS[category](id, that);
+			});
+
+			Elem.find('.models_history_content_wrapper').on('click', function(e) {
+				var parent = $(this).parents('.models_history_wrapper');
+				var category = parent.attr('category');
+				if(typeof RESOURCE_ID[category]  !== 'undefined')
+				{
+					var id = RESOURCE_ID[category](parent.prop("id"));
+					var that = this;
+					if(typeof RESOURCE_HANDLERS[category] !== 'undefined')
+					{
+						RESOURCE_HANDLERS[category](id, that, e);
+					}	
+				}
+			});
+		}
+
 		return Elem;
 	};
 
@@ -370,6 +400,37 @@ var chatFeed = (function() {
 		Elem.find("[find=shortcut]").attr('src', thumbnail);
 
 		Elem.attr('category', this.item.type);
+
+
+		if(Elem)
+		{
+			Elem.find('.models_history_standard_shortcut').on('click', function(e) {
+				e.stopPropagation();
+				var parent = $(this).parents('.models_history_wrapper');
+				var category = parent.attr('category');
+				var id = RESOURCE_ID[category](parent.prop("id"));
+				var that = this;
+				SHORTCUT_HANDLERS[category](id, that);
+			});
+
+			Elem.find('.models_history_content_wrapper').on('click', function(e) {
+				var parent = $(this).parents('.models_history_wrapper');
+				var category = parent.attr('category');
+				if(typeof RESOURCE_ID[category]  !== 'undefined')
+				{
+					var id = RESOURCE_ID[category](parent.prop("id"));
+					var that = this;
+					if(typeof RESOURCE_HANDLERS[category] !== 'undefined')
+					{
+						RESOURCE_HANDLERS[category](id, that, e);
+					}	
+				}
+					
+				
+			});
+		}
+
+
 		return Elem;
 	};
 
@@ -513,12 +574,17 @@ var chatFeed = (function() {
 		for (var i in items) {
 			var item = new BaseHistoryCls(items[i]);
 			if (item) {
+				var Elem;
+				var dateStamp; 
 				item.setTemplate(type);
 				if (type =='history'){
-					var Elem = item.renderHistoryTemplate(i);
+					Elem = item.renderHistoryTemplate(i);
+					dateStamp = checkRecentDate(item.item.timestamp, i);
 				}
 				else {
-					var Elem = item.renderChatTemplate(i);
+					Elem = item.renderChatTemplate(i);
+					dateStamp = checkRecentDate(item.item.created_at, i);
+					
 				}
 				if (Elem) {
 					if (after) {
@@ -540,7 +606,8 @@ var chatFeed = (function() {
 						}
 					}
 				}
-				var dateStamp = checkRecentDate(item.item.timestamp, i);
+
+				//var dateStamp = checkRecentDate(item.item.timestamp, i);
 				if (dateStamp) {
 					var line = renderLine(dateStamp);
 					if (Elem){
@@ -548,27 +615,6 @@ var chatFeed = (function() {
 					}
 				}
 			}
-			if(Elem)
-			{
-				Elem.find('.models_history_standard_shortcut').on('click', function(e) {
-					var parent = $(this).parents('.models_history_wrapper');
-					var category = parent.attr('category');
-					var id = RESOURCE_ID[category](parent.prop("id"));
-					var that = this;
-					SHORTCUT_HANDLERS[category](id, that);
-					return false;
-				});
-
-				Elem.find('.models_history_content_wrapper').on('click', function(e) {
-					var parent = $(this).parents('.models_history_wrapper');
-					var category = parent.attr('category');
-					var id = RESOURCE_ID[category](parent.prop("id"));
-					var that = this;
-					RESOURCE_HANDLERS[category](id, that, e);
-					return false;
-				});
-			}
-
 		}
 
 		setTimeout(function(){ app_application_lincko.prepare("submenu_show", true); }, 600);
@@ -606,6 +652,21 @@ var chatFeed = (function() {
 		});
 	}
 
+	function updateTempUploads(parentType, parentID, position)
+	{
+		var elem_uploadings = position.find('[_file_id]');
+		$.each(elem_uploadings, function(i,val){
+			var elem = $(val);
+			var _file_id = elem.attr('_file_id');
+			var item_real = Lincko.storage.list('files',1,{temp_id:_file_id},parentType,parentID,false)[0];
+			if(!item_real) return;
+			var replaceWith = (new BaseHistoryCls(item_real));
+			replaceWith.setTemplate("chats");
+			replaceWith = replaceWith.renderChatTemplate(null,true);
+			elem.replaceWith(replaceWith);
+		});
+	}
+
 	return {
 		'feedHistory': app_layers_history_launchPage,
 		'feedUploadingFiles':app_layers_uploading_files,
@@ -613,5 +674,6 @@ var chatFeed = (function() {
 		'appendItem': format_items,
 		'updateRecalled': updateRecalled,
 		'updateTempComments': updateTempComments,
+		'updateTempUploads': updateTempUploads,
 	}
 })();
