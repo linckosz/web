@@ -361,11 +361,11 @@ burgerN.assignProject = function(elem, item){
 		}
 		else{
             var projects_list = Lincko.storage.list('projects', null, {personal_private: ['==',null]}, null, null, false);
-            console.log(projects_list);
            	projects_list = Lincko.storage.sort_items(projects_list,'+title');
 			//use the submenu for mobile
 			if(responsive.test("maxMobileL")){
-				submenu_Build('projects_list');
+				console.log('here');
+				submenu_Build('burger_projects',true,false,{ input:elem, projects_list: projects_list });
 				return false;
 			}
 
