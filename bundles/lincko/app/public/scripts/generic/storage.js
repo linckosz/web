@@ -1233,6 +1233,7 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 							// 1) Get Old from item itself
 							// 2) Old is not available offline, so we download it before displaying (POST | 'data/history')
 							item = history_items[cat][id]['history'][timestamp][history_id];
+							item.hist = parseInt(history_id, 10);;
 							item.type = cat;
 							item.id = parseInt(id, 10);
 							item.timestamp = parseInt(timestamp, 10);

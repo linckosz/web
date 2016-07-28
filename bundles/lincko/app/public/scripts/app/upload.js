@@ -118,7 +118,7 @@ function app_upload_set_launcher(parent_type, parent_id, submenu, start, temp_id
 	if(typeof temp_id != 'string'){
 		app_upload_auto_launcher.temp_id = md5(Math.random()); //can only be used for single selection
 	} else {
-		app_upload_auto_launcher.temp_id = false;
+		app_upload_auto_launcher.temp_id = temp_id;
 	}
 	app_upload_auto_launcher.parent_type = parent_type;
 	app_upload_auto_launcher.parent_id = parent_id;
