@@ -274,6 +274,8 @@ skylist.prototype.subConstruct_default = function(){
 	app_application_lincko.add(
 		that.list.prop('id'),
 		'projects_'+app_content_menu.projects_id,
+		function(){
+			//console.log('project update');
 			var param = {};
 			param.new = true;
 			var newItems = Lincko.storage.list(that.list_type, null, param, 'projects', app_content_menu.projects_id, true);
