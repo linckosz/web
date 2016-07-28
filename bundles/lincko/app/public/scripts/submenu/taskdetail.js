@@ -428,6 +428,7 @@ Submenu.prototype.Add_taskdetail = function() {
 					else{ //nobody in charnge
 						elem_in_charge.html(Lincko.Translation.get('app', 3608, 'html'));//Not Assigned
 					}
+					app_application_lincko.prepare(item._type+'_'+item._id, true);
 				});
 			}
 			else{
@@ -1127,11 +1128,13 @@ Submenu.prototype.Add_taskdetail = function() {
 			var elem_new = $('#-submenu_taskdetail_meta').clone().prop('id','submenu_taskdetail_meta_'+that.md5id);
 			elem.velocity('fadeIn',{
 				duration: 200,
-				complete: function(){
+				before: function(){
 					item = Lincko.storage.get(that.param.type, item['_id']);
 					if( that.list_type == "tasks" ){
 						duration_timestamp = item['duration'];
 					}
+				},
+				complete: function(){
 					//update_meta(elem);
 					elem.find('input').blur();
 					elem.find('[find=duedate_timestamp]').datepicker('hide');
