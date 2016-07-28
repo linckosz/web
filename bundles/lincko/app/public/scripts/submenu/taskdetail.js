@@ -965,7 +965,6 @@ Submenu.prototype.Add_taskdetail = function() {
 	var thumb_url = app_application_icon_single_user.src;
 	if(picID){
 		thumb_url = Lincko.storage.getLinkThumbnail(picID);
-		
 	}
 	elem_addNewComment_bubble_wrapper.find('[find=profile_pic]')
 	.css('background-image','url("'+thumb_url+'")');
@@ -1269,7 +1268,6 @@ Submenu.prototype.Add_taskdetail = function() {
 				else{
 					route += '/update';
 				}
-
 				if(taskid != 'new' && route == 'task/update'){
 					skylist.sendAction.tasks(param, item, route, cb_success, null, cb_begin);
 				}

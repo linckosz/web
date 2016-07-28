@@ -939,7 +939,7 @@ skylist.prototype.addChat = function(item){
 					Elem_logo.find('img.logo_img').addClass("display_none");
 				}
 				Elem_logo.find('[find=title]').html(wrapper_to_html(name));
-				var comment = Lincko.storage.list("comments", 1, null, "chats", id);
+				var comment = Lincko.storage.list("comments", 1, {recalled_by:["==",null]}, "chats", id);
 				if(typeof comment[0] == "object"){
 					var commentText =  wrapper_to_html(comment[0]['+comment']);
 					Elem_logo.find('[find=description]').html(commentText);

@@ -189,12 +189,12 @@
 
 .tasks .models_history_standard_target:before {
 	color: #FB7D23;
-	content: "\"";
+	content: " ";
 }
 
 .tasks .models_history_standard_target:after {
 	color: #FB7D23;
-	content: "\"";
+	content: " ";
 }
 
 .tasks .models_history_standard_target {

@@ -50,22 +50,22 @@ var chatFeed = (function() {
 	};
 	var RESOURCE_ID = {
 		'tasks': function(raw_id) {
-			return raw_id.split('models_thistory_')[1];
+			return raw_id.split('models_thistory_')[1].split('_hist_')[0];
 		},
 		'files': function(raw_id) {
-			return raw_id.split('models_thistory_')[1];
+			return raw_id.split('models_thistory_')[1].split('_hist_')[0];
 		},
 		'uploading_file': function(raw_id) {
-			return raw_id.split("uploading_file_")[1];
+			return raw_id.split("uploading_file_")[1].split('_hist_')[0];
 		},
 		'upload_stopped_file': function(raw_id) {
-			return raw_id.split("uploading_file_")[1];
+			return raw_id.split("uploading_file_")[1].split('_hist_')[0];
 		},
 		'comments': function(raw_id) {
-			return raw_id.split('models_thistory_')[1];
+			return raw_id.split('models_thistory_')[1].split('_hist_')[0];
 		},
 		'notes': function(raw_id) {
-			return raw_id.split('models_thistory_')[1];
+			return raw_id.split('models_thistory_')[1].split('_hist_')[0];
 		},
 	};
 	var RESOURCE_HANDLERS = {
@@ -205,8 +205,9 @@ var chatFeed = (function() {
 		var action;
 		var progress;
 
-		var Elem = $("#" + this.templateType).clone();
+		console.log(this.item);
 
+		var Elem = $("#" + this.templateType).clone();
 		if (this.item._type == "uploading_file") {
 			var Elem_id = chatFeed.subm.id+"_uploading_file_"+this.item.index;
 			Elem.attr('_file_id',this.item.id);
@@ -313,11 +314,12 @@ var chatFeed = (function() {
 		var target;
 		var action;
 		var thumbnail;
+
 		if(this.item.att == 'recalled_by'){ //if comment was recalled
 			this.templateType = '-models_history_comment_recalled';
 		}
 		var Elem = $("#" + this.templateType).clone();
-		var Elem_id = chatFeed.subm.id+"_"+this.item.type+'_models_thistory_' + this.item.id;
+		var Elem_id = chatFeed.subm.id+"_"+this.item.type+'_models_thistory_' + this.item.id+'_hist_'+this.item.hist;
 
 
 		//Do not duplicate chat messages
@@ -346,7 +348,6 @@ var chatFeed = (function() {
 				Elem.find("[find=timestamp]").html(timestamp.display('time_short'));
 				var uname = wrapper_to_html(Lincko.storage.get('users', this.item.by)['-username']);
 				Elem.find("[find=msg]").text(Lincko.Translation.get('app', 3101, 'html', {username: uname }));
-
 				return Elem;
 			}
 		}
