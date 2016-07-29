@@ -205,8 +205,6 @@ var chatFeed = (function() {
 		var action;
 		var progress;
 
-		console.log(this.item);
-
 		var Elem = $("#" + this.templateType).clone();
 		if (this.item._type == "uploading_file") {
 			var Elem_id = chatFeed.subm.id+"_uploading_file_"+this.item.index;
@@ -319,8 +317,7 @@ var chatFeed = (function() {
 			this.templateType = '-models_history_comment_recalled';
 		}
 		var Elem = $("#" + this.templateType).clone();
-		var Elem_id = chatFeed.subm.id+"_"+this.item.type+'_models_thistory_' + this.item.id+'_hist_'+this.item.hist;
-
+		var Elem_id = chatFeed.subm.id+"_"+this.item.type+'_models_thistory_' + this.item.id + (this.item.type != 'comments' ? '_hist_'+this.item.hist : '');
 
 		//Do not duplicate chat messages
 		if($("#"+Elem_id).length>0){
@@ -578,9 +575,9 @@ var chatFeed = (function() {
 			timestamp: "1458629345"
 			type: "tasks"
 		*/
-
 		for (var i in items) {
 			var item = new BaseHistoryCls(items[i]);
+			console.log(items[i]);
 			if (item) {
 				var Elem;
 				var dateStamp; 
