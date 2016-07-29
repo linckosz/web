@@ -1267,6 +1267,7 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 								|| typeof Lincko.storage.data['users']=='undefined'
 								|| typeof Lincko.storage.data['users'][item['by']]=='undefined'
 								|| timestamp<=0
+								|| typeof Lincko.storage.data['_history_title']=='undefined'
 								|| typeof Lincko.storage.data['_history_title'][cat]=='undefined'
 								|| typeof Lincko.storage.data['_history_title'][cat][item['cod']]=='undefined'
 							){

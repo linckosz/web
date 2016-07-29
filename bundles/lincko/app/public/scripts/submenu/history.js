@@ -141,7 +141,7 @@ var chatFeed = (function() {
 		return false;
 	}
 
-	function cutFileTitle(title,prefixLength,suffixLength){
+	function cutFileTitle(title, prefixLength, suffixLength, type){
 		if(typeof title == 'undefined')
 		{
 			return title;
@@ -157,7 +157,11 @@ var chatFeed = (function() {
 
 		var prefix=fileName.substring(0,prefixLength);
 		var suffix=fileName.substring(fileName.length-suffixLength,fileName.length);
-		title = prefix + "..." + suffix + "." + extName;
+		if(type=="files" && extName!=""){
+			title = prefix + "..." + suffix + " ." + extName;
+		} else {
+			title = prefix + "..." + suffix;
+		}
 		return title;
 	}
 
@@ -263,7 +267,7 @@ var chatFeed = (function() {
 			Elem.find(".time", "[find=timestamp]").html(date.display('time_short'));
 			Elem.find(".date", "[find=timestamp]").html(date.display('date_short'));
 
-			Elem.find("[find=target]").addClass("upload_file_title").html(cutFileTitle(this.item[(this.item._type == "files"?"+name":"name")],5,5));
+			Elem.find("[find=target]").addClass("upload_file_title").html(cutFileTitle(this.item[(this.item._type == "files"?"+name":"name")], 10, 0, this.item._type));
 			Elem.find("[find=progress_bar]").width("0%"); 
 			Elem.find("[find=progress_text]").addClass("uploading_file_progress_size").html("0K of 0 MB");
 			Elem.find(".uploading_action").html(Lincko.Translation.get('app', 7, 'html'));
@@ -371,6 +375,8 @@ var chatFeed = (function() {
 		Elem.find("[find=icon]").attr('src', img);
 		Elem.find("[find=action]").html(wrapper_to_html($.trim(action).ucfirst()));
 
+		var cutLength = 200;
+
 		if (this.item.type === "comments") {
 			var root = Lincko.storage.getCommentRoot(this.item.id);
 			target = root['+title'];
@@ -384,6 +390,7 @@ var chatFeed = (function() {
 			else{
 				target = Lincko.storage.get(this.item.type, this.item.id, "+name");
 				thumbnail = Lincko.storage.getLinkThumbnail(this.item.id);
+				cutLength = 10;
 			}
 		}
 		if (root) {
@@ -392,7 +399,7 @@ var chatFeed = (function() {
 				.html(wrapper_to_html(Lincko.storage.data._history_title[target_type][0]));
 		}
 
-		Elem.find("[find=target]").html(cutFileTitle(target,5,5));
+		Elem.find("[find=target]").html(cutFileTitle(target, cutLength, 0, this.item.type));
 		Elem.find("[find=content]").html(wrapper_to_html(history.content));
 		var date = new wrapper_date(this.item.timestamp);
 		Elem.find(".time", "[find=timestamp]").html(date.display('time_short'));

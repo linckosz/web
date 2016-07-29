@@ -171,6 +171,9 @@
 .models_history_standard_shortcut_wrapper {
 	padding: 6px 10px;
 	position: relative;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .models_history_standard_shortcut_wrapper > span{

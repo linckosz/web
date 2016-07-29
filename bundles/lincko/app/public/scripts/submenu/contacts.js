@@ -54,11 +54,15 @@ submenu_list['contacts'] = {
 					'chat/create',
 					function() {
 						var chat = Lincko.storage.list('chats', 1, {'temp_id': comment_id})[0];
-						submenu_Build("newchat", that.layer, true, {
-							type: 'chats',
-							id: chat['_id'],
-							title: chat['+title'],
-						}, that.preview);
+						if(chat){
+							submenu_Build("newchat", that.layer, true, {
+								type: 'chats',
+								id: chat['_id'],
+								title: chat['+title'],
+							}, that.preview);
+						} else {
+							base_show_error(Lincko.Translation.get('app', 3702, 'js'), true); //Discussion group creation failed.
+						}
 						app_application_lincko.prepare("chats");
 					},
 					null,
@@ -77,11 +81,15 @@ submenu_list['contacts'] = {
 				'chat/create',
 				function() {
 					var chat = Lincko.storage.list('chats', 1, {'temp_id': comment_id})[0];
-					submenu_Build("newchat", that.layer, true, {
-						type: 'chats',
-						id: chat['_id'],
-						title: chat['+title'],
-					}, that.preview);
+					if(chat){
+						submenu_Build("newchat", that.layer, true, {
+							type: 'chats',
+							id: chat['_id'],
+							title: chat['+title'],
+						}, that.preview);
+					} else {
+						base_show_error(Lincko.Translation.get('app', 3702, 'js'), true); //Discussion group creation failed.
+					}
 				},
 				null,
 				function(jqXHR, settings, temp_id) {

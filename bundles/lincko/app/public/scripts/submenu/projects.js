@@ -131,7 +131,12 @@ Submenu.prototype.Add_MenuProjects = function() {
 		var Elem = $("#"+this.id);
 		var projects_id = this.action_param;
 		var project = Lincko.storage.get("projects", projects_id);
-		Elem.find("[find=submenu_projects_title]").html(wrapper_to_html(project["+title"]));
+		if(item_id == Lincko.storage.getMyPlaceholder()['_id']){
+			var name = Lincko.Translation.get('app', 2502, 'html'); //Personal Space
+		} else {
+			var name = wrapper_to_html(project["+title"]);
+		}
+		Elem.find("[find=submenu_projects_title]").html(name);
 		var tasks = Lincko.storage.list('tasks', null, {approved: false,}, 'projects', projects_id, true).length;
 		var notes = Lincko.storage.list('notes', null, null, 'projects', projects_id, true).length;
 		var files = Lincko.storage.list('files', null, null, 'projects', projects_id, true).length;

@@ -258,6 +258,11 @@ function wrapper_sendAction(param, method, action, cb_success, cb_error, cb_begi
 		//Here do not use "new Array(param)", because param[0] will be undefined if param is an integer
 		param = [param];
 	}
+
+	//Add lastvisit to help saving some unecessary codes
+	if(typeof param['lastvisit'] == 'undefined' && typeof Lincko.storage == 'object' && typeof Lincko.storage.getLastVisit == 'function'){
+		param['lastvisit'] = Lincko.storage.getLastVisit();
+	}
 	
 	//Convert the array to the same format as jQuery does with forms
 	for(var val in param){
@@ -265,6 +270,7 @@ function wrapper_sendAction(param, method, action, cb_success, cb_error, cb_begi
 			arr.push({name:val, value:param[val]});
 		}
 	}
+	
 	wrapper_ajax(arr, method, action, cb_success, cb_error, cb_begin, cb_complete);
 	return false; //Disable submit action
 }
