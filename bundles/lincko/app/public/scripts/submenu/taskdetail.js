@@ -102,7 +102,8 @@ submenu_list['taskdetail_new'] = {
 	},
 	"left_button": {
 		"style": "title_left_button",
-		"title": Lincko.Translation.get('app', 7, 'html'), //Cancel
+		//"title": Lincko.Translation.get('app', 7, 'html'), //Cancel
+		"title": Lincko.Translation.get('app', 41, 'html'), //Create
 		'hide': true,
 		"class": "base_pointer",
 		"action": function(elem, submenuInst) {
