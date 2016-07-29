@@ -323,7 +323,7 @@ Lincko.storage.firstLatest = function(){
 
 /* PRIVATE METHOD */
 //toto => we are not using data here, so for any update we are rebuilding the whole children list
-Lincko.storage.childrenList = function(data, children_list){
+Lincko.storage.childrenList = function(data, children_list, category_focus, category_id){
 	var parent_type = null;
 	var parent_id = 0;
 	var change = false;
@@ -331,8 +331,16 @@ Lincko.storage.childrenList = function(data, children_list){
 		children_list = {};
 		//Clean children
 		for(var category in Lincko.storage.data) {
+			//if category_focus is given, skip all other categories
+			if(typeof category_focus == 'string' && category != category_focus){
+				continue;
+			}
 			children_list[category] = {};
 			for(var id in Lincko.storage.data[category]) {
+				//if category_id is given, skip all other ids
+				if(category_id && id != category_id){
+					continue;
+				}
 				if(typeof Lincko.storage.data[category][id]['_children'] != 'undefined'){
 					children_list[category][id] = JSON.stringify(Lincko.storage.data[category][id]['_children']);
 				}
@@ -343,7 +351,15 @@ Lincko.storage.childrenList = function(data, children_list){
 
 	//Rebuild children tree
 	for(var category in Lincko.storage.data) {
+		//if category_focus is given, skip all other categories
+		if(typeof category_focus == 'string' && category != category_focus){
+			continue;
+		}
 		for(var id in Lincko.storage.data[category]) {
+			//if category_id is given, skip all other ids
+			if(category_id && id != category_id){
+				continue;
+			}
 			if(typeof Lincko.storage.data[category][id]['_parent']!='undefined' && typeof Lincko.storage.data[category][id]['_parent'][0]=='string' && Lincko.storage.data[category][id]['_parent'][1]){
 				parent_type = Lincko.storage.data[category][id]['_parent'][0];
 				parent_id = Lincko.storage.data[category][id]['_parent'][1];
@@ -362,12 +378,20 @@ Lincko.storage.childrenList = function(data, children_list){
 
 	//Check which children list has been updated
 	for(var category in Lincko.storage.data) {
+		//if category_focus is given, skip all other categories
+		if(typeof category_focus == 'string' && category != category_focus){
+			continue;
+		}
 		if(typeof children_list[category] == 'undefined'){
 			app_application_lincko.prepare(true); //Update everything
 			change = true;
 			continue;
 		}
 		for(var id in Lincko.storage.data[category]) {
+			//if category_id is given, skip all other ids
+			if(category_id && id != category_id){
+				continue;
+			}
 			if(typeof Lincko.storage.data[category][id]['_children'] != 'undefined'){
 				if(typeof children_list[category][id] == 'undefined'){
 					app_application_lincko.prepare(category+'_'+id); //Update everything

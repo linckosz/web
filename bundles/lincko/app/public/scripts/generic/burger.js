@@ -380,6 +380,8 @@ burgerN.assignProject = function(elem, item){
 					parent_id: projects_id,
 				}
 				if(item['_type'] == 'tasks'){
+					param['users>in_charge'] = taskdetail_tools.taskUserCheck(item, 'projects', projects_id).users_incharge;
+					console.log(param);
 					skylist.sendAction.tasks(param,item,route);
 				}
 				else{
@@ -543,8 +545,13 @@ burgerN.assignTask = function(elem, item){
 
 burgerN.generate_contacts = function(item){
 	var accessList = [];
-	if( item['_id'] == 'new' || item == 'new' || !item){
-		accessList = Lincko.storage.whoHasAccess('projects', app_content_menu.projects_id);
+	if( !item || item['_id'] == 'new' || item == 'new' ){
+		if(item['_parent'] && item['_parent'][0] && item['_parent'][1] ){
+			accessList = Lincko.storage.whoHasAccess(item['_parent'][0], item['_parent'][1]);
+		}
+		else{
+			accessList = Lincko.storage.whoHasAccess('projects', app_content_menu.projects_id);
+		}
 	}
 	else{
 		accessList = Lincko.storage.whoHasAccess(item['_type'], item['_id']);
