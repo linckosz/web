@@ -262,7 +262,7 @@ skylist.prototype.subConstruct_default = function(){
 	}
 	else{
 		that.elem_newcardCircle.click(function(){
-			submenu_Build('taskdetail', false, false, 
+			submenu_Build('taskdetail_new', false, false, 
 				{
 					"type":that.list_type,
 					"id": 'new', 
@@ -806,13 +806,9 @@ skylist.prototype.addCard = function(item){
 			elem_card.prop('id'),
 			that.list_type+'_'+item['_id'],
 			function(){
-				console.log(that.list_type+'_'+item['_id']+' sync function');
 				var elem = $('#'+this.id);
 				var item_new = Lincko.storage.get(that.list_type , item['_id']);
 				if( /*!item_new ||*/ (typeof item_new == 'object' && 'deleted_at' in item_new && item_new['deleted_at']) || (typeof item_new == 'object' && item_new._parent[1] != app_content_menu.projects_id) ){ //for delete
-					console.log('delete');
-					console.log('app_content projectID: '+app_content_menu.projects_id);
-					console.log('item_new projectID: '+item_new._parent[1]);
 					elem.velocity('slideUp',{
 						complete: function(){
 							$(this).remove();
@@ -826,7 +822,6 @@ skylist.prototype.addCard = function(item){
 					});
 				}
 				else if(item_new){ //for update
-					console.log('update');
 					elem.velocity('fadeOut',{
 						duration: 200,
 						complete: function(){

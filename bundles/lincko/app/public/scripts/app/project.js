@@ -364,7 +364,7 @@ $('#app_project_quick_access_tasks').click(function(){
 	var personalSpace = Lincko.storage.getMyPlaceholder();
 	if(personalSpace){
 		personalSpace = personalSpace['_id'];
-		submenu_Build('taskdetail', false, false, 
+		submenu_Build('taskdetail_new', false, false, 
 			{
 				type:'tasks',
 				id: 'new', 
@@ -378,7 +378,7 @@ $('#app_project_quick_access_notes').click(function(){
 	var personalSpace = Lincko.storage.getMyPlaceholder();
 	if(personalSpace){
 		personalSpace = personalSpace['_id'];
-		submenu_Build('taskdetail', false, false, 
+		submenu_Build('taskdetail_new', false, false, 
 			{
 				type:'notes',
 				id: 'new', 

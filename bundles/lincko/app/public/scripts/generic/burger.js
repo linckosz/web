@@ -381,7 +381,6 @@ burgerN.assignProject = function(elem, item){
 				}
 				if(item['_type'] == 'tasks'){
 					param['users>in_charge'] = taskdetail_tools.taskUserCheck(item, 'projects', projects_id).users_incharge;
-					console.log(param);
 					skylist.sendAction.tasks(param,item,route);
 				}
 				else{

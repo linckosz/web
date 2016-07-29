@@ -23,20 +23,11 @@ submenu_list['taskdetail'] = {
 	},
 	"left_button": {
 		"style": "title_left_button",
-		"title": Lincko.Translation.get('app', 7, 'html'), //Cancel
+		"title": Lincko.Translation.get('app', 25, 'html'), //Close
 		'hide': true,
 		"class": "base_pointer",
 		"action": function(elem, submenuInst) {
-			submenuInst.cancel = true;
-		},
-	},
-	"right_button": {
-		"style": "title_right_button",
-		"title": Lincko.Translation.get('app', 58, 'html'), //Save
-		'hide': true,
-		"class": "base_pointer",
-		"action": function(elem, submenuInst) {
-			
+			//submenuInst.cancel = true;
 		},
 	},
 	"taskdetail": {
@@ -71,6 +62,67 @@ submenu_list['taskdetail'] = {
 	},
 */
 
+	"projects_id": {
+		"style": "input_hidden",
+		"title": "",
+		"name": "task_parent_id_hidden",
+		"value": "",
+		"now": function(that, Elem){
+			var currentProjID = app_content_menu.projects_id;
+			if(that.param.projID){
+				currentProjID = that.param.projID;
+			}
+			Elem.find("[find=submenu_input]").prop('value', currentProjID);
+		},
+		"class": "",
+	},
+};
+
+submenu_list['taskdetail_new'] = {
+	//Set the title of the top
+	"_title": {
+		"style": "customized_title",
+		"title": function(that){
+			var title = 'Information';
+			if(that.param.type == "tasks"){
+				title = Lincko.Translation.get('app', 3605, 'html');
+			}
+			if(that.param.type == "notes"){
+				title = Lincko.Translation.get('app', 3606, 'html');
+			}
+			if(that.param.type == "files"){
+				title = Lincko.Translation.get('app', 3607, 'html');
+			}
+			return title;
+		},
+		"class": function(that){
+			var className = 'submenu_wrapper_title submenu_wrapper_taskdetail_'+that.param.type;
+			return className;
+		},
+	},
+	"left_button": {
+		"style": "title_left_button",
+		"title": Lincko.Translation.get('app', 7, 'html'), //Cancel
+		'hide': true,
+		"class": "base_pointer",
+		"action": function(elem, submenuInst) {
+			submenuInst.cancel = true;
+		},
+	},
+	"right_button": {
+		"style": "title_right_button",
+		"title": Lincko.Translation.get('app', 58, 'html'), //Save
+		'hide': true,
+		"class": "base_pointer",
+		"action": function(elem, submenuInst) {
+			
+		},
+	},
+	"taskdetail": {
+		"style": "taskdetail",
+		"title": "taskdetail",
+		"class": "",
+	},
 	"projects_id": {
 		"style": "input_hidden",
 		"title": "",
@@ -356,7 +408,10 @@ Submenu.prototype.Add_taskdetail = function() {
 						"approved": approved,
 					},
 					'post', 'task/update');
-				}
+				item.approved = approved;
+				Lincko.storage.data[item._type][item._id] = item;
+				app_application_lincko.prepare(item._type+'_'+item._id, true);
+			}
 		});
 	}
 	/* OLD CHECKBOX METHOD
@@ -436,7 +491,6 @@ Submenu.prototype.Add_taskdetail = function() {
 			else{
 				elem_projects.html(project['+title']);
 			}
-			console.log('force item parent id to be: '+project._id);
 			item['_parent'][1] = project._id;
 			currentProjID = project._id;
 
@@ -495,7 +549,6 @@ Submenu.prototype.Add_taskdetail = function() {
 					if(in_charge_id){
 						var username = Lincko.storage.get("users", in_charge_id, "username");
 						elem_in_charge.html(username);
-						if(!item['_users'][in_charge_id]){ console.log(item); item['_users'][in_charge_id] = {}; }
 						item['_users'][in_charge_id]['in_charge'] = true;
 					}
 					else{ //nobody in charnge
@@ -1231,11 +1284,17 @@ Submenu.prototype.Add_taskdetail = function() {
 		'submenu_taskdetail_meta_'+that.md5id,
 		that.param.type+'_'+item['_id'],
 		function(){
+			var item_old = item;
+			item = Lincko.storage.get(that.param.type, item['_id']);
+			if(!taskdetail_tools.itemDiff(item_old, item, ['_parent','duration','_users'])){
+				return;
+			}
+
 			var elem = $('#'+this.id);
 			var elem_new = $('#-submenu_taskdetail_meta').clone().prop('id','submenu_taskdetail_meta_'+that.md5id);
 			elem.velocity('fadeIn',{
 				duration: 200,
-				before: function(){debugger;
+				before: function(){
 					item = Lincko.storage.get(that.param.type, item['_id']);
 					if( that.list_type == "tasks" ){
 						duration_timestamp = item['duration'];
@@ -1548,7 +1607,6 @@ taskdetail_tools = {
 		if(dest_category && dest_id){
 			access_list = Lincko.storage.whoHasAccess(dest_category, dest_id);
 		}
-		console.log(access_list);
 
 		if(item._type == 'tasks' && item._users){
 			for(var userid in item._users){
@@ -1582,6 +1640,20 @@ taskdetail_tools = {
 			users_incharge: param_users_incharge,
 		}
 
+	},
+
+	//compares two items, and returns true/false if there are/no difference
+	itemDiff: function(item1, item2, attributes){
+		if(!attributes){
+			var attributes = Object.keys(item1);
+		}
+		for(var i = 0; i < attributes.length; i++ ){
+			if(JSON.stringify(item1[attributes[i]]) != JSON.stringify(item2[attributes[i]])){
+				return true;
+			}
+		}
+
+		return false;
 	},
 
 }
