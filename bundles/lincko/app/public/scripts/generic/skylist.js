@@ -1882,9 +1882,10 @@ skylist.prototype.checkboxClick = function(event,elem_checkbox){
 		"id": elem_task.data('item_id'),
 		"approved": approved,
 	};
-
 	skylist.sendAction.tasks(param, task, 'task/update');
 	//wrapper_sendAction( param, 'post', 'task/update');
+	Lincko.storage.data.tasks[task._id].approved = approved;
+	app_application_lincko.prepare('tasks_'+task._id, true);
 
 /*
 	var detail = $('#app_layers_skytasks_detail');
