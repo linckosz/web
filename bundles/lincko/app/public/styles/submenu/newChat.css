@@ -1,6 +1,3 @@
-body{cursor:pointer}
-*{ursor:pointer}
-
 textarea:focus, input:focus{
 	outline: none;
 }

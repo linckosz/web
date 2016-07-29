@@ -304,7 +304,6 @@ var chatFeed = (function() {
 				}
 			});
 		}
-
 		return Elem;
 	};
 
@@ -430,12 +429,8 @@ var chatFeed = (function() {
 						RESOURCE_HANDLERS[category](id, that, e);
 					}	
 				}
-					
-				
 			});
 		}
-
-
 		return Elem;
 	};
 
@@ -577,7 +572,6 @@ var chatFeed = (function() {
 		*/
 		for (var i in items) {
 			var item = new BaseHistoryCls(items[i]);
-			console.log(items[i]);
 			if (item) {
 				var Elem;
 				var dateStamp; 
@@ -589,7 +583,6 @@ var chatFeed = (function() {
 				else {
 					Elem = item.renderChatTemplate(i);
 					dateStamp = checkRecentDate(item.item.created_at, i);
-					
 				}
 				if (Elem) {
 					if (after) {
@@ -623,7 +616,6 @@ var chatFeed = (function() {
 		}
 
 		setTimeout(function(){ app_application_lincko.prepare("submenu_show", true); }, 600);
-
 	}
 
 	function updateRecalled(parentType, parentID, position){
