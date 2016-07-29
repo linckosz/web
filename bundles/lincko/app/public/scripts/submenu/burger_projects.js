@@ -30,6 +30,7 @@ submenu_list['burger_projects'] = {
 				switch(item['_type']){
 					case 'tasks':
 						route = 'task/update';
+						param['users>in_charge'] = taskdetail_tools.taskUserCheck(item, 'projects', new_projectID).users_incharge;
 						skylist.sendAction.tasks(param,item,route);
 						break;
 					case 'notes':
