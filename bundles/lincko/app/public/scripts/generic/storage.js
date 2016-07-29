@@ -352,17 +352,18 @@ Lincko.storage.childrenList = function(data, children_list, category_focus, cate
 	//Rebuild children tree
 	for(var category in Lincko.storage.data) {
 		//if category_focus is given, skip all other categories
-		if(typeof category_focus == 'string' && category != category_focus){
+		if(typeof category_focus == 'string' && category == category_focus){
 			continue;
 		}
 		for(var id in Lincko.storage.data[category]) {
-			//if category_id is given, skip all other ids
-			if(category_id && id != category_id){
-				continue;
-			}
 			if(typeof Lincko.storage.data[category][id]['_parent']!='undefined' && typeof Lincko.storage.data[category][id]['_parent'][0]=='string' && Lincko.storage.data[category][id]['_parent'][1]){
 				parent_type = Lincko.storage.data[category][id]['_parent'][0];
 				parent_id = Lincko.storage.data[category][id]['_parent'][1];
+				
+				//if category_id is given, skip all other ids
+				if(category_id && parent_id != category_id){
+					continue;
+				}
 				if(Lincko.storage.data[parent_type] && Lincko.storage.data[parent_type][parent_id]){
 					if(!Lincko.storage.data[parent_type][parent_id]['_children']){
 						Lincko.storage.data[parent_type][parent_id]['_children'] = {};
