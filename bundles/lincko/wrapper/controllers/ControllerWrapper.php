@@ -67,9 +67,9 @@ class ControllerWrapper extends Controller {
 
 		$url = $app->lincko->wrapper['url'].$this->action;
 
-		$timeout = 18;
+		$timeout = 36;
 		if($this->action==='translation/auto'){
-			$timeout = 38; //Need more time because requesting a third party for translation
+			$timeout = 66; //Need more time because requesting a third party for translation
 		}
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url); //Port used is 10443 only

@@ -41,9 +41,9 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 	//We add a random md5 code to insure we avoid getting in queue for the same ajax call
 	var unique_md5 = md5(Math.random());
 	var linkid = '?'+unique_md5;
-	var timeout = 20000; //20s
+	var timeout = 40000; //40s
 	if(action == 'translation/auto'){
-		timeout = 40000; //40s, Twice the time because the translation request has to request a third party
+		timeout = 60000; //60s, Because the translation request has to request a third party
 	}
 
 	if(action.match(/\/create$/, '')){

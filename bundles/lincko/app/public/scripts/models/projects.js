@@ -233,7 +233,7 @@ var app_models_projects_create_cb_success = function(){
 	submenu_form_cb_success();
 	if(tmpID){
 		var item = Lincko.storage.list("projects", 1 , {temp_id: tmpID});
-		if(item){
+		if(item[0]){
 			app_content_menu.selection(item[0]['_id']);
 		}
 		tmpID = null;
