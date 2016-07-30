@@ -187,21 +187,11 @@
 	margin-right: 10px;
 }
 
-.tasks .models_history_standard_target:before {
-	color: #FB7D23;
-	content: " ";
-}
-
-.tasks .models_history_standard_target:after {
-	color: #FB7D23;
-	content: " ";
-}
-
-.tasks .models_history_standard_target {
-	color: #FB7D23;
-}
-
-.comments .models_history_standard_target {
+.tasks .models_history_standard_target,
+.notes .models_history_standard_target,
+.comments .models_history_standard_target,
+.projects .models_history_standard_target
+{
 	color: #FB7D23;
 }
 

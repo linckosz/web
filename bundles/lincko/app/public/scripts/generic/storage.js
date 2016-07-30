@@ -461,7 +461,7 @@ Lincko.storage.get = function(category, id, attribute, deleted){
 	return false;
 };
 
-//Return the main information of the file like +title, +name, etcc
+//Return the main information of the file like +title, +name, etc
 /*
 	Lincko.storage.getPlus("projects", 5);
 */
@@ -622,7 +622,7 @@ Lincko.storage.formatHistoryInfo = function(text, history){
 		for(var i in array_needle){
 			search = String(array_needle[i]);
 			needle = search.replace(/\[\{|\}\]/g, '');
-			if(history.par && history.par[needle]){
+			if(history.par && typeof history.par[needle] != 'undefined'){
 				replacement = history.par[needle];
 				text = text.replaceAll(search, replacement);
 				continue;
@@ -630,9 +630,9 @@ Lincko.storage.formatHistoryInfo = function(text, history){
 				array = needle.split("|");
 				needle = array[0].toLowerCase();
 				array.shift(); //Remove the first element
-				if(array.length>0 && history.par && history.par[needle]){
-					replacement = history.par[needle]
-					if(typeof array === 'object'){
+				if(history.par && typeof history.par[needle] != 'undefined'){
+					replacement = history.par[needle];
+					if(array.length>0 && typeof array === 'object'){
 						for(var i in array){
 							filter = array[i].toLowerCase();
 							if(filter === 'lower'){
@@ -648,7 +648,7 @@ Lincko.storage.formatHistoryInfo = function(text, history){
 					continue;
 				}
 			}
-			text = text.replaceAll(search, '"'+Lincko.Translation.get('app', 21, 'html')+'"');
+			text = text.replaceAll(search, Lincko.Translation.get('app', 21, 'html'));
 		}
 	}
 	return text; // normaly we should not use wrapper_to_html(text) here

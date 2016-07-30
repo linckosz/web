@@ -9,7 +9,8 @@ function ChangeLanguage(language){
 	);
 }
 
-Translation_filter = function(text, param,to_html){
+//toto => what does this function do it here? Since it's parsing history text, we should only use Lincko.storage.formatHistoryInfo, modifying one or the other will make the framework less consistant
+var Translation_filter = function(text, param,to_html){
 	if(typeof text != 'string'){ return ''; }
 	var search;
 	var replacement;

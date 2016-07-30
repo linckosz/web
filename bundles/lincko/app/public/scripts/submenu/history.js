@@ -309,7 +309,7 @@ var chatFeed = (function() {
 
 	BaseHistoryCls.prototype.renderHistoryTemplate = function(index) {
 		var target;
-		var action;
+		var action = false;
 		var thumbnail;
 
 		if(this.item.att == 'recalled_by'){ //if comment was recalled
@@ -352,10 +352,18 @@ var chatFeed = (function() {
 		Elem.addClass(this.item.type);
 		var history = Lincko.storage.getHistoryInfo(this.item);
 		// We don't need to use wrapper_to_html for 'history' because the text is already protected in history format method
+		if(!history){
+			return null;
+		}
 
 		if (!action) {
-			action = php_nl2br(Lincko.storage.formatHistoryInfo(
-			history.root.title, { 'par': { 'un': ' ', 'nt': history.root.history.par.nt } }) + ":");
+
+			var clone_hist = $.extend(true, {}, history.root.history);
+			var text = history.root.title;
+			if(clone_hist.par.un){
+				clone_hist.par.un = '';
+			}
+			action = php_nl2br(Lincko.storage.formatHistoryInfo(text, clone_hist)) + ":&nbsp;";
 		}
 
 		Elem.find("[find=author]").html(php_nl2br(this.item.par.un));
