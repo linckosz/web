@@ -102,8 +102,7 @@ submenu_list['taskdetail_new'] = {
 	},
 	"left_button": {
 		"style": "title_left_button",
-		//"title": Lincko.Translation.get('app', 7, 'html'), //Cancel
-		"title": Lincko.Translation.get('app', 41, 'html'), //Create
+		"title": Lincko.Translation.get('app', 7, 'html'), //Cancel
 		'hide': true,
 		"class": "base_pointer",
 		"action": function(elem, submenuInst) {
@@ -112,7 +111,8 @@ submenu_list['taskdetail_new'] = {
 	},
 	"right_button": {
 		"style": "title_right_button",
-		"title": Lincko.Translation.get('app', 58, 'html'), //Save
+		"title": Lincko.Translation.get('app', 41, 'html'), //Create
+		//"title": Lincko.Translation.get('app', 58, 'html'), //Save
 		'hide': true,
 		"class": "base_pointer",
 		"action": function(elem, submenuInst) {
