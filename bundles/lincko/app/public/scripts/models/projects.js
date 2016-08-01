@@ -245,6 +245,10 @@ var app_models_projects_chart_tasks_data = function(Elem_id, id, chart_display_r
 	if(typeof chart_options_replace != "object"){ chart_options_replace = false; }
 	wrapper_clean_chart();
 
+	if(typeof Lincko.storage.data["_history_title"] == "undefined" || typeof Lincko.storage.data["_history_title"]["tasks"] == "undefined"){
+		return false;
+	}
+
 	//Chart default
 	var chart_display = {
 		labels: [],

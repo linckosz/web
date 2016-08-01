@@ -131,7 +131,7 @@ Submenu.prototype.Add_MenuProjects = function() {
 		var Elem = $("#"+this.id);
 		var projects_id = this.action_param;
 		var project = Lincko.storage.get("projects", projects_id);
-		if(item_id == Lincko.storage.getMyPlaceholder()['_id']){
+		if(projects_id == Lincko.storage.getMyPlaceholder()['_id']){
 			var name = Lincko.Translation.get('app', 2502, 'html'); //Personal Space
 		} else {
 			var name = wrapper_to_html(project["+title"]);
