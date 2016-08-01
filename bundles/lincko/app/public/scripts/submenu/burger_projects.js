@@ -22,6 +22,11 @@ submenu_list['burger_projects'] = {
 				submenuInst.param.input.change();
 
 				var item = submenuInst.param.item;
+
+				if(item._id == 'new'){
+					return;
+				}
+
 				var param = {
 					id: item['_id'],
 					parent_id: new_projectID,
