@@ -676,6 +676,9 @@ Submenu.prototype.Add_taskdetail = function() {
 		elem_description_text.blur(function(){
 			var old_comment = item['-comment'];
 			var new_comment = $(this).html();
+			if( $('<div>').html(new_comment).text() == '' ){
+				new_comment = '';
+			}
 
 			if(old_comment != new_comment){
 				var param = {id: taskid};
@@ -1183,6 +1186,9 @@ Submenu.prototype.Add_taskdetail = function() {
 			param['id'] = taskid;
 			submenu_taskdetail.find('[find=title_text]');
 			param['comment'] = submenu_taskdetail.find('[find=description_text]').html();
+			if( $('<div>').html(param['comment']).text() == '' ){
+				delete param.comment;
+			}
 
 
 			var new_projectID = elem_meta.find('[find=projects_id]').val();
@@ -1289,15 +1295,22 @@ Submenu.prototype.Add_taskdetail = function() {
 				return;
 			}
 
+			item = Lincko.storage.get(that.param.type, item['_id']);
+			if( that.list_type == "tasks" ){
+				duration_timestamp = item['duration'];
+			}
+
+			//if only the duration is updated, just update the item, but no flash animation
+			if(taskdetail_tools.itemDiff(item_old, item, ['duration'])){
+				return;
+			}
+
+
 			var elem = $('#'+this.id);
 			var elem_new = $('#-submenu_taskdetail_meta').clone().prop('id','submenu_taskdetail_meta_'+that.md5id);
 			elem.velocity('fadeIn',{
 				duration: 200,
 				before: function(){
-					item = Lincko.storage.get(that.param.type, item['_id']);
-					if( that.list_type == "tasks" ){
-						duration_timestamp = item['duration'];
-					}
 				},
 				complete: function(){
 					//update_meta(elem);
