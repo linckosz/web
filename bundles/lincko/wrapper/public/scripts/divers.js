@@ -695,6 +695,16 @@ function wrapper_test(type, RCUD){
 				wrapper_test_display
 			);
 		}
+		else if(RCUD==2){
+			wrapper_sendAction(
+				{
+					"settings": 123,
+				},
+				'post',
+				'data/settings',
+				wrapper_test_display
+			);
+		}
 	}
 
 	if(type=='*' || type=='translate'){

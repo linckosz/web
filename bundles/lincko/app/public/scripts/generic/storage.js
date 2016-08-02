@@ -278,17 +278,19 @@ Lincko.storage.schema = function(schema){
 	//Step 2: Get all missing data
 	//No need update=true because later will it call update() which has it
 	for(var i in schema) {
-		if(!Lincko.storage.data[i]){
-			missing[i] = schema[i];
-			app_application_lincko.prepare(i);
-			continue;
-		} else {
-			for(var j in schema[i]) {
-				if(!Lincko.storage.data[i][j]){
-					if(typeof missing[i]=='undefined'){ missing[i] = {}; }
-					missing[i][j] = schema[i][j];
-					app_application_lincko.prepare(i+"_"+j);
-					continue;
+		if(!$.isEmptyObject(schema[i])){
+			if(!Lincko.storage.data[i]){
+				missing[i] = schema[i];
+				app_application_lincko.prepare(i);
+				continue;
+			} else {
+				for(var j in schema[i]) {
+					if(!Lincko.storage.data[i][j]){
+						if(typeof missing[i]=='undefined'){ missing[i] = {}; }
+						missing[i][j] = schema[i][j];
+						app_application_lincko.prepare(i+"_"+j);
+						continue;
+					}
 				}
 			}
 		}
@@ -534,6 +536,14 @@ Lincko.storage.canI = function(rcud, category, id, child_type){
 	}
 	return false;
 };
+
+Lincko.storage.getSettings = function(){
+	var settings = Lincko.storage.get("settings", wrapper_localstorage.uid, "users");
+	if(settings){
+		settings = JSON.parse(settings);
+	}
+	return settings;
+}
 
 /* PRIVATE METHOD */
 Lincko.storage.isHistoryReady = function(){
