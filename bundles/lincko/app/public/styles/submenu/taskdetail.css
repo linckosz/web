@@ -124,7 +124,7 @@ td.submenu_taskdetail_share .fa{
 	padding-top: 0px;
 	padding-bottom: 0px;
 	background: #F7FAFC;
-	/*position: absolute;*/
+	position: absolute;
 	right: 0px;
 	left: 0px;
 }
