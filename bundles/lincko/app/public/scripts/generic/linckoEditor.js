@@ -29,7 +29,11 @@ function linckoEditor(elem, toolbarID, param){
 		//use fixed position
 		editorInst.Lincko_param.iscrollInst = myIScrollList[submenu_content.prop('id')];
 		$('#'+editorInst.Lincko_param.submenuInst.id).find('.submenu_top').css('z-index',100);
-		$(editorInst.Lincko_param.iscrollInst.scroller).css('position','fixed');
+		/*$(editorInst.Lincko_param.iscrollInst.scroller).css({
+			'position':'fixed',
+			'left':'0px',
+			'right':'0px',
+		});*/
 
 		submenu_content.on('paste cut', function(event){
 			wrapper_IScroll();
