@@ -1368,7 +1368,8 @@ Submenu.prototype.Add_taskdetail = function() {
 	var elem_description_text = submenu_wrapper.find('[find=description_text]').prop('contenteditable','true').prop('id','submenu_taskdetail_description_text_'+that.md5id);
 
 	//div for the toolbar
-	elem_description_text.before($('<div>').prop('id','submenu_taskdetail_description_toolbar_'+that.md5id));
+	var elem_editorToolbar = $('<div>').prop('id','submenu_taskdetail_description_toolbar_'+that.md5id).addClass('taskdetail_editorToolbar');
+	elem_description_text.before(elem_editorToolbar);
 	var editorInst = null;
 
 

@@ -107,11 +107,17 @@ td.submenu_taskdetail_share .fa{
 }
 .submenu_taskdetail_description [find=description_text] {
 	/*min-height: 60%;*/
-	padding-top: 40px;
+	/*padding-top: 40px;*/
 	padding-bottom: 50px;
+	padding-right: 15px;
 	margin: 0px;
 	border: none;
 }
+.taskdetail_editorToolbar{
+	height: 40px;
+}
+
+
 
 /*------easyEditor------*/
 .submenu_taskdetail_description .easyeditor-toolbar {
