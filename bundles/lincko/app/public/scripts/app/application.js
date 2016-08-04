@@ -659,9 +659,9 @@ function app_application_change_private(){
 	top.location.replace(top.location.protocol+'//'+app_application_dev_link()+document.domain); //Personal workspace
 }
 
-$('#app_application_submenu_block').click(function(){
-	if(submenu_obj['submenu']['mouseenter'] == false){
-		submenu_Hideall(false); //Only hide submenu
+$('#app_application_submenu_block').click(function(event){
+	if($(event.target).prop('id') == 'app_application_submenu_block'){
+		submenu_Hideall(false); //fase -> dont hide preview
 	}
 });
 
