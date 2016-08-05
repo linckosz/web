@@ -1,6 +1,7 @@
 var previewer = (function() {
 	function pic_preview(id) {
 		var name = Lincko.storage.get("files", id, "name");
+		var orientation = Lincko.storage.get("files", id, "orientation");
 		var url = Lincko.storage.getLink(id);
 		var thumbnail = Lincko.storage.getLinkThumbnail(id);
 		var download = Lincko.storage.getDownload(id);
@@ -9,8 +10,11 @@ var previewer = (function() {
 		var Elem_id = 'pic_preview_full_screen_'+id;
 		popout.prop("id", Elem_id);
 		popout.find('img').attr('src', url);
+		if(orientation){
+			popout.find('img').addClass(app_models_file_imageOrientationCSS[orientation]);
+		}
 		popout.find('.pic_preview_name').html(wrapper_to_html(name));
-		popout.find('img').attr('src', url);
+		//popout.find('img').attr('src', url); //toto - is this duplicate for a reason?
 		popout.find('.pic_preview_icon').attr("href", download);
 		$("body").append(popout);
 		popout.find('.close').click(Elem_id, function(event) {

@@ -40,3 +40,15 @@ var app_models_fileType = {
 	 	return fileType_class;
  	},
  };
+
+
+var app_models_file_imageOrientationCSS = {
+	1: 'app_models_files_imageOrientation1',
+	2: 'app_models_files_imageOrientation2',
+	3: 'app_models_files_imageOrientation3',
+	4: 'app_models_files_imageOrientation4',
+	5: 'app_models_files_imageOrientation5',
+	6: 'app_models_files_imageOrientation6',
+	7: 'app_models_files_imageOrientation7',
+	8: 'app_models_files_imageOrientation8',
+}

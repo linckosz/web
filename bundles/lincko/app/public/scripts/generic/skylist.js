@@ -1442,7 +1442,7 @@ skylist.prototype.addNote = function(item){
 }
 
 skylist.prototype.addFile = function(item){
-	if(!item['_perm'] || typeof item['_perm'] === 'object'){ return false; }
+	if(!item['_perm'] || typeof item['_perm'] !== 'object'){ return false; }
 	var that = this;
 	var Elem = $('#-skylist_card').clone();
 	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').empty();
