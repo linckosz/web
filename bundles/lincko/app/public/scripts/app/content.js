@@ -163,7 +163,6 @@ var app_content_menu = {
 
 			settings_new.latestvisitProjects.unshift(projects_id);
 			wrapper_sendAction({settings: JSON.stringify(settings_new)}, 'post', 'data/settings');
-			debugger;
 		}
 	},
 }

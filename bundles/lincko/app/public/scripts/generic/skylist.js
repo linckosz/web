@@ -117,16 +117,17 @@ var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct, ri
 	this.Lincko_itemsList;
 	this.Lincko_itemsList_filter = 
 	{
-		'people': wrapper_localstorage.uid,
+		//'people': wrapper_localstorage.uid,
+		'people': null,
 		'duedate': -1, //show all
 		//'timesort': null,
 		'search': '',
 		'sort_alt': false,
 		'hide_completed': false,
 	};
-	if( Lincko.storage.get("projects", app_content_menu.projects_id, 'personal_private') ){
+	/*if( Lincko.storage.get("projects", app_content_menu.projects_id, 'personal_private') ){
 		this.Lincko_itemsList_filter.people = null;
-	}
+	}*/
 
 	this.searchTimeout;
 	this.noResult_str = $('<div class="skylist_card_noCard"></div>');
@@ -1973,8 +1974,8 @@ skylist.prototype.menu_construct = function(){
 		that.tasklist_update( 'people', null );
 	});
 
-	//make selection if it is show everybody's mode (.people == null)
-	if(!that.Lincko_itemsList_filter.people){
+	//make selection if it is to show single user view
+	if(that.Lincko_itemsList_filter.people){
 		elem_people1.toggleClass('skylist_menu_selected');
 		elem_people2.toggleClass('skylist_menu_selected');
 	}

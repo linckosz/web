@@ -197,6 +197,13 @@ td.submenu_taskdetail_share .fa{
 	width: 20px;
 	font-size: 25px;
 }
+.submenu_taskdetail_collapsable_button td[find=icomoon]{
+	width: 100%;
+    font-size: 20px;
+    line-height: 24px;
+    padding-top: 2px;
+    color: #53ADD2;
+}
 .submenu_taskdetail_collapsable_content {
 
 }
@@ -355,7 +362,7 @@ td.submenu_taskdetail_share .fa{
     position: absolute;
     bottom: 0px;
     right: 0px;
-    padding-right: 5px;
+    padding-right: 10px;
     color: #53ADD2;
 }
 .submenu_taskdetail_links_card [find=action_div] span{

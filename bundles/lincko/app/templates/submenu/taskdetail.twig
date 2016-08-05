@@ -43,7 +43,7 @@
 			<td find="spaces" class="submenu_taskdetail_meta_box display_none">
 				{#<img src="{{_filelatest('/lincko/app/images/app/icons/Time-3.png') }}"/>#}
 				<span class="submenu_taskdetail_meta_icons icon-Hash"></span>
-				<span find="spaces_text" class="submenu_taskdetail_meta_text">Spaces</span>
+				<span find="spaces_text" class="submenu_taskdetail_meta_text">Spaces{#toto#}</span>
 				<span class="submenu_taskdetail_meta_icons icon-Add"></span>
 				{#<input type="text" find="jdpicker" readonly="readonly"/>#}
 			</td>
@@ -59,7 +59,9 @@
 <div id="-submenu_taskdetail_links" class="submenu_taskdetail_links">
 	<table class="submenu_taskdetail_collapsable_button submenu_taskdetail_paddingLeft">
 		<td find="icon_arrow" class="icon-Accordion base_color_text_linckoOrange"></td>
-		<td>Links{#toto Links#}(<span find="linkCount"></span>)</td>
+		<td>Links</td>
+		<td>(<span find="linkCount"></span>)</td>
+		<td class="icon-links" find="icomoon"></td>
 	</table>
 	<div find="links_wrapper" class="needsclick submenu_taskdetail_collapsable_content">
 	</div>
@@ -82,7 +84,7 @@
 	</table>
 	<div find="action_div">
 		<span class="icon-Cloud-Download"></span>
-		<span class="icon-Accordion"></span>
+		<span class="icon-Remove"></span>
 	</div>
 </div>
 
@@ -91,7 +93,9 @@
 <div id="-submenu_taskdetail_comments" class="submenu_taskdetail_comments">
 	<table class="submenu_taskdetail_collapsable_button submenu_taskdetail_paddingLeft">
 		<td find="icon_arrow" class="icon-Accordion base_color_text_linckoOrange"></td>
-		<td>{{ _trans('app', 10, 3, 'html') }}{#comments#} (<span find="commentCount"></span>)</td>
+		<td>{{ _trans('app', 10, 3, 'html') }}{#comments#}</td>
+		<td>(<span find="commentCount"></span>)</td>
+		<td class="icon-Pencil" find="icomoon"></td>
 	</table>
 	<div class="submenu_taskdetail_comments_seePrev">
 		<span find="seePrev_btn" class="submeu_taskdetail_blueButton display_none">{{ _trans('app', 14, 1, 'html') }}...{#See previous comments#}</span>
