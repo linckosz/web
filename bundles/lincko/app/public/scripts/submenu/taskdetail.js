@@ -703,7 +703,25 @@ Submenu.prototype.Add_taskdetail = function() {
 	if(that.param.type != 'files'){ //no file description for beta
 		submenu_taskdetail.append(elem);
 	}
+
+
+	/*-----Links------------------*/
+	var elem_links = $('#-submenu_taskdetail_links').clone().prop('id','submenu_taskdetail_link_'+that.md5id);
+	var elem_links_wrapper = elem_links.find('[find=links_wrapper]');
+	var item_files = Lincko.storage.list('files',null, null, that.param.type, taskid, true);
+	var elem_linkcardTemp = $('#-submenu_taskdetail_links_card').clone().prop('id','');
+	elem_links.find('[find=new_btn]').click(function(){
+		app_upload_open_files(that.param.type, taskid);
+	});
+
 	
+	elem_links_wrapper.append(elem_linkcardTemp);
+
+
+
+	submenu_taskdetail.append(elem_links);
+	/*-----END of Links-----------*/
+
 
 	/*---taskcomments--*/
 	var elem_submenu_taskdetail_comments = $('#-submenu_taskdetail_comments').clone().prop('id','submenu_taskdetail_comments_'+that.md5id);

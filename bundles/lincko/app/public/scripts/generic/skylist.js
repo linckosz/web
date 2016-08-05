@@ -118,7 +118,7 @@ var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct, ri
 	this.Lincko_itemsList_filter = 
 	{
 		'people': wrapper_localstorage.uid,
-		'duedate': null,
+		'duedate': -1, //show all
 		//'timesort': null,
 		'search': '',
 		'sort_alt': false,
@@ -166,6 +166,7 @@ skylist.prototype.construct = function(){
 	that.list_wrapper = that.list_wrapper.empty().addClass('skylist_wrapper');
 	that.list_subwrapper = $('#-skylist_subwrapper').clone().prop('id','');
 
+	that.filter_updateSettings(false); //must be before menu_construct to know which filter to be on when loaded
 	that.menu_construct();
 
 	that.list = $('#-skylist').clone()
@@ -402,7 +403,7 @@ skylist.prototype.generate_Lincko_itemsList = function(){
 		that.Lincko_itemsList = mainMenu.getlist();
 	}
 	else{
-		that.Lincko_itemsList = Lincko.storage.list(that.list_type, null, null, 'projects', app_content_menu.projects_id, false);
+		that.Lincko_itemsList = Lincko.storage.list(that.list_type, null, null, 'projects', app_content_menu.projects_id, true);
 		if( that.list_type == "tasks" ){
 			var item;
 			for( var i in that.Lincko_itemsList ){
@@ -702,6 +703,8 @@ skylist.prototype.list_filter = function(){
 		items_filtered = that.filter_by_sort_alt( items_filtered, that.Lincko_itemsList_filter.sort_alt );
 		items_filtered = that.filter_by_hide_completed( items_filtered, that.Lincko_itemsList_filter.hide_completed );
 	}
+	that.filter_updateSettings();
+
 	return items_filtered;
 }
 
@@ -1970,6 +1973,12 @@ skylist.prototype.menu_construct = function(){
 		that.tasklist_update( 'people', null );
 	});
 
+	//make selection if it is show everybody's mode (.people == null)
+	if(!that.Lincko_itemsList_filter.people){
+		elem_people1.toggleClass('skylist_menu_selected');
+		elem_people2.toggleClass('skylist_menu_selected');
+	}
+
 /*
 	that.elem_navbar.find('[people]').on('click', function(){
 		var selection = $(this);
@@ -2070,8 +2079,8 @@ skylist.prototype.menu_construct = function(){
 	 }
 	var sort;
 	that.elem_timesort = that.elem_navbar.find('.skylist_menu_timesort');
-	that.elem_timesort.append('<span class="skylist_menu_sortdot maxMobileL"></span>');
-	that.elem_sortdot = that.elem_timesort.find('.skylist_menu_sortdot');
+	that.elem_sortdot = $('<span class="skylist_menu_sortdot maxMobileL"></span>');
+	that.elem_timesort.append(that.elem_sortdot);
 	var elem_timesort_text_wrapper = $('#-skylist_menu_timesort_text_wrapper').clone().prop('id','');
 	var elem_timesort_text_wrapper_tmp;
 	
@@ -2089,7 +2098,8 @@ skylist.prototype.menu_construct = function(){
 	that.elem_sortdot.before('<br />');
 	that.elem_Jsorts = that.elem_timesort.find('[sort]');
 
-	that.menu_makeSelection(that.sort_array[0]);
+	//that.menu_makeSelection(that.sort_array[0]);
+	that.menu_makeSelection(that.Lincko_itemsList_filter.duedate);
 
 
 	that.elem_Jsorts.click(function(){
@@ -2259,6 +2269,17 @@ skylist.prototype.addFilter_tasks = function(elem_filter_pane){
 		that.tasklist_update('hide_completed', !that.Lincko_itemsList_filter.hide_completed );
 		elem_filterIcon.click();
 	});
+
+
+	//make filter selection based on the Lincko_itemsList_filter object
+	if(that.Lincko_itemsList_filter.sort_alt){
+		that.elem_navbar.find('[find=radio_wrapper] [find=radio]').toggleClass('fa-circle');
+	}
+	if(that.Lincko_itemsList_filter.hide_completed){
+		that.elem_navbar.find('[find=checkbox_wrapper] [find=checkbox]').toggleClass('fa-check');
+	}
+
+
 }
 
 
@@ -2333,9 +2354,40 @@ skylist.prototype.updateFakeCards = function(){
 	if(updated){ that.DOM_updated(); }
 }
 
+//get lincko settings object, and update the skylist filter settings
+//sendAction == false will grab the filter settings from lincko settings object and set it as the instance's filter
+skylist.prototype.filter_updateSettings = function(sendAction){
+	if(typeof sendAction === 'undefined'){ sendAction = true; }
+	var that = this;
+	//var settings_old = Lincko.storage.getSettings();
+	var settings_old = Lincko.storage.settings;
+	var settings_new = settings_old;
+	if(!settings_new){
+		settings_new = {};
+	}
+	if(!settings_new.skylist){
+		settings_new.skylist = {};
+	}
+	if(!settings_new.skylist.filter){
+		settings_new.skylist.filter = {};
+	}
+	if(!settings_new.skylist.filter[app_content_menu.projects_id]){
+		settings_new.skylist.filter[app_content_menu.projects_id]  = {};
+	}
 
+	if(!sendAction){
+		if(settings_new.skylist.filter[app_content_menu.projects_id][that.list_type]){
+			that.Lincko_itemsList_filter = settings_new.skylist.filter[app_content_menu.projects_id][that.list_type];
+		}
+		return;
+	}
 
-
+	settings_new.skylist.filter[app_content_menu.projects_id][that.list_type] = that.Lincko_itemsList_filter;
+	settings_new.skylist.filter[app_content_menu.projects_id][that.list_type].search = ''; //search filter is not saved
+	//wrapper_sendAction({settings: settings_new}, 'post', 'data/settings');
+	Lincko.storage.settings = settings_new;
+	wrapper_localstorage.encrypt('settings', JSON.stringify(Lincko.storage.settings));
+}
 
 
 /*

@@ -318,6 +318,53 @@ td.submenu_taskdetail_share .fa{
 }
 */
 
+
+.submenu_taskdetail_links [find=new_btn],
+.submenu_taskdetail_links [find=existing_btn]{
+	background-color: #f7fafc;
+	border-radius: 8px;
+	font-size: 12px;
+	color: #54add2;
+	height: 24px;
+	line-height: 24px;
+	display: inline-block;
+	text-align: center;
+	margin-top: 14px;
+	margin-bottom: 36px;
+}
+.submenu_taskdetail_links [find=new_btn]{
+	width: 114px;
+}
+.submenu_taskdetail_links [find=existing_btn]{
+	width: 150px;
+}
+.submenu_taskdetail_links_card{
+	position: relative;
+	box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.24);
+}
+.submenu_taskdetail_links_card [find=card_leftbox]{
+	font-size: 36px;
+    display: table-cell;
+    padding-right: 18px;
+}
+.submenu_taskdetail_links_card [find=card_center]{
+	height: 64px;
+}
+.submenu_taskdetail_links_card [find=action_div]{
+	top: 0px;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    padding-right: 5px;
+    color: #53ADD2;
+}
+.submenu_taskdetail_links_card [find=action_div] span{
+	font-size:40px;
+	line-height: 64px;
+}
+
+
+
 .submenu_taskdetail_comments {
 	/*background: #C7E9FF;*/
 	padding-bottom: 40px !important;
