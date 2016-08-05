@@ -386,7 +386,7 @@ Submenu.prototype.Add_taskdetail = function() {
 
 	/*----leftbox----*/
 	if( item['_type'] == "tasks" ){
-		var elem_checkbox = $('#-skylist_checkbox').clone().prop('id','');
+		var elem_checkbox = $('#-skylist_checkbox').clone().prop('id','submenu_taskdetail_checkbox_'+that.md5id);
 		elem.find('[find=leftbox]').html(elem_checkbox);
 		if(item['approved']){
 			elem.addClass('skylist_card_checked');
@@ -414,6 +414,7 @@ Submenu.prototype.Add_taskdetail = function() {
 				app_application_lincko.prepare(item._type+'_'+item._id, true);
 			}
 		});
+
 	}
 	/* OLD CHECKBOX METHOD
 	elem.find("[type=checkbox]")
@@ -1302,6 +1303,21 @@ Submenu.prototype.Add_taskdetail = function() {
 		}, this
 	);
 
+
+
+	app_application_lincko.add(
+		'submenu_taskdetail_checkbox_'+that.md5id,
+		that.param.type+'_'+item['_id'],
+		function(){
+			var item_new = Lincko.storage.get(that.param.type, item['_id']);
+			var elem_title = $('#'+this.id).closest('table');
+			if((elem_title.hasClass('skylist_card_checked') && !item_new.approved) ||
+				(!elem_title.hasClass('skylist_card_checked') && item_new.approved)){
+				elem_title.toggleClass('skylist_card_checked');
+			}
+		}
+	);//end of sync function
+	
 
 	app_application_lincko.add(
 		'submenu_taskdetail_meta_'+that.md5id,
