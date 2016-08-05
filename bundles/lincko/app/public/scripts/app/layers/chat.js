@@ -6,13 +6,10 @@ var chatlist_subConstruct = function(){
 			return false;
 		}
 
+		var submenu_projects_id = app_content_menu.projects_id;
 		that.elem_newcardCircle.click( function() {
-			submenu_Build("contacts", false, false,
-				{
-					id:app_content_menu.projects_id,
-					'contactsID': _app_contacts_gen_chatcontacts(),
-				}, true);
-			return false;
+			submenu_Build("contacts", false, false, {proid: submenu_projects_id}, true);
+			return true;
 		})
 		.appendTo(that.list_wrapper);
 }
@@ -27,12 +24,10 @@ function app_layers_chat_feedChat(parent) {
 		false,
 		'layer_chats'
 	);
+	var submenu_projects_id = app_content_menu.projects_id;
 	parent.delegate(".skylist_newcardCircle", "click", function() {
-		submenu_Build("contacts", false, false, {
-			'id': app_content_menu.projects_id,
-			'contactsID': _app_contacts_gen_chatcontacts(),
-		}, true);
-		return false;
+		submenu_Build("contacts", false, false, {proid: submenu_projects_id}, true);
+		return true;
 	});
 	app_application_lincko.add("skylist_"+app_layers_chatlist.md5id, "chats", function() {
 		var Elem;

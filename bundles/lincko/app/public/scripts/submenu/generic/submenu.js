@@ -2,7 +2,14 @@ var submenu_zindex = {
 	false: 2000,
 	true: 1000,
 };
-var submenu_obj = { 'submenu': {}, 'preview': {} };
+var submenu_obj = {
+	'submenu': {
+		'mouseenter': false,
+	},
+	'preview': {
+		'mouseenter': false,
+	},
+};
 var submenu_show = { 'submenu': {}, 'preview': {} };
 var animation_map_preview = {
 	'new_in': {
@@ -180,9 +187,24 @@ function Submenu(menu, next, param, preview) {
 
 		if (Elem.preview) {
 			submenu_wrapper.appendTo('#app_content_submenu_preview');
+			submenu_wrapper.mouseenter(function(){
+				submenu_obj['preview']['mouseenter'] = true;
+			});
+			submenu_wrapper.mouseleave(function(){
+				submenu_obj['preview']['mouseenter'] = false;
+			});
 		} else {
 			submenu_wrapper.appendTo('#app_application_submenu_block');
+			submenu_wrapper.mouseenter(function(){
+				submenu_obj['submenu']['mouseenter'] = true;
+			});
+			submenu_wrapper.mouseleave(function(){
+				submenu_obj['submenu']['mouseenter'] = false;
+			});
 		}
+		submenu_wrapper.click(function(e){
+			e.stopPropagation();
+		});
 
 		//Launch Pre action
 		for (var att in Elem.obj) {
@@ -1325,7 +1347,7 @@ var submenu_form_cb_success = function(msg, err, status, data) {
 var submenu_form_cb_error = function(xhr_err, ajaxOptions, thrownError) {
 	var msgtp = Lincko.Translation.get('wrapper', 1, 'html'); //Communication error
 	submenu_form_cb_hide_progress();
-	base_show_error(msgtp);
+	//base_show_error(msgtp); //Keep it hidden to avoid showing "communication error"
 };
 
 var submenu_form_cb_begin = function() {

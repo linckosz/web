@@ -284,11 +284,11 @@ function wrapper_test(type, RCUD){
 		else if(RCUD==2){
 			wrapper_sendAction(
 				{
-					"id": 493,
-					//"parent_id": 3, //OPTIONAL
-					//"parent_type": "projects", //OPTIONAL
+					"id": 2371,
+					"parent_id": 49, //OPTIONAL
+					"parent_type": "tasks", //OPTIONAL
 					//"name": "It's a file name"+Math.floor(Math.random() * 20), //OPTIONAL
-					"comment": "It's a file description"+Math.floor(Math.random() * 20), //OPTIONAL
+					//"comment": "It's a file description"+Math.floor(Math.random() * 20), //OPTIONAL
 				},
 				'post',
 				'file/update',
@@ -464,7 +464,7 @@ function wrapper_test(type, RCUD){
 		if(RCUD==0){
 			wrapper_sendAction(
 				{
-					"id": 6,
+					"id": 49,
 				},
 				'post',
 				'task/read',
@@ -698,7 +698,7 @@ function wrapper_test(type, RCUD){
 		else if(RCUD==2){
 			wrapper_sendAction(
 				{
-					"settings": 123,
+					"settings": JSON.stringify({a: 1+Math.floor(Math.random() * 20)}),
 				},
 				'post',
 				'data/settings',

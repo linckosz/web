@@ -538,7 +538,7 @@ Lincko.storage.canI = function(rcud, category, id, child_type){
 };
 
 Lincko.storage.getSettings = function(){
-	var settings = Lincko.storage.get("settings", wrapper_localstorage.uid, "users");
+	var settings = Lincko.storage.get("settings", wrapper_localstorage.uid, "setup");
 	if(settings){
 		settings = JSON.parse(settings);
 	}

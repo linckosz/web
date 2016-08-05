@@ -660,7 +660,9 @@ function app_application_change_private(){
 }
 
 $('#app_application_submenu_block').click(function(){
-	//submenu_Hideall(false); //Only hide submenu
+	if(submenu_obj['submenu']['mouseenter'] == false){
+		submenu_Hideall(false); //Only hide submenu
+	}
 });
 
 function app_application_submenu_position() {

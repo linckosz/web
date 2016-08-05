@@ -660,11 +660,7 @@ Submenu.prototype.Add_ChatContent = function() {
 	var chatlist_subConstruct = function(){
 		this.list_wrapper.addClass("skylist_maxMobileL_force").addClass('submenu_content_chat');
 		this.elem_newcardCircle.click([that.layer+1, that.preview], function(event) {
-			submenu_Build("contacts", event.data[0], false,
-				{
-					id:null,
-					'contactsID': _app_contacts_gen_chatcontacts(null,null,true),
-				}, event.data[1]);
+			submenu_Build("contacts", event.data[0], false, null, event.data[1]);
 			return false;
 		})
 		.appendTo(this.list_wrapper);

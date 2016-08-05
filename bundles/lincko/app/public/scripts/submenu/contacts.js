@@ -5,8 +5,8 @@ submenu_list['contacts'] = {
 		"style": "customized_title",
 		"title": Lincko.Translation.get('app', 3701, 'html'), //Start New Chat
 		"class": function(elem) {
-			if (elem.param.id) {
-				return "project" + elem.param.id + " submenu_newchat_header";
+			if (elem.param.proid) {
+				return "project" + elem.param.proid + " submenu_newchat_header";
 			}
 			else{
 				return "submenu_newchat_header";
@@ -15,20 +15,20 @@ submenu_list['contacts'] = {
 	},
 	"left_button": {
 		"style": "title_left_button",
-		"title": Lincko.Translation.get('app', 25, 'html'), //Close
+		"title": Lincko.Translation.get('app', 7, 'html'), //'Cancel',
 		'hide': true,
 		"class": "base_pointer",
 	},
 	"right_button": {
 		"style": "title_right_button",
-		"title": "Select",
+		"title": Lincko.Translation.get('app', 41, 'html'), //Create
 		"class": "base_pointer",
-		"action": function(elem, submenu, param) {
+		"action": function(elem, submenu) {
 			var that = submenu;
 			var userList = {};
 			var nameList = $.trim( $("#"+submenu.id).find("[name=title]").val() );
 
-			var IDList = _submenu_get_contacts(elem);
+			var IDList = submenu_contacts_get(elem);
 			IDList.push(wrapper_localstorage.uid);
 			if (IDList.length == 1) {
 				return;
@@ -115,126 +115,113 @@ submenu_list['contacts'] = {
 	
 };
 
-/*This is for outside usage to generate contacts list for chat*/
-function _app_contacts_gen_chatcontacts(type, id, global_chat) {
-	var projectId = null;
-	if(!global_chat){
-		projectId = app_content_menu.projects_id;
-	}
+function submenu_contacts_gen_chatcontacts(projectId) {
+	if(typeof projectId == "undefined"){ projectId = null; }
+	var contactList = {};
+	var user;
 	if (projectId) {
-		var contactsID = Object.keys(Lincko.storage.data.projects[projectId]._perm);
+		var list = Lincko.storage.get("projects", projectId, "_perm");
+		for(var i in list){
+			user = Lincko.storage.get("users", i);
+			if(user){
+				contactList[user['_id']] = {
+					'username': user['-username'],
+					'id': user['_id'],
+					'checked': false,
+					'profile_pic': user['profile_pic'],
+				}
+			}
+		}
+	} else {
+		var list = Lincko.storage.list('users', null, {_visible: true});
+		for(var i in list){
+			user = list[i];
+			contactList[user['_id']] = {
+				'username': user['-username'],
+				'id': user['_id'],
+				'checked': false,
+				'profile_pic': user['profile_pic'],
+			}
+		}
 	}
-	else {
-		var contactsID_obj = Lincko.storage.list('users',null,{_visible:true});
-		var contactsID = [];
-		$.each(contactsID_obj,function(key,val){
-			contactsID.push(contactsID_obj[key]['_id']);
-		});
-		//var contactsID = Object.keys(Lincko.storage.data.users);
+	user = Lincko.storage.get("users", wrapper_localstorage.uid);
+	contactList[user['_id']] = {
+		'username': user['-username'],
+		'id': user['_id'],
+		'checked': true,
+		'profile_pic': user['profile_pic'],
 	}
-	var self_index = contactsID.indexOf(wrapper_localstorage.uid.toString());
-	if (self_index > -1) {
-		contactsID.splice(self_index, 1);
-	}
-	var tmp = {};
-	for (var c in contactsID) {
-		tmp[contactsID[c]] = {'checked': false};
-	}
-	return tmp;
-}
 
-Submenu.prototype._prepare_contactsList = function() {
-	var logoList = ['envira', 'anchor','balance-scale', 'bomb', 'cubes', 'gavel', 'hand-spock-o', 'heartbeat', 'soccer-ball-o','heart'];
-
-	var contactList = [];
-	for (var c in this.param.contactsID) {
-		contactList.push({
-			'username': Lincko.storage.data.users[c]['-username'],
-			'id': c,
-			'checked': this.param.contactsID[c].checked,
-			'logo': logoList[parseInt(c, 10)%10],
-		});
-	}
 	return contactList;
-}
+};
 
 
 Submenu_select.contacts = function(subm) {
 	subm.Add_ContactContents();
-}
+};
 
 /*This "getContacts" method needs to be used in submit acction*/
-function _submenu_get_contacts(elem) {
+function submenu_contacts_get(elem) {
 	var items = $(elem).parents(".submenu_wrapper").find(".submenu_contact_item .checked").parent().find("input.id");
 	var keys = [];
 	for (var i = 0; i < items.length; i++) {
 		keys.push($(items[i]).val());
 	}
 	return keys;
-}
+};
 
-Submenu.prototype._displayContacts = function(position, contacts) {
+Submenu.prototype.Add_ContactContents = function() {
+	var attribute = this.attribute;
+	var submenu_wrapper = this.Wrapper();
 	var that = this;
 	var profile_pic;
-	this.Wrapper().find(".submenu_top_side_right").hide();
-	for(c in contacts) {
-		var Elem = $('#-submenu_app_contacts').clone();
-		Elem.prop('id', this.id+'_contact_'+c);
-		Elem.find('.username').html(wrapper_to_html(contacts[c].username));
+	var thumbnail;
+	var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
+	position.addClass('overthrow');
 
-		profile_pic = Lincko.storage.get("users", contacts[c]["id"], "profile_pic");
-		thumbnail = Lincko.storage.getLinkThumbnail(profile_pic);
+	var contacts = submenu_contacts_gen_chatcontacts(this.param.proid);
+	var Elem;
+
+	for(var uid in contacts) {
+		Elem = $('#-submenu_app_contacts').clone();
+		Elem.prop('id', this.id+'_contact_'+uid);
+		Elem.find('.username').html(wrapper_to_html(contacts[uid].username));
+
+		thumbnail = Lincko.storage.getLinkThumbnail(contacts[uid].profile_pic);
 		if(thumbnail){
 			Elem.find("[find=picture_src]").prop("src", thumbnail);
 		} else {
 			Elem.find("[find=picture_src]").prop("src", app_application_icon_single_user.src);
 		}
-		Elem.find("[find=picture_src]").click([that.layer+1, contacts[c]["id"], that.preview], function(event){
+		Elem.find("[find=picture_src]").click([that.layer+1, contacts[uid]["id"], that.preview], function(event){
 			event.stopPropagation();
 			submenu_Build("personal_info", event.data[0], true, event.data[1], event.data[2]);
 		});
 
-		Elem.find('.id').val(contacts[c].id);
-		if (contacts[c].checked == true) {
+		Elem.find('.id').val(uid);
+		if (contacts[uid].checked == true || uid == wrapper_localstorage.uid) {
 			Elem.find('.check').addClass('checked');
 		}
-		Elem.click(function() {
-			if ($(this).find('.checked').length != 0) {
+		Elem.click(position, function() {
+			var position = event.data;
+			if($(this).find('.checked').length == 0 || $(this).find('.id').val() == wrapper_localstorage.uid) {
+				$(this).find('.check').addClass('checked');
+			} else {
 				$(this).find('.checked').removeClass('checked');
-				if ($(this).parents(".submenu_wrapper").find(".checked").length > 0)
-				{
-					$(this).parents(".submenu_wrapper").find(".submenu_top_side_right").show();
-				}
-				else {
-					$(this).parents(".submenu_wrapper").find(".submenu_top_side_right").hide();
-				}
-				return -1;
 			}
-			$(this).find('.check').addClass('checked');
-			if ('type' in that.param && that.param.type == "tasks") {
-				$(this).siblings().find(".check").removeClass("checked");
+			if(position.find(".checked").length > 0) {
+				position.find(".submenu_top_side_right").show();
+			} else {
+				position.find(".submenu_top_side_right").hide();
 			}
-			if ($(this).parents(".submenu_wrapper").find(".checked").length > 0)
-			{
-				$(this).parents(".submenu_wrapper").find(".submenu_top_side_right").show();
-			}
-			else {
-				$(this).parents(".submenu_wrapper").find(".submenu_top_side_right").hide();
-			}
-			return -1;
 		});
+		
+		if(position.find(".checked").length > 0) {
+			position.find(".submenu_top_side_right").show();
+		} else {
+			position.find(".submenu_top_side_right").hide();
+		}
+
 		position.append(Elem);
 	}
-}
-
-Submenu.prototype.Add_ContactContents = function() {
-	var attribute = this.attribute;
-	var submenu_wrapper = this.Wrapper();
-	var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
-	//position.addClass('overthrow').addClass("submenu_chat_contents");
-	position.addClass('overthrow');
-	//position.empty();
-	//var Elem = $("[find=submenu_wrapper_title]", '#-submenu_app_chat_chatmenu').clone();
-	//_app_submenu_contacts_genContacts(position);
-	this._displayContacts(position, this._prepare_contactsList());
 }

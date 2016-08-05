@@ -21,9 +21,18 @@ submenu_list['personal_settings'] = {
 			if(!val){ return ""; }
 			return wrapper_to_html(val);
 		},
-		"action": function(Elem, that){
+		"action": function(Elem, that, now, force){
+			if(typeof now == "undefined"){ now = false; }
+			if(typeof force == "undefined"){ force = false; }
 			var val_old = Lincko.storage.get('users', wrapper_localstorage.uid, 'username');
 			var val_new = Elem.find("[find=submenu_value]").val();
+			if(!force && val_new==""){
+				return true;
+			}
+			var timer = wrapper_timeout_timer*10;
+			if(now){
+				timer = 0;
+			}
 			if(val_new != val_old){
 				clearTimeout(submenu_profile_timer['username']);
 				submenu_profile_timer['username'] = setTimeout(function(){
@@ -35,7 +44,7 @@ submenu_list['personal_settings'] = {
 						'post',
 						'user/update'
 					);
-				}, wrapper_timeout_timer);
+				}, timer);
 			}
 		},
 	},
@@ -48,9 +57,18 @@ submenu_list['personal_settings'] = {
 			if(!val){ return ""; }
 			return wrapper_to_html(val);
 		},
-		"action": function(Elem, that){
+		"action": function(Elem, that, now, force){
+			if(typeof now == "undefined"){ now = false; }
+			if(typeof force == "undefined"){ force = false; }
 			var val_old = Lincko.storage.get('users', wrapper_localstorage.uid, 'firstname');
 			var val_new = Elem.find("[find=submenu_value]").val();
+			if(!force && val_new==""){
+				return true;
+			}
+			var timer = wrapper_timeout_timer*10;
+			if(now){
+				timer = 0;
+			}
 			if(val_new != val_old){
 				clearTimeout(submenu_profile_timer['firstname']);
 				submenu_profile_timer['firstname'] = setTimeout(function(){
@@ -62,7 +80,7 @@ submenu_list['personal_settings'] = {
 						'post',
 						'user/update'
 					);
-				}, wrapper_timeout_timer);
+				}, timer);
 			}
 		},
 	},
@@ -75,9 +93,18 @@ submenu_list['personal_settings'] = {
 			if(!val){ return ""; }
 			return wrapper_to_html(val);
 		},
-		"action": function(Elem, that){
+		"action": function(Elem, that, now, force){
+			if(typeof now == "undefined"){ now = false; }
+			if(typeof force == "undefined"){ force = false; }
 			var val_old = Lincko.storage.get('users',  wrapper_localstorage.uid, 'lastname');
 			var val_new = Elem.find("[find=submenu_value]").val();
+			if(!force && val_new==""){
+				return true;
+			}
+			var timer = wrapper_timeout_timer*10;
+			if(now){
+				timer = 0;
+			}
 			if(val_new != val_old){
 				clearTimeout(submenu_profile_timer['lastname']);
 				submenu_profile_timer['lastname'] = setTimeout(function(){
@@ -89,7 +116,7 @@ submenu_list['personal_settings'] = {
 						'post',
 						'user/update'
 					);
-				}, wrapper_timeout_timer);
+				}, timer);
 			}
 		},
 	},
@@ -191,21 +218,16 @@ Submenu.prototype.Add_ProfileInput = function() {
 	if ("action" in attribute) {
 		Elem.find("[find=submenu_value]").on({
 			focus: function(){ attribute.action(Elem, that) },
-			blur: function(){ attribute.action(Elem, that) },
+			blur: function(){ attribute.action(Elem, that, true, true) },
 			change: function(){ attribute.action(Elem, that) },
 			copy: function(){ attribute.action(Elem, that) },
-			past: function(){ attribute.action(Elem, that) },
-			cut: function(){ attribute.action(Elem, that) },
+			past: function(){ attribute.action(Elem, that, true) },
+			cut: function(){ attribute.action(Elem, that, true) },
 			keyup: function(e) {
 				if (e.which != 13) {
 					attribute.action(Elem, that);
-				}
-			},
-			keypress: function(e) {
-				if (e.which == 13) {
-					$(this.form).submit();
 				} else {
-					attribute.action(Elem, that);
+					attribute.action(Elem, that, true, true);
 				}
 			},
 		});

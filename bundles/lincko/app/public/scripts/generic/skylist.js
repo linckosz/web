@@ -362,6 +362,10 @@ skylist.prototype.subConstruct_default = function(){
 skylist.prototype.destroy = function(){
 	var that = this;
 
+	if(typeof skylist_enquire[that.md5id] == "undefined"){
+		return false;
+	}
+
 	enquire.unregister(responsive.minTablet, skylist_enquire[that.md5id].minTablet);
 	enquire.unregister(responsive.maxMobileL, skylist_enquire[that.md5id].maxMobileL);
 	enquire.unregister(responsive.minMobileL, skylist_enquire[that.md5id].minMobileL);
