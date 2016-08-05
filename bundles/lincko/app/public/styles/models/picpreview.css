@@ -75,3 +75,12 @@
 	display: block;
 	text-decoration: none;
 }
+
+
+/*MobileL and smaller */
+@media only screen and (max-width: 900px) {
+	.pic_preview_wrapper{
+		width: 100%;
+		height: 100%;
+	}
+}
