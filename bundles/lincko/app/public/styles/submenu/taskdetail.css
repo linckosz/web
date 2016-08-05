@@ -32,6 +32,9 @@
 	padding-bottom: 50px;
 	font-weight: 200;
 }
+.submenu_taskdetail td{
+	white-space: nowrap;
+}
 .submenu_taskdetail_paddingLeft {
 	padding-left: 22px;
 }
