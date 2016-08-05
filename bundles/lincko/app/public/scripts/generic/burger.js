@@ -280,13 +280,15 @@ burgerN.draw_projects = function(projects,option_fn){
 	var elem_option_clone;
 
 	var latest_projects = [];
-	$.each(Lincko.storage.settings.latestvisitProjects, function(i, id){
-		var project = Lincko.storage.get('projects',id);
-		if(project.personal_private){ return; }
-		else{
-			latest_projects.push(project);
-		}
-	});
+	if(Lincko.storage.getSettings().latestvisitProjects){
+		$.each(Lincko.storage.getSettings().latestvisitProjects, function(i, id){
+			var project = Lincko.storage.get('projects',id);
+			if(project.personal_private){ return; }
+			else{
+				latest_projects.push(project);
+			}
+		});
+	}
 
 	latest_projects.unshift(Lincko.storage.getMyPlaceholder());
 

@@ -2357,12 +2357,17 @@ skylist.prototype.updateFakeCards = function(){
 //get lincko settings object, and update the skylist filter settings
 //sendAction == false will grab the filter settings from lincko settings object and set it as the instance's filter
 skylist.prototype.filter_updateSettings = function(sendAction){
-	if(typeof sendAction === 'undefined'){ sendAction = true; }
 	var that = this;
-	//var settings_old = Lincko.storage.getSettings();
-	var settings_old = Lincko.storage.settings;
+	if(that.list_type != 'tasks' && that.list_type != 'notes' && that.list_type != 'files'){ return; }
+	if(typeof sendAction === 'undefined'){ sendAction = true; }
+	
+	var settings_old = Lincko.storage.getSettings();
+
+	//offline settings
+	//var settings_old = Lincko.storage.settings;
+
 	var settings_new = settings_old;
-	if(!settings_new){
+	if(typeof settings_new !== 'object' && typeof settings_new.length === 'undefined'){
 		settings_new = {};
 	}
 	if(!settings_new.skylist){
@@ -2384,9 +2389,11 @@ skylist.prototype.filter_updateSettings = function(sendAction){
 
 	settings_new.skylist.filter[app_content_menu.projects_id][that.list_type] = that.Lincko_itemsList_filter;
 	settings_new.skylist.filter[app_content_menu.projects_id][that.list_type].search = ''; //search filter is not saved
-	//wrapper_sendAction({settings: settings_new}, 'post', 'data/settings');
-	Lincko.storage.settings = settings_new;
-	wrapper_localstorage.encrypt('settings', JSON.stringify(Lincko.storage.settings));
+	wrapper_sendAction({settings: JSON.stringify(settings_new)}, 'post', 'data/settings');
+
+	//offline settings
+	/*Lincko.storage.settings = settings_new;
+	wrapper_localstorage.encrypt('settings', JSON.stringify(Lincko.storage.settings));*/
 }
 
 
