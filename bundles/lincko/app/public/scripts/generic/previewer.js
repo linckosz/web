@@ -23,7 +23,7 @@ var previewer = (function() {
 
 		popout.find('.pic_preview_wrapper').click(function(event){
 			if(!responsive.test("maxMobileL")){return; }
-			if($(event.target).hasClass('pic_wrapper')){
+			if($(event.target).hasClass('pic_preview_wrapper') || $(event.target).hasClass('pic_wrapper')){
 				$('#'+Elem_id).remove();
 			}
 		});
