@@ -144,17 +144,17 @@ var app_content_menu = {
 		wrapper_localstorage.encrypt('old_page', JSON.stringify(old_page));
 
 		//keep track of visited projects (offline)
-		if(!Lincko.storage.settings.latestvisitProjects.length || Lincko.storage.settings.latestvisitProjects[0] != projects_id){
+		/*if(!Lincko.storage.settings.latestvisitProjects.length || Lincko.storage.settings.latestvisitProjects[0] != projects_id){
 			var i = $.inArray(projects_id, Lincko.storage.settings.latestvisitProjects);
 			if(i > -1){ Lincko.storage.settings.latestvisitProjects.splice(i,1) }
 
 			Lincko.storage.settings.latestvisitProjects.unshift(projects_id);
 			wrapper_localstorage.encrypt('settings', JSON.stringify(Lincko.storage.settings));
-		}
+		}*/
 
 		//keep track of visited projects (online)
 		var settings_new = Lincko.storage.getSettings();
-		if(!settings_new.latestvisitProjects || settings_new.latestvisitProjects.length){
+		if(!settings_new.latestvisitProjects || !settings_new.latestvisitProjects.length){
 			settings_new.latestvisitProjects = [];
 		}
 		if(settings_new.latestvisitProjects[0] != projects_id){
@@ -162,6 +162,7 @@ var app_content_menu = {
 			if(i > -1){ settings_new.latestvisitProjects.splice(i,1) }
 
 			settings_new.latestvisitProjects.unshift(projects_id);
+			Lincko.storage.settingsLocal = settings_new;
 			wrapper_sendAction({settings: JSON.stringify(settings_new)}, 'post', 'data/settings');
 		}
 	},

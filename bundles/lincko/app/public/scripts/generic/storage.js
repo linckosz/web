@@ -538,12 +538,34 @@ Lincko.storage.canI = function(rcud, category, id, child_type){
 };
 
 Lincko.storage.getSettings = function(){
-	var settings = Lincko.storage.get("settings", wrapper_localstorage.uid, "setup");
-	if(settings){
-		settings = JSON.parse(settings);
+	var settings = null;
+	if(typeof Lincko.storage.settingsLocal === 'object'){
+		settings = Lincko.storage.settingsLocal;
 	}
+	else{
+		settings = Lincko.storage.get("settings", wrapper_localstorage.uid, "setup");
+		if(settings){
+			settings = JSON.parse(settings);
+		}
+	}
+	
 	return settings;
 }
+
+Lincko.storage.list_latestProjects = function(){
+	var settings = Lincko.storage.getSettings();
+	if(!settings.latestvisitProjects){
+		return [];
+	}
+
+	var projects_array = [];
+	for(var i = 0; i < settings.latestvisitProjects.length; i++){
+		projects_array.push(Lincko.storage.get('projects', settings.latestvisitProjects[i]));
+	}
+
+	return projects_array;	
+}
+
 
 /* PRIVATE METHOD */
 Lincko.storage.isHistoryReady = function(){
@@ -1713,11 +1735,9 @@ JSfiles.finish(function(){
 		storage_first_launch = false; //Help to trigger some action once the database is downloaded
 		app_application_lincko.prepare('first_launch', true);
 	}
-	Lincko.storage.settings = JSON.parse(wrapper_localstorage.decrypt('settings'));
-	if(!Lincko.storage.settings){
-		Lincko.storage.settings = {
-			latestvisitProjects: [],
-		}
+	Lincko.storage.settingsLocal = JSON.parse(wrapper_localstorage.decrypt('settings'));
+	if(!Lincko.storage.settingsLocal){
+		Lincko.storage.settingsLocal = Lincko.storage.getSettings();
 	}
 
 	wrapper_load_progress.move(65);

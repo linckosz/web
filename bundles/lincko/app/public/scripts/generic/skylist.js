@@ -2366,12 +2366,11 @@ skylist.prototype.filter_updateSettings = function(sendAction){
 	if(that.list_type != 'tasks' && that.list_type != 'notes' && that.list_type != 'files'){ return; }
 	if(typeof sendAction === 'undefined'){ sendAction = true; }
 	
-	var settings_old = Lincko.storage.getSettings();
+	var settings_new = Lincko.storage.getSettings();
 
 	//offline settings
 	//var settings_old = Lincko.storage.settings;
 
-	var settings_new = settings_old;
 	if(typeof settings_new !== 'object' && typeof settings_new.length === 'undefined'){
 		settings_new = {};
 	}
@@ -2394,6 +2393,7 @@ skylist.prototype.filter_updateSettings = function(sendAction){
 
 	settings_new.skylist.filter[app_content_menu.projects_id][that.list_type] = that.Lincko_itemsList_filter;
 	settings_new.skylist.filter[app_content_menu.projects_id][that.list_type].search = ''; //search filter is not saved
+	Lincko.storage.settingsLocal = settings_new;
 	wrapper_sendAction({settings: JSON.stringify(settings_new)}, 'post', 'data/settings');
 
 	//offline settings
