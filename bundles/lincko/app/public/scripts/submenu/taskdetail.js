@@ -707,19 +707,89 @@ Submenu.prototype.Add_taskdetail = function() {
 
 
 	/*-----Links------------------*/
+	var generate_linkCard = function(item_link){
+		if(typeof item_link !== 'object'){ item_link = Lincko.storage.get('files',item_link);	}
+		var elem_linkcard = $('#-submenu_taskdetail_links_card').clone().prop('id','').attr('file_id',item_link['_id']).click(function(){
+			submenu_Build('taskdetail', true, null, 
+				{
+					"type":item_link['_type'], 
+					"id":item_link['_id'],
+				}, true);
+		});
+		//dont open file submenu for action buttons
+		elem_linkcard.find('[find=action_div]').click(function(event){
+			event.stopPropagation();
+		});
+		
+		//add title or name
+		elem_linkcard.find('[find=title]').text(item_link['+title'] || item_link['+name']);
+
+		//add comment(description)
+		if(item_link.comment){
+			elem_linkcard.find('[find=description]').text(item_link['comment']);
+		}
+		else{
+			elem_linkcard.find('[find=description]').addClass('display_none');
+		}
+
+		//thumbnail or icons
+		if(item_link.category && item_link.category == 'image'){
+			var thumb_url = Lincko.storage.getLinkThumbnail(item_link['_id']);
+			if(thumb_url){
+				elem_linkcard.find('[find=card_leftbox]').append($('<img />').prop('src',thumb_url)).removeClass('fa-file-o').click(function(event){
+					event.stopPropagation();
+					previewer.pic(item_link['_id']);
+				});
+			}
+		}
+		else if(item_link.ori_ext){
+			var fileType_class = app_models_fileType.getClass(item_link.ori_ext);
+		 	elem_linkcard.find('[find=card_leftbox]').addClass(fileType_class);
+		}
+
+
+		//download
+		var download_url = Lincko.storage.getDownload(item_link['_id']);
+		if(download_url){
+			elem_linkcard.find('[find=downloadIcon]').prop('href',download_url).removeClass('display_none');
+		}
+
+		//remove linking
+		elem_linkcard.find('[find=removeIcon]').click(function(){
+			var obj = {};
+			obj[item_link['_id']] = false;
+			wrapper_sendAction({
+				id: item['_id'],
+				'files>access': obj,
+			}, 'post', routeObj.update);
+			elem_linkcard.velocity('slideUp',{
+				complete: function(){
+					elem_linkcard.remove();
+				},
+			});
+		});
+
+
+		return elem_linkcard;
+	}//end of generate_linkCard
+
 	var elem_links = $('#-submenu_taskdetail_links').clone().prop('id','submenu_taskdetail_link_'+that.md5id);
-	var elem_links_wrapper = elem_links.find('[find=links_wrapper]');
-	var item_files = Lincko.storage.list('files',null, null, that.param.type, taskid, true);
-	var elem_linkcardTemp = $('#-submenu_taskdetail_links_card').clone().prop('id','');
 	elem_links.find('[find=new_btn]').click(function(){
 		app_upload_open_files(that.param.type, taskid);
 	});
-
-	
-	elem_links_wrapper.append(elem_linkcardTemp);
-
-
-
+	var elem_links_wrapper = elem_links.find('[find=links_wrapper]');
+	var item_linkedFiles = [];
+	var link_count = 0;
+	if(item._files){
+		$.each(item._files, function(key, obj){
+			if(obj.access){
+				item_linkedFiles.push(Lincko.storage.get('files',key));
+				elem_links_wrapper.append(generate_linkCard(Lincko.storage.get('files',key)));
+				link_count++;
+			}
+		});
+	}
+	elem_links.find('[find=linkCount]').text(link_count);
 	submenu_taskdetail.append(elem_links);
 	/*-----END of Links-----------*/
 
@@ -1353,6 +1423,34 @@ Submenu.prototype.Add_taskdetail = function() {
 					elem.replaceWith(update_meta(elem_new));
 				}
 			});
+		}
+	);
+
+	app_application_lincko.add(
+		'submenu_taskdetail_link_'+that.md5id,
+		that.param.type+'_'+item['_id'],
+		function(){
+			var item = Lincko.storage.get(that.param.type, taskid);
+			if(!item._files){
+				return;
+			}
+
+			var elem = $('#'+this.id);
+			var elem_linksWrapper = null;
+			var link_ids = Object.keys(item._files);
+			elem.find('[find=linkCount]').text(link_ids.length);
+
+			$.each(link_ids, function(i, id){
+				var elem_linkCard = elem.find('[file_id='+id+']');
+				if(!elem_linkCard.length){
+					if(!elem_linksWrapper){ elem_linksWrapper = elem.find('[find=links_wrapper]'); }
+					var elem_toAdd = generate_linkCard(id);
+					elem_linksWrapper.append(elem_toAdd);
+					elem_toAdd.velocity('slideDown');
+					myIScrollList[submenu_content.prop('id')].refresh();
+				}
+			});
+
 		}
 	);
 
