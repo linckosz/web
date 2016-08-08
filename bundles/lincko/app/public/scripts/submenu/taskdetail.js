@@ -742,7 +742,13 @@ Submenu.prototype.Add_taskdetail = function() {
 				});
 			}
 		}
-		else if(item_link.ori_ext){
+		else if(item_link._type == 'tasks'){
+			elem_linkcard.find('[find=card_leftbox]').addClass('icon-Tasks');
+		}
+		else if(item_link._type == 'notes'){
+			elem_linkcard.find('[find=card_leftbox]').addClass('submenu_taskdetail_links_notesABC');
+		}
+		else{
 			var fileType_class = app_models_fileType.getClass(item_link.ori_ext);
 		 	elem_linkcard.find('[find=card_leftbox]').addClass(fileType_class);
 		}
@@ -757,11 +763,22 @@ Submenu.prototype.Add_taskdetail = function() {
 		//remove linking
 		elem_linkcard.find('[find=removeIcon]').click(function(){
 			var obj = {};
-			obj[item_link['_id']] = false;
+			var route = routeObj.update;
+
+			if(that.param.type == 'files'){
+				obj[taskid] = false;
+				removedFromID = item_link['_id'];
+				route = item_link['_type'].slice(0, -1)+'/update';
+			}
+			else{
+				obj[item_link['_id']] = false;
+				removedFromID = item['_id'];
+			}
+			
 			wrapper_sendAction({
-				id: item['_id'],
+				id: removedFromID,
 				'files>access': obj,
-			}, 'post', routeObj.update);
+			}, 'post', route);
 			elem_linkcard.velocity('slideUp',{
 				complete: function(){
 					elem_linkcard.remove();
@@ -778,18 +795,27 @@ Submenu.prototype.Add_taskdetail = function() {
 		app_upload_open_files(that.param.type, taskid);
 	});
 	var elem_links_wrapper = elem_links.find('[find=links_wrapper]');
-	var item_linkedFiles = [];
+	
 	var link_count = 0;
-	if(item._files){
-		$.each(item._files, function(key, obj){
-			if(obj.access){
-				item_linkedFiles.push(Lincko.storage.get('files',key));
-				elem_links_wrapper.append(generate_linkCard(Lincko.storage.get('files',key)));
+	var item_linkedFiles = Lincko.storage.list_links(that.param.type, taskid, currentProjID);
+	if(typeof item_linkedFiles == 'object'){
+		for(var category in item_linkedFiles){
+			$.each(item_linkedFiles[category], function(id,item){
+				elem_links_wrapper.append(generate_linkCard(item));
 				link_count++;
-			}
-		});
+			});
+		}
 	}
+
 	elem_links.find('[find=linkCount]').text(link_count);
+
+	if(that.param.type == 'files'){
+		elem_links.find('[find=link_btns]').addClass('display_none');
+		if(link_count == 0){
+			elem_links.find('.submenu_taskdetail_collapsable_button').addClass('submenu_taskdetail_collapsable_button_disabled');
+		}
+	}
+
 	submenu_taskdetail.append(elem_links);
 	/*-----END of Links-----------*/
 
@@ -1152,6 +1178,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	/*attach collapsable_fn*/
 	var submenu_taskdetail_collapsable_fn = function(){
 		var elem_btn = $(this);
+		if(elem_btn.hasClass('submenu_taskdetail_collapsable_button_disabled')){ return; }
 		var elem_content = $(this).siblings();
 		var elem_arrow = elem_btn.find('[find=icon_arrow]');
 		if( elem_content.css('display')!='none' ){

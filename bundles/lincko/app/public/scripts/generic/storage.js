@@ -1441,6 +1441,42 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 	
 };
 
+//not for URL links, but files linked to a task etc.
+Lincko.storage.list_links = function(type, id, projectID){
+	if(!projectID){ projectID = app_content_menu.projects_id; }
+	var project_children = Lincko.storage.tree('projects', projectID, 'children', false, true);
+	if(typeof project_children !== 'object'){ return false; }
+
+	var links = {};
+	for(var category in project_children){
+		//skip for comments and files
+		if(category == 'comments' || category == 'files'){ continue; }
+
+		for(var item_id in project_children[category]){
+			var item = Lincko.storage.get(category, item_id);
+			if(typeof item === 'object' && item._files && id in item._files){
+				if(!links[category]){ links[category] = {}; }
+				links[category][item_id] = item;
+			}
+		}
+	}// end of category loop
+
+	var _files = Lincko.storage.get(type, id, '_files');
+	if(_files){
+		$.each(_files, function(id, obj){
+			var fileToAdd = Lincko.storage.get('files',id);
+			if(fileToAdd){
+				if(!links.files){ links.files = {}; }
+				links.files[id] = fileToAdd;
+			}
+		});
+	}
+
+
+	if($.isEmptyObject(links)){ links = false; }
+	return links;
+}
+
 Lincko.storage.getLink = function(id){
 	var file = Lincko.storage.get('files', id);
 	if(file){

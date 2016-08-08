@@ -59,15 +59,15 @@
 <div id="-submenu_taskdetail_links" class="submenu_taskdetail_links">
 	<table class="submenu_taskdetail_collapsable_button submenu_taskdetail_paddingLeft">
 		<td find="icon_arrow" class="icon-Accordion base_color_text_linckoOrange"></td>
-		<td>Links</td>
+		<td>{{ _trans('app', 15, 1, 'html') }}{# Links #}</td>
 		<td>(<span find="linkCount"></span>)</td>
 		<td class="icon-links" find="icomoon"></td>
 	</table>
 	<div find="links_wrapper" class="needsclick submenu_taskdetail_collapsable_content">
 	</div>
-	<div class="submenu_taskdetail_paddingLeft">
-		<span find="new_btn" class="skylist_clickable" >New File{#toto#}</span>
-		<span find="existing_btn" class="skylist_clickable" >Link existing file or note{#toto#}</span>
+	<div find="link_btns" class="submenu_taskdetail_paddingLeft">
+		<span find="new_btn" class="skylist_clickable" >{{ _trans('app', 15, 2, 'html') }}{# New File #}</span>
+		<span find="existing_btn" class="skylist_clickable display_none" >{{ _trans('app', 15, 3, 'html') }}{# Link existing file or note #}</span>
 	</div>
 </div>
 
