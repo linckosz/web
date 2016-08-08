@@ -20,6 +20,14 @@ var previewer = (function() {
 		popout.find('.close').click(Elem_id, function(event) {
 			$('#'+event.data).remove();
 		});
+
+		popout.find('.pic_preview_wrapper').click(function(event){
+			if(!responsive.test("maxMobileL")){return; }
+			if($(event.target).hasClass('pic_wrapper')){
+				$('#'+Elem_id).remove();
+			}
+		});
+
 		return popout;
 	}
 	function video_preview(id) {

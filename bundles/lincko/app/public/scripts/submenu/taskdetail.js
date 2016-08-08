@@ -717,10 +717,10 @@ Submenu.prototype.Add_taskdetail = function() {
 				}, true);
 		});
 
+		//dont use hover mechanism for touch devices
 		if(supportsTouch){
 			elem_linkcard.addClass('submenu_taskdetail_links_card_noHover');
 		}
-
 
 		//dont open file submenu for action buttons
 		elem_linkcard.find('[find=action_div]').click(function(event){
