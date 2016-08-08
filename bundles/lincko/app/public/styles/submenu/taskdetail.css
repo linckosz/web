@@ -347,11 +347,11 @@ td.submenu_taskdetail_share .fa{
 	margin-bottom: 36px;
 }
 .submenu_taskdetail_links [find=new_btn]{
-	min-width: 150px;
-    padding: 0px 15px;
+	width: 115px;
 }
 .submenu_taskdetail_links [find=existing_btn]{
-	width: 150px;
+	min-width: 150px;
+    padding: 0px 15px;
 }
 .submenu_taskdetail_links_card{
 	position: relative;
@@ -388,12 +388,23 @@ td.submenu_taskdetail_share .fa{
     padding-right: 10px;
     color: #53ADD2;
 }
+.submenu_taskdetail_links_card [find=action_div]{
+	display: none;
+}
 .submenu_taskdetail_links_card [find=action_div] span,
 .submenu_taskdetail_links_card [find=action_div] a{
 	font-size:40px;
 	line-height: 64px;
 	text-decoration: none;
     color: inherit;
+}
+
+.submenu_taskdetail_links_card:hover [find=action_div]{
+	display: initial;
+}
+
+.submenu_taskdetail_links_card_noHover [find=action_div]{
+	display: initial;
 }
 
 

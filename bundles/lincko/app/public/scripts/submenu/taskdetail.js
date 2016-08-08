@@ -716,6 +716,12 @@ Submenu.prototype.Add_taskdetail = function() {
 					"id":item_link['_id'],
 				}, true);
 		});
+
+		if(supportsTouch){
+			elem_linkcard.addClass('submenu_taskdetail_links_card_noHover');
+		}
+
+
 		//dont open file submenu for action buttons
 		elem_linkcard.find('[find=action_div]').click(function(event){
 			event.stopPropagation();
