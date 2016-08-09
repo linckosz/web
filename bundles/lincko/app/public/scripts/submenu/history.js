@@ -531,7 +531,7 @@ var chatFeed = (function() {
 			wrapper_IScroll();
 	}
 
-	function app_layers_uploading_files(position,type,id,submenu_wrapper_id){
+	function app_layers_uploading_files(position, type, id, submenu_wrapper_id){
 		var files = app_upload_files.lincko_files;
 		var _type=type=="history"?"projects":"chats";
 		for(var i in files)
@@ -606,7 +606,7 @@ var chatFeed = (function() {
 		format_items(type, items, position,false,false);
 	}
 
-	function format_items(type,items,position,after,newone)
+	function format_items(type, items, position, after, newone)
 	{
 		var groups;
 		var today = Math.floor( new wrapper_date().timestamp  / 86400) * 86400;
@@ -617,7 +617,7 @@ var chatFeed = (function() {
 		else
 		{
 			format_items.has_today = false;
-			groups = items_group_by_time(items,type);
+			groups = items_group_by_time(items, type);
 		}
 		for(var i in groups)
 		{
@@ -665,7 +665,7 @@ var chatFeed = (function() {
 		}
 	}
 
-	function items_group_by_time(items,type)
+	function items_group_by_time(items, type)
 	{
 		var real_items=[];
 		var timestamp_groups = [];
