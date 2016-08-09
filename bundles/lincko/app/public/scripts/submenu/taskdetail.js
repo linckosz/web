@@ -464,6 +464,20 @@ Submenu.prototype.Add_taskdetail = function() {
 
 	/*meta (general)*/
 	var elem_meta = $('#-submenu_taskdetail_meta').clone().prop('id','submenu_taskdetail_meta_'+that.md5id);
+
+	// deleteAccess variable is controlled by update_meta.on('deleteAccessFalse' and 'deleteAccessTrue')
+	var deleteAccess = true;
+
+	deleteActionClickFn = function(){
+		if(Lincko.storage.canI('delete', that.param.type, taskid)){
+			route_delete = true;
+			Lincko.storage.data[that.param.type][taskid].deleted_at = new wrapper_date().timestamp;
+			app_application_lincko.prepare(that.param.type+'_'+taskid, true);
+			submenu_Clean(null,null,that.preview);
+		} else {
+			base_show_error(Lincko.Translation.get('app', 51, 'html'), true); //Operation not allowed
+		}
+	}
 	
 	var update_meta = function(elem_meta){
 		var elem = elem_meta;
@@ -637,17 +651,16 @@ Submenu.prototype.Add_taskdetail = function() {
 				});
 			}
 		});
-		elem_action_menu.find('[find=delete]').click(function(){
-			if(Lincko.storage.canI('delete', that.param.type, taskid)){
-				route_delete = true;
-				Lincko.storage.data[that.param.type][taskid].deleted_at = new wrapper_date().timestamp;
-				app_application_lincko.prepare(that.param.type+'_'+taskid, true);
-				submenu_Clean(null,null,that.preview);
-			} else {
-				base_show_error(Lincko.Translation.get('app', 51, 'html'), true); //Operation not allowed
-			}
+		elem_action_menu.find('[find=delete]').click(deleteActionClickFn);
+
+		elem_meta.on('deleteAccessFalse', function(){
+			deleteAccess = false;
+			$(this).find('[find=delete]').addClass('submenu_taskdetail_disabled').off('click');
+		}).on('deleteAccessTrue', function(){
+			deleteAccess = true;
+			$(this).find('[find=delete]').removeClass('submenu_taskdetail_disabled').click(deleteActionClickFn);
 		});
-		if(!Lincko.storage.canI('delete', that.param.type, taskid)){
+		if(!Lincko.storage.canI('delete', that.param.type, taskid) || !deleteAccess){
 			elem_action_menu.find('[find=delete]').addClass("display_none");
 		}
 
@@ -758,38 +771,44 @@ Submenu.prototype.Add_taskdetail = function() {
 		 	elem_linkcard.find('[find=card_leftbox]').addClass(fileType_class);
 		}
 
-
-		//download
-		var download_url = Lincko.storage.getDownload(item_link['_id']);
-		if(download_url){
-			elem_linkcard.find('[find=downloadIcon]').prop('href',download_url).removeClass('display_none');
-		}
-
-		//remove linking
-		elem_linkcard.find('[find=removeIcon]').click(function(){
-			var obj = {};
-			var route = routeObj.update;
-
-			if(that.param.type == 'files'){
-				obj[taskid] = false;
-				removedFromID = item_link['_id'];
-				route = item_link['_type'].slice(0, -1)+'/update';
+		//cannot remove file link from the file. must go to the relevant task/note to remove link to file
+		if(that.param.type != 'files'){
+			//download file
+			var download_url = Lincko.storage.getDownload(item_link['_id']);
+			if(download_url){
+				elem_linkcard.find('[find=downloadIcon]').prop('href',download_url).removeClass('display_none');
 			}
-			else{
-				obj[item_link['_id']] = false;
-				removedFromID = item['_id'];
-			}
-			
-			wrapper_sendAction({
-				id: removedFromID,
-				'files>access': obj,
-			}, 'post', route);
-			elem_linkcard.velocity('slideUp',{
-				complete: function(){
-					elem_linkcard.remove();
-				},
+
+			//remove linking
+			elem_linkcard.find('[find=removeIcon]').click(function(){
+				var obj = {};
+				var route = routeObj.update;
+
+				if(that.param.type == 'files'){
+					obj[taskid] = false;
+					removedFromID = item_link['_id'];
+					route = item_link['_type'].slice(0, -1)+'/update';
+				}
+				else{
+					obj[item_link['_id']] = false;
+					removedFromID = item['_id'];
+				}
+				
+				wrapper_sendAction({
+					id: removedFromID,
+					'files>access': obj,
+				}, 'post', route);
+				elem_linkcard.velocity('slideUp',{
+					complete: function(){
+						elem_linkcard.remove();
+					},
+				});
 			});
-		});
+		}
+		else{
+			//cannot remove links from file detail page
+			elem_linkcard.find('[find=action_div]').remove();
+		}
 
 
 		return elem_linkcard;
@@ -810,6 +829,11 @@ Submenu.prototype.Add_taskdetail = function() {
 				link_count++;
 			});
 		}
+	}
+
+	//cant delete file if it is linked to others (e.g. tasks/notes)
+	if(that.param.type == 'files' && link_count > 0){
+		elem_meta.trigger('deleteAccessFalse');
 	}
 
 	elem_links.find('[find=linkCount]').text(link_count);

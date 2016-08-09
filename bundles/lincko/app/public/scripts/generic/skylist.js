@@ -2406,7 +2406,7 @@ skylist.prototype.filter_updateSettings = function(sendAction){
  *	skylist sendActionQueue system
  *	1. if item is not 'fake' -> run wrapper_sendAction
  *	2. if item is 'fake' 
- *		(1) check skylsit.sendActionQueue object & queue there if temp_id key exist
+ *		(1) check skylist.sendActionQueue object & queue there if temp_id key exist
  *		(2) if temp_id key doesn't exist, check if there is real item in Lincko.storage.data
  *			1. if real item exists, run wrapper_sendAction with real id
  *			2. if real item doesn't exist, then....error??
