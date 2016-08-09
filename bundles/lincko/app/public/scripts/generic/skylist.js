@@ -2080,6 +2080,9 @@ skylist.prototype.menu_construct = function(){
 	 * TIMESORT-----------------------------------------------------------------------------------------
 	 */
 	 if( !that.sort_arrayText ){
+	 	if( Lincko.storage.get("projects", app_content_menu.projects_id, 'personal_private') ){
+	 		that.elem_navbar.find('.skylist_menu_timesort').addClass('display_none');
+	 	}
 		return false;
 	 }
 	var sort;
