@@ -383,7 +383,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			$(this).blur();
 		}
 	});
-
+	debugger;
 	/*----leftbox----*/
 	if( item['_type'] == "tasks" ){
 		var elem_checkbox = $('#-skylist_checkbox').clone().prop('id','submenu_taskdetail_checkbox_'+that.md5id);

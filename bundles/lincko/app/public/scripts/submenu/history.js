@@ -129,14 +129,30 @@ var chatFeed = (function() {
 
 
 	function checkRecentDate(timestamp, index) {
-		var old;
 		if (index == 0) {
-			checkRecentDate.recentDatestamp = Math.floor(timestamp / 86400) * 86400;
+			checkRecentDate.lastDate = Math.floor(timestamp / 86400) * 86400;
+			checkRecentDate.recentDatestamp = checkRecentDate.lastDate;
 		}
 		if (timestamp < checkRecentDate.recentDatestamp) {
-			old = checkRecentDate.recentDatestamp;
+			var old = checkRecentDate.recentDatestamp;
 			checkRecentDate.recentDatestamp = Math.floor(timestamp / 86400) * 86400;
 			return old;
+		}
+		if (index == -1) {
+			if(typeof checkRecentDate.recentDatestamp === "undefined")
+			{
+				checkRecentDate.lastDate = Math.floor(timestamp / 86400) * 86400;
+				checkRecentDate.recentDatestamp = checkRecentDate.lastDate;
+			}
+			return checkRecentDate.recentDatestamp;/*the last item*/
+		}
+		if(index == -2)/*new comment*/
+		{
+			if(checkRecentDate.lastDate != Math.floor(new wrapper_date().timestamp / 86400) * 86400)
+			{
+				checkRecentDate.lastDate = Math.floor(new wrapper_date().timestamp / 86400) * 86400;
+				return checkRecentDate.lastDate;
+			}
 		}
 		return false;
 	}
@@ -270,11 +286,18 @@ var chatFeed = (function() {
 			Elem.find("[find=progress_bar]").width("0%"); 
 			Elem.find("[find=progress_text]").addClass("uploading_file_progress_size").html("0K of 0 MB");
 			Elem.find(".uploading_action").html(Lincko.Translation.get('app', 7, 'html'));
-
-			if (this.item._type == 'files' && this.item.category=='image') {
-				var thumbnail = Lincko.storage.getLinkThumbnail(this.item._id);
-				Elem.find(".models_history_standard_shortcut_ico").hide();
-				Elem.find(".models_history_standard_shortcut_pic").show().prop("src", thumbnail);
+			if (this.item._type == 'files' || this.item._type == 'uploading_file'){
+				if(this.item.category=='image' || this.item.category=='video' )
+				{
+					var thumbnail = Lincko.storage.getLinkThumbnail(this.item._id);
+					Elem.find(".models_history_standard_shortcut_ico").hide();
+					Elem.find(".models_history_standard_shortcut_pic").show().prop("src", thumbnail);
+				}
+				else{
+					var ext = app_models_fileType.getExt(this.item[(this.item._type == "files"?"+name":"name")]);
+					Elem.find(".models_history_standard_shortcut_ico").find("i").addClass(app_models_fileType.getClass(ext));
+					Elem.find(".models_history_standard_shortcut_pic").hide();
+				}		
 			}
 			Elem.attr('category', this.item._type);
 		}
@@ -390,6 +413,7 @@ var chatFeed = (function() {
 				return null;
 		} else {
 			if (this.item.type != 'files') {
+
 				target = Lincko.storage.get(this.item.type, this.item.id, "+title");
 			}
 			else{
@@ -409,8 +433,22 @@ var chatFeed = (function() {
 		var date = new wrapper_date(this.item.timestamp);
 		Elem.find(".time", "[find=timestamp]").html(date.display('time_short'));
 		Elem.find(".date", "[find=timestamp]").html(date.display('date_short'));
-		Elem.find("[find=shortcut]").attr('src', thumbnail);
 
+		//Elem.find("[find=shortcut]").attr('src', thumbnail);
+		
+		if (this.item.type == 'files'){
+		    var file = Lincko.storage.get('files', this.item.id);
+			if(file.category =='image' || file.category =='video')
+			{
+				Elem.find(".models_history_standard_shortcut_ico").remove();
+				Elem.find(".models_history_standard_shortcut_pic").show().prop("src", thumbnail);
+			} 
+			else{
+				var ext = app_models_fileType.getExt(target);
+				Elem.find(".models_history_standard_shortcut_ico").find("i").addClass(app_models_fileType.getClass(ext));
+				Elem.find(".models_history_standard_shortcut_pic").remove();
+			}
+		}
 		Elem.attr('category', this.item.type);
 
 
@@ -514,7 +552,7 @@ var chatFeed = (function() {
 					'created_by': wrapper_localstorage.uid,
 					'index': files[i].lincko_temp_id
 				};
-				format_items(_type, [item], position, true);	
+				format_items(_type, [item], position, true,true);	
 				if(files[i].lincko_progress>=100 && files[i].lincko_status === 'done'){
 					$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id)
 						.removeClass("uploading_file")
@@ -530,11 +568,11 @@ var chatFeed = (function() {
 				}	
 				try{
 					if(typeof files[i].files[0].preview.tagName !== 'undefined' && files[i].files[0].preview.tagName.toLowerCase() === 'canvas'){
-					$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id).find(".models_history_standard_shortcut_ico").hide();
-					$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id).find(".models_history_standard_shortcut_pic")
-						.show()
-						.prop("src", files[i].files[0].preview.toDataURL())
-						.attr("preview", "1");
+						$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id).find(".models_history_standard_shortcut_ico").remove();
+						$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id).find(".models_history_standard_shortcut_pic")
+							.show()
+							.prop("src", files[i].files[0].preview.toDataURL())
+							.attr("preview", "1");
 					}
 				}catch(e){}
 			}
@@ -559,73 +597,119 @@ var chatFeed = (function() {
 
 		var items = getRawContents(type, parentId, newRange);
 		$('<div>').addClass('chat_contents_wrapper').prop("id", chatFeed.subm.id+'_chat_contents_wrapper').appendTo(position);
-		format_items(type, items, position);
+		format_items(type, items, position,false,false);
 	}
 
 	function app_layers_history_feedPage(position, type, parentId) {
 		var items = getRawContents(type, parentId, null);
 		$('<div>').addClass('chat_contents_wrapper').prop("id", chatFeed.subm.id+'_chat_contents_wrapper').appendTo(position);
-		format_items(type, items, position);
+		format_items(type, items, position,false,false);
 	}
 
-	function format_items(type, items, position, after) {
-		// var items = getRawContents(type, parentId, "0-50");
-		/* Structure of item:
-			att: "created_at"
-			by: "12"
-			id: "130"
-			par: Object
-			timestamp: "1458629345"
-			type: "tasks"
-		*/
-		for (var i in items) {
-			var item = new BaseHistoryCls(items[i]);
-			if (item) {
-				var Elem;
-				var dateStamp; 
+	function format_items(type,items,position,after,newone)
+	{
+		var groups;
+		var today = Math.floor( new wrapper_date().timestamp  / 86400) * 86400;
+		if(newone)
+		{
+			groups =[{'timestamp':today ,'items':items}];
+		}
+		else
+		{
+			format_items.has_today = false;
+			groups = items_group_by_time(items,type);
+		}
+		for(var i in groups)
+		{
+			for(var j in groups[i].items)
+			{
+				var item = new BaseHistoryCls(groups[i].items[j]);
 				item.setTemplate(type);
-				if (type =='history'){
-					Elem = item.renderHistoryTemplate(i);
-					dateStamp = checkRecentDate(item.item.timestamp, i);
+				if (type == 'history'){
+					Elem = item.renderHistoryTemplate(j);
 				}
-				else {
+				else
+				{
 					Elem = item.renderChatTemplate(i);
-					dateStamp = checkRecentDate(item.item.created_at, i);
 				}
-				if (Elem) {
-					if (after) {
+				if(Elem)
+				{
+					if(after)
+					{
 						Elem.appendTo(position.find(".chat_contents_wrapper"));
 					}
-					else {
+					else
+					{
 						Elem.prependTo(position.find(".chat_contents_wrapper"));
-					}
-					if (type =='history'){
-						var temp_id = Lincko.storage.get(items[i]["type"], items[i]["id"], "temp_id");
-						if (temp_id){
-							var Elem_id = chatFeed.subm.id+"_"+items[i]["type"]+'_models_thistory_' + temp_id;
-							$("#"+Elem_id).remove();
-						}
-					} else {
-						if (typeof items[i]["temp_id"] != "undefined"){
-							var Elem_id = chatFeed.subm.id+"_"+items[i]["_type"]+'_models_thistory_' + items[i]["temp_id"];
-							$("#"+Elem_id).remove();
-						}
-					}
-				}
-
-				//var dateStamp = checkRecentDate(item.item.timestamp, i);
-				if (dateStamp) {
-					var line = renderLine(dateStamp);
-					if (Elem){
-						Elem.after(line);
 					}
 				}
 			}
-		}
 
-		setTimeout(function(){ app_application_lincko.prepare("submenu_show", true); }, 600);
+			if((newone && !format_items.has_today) || !newone)
+			{
+				var line = renderLine(groups[i].timestamp);
+				if(after)
+				{
+					Elem.before(line);
+				}
+				else
+				{
+					line.prependTo(position.find(".chat_contents_wrapper"));
+				}
+			}
+
+			if(groups[i].timestamp == today)
+			{
+				format_items.has_today = true;
+			}
+		}
 	}
 
+	function items_group_by_time(items,type)
+	{
+		var real_items=[];
+		var timestamp_groups = [];
+		var item_timestamp;
+		for(var i in items)
+		{
+			if (items[i].type === "comments")
+			{
+				var root = Lincko.storage.getCommentRoot(items[i].id);
+				target = root['+title'];
+				var target_type = root['_type'];
+				if (root._type == 'chats'){continue;}
+			}
+			real_items.push(items[i]);
+			item_timestamp = Math.floor( (type == "history" ? items[i].timestamp : items[i].created_at)  / 86400) * 86400;
+			if(timestamp_groups.indexOf(item_timestamp) == -1)
+			{
+				timestamp_groups.push(item_timestamp);
+			}
+		}
+
+		var groups = [];
+		for(var i in timestamp_groups)
+		{
+			groups.push({'timestamp':timestamp_groups[i],'items':[]});
+		}
+
+		var curor = 0;
+		for(var i in real_items)
+		{
+			item_timestamp = Math.floor( (type == "history" ? real_items[i].timestamp : real_items[i].created_at)  / 86400) * 86400;
+			if(item_timestamp == timestamp_groups[curor])
+			{
+				groups[curor].items.push(real_items[i]);
+			}
+			else
+			{
+				curor = curor + 1;
+				groups[curor].items.push(real_items[i]);
+			}
+		}
+		return groups;
+	}
+	
 	function updateRecalled(parentType, parentID, position){
 		var items_recalled = Lincko.storage.list('comments', null, {recalled_by:['>',null]}, parentType, parentID, false);
 			$.each(items_recalled, function(i, val){

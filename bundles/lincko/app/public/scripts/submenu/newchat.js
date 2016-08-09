@@ -62,13 +62,14 @@ Submenu.prototype.Add_ChatContents = function() {
 			//toto => there is an undefined somewhere
 			var id = Object.keys(this.range)[0].split("_")[1];
 			var items = Lincko.storage.hist(null, -1, {'by': ["!=", wrapper_localstorage.uid], 'timestamp': [">=", latest_history]}, 'projects', id, false);
+			
 			for(var i in items){
 				if(items[i]["timestamp"] > latest_history && latest_history < Lincko.storage.getLastVisit()){
 					latest_history = items[i]["timestamp"];
 				}
 			}
 
-			chatFeed.appendItem("history", items, position, true);
+			chatFeed.appendItem("history", items, position, true,true);
 			chatFeed.updateRecalled('projects', id, position);
 			chatFeed.updateTempComments('projects',id,position);
 			chatFeed.updateTempUploads('projects',id,position);
@@ -100,7 +101,7 @@ Submenu.prototype.Add_ChatContents = function() {
 					latest_comment = items[i]["created_at"];
 				}
 			}
-			chatFeed.appendItem(type, items, position, true);
+			chatFeed.appendItem(type, items, position, true,true);
 			chatFeed.updateRecalled('chats', id, position);
 			chatFeed.updateTempComments('chats',id,position);
 			chatFeed.updateTempUploads('chats',id,position);
@@ -142,7 +143,7 @@ Submenu.prototype.Add_ChatContents = function() {
 					'created_by': wrapper_localstorage.uid,
 					'index': files[i].lincko_temp_id,
 				};
-				chatFeed.appendItem(_type, [item], position, true);	
+				chatFeed.appendItem(_type, [item], position, true,true);	
 				if(files[i].lincko_progress>=100 && files[i].lincko_status === 'done'){
 					$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id)
 						.removeClass("uploading_file")
@@ -290,7 +291,7 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 					"created_by": wrapper_localstorage.uid,
 					"new": false,
 				};
-				chatFeed.appendItem('comments', [fake_comment], position, true);
+				chatFeed.appendItem('comments', [fake_comment], position, true,true);
 				var overthrow_id = "overthrow_"+sub_that.id;
 				var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
 				if(myIScrollList[overthrow_id] && last && last[0]){

@@ -234,16 +234,23 @@
 	vertical-align: middle;
 }
 
-.models_history_standard_shortcut_wrapper .icon-PauseCloud,
+/*.models_history_standard_shortcut_wrapper .icon-PauseCloud,
 .models_history_standard_shortcut_wrapper .icon-ResumeCloud,
 .models_history_standard_shortcut_wrapper .icon-Docs {
 	display: block;
 	font-size: 50px;
+}*/
+
+.models_history_standard_shortcut_wrapper i
+{
+	font-size:40px;
+	color:#475577;
+	filter:alpha(opacity=36);
+	-moz-opacity:3.6;
+	opacity:3.6;
 }
 
-.models_history_standard_shortcut_wrapper .icon-Docs{
-	color: #885AD6;
-}
+
 
 .uploading_file, .models_history_standard_shortcut_wrapper .uploading_action:before {
 	content: "X ";

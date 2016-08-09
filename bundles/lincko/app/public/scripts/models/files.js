@@ -39,6 +39,17 @@ var app_models_fileType = {
 	 	});
 	 	return fileType_class;
  	},
+ 	getExt:function(name){
+ 		var array = name.split(".");
+ 		if(array.length > 1)
+ 		{
+ 			return array[array.length-1];
+ 		}
+ 		else
+ 		{
+ 			return "";
+ 		}
+ 	},
  };
 
 

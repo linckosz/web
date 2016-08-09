@@ -102,6 +102,7 @@ function linckoEditor(elem, toolbarID, param){
 	            		&& !app_upload_files.lincko_files[val.index]){
 	            		var tmp = editor.Lincko_param.files[elem_img_id].temp_id;
 		            	var file = Lincko.storage.list('files',1,{temp_id: tmp})[0];
+		            	debugger;
 	            		var file_url = Lincko.storage.getLink(file['_id']);
 	            		var elem_replace = $('<img>')
 	            				.prop('src',file_url)
