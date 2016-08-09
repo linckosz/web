@@ -2,14 +2,8 @@ var submenu_zindex = {
 	false: 2000,
 	true: 1000,
 };
-var submenu_obj = {
-	'submenu': {
-		'mouseenter': false,
-	},
-	'preview': {
-		'mouseenter': false,
-	},
-};
+var submenu_obj = { 'submenu': {}, 'preview': {} };
+var submenu_mouseenter = { 'submenu': false, 'preview': false };
 var submenu_show = { 'submenu': {}, 'preview': {} };
 var animation_map_preview = {
 	'new_in': {
@@ -188,18 +182,18 @@ function Submenu(menu, next, param, preview) {
 		if (Elem.preview) {
 			submenu_wrapper.appendTo('#app_content_submenu_preview');
 			submenu_wrapper.mouseenter(function(){
-				submenu_obj['preview']['mouseenter'] = true;
+				submenu_mouseenter['preview'] = true;
 			});
 			submenu_wrapper.mouseleave(function(){
-				submenu_obj['preview']['mouseenter'] = false;
+				submenu_mouseenter['preview'] = false;
 			});
 		} else {
 			submenu_wrapper.appendTo('#app_application_submenu_block');
 			submenu_wrapper.mouseenter(function(){
-				submenu_obj['submenu']['mouseenter'] = true;
+				submenu_mouseenter['submenu'] = true;
 			});
 			submenu_wrapper.mouseleave(function(){
-				submenu_obj['submenu']['mouseenter'] = false;
+				submenu_mouseenter['submenu'] = false;
 			});
 		}
 		/*submenu_wrapper.click(function(e){
@@ -211,7 +205,7 @@ function Submenu(menu, next, param, preview) {
 			Elem.attribute = Elem.obj[att];
 			if ("style" in Elem.attribute && Elem.attribute.style == "preAction" && "action" in Elem.attribute) {
 				if (typeof Elem.attribute.action === "function") {
-					Elem.attribute.action(Elem);
+					Elem.attribute.action(submenu_wrapper, Elem);
 				}
 			}
 		}
@@ -229,7 +223,7 @@ function Submenu(menu, next, param, preview) {
 			Elem.attribute = Elem.obj[att];
 			if ("style" in Elem.attribute && Elem.attribute.style == "postAction" && "action" in Elem.attribute) {
 				if (typeof Elem.attribute.action === "function") {
-					Elem.attribute.action(Elem);
+					Elem.attribute.action(submenu_wrapper, Elem);
 				}
 			}
 		}
@@ -250,6 +244,7 @@ function Submenu(menu, next, param, preview) {
 }
 
 Submenu.prototype.Add_MenuTitle = function() {
+	var that = this;
 	var attribute = this.attribute;
 	var submenu_wrapper = this.Wrapper();
 	var title;
@@ -302,7 +297,7 @@ Submenu.prototype.Add_CustomisedTitle = function() {
 	Elem.find("[find=submenu_title]").html(title);
 
 	if ("now" in attribute && typeof attribute.now === "function") {
-		attribute.now(this, Elem);
+		attribute.now(Elem, that);
 	}
 	
 	span = $('<span />').addClass('submenu_top_side');
@@ -335,6 +330,7 @@ Submenu.prototype.Add_CustomisedTitle = function() {
 }
 
 Submenu.prototype.Add_TitleSmall = function() {
+	var that = this;
 	var attribute = this.attribute;
 	var submenu_wrapper = this.Wrapper();
 	var Elem = $('#-submenu_title_small').clone();
@@ -344,7 +340,7 @@ Submenu.prototype.Add_TitleSmall = function() {
 		Elem.addClass(attribute['class']);
 	}
 	if ("now" in attribute && typeof attribute.now === "function") {
-		attribute.now(this, Elem);
+		attribute.now(Elem, that);
 	}
 	submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
 	//Free memory
@@ -360,15 +356,12 @@ Submenu.prototype.Add_TitleLeftButton = function() {
 	Elem.prop("id", this.id+"_submenu_top_button_left");
 	Elem.html(wrapper_to_html(attribute.title));
 	if ("action" in attribute) {
-		if ("action_param" in attribute) {
-			Elem.click(function(){
-				attribute.action(this, that, attribute.action_param);
-			});
-		} else {
-			Elem.click(function(){
-				attribute.action(this, that);
-			});
+		if (!("action_param" in attribute)) {
+			attribute.action_param = null;
 		}
+		Elem.click(function(){
+			attribute.action(Elem, that);
+		});
 	}
 	if ("hide" in attribute) {
 		if (attribute.hide) {
@@ -383,7 +376,7 @@ Submenu.prototype.Add_TitleLeftButton = function() {
 	}
 	Elem.css('text-align', 'left');
 	if ("now" in attribute && typeof attribute.now == "function") {
-		attribute.now(this, Elem);
+		attribute.now(Elem, that);
 	}
 	this.Wrapper().find("[find=submenu_wrapper_top]").prepend(Elem);
 	return Elem;
@@ -397,15 +390,12 @@ Submenu.prototype.Add_TitleRightButton = function() {
 	Elem.prop("id", this.id+"_submenu_top_button_right");
 	Elem.html(attribute.title);
 	if ("action" in attribute) {
-		if ("action_param" in attribute) {
-			Elem.click(function(){
-				attribute.action(this, that, attribute.action_param);
-			});
-		} else {
-			Elem.click(function(){
-				attribute.action(this, that);
-			});
+		if (!("action_param" in attribute)) {
+			attribute.action_param = null;
 		}
+		Elem.click(function(){
+			attribute.action(Elem, that);
+		});
 	}
 	if ("hide" in attribute) {
 		if (attribute.hide) {
@@ -420,13 +410,14 @@ Submenu.prototype.Add_TitleRightButton = function() {
 	}
 	Elem.css('text-align', 'right');
 	if ("now" in attribute && typeof attribute.now == "function") {
-		attribute.now(this, Elem);
+		attribute.now(Elem, that);
 	}
 	this.Wrapper().find("[find=submenu_wrapper_top]").append(Elem);
 	return Elem;
 };
 
 Submenu.prototype.Add_MenuButton = function(position) {
+	var that = this;
 	var attribute = this.attribute;
 	var Elem = $('#-submenu_button').clone();
 	var preview = this.preview;
@@ -436,11 +427,12 @@ Submenu.prototype.Add_MenuButton = function(position) {
 		Elem.find("[find=submenu_button_value]").html(attribute.value);
 	}
 	if ("action" in attribute) {
-		if ("action_param" in attribute) {
-			Elem.click(attribute.action_param, attribute.action);
-		} else {
-			Elem.click(attribute.action);
+		if (!("action_param" in attribute)) {
+			attribute.action_param = null;
 		}
+		Elem.click(function(){
+			attribute.action(Elem, that);
+		});
 	}
 	if ("hide" in attribute) {
 		if (attribute.hide) {
@@ -454,7 +446,7 @@ Submenu.prototype.Add_MenuButton = function(position) {
 		Elem.addClass(attribute['class']);
 	}
 	if ("now" in attribute && typeof attribute.now === "function") {
-		attribute.now(this, Elem);
+		attribute.now(Elem, that);
 	}
 	if (!position) {
 		this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
@@ -502,7 +494,7 @@ Submenu.prototype.Add_MenuNext = function() {
 		Elem.addClass(attribute['class']);
 	}
 	if ("now" in attribute && typeof attribute.now === "function") {
-		attribute.now(this, Elem);
+		attribute.now(Elem, that);
 	}
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
 	return Elem;
@@ -537,20 +529,16 @@ Submenu.prototype.Add_MenuRadio = function() {
 	}, [Elem, attribute] )
 
 	if ("action" in attribute) {
-		if ("action_param" in attribute) {
-			Elem.click(function(){
-				attribute.action(Elem, that, attribute.action_param);
-			});
-		} else {
-			Elem.click(function(){
-				attribute.action(Elem, that);
-			});
+		if (!("action_param" in attribute)) {
+			attribute.action_param = null;
 		}
+		Elem.click(function(){
+			attribute.action(Elem, that);
+		});
 	}
 	if ("hide" in attribute) {
 		if (attribute.hide) {
 			Elem.click(function() {
-				//submenu_Hideall(this.preview);
 				submenu_Clean(this.layer, false, that.preview);
 			});
 		}
@@ -560,7 +548,7 @@ Submenu.prototype.Add_MenuRadio = function() {
 		Elem.addClass(attribute['class']);
 	}
 	if ("now" in attribute && typeof attribute.now === "function") {
-		attribute.now(this, Elem);
+		attribute.now(Elem, that);
 	}
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
 	return Elem;
@@ -568,6 +556,7 @@ Submenu.prototype.Add_MenuRadio = function() {
 
 Submenu.prototype.Add_InputHidden = function() {
 	var attribute = this.attribute;
+	var that = this;
 	var Elem = $('#-submenu_input').clone();
 	var Input = $('<input type="hidden" find="submenu_input" />');
 	Elem.prop("id", '');
@@ -582,13 +571,14 @@ Submenu.prototype.Add_InputHidden = function() {
 		Elem.addClass(attribute['class']);
 	}
 	if ("now" in attribute && typeof attribute.now === "function") {
-		attribute.now(this, Elem);
+		attribute.now(Elem, that);
 	}
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
 	return Elem;
 };
 
 Submenu.prototype.Add_InputText = function() {
+	var that = this;
 	var attribute = this.attribute;
 	var Elem = $('#-submenu_input').clone();
 	var Input = $('<input type="text" find="submenu_input" class="selectable" />');
@@ -604,13 +594,14 @@ Submenu.prototype.Add_InputText = function() {
 		Elem.addClass(attribute['class']);
 	}
 	if ("now" in attribute && typeof attribute.now === "function") {
-		attribute.now(this, Elem);
+		attribute.now(Elem, that);
 	}
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
 	return Elem;
 };
 
 Submenu.prototype.Add_InputTextarea = function() {
+	var that = this;
 	var attribute = this.attribute;
 	var Elem = $('#-submenu_input').clone();
 	Elem.prop("id", '');
@@ -628,7 +619,7 @@ Submenu.prototype.Add_InputTextarea = function() {
 		Elem.addClass(attribute['class']);
 	}
 	if ("now" in attribute && typeof attribute.now === "function") {
-		attribute.now(this, Elem);
+		attribute.now(Elem, that);
 	}
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
 	return Elem;
@@ -688,7 +679,7 @@ Submenu.prototype.Add_SelectMultiple = function() {
 		Elem.addClass(attribute['class']);
 	}
 	if ("now" in attribute && typeof attribute.now === "function") {
-		attribute.now(this, Elem);
+		attribute.now(Elem, that);
 	}
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
 	app_application_lincko.prepare("select_multiple", true);
@@ -711,7 +702,7 @@ Submenu.prototype.Add_SubmitForm = function() {
 		Elem.addClass(attribute['class']);
 	}
 	if ("now" in attribute && typeof attribute.now === "function") {
-		attribute.now(this, Elem);
+		attribute.now(Elem, that);
 	}
 	if (submenu_wrapper.find("[find=submenu_wrapper_bottom]").find(".submenu_bottom_cell").length == 0) {
 		submenu_wrapper.find("[find=submenu_wrapper_bottom]").html(wrapper_to_html(Elem));
@@ -766,17 +757,19 @@ Submenu.prototype.Add_MenuForm = function() {
 };
 
 Submenu.prototype.Add_MenuBottomButton = function() {
+	var that = this;
 	var attribute = this.attribute;
 	var submenu_wrapper = this.Wrapper();
 	var Elem = $('#-submenu_bottom').clone();
 	Elem.prop("id", '');
 	submenu_wrapper.find("[find=submenu_wrapper_bottom]").addClass('submenu_bottom');
 	if ("action" in attribute) {
-		if ("action_param" in attribute) {
-			Elem.find("[find=submenu_bottom_button]").click(attribute.action_param, attribute.action);
-		} else {
-			Elem.find("[find=submenu_bottom_button]").click(attribute.action);
+		if (!("action_param" in attribute)) {
+			attribute.action_param = null;
 		}
+		Elem.find("[find=submenu_bottom_button]").click(function(){
+			attribute.action(Elem, that);
+		});
 	}
 	if ("hide" in attribute) {
 		if (attribute.hide) {
@@ -791,7 +784,7 @@ Submenu.prototype.Add_MenuBottomButton = function() {
 		Elem.addClass(attribute['class']);
 	}
 	if ("now" in attribute && typeof attribute.now === "function") {
-		attribute.now(this, Elem);
+		attribute.now(Elem, that);
 	}
 	if (submenu_wrapper.find("[find=submenu_wrapper_bottom]").find(".submenu_bottom_cell").length == 0) {
 		submenu_wrapper.find("[find=submenu_wrapper_bottom]").html(wrapper_to_html(Elem));
@@ -1118,6 +1111,7 @@ Submenu.prototype.Hide = function(animate) {
 
 // http://stackoverflow.com/questions/19469881/javascript-remove-all-event-listeners-of-specific-type
 Submenu.prototype.Remove = function() {
+	var that = this;
 	var stack = this.preview ? submenu_obj["preview"] : submenu_obj["submenu"];
 	$('#' + this.id).hide().remove();
 	stack[this.layer] = null;

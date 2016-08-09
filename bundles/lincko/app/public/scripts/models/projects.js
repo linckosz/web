@@ -14,13 +14,13 @@ submenu_list['app_project_new'] = {
 		"style": "title_right_button",
 		"title": Lincko.Translation.get('app', 41, 'html'), //Create
 		"class": "base_pointer",
-		"action": function(Elem, that) {
-			$('#' + that.id + '_submenu_form').submit();
+		"action": function(Elem, subm) {
+			$('#' + subm.id + '_submenu_form').submit();
 		},
 	},
 	"_pre_action": {
 		"style": "preAction",
-		"action": function(subm){
+		"action": function(Elem, subm){
 			app_projects_users_contacts_list = {};
 			app_projects_users_contacts_init(subm);
 		},
@@ -37,7 +37,6 @@ submenu_list['app_project_new'] = {
 		"action": "project/create",
 		"submit": function(that){
 			var param = {
-				//"lastvisit": Lincko.storage.getLastVisit(),
 				"parent_id": Lincko.storage.getWORKID(),
 				"users>access": {},
 			};

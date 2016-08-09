@@ -21,7 +21,7 @@ submenu_list['personal_settings'] = {
 			if(!val){ return ""; }
 			return wrapper_to_html(val);
 		},
-		"action": function(Elem, that, now, force){
+		"action": function(Elem, subm, now, force){
 			if(typeof now == "undefined"){ now = false; }
 			if(typeof force == "undefined"){ force = false; }
 			var val_old = Lincko.storage.get('users', wrapper_localstorage.uid, 'username');
@@ -57,7 +57,7 @@ submenu_list['personal_settings'] = {
 			if(!val){ return ""; }
 			return wrapper_to_html(val);
 		},
-		"action": function(Elem, that, now, force){
+		"action": function(Elem, subm, now, force){
 			if(typeof now == "undefined"){ now = false; }
 			if(typeof force == "undefined"){ force = false; }
 			var val_old = Lincko.storage.get('users', wrapper_localstorage.uid, 'firstname');
@@ -93,7 +93,7 @@ submenu_list['personal_settings'] = {
 			if(!val){ return ""; }
 			return wrapper_to_html(val);
 		},
-		"action": function(Elem, that, now, force){
+		"action": function(Elem, subm, now, force){
 			if(typeof now == "undefined"){ now = false; }
 			if(typeof force == "undefined"){ force = false; }
 			var val_old = Lincko.storage.get('users',  wrapper_localstorage.uid, 'lastname');
@@ -216,6 +216,9 @@ Submenu.prototype.Add_ProfileInput = function() {
 	Elem.find("[find=submenu_value]").val(attribute.value);
 
 	if ("action" in attribute) {
+		if (!("action_param" in attribute)) {
+			attribute.action_param = null;
+		}
 		Elem.find("[find=submenu_value]").on({
 			focus: function(){ attribute.action(Elem, that) },
 			blur: function(){ attribute.action(Elem, that, true, true) },
@@ -267,11 +270,12 @@ Submenu.prototype.Add_ProfileNext = function() {
 	var range = ['users_'+wrapper_localstorage.uid, 'upload'];
 	Elem.prop("id", '');
 	if ("action" in attribute) {
-		if ("action_param" in attribute) {
-			Elem.click(attribute.action_param, attribute.action);
-		} else {
-			Elem.click(attribute.action);
+		if (!("action_param" in attribute)) {
+			attribute.action_param = null;
 		}
+		Elem.click(function(){
+			attribute.action(Elem, that);
+		});
 	}
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
@@ -432,15 +436,12 @@ Submenu.prototype.Add_ProfileInfo = function() {
 		Elem.addClass(attribute['class']);
 	}
 	if ("action" in attribute) {
-		if ("action_param" in attribute) {
-			Elem.click(function(){
-				attribute.action(this, that, attribute.action_param);
-			});
-		} else {
-			Elem.click(function(){
-				attribute.action(this, that);
-			});
+		if (!("action_param" in attribute)) {
+			attribute.action_param = null;
 		}
+		Elem.click(function(){
+			attribute.action(Elem, that);
+		});
 	}
 	Elem.find("[find=submenu_title]").html(attribute.title);
 	if ("value" in attribute) {

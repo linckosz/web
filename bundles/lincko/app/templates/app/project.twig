@@ -2,44 +2,101 @@
 <div id="begin_app_project" class="visibility_hidden">
 	<script>
 		JSfiles.later("{{ _filelatest('/lincko/app/scripts/models/notification.js') }}", 30);
-		JSfiles.later("{{ _filelatest('/lincko/app/scripts/app/project.js') }}", 50);
+		JSfiles.later("{{ _filelatest('/lincko/app/scripts/app/project.js') }}");
 	</script>
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/app/project.css') }}" type="text/css" />
 </div>
-	<div id="app_project_content" class="base_PrimaryMainMenu base_MainElementText app_application_width_child">
-		<header id="app_project_top" class="clear">
-			<aside class="icon-Settings"></aside>
-			<article>{{ title|ucfirst }}</article>
-		</header>
-		<section id="app_project_placeholder">
-			{{ _trans('app', 2, 4, 'html')|ucfirst }}{# Personal Space #}
-		</section>
-		<section id="app_project_tab">
-			<span id="app_project_project_new" class="app_project_header_add icon-Plus-no-circle"></span>
-			<header class="clear">
-				<div class="app_project_header_stats">
-					<span>{{ _trans('app', 2, 5, 'html') }}{# All #}</span>
-					<span find="app_project_all_number"></span>
-					<span class="icon-Forward"></span>
+<div id="app_project_content" class="app_project_content app_application_width_child base_color_bg_main base_color_bg_main_gradient base_color_text_white">
+	<div class="app_project_div_content app_application_width_child overthrow">
+		<div id="app_project_top">
+			<div id="app_project_header">
+				<div id="app_project_settings" class="icon-Settings app_project_settings"></div>
+				<div id="app_project_logo">{{ title|ucfirst }}</div>
+			</div>
+			<div class="app_project_line_first"><div></div></div>
+			<div class="app_project_space"></div>
+			<div class="app_project_tab">
+				<div id="app_project_placeholder" class="base_MainElementText">
+					<div>
+						{{ _trans('app', 2, 4, 'html') }}{# Personal Space #}
+					</div>
 				</div>
-				<p class="sub_header">{{ _trans('app', 2, 13, 'html') }}{# My Projects #}</p>
-			</header>
-		</section>
-		<section id="app_project_chat">
-			<header>
-				<div class="app_project_header_stats">
-					<span>{{ _trans('app', 2, 5, 'html') }}{# All #}</span>
-					<span find="app_chat_all_number"></span>
-					<span class="icon-Forward"></span>
+				{% if workspace %}
+				<div id="app_project_workspace">
+					<div id="app_project_workspace_title" class="base_MainElementText">
+						{{ _trans('app', 2, 11, 'html') }}{# Overview #}
+					</div>
 				</div>
-				<p class="sub_header">{{ _trans('app', 2, 14, 'html') }}{# Chats #}</p>
-			</header>
-		</section>
-		<section id="quick_access">
-			<span class="icon-Tasks display_none" id="app_project_quick_access_tasks"></span><!--TODO: dangling link-->
-			<span class="icon-New-Notes display_none" id="app_project_quick_access_notes"></span><!--TODO: dangling link-->
-			<span class="icon-Multipler-Persona" id="app_project_quick_access_chat"></span>
-		</section>
+				{% endif %}
+			</div>
+			<div class="app_project_space"></div>
+			<div id="app_project_projects_tab" class="app_project_tab">
+				<div id="app_project_projects_all">
+					<div>
+						<span>
+							{{ _trans('app', 2, 7, 'html') }}{# Projects #}
+						</span>
+						<span>
+							<span find="app_project_projects_all_number"></span>
+							<img id="app_project_projects_new" class="app_project_new_img" src="{{ _filelatest('/lincko/app/images/app/project/new.png') }}" />
+						</span>
+					</div>
+				</div>
+				{% for i in 0..4 %}
+					<div id="app_project_item_projects_{{ i }}" pid="-1" timestamp="-1" class="base_MainElementText app_project_projects_item display_none">
+						<div>
+							<div find="app_project_projects_title"></div>
+							<div class="app_project_projects_stats">
+								<span find="app_project_projects_tasks" class="font_monospace">&nbsp;&nbsp;0</span>
+								<span class="app_project_projects_stats_icon icon-Tasks"></span>&nbsp;
+								<span find="app_project_projects_notes" class="font_monospace">&nbsp;&nbsp;0</span>
+								<span class="app_project_projects_stats_icon icon-New-Notes"></span>&nbsp;
+								<span find="app_project_projects_files" class="font_monospace">&nbsp;&nbsp;0</span>
+								<span class="app_project_projects_stats_icon icon-Cloud-Files"></span>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+			<div class="app_project_space"></div>
+			<div id="app_project_chats_tab" class="app_project_tab">
+				<div id="app_project_chats_all">
+					<div>
+						<span>
+							{{ _trans('app', 2, 14, 'html') }}{# Chats #}
+						</span>
+						<span>
+							<span find="app_project_chats_all_number"></span>
+							<img id="app_project_chats_new" class="app_project_new_img" src="{{ _filelatest('/lincko/app/images/app/project/new.png') }}" />
+						</span>
+					</div>
+				</div>
+				{% for i in 0..4 %}
+					<div id="app_project_item_chats_{{ i }}" name="_" timestamp="-1" class="base_MainElementText app_project_chats_item display_none">
+						<div>
+							<div find="app_project_chats_picture" class="app_project_chats_picture base_color_text_linckoOrange_dark">
+								<div find="app_project_chats_notif" class="app_project_chats_notif display_none"></div>
+							</div>
+							<div find="app_project_chats_date" class="app_project_chats_date"></div>
+							<div find="app_project_chats_title" class="app_project_chats_title"></div>
+							<div find="app_project_chats_content" class="app_project_chats_content"></div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+		<div id="app_project_quick_access">
+			<div id="app_project_quick_access_plus" class="app_project_quick_access_icon icon-Plus-no-circle"></div>
+			<div id="app_project_quick_access_upload" class="app_project_quick_access_icon icon-ResumeCloud"></div>
+			<div id="app_project_quick_access_chat" class="app_project_quick_access_icon icon-Chat"></div>
+		</div>
 	</div>
+</div>
+
+<div class="display_none">
+	<div id="-app_project_project_open" timestamp="0" projectid="0" projectvisible="1">
+		<div find="app_project_project_title"></div>
+	</div>
+</div>
 
 <div id="end_app_project" class="visibility_hidden"></div>

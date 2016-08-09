@@ -285,8 +285,8 @@ function wrapper_test(type, RCUD){
 			wrapper_sendAction(
 				{
 					"id": 2371,
-					"parent_id": 49, //OPTIONAL
-					"parent_type": "tasks", //OPTIONAL
+					"parent_id": 5876, //OPTIONAL
+					"parent_type": "comments", //OPTIONAL
 					//"name": "It's a file name"+Math.floor(Math.random() * 20), //OPTIONAL
 					//"comment": "It's a file description"+Math.floor(Math.random() * 20), //OPTIONAL
 				},
@@ -464,7 +464,7 @@ function wrapper_test(type, RCUD){
 		if(RCUD==0){
 			wrapper_sendAction(
 				{
-					"id": 49,
+					"id": 4543,
 				},
 				'post',
 				'task/read',

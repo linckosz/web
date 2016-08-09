@@ -15,13 +15,13 @@ submenu_list['burger_projects'] = {
 		"style": "title_right_button",
 		"title": Lincko.Translation.get('app', 52, 'html'), //"Select", 
 		"class": "base_pointer",
-		"action": function(elem, submenuInst) {
-			var new_projectID = submenuInst.param.elem_projectSelection.val();
+		"action": function(Elem, subm) {
+			var new_projectID = subm.param.elem_projectSelection.val();
 			if(new_projectID){
-				submenuInst.param.input.val(new_projectID);
-				submenuInst.param.input.change();
+				subm.param.input.val(new_projectID);
+				subm.param.input.change();
 
-				var item = submenuInst.param.item;
+				var item = subm.param.item;
 
 				if(item._id == 'new'){
 					return;

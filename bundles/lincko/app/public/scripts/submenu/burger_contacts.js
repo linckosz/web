@@ -3,7 +3,7 @@ submenu_list['burger_contacts'] = {
 	"_title": {
 		"style": "customized_title",
 		"title": Lincko.Translation.get('app', 3601, 'html'),//   "Task Assignment",
-		"class": function(elem) {
+		"class": function(Elem) {
 				return 'submenu_wrapper_taskdetail_tasks';
 		},
 	},
@@ -17,8 +17,8 @@ submenu_list['burger_contacts'] = {
 		"style": "title_right_button",
 		"title": Lincko.Translation.get('app', 52, 'html'), //"Select", 
 		"class": "base_pointer",
-		"action": function(elem, submenuInst) {
-			var param = submenuInst.param;
+		"action": function(Elem, subm) {
+			var param = subm.param;
 			var userList = {};
 			var nameList = "";
 			var IDList = submenu_contacts_get(elem);

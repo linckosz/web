@@ -1,3 +1,33 @@
+submenu_list['app_chat_new'] = {
+	//Set the title of the top
+	 "_title": {
+		"style": "customized_title",
+		"title": Lincko.Translation.get('app', 2301, 'html'), //Chats
+	},
+	"left_button": {
+		"style": "title_left_button",
+		"title": Lincko.Translation.get('app', 25, 'html'), //Close
+		'hide': true,
+		"class": "base_pointer",
+	},
+	"user_invitation": {
+		"style": "button",
+		"title": Lincko.Translation.get('app', 2305, 'html').ucfirst(), //Invite New Contact
+		"action": function(Elem, subm){
+			submenu_Build("chat_add_user", subm.layer, false, null, subm.preview); 
+		},
+		"class": "",
+	},
+	"new_group": {
+		"style": "button",
+		"title": Lincko.Translation.get('app', 3701, 'html').ucfirst(), //Start New Chat
+		"action": function(Elem, subm){
+			submenu_Build('new_group', subm.layer, false, {type: 'chats', }, subm.preview);
+		},
+		"class": "",
+	},
+};
+
 submenu_list['chat'] = {
 	//Set the title of the top
 	"_title": {
@@ -15,8 +45,8 @@ submenu_list['chat'] = {
 		"style": "title_right_button",
 		"title": "",
 		"class": "base_pointer icon-AddPerson submenu_app_chat_title_right_button",
-		"action": function(Elem, that) {
-			submenu_Build('chat_add_user', that.layer+1, true, null, that.preview)
+		"action": function(Elem, subm) {
+			submenu_Build('chat_add_user', subm.layer+1, true, null, subm.preview)
 		},
 	},
 	//It will create a form with a validation button
@@ -660,8 +690,7 @@ Submenu.prototype.Add_ChatContent = function() {
 	var chatlist_subConstruct = function(){
 		this.list_wrapper.addClass("skylist_maxMobileL_force").addClass('submenu_content_chat');
 		this.elem_newcardCircle.click([that.layer+1, that.preview], function(event) {
-			submenu_Build("contacts", event.data[0], false, {alwaysMe: true}, event.data[1]);
-			return false;
+			submenu_Build("new_group", event.data[0], false, {alwaysMe: true}, event.data[1]);
 		})
 		.appendTo(this.list_wrapper);
 	}

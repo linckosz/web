@@ -1,334 +1,149 @@
-var mainMenu = (function() {
-	var init = false;
-	function orderList(list) {
-		return list.sort(function(a, b) {
-			return b.timestamp - a.timestamp;
-		});
-	}
+var mainMenu = {
 
-	function feedChatItem(position, data) { //This function is called too many times
-		var item = $("#-app_project_chat_item").clone();
-		var name = '';
-		$(position).append(item);
-		item.prop("id", 'app_project_chat_item_'+data.id);
-		item.removeAttr('style', '');
-		var cnt = notifier[data.type]['get'](data.id);
-		if (cnt) {
-			if (cnt > 999) {
-				item.find('.notification').html('...').show();
-			} else {
-				item.find('.notification').html(cnt).show();
-			}
-		}
-
-		if (data.type == "history") {
-			data.comment = php_nl2br(data.comment);
-			name = Lincko.storage.get("projects", data.id, "+title");
-			item.find('img.logo_img').remove();
-			item.find('span.logo').addClass('fa fa-globe');
-		} else if (data.type == 'chats') {
-			data.comment = wrapper_to_html(data.comment);
-			var chat = Lincko.storage.get('chats', data.id);
-			if(chat["single"]){
-				name = "";
-				user_icon = false;
-				var src = app_application_icon_single_user.src;
-				if(chat["_perm"][wrapper_localstorage.uid]){
-					var perso = Lincko.storage.get('users', wrapper_localstorage.uid);
-					name = perso["-username"];
-					src = Lincko.storage.getLinkThumbnail(perso['profile_pic']);
-					if(!src){
-						src = app_application_icon_single_user.src;
-					} else {
-						user_icon = true;
-					}
-				}
-				for(var i in chat["_perm"]){
-					if(i!=wrapper_localstorage.uid){
-						var perso = Lincko.storage.get('users', i);
-						name = perso["-username"];
-						src = Lincko.storage.getLinkThumbnail(perso['profile_pic']);
-						if(!src){
-							src = app_application_icon_single_user.src;
-						} else {
-							user_icon = true;
-						}
-						break;
-					}
-				}
-				if(user_icon){
-					item.find('img.logo_img').removeClass("display_none");
-					item.find('img.logo_img').attr('src', src);
-					item.find('span.logo').addClass("display_none");
-				} else {
-					item.find('span.logo').removeClass("display_none");
-					item.find('span.logo').addClass('icon-Single-Person');
-					item.find('img.logo_img').addClass("display_none");
-				}
-			} else {
-				name = Lincko.storage.get('chats', data.id, '+title');
-				item.find('span.logo').removeClass("display_none");
-				item.find('span.logo').addClass('icon-Multiple-People');
-				item.find('img.logo_img').addClass("display_none");
-			}
-		}
-		app_application_lincko.add('app_project_chat_item_'+data.id, data.type + "_" + data.id, function() {
-			var range = Object.keys(this.range)[0].split("_");
-			var type = range[0];
-			var id = range[1];
-			var item = $("#"+this.id);
-			var cnt = notifier[type]['get'](id);
-			if (type == "chats") {
-				var chat = Lincko.storage.get('chats', id);
-				if(chat["single"]){
-					name = "";
-					user_icon = false;
-					var src = app_application_icon_single_user.src;
-					if(chat["_perm"][wrapper_localstorage.uid]){
-						var perso = Lincko.storage.get('users', wrapper_localstorage.uid);
-						name = perso["-username"];
-						src = Lincko.storage.getLinkThumbnail(perso['profile_pic']);
-						if(!src){
-							src = app_application_icon_single_user.src;
-						} else {
-							user_icon = true;
-						}
-					}
-					for(var i in chat["_perm"]){
-						if(i!=wrapper_localstorage.uid){
-							var perso = Lincko.storage.get('users', i);
-							name = perso["-username"];
-							src = Lincko.storage.getLinkThumbnail(perso['profile_pic']);
-							if(!src){
-								src = app_application_icon_single_user.src;
-							} else {
-								user_icon = true;
-							}
-							break;
-						}
-					}
-					if(user_icon){
-						item.find('img.logo_img').removeClass("display_none");
-						item.find('img.logo_img').attr('src', src);
-						item.find('span.logo').addClass("display_none");
-					} else {
-						item.find('span.logo').removeClass("display_none");
-						item.find('span.logo').addClass('icon-Single-Person');
-						item.find('img.logo_img').addClass("display_none");
-					}
-				} else {
-					name = Lincko.storage.get('chats', data.id, '+title');
-					item.find('span.logo').removeClass("display_none");
-					item.find('span.logo').addClass('icon-Multiple-People');
-					item.find('img.logo_img').addClass("display_none");
-				}
-				$("#"+this.id).find('header').html(wrapper_to_html(name));
-				var comment = Lincko.storage.list("comments", 1, null, "chats", id);
-				if(typeof comment[0] == "object"){
-					$("#"+this.id).find('[find=description]').html(wrapper_to_html(comment[0]["+comment"]));
-				}
-				$("#"+this.id).find('[find=description]').html('');
-			}
-			if (cnt) {
-				if (cnt > 999) {
-					$("#"+this.id).find('.notification').html('...').show();
-				} else {
-					$("#"+this.id).find('.notification').html(cnt).show();
-				}
-			}
-			else {
-				$("#"+this.id).find('.notification').hide();
-			}
-		});
-		item.find('header').html(wrapper_to_html(name));
-		item.find('article').html(data.comment);
-		return item;
-	}
-	function initChatTab() {
-		$("#app_project_chat").find(".app_project_chat_item").remove();
-		//get list
-		var chatHistoryList = orderChatList(4);
-
-		//caculate
-		for (var c in chatHistoryList) {
-			var item = feedChatItem('#app_project_chat', chatHistoryList[c]);
-			var data = chatHistoryList[c];
-			if(data.type == "chats"){
-				item.addClass("app_project_chat_item_chats");
-			} else if(data.type == "history"){
-				item.addClass("app_project_chat_item_history");
-			}
-			item.on("click", data, function(event) {
-				var title;
-				if (event.data.type == 'chats') {
-					title = $(this).find('header').text();
-				} else {
-					title = Lincko.storage.get("projects", event.data.id, "+title");
-				}
-				//render
-				submenu_Build("newchat", false, false, {
-					type: event.data.type,
-					id: event.data.id,
-					title: title,
-				});
-			});
-		}
-	}
-
-	function initProjectTab() {
-		$("#app_project_tab").find(".app_project_item").remove();
-		var projectList = Lincko.storage.list('projects', 4, {_id:['!=', Lincko.storage.getMyPlaceholder()['_id']]});
+	initProjectTab: function(){
+		var projectList = Lincko.storage.list('projects', null, {_id:['!=', Lincko.storage.getMyPlaceholder()['_id']]});
 		var tasks;
 		var notes;
 		var files;
 
-		var projects_all = Lincko.storage.list('projects').length;
-		$("#app_project_tab").find("[find=app_project_all_number]").html("("+projects_all+")");
+		var adjust_format = function(num){
+			num = parseInt(num, 10);
+			var str = num;
+			if(num<100){
+				str = "&nbsp;"+str;
+			}
+			if(num<10){
+				str = "&nbsp;"+str;
+			}
+			if(num<1){
+				str = "&nbsp;&nbsp;0";
+			}
+			return str;
+		}
 
-		//caculate
-		for (var p in projectList) {
-				var item = $("#-app_project_item").clone();
-				item.prop("id", '');
-				$('#app_project_tab').append(item);
-				var pid = projectList[p]._id;
+		var projects_length = projectList.length;
+		if(projects_length>0){
+			projects_length = "("+projects_length+")";
+		} else {
+			projects_length = "";
+		}
+		$("#app_project_projects_all").find("[find=app_project_projects_all_number]").html(wrapper_to_html(projects_length));
+
+		for (i = 0; i < 5; i++) {
+			var item = $("#app_project_item_projects_"+i);
+			if(item.length<=0){
+				continue;
+			}
+			if(projectList[i]){
+				item.removeClass('display_none');
+			} else {
+				item.addClass('display_none');
+				continue;
+			}
+			var pid = parseInt(projectList[i]['_id'], 10);
+			var timestamp = parseInt(projectList[i]['updated'], 10);
+			if(pid!=parseInt(item.attr('pid'), 10)){
 				item.click(pid, function(event){
 					app_content_menu.selection(event.data, 'tasks');
 				});
-				item.removeAttr('id', '');
-				item.removeAttr('style', '');
-				item.find('p').text(projectList[p]['+title']);
-
-				tasks = Lincko.storage.list('tasks', null, {approved: false,}, 'projects', pid, true).length;
-				notes = Lincko.storage.list('notes', null, null, 'projects', pid, true).length;
-				files = Lincko.storage.list('files', null, null, 'projects', pid, true).length;
-
-				item.find("[find=submenu_projects_statistics_tasks]").html(wrapper_to_html(tasks));
-				item.find("[find=submenu_projects_statistics_notes]").html(wrapper_to_html(notes));
-				item.find("[find=submenu_projects_statistics_files]").html(wrapper_to_html(files));
+			}
+			if(pid!=parseInt(item.attr('pid'), 10) || timestamp!=parseInt(item.attr('timestamp'), 10)){
+				item.find("[find=app_project_projects_title]").html(wrapper_to_html(projectList[i]['+title']));
+				tasks = adjust_format(Lincko.storage.list('tasks', null, {approved: false,}, 'projects', pid, true).length);
+				notes = adjust_format(Lincko.storage.list('notes', null, null, 'projects', pid, true).length);
+				files = adjust_format(Lincko.storage.list('files', null, null, 'projects', pid, true).length);
+				item.find("[find=app_project_projects_tasks]").html(wrapper_to_html(tasks));
+				item.find("[find=app_project_projects_notes]").html(wrapper_to_html(notes));
+				item.find("[find=app_project_projects_files]").html(wrapper_to_html(files));
+				item.attr('pid', pid);
+				item.attr('timestamp', timestamp);
+			}
 		}
-	}
+	},
 
-	function initMainMenuEvents() {
-		$("#app_project_content .icon-Settings").off("click").on("click", function() {
-			submenu_Build("settings");
-		});
-
-		$("#app_project_chat header").off("click").on("click", function() {
-			submenu_Build('chat');
-		});
-
-	}
-
-	/*
-		Get an ordered chat history list for unlimited number
-		or limited number.
-		number: limit of rows of items which will report
-		project_id: given if just target a specific project not the main menu
-	*/
-	function orderChatList(number, project_id) {
-		var merge_list = [];
-		// each item should be:
-		// {'type': ['history'|'chat'], 'id': ['project_id'|'chat_id'], 'timestamp': 'the_latest_update_history_or_chat'}
-		//get project list
-		if(typeof number == "undefined"){
-			number = null;
-		} else {
-			number = Math.floor(number/2);
-		}
-		var project_list = Lincko.storage.list('projects', number);
-
-		//get the most recent history for each project
-		for (var p in project_list) {
-			if (project_id && project_list[p]._id != project_id) {
+	initChatTab: function(){
+		var histList = app_models_history.tabList(5);
+		for (i = 0; i < 5; i++) {
+			var item = $("#app_project_item_chats_"+i);
+			if(item.length<=0){
 				continue;
 			}
-			var e1 = Lincko.storage.hist(null, 1, {cod:['!=', 203]}, 'projects', project_list[p]._id, true)[0];
-			var e2 = Lincko.storage.list(['comments', 'files'], 1, [{recalled_by: ['<',1]}, {_type: 'files'}], 'projects', project_list[p]._id, false)[0];
-			if (e1) {
-				var timestamp = e1.timestamp;
-				var txt = Lincko.storage.getHistoryInfo(e1).title;
-				if (e2 && e1.timestamp < e2.created_at) {
-					var timestamp = e2.created_at;
-					var txt = e2['+comment'];
-				}
-				merge_list.push({
-					'type': 'history',
-					'id': project_list[p]._id,
-					'timestamp': timestamp,
-					'comment': txt,
+			if(histList[i]){
+				item.removeClass('display_none');
+			} else {
+				item.addClass('display_none');
+				continue;
+			}
+			var name = histList[i]['name'];
+			var timestamp = parseInt(histList[i]['timestamp'], 10);
+			if(name!=item.attr('name')){
+				item.click(histList[i], function(event){
+					submenu_Build("newchat", false, false, {
+						type: event.data.root_type,
+						id: event.data.root_id,
+						title: event.data.title,
+					});
 				});
 			}
-		}
-		if (project_id) {
-			 // Get chats belong to specific project
-			var chat_list = Lincko.storage.list('chats', number, null, 'projects', project_id, false);
-		}
-		else {
-			 // Get all chats
-			var chat_list = Lincko.storage.list('chats', number, null, null, null, false);
-		}
-		//get the most recent comment for each project
-		for (var c in chat_list) {
-			var timestamp = chat_list[c].updated_at;
-			var item = Lincko.storage.list(['comments', 'files'], 1, [{recalled_by: ['<',1]}, {_type: 'files'}], 'chats', chat_list[c]._id);
-			if(item.length>0){
-				var comment = Lincko.storage.getPlus(item[0]['_type'], item[0]['_id']);
-				if(item[0]['_type']=='files' && Lincko.storage.data && Lincko.storage.data['_history_title'] && Lincko.storage.data['_history_title']['files']){
-					comment = Translation_filter(Lincko.storage.data['_history_title']['files'][901], {un: Lincko.storage.get('users', item[0]['created_by'], 'username')}, true);
-				}
-				merge_list.push({
-					'type': 'chats',
-					'id': chat_list[c]._id,
-					'timestamp': timestamp,
-					'comment': comment,
-				});
+			if(histList[i]['notif']){
+				item.find("[find=app_project_chats_notif]").removeClass('display_none');
+			} else {
+				item.find("[find=app_project_chats_notif]").addClass('display_none');
 			}
-			else {
-				merge_list.push({
-					'type': 'chats',
-					'id': chat_list[c]._id,
-					'timestamp': timestamp,
-					'comment': "",
-				});
+			if(name!=item.attr('name') || timestamp!=parseInt(item.attr('timestamp'), 10)){
+				item.find("[find=app_project_chats_title]").html(wrapper_to_html(histList[i]['title']));
+				item.find("[find=app_project_chats_date]").html(wrapper_to_html(histList[i]['date']));
+				item.find("[find=app_project_chats_content]").html(wrapper_to_html(histList[i]['content']));
+				item.find("[find=history_picture]").remove();
+				item.find("[find=app_project_chats_picture]").append(histList[i]['picture']);
+				item.attr('name', name);
+				item.attr('timestamp', timestamp);
 			}
 		}
-		return orderList(merge_list);
-	}
-	function initTabs() {
-		if (!init) {
-			initProjectTab();
-			initChatTab();
-			initMainMenuEvents();
-			init = true;
-		}
-		return;
-	}
-	return {
-		'init': initTabs,
-		'getlist': orderChatList,
-		'feed': feedChatItem,
-		'initProjectTab': initProjectTab,
-		'initChatTab': initChatTab,
-	};
-})();
+	},
 
-var project_garbage = app_application_garbage.add();
-app_application_lincko.add(project_garbage, 'first_launch', function() {
-	if(typeof project_garbage != 'undefined' && !$.isEmptyObject(Lincko.storage.data)){
-		mainMenu.init(); //toto => mainMenu.init() has an issue, thereis an undefined variable somewhere
-		app_application_garbage.remove(this.id);
-		delete project_garbage;
-	}
-});
+};
 
-app_application_lincko.add("app_project_tab", 'projects', function() {
+JSfiles.finish(function() {
 	mainMenu.initProjectTab();
-});
-
-app_application_lincko.add("app_project_chat", '*', function() {
 	mainMenu.initChatTab();
 });
 
+app_application_lincko.add("app_project_projects_tab", "projects", function() {
+	if(app_project_update_block){
+		app_project_update_launch_projects = true;
+	} else {
+		mainMenu.initProjectTab();
+	}
+});
+//toto => the range of this function need to be adjusted over the time accoring to new items if any more
+app_application_lincko.add("app_project_chats_tab", ["projects", "chats", "tasks", "files", "notes", "comments"], function() {
+	if(app_project_update_block){
+		app_project_update_launch_chats = true;
+	} else {
+		mainMenu.initChatTab();
+	}
+});
+
+//This help to wait the update while the mouse is over, it avoids click on wrong tab while a list update
+var app_project_update_block = false;
+var app_project_update_launch_projects = false;
+var app_project_update_launch_chats = false;
+$('#app_project_top')
+.mouseenter(function(){
+	app_project_update_block = true;
+})
+.mouseleave(function(){
+	app_project_update_block = false;
+	if(app_project_update_launch_projects){
+		mainMenu.initProjectTab();
+		app_project_update_launch_projects = false;
+	}
+	if(app_project_update_launch_chats){
+		mainMenu.initChatTab();
+		app_project_update_launch_chats = false;
+	}
+});
 
 function app_project_quick_upload_display(Elem, show) {
 	var Obj_div = $('#app_project_quick_upload');
@@ -356,53 +171,68 @@ function app_project_quick_upload_display(Elem, show) {
 	}
 }
 
-$('#app_project_settings_img').click(function(){
+$('#app_project_quick_access_upload').click(function(){
+	if(responsive.test("maxTablet")){
+		app_project_quick_upload_display($(this));
+	} else {
+		$('#app_project_quick_upload_files').click();
+	}
+});
+
+$('#app_project_quick_upload_block').click(function(){
+	if($('#app_project_quick_upload').is(':visible') && !app_project_quick_upload){
+		app_project_quick_upload_display(null, false);
+	}
+});
+
+$('#app_project_quick_upload').click(function(){
+	if($('#app_project_quick_upload').is(':visible') && !app_project_quick_upload){
+		app_project_quick_upload_display(null, false);
+	}
+});
+
+var app_project_quick_upload = false;
+$('#app_project_quick_upload').children().hover(function(){
+	app_project_quick_upload = true;
+});
+$('#app_project_quick_upload').children().mouseleave(function(){
+	app_project_quick_upload = false;
+});
+
+$('#app_project_quick_upload_video').click(function(){
+	app_upload_open_video();
+});
+
+$('#app_project_quick_upload_photo').click(function(){
+	app_upload_open_photo();
+});
+
+$('#app_project_quick_upload_files').click(function(){
+	app_upload_open_files();
+});
+
+$('#app_project_settings').click(function(){
 	submenu_Build("settings");
 });
 
-$('#app_project_quick_access_tasks').click(function(){
-	var personalSpace = Lincko.storage.getMyPlaceholder();
-	if(personalSpace){
-		personalSpace = personalSpace['_id'];
-		submenu_Build('taskdetail_new', false, false, 
-			{
-				type:'tasks',
-				id: 'new', 
-				projID: personalSpace,
-
-			}, false);
-	}
+$('#app_project_projects_new').click(function(){
+	submenu_Build("app_project_new");
 });
 
-$('#app_project_quick_access_notes').click(function(){
-	var personalSpace = Lincko.storage.getMyPlaceholder();
-	if(personalSpace){
-		personalSpace = personalSpace['_id'];
-		submenu_Build('taskdetail_new', false, false, 
-			{
-				type:'notes',
-				id: 'new', 
-				projID: personalSpace,
+$('#app_project_chats_new').click(function(){
+	submenu_Build("app_chat_new");
+});
 
-			}, false);
-	}
+$('#app_project_quick_access_plus').click(function(){
+	alert('Customize your quick access'); //toto
 });
 
 $('#app_project_quick_access_chat').click(function(){
-	submenu_Build('chat', false, true, true);
+	submenu_Build("chat");
 });
 
-$('#app_project_project_new').click(function(){
-	submenu_Build("app_project_new");
-});
-$('#app_project_tab > header').click(function(){
-	submenu_Build("projects_list");
-});
-
-$('#app_project_quick_access_title').click(function(){
-	if($('#app_project_quick_access_title').find("[find=app_project_progress_all]").is(':visible')){
-		submenu_Build("app_upload_all", true);
-	}
+$('#app_project_quick_access_upload').click(function(){
+	submenu_Build("app_upload_all", true);
 });
 
 function app_project_quick_access_title(Elem_id){
@@ -432,11 +262,11 @@ function app_project_quick_access() {
 function app_project_tab() {
 	var limit = 100; //Just to insure to not make an infinite loop, but should be useless
 	var top_height = $(window).height() - $('#app_project_quick_access').height();
-	$('#app_project_tab [id^="app_project_project_open_"]').show();
+	$('#app_project_projects_tab [id^="app_project_project_open_"]').show();
 	$('#app_project_recent').show();
 	while($('#app_project_top').height() >= top_height && limit>0){
-		if($('#app_project_tab [id^="app_project_project_open_"]').filter(':visible').length>1){
-			$('#app_project_tab [id^="app_project_project_open_"]').filter(':visible').last().hide();
+		if($('#app_project_projects_tab [id^="app_project_project_open_"]').filter(':visible').length>1){
+			$('#app_project_projects_tab [id^="app_project_project_open_"]').filter(':visible').last().hide();
 		} else {
 			$('#app_project_recent').hide();
 			limit = 0;
@@ -458,7 +288,7 @@ var app_project_build = {
 		for(var position in list){
 			list_id[list[position]['_id']] = true;
 		}
-		$('#app_project_tab').find('[projectvisible^="1"]').each(
+		$('#app_project_projects_tab').find('[projectvisible^="1"]').each(
 			function(index, Elem ){
 				if(typeof list_id[$(Elem).attr('projectid')] === 'undefined'){
 					$(Elem).attr('projectvisible', 0);
@@ -480,12 +310,12 @@ var app_project_build = {
 
 		app_project_build.removeProjectFrom(max_display);
 
-		if(list.length<=0 && $("#app_project_project_all").is(':visible')){
-			$('#app_project_project_all').velocity("slideUp", { duration: 200, delay: 100, complete: function(){
+		if(list.length<=0 && $("#app_project_projects_all").is(':visible')){
+			$('#app_project_projects_all').velocity("slideUp", { duration: 200, delay: 100, complete: function(){
 				app_project_tab();
 			}, });
-		} else if(list.length>0 && !$("#app_project_project_all").is(':visible')){
-			$('#app_project_project_all').velocity("slideDown", { duration: 200, delay: 100, complete: function(){
+		} else if(list.length>0 && !$("#app_project_projects_all").is(':visible')){
+			$('#app_project_projects_all').velocity("slideDown", { duration: 200, delay: 100, complete: function(){
 				app_project_tab();
 			}, });
 		}
@@ -502,9 +332,9 @@ var app_project_build = {
 				app_content_menu.selection(item_id, 'tasks');
 			});
 			Elem.hide();
-			var Elem_position = $('#app_project_tab').find('[projectvisible^="1"]').eq(position);
+			var Elem_position = $('#app_project_projects_tab').find('[projectvisible^="1"]').eq(position);
 			if(Elem_position.length==0){
-				Elem.insertBefore($('#app_project_project_all'));
+				Elem.insertBefore($('#app_project_projects_all'));
 			} else {
 				Elem.insertBefore(Elem_position);
 			}
@@ -548,7 +378,7 @@ var app_project_build = {
 
 	moveProject: function(Elem, position){
 		if(Elem.length>0){
-			var Elem_position = $('#app_project_tab').find('[projectvisible^="1"]').eq(position);
+			var Elem_position = $('#app_project_projects_tab').find('[projectvisible^="1"]').eq(position);
 			if(Elem.prop('id') != Elem_position.prop('id')){
 				var Elem_clone = Elem.clone();
 				Elem.prop('id', null);
@@ -569,7 +399,7 @@ var app_project_build = {
 	},
 
 	removeProjectFrom: function(max_display){
-		$('#app_project_tab').find('[projectvisible^="1"]').each(
+		$('#app_project_projects_tab').find('[projectvisible^="1"]').each(
 			function(index, Elem ){
 				Elem = $(Elem);
 				if(index >= max_display){
@@ -577,7 +407,7 @@ var app_project_build = {
 				}
 			}
 		);
-		$('#app_project_tab').find('[projectvisible^="0"]').velocity("slideUp", { duration: 200, delay: 100, complete: function(){
+		$('#app_project_projects_tab').find('[projectvisible^="0"]').velocity("slideUp", { duration: 200, delay: 100, complete: function(){
 			$(this).remove();
 		}, });
 
@@ -653,6 +483,12 @@ var app_project_info = {
 	},
 }
 
+/*
+	Lincko.storage.searchTimer('word', 'autocut');
+	Lincko.storage.searchTimer('word', 'a', 'projects');
+*/
+var app_project_searchTiming = null;
+var app_project_searchValue = '';
 var app_project_search = {
 
 	timing: null,
@@ -704,6 +540,10 @@ $("#app_project_search").on({
 	},
 });
 
+$('#app_project_projects_all').click(function(){
+	app_content_menu.selection(Lincko.storage.getMyPlaceholder()['_id'], 'projects');
+});
+
 $('#app_project_placeholder').click(function(){
 	app_content_menu.selection(Lincko.storage.getMyPlaceholder()['_id'], 'dashboard');
 });
@@ -715,6 +555,12 @@ $('#app_project_info').click(function(){
 $('#app_project_workspace').click(function(){
 	app_content_menu.selection(-1, 'statistics');
 });
+
+var app_project_img_user_male = new Image();
+app_project_img_user_male.src = app_project_img_user_male_src;
+var app_project_img_user_female = new Image();
+app_project_img_user_female.src = app_project_img_user_female_src;
+$('#app_project_user_image').attr('src', app_project_img_user_male.src);
 
 var app_project_tab_timer;
 JSfiles.finish(function(){
@@ -764,3 +610,4 @@ JSfiles.finish(function(){
 	
 	app_application_lincko.prepare(true, true); //Update everything
 });
+

@@ -26,8 +26,8 @@ submenu_list['taskdetail'] = {
 		"title": Lincko.Translation.get('app', 25, 'html'), //Close
 		'hide': true,
 		"class": "base_pointer",
-		"action": function(elem, submenuInst) {
-			//submenuInst.cancel = true;
+		"action": function(Elem, subm) {
+			//subm.cancel = true;
 		},
 	},
 	"taskdetail": {
@@ -67,9 +67,10 @@ submenu_list['taskdetail'] = {
 		"title": "",
 		"name": "task_parent_id_hidden",
 		"value": "",
-		"now": function(that, Elem){
-			if(!that.param.projID){
-				that.param.projID = app_content_menu.projects_id;
+		"now": function(Elem, subm){
+			var currentProjID = app_content_menu.projects_id;
+			if(subm.param.projID){
+				currentProjID = subm.param.projID;
 			}
 			Elem.find("[find=submenu_input]").prop('value', that.param.projID);
 		},
@@ -104,8 +105,8 @@ submenu_list['taskdetail_new'] = {
 		"title": Lincko.Translation.get('app', 7, 'html'), //Cancel
 		'hide': true,
 		"class": "base_pointer",
-		"action": function(elem, submenuInst) {
-			submenuInst.cancel = true;
+		"action": function(Elem, subm) {
+			subm.cancel = true;
 		},
 	},
 	"right_button": {
@@ -114,7 +115,7 @@ submenu_list['taskdetail_new'] = {
 		//"title": Lincko.Translation.get('app', 58, 'html'), //Save
 		'hide': true,
 		"class": "base_pointer",
-		"action": function(elem, submenuInst) {
+		"action": function(Elem, subm) {
 			
 		},
 	},
@@ -128,9 +129,10 @@ submenu_list['taskdetail_new'] = {
 		"title": "",
 		"name": "task_parent_id_hidden",
 		"value": "",
-		"now": function(that, Elem){
-			if(!that.param.projID){
-				that.param.projID = app_content_menu.projects_id;
+		"now": function(Elem, subm){
+			var currentProjID = app_content_menu.projects_id;
+			if(subm.param.projID){
+				currentProjID = subm.param.projID;
 			}
 			Elem.find("[find=submenu_input]").prop('value', that.param.projID);
 		},
@@ -164,7 +166,7 @@ submenu_list['task_new'] = {
 		"title": Lincko.Translation.get('app', 41, 'html'), //Create
 		"class": "base_pointer",
 		'hide': true,
-		"action": function(Elem, that) {
+		"action": function(Elem, subm) {
 			console.log('A function to save')
 		},
 	},
@@ -178,10 +180,10 @@ submenu_list['task_new'] = {
 		"title": "",
 		"name": "task_parent_id_hidden",
 		"value": "",
-		"now": function(that, Elem){
-			var that.param.projID = app_content_menu.projects_id;
-			if(that.param.projID){
-				that.param.projID = that.param.projID;
+		"now": function(Elem, subm){
+			var currentProjID = app_content_menu.projects_id;
+			if(subm.param.projID){
+				currentProjID = subm.param.projID;
 			}
 			Elem.find("[find=submenu_input]").prop('value', that.param.projID);
 		},

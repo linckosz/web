@@ -58,8 +58,8 @@ var submenu_projects_build_list = function(){
 				"title": title,
 				"hide": true,
 				"action_param": { projects_id: projects_id, },
-				"action": function(event){
-					app_content_menu.selection(event.data.projects_id, 'tasks');
+				"action": function(Elem, subm){
+					app_content_menu.selection(subm.attribute.action_param.projects_id, 'tasks');
 				},
 			};
 		}
@@ -102,11 +102,12 @@ Submenu.prototype.Add_MenuProjects = function() {
 	}
 
 	if ("action" in attribute) {
-		if ("action_param" in attribute) {
-			Elem.click(attribute.action_param, attribute.action);
-		} else {
-			Elem.click(attribute.action);
+		if (!("action_param" in attribute)) {
+			attribute.action_param = null;
 		}
+		Elem.click(function(){
+			attribute.action(Elem, that);
+		});
 	}
 	if ("hide" in attribute) {
 		if (attribute.hide) {

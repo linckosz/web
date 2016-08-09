@@ -17,11 +17,11 @@ submenu_list['newchat'] = {
 		"style": "title_right_button",
 		"title": "",
 		"class": "icon-SmallPersonaiconBlack base_pointer chat_add_person display_none",
-		"action": function(Elem, that) {
+		"action": function(Elem, subm) {
 			var all_users = [];
 			var checked_users = [];
 			var userList = [];
-			submenu_Build('contacts', true, false, {type: 'chats', alwaysMe:true, }, that.preview);
+			submenu_Build('new_group', true, false, {type: 'chats', alwaysMe:true, }, subm.preview);
 		}
 	},
 	"new_chat_menu": {

@@ -415,7 +415,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				}
 			);
 		}
-		$("#app_project_top").velocity(
+		$("#app_project_header").velocity(
 			{ opacity: 0 },
 			{
 				duration: time-Math.floor(2*time/3),
@@ -496,7 +496,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				);
 			}
 		}
-		$("#app_project_top")
+		$("#app_project_header")
 		.css("visibility", "hidden")
 		.css("opacity", 0)
 		.velocity(

@@ -1,12 +1,12 @@
 //Category 
-submenu_list['contacts'] = {
+submenu_list['new_group'] = {
 	//Set the title of the top
 	"_title": {
 		"style": "customized_title",
 		"title": Lincko.Translation.get('app', 3701, 'html'), //Start New Chat
-		"class": function(elem) {
-			if (elem.param.proid) {
-				return "project" + elem.param.proid + " submenu_newchat_header";
+		"class": function(Elem) {
+			if (Elem.param.proid) {
+				return "project" + Elem.param.proid + " submenu_newchat_header";
 			}
 			else{
 				return "submenu_newchat_header";
@@ -23,12 +23,12 @@ submenu_list['contacts'] = {
 		"style": "title_right_button",
 		"title": Lincko.Translation.get('app', 41, 'html'), //Create
 		"class": "base_pointer",
-		"action": function(elem, submenu) {
-			var that = submenu;
+		"action": function(Elem, subm) {
+			var that = subm;
 			var userList = {};
-			var nameList = $.trim( $("#"+submenu.id).find("[name=title]").val() );
+			var nameList = $.trim( $("#"+subm.id).find("[name=title]").val() );
 
-			var IDList = submenu_contacts_get(elem);
+			var IDList = submenu_contacts_get(Elem);
 			IDList.push(wrapper_localstorage.uid);
 			if (IDList.length == 1) {
 				return;

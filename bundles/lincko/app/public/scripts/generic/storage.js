@@ -37,7 +37,7 @@ var storage_cb_success = function(msg, err, status, data){
 
 Lincko.storage.getParent = function(type, id, attr) {
 	var elem = Lincko.storage.get(type, id);
-	var parent;
+	var parent = false;
 	var parent_type = elem._parent[0];
 	var parent_id = elem._parent[1];
 	if (elem && parent_type && parent_id) {
@@ -579,6 +579,7 @@ Lincko.storage.isHistoryReady = function(){
 Lincko.storage.getHistoryInfo = function(history){
 	var result = {
 		title: '',
+		date: '',
 		content: '',
 		root: {
 			title: '',
@@ -609,7 +610,8 @@ Lincko.storage.getHistoryInfo = function(history){
 		}
 
 		var date = new wrapper_date(history.timestamp);
-		result.title = '[ '+date.display('date_very_short')+' ] '+result.title.ucfirst();
+		result.title = result.title.ucfirst();
+		result.date = date.display('date_very_short');
 		
 		var item = Lincko.storage.data[history.type][history.id];
 		//Add to the content the main title (such as "project name")
@@ -1023,7 +1025,6 @@ Lincko.storage.makeChain = function(type, id) {
 	   var ascendants = Lincko.storage.tree(type, id , 'parents', true, true);
 	   var child = Lincko.storage.get(type, id);
 	   var parent = child;
-
 	   while (parent != undefined) {
 		   type = child['_type'];
 		   id = child['_id'];
@@ -1033,7 +1034,6 @@ Lincko.storage.makeChain = function(type, id) {
 
 	   }
 	   return ascendants;
-
 }
 
 Lincko.storage.getCommentRoot = function(id) {

@@ -24,9 +24,9 @@ submenu_list['sample'] = {
 		"action": function(){
 			alert('An action');
 		},
-		"now": function(that, Elem){ //An action to launch at element creation
+		"now": function(Elem, subm){ //An action to launch at element creation
 			alert('An action');
-			console.log(that);
+			console.log(subm);
 			console.log(Elem);
 		},
 		"class": "",
@@ -37,7 +37,7 @@ submenu_list['sample'] = {
 		"style": "next",
 		"title": "Submenu", //The name of the next menu we will access
 		"next": "anothermenu",
-		"value": "Un truc", //This will ne replace by the title of the sub menu if it exists
+		"value": "Un truc", //This will be replace by the title of the sub menu if it exists
 		"class": "",
 	},
 	//It will create a form with a validation button
@@ -146,7 +146,7 @@ JSfiles.finish(function(){
 			"title": Lincko.Translation.get('app', 40, 'html'), //My workspace
 			"hide": true,
 			"action_param": null,
-			"action": function(Elem, that, event){
+			"action": function(Elem, subm, event){
 				app_application_change_private();
 			},
 			"selected": false,
@@ -165,8 +165,8 @@ JSfiles.finish(function(){
 						"title": name,
 						"hide": true,
 						"action_param": { workspace:url, },
-						"action": function(Elem, that, event){
-							app_application_change_workspace(event.data.workspace);
+						"action": function(Elem, subm){
+							app_application_change_workspace(subm.attribute.action_param.workspace);
 						},
 						"selected": false,
 					};

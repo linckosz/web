@@ -221,6 +221,7 @@ html, .font_sans_serif {
 .base_color_text_black { color: #000000; }
 .base_color_text_grey  { color: #6F7377; }
 .base_color_text_linckoOrange { color: #FBA026; }
+.base_color_text_linckoOrange_dark { color: #E98723; }
 .base_color_bg_neutral { background-color: #FBFBFB; }
 
 /* MAIN */

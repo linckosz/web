@@ -11,7 +11,7 @@ submenu_list['app_projects_users_contacts'] = {
 	},
 	"_pre_action": {
 		"style": "preAction",
-		"action": function(subm){
+		"action": function(Elem, subm){
 			app_projects_users_contacts_init(subm);
 		},
 	},

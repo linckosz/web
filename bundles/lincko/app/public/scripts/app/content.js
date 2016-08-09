@@ -57,6 +57,9 @@ var app_content_menu = {
 		if(typeof menu === 'undefined'){ menu = 'tasks'; }
 		if(typeof param === 'undefined'){ param = null; }
 
+		//Clean all submenu before opening a new project (even if the same as current one)
+		submenu_Hideall();
+
 		var list = [];
 		var title = base_myplaceholder;
 

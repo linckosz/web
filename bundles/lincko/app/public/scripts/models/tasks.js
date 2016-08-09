@@ -65,7 +65,7 @@ submenu_list['app_task_new'] = {
 		"title": "",
 		"name": "task_parent_id_hidden",
 		"value": "",
-		"now": function(that, Elem){
+		"now": function(Elem, subm){
 			Elem.find("[find=submenu_input]").prop('value', app_content_menu.projects_id);
 		},
 		"class": "",

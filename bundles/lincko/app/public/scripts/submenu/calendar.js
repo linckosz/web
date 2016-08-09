@@ -23,8 +23,8 @@ submenu_list['calendar'] = {
 		"title": Lincko.Translation.get('app', 52, 'html'), //Select
 		'hide': true,
 		"class": "base_pointer",
-		'action': function(elem, submenuInst){
-			submenuInst.param.elem_inputOrig.val(submenuInst.param.elem_inputTarget.val()-86399000).change(); //subtract 23hrs59min59sec
+		'action': function(Elem, subm){
+			subm.param.elem_inputOrig.val(subm.param.elem_inputTarget.val()-86399000).change(); //subtract 23hrs59min59sec
 		},
 	},
 	"projects_id": {
@@ -32,7 +32,7 @@ submenu_list['calendar'] = {
 		"title": "",
 		"name": "task_parent_id_hidden",
 		"value": "",
-		"now": function(that, Elem){
+		"now": function(Elem, subm){
 			Elem.find("[find=submenu_input]").prop('value', app_content_menu.projects_id);
 		},
 		"class": "",

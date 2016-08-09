@@ -185,7 +185,6 @@ function app_models_chat_bubble_actionMenu(){
 }
 app_models_chat_bubble_actionMenu();
 
-
 var app_models_chat_recallQueue = {
 	sendAction: function(commentID){
 		wrapper_sendAction(
