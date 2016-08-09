@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?s1xbrg');
-  src:  url('fonts/icomoon.eot?s1xbrg#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?s1xbrg') format('truetype'),
-    url('fonts/icomoon.woff?s1xbrg') format('woff'),
-    url('fonts/icomoon.svg?s1xbrg#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?82srhj');
+  src:  url('fonts/icomoon.eot?82srhj#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?82srhj') format('truetype'),
+    url('fonts/icomoon.woff?82srhj') format('woff'),
+    url('fonts/icomoon.svg?82srhj#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-projectActivity:before {
+  content: "\e926";
+}
+.icon-largerIndividual:before {
+  content: "\e929";
+}
+.icon-largerGroup:before {
+  content: "\e928";
+}
 .icon-Remove:before {
   content: "\e925";
 }
