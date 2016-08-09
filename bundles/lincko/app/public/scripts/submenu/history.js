@@ -672,6 +672,7 @@ var chatFeed = (function() {
 		var item_timestamp;
 		for(var i in items)
 		{
+			if(items[i].hasOwnProperty('+title')){continue;}
 			if (items[i].type === "comments")
 			{
 				var root = Lincko.storage.getCommentRoot(items[i].id);
@@ -693,18 +694,18 @@ var chatFeed = (function() {
 			groups.push({'timestamp':timestamp_groups[i],'items':[]});
 		}
 
-		var curor = 0;
+		var cursor = 0;
 		for(var i in real_items)
 		{
 			item_timestamp = Math.floor( (type == "history" ? real_items[i].timestamp : real_items[i].created_at)  / 86400) * 86400;
-			if(item_timestamp == timestamp_groups[curor])
+			if(item_timestamp == timestamp_groups[cursor])
 			{
-				groups[curor].items.push(real_items[i]);
+				groups[cursor].items.push(real_items[i]);
 			}
 			else
 			{
-				curor = curor + 1;
-				groups[curor].items.push(real_items[i]);
+				cursor = cursor + 1;
+				groups[cursor].items.push(real_items[i]);
 			}
 		}
 		return groups;

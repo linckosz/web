@@ -1,5 +1,4 @@
 var app_models_chat_bubble_timeout = null;
-
 function app_models_chat_bubble_actionMenu(){
 	var translate_str = Lincko.Translation.get('app', 56, 'html'); //translate
 	var untranslate_str = Lincko.Translation.get('app', 57, 'html'); //untranslate
@@ -126,8 +125,8 @@ function app_models_chat_bubble_actionMenu(){
 		/*------------recall chat action----------------*/
 		var elem_recallBtn = elem_actionMenu.find('[find=recall_btn]');
 		elem_recallBtn.on("mousedown touchstart", function(){
-			if(!item_comment && !app_moels_chat_recallQueue[commentID]){
-				app_moels_chat_recallQueue[commentID] = true;
+			if(!item_comment && !app_models_chat_recallQueue[commentID]){
+				app_models_chat_recallQueue[commentID] = true;
 			}
 			else{
 				wrapper_sendAction(
@@ -183,13 +182,11 @@ function app_models_chat_bubble_actionMenu(){
 		var that = $(this);
 		that.find('[find=actionMenu]').remove();
 	});
-
-
 }
 app_models_chat_bubble_actionMenu();
 
 
-app_moels_chat_recallQueue = {
+var app_models_chat_recallQueue = {
 	sendAction: function(commentID){
 		wrapper_sendAction(
 				{
@@ -199,4 +196,4 @@ app_moels_chat_recallQueue = {
 				'comment/recall'
 			);
 	}
-}
+};

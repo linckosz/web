@@ -271,8 +271,8 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 				//recall comment if in queue
 				if(data_msg.partial && data_msg.partial[wrapper_localstorage.uid] && data_msg.partial[wrapper_localstorage.uid].comments){
 					$.each(data_msg.partial[wrapper_localstorage.uid].comments, function(id, item){
-						if(app_moels_chat_recallQueue[item.temp_id]){
-							app_moels_chat_recallQueue.sendAction(id);
+						if(app_models_chat_recallQueue[item.temp_id]){
+							app_models_chat_recallQueue.sendAction(id);
 						}
 					});
 				}
@@ -309,7 +309,7 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 			},
 			function(){
 				$.each(tmpID,function(i,val){
-					delete app_moels_chat_recallQueue[val];
+					delete app_models_chat_recallQueue[val];
 				});
 				tmpID = [];
 			}

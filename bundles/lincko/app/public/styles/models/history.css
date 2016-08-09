@@ -103,6 +103,8 @@
 	width: auto;
 	margin:0 auto;
 	color: #679e52;
+	padding-top:10px;
+	padding-bottom:5px;
 }
 
 .models_history_line .models_history_line_box{
@@ -305,6 +307,7 @@
 
 .models_history_standard_shortcut_pic{
 	display:none;
+	max-width:120px;
 }
 
 /* Mobile phone in Portrait */
