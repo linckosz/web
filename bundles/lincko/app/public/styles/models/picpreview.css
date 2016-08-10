@@ -44,6 +44,7 @@
 	-ms-transform: translate(50%,-50%);
 	-o-transform: translate(50%,-50%);
 	cursor: pointer;
+	font-size: 26px;
 }
 
 .pic_preview_wrapper .pic_wrapper {
@@ -79,8 +80,15 @@
 
 /*MobileL and smaller */
 @media only screen and (max-width: 900px) {
-	.pic_preview_wrapper{
+	.pic_preview_wrapper {
 		width: 100%;
 		height: 100%;
+	}
+	.pic_preview_wrapper .close {
+		font-size: 32px;
+		position: fixed;
+		top: 20px;
+		right: 20px;
+
 	}
 }
