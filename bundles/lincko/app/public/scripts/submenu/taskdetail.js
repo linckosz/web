@@ -1699,7 +1699,7 @@ taskdetail_linkQueue = {
 	queueUpdate_cbSuccess: function(uniqueID, type, id, uploadGarbageID){
 		var keepUploadGarbage = false;
 		$.each(taskdetail_linkQueue.queue, function(temp_id, obj){
-			if(obj.uniqueID && obj.uniqueID == uniqueID){ console.log(obj);
+			if(obj.uniqueID && obj.uniqueID == uniqueID){
 				taskdetail_linkQueue.queue[temp_id].parent_type = type;
 				taskdetail_linkQueue.queue[temp_id].parent_id = id;
 				if(taskdetail_linkQueue.queue[temp_id].id){
