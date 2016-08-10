@@ -58,6 +58,7 @@ Submenu.prototype.Add_ChatContents = function() {
 
 	notifier[type]['clear'](id);
 	if (type == 'history') {
+		latest_history = Lincko.storage.hist(null, -1, null, 'projects', id, false)[0]["timestamp"];
 		app_application_lincko.add(this.id+"_chat_contents_wrapper","projects_" + id, function() {
 			//toto => there is an undefined somewhere
 			var id = Object.keys(this.range)[0].split("_")[1];
@@ -68,6 +69,7 @@ Submenu.prototype.Add_ChatContents = function() {
 					latest_history = items[i]["timestamp"];
 				}
 			}
+
 
 			chatFeed.appendItem("history", items, position, true,true);
 			chatFeed.updateRecalled('projects', id, position);
@@ -90,7 +92,7 @@ Submenu.prototype.Add_ChatContents = function() {
 		}, [that.id, id]);
 	}
 	else {
-
+		latest_history = Lincko.storage.list(null, -1, null, 'chats', id, false)[0]["created_at"];
 		app_application_lincko.add(this.id+"_chat_contents_wrapper", "chats_" + id, function() {
 			//toto => there is an undefined somewhere
 			var id = Object.keys(this.range)[0].split("_")[1];
