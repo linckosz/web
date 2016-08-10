@@ -315,7 +315,7 @@ burgerN.draw_projects = function(projects,option_fn){
 
 	$.each(projects, function(i, project){
 		//return if it is one of the latest
-		if(!$.inArray(project['_id'], Lincko.storage.settings.latestvisitProjects)){ return; }
+		if(!$.inArray(project['_id'], Lincko.storage.getSettings().latestvisitProjects)){ return; }
 
 		elem_option_clone = elem_option.clone().attr('projects_id',project['_id']);
 		elem_option_clone.find('[find=image]').addClass('display_none');

@@ -108,7 +108,7 @@ function app_upload_prepare_log(parent_type, parent_id, temp_id){
 	$('#app_upload_temp_id').val(temp_id);
 }
 
-function app_upload_set_launcher(parent_type, parent_id, submenu, start, temp_id){
+function app_upload_set_launcher(parent_type, parent_id, submenu, start, temp_id, param){
 	if(typeof parent_type != 'string' && !$.isNumeric(parent_id)){
 		parent_type = 'projects';
 		parent_id = Lincko.storage.getMyPlaceholder()['_id'];
@@ -124,27 +124,28 @@ function app_upload_set_launcher(parent_type, parent_id, submenu, start, temp_id
 	app_upload_auto_launcher.parent_id = parent_id;
 	app_upload_auto_launcher.submenu = submenu;
 	app_upload_auto_launcher.start = start;
+	app_upload_auto_launcher.param = param;
 }
 
-function app_upload_open_files(parent_type, parent_id, submenu, start){
-	app_upload_set_launcher(parent_type, parent_id, submenu, start);
+function app_upload_open_files(parent_type, parent_id, submenu, start, param){
+	app_upload_set_launcher(parent_type, parent_id, submenu, start, null, param);
 	$('#app_upload_form_files').click();
 }
 
-function app_upload_open_photo(parent_type, parent_id, submenu, start){
-	app_upload_set_launcher(parent_type, parent_id, submenu, start);
+function app_upload_open_photo(parent_type, parent_id, submenu, start, param){
+	app_upload_set_launcher(parent_type, parent_id, submenu, start, null, param);
 	$('#app_upload_form_photo').click();
 }
 
-function app_upload_open_photo_single(parent_type, parent_id, submenu, start){
+function app_upload_open_photo_single(parent_type, parent_id, submenu, start, param){
 	var temp_id = md5(Math.random());
-	app_upload_set_launcher(parent_type, parent_id, submenu, start, temp_id);
+	app_upload_set_launcher(parent_type, parent_id, submenu, start, temp_id, param);
 	$('#app_upload_form_photo_single').click();
 	return temp_id;
 }
 
-function app_upload_open_video(parent_type, parent_id, submenu, start){
-	app_upload_set_launcher(parent_type, parent_id, submenu, start);
+function app_upload_open_video(parent_type, parent_id, submenu, start, param){
+	app_upload_set_launcher(parent_type, parent_id, submenu, start, null, param);
 	$('#app_upload_form_video').click();
 }
 
@@ -155,12 +156,14 @@ var app_upload_auto_launcher = {
 	submenu: true,
 	start: false,
 	temp_id: false,
+	param: null,
 	init: function(){
 		this.parent_type = 'projects';
 		this.parent_id = parseInt(Lincko.storage.getMyPlaceholder()['_id'], 10);
 		this.submenu = true;
 		this.start = false;
 		this.temp_id = false;
+		this.param = null;
 	},
 };
 
@@ -237,6 +240,13 @@ $(function () {
 				app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_temp_id = app_upload_auto_launcher.temp_id;
 			} else {
 				app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_temp_id = md5(Math.random());
+			}
+
+			if(app_upload_auto_launcher.param){
+				app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_param = app_upload_auto_launcher.param;
+			}
+			else{
+				app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_param = null;
 			}
 
 			//Reinitialise display information

@@ -68,13 +68,15 @@ function linckoEditor(elem, toolbarID, param){
 
             app_application_lincko.add(elem, 'upload', function(){
             	//use this.action_param, unique to each anonymous function
-            	this.action_param['hey'] = 'B';
             	$.each(editor.Lincko_param.files, function(elem_img_id,val){
             		if(!val.temp_id){
 	            		editor.insertHtml('<span id="'+elem_img_id+'" contenteditable="false" class="submenu_taskdetail_description_img_progress">Image</span>');
+	            		if(!app_upload_files.lincko_files[val.index]){return; }//there is an issue here
 	            		editor.Lincko_param.files[elem_img_id].temp_id = app_upload_files.lincko_files[val.index].lincko_temp_id;
 	            	}
-	            	if(!$('#'+elem_img_id).prop('style').length 
+	            	if(	$('#'+elem_img_id)
+	            		&& $('#'+elem_img_id).prop('style')
+	            		&& !$('#'+elem_img_id).prop('style').length 
 	            		&& app_upload_files.lincko_files[val.index]
 	            		&& app_upload_files.lincko_files[val.index].files[0] 
 	            		&& app_upload_files.lincko_files[val.index].files[0].preview){
@@ -102,7 +104,6 @@ function linckoEditor(elem, toolbarID, param){
 	            		&& !app_upload_files.lincko_files[val.index]){
 	            		var tmp = editor.Lincko_param.files[elem_img_id].temp_id;
 		            	var file = Lincko.storage.list('files',1,{temp_id: tmp})[0];
-		            	debugger;
 	            		var file_url = Lincko.storage.getLink(file['_id']);
 	            		var elem_replace = $('<img>')
 	            				.prop('src',file_url)
@@ -124,9 +125,14 @@ function linckoEditor(elem, toolbarID, param){
             	
             	
             	
-            }, {A: 'A'});
-            app_upload_open_files(editor.Lincko_param.submenuInst.param.type, editor.Lincko_param.submenuInst.param.id, false, true);
-            //app_upload_open_files('projects', app_content_menu.projects_id, false, true);
+            } /*access value here by this.action_param*/);
+            if(editor.Lincko_param.submenuInst.param.id == 'new' && editor.Lincko_param.submenuInst.param.uniqueID){
+            	//app_upload_open_files(editor.Lincko_param.submenuInst.param.projID, editor.Lincko_param.submenuInst.param.uniqueID);//, false, true);
+            	app_upload_open_files('projects', editor.Lincko_param.submenuInst.param.projID, false, true, 'link_queue');//, false, true);
+            }
+            else{
+            	app_upload_open_files(editor.Lincko_param.submenuInst.param.type, editor.Lincko_param.submenuInst.param.id);//, false, true);
+        	}
 
 	    }
 	});
@@ -143,6 +149,154 @@ function linckoEditor(elem, toolbarID, param){
 
 
 
+	var options = {
+		buttons: [ 'h', 'h1', 'h2', 'h3', 'h4', 'p', 'bold', 'italic', 'list', 'alignleft', 'aligncenter', 'alignright', 'x', 'image'],
+		buttonsHtml: {
+			'italic': '<i class="fa fa-italic"></i>',
+			'header': '<i class="fa fa-header"></i>',
+			'header-1': '<h1>header 1</h1>',
+			'header-2': '<h2>header 2</h2>',
+			'header-3': '<h3>header 3</h3>',
+			'header-4': '<h4>header 4</h4>',
+			'paragraph': '<p>paragraph</p>',
+			'align-left': '<i class="fa fa-align-left"></i>',
+			'align-center': '<i class="fa fa-align-center"></i>',
+			'align-right': '<i class="fa fa-align-right"></i>',
+			'insert-image': '<i class="fa fa-picture-o" title="Coming Soon!"></i>',
+			'remove-formatting': '<i class="fa fa-ban"></i>'
+		},
+		overwriteButtonSettings: {
+			'header-2': {
+				childOf: 'header',
+			},
+			'header-3': {
+				childOf: 'header',
+			},
+			'header-4': {
+				childOf: 'header',
+			},
+		}
+	};
+
+	var editorInst = new EasyEditor(elem, options);
+	editorInst.$toolbarContainer.addClass('submenu_taskdetail_paddingLeft');
+	$(editorInst.elem).addClass('base_DescriptionText');
+
+	
+	$(editorInst.elem).on('paste', function(){
+		$(window).resize();
+	});
+
+	return editorInst;
+}
+
+EasyEditor.prototype.font = function(){
+	var _this = this;
+	var settings = {
+		buttonIdentifier: 'font',
+		buttonHtml: 'Font',
+		clickHandler: function(){
+			_this.openDropdownOf('font');
+		},
+		hasChild: true
+	};
+
+	_this.injectButton(settings);
+};
+
+EasyEditor.prototype.calibri = function(){
+	var _this = this;
+	var settings = {
+		buttonIdentifier: 'calibri',
+		buttonHtml: 'Calibri',
+		clickHandler: function(){
+			_this.wrapSelectionWithNodeName({ nodeName: 'span', style: 'font-family: Calibri,sans-serif', keepHtml: true });
+		},
+		childOf: 'font'
+	};
+
+	_this.injectButton(settings);
+};
+
+EasyEditor.prototype.georgia = function(){
+	var _this = this;
+	var settings = {
+		buttonIdentifier: 'georgia',
+		buttonHtml: 'Georgia',
+		clickHandler: function(){
+			_this.wrapSelectionWithNodeName({ nodeName: 'span', style: 'font-family: Georgia,serif', keepHtml: true });
+		},
+		childOf: 'font'
+	};
+
+	_this.injectButton(settings);
+};
+
+EasyEditor.prototype.h = function(){
+	var _this = this;
+	var settings = {
+		buttonIdentifier: 'header',
+		buttonHtml: 'H',
+		clickHandler: function(){
+			if($(this).next('ul').css('display') != 'none'){
+				$(_this.elem).click();
+			}
+			else {
+				_this.openDropdownOf('header');
+			}
+		},
+		hasChild: true
+	};
+
+	_this.injectButton(settings);
+};
+
+EasyEditor.prototype.h1 = function(){
+	var _this = this;
+	var settings = {
+		buttonIdentifier: 'header-1',
+		buttonHtml: 'H1',
+		clickHandler: function(){
+			_this.wrapSelectionWithNodeName({ nodeName: 'h1', blockElement: true });
+		},
+		childOf: 'header'
+	};
+
+	_this.injectButton(settings);
+};
+
+EasyEditor.prototype.p = function(){
+	var _this = this;
+	var settings = {
+		buttonIdentifier: 'paragraph',
+		buttonHtml: 'p',
+		clickHandler: function(){
+			_this.wrapSelectionWithNodeName({ nodeName: 'p'});
+		},
+		childOf: 'header'
+	};
+
+	_this.injectButton(settings);
+};
+
+EasyEditor.prototype.image = function(){
+	var _this = this;
+	var settings = {
+		buttonIdentifier: 'insert-image',
+		buttonHtml: 'Insert image',
+		clickHandler: function(){
+			return;
+			_this.openModal('#easyeditor-modal-1');
+		}
+	};
+
+	_this.injectButton(settings);
+};
+
+/*------END OF linckoEditor---------------------------*/
+
+/*-----linckoEditorEasy------------------------------------*/
+function linckoEditorEasy(elem){
 	var options = {
 		buttons: [ 'h', 'h1', 'h2', 'h3', 'h4', 'p', 'bold', 'italic', 'list', 'alignleft', 'aligncenter', 'alignright', 'x', 'image'],
 		buttonsHtml: {
