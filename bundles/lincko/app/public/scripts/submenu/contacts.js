@@ -37,8 +37,9 @@ submenu_list['contacts'] = {
 				userList[IDList[i]] = true;
 			}
 			var tmp = $(elem).parents('.submenu_newchat_header').attr('class').split(" ");
+			//toto => do not use of split, here we can use action_param to store projects_id
 			for (var t in tmp) {
-				if (tmp[t].startsWith("project")) {
+				if(tmp[t].indexOf('project')===0){
 					var id = tmp[t].slice(7);
 				}
 			}
@@ -202,7 +203,7 @@ Submenu.prototype.Add_ContactContents = function() {
 		if (contacts[uid].checked == true || uid == wrapper_localstorage.uid) {
 			Elem.find('.check').addClass('checked');
 		}
-		Elem.click(position, function() {
+		Elem.click(position, function(event) {
 			var position = event.data;
 			if($(this).find('.checked').length == 0 || $(this).find('.id').val() == wrapper_localstorage.uid) {
 				$(this).find('.check').addClass('checked');

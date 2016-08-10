@@ -726,7 +726,8 @@ Submenu.prototype.Add_taskdetail = function() {
 	var generate_linkCard = function(item_link){
 		if(typeof item_link !== 'object'){ item_link = Lincko.storage.get('files',item_link);	}
 		var elem_linkcard = $('#-submenu_taskdetail_links_card').clone().prop('id','').attr('file_id',item_link['_id']).click(function(){
-			submenu_Build('taskdetail', true, null, 
+			var next = submenu_Getnext(true);
+			submenu_Build('taskdetail', next, null, 
 				{
 					"type":item_link['_type'], 
 					"id":item_link['_id'],
