@@ -661,7 +661,7 @@ function app_application_change_private(){
 
 $('#app_application_submenu_block').click(function(event){
 	if($(event.target).prop('id') == 'app_application_submenu_block'){
-		submenu_Hideall(false); //fase -> dont hide preview
+		submenu_Hideall(false); //false -> dont hide preview
 	}
 });
 

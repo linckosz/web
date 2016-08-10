@@ -273,8 +273,8 @@ Submenu.prototype.Add_ProfileNext = function() {
 		if (!("action_param" in attribute)) {
 			attribute.action_param = null;
 		}
-		Elem.click(function(){
-			attribute.action(Elem, that);
+		Elem.click(attribute.action_param, function(event){
+			attribute.action(Elem, that, event.data);
 		});
 	}
 	if ("class" in attribute) {
@@ -439,8 +439,8 @@ Submenu.prototype.Add_ProfileInfo = function() {
 		if (!("action_param" in attribute)) {
 			attribute.action_param = null;
 		}
-		Elem.click(function(){
-			attribute.action(Elem, that);
+		Elem.click(attribute.action_param, function(event){
+			attribute.action(Elem, that, event.data);
 		});
 	}
 	Elem.find("[find=submenu_title]").html(attribute.title);

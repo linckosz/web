@@ -146,7 +146,7 @@ JSfiles.finish(function(){
 			"title": Lincko.Translation.get('app', 40, 'html'), //My workspace
 			"hide": true,
 			"action_param": null,
-			"action": function(Elem, subm, event){
+			"action": function(Elem, subm){
 				app_application_change_private();
 			},
 			"selected": false,
@@ -164,9 +164,9 @@ JSfiles.finish(function(){
 						"style": "radio",
 						"title": name,
 						"hide": true,
-						"action_param": { workspace:url, },
-						"action": function(Elem, subm){
-							app_application_change_workspace(subm.attribute.action_param.workspace);
+						"action_param": { workspace: url, },
+						"action": function(Elem, subm, action_param){
+							app_application_change_workspace(action_param.workspace);
 						},
 						"selected": false,
 					};

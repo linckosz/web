@@ -2,6 +2,7 @@
 
 var chatlist_subConstruct = function(){
 		var that = this;
+		console.log(that.list_wrapper);
 		if($('#app_layers_content').has(that.list_wrapper).length && Lincko.storage.get('projects', app_content_menu.projects_id)['personal_private']){
 			return false;
 		}
@@ -15,6 +16,15 @@ var chatlist_subConstruct = function(){
 }
 
 function app_layers_chat_feedChat(parent) {
+
+	var Elem;
+
+	var submenu_projects_id = app_content_menu.projects_id;
+	parent.delegate(".skylist_newcardCircle", "click", function() {
+		submenu_Build("new_group", false, false, {proid: submenu_projects_id}, true);
+		return true;
+	});
+
 	var app_layers_chatlist = new skylist(
 		'chats',
 		parent,
@@ -24,12 +34,52 @@ function app_layers_chat_feedChat(parent) {
 		false,
 		'layer_chats'
 	);
-	var submenu_projects_id = app_content_menu.projects_id;
-	parent.delegate(".skylist_newcardCircle", "click", function() {
-		submenu_Build("new_group", false, false, {proid: submenu_projects_id, alwaysMe:true, }, true);
-		return true;
-	});
+
+	if(app_layers_chatlist.Lincko_itemsList){
+		for(var i in app_layers_chatlist.Lincko_itemsList){
+			Elem = $(app_layers_chatlist.elem_card_all[i]);
+			if(app_layers_chatlist.Lincko_itemsList[i]["root_type"]=="chats"){
+				Elem.click(app_layers_chatlist.Lincko_itemsList[i], function(event){
+					var id = event.data["root_id"];
+					var title = event.data["title"];
+					submenu_Build("newchat", false, false, {
+						type: 'chats',
+						id: id,
+						title: title,
+					}, true);
+				});
+			} else if(app_layers_chatlist.Lincko_itemsList[i]["root_type"]=="projects"){
+				Elem.click(app_layers_chatlist.Lincko_itemsList[i], function(event){
+					var id = event.data["root_id"];
+					var title = event.data["title"];
+					if(id == Lincko.storage.getMyPlaceholder()['_id']){
+						title = Lincko.Translation.get('app', 2502, 'html'); //Personal Space
+					}
+					submenu_Build("newchat", false, false, {
+						type: 'history',
+						id: id,
+						title: title,
+					}, true);
+				});
+			}
+		}
+	}
+	console.log(app_layers_chatlist)
+	return;
+	
 	app_application_lincko.add("skylist_"+app_layers_chatlist.md5id, "chats", function() {
+
+		var app_layers_chatlist = new skylist(
+			'chats',
+			parent,
+			null,
+			chatlist_subConstruct,
+			false,
+			false,
+			'layer_chats'
+		);
+
+
 		var Elem;
 		var id_list = [];
 		var iscroll_elem = $("#"+this.id).find(".iscroll_sub_div");
@@ -78,7 +128,7 @@ function app_layers_chat_feedChat(parent) {
 	setTimeout(function(){
 		app_application_lincko.prepare("chats", true);
 	}, 50);
-
+	
 }
 
 function app_layers_chat_launchPage(param) {

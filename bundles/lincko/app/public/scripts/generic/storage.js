@@ -1021,36 +1021,16 @@ Lincko.storage.getMyPlaceholder = function(){
 	return false;
 };
 
-Lincko.storage.makeChain = function(type, id) {
-	   var ascendants = Lincko.storage.tree(type, id , 'parents', true, true);
-	   var child = Lincko.storage.get(type, id);
-	   var parent = child;
-	   while (parent != undefined) {
-		   type = child['_type'];
-		   id = child['_id'];
-		   parent = Lincko.storage.getParent(type, id);
-		   ascendants[type][id] = parent;
-		   child = parent;
-
-	   }
-	   return ascendants;
-}
-
-Lincko.storage.getCommentRoot = function(id) {
-	 var ascendants = Lincko.storage.makeChain('comments', id);
-	 var parent = Lincko.storage.get('comments', id);
-	 var child = parent;
-
-	 while (parent != undefined) {
-		type = child['_type'];
-		id = child['_id'];
-		parent = ascendants[type][id];
-		if (parent['_type'] != 'comments') {
-			break;
-		}
-		child = parent;
-	 }
-	 return parent;
+Lincko.storage.getRoot = function(type, id) {
+	var current = Lincko.storage.get(type, id);
+	var parent = Lincko.storage.getParent(type, id);
+	while(parent){
+		type = parent["_type"];
+		id = parent["_id"];
+		current = parent;
+		parent = Lincko.storage.getParent(type, id);
+	}
+	return current;
 }
 
 // "include" [default: true] at true it includes the object itself

@@ -95,7 +95,7 @@ var app_projects_users_contacts_init = function(subm){
 				"title": Lincko.storage.get('users', others[i]['_id'], 'username'),
 				"selected": false,
 				"action_param": { value: others[i]['_id'], },
-				"action": function(){
+				"action": function(Elem, subm){
 					this.selected = !this.selected;
 					if(this.selected){
 						app_projects_users_contacts_list[this.action_param.value] = true;

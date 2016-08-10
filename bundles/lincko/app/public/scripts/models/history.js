@@ -2,11 +2,15 @@ var app_models_history = {
 
 	hist_root: {},
 
-	tabList: function(limit){
-		if(typeof limit != 'number' || limit<=0){
-			limit = false;
+	tabList: function(limit, parent_type, parent_id){
+		if(typeof limit != 'number' || limit<=0){ limit = false; }
+		if(typeof parent_type == 'undefined'){ parent_type = false; }
+		if(typeof parent_id == 'undefined'){ parent_id = false; }
+		if(parent_type && parent_id){
+			var hist_all = Lincko.storage.hist(null, -1, null, parent_type, parent_id, true);
+		} else {
+			var hist_all = Lincko.storage.hist(null, -1);
 		}
-		var hist_all = Lincko.storage.hist(null, -1);
 		var histList = [];
 		var hist_num = {};
 		var item;
@@ -41,6 +45,7 @@ var app_models_history = {
 			}
 			return false;
 		};
+
 		for(var i in hist_all){
 			root_item = getRoot(hist_all[i]["type"], hist_all[i]["id"]);
 			root_name = root_item["_type"]+"_"+root_item["_id"];
@@ -71,7 +76,7 @@ var app_models_history = {
 					info[i].picture = $('<span />');
 					info[i].picture.attr('find', 'history_picture');
 					if(root_item["_type"]=="projects"){
-						info[i].picture.addClass('fa fa-globe');
+						info[i].picture.addClass('icon-projectActivity');
 					} else if(root_item["single"]){
 						if(root_item["_perm"][wrapper_localstorage.uid]){
 							perso = Lincko.storage.get('users', wrapper_localstorage.uid);
@@ -90,10 +95,10 @@ var app_models_history = {
 						if(src){
 							info[i].picture.css('background-image', 'url(' + src + ')');
 						} else {
-							info[i].picture.addClass('icon-Single-Person');
+							info[i].picture.addClass('icon-largerIndividual');
 						}
 					} else {
-						info[i].picture.addClass('icon-Multiple-People');
+						info[i].picture.addClass('icon-largerGroup');
 					}
 
 					info[i].timestamp = hist_all[i]["timestamp"];

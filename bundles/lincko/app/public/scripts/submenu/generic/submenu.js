@@ -169,10 +169,7 @@ function Submenu(menu, next, param, preview) {
 		if(Elem.preview){
 			submenu_wrapper.addClass('submenu_wrapper_preview');
 		}
-		//Back button
-		submenu_wrapper.on('click', "[find=submenu_wrapper_back]", function() {
-			submenu_Clean(Elem.layer, true, Elem.preview);
-		});
+
 		submenu_wrapper.css('z-index', Elem.zIndex);
 		//Do not not add "overthrow" in twig template, if not the scrollbar will not work
 		submenu_wrapper.find("[find=submenu_wrapper_content]").addClass('overthrow').prop("id", "overthrow_"+Elem.id);
@@ -196,9 +193,6 @@ function Submenu(menu, next, param, preview) {
 				submenu_mouseenter['submenu'] = false;
 			});
 		}
-		/*submenu_wrapper.click(function(e){
-			e.stopPropagation();
-		});*/
 
 		//Launch Pre action
 		for (var att in Elem.obj) {
@@ -359,8 +353,8 @@ Submenu.prototype.Add_TitleLeftButton = function() {
 		if (!("action_param" in attribute)) {
 			attribute.action_param = null;
 		}
-		Elem.click(function(){
-			attribute.action(Elem, that);
+		Elem.click(attribute.action_param, function(event){
+			attribute.action(Elem, that, event.data);
 		});
 	}
 	if ("hide" in attribute) {
@@ -393,8 +387,8 @@ Submenu.prototype.Add_TitleRightButton = function() {
 		if (!("action_param" in attribute)) {
 			attribute.action_param = null;
 		}
-		Elem.click(function(){
-			attribute.action(Elem, that);
+		Elem.click(attribute.action_param, function(event){
+			attribute.action(Elem, that, event.data);
 		});
 	}
 	if ("hide" in attribute) {
@@ -430,8 +424,8 @@ Submenu.prototype.Add_MenuButton = function(position) {
 		if (!("action_param" in attribute)) {
 			attribute.action_param = null;
 		}
-		Elem.click(function(){
-			attribute.action(Elem, that);
+		Elem.click(attribute.action_param, function(event){
+			attribute.action(Elem, that, event.data);
 		});
 	}
 	if ("hide" in attribute) {
@@ -532,8 +526,8 @@ Submenu.prototype.Add_MenuRadio = function() {
 		if (!("action_param" in attribute)) {
 			attribute.action_param = null;
 		}
-		Elem.click(function(){
-			attribute.action(Elem, that);
+		Elem.click(attribute.action_param, function(event){
+			attribute.action(Elem, that, event.data);
 		});
 	}
 	if ("hide" in attribute) {
@@ -767,8 +761,8 @@ Submenu.prototype.Add_MenuBottomButton = function() {
 		if (!("action_param" in attribute)) {
 			attribute.action_param = null;
 		}
-		Elem.find("[find=submenu_bottom_button]").click(function(){
-			attribute.action(Elem, that);
+		Elem.find("[find=submenu_bottom_button]").click(attribute.action_param, function(event){
+			attribute.action(Elem, that, event.data);
 		});
 	}
 	if ("hide" in attribute) {

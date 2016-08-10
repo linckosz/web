@@ -27,6 +27,14 @@ var wrapper_to_html = function(text){
 	return text;
 };
 
+var wrapper_flat_text = function(text){
+	if(typeof text == 'undefined'){
+		text = '';
+	}
+	text = text.replace(/\r\n|\n\r|\r|\n/g, '&nbsp;');
+	return text;
+}
+
 var wrapper_to_url = function(text){
 	// based on the rules here: http://www.mtu.edu/umc/services/web/cms/characters-avoid/
 	text = text.replace(/[#%&{}\/\\<>*? $!'":@+`|=_]/g,'-');

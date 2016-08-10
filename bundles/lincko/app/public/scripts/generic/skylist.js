@@ -178,7 +178,6 @@ skylist.prototype.construct = function(){
 	that.elem_newcardCircle = $('#-skylist_newcardCircle').clone()
 		.prop('id','skylist_newcardCircle_'+that.md5id);
 
-	that.generate_Lincko_itemsList();
 	that.addCard_all();
 	//that.setHeight();
 
@@ -398,10 +397,10 @@ skylist.prototype.generate_Lincko_itemsList = function(){
 	var that = this;
 	that.Lincko_itemsList = [];
 	if (that.list_type == "chats") {
-		that.Lincko_itemsList = mainMenu.getlist(null, app_content_menu.projects_id);
+		that.Lincko_itemsList = app_models_history.tabList(false, 'projects', app_content_menu.projects_id);
 	}
 	else if (that.list_type == "global_chats") {
-		that.Lincko_itemsList = mainMenu.getlist();
+		that.Lincko_itemsList = app_models_history.tabList();
 	}
 	else{
 		that.Lincko_itemsList = Lincko.storage.list(that.list_type, null, null, 'projects', app_content_menu.projects_id, true);
@@ -850,6 +849,8 @@ skylist.prototype.addCard = function(item){
 			}
 		);
 	} //END OF 'tasks' || 'notes'
+	else if (that.list_type == 'chats' || that.list_type == 'global_chats') {
+	}
 	if(that.elem_rightOptions_count < 1){
 		elem_card.find('[find=card_rightOptions]').addClass('display_none');
 	}
@@ -857,6 +858,18 @@ skylist.prototype.addCard = function(item){
 }
 
 skylist.prototype.addChat = function(item){
+		var that = this;
+		var Elem = $('#-skylist_card').clone();
+		Elem.prop('id','skylist_card_'+that.md5id+'_'+item['root_type']+'_'+item['root_id']);
+		Elem.find('[find=card_leftbox]').append(item['picture']);
+		Elem.find('[find=title]').html(wrapper_to_html(item['title']));
+		Elem.find('[find=description]').html(wrapper_to_html(wrapper_flat_text(item['content'])));
+		Elem.find('[find=card_time]').html(item['date']);
+		//that.add_cardEvents(Elem);
+		return Elem;
+}
+
+skylist.prototype.addChat_toto = function(item){
 		var that = this;
 
 		if(typeof item["_type"] != "undefined"){

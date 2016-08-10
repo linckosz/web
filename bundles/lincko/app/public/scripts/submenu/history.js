@@ -351,7 +351,7 @@ var chatFeed = (function() {
 
 		if (this.item.type === "comments") {
 			Elem.attr('comment_id',this.item.id);
-			var root = Lincko.storage.getCommentRoot(this.item.id);
+			var root = Lincko.storage.getRoot('comments', this.item.id);
 			target = root['+title'];
 			var target_type = root['_type'];
 			if (root._type == 'chats'){
@@ -406,7 +406,7 @@ var chatFeed = (function() {
 		var cutLength = 200;
 
 		if (this.item.type === "comments") {
-			var root = Lincko.storage.getCommentRoot(this.item.id);
+			var root = Lincko.storage.getRoot('comments', this.item.id);
 			target = root['+title'];
 			var target_type = root['_type'];
 			if (root._type == 'chats')
@@ -672,7 +672,7 @@ var chatFeed = (function() {
 			if(items[i].hasOwnProperty('+title')){continue;}
 			if (items[i].type === "comments")
 			{
-				var root = Lincko.storage.getCommentRoot(items[i].id);
+				var root = Lincko.storage.getRoot('comments', items[i].id);
 				target = root['+title'];
 				var target_type = root['_type'];
 				if (root._type == 'chats'){continue;}
