@@ -650,11 +650,7 @@ var chatFeed = (function() {
 				var line = renderLine(groups[i].timestamp);
 				if(after)
 				{
-					try{
-						Elem.before(line);
-					}
-					catch(e){}
-					
+					Elem.before(line);
 				}
 				else
 				{
