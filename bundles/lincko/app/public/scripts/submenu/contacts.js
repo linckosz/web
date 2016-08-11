@@ -171,7 +171,7 @@ function submenu_contacts_get(elem) {
 	return keys;
 };
 
-Submenu.prototype.Add_ContactContents = function() {
+Submenu.prototype.Add_ContactContents = function() { console.log('contactscontents');
 	var attribute = this.attribute;
 	var submenu_wrapper = this.Wrapper();
 	var that = this;
@@ -180,9 +180,10 @@ Submenu.prototype.Add_ContactContents = function() {
 	var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
 	position.addClass('overthrow');
 
+	console.log(this.param);
 	var contacts = submenu_contacts_gen_chatcontacts(this.param.proid);
 	var Elem;
-
+	console.log(contacts);
 	for(var uid in contacts) {
 		Elem = $('#-submenu_app_contacts').clone();
 		Elem.prop('id', this.id+'_contact_'+uid);
@@ -205,11 +206,7 @@ Submenu.prototype.Add_ContactContents = function() {
 		}
 		Elem.click(position, function(event) {
 			var position = event.data;
-			console.log(that.param);
-			console.log(that.param.alwaysMe);
-			console.log(uid);
-			console.log(wrapper_localstorage.uid);
-			if($(this).find('.checked').length == 0 || uid == wrapper_localstorage.uid ) {
+			if($(this).find('.checked').length == 0 || (that.param && that.param.alwaysMe && $(this).find('.id').val() == wrapper_localstorage.uid) ) {
 				$(this).find('.check').addClass('checked');
 			} else {
 				$(this).find('.checked').removeClass('checked');
