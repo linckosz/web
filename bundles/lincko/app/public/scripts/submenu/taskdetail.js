@@ -1595,9 +1595,13 @@ Submenu.prototype.Add_taskdetail = function() {
 	//div for the toolbar
 	var elem_editorToolbar = $('<div>').prop('id','submenu_taskdetail_description_toolbar_'+that.md5id).addClass('taskdetail_editorToolbar');
 	elem_description_text.before(elem_editorToolbar);
+
 	var editorInst = null;
-
-
+	elem_editorToolbar.click(function(){
+		if(!editorInst){
+			elem_description_text.focus();
+		}
+	});
 	elem_description_text.focus(function(){
 		if(!editorInst){
 
