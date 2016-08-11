@@ -116,15 +116,42 @@ submenu_list['contacts'] = {
 	
 };
 
-function submenu_contacts_gen_chatcontacts(projectId) {
+function submenu_contacts_gen_chatcontacts(projectId, alwaysMe, contacts) {
 	if(typeof projectId == "undefined"){ projectId = null; }
+	if(typeof alwaysMe !== 'boolean'){ alwaysMe = false; }
 	var contactList = {};
 	var user;
-	if (projectId) {
-		var list = Lincko.storage.get("projects", projectId, "_perm");
-		for(var i in list){
-			user = Lincko.storage.get("users", i);
+	if(typeof contacts === 'object'){
+		for(var userid in contacts){
+			user = Lincko.storage.get("users", userid);
 			if(user){
+				contactList[user['_id']] = {
+					'username': user['-username'],
+					'id': user['_id'],
+					'checked': contacts[userid].checked,
+					'profile_pic': user['profile_pic'],
+				}
+			}
+		}
+	}
+	else{
+		if (projectId) {
+			var list = Lincko.storage.get("projects", projectId, "_perm");
+			for(var i in list){
+				user = Lincko.storage.get("users", i);
+				if(user){
+					contactList[user['_id']] = {
+						'username': user['-username'],
+						'id': user['_id'],
+						'checked': false,
+						'profile_pic': user['profile_pic'],
+					}
+				}
+			}
+		} else {
+			var list = Lincko.storage.list('users', null, {_visible: true});
+			for(var i in list){
+				user = list[i];
 				contactList[user['_id']] = {
 					'username': user['-username'],
 					'id': user['_id'],
@@ -133,25 +160,15 @@ function submenu_contacts_gen_chatcontacts(projectId) {
 				}
 			}
 		}
-	} else {
-		var list = Lincko.storage.list('users', null, {_visible: true});
-		for(var i in list){
-			user = list[i];
-			contactList[user['_id']] = {
-				'username': user['-username'],
-				'id': user['_id'],
-				'checked': false,
-				'profile_pic': user['profile_pic'],
-			}
+		user = Lincko.storage.get("users", wrapper_localstorage.uid);
+		contactList[user['_id']] = {
+			'username': user['-username'],
+			'id': user['_id'],
+			'checked': alwaysMe,
+			'profile_pic': user['profile_pic'],
 		}
 	}
-	user = Lincko.storage.get("users", wrapper_localstorage.uid);
-	contactList[user['_id']] = {
-		'username': user['-username'],
-		'id': user['_id'],
-		'checked': true,
-		'profile_pic': user['profile_pic'],
-	}
+
 
 	return contactList;
 };
@@ -171,7 +188,7 @@ function submenu_contacts_get(elem) {
 	return keys;
 };
 
-Submenu.prototype.Add_ContactContents = function() { console.log('contactscontents');
+Submenu.prototype.Add_ContactContents = function() {
 	var attribute = this.attribute;
 	var submenu_wrapper = this.Wrapper();
 	var that = this;
@@ -180,10 +197,9 @@ Submenu.prototype.Add_ContactContents = function() { console.log('contactsconten
 	var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
 	position.addClass('overthrow');
 
-	console.log(this.param);
-	var contacts = submenu_contacts_gen_chatcontacts(this.param.proid);
+	var contacts = submenu_contacts_gen_chatcontacts(this.param.proid, this.param.alwaysMe, this.param.contactsID);
 	var Elem;
-	console.log(contacts);
+
 	for(var uid in contacts) {
 		Elem = $('#-submenu_app_contacts').clone();
 		Elem.prop('id', this.id+'_contact_'+uid);
