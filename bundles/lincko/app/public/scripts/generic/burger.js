@@ -488,9 +488,11 @@ burgerN.assignTask = function(elem, item){
 			if(responsive.test("maxMobileL")){
 				var param = {};
 				param.elem_input = elem;
-				param.type = 'tasks';//item['_type'];
+				//param.type = 'tasks';//item['_type'];
+				param.selectOne = true;
 				param.item_obj = item;
 				param.contactsID = contactsID_obj;
+				param.alwaysMe = false;
 				submenu_Build('burger_contacts', true, null, param);
 				return false;
 			}

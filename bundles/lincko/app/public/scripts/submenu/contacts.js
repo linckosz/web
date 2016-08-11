@@ -200,16 +200,24 @@ Submenu.prototype.Add_ContactContents = function() {
 		});
 
 		Elem.find('.id').val(uid);
-		if (contacts[uid].checked == true || uid == wrapper_localstorage.uid) {
+		if (contacts[uid].checked == true || (that.param && that.param.alwaysMe && uid == wrapper_localstorage.uid) ) {
 			Elem.find('.check').addClass('checked');
 		}
 		Elem.click(position, function(event) {
 			var position = event.data;
-			if($(this).find('.checked').length == 0 || $(this).find('.id').val() == wrapper_localstorage.uid) {
+			console.log(that.param);
+			console.log(that.param.alwaysMe);
+			console.log(uid);
+			console.log(wrapper_localstorage.uid);
+			if($(this).find('.checked').length == 0 || uid == wrapper_localstorage.uid ) {
 				$(this).find('.check').addClass('checked');
 			} else {
 				$(this).find('.checked').removeClass('checked');
 			}
+			if (that.param.selectOne) {
+				$(this).siblings().find(".check").removeClass("checked");
+			}
+
 			if(position.find(".checked").length > 0) {
 				position.find(".submenu_top_side_right").show();
 			} else {

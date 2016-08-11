@@ -8,7 +8,7 @@ var chatlist_subConstruct = function(){
 
 		var submenu_projects_id = app_content_menu.projects_id;
 		that.elem_newcardCircle.click( function() {
-			submenu_Build("contacts", false, false, {proid: submenu_projects_id}, true);
+			submenu_Build("contacts", false, false, {proid: submenu_projects_id, alwaysMe:true, }, true);
 			return true;
 		})
 		.appendTo(that.list_wrapper);
@@ -26,7 +26,7 @@ function app_layers_chat_feedChat(parent) {
 	);
 	var submenu_projects_id = app_content_menu.projects_id;
 	parent.delegate(".skylist_newcardCircle", "click", function() {
-		submenu_Build("contacts", false, false, {proid: submenu_projects_id}, true);
+		submenu_Build("contacts", false, false, {proid: submenu_projects_id, alwaysMe:true, }, true);
 		return true;
 	});
 	app_application_lincko.add("skylist_"+app_layers_chatlist.md5id, "chats", function() {

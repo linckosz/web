@@ -21,7 +21,7 @@ submenu_list['newchat'] = {
 			var all_users = [];
 			var checked_users = [];
 			var userList = [];
-			submenu_Build('contacts', true, false, {type: 'chats', }, that.preview);
+			submenu_Build('contacts', true, false, {type: 'chats', alwaysMe:true, }, that.preview);
 		}
 	},
 	"new_chat_menu": {
