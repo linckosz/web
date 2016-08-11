@@ -1312,7 +1312,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		that.id,
 		'submenu_hide_'+that.preview+'_'+that.id,
 		function(){
-			if( (taskid == 'new' && route_delete) || this.action_param.cancel ){
+			if( (taskid == 'new' && route_delete) || this.action_param.cancel || item.deleted_at){
 				return false;
 			}
 			var contactServer = false;
