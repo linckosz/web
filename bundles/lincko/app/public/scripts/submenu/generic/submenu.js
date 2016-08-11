@@ -202,9 +202,9 @@ function Submenu(menu, next, param, preview) {
 				submenu_obj['submenu']['mouseenter'] = false;
 			});
 		}
-		submenu_wrapper.click(function(e){
+		/*submenu_wrapper.click(function(e){
 			e.stopPropagation();
-		});
+		});*/
 
 		//Launch Pre action
 		for (var att in Elem.obj) {

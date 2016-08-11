@@ -645,18 +645,35 @@ var chatFeed = (function() {
 				}
 			}
 
-			if((newone && !format_items.has_today) || !newone)
+			if(newone && !format_items.has_today)
+			{
+				var line = renderLine(groups[i].timestamp);
+				Elem.before(line);
+			}
+			else if(!newone)
+			{
+				var line = renderLine(groups[i].timestamp);
+				line.prependTo(position.find(".chat_contents_wrapper"));
+			}
+			/*if((newone && !format_items.has_today) || !newone)
 			{
 				var line = renderLine(groups[i].timestamp);
 				if(after)
 				{
-					Elem.before(line);
+					try{
+						debugger;
+						Elem.before(line);
+					}
+					catch(e)
+					{
+
+					}
 				}
 				else
 				{
 					line.prependTo(position.find(".chat_contents_wrapper"));
 				}
-			}
+			}*/
 
 			if(groups[i].timestamp == today)
 			{
