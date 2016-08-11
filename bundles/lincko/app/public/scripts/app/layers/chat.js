@@ -2,29 +2,18 @@
 
 var chatlist_subConstruct = function(){
 		var that = this;
-		console.log(that.list_wrapper);
-		if($('#app_layers_content').has(that.list_wrapper).length && Lincko.storage.get('projects', app_content_menu.projects_id)['personal_private']){
+		if(Lincko.storage.get('projects', app_content_menu.projects_id)['personal_private']){
 			return false;
 		}
-
 		var submenu_projects_id = app_content_menu.projects_id;
 		that.elem_newcardCircle.click( function() {
 			submenu_Build("new_group", false, false, {proid: submenu_projects_id, alwaysMe:true, }, true);
-			return true;
 		})
 		.appendTo(that.list_wrapper);
 }
 
 function app_layers_chat_feedChat(parent) {
-
 	var Elem;
-
-	var submenu_projects_id = app_content_menu.projects_id;
-	parent.delegate(".skylist_newcardCircle", "click", function() {
-		submenu_Build("new_group", false, false, {proid: submenu_projects_id}, true);
-		return true;
-	});
-
 	var app_layers_chatlist = new skylist(
 		'chats',
 		parent,
@@ -125,9 +114,7 @@ function app_layers_chat_feedChat(parent) {
 		}
 		
 	});
-	setTimeout(function(){
-		app_application_lincko.prepare("chats", true);
-	}, 50);
+
 	
 }
 

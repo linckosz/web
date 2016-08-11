@@ -1602,7 +1602,6 @@ Lincko.storage.sort_items = function(array_items, att, page_start, page_end, asc
 			temp[value].push(item);
 		}
 	}
-	
 	pagination = 0;
 	if(!$.isEmptyObject(temp)){
 		if(ascendant){
@@ -1624,6 +1623,7 @@ Lincko.storage.sort_items = function(array_items, att, page_start, page_end, asc
 				}
 			});
 		}
+		
 		var asc_id;
 		var item_id;
 		//Pagination
@@ -1639,11 +1639,15 @@ Lincko.storage.sort_items = function(array_items, att, page_start, page_end, asc
 					results.push(temp[attribute][item_id]);
 				}
 				pagination++;
+				if(page_start+pagination >= page_end){
+					break;
+				}
 			}
 			if(page_end >= page_start && pagination > page_end){
 				break;
 			}
 		}
+		
 	}
 	return results;
 }

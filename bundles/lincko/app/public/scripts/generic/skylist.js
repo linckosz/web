@@ -850,6 +850,7 @@ skylist.prototype.addCard = function(item){
 		);
 	} //END OF 'tasks' || 'notes'
 	else if (that.list_type == 'chats' || that.list_type == 'global_chats') {
+		console.log(that.list_type);
 	}
 	if(that.elem_rightOptions_count < 1){
 		elem_card.find('[find=card_rightOptions]').addClass('display_none');

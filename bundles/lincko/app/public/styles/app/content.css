@@ -76,6 +76,8 @@
 	overflow: hidden;
 	z-index: 6;
 	border-right: 1px solid rgba(251,160,38,0.40);
+	border-left: 1px solid transparent;
+	box-sizing: border-box;
 }
 
 #app_content_dynamic {
@@ -101,7 +103,7 @@
 	width: 100%;
 	display: table;
 	border-collapse: separate;
-	border-spacing: 6px;
+	border-spacing: 5px;
 	z-index: 5;
 }
 
@@ -237,7 +239,9 @@
 		white-space: nowrap;
 		text-align: justify;
 		border-right: none;
+		border-left: none;
 		border-top: 1px solid rgba(251,160,38,0.30);
+		border-bottom: 1px solid transparent;
 	}
 	#app_content_menu_table {
 		height: 48px !important;

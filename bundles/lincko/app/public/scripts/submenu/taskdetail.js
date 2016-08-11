@@ -72,7 +72,7 @@ submenu_list['taskdetail'] = {
 			if(subm.param.projID){
 				currentProjID = subm.param.projID;
 			}
-			Elem.find("[find=submenu_input]").prop('value', that.param.projID);
+			Elem.find("[find=submenu_input]").prop('value', subm.param.projID);
 		},
 		"class": "",
 	},
@@ -134,7 +134,7 @@ submenu_list['taskdetail_new'] = {
 			if(subm.param.projID){
 				currentProjID = subm.param.projID;
 			}
-			Elem.find("[find=submenu_input]").prop('value', that.param.projID);
+			Elem.find("[find=submenu_input]").prop('value', subm.param.projID);
 		},
 		"class": "",
 	},
@@ -185,7 +185,7 @@ submenu_list['task_new'] = {
 			if(subm.param.projID){
 				currentProjID = subm.param.projID;
 			}
-			Elem.find("[find=submenu_input]").prop('value', that.param.projID);
+			Elem.find("[find=submenu_input]").prop('value', subm.param.projID);
 		},
 		"class": "",
 	},

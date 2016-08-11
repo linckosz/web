@@ -134,8 +134,6 @@ var app_content_menu = {
 
 		app_layers_changePage(menu, param);
 
-		app_application_lincko.prepare("projects", true);
-
 		if(responsive.test("maxMobileL")){ app_application.forceClose(); }
 
 		//Keep a record offline for future page opening
@@ -167,7 +165,10 @@ var app_content_menu = {
 			settings_new.latestvisitProjects.unshift(projects_id);
 			Lincko.storage.settingsLocal = settings_new;
 			wrapper_sendAction({settings: JSON.stringify(settings_new)}, 'post', 'data/settings');
+			app_application_lincko.prepare("settings");
 		}
+
+		app_application_lincko.prepare("projects", true);
 	},
 }
 

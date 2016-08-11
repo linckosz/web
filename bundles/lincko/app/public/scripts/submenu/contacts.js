@@ -36,7 +36,7 @@ submenu_list['new_group'] = {
 			for (var i=0;i<IDList.length; i++) {
 				userList[IDList[i]] = true;
 			}
-			var tmp = $(elem).parents('.submenu_newchat_header').attr('class').split(" ");
+			var tmp = $(Elem).parents('.submenu_newchat_header').attr('class').split(" ");
 			//toto => do not use of split, here we can use action_param to store projects_id
 			for (var t in tmp) {
 				if(tmp[t].indexOf('project')===0){

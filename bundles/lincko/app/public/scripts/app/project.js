@@ -1,7 +1,48 @@
 var mainMenu = {
 
+	projectSelect: function(){
+		pid = app_content_menu.projects_id;
+		$("#app_project_projects_tab").find("[pid]").removeClass("app_project_projects_item_selected");
+		if(pid != Lincko.storage.getMyPlaceholder()['_id']){
+			$("#app_project_placeholder").removeClass("app_project_projects_item_selected");
+			var item = $("#app_project_projects_tab").find("[pid="+pid+"]");
+			if(item.length>0){
+				item.addClass("app_project_projects_item_selected");
+			}
+		} else {
+			$("#app_project_placeholder").addClass("app_project_projects_item_selected");
+		}
+	},
+
 	initProjectTab: function(){
-		var projectList = Lincko.storage.list('projects', null, {_id:['!=', Lincko.storage.getMyPlaceholder()['_id']]});
+		var projectList = [];
+		var personal = Lincko.storage.getMyPlaceholder()['_id'];
+		var projectList_conditions = {
+			_id: ['!in', [personal]],
+		};
+		var settings = Lincko.storage.getSettings();
+		if(settings.latestvisitProjects && settings.latestvisitProjects.length>0){
+			for(var i in settings.latestvisitProjects){
+				if(settings.latestvisitProjects[i] != personal){
+					projectList.push(
+						Lincko.storage.get('projects', settings.latestvisitProjects[i])
+					);
+					projectList_conditions._id[1].push(
+						settings.latestvisitProjects[i]
+					);
+				}
+				if(projectList.length>=5){ break; } //Limit to 5 projects
+			}
+		}
+		if(projectList.length<5){
+			var projectList_tp = Lincko.storage.list('projects', null, projectList_conditions);
+			projectList_tp = Lincko.storage.sort_items(projectList_tp, 'title', 1, 5-projectList.length);
+			for(var i in projectList_tp){
+				projectList.push(projectList_tp[i]);
+				if(projectList.length>=5){ break; } //Limit to 5 projects
+			}
+		}
+		
 		var tasks;
 		var notes;
 		var files;
@@ -41,7 +82,7 @@ var mainMenu = {
 				continue;
 			}
 			var pid = parseInt(projectList[i]['_id'], 10);
-			var timestamp = parseInt(projectList[i]['updated'], 10);
+			var timestamp = parseInt(projectList[i]['updated_at'], 10);
 			if(pid!=parseInt(item.attr('pid'), 10)){
 				item.click(pid, function(event){
 					app_content_menu.selection(event.data, 'tasks');
@@ -59,6 +100,7 @@ var mainMenu = {
 				item.attr('timestamp', timestamp);
 			}
 		}
+		mainMenu.projectSelect();
 	},
 
 	initChatTab: function(){
@@ -149,7 +191,8 @@ JSfiles.finish(function() {
 	mainMenu.initChatTab();
 });
 
-app_application_lincko.add("app_project_projects_tab", "projects", function() {
+app_application_lincko.add("app_project_projects_tab", ["projects", "settings"], function() {
+	mainMenu.projectSelect();
 	if(app_project_update_block){
 		app_project_update_launch_projects = true;
 	} else {

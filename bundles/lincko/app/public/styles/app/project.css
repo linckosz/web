@@ -106,7 +106,7 @@
 }
 
 .app_project_space {
-	height: 8px;
+	height: 16px;
 }
 
 .app_project_label_inside {
@@ -224,8 +224,16 @@
 	box-sizing: border-box;
 }
 
+#app_project_placeholder {
+	margin-top: 0;
+}
+
 .app_project_projects_item {
 	padding: 8px 0 !important;
+}
+
+.app_project_projects_item_selected {
+	background-color: rgba(255, 255, 255, 0.63) !important;
 }
 
 .app_project_projects_item > div > div {
@@ -445,6 +453,13 @@
 @media only screen and (max-width: 479px){
 	.app_project_space {
 		height: 2px;
+	}
+}
+
+/* Mobile phone in Landscape and Tablet in Portrait */
+@media only screen and (min-width: 480px) and (max-width: 900px){
+	.app_project_space {
+		height: 8px;
 	}
 }
 
