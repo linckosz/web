@@ -2,7 +2,7 @@
 var chatFeed = (function() {
 	var subm = null;
 	var SHORTCUT_HANDLERS = {
-		'files': function(id, elem) {
+		'files': function(id, elem) { console.log('here');
 			var file = Lincko.storage.get('files', id);
 			var name = Lincko.storage.get('files', id, "+name");
 			var url = Lincko.storage.getLink(id);
@@ -15,7 +15,7 @@ var chatFeed = (function() {
 			else {
 				var tmp = $(elem).parents(".submenu_wrapper").prop("id").split("_");
 				var preview = JSON.parse(tmp[tmp.length-1]);
-				submenu_Build('taskdetail', true, null, {'type':'files', 'id':id}, preview);
+				submenu_Build('taskdetail', submenu_Getposition('taskdetail',preview), null, {'type':'files', 'id':id}, preview);
 				return false;
 			}
 		},
@@ -72,13 +72,13 @@ var chatFeed = (function() {
 		'tasks': function(taskid, elem) {
 			var tmp = $(elem).parents(".submenu_wrapper").prop("id").split("_");
 			var preview = JSON.parse(tmp[tmp.length-1]);
-			submenu_Build('taskdetail', true, null, {'type': 'tasks', 'id': taskid}, preview);
+			submenu_Build('taskdetail', submenu_Getposition('taskdetail',preview), null, {'type': 'tasks', 'id': taskid}, preview);
 			return false;
 		},
 		'files': function(fileid, elem) {
 			var tmp = $(elem).parents(".submenu_wrapper").prop("id").split("_");
 			var preview = JSON.parse(tmp[tmp.length-1]);
-			submenu_Build('taskdetail', true, null, {'type':'files', 'id':fileid}, preview);
+			submenu_Build('taskdetail', submenu_Getposition('taskdetail',preview), null, {'type':'files', 'id':fileid}, preview);
 			return false;
 		},
 		'uploading_file': function(id, elem,e) {
@@ -118,7 +118,7 @@ var chatFeed = (function() {
 		'notes': function(noteid, elem) {
 			var tmp = $(elem).parents(".submenu_wrapper").prop("id").split("_");
 			var preview = JSON.parse(tmp[tmp.length-1]);
-			submenu_Build('taskdetail', true, null,  {'type': 'notes', 'id': noteid}, preview);
+			submenu_Build('taskdetail', submenu_Getposition('taskdetail',preview), null,  {'type': 'notes', 'id': noteid}, preview);
 			return false;
 		}
 	};

@@ -730,7 +730,7 @@ Submenu.prototype.Add_taskdetail = function() {
 				{
 					"type":item_link['_type'], 
 					"id":item_link['_id'],
-				}, true);
+				}, that.preview);
 		});
 
 		//dont use hover mechanism for touch devices
