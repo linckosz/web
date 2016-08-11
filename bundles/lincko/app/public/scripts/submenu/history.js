@@ -552,7 +552,7 @@ var chatFeed = (function() {
 					'created_by': wrapper_localstorage.uid,
 					'index': files[i].lincko_temp_id
 				};
-				format_items(_type, [item], position, true,true);	
+				format_items(_type, [item], position, true);	
 				if(files[i].lincko_progress>=100 && files[i].lincko_status === 'done'){
 					$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id)
 						.removeClass("uploading_file")
@@ -597,16 +597,16 @@ var chatFeed = (function() {
 
 		var items = getRawContents(type, parentId, newRange);
 		$('<div>').addClass('chat_contents_wrapper').prop("id", chatFeed.subm.id+'_chat_contents_wrapper').appendTo(position);
-		format_items(type, items, position,false,false);
+		format_items(type, items, position,false);
 	}
 
 	function app_layers_history_feedPage(position, type, parentId) {
 		var items = getRawContents(type, parentId, null);
 		$('<div>').addClass('chat_contents_wrapper').prop("id", chatFeed.subm.id+'_chat_contents_wrapper').appendTo(position);
-		format_items(type, items, position,false,false);
+		format_items(type, items, position,false);
 	}
 
-	function format_items(type, items, position, after, newone)
+	function format_items(type, items, position, newone)
 	{
 		var groups;
 		var today = Math.floor( new wrapper_date().timestamp  / 86400) * 86400;
@@ -634,7 +634,7 @@ var chatFeed = (function() {
 				}
 				if(Elem)
 				{
-					if(after)
+					if(newone)
 					{
 						Elem.appendTo(position.find(".chat_contents_wrapper"));
 					}
@@ -645,36 +645,16 @@ var chatFeed = (function() {
 				}
 			}
 
-			if(newone && !format_items.has_today)
+			if(newone && !format_items.has_today && Elem)
 			{
 				var line = renderLine(groups[i].timestamp);
 				Elem.before(line);
 			}
-			else if(!newone)
+			else if(!newone && Elem)
 			{
 				var line = renderLine(groups[i].timestamp);
 				line.prependTo(position.find(".chat_contents_wrapper"));
 			}
-			/*if((newone && !format_items.has_today) || !newone)
-			{
-				var line = renderLine(groups[i].timestamp);
-				if(after)
-				{
-					try{
-						debugger;
-						Elem.before(line);
-					}
-					catch(e)
-					{
-
-					}
-				}
-				else
-				{
-					line.prependTo(position.find(".chat_contents_wrapper"));
-				}
-			}*/
-
 			if(groups[i].timestamp == today)
 			{
 				format_items.has_today = true;
