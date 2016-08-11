@@ -1228,7 +1228,7 @@ function submenu_Build(menu, next, hide, param, preview) {
 	var stack = preview ? submenu_obj["preview"] : submenu_obj["submenu"];
 
 	if(next === true){
-		next = submenu_Getposition(menu, preview);
+		next = submenu_Getnext(preview);
 	} else if(next === false){
 		next = 1;
 	}
