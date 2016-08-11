@@ -1294,9 +1294,12 @@ Submenu.prototype.Add_taskdetail = function() {
 		});
 	}
 
-
+	
 	/*---append to submenu_content---*/
 	submenu_content.append(submenu_taskdetail);
+	if(item.deleted_at){
+		submenu_content.append('<div class="submenu_taskdetail_deletedOverlay"></div>');
+	}
 
 
 

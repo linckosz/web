@@ -32,6 +32,15 @@
 	padding-bottom: 50px;
 	font-weight: 200;
 }
+
+.submenu_taskdetail_deletedOverlay{
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+}
+
 .submenu_taskdetail td{
 	white-space: nowrap;
 }
