@@ -1658,9 +1658,6 @@ Lincko.storage.sort_items = function(array_items, att, page_start, page_end, asc
 				if(pagination >= page_start){
 					results.push(temp[attribute][item_id]);
 				}
-				if(page_start+pagination >= page_end){
-					break;
-				}
 				pagination++;
 			}
 			if(page_end >= page_start && pagination > page_end){
