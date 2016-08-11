@@ -1331,6 +1331,10 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 												save = true;
 											} else if(conditions[i][att][0] == ">" && item[attribute] > conditions[i][att][1]){
 												save = true;
+											} else if(conditions[i][att][0] == "in" && $.inArray(item[attribute], conditions[i][att][1]) >= 0){ //Conditions must be an array
+												save = true;
+											} else if(conditions[i][att][0] == "!in" && $.inArray(item[attribute], conditions[i][att][1]) < 0){ //Conditions must be an array
+												save = true;
 											}
 											if(!save){
 												break;
@@ -1423,6 +1427,10 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 									} else if(conditions[i][att][0] == ">=" && item[attribute] >= conditions[i][att][1]){
 										save = true;
 									} else if(conditions[i][att][0] == ">" && item[attribute] > conditions[i][att][1]){
+										save = true;
+									} else if(conditions[i][att][0] == "in" && $.inArray(item[attribute], conditions[i][att][1]) >= 0){ //Conditions must be an array
+										save = true;
+									} else if(conditions[i][att][0] == "!in" && $.inArray(item[attribute], conditions[i][att][1]) < 0){ //Conditions must be an array
 										save = true;
 									}
 									if(!save){
@@ -1649,6 +1657,9 @@ Lincko.storage.sort_items = function(array_items, att, page_start, page_end, asc
 				item_id = asc_id[j];
 				if(pagination >= page_start){
 					results.push(temp[attribute][item_id]);
+				}
+				if(page_start+pagination >= page_end){
+					break;
 				}
 				pagination++;
 			}
