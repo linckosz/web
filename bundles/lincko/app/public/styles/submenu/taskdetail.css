@@ -41,9 +41,6 @@
 	right: 0px;
 }
 
-.submenu_taskdetail td{
-	white-space: nowrap;
-}
 .submenu_taskdetail_paddingLeft {
 	padding-left: 22px;
 }
@@ -204,6 +201,9 @@ td.submenu_taskdetail_share .fa{
 	font-size: 14px;
 	color: #3F84B0;
 	text-transform: capitalize;
+}
+.submenu_taskdetail_collapsable_button td{
+	white-space: nowrap;
 }
 .submenu_taskdetail_collapsable_button_disabled{
 	opacity: 0.5;
