@@ -107,10 +107,7 @@ function linckoEditor(elem, toolbarID, param){
 	            		var file_url = Lincko.storage.getLink(file['_id']);
 	            		var elem_replace = $('<img>')
 	            				.prop('src',file_url)
-	            				.addClass('submenu_taskdetail_description_img')
-	            				.css({
-	            					'max-width': $(editor.element.$).width(),
-	            				});										
+	            				.addClass('submenu_taskdetail_description_img');								
 	            		$('#'+elem_img_id).replaceWith(elem_replace);
 	            		$('#'+editorInst.Lincko_param.submenuInst.id).trigger('canSave');
 	            	}
