@@ -1743,7 +1743,6 @@ JSfiles.finish(function(){
 		storage_first_launch = false; //Help to trigger some action once the database is downloaded
 		app_application_lincko.prepare('first_launch', true);
 	}
-	Lincko.storage.settingsLocal = JSON.parse(wrapper_localstorage.decrypt('settings'));
 	if(!Lincko.storage.settingsLocal){
 		Lincko.storage.settingsLocal = Lincko.storage.getSettings();
 	}
