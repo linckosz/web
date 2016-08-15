@@ -9,14 +9,17 @@
 	optionHeight: 50,
 };
 
-burgerN.typeTask = function(projectID){
+burgerN.typeTask = function(projectID, skylistInst){
 	if(!projectID){
 		projectID = app_content_menu.projects_id;
 	}
+	var defaultDuration = 86400;
+	
+
 	var elem_typeTask = $('#-burger_typeTask').clone().prop('id','');
 	var elem_typingArea = elem_typeTask.find('[find=text]');
 
-	var defaultPhrase = 'Type a task';
+	var defaultPhrase = 'Type a task';//toto
 
 	elem_typingArea.focus(function(){
 		if($(this).html() != ''){
@@ -30,7 +33,7 @@ burgerN.typeTask = function(projectID){
 	elem_typingArea.keypress({projectID: projectID}, function(event){
 		if(event.which == 13){ //upon enter
 			event.preventDefault();
-			var title = $(this).html();
+			var title = $(this).text();
 			var projectID = event.data.projectID;
 			var tempID = null;
 			var param = {
@@ -43,15 +46,22 @@ burgerN.typeTask = function(projectID){
 			param['users>in_charge'] = {};
 			param['users>in_charge'][in_charge_id] = true;
 
+			var time_now = new wrapper_date();
+			//modify duration based on current skylistFilter
+			if(skylistInst && skylistInst.Lincko_itemsList_filter && skylistInst.Lincko_itemsList_filter.duedate 
+				&& skylistInst.Lincko_itemsList_filter.duedate == 0){
+				defaultDuration = time_now.getEndofDay() - time_now.timestamp;
+			}
+
 			var item = {
 				'+title': title,
 				'_parent': ['projects', projectID],
 				'_perm': Lincko.storage.get('projects',projectID, '_perm'),
 				'_type': 'tasks',
 				'_users': {},
-				'created_at':new wrapper_date().timestamp,
-				'start': new wrapper_date().timestamp,
-				'duration': 86400,
+				'created_at':time_now.timestamp,
+				'start': time_now.timestamp,
+				'duration': defaultDuration,
 				'updated_by': wrapper_localstorage.uid,
 				'new': true,
 			}
@@ -59,6 +69,7 @@ burgerN.typeTask = function(projectID){
 				approver: '1',
 				in_charge: '1',
 			}
+			
 
 			function getRandomInt(min, max) {
 			    return Math.floor(Math.random() * (max - min + 1)) + min;
