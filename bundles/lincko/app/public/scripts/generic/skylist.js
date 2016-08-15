@@ -727,7 +727,7 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 			}
 
 			if(that.list_type == 'tasks'){
-				//iscroll_elem.append(burgerN.typeTask());
+				iscroll_elem.append(burgerN.typeTask());
 			}
 
 			if( items_filtered.length < 1 ){
@@ -773,7 +773,7 @@ skylist.prototype.DOM_updated = function(){
 skylist.prototype.addCard_all = function(){
 	var that = this;
 	if(that.list_type == 'tasks'){
-		//that.list.append(burgerN.typeTask());
+		that.list.append(burgerN.typeTask());
 	}
 	
 	var items;
