@@ -216,6 +216,9 @@
 .burger_typeTask [find=checkbox_td]{
 	width: 1px;
 }
+.burger_typeTask .skylist_checkbox {
+	cursor: default;
+}
 .burger_typeTask [find=userid]{
 	top: 0px;
     position: absolute;

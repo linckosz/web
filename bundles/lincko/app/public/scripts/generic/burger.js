@@ -2,6 +2,11 @@
  * the ultimate Lincko Burger
  */
  var burgerN = {
+ 	shortcut:{
+ 		user: '@',
+ 		date: '++',
+ 	},
+ 	monthsArray: null,
 	elem_dropdown: $('#-burger_dropdown').clone().prop('id',''),
 	dropdownTime: 200,
 	dropdownCount: 5,
@@ -64,6 +69,9 @@
 };
 burgerN.placeCaretAtStart =  burgerN.createCaretPlacer(true);
 burgerN.placeCaretAtEnd = burgerN.createCaretPlacer(false);
+
+burgerN.monthsArray = (new wrapper_date()).month;
+burgerN.daysVeryShortArray = (new wrapper_date()).day_very_short;
 
 burgerN.typeTask = function(projectID, skylistInst){
 	if(!projectID){
@@ -262,6 +270,7 @@ burgerN.regex = function(elem, item, param){
 	var elem_burger_tag = $('#-burger_tag').clone().prop('id','');
 	var burger_startIndex = null;
 	var caretIndex = null;
+	var currentMode = null; //'@' or '++'
 
 	var destroy = function(){
 		console.log('burgerN.regex destroy');
@@ -269,6 +278,7 @@ burgerN.regex = function(elem, item, param){
 		elem_dropdown = null;
 		burger_str = "";
 		burger_startIndex = null;
+		currentMode = null;
 	}
 
 	var contactsID_obj = {};
@@ -290,9 +300,9 @@ burgerN.regex = function(elem, item, param){
 		var outerTextNode = elem.contents().filter(function(){ return this.nodeType == 3; });
 		//if there are spans in the middle, outerTextNode is divied up, so must loop
 		$.each(outerTextNode, function(key,str2){
-			var str = '@'+burger_str;
+			var str = that.shortcut.user+burger_str;
 			if((str2.data).indexOf(str) != -1){
-			    $(outerTextNode[key]).replaceWith($(outerTextNode[key]).text().replace('@'+burger_str, '<span userid="'+userid+'" contenteditable="false" class="burger_tag">@'+username+'</span>'));
+			    $(outerTextNode[key]).replaceWith($(outerTextNode[key]).text().replace(that.shortcut.user+burger_str, '<span userid="'+userid+'" contenteditable="false" class="burger_tag">'+that.shortcut.user+username+'</span>'));
 			    return false;
 			}
 		});
@@ -301,10 +311,10 @@ burgerN.regex = function(elem, item, param){
 			param.elem_input.val(userid);
 		}
 		else{
-			burger_contacts_sendAction(contactsID_obj, [userid], item, true);
+			//burger_contacts_sendAction(contactsID_obj, [userid], item, true);
 		}
 		destroy();
-		burgerN.placeCaretAt(caretIndex_new-('@'+burger_str).length, elem);
+		burgerN.placeCaretAt(caretIndex_new-(that.shortcut.user+burger_str).length, elem);
 	}
 
 	elem.on('keydown', function(event){ return;
@@ -356,6 +366,7 @@ burgerN.regex = function(elem, item, param){
 	  	console.log('currentCaret:', caretIndex);
 	  	var currentText = elem.text();
 	  	latestChar = currentText[caretIndex - 1];
+	  	console.log('latestChar:',latestChar);
 
 	    /*For Chinese only, when inputting pinyin:
 	      if waiting for combined character (229) but latestChar is not Chinese, return and act on next keyup*/
@@ -364,7 +375,7 @@ burgerN.regex = function(elem, item, param){
 		}
 
 	    if( elem_dropdown ){
-			if( event.which == 32 || burger_startIndex > caretIndex ){//if 'space' or caret is moved behind the burger_startIndex
+			if( event.which == 32 || caretIndex < burger_startIndex ){//if 'space' or caret is moved behind the burger_startIndex
 				destroy();
 				return;
 			}
@@ -400,7 +411,7 @@ burgerN.regex = function(elem, item, param){
 				elem_dropdown.html('<div>no match</div>');/*toto*/
 			} 
 		}
-		else if( latestChar == '@' ){
+		else if( latestChar == that.shortcut.user /* @ */ ){
 			contactsID_obj = burgerN.generate_contacts(Lincko.storage.get(item['_type'], item['_id']));
 	    	burger_startIndex = caretIndex;
 			console.log('burger_startIndex: '+burger_startIndex);
@@ -414,8 +425,23 @@ burgerN.regex = function(elem, item, param){
 			$('#app_content_dynamic_sub').append(elem_dropdown);
 			that.slideDown(elem_dropdown);
 		}
-		else if((event.which || event.keyCode) == 13 && param.elem_input && typeof param.enter_fn == 'function'){ //if enter is pressed
-			param.enter_fn();
+		else if( latestChar == that.shortcut.date[0] /* + */ ){
+			if(currentMode == '+' ){
+				currentMode += '+'; console.log('burgerMode set:',currentMode);
+				burger_startIndex = caretIndex;
+				/*initiate elem_dropdown*/
+			}
+			else{
+				currentMode = '+';
+			}
+		}
+		else if((event.which || event.keyCode) == 13 ){ //if enter is pressed
+			if(param && param.elem_input && typeof param.enter_fn == 'function'){
+				param.enter_fn();
+			}
+			else{
+				elem.blur();
+			}
 		}
 
 	    console.log('<<----keyup END---->>');
@@ -587,6 +613,41 @@ burgerN.assignProject = function(elem, item){
 	});
 }
 
+burgerN.draw_dates = function(){
+	var that = this;
+	var elem_dropdown = burgerN.elem_dropdown.clone();
+	var elem_option = $('#-burger_option').clone().prop('id','').addClass('burger_option_users');
+	var elem_option_clone;
+
+
+
+	$.each(dates, function(userid, obj){
+		in_charge = obj.checked;
+		username = Lincko.storage.get("users", userid,"username");
+		elem_option_clone = elem_option.clone().attr('userid',userid);
+		elem_option_clone.find('[find=text]').html(username);
+		picID  = Lincko.storage.get("users", userid, 'profile_pic');
+		if(picID){
+			var thumb_url = Lincko.storage.getLinkThumbnail(picID);
+			elem_option_clone.find('[find=image]').removeClass('icon-SmallPersonaiconBlack').css('background-image','url("'+thumb_url+'")');
+		}
+		if( in_charge ){
+			elem_option_clone.addClass('burger_option_selected');
+		}
+
+		if(typeof option_fn == 'function' ){
+			elem_option_clone.on('mousedown', option_fn);
+		}
+		elem_dropdown.find('[find=wrapper]').append(elem_option_clone);
+	});
+
+	if(Object.keys(dates).length > that.dropdownCount){
+		elem_dropdown.css({'height': that.optionHeight*that.dropdownCount, 'width': that.dropdownWidth});
+		elem_dropdown.find('[find=wrapper]').addClass('overthrow');
+	}
+
+	return elem_dropdown;
+}
 
 burgerN.draw_contacts = function(contacts,option_fn){
 	var that = this;
@@ -1106,8 +1167,8 @@ function burger_calendar (elem_timestamp, elem_display){
 	{
 		//altFormat: "M d",
 		//altField: elem_alt,
-		dayNamesMin: (new wrapper_date()).day_very_short,
-		monthNames: (new wrapper_date()).month,
+		dayNamesMin: burgerN.daysVeryShortArray,
+		monthNames: burgerN.monthsArray,
 		showOtherMonths: true,
 		dateFormat: '@',
 		gotoCurrent: true,

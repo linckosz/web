@@ -1227,8 +1227,16 @@ skylist.prototype.addTask = function(item){
 				$(this).blur();
 			}
 		});
-		elem_title.blur(function(){ console.log('here blur');
+		elem_title.blur(function(){
 			that.editing_target.attr('contenteditable',false);
+
+			var inChargeID_new = null;
+			var elem_users = $(this).find('[userid]');
+			if(elem_users.length){
+				inChargeID_new = $(elem_users[0]).attr('userid');
+			}
+			console.log('inChargeID_new:',inChargeID_new);
+
 			var new_text = $(this).contents().filter(function() {
 			  return this.nodeType == 3;
 			}).text();
@@ -1236,7 +1244,28 @@ skylist.prototype.addTask = function(item){
 
 
 
-			if(new_text != item['+title']){
+			if(new_text != item['+title'] || inChargeID_new){
+				var param = {
+					id: item['_id']
+				};
+
+				if(new_text != item['+title']){
+					param.title = new_text;
+				}
+				if(inChargeID_new){
+					param['users>in_charge'] = {};
+					param['users>in_charge'][inChargeID_new] = true;
+
+					//unassign anyone that have been previously assigned
+					$.each(item._users, function(userid, obj){
+						if(inChargeID_new == userid){return;}
+						if(obj.in_charge){
+							param['users>in_charge'][userid] = false;
+						}
+					});
+				}
+
+
 
 				/*wrapper_sendAction({
 				id: item['_id'],
@@ -1250,10 +1279,7 @@ skylist.prototype.addTask = function(item){
 
 
 				skylist.sendAction.tasks(
-					{
-						id: item['_id'],
-						title: new_text,
-					}, 
+					param, 
 					item, 'task/update',
 					function(msg, data_error, data_status, data_msg){ 
 						if(data_error){
