@@ -1220,16 +1220,22 @@ skylist.prototype.addTask = function(item){
 		elem_title.on('mouseup touchend', function(event){
 			clearTimeout(that.editing_timeout);
 		});
-		elem_title.keydown(function(event){
+		elem_title.keydown(function(event){ return;
 			if(event.keyCode == 13){
 				event.preventDefault();
 				$(this).focusout();
 				$(this).blur();
 			}
 		});
-		elem_title.blur(function(){
+		elem_title.blur(function(){ console.log('here blur');
 			that.editing_target.attr('contenteditable',false);
-			var new_text = $(this).html();
+			var new_text = $(this).contents().filter(function() {
+			  return this.nodeType == 3;
+			}).text();
+			$(this).html(new_text);
+
+
+
 			if(new_text != item['+title']){
 
 				/*wrapper_sendAction({
@@ -1259,7 +1265,8 @@ skylist.prototype.addTask = function(item){
 
 			}
 		});
-		burger(Elem.find('[find=title]'), 'regex');
+		//burger(Elem.find('[find=title]'), 'regex');
+		burgerN.regex(Elem.find('[find=title]'), item);
 	}
 
 

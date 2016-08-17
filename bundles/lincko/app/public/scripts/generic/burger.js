@@ -7,13 +7,69 @@
 	dropdownCount: 5,
 	dropdownWidth: 200,
 	optionHeight: 50,
+	//doesnt work for <IE9
+	placeCaretAt: function(index, elem){
+		console.log('-----placeCaretAt-------');
+		console.log('index:',index);
+		if(index < 0){ index = 0; }
+		var caretPlaced = false;
+		//ignore child
+		var outerTextNode = elem.contents().filter(function(){ return this.nodeType == 3; });
+		console.log(outerTextNode);
+		$.each(outerTextNode, function(i, val){
+			if(index >= val.length){
+				index = index - val.length;
+				console.log('index:',index);
+			}
+			else if(index < val.length){
+				var el = elem;
+				if(el instanceof $){ var el = el.get(0); }
+				var range = document.createRange();
+				var sel = window.getSelection();
+				range.setStart(outerTextNode[i], index);
+				range.collapse(true);
+				sel.removeAllRanges();
+				sel.addRange(range);
+				caretPlaced = true;
+				return false;
+			}
+		});
+		if(!caretPlaced){
+			console.log('caretAtEnd');
+			burgerN.placeCaretAtEnd(elem);
+		}
+		elem.trigger('focus',{cancelBlur: true});
+		//elem.focus();
+	},
+	createCaretPlacer: function(atStart) {
+	    return function(el) {
+	    	if(el instanceof $){ el = el.get(0); }
+	        el.focus();
+	        if (typeof window.getSelection != "undefined"
+	                && typeof document.createRange != "undefined") {
+	            var range = document.createRange();
+	            range.selectNodeContents(el);
+	            range.collapse(atStart);
+	            var sel = window.getSelection();
+	            sel.removeAllRanges();
+	            sel.addRange(range);
+	        } else if (typeof document.body.createTextRange != "undefined") {
+	            var textRange = document.body.createTextRange();
+	            textRange.moveToElementText(el);
+	            textRange.collapse(atStart);
+	            textRange.select();
+	        }
+	    };
+	},
 };
+burgerN.placeCaretAtStart =  burgerN.createCaretPlacer(true);
+burgerN.placeCaretAtEnd = burgerN.createCaretPlacer(false);
 
 burgerN.typeTask = function(projectID, skylistInst){
 	if(!projectID){
 		projectID = app_content_menu.projects_id;
 	}
-	var defaultDuration = 86400;
+	var defaultDuration = 86400; //seconds
 	
 
 	var elem_typeTask = $('#-burger_typeTask').clone().prop('id','');
@@ -21,94 +77,127 @@ burgerN.typeTask = function(projectID, skylistInst){
 
 	var defaultPhrase = 'Type a task';//toto
 
-	elem_typingArea.focus(function(){
-		if($(this).html() != ''){
+	//use cancelBlur to control unwanted 'blur'
+	var cancelBlur = false;
+	elem_typingArea.focus(function(event, param){
+		console.log('focus');
+		if(typeof param == 'object' && param.cancelBlur){ cancelBlur = true; }
+
+		$(this).closest('[find=toggleOpacity]').removeClass('burger_typeTask_opacity');
+		if($(this).html() == defaultPhrase){
 			$(this).html('').focus();
 		}
 	});
-	elem_typingArea.blur(function(){
-		$(this).html(defaultPhrase);
-	});
-
-	elem_typingArea.keypress({projectID: projectID}, function(event){
-		if(event.which == 13){ //upon enter
+	elem_typingArea.blur(function(event){
+		console.log('blur');
+		if(cancelBlur){
 			event.preventDefault();
-			var title = $(this).text();
-			var projectID = event.data.projectID;
-			var tempID = null;
-			var param = {
-				title: title,
-				parent_id: projectID,
-			}
-
-			//default to current user
-			var in_charge_id = wrapper_localstorage.uid;
-			param['users>in_charge'] = {};
-			param['users>in_charge'][in_charge_id] = true;
-
-			var time_now = new wrapper_date();
-			//modify duration based on current skylistFilter
-			if(skylistInst && skylistInst.Lincko_itemsList_filter && skylistInst.Lincko_itemsList_filter.duedate 
-				&& skylistInst.Lincko_itemsList_filter.duedate == 0){
-				defaultDuration = time_now.getEndofDay() - time_now.timestamp;
-			}
-
-			var item = {
-				'+title': title,
-				'_parent': ['projects', projectID],
-				'_perm': Lincko.storage.get('projects',projectID, '_perm'),
-				'_type': 'tasks',
-				'_users': {},
-				'created_at':time_now.timestamp,
-				'start': time_now.timestamp,
-				'duration': defaultDuration,
-				'updated_by': wrapper_localstorage.uid,
-				'new': true,
-			}
-			item['_users'][wrapper_localstorage.uid] = {
-				approver: '1',
-				in_charge: '1',
-			}
-			
-
-			function getRandomInt(min, max) {
-			    return Math.floor(Math.random() * (max - min + 1)) + min;
-			}
-
-			var fakeID = getRandomInt(100000000000,999999999999);
-			var cb_begin = function(jqXHR, settings, temp_id){
-				tempID = temp_id;
-				item['temp_id'] = temp_id;
-				item['_id'] = fakeID;
-				item['fake'] = true;
-				Lincko.storage.data.tasks[fakeID] = item;
-				Lincko.storage.data.projects[projectID]['_children']['tasks'][fakeID] = true;
-				app_application_lincko.prepare('projects_'+projectID, true);
-				skylist.sendActionQueue.tasks[temp_id] = [];
-			}
-
-			var cb_success = function(){
-				skylist.sendActionQueue.tasks.run(tempID);
-			}	
-
-			var cb_error = function(){
-				delete skylist.sendActionQueue.tasks[tempID];
-			}
-
-			var cb_complete = function(){
-				app_application_lincko.prepare('projects_'+projectID, true);
-				var fakeTask = Lincko.storage.get('tasks',fakeID);
-				if(fakeTask){
-					//delete Lincko.storage.data.tasks[fakeID];
-				}
-			}
-
-			wrapper_sendAction(param, 'post', 'task/create', cb_success, null, cb_begin, cb_complete);
-
-			$(this).html('');
-			$(this).focus();
+			cancelBlur = false;
+			return;
+		}
+		$(this).closest('[find=toggleOpacity]').addClass('burger_typeTask_opacity');
+		if($(this).html() == ''){
+			$(this).html(defaultPhrase);
 		}
 	});
+
+	var param= {};
+	var elem_userid = elem_typeTask.find('input[find=userid]');
+	param.elem_input = elem_userid;
+
+	param.enter_fn = function(){
+		console.log('enter_fn');
+
+		//remove all child DOMs (<span>) from title
+		var title = $(elem_typingArea).contents().filter(function() {
+		  return this.nodeType == 3;
+		}).text();
+
+		var tempID = null;
+		var param = {
+			title: title,
+			parent_id: projectID,
+		}
+
+		//default to current user
+		var in_charge_id = wrapper_localstorage.uid;
+		/*if(elem_userid.val().length){
+			in_charge_id = elem_userid.val();
+		}*/
+		var elem_users = elem_typingArea.find('[userid]');
+		if(elem_users.length){
+			in_charge_id = $(elem_users[0]).attr('userid');
+		}
+
+
+
+		param['users>in_charge'] = {};
+		param['users>in_charge'][in_charge_id] = true;
+
+		var time_now = new wrapper_date();
+		//modify duration based on current skylistFilter
+		if(skylistInst && skylistInst.Lincko_itemsList_filter && skylistInst.Lincko_itemsList_filter.duedate 
+			&& skylistInst.Lincko_itemsList_filter.duedate == 0){
+			defaultDuration = time_now.getEndofDay() - time_now.timestamp;
+		}
+
+		var item = {
+			'+title': title,
+			'_parent': ['projects', projectID],
+			'_perm': Lincko.storage.get('projects',projectID, '_perm'),
+			'_type': 'tasks',
+			'_users': {},
+			'created_at':time_now.timestamp,
+			'start': time_now.timestamp,
+			'duration': defaultDuration,
+			'updated_by': wrapper_localstorage.uid,
+			'new': true,
+		}
+		item['_users'][in_charge_id] = {
+			approver: true,
+			in_charge: true,
+		}
+		
+
+		function getRandomInt(min, max) {
+		    return Math.floor(Math.random() * (max - min + 1)) + min;
+		}
+
+		var fakeID = getRandomInt(100000000000,999999999999);
+		var cb_begin = function(jqXHR, settings, temp_id){
+			tempID = temp_id;
+			item['temp_id'] = temp_id;
+			item['_id'] = fakeID;
+			item['fake'] = true;
+			Lincko.storage.data.tasks[fakeID] = item;
+			Lincko.storage.data.projects[projectID]['_children']['tasks'][fakeID] = true;
+			app_application_lincko.prepare('projects_'+projectID, true);
+			skylist.sendActionQueue.tasks[temp_id] = [];
+		}
+
+		var cb_success = function(){
+			skylist.sendActionQueue.tasks.run(tempID);
+		}	
+
+		var cb_error = function(){
+			delete skylist.sendActionQueue.tasks[tempID];
+		}
+
+		var cb_complete = function(){
+			app_application_lincko.prepare('projects_'+projectID, true);
+			var fakeTask = Lincko.storage.get('tasks',fakeID);
+			if(fakeTask){
+				//delete Lincko.storage.data.tasks[fakeID];
+			}
+		}
+
+		wrapper_sendAction(param, 'post', 'task/create', cb_success, null, cb_begin, cb_complete);
+
+		elem_typingArea.html('');
+		elem_typingArea.focus();
+	}
+
+	burgerN.regex(elem_typingArea, null, param);
 
 	return elem_typeTask;
 }
@@ -130,7 +219,10 @@ burgerN.destroy = function(elem_dropdown){
 }
 
 burgerN.slideDown = function(elem_dropdown){
+	//elem_dropdown css bottom must be defined for the 'reverse' slideDown to work
 	var that = this;
+	console.log('top:',elem_dropdown.css('top'));
+	console.log('bottom:',elem_dropdown.css('bottom'));
 	var top = parseInt(elem_dropdown.css('top'),10);
 	//if( top+that.optionHeight*elem_dropdown.find('.burger_option_users').length > $(window).height() ){
 	if( top+that.optionHeight*that.dropdownCount > $(window).height() ){
@@ -139,6 +231,8 @@ burgerN.slideDown = function(elem_dropdown){
 	else{
 		elem_dropdown.css('bottom','');
 	}
+	console.log('top:',elem_dropdown.css('top'));
+	console.log('bottom:',elem_dropdown.css('bottom'));
 	
 	elem_dropdown.velocity("slideDown",{
 		duration: that.dropdownTime,
@@ -167,60 +261,126 @@ burgerN.regex = function(elem, item, param){
 	var burger_type = null;
 	var elem_burger_tag = $('#-burger_tag').clone().prop('id','');
 	var burger_startIndex = null;
+	var caretIndex = null;
 
 	var destroy = function(){
 		console.log('burgerN.regex destroy');
 		burgerN.destroy(elem_dropdown);
 		elem_dropdown = null;
-		var burger_str = "";
-		var burger_startIndex = null;
+		burger_str = "";
+		burger_startIndex = null;
 	}
 
 	var contactsID_obj = {};
-	var userClick_fn = function(){
-		var userid = $(this).attr('userid');
-		var str = elem.text().replace('@'+burger_str, '');
-		elem.text(str);
-		if(param.elem_input){
+	var userClick_fn = function(userid){
+		console.log('userClick_fn');
+		if(typeof userid != 'string' && typeof userid != 'number' ){ userid = $(this).attr('userid'); }
+		var username = Lincko.storage.get('users',userid,'username');
+		var caretIndex_new = caretIndex;
+
+		var textLength = elem.text().length;
+		//remove other @user spans
+		if(username){
+			elem.find('span[userid]').remove();
+		}
+		//adjust for deleted spans
+		caretIndex_new -= textLength - elem.text().length;
+
+		//dont touch any text inside child DOM (e.g. <span>)
+		var outerTextNode = elem.contents().filter(function(){ return this.nodeType == 3; });
+		//if there are spans in the middle, outerTextNode is divied up, so must loop
+		$.each(outerTextNode, function(key,str2){
+			var str = '@'+burger_str;
+			if((str2.data).indexOf(str) != -1){
+			    $(outerTextNode[key]).replaceWith($(outerTextNode[key]).text().replace('@'+burger_str, '<span userid="'+userid+'" contenteditable="false" class="burger_tag">@'+username+'</span>'));
+			    return false;
+			}
+		});
+
+		if(param && param.elem_input){
 			param.elem_input.val(userid);
 		}
 		else{
 			burger_contacts_sendAction(contactsID_obj, [userid], item, true);
 		}
 		destroy();
+		burgerN.placeCaretAt(caretIndex_new-('@'+burger_str).length, elem);
 	}
-	
-	elem.keypress(function(event){
-		var char = event.which || event.keyCode;
-		char = String.fromCharCode(char);
-		console.log('char: '+char);
 
-		if( elem_dropdown ){
-			if( char == ' ' ){
+	elem.on('keydown', function(event){ return;
+		console.log('<<----keydown---->>');
+		var selection = getSelection();
+	    var focus_node = selection.focusNode;
+	    focus_node.normalize();
+	    console.log("event type:", event.type);
+	    console.log("which:", event.which);
+	    console.log("keyCode:", event.keyCode);
+	    console.log("charCode:", event.charCode);
+	    console.log("node value:", focus_node.nodeValue);
+	    console.log('<<----keydown END---->>');
+	});
+
+	elem.on('input', function(event){return;
+		console.log('<<----input---->>');
+		var selection = getSelection();
+	    var focus_node = selection.focusNode;
+	    focus_node.normalize();
+	    console.log("node value:", focus_node.nodeValue);
+	    console.log('<<----input END---->>');
+	});
+
+	//adding linebreak happens on keypress, not on keyup
+	elem.keypress(function(event){
+		if((event.which || event.keyCode) == 13){ //if enter is pressed
+			event.preventDefault();
+		}
+	});
+
+	elem.keyup(function(event){
+		console.log('<<----keyup---->>');
+		var selection = getSelection();
+	    var focus_node = selection.focusNode;
+	    focus_node.normalize();
+	    console.log("event type:", event.type);
+	    console.log("which:", event.which);
+	    console.log("keyCode:", event.keyCode);
+	    console.log("charCode:", event.charCode);
+	    console.log("node value:", focus_node.nodeValue);
+	    var latestChar = null;
+	    if(focus_node.nodeValue){ latestChar = (focus_node.nodeValue).slice(-1); }
+	    //console.log('latestChar:', latestChar);
+
+	    var coord = burger_regex_getCaretOffset(elem);
+
+	    caretIndex = coord.caretOffset;
+	  	console.log('currentCaret:', caretIndex);
+	  	var currentText = elem.text();
+	  	latestChar = currentText[caretIndex - 1];
+
+	    /*For Chinese only, when inputting pinyin:
+	      if waiting for combined character (229) but latestChar is not Chinese, return and act on next keyup*/
+	    if(latestChar && event.which == 229 && !latestChar.match(/[\u4E00-\u9FA5]/)){
+			return;
+		}
+
+	    if( elem_dropdown ){
+			if( event.which == 32 || burger_startIndex > caretIndex ){//if 'space' or caret is moved behind the burger_startIndex
 				destroy();
+				return;
 			}
 			if((event.which || event.keyCode) == 13){ //if enter is pressed
 				event.preventDefault();
-				if(elem_dropdown.children('.burger_option_users').length){
-					var caret = burger_regex_getCaretOffset(elem).caretOffset - ('@'+burger_str).length;
-					elem_dropdown.children('.burger_option_users')[0].click();
-
-					var textNode = elem[0].firstChild;
-					var range = document.createRange();
-					range.setStart(textNode, caret);
-					range.setEnd(textNode, caret);
-					var sel = window.getSelection();
-					sel.removeAllRanges();
-					sel.addRange(range);
-					
-					return false;
+				var elem_options = elem_dropdown.find('.burger_option_users');
+				if(elem_options.length){
+					userClick_fn($(elem_options[0]).attr('userid'));
+					return;
 				}
 			}
 			elem_dropdown.empty();
-			burger_str = elem.text().substring(burger_startIndex+1,burger_regex_getCaretOffset(elem).caretOffset)+char;
-			console.log('burger_startIndex: '+burger_startIndex);
-			console.log('burger_str: '+burger_str);
-			console.log('current caret: '+burger_regex_getCaretOffset(elem).caretOffset);	
+			burger_str = elem.text().substring(burger_startIndex, burger_regex_getCaretOffset(elem).caretOffset);
+			console.log('substring_from:',burger_startIndex);
+			console.log('substring_to:',burger_regex_getCaretOffset(elem).caretOffset);
+			console.log('burger_str:',burger_str);
 
 			var search_result = Lincko.storage.search('word',burger_str,'users')['users'];
 			var contactsID_obj_search = {};
@@ -228,7 +388,6 @@ burgerN.regex = function(elem, item, param){
 				search_result = Object.keys(search_result);
 				$.each(contactsID_obj, function(key,val){
 					if( $.inArray(key,search_result) > -1){
-						console.log('match: '+key);
 						contactsID_obj_search[key] = contactsID_obj[key];
 					}
 				});
@@ -241,43 +400,35 @@ burgerN.regex = function(elem, item, param){
 				elem_dropdown.html('<div>no match</div>');/*toto*/
 			} 
 		}
-		else if( char == '@' ){
+		else if( latestChar == '@' ){
 			contactsID_obj = burgerN.generate_contacts(Lincko.storage.get(item['_type'], item['_id']));
-			var coord = burger_regex_getCaretOffset(elem);
-			//var coord = getSelectionCoords();
-			burger_startIndex = coord.caretOffset;
+	    	burger_startIndex = caretIndex;
 			console.log('burger_startIndex: '+burger_startIndex);
-			elem_dropdown = burgerN.draw_contacts(contactsID_obj, userClick_fn).css({'top':coord.y, 'left':coord.x});
+			elem_dropdown = burgerN.draw_contacts(contactsID_obj, userClick_fn)
+				.css({
+					'top':coord.y, 
+					'left':coord.x, 
+					'bottom':$(window).height()-coord.y + elem.outerHeight(),
+				});
 
 			$('#app_content_dynamic_sub').append(elem_dropdown);
 			that.slideDown(elem_dropdown);
-
 		}
-		else if((event.which || event.keyCode) == 13 && param.elem_input){ //if enter is pressed
-			event.preventDefault();
+		else if((event.which || event.keyCode) == 13 && param.elem_input && typeof param.enter_fn == 'function'){ //if enter is pressed
 			param.enter_fn();
-
-			/*
-			var sendAction_param = {
-				parent_id: app_content_menu.projects_id,
-				title: elem.text(),
-				comment: '',
-			};
-			var in_charge =  parseInt(param.elem_input.val(),10);
-			console.log(in_charge);
-			if(in_charge && typeof in_charge == 'number'){
-				sendAction_param['users>in_charge'] = {};
-				sendAction_param['users>in_charge'][in_charge] = true;
-				sendAction_param['users>approver'] = {};
-				sendAction_param['users>approver'][in_charge] = true;
-			}
-			console.log(sendAction_param);
-			wrapper_sendAction( sendAction_param, 'post', 'task/create');
-			*/
 		}
-		 
-		 
+
+	    console.log('<<----keyup END---->>');
 	});
+
+	elem.click(function(){
+		var click_caret = burger_regex_getCaretOffset(elem).caretOffset;
+		//if clicked outside the range between start and end carret, destroy dropdown
+		if(elem_dropdown && (click_caret < burger_startIndex || click_caret > caretIndex)){
+			destroy();
+		}
+	});
+
 	elem.focusout(function(){
 		destroy();
 	});
@@ -863,6 +1014,8 @@ function burger_contacts_sendAction(users, selectArray, item, multiselect){
 			param['users>in_charge'][userid] = false;
 		}
 	});
+
+	console.log(param);
 
 	if(item['_type'] == 'tasks'){
 		//wrapper_sendAction( param, 'post', 'task/update');

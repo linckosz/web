@@ -9,8 +9,7 @@
 	box-shadow: 0px 0px 4px 0px #3F84B0;
 }
 .burger_tag {
-	font-weight: bold;
-	border-radius: 7px;
+	color: #53ADD2;
 	padding: 1px;
 	cursor: pointer; cursor: hand;
 }
@@ -203,10 +202,22 @@
 /*--------burger_typeTask----------------------------*/
 .burger_typeTask {
 	height: 60px;
+    background-color: #ffffff;
+    margin-bottom: 3px;
+}
+.burger_typeTask_opacity{
+	opacity: 0.6;
 }
 .burger_typeTask table{
 	width: 100%;
+    height: 100%;
+    border-collapse: collapse;
 }
 .burger_typeTask [find=checkbox_td]{
 	width: 1px;
+}
+.burger_typeTask [find=userid]{
+	top: 0px;
+    position: absolute;
+    right: 0px;
 }
