@@ -14,6 +14,22 @@ var mainMenu = {
 		}
 	},
 
+	chatsSelect: function(){
+		$("#app_project_chats_tab").find("[cid]").removeClass("app_project_chats_item_selected");
+		var subm = submenu_get('newchat', false);
+		if(subm){
+			var type = subm.param.type;
+			if(type == 'history'){
+				type = 'projects';
+			}
+			cid = type+"_"+subm.param.id;
+			var item = $("#app_project_chats_tab").find("[cid="+cid+"]");
+			if(item.length>0){
+				item.addClass("app_project_chats_item_selected");
+			}
+		}
+	},
+
 	initProjectTab: function(){
 		var projectList = [];
 		var personal = Lincko.storage.getMyPlaceholder()['_id'];
@@ -34,9 +50,11 @@ var mainMenu = {
 				if(projectList.length>=5){ break; } //Limit to 5 projects
 			}
 		}
+
+		var projectList_tp = Lincko.storage.list('projects', null, projectList_conditions); //Do not include personal space, it has to be show separatly fro projects list (separate on top of list)
+		projectList_tp_length = projectList_tp.length + 1;
+
 		if(projectList.length<5){
-			var projectList_tp = Lincko.storage.list('projects', null, projectList_conditions);
-			projectList_tp = Lincko.storage.sort_items(projectList_tp, 'title', 1, 5-projectList.length);
 			for(var i in projectList_tp){
 				projectList.push(projectList_tp[i]);
 				if(projectList.length>=5){ break; } //Limit to 5 projects
@@ -62,11 +80,12 @@ var mainMenu = {
 			return str;
 		}
 
-		var projects_length = projectList.length;
-		if(projects_length>0){
-			projects_length = "("+projects_length+")";
+		var projects_length = "";
+		if(projectList_tp_length>0){
+			$("#app_project_projects_all").removeClass('app_project_tab_force_radius');
+			projects_length = "("+projectList_tp_length+")";
 		} else {
-			projects_length = "";
+			$("#app_project_projects_all").addClass('app_project_tab_force_radius');
 		}
 		$("#app_project_projects_all").find("[find=app_project_projects_all_number]").html(wrapper_to_html(projects_length));
 
@@ -74,6 +93,11 @@ var mainMenu = {
 			var item = $("#app_project_item_projects_"+i);
 			if(item.length<=0){
 				continue;
+			}
+			if(i<projectList.length-1){
+				item.removeClass('app_project_tab_force_radius');
+			} else {
+				item.addClass('app_project_tab_force_radius');
 			}
 			if(projectList[i]){
 				item.removeClass('display_none');
@@ -106,10 +130,20 @@ var mainMenu = {
 	initChatTab: function(){
 		var histList = app_models_history.tabList(5);
 		var content;
+		if(histList.length>0){
+			$("#app_project_chats_all").removeClass('app_project_tab_force_radius');
+		} else {
+			$("#app_project_chats_all").addClass('app_project_tab_force_radius');
+		}
 		for (i = 0; i < 5; i++) {
 			var item = $("#app_project_item_chats_"+i);
 			if(item.length<=0){
 				continue;
+			}
+			if(i<histList.length-1){
+				item.removeClass('app_project_tab_force_radius');
+			} else {
+				item.addClass('app_project_tab_force_radius');
 			}
 			if(histList[i]){
 				item.removeClass('display_none');
@@ -118,11 +152,16 @@ var mainMenu = {
 				continue;
 			}
 			var name = histList[i]['name'];
+			var cid = histList[i]['root_type']+"_"+histList[i]['root_id'];
 			var timestamp = parseInt(histList[i]['timestamp'], 10);
 			if(name!=item.attr('name')){
 				item.click(histList[i], function(event){
+					var type = 'chats';
+					if(event.data.root_type == 'projects'){
+						type = 'history';
+					}
 					submenu_Build("newchat", false, false, {
-						type: event.data.root_type,
+						type: type,
 						id: event.data.root_id,
 						title: event.data.title,
 					});
@@ -139,8 +178,9 @@ var mainMenu = {
 				content = wrapper_flat_text(histList[i]['content']);
 				item.find("[find=app_project_chats_content]").html(wrapper_to_html(content));
 				item.find("[find=history_picture]").remove();
-				item.find("[find=app_project_chats_picture]").append(histList[i]['picture']);
+				item.find("[find=app_project_chats_picture]").append(histList[i]['picture'].clone());
 				item.attr('name', name);
+				item.attr('cid', cid);
 				item.attr('timestamp', timestamp);
 			}
 		}
@@ -175,21 +215,35 @@ $('#app_project_quick_access_plus').click(function(){
 });
 
 $('#app_project_quick_access_chat').click(function(){
-	submenu_Build('chat', false, true, true);
-});
-
-$('#app_project_quick_access_upload').click(function(){
-	submenu_Build("app_upload_all", true);
+	submenu_Build('chat_list', false, true, true);
 });
 
 $('#app_project_placeholder').click(function(){
 	app_content_menu.selection(Lincko.storage.getMyPlaceholder()['_id'], 'tasks');
 });
 
-JSfiles.finish(function() {
-	mainMenu.initProjectTab();
-	mainMenu.initChatTab();
+$('#app_project_quick_access_title').click(function(){
+	if($('#app_project_quick_access_title').find("[find=app_project_progress_all]").is(':visible')){
+		submenu_Build("app_upload_all", true);
+	}
 });
+
+function app_project_quick_access_title(){console.log(this);
+	Elem = $('#'+this.id);
+	if(app_upload_files.lincko_numberOfFiles <= 0){
+		Elem.find("[find=app_project_upload]").hide();
+		Elem.removeClass('app_project_quick_access_title_prog');
+		Elem.find("[find=app_project_progress_all]").hide().css('width', 0);
+	} else {
+		Elem.find("[find=app_project_upload]").show();
+		Elem.addClass('app_project_quick_access_title_prog');
+		Elem.find("[find=app_project_progress_all]").show().css('width', app_upload_files.lincko_progressall+'%');
+	}
+	delete Elem;
+}
+
+
+
 
 app_application_lincko.add("app_project_projects_tab", ["projects", "settings"], function() {
 	mainMenu.projectSelect();
@@ -199,7 +253,7 @@ app_application_lincko.add("app_project_projects_tab", ["projects", "settings"],
 		mainMenu.initProjectTab();
 	}
 });
-//toto => the range of this function need to be adjusted over the time accoring to new items if any more
+//toto => the range of this function need to be adjusted over the time according to new items if any more
 app_application_lincko.add("app_project_chats_tab", ["projects", "chats", "tasks", "files", "notes", "comments"], function() {
 	if(app_project_update_block){
 		app_project_update_launch_chats = true;
@@ -208,8 +262,10 @@ app_application_lincko.add("app_project_chats_tab", ["projects", "chats", "tasks
 	}
 });
 
+app_application_lincko.add("app_project_chats_all", ["submenu_hide", "submenu_show"], function() {
+	mainMenu.chatsSelect();
+});
 
-// START - ANIMATED MENU FOR ULOAD FILES
 
 //This help to wait the update while the mouse is over, it avoids click on wrong tab while a list update
 var app_project_update_block = false;
@@ -231,6 +287,8 @@ $('#app_project_top')
 	}
 });
 
+
+/* ++ quick upload ++ */
 function app_project_quick_upload_display(Elem, show) {
 	var Obj_div = $('#app_project_quick_upload');
 	var Obj_img = $('#app_project_quick_upload > div > img');
@@ -262,6 +320,7 @@ $('#app_project_quick_access_upload').click(function(){
 		app_project_quick_upload_display($(this));
 	} else {
 		$('#app_project_quick_upload_files').click();
+		//submenu_Build("app_upload_all", -1);
 	}
 });
 
@@ -296,6 +355,11 @@ $('#app_project_quick_upload_photo').click(function(){
 $('#app_project_quick_upload_files').click(function(){
 	app_upload_open_files();
 });
+/* -- quick upload -- */
 
-// END - ANIMATED MENU FOR ULOAD FILES
 
+JSfiles.finish(function() {
+	mainMenu.initProjectTab();
+	mainMenu.initChatTab();
+	app_application_lincko.add("app_project_quick_access_title", "upload", app_project_quick_access_title);
+});

@@ -310,6 +310,20 @@
 	max-width:120px;
 }
 
+.models_history_notif {
+	position: absolute;
+	top: -3px;
+	right: -6px;
+	border-radius: 100%;
+	width: 10px;
+	height: 10px;
+	background-color: #FF4444;
+	filter:alpha(opacity=90);
+	opacity:0.9;
+	-moz-opacity:0.9;
+	-khtml-opacity:0.9;
+}
+
 /* Mobile phone in Portrait */
 
 @media only screen and (max-width: 479px) {

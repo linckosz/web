@@ -197,7 +197,8 @@ Lincko.storage.update = function(partial, info){
 			//If only update_at (parent->touch), we do not prepare for update
 			if(typeof Lincko.storage.data[i][j] != 'undefined'){
 				for(var k in partial[i][j]){
-					if(k!="_children" && k!="_id" && k!="type" && k!="history" && k!="created_at" && k!="created_by" && k!="updated_at" && k!="updated_by"){
+					//if(k!="_children" && k!="_id" && k!="type" && k!="history" && k!="created_at" && k!="created_by" && k!="updated_at" && k!="updated_by"){
+					if(k!="_children" && k!="_id" && k!="type" && k!="history" && k!="created_at" && k!="created_by" && k!="updated_by"){
 						if(typeof Lincko.storage.data[i][j][k] == 'undefined'){ //New field
 							update_real = true;
 							break;

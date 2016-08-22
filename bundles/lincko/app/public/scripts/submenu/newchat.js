@@ -56,7 +56,9 @@ Submenu.prototype.Add_ChatContents = function() {
 	chatFeed.feedHistory(position, type, id, that);
 	chatFeed.feedUploadingFiles(position,type,id,submenu_wrapper_id);
 
-	notifier[type]['clear'](id);
+	if(typeof notifier[type] != "undefined" && typeof notifier[type]['clear'] != "undefined"){
+		notifier[type]['clear'](id);
+	}
 	if (type == 'history') {
 		var hist = Lincko.storage.hist(null, -1,  {'by': ["!=", wrapper_localstorage.uid]} , 'projects', id, false);
 		if(hist.length > 0)

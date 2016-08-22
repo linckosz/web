@@ -361,7 +361,7 @@ burgerN.assignProject = function(elem, item){
            	projects_list = Lincko.storage.sort_items(projects_list,'+title');
 			//use the submenu for mobile
 			if(responsive.test("maxMobileL")){
-				submenu_Build('burger_projects',true,false,{ input:elem, projects_list: projects_list, item: item });
+				submenu_Build('burger_projects', true, false, { input:elem, projects_list: projects_list, item: item });
 				return false;
 			}
 
@@ -965,7 +965,7 @@ function burger_calendar (elem_timestamp, elem_display){
 	elem_timestamp.click(function(){
 		if( responsive.test("maxMobileL")){
 			var param = {elem_inputOrig:elem_timestamp };
-			submenu_Build('calendar',true,false,param);
+			submenu_Build('calendar', true, false, param);
 			return false;
 		}
 

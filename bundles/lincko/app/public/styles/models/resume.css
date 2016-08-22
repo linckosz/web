@@ -1,0 +1,37 @@
+.app_models_resume_span {
+	display: inline-block;
+	position: relative;
+}
+
+.app_models_resume_tasks {
+	color: #F9A550;
+	cursor: pointer;
+}
+
+.app_models_resume_tasks_overdue {
+	color: #EC4545;
+	cursor: pointer;
+}
+
+.app_models_resume_notes {
+	color: #F9A550;
+	cursor: pointer;
+}
+
+.app_models_resume_files {
+	color: #F9A550;
+	cursor: pointer;
+}
+
+.app_models_resume_files {
+	width: 100%;
+}
+
+.app_models_resume_links {
+	display: inline-block;
+	padding: 2px 6px;
+}
+
+.app_models_resume_links:hover {
+	text-decoration: underline;
+}

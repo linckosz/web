@@ -2,8 +2,10 @@
 <div id="begin_models_history" class="visibility_hidden">
 		<script>
 				JSfiles.later("{{ _filelatest('/lincko/app/scripts/models/history.js') }}", 60);
+				JSfiles.later("{{ _filelatest('/lincko/app/scripts/models/resume.js') }}", 60);
 		</script>
 		<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/models/history.css') }}" type="text/css" />
+		<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/models/resume.css') }}" type="text/css" />
 </div>
 <div id="end_models_history" class="visibility_hidden"></div>
 <div class="display_none">
@@ -158,5 +160,7 @@
 			</div>
 		</div>
 	</li>
+
+	<div id="-models_history_chats_notif" find="chats_notif" class="models_history_notif display_none"></div>
 
 </div>

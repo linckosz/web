@@ -32,6 +32,7 @@
 						<span>{{ _trans('web', 5, 3, 'html') }}{# Password #}</span>
 						<input type="password" id="account_joinus_password" name="password" value="" autocomplete="off" class="selectable" />
 					</label>
+					<input type="hidden" id="account_joinus_timeoffset" name="timeoffset" value="0" autocomplete="off" />
 					{% if wrapper_user_created %}
 						<label class="account_label_inside" for="account_joinus_captcha">
 							<img name="captcha" id="account_captcha" src="" title="{{ _trans('web', 5, 12, 'brut') }}{# Refresh the captcha #}"/>

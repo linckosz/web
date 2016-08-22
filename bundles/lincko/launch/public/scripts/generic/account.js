@@ -206,4 +206,13 @@ $("#account_signin_submit").keyup(function(){
 
 JSfiles.finish(function(){
 	account_display_label($('#account_signin_email'), false);
+	var timeoffset = (new Date()).getTimezoneOffset();
+	timeoffset = Math.floor(timeoffset/60);
+	if(timeoffset<0){
+		timeoffset = 24 - timeoffset; //24H - offset
+	}
+	if(timeoffset>=24){
+		timeoffset = 0;
+	}
+	$('#account_joinus_timeoffset').val(timeoffset);
 });

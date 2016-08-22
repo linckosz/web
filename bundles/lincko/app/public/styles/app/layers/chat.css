@@ -29,7 +29,7 @@
 	color: #3270A0;
 }
 
-.skylist .skylist_logo >span {
+.skylist .skylist_logo > span {
 	display: inline-block;
 	width: 60px;
 	font-size: 55px;
@@ -41,7 +41,7 @@
 	max-width: 48px;
 }
 
-.submenu_wrapper .skylist .skylist_logo >span {
+.submenu_wrapper .skylist .skylist_logo > span {
 	width: 45px;
 }
 
@@ -55,7 +55,7 @@
 }
 
 .app_layers_chat .skylist_card_center [find=title] {
-	font-size: 18px;
+	font-size: 16px;
 	color: #475577;
 }
 

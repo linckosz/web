@@ -28,7 +28,7 @@ submenu_list['app_chat_new'] = {
 	},
 };
 
-submenu_list['chat'] = {
+submenu_list['chat'] = submenu_list['chat_list'] = {
 	//Set the title of the top
 	"_title": {
 		"style": "customized_title",

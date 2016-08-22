@@ -1003,6 +1003,7 @@ Submenu.prototype.hideSubmenu = function(time, delay, animate) {
 	if(!animate){
 		app_application_lincko.prepare(["submenu_hide", "submenu_hide_"+that.preview+"_"+that.id], true);
 		that.Remove();
+		app_application_lincko.prepare(["submenu_hide", "submenu_hide_"+that.preview+"_"+that.id], true);
 	} else if (responsive.test("minDesktop")) {
 		if (that.layer <= 3) { submenu_wrapper.css('z-index', submenu_zindex[this.preview]); } //This insure for the 1/3 version to go below the previous one
 		submenu_wrapper.velocity(
@@ -1013,6 +1014,7 @@ Submenu.prototype.hideSubmenu = function(time, delay, animate) {
 				complete: function() {
 					app_application_lincko.prepare(["submenu_hide", "submenu_hide_"+that.preview+"_"+that.id], true);
 					that.Remove();
+					app_application_lincko.prepare(["submenu_hide", "submenu_hide_"+that.preview+"_"+that.id], true);
 				}
 			}
 		);
@@ -1029,6 +1031,7 @@ Submenu.prototype.hideSubmenu = function(time, delay, animate) {
 				complete: function() {
 					app_application_lincko.prepare(["submenu_hide", "submenu_hide_"+that.preview+"_"+that.id], true);
 					that.Remove();
+					app_application_lincko.prepare(["submenu_hide", "submenu_hide_"+that.preview+"_"+that.id], true);
 				}
 			}
 		);
@@ -1048,6 +1051,7 @@ Submenu.prototype.hidePreview = function(time, delay, animate) {
 	if(!animate){
 		app_application_lincko.prepare(["submenu_hide", "submenu_hide_"+that.preview+"_"+that.id], true);
 		that.Remove();
+		app_application_lincko.prepare(["submenu_hide", "submenu_hide_"+that.preview+"_"+that.id], true);
 	} else if (responsive.test("minDesktop")) {
 		animation = animation_map_preview[this.outAnimation]['desktop'];
 		submenu_wrapper.velocity("stop", true).velocity(
@@ -1058,6 +1062,7 @@ Submenu.prototype.hidePreview = function(time, delay, animate) {
 				complete: function() {
 					app_application_lincko.prepare(["submenu_hide", "submenu_hide_"+that.preview+"_"+that.id], true);
 					that.Remove();
+					app_application_lincko.prepare(["submenu_hide", "submenu_hide_"+that.preview+"_"+that.id], true);
 				}
 			}
 		);
@@ -1071,6 +1076,7 @@ Submenu.prototype.hidePreview = function(time, delay, animate) {
 				complete: function() {
 					app_application_lincko.prepare(["submenu_hide", "submenu_hide_"+that.preview+"_"+that.id], true);
 					that.Remove();
+					app_application_lincko.prepare(["submenu_hide", "submenu_hide_"+that.preview+"_"+that.id], true);
 				}
 			}
 		);
@@ -1180,6 +1186,17 @@ function submenu_Getnext(preview) {
 	return submenu_layer;
 }
 
+function submenu_get(menu, preview) {
+	var stack = preview ? submenu_obj['preview'] : submenu_obj['submenu'];
+	var submenu = false;
+	for (var index in stack) {
+		if (stack[index].menu === menu) {
+			submenu = stack[index];
+		}
+	}
+	return submenu;
+}
+
 function submenu_Getposition(menu, preview) {
 	var stack = preview ? submenu_obj['preview'] : submenu_obj['submenu'];
 	submenu_position = submenu_Getnext(preview);
@@ -1219,6 +1236,8 @@ function submenu_Build(menu, next, hide, param, preview) {
 		next = submenu_Getnext(preview);
 	} else if(next === false){
 		next = 1;
+	} else if(next === -1){
+		next = submenu_Getposition(menu, preview);
 	}
 
 	//If the tab already exists, just close it if we launch again the action

@@ -47,10 +47,10 @@ var app_models_history = {
 		};
 
 		for(var i in hist_all){
-			root_item = getRoot(hist_all[i]["type"], hist_all[i]["id"]);
+			root_item = getRoot(hist_all[i]["type"], hist_all[i]["id"]); //Accept only Chats and Projects
 			root_name = root_item["_type"]+"_"+root_item["_id"];
 			name = hist_all[i]["type"]+"_"+hist_all[i]["id"];
-			if(typeof hist_num[root_name] == "undefined"){
+			if(root_item && typeof hist_num[root_name] == "undefined"){
 				hist_num[root_name] = true;
 				if(app_models_history.hist_root[root_name] && app_models_history.hist_root[root_name].name == name && app_models_history.hist_root[root_name].timestamp == hist_all[i]["timestamp"]){
 					date.setTime(app_models_history.hist_root[root_name].timestamp);

@@ -597,19 +597,19 @@ var chatFeed = (function() {
 
 		var items = getRawContents(type, parentId, newRange);
 		$('<div>').addClass('chat_contents_wrapper').prop("id", chatFeed.subm.id+'_chat_contents_wrapper').appendTo(position);
-		format_items(type, items, position,false);
+		format_items(type, items, position, false, false);
 	}
 
 	function app_layers_history_feedPage(position, type, parentId) {
 		var items = getRawContents(type, parentId, null);
 		$('<div>').addClass('chat_contents_wrapper').prop("id", chatFeed.subm.id+'_chat_contents_wrapper').appendTo(position);
-		format_items(type, items, position,false);
+		format_items(type, items, position, false, false);
 	}
 
 	function format_items(type, items, position, newone)
 	{
 		var groups;
-		var today = Math.floor( new wrapper_date().timestamp  / 86400) * 86400;
+		var today = (new wrapper_date()).getDayStartTimestamp();
 		if(newone)
 		{
 			groups =[{'timestamp':today ,'items':items}];
@@ -655,6 +655,7 @@ var chatFeed = (function() {
 				var line = renderLine(groups[i].timestamp);
 				line.prependTo(position.find(".chat_contents_wrapper"));
 			}
+
 			if(groups[i].timestamp == today)
 			{
 				format_items.has_today = true;

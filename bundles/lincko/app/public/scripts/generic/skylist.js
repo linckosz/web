@@ -850,7 +850,17 @@ skylist.prototype.addCard = function(item){
 		);
 	} //END OF 'tasks' || 'notes'
 	else if (that.list_type == 'chats' || that.list_type == 'global_chats') {
-		console.log(that.list_type);
+		//toto => rebuild the chat list here
+		//console.log(that.list_type);
+		app_application_lincko.add(
+			elem_card.prop('id'),
+			[item['root_type']+'_'+item['root_id'], item['name']],
+			function(){
+				var elem = $('#'+this.id);
+				var item_new = app_models_history.tabList(1, item['root_type'], item['root_id'])[0];
+				that.addChat(item_new);
+			}
+		);
 	}
 	if(that.elem_rightOptions_count < 1){
 		elem_card.find('[find=card_rightOptions]').addClass('display_none');
@@ -859,15 +869,69 @@ skylist.prototype.addCard = function(item){
 }
 
 skylist.prototype.addChat = function(item){
-		var that = this;
-		var Elem = $('#-skylist_card').clone();
-		Elem.prop('id','skylist_card_'+that.md5id+'_'+item['root_type']+'_'+item['root_id']);
-		Elem.find('[find=card_leftbox]').append(item['picture']);
-		Elem.find('[find=title]').html(wrapper_to_html(item['title']));
-		Elem.find('[find=description]').html(wrapper_to_html(wrapper_flat_text(item['content'])));
-		Elem.find('[find=card_time]').html(item['date']);
-		//that.add_cardEvents(Elem);
-		return Elem;
+	var temp = app_models_history.tabList(1, item['root_type'], item['root_id']);
+	
+	var that = this;
+	var Elem = $('#skylist_card_'+that.md5id+'_'+item['root_type']+'_'+item['root_id']);
+	var new_elem = false;
+	if(Elem.length <= 0){
+		new_elem = true;
+		Elem = $('#-skylist_card').clone();
+		Elem.prop('id', 'skylist_card_'+that.md5id+'_'+item['root_type']+'_'+item['root_id']);
+	}
+		
+	if(new_elem){
+		Elem.find('[find=card_center]').addClass('skylist_chat_card_center');
+		var notif = $('#-models_history_chats_notif').clone();
+		notif.prop('id', '');
+		notif.addClass('models_history_chats_notif');
+		Elem.find('[find=card_leftbox]').append(item['picture'].clone()).addClass('skylist_chat_card_leftbox');
+		Elem.find('[find=history_picture]').append(notif).addClass('skylist_chat_history_picture base_MainElementText');
+		Elem.find('[find=card_time]').addClass('skylist_chat_card_time');
+		Elem.attr('timestamp', item['timestamp']);
+
+		if(item['root_type']=="chats"){
+			Elem.click(item, function(event){
+				var id = event.data["root_id"];
+				var title = event.data["title"];
+				submenu_Build("newchat", false, false, {
+					type: 'chats',
+					id: id,
+					title: title,
+				}, true);
+			});
+		} else if(item['root_type']=="projects"){
+			Elem.click(item, function(event){
+				var id = event.data["root_id"];
+				var title = event.data["title"];
+				if(id == Lincko.storage.getMyPlaceholder()['_id']){
+					title = Lincko.Translation.get('app', 2502, 'html'); //Personal Space
+				}
+				submenu_Build("newchat", false, false, {
+					type: 'history',
+					id: id,
+					title: title,
+				}, true);
+			});
+		}
+
+	} else {
+		var notif = Elem.find('[find=chats_notif]');
+	}
+
+	if(item['notif']){
+		notif.removeClass('display_none');
+	} else {
+		notif.addClass('display_none');
+	}
+		
+	Elem.find('[find=title]').html(wrapper_to_html(item['title']));
+	Elem.find('[find=description]').html(wrapper_to_html(wrapper_flat_text(item['content'])));
+	Elem.find('[find=card_time]').html(item['date']);
+
+	//toto => need to add deletion slide feature
+	//that.add_cardEvents(Elem);
+	return Elem;
 }
 
 skylist.prototype.addChat_toto = function(item){
@@ -1314,7 +1378,7 @@ skylist.prototype.addTask = function(item){
 	var elem_rightOptions_duedate = that.add_rightOptionsBox(duedate,'fa-calendar');
 	elem_rightOptions_duedate.click(function(){
 		var param = {elem_inputOrig:elem_calendar_timestamp };
-		submenu_Build('calendar',true,false,param);
+		submenu_Build('calendar', true, false, param);
 	});
 	Elem_rightOptions.append(elem_rightOptions_duedate);
 

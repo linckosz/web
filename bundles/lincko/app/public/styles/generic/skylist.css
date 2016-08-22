@@ -565,6 +565,37 @@
  * ----------END OF skylist_maxMobileL--------------------
  */
 
+/*
+ * ---------- START OF skylist_chat --------------------
+ */
+
+.skylist_chat_card_center {
+	height: 50px;
+}
+
+.skylist_chat_card_leftbox {
+	padding: 0 16px;
+}
+
+.skylist_chat_history_picture {
+	padding: 0;
+	height: 32px;
+	width: 32px;
+	font-size: 32px;
+	display: inline-block;
+	position: relative;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+}
+
+.skylist_chat_card_time {
+	font-size: 12px;
+}
+
+/*
+ * ---------- END OF skylist_chat --------------------
+ */
 
 
 /*MobileL and smaller */

@@ -2,6 +2,7 @@ $.extend(wrapper_date.prototype, {
 	
 	time: false,
 	timestamp: false,
+	timezone_offset: 0,
 
 	Constructor: function(timestamp){
 		if(typeof timestamp != 'number' && typeof timestamp != 'string'){
@@ -9,6 +10,7 @@ $.extend(wrapper_date.prototype, {
 		} else {
 			this.timestamp = timestamp;
 		}
+		this.timezone_offset = (new Date()).getTimezoneOffset();
 		this.time = new Date(1000*parseInt(this.timestamp, 10)); //Convert in milliseconds
 	},
 
@@ -150,6 +152,7 @@ $.extend(wrapper_date.prototype, {
 
 	happensToday: function() {
 		var dateStampToday = Math.floor(Date.now() / 86400000) * 86400000;
+		dateStampToday = dateStampToday + (this.timezone_offset*1000);
 		var dateStampTomorrow = dateStampToday + 86400000;
 		if ((this.timestamp*1000 >= dateStampToday) && (this.timestamp*1000 < dateStampTomorrow))
 			return true;
@@ -159,6 +162,7 @@ $.extend(wrapper_date.prototype, {
 
 	happensSomeday: function(int) {
 		var dateStampPrev = Math.floor(Date.now() / 86400000) * 86400000;
+		dateStampPrev = dateStampPrev + (this.timezone_offset*1000);
 		if(int != 0){
 			dateStampPrev += int*86400000;
 		}
@@ -167,6 +171,12 @@ $.extend(wrapper_date.prototype, {
 			return true;
 		else
 			return false;
+	},
+
+	getDayStartTimestamp: function() {
+		var day = Math.floor( new wrapper_date().timestamp  / 86400) * 86400;
+		day = day + this.timezone_offset;
+		return day;
 	},
 
 	//Transform the format sentence into a readable date

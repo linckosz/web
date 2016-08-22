@@ -272,7 +272,7 @@ $(function () {
 
 			//Open submenu by default
 			if(app_upload_auto_launcher.submenu){
-				submenu_Build("app_upload_all", true, false);
+				submenu_Build("app_upload_all", -1, false);
 			}
 			//Do not auto start by default
 			if(app_upload_auto_launcher.start){
