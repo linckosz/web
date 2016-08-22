@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 var mainMenu = {
 
 	projectSelect: function(){
