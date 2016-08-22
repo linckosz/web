@@ -39,12 +39,13 @@
 				return false;
 			}
 		});
+		elem.trigger('focus',{cancelBlur: true});
+		//elem.focus();
 		if(!caretPlaced){
 			console.log('caretAtEnd');
 			burgerN.placeCaretAtEnd(elem);
 		}
-		elem.trigger('focus',{cancelBlur: true});
-		//elem.focus();
+		
 	},
 	createCaretPlacer: function(atStart) {
 	    return function(el) {
@@ -70,8 +71,39 @@
 burgerN.placeCaretAtStart =  burgerN.createCaretPlacer(true);
 burgerN.placeCaretAtEnd = burgerN.createCaretPlacer(false);
 
-burgerN.monthsArray = (new wrapper_date()).month;
+burgerN.todayStr = Lincko.Translation.get('app', 3302, 'html').toLowerCase();//today
+burgerN.tomorrowStr = Lincko.Translation.get('app', 3303, 'html').toLowerCase();//tomorrow
 burgerN.daysVeryShortArray = (new wrapper_date()).day_very_short;
+burgerN.monthsArray = (new wrapper_date()).month;
+burgerN.monthsArrayObj = [];
+$.each(burgerN.monthsArray, function(i, month){
+	var year = new Date().getFullYear();
+	var monthStart = new Date(year, i, 1);
+	var monthEnd = new Date(year, i + 1, 1);
+	var monthLength = (monthEnd - monthStart) / (1000 * 60 * 60 * 24);
+
+	var obj = {
+		name: month,
+		val: i+1,
+	  	maxDays:monthLength,
+	  	getDuedateTimestamp: function(date){
+	  		if(!date || !date.length){ date = this.maxDays; }
+	  		var currentYear = new Date().getFullYear();
+	  		var timestamp = new Date(currentYear, this.val-1, date).setHours(23,59,59,0);
+	  		//if needs to be next year
+	  		if(timestamp < new Date()){
+	  			timestamp = new Date(timestamp).setFullYear(currentYear+1);
+	  		}
+	  		return timestamp/1000;
+	  	},
+	};
+
+	burgerN.monthsArrayObj.push(obj);
+});
+
+
+
+
 
 burgerN.typeTask = function(projectID, skylistInst){
 	if(!projectID){
@@ -112,6 +144,9 @@ burgerN.typeTask = function(projectID, skylistInst){
 	var param= {};
 	var elem_userid = elem_typeTask.find('input[find=userid]');
 	param.elem_input = elem_userid;
+	param.projectID = projectID;
+	//disable '@' for burgerN.regex if its personal space
+	param.disable_shortcutUser = Lincko.storage.get('projects', projectID, 'personal_private');
 
 	param.enter_fn = function(){
 		console.log('enter_fn');
@@ -136,18 +171,35 @@ burgerN.typeTask = function(projectID, skylistInst){
 		if(elem_users.length){
 			in_charge_id = $(elem_users[0]).attr('userid');
 		}
-
-
-
 		param['users>in_charge'] = {};
 		param['users>in_charge'][in_charge_id] = true;
 
+
+		//date logic
+		var duration = defaultDuration;
 		var time_now = new wrapper_date();
-		//modify duration based on current skylistFilter
-		if(skylistInst && skylistInst.Lincko_itemsList_filter && skylistInst.Lincko_itemsList_filter.duedate 
-			&& skylistInst.Lincko_itemsList_filter.duedate == 0){
-			defaultDuration = time_now.getEndofDay() - time_now.timestamp;
+		var elem_dateWrapper = elem_typingArea.find('[find=dateWrapper]');
+		if(elem_dateWrapper.length){
+			var timestamp = elem_dateWrapper.attr('val');
+			if(timestamp == 0){
+				duration = time_now.getEndofDay() - time_now.timestamp;
+			}
+			else if(timestamp == 1){
+				//do nothing, use DefaultDuration and also dont follow filter
+			}
+			else{ //val == due date timestamp in seconds
+				duration = timestamp - time_now.timestamp;
+			}
+
 		}
+		else{
+			//modify duration based on current skylistFilter
+			if(skylistInst && skylistInst.Lincko_itemsList_filter && skylistInst.Lincko_itemsList_filter.duedate 
+				&& skylistInst.Lincko_itemsList_filter.duedate == 0){
+				duration = time_now.getEndofDay() - time_now.timestamp;
+			}
+		}
+		param.duration = duration;
 
 		var item = {
 			'+title': title,
@@ -157,7 +209,7 @@ burgerN.typeTask = function(projectID, skylistInst){
 			'_users': {},
 			'created_at':time_now.timestamp,
 			'start': time_now.timestamp,
-			'duration': defaultDuration,
+			'duration': duration,
 			'updated_by': wrapper_localstorage.uid,
 			'new': true,
 		}
@@ -268,6 +320,7 @@ burgerN.regex = function(elem, item, param){
 	var burger_str = "";
 	var burger_type = null;
 	var elem_burger_tag = $('#-burger_tag').clone().prop('id','');
+	var latestChar_prev = null; //updated at the end of every keyup
 	var burger_startIndex = null;
 	var caretIndex = null;
 	var currentMode = null; //'@' or '++'
@@ -279,6 +332,7 @@ burgerN.regex = function(elem, item, param){
 		burger_str = "";
 		burger_startIndex = null;
 		currentMode = null;
+		latestChar_prev = null;
 	}
 
 	var contactsID_obj = {};
@@ -315,7 +369,56 @@ burgerN.regex = function(elem, item, param){
 		}
 		destroy();
 		burgerN.placeCaretAt(caretIndex_new-(that.shortcut.user+burger_str).length, elem);
-	}
+	}//end of userClick_fn
+
+	var dateClick_fn = function(dateType, dateVal, timestamp){
+		console.log('dateClick_fn');
+		console.log(this);
+		if(typeof dateType != 'string' && typeof dateType != 'number' ){ dateType = $(this).attr('dateType'); }
+		if(typeof dateVal != 'string' && typeof dateVal != 'number' ){ dateVal = $(this).attr('dateVal'); }
+		if(typeof timestamp != 'string' && typeof timestamp != 'number' ){ timestamp = $(this).attr('timestamp'); }
+		console.log('dateType:',dateType);
+		console.log('dateVal:',dateVal);
+		var finalStr = '';
+		var finalVal = null;
+		if(dateType == 'TT'){
+			if(dateVal == 0){
+				finalStr = that.todayStr;
+			}
+			else if(dateVal == 1){
+				finalStr = that.tomorrowStr;
+			}
+			finalVal = dateVal;
+		}
+		else{
+			finalStr = $(this).text();
+			finalVal = timestamp;
+		}
+		console.log('finalVal:',finalVal);
+
+		var caretIndex_new = caretIndex;
+
+		var textLength = elem.text().length;
+		elem.find('span[find=dateWrapper]').remove();
+		//adjust for deleted spans
+		caretIndex_new -= textLength - elem.text().length;
+
+		//dont touch any text inside child DOM (e.g. <span>)
+		var outerTextNode = elem.contents().filter(function(){ return this.nodeType == 3; });
+		//if there are spans in the middle, outerTextNode is divied up, so must loop
+		$.each(outerTextNode, function(key,str2){
+			var str = that.shortcut.date+burger_str;
+			if((str2.data).indexOf(str) != -1){
+			    $(outerTextNode[key]).replaceWith($(outerTextNode[key]).text().replace(that.shortcut.date+burger_str, '<span find="dateWrapper" val="'+finalVal+'" contenteditable="false" class="burger_tag">'+that.shortcut.date+finalStr+'</span>'));
+			    return false;
+			}
+		});
+
+
+
+		burgerN.placeCaretAt(caretIndex_new-(that.shortcut.date+burger_str).length, elem);
+		destroy();
+	}//end of dateClick_fn
 
 	elem.on('keydown', function(event){ return;
 		console.log('<<----keydown---->>');
@@ -370,9 +473,13 @@ burgerN.regex = function(elem, item, param){
 
 	    /*For Chinese only, when inputting pinyin:
 	      if waiting for combined character (229) but latestChar is not Chinese, return and act on next keyup*/
-	    if(latestChar && event.which == 229 && !latestChar.match(/[\u4E00-\u9FA5]/)){
-			return;
-		}
+	    if(latestChar && event.which == 229 && !latestChar.match(/[\u4E00-\u9FA5]/)){ 
+	    	latestChar_prev = latestChar;
+	    	return; 
+	    }
+
+		/*dont take action for shift keys*/
+		//if(event.which == 16){ return; }
 
 	    if( elem_dropdown ){
 			if( event.which == 32 || caretIndex < burger_startIndex ){//if 'space' or caret is moved behind the burger_startIndex
@@ -383,8 +490,16 @@ burgerN.regex = function(elem, item, param){
 				event.preventDefault();
 				var elem_options = elem_dropdown.find('.burger_option_users');
 				if(elem_options.length){
-					userClick_fn($(elem_options[0]).attr('userid'));
+					$(elem_options[0]).mousedown();
 					return;
+					if(currentMode == that.shortcut.user){
+						//userClick_fn($(elem_options[0]).attr('userid'));
+						return;
+					}
+					else if(currentMode == that.shortcut.date){
+						//dateClick_fn($(elem_options[0]).attr('dateType'), $(elem_options[0]).attr('dateVal'));
+						return;
+					}
 				}
 			}
 			elem_dropdown.empty();
@@ -393,25 +508,25 @@ burgerN.regex = function(elem, item, param){
 			console.log('substring_to:',burger_regex_getCaretOffset(elem).caretOffset);
 			console.log('burger_str:',burger_str);
 
-			var search_result = Lincko.storage.search('word',burger_str,'users')['users'];
-			var contactsID_obj_search = {};
-			if(typeof search_result == 'object'){
-				search_result = Object.keys(search_result);
-				$.each(contactsID_obj, function(key,val){
-					if( $.inArray(key,search_result) > -1){
-						contactsID_obj_search[key] = contactsID_obj[key];
-					}
-				});
-			}
-
-			if( !$.isEmptyObject(contactsID_obj_search) ){
+			if(currentMode == that.shortcut.user){
+				var search_result = Lincko.storage.search('word',burger_str,'users')['users'];
+				var contactsID_obj_search = {};
+				if(typeof search_result == 'object'){
+					search_result = Object.keys(search_result);
+					$.each(contactsID_obj, function(key,val){
+						if( $.inArray(key,search_result) > -1){
+							contactsID_obj_search[key] = contactsID_obj[key];
+						}
+					});
+				}
 				elem_dropdown.empty().html(burgerN.draw_contacts(contactsID_obj_search, userClick_fn).children());
 			}
-			else{
-				elem_dropdown.html('<div>no match</div>');/*toto*/
-			} 
+			else if(currentMode == that.shortcut.date){
+				elem_dropdown.empty().html(burgerN.draw_dates(burger_str, dateClick_fn).children());
+			}
 		}
-		else if( latestChar == that.shortcut.user /* @ */ ){
+		else if( latestChar == that.shortcut.user /* @ */ && (!param || !param.disable_shortcutUser)){
+			currentMode = that.shortcut.user;
 			contactsID_obj = burgerN.generate_contacts(Lincko.storage.get(item['_type'], item['_id']));
 	    	burger_startIndex = caretIndex;
 			console.log('burger_startIndex: '+burger_startIndex);
@@ -425,15 +540,18 @@ burgerN.regex = function(elem, item, param){
 			$('#app_content_dynamic_sub').append(elem_dropdown);
 			that.slideDown(elem_dropdown);
 		}
-		else if( latestChar == that.shortcut.date[0] /* + */ ){
-			if(currentMode == '+' ){
-				currentMode += '+'; console.log('burgerMode set:',currentMode);
-				burger_startIndex = caretIndex;
-				/*initiate elem_dropdown*/
-			}
-			else{
-				currentMode = '+';
-			}
+		else if( latestChar_prev+latestChar == that.shortcut.date /* ++ */ ){
+			currentMode = that.shortcut.date; console.log('burgerMode set:',currentMode);
+			burger_startIndex = caretIndex;
+			elem_dropdown = burgerN.draw_dates(burger_str, dateClick_fn)
+				.css({
+					'top':coord.y, 
+					'left':coord.x, 
+					'bottom':$(window).height()-coord.y + elem.outerHeight(),
+				});
+
+			$('#app_content_dynamic_sub').append(elem_dropdown);
+			that.slideDown(elem_dropdown);
 		}
 		else if((event.which || event.keyCode) == 13 ){ //if enter is pressed
 			if(param && param.elem_input && typeof param.enter_fn == 'function'){
@@ -444,6 +562,7 @@ burgerN.regex = function(elem, item, param){
 			}
 		}
 
+		latestChar_prev = latestChar;
 	    console.log('<<----keyup END---->>');
 	});
 
@@ -613,35 +732,78 @@ burgerN.assignProject = function(elem, item){
 	});
 }
 
-burgerN.draw_dates = function(){
+burgerN.draw_dates = function(substr, option_fn){
 	var that = this;
 	var elem_dropdown = burgerN.elem_dropdown.clone();
 	var elem_option = $('#-burger_option').clone().prop('id','').addClass('burger_option_users');
 	var elem_option_clone;
 
+	var substr_char = substr.replace(/\d/g,'').toLowerCase();
+	var substr_num = substr.replace(/\D/g,'');
+	console.log('substr_char:',substr_char);
+	console.log('substr_num:',substr_num);
+
+	var optionsMonths = burgerN.monthsArray;
+	var optionsTT = [that.todayStr, that.tomorrowStr];
+	var optionsFinal = [];
+
+	//if only letters, then TT + months
+	if(!substr_num){
+		optionsFinal = optionsTT.concat(optionsMonths);
+	}
+	else if(substr_num < 32){// && (!substr_char.length || !$.isNumeric(substr.slice(-1)))){
+	//if numbers are within range and either no char or last letter is char
+		optionsFinal = optionsMonths;
+	}
 
 
-	$.each(dates, function(userid, obj){
-		in_charge = obj.checked;
-		username = Lincko.storage.get("users", userid,"username");
-		elem_option_clone = elem_option.clone().attr('userid',userid);
-		elem_option_clone.find('[find=text]').html(username);
-		picID  = Lincko.storage.get("users", userid, 'profile_pic');
-		if(picID){
-			var thumb_url = Lincko.storage.getLinkThumbnail(picID);
-			elem_option_clone.find('[find=image]').removeClass('icon-SmallPersonaiconBlack').css('background-image','url("'+thumb_url+'")');
-		}
-		if( in_charge ){
-			elem_option_clone.addClass('burger_option_selected');
-		}
+	$.each(optionsFinal, function(i, fullStr){
+		console.log('fullStr:',fullStr);
+		if((fullStr.toLowerCase()).indexOf(substr_char) != -1){
 
-		if(typeof option_fn == 'function' ){
-			elem_option_clone.on('mousedown', option_fn);
+			//months only selections, and the number exceeds the corresponding month's max days
+			if(optionsFinal.length == 12 && substr_num){
+				if(substr_num > burgerN.monthsArrayObj[i].maxDays){
+					return;
+				}
+			}
+			elem_option_clone = elem_option.clone();
+			if(optionsTT.indexOf(fullStr) != -1){
+				elem_option_clone.attr('dateType','TT').attr('dateVal', i);
+			}
+			else{
+				var monthIndex = optionsMonths.indexOf(fullStr);
+				if(monthIndex != -1 && monthIndex < 12){
+					elem_option_clone.attr('timestamp', burgerN.monthsArrayObj[monthIndex].getDuedateTimestamp(substr_num));
+				}
+			}
+
+
+
+			if(substr_num.length){
+				elem_option_clone.find('[find=text]').html(substr.replace(substr_char,fullStr));
+			}
+			else{
+				elem_option_clone.find('[find=text]').html(fullStr);
+			}
+			
+			elem_option_clone.find('[find=image]').addClass('display_none');
+
+			if(typeof option_fn == 'function' ){
+				elem_option_clone.on('mousedown', option_fn);
+			}
+			elem_dropdown.find('[find=wrapper]').append(elem_option_clone);
 		}
-		elem_dropdown.find('[find=wrapper]').append(elem_option_clone);
 	});
 
-	if(Object.keys(dates).length > that.dropdownCount){
+	if(!elem_dropdown.find('.burger_option_users').length){
+		elem_option.find('[find=text]').html('no match');/*toto*/
+		elem_option.find('[find=image]').addClass('display_none');
+		elem_dropdown.find('[find=wrapper]').append(elem_option);
+		return elem_dropdown;
+	}
+
+	if(Object.keys(options).length > that.dropdownCount){
 		elem_dropdown.css({'height': that.optionHeight*that.dropdownCount, 'width': that.dropdownWidth});
 		elem_dropdown.find('[find=wrapper]').addClass('overthrow');
 	}
@@ -664,6 +826,16 @@ burgerN.draw_contacts = function(contacts,option_fn){
 	var elem_dropdown = burgerN.elem_dropdown.clone();
 	var elem_option = $('#-burger_option').clone().prop('id','').addClass('burger_option_users');
 	var elem_option_clone;
+
+	//if there is no contacts to display
+	if($.isEmptyObject(contacts)){
+		elem_option.find('[find=text]').html('no match');/*toto*/
+		elem_option.find('[find=image]').addClass('display_none');
+		elem_dropdown.find('[find=wrapper]').append(elem_option);
+		return elem_dropdown;
+	}
+
+
 	$.each(contacts, function(userid, obj){
 		in_charge = obj.checked;
 		username = Lincko.storage.get("users", userid,"username");
