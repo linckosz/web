@@ -52,7 +52,7 @@ var mainMenu = {
 		}
 
 		var projectList_tp = Lincko.storage.list('projects', null, projectList_conditions); //Do not include personal space, it has to be show separatly fro projects list (separate on top of list)
-		projectList_tp_length = projectList_tp.length + 1;
+		projectList_tp_length = projectList_tp.length + projectList.length + 1;
 
 		if(projectList.length<5){
 			for(var i in projectList_tp){
@@ -108,6 +108,7 @@ var mainMenu = {
 			var pid = parseInt(projectList[i]['_id'], 10);
 			var timestamp = parseInt(projectList[i]['updated_at'], 10);
 			if(pid!=parseInt(item.attr('pid'), 10)){
+				item.off('click');
 				item.click(pid, function(event){
 					app_content_menu.selection(event.data, 'tasks');
 				});
@@ -155,6 +156,7 @@ var mainMenu = {
 			var cid = histList[i]['root_type']+"_"+histList[i]['root_id'];
 			var timestamp = parseInt(histList[i]['timestamp'], 10);
 			if(name!=item.attr('name')){
+				item.off('click');
 				item.click(histList[i], function(event){
 					var type = 'chats';
 					if(event.data.root_type == 'projects'){
@@ -316,7 +318,7 @@ function app_project_quick_upload_display(Elem, show) {
 }
 
 $('#app_project_quick_access_upload').click(function(){
-	if(responsive.test("maxTablet")){
+	if(supportsTouch && responsive.test("maxTablet")){
 		app_project_quick_upload_display($(this));
 	} else {
 		$('#app_project_quick_upload_files').click();
@@ -325,15 +327,13 @@ $('#app_project_quick_access_upload').click(function(){
 });
 
 $('#app_project_quick_upload_block').click(function(){
-	if($('#app_project_quick_upload').is(':visible') && !app_project_quick_upload){
-		app_project_quick_upload_display(null, false);
-	}
+	$('#app_project_quick_upload_block').hide();
+	app_project_quick_upload_display(null, false);
 });
 
 $('#app_project_quick_upload').click(function(){
-	if($('#app_project_quick_upload').is(':visible') && !app_project_quick_upload){
-		app_project_quick_upload_display(null, false);
-	}
+	$('#app_project_quick_upload_block').hide();
+	app_project_quick_upload_display(null, false);
 });
 
 var app_project_quick_upload = false;

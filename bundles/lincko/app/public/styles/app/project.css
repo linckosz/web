@@ -299,7 +299,7 @@
 	color: #FFFFFF;
 	display: inline-block;
 	font-size: 20px;
-	border-radius: 3px;
+	border-radius: 100%;
 	vertical-align: middle;
 	transform: translateY(-50%);
 	-webkit-transform: translateY(-50%);

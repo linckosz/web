@@ -886,7 +886,7 @@ skylist.prototype.addChat = function(item){
 		notif.prop('id', '');
 		notif.addClass('models_history_chats_notif');
 		Elem.find('[find=card_leftbox]').append(item['picture'].clone()).addClass('skylist_chat_card_leftbox');
-		Elem.find('[find=history_picture]').append(notif).addClass('skylist_chat_history_picture base_MainElementText');
+		Elem.find('[find=history_picture]').append(notif).addClass('skylist_chat_history_picture base_color_text_linckoOrange');
 		Elem.find('[find=card_time]').addClass('skylist_chat_card_time');
 		Elem.attr('timestamp', item['timestamp']);
 
