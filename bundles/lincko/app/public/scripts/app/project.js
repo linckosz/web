@@ -32,6 +32,7 @@ var mainMenu = {
 
 	initProjectTab: function(){
 		var projectList = [];
+		var project;
 		var personal = Lincko.storage.getMyPlaceholder()['_id'];
 		var projectList_conditions = {
 			_id: ['!in', [personal]],
@@ -40,12 +41,15 @@ var mainMenu = {
 		if(settings.latestvisitProjects && settings.latestvisitProjects.length>0){
 			for(var i in settings.latestvisitProjects){
 				if(settings.latestvisitProjects[i] != personal){
-					projectList.push(
-						Lincko.storage.get('projects', settings.latestvisitProjects[i])
-					);
-					projectList_conditions._id[1].push(
-						settings.latestvisitProjects[i]
-					);
+					project = Lincko.storage.get('projects', settings.latestvisitProjects[i]);
+					if(project){
+						projectList.push(
+							Lincko.storage.get('projects', settings.latestvisitProjects[i])
+						);
+						projectList_conditions._id[1].push(
+							settings.latestvisitProjects[i]
+						);
+					}
 				}
 				if(projectList.length>=5){ break; } //Limit to 5 projects
 			}
