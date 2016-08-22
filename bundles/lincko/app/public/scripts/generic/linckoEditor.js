@@ -35,9 +35,26 @@ function linckoEditor(elem, toolbarID, param){
 			'right':'0px',
 		});*/
 
-		submenu_content.on('paste cut', function(event){
-			wrapper_IScroll();
-		});
+
+		$(editorInst.element.$).on('paste cut', {iscroll: editorInst.Lincko_param.iscrollInst}, function(event) {
+			var iscrollInst = event.data.iscroll;
+			var that = $(this);
+	        that.css({'overflow':'hidden', 'height':that.height()});
+
+	        setTimeout(function(){
+	        	that.removeAttr('style');
+				iscrollInst.refresh();
+				//wrapper_IScroll();
+
+				var windowHeight = $(window).height();
+	        	var buffer = 50;
+				var y = burger_regex_getCaretOffset(that, true).y;
+				if(y > windowHeight && iscrollInst && iscrollInst.hasVerticalScroll){
+					var scrollpx = y - $(window).height() + buffer;
+					iscrollInst.scrollTo(0,-scrollpx);			
+				}
+	        }, 100);
+	    });
 	}
 
 

@@ -190,7 +190,6 @@ burgerN.typeTask = function(projectID, skylistInst){
 			else{ //val == due date timestamp in seconds
 				duration = timestamp - time_now.timestamp;
 			}
-
 		}
 		else{
 			//modify duration based on current skylistFilter
@@ -281,8 +280,6 @@ burgerN.destroy = function(elem_dropdown){
 burgerN.slideDown = function(elem_dropdown){
 	//elem_dropdown css bottom must be defined for the 'reverse' slideDown to work
 	var that = this;
-	console.log('top:',elem_dropdown.css('top'));
-	console.log('bottom:',elem_dropdown.css('bottom'));
 	var top = parseInt(elem_dropdown.css('top'),10);
 	//if( top+that.optionHeight*elem_dropdown.find('.burger_option_users').length > $(window).height() ){
 	if( top+that.optionHeight*that.dropdownCount > $(window).height() ){
@@ -291,8 +288,6 @@ burgerN.slideDown = function(elem_dropdown){
 	else{
 		elem_dropdown.css('bottom','');
 	}
-	console.log('top:',elem_dropdown.css('top'));
-	console.log('bottom:',elem_dropdown.css('bottom'));
 	
 	elem_dropdown.velocity("slideDown",{
 		duration: that.dropdownTime,
@@ -373,12 +368,9 @@ burgerN.regex = function(elem, item, param){
 
 	var dateClick_fn = function(dateType, dateVal, timestamp){
 		console.log('dateClick_fn');
-		console.log(this);
 		if(typeof dateType != 'string' && typeof dateType != 'number' ){ dateType = $(this).attr('dateType'); }
 		if(typeof dateVal != 'string' && typeof dateVal != 'number' ){ dateVal = $(this).attr('dateVal'); }
 		if(typeof timestamp != 'string' && typeof timestamp != 'number' ){ timestamp = $(this).attr('timestamp'); }
-		console.log('dateType:',dateType);
-		console.log('dateVal:',dateVal);
 		var finalStr = '';
 		var finalVal = null;
 		if(dateType == 'TT'){
@@ -394,7 +386,6 @@ burgerN.regex = function(elem, item, param){
 			finalStr = $(this).text();
 			finalVal = timestamp;
 		}
-		console.log('finalVal:',finalVal);
 
 		var caretIndex_new = caretIndex;
 
@@ -1401,11 +1392,12 @@ function burger_calendar (elem_timestamp, elem_display){
 	});
 }
 
-function burger_regex_getCaretOffset(elem) {
+function burger_regex_getCaretOffset(elem, noElemHeight) {
 	//http://stackoverflow.com/questions/6846230/coordinates-of-selected-text-in-browser-page
 	//http://stackoverflow.com/questions/4811822/get-a-ranges-start-and-end-offsets-relative-to-its-parent-container/4812022#4812022
-	//parameter element is HTML only, not JQuery obj
-	var element = elem[0];
+	var element = elem;
+	if(elem instanceof $){ element = elem.get(0); 	}
+
 	var x = 0, y = 0, caretOffset = 0;
 	var doc = element.ownerDocument || element.document;
 	var win = doc.defaultView || doc.parentWindow;
@@ -1426,8 +1418,9 @@ function burger_regex_getCaretOffset(elem) {
 				if (rects.length > 0) {
 					rect = rects[0];
 				}
-				x = rect.left;
-				y = rect.top;
+				if(rect && rect.left){ x = rect.left; }
+				if(rect && rect.top){ y = rect.top; }
+				
 			}
 			// Fall back to inserting a temporary element
 			if (x == 0 && y == 0) {
@@ -1461,7 +1454,9 @@ function burger_regex_getCaretOffset(elem) {
 	}
 	
 	//below targeted element
-	y = y + elem.outerHeight();
+	if(elem instanceof $ && !noElemHeight){
+		y = y + elem.outerHeight();
+	}
 	return { x: x, y: y, caretOffset:caretOffset };
 }
 
