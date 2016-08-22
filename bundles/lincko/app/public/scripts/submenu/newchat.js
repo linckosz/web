@@ -60,7 +60,7 @@ Submenu.prototype.Add_ChatContents = function() {
 		notifier[type]['clear'](id);
 	}
 	if (type == 'history') {
-		var hist = Lincko.storage.hist(null, -1,  {'by': ["!=", wrapper_localstorage.uid]} , 'projects', id, false);
+		var hist = Lincko.storage.hist(null, -1, false, 'projects', id, false);
 		if(hist.length > 0)
 		{
 			latest_history = hist[0]["timestamp"];
@@ -68,7 +68,7 @@ Submenu.prototype.Add_ChatContents = function() {
 		app_application_lincko.add(this.id+"_chat_contents_wrapper","projects_" + id, function() {
 			//toto => there is an undefined somewhere
 			var id = Object.keys(this.range)[0].split("_")[1];
-			var items = Lincko.storage.hist(null, -1, {'by': ["!=", wrapper_localstorage.uid], 'timestamp': [">=", latest_history]}, 'projects', id, false);
+			var items = Lincko.storage.hist(null, -1, {'timestamp': [">=", latest_history]}, 'projects', id, false);
 			
 			for(var i in items){
 				if(items[i]["timestamp"] > latest_history && latest_history < Lincko.storage.getLastVisit()){
@@ -98,7 +98,7 @@ Submenu.prototype.Add_ChatContents = function() {
 		}, [that.id, id]);
 	}
 	else {
-		var list = Lincko.storage.list(null, -1, {'created_by': ["!=", wrapper_localstorage.uid]}, 'chats', id, false);
+		var list = Lincko.storage.list(null, -1, false, 'chats', id, false);
 		if(list.length > 0)
 		{
 			latest_comment = list[0]["created_at"];
@@ -107,7 +107,7 @@ Submenu.prototype.Add_ChatContents = function() {
 			//toto => there is an undefined somewhere
 			var id = Object.keys(this.range)[0].split("_")[1];
 			var type = Object.keys(this.range)[0].split("_")[0];
-			var items = Lincko.storage.list(null, -1, {'created_by': ["!=", wrapper_localstorage.uid], 'created_at': [">=", latest_comment]}, 'chats', id, false);
+			var items = Lincko.storage.list(null, -1, {'created_at': [">=", latest_comment]}, 'chats', id, false);
 			for(var i in items){
 				if(items[i]["created_at"] > latest_comment && latest_comment < Lincko.storage.getLastVisit()){
 					latest_comment = items[i]["created_at"];
