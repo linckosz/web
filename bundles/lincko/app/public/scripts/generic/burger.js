@@ -5,6 +5,7 @@
  	shortcut:{
  		user: '@',
  		date: '++',
+ 		dateAlt: '＋＋',
  	},
  	monthsArray: null,
 	elem_dropdown: $('#-burger_dropdown').clone().prop('id',''),
@@ -39,12 +40,13 @@
 				return false;
 			}
 		});
-		elem.trigger('focus',{cancelBlur: true});
-		//elem.focus();
+		
 		if(!caretPlaced){
 			console.log('caretAtEnd');
 			burgerN.placeCaretAtEnd(elem);
 		}
+		elem.trigger('focus',{cancelBlur: true});
+		//elem.focus();
 		
 	},
 	createCaretPlacer: function(atStart) {
@@ -100,9 +102,124 @@ $.each(burgerN.monthsArray, function(i, month){
 
 	burgerN.monthsArrayObj.push(obj);
 });
+burgerN.ChineseNumberConverter = function(input){
+	var single = {
+		ling: 0, '〇': 0,
+		yi: 1, '一': 1,
+		er: 2, '二': 2,
+		san: 3, '三': 3,
+		si: 4, '四': 4,
+		wu: 5, '五': 5,
+		liu: 6, '六': 6,
+		qi: 7, '七': 7,
+		ba: 8, '八': 8,
+		jiu: 9, '九': 9,
+		shi: 10, '十': 10,
+	}
+
+	var numberObj1 = {
+		ershi: 20, '二十': 20,
+		sanshi: 30, '三十': 30,
+		sishi: 40, '四十': 40,
+		wushi: 50, '五十': 50,
+		liushi: 60, '六十': 60,
+		qishi: 70, '七十': 70,
+		bashi: 80, '八十': 80,
+		jiushi: 90, '九十': 90,
+	}
+	var numberObj2 = {
+		ling: 0, '〇': 0,
+		yi: 1, '一': 1,
+		er: 2, '二': 2,
+		san: 3, '三': 3,
+		si: 4, '四': 4,
+		wu: 5, '五': 5,
+		liu: 6, '六': 6,
+		qi: 7, '七': 7,
+		ba: 8, '八': 8,
+		jiu: 9, '九': 9,
+		shi: 10, '十': 10,
+	}
+
+	var array = [];
+
+	var start = 0;
+	var pushed = false;
+	var converted = false;
+	while(start < input.length){
+		for(var i=1;i < 5; i++){
+			if(input.substr(start,i) in single){
+				array.push(single[input.substr(start,i)]);
+				pushed = true;
+				converted = true;
+				start += i;
+				break;
+			}
+		}
+		if(pushed){
+			pushed = false;
+		}
+		else{
+			array.push(input[start]);
+			start++;
+		}
+		
+	}
+	if(!converted){ return input; }
+
+	var result = '';
+	var num = null;
+
+	$.each(array, function(i, val){
+		if($.isNumeric(val)){
+			if(!num){ 
+				num = val; 
+			}
+			else{
+				if(num%10 != 0){ 
+					num = num * val; 
+				}
+				else{ 
+					num += val;
+					result += num;
+					num = null;
+				}
+				
+			}
+		}
+		else{
+			if(num){ result+=num; }
+			result += val;
+			num = null;
+		}
+	});
+	if(num){ result += num; }
+
+	return result;
 
 
 
+
+
+
+
+	$.each(numberObj1, function(key,val){
+		if(input.indexOf(key) != -1){
+			input = input.replace(key,val);
+		}
+	});
+	$.each(numberObj2, function(key,val){
+		if(input.indexOf(key) != -1){
+			input = input.replace(key,val);
+		}
+	});
+
+	/*if(input.indexOf('shi') != -1){ input = input.replace('shi',10); }
+	if(input.indexOf('十') != -1){ input = input.replace('十',10); }*/
+
+	return input;
+
+}
 
 
 burgerN.typeTask = function(projectID, skylistInst){
@@ -120,7 +237,6 @@ burgerN.typeTask = function(projectID, skylistInst){
 	//use cancelBlur to control unwanted 'blur'
 	var cancelBlur = false;
 	elem_typingArea.focus(function(event, param){
-		console.log('focus');
 		if(typeof param == 'object' && param.cancelBlur){ cancelBlur = true; }
 
 		$(this).closest('[find=toggleOpacity]').removeClass('burger_typeTask_opacity');
@@ -129,7 +245,6 @@ burgerN.typeTask = function(projectID, skylistInst){
 		}
 	});
 	elem_typingArea.blur(function(event){
-		console.log('blur');
 		if(cancelBlur){
 			event.preventDefault();
 			cancelBlur = false;
@@ -149,7 +264,6 @@ burgerN.typeTask = function(projectID, skylistInst){
 	param.disable_shortcutUser = Lincko.storage.get('projects', projectID, 'personal_private');
 
 	param.enter_fn = function(){
-		console.log('enter_fn');
 
 		//remove all child DOMs (<span>) from title
 		var title = $(elem_typingArea).contents().filter(function() {
@@ -321,7 +435,6 @@ burgerN.regex = function(elem, item, param){
 	var currentMode = null; //'@' or '++'
 
 	var destroy = function(){
-		console.log('burgerN.regex destroy');
 		burgerN.destroy(elem_dropdown);
 		elem_dropdown = null;
 		burger_str = "";
@@ -332,7 +445,6 @@ burgerN.regex = function(elem, item, param){
 
 	var contactsID_obj = {};
 	var userClick_fn = function(userid){
-		console.log('userClick_fn');
 		if(typeof userid != 'string' && typeof userid != 'number' ){ userid = $(this).attr('userid'); }
 		var username = Lincko.storage.get('users',userid,'username');
 		var caretIndex_new = caretIndex;
@@ -367,7 +479,6 @@ burgerN.regex = function(elem, item, param){
 	}//end of userClick_fn
 
 	var dateClick_fn = function(dateType, dateVal, timestamp){
-		console.log('dateClick_fn');
 		if(typeof dateType != 'string' && typeof dateType != 'number' ){ dateType = $(this).attr('dateType'); }
 		if(typeof dateVal != 'string' && typeof dateVal != 'number' ){ dateVal = $(this).attr('dateVal'); }
 		if(typeof timestamp != 'string' && typeof timestamp != 'number' ){ timestamp = $(this).attr('timestamp'); }
@@ -457,10 +568,8 @@ burgerN.regex = function(elem, item, param){
 	    var coord = burger_regex_getCaretOffset(elem);
 
 	    caretIndex = coord.caretOffset;
-	  	console.log('currentCaret:', caretIndex);
 	  	var currentText = elem.text();
 	  	latestChar = currentText[caretIndex - 1];
-	  	console.log('latestChar:',latestChar);
 
 	    /*For Chinese only, when inputting pinyin:
 	      if waiting for combined character (229) but latestChar is not Chinese, return and act on next keyup*/
@@ -495,9 +604,6 @@ burgerN.regex = function(elem, item, param){
 			}
 			elem_dropdown.empty();
 			burger_str = elem.text().substring(burger_startIndex, burger_regex_getCaretOffset(elem).caretOffset);
-			console.log('substring_from:',burger_startIndex);
-			console.log('substring_to:',burger_regex_getCaretOffset(elem).caretOffset);
-			console.log('burger_str:',burger_str);
 
 			if(currentMode == that.shortcut.user){
 				var search_result = Lincko.storage.search('word',burger_str,'users')['users'];
@@ -512,7 +618,7 @@ burgerN.regex = function(elem, item, param){
 				}
 				elem_dropdown.empty().html(burgerN.draw_contacts(contactsID_obj_search, userClick_fn).children());
 			}
-			else if(currentMode == that.shortcut.date){
+			else if(currentMode == that.shortcut.date || currentMode == that.shortcut.dateAlt){
 				elem_dropdown.empty().html(burgerN.draw_dates(burger_str, dateClick_fn).children());
 			}
 		}
@@ -520,7 +626,6 @@ burgerN.regex = function(elem, item, param){
 			currentMode = that.shortcut.user;
 			contactsID_obj = burgerN.generate_contacts(Lincko.storage.get(item['_type'], item['_id']));
 	    	burger_startIndex = caretIndex;
-			console.log('burger_startIndex: '+burger_startIndex);
 			elem_dropdown = burgerN.draw_contacts(contactsID_obj, userClick_fn)
 				.css({
 					'top':coord.y, 
@@ -531,7 +636,7 @@ burgerN.regex = function(elem, item, param){
 			$('#app_content_dynamic_sub').append(elem_dropdown);
 			that.slideDown(elem_dropdown);
 		}
-		else if( latestChar_prev+latestChar == that.shortcut.date /* ++ */ ){
+		else if( latestChar_prev+latestChar == that.shortcut.date /* ++ */ || latestChar_prev+latestChar == that.shortcut.dateAlt){
 			currentMode = that.shortcut.date; console.log('burgerMode set:',currentMode);
 			burger_startIndex = caretIndex;
 			elem_dropdown = burgerN.draw_dates(burger_str, dateClick_fn)
@@ -729,63 +834,153 @@ burgerN.draw_dates = function(substr, option_fn){
 	var elem_option = $('#-burger_option').clone().prop('id','').addClass('burger_option_users');
 	var elem_option_clone;
 
+	//for chinese, convert chinese character and pinyin to numbers
+	if(app_language_short == 'zh-chs'){
+		substr = burgerN.ChineseNumberConverter(substr);
+		console.log('converted:',substr);
+	}
+
+
+	var optionsMonths = burgerN.monthsArray;
+	var optionsTT = [that.todayStr, that.tomorrowStr];
+	
 	var substr_char = substr.replace(/\d/g,'').toLowerCase();
 	var substr_num = substr.replace(/\D/g,'');
 	console.log('substr_char:',substr_char);
 	console.log('substr_num:',substr_num);
+	
+	//group 1 languages or to display today,tomorrow
+	if(app_language_group == 1 || !substr_num){
+		var optionsFinal = [];
 
-	var optionsMonths = burgerN.monthsArray;
-	var optionsTT = [that.todayStr, that.tomorrowStr];
-	var optionsFinal = [];
+		//if only letters, then TT + months
+		if(!substr_num){
+			optionsFinal = optionsTT.concat(optionsMonths);
+		}
+		else if(substr_num < 32){// && (!substr_char.length || !$.isNumeric(substr.slice(-1)))){
+		//if numbers are within range and either no char or last letter is char
+			optionsFinal = optionsMonths;
+		}
 
-	//if only letters, then TT + months
-	if(!substr_num){
-		optionsFinal = optionsTT.concat(optionsMonths);
-	}
-	else if(substr_num < 32){// && (!substr_char.length || !$.isNumeric(substr.slice(-1)))){
-	//if numbers are within range and either no char or last letter is char
-		optionsFinal = optionsMonths;
-	}
+		$.each(optionsFinal, function(i, fullStr){
+			console.log('fullStr:',fullStr);
+			if((fullStr.toLowerCase()).indexOf(substr_char) != -1){
 
+				//months only selections, and the number exceeds the corresponding month's max days
+				if(optionsFinal.length == 12 && substr_num){
+					if(substr_num > burgerN.monthsArrayObj[i].maxDays){
+						return;
+					}
+				}
+				elem_option_clone = elem_option.clone();
+				if(optionsTT.indexOf(fullStr) != -1){
+					elem_option_clone.attr('dateType','TT').attr('dateVal', i);
+				}
+				else{
+					var monthIndex = optionsMonths.indexOf(fullStr);
+					if(monthIndex != -1 && monthIndex < 12){
+						elem_option_clone.attr('timestamp', burgerN.monthsArrayObj[monthIndex].getDuedateTimestamp(substr_num));
+					}
+				}
 
-	$.each(optionsFinal, function(i, fullStr){
-		console.log('fullStr:',fullStr);
-		if((fullStr.toLowerCase()).indexOf(substr_char) != -1){
+				if(substr_num.length){
+					elem_option_clone.find('[find=text]').html(substr.replace(substr_char,fullStr));
+				}
+				else{
+					elem_option_clone.find('[find=text]').html(fullStr);
+				}
+				
+				elem_option_clone.find('[find=image]').addClass('display_none');
 
-			//months only selections, and the number exceeds the corresponding month's max days
-			if(optionsFinal.length == 12 && substr_num){
-				if(substr_num > burgerN.monthsArrayObj[i].maxDays){
-					return;
+				if(typeof option_fn == 'function' ){
+					elem_option_clone.on('mousedown', option_fn);
+				}
+				elem_dropdown.find('[find=wrapper]').append(elem_option_clone);
+			}
+		});
+	}//end of app_language_group == 1
+	else if(app_language_group == 2){
+		var	i_symMonth = -1;
+		var i_symDay = -1;
+		var num_Month = '';
+		var num_Day = '';
+		var num_array = '';
+	
+		//alternative for pinyin
+		if(app_language_short == 'zh-chs'){
+			i_symMonth = substr.indexOf('yue');
+			i_symDay = substr.indexOf('ri');
+			if(i_symDay==-1){
+				i_symDay = substr.indexOf('hao');
+			}
+			if(i_symDay==-1){
+				i_symDay = substr.indexOf('号');
+			}
+
+		}
+
+		if(i_symMonth==-1){
+			i_symMonth = substr.indexOf(app_language_month);
+		}
+		if(i_symDay==-1){
+			i_symDay = substr.indexOf(app_language_day);
+		}
+		
+		num_array = substr.match(/(\d+)/g);
+		$.each(num_array, function(i,val){
+			if(i == 0){
+				if( i_symMonth == i_symDay || (i_symMonth!=-1 && i_symDay==-1) || (i_symMonth!=-1 && i_symMonth < i_symDay) ){
+					num_Month = val;
+				}
+				else{
+					num_Day = val;
 				}
 			}
+			else if(i == 1){ 
+				if(!num_Month.length){
+					num_Month = val;
+				}
+				else{
+					num_Day = val;
+				}
+				return false; 
+			}
+		});
+		console.log('i_symMonth:',i_symMonth);
+		console.log('i_symDay:',i_symDay);
+		console.log('substr:',substr);
+		console.log('num_Month', num_Month);
+		console.log('num_Day', num_Day);
+		console.log('num_array',num_array);
+
+		$.each(optionsMonths, function(i,fullMonth){
+			//return if month is specified and not matched
+			if(num_Month.length && i != num_Month-1){ return; }
+
+			var displayStr = '';
+			displayStr = (i+1) + app_language_month;
+			if(num_Day.length){ displayStr += num_Day+app_language_day; }
+
 			elem_option_clone = elem_option.clone();
-			if(optionsTT.indexOf(fullStr) != -1){
-				elem_option_clone.attr('dateType','TT').attr('dateVal', i);
-			}
-			else{
-				var monthIndex = optionsMonths.indexOf(fullStr);
-				if(monthIndex != -1 && monthIndex < 12){
-					elem_option_clone.attr('timestamp', burgerN.monthsArrayObj[monthIndex].getDuedateTimestamp(substr_num));
-				}
-			}
-
-
-
-			if(substr_num.length){
-				elem_option_clone.find('[find=text]').html(substr.replace(substr_char,fullStr));
-			}
-			else{
-				elem_option_clone.find('[find=text]').html(fullStr);
-			}
-			
+			elem_option_clone.find('[find=text]').html(displayStr);
 			elem_option_clone.find('[find=image]').addClass('display_none');
+			elem_option_clone.attr('timestamp', burgerN.monthsArrayObj[i].getDuedateTimestamp(num_Day));
 
 			if(typeof option_fn == 'function' ){
 				elem_option_clone.on('mousedown', option_fn);
 			}
 			elem_dropdown.find('[find=wrapper]').append(elem_option_clone);
-		}
-	});
+		});
+
+
+
+
+	}//end of app_language_group == 2
+
+
+
+
+
 
 	if(!elem_dropdown.find('.burger_option_users').length){
 		elem_option.find('[find=text]').html('no match');/*toto*/

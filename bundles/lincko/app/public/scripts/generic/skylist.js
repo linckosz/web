@@ -1230,12 +1230,20 @@ skylist.prototype.addTask = function(item){
 		elem_title.blur(function(){
 			that.editing_target.attr('contenteditable',false);
 
+			//@ burger
 			var inChargeID_new = null;
 			var elem_users = $(this).find('[userid]');
 			if(elem_users.length){
 				inChargeID_new = $(elem_users[0]).attr('userid');
 			}
-			console.log('inChargeID_new:',inChargeID_new);
+			
+			//++ burger
+			var duration = null;
+			var elem_dateWrapper = $(this).find('[find=dateWrapper]');
+			if(elem_dateWrapper.length){
+				duration = $(elem_dateWrapper[0]).attr('val') - item['start'];
+			}
+
 
 			var new_text = $(this).contents().filter(function() {
 			  return this.nodeType == 3;
@@ -1244,7 +1252,7 @@ skylist.prototype.addTask = function(item){
 
 
 
-			if(new_text != item['+title'] || inChargeID_new){
+			if(new_text != item['+title'] || inChargeID_new || duration){
 				var param = {
 					id: item['_id']
 				};
@@ -1263,6 +1271,10 @@ skylist.prototype.addTask = function(item){
 							param['users>in_charge'][userid] = false;
 						}
 					});
+				}
+
+				if(duration){
+					param.duration = duration;
 				}
 
 
