@@ -234,7 +234,7 @@ $('#app_project_quick_access_title').click(function(){
 	}
 });
 
-function app_project_quick_access_title(){console.log(this);
+function app_project_quick_access_title(){
 	Elem = $('#'+this.id);
 	if(app_upload_files.lincko_numberOfFiles <= 0){
 		Elem.find("[find=app_project_upload]").hide();
@@ -326,18 +326,17 @@ $('#app_project_quick_access_upload').click(function(){
 		app_project_quick_upload_display($(this));
 	} else {
 		$('#app_project_quick_upload_files').click();
-		//submenu_Build("app_upload_all", -1);
 	}
 });
 
 $('#app_project_quick_upload_block').click(function(){
-	$('#app_project_quick_upload_block').hide();
 	app_project_quick_upload_display(null, false);
+	$('#app_project_quick_upload_block').hide();
 });
 
 $('#app_project_quick_upload').click(function(){
-	$('#app_project_quick_upload_block').hide();
 	app_project_quick_upload_display(null, false);
+	$('#app_project_quick_upload_block').hide();
 });
 
 var app_project_quick_upload = false;

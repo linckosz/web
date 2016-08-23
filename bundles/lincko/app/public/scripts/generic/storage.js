@@ -613,6 +613,12 @@ Lincko.storage.getHistoryInfo = function(history){
 		var date = new wrapper_date(history.timestamp);
 		result.title = result.title.ucfirst();
 		result.date = date.display('date_very_short');
+
+		//console.log(history);
+		if(history.type=="comments" && history.by==0){
+			result.content = app_models_resume_format_sentence(history.id);
+			return result;
+		}
 		
 		var item = Lincko.storage.data[history.type][history.id];
 		//Add to the content the main title (such as "project name")
@@ -1275,7 +1281,9 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 							item.type = cat;
 							item.id = parseInt(id, 10);
 							item.timestamp = parseInt(timestamp, 10);
-							if(
+							if(item['by']==0 && item['type']=='comments'){
+								save = true; //For auto resume (Roboto user)
+							} else if(
 								   item['by']<=0
 								|| typeof Lincko.storage.data['users']=='undefined'
 								|| typeof Lincko.storage.data['users'][item['by']]=='undefined'

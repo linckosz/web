@@ -230,8 +230,12 @@ var chatFeed = (function() {
 		}
 
 		//Do not duplicate chat messages (unless it is trying to replace the existing element e.g. during updateRecall)
-		if($("#"+Elem_id).length>0 && !replace){
-			return false;
+		if($("#"+Elem_id).length>0){
+			if(replace){
+				$("#"+Elem_id).remove();
+			} else {
+				return false;
+			}
 		}
 		Elem.prop('id', Elem_id);
 		Elem.attr('comment_id',this.item._id);
@@ -389,11 +393,18 @@ var chatFeed = (function() {
 			action = php_nl2br(Lincko.storage.formatHistoryInfo(text, clone_hist)) + ":&nbsp;";
 		}
 
-		Elem.find("[find=author]").html(php_nl2br(this.item.par.un));
+		
 		//var user = this.item.type == "history" ? this.item.by: this.item.created_by;
 		var img = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", this.item.by, 'profile_pic'));
 		if(!img){
 			img = app_application_icon_single_user.src;
+		}
+
+		if(this.item.type=='comments' && this.item.by==0){
+			img = app_application_icon_roboto.src;
+			Elem.find("[find=author]").html(Lincko.Translation.get('app', 0, 'html')); //Roboto
+		} else {
+			Elem.find("[find=author]").html(php_nl2br(this.item.par.un));
 		}
 
 		Elem.find("[find=icon]").click(this.item.by, function(event){
@@ -429,7 +440,11 @@ var chatFeed = (function() {
 		}
 
 		Elem.find("[find=target]").html(cutFileTitle(target, cutLength, 0, this.item.type));
-		Elem.find("[find=content]").html(wrapper_to_html(history.content));
+		if(typeof history.content == 'object'){
+			Elem.find("[find=content]").append(history.content);
+		} else {
+			Elem.find("[find=content]").html(wrapper_to_html(history.content));
+		}
 		var date = new wrapper_date(this.item.timestamp);
 		Elem.find(".time", "[find=timestamp]").html(date.display('time_short'));
 		Elem.find(".date", "[find=timestamp]").html(date.display('date_short'));

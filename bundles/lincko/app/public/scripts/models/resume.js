@@ -124,7 +124,7 @@ var app_models_resume_listup = function(Elem, list, color){
 						}
 						submenu_Build(
 							'taskdetail',
-							null,
+							true,
 							null,
 							{
 								type: type,
