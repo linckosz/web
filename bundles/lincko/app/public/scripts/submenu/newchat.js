@@ -3,7 +3,11 @@ submenu_list['newchat'] = {
 	"_title": {
 		"style": "customized_title",
 		"title": function(elem){
-			return elem.param.title;
+			if(elem.param.type == "history"){
+				return '<span class="icon-projectActivity submenu_title_center_icon minMobileL">&nbsp;</span>'+elem.param.title;
+			} else {
+				return elem.param.title;
+			}
 		}, //chat room you are in
 		"class": "submenu_newchat_header",
 	},
@@ -178,10 +182,10 @@ Submenu.prototype.Add_ChatContents = function() {
 							clearInterval(drawImageInterval);
 						}
 						if(typeof files[i].files[0].preview.tagName !== 'undefined' && files[i].files[0].preview.tagName.toLowerCase() === 'canvas'){
-						$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id).find(".models_history_standard_shortcut_ico").hide();
+						$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id).find(".models_history_standard_shortcut_ico").addClass('display_none');
 						$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id).find(".models_history_standard_shortcut_pic")
-							.show()
-							.prop("src", files[i].files[0].preview.toDataURL())
+							.removeClass('display_none')
+							.css('background-image','url("'+files[i].files[0].preview.toDataURL()+'")')
 							.attr("preview", "1");
 						}
 						clearInterval(drawImageInterval);

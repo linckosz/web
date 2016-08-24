@@ -84,7 +84,10 @@
 }
 
 .submenu_app_chat_profile_picture {
-	background-image: unset;
+	display: inline-block;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
 	height: 48px;
 	width: 48px;
 	border-radius: 100%;

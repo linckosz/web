@@ -491,7 +491,8 @@ td.submenu_taskdetail_share .fa{
 	border: 1px solid #FBA026;
 	border-radius: 40px;
 	display: inline-block;
-	background-size: 40px 40px;
+	background-position: center;
+	background-size: cover;
 	background-repeat: no-repeat;
 }
 .submenu_taskdetail_commentbubble_profile [find=name] {

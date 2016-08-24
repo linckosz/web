@@ -151,19 +151,25 @@
 	margin: 12px 12px 6px 12px;
 }
 
-.models_history_id > h5 {
+.models_history_id_author {
 	margin: 0 auto;
 	text-align: center;
 	color: #475577;
+	display: block;
+	font-size: 12px;
+	font-weight: 200;
 }
 
-.models_history_id > .icon {
+.models_history_id_icon {
 	margin: 0 auto;
 	width: 48px;
 	height: 48px;
 	display: block;
 	border-radius: 100%;
 	border: 2px solid #FBA026;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
 }
 
 .models_history_standard_target {
@@ -230,6 +236,7 @@
 
 .models_history_standard_target_wrapper {
 	text-align: center;
+	display: inline-block;
 }
 
 .models_history_standard_shortcut_wrapper > .models_history_standard_shortcut {
@@ -245,11 +252,14 @@
 
 .models_history_standard_shortcut_wrapper i
 {
-	font-size:40px;
-	color:#475577;
-	filter:alpha(opacity=36);
-	-moz-opacity:3.6;
-	opacity:3.6;
+	font-size: 48px;
+	height: 48px;
+	width: 80px;
+	color: #475577;
+	filter: alpha(opacity=36);
+	-moz-opacity: 0.36;
+	opacity: 0.36;
+	text-align: center;
 }
 
 
@@ -297,17 +307,46 @@
 }
 
 .models_history_standard_target_wrapper {
-	float: right;
 	line-height: 1;
 }
 
-.models_history_standard_shortcut_ico{
-	display: inline-block;
+.models_history_standard_shortcut_uploading {
+	cursor: initial;
 }
 
-.models_history_standard_shortcut_pic{
-	display:none;
-	max-width:120px;
+.models_history_standard_shortcut_ico {
+	border-radius: 0;
+	display: inline-block;
+	vertical-align: top !important;
+	height: 48px;
+}
+
+.models_history_standard_shortcut_pic {
+	width: 80px;
+	height: 48px;
+	border-radius: 0;
+	background-color: transparent;
+	display: inline-block;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
+	vertical-align: top !important;
+	box-sizing: border-box;
+	border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.models_history_standard_shortcut_pic:hover {
+	border: 2px solid rgba(255, 255, 255, 0.8);
+}
+
+.models_history_standard_shortcut_pic:active {
+	border: 2px solid rgba(255, 255, 255, 1);
+}
+
+.models_history_profile_pic {
+	border: solid 1px #FBA026;
+	border-radius: 100%;
+	box-sizing: border-box;
 }
 
 .models_history_notif {

@@ -63,6 +63,8 @@ var app_models_history = {
 				} else {
 					info[i] = {};
 					info[i].name = name;
+					info[i].type = hist_all[i]["type"];
+					info[i].id = hist_all[i]["id"];
 					info[i].root_type = root_item["_type"];
 					info[i].root_id = root_item["_id"];
 					info[i].notif = hist_all[i].not;
@@ -93,11 +95,14 @@ var app_models_history = {
 						}
 
 						if(src){
-							info[i].picture.css('background-image', 'url(' + src + ')');
+							info[i].picture
+								.css('background-image', 'url(' + src + ')')
+								.addClass('models_history_profile_pic');
 						} else {
 							info[i].picture.addClass('icon-largerIndividual');
 						}
 					} else {
+						//toto => use multi picture if group of users
 						info[i].picture.addClass('icon-largerGroup');
 					}
 
@@ -110,7 +115,14 @@ var app_models_history = {
 					}
 
 					if(hist_all[i]["type"]=="comments"){
-						info[i].content = Lincko.storage.get("comments", hist_all[i]["id"], "comment");
+						if(hist_all[i]["by"]==0){toto = app_models_resume_format_sentence(hist_all[i]["id"]);
+							info[i].content = app_models_resume_format_sentence(hist_all[i]["id"]).text();
+						} else if(root_item["single"]){
+							info[i].content = Lincko.storage.get("comments", hist_all[i]["id"], "comment");
+						} else {
+							var username = "["+Lincko.storage.get('users', hist_all[i]["by"], "username")+"] ";
+							info[i].content = username+Lincko.storage.get("comments", hist_all[i]["id"], "comment");
+						}
 					} else {
 						info[i].content = Lincko.storage.getHistoryInfo(hist_all[i])["title"];
 					}
@@ -127,3 +139,4 @@ var app_models_history = {
 		return histList;
 	},
 };
+var toto;

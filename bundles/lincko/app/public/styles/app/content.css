@@ -30,6 +30,7 @@
 	vertical-align: middle;
 	text-align: center;
 	width: auto;
+	padding: 0 24px;
 }
 
 #app_content_top_project {
@@ -38,12 +39,6 @@
 	left: 0;
 	font-size: 25px;
 	margin: 12px 12px;
-}
-
-#app_content_top_title {
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
 }
 
 .app_content_top_img {

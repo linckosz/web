@@ -207,16 +207,10 @@ Submenu.prototype.Add_ContactContents = function() {
 
 		thumbnail = Lincko.storage.getLinkThumbnail(contacts[uid].profile_pic);
 		if(thumbnail){
-			Elem.find("[find=picture_src]").prop("src", thumbnail);
+			Elem.find("[find=picture_src]").css('background-image','url("'+thumbnail+'")');
 		} else {
-			Elem.find("[find=picture_src]").prop("src", app_application_icon_single_user.src);
+			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_single_user.src+'")');
 		}
-		//disabled: click pic to open profile
-		/*Elem.find("[find=picture_src]").click([that.layer+1, contacts[uid]["id"], that.preview], function(event){
-			event.stopPropagation();
-			submenu_Build("personal_info", event.data[0], true, event.data[1], event.data[2]);
-		});*/
-
 		Elem.find('.id').val(uid);
 		if (contacts[uid].checked == true || (that.param && that.param.alwaysMe && uid == wrapper_localstorage.uid) ) {
 			Elem.find('.check').addClass('checked');

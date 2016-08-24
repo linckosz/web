@@ -242,23 +242,7 @@ Submenu.prototype.Add_ProfileInput = function() {
 var submenu_app_personal_temp_id = false;
 var submenu_app_personal_garbage = app_application_garbage.add();
 app_application_lincko.add(submenu_app_personal_garbage, 'users_'+wrapper_localstorage.uid, function() {
-	if(submenu_app_personal_temp_id){
-		var file = Lincko.storage.list('files', 1, {temp_id:submenu_app_personal_temp_id,});
-		if(file.length==1){
-			var file_id = file[0]['_id'];
-			wrapper_sendAction(
-				{
-					"id": wrapper_localstorage.uid,
-					"profile_pic": file_id,
-				},
-				'post',
-				'user/update',
-				function(){
-					submenu_app_personal_temp_id = false;
-				}
-			);
-		}
-	}
+	submenu_app_personal_temp_id = false;
 });
 
 Submenu.prototype.Add_ProfileNext = function() {
@@ -283,10 +267,13 @@ Submenu.prototype.Add_ProfileNext = function() {
 	var Elem_pic = Elem.find("[find=submenu_next_upload_picture]");
 	Elem_pic
 		.attr("preview", "0")
-		.prop("id", that.id+"_submenu_next_upload_picture");
+		.prop("id", that.id+"_submenu_next_upload_picture")
+		.css('background-image','url("'+app_application_icon_single_user.src+'")');
 	if(perso['profile_pic'] && $.isNumeric(perso['profile_pic'])){
 		var src = Lincko.storage.getLinkThumbnail(perso['profile_pic']);
-		Elem_pic.prop("src", src);
+		if(src){
+			Elem_pic.css('background-image','url("'+src+'")');
+		}
 	}
 	Elem.click(function(){
 		submenu_Build("personal_settings", that.layer + 1, true, wrapper_localstorage.uid, that.preview);
@@ -305,12 +292,18 @@ Submenu.prototype.Add_ProfileNext = function() {
 		if(file.length==1){
 			var file_id = file[0]['_id'];
 			var src = Lincko.storage.getLinkThumbnail(file_id);
-			Elem_pic.prop("src", src).attr("preview", "0");
+			if(src){
+				Elem_pic
+					.css('background-image','url("'+src+'")')
+					.attr("preview", "0");
+			}
 		} else if(submenu_app_personal_temp_id===false){
 			var perso = Lincko.storage.get('users', this.action_param);
 			if(perso["profile_pic"]){
 				var src = Lincko.storage.getLinkThumbnail(perso["profile_pic"]);
-				Elem_pic.prop("src", src);
+				if(src){
+					Elem_pic.css('background-image','url("'+src+'")');
+				}
 			}
 		} else if(this.action_param == wrapper_localstorage.uid){
 			var data = false;
@@ -324,8 +317,9 @@ Submenu.prototype.Add_ProfileNext = function() {
 			if(data){
 				if(data.files[0].preview && Elem_pic.attr("preview")=="0"){
 					if(typeof data.files[0].preview.tagName !== 'undefined' && data.files[0].preview.tagName.toLowerCase() === 'canvas'){
-						Elem_pic.prop("src", data.files[0].preview.toDataURL());
-						Elem_pic.attr("preview", "1");
+						Elem_pic
+							.css('background-image','url("'+data.files[0].preview.toDataURL()+'")')
+							.attr("preview", "1");
 					}
 				}
 			}
@@ -370,10 +364,13 @@ Submenu.prototype.Add_ProfilePhoto = function() {
 	var Elem_pic = Elem.find("[find=submenu_profile_upload_picture]");
 	Elem_pic
 		.attr("preview", "0")
-		.prop("id", that.id+"_submenu_profile_upload_picture");
+		.prop("id", that.id+"_submenu_profile_upload_picture")
+		.css('background-image','url("'+app_application_icon_single_user.src+'")');
 	if(perso['profile_pic'] && $.isNumeric(perso['profile_pic'])){
 		var src = Lincko.storage.getLinkThumbnail(perso['profile_pic']);
-		Elem_pic.prop("src", src);
+		if(src){
+			Elem_pic.css('background-image','url("'+src+'")');
+		}
 	}
 
 	if(users_id == wrapper_localstorage.uid){
@@ -395,12 +392,18 @@ Submenu.prototype.Add_ProfilePhoto = function() {
 		if(file.length==1){
 			var file_id = file[0]['_id'];
 			var src = Lincko.storage.getLinkThumbnail(file_id);
-			Elem_pic.prop("src", src).attr("preview", "0");
+			if(src){
+				Elem_pic
+					.css('background-image','url("'+src+'")')
+					.attr("preview", "0");
+			}
 		} else if(submenu_app_personal_temp_id===false){
 			var perso = Lincko.storage.get('users', this.action_param);
 			if(perso["profile_pic"]){
 				var src = Lincko.storage.getLinkThumbnail(perso["profile_pic"]);
-				Elem_pic.prop("src", src);
+				if(src){
+					Elem_pic.css('background-image','url("'+src+'")');
+				}
 			}
 		} else if(this.action_param == wrapper_localstorage.uid){
 			var data = false;
@@ -414,8 +417,9 @@ Submenu.prototype.Add_ProfilePhoto = function() {
 			if(data){
 				if(data.files[0].preview && Elem_pic.attr("preview")=="0"){
 					if(typeof data.files[0].preview.tagName !== 'undefined' && data.files[0].preview.tagName.toLowerCase() === 'canvas'){
-						Elem_pic.prop("src", data.files[0].preview.toDataURL());
-						Elem_pic.attr("preview", "1");
+						Elem_pic
+							.css('background-image','url("'+data.files[0].preview.toDataURL()+'")')
+							.attr("preview", "1");
 					}
 				}
 			}

@@ -1156,6 +1156,17 @@ $(window).resize(function(){
 	submenu_resize_content_timer = setTimeout(submenu_resize_content, wrapper_timeout_timer*2);
 });
 
+function submenu_getById(id) {
+	for(var stack in submenu_obj){
+		for(var index in submenu_obj[stack]){
+			if(submenu_obj[stack][index]['id']==id && $("#"+id).length>0){
+				return submenu_obj[stack][index];
+			}
+		}
+	}
+	return false;
+}
+
 function submenu_Hideall(preview) {
 	if(typeof preview == 'undefined'){ preview = false; }
 	var stack = preview ? submenu_obj['preview'] : submenu_obj['submenu'];

@@ -150,6 +150,7 @@ var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct, ri
 	this.elem_newcardBox;
 	this.detail;
 	this.construct();
+
 }
 
 /* enquire.js
@@ -879,7 +880,7 @@ skylist.prototype.addChat = function(item){
 		Elem = $('#-skylist_card').clone();
 		Elem.prop('id', 'skylist_card_'+that.md5id+'_'+item['root_type']+'_'+item['root_id']);
 	}
-		
+	
 	if(new_elem){
 		Elem.find('[find=card_center]').addClass('skylist_chat_card_center');
 		var notif = $('#-models_history_chats_notif').clone();
@@ -888,30 +889,47 @@ skylist.prototype.addChat = function(item){
 		Elem.find('[find=card_leftbox]').append(item['picture'].clone()).addClass('skylist_chat_card_leftbox');
 		Elem.find('[find=history_picture]').append(notif).addClass('skylist_chat_history_picture base_color_text_linckoOrange');
 		Elem.find('[find=card_time]').addClass('skylist_chat_card_time');
+		Elem.find('[find=card_textwrapper]').addClass('skylist_chat_card_textwrapper');
 		Elem.attr('timestamp', item['timestamp']);
 
 		if(item['root_type']=="chats"){
 			Elem.click(item, function(event){
+				var preview = true; //By default it's listed inside working area
+				var layer = false;
+				//Get the subemnu if it's inside it
+				var submenu = submenu_getById(that.md5id);
+				if(submenu){
+					preview = submenu.preview;
+					layer = submenu.layer+1;
+				}
 				var id = event.data["root_id"];
 				var title = event.data["title"];
-				submenu_Build("newchat", false, false, {
+				submenu_Build("newchat", layer, false, {
 					type: 'chats',
 					id: id,
 					title: title,
-				}, true);
+				}, preview);
 			});
 		} else if(item['root_type']=="projects"){
 			Elem.click(item, function(event){
+				var preview = true; //By default it's listed inside working area
+				var layer = false;
+				//Get the subemnu if it's inside it
+				var submenu = submenu_getById(that.md5id);
+				if(submenu){
+					preview = submenu.preview;
+					layer = submenu.layer+1;
+				}
 				var id = event.data["root_id"];
 				var title = event.data["title"];
 				if(id == Lincko.storage.getMyPlaceholder()['_id']){
 					title = Lincko.Translation.get('app', 2502, 'html'); //Personal Space
 				}
-				submenu_Build("newchat", false, false, {
+				submenu_Build("newchat", layer, false, {
 					type: 'history',
 					id: id,
 					title: title,
-				}, true);
+				}, preview);
 			});
 		}
 
@@ -925,242 +943,18 @@ skylist.prototype.addChat = function(item){
 		notif.addClass('display_none');
 	}
 		
-	Elem.find('[find=title]').html(wrapper_to_html(item['title']));
-	Elem.find('[find=description]').html(wrapper_to_html(wrapper_flat_text(item['content'])));
+	Elem.find('[find=title]')
+		.addClass('ellipsis')
+		.html(wrapper_to_html(item['title']));
 	Elem.find('[find=card_time]').html(item['date']);
+
+	Elem.find('[find=description]')
+		.addClass('ellipsis')
+		.html(wrapper_to_html(wrapper_flat_text(item['content'])));
 
 	//toto => need to add deletion slide feature
 	//that.add_cardEvents(Elem);
 	return Elem;
-}
-
-skylist.prototype.addChat_toto = function(item){
-		var that = this;
-
-		if(typeof item["_type"] != "undefined"){
-			var item_type = item["_type"];
-		} else if(typeof item["type"] != "undefined"){
-			var item_type = item["type"];
-		} else {
-			return false;
-		}
-
-		if(typeof item["_id"] != "undefined"){
-			var item_id = item["_id"];
-		} else if(typeof item["id"] != "undefined"){
-			var item_id = item["id"];
-		} else {
-			return false;
-		}
-
-		if(typeof item["updated_at"] != "undefined"){
-			var item_timestamp = item["updated_at"];
-		} else if(typeof item["timestamp"] != "undefined"){
-			var item_timestamp = item["timestamp"];
-		} else {
-			return false;
-		}
-
-		var Elem = $('#-skylist_card').clone();
-		var Elem_rightOptions = Elem.find('[find=card_rightOptions]').empty();
-		var Elem_logo = $('#-skylist_logo').clone().prop('id','');
-		Elem_logo.addClass("logo_width");
-		var cnt = notifier[item_type]['get'](item_id);
-		if (cnt) {
-			if (cnt > 999) {
-				Elem_logo.find('.notification').html('...').show();
-			} else {
-				Elem_logo.find('.notification').html(cnt).show();
-			}
-		}
-		var sync_type = "chats";
-		if(item_type == "history"){
-			sync_type = "projects";
-		}
-		app_application_lincko.add("skylist_card_"+this.md5id+"_"+item_id, sync_type + "_" + item_id, function() {
-			var range = Object.keys(this.range)[0].split("_");
-			var type = range[0];
-			var id = range[1];
-			var cnt = notifier[type]['get'](id);
-			Elem_logo = $("#"+this.id);
-			if (type == "chats") {
-				var chat = Lincko.storage.get('chats', id);
-				if(chat["single"]){
-					name = "";
-					user_icon = false;
-					var src = app_application_icon_single_user.src;
-					if(chat["_perm"][wrapper_localstorage.uid]){
-						var perso = Lincko.storage.get('users', wrapper_localstorage.uid);
-						name = perso["-username"];
-						src = Lincko.storage.getLinkThumbnail(perso['profile_pic']);
-						if(!src){
-							src = app_application_icon_single_user.src;
-						} else {
-							user_icon = true;
-						}
-					}
-					for(var i in chat["_perm"]){
-						if(i!=wrapper_localstorage.uid){
-							var perso = Lincko.storage.get('users', i);
-							name = perso["-username"];
-							src = Lincko.storage.getLinkThumbnail(perso['profile_pic']);
-							if(!src){
-								src = app_application_icon_single_user.src;
-							} else {
-								user_icon = true;
-							}
-							break;
-						}
-					}
-					if(user_icon){
-						Elem_logo.find('img.logo_img').removeClass("display_none");
-						Elem_logo.find('img.logo_img').attr('src', src);
-						Elem_logo.find('span.logo').addClass("display_none");
-					} else {
-						Elem_logo.find('span.logo').removeClass("display_none");
-						Elem_logo.find('span.logo').addClass('icon-Single-Person');
-						Elem_logo.find('img.logo_img').addClass("display_none");
-					}
-				} else {
-					name = Lincko.storage.get('chats', id, '+title');
-					Elem_logo.find('span.logo').removeClass("display_none");
-					Elem_logo.find('span.logo').addClass('icon-Multiple-People');
-					Elem_logo.find('img.logo_img').addClass("display_none");
-				}
-				Elem_logo.find('[find=title]').html(wrapper_to_html(name));
-				var comment = Lincko.storage.list("comments", 1, {recalled_by:["==",null]}, "chats", id);
-				if(typeof comment[0] == "object"){
-					var commentText =  wrapper_to_html(comment[0]['+comment']);
-					Elem_logo.find('[find=description]').html(commentText);
-				} else {
-					Elem_logo.find('[find=description]').html('');
-				}
-			} else {
-				var name = Lincko.storage.get('projects', id, '+title');
-				Elem_logo.find('[find=title]').html(name);
-				/*
-				var comment = Lincko.storage.list("comments", 1, null, "chats", id);
-				if(typeof comment[0] == "object"){
-					var commentText =  wrapper_to_html(comment[0]['+comment']);
-					$("#"+this.id).find('[find=description]').html(commentText);
-				} else {
-					$("#"+this.id).find('[find=description]').html('');
-				}
-				*/
-			}
-			if (cnt) {
-				if (cnt > 999) {
-					$("#"+this.id).find('.notification').html('...').show();
-				} else {
-					$("#"+this.id).find('.notification').html(cnt).show();
-				}
-			}
-			else {
-				$("#"+this.id).find('.notification').hide();
-			}
-		});
-		Elem.find('[find=card_leftbox]').html(Elem_logo);
-		var name = '';
-
-
-		Elem.prop('id','skylist_card_'+that.md5id+'_'+item['id']);
-
-
-		/*
-		title
-		*/
-		Elem.attr('type', item_type);
-		var elem_title = Elem.find('[find=title]');
-		if (item_type == "projects" || item_type == "history") {
-			if(item_id == Lincko.storage.getMyPlaceholder()['_id']){
-				name = Lincko.Translation.get('app', 2502, 'html'); //Personal Space
-			} else {
-				name = Lincko.storage.get("projects", item_id, "+title");
-			}
-
-			Elem_logo.find('span').addClass('fa fa-globe');
-
-		} else if (item_type == 'chats') {
-			var chat = Lincko.storage.get('chats', item_id);
-			if(chat["single"]){
-				name = "";
-				user_icon = false;
-				var src = app_application_icon_single_user.src;
-				if(chat["_perm"][wrapper_localstorage.uid]){
-					var perso = Lincko.storage.get('users', wrapper_localstorage.uid);
-					name = perso["-username"];
-					src = Lincko.storage.getLinkThumbnail(perso['profile_pic']);
-					if(!src){
-						src = app_application_icon_single_user.src;
-					} else {
-						user_icon = true;
-					}
-				}
-				for(var i in chat["_perm"]){
-					if(i!=wrapper_localstorage.uid){
-						var perso = Lincko.storage.get('users', i);
-						name = perso["-username"];
-						src = Lincko.storage.getLinkThumbnail(perso['profile_pic']);
-						if(!src){
-							src = app_application_icon_single_user.src;
-						} else {
-							user_icon = true;
-						}
-						break;
-					}
-				}
-				if(user_icon){
-					Elem_logo.find('img.logo_img').removeClass("display_none");
-					Elem_logo.find('img.logo_img').attr('src', src);
-					Elem_logo.find('span.logo').addClass("display_none");
-				} else {
-					Elem_logo.find('span.logo').removeClass("display_none");
-					Elem_logo.find('span.logo').addClass('icon-Single-Person');
-					Elem_logo.find('img.logo_img').addClass("display_none");
-				}
-			} else {
-				name = Lincko.storage.get('chats', item_id, '+title');
-				Elem_logo.find('span.logo').removeClass("display_none");
-				Elem_logo.find('span.logo').addClass('icon-Multiple-People');
-				Elem_logo.find('img.logo_img').addClass("display_none");
-			}
-
-
-		}
-		var contenteditable = false;
-		var elem_title = Elem.find('[find=title]');
-		elem_title.html(wrapper_to_html(name));
-
-		var commentText = '';
-		if(item['comment']){
-			var commentText = item['comment'];
-			if(item.type != 'history'){
-				commentText =  wrapper_to_html(item['comment']);
-			}
-		}
-
-		Elem.find('[find=description]').html(commentText);
-
-		var latest_update = new wrapper_date(item_timestamp);
-
-		if( latest_update.happensSomeday(0) ){
-			latest_update = Lincko.Translation.get('app', 3302, 'html').toUpperCase(); //today
-		}
-		//toto => happensSomeday is somwhow not tking is account the timezone
-		/*
-		else if( latest_update.happensSomeday(-1) ){
-			latest_update = Lincko.Translation.get('app', 3304, 'html').toUpperCase(); //yesterday
-		}
-		*/
-		else{
-			latest_update = latest_update.display('date_very_short');
-		}
-
-		Elem.find('[find=card_time]').html(latest_update);
-		Elem.data('options',false);
-		that.add_cardEvents(Elem);
-
-		return Elem;
 }
 
 skylist.prototype.addTask = function(item){

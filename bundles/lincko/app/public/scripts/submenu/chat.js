@@ -211,9 +211,9 @@ Submenu.prototype.Add_ChatContacts = function() {
 		Elem.removeClass("submenu_deco").addClass("submenu_deco_read");
 		thumbnail = Lincko.storage.getLinkThumbnail(contacts[i]['profile_pic']);
 		if(thumbnail){
-			Elem.find("[find=picture_src]").prop("src", thumbnail);
+			Elem.find("[find=picture_src]").css('background-image','url("'+thumbnail+'")');
 		} else {
-			Elem.find("[find=picture_src]").prop("src", app_application_icon_single_user.src);
+			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_single_user.src+'")');
 		}
 		Elem.find("[find=who]").html(wrapper_to_html(contacts[i]['-username'].ucfirst()));
 		Elem.find("[find=invitation]").removeClass("display_none");
@@ -266,9 +266,9 @@ Submenu.prototype.Add_ChatContacts = function() {
 		Elem.prop("id", that.id+"_submenu_app_chat_chat_contact_"+contacts[i]['_id']);
 		thumbnail = Lincko.storage.getLinkThumbnail(contacts[i]['profile_pic']);
 		if(thumbnail){
-			Elem.find("[find=picture_src]").prop("src", thumbnail);
+			Elem.find("[find=picture_src]").css('background-image','url("'+thumbnail+'")');
 		} else {
-			Elem.find("[find=picture_src]").prop("src", app_application_icon_single_user.src);
+			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_single_user.src+'")');
 		}
 		Elem.find("[find=who]").html(wrapper_to_html(contacts[i]['-username'].ucfirst()));
 		Elem.off("click");
@@ -470,10 +470,11 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 	else if(chat_status == "found" && data && data['id'] && typeof data['profile_pic']!="undefined" && typeof data['username']!="undefined"){
 		Elem_user.removeClass("display_none");
 		Elem_user.find("[find=invitation_invite]").removeClass("display_none").off("click");
-		if(Lincko.storage.get("files", data['profile_pic'])){
-			Elem_user.find("[find=picture_src]").prop("src", Lincko.storage.getLinkThumbnail(data['profile_pic']));
+		var thumbnail = Lincko.storage.getLinkThumbnail(data['profile_pic']);
+		if(thumbnail){
+			Elem_user.find("[find=picture_src]").css('background-image','url("'+thumbnail+'")');
 		} else {
-			Elem_user.find("[find=picture_src]").prop("src", app_application_icon_single_user.src);
+			Elem_user.find("[find=picture_src]").css('background-image','url("'+app_application_icon_single_user.src+'")');
 		}
 		Elem_user.find("[find=who]").html(wrapper_to_html(data['username'].ucfirst()));
 		var param = data;
@@ -498,10 +499,11 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 		if(data && data['id'] && typeof data['profile_pic']!="undefined" && typeof data['username']!="undefined"){
 			Elem_user.removeClass("display_none");
 			Elem_user.find("[find=invitation_invite]").off("click").addClass("display_none");
-			if(Lincko.storage.get("files", data['profile_pic'])){
-				Elem_user.find("[find=picture_src]").prop("src", Lincko.storage.getLinkThumbnail(data['profile_pic']));
+			var thumbnail = Lincko.storage.getLinkThumbnail(data['profile_pic']);
+			if(thumbnail){
+				Elem_user.find("[find=picture_src]").css('background-image','url("'+thumbnail+'")');
 			} else {
-				Elem_user.find("[find=picture_src]").prop("src", app_application_icon_single_user.src);
+				Elem_user.find("[find=picture_src]").css('background-image','url("'+app_application_icon_single_user.src+'")');
 			}
 			Elem_user.find("[find=who]").html(wrapper_to_html(data['username'].ucfirst()));
 		}
@@ -512,10 +514,11 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 		if(data && data['id'] && typeof data['profile_pic']!="undefined" && typeof data['username']!="undefined"){
 			Elem_user.removeClass("display_none");
 			Elem_user.find("[find=invitation_invite]").off("click").addClass("display_none");
-			if(Lincko.storage.get("files", data['profile_pic'])){
-				Elem_user.find("[find=picture_src]").prop("src", Lincko.storage.getLinkThumbnail(data['profile_pic']));
+			var thumbnail = Lincko.storage.getLinkThumbnail(data['profile_pic']);
+			if(thumbnail){
+				Elem_user.find("[find=picture_src]").css('background-image','url("'+thumbnail+'")');
 			} else {
-				Elem_user.find("[find=picture_src]").prop("src", app_application_icon_single_user.src);
+				Elem_user.find("[find=picture_src]").css('background-image','url("'+app_application_icon_single_user.src+'")');
 			}
 			Elem_user.find("[find=who]").html(wrapper_to_html(data['username'].ucfirst()));
 		}
@@ -680,12 +683,8 @@ Submenu.prototype.Add_ChatContent = function() {
 	var that = this;
 	var submenu_wrapper = this.Wrapper();
 	var position = submenu_wrapper.find("[find=submenu_wrapper_content]");
-	//position.addClass('overthrow').addClass("submenu_chat_contents");
 	position.addClass('overthrow');
 	position.empty();
-	//var Elem = $("[find=submenu_wrapper_title]", '#-submenu_app_chat_chatmenu').clone();
-
-	//submenu_wrapper.find("[find=submenu_wrapper_title]").html(wrapper_to_html(this.param['title']));
 
 	var chatlist_subConstruct = function(){
 		this.list_wrapper.addClass("skylist_maxMobileL_force").addClass('submenu_content_chat');
@@ -707,44 +706,80 @@ Submenu.prototype.Add_ChatContent = function() {
 
 	submenu_wrapper.find("[find=search_textbox]").addClass('no_focus');
 
-	/*
-	for (var item in chatList) {
-		var elem = mainMenu.feed(position, chatList[item]);
-
-		elem.on("click", chatList[item], function(event) {
-				var title;
-				if (event.data.type == 'chats') {
-					title = $(this).find('header').html();
-				} else {
-					title = Lincko.storage.get("projects", event.data.id, "+title");
-				}
-				//render
-				submenu_Build("newchat", true, false, {
-					type: event.data.type,
-					id: event.data.id,
-					title: title,
-				});
+	//toto => synchronization still need to work for repositioning and adding new chat group or projects
+	app_application_lincko.add(
+		submenu_wrapper.id,
+		["projects", "chats"],
+		function(){
+			var layer = $('#'+this.id);
+			var prefix = 'skylist_card_'+this.action_param.md5id+'_';
+			var items = this.action_param.Lincko_itemsList = this.action_param.list_filter();
+			var list = {};
+			for(var i in items){
+				list[ prefix + items[i]['root_type']+"_"+items[i]['root_id'] ] = items[i]['timestamp'];
 			}
-		);
-	}
-	*/
-	position.delegate(".skylist_card", "click", function() {
-		if ($(this).attr('type') != 'history') {
-			var tmp = $(this).prop("id").split("_");
-			var id = tmp[tmp.length-1];
-			var title = Lincko.storage.get('chats', id, '+title');
-		}
-		else {
-			var tmp = $(this).prop("id").split("_");
-			var id = tmp[tmp.length-1];
-			var title = Lincko.storage.get("projects", id, "+title");
-		}
-		submenu_Build("newchat", that.layer+1, false, {
-			type: $(this).attr('type'),
-			id: id,
-			title: title }, that.preview);
-		return false;
-	});
+			
+			var Elems = layer.find('[find=card]');
+
+			var list_dom = {};
+			Elems.each(function(){
+				var Elem = $(this);
+				list_dom[ Elem.prop('id') ] = Elem.attr('timestamp');
+				if(typeof list[Elem.prop('id')] == "undefined"){ //remove
+					Elem.velocity('slideUp', {
+						complete: function(){
+							$(this).remove();
+						}
+					});
+				} else if(list[Elem.prop('id')] != Elem.attr('timestamp')){ //update (move place)
+					var parent = Elem.parent();
+					Elem.detach(); //cut
+					var timestamp = list[Elem.prop('id')];
+					var Elems_bis = layer.find('[find=card]');
+					var attached = false;
+					Elems_bis.each(function(){
+						var Elem_bis = $(this);
+						if(!attached && timestamp >= Elem_bis.attr('timestamp')){
+							attached = true;
+							Elem_bis.before(Elem);
+							return false;
+						}
+					});
+					if(!attached){
+						parent.append(Elem);
+					}
+				}
+			});
+
+			for(var i in items){
+				var Elem = $('#'+ prefix + items[i]['root_type']+"_"+items[i]['root_id']);
+				if(Elem.length <= 0){
+					var Elem = this.action_param.addChat(items[i]);
+					var parent = this.action_param.list
+					Elem.detach(); //cut
+					var timestamp = list[Elem.prop('id')];
+					var Elems_bis = layer.find('[find=card]');
+					var attached = false;
+					Elems_bis.each(function(){
+						var Elem_bis = $(this);
+						if(!attached && timestamp >= Elem_bis.attr('timestamp')){
+							attached = true;
+							Elem_bis.before(Elem);
+							return false;
+						}
+					});
+					if(!attached){
+						parent.append(Elem);
+					}
+				} else if(items[i]['timestamp'] != Elem.attr('timestamp')){
+					this.action_param.addChat(items[i]);
+				}
+			}
+
+		},
+		app_layers_chatlist
+	);
+
 	//Free memory
 	delete submenu_wrapper;
 	return true;

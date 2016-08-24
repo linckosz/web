@@ -337,7 +337,7 @@ $(function () {
 				if(typeof data.result.msg === 'string'){
 					app_upload_files.lincko_files[data.lincko_files_index].lincko_error = data.result.msg;
 				}
-				if(data.result.flash && data.result.flash.resignin){
+				if(data.result.flash && data.result.flash.resignin){consoel.log(data.result)
 					app_upload_files.lincko_files[data.lincko_files_index].lincko_status = 'restart';
 					app_upload_files.lincko_files[data.lincko_files_index].lincko_error = Lincko.Translation.get('app', 59, 'html'); //Your file upload is restarting
 					wrapper_force_resign(function(){

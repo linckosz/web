@@ -572,10 +572,20 @@
 
 .skylist_chat_card_center {
 	height: 50px;
+	table-layout: fixed;
+}
+
+.skylist_maxMobileL .skylist_chat_card_center [find=title]{
+	padding-right: 80px;
 }
 
 .skylist_chat_card_leftbox {
 	padding: 0 16px;
+	width: 32px;
+}
+
+.skylist_chat_card_textwrapper {
+	width: auto;
 }
 
 .skylist_chat_history_picture {

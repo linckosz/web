@@ -133,12 +133,18 @@ var mainMenu = {
 	},
 
 	initChatTab: function(){
+		var not_all = Lincko.storage.hist(null, 1, {not: true}).length;
 		var histList = app_models_history.tabList(5);
 		var content;
 		if(histList.length>0){
 			$("#app_project_chats_all").removeClass('app_project_tab_force_radius');
 		} else {
 			$("#app_project_chats_all").addClass('app_project_tab_force_radius');
+		}
+		if(not_all>0){
+			$("#app_project_chats_all").find("[find=app_project_chats_notif]").removeClass('display_none');
+		} else {
+			$("#app_project_chats_all").find("[find=app_project_chats_notif]").addClass('display_none');
 		}
 		for (i = 0; i < 5; i++) {
 			var item = $("#app_project_item_chats_"+i);
@@ -209,11 +215,23 @@ $('#app_project_settings').click(function(){
 $('#app_project_projects_new').click(function(event){
 	event.stopPropagation();
 	submenu_Build("app_project_new");
+})
+.mouseenter(function(){
+	$('#app_project_projects_all').addClass('app_project_projects_all_reset');
+})
+.mouseleave(function(){
+	$('#app_project_projects_all').removeClass('app_project_projects_all_reset');
 });
 
 $('#app_project_chats_new').click(function(event){
 	event.stopPropagation();
 	submenu_Build("app_chat_new");
+})
+.mouseenter(function(){
+	$('#app_project_chats_all').addClass('app_project_chats_all_reset');
+})
+.mouseleave(function(){
+	$('#app_project_chats_all').removeClass('app_project_chats_all_reset');
 });
 
 $('#app_project_quick_access_plus').click(function(){

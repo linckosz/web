@@ -40,9 +40,17 @@ var app_models_resume_format_sentence = function(comments_id, who, type) {
 
 	if(error){
 		if(base == 700){
-			return Lincko.Translation.get('app', 3817, 'html'); //There was no activity last week.
+			return $('<span>')
+				.addClass('unselectable')
+				.html(wrapper_to_html(
+					Lincko.Translation.get('app', 3817, 'html') //There was no activity last week.
+				));
 		} else {
-			return Lincko.Translation.get('app', 3811, 'html'); //There was no activity yesterday.
+			return $('<span>')
+				.addClass('unselectable')
+				.html(wrapper_to_html(
+					Lincko.Translation.get('app', 3811, 'html') //There was no activity yesterday.
+				));
 		}
 	}
 
@@ -72,8 +80,8 @@ var app_models_resume_format_sentence = function(comments_id, who, type) {
 
 	sentence = sentence + '<div find="result" class="ellipsis"></div>';
 
-	var span = $('<span>').html(php_nl2br(sentence));
-	span.addClass('app_models_resume_span');
+	var span = $('<span>').html(sentence);
+	span.addClass('app_models_resume_span unselectable');
 	var result = {};
 	//Attach event click
 	//Task list
@@ -141,12 +149,16 @@ var app_models_resume_listup = function(Elem, list, color){
 		}
 		div.velocity("slideDown", {
 			duration: 500,
+			complete: function(){
+				wrapper_IScroll();
+			},
 		});
 	} else {
 		div.velocity("slideUp", {
 			duration: 300,
 			complete: function(){
 				$(this).empty();
+				wrapper_IScroll();
 			},
 		});
 	}

@@ -109,6 +109,13 @@
 
 .submenu_title_center {
 	width: 100%;
+	padding: 0 70px;
+}
+
+.submenu_title_center_icon {
+	font-size: 24px;
+	height: 24px;
+	vertical-align: text-bottom;
 }
 
 .submenu_top_side {
