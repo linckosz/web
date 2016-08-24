@@ -287,8 +287,8 @@ var chatFeed = (function() {
 			Elem.find(".date", "[find=timestamp]").html(date.display('date_short'));
 
 			Elem.find("[find=target]").addClass("upload_file_title").html(cutFileTitle(this.item[(this.item._type == "files"?"+name":"name")], 10, 0, this.item._type));
-			Elem.find("[find=progress_bar]").width("70%");  //toto
-			Elem.find("[find=progress_text]").addClass("uploading_file_progress_size").html("0K of 0 MB");
+			Elem.find("[find=progress_bar]").width("0%");
+			Elem.find("[find=progress_text]").addClass("uploading_file_progress_size").html("0 K of 0 MB"); //toto => translation
 			Elem.find(".uploading_action").html(Lincko.Translation.get('app', 7, 'html'));
 			if (this.item._type == 'files' || this.item._type == 'uploading_file'){
 				if(this.item.category=='image' || this.item.category=='video' )
@@ -582,7 +582,7 @@ var chatFeed = (function() {
 						.css('width', Math.floor(files[i].lincko_progress) + '%');
 					$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id)
 						.find("[find=progress_text]")
-						.html(files[i].lincko_progress * files[i].lincko_size +" K of "+files[i].lincko_size+" KB");
+						.html(files[i].lincko_progress * files[i].lincko_size +" K of "+files[i].lincko_size+" KB"); //toto => translation
 				}	
 				try{
 					if(typeof files[i].files[0].preview.tagName !== 'undefined' && files[i].files[0].preview.tagName.toLowerCase() === 'canvas'){

@@ -115,7 +115,7 @@ var app_models_history = {
 					}
 
 					if(hist_all[i]["type"]=="comments"){
-						if(hist_all[i]["by"]==0){toto = app_models_resume_format_sentence(hist_all[i]["id"]);
+						if(hist_all[i]["by"]==0){
 							info[i].content = app_models_resume_format_sentence(hist_all[i]["id"]).text();
 						} else if(root_item["single"]){
 							info[i].content = Lincko.storage.get("comments", hist_all[i]["id"], "comment");
@@ -139,4 +139,3 @@ var app_models_history = {
 		return histList;
 	},
 };
-var toto;
