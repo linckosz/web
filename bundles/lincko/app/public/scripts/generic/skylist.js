@@ -1725,7 +1725,7 @@ skylist.prototype.clearOptions = function(elem_task, begin_fn, complete_fn){
 		that.elem_card_all.find('[find=card_leftOptions]').removeAttr('style');
 		that.elem_card_all.data('options',false);
 	}
-	else{
+	else if(that.actiontask){
 		that.actiontask.data('options',false);
 		elem_task.velocity( {left: 0},{
 			begin: begin_fn,

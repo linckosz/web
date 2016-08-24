@@ -552,6 +552,9 @@ burgerN.regex = function(elem, item, param){
 	});
 
 	elem.keyup(function(event){
+		if( responsive.test("maxMobileL") ){
+			return;
+		}
 		console.log('<<----keyup---->>');
 		var selection = getSelection();
 	    var focus_node = selection.focusNode;
@@ -561,8 +564,11 @@ burgerN.regex = function(elem, item, param){
 	    console.log("keyCode:", event.keyCode);
 	    console.log("charCode:", event.charCode);
 	    console.log("node value:", focus_node.nodeValue);
+	   	console.log('.text():',elem.text());
+	   	console.log('$.selection():',$.selection());
 	    var latestChar = null;
-	    if(focus_node.nodeValue){ latestChar = (focus_node.nodeValue).slice(-1); }
+	    var latestCharAlt = null;
+	    if(focus_node.nodeValue){ latestCharAlt = (focus_node.nodeValue).slice(-1); }
 	    //console.log('latestChar:', latestChar);
 
 	    var coord = burger_regex_getCaretOffset(elem);
@@ -570,6 +576,8 @@ burgerN.regex = function(elem, item, param){
 	    caretIndex = coord.caretOffset;
 	  	var currentText = elem.text();
 	  	latestChar = currentText[caretIndex - 1];
+	  	console.log('latestChar:',latestChar);
+	  	if(latestChar == latestChar_prev  && latestCharAlt != latestChar_prev ){ latestChar = latestCharAlt; }
 
 	    /*For Chinese only, when inputting pinyin:
 	      if waiting for combined character (229) but latestChar is not Chinese, return and act on next keyup*/
@@ -582,7 +590,7 @@ burgerN.regex = function(elem, item, param){
 		//if(event.which == 16){ return; }
 
 	    if( elem_dropdown ){
-			if( event.which == 32 || caretIndex < burger_startIndex ){//if 'space' or caret is moved behind the burger_startIndex
+			if( (event.which == 32 && !latestChar.replace(/\s/g, '').length) || caretIndex < burger_startIndex ){//if 'space' or caret is moved behind the burger_startIndex
 				destroy();
 				return;
 			}
@@ -863,8 +871,15 @@ burgerN.draw_dates = function(substr, option_fn){
 		}
 
 		$.each(optionsFinal, function(i, fullStr){
-			console.log('fullStr:',fullStr);
-			if((fullStr.toLowerCase()).indexOf(substr_char) != -1){
+
+			var pinyin = '';
+			if(app_language_short == 'zh-chs'){
+				pinyin = Pinyin.GetQP(fullStr);
+				console.log('pinyin:',pinyin);
+				fullStr = burgerN.ChineseNumberConverter(fullStr);
+			}
+
+			if((fullStr.toLowerCase()).indexOf(substr_char) != -1 || pinyin.indexOf(substr_char) != -1){
 
 				//months only selections, and the number exceeds the corresponding month's max days
 				if(optionsFinal.length == 12 && substr_num){
