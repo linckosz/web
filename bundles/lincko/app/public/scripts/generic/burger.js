@@ -237,7 +237,8 @@ burgerN.typeTask = function(projectID, skylistInst){
 
 		$(this).closest('[find=toggleOpacity]').removeClass('burger_typeTask_opacity');
 		if($(this).html() == defaultPhrase){
-			$(this).html('').focus();
+			$(this).text('');
+			burgerN.placeCaretAtEnd($(this));
 		}
 	});
 	elem_typingArea.blur(function(event){
