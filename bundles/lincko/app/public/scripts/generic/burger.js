@@ -15,17 +15,13 @@
 	optionHeight: 50,
 	//doesnt work for <IE9
 	placeCaretAt: function(index, elem){
-		console.log('-----placeCaretAt-------');
-		console.log('index:',index);
 		if(index < 0){ index = 0; }
 		var caretPlaced = false;
 		//ignore child
 		var outerTextNode = elem.contents().filter(function(){ return this.nodeType == 3; });
-		console.log(outerTextNode);
 		$.each(outerTextNode, function(i, val){
 			if(index >= val.length){
 				index = index - val.length;
-				console.log('index:',index);
 			}
 			else if(index < val.length){
 				var el = elem;
@@ -42,7 +38,6 @@
 		});
 		
 		if(!caretPlaced){
-			console.log('caretAtEnd');
 			burgerN.placeCaretAtEnd(elem);
 		}
 		elem.trigger('focus',{cancelBlur: true});
@@ -73,8 +68,8 @@
 burgerN.placeCaretAtStart =  burgerN.createCaretPlacer(true);
 burgerN.placeCaretAtEnd = burgerN.createCaretPlacer(false);
 
-burgerN.todayStr = Lincko.Translation.get('app', 3302, 'html').toLowerCase();//today
-burgerN.tomorrowStr = Lincko.Translation.get('app', 3303, 'html').toLowerCase();//tomorrow
+burgerN.todayStr = Lincko.Translation.get('app', 3302, 'pure').toLowerCase();//today
+burgerN.tomorrowStr = Lincko.Translation.get('app', 3303, 'pure').toLowerCase();//tomorrow
 burgerN.daysVeryShortArray = (new wrapper_date()).day_very_short;
 burgerN.monthsArray = (new wrapper_date()).month;
 burgerN.monthsArrayObj = [];
@@ -117,7 +112,7 @@ burgerN.ChineseNumberConverter = function(input){
 		shi: 10, '十': 10,
 	}
 
-	var numberObj1 = {
+	/*var numberObj1 = {
 		ershi: 20, '二十': 20,
 		sanshi: 30, '三十': 30,
 		sishi: 40, '四十': 40,
@@ -139,7 +134,7 @@ burgerN.ChineseNumberConverter = function(input){
 		ba: 8, '八': 8,
 		jiu: 9, '九': 9,
 		shi: 10, '十': 10,
-	}
+	}*/
 
 	var array = [];
 
@@ -232,7 +227,8 @@ burgerN.typeTask = function(projectID, skylistInst){
 	var elem_typeTask = $('#-burger_typeTask').clone().prop('id','');
 	var elem_typingArea = elem_typeTask.find('[find=text]');
 
-	var defaultPhrase = 'Type a task';//toto
+	var defaultPhrase = Lincko.Translation.get('app', 2204, 'html'); //type here to add a task
+	elem_typingArea.text(defaultPhrase);
 
 	//use cancelBlur to control unwanted 'blur'
 	var cancelBlur = false;
@@ -463,7 +459,7 @@ burgerN.regex = function(elem, item, param){
 		$.each(outerTextNode, function(key,str2){
 			var str = that.shortcut.user+burger_str;
 			if((str2.data).indexOf(str) != -1){
-			    $(outerTextNode[key]).replaceWith($(outerTextNode[key]).text().replace(that.shortcut.user+burger_str, '<span userid="'+userid+'" contenteditable="false" class="burger_tag">'+that.shortcut.user+username+'</span>'));
+			    $(outerTextNode[key]).replaceWith($(outerTextNode[key]).text().replace(that.shortcut.user+burger_str, '<span userid="'+userid+'" contenteditable="false" class="burger_tag">'+that.shortcut.user+username+'</span> '));
 			    return false;
 			}
 		});
@@ -494,8 +490,8 @@ burgerN.regex = function(elem, item, param){
 			finalVal = dateVal;
 		}
 		else{
-			finalStr = $(this).text();
 			finalVal = timestamp;
+			finalStr = new wrapper_date(finalVal).display('date_very_short');
 		}
 
 		var caretIndex_new = caretIndex;
@@ -510,8 +506,14 @@ burgerN.regex = function(elem, item, param){
 		//if there are spans in the middle, outerTextNode is divied up, so must loop
 		$.each(outerTextNode, function(key,str2){
 			var str = that.shortcut.date+burger_str;
-			if((str2.data).indexOf(str) != -1){
-			    $(outerTextNode[key]).replaceWith($(outerTextNode[key]).text().replace(that.shortcut.date+burger_str, '<span find="dateWrapper" val="'+finalVal+'" contenteditable="false" class="burger_tag">'+that.shortcut.date+finalStr+'</span>'));
+			var strAlt = that.shortcut.dateAlt+burger_str;
+			var shortcut = that.shortcut.date;
+			if((str2.data).indexOf(strAlt) != -1){
+				shortcut = that.shortcut.dateAlt;
+			}
+
+			if((str2.data).indexOf(str) != -1 || (str2.data).indexOf(strAlt) != -1){
+			    $(outerTextNode[key]).replaceWith($(outerTextNode[key]).text().replace(shortcut+burger_str, '<span find="dateWrapper" val="'+finalVal+'" contenteditable="false" class="burger_tag">'+that.shortcut.date+finalStr+'</span> '));
 			    return false;
 			}
 		});
@@ -522,7 +524,7 @@ burgerN.regex = function(elem, item, param){
 		destroy();
 	}//end of dateClick_fn
 
-	elem.on('keydown', function(event){ return;
+	/*elem.on('keydown', function(event){ return;
 		console.log('<<----keydown---->>');
 		var selection = getSelection();
 	    var focus_node = selection.focusNode;
@@ -533,15 +535,13 @@ burgerN.regex = function(elem, item, param){
 	    console.log("charCode:", event.charCode);
 	    console.log("node value:", focus_node.nodeValue);
 	    console.log('<<----keydown END---->>');
-	});
+	});*/
 
-	elem.on('input', function(event){return;
-		console.log('<<----input---->>');
-		var selection = getSelection();
-	    var focus_node = selection.focusNode;
-	    focus_node.normalize();
-	    console.log("node value:", focus_node.nodeValue);
-	    console.log('<<----input END---->>');
+	//tab to go to next focusable element happens at keydown
+	elem.on('keydown', function(event){
+		if((event.which || event.keyCode) == 9){ //if tab is pressed
+			event.preventDefault();
+		}
 	});
 
 	//adding linebreak happens on keypress, not on keyup
@@ -555,17 +555,9 @@ burgerN.regex = function(elem, item, param){
 		if( responsive.test("maxMobileL") ){
 			return;
 		}
-		console.log('<<----keyup---->>');
 		var selection = getSelection();
 	    var focus_node = selection.focusNode;
 	    focus_node.normalize();
-	    console.log("event type:", event.type);
-	    console.log("which:", event.which);
-	    console.log("keyCode:", event.keyCode);
-	    console.log("charCode:", event.charCode);
-	    console.log("node value:", focus_node.nodeValue);
-	   	console.log('.text():',elem.text());
-	   	console.log('$.selection():',$.selection());
 	    var latestChar = null;
 	    var latestCharAlt = null;
 	    if(focus_node.nodeValue){ latestCharAlt = (focus_node.nodeValue).slice(-1); }
@@ -576,7 +568,6 @@ burgerN.regex = function(elem, item, param){
 	    caretIndex = coord.caretOffset;
 	  	var currentText = elem.text();
 	  	latestChar = currentText[caretIndex - 1];
-	  	console.log('latestChar:',latestChar);
 	  	if(latestChar == latestChar_prev  && latestCharAlt != latestChar_prev ){ latestChar = latestCharAlt; }
 
 	    /*For Chinese only, when inputting pinyin:
@@ -594,7 +585,7 @@ burgerN.regex = function(elem, item, param){
 				destroy();
 				return;
 			}
-			if((event.which || event.keyCode) == 13){ //if enter is pressed
+			if((event.which || event.keyCode) == 13 || (event.which || event.keyCode) == 9){ //if enter or tab is pressed
 				event.preventDefault();
 				var elem_options = elem_dropdown.find('.burger_option_users');
 				if(elem_options.length){
@@ -624,10 +615,33 @@ burgerN.regex = function(elem, item, param){
 						}
 					});
 				}
-				elem_dropdown.empty().html(burgerN.draw_contacts(contactsID_obj_search, userClick_fn).children());
+
+				//elem_dropdown.empty().html(burgerN.draw_contacts(contactsID_obj_search, userClick_fn).children());
+
+				var elem_dropdown_new = burgerN.draw_contacts(contactsID_obj_search, userClick_fn);
+				elem_dropdown.empty().html(elem_dropdown_new.children());
+				var elem_height = elem_dropdown_new.height();
+				if(elem_height){
+					elem_dropdown.height(elem_height);
+				}
+				else{
+					elem_dropdown.height('');
+				}
+				wrapper_IScroll();
 			}
 			else if(currentMode == that.shortcut.date || currentMode == that.shortcut.dateAlt){
-				elem_dropdown.empty().html(burgerN.draw_dates(burger_str, dateClick_fn).children());
+				//elem_dropdown.empty().html(burgerN.draw_dates(burger_str, dateClick_fn).children());
+
+				var elem_dropdown_new = burgerN.draw_dates(burger_str, dateClick_fn);
+				elem_dropdown.empty().html(elem_dropdown_new.children());
+				var elem_height = elem_dropdown_new.height();
+				if(elem_height){
+					elem_dropdown.height(elem_height);
+				}
+				else{
+					elem_dropdown.height('');
+				}
+				wrapper_IScroll();
 			}
 		}
 		else if( latestChar == that.shortcut.user /* @ */ && (!param || !param.disable_shortcutUser)){
@@ -645,7 +659,7 @@ burgerN.regex = function(elem, item, param){
 			that.slideDown(elem_dropdown);
 		}
 		else if( latestChar_prev+latestChar == that.shortcut.date /* ++ */ || latestChar_prev+latestChar == that.shortcut.dateAlt){
-			currentMode = that.shortcut.date; console.log('burgerMode set:',currentMode);
+			currentMode = that.shortcut.date;
 			burger_startIndex = caretIndex;
 			elem_dropdown = burgerN.draw_dates(burger_str, dateClick_fn)
 				.css({
@@ -667,7 +681,6 @@ burgerN.regex = function(elem, item, param){
 		}
 
 		latestChar_prev = latestChar;
-	    console.log('<<----keyup END---->>');
 	});
 
 	elem.click(function(){
@@ -845,7 +858,6 @@ burgerN.draw_dates = function(substr, option_fn){
 	//for chinese, convert chinese character and pinyin to numbers
 	if(app_language_short == 'zh-chs'){
 		substr = burgerN.ChineseNumberConverter(substr);
-		console.log('converted:',substr);
 	}
 
 
@@ -854,8 +866,6 @@ burgerN.draw_dates = function(substr, option_fn){
 	
 	var substr_char = substr.replace(/\d/g,'').toLowerCase();
 	var substr_num = substr.replace(/\D/g,'');
-	console.log('substr_char:',substr_char);
-	console.log('substr_num:',substr_num);
 	
 	//group 1 languages or to display today,tomorrow
 	if(app_language_group == 1 || !substr_num){
@@ -871,16 +881,16 @@ burgerN.draw_dates = function(substr, option_fn){
 		}
 
 		$.each(optionsFinal, function(i, fullStr){
-
+			var monthIndex = null;
 			var pinyin = '';
 			if(app_language_short == 'zh-chs'){
 				pinyin = Pinyin.GetQP(fullStr);
-				console.log('pinyin:',pinyin);
 				fullStr = burgerN.ChineseNumberConverter(fullStr);
+				monthIndex = parseInt(fullStr,10);
+				if($.isNumeric(monthIndex)){ monthIndex -= 1; }
 			}
 
 			if((fullStr.toLowerCase()).indexOf(substr_char) != -1 || pinyin.indexOf(substr_char) != -1){
-
 				//months only selections, and the number exceeds the corresponding month's max days
 				if(optionsFinal.length == 12 && substr_num){
 					if(substr_num > burgerN.monthsArrayObj[i].maxDays){
@@ -892,7 +902,9 @@ burgerN.draw_dates = function(substr, option_fn){
 					elem_option_clone.attr('dateType','TT').attr('dateVal', i);
 				}
 				else{
-					var monthIndex = optionsMonths.indexOf(fullStr);
+					if(!monthIndex){
+						monthIndex = optionsMonths.indexOf(fullStr);
+					}
 					if(monthIndex != -1 && monthIndex < 12){
 						elem_option_clone.attr('timestamp', burgerN.monthsArrayObj[monthIndex].getDuedateTimestamp(substr_num));
 					}
@@ -943,8 +955,10 @@ burgerN.draw_dates = function(substr, option_fn){
 		
 		num_array = substr.match(/(\d+)/g);
 		$.each(num_array, function(i,val){
+			//if no month or day is given, return
+			if(i_symMonth == i_symDay){ return; }
 			if(i == 0){
-				if( i_symMonth == i_symDay || (i_symMonth!=-1 && i_symDay==-1) || (i_symMonth!=-1 && i_symMonth < i_symDay) ){
+				if( (i_symMonth!=-1 && i_symDay==-1) || (i_symMonth!=-1 && i_symMonth < i_symDay) ){
 					num_Month = val;
 				}
 				else{
@@ -961,19 +975,34 @@ burgerN.draw_dates = function(substr, option_fn){
 				return false; 
 			}
 		});
-		console.log('i_symMonth:',i_symMonth);
-		console.log('i_symDay:',i_symDay);
-		console.log('substr:',substr);
-		console.log('num_Month', num_Month);
-		console.log('num_Day', num_Day);
-		console.log('num_array',num_array);
+
+		var currentMonth_i = new Date().getMonth();
 
 		$.each(optionsMonths, function(i,fullMonth){
+
+			//just number given, with no month or day specified
+			//2 results, matching month or matching day with current month
+			if(i_symMonth == i_symDay && num_array.length == 1){
+				if(currentMonth_i == i){ //if today's month matches the given number
+					num_Month = '';
+					num_Day = num_array[0];
+				}
+				else if(num_array[0]-1 == i){ //if given number matches the month
+					num_Month = (i+1).toString();
+					num_Day = '';//Day will be undefined, which means end of the month
+				}
+				else{
+					return;
+				}
+			}
+
 			//return if month is specified and not matched
 			if(num_Month.length && i != num_Month-1){ return; }
-
+			//if month is not specified, date is specified, only show the current month
+			if(!num_Month.length && currentMonth_i != i && num_Day.length ){ return; }
+			
 			var displayStr = '';
-			displayStr = (i+1) + app_language_month;
+			if(num_Month.length){displayStr += num_Month + app_language_month;}
 			if(num_Day.length){ displayStr += num_Day+app_language_day; }
 
 			elem_option_clone = elem_option.clone();
@@ -988,25 +1017,20 @@ burgerN.draw_dates = function(substr, option_fn){
 		});
 
 
-
-
 	}//end of app_language_group == 2
 
-
-
-
-
-
-	if(!elem_dropdown.find('.burger_option_users').length){
+	var optionCount = elem_dropdown.find('.burger_option_users').length;
+	if(!optionCount){
 		elem_option.find('[find=text]').html('no match');/*toto*/
 		elem_option.find('[find=image]').addClass('display_none');
 		elem_dropdown.find('[find=wrapper]').append(elem_option);
-		return elem_dropdown;
 	}
-
-	if(Object.keys(options).length > that.dropdownCount){
+	else if(optionCount > that.dropdownCount){
 		elem_dropdown.css({'height': that.optionHeight*that.dropdownCount, 'width': that.dropdownWidth});
 		elem_dropdown.find('[find=wrapper]').addClass('overthrow');
+	}
+	else{
+		elem_dropdown.css('height','initial');
 	}
 
 	return elem_dropdown;
