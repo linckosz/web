@@ -117,6 +117,7 @@ td.submenu_taskdetail_share .fa{
 .submenu_taskdetail_description [find=description_text] {
 	/*min-height: 60%;*/
 	/*padding-top: 40px;*/
+	color: #131313;
 	padding-bottom: 50px;
 	padding-right: 15px;
 	margin: 0px;
