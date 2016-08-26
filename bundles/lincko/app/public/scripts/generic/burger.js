@@ -564,7 +564,8 @@ burgerN.regex = function(elem, item, param){
 	    if(focus_node.nodeValue){ latestCharAlt = (focus_node.nodeValue).slice(-1); }
 	    //console.log('latestChar:', latestChar);
 
-	    var coord = burger_regex_getCaretOffset(elem);
+	    var coord = burger_regex_getCaretOffset(elem, true);
+	    coord.y = coord.y + 27; //offset by height of a single line of text
 
 	    caretIndex = coord.caretOffset;
 	  	var currentText = elem.text();
