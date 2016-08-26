@@ -569,7 +569,23 @@ burgerN.regex = function(elem, item, param){
 	    caretIndex = coord.caretOffset;
 	  	var currentText = elem.text();
 	  	latestChar = currentText[caretIndex - 1];
-	  	if(latestChar == latestChar_prev  && latestCharAlt != latestChar_prev ){ latestChar = latestCharAlt; }
+	  	if(caretIndex > 0){
+	  		latestChar_prev = currentText[caretIndex - 2];
+	  	}
+	  	else{
+	  		latestChar_prev = null;
+	  	}
+
+	  	//sometimes, for some input methods, focus_node.nodeValue reflects the latest typed characters
+	  	if(latestChar == latestChar_prev  && latestCharAlt != latestChar_prev ){ 
+	  		latestChar = latestCharAlt; 
+	  		if((focus_node.nodeValue).length > 1){
+	  			latestChar_prev = ((focus_node.nodeValue).slice(-2))[0];
+	  		}
+	  		else{
+	  			latestChar_prev = null;
+	  		}
+	  	}
 
 	    /*For Chinese only, when inputting pinyin:
 	      if waiting for combined character (229) but latestChar is not Chinese, return and act on next keyup*/
@@ -681,7 +697,6 @@ burgerN.regex = function(elem, item, param){
 			}
 		}
 
-		latestChar_prev = latestChar;
 	});
 
 	elem.click(function(){
