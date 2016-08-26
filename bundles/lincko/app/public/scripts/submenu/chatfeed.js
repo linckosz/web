@@ -138,7 +138,7 @@ function app_submenu_chatFeed() {
 			var type = $(elem).find("[find=target_type]").attr('parent');
 			var p_id = $(elem).find("[find=target_type]").attr('parent_id');
 			if(typeof type !== "undefined" && typeof p_id !== "undefined"){
-				that.chatFeed.RESOURCE_HANDLERS[type](p_id, elem);
+				this[type](p_id, elem);
 			}
 			return false;
 		},
