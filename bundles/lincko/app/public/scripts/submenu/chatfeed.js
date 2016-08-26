@@ -1,4 +1,24 @@
 /* Category 31 */
+
+var checkExtension = function(id) {
+	var PIC_EXTENSION = ['bmp', 'gif', 'png', 'apng', 'jpg', 'jpeg'];
+	var VIDEO_EXTENSION = ['mp4', 'mkv', 'mov', 'xvid', 'x264', 'wmv', 'avi'];
+
+	var file_name = Lincko.storage.get('files', id, "+name");
+	if(!file_name){
+		return null;
+	}
+	var tmp = file_name.split(".");
+	var extension = tmp[tmp.length - 1].toLowerCase();
+	if ($.inArray(extension, PIC_EXTENSION)>-1) {
+		return 'pic';
+	} else if ($.inArray(extension, VIDEO_EXTENSION)>-1) {
+		return 'video';
+	} else {
+		return null;
+	}
+};
+
 //class
 function app_submenu_chatFeed() {
 
@@ -12,7 +32,7 @@ function app_submenu_chatFeed() {
 			var name = Lincko.storage.get('files', id, "+name");
 			var url = Lincko.storage.getLink(id);
 			var thumbnail = Lincko.storage.getLinkThumbnail(id);
-			var extension = this.checkExtension(id);
+			var extension = checkExtension(id);
 			if (extension) {
 				previewer[extension](id);
 				return false;
@@ -43,7 +63,7 @@ function app_submenu_chatFeed() {
 			var name = Lincko.storage.get('files', id, "+name");
 			var url = Lincko.storage.getLink(id);
 			var thumbnail = Lincko.storage.getLinkThumbnail(id);
-			var extension = this.checkExtension(id);
+			var extension = checkExtension(id);
 			if (extension) {
 				previewer[extension](id);
 				return false;
@@ -204,25 +224,6 @@ app_submenu_chatFeed.prototype.renderLine = function(timestamp) {
 	}
 	line.find('span').html(date);
 	return line;
-};
-
-app_submenu_chatFeed.prototype.checkExtension = function(id) {
-	var PIC_EXTENSION = ['bmp', 'gif', 'png', 'apng', 'jpg', 'jpeg'];
-	var VIDEO_EXTENSION = ['mp4', 'mkv', 'mov', 'xvid', 'x264', 'wmv', 'avi'];
-
-	var file_name = Lincko.storage.get('files', id, "+name");
-	if(!file_name){
-		return null;
-	}
-	var tmp = file_name.split(".");
-	var extension = tmp[tmp.length - 1].toLowerCase();
-	if ($.inArray(extension, PIC_EXTENSION)>-1) {
-		return 'pic';
-	} else if ($.inArray(extension, VIDEO_EXTENSION)>-1) {
-		return 'video';
-	} else {
-		return null;
-	}
 };
 
 app_submenu_chatFeed.prototype.app_layers_history_launchPage = function(position, type, projectId, subm) {
