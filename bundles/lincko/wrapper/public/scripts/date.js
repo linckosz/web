@@ -157,32 +157,51 @@ $.extend(wrapper_date.prototype, {
 	},
 
 	happensToday: function() {
-		var dateStampToday = Math.floor(Date.now() / 86400000) * 86400000;
-		dateStampToday = dateStampToday + (this.timezone_offset*1000);
-		var dateStampTomorrow = dateStampToday + 86400000;
-		if ((this.timestamp*1000 >= dateStampToday) && (this.timestamp*1000 < dateStampTomorrow))
+		var now = new Date;
+		now.setHours(0);
+		now.setMinutes(0);
+		now.setSeconds(0);
+		var dateStampToday = Math.floor(now / 1000); //timestamp of beginning of the day taking in account the timezone
+		//dateStampToday = dateStampToday + (this.timezone_offset); //The offset seems useless
+		var dateStampTomorrow = dateStampToday + 86400;
+		if ((this.timestamp >= dateStampToday) && (this.timestamp < dateStampTomorrow)){
 			return true;
-		else
+		} else {
 			return false;
-	},
-
-	happensSomeday: function(int) {
-		var dateStampPrev = Math.floor(Date.now() / 86400000) * 86400000;
-		dateStampPrev = dateStampPrev + (this.timezone_offset*1000);
-		if(int != 0){
-			dateStampPrev += int*86400000;
 		}
-		var dateStampNext = dateStampPrev + 86400000;
-		if ((this.timestamp*1000 >= dateStampPrev) && (this.timestamp*1000 < dateStampNext))
-			return true;
-		else
-			return false;
 	},
 
-	getDayStartTimestamp: function() {
-		var day = Math.floor( new wrapper_date().timestamp  / 86400) * 86400;
-		day = day + this.timezone_offset;
-		return day;
+	//happensSomeday(-1) for yesterday
+	//happensSomeday(1) for tomorrow
+	happensSomeday: function(int) {
+		var now = new Date;
+		now.setHours(0);
+		now.setMinutes(0);
+		now.setSeconds(0);
+		var dateStampPrev = Math.floor(now / 1000); //timestamp of beginning of the day taking in account the timezone
+		//dateStampPrev = dateStampPrev + (this.timezone_offset); //The offset seems useless
+		if(int != 0){
+			dateStampPrev += int*86400;
+		}
+		var dateStampNext = dateStampPrev + 86400;
+		if ((this.timestamp >= dateStampPrev) && (this.timestamp < dateStampNext)){
+			return true;
+		} else {
+			return false;
+		}
+	},
+
+	getDayStartTimestamp: function(timestamp) {
+		//var day = Math.floor( new wrapper_date().timestamp  / 86400) * 86400;
+		//day = day + this.timezone_offset;
+		if(typeof timestamp == 'undefined'){
+			timestamp = this.timestamp;
+		}
+		var now = new Date(timestamp*1000);
+		now.setHours(0);
+		now.setMinutes(0);
+		now.setSeconds(0);
+		return Math.floor(now / 1000); //timestamp of beginning of the day taking in account the timezone
 	},
 
 	//Transform the format sentence into a readable date

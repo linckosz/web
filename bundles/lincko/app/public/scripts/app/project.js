@@ -208,6 +208,7 @@ var mainMenu = {
 			}
 			
 		}
+		mainMenu.chatsSelect();
 	},
 
 };

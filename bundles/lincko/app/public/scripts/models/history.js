@@ -22,13 +22,9 @@ var app_models_history = {
 		var perso;
 		var user_icon = false;
 		var date = new wrapper_date();
-		var info = {};
+		var startOfDay = date.getDayStartTimestamp(); //timestamp of beginning of the day taking in account the timezone
 
-		var now = new Date;
-		now.setHours(0);
-		now.setMinutes(0);
-		now.setSeconds(0);
-		var startOfDay = Math.floor(now / 1000); //timestamp of beginning of teh day taking in account the timezone
+		var info = {};
 
 		//This return projects or chats item
 		var getRoot = function(type, id){

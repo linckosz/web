@@ -211,16 +211,14 @@ app_submenu_chatFeed.prototype.renderLine = function(timestamp) {
 	var line = $('#' + lineTemplate).clone();
 	line.removeAttr('id');
 	line.addClass("models_history_line");
-	var today = Math.floor((new Date()).getTime() / 86400000);
-	if (timestamp == today * 86400) {
+	var date_tp = new wrapper_date(timestamp);
+	var date = date_tp.display('date_very_short');
+	if(date_tp.happensSomeday(0)){
 		this.is_today = true;
 		date = Lincko.Translation.get('app', 3302, 'html').toUpperCase(); //Today
 	}
-	else if (timestamp == (today - 1) * 86400) {
+	else if(date_tp.happensSomeday(-1)){
 		date = Lincko.Translation.get('app', 3304, 'html').toUpperCase(); //Yesterday
-	}
-	else{
-		date = (new wrapper_date(timestamp).display('date_very_short'));
 	}
 	line.find('span').html(date);
 	return line;
@@ -322,14 +320,12 @@ app_submenu_chatFeed.prototype.format_items = function(type, items, position, ne
 	var Elem;
 	var that = this;
 	var today = (new wrapper_date()).getDayStartTimestamp();
-	this.has_today = false;
 	if(newone)
 	{
 		groups = [{'timestamp':today ,'items':items}];
 	}
 	else
 	{
-		this.has_today = false;
 		groups = this.items_group_by_time(items, type);
 	}
 	for(var i in groups)
@@ -379,7 +375,7 @@ app_submenu_chatFeed.prototype.format_items = function(type, items, position, ne
 			}
 		}
 
-		if(newone && !this.has_today && Elem && !this.is_today)
+		if(newone && Elem && !this.is_today)
 		{
 			var line = this.renderLine(groups[i].timestamp);
 			Elem.before(line);
@@ -390,10 +386,6 @@ app_submenu_chatFeed.prototype.format_items = function(type, items, position, ne
 			line.prependTo(position.find(".chat_contents_wrapper"));
 		}
 
-		if(groups[i].timestamp == today)
-		{
-			this.has_today = true;
-		}
 	}
 };
 
@@ -401,18 +393,26 @@ app_submenu_chatFeed.prototype.items_group_by_time = function(items, type) {
 	var real_items=[];
 	var timestamp_groups = [];
 	var item_timestamp;
-	for(var i in items)
-	{
-		if(items[i].hasOwnProperty('+title')){continue;}
-		if (items[i].type === "comments")
-		{
+	var time_temp;
+	var date = new wrapper_date();
+	for(var i in items){
+		if(typeof items[i]['+title'] != 'undefined'){ //Bad design to exclude by title only
+			continue;
+		}
+		if (items[i].type == "comments"){
 			var root = Lincko.storage.getRoot('comments', items[i].id);
 			target = root['+title'];
 			var target_type = root['_type'];
 			if (root._type == 'chats'){continue;}
 		}
 		real_items.push(items[i]);
-		item_timestamp = Math.floor( (type == "history" ? items[i].timestamp : items[i].created_at)  / 86400) * 86400;
+
+		if(type == "history"){
+			time_temp = items[i].timestamp;
+		} else {
+			time_temp = items[i].created_at;
+		}
+		item_timestamp = date.getDayStartTimestamp(time_temp);
 		if(timestamp_groups.indexOf(item_timestamp) == -1)
 		{
 			timestamp_groups.push(item_timestamp);
@@ -428,7 +428,12 @@ app_submenu_chatFeed.prototype.items_group_by_time = function(items, type) {
 	var cursor = 0;
 	for(var i in real_items)
 	{
-		item_timestamp = Math.floor( (type == "history" ? real_items[i].timestamp : real_items[i].created_at)  / 86400) * 86400;
+		if(type == "history"){
+			time_temp = real_items[i].timestamp;
+		} else {
+			time_temp = real_items[i].created_at;
+		}
+		item_timestamp = date.getDayStartTimestamp(time_temp);
 		if(item_timestamp == timestamp_groups[cursor])
 		{
 			groups[cursor].items.push(real_items[i]);
