@@ -21,7 +21,7 @@ submenu_list['burger_contacts'] = {
 			var param = subm.param;
 			var userList = {};
 			var nameList = "";
-			var IDList = submenu_contacts_get(elem);
+			var IDList = submenu_contacts_get(Elem);
 			param.elem_input.val('');
 			$.each(IDList, function(i,val){
 				param.elem_input.val(param.elem_input.val()+val+' ');
