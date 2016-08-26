@@ -40,7 +40,7 @@ submenu_list['newchat'] = {
 
 Submenu_select.chat_contents = function(subm) {
 	subm.Add_ChatContents();
-}
+};
 Submenu_select.new_chat_menu = function(subm) {
 	subm.New_Add_ChatMenu();
 };
@@ -57,8 +57,9 @@ Submenu.prototype.Add_ChatContents = function() {
 	var position = submenu_wrapper.find("[find='submenu_wrapper_content']");
 	position.addClass('overthrow').addClass("submenu_chat_contents");
 	var submenu_wrapper_id=submenu_wrapper.prop("id");
-	chatFeed.feedHistory(position, type, id, that);
-	chatFeed.feedUploadingFiles(position,type,id,submenu_wrapper_id);
+	that.param.chatFeed = new app_submenu_chatFeed();
+	that.param.chatFeed.app_layers_history_launchPage(position, type, id, that);
+	that.param.chatFeed.app_layers_uploading_files(position,type,id,submenu_wrapper_id);
 
 	if (type == 'history') {
 		app_models_notifier.clearNotification('projects', id);
@@ -69,7 +70,7 @@ Submenu.prototype.Add_ChatContents = function() {
 		}
 		app_application_lincko.add(this.id+"_chat_contents_wrapper", "projects_" + id, function() {
 			//toto => there is an undefined somewhere
-			var id = Object.keys(this.range)[0].split("_")[1];
+			var id = this.action_param[1];
 			var items = Lincko.storage.hist(null, -1, {'timestamp': [">=", latest_history]}, 'projects', id, false);
 			
 			for(var i in items){
@@ -78,12 +79,11 @@ Submenu.prototype.Add_ChatContents = function() {
 				}
 			}
 
-
-			chatFeed.appendItem("history", items, position, true);
-			chatFeed.updateRecalled('projects', id, position);
-			chatFeed.updateTempComments('projects',id,position);
-			chatFeed.updateTempUploads('projects',id,position);
-
+			var chat_item = this.action_param[2];
+			chat_item.format_items("history", items, position, true);
+			chat_item.updateRecalled('projects', id, position, type);
+			chat_item.updateTempComments('projects', id, position, type);
+			chat_item.updateTempUploads('projects', id, position, type);
 
 			var overthrow_id = "overthrow_"+this.action_param[0];
 			var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
@@ -97,7 +97,7 @@ Submenu.prototype.Add_ChatContents = function() {
 			}
 			app_models_notifier.clearNotification('projects', id);
 			
-		}, [that.id, id]);
+		}, [that.id, id, that.param.chatFeed]);
 	}
 	else {
 		app_models_notifier.clearNotification('chats', id);
@@ -108,19 +108,19 @@ Submenu.prototype.Add_ChatContents = function() {
 		}
 		app_application_lincko.add(this.id+"_chat_contents_wrapper", "chats_" + id, function() {
 			//toto => there is an undefined somewhere
-			var id = Object.keys(this.range)[0].split("_")[1];
-			var type = Object.keys(this.range)[0].split("_")[0];
+			var id = this.action_param[1];
 			var items = Lincko.storage.list(null, -1, {'created_at': [">=", latest_comment]}, 'chats', id, false);
 			for(var i in items){
 				if(items[i]["created_at"] > latest_comment && latest_comment < Lincko.storage.getLastVisit()){
 					latest_comment = items[i]["created_at"];
 				}
 			}
-			chatFeed.appendItem(type, items, position, true);
-			chatFeed.updateRecalled('chats', id, position);
-			chatFeed.updateTempComments('chats',id,position);
-			chatFeed.updateTempUploads('chats',id,position);
-
+			
+			var chat_item = this.action_param[2];
+			chat_item.format_items('chats', items, position, true);
+			chat_item.updateRecalled('chats', id, position, type);
+			chat_item.updateTempComments('chats', id, position, type);
+			chat_item.updateTempUploads('chats', id, position, type);
 
 			var overthrow_id = "overthrow_"+this.action_param[0];
 			var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
@@ -134,7 +134,7 @@ Submenu.prototype.Add_ChatContents = function() {
 			}
 			app_models_notifier.clearNotification('chats', this.action_param[1]);
 			
-		}, [that.id, id]);
+		}, [that.id, id, that.param.chatFeed]);
 	}
 
 	app_application_lincko.add(submenu_wrapper_id, 'upload', function(){ //We cannot simplify because Elem is not the HTML object, it's a JS Submenu object
@@ -158,7 +158,8 @@ Submenu.prototype.Add_ChatContents = function() {
 					'created_by': wrapper_localstorage.uid,
 					'index': files[i].lincko_temp_id,
 				};
-				chatFeed.appendItem(_type, [item], position, true);	
+				var chat_item = this.action_param[2];
+				chat_item.format_items(_type, [item], position, true);	
 				if(files[i].lincko_progress>=100 && files[i].lincko_status === 'done'){
 					$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id)
 						.removeClass("uploading_file")
@@ -210,7 +211,7 @@ Submenu.prototype.Add_ChatContents = function() {
 				myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
 			}
 		}
-	}, [that.id, id]);
+	}, [that.id, id, that.param.chatFeed]);
 
 	var type_clear = type;
 	if (type == 'history') {
@@ -299,7 +300,7 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 			function(jqXHR, settings, temp_id) {
 				tmpID.push(temp_id);
 				if($.trim(content)==''){ return false; }
-				var position = $("[find='submenu_wrapper_content']", submenu_wrapper);	
+				var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
 				//Display a temp comment				
 				var fake_comment = {
 					"+comment": content.replace(/<(br).*?>/g,"\n"),
@@ -309,7 +310,10 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 					"created_by": wrapper_localstorage.uid,
 					"new": false,
 				};
-				chatFeed.appendItem('comments', [fake_comment], position, true);
+				//toto
+				//console.log(sub_that);
+				var chat_item = sub_that;
+				sub_that.param.chatFeed.format_items('comments', [fake_comment], position, true);
 				var overthrow_id = "overthrow_"+sub_that.id;
 				var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
 				if(myIScrollList[overthrow_id] && last && last[0]){

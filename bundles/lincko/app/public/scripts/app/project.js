@@ -365,7 +365,7 @@ $('#app_project_quick_access_upload').click(function(){
 	if(supportsTouch && responsive.test("maxTablet") && navigator.platform.toLowerCase()!="iphone"){
 		app_project_quick_upload_display($(this));
 	} else {
-		$('#app_project_quick_upload_files').click();
+		app_upload_open_files();
 	}
 });
 

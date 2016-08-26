@@ -17,6 +17,7 @@ var app_models_history = {
 		var root_item;
 		var root_name;
 		var name;
+		var comment;
 		var src;
 		var perso;
 		var user_icon = false;
@@ -121,15 +122,26 @@ var app_models_history = {
 					} else {
 						info[i].date = date.display('time_short');
 					}
-
 					if(hist_all[i]["type"]=="comments"){
 						if(hist_all[i]["by"]==0){
 							info[i].content = app_models_resume_format_sentence(hist_all[i]["id"]).text();
 						} else if(root_item["single"]){
-							info[i].content = Lincko.storage.get("comments", hist_all[i]["id"], "comment");
+							comment = Lincko.storage.get("comments", hist_all[i]["id"]);
+							if(comment['recalled_by']){
+								var uname = wrapper_to_html(Lincko.storage.get('users', hist_all[i]["by"])['-username']);
+								info[i].content = Lincko.Translation.get('app', 3101, 'html', {username: uname }); //has recalled a message
+							} else {
+								info[i].content = comment['+comment'];
+							}
 						} else {
-							info[i].by = hist_all[i]["by"];
-							info[i].content = Lincko.storage.get("comments", hist_all[i]["id"], "comment");
+							comment = Lincko.storage.get("comments", hist_all[i]["id"]);
+							if(comment['recalled_by']){
+								var uname = wrapper_to_html(Lincko.storage.get('users', hist_all[i]["by"])['-username']);
+								info[i].content = Lincko.Translation.get('app', 3101, 'html', {username: uname }); //has recalled a message
+							} else {
+								info[i].by = hist_all[i]["by"];
+								info[i].content = comment['+comment'];
+							}
 						}
 					} else {
 						info[i].content = Lincko.storage.getHistoryInfo(hist_all[i])["title"];
