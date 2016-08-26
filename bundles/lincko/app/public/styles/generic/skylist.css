@@ -590,9 +590,11 @@
 
 .skylist_chat_history_picture {
 	padding: 0;
-	height: 32px;
-	width: 32px;
+	width: 36px;
+	height: 36px;
 	font-size: 32px;
+	vertical-align: middle;
+	text-align: center;
 	display: inline-block;
 	position: relative;
 	background-repeat: no-repeat;
@@ -602,6 +604,10 @@
 
 .skylist_chat_card_time {
 	font-size: 12px;
+}
+
+.skylist_chat_card_username {
+	color: rgba(71, 85, 119, 0.70);
 }
 
 /*

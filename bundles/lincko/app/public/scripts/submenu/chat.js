@@ -22,7 +22,7 @@ submenu_list['app_chat_new'] = {
 		"style": "button",
 		"title": Lincko.Translation.get('app', 3701, 'html').ucfirst(), //Start New Chat
 		"action": function(Elem, subm){
-			submenu_Build('new_group', subm.layer, false, {type: 'chats', }, subm.preview);
+			submenu_Build('new_group', subm.layer, false, {type: 'chats', alwaysMe: true, }, subm.preview);
 		},
 		"class": "",
 	},
@@ -183,16 +183,16 @@ Submenu.prototype.Add_ChatContacts = function() {
 	submenu_wrapper.find("[find=submenu_wrapper_content]").empty();
 	submenu_wrapper.find("[find=submenu_wrapper_content]").prop("id", wrapper_content_id);
 
-	var temp = Lincko.storage.list('users');
+	var temp = Lincko.storage.list('users', null);
 	var visible = [];
 	var invitation = [];
 	var contacts = [];
 	if(temp){
 		for(var i in temp){
-			if(temp[i]['_visible'] || temp[i]['_id']==wrapper_localstorage.uid){
-				visible.push(temp[i]);
-			} else if(!temp[i]['_visible'] && temp[i]['_invitation'] && temp[i]['_id']!=wrapper_localstorage.uid){
+			if(temp[i]['_invitation'] && temp[i]['_id']!=wrapper_localstorage.uid){
 				invitation.push(temp[i]);
+			} else if(temp[i]['_visible'] || temp[i]['_id']==wrapper_localstorage.uid){
+				visible.push(temp[i]);
 			}
 		}
 	}

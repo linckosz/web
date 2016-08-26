@@ -133,7 +133,14 @@ var mainMenu = {
 	},
 
 	initChatTab: function(){
-		var not_all = Lincko.storage.hist(null, 1, {not: true}).length;
+		var not_all = false;
+		var temp = app_models_history.tabList();
+		for(var i in temp){
+			if(temp[i].notif){
+				not_all = true;
+				break;
+			}
+		}
 		var histList = app_models_history.tabList(5);
 		var content;
 		if(histList.length>0){
@@ -141,7 +148,7 @@ var mainMenu = {
 		} else {
 			$("#app_project_chats_all").addClass('app_project_tab_force_radius');
 		}
-		if(not_all>0){
+		if(not_all){
 			$("#app_project_chats_all").find("[find=app_project_chats_notif]").removeClass('display_none');
 		} else {
 			$("#app_project_chats_all").find("[find=app_project_chats_notif]").addClass('display_none');
@@ -189,12 +196,17 @@ var mainMenu = {
 				item.find("[find=app_project_chats_date]").html(wrapper_to_html(histList[i]['date']));
 				content = wrapper_flat_text(histList[i]['content']);
 				item.find("[find=app_project_chats_content]").html(wrapper_to_html(content));
-				item.find("[find=history_picture]").remove();
+				if(histList[i]['by']>0){
+					var username = $('<span>').addClass('app_project_chats_content_username').html(Lincko.storage.get('users', histList[i]["by"], "username")+": ");
+					item.find("[find=app_project_chats_content]").prepend(username);
+				}
+				item.find("[find=history_picture]").addClass('display_none');
 				item.find("[find=app_project_chats_picture]").append(histList[i]['picture'].clone());
 				item.attr('name', name);
 				item.attr('cid', cid);
 				item.attr('timestamp', timestamp);
 			}
+			
 		}
 	},
 
@@ -286,6 +298,16 @@ app_application_lincko.add("app_project_chats_tab", ["projects", "chats", "tasks
 	}
 });
 
+app_application_lincko.add("app_project_quick_access_chat", "users", function() {
+	if(Lincko.storage.list('users', 1, {_invitation: true}).length > 0){
+		$('#app_project_quick_access_chat').find("[find=notif]").removeClass('display_none');
+	} else {
+		$('#app_project_quick_access_chat').find("[find=notif]").addClass('display_none');
+	}
+});
+
+
+
 app_application_lincko.add("app_project_chats_all", ["submenu_hide", "submenu_show"], function() {
 	mainMenu.chatsSelect();
 });
@@ -340,7 +362,7 @@ function app_project_quick_upload_display(Elem, show) {
 }
 
 $('#app_project_quick_access_upload').click(function(){
-	if(supportsTouch && responsive.test("maxTablet")){
+	if(supportsTouch && responsive.test("maxTablet") && navigator.platform.toLowerCase()!="iphone"){
 		app_project_quick_upload_display($(this));
 	} else {
 		$('#app_project_quick_upload_files').click();

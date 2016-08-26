@@ -59,7 +59,10 @@ var app_models_history = {
 					} else {
 						app_models_history.hist_root[root_name].date = date.display('time_short');
 					}
-					app_models_history.hist_root[root_name].notif = hist_all[i].not;
+					app_models_history.hist_root[root_name].notif = false;
+					if(Lincko.storage.hist(null, 1, {not: true}, root_item["_type"], root_item["_id"], true).length > 0){
+						app_models_history.hist_root[root_name].notif = true;
+					}
 				} else {
 					info[i] = {};
 					info[i].name = name;
@@ -67,7 +70,12 @@ var app_models_history = {
 					info[i].id = hist_all[i]["id"];
 					info[i].root_type = root_item["_type"];
 					info[i].root_id = root_item["_id"];
-					info[i].notif = hist_all[i].not;
+					info[i].by = false;
+
+					info[i].notif = false;
+					if(Lincko.storage.hist(null, 1, {not: true}, root_item["_type"], root_item["_id"], true).length > 0){
+						info[i].notif = true;
+					}
 
 					if(root_item["_type"]=="projects" && root_item["_id"]==Lincko.storage.getMyPlaceholder()['_id']){
 						info[i].title = Lincko.Translation.get('app', 2502, 'html'); //Personal Space
@@ -120,8 +128,8 @@ var app_models_history = {
 						} else if(root_item["single"]){
 							info[i].content = Lincko.storage.get("comments", hist_all[i]["id"], "comment");
 						} else {
-							var username = "["+Lincko.storage.get('users', hist_all[i]["by"], "username")+"] ";
-							info[i].content = username+Lincko.storage.get("comments", hist_all[i]["id"], "comment");
+							info[i].by = hist_all[i]["by"];
+							info[i].content = Lincko.storage.get("comments", hist_all[i]["id"], "comment");
 						}
 					} else {
 						info[i].content = Lincko.storage.getHistoryInfo(hist_all[i])["title"];

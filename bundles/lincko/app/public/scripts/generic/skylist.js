@@ -784,11 +784,18 @@ skylist.prototype.addCard_all = function(){
 	}
 	else{
 		var item;
+		var Elem_tp = $('<span>');
 		for (var i in items){
 			item = items[i];
 			item['duedate'];
-			that.list.append(that.addCard(item));
+			Elem_tp.append(that.addCard(item));
 		}
+		that.list.append(Elem_tp.children()); //toto => try to not draw here, but inside a timeout to use multi-thread
+		//This help to use multi-thread and draw the DOM faster
+		//toto => but it generate a bug in task list by making disappearing some tasks
+		setTimeout(function(){
+			//that.list.append(Elem_tp.children());
+		}, 0);
 	}
 	that.store_all_elem();
 }
@@ -870,8 +877,6 @@ skylist.prototype.addCard = function(item){
 }
 
 skylist.prototype.addChat = function(item){
-	var temp = app_models_history.tabList(1, item['root_type'], item['root_id']);
-	
 	var that = this;
 	var Elem = $('#skylist_card_'+that.md5id+'_'+item['root_type']+'_'+item['root_id']);
 	var new_elem = false;
@@ -951,6 +956,11 @@ skylist.prototype.addChat = function(item){
 	Elem.find('[find=description]')
 		.addClass('ellipsis')
 		.html(wrapper_to_html(wrapper_flat_text(item['content'])));
+
+	if(item['by']>0){
+		var username = $('<span>').addClass('skylist_chat_card_username').html(Lincko.storage.get('users', item["by"], "username")+": ");
+		Elem.find('[find=description]').prepend(username);
+	}
 
 	//toto => need to add deletion slide feature
 	//that.add_cardEvents(Elem);

@@ -1,6 +1,7 @@
 .app_models_resume_span {
 	display: inline-block;
 	position: relative;
+	width: 100%;
 }
 
 .app_models_resume_tasks {
@@ -30,6 +31,8 @@
 .app_models_resume_links {
 	display: inline-block;
 	padding: 2px 6px;
+	width: 100%;
+	box-sizing: border-box;
 }
 
 .app_models_resume_links:hover {

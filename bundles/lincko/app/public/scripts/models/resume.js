@@ -30,7 +30,7 @@ var app_models_resume_format_sentence = function(comments_id, who, type) {
 			var list = temp[uid];
 			if(list[100]){
 				base = 100; //Daily
-			} else if(list[100]){
+			} else if(list[700]){
 				base = 700; //Weekly
 			} else {
 				error = true;
@@ -60,7 +60,7 @@ var app_models_resume_format_sentence = function(comments_id, who, type) {
 		if(list[i]){
 			if(typeof list[i] == 'object'){
 				data[i] = ''+list[i].length;
-			} else if(i==108){
+			} else if(i==base+8){
 				data[i] = ''+Lincko.storage.get('users', list[i], 'username').ucfirst();
 			} else {
 				data[i] = ''+list[i];
@@ -73,12 +73,19 @@ var app_models_resume_format_sentence = function(comments_id, who, type) {
 		if(type==1){
 			sentence = Lincko.Translation.get('app', 3801, 'pure', data);
 			if(data[108]!=0){
-				sentence = sentence + '<br />' + Lincko.Translation.get('app', 3802, 'pure', data);
+				sentence = sentence + ' ' + Lincko.Translation.get('app', 3802, 'pure', data);
+			}
+		}
+	} else if(base==700){
+		if(type==1){
+			sentence = Lincko.Translation.get('app', 3803, 'pure', data);
+			if(data[708]!=0){
+				sentence = sentence + ' ' + Lincko.Translation.get('app', 3804, 'pure', data);
 			}
 		}
 	}
 
-	sentence = sentence + '<div find="result" class="ellipsis"></div>';
+	sentence = sentence + '<div find="result" link="" class="ellipsis"></div>';
 
 	var span = $('<span>').html(sentence);
 	span.addClass('app_models_resume_span unselectable');
@@ -86,22 +93,40 @@ var app_models_resume_format_sentence = function(comments_id, who, type) {
 	//Attach event click
 	//Task list
 	links = {
+		
 		101: ['tasks', 'app_models_resume_tasks', ],
+		701: ['tasks', 'app_models_resume_tasks', ],
+
 		102: ['tasks', 'app_models_resume_tasks', ],
+		702: ['tasks', 'app_models_resume_tasks', ],
+		
 		103: ['tasks', 'app_models_resume_tasks', ],
+		703: ['tasks', 'app_models_resume_tasks', ],
+
 		104: ['tasks', 'app_models_resume_tasks', ],
+		704: ['tasks', 'app_models_resume_tasks', ],
+		
 		105: ['tasks', 'app_models_resume_tasks_overdue', ],
+		705: ['tasks', 'app_models_resume_tasks_overdue', ],
+
 		111: ['notes', 'app_models_resume_notes', ],
+		711: ['notes', 'app_models_resume_notes', ],
+
 		121: ['files', 'app_models_resume_files', ],
+		721: ['files', 'app_models_resume_files', ],
+
 	};
 
 	for(var i in links){
 		if(typeof list[i] == 'object'){
+			if(list[i].length<=0){
+				continue;
+			}
 			result = {};
 			result[links[i][0]] = list[i];
 			span.find("[find="+i+"]")
-			.click([span, result, links[i][1]], function(event){
-				app_models_resume_listup(event.data[0], event.data[1], event.data[2]);
+			.click([span, result, links[i][1], i], function(event){
+				app_models_resume_listup(event.data[0], event.data[1], event.data[2], event.data[3]);
 			})
 			.addClass(links[i][1]);
 		}
@@ -110,9 +135,11 @@ var app_models_resume_format_sentence = function(comments_id, who, type) {
 	return span;
 };
 
-var app_models_resume_listup = function(Elem, list, color){
+var app_models_resume_listup = function(Elem, list, color, link, height){
+	if(typeof height == 'undefined'){ height = 0; }
 	var div = Elem.find("[find=result]");
-	if(div.html()==""){
+	if(div.attr('link')==''){
+		div.attr('link', link);
 		for(var type in list){
 			for(var i in list[type]){
 				var id = list[type][i]
@@ -149,18 +176,48 @@ var app_models_resume_listup = function(Elem, list, color){
 		}
 		div.velocity("slideDown", {
 			duration: 500,
+			begin: function(){
+				wrapper_IScroll();
+				var offsetHeight = $(this).outerHeight() - height;
+				var wrapper = $(this).closest('.submenu_wrapper_preview');
+				if(wrapper.length>0){
+					var iScroll = myIScrollList["overthrow_"+wrapper[0].id];
+					if(iScroll){
+						iScroll.scrollBy(0, -offsetHeight, 1000, IScroll.utils.ease.circular);
+					}
+				}
+			},
 			complete: function(){
 				wrapper_IScroll();
 			},
 		});
 	} else {
+		var offsetHeight = div.outerHeight();
+		var link_old = div.attr('link');
 		div.velocity("slideUp", {
-			duration: 300,
+			duration: 400,
+			begin: function(){
+				if(link == link_old){
+					var wrapper = $(this).closest('.submenu_wrapper_preview');
+					if(wrapper.length>0){
+						var iScroll = myIScrollList["overthrow_"+wrapper[0].id];
+						if(iScroll){
+							//It feels strange to move up
+							//iScroll.scrollBy(0, offsetHeight, 300, IScroll.utils.ease.circular);
+						}
+					}
+				}
+			},
 			complete: function(){
 				$(this).empty();
-				wrapper_IScroll();
+				div.attr('link', '');
+				if(link != link_old){
+					app_models_resume_listup(Elem, list, color, link, offsetHeight);
+				} else {
+					wrapper_IScroll();
+				}
 			},
 		});
 	}
 };
-
+var toto;

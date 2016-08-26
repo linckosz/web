@@ -1189,7 +1189,7 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 	} else {
 		category = null;
 	}
-	if(typeof page_end == 'undefined'){ page_end = -1; }
+	if(typeof page_end == 'undefined'){ page_end = null; }
 	if($.type(conditions) == 'object'){ conditions = [conditions]; }
 	if($.type(conditions) != 'array'){ conditions = []; }
 	if(typeof parent_type != 'string'){ parent_type = null; } else { parent_type = parent_type.toLowerCase(); }

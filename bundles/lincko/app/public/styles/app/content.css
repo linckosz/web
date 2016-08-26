@@ -108,7 +108,13 @@
 	text-align: center;
 }
 
+.app_content_menu_notif {
+	top: 2px !important;
+	right: 2px !important;
+}
+
 .app_content_menu_icon {
+	position: relative;
 	background-color: #FFFFFF;
 	text-align: center;
 	vertical-align: middle;
@@ -263,6 +269,10 @@
 @media only screen and (min-width: 901px){
 	#app_content_menu {
 		width: 48px !important;
+	}
+	.app_content_menu_notif {
+		top: 6px !important;
+		right: -2px !important;
 	}
 }
 

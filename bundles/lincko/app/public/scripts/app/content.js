@@ -199,6 +199,17 @@ app_application_lincko.add("app_content_submenu_preview_statistics", "projects",
 	}
 });
 
+app_application_lincko.add("app_content_menu_notif", "projects", function() {
+	var temp = app_models_history.tabList(false, 'projects', app_content_menu.projects_id);
+	for(var i in temp){
+		if(temp[i].notif){
+			$("#app_content_menu_notif").removeClass('display_none');
+			return true;
+		}
+	}
+	$("#app_content_menu_notif").addClass('display_none');
+});
+
 var app_content_menu_first_launch = true;
 
 var app_content_menu_default = function(){

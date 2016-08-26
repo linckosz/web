@@ -60,16 +60,14 @@ Submenu.prototype.Add_ChatContents = function() {
 	chatFeed.feedHistory(position, type, id, that);
 	chatFeed.feedUploadingFiles(position,type,id,submenu_wrapper_id);
 
-	if(typeof notifier[type] != "undefined" && typeof notifier[type]['clear'] != "undefined"){
-		notifier[type]['clear'](id);
-	}
 	if (type == 'history') {
+		app_models_notifier.clearNotification('projects', id);
 		var hist = Lincko.storage.hist(null, -1, false, 'projects', id, false);
 		if(hist.length > 0)
 		{
 			latest_history = hist[0]["timestamp"];
 		}
-		app_application_lincko.add(this.id+"_chat_contents_wrapper","projects_" + id, function() {
+		app_application_lincko.add(this.id+"_chat_contents_wrapper", "projects_" + id, function() {
 			//toto => there is an undefined somewhere
 			var id = Object.keys(this.range)[0].split("_")[1];
 			var items = Lincko.storage.hist(null, -1, {'timestamp': [">=", latest_history]}, 'projects', id, false);
@@ -97,11 +95,12 @@ Submenu.prototype.Add_ChatContents = function() {
 					myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
 				}
 			}
-			notifier['history']['clear'](this.action_param[1]);
+			app_models_notifier.clearNotification('projects', id);
 			
 		}, [that.id, id]);
 	}
 	else {
+		app_models_notifier.clearNotification('chats', id);
 		var list = Lincko.storage.list(null, -1, false, 'chats', id, false);
 		if(list.length > 0)
 		{
@@ -133,7 +132,7 @@ Submenu.prototype.Add_ChatContents = function() {
 					myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
 				}
 			}
-			notifier['chats']['clear'](this.action_param[1]);
+			app_models_notifier.clearNotification('chats', this.action_param[1]);
 			
 		}, [that.id, id]);
 	}
@@ -213,7 +212,10 @@ Submenu.prototype.Add_ChatContents = function() {
 		}
 	}, [that.id, id]);
 
-
+	var type_clear = type;
+	if (type == 'history') {
+		type_clear = 'projects';
+	}
 	app_application_lincko.add("overthrow_"+that.id, "submenu_show_"+that.preview+"_"+that.id, function() {
 		var submenu_id = this.action_param[0];
 		var scroll_time = this.action_param[1];
@@ -224,8 +226,8 @@ Submenu.prototype.Add_ChatContents = function() {
 			myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
 		}
 		this.action_param[1] = 300;
-		notifier[this.action_param[2]]['clear'](this.action_param[3]);
-	}, [that.id, 0, type, id]);
+		app_models_notifier.clearNotification(this.action_param[2], this.action_param[3]);
+	}, [that.id, 0, type_clear, id]);
 
 }
 
@@ -379,7 +381,6 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 		}
 	});
 
-
 	$('.send', submenu_wrapper).on("click", function(e) {
 		send_comments();
 		show_button();
@@ -391,18 +392,6 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 		app_upload_open_files(type, id,false,true);
 	});
 
-
-	/*
-	toto => enable it to allow file uploading
-	Elem.find(".comments_input").blur(function() {
-		if (!Elem.find('.comments_input').val()) {
-			if (that.param.type != "history") {
-				Elem.find(".send").hide();
-				Elem.find(".attachment").show();
-			}
-		}
-	});
-	*/
 	setTimeout(function(){
 		if(!supportsTouch || responsive.test("minDesktop")){
 			Elem.find(".comments_input").focus();
