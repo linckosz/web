@@ -340,6 +340,12 @@ burgerN.typeTask = function(projectID, skylistInst){
 			item['_id'] = fakeID;
 			item['fake'] = true;
 			Lincko.storage.data.tasks[fakeID] = item;
+			if(!('_children' in Lincko.storage.data.projects[projectID])){
+				Lincko.storage.data.projects[projectID]['_children'] = {};
+			}
+			if(!('tasks' in Lincko.storage.data.projects[projectID]['_children'])){
+				Lincko.storage.data.projects[projectID]['_children']['tasks'] = {};
+			}
 			Lincko.storage.data.projects[projectID]['_children']['tasks'][fakeID] = true;
 			app_application_lincko.prepare('projects_'+projectID, true);
 			skylist.sendActionQueue.tasks[temp_id] = [];
