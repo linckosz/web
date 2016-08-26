@@ -566,6 +566,12 @@ burgerN.regex = function(elem, item, param){
 
 	    var coord = burger_regex_getCaretOffset(elem, true);
 	    coord.y = coord.y + 27; //offset by height of a single line of text
+	    /* possible alternative to hardcode offset
+	    //http://stackoverflow.com/questions/1185151/how-to-determine-a-line-height-using-javascript-jquery
+	    //1.5 of font-size is typical for lineheight
+	    var fontSize = $(el).css('font-size');
+		var lineHeight = Math.floor(parseInt(fontSize.replace('px','')) * 1.5);
+		*/
 
 	    caretIndex = coord.caretOffset;
 	  	var currentText = elem.text();
