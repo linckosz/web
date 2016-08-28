@@ -225,10 +225,11 @@ app_submenu_chatFeed.prototype.renderLine = function(timestamp) {
 };
 
 app_submenu_chatFeed.prototype.app_layers_history_launchPage = function(position, type, projectId, subm) {
-		chatFeed.subm = subm;
+		this.subm = subm;
 		position.addClass('overthrow').addClass("submenu_chat_contents");
 		position.empty();
 		this.app_layers_history_feedPage(position, type, projectId);
+		wrapper_IScroll_refresh();
 		wrapper_IScroll();
 };
 
@@ -278,6 +279,7 @@ app_submenu_chatFeed.prototype.app_layers_uploading_files = function(position, t
 			}catch(e){}
 		}
 	}
+	wrapper_IScroll_refresh();
 	wrapper_IScroll();
 };
 
@@ -295,13 +297,13 @@ app_submenu_chatFeed.prototype.getHistoryPaging = function(type, position, paren
 	var lastIndex = firstIndex + 20;
 	var newRange = firstIndex + "-" + lastIndex;
 	var items = this.getRawContents(type, parentId, newRange);
-	$('<div>').addClass('chat_contents_wrapper').prop("id", chatFeed.subm.id+'_chat_contents_wrapper').appendTo(position);
+	$('<div>').addClass('chat_contents_wrapper').prop("id", this.subm.id+'_chat_contents_wrapper').appendTo(position);
 	this.format_items(type, items, position, false, false);
 };
 
 app_submenu_chatFeed.prototype.app_layers_history_feedPage = function(position, type, parentId) {
 	var items = this.getRawContents(type, parentId, null);
-	$('<div>').addClass('chat_contents_wrapper').prop("id", chatFeed.subm.id+'_chat_contents_wrapper').appendTo(position);
+	$('<div>').addClass('chat_contents_wrapper').prop("id", this.subm.id+'_chat_contents_wrapper').appendTo(position);
 	this.format_items(type, items, position, false, false);
 };
 
@@ -322,17 +324,23 @@ app_submenu_chatFeed.prototype.format_items = function(type, items, position, ne
 	var today = (new wrapper_date()).getDayStartTimestamp();
 	if(newone)
 	{
-		groups = [{'timestamp':today ,'items':items}];
+		groups = {};
+		groups[today] = items;
 	}
 	else
 	{
 		groups = this.items_group_by_time(items, type);
 	}
-	for(var i in groups)
+	//Sort group by time from recent to older
+	var temp = Object.keys(groups).sort(function(a, b) {
+		return b - a;
+	});
+	for(var i in temp)
 	{
-		for(var j in groups[i].items)
+		var timestamp = temp[i];
+		for(var j in groups[timestamp])
 		{
-			current = groups[i].items[j];
+			current = groups[timestamp][j];
 			//If similar modification
 			if(
 				   pre.cod !== null
@@ -356,11 +364,11 @@ app_submenu_chatFeed.prototype.format_items = function(type, items, position, ne
 			var item = new BaseHistoryCls(current, that);
 			item.setTemplate(type);
 			if (type == 'history'){
-				Elem = item.renderHistoryTemplate(j);
+				Elem = item.renderHistoryTemplate(timestamp+""+j);
 			}
 			else
 			{
-				Elem = item.renderChatTemplate(i);
+				Elem = item.renderChatTemplate(timestamp+""+j); //toto => what is the index?
 			}
 			if(Elem)
 			{
@@ -377,12 +385,12 @@ app_submenu_chatFeed.prototype.format_items = function(type, items, position, ne
 
 		if(newone && Elem && !this.is_today)
 		{
-			var line = this.renderLine(groups[i].timestamp);
+			var line = this.renderLine(timestamp);
 			Elem.before(line);
 		}
 		else if(!newone && Elem)
 		{
-			var line = this.renderLine(groups[i].timestamp);
+			var line = this.renderLine(timestamp);
 			line.prependTo(position.find(".chat_contents_wrapper"));
 		}
 
@@ -390,13 +398,17 @@ app_submenu_chatFeed.prototype.format_items = function(type, items, position, ne
 };
 
 app_submenu_chatFeed.prototype.items_group_by_time = function(items, type) {
-	var real_items=[];
-	var timestamp_groups = [];
+	var groups = {};
 	var item_timestamp;
 	var time_temp;
 	var date = new wrapper_date();
 	for(var i in items){
-		if(typeof items[i]['+title'] != 'undefined'){ //Bad design to exclude by title only
+		if( //Exclude main object
+			   typeof this.subm.param.type != 'undefined'
+			&& typeof this.subm.param.id != 'undefined'
+			&& this.subm.param.type == items[i].type
+			&& this.subm.param.id == items[i].id
+		){
 			continue;
 		}
 		if (items[i].type == "comments"){
@@ -405,7 +417,6 @@ app_submenu_chatFeed.prototype.items_group_by_time = function(items, type) {
 			var target_type = root['_type'];
 			if (root._type == 'chats'){continue;}
 		}
-		real_items.push(items[i]);
 
 		if(type == "history"){
 			time_temp = items[i].timestamp;
@@ -413,36 +424,10 @@ app_submenu_chatFeed.prototype.items_group_by_time = function(items, type) {
 			time_temp = items[i].created_at;
 		}
 		item_timestamp = date.getDayStartTimestamp(time_temp);
-		if(timestamp_groups.indexOf(item_timestamp) == -1)
-		{
-			timestamp_groups.push(item_timestamp);
+		if(typeof groups[item_timestamp] == 'undefined'){
+			groups[item_timestamp] = [];
 		}
-	}
-
-	var groups = [];
-	for(var i in timestamp_groups)
-	{
-		groups.push({'timestamp':timestamp_groups[i],'items':[]});
-	}
-
-	var cursor = 0;
-	for(var i in real_items)
-	{
-		if(type == "history"){
-			time_temp = real_items[i].timestamp;
-		} else {
-			time_temp = real_items[i].created_at;
-		}
-		item_timestamp = date.getDayStartTimestamp(time_temp);
-		if(item_timestamp == timestamp_groups[cursor])
-		{
-			groups[cursor].items.push(real_items[i]);
-		}
-		else
-		{
-			cursor = cursor + 1;
-			groups[cursor].items.push(real_items[i]);
-		}
+		groups[item_timestamp].push(items[i]);
 	}
 	return groups;
 };
@@ -531,10 +516,10 @@ BaseHistoryCls.prototype.renderChatTemplate = function(index, replace) {
 
 	var Elem = $("#" + this.templateType).clone();
 	if (this.item._type == "uploading_file") {
-		var Elem_id = chatFeed.subm.id+"_uploading_file_"+this.item.index;
+		var Elem_id = that.chatFeed.subm.id+"_uploading_file_"+this.item.index;
 		Elem.attr('_file_id',this.item.id);
 	} else {
-		var Elem_id = chatFeed.subm.id+"_"+this.item._type+'_models_thistory_' + this.item._id;
+		var Elem_id = that.chatFeed.subm.id+"_"+this.item._type+'_models_thistory_' + this.item._id;
 	}
 
 	//Do not duplicate chat messages (unless it is trying to replace the existing element e.g. during updateRecall)
@@ -577,7 +562,7 @@ BaseHistoryCls.prototype.renderChatTemplate = function(index, replace) {
 		}
 
 		Elem.find("[find=icon]").click(this.item.created_by, function(event){
-			submenu_Build("personal_info", chatFeed.subm.layer+1, true, event.data, chatFeed.subm.preview);
+			submenu_Build("personal_info", that.chatFeed.subm.layer+1, true, event.data, that.chatFeed.subm.preview);
 		});
 
 		Elem.find("[find=icon]").css('background-image','url("'+img+'")'); //toto => this slow down the paint of submenu 
@@ -654,7 +639,7 @@ BaseHistoryCls.prototype.renderHistoryTemplate = function(index) {
 		this.templateType = '-models_history_comment_recalled';
 	}
 	var Elem = $("#" + this.templateType).clone();
-	var Elem_id = chatFeed.subm.id+"_"+this.item.type+'_models_thistory_' + this.item.id + (this.item.type != 'comments' ? '_hist_'+this.item.hist : '');
+	var Elem_id = that.chatFeed.subm.id+"_"+this.item.type+'_models_thistory_' + this.item.id + (this.item.type != 'comments' ? '_hist_'+this.item.hist : '');
 
 	//Do not duplicate chat messages
 	if($("#"+Elem_id).length>0){
@@ -719,7 +704,7 @@ BaseHistoryCls.prototype.renderHistoryTemplate = function(index) {
 	}
 
 	Elem.find("[find=icon]").click(this.item.by, function(event){
-		submenu_Build("personal_info", chatFeed.subm.layer+1, true, event.data, chatFeed.subm.preview);
+		submenu_Build("personal_info", that.chatFeed.subm.layer+1, true, event.data, that.chatFeed.subm.preview);
 	});
 
 	Elem.find("[find=icon]").css('background-image','url("'+img+'")');

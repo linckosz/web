@@ -158,7 +158,7 @@ var app_content_menu = {
 		if(!settings_new.latestvisitProjects || !settings_new.latestvisitProjects.length){
 			settings_new.latestvisitProjects = [];
 		}
-		if(settings_new.latestvisitProjects[0] != projects_id){
+		if(settings_new.latestvisitProjects.length > 0 && settings_new.latestvisitProjects[0] != projects_id){
 			var i = $.inArray(projects_id, settings_new.latestvisitProjects);
 			if(i > -1){ settings_new.latestvisitProjects.splice(i,1) }
 

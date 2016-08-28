@@ -184,11 +184,11 @@ var app_models_resume_listup = function(Elem, list, color, link, comments_id){
 		div.velocity("slideDown", {
 			duration: 200,
 			complete: function(){
-				wrapper_IScroll();
 				var wrapper = $(this).closest('.submenu_wrapper');
 				if(wrapper.length > 0){
 					var iScroll = myIScrollList["overthrow_"+wrapper[0].id];
 					if(iScroll){
+						iScroll.refresh();
 						var scrollTo = document.getElementById(wrapper[0].id).querySelector("[find=anchor_"+comments_id+"]");
 						iScroll.scrollToElement(scrollTo, 600, 0, -34, IScroll.utils.ease.circular);
 					}

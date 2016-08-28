@@ -45,6 +45,16 @@ Submenu_select.new_chat_menu = function(subm) {
 	subm.New_Add_ChatMenu();
 };
 
+var app_submenu_scrollto = function(iScroll, last, scroll_time){
+	if(typeof scroll_time == 'undefined'){
+		scroll_time = 0;
+	}
+	setTimeout(function(){
+		iScroll.scrollToElement(last, scroll_time);
+	}, 50);
+}
+
+
 Submenu.prototype.Add_ChatContents = function() {
 	var attribute = this.attribute;
 	var that = this;
@@ -92,7 +102,8 @@ Submenu.prototype.Add_ChatContents = function() {
 					myIScrollList[overthrow_id].refresh();
 					var scroll_time = 0;
 					if(!supportsTouch || responsive.test("minDesktop")){ scroll_time = 300; }
-					myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
+					//myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
+					app_submenu_scrollto(myIScrollList[overthrow_id], last[0], scroll_time);
 				}
 			}
 			app_models_notifier.clearNotification('projects', id);
@@ -129,7 +140,8 @@ Submenu.prototype.Add_ChatContents = function() {
 					myIScrollList[overthrow_id].refresh();
 					var scroll_time = 0;
 					if(!supportsTouch || responsive.test("minDesktop")){ scroll_time = 300; }
-					myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
+					//myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
+					app_submenu_scrollto(myIScrollList[overthrow_id], last[0], scroll_time);
 				}
 			}
 			app_models_notifier.clearNotification('chats', this.action_param[1]);
@@ -208,7 +220,8 @@ Submenu.prototype.Add_ChatContents = function() {
 				myIScrollList[overthrow_id].refresh();
 				var scroll_time = 0;
 				if(!supportsTouch || responsive.test("minDesktop")){ scroll_time = 300; }
-				myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
+				//myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
+				app_submenu_scrollto(myIScrollList[overthrow_id], last[0], scroll_time);
 			}
 		}
 	}, [that.id, id, that.param.chatFeed]);
@@ -224,7 +237,8 @@ Submenu.prototype.Add_ChatContents = function() {
 		var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
 		if(myIScrollList[overthrow_id] && last && last[0]){
 			myIScrollList[overthrow_id].refresh();
-			myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
+			//myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
+			app_submenu_scrollto(myIScrollList[overthrow_id], last[0], scroll_time);
 		}
 		this.action_param[1] = 300;
 		app_models_notifier.clearNotification(this.action_param[2], this.action_param[3]);
@@ -284,7 +298,8 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 					myIScrollList[overthrow_id].refresh();
 					var scroll_time = 0;
 					if(!supportsTouch || responsive.test("minDesktop")){ scroll_time = 200; }
-					myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
+					//myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
+					app_submenu_scrollto(myIScrollList[overthrow_id], last[0], scroll_time);
 				}
 
 				//recall comment if in queue
@@ -320,7 +335,8 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 					myIScrollList[overthrow_id].refresh();
 					var scroll_time = 0;
 					if(!supportsTouch || responsive.test("minDesktop")){ scroll_time = 200; }
-					myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
+					//myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
+					app_submenu_scrollto(myIScrollList[overthrow_id], last[0], scroll_time);
 				}
 				
 				var textarea = $("#"+sub_that.id).find("[find=chat_textarea]");

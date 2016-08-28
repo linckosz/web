@@ -146,7 +146,7 @@ var app_models_history = {
 					app_models_history.hist_root[root_name] = info[i];
 				}
 				histList.push(app_models_history.hist_root[root_name]);
-				if(limit && histList.length>=limit){ //Limit to five history
+				if(limit && histList.length>=limit){
 					break;
 				}
 			}

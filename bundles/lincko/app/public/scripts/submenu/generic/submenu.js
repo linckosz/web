@@ -230,6 +230,7 @@ function Submenu(menu, next, param, preview) {
 		if (Elem.prefix) {
 			base_format_form(Elem.prefix);
 		}
+		wrapper_IScroll_refresh();
 		wrapper_IScroll();
 		//Free memory
 		delete submenu_wrapper;
@@ -1145,6 +1146,7 @@ function submenu_resize_content() {
 		}
 	}
 	if(iscroll){
+		wrapper_IScroll_refresh();
 		wrapper_IScroll();
 	}
 	return true;

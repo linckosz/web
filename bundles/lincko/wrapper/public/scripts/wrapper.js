@@ -476,33 +476,34 @@ function wrapper_IScroll(){
 	});
 
 	//Reinitialize or Delete all in a setTimeout to be sure it's loaded after DOM repainting
-	setTimeout(function(){
-		var Elem = false;
-		var Child = null;
-		for(var i in myIScrollList){
-			Elem = $('#'+i);
-			Child = Elem.children().first();
-			if(Elem.length>0){
-				if(Elem.hasClass('overthrow')){
-					if('refresh' in myIScrollList[i]){
-						myIScrollList[i].refresh();
-						continue;
-					}
-				} else {
-					if('destroy' in myIScrollList[i]){
-						if(Child.length>0 && Child.hasClass('iscroll_sub_div')){
-							Child.addClass('iscroll_destroyed');
-						}
-					}
-					myIScrollList[i].destroy();
-				}
-			}
-			myIScrollList[i] = null;
-			delete myIScrollList[i];
-			
-		}
-	}, wrapper_timeout_timer);
+	setTimeout(wrapper_IScroll_refresh, wrapper_timeout_timer);
 };
+
+var wrapper_IScroll_refresh = function(){
+	var Elem = false;
+	var Child = null;
+	for(var i in myIScrollList){
+		Elem = $('#'+i);
+		Child = Elem.children().first();
+		if(Elem.length>0){
+			if(Elem.hasClass('overthrow')){
+				if('refresh' in myIScrollList[i]){
+					myIScrollList[i].refresh();
+					continue;
+				}
+			} else {
+				if('destroy' in myIScrollList[i]){
+					if(Child.length>0 && Child.hasClass('iscroll_sub_div')){
+						Child.addClass('iscroll_destroyed');
+					}
+				}
+				myIScrollList[i].destroy();
+			}
+		}
+		myIScrollList[i] = null;
+		delete myIScrollList[i];
+	}
+}
 
 var wrapper_timeout_timer = 200;
 var wrapper_IScroll_timer;
