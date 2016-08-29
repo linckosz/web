@@ -723,6 +723,9 @@ Lincko.storage.search = function(type, param, category){
 				if(item[prop].toLowerCase().indexOf(param)!==-1){
 					save_result = true;
 				}
+				else if((Pinyin.GetQP(item[prop])).indexOf(Pinyin.GetQP(param)) !== -1){ //convert hanzi into pinyin and match
+					save_result = true;
+				}
 			}
 		}
 		if(save_result){
