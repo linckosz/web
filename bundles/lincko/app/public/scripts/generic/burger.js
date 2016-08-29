@@ -364,7 +364,7 @@ burgerN.typeTask = function(projectID, skylistInst){
 			app_application_lincko.prepare('projects_'+projectID, true);
 			var fakeTask = Lincko.storage.get('tasks',fakeID);
 			if(fakeTask){
-				//delete Lincko.storage.data.tasks[fakeID];
+				delete Lincko.storage.data.tasks[fakeID];
 			}
 		}
 
