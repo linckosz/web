@@ -28,6 +28,11 @@ $.extend(wrapper_date.prototype, {
 		}
 	},
 
+	//Timezone Offset in minutes
+	getTimeOffset: function(){
+		return this.timezone_offset;
+	},
+
 	//returns the timestamp of the end of day (23:59:59:00) based on this.timestamp
 	getEndofDay: function(){
 		var endofday = new Date(this.timestamp*1000).setHours(23,59,59,0)/1000;

@@ -1455,7 +1455,6 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 			results = Lincko.storage.sort_items(array_items, 'created_at', page_start, page_end, false); //From newest (big timestamp) to oldest (small timestamp)
 		}
 	}
-
 	return results;
 	
 };
@@ -1611,6 +1610,7 @@ Lincko.storage.sort_items = function(array_items, att, page_start, page_end, asc
 			temp[value].push(item);
 		}
 	}
+	
 	pagination = 0;
 	if(!$.isEmptyObject(temp)){
 		if(ascendant){
@@ -1637,7 +1637,8 @@ Lincko.storage.sort_items = function(array_items, att, page_start, page_end, asc
 		var item_id;
 		//Pagination
 		for(var i in desc_att){
-			attribute = desc_att[i]
+			attribute = desc_att[i];
+			
 			//Sort IDs from smallest to bigger
 			asc_id = Object.keys(temp[attribute]).sort(function(a, b) {
 				return a - b;
@@ -1648,13 +1649,14 @@ Lincko.storage.sort_items = function(array_items, att, page_start, page_end, asc
 					results.push(temp[attribute][item_id]);
 				}
 				pagination++;
-				if(page_start+pagination >= page_end){
+				if(page_end >= page_start && page_start+pagination > page_end){
 					break;
 				}
 			}
-			if(page_end >= page_start && pagination > page_end){
+			if(page_end >= page_start && page_start+pagination > page_end){
 				break;
 			}
+			
 		}
 		
 	}
