@@ -1051,7 +1051,7 @@ burgerN.draw_dates = function(substr, option_fn){
 
 	var optionCount = elem_dropdown.find('.burger_option_users').length;
 	if(!optionCount){
-		elem_option.find('[find=text]').html('no match');/*toto*/
+		elem_option.find('[find=text]').html(Lincko.Translation.get('app', 2205, 'html'));/*no match*/
 		elem_option.find('[find=image]').addClass('display_none');
 		elem_dropdown.find('[find=wrapper]').append(elem_option);
 	}
@@ -1084,7 +1084,7 @@ burgerN.draw_contacts = function(contacts,option_fn){
 
 	//if there is no contacts to display
 	if($.isEmptyObject(contacts)){
-		elem_option.find('[find=text]').html('no match');/*toto*/
+		elem_option.find('[find=text]').html(Lincko.Translation.get('app', 2205, 'html'));/*no match*/
 		elem_option.find('[find=image]').addClass('display_none');
 		elem_dropdown.find('[find=wrapper]').append(elem_option);
 		return elem_dropdown;
@@ -1293,7 +1293,7 @@ var burger = function(elem, burger_mode, item){
 					}
 				}
 				else{
-					elem_dropdown.html('no match');/*toto*/
+					elem_dropdown.html(Lincko.Translation.get('app', 2205, 'html'));/*no match*/
 				} 
 			 }
 			 if( char == '@' ){
@@ -1326,7 +1326,7 @@ var burger = function(elem, burger_mode, item){
 					}
 				}
 				else{
-					elem_dropdown.html('no match');/*toto*/
+					elem_dropdown.html(Lincko.Translation.get('app', 2205, 'html'));/*no match*/
 				} 
 
 
