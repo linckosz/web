@@ -719,7 +719,37 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 	var items_filtered = that.list_filter();
 
 	var iscroll_elem;
-	that.list.velocity("fadeOut",{
+	var cards_elem;
+	if( that.list.find('.iscroll_sub_div').length > 0 ){
+		iscroll_elem = that.list.find('.iscroll_sub_div');
+	}else{
+		iscroll_elem = that.list;
+	}
+	cards_elem = iscroll_elem.children().not('.burger_typeTask');
+
+	cards_elem.remove();
+	if( items_filtered.length < 1 ){
+		iscroll_elem.append(that.noResult_str);
+	}
+	else{
+		for (var i in items_filtered){
+			item = items_filtered[i];
+			iscroll_elem.append(that.addCard(item));
+		}
+	}
+
+	iscroll_elem.children().not('.burger_typeTask').velocity("fadeIn",{
+		complete: 200,
+		complete: function(){
+			that.store_all_elem();
+			that.window_resize();
+		}
+	});
+
+
+	return;
+
+	/*that.list.velocity("fadeOut",{
 		duration: 200,
 		complete: function(){
 			if( that.list.find('.iscroll_sub_div').length > 0 ){
@@ -734,15 +764,6 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 
 			if( items_filtered.length < 1 ){
 				var noResultString = that.noResult_str;
-				/*
-				if( that.list_type == 'tasks' ){
-					noResultString += '<div class="skylist_card_noCard">(Filter: ';
-					$.each(that.Lincko_itemsList_filter, function(key, val){
-						noResultString += '['+key+': '+val+']';
-					});
-					noResultString += ')';
-				}
-				*/
 				iscroll_elem.append(noResultString);
 			}
 			else{
@@ -761,7 +782,7 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 		complete: function(){
 			that.window_resize();
 		}
-	});
+	});*/
 }
 
 skylist.prototype.DOM_updated = function(){
