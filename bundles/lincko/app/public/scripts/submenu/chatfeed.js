@@ -322,6 +322,7 @@ app_submenu_chatFeed.prototype.format_items = function(type, items, position, ne
 	var Elem;
 	var that = this;
 	var today = (new wrapper_date()).getDayStartTimestamp();
+
 	if(newone)
 	{
 		groups = {};
@@ -343,7 +344,8 @@ app_submenu_chatFeed.prototype.format_items = function(type, items, position, ne
 			current = groups[timestamp][j];
 			//If similar modification
 			if(
-				   pre.cod !== null
+				   type == 'history'
+				&& pre.cod !== null
 				&& current.att === pre.att
 				&& current.by === pre.by
 				&& current.cod === pre.cod
@@ -353,14 +355,16 @@ app_submenu_chatFeed.prototype.format_items = function(type, items, position, ne
 			){
 				continue;
 			}
-			pre = {
-				att: current.att,
-				by: current.by,
-				cod: current.cod,
-				id: current.id,
-				type: current.type,
-				timestamp: current.timestamp,
-			};
+			if (type == 'history'){
+				pre = {
+					att: current.att,
+					by: current.by,
+					cod: current.cod,
+					id: current.id,
+					type: current.type,
+					timestamp: current.timestamp,
+				};
+			}
 			var item = new BaseHistoryCls(current, that);
 			item.setTemplate(type);
 			if (type == 'history'){
@@ -375,6 +379,11 @@ app_submenu_chatFeed.prototype.format_items = function(type, items, position, ne
 				if(newone)
 				{
 					Elem.appendTo(position.find(".chat_contents_wrapper"));
+					if(type == 'history'){
+						Elem.attr('temp_id', current.id);
+					} else {
+						Elem.attr('temp_id', current._id);
+					}
 				}
 				else
 				{
@@ -450,26 +459,20 @@ app_submenu_chatFeed.prototype.updateRecalled = function(parentType, parentID, p
 
 app_submenu_chatFeed.prototype.updateTempComments = function(parentType, parentID, position, chatType) {
 	var that = this;
-	var elem_comments = position.find('[comment_id]');
+	var elem_comments = position.find('[temp_id]');
 	$.each(elem_comments, function(i,val){
 		var elem = $(val);
-		var comment_id = elem.attr('comment_id');
-		var item = Lincko.storage.get('comments', comment_id);
-		if(!item){
-			var item_real = Lincko.storage.list('comments',1,{temp_id:comment_id},parentType,parentID,false)[0];
-			if(!item_real) return;
-			var replaceWith = (new BaseHistoryCls(item_real, that));
-			replaceWith.setTemplate("chats");
-			replaceWith = replaceWith.renderChatTemplate(null,true);
-			//toto => The problem is that the backend is returning 2 comments and the wrong temp_id is taken for scan the element
-			//console.log('+++++++++++++++++++++++++++++++++++++++');
-			//console.log(replaceWith);
-			//console.log(elem);
-			elem.before(replaceWith);
-			elem.remove();
-			//console.log(elem);
-			//console.log('------------------------------------');
+		var temp_id = elem.attr('temp_id');
+		var item_real = Lincko.storage.list('comments', 1, {temp_id:temp_id}, parentType, parentID, false);
+		if(item_real.length <= 0){
+			return true;	
 		}
+		var replaceWith = (new BaseHistoryCls(item_real[0], that));
+		replaceWith.setTemplate("chats");
+		replaceWith = replaceWith.renderChatTemplate(null, true);
+		elem.before(replaceWith);
+		elem.removeAttr('temp_id');
+		elem.remove();
 	});
 };
 
@@ -479,11 +482,13 @@ app_submenu_chatFeed.prototype.updateTempUploads = function(parentType, parentID
 	$.each(elem_uploadings, function(i,val){
 		var elem = $(val);
 		var _file_id = elem.attr('_file_id');
-		var item_real = Lincko.storage.list('files',1,{temp_id:_file_id},parentType,parentID,false)[0];
-		if(!item_real) return;
-		var replaceWith = (new BaseHistoryCls(item_real, that));
+		var item_real = Lincko.storage.list('files', 1, {temp_id:_file_id}, parentType, parentID, false);
+		if(item_real.length <= 0){
+			return true;	
+		}
+		var replaceWith = (new BaseHistoryCls(item_real[0], that));
 		replaceWith.setTemplate("chats");
-		replaceWith = replaceWith.renderChatTemplate(null,true);
+		replaceWith = replaceWith.renderChatTemplate(null, true);
 		if(chatType!='history'){
 			elem.before(replaceWith);
 		}

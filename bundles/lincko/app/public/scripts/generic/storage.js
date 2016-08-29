@@ -1607,8 +1607,8 @@ Lincko.storage.sort_items = function(array_items, att, page_start, page_end, asc
 				}
 			}
 			value = value.toString().toLowerCase();
-			if(typeof temp[i] == 'undefined'){ temp[i] = [];}
-			temp[i].push(item);
+			if(typeof temp[value] == 'undefined'){ temp[value] = [];}
+			temp[value].push(item);
 		}
 	}
 	pagination = 0;

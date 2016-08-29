@@ -81,6 +81,7 @@ Submenu.prototype.Add_ChatContents = function() {
 		app_application_lincko.add(this.id+"_chat_contents_wrapper", "projects_" + id, function() {
 			//toto => there is an undefined somewhere
 			var id = this.action_param[1];
+			var position = this.action_param[3];
 			var items = Lincko.storage.hist(null, -1, {'timestamp': [">=", latest_history]}, 'projects', id, false);
 			
 			for(var i in items){
@@ -108,7 +109,7 @@ Submenu.prototype.Add_ChatContents = function() {
 			}
 			app_models_notifier.clearNotification('projects', id);
 			
-		}, [that.id, id, that.param.chatFeed]);
+		}, [that.id, id, that.param.chatFeed, position]);
 	}
 	else {
 		app_models_notifier.clearNotification('chats', id);
@@ -120,6 +121,7 @@ Submenu.prototype.Add_ChatContents = function() {
 		app_application_lincko.add(this.id+"_chat_contents_wrapper", "chats_" + id, function() {
 			//toto => there is an undefined somewhere
 			var id = this.action_param[1];
+			var position = this.action_param[3];
 			var items = Lincko.storage.list(null, -1, {'created_at': [">=", latest_comment]}, 'chats', id, false);
 			for(var i in items){
 				if(items[i]["created_at"] > latest_comment && latest_comment < Lincko.storage.getLastVisit()){
@@ -146,11 +148,12 @@ Submenu.prototype.Add_ChatContents = function() {
 			}
 			app_models_notifier.clearNotification('chats', this.action_param[1]);
 			
-		}, [that.id, id, that.param.chatFeed]);
+		}, [that.id, id, that.param.chatFeed, position]);
 	}
 
 	app_application_lincko.add(submenu_wrapper_id, 'upload', function(){ //We cannot simplify because Elem is not the HTML object, it's a JS Submenu object
 		var files = app_upload_files.lincko_files;
+		var position = this.action_param[3];
 		var _type=type=="history"?"projects":"chats";
 		for(var i in files)
 		{
@@ -224,7 +227,7 @@ Submenu.prototype.Add_ChatContents = function() {
 				app_submenu_scrollto(myIScrollList[overthrow_id], last[0], scroll_time);
 			}
 		}
-	}, [that.id, id, that.param.chatFeed]);
+	}, [that.id, id, that.param.chatFeed, position]);
 
 	var type_clear = type;
 	if (type == 'history') {
