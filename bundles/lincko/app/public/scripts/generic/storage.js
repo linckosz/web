@@ -539,7 +539,7 @@ Lincko.storage.canI = function(rcud, category, id, child_type){
 };
 
 Lincko.storage.getSettings = function(){
-	var settings = null;
+	var settings = false;
 	if(typeof Lincko.storage.settingsLocal === 'object'){
 		settings = Lincko.storage.settingsLocal;
 	}

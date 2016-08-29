@@ -155,6 +155,9 @@ var app_content_menu = {
 
 		//keep track of visited projects (online)
 		var settings_new = Lincko.storage.getSettings();
+		if(!settings_new){
+			settings_new = {};
+		}
 		if(!settings_new.latestvisitProjects || !settings_new.latestvisitProjects.length){
 			settings_new.latestvisitProjects = [];
 		}

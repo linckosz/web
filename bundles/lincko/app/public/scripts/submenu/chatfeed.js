@@ -137,7 +137,7 @@ function app_submenu_chatFeed() {
 		'comments': function(commentid, elem) {
 			var type = $(elem).find("[find=target_type]").attr('parent');
 			var p_id = $(elem).find("[find=target_type]").attr('parent_id');
-			if(typeof type !== "undefined" && typeof p_id !== "undefined"){
+			if(typeof type != "undefined" && typeof p_id != "undefined" && typeof this[type] == 'function'){
 				this[type](p_id, elem);
 			}
 			return false;
