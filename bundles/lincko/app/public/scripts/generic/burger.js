@@ -309,6 +309,7 @@ burgerN.typeTask = function(projectID, skylistInst){
 				duration = time_now.getEndofDay() - time_now.timestamp;
 			}
 		}
+		param.start =  time_now.timestamp;
 		param.duration = duration;
 
 		var item = {
