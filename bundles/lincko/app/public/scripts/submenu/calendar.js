@@ -51,7 +51,9 @@ Submenu.prototype.Add_calendar = function() {
 	var elem_datepicker = $('<div>elem_datepicker</div>');
 	var elem_datepicker_inline = null;
 
-	elem_timestamp.val(that.param.elem_inputOrig.val());
+	if(that.param && that.param.elem_inputOrig){
+		elem_timestamp.val(that.param.elem_inputOrig.val());
+	}
 	that.param.elem_inputTarget = elem_timestamp;
 
 	var calendar_inst = {};

@@ -494,7 +494,16 @@ burgerN.regex = function(elem, item, param){
 		}
 		else{
 			finalVal = timestamp;
-			finalStr = new wrapper_date(finalVal).display('date_very_short');
+			var dateInst_temp  = new wrapper_date(finalVal);
+			if(dateInst_temp.happensSomeday(0)){
+				finalStr = that.todayStr;
+			}
+			else if(dateInst_temp.happensSomeday(1)){
+				finalStr = that.tomorrowStr;
+			}
+			else{
+				finalStr = dateInst_temp.display('date_very_short');
+			}
 		}
 
 		var caretIndex_new = caretIndex;
@@ -555,9 +564,6 @@ burgerN.regex = function(elem, item, param){
 	});
 
 	elem.keyup(function(event){
-		if( responsive.test("maxMobileL") ){
-			return;
-		}
 		var selection = getSelection();
 	    var focus_node = selection.focusNode;
 	    focus_node.normalize();
@@ -598,7 +604,7 @@ burgerN.regex = function(elem, item, param){
 
 	    /*For Chinese only, when inputting pinyin:
 	      if waiting for combined character (229) but latestChar is not Chinese, return and act on next keyup*/
-	    if(latestChar && event.which == 229 && !latestChar.match(/[\u4E00-\u9FA5]/)){ 
+	    if(latestChar && event.which == 229 && !latestChar.match(/[\u4E00-\u9FA5]/) && !responsive.test("maxMobileL")){ 
 	    	latestChar_prev = latestChar;
 	    	return; 
 	    }
@@ -671,8 +677,27 @@ burgerN.regex = function(elem, item, param){
 			}
 		}
 		else if( latestChar == that.shortcut.user /* @ */ && (!param || !param.disable_shortcutUser)){
-			currentMode = that.shortcut.user;
+
+			//used for burger dropdown as well as the mobile submenu
 			contactsID_obj = burgerN.generate_contacts(Lincko.storage.get(item['_type'], item['_id']));
+
+			//for mobile
+			if(responsive.test("maxMobileL")){
+				if(!submenu_get('burger_contacts_typeTask')){
+					var param_submenu = {};
+					param_submenu.elem_typeTask = elem;
+					param_submenu.selectOne = true;
+					param_submenu.item_obj = item;
+					param_submenu.contactsID = contactsID_obj;
+					param_submenu.alwaysMe = false;
+					param_submenu.userClick_fn = userClick_fn;
+					submenu_Build('burger_contacts_typeTask', true, null, param_submenu);
+					elem.attr('contenteditable',false);
+				}
+				return;
+			}
+
+			currentMode = that.shortcut.user;
 	    	burger_startIndex = caretIndex;
 			elem_dropdown = burgerN.draw_contacts(contactsID_obj, userClick_fn)
 				.css({
@@ -685,6 +710,21 @@ burgerN.regex = function(elem, item, param){
 			that.slideDown(elem_dropdown);
 		}
 		else if( latestChar_prev+latestChar == that.shortcut.date /* ++ */ || latestChar_prev+latestChar == that.shortcut.dateAlt){
+
+			//for mobile
+			if(responsive.test("maxMobileL")){
+				if(!submenu_get('burger_calendar_typeTask')){
+					var param_submenu = {};
+					param_submenu.elem_typeTask = elem;
+					param_submenu.dateClick_fn = dateClick_fn;
+					submenu_Build('burger_calendar_typeTask', true, null, param_submenu);
+					elem.attr('contenteditable',false);
+				}
+				return;
+			}
+
+
+
 			currentMode = that.shortcut.date;
 			burger_startIndex = caretIndex;
 			elem_dropdown = burgerN.draw_dates(burger_str, dateClick_fn)
@@ -1497,8 +1537,6 @@ function burger_contacts_sendAction(users, selectArray, item, multiselect){
 			param['users>in_charge'][userid] = false;
 		}
 	});
-
-	console.log(param);
 
 	if(item['_type'] == 'tasks'){
 		//wrapper_sendAction( param, 'post', 'task/update');
