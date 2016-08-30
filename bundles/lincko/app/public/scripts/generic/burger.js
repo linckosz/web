@@ -193,11 +193,6 @@ burgerN.ChineseNumberConverter = function(input){
 	return result;
 
 
-
-
-
-
-
 	$.each(numberObj1, function(key,val){
 		if(input.indexOf(key) != -1){
 			input = input.replace(key,val);
