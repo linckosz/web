@@ -32,7 +32,6 @@
 .models_history_content {
 	border-radius: 8px;
 	padding: 5px 8px;
-	cursor: pointer;
 	position: relative;/*added this to position chat bubble actionMenu*/
 }
 .models_history_content:focus {
@@ -95,6 +94,11 @@
 .models_history_id {
 	width: 80px;
 	height: 80px;
+}
+
+.models_history_id .icon{
+	cursor: pointer;
+	cursor: hand;
 }
 
 .models_history_line {
@@ -197,11 +201,14 @@
 
 .tasks .models_history_standard_target,
 .notes .models_history_standard_target,
-.comments .models_history_standard_target,
-.projects .models_history_standard_target
+.comments .models_history_standard_target
 {
 	color: #FB7D23;
+	cursor: pointer;
+	cursor: hand;
 }
+
+
 
 .uploading_file .models_history_standard_shortcut_wrapper {
 	padding: 6px 10px;

@@ -50,6 +50,29 @@ var app_models_fileType = {
  			return "";
  		}
  	},
+ 	cutFileTitle(title, prefixLength, suffixLength, type){
+		if(typeof title == 'undefined')
+		{
+			return title;
+		}
+
+		var dotIndex = title.lastIndexOf(".");
+		var fileName = title.substring(0,dotIndex);
+		var extName = title.substring(dotIndex + 1,title.length);
+		if(prefixLength + suffixLength >= fileName.length)
+		{
+			return title;
+		}
+
+		var prefix=fileName.substring(0,prefixLength);
+		var suffix=fileName.substring(fileName.length-suffixLength,fileName.length);
+		if(type=="files" && extName!=""){
+			title = prefix + "..." + suffix + " ." + extName;
+		} else {
+			title = prefix + "..." + suffix;
+		}
+		return title;
+	},
  };
 
 

@@ -196,3 +196,14 @@ var app_models_chats_recallQueue = {
 			);
 	}
 };
+
+
+var app_models_chat_list_cache = {
+	chat_list_cache:{},//static data,class data
+	getChatCache:function(projectID){
+		
+	},
+	setChatCache:function(projectID,data){
+
+	},
+}

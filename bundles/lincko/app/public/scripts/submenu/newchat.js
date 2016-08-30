@@ -67,9 +67,12 @@ Submenu.prototype.Add_ChatContents = function() {
 	var position = submenu_wrapper.find("[find='submenu_wrapper_content']");
 	position.addClass('overthrow').addClass("submenu_chat_contents");
 	var submenu_wrapper_id=submenu_wrapper.prop("id");
+
 	that.param.chatFeed = new app_submenu_chatFeed();
 	that.param.chatFeed.app_layers_history_launchPage(position, type, id, that);
 	that.param.chatFeed.app_layers_uploading_files(position,type,id,submenu_wrapper_id);
+
+
 
 	if (type == 'history') {
 		app_models_notifier.clearNotification('projects', id);
@@ -90,11 +93,14 @@ Submenu.prototype.Add_ChatContents = function() {
 				}
 			}
 
+
 			var chat_item = this.action_param[2];
 			chat_item.format_items("history", items, position, true);
 			chat_item.updateRecalled('projects', id, position, type);
 			chat_item.updateTempComments('projects', id, position, type);
 			chat_item.updateTempUploads('projects', id, position, type);
+
+
 
 			var overthrow_id = "overthrow_"+this.action_param[0];
 			var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");

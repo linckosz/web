@@ -1,4 +1,233 @@
 /* Category 31 */
+var chatFeeder = (function(){
+	var subm = null ;
+	var records = [];
+	var data_init = function(id,type){
+		records = [];
+		var is_history = type == 'history' ;
+		var data = is_history ? Lincko.storage.hist(null, null, null, 'projects', id, true)
+									: Lincko.storage.list(null, null, null, 'chats', id, true);
+									console.log(data);
+		for(var i in data)
+		{
+			var id = is_history ? data[i]["id"] : data[i]["_id"] ;
+			var category = is_history ? data[i]["type"] : data[i]["_type"];
+			var by = is_history ? data[i]["by"] : data[i]["created_by"];
+			var author =  is_history ? data[i]["par"]["un"] : Lincko.storage.get('users', by)['-username'] ;
+
+			var profile = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", by, 'profile_pic'));
+			if(!profile){
+				profile = app_application_icon_single_user.src;
+			}
+			var timestamp = is_history ? data[i]["timestamp"] : data[i]["created_at"] ;
+			var code = is_history ? data[i]["cod"] : 0;
+			var action = '';
+			var can_insert = true;
+			var parent = null;
+			var parent_category = null ;
+			var parent_id = 0 ;
+			var target = null;
+
+			if(is_history)
+			{
+				switch(category)
+				{
+					case 'comments':
+						var root = Lincko.storage.getCommentRoot(data[i]['id']);
+						can_insert = (root._type != 'chats');
+						parent = root._type == 'projects' ? null : Lincko.storage.data._history_title[root._type][0] ;
+						parent_category = root._type;
+						parent_id = root['_id'];
+						target = root._type == 'projects' ? null : root['+title'];
+						if(data[i]["att"] == 'recalled_by')
+						{
+							category = 'comment_recalled';
+						}
+						break;
+					default:
+						can_insert = category != 'chats';
+						target = Lincko.storage.get(category , data[i]['id'], category == 'files' ? "+name" : "+title");
+						break;
+				}
+				var history = Lincko.storage.getHistoryInfo(data[i]);
+				var clone_hist = $.extend(true, {}, history.root.history);
+				var text = history.root.title;
+				if(clone_hist.par.un){
+					clone_hist.par.un = '';
+				}
+				action = php_nl2br(Lincko.storage.formatHistoryInfo(text, clone_hist)) + ":&nbsp;";
+			}
+			else
+			{
+				can_insert = category != "chats";
+				target = data[i][category == "files" ? "+name":"name"];
+			}
+
+			var content = category == "files" ? Lincko.storage.getLinkThumbnail(id) 
+			: (is_history ? history["content"] : (category == "comments" ? data[i]["+comment"] : data[i]["+name"]));
+
+			if(can_insert)
+			{
+				var record = {
+						'id'				: id,
+						'category'			: category,
+						'by'				: by,
+						'author'			: author,
+						'profile'			: profile,
+						'timestamp'			: timestamp,
+						'code'				: code,
+						'action'			: action,
+						'parent'			: parent,
+						'parent_id'			: parent_id,
+						'parent_category'	: parent_category,
+						'target'			: target,
+						'content'			: content,
+				}
+				records.push(record);
+			}
+		}
+	}
+
+	var item_template_render = function(category,is_chat_comment)
+	{
+		switch(category)
+		{
+			case "comments" :
+				return is_chat_comment ? "-models_history_comment_short" : "-models_history_comment_long";
+			default :
+				return "-models_history_" + category;
+		}
+	}
+
+	var item_add_handler = function(elem,type,target_id)
+	{
+		elem.find("[find=target]").click({type,target_id},function(event){
+			switch(event.data.type)
+			{
+				case 'files' :
+					break;
+				case 'notes' :
+					var tmp = $(elem).parents(".submenu_wrapper").prop("id").split("_");
+					var preview = JSON.parse(tmp[tmp.length-1]);
+					submenu_Build('taskdetail', true, null,  {'type':event.data.type, 'id': event.data.target_id}, preview);
+					break;
+				case 'tasks' :
+					var tmp = $(elem).parents(".submenu_wrapper").prop("id").split("_");
+					var preview = JSON.parse(tmp[tmp.length-1]);
+					submenu_Build('taskdetail', true, null,  {'type':event.data.type, 'id': event.data.target_id}, preview);
+					break;
+				default :
+					break;
+			}
+		});
+	}
+
+	var item_profile_handler = function (elem,userid)
+	{
+		elem.find("[find=icon]").click(userid,function(event){
+			submenu_Build("personal_info", chatFeeder.subm.layer + 1, true, event.data, chatFeeder.subm.preview);
+		});
+	}
+
+	var layer_display = function(position,subm){
+		chatFeeder.subm = subm ;
+		position.addClass('overthrow').addClass("submenu_chat_contents");
+		position.empty();
+		$('<div>').addClass('chat_contents_wrapper').prop("id", subm.id+'_chat_contents_wrapper').appendTo(position);
+
+
+		for(var i in records)
+		{
+			var template = item_template_render(records[i]["category"],records[i]['parent'] == null);
+			var elem = $("#" + template).clone();
+			elem.prop('id',subm.id + "_" + records[i]["category"] + '_models_thistory_' + records[i]["id"]);
+
+			
+			
+			
+
+			switch(records[i]['category'])
+			{
+				case "comments" :
+					elem.addClass(records[i]['category']);
+					elem.addClass(wrapper_localstorage.uid === parseInt(records[i]["by"], 10) ? "models_history_self" : "models_history_others");
+					elem.find("[find=icon]").attr('src',records[i]["profile"]); 
+					elem.find("[find=author]").text(records[i]["author"]);
+					var date = new wrapper_date(records[i].timestamp);
+					elem.find(".time", "[find=timestamp]").html(date.display('time_short'));
+					elem.find(".date", "[find=timestamp]").html(date.display('date_short'));
+
+					if(records[i]['parent'] == null)
+					{
+						elem.find("[find=content]").html(records[i]["content"]);
+					}
+					else
+					{
+						elem.find("[find=action]").html(wrapper_to_html($.trim(records[i]["action"]).ucfirst()));
+						elem.find("[find=target_type]").html(records[i]["parent"]);
+						elem.find("[find=target]").html(records[i]["target"]);
+						item_add_handler(elem,records[i]['parent_category'],records[i]['parent_id']);
+					}
+					break;
+				case 'files' :
+					elem.addClass(records[i]['category']);
+					elem.addClass(wrapper_localstorage.uid === parseInt(records[i]["by"], 10) ? "models_history_self" : "models_history_others");
+					elem.find("[find=icon]").attr('src',records[i]["profile"]); 
+					elem.find("[find=author]").text(records[i]["author"]);
+					var date = new wrapper_date(records[i].timestamp);
+					elem.find(".time", "[find=timestamp]").html(date.display('time_short'));
+					elem.find(".date", "[find=timestamp]").html(date.display('date_short'));
+
+					var file = Lincko.storage.get('files', records[i]["id"]);
+					if(file.category =='image' || file.category =='video')
+					{
+						elem.find(".models_history_standard_shortcut_ico").remove();
+						elem.find(".models_history_standard_shortcut_pic").show().prop("src", records[i]["content"]);
+					} 
+					else{
+						var ext = app_models_fileType.getExt(target);
+						elem.find(".models_history_standard_shortcut_ico").find("i").addClass(app_models_fileType.getClass(ext));
+						elem.find(".models_history_standard_shortcut_pic").remove();
+					}
+					elem.find("[find=target]").html(records[i]["target"]);
+					elem.find("[find=action]").html(wrapper_to_html($.trim(records[i]["action"]).ucfirst()));
+					break;
+				case 'comment_recalled' :
+					var date = new wrapper_date(records[i].timestamp);
+					elem.find("[find=timestamp]").html(date.display('time_short'));
+					elem.find("[find=msg]").text(Lincko.Translation.get('app', 3101, 'html', {username: records[i]["author"] }));
+					break;
+				default:
+					elem.addClass(records[i]['category']);
+					elem.addClass(wrapper_localstorage.uid === parseInt(records[i]["by"], 10) ? "models_history_self" : "models_history_others");
+					elem.find("[find=icon]").attr('src',records[i]["profile"]); 
+					elem.find("[find=author]").text(records[i]["author"]);
+					var date = new wrapper_date(records[i].timestamp);
+					elem.find(".time", "[find=timestamp]").html(date.display('time_short'));
+					elem.find(".date", "[find=timestamp]").html(date.display('date_short'));
+
+					elem.find("[find=target]").html(records[i]["target"]);
+					elem.find("[find=action]").html(wrapper_to_html($.trim(records[i]["action"]).ucfirst()));
+					item_add_handler(elem,records[i]["category"],records[i]['id']);
+					break;
+			}
+			item_profile_handler(elem,records[i]["by"]);
+			elem.prependTo(position.find(".chat_contents_wrapper"));
+		}
+	}
+
+	
+	var app_layers_chat_feed_history = function(position,type,project_id,subm)
+	{
+		data_init(project_id,type);
+		layer_display(position,subm);
+	}
+
+	return {
+		"app_layers_chat_feed_history" : app_layers_chat_feed_history,
+	}
+})();
+
 var chatFeed = (function() {
 	var subm = null;
 	var SHORTCUT_HANDLERS = {
@@ -19,34 +248,6 @@ var chatFeed = (function() {
 				return false;
 			}
 		},
-		'uploading_file': function(id, elem) {
-			//var file = $("#uploading_file_" + id);
-			/*var file = app_upload_files.lincko_files[id];
-			file.abort();
-			file.lincko_status = 'abort';
-			$(elem).parents(".models_history_wrapper").removeClass("uploading_file").addClass("upload_stopped_file").attr("category", "upload_stopped_file");
-			return false;*/
-			//todo:show preview
-		},
-		'upload_stopped_file': function(id, elem) {
-			/*var file = app_upload_files.lincko_files[id];
-			file.submit();
-			file.lincko_status = 'uploading';
-			$(elem).parents(".models_history_wrapper").removeClass("upload_stopped_file").addClass("uploading_file").attr("category", "uploading_file");
-			return false;*/
-			var file = Lincko.storage.get('files', id);
-			var name = Lincko.storage.get('files', id, "+name");
-			var url = Lincko.storage.getLink(id);
-			var thumbnail = Lincko.storage.getLinkThumbnail(id);
-			var extension = checkExtension(id);
-			if (extension) {
-				previewer[extension](id);
-				return false;
-			}
-			else {
-				return true;
-			}
-		},
 	};
 	var RESOURCE_ID = {
 		'tasks': function(raw_id) {
@@ -56,9 +257,6 @@ var chatFeed = (function() {
 			return raw_id.split('models_thistory_')[1].split('_hist_')[0];
 		},
 		'uploading_file': function(raw_id) {
-			return raw_id.split("uploading_file_")[1].split('_hist_')[0];
-		},
-		'upload_stopped_file': function(raw_id) {
 			return raw_id.split("uploading_file_")[1].split('_hist_')[0];
 		},
 		'comments': function(raw_id) {
@@ -125,36 +323,6 @@ var chatFeed = (function() {
 
 	function BaseHistoryCls(item) {
 		this.item = item;
-	}
-
-
-	function checkRecentDate(timestamp, index) {
-		if (index == 0) {
-			checkRecentDate.lastDate = Math.floor(timestamp / 86400) * 86400;
-			checkRecentDate.recentDatestamp = checkRecentDate.lastDate;
-		}
-		if (timestamp < checkRecentDate.recentDatestamp) {
-			var old = checkRecentDate.recentDatestamp;
-			checkRecentDate.recentDatestamp = Math.floor(timestamp / 86400) * 86400;
-			return old;
-		}
-		if (index == -1) {
-			if(typeof checkRecentDate.recentDatestamp === "undefined")
-			{
-				checkRecentDate.lastDate = Math.floor(timestamp / 86400) * 86400;
-				checkRecentDate.recentDatestamp = checkRecentDate.lastDate;
-			}
-			return checkRecentDate.recentDatestamp;/*the last item*/
-		}
-		if(index == -2)/*new comment*/
-		{
-			if(checkRecentDate.lastDate != Math.floor(new wrapper_date().timestamp / 86400) * 86400)
-			{
-				checkRecentDate.lastDate = Math.floor(new wrapper_date().timestamp / 86400) * 86400;
-				return checkRecentDate.lastDate;
-			}
-		}
-		return false;
 	}
 
 	function cutFileTitle(title, prefixLength, suffixLength, type){
@@ -240,7 +408,6 @@ var chatFeed = (function() {
 		Elem.prop('id', Elem_id);
 		Elem.attr('comment_id',this.item._id);
 
-
 		if(this.item.recalled_by){ //if comment was recalled
 			if(this.item["timestamp"]){
 				var timestamp = this.item["timestamp"];
@@ -254,7 +421,7 @@ var chatFeed = (function() {
 		}
 		else{
 			if (this.item._type == "uploading_file") {
-					Elem.addClass("files");
+				Elem.addClass("files");
 			}
 			else if (this.item._type == "files") {
 				Elem.addClass("uploaded_file");
@@ -291,7 +458,7 @@ var chatFeed = (function() {
 			Elem.find("[find=progress_text]").addClass("uploading_file_progress_size").html("0 K of 0 MB"); //toto => translation
 			Elem.find(".uploading_action").html(Lincko.Translation.get('app', 7, 'html'));
 			if (this.item._type == 'files' || this.item._type == 'uploading_file'){
-				if(this.item.category=='image' || this.item.category=='video' )
+				if(this.item.category == 'image' || this.item.category == 'video' )
 				{
 					var thumbnail = Lincko.storage.getLinkThumbnail(this.item._id);
 					Elem.find(".models_history_standard_shortcut_ico").addClass('display_none');
@@ -299,12 +466,14 @@ var chatFeed = (function() {
 				}
 				else{
 					var ext = app_models_fileType.getExt(this.item[(this.item._type == "files"?"+name":"name")]);
+
 					Elem.find(".models_history_standard_shortcut_ico")
 						.removeClass('display_none')
 							.find("i")
 							.addClass(app_models_fileType.getClass(ext));
 					Elem.find(".models_history_standard_shortcut_pic").addClass('display_none');
 				}		
+
 			}
 			Elem.attr('category', this.item._type);
 		}
@@ -387,7 +556,6 @@ var chatFeed = (function() {
 		}
 
 		if (!action) {
-
 			var clone_hist = $.extend(true, {}, history.root.history);
 			var text = history.root.title;
 			if(clone_hist.par.un){
@@ -429,7 +597,6 @@ var chatFeed = (function() {
 				return null;
 		} else {
 			if (this.item.type != 'files') {
-
 				target = Lincko.storage.get(this.item.type, this.item.id, "+title");
 			}
 			else{
@@ -455,7 +622,7 @@ var chatFeed = (function() {
 		Elem.find(".date", "[find=timestamp]").html(date.display('date_short'));
 		
 		if (this.item.type == 'files'){
-		    var file = Lincko.storage.get('files', this.item.id);
+			var file = Lincko.storage.get('files', this.item.id);
 			if(file.category =='image' || file.category =='video')
 			{
 				Elem.find(".models_history_standard_shortcut_ico").addClass('display_none');
@@ -624,6 +791,8 @@ var chatFeed = (function() {
 		format_items(type, items, position, false, false);
 	}
 
+	
+
 	function format_items(type, items, position, newone)
 	{
 		var pre = {
@@ -715,7 +884,7 @@ var chatFeed = (function() {
 
 	function items_group_by_time(items, type)
 	{
-		var real_items=[];
+		var real_items = [];
 		var timestamp_groups = [];
 		var item_timestamp;
 		for(var i in items)
