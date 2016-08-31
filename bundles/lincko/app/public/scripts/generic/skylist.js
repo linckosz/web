@@ -1238,6 +1238,32 @@ skylist.prototype.addTask = function(item){
 		linkCount = (Object.keys(item._files)).length;
 	}
 	Elem.find('[find=linkCount]').text(linkCount);
+	if(that.Lincko_itemsList_filter.view == 'paper'){
+		var elem_expandable_links = Elem.find('[find=expandable_links]');
+		var elem_btn_addNew = elem_expandable_links.find('[find=btn_addNew]');
+		if(item._files){
+			$.each(item._files, function(fileID, obj){
+				var elem_span = $('<span class="skylist_paperView_expandable_boxsize">');
+				var thumb_url = Lincko.storage.getLinkThumbnail(fileID);
+				elem_span.css('background-image','url("'+thumb_url+'")');
+				elem_btn_addNew.before(elem_span);
+			});
+		}
+
+		elem_btn_addNew.click(function(){
+			if(item.fake){
+				app_upload_open_files('projects', item._parent[1] , false, true, 'link_queue');
+			}
+			else{
+				app_upload_open_files(that.list_type, item._id, false, true);
+			}
+		});
+
+		Elem.find('[find=links_icon]').click(function(){
+			console.log(item._files);
+			that.paperView_expandLinks(elem_expandable_links, item);
+		});
+	}
 
 	/*
 	updated_at
@@ -1959,7 +1985,17 @@ skylist.prototype.taskClick = function(event,task_elem){
 		return;
 	}
 	this.openDetail(task_elem);
+}
 
+skylist.prototype.paperView_expandLinks = function(elem_links, item){
+	var that = this;
+	elem_links.removeClass('display_none');
+	if(elem_links.css('display') != 'block'){
+		elem_links.velocity("slideDown");
+	}
+	else{
+		elem_links.velocity("slideUp");
+	}
 }
 
 skylist.prototype.openDetail = function(/*open,*/ task_elem){

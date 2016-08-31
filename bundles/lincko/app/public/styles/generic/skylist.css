@@ -335,6 +335,10 @@
 	z-index: -1;
 }
 
+.skylist_card [find=expandable_links]{
+	display:none;
+}
+
 .skylist_card_bottom {
 	height: 20px;
 	width: 100%;
@@ -541,6 +545,12 @@
  	border:none;
  	margin:0px;
 }
+.skylist_wrapper[view=paper] .skylist_card:hover .skylist_card_center{
+	background:initial;
+}
+
+
+
 .skylist_wrapper[view=paper] .skylist_paperView_divider{
 	padding-top: 1px;
 	background-color: #54add2;
@@ -601,6 +611,22 @@
 }
 .skylist_wrapper[view=paper]>.burger_typeTask td.skylist_card_textwrapper [find=text]{
 	height: 100px;
+}
+
+
+/*expandables*/
+.skylist_paperView_expandable_boxsize{
+	height: 100px;
+	width: 100px;
+	margin: 0px 5px;
+	display: inline-block;
+	vertical-align: top;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.skylist_paperView_expandable_boxsize[find=btn_addNew]{
+	font-size: 100px;
 }
 
 /*

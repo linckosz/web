@@ -825,7 +825,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			app_upload_open_files('projects', that.param.projID, false, true, 'link_queue');
 		}
 		else{
-			app_upload_open_files(that.param.type, taskid);
+			app_upload_open_files(that.param.type, taskid, false, true);
 		}
 	});
 	var elem_links_wrapper = elem_links.find('[find=links_wrapper]');
