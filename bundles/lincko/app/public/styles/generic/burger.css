@@ -12,6 +12,7 @@
 	color: #53ADD2;
 	padding: 0px 5px;
 	cursor: pointer; cursor: hand;
+	white-space: nowrap;
 }
 .burger_option {
 	padding: 5px 10px;

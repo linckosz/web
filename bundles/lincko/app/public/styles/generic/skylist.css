@@ -122,9 +122,12 @@
 	box-shadow: 0px 0px 4px 0px #3F84B0;
 	border-radius: 3px;
 	z-index: 10;
-	padding: 5px 10px;
+	/*padding: 5px 10px;*/
 	font-size: 14px;
 	margin: 0px 5px;
+}
+.skylist_menu_navbar_filter_pane>table{
+	border-collapse: collapse;
 }
 .skylist_menu_navbar_filter_pane [find="filter_header_1"] {
 	font-size: 18px;
@@ -157,6 +160,20 @@
 	padding: .5px 0px;
 	margin: 5px 25px;
 }
+
+/*skylist filter for tasks*/
+.skylist_filter_tasks_view_wrapper>table{
+	border-collapse: collapse;
+}
+.skylist_filter_tasks_view_wrapper td{
+	cursor:pointer; cursor: hand;
+	height: 75px;
+	padding:0px 10px;
+}
+.skylist_filter_tasks_view_wrapper td:hover{
+	background-color: #DBEBF4;
+}
+
 
 .skylist_menu_navbar_search{
 	/* old search button at the top right corner
@@ -279,6 +296,9 @@
 
 .skylist_card_center [find=card_leftbox]{ /*check with royce*/
 
+}
+.skylist_card_center [find=card_rightbox]{
+	display:none;
 }
 .skylist_card_center_leftbox{
 	width: 1px;
@@ -445,6 +465,9 @@
 /*
  * For tasklist----------------------------------------------
  */
+ .skylist_wrapper>.burger_typeTask{
+ 	display:none;
+ }
 .skylist_checkbox {
 	cursor: pointer;
 	/* background-color: #EFEFEF; */
@@ -492,6 +515,98 @@
  * END OF for tasklist----------------------------------------------
  */
 
+/*
+ *  paperView---------------------------------------------------
+ */
+.skylist_wrapper[view=paper] [find=card_bottom],
+.skylist_wrapper[view=paper] [find=card] input,
+.skylist_wrapper[view=paper] [find=card_time],
+.skylist_wrapper[view=paper] [find=card_rightOptions]{
+	display:none;
+}
+.skylist_wrapper[view=paper] .skylist {
+	margin:0px 10px;
+	background-color: #FFFFFF;
+}
+.skylist_wrapper[view=paper] .skylist_subwrapper {
+	/*bottom: 120px;*/
+}
+.skylist_wrapper[view=paper] .skylist_newcardCircle{
+	display: none;
+}
+.skylist_wrapper[view=paper] .skylist .iscroll_sub_div.scrollY{
+	padding-bottom: 0px;
+}
+.skylist_wrapper[view=paper] .skylist_card {
+ 	border:none;
+ 	margin:0px;
+}
+.skylist_wrapper[view=paper] .skylist_paperView_divider{
+	padding-top: 1px;
+	background-color: #54add2;
+	margin: 10px 40px;
+}
+.skylist_wrapper[view=paper] .skylist_card_center{
+	height:initial;
+}
+.skylist_wrapper[view=paper] .skylist_card_center [find=card_rightbox]{
+	width: 100px;
+	display:table-cell;
+	vertical-align: top;
+	font-size: 14px;
+}
+.skylist_wrapper[view=paper] .skylist_card_center [find=links_icon],
+.skylist_wrapper[view=paper] .skylist_card_center [find=comments_icon]{
+	color: #53ADD2;
+}
+.skylist_wrapper[view=paper] .skylist_card [find=title]{
+	cursor: text;
+	max-height: none;
+	font-size: 14px;
+	padding-right: 0px;
+}
+.skylist_wrapper[view=paper] .skylist_card_center [find=card_leftbox] {
+	vertical-align: top;
+}
+.skylist_wrapper[view=paper] .skylist_card [find=title] .burger_tag[find=name]{
+	color: #3677a7;
+    font-weight: 400;
+}
+.skylist_wrapper[view=paper] .skylist_card [find=title] [find=name]:before{
+	color: #53ADD2;
+ 	content:'@';
+}
+.skylist_wrapper[view=paper] .skylist_card [find=title] [find=dateWrapper]:before{
+	content:'++';
+}
+.skylist_wrapper[view=paper] .skylist_subwrapper .burger_typeTask{
+	display:none;
+}
+.skylist_wrapper[view=paper]>.burger_typeTask{
+	margin-bottom: 0px;
+	border-top: solid 1px #fba026;
+	display:initial;
+	position: absolute;
+	height: 120px;
+	bottom: 0px;
+	left: 10px;
+	right: 10px;
+}
+.skylist_wrapper[view=paper]>.burger_typeTask [find=checkbox_td]{
+	vertical-align: top;
+}
+.skylist_wrapper[view=paper]>.burger_typeTask td.skylist_card_textwrapper{
+	display:block;
+	padding: 10px 0px;
+}
+.skylist_wrapper[view=paper]>.burger_typeTask td.skylist_card_textwrapper [find=text]{
+	height: 100px;
+}
+
+/*
+ *  END OF paperView-----------------------------------------------
+ */
+
 
 /*
  * For noteslist----------------------------------------------
@@ -501,7 +616,7 @@
 	border: 1px solid black;
 }
 /*
- * END OF for tasklist----------------------------------------------
+ * END OF for noteslist-------------------------------------------
  */
 
 

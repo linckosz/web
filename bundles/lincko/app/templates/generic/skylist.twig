@@ -23,7 +23,13 @@
 		<div class="skylist_menu_timesort"></div>
 		<span class="skylist_menu_navbar_filter_icon icon-Filter skylist_clickable "></span>
 		<div class="skylist_menu_navbar_filter_pane" tabindex="1">
-			<div find="filter_header_1">{{ _trans('app', 13, 1, 'html') }}{#Filter#}:</div>
+			<table>
+				<td find="filter_block1">
+				</td>
+				<td find="filter_block2">
+					<div find="filter_header_1">{{ _trans('app', 13, 1, 'html') }}{#Filter#}:</div>
+				</td>
+			</table>
 		</div>
 		<div class="skylist_menu_navbar_search">
 			<input find='search_textbox' type='textbox'/>
@@ -57,6 +63,25 @@
 			<td find="text">{{ _trans('app', 13, 5, 'html') }}{#Show completed tasks#}</td>
 		</table>
 	</div>
+	<div id="-skylist_filter_tasks_view_wrapper" class="skylist_filter_tasks_view_wrapper">
+		<table>
+			<tr>
+				<td find="card">
+					Card{#toto#}
+				</td>
+			</tr>
+			<tr>
+				<td find="paper">
+					Paper {#toto#}
+				</td>
+			</tr>
+			<tr class="display_none">
+				<td>
+					Kanban {#toto#}
+				</td>
+			</tr>
+		</table>
+	</div>
 
 	<div id='-skylist_subwrapper' class="skylist_subwrapper"></div>
 	<div id="-skylist" class="skylist overthrow"></div>
@@ -73,8 +98,14 @@
 				<td find='card_spacestick' class="skylist_card_spacestick display_none">&nbsp;</td>
 				<td find='card_leftbox' class="skylist_card_center_leftbox"></td>
 				<td find='card_textwrapper' class="skylist_card_textwrapper">
-					<div find='title' contenteditable="false"></div><!--<span find='dash'>-</span>-->
+					<div find='title' contenteditable="false"></div>
 					<div find='description'></div>
+				</td>
+				<td find='card_rightbox'>
+					<span find="links_icon" class="icon-links"></span>
+					<span find='links' class="skylist_icon_text">(<span find="linkCount"></span>)</span>
+					<span find="comments_icon" class="icon-Pencil"></span>
+					<span find='comments' class="skylist_icon_text">(<span find="commentCount"></span>)</span>
 				</td>
 				<input type="text" find="card_time_calendar_timestamp" class="skylist_card_time_hidden skylist_clickable display_none" readonly="readonly"/>
 				<span find='card_time' class="skylist_card_time floatright skylist_paddingRight"></span>

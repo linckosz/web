@@ -323,6 +323,10 @@ burgerN.typeTask = function(projectID, skylistInst){
 			approver: true,
 			in_charge: true,
 		}
+
+		if(skylistInst.Lincko_itemsList_filter.view == 'paper'){
+			item.paperView = true;
+		}
 		
 
 		function getRandomInt(min, max) {
