@@ -694,7 +694,7 @@ Submenu.prototype.Add_ChatContent = function() {
 		.appendTo(this.list_wrapper);
 	}
 
-	var app_layers_chatlist = new skylist(
+	var app_layers_chats_list = new skylist(
 		'global_chats',
 		position,
 		null,
@@ -777,7 +777,7 @@ Submenu.prototype.Add_ChatContent = function() {
 			}
 
 		},
-		app_layers_chatlist
+		app_layers_chats_list
 	);
 
 	//Free memory

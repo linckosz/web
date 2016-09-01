@@ -375,11 +375,17 @@ enquire.register(responsive.isMobileL, function() {
 	}
 });
 
+var app_application_move_mainmenu_block = false;
 function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 	if(typeof Blur==="undefined"){ Blur = $(null); }
 	if(typeof Block==="undefined"){ Block = $(null); }
 	if(typeof Button==="undefined"){ Button = $(null); }
 	if(typeof force_blur==="undefined"){ force_blur = false; }
+
+	if(app_application_move_mainmenu_block){
+		return true;
+	}
+	app_application_move_mainmenu_block = true;
 
 	var time = 200;
 	var delay = 60;
@@ -395,6 +401,10 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 
 	//Close
 	if(Elem.hasClass('app_application_visible')){
+
+		app_generic_state.change({
+			mainmenu: false,
+		});
 		time = 200;
 		if(true || responsive.test("maxTablet")){
 			time = Math.floor(2.5*time);
@@ -453,7 +463,6 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				duration: time,
 				delay: delay,
 				progress: function(){
-					//Elem.removeClass('app_application_visible'); //toto [ko- main menu animation]
 					if(responsive.test("minTablet")){
 						app_content_dynamic_position();
 						app_application_submenu_position();
@@ -463,9 +472,10 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 					setTimeout(function(){
 						$(window).trigger('resize');
 						app_application_submenu_position();
-						Elem.removeClass('app_application_visible'); //toto [bruno - main menu animation]
 						Blur.removeClass('app_application_blur');
 						Block.removeClass('app_application_block_visible');
+						Elem.removeClass('app_application_visible');
+						app_application_move_mainmenu_block = false;
 					},50);
 				},
 			}
@@ -473,11 +483,13 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 		
 	//Open
 	} else {
+		app_generic_state.change({
+			mainmenu: true,
+		});
 		time = 300;
 		if(true || responsive.test("maxTablet")){
 			time = Math.floor(2*time);
 		}
-		Elem.addClass('app_application_visible');  //toto [bruno - main menu animation]
 		Block.addClass('app_application_block_visible');
 		$.each(Elem.find('.app_application_width_child'), function() {
 			$(this).css('width', width_child);
@@ -533,6 +545,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 			}
 		);
 		*/
+		Elem.addClass('app_application_visible');
 		Elem.css('width', 0).velocity(
 			{width: width},
 			{
@@ -545,8 +558,8 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 					}
 				},
 				complete: function(){
-					//Elem.addClass('app_application_visible');  //toto [ko - main menu animation]
 					setTimeout(function(){
+						app_application_move_mainmenu_block = false;
 						$(window).trigger('resize');
 						app_application_submenu_position();
 						Elem.addClass('app_application_width');
@@ -554,6 +567,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 						$.each(Elem.find('.app_application_width_child'), function() {
 							$(this).addClass('app_application_width');
 						});
+						app_application_move_mainmenu_block = false;
 					},50);
 				},
 			}

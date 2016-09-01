@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=9,chrome=1" />
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
-<title>{{ _trans('wrapper', 1, 1, 'html') }}{# Lincko - Team collaboration toll #}</title>
+<title>{{ _trans('wrapper', 1, 1, 'html') }}{# Lincko - The way of projects #}</title>
 <link rel="shortcut icon" href="{{ _filelatest('/favicon.ico') }}" type="image/x-icon" />
 <link rel="icon" href="{{ _filelatest('/favicon.ico') }}" type="image/x-icon" />
 <link rel="apple-touch-icon" href="{{ _filelatest('/favicon.ico') }}" type="image/x-icon" />
@@ -73,7 +73,8 @@ window.name = 'brunomartin';
 document.domain = '{{ domain }}';
 document.linckoBack = '{{ lincko_back }}';
 document.linckoFront = '{{ lincko_front }}';
-wrapper_show_error = {{ lincko_show_dev }};
+var wrapper_show_error = {{ lincko_show_dev }};
+var wrapper_title = "{{ _trans('wrapper', 1, 1, 'html') }}";
 document.linckoBackPort = 8443;
 {% if lincko_show_dev %}
 	if(top.location.protocol.indexOf('https')==-1){
@@ -254,7 +255,7 @@ JSfiles.loadLibraries = function(){
 	}
 	//The latest operation would be to trigger the window resize event to be sure the display fit the screen
 	$(window).trigger('resize');
-	//After 9s wait we always force to display
+	//After 20s wait we always force to display
 	setTimeout(function(){
 		wrapper_load_progress.move(80);
 	}, 3000);
@@ -262,8 +263,11 @@ JSfiles.loadLibraries = function(){
 		wrapper_load_progress.move(90);
 	}, 6000);
 	setTimeout(function(){
+		wrapper_load_progress.move(98);
+	}, 14000);
+	setTimeout(function(){
 		wrapper_load_progress.move(100);
-	}, 9000);
+	}, 20000);
 };
 
 var wrapper_fp = '{{ fingerprint }}';

@@ -60,7 +60,7 @@
 	min-height: 100%;
 	overflow: hidden;
 	z-index: 1200;
-	visibility: hidden;
+	/*visibility: hidden;*/
 	vertical-align: top;
 }
 

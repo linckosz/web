@@ -1,27 +1,27 @@
-.app_layers_chat .skylist_card_bottom {
+.app_layers_chats .skylist_card_bottom {
 	display: none;
 }
-.app_layers_chat .skylist_menu_people {
-	display: none;
-}
-
-.app_layers_chat .skylist_menu_timesort {
+.app_layers_chats .skylist_menu_people {
 	display: none;
 }
 
-.app_layers_chat .skylist_menu_navbar_search {
+.app_layers_chats .skylist_menu_timesort {
 	display: none;
 }
 
-.app_layers_chat .skylist_menu_navbar_filter_icon {
+.app_layers_chats .skylist_menu_navbar_search {
 	display: none;
 }
 
-.app_layers_chat  .skylist_subwrapper {
+.app_layers_chats .skylist_menu_navbar_filter_icon {
+	display: none;
+}
+
+.app_layers_chats  .skylist_subwrapper {
 	padding-top: 5px;
 }
 
-.app_layers_chat .skylist_card {
+.app_layers_chats .skylist_card {
 	cursor: pointer;
 }
 .skylist .skylist_card_center [find=description] {
@@ -54,15 +54,15 @@
 	display: block;
 }
 
-.app_layers_chat .skylist_card_center [find=title] {
+.app_layers_chats .skylist_card_center [find=title] {
 	font-size: 16px;
 	color: #475577;
 }
 
-.app_layers_chat .skylist_newcardCircle {
+.app_layers_chats .skylist_newcardCircle {
 	color: #679E52;
 }
-.app_layers_chat .skylist_newcardCircle:hover {
+.app_layers_chats .skylist_newcardCircle:hover {
 	opacity: 0.5;
 }
 
@@ -89,22 +89,22 @@
 
 /* Mobile phone in Portrait */
 @media only screen and (max-width: 479px){
-	.app_layers_chat {
+	.app_layers_chats {
 		padding: 0;
 	}
 }
 
 /* Tablet in Landscape */
 @media only screen and (max-width: 1279px){
-	.app_layers_chat .skylist_logo >span {
+	.app_layers_chats .skylist_logo >span {
 		width: 48px;
 		font-size: 40px;
 	}
-	.app_layers_chat .skylist_card_center [find=description] {
+	.app_layers_chats .skylist_card_center [find=description] {
 		font-size: 12px;
 	}
 
-	.app_layers_chat .skylist_card_center [find=title] {
+	.app_layers_chats .skylist_card_center [find=title] {
 		font-size: 14px;
 	}
 }

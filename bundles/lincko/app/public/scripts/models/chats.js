@@ -1,5 +1,5 @@
-var app_models_chat_bubble_timeout = null;
-function app_models_chat_bubble_actionMenu(){
+var app_models_chats_bubble_timeout = null;
+function app_models_chats_bubble_actionMenu(){
 	var translate_str = Lincko.Translation.get('app', 56, 'html'); //translate
 	var untranslate_str = Lincko.Translation.get('app', 57, 'html'); //untranslate
 	var timeout_fn = function(that){
@@ -40,7 +40,7 @@ function app_models_chat_bubble_actionMenu(){
 		}
 
 
-		elem_actionMenu = $('#-app_models_chat_bubble_actionMenu').clone().prop('id','');
+		elem_actionMenu = $('#-app_models_chats_bubble_actionMenu').clone().prop('id','');
 		if(item_comment && (item_comment.created_by != wrapper_localstorage.uid || $.now()/1000 - item_comment.created_at > 60*2/*2 minutes*/)){
 			elem_actionMenu.find('[find=recall_btn]').addClass('visibility_hidden');
 		}
@@ -48,7 +48,7 @@ function app_models_chat_bubble_actionMenu(){
 		//center if chat bubble is long enough, align to right side of chat bubble if chat bubble is too small
 		//if comment is not your comment (e.g. on the left side), always center/align to left
 		if(elem_actionMenu.outerWidth() < that.outerWidth() || (item_comment && item_comment.created_by != wrapper_localstorage.uid) ){
-			elem_actionMenu.addClass('app_models_chat_bubble_actionMenu_leftZero');
+			elem_actionMenu.addClass('app_models_chats_bubble_actionMenu_leftZero');
 		}
 
 		var that_clone = that.clone();
@@ -89,7 +89,7 @@ function app_models_chat_bubble_actionMenu(){
 				    	if(that.find('[find=translated_text]').length){
 				    		return false;
 				    	}
-			    		var elem_translated = $('#-app_models_chat_bubble_chatTranslation').clone().prop('id','');
+			    		var elem_translated = $('#-app_models_chats_bubble_chatTranslation').clone().prop('id','');
 			    		elem_translated.find('[find=text]').text(data);
 			    		that.append(elem_translated);
 			    		elem_translated.velocity('slideDown',{
@@ -125,8 +125,8 @@ function app_models_chat_bubble_actionMenu(){
 		/*------------recall chat action----------------*/
 		var elem_recallBtn = elem_actionMenu.find('[find=recall_btn]');
 		elem_recallBtn.on("mousedown touchstart", function(){
-			if(!item_comment && !app_models_chat_recallQueue[commentID]){
-				app_models_chat_recallQueue[commentID] = true;
+			if(!item_comment && !app_models_chats_recallQueue[commentID]){
+				app_models_chats_recallQueue[commentID] = true;
 			}
 			else{
 				wrapper_sendAction(
@@ -156,13 +156,13 @@ function app_models_chat_bubble_actionMenu(){
 			if(that.has('[contenteditable]').length){
 				event.preventDefault();
 				that.find('[contenteditable]').focus();
-				app_models_chat_bubble_timeout = setTimeout(function(){
+				app_models_chats_bubble_timeout = setTimeout(function(){
 					timeout_fn(that);
 				}, 1000);
 			}
 		});
 		$("body").on("mouseup touchend", '.models_history_content', function() {
-			clearTimeout(app_models_chat_bubble_timeout);
+			clearTimeout(app_models_chats_bubble_timeout);
 		});
 	}
 	else{
@@ -183,9 +183,9 @@ function app_models_chat_bubble_actionMenu(){
 		that.find('[find=actionMenu]').remove();
 	});
 }
-app_models_chat_bubble_actionMenu();
+app_models_chats_bubble_actionMenu();
 
-var app_models_chat_recallQueue = {
+var app_models_chats_recallQueue = {
 	sendAction: function(commentID){
 		wrapper_sendAction(
 				{

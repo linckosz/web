@@ -987,9 +987,26 @@ Submenu.prototype.Show = function(animate) {
 	var stack = this.preview ? submenu_show['preview'] : submenu_show['submenu'];
 	if (typeof stack[this.id] !== 'boolean' || !stack[this.id]) {
 		stack[this.id] = true;
+		var state_layer = that.layer;
 		if (this.preview) {
+			app_generic_state.change(
+				{
+					preview: state_layer,
+				},
+				{
+					param: that.param,
+				}
+			);
 			this.showPreview(time, delay, animate);
 		} else {
+			app_generic_state.change(
+				{
+					submenu: state_layer,
+				},
+				{
+					param: that.param,
+				}
+			);
 			this.showSubmenu(time, delay, animate);
 		}
 	}
@@ -1102,10 +1119,27 @@ Submenu.prototype.Hide = function(animate) {
 			$(this).removeClass('submenu_deco_next');
 		});
 	}
+	var state_layer = that.layer - 1;
 	if (this.preview) {
+		app_generic_state.change(
+			{
+				preview: state_layer,
+			},
+			{
+				param: that.param,
+			}
+		);
 		this.hidePreview(time, delay, animate);
 	} else {
 		this.hideSubmenu(time, delay, animate);
+		app_generic_state.change(
+			{
+				submenu: state_layer,
+			},
+			{
+				param: that.param,
+			}
+		);
 	}
 	$(document).trigger("submenuHide");
 };

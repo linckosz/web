@@ -12,9 +12,9 @@ var chatlist_subConstruct = function(){
 		.appendTo(that.list_wrapper);
 }
 
-function app_layers_chat_feedChat(parent) {
+function app_layers_chats_feedChat(parent) {
 	var Elem;
-	var app_layers_chatlist = new skylist(
+	var app_layers_chats_list = new skylist(
 		'chats',
 		parent,
 		null,
@@ -25,7 +25,7 @@ function app_layers_chat_feedChat(parent) {
 	);
 
 	app_application_lincko.add(
-		"skylist_"+app_layers_chatlist.md5id,
+		"skylist_"+app_layers_chats_list.md5id,
 		"projects_"+app_content_menu.projects_id,
 		function(){
 			var layer = $('#'+this.id);
@@ -94,20 +94,20 @@ function app_layers_chat_feedChat(parent) {
 			}
 
 		},
-		app_layers_chatlist
+		app_layers_chats_list
 	);
 
 }
 
-function app_layers_chat_launchPage(param) {
+function app_layers_chats_launchPage(param) {
 	if (typeof param === 'undefined') { param = null; }
-	app_layers_chat_feedPage(param);
+	app_layers_chats_feedPage(param);
 }
 
-var app_layers_chat_feedPage = function(param) {
+var app_layers_chats_feedPage = function(param) {
 	if (typeof param === 'undefined') { param = null; }
-	var position = $('#app_layers_chat');
+	var position = $('#app_layers_chats');
 	position.addClass('overthrow');
 	position.empty();
-	app_layers_chat_feedChat(position);
+	app_layers_chats_feedChat(position);
 }

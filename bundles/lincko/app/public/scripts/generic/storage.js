@@ -238,7 +238,7 @@ Lincko.storage.update = function(partial, info){
 			app_application_lincko.prepare('first_launch', true);
 			setTimeout(function(){
 				wrapper_load_progress.move(100);
-			},200);
+			}, 200);
 		}
 		return true;
 	}
@@ -824,158 +824,6 @@ Lincko.storage.searchArray = function(type, param, array){
 
 
 /*
-	[toto] We should move favorite records to the backend
-	Lincko.storage.favorite('projects', 2, true); //Save the favorite
-	Lincko.storage.favorite('projects', 2); //Request the favorite
-	Lincko.storage.favorite('projects', 2, false); //Delete the favorite
-*/
-Lincko.storage.favorite = function(category, id, save){
-	if(typeof category === 'string' && category.indexOf('_')!==0){
-		category = category.toLowerCase();
-	} else {
-		return false;
-	}
-	if(typeof id !== 'string' && typeof id !== 'number'){ return false; }
-	var index;
-
-	//Before saving it, we do not need to double check if the items exist because it can be temporary hidden by another user 
-	
-	if(typeof save === 'undefined'){
-		if(typeof Lincko.storage.data_favorite[category] !== 'undefined' && $.inArray(id, Lincko.storage.data_favorite[category])!=-1){
-			return $.inArray(id, Lincko.storage.data_favorite[category]);
-		}
-	} else if(save){
-		//Do not save unexisting items
-		if(typeof Lincko.storage.data[category] === 'undefined' || typeof Lincko.storage.data[category][id] === 'undefined'){
-			return false
-		}
-		if(typeof Lincko.storage.data_favorite[category] === 'undefined'){
-			Lincko.storage.data_favorite[category] = [];
-		}
-		
-		index = $.inArray(id, Lincko.storage.data_favorite[category]);
-		if(index == -1){
-			Lincko.storage.data_favorite[category].push(id);
-			app_application_lincko.prepare(category);
-			wrapper_localstorage.encrypt('data_favorite', JSON.stringify(Lincko.storage.data_favorite));
-			//Return it's index position
-			return $.inArray(id, Lincko.storage.data_favorite[category]);
-		} else {
-			//Return it's current index position
-			return index;
-		}
-	} else if(!save){
-		if(typeof Lincko.storage.data_favorite[category] !== 'undefined'){
-			index = $.inArray(id, Lincko.storage.data_favorite[category]);
-			if(index != -1){
-				Lincko.storage.data_favorite[category].splice(index, 1); //splice delte and reconstruct the table indexation
-				app_application_lincko.prepare(category);
-				wrapper_localstorage.encrypt('data_favorite', JSON.stringify(Lincko.storage.data_favorite));
-				return true;
-			}
-		}
-	}
-	return false;
-};
-
-/*
-	If available, move the items into the category to it's new position
-	Lincko.storage.moveFavorite('projects', 5, 2) => Move the project No5 to the 2nd favorite position, and then record it to localstorage
-	NOTE: the 2nd position equals to the index 1 of an array (the list starts from index 0)
-*/
-Lincko.storage.moveFavorite = function(category, id, order){
-	if(typeof category === 'string' && category.indexOf('_')!==0){
-		category = category.toLowerCase();
-	} else {
-		return false;
-	}
-	if(typeof id !== 'string' && typeof id !== 'number'){ return false; }
-	if(typeof order !== 'number' || order <= 0){ return false; }
-	var index;
-	var position;
-	var item;
-	order = order-1; //We decrease the number to fit array position starting from 0
-	if(typeof Lincko.storage.data_favorite[category] === 'object'){
-		index = $.inArray(id, Lincko.storage.data_favorite[category]);
-		if(index != -1){
-			item = Lincko.storage.data_favorite[category][index];
-			if(order != index){
-				//We delete the item first
-				Lincko.storage.data_favorite[category].splice(index, 1);
-				//then we reinsert to it's new position
-				Lincko.storage.data_favorite[category].splice(order, 0, item);
-				app_application_lincko.prepare(category);
-				wrapper_localstorage.encrypt('data_favorite', JSON.stringify(Lincko.storage.data_favorite));
-				return $.inArray(id, Lincko.storage.data_favorite[category]);
-			}
-		}
-	}
-	return false;
-};
-
-/*
-	Return a simple table with item as value;
-	Lincko.storage.getFavorites('projects'); => Return all favorite projects
-	Lincko.storage.getFavorites('projects', 5); => Return 5 favorite projects
-	Lincko.storage.getFavorites('projects', 5, true); => Return 5 favorite projects, and combine with newest created projects if not enough favorites to reach 5 items
-	Lincko.storage.getFavorites('projects', null, true); => Return all favorite projects, and combine with all projects from newest to oldest
-*/
-Lincko.storage.getFavorites = function(category, param, extend){
-	var results = [];
-	var id_record = {}; //Avoid double record
-	var list;
-	var item_tp;
-	if(typeof category === 'string' && category.indexOf('_')!==0){
-		category = category.toLowerCase();
-	} else {
-		return results;
-	}
-	if(typeof param === 'string'){ param = parseInt(id, 10); }
-	if(typeof param !== 'number'){ param = -1; } //Since it's below 0, we can scan all items
-	if(param == 0){ param = -1; } //0 will display all items
-	if(typeof extend === 'undefined'){ extend = false; } //If true, look for creation date at second step
-
-	if(typeof Lincko.storage.data_favorite[category] === 'object'){
-		list = Lincko.storage.data_favorite[category];
-		for(var i in list){
-			if(item_tp = Lincko.storage.get(category, list[i])){
-				if(typeof id_record[item_tp['_id']]==='undefined' && (typeof item_tp['personal_private']==='undefined' || item_tp['personal_private']==null || item_tp['personal_private']==0)){
-					//Add info to element, use "_" to recognize that it has been added by JS
-					item_tp['_timestamp'] = item_tp['created_at'];
-					results.push(item_tp);
-					id_record[item_tp['_id']] = true;
-					param--;
-				}
-			}
-			if(param===0){
-				return results;
-			}
-		}
-	}
-
-	if(extend){
-		//Then it will scan creation date until it match the limitation number (param)
-		list = Lincko.storage.hist(category, param, {att: 'created_at'});
-		for(var i in list){
-			if(item_tp = Lincko.storage.get(category, list[i].id)){
-				if(typeof id_record[item_tp['_id']]==='undefined' && (typeof item_tp['personal_private']==='undefined' || item_tp['personal_private']==null || item_tp['personal_private']==0)){
-					//Add info to element, use "_" to recognize that it has been added by JS
-					item_tp['_timestamp'] = item_tp['created_at'];
-					results.push(item_tp);
-					id_record[item_tp['_id']] = true;
-					param--;
-				}
-			}
-			if(param===0){
-				return results;
-			}
-		}
-	}
-
-	return results;
-};
-
-/*
 	Return a integer
 	Lincko.storage.getAllow('projects', 5); => Return the maximum allowed to the user
 */
@@ -1237,6 +1085,7 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 
 	var items;
 	var item;
+	var parent;
 	var save = false;
 	var condition_alert = false;
 	var timestamp = 0;
@@ -1270,6 +1119,10 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 		}
 		for(var cat in history_items){
 			for(var id in history_items[cat]){
+				parent = [null, 0];
+				if(typeof history_items[cat][id]['_parent'] != 'undefined'){
+					parent = history_items[cat][id]['_parent'];
+				}
 				if(typeof history_items[cat][id]['history'] != 'undefined'){
 					for(var timestamp in history_items[cat][id]['history']){
 						for(var history_id in history_items[cat][id]['history'][timestamp]){
@@ -1279,6 +1132,8 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 							item = history_items[cat][id]['history'][timestamp][history_id];
 							item.hist = parseInt(history_id, 10);;
 							item.type = cat;
+							item.par_type = parent[0];
+							item.par_id = parent[1];
 							item.id = parseInt(id, 10);
 							item.timestamp = parseInt(timestamp, 10);
 							if(item['by']==0 && item['type']=='comments'){
@@ -1362,7 +1217,7 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 				continue;
 			}
 			if((category==null || cat==category) && cat.indexOf('_')!==0){
-				items = Lincko.storage.data[cat];
+				items = Lincko.storage.data[cat]
 				for(var id in items) {
 					//if(id.length > 5 && parent_id == 8)debugger;
 					save = true;
@@ -1731,13 +1586,6 @@ JSfiles.finish(function(){
 	if(!Lincko.storage.data){
 		Lincko.storage.data = {};
 	}
-	Lincko.storage.data_favorite = JSON.parse(wrapper_localstorage.decrypt('data_favorite'));
-	if(!Lincko.storage.data_favorite){
-		Lincko.storage.data_favorite = {};
-	} else {
-		storage_first_launch = false; //Help to trigger some action once the database is downloaded
-		app_application_lincko.prepare('first_launch', true);
-	}
 	if(!Lincko.storage.settingsLocal){
 		Lincko.storage.settingsLocal = Lincko.storage.getSettings();
 	}
@@ -1749,6 +1597,8 @@ JSfiles.finish(function(){
 		Lincko.storage.setLastVisit(0);
 		Lincko.storage.getLatest();
 	} else {
+		storage_first_launch = false; //Help to trigger some action once the database is downloaded
+		app_application_lincko.prepare('first_launch', true);
 		Lincko.storage.display(true, true);
 		setTimeout(function(){
 			Lincko.storage.getLatest();

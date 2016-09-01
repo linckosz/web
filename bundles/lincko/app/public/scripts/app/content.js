@@ -47,7 +47,9 @@ var app_content_menu = {
 	param: null,
 
 	change: function(menu){
-		app_content_menu.selection(app_content_menu.projects_id, menu, app_content_menu.param)
+		if(app_content_menu.menu != menu){
+			app_content_menu.selection(app_content_menu.projects_id, menu, app_content_menu.param);
+		}
 	},
 
 	selection: function(projects_id, menu, param){
@@ -78,7 +80,7 @@ var app_content_menu = {
 			list = [
 				'tasks',
 				'notes',
-				'chat',
+				'chats',
 				'files',
 			];
 		} else { //Personal space (default)
@@ -86,7 +88,7 @@ var app_content_menu = {
 			list = [
 				'tasks',
 				'notes',
-				'chat',
+				'chats',
 				'files',
 			];
 		}
@@ -100,6 +102,16 @@ var app_content_menu = {
 			if(responsive.test("maxMobileL")){ app_application.forceClose(); }
 			return true;
 		}
+
+		app_generic_state.change(
+			{
+				projects_id: projects_id,
+				menu: menu,
+			},
+			{
+				param: param,
+			}
+		);
 
 		app_content_menu.projects_id = projects_id;
 		app_content_menu.menu = menu;

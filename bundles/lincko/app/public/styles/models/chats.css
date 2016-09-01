@@ -1,4 +1,4 @@
-.app_models_chat_bubble_actionMenu{
+.app_models_chats_bubble_actionMenu{
     position: absolute;
     top: -26px;
     /*left: 0px;*/
@@ -6,10 +6,10 @@
     text-align: center;
     white-space: nowrap;
 }
-.app_models_chat_bubble_actionMenu_leftZero{
+.app_models_chats_bubble_actionMenu_leftZero{
     left: 0px;
 }
-.app_models_chat_actionBtn {
+.app_models_chats_actionBtn {
     background-color: rgba(251,160,38,0.75);
     color: #FFFFFF;
     border-radius: 3px;
@@ -19,11 +19,11 @@
     padding: 0px 7px;
     vertical-align: bottom;
 }
-.app_models_chat_actionBtn[find=task_btn]{
+.app_models_chats_actionBtn[find=task_btn]{
     font-size: 20px;
 }
 
-.app_models_chat_bubble_chatTranslation [find=divider]{
+.app_models_chats_bubble_chatTranslation [find=divider]{
     background: #53ADD2;
     padding-top: 1px;
     opacity: 0.5;
