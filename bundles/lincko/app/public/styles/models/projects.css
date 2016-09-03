@@ -69,6 +69,34 @@
 
 .models_projects_standard_last {}
 
+.models_projects_deletion {
+	text-align: center !important;
+	cursor: default !important;
+	background-color: transparent !important;
+	border-style: none !important;
+}
+
+.models_projects_deletion_button {
+	display: inline-block !important;
+	padding: 6px 32px !important;
+	color: #FFFFFF !important;
+	background-color: #BE2B1F !important;
+	border: solid 2px transparent;
+	border-radius: 4px;
+	cursor: pointer; cursor: hand;
+	box-sizing: border-box;
+}
+
+.models_projects_deletion_button:hover {
+	border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.models_projects_id {
+	text-align: right !important;
+	padding: 2px 6px;
+	box-sizing: border-box
+}
+
 /* Mobile phone in Portrait */
 @media only screen and (max-width: 479px){
 	.models_projects_standard {

@@ -86,13 +86,20 @@ submenu_list['app_project_edit'] = {
 	//Set the title of the top
 	 "_title": {
 		"style": "customized_title",
-		"title": Lincko.Translation.get('app', 2001, 'html'), //New project
+		"title": Lincko.Translation.get('app', 2002, 'html'), //Project settings
 	},
 	"left_button": {
 		"style": "title_left_button",
 		"title": Lincko.Translation.get('app', 25, 'html'), //Close
 		'hide': true,
 		"class": "base_pointer",
+	},
+	"id": {
+		"style": "project_id",
+		"title": "ID",
+		"name": "id",
+		"value": "",
+		"class": "models_projects_id",
 	},
 	"title": {
 		"style": "project_title_edit",
@@ -116,6 +123,27 @@ submenu_list['app_project_edit'] = {
 		"value": "",
 		"class": "submenu_input_textarea",
 	},
+	"deletion": {
+		"style": "project_deletion",
+		"title": Lincko.Translation.get('app', 22, 'html'), //Delete
+		"name": "deletion",
+		"value": "",
+		"class": "models_projects_deletion",
+		"action": function(Elem, subm){
+			var projects_id = subm.param;
+			if(confirm("Do you really want to delete this project?")){
+				submenu_Hideall(subm.preview);
+				wrapper_sendAction(
+					{
+						"id": projects_id
+					},
+					'post',
+					'project/delete'
+				);
+			}
+		}
+	},
+	
 };
 
 Submenu_select.project_title_edit = function(subm) {
@@ -128,6 +156,15 @@ Submenu_select.project_description_edit = function(subm){
 
 Submenu_select.project_team_edit = function(subm){
 	subm.Add_ProjectTeamEdit(subm);
+};
+
+Submenu_select.project_deletion = function(subm){
+	subm.Add_ProjectDeletion(subm);
+};
+
+Submenu_select.project_id = function(subm){
+	var Elem = subm.Add_TitleSmall();
+	Elem.find("[find=submenu_title]").html("ID: "+subm.param);
 };
 
 
@@ -171,6 +208,31 @@ Submenu.prototype.Add_ProjectTitleEdit = function(subm) {
 				}
 			}
 		);
+	return Elem;
+};
+
+Submenu.prototype.Add_ProjectDeletion = function(subm) {
+	var that = this;
+	var submenu_wrapper = this.Wrapper();
+	var attribute = this.attribute;
+	var Elem = $('#-submenu_button').clone();
+	var preview = this.preview;
+	Elem.prop("id", '');
+	Elem.find("[find=submenu_button_title]").addClass("models_projects_deletion_button").html(attribute.title);
+	Elem.find("[find=submenu_button_value]").remove();
+	if ("action" in attribute) {
+		if (!("action_param" in attribute)) {
+			attribute.action_param = null;
+		}
+		Elem.find("[find=submenu_button_title]").click(attribute.action_param, function(event){
+			attribute.action(Elem, that, event.data);
+		});
+	}
+	if ("class" in attribute) {
+		Elem.addClass(attribute['class']);
+	}
+	submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
+	delete submenu_wrapper;
 	return Elem;
 };
 
@@ -423,3 +485,72 @@ var app_models_projects_chart_tasks_data = function(Elem_id, id, chart_display_r
 	return false;
 }
 
+var app_models_projects_list = function(limit, recents){
+	if(typeof limit != "number"){ limit = false; }
+	if(typeof recents != "number"){ recents = 5; }
+	var projects_personal = Lincko.storage.getMyPlaceholder();
+	var projects_recents = [];
+	var projects_alphabet = [];
+	var project;
+	projects_personal["+title"] = Lincko.Translation.get('app', 2502, 'html'); //Personal Space
+	var projectList_conditions = {
+		_id: ['!in', [projects_personal['_id']]],
+	};
+	var settings = Lincko.storage.getSettings();
+	if(settings.latestvisitProjects && settings.latestvisitProjects.length>0){
+		for(var i in settings.latestvisitProjects){
+			if(settings.latestvisitProjects[i] != projects_personal['_id']){
+				project = Lincko.storage.get('projects', settings.latestvisitProjects[i]);
+				if(project && project["deleted_at"]==null){
+					projects_recents.push(
+						Lincko.storage.get('projects', settings.latestvisitProjects[i])
+					);
+					projectList_conditions._id[1].push(
+						settings.latestvisitProjects[i]
+					);
+				}
+			}
+			if(projects_recents.length>=recents){ break; } //Limit to 5 most recent opened projects
+		}
+	}
+
+	projects_alphabet = Lincko.storage.list('projects', null, projectList_conditions); //Do not include personal space, it has to be show separatly fro projects list (separate on top of list)
+	projects_alphabet = Lincko.storage.sort_items(projects_alphabet, 'title'); //Alphabetic order for remaining projects
+
+	var total = 1 + projects_recents.length + projects_alphabet.length;
+	var result = [];
+	result.push(projects_personal);
+	if(limit && limit>0){
+		limit--; //It includes already personal space
+		if(limit<0){ limit = 0; }
+		if(projects_recents.length >= limit){
+			projects_recents.length = limit;
+			projects_alphabet.length = 0;
+		}
+		limit = limit - projects_recents.length;
+		if(limit<0){ limit = 0; }
+		if(projects_alphabet.length >= limit){
+			projects_alphabet.length = limit;
+		}
+	}
+	result.push(projects_recents);
+	result.push(projects_alphabet);
+	result.push(total);
+
+	return result;
+}
+
+var app_models_projects_adjust_format = function(num){
+	num = parseInt(num, 10);
+	var str = num;
+	if(num<100){
+		str = "&nbsp;"+str;
+	}
+	if(num<10){
+		str = "&nbsp;"+str;
+	}
+	if(num<1){
+		str = "&nbsp;&nbsp;0";
+	}
+	return str;
+}

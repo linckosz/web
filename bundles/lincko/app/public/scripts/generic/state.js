@@ -1,7 +1,8 @@
 
 $(window).bind('popstate', function(){
 	if(app_generic_state.manual){ //Only trigger manual user action (button)
-		var action = true;
+		var action = false;
+		var change = false;
 		var data = history.state;
 		if(data){
 			for(var i=0; i<app_generic_state.priority.length; i++){
@@ -9,29 +10,35 @@ $(window).bind('popstate', function(){
 				if(app_generic_state.type[key]=='boolean'){
 					if(typeof data[key] != 'undefined' && app_generic_state.current[key]!=app_generic_state.default[key]){
 						data[key] = app_generic_state.default[key];
-						app_generic_state.updateKey(key, data[key]);
-						if(typeof app_generic_state.action[key] == 'function'){
-							app_generic_state.action[key](data);
+						change = app_generic_state.downKey(key, data[key]);
+						if(change){
+							if(typeof app_generic_state.action[key] == 'function'){
+								app_generic_state.action[key](data);
+							}
+							action = true;
+							break; //We only modify one element at a time
 						}
-						action = false;
-						break; //We only modify one element at a time
+						action = true;
 					}
-				} else if(app_generic_state.type[key]=='integer'){
+				} else if(app_generic_state.type[key]=='increase'){
 					if(typeof data[key] != 'undefined' && data[key]!=app_generic_state.current[key]){
 						if(data[key]<0){
 							data[key] = 0;
 						}
-						app_generic_state.updateKey(key, data[key]);
-						if(typeof app_generic_state.action[key] == 'function'){
-							app_generic_state.action[key](data);
+						change = app_generic_state.downKey(key, data[key]);
+						if(change){
+							if(typeof app_generic_state.action[key] == 'function'){
+								app_generic_state.action[key](data);
+							}
+							action = true;
+							break; //We only modify one element at a time
 						}
-						action = false;
-						break; //We only modify one element at a time
+						action = true;
 					}
 				}
 			}
 		}
-		if(action){
+		if(!action){
 			if(supportsTouch){
 				base_show_error(Lincko.Translation.get('app', 61, 'js')); //Tap again to exit the application
 				clearTimeout(app_generic_state.close_timer);
@@ -45,6 +52,9 @@ $(window).bind('popstate', function(){
 				app_generic_state.reset();
 				window.history.replaceState(app_generic_state.default, app_generic_state.getTitle(), "/");
 			}
+		} else if(!change){
+			app_generic_state.manual = true;
+			window.history.go(-1);
 		}
 	}
 	app_generic_state.manual = true;
@@ -85,12 +95,12 @@ var app_generic_state = {
 
 	/*
 		boolean: -1/0/1 (depends on default value)
-		integer: -x/0/x (depends on incremantal integer value)
+		increase: -x/0/x (depends on incremantal integer value)
 	*/
 	type: {
-		submenu: 'integer',
+		submenu: 'increase',
 		mainmenu: 'boolean',
-		preview: 'integer',
+		preview: 'increase',
 		menu: 'boolean',
 		projects_id: 'boolean',
 	},
@@ -148,9 +158,32 @@ var app_generic_state = {
 		return true;
 	},
 
+	downKey: function(key, value){
+		var result = true;
+		if(typeof this.current[key] == 'undefined'){
+			return false;
+		}
+		if(this.type[key] == 'boolean'){
+			if(value!=this.default[key]){
+				value = this.default[key];
+				result = false;
+			}
+		} else if(this.type[key] == 'increase'){
+			//console.log(value+">="+this.current[key]);
+			if(value>=this.current[key]){
+				value = this.current[key]
+				result = false;
+			}
+		}
+		this.current[key] = value;
+		window.history.replaceState(this.current, this.getTitle());
+		return result;
+	},
+
 	//data must be an object like default
-	change: function(data, param){
-		if(typeof param == 'undefined'){ param == null; }
+	change: function(data, param, direction){
+		if(typeof param == 'undefined'){ param = null; }
+		if(typeof direction == 'undefined'){ direction = 0; }
 		var record = false;
 		var position = 0;
 		for(var key in data){
@@ -168,7 +201,7 @@ var app_generic_state = {
 							position = -1; //Back (return default)
 						}
 					}
-				} else if(this.type[key] == 'integer'){
+				} else if(this.type[key] == 'increase'){
 					if(data[key]<0){
 						data[key] = 0;
 					}
@@ -177,6 +210,13 @@ var app_generic_state = {
 						position = data[key] - this.current[key]; //Forward for higher - Back for lower
 					}
 				}
+				//0:all , 1: forceUp(>=0) , 2: forceDown(<=0)
+				if((direction<0 && position>0) || (direction>0 && position<0)){
+					position = 0;
+					record = false;
+				}
+				//console.log("-------------------------------");
+				//console.log("+"+key+": "+position+" ["+direction+"]"+this.current[key]); //It shows an issue when close 2 submenu or previw in one time, position is -2 then +1(wrong)
 				if(record){
 					if(position<0){ //Back
 						this.current[key] = data[key];
@@ -191,7 +231,7 @@ var app_generic_state = {
 						if(this.type[key] == 'boolean'){
 							this.current[key] = data[key];
 							window.history.pushState(this.current, this.getTitle());
-						} else if(this.type[key] == 'integer'){
+						} else if(this.type[key] == 'increase'){
 							for(var j=0; j<position; j++){
 								this.current[key] = data[key];
 								window.history.pushState(this.current, this.getTitle());
@@ -199,6 +239,7 @@ var app_generic_state = {
 						}
 					}
 				}
+				//console.log("-"+key+": "+position+" ["+direction+"]"+this.current[key]);
 			}
 		}
 	},

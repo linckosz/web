@@ -345,6 +345,12 @@ var app_application = {
 		if($('#app_application_project').hasClass('app_application_visible')){
 			app_application_move_menu($('#app_application_project'), $('#app_application_content'), $('#app_application_project_block'), $('#app_content_top_project'));
 		}
+	},
+
+	forceOpen: function(){
+		if(!$('#app_application_project').hasClass('app_application_visible')){
+			app_application_move_menu($('#app_application_project'), $('#app_application_content'), $('#app_application_project_block'), $('#app_content_top_project'));
+		}
 	}
 };
 
@@ -404,7 +410,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 
 		app_generic_state.change({
 			mainmenu: false,
-		});
+		}, null, -1);
 		time = 200;
 		if(true || responsive.test("maxTablet")){
 			time = Math.floor(2.5*time);
@@ -485,7 +491,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 	} else {
 		app_generic_state.change({
 			mainmenu: true,
-		});
+		}, null, 1);
 		time = 300;
 		if(true || responsive.test("maxTablet")){
 			time = Math.floor(2*time);
@@ -673,11 +679,19 @@ function app_application_change_private(){
 	top.location.replace(top.location.protocol+'//'+app_application_dev_link()+document.domain); //Personal workspace
 }
 
-$('#app_application_submenu_block').click(function(event){
-	if($(event.target).prop('id') == 'app_application_submenu_block'){
-		submenu_Hideall(false); //false -> dont hide preview
-	}
-});
+app_application_submenu_block_mousedown = false;
+$('#app_application_submenu_block')
+	.mousedown(function(event){
+		if($(event.target).prop('id') == 'app_application_submenu_block'){
+			app_application_submenu_block_mousedown = true;
+		}
+	})
+	.mouseup(function(event){
+		if(app_application_submenu_block_mousedown && $(event.target).prop('id') == 'app_application_submenu_block'){
+			submenu_Hideall(false); //false -> dont hide preview
+		}
+		app_application_submenu_block_mousedown = false;
+	});
 
 function app_application_submenu_position() {
 	var Elem = $('#app_application_submenu_block');

@@ -264,7 +264,7 @@ Lincko.storage.schema = function(schema){
 				category = false;
 				if(
 					   typeof schema[i][j] == 'undefined'
-					|| (typeof Lincko.storage.data[i][j]['deleted_at'] != 'undefined' && Lincko.storage.data[i][j]['deleted_at']==null && schema[i][j]==false)
+					//|| (typeof Lincko.storage.data[i][j]['deleted_at'] != 'undefined' && Lincko.storage.data[i][j]['deleted_at']==null && schema[i][j]==false) //We keep deleted items
 					|| (typeof Lincko.storage.data[i][j]['deleted_at'] != 'undefined' && $.isNumeric(Lincko.storage.data[i][j]['deleted_at']) && schema[i][j]==true)
 				){
 					delete Lincko.storage.data[i][j];
@@ -883,9 +883,57 @@ Lincko.storage.getRoot = function(type, id) {
 		type = parent["_type"];
 		id = parent["_id"];
 		current = parent;
+		if(type=="workspaces"){ //Do not scan until workspace
+			break;
+		}
 		parent = Lincko.storage.getParent(type, id);
 	}
 	return current;
+}
+
+Lincko.storage.isProjectActivity = function(type, id) {
+	var current = Lincko.storage.get(type, id);
+	var parent = Lincko.storage.getParent(type, id);
+	while(parent){
+		type = parent["_type"];
+		id = parent["_id"];
+		current = parent;
+		if(type=="chats"){ //Exclude chats in projects
+			return false;
+		} else if(type=="projects"){ //Is a project activity
+			return id;
+		}
+		parent = Lincko.storage.getParent(type, id);
+	}
+	return false; //Anything else is not a project activity
+}
+
+Lincko.storage.itemsNotInProjectActivity = function(id) {
+	var arr = {};
+	var chats = [];
+	var temp;
+	if(typeof id == "number"){
+		chats = Lincko.storage.list("chats", null, null, "projects", id, false, true); //Must include deleted
+	} else {
+		temp = Lincko.storage.list("chats", null, null, null, null, false, true); //Must include deleted
+		for(var i in temp){
+			if(typeof temp[i]["_parent"] != "undefined" && temp[i]["_parent"][0] == "projects"){
+				chats.push(temp[i]);
+			}
+		}
+	}
+	for(var i in chats){
+		temp = Lincko.storage.tree("chats", chats[i]["_id"], "children", true, true);
+		if(temp){
+			for(var cat in temp){
+				if(typeof arr[cat] == "undefined"){ arr[cat] = {}; }
+				for(var id in temp[cat]){
+					arr[cat][id] = true;
+				}
+			}
+		}
+	}
+	return arr;
 }
 
 // "include" [default: true] at true it includes the object itself
@@ -1018,11 +1066,12 @@ Lincko.storage.list = function(category, page_end, conditions, parent_type, pare
 	if(typeof deleted != 'boolean'){ deleted = false; } //By default, exclude deleted items
 	return Lincko.storage.list_multi(null, category, page_end, conditions, parent_type, parent_id, children, deleted);
 }
-Lincko.storage.hist = function(category, page_end, conditions, parent_type, parent_id, children, deleted){
+Lincko.storage.hist = function(category, page_end, conditions, parent_type, parent_id, children, deleted, exclude){
 	if(typeof deleted != 'boolean'){ deleted = true; } //By default, include deleted items
-	return Lincko.storage.list_multi('notifications', category, page_end, conditions, parent_type, parent_id, children, deleted);
+	if(typeof exclude != 'boolean'){ exclude = true; } //By default, we exclude chats from projects activity
+	return Lincko.storage.list_multi('notifications', category, page_end, conditions, parent_type, parent_id, children, deleted, exclude);
 }
-Lincko.storage.list_multi = function(type, category, page_end, conditions, parent_type, parent_id, children, deleted){
+Lincko.storage.list_multi = function(type, category, page_end, conditions, parent_type, parent_id, children, deleted, exclude){
 	var temp;
 	var attribute;
 	var only_items = false;
@@ -1044,6 +1093,7 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 	if(!$.isNumeric(parent_id)){ parent_id = null; } else { parent_id = parseInt(parent_id, 10); }
 	if(typeof children != 'boolean'){ children = null; }
 	if(typeof deleted != 'boolean'){ deleted = false; }
+	if(typeof exclude != 'boolean'){ exclude = true; }
 
 	if(parent_type!=null && parent_id!=null){
 		if(children){
@@ -1060,7 +1110,7 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 				only_items = {};
 			}
 		}
-		if(!only_items){ //Must return an empty object to be sure the reject all
+		if(!only_items){ //Must return an empty object to be sure we reject all
 			only_items = {};
 		}
 	}
@@ -1094,6 +1144,17 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 
 	//notifications
 	if(type=='notifications'){
+		//For single Projects activity only, exclude chats activity
+		if(exclude && only_items && parent_type=="projects"){
+			var exclude_list = Lincko.storage.itemsNotInProjectActivity(parent_id);
+			for(var cat in exclude_list){
+				if(typeof only_items[cat]!="undefined"){
+					for(var id in exclude_list[cat]){
+						delete only_items[cat][id];
+					}
+				}
+			}
+		}
 		for(var cat in Lincko.storage.data){
 			if(only_items && typeof only_items[cat]=='undefined'){
 				continue;

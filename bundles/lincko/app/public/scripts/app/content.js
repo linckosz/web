@@ -65,6 +65,13 @@ var app_content_menu = {
 		var list = [];
 		var title = base_myplaceholder;
 
+		if(projects_id >= 0){
+			var project = Lincko.storage.get("projects", projects_id);
+			if(project && project["deleted_at"]!=null){
+				projects_id = Lincko.storage.getMyPlaceholder()['_id'];
+			}
+		}
+
 		if(projects_id < 0){ //Workspace
 			title = Lincko.storage.WORKNAME;
 			list = [
@@ -137,11 +144,28 @@ var app_content_menu = {
 
 		$('#app_content_top_title_menu').html(wrapper_to_html(title));
 		app_application_lincko.add('app_content_top_title_menu', 'projects_'+projects_id, function() {
-			var title = Lincko.storage.get("projects", this.action_param, "title");
-			if(projects_id == Lincko.storage.getMyPlaceholder()['_id']){
-				title = base_myplaceholder;
+			var project = Lincko.storage.get("projects", this.action_param);
+			var projects_id = this.action_param;
+			
+			if(project && project["deleted_at"]==null){
+				var title = project["+title"];
+				if(projects_id == Lincko.storage.getMyPlaceholder()['_id']){
+					title = base_myplaceholder;
+				}
+				$('#app_content_top_title_menu').html(wrapper_to_html(title));
+			} else {
+				var hist = Lincko.storage.hist("projects", 1, null, "projects", projects_id);
+				projects_id = Lincko.storage.getMyPlaceholder()['_id'];
+				if(hist.length>0 && hist[0]["att"]=="_delete"){
+					var msg = Lincko.storage.getHistoryInfo(hist[0]);
+					base_show_error(msg.title+"\n"+msg.content);
+				}
+				var proid = projects_id;
+				//The Timeout will help to avoid a loop.
+				setTimeout(function(){
+					app_content_menu.selection(proid);
+				}, 100);
 			}
-			$('#app_content_top_title_menu').html(wrapper_to_html(title));
 		}, projects_id);
 
 		app_layers_changePage(menu, param);

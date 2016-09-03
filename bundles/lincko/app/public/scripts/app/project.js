@@ -31,67 +31,27 @@ var mainMenu = {
 	},
 
 	initProjectTab: function(){
-		var projectList = [];
-		var project;
-		var personal = Lincko.storage.getMyPlaceholder()['_id'];
-		var projectList_conditions = {
-			_id: ['!in', [personal]],
-		};
-		var settings = Lincko.storage.getSettings();
-		if(settings.latestvisitProjects && settings.latestvisitProjects.length>0){
-			for(var i in settings.latestvisitProjects){
-				if(settings.latestvisitProjects[i] != personal){
-					project = Lincko.storage.get('projects', settings.latestvisitProjects[i]);
-					if(project){
-						projectList.push(
-							Lincko.storage.get('projects', settings.latestvisitProjects[i])
-						);
-						projectList_conditions._id[1].push(
-							settings.latestvisitProjects[i]
-						);
-					}
-				}
-				if(projectList.length>=5){ break; } //Limit to 5 projects
-			}
-		}
-
-		var projectList_tp = Lincko.storage.list('projects', null, projectList_conditions); //Do not include personal space, it has to be show separatly fro projects list (separate on top of list)
-		projectList_tp_length = projectList_tp.length + projectList.length + 1;
-
-		if(projectList.length<5){
-			for(var i in projectList_tp){
-				projectList.push(projectList_tp[i]);
-				if(projectList.length>=5){ break; } //Limit to 5 projects
-			}
-		}
+		var projects_all = app_models_projects_list(false, 6); //6 = 1 personal + 5 others
+		var projectList = $.merge(projects_all[1], projects_all[2]);
+		var projects_total = projects_all[3];
+		delete projects_all;
 		
 		var tasks;
 		var notes;
 		var files;
 
-		var adjust_format = function(num){
-			num = parseInt(num, 10);
-			var str = num;
-			if(num<100){
-				str = "&nbsp;"+str;
-			}
-			if(num<10){
-				str = "&nbsp;"+str;
-			}
-			if(num<1){
-				str = "&nbsp;&nbsp;0";
-			}
-			return str;
-		}
-
 		var projects_length = "";
-		if(projectList_tp_length>0){
+		if(projects_total>0){
 			$("#app_project_projects_all").removeClass('app_project_tab_force_radius');
-			projects_length = "("+projectList_tp_length+")";
+			projects_length = "("+projects_total+")";
 		} else {
 			$("#app_project_projects_all").addClass('app_project_tab_force_radius');
 		}
 		$("#app_project_projects_all").find("[find=app_project_projects_all_number]").html(wrapper_to_html(projects_length));
+		//For new user, open the mainmenu by default
+		if(projects_total<=1){
+			app_application.forceOpen();
+		}
 
 		for (i = 0; i < 5; i++) {
 			var item = $("#app_project_item_projects_"+i);
@@ -119,9 +79,9 @@ var mainMenu = {
 			}
 			if(pid!=parseInt(item.attr('pid'), 10) || timestamp!=parseInt(item.attr('timestamp'), 10)){
 				item.find("[find=app_project_projects_title]").html(wrapper_to_html(projectList[i]['+title']));
-				tasks = adjust_format(Lincko.storage.list('tasks', null, {approved: false,}, 'projects', pid, true).length);
-				notes = adjust_format(Lincko.storage.list('notes', null, null, 'projects', pid, true).length);
-				files = adjust_format(Lincko.storage.list('files', null, null, 'projects', pid, true).length);
+				tasks = app_models_projects_adjust_format(Lincko.storage.list('tasks', null, {approved: false,}, 'projects', pid, true).length);
+				notes = app_models_projects_adjust_format(Lincko.storage.list('notes', null, null, 'projects', pid, true).length);
+				files = app_models_projects_adjust_format(Lincko.storage.list('files', null, null, 'projects', pid, true).length);
 				item.find("[find=app_project_projects_tasks]").html(wrapper_to_html(tasks));
 				item.find("[find=app_project_projects_notes]").html(wrapper_to_html(notes));
 				item.find("[find=app_project_projects_files]").html(wrapper_to_html(files));

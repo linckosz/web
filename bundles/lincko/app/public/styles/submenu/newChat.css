@@ -137,17 +137,13 @@ textarea:focus, input:focus{
 	float:left;
 }
 
-[find=submenu_app_chat_button_desktop] 
-{
+.submenu_app_chat_v_pos [find=submenu_app_chat_button_desktop] {
 	display: block;
 }
 
-
-[find=submenu_app_chat_button_mobile]
-{
+.submenu_app_chat_v_pos [find=submenu_app_chat_button_mobile] {
 	display: none;
 }
-
 
 
 .submenu_app_chat_button{
@@ -176,12 +172,12 @@ textarea:focus, input:focus{
 
 /* Tablet in Landscape */
 @media only screen and (max-width: 1279px){
-	[find=submenu_app_chat_button_desktop]
+	.submenu_app_chat_v_pos [find=submenu_app_chat_button_desktop]
 	{
 		display: none;
 	}
 
-	[find=submenu_app_chat_button_mobile]
+	.submenu_app_chat_v_pos [find=submenu_app_chat_button_mobile]
 	{
 		display: block;
 	}

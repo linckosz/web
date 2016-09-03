@@ -4,6 +4,14 @@
 	width: 100%;
 	margin: 0px;
 	background-color: #7BB1A9;
+	table-layout: fixed;
+}
+
+.submenu_projects_selected {
+	filter:alpha(opacity=80);
+	opacity:0.80;
+	-moz-opacity:0.80;
+	-khtml-opacity:0.80;
 }
 
 .submenu_deco.submenu_projects:hover {
@@ -13,12 +21,12 @@
 	-khtml-opacity:0.90;
 }
 .submenu_projects_title {
-	width: 100%;
+	width: 45%;
 }
 
 .submenu_projects_chart {
 	padding: 0;
-	padding-right: 20px;
+	padding-right: 6px;
 	line-height: 0;
 }
 .submenu_projects_chart > canvas {
@@ -27,10 +35,12 @@
 }
 
 .submenu_projects_statistics {
-	font-size: 10px;
-	padding: 0 8px 0 8px;
+	padding: 0 2px 0 8px;
+	font-size: 9px;
+	width: 110px;
+	text-align: right !important;
+	overflow: visible !important;
 }
-
 
 .submenu_padding.submenu_projects_settings {
 	font-size: 24px;
@@ -42,7 +52,7 @@
 }
 
 .submenu_projects_right {
-	position: absolute;
+	float: right;
 	right: 0;
 	height: 48px;
 	line-height: 48px;
@@ -63,7 +73,7 @@
 
 @media only screen and (min-width: 1280px){
 	.submenu_projects_chart {
-		padding-right: 12px;
+		padding-right: 6px;
 	}
 	.submenu_projects_chart > canvas {
 		width: 100px !important;

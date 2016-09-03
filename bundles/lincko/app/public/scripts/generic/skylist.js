@@ -419,13 +419,14 @@ skylist.prototype.generate_Lincko_itemsList = function(){
 }
 
 skylist.prototype.store_all_elem = function(){
-	//should be lanunched when all DOM is loaded
-	//this.elem_taskblur_all = this.tasklist.find('.app_layers_dev_skytasks_taskblur');
-	this.elem_cardcenter_all = this.list.find('[find=card_center]');
-	this.elem_leftOptions_all = this.list.find('[find=card_leftOptions]');
-	this.elem_rightOptions_all = this.list.find('[find=card_leftOptions]');
-
-	this.elem_card_all = this.list.find('[find=card]');
+	if(typeof this.list != "undefined"){
+		//should be lanunched when all DOM is loaded
+		//this.elem_taskblur_all = this.tasklist.find('.app_layers_dev_skytasks_taskblur');
+		this.elem_cardcenter_all = this.list.find('[find=card_center]');
+		this.elem_leftOptions_all = this.list.find('[find=card_leftOptions]');
+		this.elem_rightOptions_all = this.list.find('[find=card_leftOptions]');
+		this.elem_card_all = this.list.find('[find=card]');
+	}
 }
 
 skylist.prototype.window_resize = function(){
@@ -906,6 +907,11 @@ skylist.prototype.addChat = function(item){
 				if(submenu){
 					preview = submenu.preview;
 					layer = submenu.layer+1;
+					submenu.Wrapper().find(".skylist_chat_card_hover").removeClass("skylist_chat_card_hover");
+					$(this).find('[find=card_center]').addClass("skylist_chat_card_hover");
+				} else if($("#skylist_layer_chats").length>0){
+					$("#skylist_layer_chats").find(".skylist_chat_card_hover").removeClass("skylist_chat_card_hover");
+					$(this).find('[find=card_center]').addClass("skylist_chat_card_hover");
 				}
 				var id = event.data["root_id"];
 				var title = event.data["title"];
@@ -924,6 +930,11 @@ skylist.prototype.addChat = function(item){
 				if(submenu){
 					preview = submenu.preview;
 					layer = submenu.layer+1;
+					submenu.Wrapper().find(".skylist_chat_card_hover").removeClass("skylist_chat_card_hover");
+					$(this).find('[find=card_center]').addClass("skylist_chat_card_hover");
+				} else if($("#skylist_layer_chats").length>0){
+					$("#skylist_layer_chats").find(".skylist_chat_card_hover").removeClass("skylist_chat_card_hover");
+					$(this).find('[find=card_center]').addClass("skylist_chat_card_hover");
 				}
 				var id = event.data["root_id"];
 				var title = event.data["title"];

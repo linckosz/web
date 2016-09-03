@@ -427,11 +427,15 @@
 /*
  * Hover-----------------------------------------------------
  */
- .skylist_card:hover .skylist_card_center, .skylist_card_hover .skylist_card_center {
+.skylist_card:hover .skylist_card_center, .skylist_card_hover .skylist_card_center {
 	background: #DBEBF4;
- }
+}
 .skylist_card:hover .skylist_card_bottom, .skylist_card_hover .skylist_card_bottom {
 	background: #D6E8F2;
+}
+
+.skylist_chat_card_hover {
+	background: #DBEBF4 !important;
 }
 
 

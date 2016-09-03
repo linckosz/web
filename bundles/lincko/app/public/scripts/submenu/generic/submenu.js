@@ -995,7 +995,8 @@ Submenu.prototype.Show = function(animate) {
 				},
 				{
 					param: that.param,
-				}
+				},
+				1
 			);
 			this.showPreview(time, delay, animate);
 		} else {
@@ -1005,7 +1006,8 @@ Submenu.prototype.Show = function(animate) {
 				},
 				{
 					param: that.param,
-				}
+				},
+				1
 			);
 			this.showSubmenu(time, delay, animate);
 		}
@@ -1127,7 +1129,8 @@ Submenu.prototype.Hide = function(animate) {
 			},
 			{
 				param: that.param,
-			}
+			},
+			-1
 		);
 		this.hidePreview(time, delay, animate);
 	} else {
@@ -1138,7 +1141,8 @@ Submenu.prototype.Hide = function(animate) {
 			},
 			{
 				param: that.param,
-			}
+			},
+			-1
 		);
 	}
 	$(document).trigger("submenuHide");

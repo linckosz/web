@@ -6,11 +6,16 @@ var app_models_history = {
 		if(typeof limit != 'number' || limit<=0){ limit = false; }
 		if(typeof parent_type == 'undefined'){ parent_type = false; }
 		if(typeof parent_id == 'undefined'){ parent_id = false; }
+		
+		var exclude = false;
 		if(parent_type && parent_id){
-			var hist_all = Lincko.storage.hist(null, -1, null, parent_type, parent_id, true);
+			//If parent is a project, .hist will reject all chats activity inside it
+			var hist_all = Lincko.storage.hist(null, -1, null, parent_type, parent_id, true, true, false);
 		} else {
-			var hist_all = Lincko.storage.hist(null, -1);
+			var hist_all = Lincko.storage.hist();
+			exclude = Lincko.storage.itemsNotInProjectActivity();
 		}
+		
 		var histList = [];
 		var hist_num = {};
 		var item;
@@ -48,7 +53,14 @@ var app_models_history = {
 			root_name = root_item["_type"]+"_"+root_item["_id"];
 			name = hist_all[i]["type"]+"_"+hist_all[i]["id"];
 			if(root_item && typeof hist_num[root_name] == "undefined"){
-				hist_num[root_name] = true;
+				if(root_item["_type"]=="projects" && exclude && exclude[hist_all[i]["type"]] && exclude[hist_all[i]["id"]]){
+					//Exclude everything about chats inside project activity
+					continue;
+				}
+				if(root_item["_type"]=="projects" && hist_all[i]["att"]=="recalled_by"){
+					//For projects activity only, exclude recalled messages
+					//continue;
+				}
 				if(app_models_history.hist_root[root_name] && app_models_history.hist_root[root_name].name == name && app_models_history.hist_root[root_name].timestamp == hist_all[i]["timestamp"]){
 					date.setTime(app_models_history.hist_root[root_name].timestamp);
 					if(hist_all[i]["timestamp"] < startOfDay){ //Previous date
@@ -98,7 +110,6 @@ var app_models_history = {
 								break;
 							}
 						}
-
 						if(src){
 							info[i].picture
 								.css('background-image', 'url(' + src + ')')
@@ -124,6 +135,10 @@ var app_models_history = {
 						} else if(root_item["single"]){
 							comment = Lincko.storage.get("comments", hist_all[i]["id"]);
 							if(comment['recalled_by']){
+								if(root_item["_type"]=="projects"){
+									//We don't display recalled messages in activity short description
+									continue;
+								}
 								var uname = wrapper_to_html(Lincko.storage.get('users', hist_all[i]["by"])['-username']);
 								info[i].content = Lincko.Translation.get('app', 3101, 'html', {username: uname }); //has recalled a message
 							} else {
@@ -132,6 +147,10 @@ var app_models_history = {
 						} else {
 							comment = Lincko.storage.get("comments", hist_all[i]["id"]);
 							if(comment['recalled_by']){
+								if(root_item["_type"]=="projects"){
+									//We don't display recalled messages in activity short description
+									continue;
+								}
 								var uname = wrapper_to_html(Lincko.storage.get('users', hist_all[i]["by"])['-username']);
 								info[i].content = Lincko.Translation.get('app', 3101, 'html', {username: uname }); //has recalled a message
 							} else {
@@ -145,9 +164,13 @@ var app_models_history = {
 
 					app_models_history.hist_root[root_name] = info[i];
 				}
-				histList.push(app_models_history.hist_root[root_name]);
-				if(limit && histList.length>=limit){
-					break;
+				hist_num[root_name] = true;
+				//Accept only not deleted items
+				if(root_item["deleted_at"]==null){
+					histList.push(app_models_history.hist_root[root_name]);
+					if(limit && histList.length>=limit){
+						break;
+					}
 				}
 			}
 		}
