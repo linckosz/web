@@ -466,7 +466,7 @@ burgerN.regex = function(elem, item, param){
 		$.each(outerTextNode, function(key,str2){
 			var str = that.shortcut.user+burger_str;
 			if((str2.data).indexOf(str) != -1){
-			    $(outerTextNode[key]).replaceWith($(outerTextNode[key]).text().replace(that.shortcut.user+burger_str, '<span userid="'+userid+'" contenteditable="false" class="burger_tag">'+that.shortcut.user+username+'</span> '));
+			    $(outerTextNode[key]).replaceWith($(outerTextNode[key]).text().replace(that.shortcut.user+burger_str, '<span find="name" userid="'+userid+'" contenteditable="false" class="burger_tag">'+username+'</span> '));
 			    return false;
 			}
 		});
@@ -529,7 +529,7 @@ burgerN.regex = function(elem, item, param){
 			}
 
 			if((str2.data).indexOf(str) != -1 || (str2.data).indexOf(strAlt) != -1){
-			    $(outerTextNode[key]).replaceWith($(outerTextNode[key]).text().replace(shortcut+burger_str, '<span find="dateWrapper" val="'+finalVal+'" contenteditable="false" class="burger_tag">'+that.shortcut.date+finalStr+'</span> '));
+			    $(outerTextNode[key]).replaceWith($(outerTextNode[key]).text().replace(shortcut+burger_str, '<span find="dateWrapper" val="'+finalVal+'" contenteditable="false" class="burger_tag">'+finalStr+'</span> '));
 			    return false;
 			}
 		});

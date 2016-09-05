@@ -14,6 +14,21 @@
 	cursor: pointer; cursor: hand;
 	white-space: nowrap;
 }
+.burger_tag:after {
+	content:' ';
+}
+.burger_tag[find=name]{
+	color: #3677a7;
+    font-weight: 400;
+}
+.burger_tag[find=name]:before{
+	color: #53ADD2;
+	content:'@';
+}
+.burger_tag[find=dateWrapper]:before{
+	content:'++';
+}
+
 .burger_option {
 	padding: 5px 10px;
 	width: 200px;
