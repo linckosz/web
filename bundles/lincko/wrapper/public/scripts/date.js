@@ -35,7 +35,7 @@ $.extend(wrapper_date.prototype, {
 
 	//returns the timestamp of the end of day (23:59:59:00) based on this.timestamp
 	getEndofDay: function(){
-		var endofday = new Date(this.timestamp*1000).setHours(23,59,59,0)/1000;
+		var endofday = Math.floor(new Date(this.timestamp*1000).setHours(23, 59, 59, 0) / 1000);
 		return endofday;
 	},
 
@@ -162,11 +162,7 @@ $.extend(wrapper_date.prototype, {
 	},
 
 	happensToday: function() {
-		var now = new Date;
-		now.setHours(0);
-		now.setMinutes(0);
-		now.setSeconds(0);
-		var dateStampToday = Math.floor(now / 1000); //timestamp of beginning of the day taking in account the timezone
+		var dateStampToday = Math.floor(new Date().setHours(0, 0, 0, 0) / 1000) //timestamp of beginning of the day taking in account the timezone
 		//dateStampToday = dateStampToday + (this.timezone_offset); //The offset seems useless
 		var dateStampTomorrow = dateStampToday + 86400;
 		if ((this.timestamp >= dateStampToday) && (this.timestamp < dateStampTomorrow)){

@@ -128,7 +128,7 @@ submenu_list['app_project_edit'] = {
 		"title": Lincko.Translation.get('app', 22, 'html'), //Delete
 		"name": "deletion",
 		"value": "",
-		"class": "models_projects_deletion",
+		"class": "models_projects_deletion display_none", //toto => delete display_none to use it
 		"action": function(Elem, subm){
 			var projects_id = subm.param;
 			if(confirm("Do you really want to delete this project?")){

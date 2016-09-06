@@ -1,31 +1,30 @@
 //Category 38
 /*
 	app_models_resume_format_sentence(9984);
-	app_models_resume_format_sentence(9984, false, 1);
-	app_models_resume_format_sentence(9984, true, 1);
+	app_models_resume_format_sentence(9984, 1);
 */
-var app_models_resume_format_sentence = function(comments_id, who, type) {
-	var uid = 0;
-	if(typeof who == 'boolean' && who===true){
-		uid = wrapper_localstorage.uid;
-	}
+var app_models_resume_format_sentence = function(comments_id, type) {
 	if(typeof type == 'undefined'){ type = 1; }
-
-	//We do not display message from other user (useless information)
-	if(uid!=0 && uid!=wrapper_localstorage.uid){
-		return false;
-	}
 
 	var comment = Lincko.storage.get('comments', comments_id, 'comment');
 	var sentence = '';
 	var error = false;
-	var base = 100;
+	var base = 0;
+	var uid = 0;
 	if(!comment){
 		error = true;
 	} else {
 		var temp = JSON.parse(comment);
+		if(temp[0]){ //By default we force to display team in priority
+			uid = 0;
+		} else if(temp[wrapper_localstorage.uid]){
+			uid = wrapper_localstorage.uid;
+		}
 		if($.type(temp) != 'object' || !temp[uid]){
 			error = true;
+			if($.type(temp) == 'number'){
+				base = temp;
+			}
 		} else {
 			var list = temp[uid];
 			if(list[100]){
@@ -37,7 +36,6 @@ var app_models_resume_format_sentence = function(comments_id, who, type) {
 			}
 		}
 	}
-
 	if(error){
 		if(base == 700){
 			return $('<span>')
@@ -45,11 +43,19 @@ var app_models_resume_format_sentence = function(comments_id, who, type) {
 				.html(wrapper_to_html(
 					Lincko.Translation.get('app', 3817, 'html') //There was no activity last week.
 				));
-		} else {
+		} else if(base == 100){
 			return $('<span>')
 				.addClass('unselectable')
 				.html(wrapper_to_html(
 					Lincko.Translation.get('app', 3811, 'html') //There was no activity yesterday.
+				));
+		} else {
+			//A random quote
+			var random_quote = 9901 + Math.floor(Math.random() * 46);
+			return $('<span>')
+				.addClass('unselectable')
+				.html(wrapper_to_html(
+					Lincko.Translation.get('app', random_quote, 'html') //“Knowing trees, I understand the meaning of patience. Knowing grass, I can appreciate persistence.” – Hal Borland
 				));
 		}
 	}
@@ -65,29 +71,64 @@ var app_models_resume_format_sentence = function(comments_id, who, type) {
 			} else {
 				data[i] = ''+list[i];
 			}
-			
 		}
 	}
-	
-	if(base==100){
-		if(type==1){
-			sentence = Lincko.Translation.get('app', 3801, 'pure', data);
-			if(data[108]!=0){
-				sentence = sentence + ' ' + Lincko.Translation.get('app', 3802, 'pure', data);
+	if(uid==0){
+		if(base==100){
+			if(type==1){
+				sentence = Lincko.Translation.get('app', 3801, 'pure', data);
+				if(typeof data[108] != 'undefined' && data[108]!=0){
+					sentence = sentence + ' ' + Lincko.Translation.get('app', 3802, 'pure', data);
+				}
+			}
+		} else if(base==700){
+			if(type==1){
+				sentence = Lincko.Translation.get('app', 3803, 'pure', data);
+				if(typeof data[708] != 'undefined' && data[708]!=0){
+					sentence = sentence + ' ' + Lincko.Translation.get('app', 3804, 'pure', data);
+				}
 			}
 		}
-	} else if(base==700){
-		if(type==1){
-			sentence = Lincko.Translation.get('app', 3803, 'pure', data);
-			if(data[708]!=0){
-				sentence = sentence + ' ' + Lincko.Translation.get('app', 3804, 'pure', data);
+	} else {
+		data['username'] = Lincko.storage.get('users', uid, 'username').ucfirst();
+		if(base==100){
+			if(type==1){
+				data['motivation'] = '';
+				if(typeof data[132] != 'undefined' && data[132]>0){ //Done more than last week
+					data['motivation'] = Lincko.Translation.get('app', 3808, 'pure'); //That's more than yesterday. Great work!
+				}
+				sentence = Lincko.Translation.get('app', 3807, 'pure', data); //Hi [{username}]: You completed <span find="101">[{101}] task(s)</span> today![{motivation}]You have <span find="130">[{130}] task(s)</span> due tomorrow. You currently have <span find="105">[{105}] overdue task(s)</span>.
+			}
+		} else if(base==700){
+			if(type==1){
+				data['whatweek'] = '';
+				if(typeof data[701] != 'undefined' && data[701]>=2){ //At least 2 completed tasks during the week
+					data['whatweek'] = Lincko.Translation.get('app', 3812, 'pure'); //What a week!
+				}
+				data['motivation'] = '';
+				if(typeof data[732] != 'undefined' && data[732]>0){
+					data['motivation'] = Lincko.Translation.get('app', 3810, 'pure'); //That's more than last week! You're really making progress.
+				}
+				sentence = Lincko.Translation.get('app', 3809, 'pure', data); //Hi [{username}]: [{whatweek}]You completed <span find="701">[{701}] task(s)</span> this week.[{motivation}]You have <span find="730">[{730}] task(s)</span> due next week... but it's the weekend so make sure to take a break. You currently have <span find="705">[{705}] overdue task
 			}
 		}
 	}
 
-	sentence = sentence + '<div find="result" link="" class="ellipsis"></div>';
+	if(uid==0){
+		sentence = sentence + '<div find="result" link="" class="ellipsis"></div>';
+		var span = $('<span>').html(sentence);
+	} else {
+		var span = $('<span>').addClass('app_models_resume_individual_span');
+		var cell_shhh = $('<span>').addClass('app_models_resume_individual_shhh').html("["+Lincko.Translation.get('app', 3805, 'pure')+"]"); //Shhh
+		var cell_info = $('<span>');
 
-	var span = $('<span>').html(sentence);
+		var private = $('<div>').addClass('app_models_resume_individual_private ellipsis').html(Lincko.Translation.get('app', 3806, 'pure')); //Private Message - Only you can see this.
+		cell_info.append(private);
+		cell_info.append(sentence);
+		span.append(cell_shhh);
+		span.append(cell_info);
+		span.append('<div find="result" link="" class="ellipsis"></div>');
+	}
 	span.addClass('app_models_resume_span unselectable');
 	span.attr('find', 'anchor_'+comments_id);
 	var result = {};
@@ -115,6 +156,12 @@ var app_models_resume_format_sentence = function(comments_id, who, type) {
 
 		121: ['files', 'app_models_resume_files', ],
 		721: ['files', 'app_models_resume_files', ],
+
+		130: ['tasks', 'app_models_resume_tasks', ],
+		730: ['tasks', 'app_models_resume_tasks', ],
+
+		131: ['tasks', 'app_models_resume_tasks', ],
+		731: ['tasks', 'app_models_resume_tasks', ],
 
 	};
 

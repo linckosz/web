@@ -23,6 +23,7 @@ var app_models_history = {
 		var root_name;
 		var name;
 		var comment;
+		var content;
 		var src;
 		var perso;
 		var user_icon = false;
@@ -57,9 +58,12 @@ var app_models_history = {
 					//Exclude everything about chats inside project activity
 					continue;
 				}
-				if(root_item["_type"]=="projects" && hist_all[i]["att"]=="recalled_by"){
-					//For projects activity only, exclude recalled messages
-					//continue;
+				if(root_item["_type"]=="projects" && !hist_all[i]["by"] && hist_all[i]["type"]=="comments"){
+					comment = Lincko.storage.get('comments', hist_all[i]["id"], 'comment');
+					if(comment=="" || comment=="100" || comment=="700"){
+						//Exclude everything about chats inside project activity
+						continue;
+					}
 				}
 				if(app_models_history.hist_root[root_name] && app_models_history.hist_root[root_name].name == name && app_models_history.hist_root[root_name].timestamp == hist_all[i]["timestamp"]){
 					date.setTime(app_models_history.hist_root[root_name].timestamp);

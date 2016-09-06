@@ -1,5 +1,7 @@
 var mainMenu = {
 
+	check_open: false,
+
 	projectSelect: function(){
 		pid = app_content_menu.projects_id;
 		$("#app_project_projects_tab").find("[pid]").removeClass("app_project_projects_item_selected");
@@ -49,8 +51,11 @@ var mainMenu = {
 		}
 		$("#app_project_projects_all").find("[find=app_project_projects_all_number]").html(wrapper_to_html(projects_length));
 		//For new user, open the mainmenu by default
-		if(projects_total<=1){
-			app_application.forceOpen();
+		if(!storage_first_launch && !this.check_open){
+			this.check_open = true; //Only check once
+			if(projects_total<=1){
+				app_application.forceOpen();
+			}
 		}
 
 		for (i = 0; i < 5; i++) {

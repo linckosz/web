@@ -15,12 +15,12 @@
 }
 
 .app_models_resume_notes {
-	color: #F9A550;
+	color: #548DD2;
 	cursor: pointer;
 }
 
 .app_models_resume_files {
-	color: #F9A550;
+	color: #548DD2;
 	cursor: pointer;
 }
 
@@ -37,4 +37,26 @@
 
 .app_models_resume_links:hover {
 	text-decoration: underline;
+}
+
+
+.app_models_resume_individual_span {
+	/*display: table-row !important;*/
+}
+
+.app_models_resume_individual_span > span {
+	display: table-cell;
+}
+
+.app_models_resume_individual_private {
+	font-style: italic;
+	color: #131313;
+	padding-bottom: 4px;
+}
+
+.app_models_resume_individual_shhh {
+	vertical-align: middle;
+	text-align: center;
+	padding: 0 12px 0 6px;
+	color: #F9A550;
 }

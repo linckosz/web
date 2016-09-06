@@ -169,7 +169,6 @@ var app_generic_state = {
 				result = false;
 			}
 		} else if(this.type[key] == 'increase'){
-			//console.log(value+">="+this.current[key]);
 			if(value>=this.current[key]){
 				value = this.current[key]
 				result = false;
@@ -215,8 +214,6 @@ var app_generic_state = {
 					position = 0;
 					record = false;
 				}
-				//console.log("-------------------------------");
-				//console.log("+"+key+": "+position+" ["+direction+"]"+this.current[key]); //It shows an issue when close 2 submenu or previw in one time, position is -2 then +1(wrong)
 				if(record){
 					if(position<0){ //Back
 						this.current[key] = data[key];
@@ -239,7 +236,6 @@ var app_generic_state = {
 						}
 					}
 				}
-				//console.log("-"+key+": "+position+" ["+direction+"]"+this.current[key]);
 			}
 		}
 	},
@@ -276,7 +272,7 @@ var app_generic_state = {
 			var item = this.getItem();
 		}
 		window.history.replaceState(this.current, this.getTitle(), "/"); //This is just to clean the url
-		console.log(item);
+		//console.log(item);
 		
 		if(typeof this.model_action[item._type] == 'function'){
 			this.model_action[item._type](item);
