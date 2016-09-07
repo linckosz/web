@@ -1,3 +1,7 @@
+var app_models_cache_history = {
+	
+}
+
 var app_models_history = {
 
 	hist_root: {},

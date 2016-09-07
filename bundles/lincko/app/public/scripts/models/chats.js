@@ -9,7 +9,7 @@ function app_models_chats_bubble_actionMenu(){
 		if(elem_actionMenu.length || elem_historyWrapper.length < 1){
 			return false;
 		}
-		var commentID = elem_historyWrapper.prop('id').split('_').slice(-1)[0];
+		var commentID = elem_historyWrapper.attr('comment_id');
 		var item_comment = Lincko.storage.get('comments', commentID);
 
 		var projectID = Lincko.storage.getMyPlaceholder()['_id']; //default is personal space

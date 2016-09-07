@@ -101,6 +101,19 @@
 	cursor: hand;
 }
 
+.models_history_loading{
+	text-align: center;
+	line-height: 30px;
+	height:auto;
+	overflow:hidden;
+}
+
+.models_history_loading i
+{
+	font-size: 16px;
+	color:#cccccc;
+}
+
 .models_history_line {
 	font-size: 14px;
 	text-align: center;
@@ -174,6 +187,8 @@
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: cover;
+	cursor: pointer;
+	cursor: hand;
 }
 
 .models_history_standard_target {
@@ -208,6 +223,12 @@
 	cursor: hand;
 }
 
+
+.files .models_history_standard_target_wrapper
+{
+	cursor: pointer;
+	cursor: hand;
+}
 
 
 .uploading_file .models_history_standard_shortcut_wrapper {

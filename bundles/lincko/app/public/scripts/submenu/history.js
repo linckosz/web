@@ -1,237 +1,642 @@
 /* Category 31 */
-var chatFeeder = (function(){
-	var subm = null ;
-	var records = [];
-	var data_init = function(id,type){
-		records = [];
-		var is_history = type == 'history' ;
-		var data = is_history ? Lincko.storage.hist(null, null, null, 'projects', id, true)
-									: Lincko.storage.list(null, null, null, 'chats', id, true);
-									console.log(data);
-		for(var i in data)
-		{
-			var id = is_history ? data[i]["id"] : data[i]["_id"] ;
-			var category = is_history ? data[i]["type"] : data[i]["_type"];
-			var by = is_history ? data[i]["by"] : data[i]["created_by"];
-			var author =  is_history ? data[i]["par"]["un"] : Lincko.storage.get('users', by)['-username'] ;
+var chatFeeder = function(project_id,type,position,subm){
+	this.project_id =  project_id;
+	this.type = type;
+	this.subm = subm;
+	this.position = position;
+	this.records = [];
+	this.prepare_records = [];
+	this.current_page = 0;
+	this.page_count = 15;
+	this.last_recalled_id = 0;
+	this.last_element_id = '';
+	this.pre_last_element_id = '';
+	this.has_today = false;
+	this.over = false;
+	this.display_history_mode = true ;
+	this.last_time = 0;
+	this.last_by = 0;
+};
 
-			var profile = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", by, 'profile_pic'));
+
+chatFeeder.prototype.app_layers_uploading_files = function(){
+	debugger;
+	var records =[]
+	var files = app_upload_files.lincko_files;
+	var _type= this.type =="history" ? "projects":"chats";
+	for(var i in files)
+	{
+		if(files[i].lincko_parent_type != _type || files[i].lincko_parent_id != this.project_id ) {continue;}
+		if(files[i].lincko_status=="deleted")
+		{
+			$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id).remove();
+		}
+		else{
+			var author =  Lincko.storage.get('users', wrapper_localstorage.uid)['-username'] ;
+			var profile = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", wrapper_localstorage.uid, 'profile_pic'));
 			if(!profile){
 				profile = app_application_icon_single_user.src;
 			}
-			var timestamp = is_history ? data[i]["timestamp"] : data[i]["created_at"] ;
-			var code = is_history ? data[i]["cod"] : 0;
-			var action = '';
-			var can_insert = true;
-			var parent = null;
-			var parent_category = null ;
-			var parent_id = 0 ;
-			var target = null;
 
-			if(is_history)
-			{
-				switch(category)
-				{
-					case 'comments':
-						var root = Lincko.storage.getCommentRoot(data[i]['id']);
-						can_insert = (root._type != 'chats');
-						parent = root._type == 'projects' ? null : Lincko.storage.data._history_title[root._type][0] ;
-						parent_category = root._type;
-						parent_id = root['_id'];
-						target = root._type == 'projects' ? null : root['+title'];
-						if(data[i]["att"] == 'recalled_by')
-						{
-							category = 'comment_recalled';
-						}
-						break;
-					default:
-						can_insert = category != 'chats';
-						target = Lincko.storage.get(category , data[i]['id'], category == 'files' ? "+name" : "+title");
-						break;
+			var data = "";
+			try{
+			   if(typeof files[i].files[0].preview.tagName !== 'undefined' && files[i].files[0].preview.tagName.toLowerCase() === 'canvas'){
+					data = files[i].files[0].preview.toDataURL();
 				}
-				var history = Lincko.storage.getHistoryInfo(data[i]);
-				var clone_hist = $.extend(true, {}, history.root.history);
-				var text = history.root.title;
-				if(clone_hist.par.un){
-					clone_hist.par.un = '';
-				}
-				action = php_nl2br(Lincko.storage.formatHistoryInfo(text, clone_hist)) + ":&nbsp;";
 			}
-			else
+			catch(e)
 			{
-				can_insert = category != "chats";
-				target = data[i][category == "files" ? "+name":"name"];
+				
 			}
 
-			var content = category == "files" ? Lincko.storage.getLinkThumbnail(id) 
-			: (is_history ? history["content"] : (category == "comments" ? data[i]["+comment"] : data[i]["+name"]));
 
-			if(can_insert)
-			{
-				var record = {
-						'id'				: id,
-						'category'			: category,
-						'by'				: by,
-						'author'			: author,
-						'profile'			: profile,
-						'timestamp'			: timestamp,
-						'code'				: code,
-						'action'			: action,
-						'parent'			: parent,
-						'parent_id'			: parent_id,
-						'parent_category'	: parent_category,
-						'target'			: target,
-						'content'			: content,
-				}
-				records.push(record);
-			}
+			var file_attr = {
+				'category'			: '',
+				'data'				: data,
+				'lincko_progress'	: files[i].lincko_progress,
+				'lincko_status'		: files[i].lincko_status,
+				'lincko_size'		: files[i].lincko_size,
+			};
+
+			var record = {
+					'id'				: files[i].lincko_temp_id,
+					'category'			: 'uploading_file',
+					'by'				:  wrapper_localstorage.uid,
+					'author'			: author,
+					'profile'			: profile,
+					'timestamp'			: Math.floor($.now()/1000),
+					'code'				: 0,
+					'action'			: '',
+					'parent'			: null,
+					'parent_id'			: 0,
+					'parent_category'	: null,
+					'target'			: files[i].lincko_name,
+					'content'			: file_attr ,
+					'hist'				: 0,
+					'timeline'			: null,
+					'is_first'			: false,
+					'temp_id'			: files[i].lincko_temp_id,
+			};
+
 		}
+		records.push(record);
 	}
+	this.display_history_mode = false ;
+	this.prepare_records = records;
+	this.layer_display();
+}
 
-	var item_template_render = function(category,is_chat_comment)
+
+
+chatFeeder.prototype.item_template_render = function(category,is_chat_comment){
+	switch(category)
 	{
-		switch(category)
-		{
-			case "comments" :
-				return is_chat_comment ? "-models_history_comment_short" : "-models_history_comment_long";
-			default :
-				return "-models_history_" + category;
-		}
+		case "comments" :
+			return is_chat_comment ? "-models_history_comment_short" : "-models_history_comment_long";
+		default :
+			return "-models_history_" + category;
 	}
+}
 
-	var item_add_handler = function(elem,type,target_id)
+chatFeeder.prototype.item_add_handler = function(elem,type,target_id){	
+	switch(type)
 	{
-		elem.find("[find=target]").click({type,target_id},function(event){
-			switch(event.data.type)
-			{
-				case 'files' :
-					break;
-				case 'notes' :
+		case 'files' :
+			elem.find("[find=shortcut]").click(function(){
+				var extension = checkExtension(target_id);
+				if (extension) {
+					previewer[extension](target_id);
+				}
+				else {
 					var tmp = $(elem).parents(".submenu_wrapper").prop("id").split("_");
 					var preview = JSON.parse(tmp[tmp.length-1]);
-					submenu_Build('taskdetail', true, null,  {'type':event.data.type, 'id': event.data.target_id}, preview);
-					break;
-				case 'tasks' :
-					var tmp = $(elem).parents(".submenu_wrapper").prop("id").split("_");
-					var preview = JSON.parse(tmp[tmp.length-1]);
-					submenu_Build('taskdetail', true, null,  {'type':event.data.type, 'id': event.data.target_id}, preview);
-					break;
-				default :
-					break;
-			}
-		});
+					submenu_Build('taskdetail', -1, null, {'type':type, 'id':target_id}, preview);
+				}
+			});
+			elem.find("[find=target]").click({type,target_id},function(event){
+				var tmp = $(elem).parents(".submenu_wrapper").prop("id").split("_");
+				var preview = JSON.parse(tmp[tmp.length-1]);
+				submenu_Build('taskdetail', -1, null, {'type':type, 'id': target_id}, preview);
+			});
+			break;
+		case 'notes' :
+			elem.find("[find=target]").click({type,target_id},function(event){
+				var tmp = $(elem).parents(".submenu_wrapper").prop("id").split("_");
+				var preview = JSON.parse(tmp[tmp.length-1]);
+				submenu_Build('taskdetail', -1 , null,  {'type':type, 'id': target_id}, preview);
+			});
+			break;
+		case 'tasks' :
+			elem.find("[find=target]").click({type,target_id},function(event){
+				var tmp = $(elem).parents(".submenu_wrapper").prop("id").split("_");
+				var preview = JSON.parse(tmp[tmp.length-1]);
+				submenu_Build('taskdetail', -1 , null,  {'type':type, 'id': target_id}, preview);
+			});
+			break;
+		default :
+			break;
 	}
+}
 
-	var item_profile_handler = function (elem,userid)
-	{
-		elem.find("[find=icon]").click(userid,function(event){
-			submenu_Build("personal_info", chatFeeder.subm.layer + 1, true, event.data, chatFeeder.subm.preview);
-		});
-	}
+chatFeeder.prototype.item_add_profile_handler = function (elem,userid){
+	var that  = this;
+	elem.find("[find=icon]").click(userid,function(event){
+		submenu_Build("personal_info", that.subm.layer + 1, true, event.data, that.subm.preview);
+	});
+}
 
-	var layer_display = function(position,subm){
-		chatFeeder.subm = subm ;
-		position.addClass('overthrow').addClass("submenu_chat_contents");
-		position.empty();
-		$('<div>').addClass('chat_contents_wrapper').prop("id", subm.id+'_chat_contents_wrapper').appendTo(position);
+chatFeeder.prototype.data_format = function(data)
+{
+	var result = [];
+	var today = Math.floor((new Date()).getTime() / 86400000);
+	var is_history = this.type == 'history' ;
+	var the_date;
 
+	for(var i in data){
+		var id = is_history ? data[i]["id"] : data[i]["_id"] ;
+		var category = is_history ? data[i]["type"] : data[i]["_type"];
+		var by = is_history ? data[i]["by"] : data[i]["created_by"];
+		var author =  is_history ? data[i]["par"]["un"] : Lincko.storage.get('users', by)['-username'] ;
 
-		for(var i in records)
+		var profile = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", by, 'profile_pic'));
+		if(!profile){
+			profile = app_application_icon_single_user.src;
+		}
+		var timestamp = is_history ? data[i]["timestamp"] : data[i]["created_at"] ;
+		var code = is_history ? data[i]["cod"] : 0;
+		var action = '';
+		var can_insert = true;
+		var parent = null;
+		var parent_category = null ;
+		var parent_id = 0 ;
+		var target = null;
+		var hist =  is_history ? data[i]["hist"] : 0 ;
+		var timeline = null ;
+		var is_first = false;
+		var temp_id = 0;
+
+		if(is_history)
 		{
-			var template = item_template_render(records[i]["category"],records[i]['parent'] == null);
-			var elem = $("#" + template).clone();
-			elem.prop('id',subm.id + "_" + records[i]["category"] + '_models_thistory_' + records[i]["id"]);
-
-			
-			
-			
-
-			switch(records[i]['category'])
+			switch(category)
 			{
-				case "comments" :
-					elem.addClass(records[i]['category']);
-					elem.addClass(wrapper_localstorage.uid === parseInt(records[i]["by"], 10) ? "models_history_self" : "models_history_others");
-					elem.find("[find=icon]").attr('src',records[i]["profile"]); 
-					elem.find("[find=author]").text(records[i]["author"]);
-					var date = new wrapper_date(records[i].timestamp);
-					elem.find(".time", "[find=timestamp]").html(date.display('time_short'));
-					elem.find(".date", "[find=timestamp]").html(date.display('date_short'));
-
-					if(records[i]['parent'] == null)
+				case 'comments':
+					var root = Lincko.storage.getRoot('comments', data[i]['id']);
+					can_insert = (root._type != 'chats');
+					parent = root._type == 'projects' ? null : Lincko.storage.data._history_title[root._type][0] ;
+					parent_category = root._type;
+					parent_id = root['_id'];
+					target = root._type == 'projects' ? null : root['+title'];
+					if(data[i]["att"] == 'recalled_by')
 					{
-						elem.find("[find=content]").html(records[i]["content"]);
+						category = 'comment_recalled';
+						this.last_recalled_id = data[i]['id'];
+					}
+					else if(this.last_recalled_id == data[i]['id'])
+					{
+						this.last_recalled_id = 0;
+						can_insert = false ;
+					}
+					temp_id = root["temp_id"];
+					break;
+				default:
+					can_insert = category != 'chats';
+					target = Lincko.storage.get(category , data[i]['id'], category == 'files' ? "+name" : "+title");
+					break;
+			}
+			var history = Lincko.storage.getHistoryInfo(data[i]);
+			var clone_hist = $.extend(true, {}, history.root.history);
+			var text = history.root.title;
+			if(clone_hist.par.un){
+				clone_hist.par.un = '';
+			}
+			action = php_nl2br(Lincko.storage.formatHistoryInfo(text, clone_hist)) + ":&nbsp;";
+		}
+		else
+		{
+			can_insert = category != "chats";
+			target = data[i][category == "files" ? "+name":"name"];
+			temp_id = data[i]["temp_id"] ;
+		}
+
+		var content = category == "files" ? Lincko.storage.getLinkThumbnail(id) 
+		: (is_history ? history["content"] : (category == "comments" ? data[i]["+comment"] : data[i]["+name"]));
+
+		if( i == 0 )
+		{
+			the_date = Math.floor( timestamp / 86400) * 86400;
+		}
+
+		if(can_insert)
+		{
+			if( the_date > Math.floor( timestamp  / 86400) * 86400 )
+			{
+				result[result.length - 1]["timeline"]  = the_date;
+				the_date = Math.floor( timestamp  / 86400) * 86400 ;
+			}
+
+
+			if (timestamp  == today * 86400 & !this.has_today ) {
+				this.has_today = true;
+			}
+			
+
+			var record = {
+					'id'				: id,
+					'category'			: category,
+					'by'				: by,
+					'author'			: author,
+					'profile'			: profile,
+					'timestamp'			: timestamp,
+					'code'				: code,
+					'action'			: action,
+					'parent'			: parent,
+					'parent_id'			: parent_id,
+					'parent_category'	: parent_category,
+					'target'			: target,
+					'content'			: content,
+					'hist'				: hist,
+					'timeline'			: timeline,
+					'is_first'			: is_first,
+					'temp_id'			: temp_id,
+			}
+			result.push(record);
+		}
+	}
+
+
+	
+	if(result.length > 0 && result[result.length-1]["timeline"] == null)
+	{
+		result[result.length-1]["timeline"] = the_date ;
+		result[result.length-1]["is_first"] = true;
+	}
+	return result ;
+
+} 
+
+chatFeeder.prototype.data_init = function(){
+	//history_data
+
+	var is_history = this.type == 'history' ;
+
+	if(typeof app_models_cache_history[this.type + "_" + this.project_id] === "undefined")
+	{
+		var data = is_history ? 
+			Lincko.storage.hist(null, null , null, 'projects', this.project_id, true)
+			: Lincko.storage.list(null, null, null, 'chats', this.project_id, true);
+		var result = this.data_format(data);
+		app_models_cache_history[this.type + "_" + this.project_id] = 
+		{
+			history_data : result,
+			history_last_time : result.length > 0 ? result[0]["timestamp"] : 0,
+			history_last_by : result.length > 0 ? result[0]["by"] : 0 ,
+		}	
+	}
+
+	this.last_time = app_models_cache_history[this.type + "_" + this.project_id]["history_last_time"];
+	this.last_by = app_models_cache_history[this.type + "_" + this.project_id]["history_last_by"];
+	
+	var no_cache_result = this.no_cache_data_load()
+	this.records = no_cache_result.concat(app_models_cache_history[this.type + "_" + this.project_id]["history_data"]);
+}
+
+
+
+chatFeeder.prototype.no_cache_data_load = function(){
+	var is_history = this.type == 'history' ;
+	var data = is_history ? 
+			Lincko.storage.hist(null, null , {'timestamp': [">=", this.last_time]}, 'projects', this.project_id, true)
+			: Lincko.storage.list(null, null, {'created_at': [">=", this.last_time ]}, 'chats', this.project_id, true);
+	console.log(data);
+	return this.data_format(data);
+}
+
+chatFeeder.prototype.data_load = function(index,page_count,records){
+	var data = [];
+	var start = index * page_count;
+	var end = (index + 1) * page_count - 1;
+	end = end > records.length -1 ? records.length -1 : end;
+	for(var i = start ; i <= end; i ++ )
+	{
+		data.push(records[i]);
+	}
+	return data;
+}
+
+
+chatFeeder.prototype.data_load_page = function(){
+	this.prepare_records = this.data_load(this.current_page,this.page_count,this.records);
+	this.current_page ++ ;
+}
+
+
+chatFeeder.prototype.layer_display = function(){
+	for(var i in this.prepare_records)
+	{
+		var template = this.item_template_render(this.prepare_records[i]["category"],this.prepare_records[i]['parent'] == null);
+		var elem = $("#" + template).clone();
+		var elem_id = this.subm.id + "_" + this.prepare_records[i]["category"] + '_models_thistory_' + this.prepare_records[i]["id"] + "_" + this.prepare_records[i]["hist"];
+		elem.prop('id',elem_id);
+
+		if(this.display_history_mode){
+			this.last_element_id = elem_id;
+		}
+
+		var temp_elem_id =  this.subm.id + "_" + this.prepare_records[i]["category"] + '_models_thistory_' + this.prepare_records[i]["temp_id"] + "_" + this.prepare_records[i]["hist"];
+		if(this.prepare_records[i]["temp_id"] != 0 
+			&& $("#"+temp_elem_id).length > 0 
+			&& this.prepare_records[i]["temp_id"] != this.prepare_records[i]["id"] )
+		{
+			switch(this.prepare_records[i]['category'])
+			{
+				case 'comments':
+					$("#"+temp_elem_id).removeAttr("temp_id");
+					$("#"+temp_elem_id).attr("comment_id",elem_id);
+					$("#"+temp_elem_id).prop("id",elem_id);
+					break;
+				case 'files':
+					break;
+				default:
+					break;	
+			}
+		}
+		else 
+		if($("#"+elem_id).length > 0)
+		{
+			switch(this.prepare_records[i]['category'])
+			{
+				case 'uploading_file':
+					if(this.prepare_records[i]["content"]["lincko_progress"] >=100 && this.prepare_records[i]["content"]["lincko_status"] === 'done'){
+						$("#"+elem_id).removeClass("uploading_file").addClass("uploaded_file");
+					} 
+					else {
+						$("#"+elem_id).find("[find=progress_bar]")
+							.css('width', Math.floor(this.prepare_records[i]["content"]["lincko_progress"]) + '%');
+						$("#"+elem_id).find("[find=progress_text]")
+							.html(this.prepare_records[i]["content"]["lincko_progress"] * this.prepare_records[i]["content"]["lincko_size"] +" K of "
+							+ this.prepare_records[i]["content"]["lincko_size"] +" KB"); //toto => translation
+					}	
+					if(this.prepare_records[i]["content"]["data"] != '')
+					{
+						elem.find(".models_history_standard_shortcut_ico").addClass('display_none');
+						elem.find(".models_history_standard_shortcut_pic")
+									.removeClass('display_none')
+									.css('background-image','url("'+ this.prepare_records[i]["content"]['data'] +'")')
+									.attr("preview", "1");
 					}
 					else
 					{
-						elem.find("[find=action]").html(wrapper_to_html($.trim(records[i]["action"]).ucfirst()));
-						elem.find("[find=target_type]").html(records[i]["parent"]);
-						elem.find("[find=target]").html(records[i]["target"]);
-						item_add_handler(elem,records[i]['parent_category'],records[i]['parent_id']);
+						elem.find(".models_history_standard_shortcut_ico").removeClass('display_none');
+						elem.find(".models_history_standard_shortcut_pic").addClass('display_none');
+					}
+					break;
+				default:
+					break;
+			}
+			continue;
+		}
+		else
+		{
+			switch(this.prepare_records[i]['category'])
+			{
+				case "comments" :
+					elem.addClass(this.prepare_records[i]['category']);
+					elem.addClass(wrapper_localstorage.uid === parseInt(this.prepare_records[i]["by"], 10) ? "models_history_self" : "models_history_others");
+
+					if(this.prepare_records[i]["by"] == 0){
+						elem.find("[find=content]").removeAttr('contenteditable');
+						img = app_application_icon_roboto.src;
+						elem.find("[find=icon]").css('border-color', 'transparent');
+						elem.find("[find=icon]").css('background-image','url("' + img + '")');
+						elem.find("[find=author]").html(Lincko.Translation.get('app', 0, 'html')); //Roboto
+					} else {
+						elem.find("[find=icon]").css('background-image','url("' + this.prepare_records[i]["profile"] + '")');
+						elem.find("[find=author]").text(this.prepare_records[i]["author"]);
+						elem.attr('category','comments');
+						elem.attr('comment_id',this.prepare_records[i]["id"]);
+					}
+
+					var date = new wrapper_date(this.prepare_records[i].timestamp);
+					elem.find(".time", "[find=timestamp]").html(date.display('time_short'));
+					elem.find(".date", "[find=timestamp]").html(date.display('date_short'));
+
+					if(this.prepare_records[i]['parent'] == null)
+					{
+						elem.find("[find=content]").html(this.prepare_records[i]["content"]);
+					}
+					else
+					{
+						elem.find("[find=action]").html(wrapper_to_html($.trim(this.prepare_records[i]["action"]).ucfirst()));
+						elem.find("[find=target_type]").html(this.prepare_records[i]["parent"]);
+						elem.find("[find=target]").html(this.prepare_records[i]["target"]);
+						this.item_add_handler(elem,this.prepare_records[i]['parent_category'],this.prepare_records[i]['parent_id']);
+					}
+					if(this.prepare_records[i]["temp_id"] != 0){
+						elem.attr("temp_id",this.prepare_records[i]["temp_id"]);
 					}
 					break;
 				case 'files' :
-					elem.addClass(records[i]['category']);
-					elem.addClass(wrapper_localstorage.uid === parseInt(records[i]["by"], 10) ? "models_history_self" : "models_history_others");
-					elem.find("[find=icon]").attr('src',records[i]["profile"]); 
-					elem.find("[find=author]").text(records[i]["author"]);
-					var date = new wrapper_date(records[i].timestamp);
+					elem.addClass(this.prepare_records[i]['category']);
+					elem.addClass(wrapper_localstorage.uid === parseInt(this.prepare_records[i]["by"], 10) ? "models_history_self" : "models_history_others");
+					elem.find("[find=icon]").css('background-image','url("'+this.prepare_records[i]["profile"]+'")');
+					elem.find("[find=author]").text(this.prepare_records[i]["author"]);
+					var date = new wrapper_date(this.prepare_records[i].timestamp);
 					elem.find(".time", "[find=timestamp]").html(date.display('time_short'));
 					elem.find(".date", "[find=timestamp]").html(date.display('date_short'));
 
-					var file = Lincko.storage.get('files', records[i]["id"]);
+					var file = Lincko.storage.get('files', this.prepare_records[i]["id"]);
 					if(file.category =='image' || file.category =='video')
 					{
-						elem.find(".models_history_standard_shortcut_ico").remove();
-						elem.find(".models_history_standard_shortcut_pic").show().prop("src", records[i]["content"]);
+						elem.find(".models_history_standard_shortcut_ico").addClass('display_none');
+						elem.find(".models_history_standard_shortcut_pic").removeClass('display_none').css('background-image','url("'+this.prepare_records[i]["content"]+'")');
 					} 
 					else{
-						var ext = app_models_fileType.getExt(target);
-						elem.find(".models_history_standard_shortcut_ico").find("i").addClass(app_models_fileType.getClass(ext));
-						elem.find(".models_history_standard_shortcut_pic").remove();
+						var ext = app_models_fileType.getExt(this.prepare_records[i]["target"]);
+						elem.find(".models_history_standard_shortcut_ico").removeClass('display_none').find("i").addClass(app_models_fileType.getClass(ext));
+						elem.find(".models_history_standard_shortcut_pic").addClass('display_none');
 					}
-					elem.find("[find=target]").html(records[i]["target"]);
-					elem.find("[find=action]").html(wrapper_to_html($.trim(records[i]["action"]).ucfirst()));
+					elem.find("[find=target]").html(this.prepare_records[i]["target"]);
+					elem.find("[find=action]").html(wrapper_to_html($.trim(this.prepare_records[i]["action"]).ucfirst()));
+					this.item_add_handler(elem,this.prepare_records[i]["category"],this.prepare_records[i]['id']);
 					break;
 				case 'comment_recalled' :
-					var date = new wrapper_date(records[i].timestamp);
+					var date = new wrapper_date(this.prepare_records[i].timestamp);
 					elem.find("[find=timestamp]").html(date.display('time_short'));
-					elem.find("[find=msg]").text(Lincko.Translation.get('app', 3101, 'html', {username: records[i]["author"] }));
+					elem.find("[find=msg]").text(Lincko.Translation.get('app', 3101, 'html', {username: this.prepare_records[i]["author"] }));
+					break;
+				case 'uploading_file':
+					elem.addClass('files');
+					elem.addClass(this.prepare_records[i]['category']);
+					elem.addClass(wrapper_localstorage.uid === parseInt(this.prepare_records[i]["by"], 10) ? "models_history_self" : "models_history_others");
+					elem.find("[find=target]").addClass("upload_file_title").html(this.prepare_records[i]["target"]);
+					elem.find("[find=progress_bar]").width("0%");
+					elem.find("[find=progress_text]").addClass("uploading_file_progress_size").html("0 K of 0 MB"); //toto => translation
+					elem.find(".uploading_action").html(Lincko.Translation.get('app', 7, 'html'));
+
+					if(this.prepare_records[i]["content"]["data"] != '')
+					{
+						elem.find(".models_history_standard_shortcut_ico").addClass('display_none');
+						elem.find(".models_history_standard_shortcut_pic")
+									.removeClass('display_none')
+									.css('background-image','url("'+ this.prepare_records[i]["content"]['data'] +'")')
+									.attr("preview", "1");
+					}
+					else
+					{
+						elem.find(".models_history_standard_shortcut_ico").removeClass('display_none');
+						elem.find(".models_history_standard_shortcut_pic").addClass('display_none');
+					}
+					
+					elem.find("[find=icon]").css('background-image','url("'+this.prepare_records[i]["profile"]+'")');
+					elem.find("[find=author]").text(this.prepare_records[i]["author"]);
+					if(this.prepare_records[i]["temp_id"] != 0){
+						elem.attr("temp_id",this.prepare_records[i]["temp_id"]);
+					}
 					break;
 				default:
-					elem.addClass(records[i]['category']);
-					elem.addClass(wrapper_localstorage.uid === parseInt(records[i]["by"], 10) ? "models_history_self" : "models_history_others");
-					elem.find("[find=icon]").attr('src',records[i]["profile"]); 
-					elem.find("[find=author]").text(records[i]["author"]);
-					var date = new wrapper_date(records[i].timestamp);
+					elem.addClass(this.prepare_records[i]['category']);
+					elem.addClass(wrapper_localstorage.uid === parseInt(this.prepare_records[i]["by"], 10) ? "models_history_self" : "models_history_others");
+					elem.find("[find=icon]").css('background-image','url("'+this.prepare_records[i]["profile"]+'")');
+					elem.find("[find=author]").text(this.prepare_records[i]["author"]);
+					var date = new wrapper_date(this.prepare_records[i].timestamp);
 					elem.find(".time", "[find=timestamp]").html(date.display('time_short'));
 					elem.find(".date", "[find=timestamp]").html(date.display('date_short'));
 
-					elem.find("[find=target]").html(records[i]["target"]);
-					elem.find("[find=action]").html(wrapper_to_html($.trim(records[i]["action"]).ucfirst()));
-					item_add_handler(elem,records[i]["category"],records[i]['id']);
+					elem.find("[find=target]").html(this.prepare_records[i]["target"]);
+					elem.find("[find=action]").html(wrapper_to_html($.trim(this.prepare_records[i]["action"]).ucfirst()));
+					this.item_add_handler(elem,this.prepare_records[i]["category"],this.prepare_records[i]['id']);
 					break;
 			}
-			item_profile_handler(elem,records[i]["by"]);
-			elem.prependTo(position.find(".chat_contents_wrapper"));
+			this.item_add_profile_handler(elem,this.prepare_records[i]["by"]);
+			
+
+			if(this.display_history_mode)
+			{
+				elem.prependTo(this.position.find(".chat_contents_wrapper"));
+				this.over = this.prepare_records[i]["is_first"];
+			}
+			else
+			{
+				elem.appendTo(this.position.find(".chat_contents_wrapper"));
+			}
+
+			if(this.prepare_records[i]['timeline'] != null){
+				template = "-models_history_line" ;
+				var timeline = $("#" + template).clone();
+				var today = Math.floor((new Date()).getTime() / 86400000);
+
+				if (this.prepare_records[i]["timeline"]  == today * 86400 & !this.has_today) {
+					timeline.find(".history_time").html(Lincko.Translation.get('app', 3302, 'html').toUpperCase());
+				}
+				else if (this.prepare_records[i]["timeline"]  == (today - 1) * 86400) {
+					timeline.find(".history_time").html(Lincko.Translation.get('app', 3304, 'html').toUpperCase());
+				}
+				else{
+					timeline.find(".history_time").html(new wrapper_date(this.prepare_records[i]["timeline"] * 1).display('date_very_short'));
+				}
+				elem.before(timeline);
+			}
+
 		}
-	}
 
-	
-	var app_layers_chat_feed_history = function(position,type,project_id,subm)
+	}
+	if(!this.over & this.display_history_mode & this.records.length > this.page_count)
 	{
-		data_init(project_id,type);
-		layer_display(position,subm);
+		var loading_elem =  $("#-models_history_loading").clone();
+		loading_elem.prependTo(this.position.find(".chat_contents_wrapper"));
+	}
+}
+
+
+
+chatFeeder.prototype.create_iscroll_container = function()
+{
+	this.position.addClass('overthrow').addClass("submenu_chat_contents");
+	this.position.empty();
+	$('<div>').addClass('chat_contents_wrapper').prop("id", this.subm.id+'_chat_contents_wrapper').appendTo(this.position);
+}
+
+
+
+chatFeeder.prototype.app_layers_chat_send_item = function(data)
+{
+	var result = [];
+	var by = data["by"];
+	var author =  Lincko.storage.get('users', by)['-username'];
+
+	var profile = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", by, 'profile_pic'));
+	if(!profile){
+		profile = app_application_icon_single_user.src;
+	}
+	var timeline = null ;
+
+	if(!this.has_today)
+	{
+		timeline  = Math.floor(data["timestamp"] / 86400) * 86400;
 	}
 
-	return {
-		"app_layers_chat_feed_history" : app_layers_chat_feed_history,
+	var record = {
+		'id'				: data["id"],
+		'category'			: data["category"],
+		'by'				: by,
+		'author'			: author,
+		'profile'			: profile,
+		'timestamp'			: data["timestamp"] ,
+		'code'				: 0,
+		'action'			: '',
+		'parent'			: null,
+		'parent_id'			: 0,
+		'parent_category'	: null,
+		'target'			: null,
+		'content'			: data["content"],
+		'hist'				: 0,
+		'timeline'			: timeline,
+		'is_first'			: false,
+		'temp_id'			: data["id"],
 	}
-})();
+
+	this.display_history_mode = false;
+	this.prepare_records = [record];
+	this.layer_display();
+} 
+
+
+chatFeeder.prototype.app_layers_chat_receive_items = function(data)
+{
+	this.display_history_mode = false;
+	this.prepare_records = this.no_cache_data_load();
+	this.layer_display();
+
+} 
+
+chatFeeder.prototype.app_layers_chat_feed_history = function(){
+	this.data_init();
+	this.data_load_page();
+	this.create_iscroll_container();
+	this.layer_display();
+
+	var that = this;
+
+	wrapper_IScroll_cb_creation[that.position.prop('id')] = function(){
+		var IScroll = myIScrollList[that.position.prop('id')];
+		IScroll.on('scrollEnd', function(){
+			if(this.y == 0 & !that.over){
+				that.position.find(".models_history_loading").remove();
+				that.data_load_page();
+				that.display_history_mode = true;
+				that.pre_last_element_id = that.last_element_id;
+				that.layer_display();
+				IScroll.refresh();
+				IScroll.scrollToElement($('#'+that.pre_last_element_id).get(0), 0, 0, -30);
+			}
+		});
+	}
+}
 
 var chatFeed = (function() {
 	var subm = null;
 	var SHORTCUT_HANDLERS = {
-		'files': function(id, elem) { console.log('here');
+		'files': function(id, elem) { 
 			var file = Lincko.storage.get('files', id);
 			var name = Lincko.storage.get('files', id, "+name");
 			var url = Lincko.storage.getLink(id);
