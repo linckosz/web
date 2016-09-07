@@ -703,7 +703,7 @@
 	overflow: hidden;
 }
 .skylist_wrapper[view=paper]>.burger_typeTask td.skylist_card_textwrapper [find=text]{
-	font-size: 16px;
+	font-size: 14px;
 	height: 100px;
 }
 
@@ -893,7 +893,7 @@
 .skylist_maxMobileL .skylist_paperView_expandable_boxsize{
 	margin: 5px 0px;
 }
-.skylist_wrapper.skylist_maxMobileL[view=paper]>.burger_typeTask td.skylist_card_textwrapper [find=text]{
+.skylist_maxMobileL.skylist_wrapper[view=paper]>.burger_typeTask td.skylist_card_textwrapper [find=text]{
 	font-size: 14px;
 }
 /*
