@@ -1196,13 +1196,15 @@ skylist.prototype.addTask = function(item){
 
 
 	/*in_charge*/
-	for (var i in item['_users']){
-		if( item['_users'][i]['in_charge']==true ){
-			in_charge += Lincko.storage.get("users", i ,"username");
-			in_chargeID = i;
+	if(item['_users']){
+		for (var i in item['_users']){
+			if( i && item['_users'][i]['in_charge']==true ){
+				in_charge += Lincko.storage.get("users", i ,"username");
+				in_chargeID = i;
+			}
 		}
 	}
-	if( !in_charge ){
+	if( !in_charge || in_charge == 'false' ){
 		in_charge = Lincko.Translation.get('app', 3608, 'html'); //'Not Assigned'
 	}
 
