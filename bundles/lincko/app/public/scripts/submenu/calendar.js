@@ -8,7 +8,7 @@ submenu_list['calendar'] = {
 			return className;
 		},
 	},
-	"calenar":{
+	"calendar":{
 		"style": "calendar",
 		"title": "calendar",
 	},

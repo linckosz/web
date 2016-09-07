@@ -212,10 +212,11 @@ burgerN.ChineseNumberConverter = function(input){
 }
 
 
-burgerN.typeTask = function(projectID, skylistInst){
+burgerN.typeTask = function(projectID, skylistInst, dropdownOffset){
 	if(!projectID){
 		projectID = app_content_menu.projects_id;
 	}
+	if(typeof dropdownOffset != 'number'){ dropdownOffset = null; }
 	var defaultDuration = 86400; //seconds
 	
 
@@ -252,6 +253,7 @@ burgerN.typeTask = function(projectID, skylistInst){
 	var elem_userid = elem_typeTask.find('input[find=userid]');
 	param.elem_input = elem_userid;
 	param.projectID = projectID;
+	param.dropdownOffset = dropdownOffset;
 	//disable '@' for burgerN.regex if its personal space
 	param.disable_shortcutUser = Lincko.storage.get('projects', projectID, 'personal_private');
 
@@ -317,6 +319,7 @@ burgerN.typeTask = function(projectID, skylistInst){
 			'start': time_now.timestamp,
 			'duration': duration,
 			'updated_by': wrapper_localstorage.uid,
+			'updated_at': time_now.timestamp,
 			'new': true,
 		}
 		item['_users'][in_charge_id] = {
@@ -372,7 +375,6 @@ burgerN.typeTask = function(projectID, skylistInst){
 		elem_typingArea.html('');
 		elem_typingArea.focus();
 	}
-
 	burgerN.regex(elem_typingArea, null, param);
 
 	return elem_typeTask;
@@ -416,14 +418,17 @@ burgerN.slideDown = function(elem_dropdown){
 	});
 }
 
+
+/* burgerN.regex param
+	param.elem_input
+	param.projectID
+	param.dropdownOffset
+	param.disable_shortcutUser
+	param.enter_fn
+	param.dropdownOffset
+*/
 burgerN.regex = function(elem, item, param){
 	var that = this;
-	/*
-		param = {
-			elem_input:----,
-			enter_fn:----,
-		}	
-	*/
 	if(!item){
 		item = {};
 		item['_id'] = 'new';
@@ -696,18 +701,22 @@ burgerN.regex = function(elem, item, param){
 					param_submenu.alwaysMe = false;
 					param_submenu.userClick_fn = userClick_fn;
 					submenu_Build('burger_contacts_typeTask', true, null, param_submenu);
-					elem.attr('contenteditable',false);
+					//elem.attr('contenteditable',false);
 				}
 				return;
 			}
 
 			currentMode = that.shortcut.user;
 	    	burger_startIndex = caretIndex;
+	    	var dropdownOffset = elem.outerHeight();
+	    	if(param && typeof param.dropdownOffset == 'number'){
+	    		dropdownOffset = param.dropdownOffset;
+	    	}
 			elem_dropdown = burgerN.draw_contacts(contactsID_obj, userClick_fn)
 				.css({
 					'top':coord.y, 
 					'left':coord.x, 
-					'bottom':$(window).height()-coord.y + elem.outerHeight(),
+					'bottom':$(window).height()-coord.y + dropdownOffset,
 				});
 
 			$('#app_content_dynamic_sub').append(elem_dropdown);
@@ -722,7 +731,7 @@ burgerN.regex = function(elem, item, param){
 					param_submenu.elem_typeTask = elem;
 					param_submenu.dateClick_fn = dateClick_fn;
 					submenu_Build('burger_calendar_typeTask', true, null, param_submenu);
-					elem.attr('contenteditable',false);
+					//elem.attr('contenteditable',false);
 				}
 				return;
 			}
@@ -1156,6 +1165,83 @@ burgerN.draw_contacts = function(contacts,option_fn){
 	}
 
 	return elem_dropdown;
+}
+
+burgerN.assignTaskN = function(select_fn, item){
+	var that = this;
+	var burger_destroy = burgerN.destroy;
+	var elem_dropdown = null;
+	var dropdown_duration = burgerN.dropdownTime;
+
+	elem.click(function(event){
+		elem.focus();
+		event.stopPropagation();
+		if( elem_dropdown ){
+			burger_destroy(elem_dropdown);
+			elem_dropdown = null;
+		}
+		else{
+            var contactsID_obj = burgerN.generate_contacts(item);
+			//use the submenu for mobile
+			if(responsive.test("maxMobileL")){
+				var param = {};
+				param.elem_input = elem;
+				//param.type = 'tasks';//item['_type'];
+				param.selectOne = true;
+				param.item_obj = item;
+				param.contactsID = contactsID_obj;
+				param.alwaysMe = false;
+				submenu_Build('burger_contacts', true, null, param);
+				return false;
+			}
+
+			var userClick_fn = function(){
+				var userid = $(this).attr('userid'); 
+                if(elem.val() == userid){
+                    elem.val('');
+                }
+                else{
+                    elem.val(userid);
+                }
+				elem.change();
+				if(!item['_id'] || item['_id'] == 'new'){
+					return;
+				}
+				burger_contacts_sendAction(contactsID_obj, [userid], item, true);
+			}
+
+			elem_dropdown = burgerN.draw_contacts(contactsID_obj, userClick_fn);
+			elem_dropdown.appendTo('#app_application_main');
+
+			var coord = $(this).offset();
+			var coordP = $(this).position();
+			var left = coord.left;
+			if(left == 0){ 
+				left = coord.left;
+				if( responsive.test("minTablet")){
+					left -= $('#app_content_menu').outerWidth();
+					if( $('#app_application_project').outerWidth() > 0){
+						left -= $('#app_application_project').outerWidth();
+					}
+				}
+			};
+			var table_height = $(this).closest('table').outerHeight();
+			var top = coord.top + table_height; //- $('#app_content_top').outerHeight();
+			var bottom = $(window).height() - top + table_height +3/*some padding*/;
+			
+			elem_dropdown.css({
+				position: 'absolute',
+				left: left,
+				top: top,
+				bottom: bottom,
+			});
+			that.slideDown(elem_dropdown);
+		}
+	});
+	elem.blur(function(){
+		burger_destroy(elem_dropdown);
+		elem_dropdown = null;
+	});
 }
 
 burgerN.assignTask = function(elem, item){

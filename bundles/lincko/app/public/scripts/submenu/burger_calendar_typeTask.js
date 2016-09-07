@@ -8,7 +8,7 @@ submenu_list['burger_calendar_typeTask'] = {
 			return className;
 		},
 	},
-	"calenar":{
+	"calendar":{
 		"style": "calendar",
 		"title": "calendar",
 	},
@@ -17,6 +17,13 @@ submenu_list['burger_calendar_typeTask'] = {
 		"title": Lincko.Translation.get('app', 7, 'html'), //Cancel
 		'hide': true,
 		"class": "base_pointer",
+		"action": function(Elem, subm){
+			burgerN.placeCaretAtEnd(subm.param.elem_typeTask);
+		},
+		"now": function(Elem, subm){
+			//remove keyboard for mobile
+			subm.param.elem_typeTask.blur();
+		},
 	},
 	"right_button": {
 		"style": "title_right_button",
@@ -24,7 +31,6 @@ submenu_list['burger_calendar_typeTask'] = {
 		'hide': true,
 		"class": "base_pointer",
 		'action': function(Elem, subm){
-			subm.param.elem_typeTask.attr('contenteditable',true);
 			subm.param.dateClick_fn(null, null, subm.param.elem_inputTarget.val()/1000);
 		},
 	},

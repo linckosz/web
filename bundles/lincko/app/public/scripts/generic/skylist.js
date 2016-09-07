@@ -275,8 +275,9 @@ skylist.prototype.subConstruct_default = function(){
 	that.elem_newcardCircle.appendTo(that.list_wrapper);
 
 	if(that.list_type == 'tasks'){
-		var elem_sort = $('<div>').addClass('skylist_sortBtn').text('Sort');//toto
+		var elem_sort = $('<div>').addClass('display_none skylist_sortBtn').text('Sort');//toto
 		elem_sort.click(function(){
+			elem_sort.addClass('display_none');
 			that.tasklist_update();
 		});
 		that.list_subwrapper.append(elem_sort);
@@ -355,6 +356,7 @@ skylist.prototype.subConstruct_default = function(){
 							scollToBottom = true;
 							$(elem_cards.get(elem_cards.length-1)).after(elem_newCard);
 							if(!that.list_subwrapper.find('.skylist_paperView_divider').length){
+								that.list_subwrapper.find('.skylist_sortBtn').removeClass('display_none');
 								elem_newCard.before('<div class="skylist_paperView_divider"></div>');
 							}
 							
@@ -569,10 +571,7 @@ skylist.prototype.filter_by_sort_alt = function(items, filter){
 	}
 	else{
 		if( that.list_type == "tasks" && filter ){
-			for( var i in items ){
-				item = items[i];
-				items_filtered = Lincko.storage.sort_items( items, 'updated_at', 0, -1, false );
-			}
+			items_filtered = Lincko.storage.sort_items( items, 'updated_at', 0, -1, false );
 		}
 		else{
 			items_filtered = items;
@@ -825,7 +824,7 @@ skylist.prototype.DOM_updated = function(){
 skylist.prototype.addCard_all = function(){
 	var that = this;
 	if(that.list_type == 'tasks'){
-		that.list_wrapper.append(burgerN.typeTask(null, that));
+		that.list_wrapper.append(burgerN.typeTask(null, that, 30));
 		that.list.append(burgerN.typeTask(null, that));
 	}
 	
@@ -1247,6 +1246,9 @@ skylist.prototype.addTask = function(item){
 	var comments = Lincko.storage.list('comments',null, null, that.list_type, item['_id'], true);
 	commentCount = comments.length;
 	Elem.find('[find=commentCount]').html(commentCount);
+	if(commentCount == 0 && that.Lincko_itemsList_filter.view == 'paper'){
+		Elem.find('[find=card_rightbox] [find=comments_icon]').addClass('skylist_greyColor');
+	}
 
 	/*
 	links
@@ -1280,31 +1282,38 @@ skylist.prototype.addTask = function(item){
 				if(item_file['category'] == 'image'){
 					fileType_class = 'fa fa-file-image-o';
 					elem_linkbox = $('<img />').prop('src',thumb_url);
-					/*elem_linkbox = $('<img />').prop('src',thumb_url).click(fileID, function(event){
+					elem_linkbox = $('<img />').prop('src',thumb_url).click(fileID, function(event){
 						event.stopPropagation();
 						previewer.pic(event.data);
-					});*/
+					});
 				}
 				else if(item_file['category'] == 'video'){
 					fileType_class = 'fa fa-file-video-o';
 					elem_linkbox = $('<img />').prop('src',thumb_url);
-					/*elem_linkbox = $('<img />').prop('src',thumb_url).click(fileID, function(event){
+					elem_linkbox = $('<img />').prop('src',thumb_url).click(fileID, function(event){
 						event.stopPropagation();
 						previewer.video(event.data);
-					});*/
+					});
 				}
 				else{
 					fileType_class = app_models_fileType.getClass(item_file.ori_ext);
-					elem_linkbox.addClass(fileType_class);
+					elem_linkbox.addClass(fileType_class).click(function(){
+						submenu_Build(
+						'taskdetail', null, null, {
+							"type":'files', 
+							"id":fileID,
+						}, true);
+					});
 				}
 
-				elem_linkbox = $('<div>').addClass('skylist_paperView_expandable_boxsize').html(elem_linkbox).click(function(){
+				elem_linkbox = $('<div>').addClass('skylist_paperView_expandable_boxsize').html(elem_linkbox);
+				/*.click(function(){
 					submenu_Build(
 					'taskdetail', null, null, {
 						"type":'files', 
 						"id":fileID,
 					}, true);
-				});
+				});*/
 
 				elem_btn_addNew.before(elem_linkbox);
 
@@ -1319,7 +1328,8 @@ skylist.prototype.addTask = function(item){
 		}
 
 		if(linkCount > 0){
-			elem_btn_addNew.click(function(){
+			elem_btn_addNew.click(function(event){
+				event.stopPropagation();
 				if(item.fake){
 					app_upload_open_files('projects', item._parent[1] , false, true, 'link_queue');
 				}
@@ -1328,13 +1338,15 @@ skylist.prototype.addTask = function(item){
 				}
 			});
 
-			Elem.find('[find=card_rightbox] [find=links_wrapper]').click(function(){
+			Elem.find('[find=card_rightbox] [find=links_wrapper]').click(function(event){
+				event.stopPropagation();
 				that.paperView_expandLinks(elem_expandable_links);
 			});
 		}
 		else{
 			Elem.find('[find=card_rightbox] [find=links_icon]').addClass('skylist_greyColor');
-			Elem.find('[find=card_rightbox] [find=links_wrapper]').click(function(){
+			Elem.find('[find=card_rightbox] [find=links_wrapper]').click(function(event){
+				event.stopPropagation();
 				if(item.fake){
 					app_upload_open_files('projects', item._parent[1] , false, true, 'link_queue');
 				}
