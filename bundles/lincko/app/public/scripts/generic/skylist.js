@@ -275,7 +275,7 @@ skylist.prototype.subConstruct_default = function(){
 	that.elem_newcardCircle.appendTo(that.list_wrapper);
 
 	if(that.list_type == 'tasks'){
-		var elem_sort = $('<div>').addClass('display_none skylist_sortBtn').text('Sort');//toto
+		var elem_sort = $('<div>').addClass('display_none skylist_sortBtn').text(Lincko.Translation.get('app', 62, 'html'));//Sort
 		elem_sort.click(function(){
 			elem_sort.addClass('display_none');
 			that.tasklist_update();
@@ -1080,12 +1080,12 @@ skylist.prototype.addTask = function(item){
 	}
 	if(contenteditable){
 		//for paper, direct edit, for others, settimeout
-		if(that.Lincko_itemsList_filter.view == 'paper'){
+		if(that.Lincko_itemsList_filter.view == 'paper' && !supportsTouch){
 			elem_title.attr('contenteditable',contenteditable);
 		}
 		else{
 			elem_title.on('mousedown touchstart', function(event){ 
-				if( responsive.test("maxMobileL") ){ return true; }
+				if( responsive.test("maxMobileL") &&  that.Lincko_itemsList_filter.view != 'paper' ){ return true; } //for paper mode, mobile can edit
 				that.editing_target = $(this);
 				clearTimeout(that.editing_timeout);
 				that.editing_timeout = setTimeout(function(){
