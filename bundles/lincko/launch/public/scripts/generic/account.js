@@ -208,7 +208,7 @@ JSfiles.finish(function(){
 	account_display_label($('#account_signin_email'), false);
 	//Important: Note that getTimezoneOffset() is return posit value number (-8H for China instead of 8H)
 	//Reason is specs: http://stackoverflow.com/questions/21102435/why-does-javascript-date-gettimezoneoffset-consider-0500-as-a-positive-off
-	var timeoffset = -(new Date()).getTimezoneOffset();
+	var timeoffset = (new Date()).getTimezoneOffset();
 	timeoffset = Math.floor(timeoffset/60);
 	if(timeoffset<0){
 		timeoffset = 24 + timeoffset; //24H - offset
