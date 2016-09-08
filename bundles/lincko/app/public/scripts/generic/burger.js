@@ -749,11 +749,15 @@ burgerN.regex = function(elem, item, param){
 
 			currentMode = that.shortcut.date;
 			burger_startIndex = caretIndex;
+			var dropdownOffset = elem.outerHeight();
+	    	if(param && typeof param.dropdownOffset == 'number'){
+	    		dropdownOffset = param.dropdownOffset;
+	    	}
 			elem_dropdown = burgerN.draw_dates(burger_str, dateClick_fn)
 				.css({
 					'top':coord.y, 
 					'left':coord.x, 
-					'bottom':$(window).height()-coord.y + elem.outerHeight(),
+					'bottom':$(window).height()-coord.y + dropdownOffset,
 				});
 
 			$('#app_content_dynamic_sub').append(elem_dropdown);

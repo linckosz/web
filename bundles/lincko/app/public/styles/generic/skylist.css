@@ -694,7 +694,7 @@
 	bottom: 0px;
 	left: 10px;
 	right: 10px;
-	z-index: 90000;
+	z-index: 100;
 }
 .skylist_wrapper[view=paper]>.burger_typeTask [find=checkbox_td]{
 	vertical-align: top;
@@ -705,7 +705,7 @@
 	overflow: hidden;
 }
 .skylist_wrapper[view=paper]>.burger_typeTask td.skylist_card_textwrapper [find=text]{
-	font-size: 14px;
+	font-size: 16px;
 	height: 100px;
 }
 
@@ -899,6 +899,7 @@
 	height: 50px;
 }
 .skylist_maxMobileL.skylist_wrapper[view=paper]>.burger_typeTask td.skylist_card_textwrapper [find=text]{
+	height: 40px;
 	font-size: 14px;
 }
 /*
