@@ -1342,7 +1342,7 @@ burgerN.generate_contacts = function(item){
 	var contacts = {};
 	for (var i = 0; i < accessList.length; i++) {
 		var userid = accessList[i];
-		if( typeof item == 'object' && '_users' in item && userid in item['_users'] && item['_users'][userid]['in_charge'] ){
+		if( typeof item == 'object' && item['_users']  && userid in item['_users'] && item['_users'][userid]['in_charge'] ){
 			contacts[userid] = { checked: true };
 		}
 		else{
