@@ -680,7 +680,7 @@ BaseHistoryCls.prototype.renderHistoryTemplate = function(index) {
 	Elem.addClass(this.item.type);
 	var history = Lincko.storage.getHistoryInfo(this.item);
 	// We don't need to use wrapper_to_html for 'history' because the text is already protected in history format method
-	if(!history){
+	if(!history || history.content===false){
 		return null;
 	}
 

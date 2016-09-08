@@ -19,6 +19,8 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 			uid = 0;
 		} else if(temp[wrapper_localstorage.uid]){
 			uid = wrapper_localstorage.uid;
+		} else {
+			return false;
 		}
 		if($.type(temp) != 'object' || !temp[uid]){
 			error = true;
@@ -50,8 +52,10 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 					Lincko.Translation.get('app', 3811, 'html') //There was no activity yesterday.
 				));
 		} else {
-			//A random quote
-			var random_quote = 9901 + Math.floor(Math.random() * 46);
+			//A random quote (will be the same for the same comment ID)
+			var random_quote = parseInt(comments_id, 10);
+			var random_quote = 9901 + random_quote - (46 * Math.floor( random_quote / 46));
+
 			return $('<span>')
 				.addClass('unselectable')
 				.html(wrapper_to_html(

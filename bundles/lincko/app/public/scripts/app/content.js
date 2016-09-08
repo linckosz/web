@@ -158,6 +158,7 @@ var app_content_menu = {
 				projects_id = Lincko.storage.getMyPlaceholder()['_id'];
 				if(hist.length>0 && hist[0]["att"]=="_delete"){
 					var msg = Lincko.storage.getHistoryInfo(hist[0]);
+					if(msg.content===false){ msg.content = ''; }
 					base_show_error(msg.title+"\n"+msg.content);
 				}
 				var proid = projects_id;

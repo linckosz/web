@@ -135,7 +135,12 @@ var app_models_history = {
 					}
 					if(hist_all[i]["type"]=="comments"){
 						if(hist_all[i]["by"]==0){
-							info[i].content = app_models_resume_format_sentence(hist_all[i]["id"]).text();
+							var sentence = app_models_resume_format_sentence(hist_all[i]["id"]);
+							if(sentence===false){
+								//We don't display the message that the user is not concerned
+								continue;
+							}
+							info[i].content = sentence.text();
 						} else if(root_item["single"]){
 							comment = Lincko.storage.get("comments", hist_all[i]["id"]);
 							if(comment['recalled_by']){
@@ -163,7 +168,12 @@ var app_models_history = {
 							}
 						}
 					} else {
-						info[i].content = Lincko.storage.getHistoryInfo(hist_all[i])["title"];
+						var hist_info = Lincko.storage.getHistoryInfo(hist_all[i]);
+						if(hist_info.content===false){
+							//We don't display the message that the user is not concerned
+							continue;
+						}
+						info[i].content = hist_info.title;
 					}
 
 					app_models_history.hist_root[root_name] = info[i];
