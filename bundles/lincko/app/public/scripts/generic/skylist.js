@@ -651,7 +651,10 @@ skylist.prototype.filter_by_search = function(items, filter){
 					for( var k=0; k < userid_array.length; k++){
 						userid = userid_array[k];
 						if( that.list_type == 'tasks' ){
-							if( userid in item['_users'] && item['_users'][userid]['in_charge'] ){
+							if(!item['_users']){ //not assigned
+								break;
+							}
+							else if( userid in item['_users'] && item['_users'][userid]['in_charge'] ){
 								push = true;
 								break;
 							}
