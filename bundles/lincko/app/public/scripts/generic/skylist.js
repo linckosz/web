@@ -748,8 +748,8 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 
 	var iscroll_elem;
 	var cards_elem;
-	if( that.list.find('.iscroll_sub_div').length > 0 ){
-		iscroll_elem = that.list.find('.iscroll_sub_div');
+	if( that.list.children('.iscroll_sub_div').length > 0 ){
+		iscroll_elem = that.list.children('.iscroll_sub_div');
 	}else{
 		iscroll_elem = that.list;
 	}
