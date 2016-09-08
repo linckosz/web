@@ -1261,7 +1261,12 @@ skylist.prototype.addTask = function(item){
 	}
 	Elem.find('[find=linkCount]').text(linkCount);
 	if(that.Lincko_itemsList_filter.view == 'paper'){
-		var elem_expandable_links = Elem.find('[find=expandable_links]').addClass('overthrow').prop('id',Elem.prop('id')+'_expandable_links');
+		var elem_expandable_links = Elem.find('[find=expandable_links]')
+			.addClass('overthrow')
+			.prop('id',Elem.prop('id')+'_expandable_links')
+			.click(function(event){
+				event.stopPropagation();
+			});
 		wrapper_IScroll_options_new[elem_expandable_links.prop('id')] = { 
 			scrollX: true, 
 			scrollY: false, 
@@ -1283,16 +1288,14 @@ skylist.prototype.addTask = function(item){
 				real_url = Lincko.storage.getLink(fileID);
 				if(item_file['category'] == 'image'){
 					fileType_class = 'fa fa-file-image-o';
-					elem_linkbox = $('<img />').prop('src',thumb_url);
-					elem_linkbox = $('<img />').prop('src',thumb_url).click(fileID, function(event){
+					elem_linkbox = $('<img />').prop('src',thumb_url).attr('draggable', false).click(fileID, function(event){
 						event.stopPropagation();
 						previewer.pic(event.data);
 					});
 				}
 				else if(item_file['category'] == 'video'){
 					fileType_class = 'fa fa-file-video-o';
-					elem_linkbox = $('<img />').prop('src',thumb_url);
-					elem_linkbox = $('<img />').prop('src',thumb_url).click(fileID, function(event){
+					elem_linkbox = $('<img />').prop('src',thumb_url).attr('draggable', false).click(fileID, function(event){
 						event.stopPropagation();
 						previewer.video(event.data);
 					});
