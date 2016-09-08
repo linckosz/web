@@ -161,10 +161,13 @@
 
 #app_content_dynamic_layers {
 	margin-right: 55%;
+	position: relative;
+	z-index: 2;
 }
 
 #app_content_submenu_preview {
 	position: relative;
+	z-index: 1;
 	width: 55%;
 	background-color: #FFFFFF;
 	background-repeat: no-repeat;
