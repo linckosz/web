@@ -67,6 +67,8 @@ $(window).on('hashchange', function() {
 
 var app_generic_state = {
 	
+	allowed: false, //At true pushState and replaceState are available
+
 	close_timer: false,
 
 	started: false,
@@ -132,6 +134,7 @@ var app_generic_state = {
 	},
 
 	reset: function(){
+		if(!this.allowed){ return false; }
 		for(var i=0; i<this.priority.length; i++){
 			var key = this.priority[i];
 			if(typeof this.action[key] == 'function'){
@@ -142,14 +145,17 @@ var app_generic_state = {
 	},
 
 	getIndex: function(){
+		if(!this.allowed){ return false; }
 		return window.history.length;
 	},
 	
 	getTitle: function(){
+		if(!this.allowed){ return false; }
 		return wrapper_title+" ["+(this.getIndex()+1)+"]";
 	},
 
 	updateKey: function(key, value){
+		if(!this.allowed){ return false; }
 		if(typeof this.current[key] == 'undefined'){
 			return false;
 		}
@@ -159,6 +165,7 @@ var app_generic_state = {
 	},
 
 	downKey: function(key, value){
+		if(!this.allowed){ return false; }
 		var result = true;
 		if(typeof this.current[key] == 'undefined'){
 			return false;
@@ -181,6 +188,7 @@ var app_generic_state = {
 
 	//data must be an object like default
 	change: function(data, param, direction){
+		if(!this.allowed){ return false; }
 		if(typeof param == 'undefined'){ param = null; }
 		if(typeof direction == 'undefined'){ direction = 0; }
 		var record = false;
@@ -242,6 +250,10 @@ var app_generic_state = {
 
 	//Add 2 times currents to avoid exiting to easliy
 	start: function(){
+		if(typeof window.history.pushState != 'function'){
+			this.allowed = false;
+			return false;
+		}
 		if(!this.started && !storage_first_launch && Lincko.storage.getMyPlaceholder()){
 			this.started = true;
 			this.default.projects_id = Lincko.storage.getMyPlaceholder()['_id'];
@@ -254,6 +266,7 @@ var app_generic_state = {
 	},
 
 	getItem: function(){
+		if(!this.allowed){ return false; }
 		this.quick_item = false;
 		var hash = location.hash.substr(1).split("-");
 		if(hash.length==2){
@@ -265,6 +278,7 @@ var app_generic_state = {
 	},
 
 	openItem: function(old){
+		if(!this.allowed){ return false; }
 		if(typeof old == 'undefined'){ old = false; }
 		if(old){
 			var item = this.quick_item;
