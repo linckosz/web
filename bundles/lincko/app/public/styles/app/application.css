@@ -6,6 +6,8 @@
 	table-layout: fixed;
 	overflow: hidden;
 	vertical-align: top;
+	position: relative;
+	z-index: 1;
 }
 
 #app_application_project {
@@ -33,6 +35,7 @@
 	z-index: 1;
 	overflow: hidden;
 	vertical-align: top;
+	position: relative;
 }
 
 #app_application_lincko_action {
