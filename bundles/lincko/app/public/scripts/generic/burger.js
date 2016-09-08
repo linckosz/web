@@ -272,10 +272,14 @@ burgerN.typeTask = function(projectID, skylistInst, dropdownOffset){
 
 		//default not assigned
 		var in_charge_id = null;
-		//default to current filtered person, if any
-		if(skylistInst && skylistInst.Lincko_itemsList_filter && skylistInst.Lincko_itemsList_filter.people){
+		//if project is personal, default to self
+		if(Lincko.storage.get('projects', projectID, 'personal_private')){
+			in_charge_id = wrapper_localstorage.uid;
+		}
+		else if(skylistInst && skylistInst.Lincko_itemsList_filter && skylistInst.Lincko_itemsList_filter.people){ //default to current filtered person, if any
 			in_charge_id = skylistInst.Lincko_itemsList_filter.people;
 		}
+
 		//if specific person was assigned, override default
 		var elem_users = elem_typingArea.find('[userid]');
 		if(elem_users.length){
