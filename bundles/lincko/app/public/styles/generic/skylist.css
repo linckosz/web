@@ -545,7 +545,8 @@
 /*
  *  paperView---------------------------------------------------
  */
- .skylist_sortBtn {
+.skylist_sortBtn {
+	display: none;
 	cursor: pointer; cursor: hand;
     position: absolute;
     right: 20px;
@@ -560,7 +561,7 @@
     line-height: 30px;
 }
 .skylist_wrapper[view=paper]  .skylist_sortBtn{
-
+	display: initial;
 }
 
 .skylist_wrapper[view=paper] [find=card_bottom],

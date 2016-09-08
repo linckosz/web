@@ -2476,6 +2476,7 @@ skylist.prototype.addFilter_tasks = function(elem_filter_pane){
 
 	that.elem_navbar.find('[find=paper]').click(function(){
 		that.Lincko_itemsList_filter.view = 'paper';
+		that.list_subwrapper.children('.skylist_sortBtn').addClass('display_none');
 		that.tasklist_update();
 		elem_filterIcon.click();
 		elem_block1.find('td').toggleClass('skylist_lightblueBG');
