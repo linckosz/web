@@ -2610,12 +2610,11 @@ skylist.prototype.filter_updateSettings = function(sendAction){
 		}
 		return;
 	}
-
-	settings_new.skylist.filter[app_content_menu.projects_id][that.list_type] = that.Lincko_itemsList_filter;
+	
+	settings_new.skylist.filter[app_content_menu.projects_id][that.list_type] = JSON.parse(JSON.stringify(that.Lincko_itemsList_filter));
 	settings_new.skylist.filter[app_content_menu.projects_id][that.list_type].search = ''; //search filter is not saved
 	Lincko.storage.settingsLocal = settings_new;
 	wrapper_sendAction({settings: JSON.stringify(settings_new)}, 'post', 'data/settings');
-
 	//offline settings
 	/*Lincko.storage.settings = settings_new;
 	wrapper_localstorage.encrypt('settings', JSON.stringify(Lincko.storage.settings));*/

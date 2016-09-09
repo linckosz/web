@@ -142,10 +142,10 @@ function linckoEditor(elem, toolbarID, param){
             } /*access value here by this.action_param*/);
             if(editor.Lincko_param.submenuInst.param.id == 'new' && editor.Lincko_param.submenuInst.param.uniqueID){
             	//app_upload_open_files(editor.Lincko_param.submenuInst.param.projID, editor.Lincko_param.submenuInst.param.uniqueID);//, false, true);
-            	app_upload_open_files('projects', editor.Lincko_param.submenuInst.param.projID, false, true, 'link_queue');
+            	app_upload_open_photo_single('projects', editor.Lincko_param.submenuInst.param.projID, false, true, 'link_queue');
             }
             else{
-            	app_upload_open_files(editor.Lincko_param.submenuInst.param.type, editor.Lincko_param.submenuInst.param.id, false, true);
+            	app_upload_open_photo_single(editor.Lincko_param.submenuInst.param.type, editor.Lincko_param.submenuInst.param.id, false, true);
         	}
 
 	    }
