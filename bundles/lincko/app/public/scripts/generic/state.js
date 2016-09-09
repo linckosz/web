@@ -254,6 +254,7 @@ var app_generic_state = {
 			this.allowed = false;
 			return false;
 		}
+		this.allowed = true;
 		if(!this.started && !storage_first_launch && Lincko.storage.getMyPlaceholder()){
 			this.started = true;
 			this.default.projects_id = Lincko.storage.getMyPlaceholder()['_id'];
