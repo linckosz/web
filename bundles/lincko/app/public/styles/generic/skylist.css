@@ -878,6 +878,9 @@
     line-height: 54px;
     text-align: center;
 }
+.skylist_maxMobileL .skylist_filter_tasks_view_wrapper td{
+	padding: 0px 4px;
+}
 .skylist_maxMobileL .skylist .burger_typeTask [find=text]{
 	font-size: 14px;
 }
