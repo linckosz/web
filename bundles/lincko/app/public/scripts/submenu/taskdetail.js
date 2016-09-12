@@ -736,6 +736,9 @@ Submenu.prototype.Add_taskdetail = function() {
 
 
 	if(that.param.type != 'files'){ //no file description for beta
+		
+		taskdetail_clean_descriptionFiles(elem);
+		taskdetail_description_attachFileClick(elem);
 		submenu_taskdetail.append(elem);
 	}
 
@@ -1700,6 +1703,66 @@ Submenu.prototype.Add_taskdetail = function() {
 	delete submenu_wrapper;
 	return true;
 };
+
+
+//check description for any broken images, and updated them of image is available
+var taskdetail_clean_descriptionFiles = function(elem_description){
+	var elem_tempFiles = elem_description.find('span[temp_id]');
+	if(elem_tempFiles.length){
+		$.each(elem_tempFiles, function(i, elem){
+			var elem$ = null;
+			var temp_id = null;
+			var item_file = null;
+			var elem_new = null;
+			elem$ = $(elem);
+			temp_id = elem$.attr('temp_id');
+			if(temp_id){
+				item_file = Lincko.storage.list('files',1,{temp_id: temp_id})[0];
+				if(item_file){
+					if(elem$.hasClass('fa')){
+						elem$.removeClass('linckoEditor_fileProgress').html('&nbsp;').removeAttr('temp_id').removeAttr('contenteditable');
+						elem_new = $('#-linckoEditor_fileWrapper').clone().prop('id','').attr('file_id',file['_id']);
+						elem_new.find('[find=icon]').append(elem$.clone());
+	            		elem_new.find('[find=name]').text(item_file['+name']);
+	            		/*elem_new.click(function(){
+	            			submenu_Build(
+								'taskdetail', true, null, {
+									"type":'files', 
+									"id":item_file['_id'],
+								}, true);
+	            		});*/
+            		}
+	            	else{
+	            		elem_new = $('<img>').addClass('submenu_taskdetail_description_img').prop('src',Lincko.storage.getLink(item_file['_id']));
+	            	}
+	            	elem$.replaceWith(elem_new);
+					
+				}
+			}
+		});
+	}
+}
+
+var taskdetail_description_attachFileClick = function(elem_description){
+	if(!(elem_description instanceof $)){ elem_description = $(elem_description); }
+	var elem_files = elem_description.find('.linckoEditor_fileWrapper');
+	if(elem_files.length){
+		$.each(elem_files, function(i, elem){
+			var elem = $(elem);
+			var id = elem.attr('file_id');
+			if(!id){ return; }
+			elem.click(function(){ 
+				submenu_Build( 'taskdetail', true, null, 
+					{
+						"type":'files', 
+						"id":id,
+					}, true);
+			});
+		});
+	}
+}
+
+
 
 
 taskdetail_linkQueue = {

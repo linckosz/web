@@ -1,6 +1,16 @@
-<div id="begin_burger" class="visibility_hidden">
+<div id="begin_linckoEditor" class="visibility_hidden">
 	<script>
 		JSfiles.later("{{ _filelatest('/lincko/app/scripts/generic/linckoEditor.js') }}",30);
 	</script>
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/generic/linckoEditor.css') }}" type="text/css" />
+</div>
+<div id="end_linckoEditor" class="visibility_hidden"></div>
+
+<div class="display_none">
+	<div id="-linckoEditor_fileWrapper" class="linckoEditor_fileWrapper" contenteditable="false">
+		<span find="icon">
+		</span>
+		<span find="name">
+		</span>
+	</div>
 </div>

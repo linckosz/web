@@ -2668,6 +2668,7 @@ skylist.sendAction = {
 				delete param.id, delete param._id;
 				param.id = id;
 			}
+			if(Object.keys(param).length < 2){ return; }//if param only has id, no point to sendAction
 			wrapper_sendAction(param, 'post', action, cb_success, cb_error, cb_begin, cb_complete);
 		}
 

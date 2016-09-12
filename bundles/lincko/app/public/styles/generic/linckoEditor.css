@@ -1,0 +1,23 @@
+.linckoEditor_fileProgress{
+	font-size: 14px;
+	vertical-align: bottom;
+	display: inline-block;
+    padding: 10px;
+    border-radius: 3px;
+    border: 1px solid rgba(151, 151, 151, 0.26);
+    background-color: rgba(182, 214, 232, 0.20);
+}
+.linckoEditor_fileProgress:after{
+	content:'%';
+}
+.linckoEditor_fileComplete{
+	font-size: 30px;
+}
+.linckoEditor_fileWrapper{
+	vertical-align: bottom;
+	display: inline-block;
+    padding: 10px;
+    border-radius: 3px;
+    border: 1px solid rgba(151, 151, 151, 0.26);
+    background-color: rgba(182, 214, 232, 0.20);
+}

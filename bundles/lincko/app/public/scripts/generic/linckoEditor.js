@@ -17,7 +17,6 @@ function linckoEditor(elem, toolbarID, param){
         }
     });
 
-
 	editorInst.Lincko_param = {};
 	editorInst.Lincko_param = param;
 	editorInst.Lincko_param.files = {};
@@ -66,7 +65,7 @@ function linckoEditor(elem, toolbarID, param){
             if(picID){
                 thumb_url = Lincko.storage.getLinkThumbnail(picID);
             }
-           
+
             //editor.insertHtml( '<img style="background-image: url("'+thumb_url+'")" />' );
             //editor.insertHtml(elem_img[0].outerHTML);
             var elem_img = $('<img>').css('background-image','url("'+thumb_url+'")');
@@ -86,21 +85,44 @@ function linckoEditor(elem, toolbarID, param){
             app_application_lincko.add(elem, 'upload', function(){
             	//use this.action_param, unique to each anonymous function
             	$.each(editor.Lincko_param.files, function(elem_img_id,val){
-            		if(!val.temp_id){
-	            		editor.insertHtml('<span id="'+elem_img_id+'" contenteditable="false" class="submenu_taskdetail_description_img_progress">Image</span>');
+            		var $elem_img_id = $('#'+elem_img_id);
+
+            		//initialize
+            		if(!val.temp_id){//to make sure it is run only once. temp_id is added within this if statement
 	            		if(!app_upload_files.lincko_files[val.index]){return; }//there is an issue here
 	            		editor.Lincko_param.files[elem_img_id].temp_id = app_upload_files.lincko_files[val.index].lincko_temp_id;
+
+	            		var elem_fileUpload = $('<span temp_id="'+app_upload_files.lincko_files[val.index].lincko_temp_id+'" id="'+elem_img_id+'" contenteditable="false" class="linckoEditor_fileProgress">0</span>');
+	            		
+	            		
+	            		var fileType = app_upload_files.lincko_files[val.index].files[0].type;
+	            		if(('image').indexOf(fileType.toLowerCase()) == -1){
+	            			var fileName = app_upload_files.lincko_files[val.index].files[0].name;
+	            			var regex_fileExt = new RegExp(/\.([0-9a-z]+$)/);
+	            			var match = fileName.match(regex_fileExt);
+	            			if(match){
+	            				elem_fileUpload.addClass(app_models_fileType.getClass(match[1]));
+	            			}
+	            		}
+	            		
+
+	            		editor.insertHtml(elem_fileUpload.wrap('<div/>').parent().html());
+
 	            	}
-	            	if(	$('#'+elem_img_id)
-	            		&& $('#'+elem_img_id).prop('style')
-	            		&& !$('#'+elem_img_id).prop('style').length 
+
+
+	            	//for IMAGE: use the local image to preview the current image being uploaded
+	            	if(	$elem_img_id.length
+	            		&& !$elem_img_id.hasClass('fa')
+	            		&& $elem_img_id.prop('style')
+	            		&& !$elem_img_id.prop('style').length 
 	            		&& app_upload_files.lincko_files[val.index]
 	            		&& app_upload_files.lincko_files[val.index].files[0] 
 	            		&& app_upload_files.lincko_files[val.index].files[0].preview){
 	            		var local_url = app_upload_files.lincko_files[val.index].files[0].preview.toDataURL();
 	            		var img = new Image();
 	            		img.src = local_url;
-  						$('#'+elem_img_id).css({
+  						$elem_img_id.css({
   												'background-image': 'url('+local_url+')', 
 												'height': img.naturalHeight, 
 												'width': img.naturalWidth,
@@ -111,27 +133,52 @@ function linckoEditor(elem, toolbarID, param){
 												'font-size': (img.naturalHeight)/3+'px',
 											});
 	            	}
+
 	            	var index = editor.Lincko_param.files[elem_img_id].index;
+
+
+
+
 
 	            	if(app_upload_files.lincko_files[val.index]
 	            		&& app_upload_files.lincko_files[val.index].lincko_status == 'error'){
-	            		$('#'+elem_img_id).html(Lincko.Translation.get('app', 60, 'html')/*upload failed*/);
+	            		$elem_img_id.html(Lincko.Translation.get('app', 60, 'html')/*upload failed*/);
 	            	}
 	            	else if(editor.Lincko_param.files[elem_img_id].progress==100
-	            		&& !app_upload_files.lincko_files[val.index]){
+	            		&& !app_upload_files.lincko_files[val.index]
+	            		&& $elem_img_id.hasClass('linckoEditor_fileProgress')){ //on completion, replace with proper html
+
+	            		var elem_replace;
 	            		var tmp = editor.Lincko_param.files[elem_img_id].temp_id;
 		            	var file = Lincko.storage.list('files',1,{temp_id: tmp})[0];
-	            		var file_url = Lincko.storage.getLink(file['_id']);
-	            		var elem_replace = $('<img>')
-	            				.prop('src',file_url)
-	            				.addClass('submenu_taskdetail_description_img');								
-	            		$('#'+elem_img_id).replaceWith(elem_replace);
+
+		            	if($elem_img_id.hasClass('fa')){ //if file
+		            		$elem_img_id.removeClass('linckoEditor_fileProgress').html('&nbsp;').removeAttr('temp_id').removeAttr('contenteditable');
+		            		var elem_replace = $('#-linckoEditor_fileWrapper').clone().prop('id','').attr('file_id',file['_id']);
+		            		elem_replace.find('[find=icon]').append($elem_img_id.clone());
+		            		elem_replace.find('[find=name]').text(file['+name']);
+		            		elem_replace.click(function(){
+		            			submenu_Build(
+									'taskdetail', true, null, {
+										"type":'files', 
+										"id":file['_id'],
+									}, true);
+		            		});
+		            	}
+		            	else{//if image
+		            		var file_url = Lincko.storage.getLink(file['_id']);
+		            		elem_replace = $('<img>')
+		            				.prop('src',file_url)
+		            				.addClass('submenu_taskdetail_description_img');								
+		            	}
+
+		            	$elem_img_id.replaceWith(elem_replace);
 	            		$('#'+editorInst.Lincko_param.submenuInst.id).trigger('canSave');
 	            	}
 	            	else{
 	            		var progress = app_upload_files.lincko_files[index].lincko_progress;
 		            	editor.Lincko_param.files[elem_img_id].progress = progress;
-		            	$('#'+elem_img_id).html(progress);
+		            	$elem_img_id.html(progress);
 	            	}
 
 	            	
@@ -142,10 +189,10 @@ function linckoEditor(elem, toolbarID, param){
             } /*access value here by this.action_param*/);
             if(editor.Lincko_param.submenuInst.param.id == 'new' && editor.Lincko_param.submenuInst.param.uniqueID){
             	//app_upload_open_files(editor.Lincko_param.submenuInst.param.projID, editor.Lincko_param.submenuInst.param.uniqueID);//, false, true);
-            	app_upload_open_photo_single('projects', editor.Lincko_param.submenuInst.param.projID, false, true, 'link_queue');
+            	app_upload_open_files('projects', editor.Lincko_param.submenuInst.param.projID, false, true, 'link_queue');
             }
             else{
-            	app_upload_open_photo_single(editor.Lincko_param.submenuInst.param.type, editor.Lincko_param.submenuInst.param.id, false, true);
+            	app_upload_open_files(editor.Lincko_param.submenuInst.param.type, editor.Lincko_param.submenuInst.param.id, false, true);
         	}
 
 	    }
@@ -157,7 +204,6 @@ function linckoEditor(elem, toolbarID, param){
 	    toolbar: 'insert',
 	    icon: "/lincko/app/images/app/linckoeditor/imageupload.png",
 	});
-
 
 	return editorInst;
 
