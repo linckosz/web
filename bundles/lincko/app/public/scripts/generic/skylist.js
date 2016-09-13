@@ -1599,9 +1599,180 @@ skylist.prototype.addNote = function(item){
 	return Elem;
 }
 
+skylist.draw_fileCard = function(item){
+	if(!item['_perm'] || typeof item['_perm'] !== 'object'){ return false; }
+	var Elem = $('#-skylist_card').clone().prop('id','skylist_card_'+item['_id']);
+	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').empty();
+	var updated_by;
+	var updated_at;
+
+	/*
+	title
+	*/
+	var elem_title = Elem.find('[find=title]');
+	elem_title.html(item['+name']);
+
+	/*
+	 file description and preview image
+	 */
+	 var fileType_class = 'fa fa-file-o';
+	 var elem_leftbox = $('<span></span>').addClass('skylist_card_leftbox_fileIcon');
+	 var real_url = null;
+	 var thumb_url = null;
+	 if(item['category'] == 'image'){
+		fileType_class = 'fa fa-file-image-o';
+		thumb_url = Lincko.storage.getLinkThumbnail(item['_id']);
+		real_url = Lincko.storage.getLink(item['_id']);
+		elem_leftbox = $('<img />').prop('src',thumb_url);
+	 }
+	 else if(item['category'] == 'video'){
+		fileType_class = 'fa fa-file-video-o';
+		thumb_url = Lincko.storage.getLinkThumbnail(item['_id']);
+		real_url = Lincko.storage.getLink(item['_id']);
+		elem_leftbox = $('<img />').prop('src',thumb_url);
+	 }
+	 else{
+	 	fileType_class = app_models_fileType.getClass(item.ori_ext);
+	 	elem_leftbox.addClass(fileType_class);
+	 }
+
+	var elem_fileType = $('<div>'+Lincko.Translation.get('app', 3602, 'html')+': '+item['category']+', '+item['ori_ext'].toUpperCase()+'</div>');
+	Elem.find('[find=description]').html(elem_fileType);
+	Elem.find('[find=card_leftbox]').append(elem_leftbox);
+
+	/*updated_by*/
+	updated_by = item['updated_by'];
+	updated_by = Lincko.storage.get("users", updated_by,"username");
+	Elem.find('[find=name]').html(updated_by);
+	
+
+	/*
+	comments
+	*/
+	var commentCount = 0;
+	var comments = Lincko.storage.list('comments',null, null, item['_type'], item['_id'], true);
+	commentCount = comments.length;
+	Elem.find('[find=commentCount]').html(commentCount);
+
+	updated_at = new wrapper_date(item['updated_at']);
+	if(skylist_textDate(updated_at)){
+		updated_at = skylist_textDate(updated_at);
+	}
+	else{
+		updated_at = updated_at.display('date_very_short');
+	}
+	Elem.find('[find=card_time]').html(updated_at);
+
+
+	/*
+	updated_by (quickInfo)
+	*/
+	var fileSize = app_layers_files_bitConvert(item['size']);
+	var sizeUnit = fileSize.unit;
+	var sizeNum = fileSize.val;
+
+	Elem.find('[find=quickInfo1]').html(Lincko.Translation.get('app', 3603, 'html')+': ');
+	Elem.find('[find=quickInfo2]').html(sizeNum+' '+sizeUnit);
+
+	return Elem;
+}
+
 skylist.prototype.addFile = function(item){
 	if(!item['_perm'] || typeof item['_perm'] !== 'object'){ return false; }
 	var that = this;
+
+	var Elem = skylist.draw_fileCard(item);
+	Elem.prop('id','skylist_card_'+that.md5id+'_'+item['_id']);
+
+	/*
+	title
+	*/
+	var elem_title = Elem.find('[find=title]');
+	var contenteditable = false;
+	if( typeof item == 'object' && '_perm' in item && wrapper_localstorage.uid in item['_perm'] && item['_perm'][wrapper_localstorage.uid][0] > 1 ){ //RCU and beyond
+		contenteditable = true; 
+	}
+	if(contenteditable){
+		elem_title.on('mousedown touchstart', function(event){ 
+			if( responsive.test("maxMobileL") ){ return true; }
+			that.editing_target = $(this);
+			clearTimeout(that.editing_timeout);
+			that.editing_timeout = setTimeout(function(){
+				that.editing_target.attr('contenteditable',contenteditable);
+				that.editing_target.focus();
+			},1000);
+		});
+		elem_title.on('mouseup touchend', function(event){
+			clearTimeout(that.editing_timeout);
+		});
+		elem_title.keydown(function(event){
+			if(event.keyCode == 13){
+				event.preventDefault();
+				$(this).focusout();
+				$(this).blur();
+			}
+		});
+		elem_title.blur(function(){
+			that.editing_target.attr('contenteditable',false);
+			var new_text = $(this).html();
+			if(new_text != item['+name']){
+				wrapper_sendAction({
+				id: item['_id'],
+				name: new_text,
+				}, 'post', 'file/update', 
+				function(msg, data_error, data_status, data_msg){ 
+					if(data_error){
+						app_application_lincko.prepare(item['_type']+'_'+item['_id']);
+					}
+				}, function(){ app_application_lincko.prepare(item['_type']+'_'+item['_id']); });
+			}
+		});
+	}
+
+
+	var elem_leftbox = Elem.find('[find=card_leftbox]');
+	if(item['category'] == 'image'){
+		elem_leftbox.click(item['_id'], function(event){
+			event.stopPropagation();
+			previewer.pic(event.data);
+		});
+	 }
+	 else if(item['category'] == 'video'){
+		elem_leftbox.click(item['_id'], function(event){
+			event.stopPropagation();
+			previewer.video(event.data);
+		});
+	 }
+
+	Elem.data('item_id',item['_id']);
+	Elem.data('options',false);
+
+	
+	Elem.on('click', function(event){
+		if( that.panyes == false ){
+			that.taskClick(event,this);
+		}
+	});
+
+
+	that.add_cardEvents(Elem);
+
+	return Elem;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	var Elem = $('#-skylist_card').clone();
 	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').empty();
 	var updated_by;

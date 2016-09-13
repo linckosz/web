@@ -51,34 +51,34 @@ textarea:focus, input:focus{
 .submenu_newchat_header .icon-SmallPersonaiconBlack [find='submenu_button_title'] {
 	display: none;
 }
-.submenu_wrapper .skylist_logo  span {
+.submenu_wrapper .submenu_content_chat .skylist_logo  span {
 	font-size: 35px;
 	color: #FBA026;
 }
 
-.submenu_wrapper .skylist_menu_people {
+.submenu_wrapper .submenu_content_chat .skylist_menu_people {
 	display: none;
 }
-.submenu_wrapper .skylist_card_bottom {
+.submenu_wrapper .submenu_content_chat .skylist_card_bottom {
 	display: none;
 }
-.submenu_wrapper .skylist_menu_timesort {
+.submenu_wrapper .submenu_content_chat .skylist_menu_timesort {
 	display: none;
 }
-.submenu_wrapper .skylist_menu_navbar_filter_icon {
+.submenu_wrapper .submenu_content_chat .skylist_menu_navbar_filter_icon {
 	display: none;
 }
-.submenu_wrapper .skylist_menu_navbar_search {
+.submenu_wrapper .submenu_content_chat .skylist_menu_navbar_search {
 	display: none;
 }
 .chat_contents_wrapper {
 	padding-bottom: 12px;
 }
 
-.submenu_wrapper .skylist {
+.submenu_wrapper .submenu_content_chat .skylist {
 	margin-left: 5px;
 }
-.submenu_wrapper .skylist .iscroll_sub_div.scrollY {
+.submenu_wrapper .submenu_content_chat .skylist .iscroll_sub_div.scrollY {
 	padding-bottom: 0px;
 }
 .submenu_chats .submenu_bottom{
