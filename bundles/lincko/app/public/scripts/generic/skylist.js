@@ -1479,9 +1479,126 @@ skylist.prototype.addTask = function(item){
 	return Elem;
 }
 
+skylist.draw_noteCard = function(item){
+	var Elem = $('#-skylist_card').clone();
+	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').empty();
+	var updated_by;
+	var updated_at;
+
+	/*
+	title
+	*/
+	var elem_title = Elem.find('[find=title]');
+	elem_title.html(item['+title']);
+
+	/*
+	 note description
+	 */
+	Elem.find('[find=description]').html($('<div>'+item['-comment']+'</div>').text());
+
+
+	/*
+	 note preview image
+	*/
+	var elem_leftbox = $('<span></span>').addClass('skylist_card_leftbox_abc');
+	Elem.find('[find=card_leftbox]').append(elem_leftbox);
+
+	/*updated_by*/
+	updated_by = item['updated_by'];
+	updated_by = Lincko.storage.get("users", updated_by,"username");
+	Elem.find('[find=name]').html(updated_by);
+
+	/*
+	comments
+	*/
+	var commentCount = 0;
+	var comments = Lincko.storage.list('comments', null, null, item['_type'], item['_id'], true);
+	commentCount = comments.length;
+	Elem.find('[find=commentCount]').html(commentCount);
+
+	updated_at = new wrapper_date(item['updated_at']);
+	if(skylist_textDate(updated_at)){
+		updated_at = skylist_textDate(updated_at);
+	}
+	else{
+		updated_at = updated_at.display('date_very_short');
+	}
+	Elem.find('[find=card_time]').html(updated_at);
+
+	return Elem;
+}
 
 skylist.prototype.addNote = function(item){
 	var that = this;
+
+	var Elem = skylist.draw_noteCard(item);
+	Elem.prop('id','skylist_card_'+that.md5id+'_'+item['_id']);
+	var Elem_rightOptions = Elem.find('[find=card_rightOptions]');
+
+	/*
+	title
+	*/
+	var contenteditable = false;
+	var elem_title = Elem.find('[find=title]');
+	if( wrapper_localstorage.uid in item['_perm'] && item['_perm'][wrapper_localstorage.uid][0] > 1 ){ //RCU and beyond
+		contenteditable = true; 
+	}
+	if(contenteditable){
+		elem_title.on('mousedown touchstart', function(event){ 
+			if( responsive.test("maxMobileL") ){ return true; }
+			that.editing_target = $(this);
+			clearTimeout(that.editing_timeout);
+			that.editing_timeout = setTimeout(function(){
+				that.editing_target.attr('contenteditable',contenteditable);
+				that.editing_target.focus();
+			},1000);
+		});
+		elem_title.on('mouseup touchend', function(event){
+			clearTimeout(that.editing_timeout);
+		});
+		elem_title.blur(function(){
+			that.editing_target.attr('contenteditable',false);
+			var new_text = $(this).html();
+			if(new_text != item['+title']){
+				wrapper_sendAction({
+				id: item['_id'],
+				title: new_text,
+				}, 'post', 'note/update', 
+				function(msg, data_error, data_status, data_msg){ 
+					if(data_error){
+						app_application_lincko.prepare(item['_type']+'_'+item['_id']);
+					}
+				}, function(){ app_application_lincko.prepare(item['_type']+'_'+item['_id']); });
+			}
+		});
+	}
+
+	/*
+	rightOptions - updated_by
+	*/
+	Elem_rightOptions.append(that.add_rightOptionsBox(updated_by,'fa-user'));
+
+	/*
+	rightOptions - duedate
+	*/
+	Elem_rightOptions.append(that.add_rightOptionsBox(updated_at,'fa-calendar'));
+
+	Elem.data('item_id',item['_id']);
+	Elem.data('options',false);
+
+	
+	Elem.on('click', function(event){
+		if( that.panyes == false ){
+			that.taskClick(event,this);
+		}
+	});
+
+	that.add_cardEvents(Elem);
+
+	return Elem;
+
+
+
 	var Elem = $('#-skylist_card').clone();
 	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').empty();
 	var updated_by;
