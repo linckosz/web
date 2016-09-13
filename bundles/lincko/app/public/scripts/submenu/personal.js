@@ -327,11 +327,11 @@ Submenu.prototype.Add_ProfileNext = function() {
 	}, wrapper_localstorage.uid);
 	
 
-	Elem.find("[find=submenu_next_user]").html(wrapper_to_html(perso['-username'].ucfirst()));
+	Elem.find("[find=submenu_next_user]").html(wrapper_to_html(perso['-username']));
 	
 	Elem.find("[find=submenu_next_user]").prop("id", this.id+"_submenu_next_user");
 	app_application_lincko.add(this.id+"_submenu_next_user", "users_"+wrapper_localstorage.uid, function() {
-		var username = Lincko.storage.get('users',  wrapper_localstorage.uid, "username").ucfirst();
+		var username = Lincko.storage.get('users',  wrapper_localstorage.uid, "username");
 		$("#"+this.id).html(wrapper_to_html(username));
 	});
 

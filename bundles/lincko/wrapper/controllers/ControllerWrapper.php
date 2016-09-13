@@ -284,6 +284,8 @@ class ControllerWrapper extends Controller {
 				'jizhu' => true,
 			));
 
+		} else if($action==='user/reset' && $type==='POST' && isset($this->json['data']['email']) && isset($this->json['data']['password'])){
+			$this->json['data']['password'] = Datassl::encrypt($this->json['data']['password'], $this->json['data']['email']);
 		} else {
 			//We autosign if available
 			$this->autoSign();

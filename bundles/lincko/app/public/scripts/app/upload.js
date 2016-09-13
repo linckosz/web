@@ -108,7 +108,7 @@ function app_upload_prepare_log(parent_type, parent_id, temp_id){
 	$('#app_upload_temp_id').val(temp_id);
 }
 
-function app_upload_set_launcher(parent_type, parent_id, submenu, start, temp_id, param){
+function app_upload_set_launcher(parent_type, parent_id, submenu, start, temp_id, param, precompress){
 	if(typeof parent_type != 'string' && !$.isNumeric(parent_id)){
 		parent_type = 'projects';
 		parent_id = Lincko.storage.getMyPlaceholder()['_id'];
@@ -120,11 +120,19 @@ function app_upload_set_launcher(parent_type, parent_id, submenu, start, temp_id
 	} else {
 		app_upload_auto_launcher.temp_id = temp_id;
 	}
+	if(typeof param == 'undefined'){ param = null; }
+	if(typeof precompress == 'undefined'){ precompress = false; }
 	app_upload_auto_launcher.parent_type = parent_type;
 	app_upload_auto_launcher.parent_id = parent_id;
 	app_upload_auto_launcher.submenu = submenu;
 	app_upload_auto_launcher.start = start;
 	app_upload_auto_launcher.param = param;
+	if(precompress){
+		precompress = /Android(?!.*Chrome)|Opera/.test(window.navigator.userAgent);
+		$('#app_upload_fileupload').fileupload('option', {disableImageResize: precompress,});
+	} else {
+		$('#app_upload_fileupload').fileupload('option', {disableImageResize: true,});
+	}
 }
 
 function app_upload_open_files(parent_type, parent_id, submenu, start, param){
@@ -133,13 +141,13 @@ function app_upload_open_files(parent_type, parent_id, submenu, start, param){
 }
 
 function app_upload_open_photo(parent_type, parent_id, submenu, start, param){
-	app_upload_set_launcher(parent_type, parent_id, submenu, start, null, param);
+	app_upload_set_launcher(parent_type, parent_id, submenu, start, null, param, true);
 	$('#app_upload_form_photo').click();
 }
 
 function app_upload_open_photo_single(parent_type, parent_id, submenu, start, param){
 	var temp_id = md5(Math.random());
-	app_upload_set_launcher(parent_type, parent_id, submenu, start, temp_id, param);
+	app_upload_set_launcher(parent_type, parent_id, submenu, start, temp_id, param, true);
 	$('#app_upload_form_photo_single').click();
 	return temp_id;
 }
@@ -167,8 +175,6 @@ var app_upload_auto_launcher = {
 	},
 };
 
-
-
 $(function () {
 	//Do not use 'use strict', it makes the code heavier, even if it's better for conventional coding
 
@@ -184,6 +190,10 @@ $(function () {
 			.test(window.navigator.userAgent),
 		*/
 		disableImageResize: true, //Bruno update
+		imageMaxWidth: 1920,
+		imageMaxHeight: 1920,
+		imageQuality: 0.8,
+
 		imageOrientation: true, //Bruno update
 		singleFileUploads: true, //Bruno update
 		minFileSize: 0, //Bruno update
@@ -337,11 +347,14 @@ $(function () {
 				if(typeof data.result.msg === 'string'){
 					app_upload_files.lincko_files[data.lincko_files_index].lincko_error = data.result.msg;
 				}
-				if(data.result.flash && data.result.flash.resignin){consoel.log(data.result)
+				if(data.result.flash && data.result.flash.resignin){
 					app_upload_files.lincko_files[data.lincko_files_index].lincko_status = 'restart';
 					app_upload_files.lincko_files[data.lincko_files_index].lincko_error = Lincko.Translation.get('app', 59, 'html'); //Your file upload is restarting
+					var data_bis = data;
 					wrapper_force_resign(function(){
-						data.submit();
+						setTimeout(function(data_bis){
+							data_bis.submit();
+						}, 600, data_bis);
 					});
 				}
 			} else {

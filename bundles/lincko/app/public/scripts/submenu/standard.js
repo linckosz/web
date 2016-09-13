@@ -157,7 +157,7 @@ JSfiles.finish(function(){
 		//List first Workspaces' workspace
 		for(var i in workspaces){
 			if(workspaces[i].name.length > 0){
-				name = workspaces[i].name.ucfirst();
+				name = workspaces[i].name;
 				url = workspaces[i].url;
 				if(typeof submenu_list['workspace']['_1_'+workspaces[i]['_id']] == 'undefined'){
 					submenu_list['workspace']['_1_'+workspaces[i]['_id']] = {

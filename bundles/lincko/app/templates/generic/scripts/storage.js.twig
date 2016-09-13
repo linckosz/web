@@ -3,7 +3,7 @@
 	//Because this is loaded at very first
 	Lincko.storage = {
 		WORKID: null,
-		WORKNAME: '{{ workspace|ucfirst }}',
+		WORKNAME: '{{ workspace }}',
 		last_visit: null,
 		last_visit_clean: {% if reset_data is empty %}false{% else %}true{% endif %},
 		data: {},

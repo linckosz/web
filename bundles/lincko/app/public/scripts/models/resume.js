@@ -71,7 +71,7 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 			if(typeof list[i] == 'object'){
 				data[i] = ''+list[i].length;
 			} else if(i==base+8){
-				data[i] = ''+Lincko.storage.get('users', list[i], 'username').ucfirst();
+				data[i] = ''+Lincko.storage.get('users', list[i], 'username');
 			} else {
 				data[i] = ''+list[i];
 			}
@@ -94,7 +94,7 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 			}
 		}
 	} else {
-		data['username'] = Lincko.storage.get('users', uid, 'username').ucfirst();
+		data['username'] = Lincko.storage.get('users', uid, 'username');
 		if(base==100){
 			if(type==1){
 				data['motivation'] = '';

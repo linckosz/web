@@ -215,7 +215,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 		} else {
 			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_single_user.src+'")');
 		}
-		Elem.find("[find=who]").html(wrapper_to_html(contacts[i]['-username'].ucfirst()));
+		Elem.find("[find=who]").html(wrapper_to_html(contacts[i]['-username']));
 		Elem.find("[find=invitation]").removeClass("display_none");
 		Elem.find("[find=invitation_accept]").removeClass("display_none").on("click", [contacts[i]['_id'], Elem_id], function(event) {
 			event.stopPropagation();
@@ -270,7 +270,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 		} else {
 			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_single_user.src+'")');
 		}
-		Elem.find("[find=who]").html(wrapper_to_html(contacts[i]['-username'].ucfirst()));
+		Elem.find("[find=who]").html(wrapper_to_html(contacts[i]['-username']));
 		Elem.off("click");
 		Elem.click([that, contacts[i]['_id']], function(event){ //toto => why this is called multiple time when when switch few times from Contact list adn Chats list?
 			event.stopPropagation();
@@ -476,7 +476,7 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 		} else {
 			Elem_user.find("[find=picture_src]").css('background-image','url("'+app_application_icon_single_user.src+'")');
 		}
-		Elem_user.find("[find=who]").html(wrapper_to_html(data['username'].ucfirst()));
+		Elem_user.find("[find=who]").html(wrapper_to_html(data['username']));
 		var param = data;
 		Elem_user.find("[find=invitation_invite]").click(param, function(event){
 			var param = {
@@ -505,7 +505,7 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 			} else {
 				Elem_user.find("[find=picture_src]").css('background-image','url("'+app_application_icon_single_user.src+'")');
 			}
-			Elem_user.find("[find=who]").html(wrapper_to_html(data['username'].ucfirst()));
+			Elem_user.find("[find=who]").html(wrapper_to_html(data['username']));
 		}
 	}
 	else if(chat_status == "exists"){
@@ -520,7 +520,7 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 			} else {
 				Elem_user.find("[find=picture_src]").css('background-image','url("'+app_application_icon_single_user.src+'")');
 			}
-			Elem_user.find("[find=who]").html(wrapper_to_html(data['username'].ucfirst()));
+			Elem_user.find("[find=who]").html(wrapper_to_html(data['username']));
 		}
 	}
 	else if(chat_status == "invitationfailed"){

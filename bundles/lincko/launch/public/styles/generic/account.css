@@ -46,6 +46,25 @@
 	font-weight: bold;
 }
 
+.account_forgot_top, .account_reset_top {
+	color: #F8F8F8;
+	font-size: 14px;
+	padding-top: 2px;
+	padding-bottom: 16px;
+}
+
+.account_reset_top {
+	padding-bottom: 10px !important;
+}
+
+.account_reset_submit_disabled {
+	background-color: #CECECE !important;
+}
+
+.account_no_cursor {
+	cursor: default !important;
+}
+
 .account_tab > div {
 	display: table-cell;
 	width: 50%;
@@ -75,7 +94,6 @@
 	border-radius: 4px;
 	background-color: rgba(251, 160, 38, 0.5) !important;
 	font-size: 30px;
-	font-family: Roboto;
 	font-weight: 200;
 }
 
@@ -123,12 +141,26 @@
 	margin-bottom: 3px;
 }
 
+#account_joinus_box, #account_signin_box, #account_forgot_box, #account_reset_box {
+	display: block;
+}
+
 .account_joinus_box_div {
 	border-top-left-radius: 0px !important;
 	text-align: left;
 }
 
 .account_signin_box_div {
+	border-top-right-radius: 0px !important;
+	text-align: left;
+}
+
+.account_forgot_box_div {
+	border-top-right-radius: 0px !important;
+	text-align: left;
+}
+
+.account_reset_box_div {
 	border-top-right-radius: 0px !important;
 	text-align: left;
 }
@@ -229,6 +261,74 @@
 .account_signin_appendix {
 	text-align: left;
 }
+
+
+
+
+#account_forgot_submit {
+	display: block;
+	padding: 8px 10px 8px 10px;
+	border-radius: 4px;
+	font-size: 16px;
+	color: #F8F8F8;
+	background-color: #2895F2;
+	width: 222px;
+	border-style: none;
+	font-weight: bold;
+	cursor: pointer; cursor: hand;
+}
+
+#account_forgot_submit:hover {
+	background-color: #4FA8F4;
+}
+
+.account_forgot_submit_active, #account_forgot_submit:active {
+	background-color: #2586D8 !important;
+}
+
+#account_forgot_info {
+	margin-top: 4px;
+	font-size: 12px;
+	color: #7E7E7E;
+	cursor: pointer; cursor: hand;
+	text-align: left;
+}
+
+
+#account_reset_submit {
+	display: block;
+	padding: 8px 10px 8px 10px;
+	border-radius: 4px;
+	font-size: 16px;
+	color: #F8F8F8;
+	background-color: #2895F2;
+	width: 222px;
+	border-style: none;
+	font-weight: bold;
+	cursor: pointer; cursor: hand;
+}
+
+#account_reset_submit:hover {
+	background-color: #4FA8F4;
+}
+
+.account_reset_submit_active, #account_reset_submit:active {
+	background-color: #2586D8 !important;
+}
+
+.account_reset_limit {
+	text-align: left;
+	padding: 3px;
+	padding-left: 10px;
+	font-size: 11px;
+	color: #909090;
+}
+.account_reset_limit_expired {
+	color: #BE2B1F;
+}
+
+
+
 
 #account_joinus_tos_div {
 	margin-top: 4px;

@@ -15,7 +15,7 @@ function mailchimp_ajax(email){
 		beforeSend: function(jqXHR, settings){
 			$(document.body).css('cursor', 'progress');
 			$('#home_news_submit_progress').css("display", "block");
-			$('#home_news_submit_progress').show();
+			$('#home_news_submit_progress').removeClass('display_none');
 			base_format_form_single($('#home_news_submit_progress'));
 		},
 		success: function(data){
@@ -32,7 +32,7 @@ function mailchimp_ajax(email){
 		},
 		complete: function(){
 			$(document.body).css('cursor', '');
-			$('#home_news_submit_progress').hide();
+			$('#home_news_submit_progress').addClass('display_none');
 		},
 	});
 }

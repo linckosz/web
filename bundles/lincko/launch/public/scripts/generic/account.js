@@ -1,17 +1,60 @@
-var global_select = true; //true = Join us / false = Sign in
 
-var account_joinus_cb_success = function(msg, err){
-	var field = 'undefined';
-	var msgtp = msg;
-	if(typeof msg.field !== 'undefined') { field = msg.field; }
-	if(typeof msg.show === 'string'){
-		msgtp = msg.show;
-	} else if(typeof msg.msg === 'string') {
-		msgtp = msg.msg;
+var account_joinus_cb_begin = function(){
+	account_hide_error();
+	$(document.body).css('cursor', 'progress');
+	$('#account_joinus_submit_progress').css("display", "block");
+	$('#account_joinus_submit_progress').removeClass('display_none');
+	base_format_form_single($('#account_joinus_submit_progress'));
+};
+
+var account_signin_cb_begin = function(){
+	account_hide_error();
+	$(document.body).css('cursor', 'progress');
+	$('#account_signin_submit_progress').css("display", "block");
+	$('#account_signin_submit_progress').removeClass('display_none');
+	base_format_form_single($('#account_signin_submit_progress'));
+};
+
+var account_forgot_cb_begin = function(){
+	account_hide_error();
+	$(document.body).css('cursor', 'progress');
+	$('#account_forgot_submit_progress').css("display", "block");
+	$('#account_forgot_submit_progress').removeClass('display_none');
+	base_format_form_single($('#account_forgot_submit_progress'));
+};
+
+var account_reset_cb_begin = function(jqXHR, settings){
+	account_hide_error();
+	$(document.body).css('cursor', 'progress');
+	$('#account_reset_submit_progress').css("display", "block");
+	$('#account_reset_submit_progress').removeClass('display_none');
+	base_format_form_single($('#account_reset_submit_progress'));
+	//Initialize credential
+	account_credential = {};
+	if(settings.data){
+		var data = JSON.parse(settings.data);
+		if(typeof data == 'object'){
+			for(var i in data){
+				if(typeof data[i].name == 'string' && typeof data[i].value == 'string'){
+					if(data[i].name == 'email'){
+						account_credential.email = data[i].value;
+					}
+					if(data[i].name == 'password'){
+						account_credential.password = data[i].value;
+					}
+				}
+			}
+		}
 	}
-	msgtp = php_nl2br(msgtp);
+};
+
+
+
+var account_joinus_cb_success = account_signin_cb_success = function(msg, err, status, data){
+	var field = 'undefined';
+	if(typeof data.field !== 'undefined') { field = data.field; }
 	if(err){
-		$('#account_error').html(msgtp);
+		$('#account_error').html(wrapper_to_html(msg));
 		$("#account_error").velocity("transition.slideDownIn", { duration: 500, delay: 100, });
 		$("#account_joinus_form input[name="+field+"]").addClass('base_input_text_error').focus();
 	} else {
@@ -19,26 +62,43 @@ var account_joinus_cb_success = function(msg, err){
 	}
 };
 
-var account_signin_cb_success = function(msg, err){
+var account_forgot_cb_success = function(msg, err, status, data){
 	var field = 'undefined';
-	var msgtp = msg;
-	if(typeof msg.field !== 'undefined') { field = msg.field; }
-	if(typeof msg.show === 'string'){
-		msgtp = msg.show;
-	} else if(typeof msg.msg === 'string') {
-		msgtp = msg.msg;
-	}
-	msgtp = php_nl2br(msgtp);
+	var email = "";
+	var reset = false;
+	if(typeof data.field != 'undefined') { field = data.field; }
+	if(typeof data.email != 'undefined') { email = data.email; }
+	if(typeof data.reset != 'undefined') { reset = data.reset; }
 	if(err){
-		$('#account_error').html(msgtp);
+		$('#account_error').html(wrapper_to_html(msg));
 		$("#account_error").velocity("transition.slideDownIn", { duration: 500, delay: 100, });
 		$("#account_signin_form input[name="+field+"]").addClass('base_input_text_error').focus();
+		if(reset){
+			account_reset_time_left(0);
+		}
 	} else {
-		window.location.href = account_link['root'];
+		account_reset_time_left_init(email);
+		account_show('reset');
 	}
 };
 
-var account_joinus_cb_error = account_signin_cb_error = function(xhr_err, ajaxOptions, thrownError){
+var account_reset_cb_success = function(msg, err, status, data){
+	var field = 'undefined';
+	if(typeof data.field !== 'undefined') { field = data.field; }
+	if(err){
+		$('#account_error').html(wrapper_to_html(msg));
+		$("#account_error").velocity("transition.slideDownIn", { duration: 500, delay: 100, });
+		$("#account_joinus_form input[name="+field+"]").addClass('base_input_text_error').focus();
+	} else {
+		$('#account_signin_email').val(account_credential.email).focus();
+		$('#account_signin_password').val(account_credential.password).focus();
+		$('#account_signin_submit').submit();
+	}
+};
+
+
+
+var account_joinus_cb_error = account_signin_cb_error = account_forgot_cb_error = account_reset_cb_error = function(xhr_err, ajaxOptions, thrownError){
 	var msgtp = Lincko.Translation.get('wrapper', 1, 'html'); //Communication error
 	$('#account_error').html(msgtp);
 	if($('#account_error').is(':hidden')){
@@ -46,34 +106,44 @@ var account_joinus_cb_error = account_signin_cb_error = function(xhr_err, ajaxOp
 	}
 };
 
-var account_joinus_cb_begin = function(){
-	account_hide_error();
-	$(document.body).css('cursor', 'progress');
-	$('#account_joinus_submit_progress').show();
-	$('#account_joinus_submit_progress').css("display", "block");
-	base_format_form_single($('#account_joinus_submit_progress'));
-};
+var account_credential = {};
 
 var account_joinus_cb_complete = function(){
 	$(document.body).css('cursor', '');
-	$('#account_joinus_submit_progress').hide();
-};
-
-var account_signin_cb_begin = function(){
-	account_hide_error();
-	$(document.body).css('cursor', 'progress');
-	$('#account_signin_submit_progress').show();
-	$('#account_signin_submit_progress').css("display", "block");
-	base_format_form_single($('#account_signin_submit_progress'));
+	$('#account_joinus_submit_progress').addClass('display_none');
 };
 
 var account_signin_cb_complete = function(){
 	$(document.body).css('cursor', '');
-	$('#account_signin_submit_progress').hide();
+	$('#account_signin_submit_progress').addClass('display_none');
 };
 
+var account_forgot_cb_complete = function(){
+	$(document.body).css('cursor', '');
+	$('#account_forgot_submit_progress').addClass('display_none');
+};
+
+var account_reset_cb_complete = function(){
+	$(document.body).css('cursor', '');
+	$('#account_reset_submit_progress').addClass('display_none');
+	account_credential = {};
+};
+
+
+var global_select = false; //'joinus', 'signin', 'forgot', 'reset'
+
 function account_show(select) {
-	if(typeof select==="undefined"){ select = false; }
+	if(select == global_select){
+		return false;
+	}
+	if(typeof select=="boolean"){
+		if(select){
+			select = 'signin';
+		} else {
+			select = 'joinus';
+		}
+	}
+	if(typeof select=="undefined"){ select = 'joinus'; }
 	$('#account_wrapper').css('z-index',1500).css("display", "table");
 	$('#base_wrapper').addClass('blur');
 	account_select(select);
@@ -86,12 +156,22 @@ function account_hide() {
 
 function account_select(select) {
 	global_select = select;
-	$('#account_signin_box, #account_joinus_box').hide();
-	$('#account_tab_joinus, #account_tab_signin').removeClass('account_trans');
+	$('#account_signin_box, #account_joinus_box, #account_forgot_box, #account_reset_box').addClass('display_none');
+	$('#account_tab_joinus, #account_tab_signin').removeClass('account_trans').addClass('display_none');
 	$('#account_tab_joinus > div, #account_tab_signin > div').removeClass('account_tab_joinus').removeClass('account_tab_signin');
 	account_hide_error();
-	if(select){
-		$('#account_signin_box').show();
+	if(select == 'forgot'){
+		$('#account_forgot_box').removeClass('display_none');
+		$('#account_forgot_email').focus();
+	} else if(select == 'reset'){
+		$('#account_reset_box').removeClass('display_none');
+		$('#account_reset_code').val("");
+		$('#account_reset_password').val("");
+		$('#account_reset_password').focus(); //Helps to reset the text behind
+		$('#account_reset_code').focus();
+	} else if(select == 'signin'){
+		$('#account_signin_box').removeClass('display_none');
+		$('#account_tab_joinus, #account_tab_signin').removeClass('display_none');
 		$('#account_tab_joinus').addClass('account_trans');
 		$('#account_tab_joinus > div').addClass('account_tab_joinus');
 		if($('#account_signin_email').val() != ''){
@@ -100,8 +180,9 @@ function account_select(select) {
 		} else {
 			$('#account_signin_email').focus();
 		}
-	} else {
-		$('#account_joinus_box').show();
+	} else { // 'joinus'
+		$('#account_joinus_box').removeClass('display_none');
+		$('#account_tab_joinus, #account_tab_signin').removeClass('display_none');
 		$('#account_tab_signin').addClass('account_trans');
 		$('#account_tab_signin > div').addClass('account_tab_signin');
 		//This helps to refresh the captcha image to avoid it appear unlinked
@@ -134,31 +215,77 @@ function account_display_label(input, hide_error) {
 	}
 }
 
+var account_reset_time_left_timer;
+var account_reset_time_left_seconds = 0;
+var account_reset_time_left = function(timeout){
+	account_reset_time_left_seconds = timeout;
+	if(account_reset_time_left_seconds<=0){
+		account_reset_time_left_expired();
+	} else {
+		$('#account_reset_limit_seconds').removeClass('display_none');
+		$('#account_reset_limit_time').html(account_reset_time_left_seconds);
+		window.clearInterval(account_reset_time_left_timer);
+		account_reset_time_left_timer = window.setInterval(function(){
+			if(account_reset_time_left_seconds<=0){
+				account_reset_time_left_expired();
+			} else {
+				$('#account_reset_limit_time').html(account_reset_time_left_seconds);
+			}
+			account_reset_time_left_seconds--;
+			if(account_reset_time_left_seconds<0){
+				account_reset_time_left_seconds = 0;
+				window.clearInterval(account_reset_time_left_timer);
+			}
+		}, 1000);
+	}
+}
+
+var account_reset_time_left_is_expired = false;
+var account_reset_time_left_expired = function(){
+	account_reset_time_left_is_expired = true;
+	var span = $('<span>').addClass('account_reset_limit_expired').html(Lincko.Translation.get('web', 12, 'html')); //time expired
+	$('#account_reset_limit_time').html(span);
+	$('#account_reset_limit_seconds').addClass('display_none');
+	account_reset_time_left_seconds = 0;
+	window.clearInterval(account_reset_time_left_timer);
+	$("#account_reset_email").val("").prop('disabled', true);
+	$("#account_reset_code, #account_reset_password").val("").prop('disabled', true);
+	$("#account_reset_code, #account_reset_password").parent().addClass("account_no_cursor");
+	$("#account_reset_submit").addClass("account_no_cursor account_reset_submit_disabled").prop('disabled', true);
+	$('#account_reset_password').blur(); //Helps to reset the text behind
+	$('#account_reset_code').blur();
+	account_hide_error();
+}
+var account_reset_time_left_init = function(email){
+	account_reset_time_left_is_expired = false;
+	$("#account_reset_email").prop('disabled', false).val(email);
+	$("#account_reset_code, #account_reset_password").prop('disabled', false);
+	$("#account_reset_code, #account_reset_password").parent().removeClass("account_no_cursor");
+	$("#account_reset_submit").removeClass("account_no_cursor account_reset_submit_disabled").prop('disabled', false);
+	account_reset_time_left(120); //Set timeout to 2 minutes
+}
+
 $('#account_close').click(function(){
 	account_hide();
 });
 
 $('#account_tab_joinus').click(function(){
-	if(global_select){
-		account_show(false);
-	}
+	account_show('joinus');
 });
 
 $('#account_tab_signin').click(function(){
-	if(!global_select){
-		account_show(true);
-	}
+	account_show('signin');
 });
 
 $('#account_signin_forgot').click(function(){
-	window.location.href = account_link['account_forgot'];
+	account_show('forgot');
 });
 
 $('#account_error').click(function(){
 	account_hide_error();
 });
 
-$("#account_joinus_email, #account_joinus_password, #account_joinus_captcha, #account_signin_email, #account_signin_password").on({
+$("#account_joinus_email, #account_joinus_password, #account_joinus_captcha, #account_signin_email, #account_signin_password, #account_forgot_email, #account_reset_code, #account_reset_password").on({
 	focus: function(){ account_display_label(this, false); },
 	click: function(){ account_display_label(this, false); },
 	blur: function(){ account_display_label(this, false); },
