@@ -138,7 +138,11 @@ Submenu.prototype.Add_itemSelector = function() {
 
 	//adjust iscroll on resize
 	var setListWrapperHeight = function(){
-		elem_list_wrapper.height(submenu_content.height() - elem_menubar.outerHeight() - elem_searchbar_wrapper.outerHeight());
+		var searchbar_height = 0;
+		if(elem_searchbar_wrapper.height() > 0){
+			elem_searchbar_wrapper.outerHeight();
+		}
+		elem_list_wrapper.height(submenu_content.height() - elem_menubar.outerHeight() - searchbar_height);
 	}
 	var setListWrapperHeight_timeout;
 	$(window).resize(function(){
