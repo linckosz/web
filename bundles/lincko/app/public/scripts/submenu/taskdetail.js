@@ -848,7 +848,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		}
 	});
 	elem_links.find('[find=existing_btn]').click(function(){
-		submenu_Build('itemSelector', null, null, null, true);
+		submenu_Build('itemSelector', true, null, {item:item, uniqueID: that.param.uniqueID }, true);
 	});
 	var elem_links_wrapper = elem_links.find('[find=links_wrapper]');
 	

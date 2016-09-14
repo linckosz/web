@@ -1480,7 +1480,7 @@ skylist.prototype.addTask = function(item){
 }
 
 skylist.draw_noteCard = function(item){
-	var Elem = $('#-skylist_card').clone();
+	var Elem = $('#-skylist_card').clone().removeAttr('id');
 	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').empty();
 	var updated_by;
 	var updated_at;
@@ -1598,6 +1598,13 @@ skylist.prototype.addNote = function(item){
 	return Elem;
 
 
+
+
+
+
+/*
+	if there is no issue, delete code below
+*/
 
 	var Elem = $('#-skylist_card').clone();
 	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').empty();
@@ -1718,7 +1725,7 @@ skylist.prototype.addNote = function(item){
 
 skylist.draw_fileCard = function(item){
 	if(!item['_perm'] || typeof item['_perm'] !== 'object'){ return false; }
-	var Elem = $('#-skylist_card').clone().prop('id','skylist_card_'+item['_id']);
+	var Elem = $('#-skylist_card').clone().removeAttr('id');
 	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').empty();
 	var updated_by;
 	var updated_at;
@@ -1886,9 +1893,9 @@ skylist.prototype.addFile = function(item){
 
 
 
-
-
-
+/*
+	if there is no issue, delete code below
+*/
 
 	var Elem = $('#-skylist_card').clone();
 	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').empty();
