@@ -207,13 +207,11 @@ Submenu.prototype.Add_itemSelector = function() {
 
 		currentView = elem.attr('find');
 		if(currentView == 'files'){
-			console.log('files');
 			elem_list_files.removeClass('display_none');
 			elem_list_notes.addClass('display_none');
 			submenu_itemSelector.removeClass('submenu_itemSelector_showSelectedOnly');
 		}
 		else if(currentView == 'notes'){
-			console.log('notes');
 			elem_list_notes.removeClass('display_none');
 			elem_list_files.addClass('display_none');
 			submenu_itemSelector.removeClass('submenu_itemSelector_showSelectedOnly');
@@ -244,7 +242,6 @@ Submenu.prototype.Add_itemSelector = function() {
 		build list
 	*/
 	var card_click = function(){
-		console.log('click');
 		var elem_card = $(this);
 		elem_card.toggleClass('submenu_itemSelector_cardSelected');
 		if(elem_card.hasClass('submenu_itemSelector_cardSelected')){
