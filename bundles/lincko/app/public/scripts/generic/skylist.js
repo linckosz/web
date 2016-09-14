@@ -1135,9 +1135,9 @@ skylist.prototype.addTask = function(item){
 			}
 
 
-			var new_text = $(this).contents().filter(function() {
+			var new_text = $.trim($(this).contents().filter(function() {
 			  return this.nodeType == 3;
-			}).text();
+			}).text());
 			$(this).html(new_text);
 
 

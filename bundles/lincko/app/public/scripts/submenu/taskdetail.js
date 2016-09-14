@@ -1417,7 +1417,7 @@ Submenu.prototype.Add_taskdetail = function() {
 				*/
 			}
 			else{
-				param['title'] = $('<div>').html(submenu_taskdetail.find('[find=title_text]').html()).text();
+				param['title'] = $.trim($('<div>').html(submenu_taskdetail.find('[find=title_text]').html()).text());
 			}
 
 

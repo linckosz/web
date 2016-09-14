@@ -260,9 +260,9 @@ burgerN.typeTask = function(projectID, skylistInst, dropdownOffset){
 	param.enter_fn = function(){
 
 		//remove all child DOMs (<span>) from title
-		var title = $(elem_typingArea).contents().filter(function() {
+		var title = $.trim($(elem_typingArea).contents().filter(function() {
 		  return this.nodeType == 3;
-		}).text();
+		}).text());
 
 		var tempID = null;
 		var param = {
