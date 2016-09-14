@@ -66,6 +66,12 @@ Submenu_select.itemSelector = function(subm){
 	subm.Add_itemSelector();
 };
 
+/*
+	available parameters
+	param = {
+		item: //(optional) the parent item
+	}
+*/
 Submenu.prototype.Add_itemSelector = function() {
 	var that = this;
 	var attribute = this.attribute;
@@ -90,6 +96,11 @@ Submenu.prototype.Add_itemSelector = function() {
 	var item_parent = null;
 	if(that.param.item){
 		item_parent = that.param.item;
+		//if parent item is a note, cannot link a note
+		if(item_parent['_type'] == 'notes'){
+			elem_menubar.find('[find=notes]').addClass('display_none');
+			elem_list.find('[find=header_notes]').addClass('display_none');
+		}
 	}
 
 	var projectID = app_content_menu.projects_id;
@@ -274,13 +285,16 @@ Submenu.prototype.Add_itemSelector = function() {
 		elem_list_files.addClass('app_layers_files_fileslist');
 	});
 
-	$.each(items_notes, function(i, item){
-		var elem_card = skylist.draw_noteCard(item).attr('type',item['_type']).attr('_id',item['_id']).click(card_click);
-		elem_card.find('[find=card_leftOptions]').remove();
-		elem_card.find('[find=card_rightOptions]').remove();
-		elem_list_notes.append(elem_card);
-		elem_list_notes.addClass('app_layers_notes_noteslist');
-	});
+	//not for item_parent is notes
+	if(!item_parent || item_parent['_type'] != 'notes'){
+		$.each(items_notes, function(i, item){
+			var elem_card = skylist.draw_noteCard(item).attr('type',item['_type']).attr('_id',item['_id']).click(card_click);
+			elem_card.find('[find=card_leftOptions]').remove();
+			elem_card.find('[find=card_rightOptions]').remove();
+			elem_list_notes.append(elem_card);
+			elem_list_notes.addClass('app_layers_notes_noteslist');
+		});
+	}
 
 	elem_cards_all = elem_list.find('[find=card]').append($('<span find="check"></span>').addClass('fa fa-check'));
 
