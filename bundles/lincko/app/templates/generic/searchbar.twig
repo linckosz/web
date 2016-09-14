@@ -1,0 +1,20 @@
+<div id="begin_searchbar" class="visibility_hidden">
+	<script>
+		JSfiles.later("{{ _filelatest('/lincko/app/scripts/generic/searchbar.js') }}");
+	</script>
+	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/generic/searchbar.css') }}" type="text/css" />
+</div>
+<div id="end_searchbar" class="visibility_hidden"></div>
+
+<div class="display_none">
+
+	<label id="-searchbar" class="searchbar">
+		<div find="overlay" class="searchbar_overlay">
+			<span find='search_icon' class="icon-Search"></span>
+			<span>{{ _trans('app', 2, 3, 'html') }}{# Search #}</span>
+		</div>
+		<input/>
+		<span find="clear_btn" class="display_none">✕</span>
+	</label>
+
+</div>
