@@ -92,11 +92,11 @@ function linckoEditor(elem, toolbarID, param){
 	            		if(!app_upload_files.lincko_files[val.index]){return; }//there is an issue here
 	            		editor.Lincko_param.files[elem_img_id].temp_id = app_upload_files.lincko_files[val.index].lincko_temp_id;
 
-	            		var elem_fileUpload = $('<span temp_id="'+app_upload_files.lincko_files[val.index].lincko_temp_id+'" id="'+elem_img_id+'" contenteditable="false" class="linckoEditor_fileProgress">0</span>');
+	            		var elem_fileUpload = $('<span temp_id="'+app_upload_files.lincko_files[val.index].lincko_temp_id+'" id="'+elem_img_id+'"class="linckoEditor_fileProgress" contenteditable="false">0</span>');
 	            		
-	            		
+
 	            		var fileType = app_upload_files.lincko_files[val.index].files[0].type;
-	            		if(('image').indexOf(fileType.toLowerCase()) == -1){
+	            		if(('image').indexOf(fileType.toLowerCase()) != -1){
 	            			var fileName = app_upload_files.lincko_files[val.index].files[0].name;
 	            			var regex_fileExt = new RegExp(/\.([0-9a-z]+$)/);
 	            			var match = fileName.match(regex_fileExt);
@@ -105,11 +105,10 @@ function linckoEditor(elem, toolbarID, param){
 	            			}
 	            		}
 	            		
-
+	            		$elem_img_id = elem_fileUpload;
 	            		editor.insertHtml(elem_fileUpload.wrap('<div/>').parent().html());
 
 	            	}
-
 
 	            	//for IMAGE: use the local image to preview the current image being uploaded
 	            	if(	$elem_img_id.length

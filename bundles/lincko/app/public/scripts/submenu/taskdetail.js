@@ -1731,7 +1731,7 @@ var taskdetail_clean_descriptionFiles = function(elem_description){
 				if(item_file){
 					if(elem$.hasClass('fa')){
 						elem$.removeClass('linckoEditor_fileProgress').html('&nbsp;').removeAttr('temp_id').removeAttr('contenteditable');
-						elem_new = $('#-linckoEditor_fileWrapper').clone().prop('id','').attr('file_id',file['_id']);
+						elem_new = $('#-linckoEditor_fileWrapper').clone().prop('id','').attr('file_id',item_file['_id']);
 						elem_new.find('[find=icon]').append(elem$.clone());
 	            		elem_new.find('[find=name]').text(item_file['+name']);
 	            		/*elem_new.click(function(){
