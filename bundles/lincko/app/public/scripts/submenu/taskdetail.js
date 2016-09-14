@@ -848,7 +848,14 @@ Submenu.prototype.Add_taskdetail = function() {
 		}
 	});
 	elem_links.find('[find=existing_btn]').click(function(){
-		submenu_Build('itemSelector', true, null, {item:item, uniqueID: that.param.uniqueID }, true);
+		var param_itemSelector = {
+			item:item, 
+			uniqueID: that.param.uniqueID,
+		}
+		if(item['_type'] == 'notes'){
+			param_itemSelector.hideType = { notes: true };
+		}
+		submenu_Build('itemSelector', true, null, param_itemSelector, true);
 	});
 	var elem_links_wrapper = elem_links.find('[find=links_wrapper]');
 	

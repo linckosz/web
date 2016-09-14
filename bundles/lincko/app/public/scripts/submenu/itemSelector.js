@@ -70,6 +70,10 @@ Submenu_select.itemSelector = function(subm){
 	available parameters
 	param = {
 		item: //(optional) the parent item
+		hideType: { //(optional) default is available, true means will be hidden
+			files: true/false,
+			notes: true/false,
+		}
 	}
 */
 Submenu.prototype.Add_itemSelector = function() {
@@ -92,15 +96,18 @@ Submenu.prototype.Add_itemSelector = function() {
 	//default view is files
 	var currentView = 'files';
 
+	//hide notes/files if specified
+	if(that.param.hideType){
+		$.each(that.param.hideType, function(type, bool){
+			elem_menubar.find('[find='+type+']').addClass('display_none');
+			elem_list.find('[find=header_'+type+']').addClass('display_none');
+		});
+	}
+
 	//check for parent item
 	var item_parent = null;
 	if(that.param.item){
-		item_parent = that.param.item;
-		//if parent item is a note, cannot link a note
-		if(item_parent['_type'] == 'notes'){
-			elem_menubar.find('[find=notes]').addClass('display_none');
-			elem_list.find('[find=header_notes]').addClass('display_none');
-		}
+		item_parent = that.param.item;	
 	}
 
 	var projectID = app_content_menu.projects_id;
@@ -173,8 +180,15 @@ Submenu.prototype.Add_itemSelector = function() {
 
 
 	//build files and notes array
-	var items_files = Lincko.storage.list('files', null, null, 'projects', projectID, false);
-	var items_notes = Lincko.storage.list('notes', null, null, 'projects', projectID, false);
+	var items_files = null;
+	var items_notes = null;
+	if(!that.param.hideType || !that.param.hideType.files){
+		items_files = Lincko.storage.list('files', null, null, 'projects', projectID, false);
+	}
+	if(!that.param.hideType || !that.param.hideType.notes){
+		items_notes = Lincko.storage.list('notes', null, null, 'projects', projectID, false);
+	}
+	//use items_all to check for whether files/notes are hidden
 	var items_all = {
 		files: items_files,
 		notes: items_notes,
@@ -269,28 +283,32 @@ Submenu.prototype.Add_itemSelector = function() {
 		selectionCount.update();
 	}
 
-	
-	$.each(items_all.files, function(i, item){
-		//if it is already linked, skip
-		if(!item || (item_parent && item_parent['_files'] && item_parent['_files'][item['_id']])){
-			items_all.files[i] = null;
-			return;
-		}
+	if(items_all.files){
+		$.each(items_all.files, function(i, item){
+			//if it is already linked, skip
+			if(!item || (item_parent && item_parent['_files'] && item_parent['_files'][item['_id']])){
+				items_all.files[i] = null;
+				return;
+			}
 
-		var elem_card = skylist.draw_fileCard(item).attr('type',item['_type']).attr('_id',item['_id']).click(card_click);
-		elem_card.find('[find=card_leftOptions]').remove();
-		elem_card.find('[find=card_rightOptions]').remove();
+			var elem_card = skylist.draw_fileCard(item).attr('type',item['_type']).attr('_id',item['_id']).click(card_click);
+			elem_card.find('[find=card_leftOptions]').remove();
+			elem_card.find('[find=card_rightOptions]').remove();
 
-		elem_list_files.append(elem_card);
-		elem_list_files.addClass('app_layers_files_fileslist');
-	});
+			elem_list_files.append(elem_card);
+			elem_list_files.addClass('app_layers_files_fileslist');
+		});
+	}
 
-	//not for item_parent is notes
-	if(!item_parent || item_parent['_type'] != 'notes'){
+	if(items_all.notes){
 		$.each(items_notes, function(i, item){
+			//if it is already linked, skip
+			//toto - add logic here
+
 			var elem_card = skylist.draw_noteCard(item).attr('type',item['_type']).attr('_id',item['_id']).click(card_click);
 			elem_card.find('[find=card_leftOptions]').remove();
 			elem_card.find('[find=card_rightOptions]').remove();
+
 			elem_list_notes.append(elem_card);
 			elem_list_notes.addClass('app_layers_notes_noteslist');
 		});
