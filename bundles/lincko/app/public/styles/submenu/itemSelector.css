@@ -1,3 +1,11 @@
+.submenu_top_itemSelector{
+	background-color: #000000;
+    background-image: none;
+}
+.submenu_top_itemSelector>span{
+	color: #FFFFFF;
+}
+
 .submenu_itemSelector{
 	background-color: #c5c5c5;
 	height: 100%;

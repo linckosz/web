@@ -3,6 +3,7 @@ submenu_list['itemSelector'] = {
 	"_title": {
 		"style": "customized_title",
 		"title": Lincko.Translation.get('app', 3901, 'html'), //Add Links
+		"class": "submenu_top_itemSelector",
 	},
 	"left_button": {
 		"style": "title_left_button",
