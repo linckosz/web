@@ -1,0 +1,144 @@
+.submenu_itemSelector{
+	background-color: #c5c5c5;
+	height: 100%;
+}
+
+
+/*
+	menubar
+*/
+.submenu_itemSelector [find=menubar]{
+	background-color: #FFFFFF;
+	height: 48px;
+}
+.submenu_itemSelector [find=menubar]>span{
+	position: relative;
+	cursor: pointer;
+    cursor: hand;
+    font-size: 18px;
+    line-height: 48px;
+    vertical-align: middle;
+    display: inline-block;
+    text-align: center;
+    padding: 0px 4px;
+}
+.submenu_itemSelector [find=menubar] [find=files],
+.submenu_itemSelector [find=menubar] [find=notes]{
+	font-size: 28px;
+    padding: 0px 25px;
+}
+.submenu_itemSelector [find=menubar] [find=files]{
+	color: #6526cb; /*purple*/
+}
+.submenu_itemSelector [find=menubar] [find=notes]{
+	color: #fbd226; /*yellow*/
+}
+.submenu_itemSelector_menuSelected{
+	color: #FFFFFF !important;
+}
+.submenu_itemSelector_menuSelected[find=files]{
+	background-color: #6526cb; /*purple*/
+}
+.submenu_itemSelector_menuSelected[find=notes]{
+	background-color: #fbd226; /*yellow*/
+}
+.submenu_itemSelector_menuSelected[find=selected]{
+	background-color: #53add2; /*teal*/
+}
+.submenu_itemSelector_menubar_counter{
+    position: absolute;
+    overflow: hidden;
+    right: 18px;
+    top: 6px;
+    font-size: 10px;
+    line-height: 15px;
+    height: 15px;
+    width: 15px;
+    text-align: center;
+    border-radius: 15px;
+    background-color: #53add2;
+    color: #FFFFFF;
+}
+
+
+
+/*
+	searchbar_wrapper
+*/
+.submenu_itemSelector_showSelectedOnly [find=searchbar_wrapper]{
+	display: none;
+}
+.submenu_itemSelector [find=searchbar_wrapper]{
+	text-align: center;
+	padding: 5px 10px;
+	padding-right: 20px;
+}
+.submenu_itemSelector [find=searchbar_wrapper] .searchbar input{
+	width: 100%;
+}
+
+/*
+	list_wrapper
+*/
+.submenu_itemSelector [find=list_wrapper]{
+	position: relative;
+}
+
+.submenu_itemSelector_listHeader{
+	text-transform: capitalize;
+	display: none;
+	color: #FFFFFF;
+    width: 300px;
+    font-size: 18px;
+    padding: 10px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+.submenu_itemSelector_showSelectedOnly .submenu_itemSelector_listHeader{
+	display: inline-block;
+}
+.submenu_itemSelector_listHeader[find=header_files]{
+	background-color: #6526cb;
+}
+.submenu_itemSelector_listHeader[find=header_notes]{
+	background-color: #fbd226;
+}
+
+
+/*
+	cards
+*/
+.submenu_itemSelector_showSelectedOnly .skylist_card{
+	display: none;
+}
+.submenu_itemSelector_showSelectedOnly .skylist_card.submenu_itemSelector_cardSelected{
+	display: block;
+}
+.submenu_itemSelector .skylist_card [find=card_bottom]{
+	background-color: #FFFFFF;
+}
+.submenu_itemSelector_cardSelected [find=card_center]{
+	opacity: 0.6;
+}
+.submenu_itemSelector_cardSelected [find=card_bottom]{
+	opacity: 0.6;
+
+}
+.submenu_itemSelector_cardSelected.skylist_card{
+	background-color: initial;
+}
+.skylist_card [find=check]{
+	display: none;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 24px;
+    color: #FFFFFF;
+    background-color: #53add2; /*teal*/
+    border-radius: 24px;
+}
+.submenu_itemSelector_cardSelected.skylist_card [find=check]{
+	display: initial;
+}

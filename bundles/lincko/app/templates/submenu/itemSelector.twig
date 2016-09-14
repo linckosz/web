@@ -1,0 +1,27 @@
+<div id="-submenu_itemSelector" class="submenu_itemSelector">
+	<input class="visibility_hidden">
+	<div find="menubar">
+		<span find="files" class="icon-Cloud-Files submenu_itemSelector_menuSelected">
+			<span class="submenu_itemSelector_menubar_counter display_none"></span>
+		</span>
+		<span find="notes" class="icon-New-Notes">
+			<span class="submenu_itemSelector_menubar_counter display_none"></span>
+		</span>
+		<span find="selected">
+			{{ _trans('app', 16, 1, 'html') }}{#View Selected#}
+			<span class="submenu_itemSelector_menubar_counter display_none"></span>
+		</span>
+	</div>
+	<div find="searchbar_wrapper">
+	</div>
+	<div find="list_wrapper">
+		<div find="list">
+			<span find="header_files" class="submenu_itemSelector_listHeader">{{ _trans('app', 8000, 20, 'html') }}{#files#}</span>
+			<div find="files">
+			</div>
+			<span find="header_notes" class="submenu_itemSelector_listHeader">{{ _trans('app', 4, 7, 'html') }}{#notes#}</span>
+			<div find="notes" class="display_none">
+			</div>
+		</div>
+	</div>
+</div>
