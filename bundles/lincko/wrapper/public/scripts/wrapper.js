@@ -7,6 +7,7 @@ var wrapper_shangzai = {
 };
 var wrapper_set_shangzai = true;
 var wrapper_xhr_error = false;
+var wrapper_signing_out = false;
 
 // Because "const" seems to not work in some browsers
 // http://stackoverflow.com/questions/24370447/the-const-keyword-in-javascript
@@ -124,8 +125,11 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 			}
 
 			//Exit if we are signout
-			if(data.signout){
-				base_show_error(Lincko.Translation.get('app', 33, 'js')); //You are not allowed to access this workspace. (keep it blue to avoid it looking like a bug message)
+			if(data.signout && !wrapper_signing_out && wrapper_localstorage.logged){
+				wrapper_signing_out = true; //Avoid a loop
+				if(data.show && typeof base_show_error === 'function'){
+					base_show_error(Lincko.Translation.get('app', 33, 'js')); //You are not allowed to access this workspace. (keep it blue to avoid it looking like a bug message)
+				}
 				setTimeout(function(){
 					wrapper_sendAction('','post','user/signout', null, null, wrapper_signout_cb_begin, wrapper_signout_cb_complete);
 				}, 200);
