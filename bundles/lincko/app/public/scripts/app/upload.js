@@ -268,7 +268,7 @@ $(function () {
 				data.process(function () {
 					var result = {};
 					try {
-						//Bug if the canavs is not loaded => 'parseMetaData' of undefined
+						//Bug if the canvas is not loaded => 'parseMetaData' of undefined
 						result = $('#app_upload_fileupload').fileupload('process', data);
 					} catch(e){}
 					return result;
