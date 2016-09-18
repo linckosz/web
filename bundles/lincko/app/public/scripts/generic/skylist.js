@@ -1285,7 +1285,12 @@ skylist.prototype.addTask = function(item){
 		var cb_complete = function(){
 			elem_addNewCommentBtn.click();
 		}
-		that.paperView_toggleExpandable(elem_expandable_comments, cb_complete);
+		if(elem_expandable_comments.find('[rootcomment_id]').length){
+			that.paperView_toggleExpandable(elem_expandable_comments);
+		}
+		else{
+			that.paperView_toggleExpandable(elem_expandable_comments, cb_complete);
+		}
 	});
 
 
