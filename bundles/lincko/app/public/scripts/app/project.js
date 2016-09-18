@@ -159,8 +159,9 @@ var mainMenu = {
 			if(name!=item.attr('name') || timestamp!=parseInt(item.attr('timestamp'), 10)){
 				item.find("[find=app_project_chats_title]").html(wrapper_to_html(histList[i]['title']));
 				item.find("[find=app_project_chats_date]").html(wrapper_to_html(histList[i]['date']));
-				content = wrapper_flat_text(histList[i]['content']);
-				item.find("[find=app_project_chats_content]").html(wrapper_to_html(content));
+				content = wrapper_to_html(wrapper_flat_text(histList[i]['content']));
+				if(content==""){ content = "&nbsp;"; } //This helps to keep the tab high consistant
+				item.find("[find=app_project_chats_content]").html(content);
 				if(histList[i]['by']>0){
 					var username = $('<span>').addClass('app_project_chats_content_username').html(Lincko.storage.get('users', histList[i]["by"], "username")+": ");
 					item.find("[find=app_project_chats_content]").prepend(username);

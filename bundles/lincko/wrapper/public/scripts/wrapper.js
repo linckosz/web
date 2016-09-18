@@ -123,6 +123,14 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 				base_show_error(msg, data.error);
 			}
 
+			//Exit if we are signout
+			if(data.signout){
+				base_show_error(Lincko.Translation.get('app', 33, 'js')); //You are not allowed to access this workspace. (keep it blue to avoid it looking like a bug message)
+				setTimeout(function(){
+					wrapper_sendAction('','post','user/signout', null, null, wrapper_signout_cb_begin, wrapper_signout_cb_complete);
+				}, 200);
+			}
+
 			//Force to update elements if the function is available
 			if(typeof storage_cb_success === 'function'){
 				storage_cb_success(msg, data.error, data.status, data.msg);
@@ -139,11 +147,9 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 				+'ajaxOptions => '+ajaxOptions
 				+'\n'
 				+'thrownError => '+thrownError;
-			//if(wrapper_show_error && ajaxOptions!='abort' && ajaxOptions!='timeout'){
-			//if(false){ //[toto] Temporary avoid to display so many connexion error logs
 			if(!wrapper_xhr_error && ajaxOptions!='abort' && ajaxOptions!='timeout'){
 				JSerror.sendError(msg, '/wrapper.js/wrapper_ajax().error()', 0);
-				wrapper_xhr_error = true;
+				wrapper_xhr_error = true; //Make this message appearing only once
 			}
 			if(ajaxOptions!='abort'){
 				console.log(msg);

@@ -25,6 +25,10 @@
 	width: 100%;
 }
 
+.app_project_div_content > .iscroll_sub_div {
+	height: 100% !important;
+}
+
 .app_project_width {
 	width: 320px;
 }

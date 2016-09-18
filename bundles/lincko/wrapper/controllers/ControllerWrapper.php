@@ -109,6 +109,7 @@ class ControllerWrapper extends Controller {
 				//In case of Access unauthorize, we force to sign out the user
 				else if(isset($json_result->flash->signout) && $json_result->flash->signout===true){
 					$this->signOut(true);
+					$json_result->signout = true;
 				}
 				//In case of first Sign in (public key and private key must be a pair)
 				else if(isset($json_result->flash->public_key) && isset($json_result->flash->private_key)){

@@ -306,7 +306,7 @@ var app_models_projects_chart_tasks_data = function(Elem_id, id, chart_display_r
 	if(typeof chart_options_replace != "object"){ chart_options_replace = false; }
 	wrapper_clean_chart();
 
-	if(typeof Lincko.storage.data["_history_title"] == "undefined" || typeof Lincko.storage.data["_history_title"]["tasks"] == "undefined"){
+	if(typeof Lincko.storage.data["_history_title"] == "undefined" || typeof Lincko.storage.data["_history_title"]["tasks"] == "undefined" || Lincko.storage.data["_history_title"]["tasks"][0] == null){
 		return false;
 	}
 
@@ -383,7 +383,7 @@ var app_models_projects_chart_tasks_data = function(Elem_id, id, chart_display_r
 	var tasks = Lincko.storage.list('tasks', -1, null, 'projects', id);
 
 
-	if(tasks.length<=0){
+	if(tasks.length<=3){ //Start to display a graphic after 3 tasks created
 		return false;
 	}
 	//Cut in 10 slices the time to make a curve smooth

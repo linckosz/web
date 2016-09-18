@@ -104,7 +104,7 @@ function app_upload_prepare_log(parent_type, parent_id, temp_id){
 	$('#app_upload_parent_type').val(parent_type);
 	$('#app_upload_parent_id').val(parseInt(parent_id, 10));
 	$('#app_upload_fingerprint').val(fingerprint);
-	$('#app_upload_workspace').val(Lincko.storage.getWORKID());
+	$('#app_upload_workspace').val(wrapper_localstorage.workspace);
 	$('#app_upload_temp_id').val(temp_id);
 }
 
@@ -245,6 +245,7 @@ $(function () {
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_parent_id = app_upload_auto_launcher.parent_id;
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_parent_type = app_upload_auto_launcher.parent_type;
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_start = app_upload_auto_launcher.start;
+			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_try = 3;
 
 			if(app_upload_auto_launcher.temp_id){
 				app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_temp_id = app_upload_auto_launcher.temp_id;
@@ -265,7 +266,12 @@ $(function () {
 
 			if('process' in data){
 				data.process(function () {
-					return $('#app_upload_fileupload').fileupload('process', data);
+					var result = {};
+					try {
+						//Bug if the canavs is not loaded => 'parseMetaData' of undefined
+						result = $('#app_upload_fileupload').fileupload('process', data);
+					} catch(e){}
+					return result;
 				})
 				.fail(function () {
 					if (data.files[0].error) {
@@ -307,13 +313,13 @@ $(function () {
 			
 
 			//This is used to force the preview to appear because the preview variable is not available at once right after the object creation
-			setTimeout(function() {
+			setTimeout(function(data) {
 				$('#app_upload_fileupload').fileupload('option').progressall(e, this);
-			}, 60);
+			}, 60, data);
 			//The second timeout is just in case the first one didn't worked
-			setTimeout(function() {
+			setTimeout(function(data) {
 				$('#app_upload_fileupload').fileupload('option').progressall(e, this);
-			}, 2000);
+			}, 2000, data);
 
 		},
 
@@ -347,7 +353,8 @@ $(function () {
 				if(typeof data.result.msg === 'string'){
 					app_upload_files.lincko_files[data.lincko_files_index].lincko_error = data.result.msg;
 				}
-				if(data.result.flash && data.result.flash.resignin){
+				if(app_upload_files.lincko_files[data.lincko_files_index].lincko_try>0 && data.result.flash && data.result.flash.resignin){
+					app_upload_files.lincko_files[data.lincko_files_index].lincko_try--;
 					app_upload_files.lincko_files[data.lincko_files_index].lincko_status = 'restart';
 					app_upload_files.lincko_files[data.lincko_files_index].lincko_error = Lincko.Translation.get('app', 59, 'html'); //Your file upload is restarting
 					var data_bis = data;

@@ -61,6 +61,20 @@ Lincko.storage.getWORKID = function(){
 };
 
 /* PRIVATE METHOD */
+Lincko.storage.getWORKNAME = function(){
+	if(Lincko.storage.WORKID !== null){
+		return Lincko.storage.WORKNAME;
+	} else if(Lincko.storage.searchWORKID() !== false){
+		return Lincko.storage.WORKNAME;
+	} else if($.isEmptyObject(Lincko.storage.data)){
+		return false;
+	} else {
+		throw new Error(Lincko.Translation.get('app', 34, 'brut')); //We could not define in which workspace you are.
+		return false;
+	}
+};
+
+/* PRIVATE METHOD */
 Lincko.storage.searchWORKID = function(){
 	if(wrapper_localstorage.workspace == ''){
 		Lincko.storage.WORKID = 0;
