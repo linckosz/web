@@ -92,7 +92,7 @@ if(!window.console){
 }
 
 var wrapper_link = [];
-wrapper_link['home'] = "{{ urlFor('home') }}";
+wrapper_link['home'] = top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"{{ urlFor('home') }}";
 
 //Do not use "success", it can bug for some files, use "complete" as callback
 $.cachedScript = function( url ) {
