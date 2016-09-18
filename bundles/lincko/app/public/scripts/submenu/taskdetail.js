@@ -996,7 +996,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		}
 
 
-		elem_translateBtn = elem.find('[find=translateBtn]').html(Lincko.Translation.get('app', 56, 'html')); //translate
+		var elem_translateBtn = elem.find('[find=translateBtn]').html(Lincko.Translation.get('app', 56, 'html')); //translate
 		elem_translateBtn.click(function(){
 			var elem = $(this).closest('.submenu_taskdetail_commentbubble');
 			var elem_translateBtn = $(this);
@@ -1072,6 +1072,70 @@ Submenu.prototype.Add_taskdetail = function() {
 		return elem;
 	}
 
+	var sendAction_newComment = function(parent_type, parent_id, comment){
+		var tmpID = null;
+		var param = {
+			"parent_type": parent_type,
+			"parent_id": parent_id,
+			"comment": comment,
+		}
+		var cb_success = function(msg, data_error, data_status, data_msg){
+			if(!document.getElementById('taskdetail_'+that.md5id)){ return; }
+			var comment = Lincko.storage.list('comments',1,{temp_id: tmpID});
+			if(comment.length){
+				comment = comment[0];
+				var elem = taskdetail_generateCommentBubble(comment, item['_id'], sendAction_newComment);
+				var elem_toReplace = submenu_taskdetail.find('[comment_id='+tmpID+']').closest('.submenu_taskdetail_commentbubble');
+				elem_toReplace.replaceWith(elem);
+				var param = {};
+				param['comments_'+comment['_id']] = true;
+				wrapper_sendAction(param, 'post', 'data/viewed');
+			}
+			tmpID = null;
+		}
+		var cb_error = function(xhr_err, ajaxOptions, thrownError){
+			if(!document.getElementById('taskdetail_'+that.md5id)){ return; }
+			var elem_toRemove = submenu_taskdetail.find('[comment_id='+tmpID+']').closest('.submenu_taskdetail_commentbubble');
+			elem_toRemove.remove();
+			tmpID = null;
+			var elem_commentCount = elem_submenu_taskdetail_comments.find('[find=commentCount]');
+			var commentCount = parseInt(elem_commentCount.html(),10);
+			elem_commentCount.html(commentCount-1);
+		}
+		var cb_begin = function(jqXHR, settings, temp_id){
+			if(!document.getElementById('taskdetail_'+that.md5id)){ return; }
+			tmpID = temp_id;
+			var commentObj = {};
+			commentObj['_id'] = tmpID;
+			commentObj['+comment'] = comment;
+			commentObj['created_by'] = wrapper_localstorage.uid;
+			commentObj['created_at'] = $.now()/1000;
+			commentObj['_parent'] = [];
+			commentObj['_parent'][0] = parent_type;
+			if( commentObj['_parent'][0] == that.param.type ){
+				submenu_taskdetail.find('.submenu_taskdetail_comments_main').append(taskdetail_generateCommentBubble(commentObj, item['_id'], sendAction_newComment));
+			}
+			else{
+				submenu_taskdetail.find('[comment_id=new]').closest('.submenu_taskdetail_commentbubble').replaceWith(taskdetail_generateCommentBubble(commentObj, item['_id'], sendAction_newComment));
+			}
+			var elem_commentCount = elem_submenu_taskdetail_comments.find('[find=commentCount]');
+			var commentCount = parseInt(elem_commentCount.html(),10);
+			elem_commentCount.velocity('fadeOut',{
+				duration: 200,
+				complete: function(){
+					$(this).html(commentCount+1).attr('style','');
+				}
+			});
+			myIScrollList[submenu_content.prop('id')].refresh();
+		}
+		if(parent_id == 'new'){ 
+			cb_begin(null, null, 'new');
+			param_newItemComments.push(param);
+			return false; 
+		}
+		wrapper_sendAction(param, 'post', 'comment/create', cb_success, cb_error, cb_begin);
+	} // END OF sendAction_newComment
+
 
 	var elem_comments_main = submenu_taskdetail.find('.submenu_taskdetail_comments_main');
 	var elem_seePrev = submenu_taskdetail.find('[find=seePrev_btn]');
@@ -1094,7 +1158,7 @@ Submenu.prototype.Add_taskdetail = function() {
 				else{
 					showToParent = false;
 				}
-				var elem_newComment_bubble = generateCommentBubble(comment);
+				var elem_newComment_bubble = taskdetail_generateCommentBubble(comment, item['_id'], sendAction_newComment);
 				if(animation){
 					elem_toShow_wrapper.prepend(elem_newComment_bubble);
 				}
@@ -1164,70 +1228,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		elem_addNewComment_text.val('');
 	}
 
-	var sendAction_newComment = function(parent_type, parent_id, comment){
-		var tmpID = null;
-		var param = {
-			"parent_type": parent_type,
-			"parent_id": parent_id,
-			"comment": comment,
-		}
-		var cb_success = function(msg, data_error, data_status, data_msg){
-			if(!document.getElementById('taskdetail_'+that.md5id)){ return; }
-			var comment = Lincko.storage.list('comments',1,{temp_id: tmpID});
-			if(comment.length){
-				comment = comment[0];
-				var elem = generateCommentBubble(comment);
-				var elem_toReplace = submenu_taskdetail.find('[comment_id='+tmpID+']').closest('.submenu_taskdetail_commentbubble');
-				elem_toReplace.replaceWith(elem);
-				var param = {};
-				param['comments_'+comment['_id']] = true;
-				wrapper_sendAction(param, 'post', 'data/viewed');
-			}
-			tmpID = null;
-		}
-		var cb_error = function(xhr_err, ajaxOptions, thrownError){
-			if(!document.getElementById('taskdetail_'+that.md5id)){ return; }
-			var elem_toRemove = submenu_taskdetail.find('[comment_id='+tmpID+']').closest('.submenu_taskdetail_commentbubble');
-			elem_toRemove.remove();
-			tmpID = null;
-			var elem_commentCount = elem_submenu_taskdetail_comments.find('[find=commentCount]');
-			var commentCount = parseInt(elem_commentCount.html(),10);
-			elem_commentCount.html(commentCount-1);
-		}
-		var cb_begin = function(jqXHR, settings, temp_id){
-			if(!document.getElementById('taskdetail_'+that.md5id)){ return; }
-			tmpID = temp_id;
-			var commentObj = {};
-			commentObj['_id'] = tmpID;
-			commentObj['+comment'] = comment;
-			commentObj['created_by'] = wrapper_localstorage.uid;
-			commentObj['created_at'] = $.now()/1000;
-			commentObj['_parent'] = [];
-			commentObj['_parent'][0] = parent_type;
-			if( commentObj['_parent'][0] == that.param.type ){
-				submenu_taskdetail.find('.submenu_taskdetail_comments_main').append(generateCommentBubble(commentObj));
-			}
-			else{
-				submenu_taskdetail.find('[comment_id=new]').closest('.submenu_taskdetail_commentbubble').replaceWith(generateCommentBubble(commentObj));
-			}
-			var elem_commentCount = elem_submenu_taskdetail_comments.find('[find=commentCount]');
-			var commentCount = parseInt(elem_commentCount.html(),10);
-			elem_commentCount.velocity('fadeOut',{
-				duration: 200,
-				complete: function(){
-					$(this).html(commentCount+1).attr('style','');
-				}
-			});
-			myIScrollList[submenu_content.prop('id')].refresh();
-		}
-		if(parent_id == 'new'){ 
-			cb_begin(null, null, 'new');
-			param_newItemComments.push(param);
-			return false; 
-		}
-		wrapper_sendAction(param, 'post', 'comment/create', cb_success, cb_error, cb_begin);
-	} // END OF sendAction_newComment
-
+	
 	elem_addNewComment_btn.click(function(){
 		elem_addNewComment_text.empty();
 		toggleNewComment();
@@ -1608,7 +1609,7 @@ Submenu.prototype.Add_taskdetail = function() {
 					var newComment_id = comments_array[i_array]['_id'];
 					var elem_id = $(elem_commentBubbles[i_bubble]).find('[find=comment_id]').attr('comment_id');
 					if( elem_id != newComment_id ){
-						$(elem_commentBubbles[i_bubble]).before(generateCommentBubble(comments_array[i_array]));
+						$(elem_commentBubbles[i_bubble]).before(taskdetail_generateCommentBubble(comments_array[i_array], item['_id'], sendAction_newComment));
 					}
 					else { i_bubble++;	}
 				}
@@ -1752,6 +1753,149 @@ var taskdetail_clean_descriptionFiles = function(elem_description){
 		});
 	}
 }
+
+var taskdetail_generateNewCommentBubble = function(parent_type, parent_id, sendAction_fn){
+	if(!sendAction_fn){
+		var sendAction_fn = function(parent_type, parent_id, text){
+			var param = {
+				"parent_type": parent_type,
+				"parent_id": parent_id,
+				"comment": text,
+			}
+			wrapper_sendAction(param, 'post', 'comment/create');
+		}
+	}
+
+	var elem_newCommentBubble = $('#-submenu_taskdetail_commentbubble').clone().prop('id','')
+		.addClass('submenu_taskdetail_commentbubble_me submenu_taskdetail_commentbubble_addNew');
+	if(parent_type == 'comments'){
+		elem_newCommentBubble.addClass('submenu_taskdetail_commentbubble_sub');
+	}
+
+	elem_newCommentBubble.find('[find=name]').html(Lincko.storage.get("users", wrapper_localstorage.uid,"username"));
+	elem_newCommentBubble.find('[find=comment_id]').attr('comment_id','new');
+	var thumb_url = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", wrapper_localstorage.uid, 'profile_pic'));
+	elem_newCommentBubble.find('[find=profile_pic]').css('background-image','url("'+thumb_url+'")');
+	var elem_addNewComment_text = elem_newCommentBubble.find('[find=addNewComment_text]');
+	elem_addNewComment_text.keyup(function(event) {
+		if (event.keyCode == 13) {
+			sendAction_fn('comments', parent_id, elem_newCommentBubble.find('[find=addNewComment_text]').val());
+			elem_addNewComment_text.blur();
+		}
+	});
+	elem_addNewComment_text.focusout(function(){
+		elem_newCommentBubble.remove();
+	});
+
+	return elem_newCommentBubble;
+}
+
+var taskdetail_generateCommentBubble = function(comment, root_id, sendAction_reply){
+	if(!comment || typeof comment != 'object') return;
+	//if(!comment) return false;
+	//comment is a Lincko.storage.data comment object
+	if(!sendAction_reply){
+		var sendAction_reply = function(parent_type, parent_id, text){
+			var param = {
+				"parent_type": 'comments',
+				"parent_id": parent_id,
+				"comment": text,
+			}
+			wrapper_sendAction(param, 'post', 'comment/create');
+		}
+	}
+
+	var elem = $('#-submenu_taskdetail_commentbubble').clone().prop('id','');
+	elem.find('[find=comment_id]').attr('comment_id', comment['_id']);
+	//elem.find('[find=text]').html(wrapper_to_html(comment['+comment']));
+	//elem.find('[find=text]')[0].innerHTML = wrapper_to_html(comment['+comment']);
+	//var str = wrapper_to_html(comment['+comment']);
+	//elem.find('[find=text]')[0].execCommand('insertText', false, 'AA');
+	elem.find('[find=text]').text(comment['+comment']);
+
+	var created_by = Lincko.storage.get("users", comment['created_by'],"username");
+	elem.find('[find=name]').html(created_by);
+
+	var picID  = Lincko.storage.get("users", comment['created_by'], 'profile_pic');
+	var thumb_url = app_application_icon_single_user.src;
+	if(picID){
+		thumb_url = Lincko.storage.getLinkThumbnail(picID);
+		
+	}
+	elem.find('[find=profile_pic]').css('background-image','url("'+thumb_url+'")');
+
+	var created_at = new wrapper_date(comment['created_at']);
+	created_at = created_at.display('date_very_short');
+	elem.find('[find=date]').html(created_at);
+
+	if( comment['created_by'] == wrapper_localstorage.uid ){
+		elem.addClass('submenu_taskdetail_commentbubble_me');
+	}
+	if( comment['_parent'][0] == "comments" ){
+		elem.addClass('submenu_taskdetail_commentbubble_sub');
+	}
+
+
+	var elem_translateBtn = elem.find('[find=translateBtn]').html(Lincko.Translation.get('app', 56, 'html')); //translate
+	elem_translateBtn.click(function(){
+		var elem = $(this).closest('.submenu_taskdetail_commentbubble');
+		var elem_translateBtn = $(this);
+		elem_translateBtn.css('opacity','0.5');
+		var elem_textTranslated = elem.find('[find=text_translated]');
+
+		var translate_str = Lincko.Translation.get('app', 56, 'html'); //translate
+		var untranslate_str = Lincko.Translation.get('app', 57, 'html'); //untranslate
+		if(elem_textTranslated.hasClass('display_none')){
+			var textToTranslate = elem.find('[find=text]').text();
+			wrapper_sendAction( 
+			    { 
+			        "text": textToTranslate,
+			    }, 
+			    'post', 
+			    'translation/auto', 
+			    function(data){ 
+		    		elem_textTranslated.html(data).removeClass('display_none');
+		    		elem_translateBtn.html(untranslate_str);
+		    		elem_textTranslated.velocity('slideDown',{
+		    			complete: function(){
+		    				elem_translateBtn.removeAttr('style');
+		    			}
+		    		});
+			    } 
+			);
+		}
+		else{
+    		elem_translateBtn.html(translate_str);
+    		elem_textTranslated.velocity('slideUp',{
+    			complete: function(){
+    				elem_textTranslated.html('').addClass('display_none');
+    				elem_translateBtn.removeAttr('style');
+    			}
+    		});
+    	}
+	});
+
+
+	if(!root_id || root_id == 'new' ){
+		elem.find('[find=replyBtn]').addClass('display_none');
+	}
+	else{
+		elem.find('[find=replyBtn]').click(function(){
+			var elem_click = $(this);
+			var elem_replyTo = elem_click.closest('.submenu_taskdetail_commentbubble');
+			var parentID = elem_replyTo.find('[find=comment_id]').attr('comment_id');
+			if(!Lincko.storage.get('comments',parentID)){
+				return false;
+			}
+
+			var elem_replyBubble = taskdetail_generateNewCommentBubble('comments', parentID, sendAction_reply);
+			elem_replyTo.after(elem_replyBubble);
+			elem_replyBubble.find('[find=addNewComment_text]').focus();
+		});
+	}
+	return elem;
+}
+
 
 var taskdetail_description_attachFileClick = function(elem_description){
 	if(!(elem_description instanceof $)){ elem_description = $(elem_description); }

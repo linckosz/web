@@ -571,7 +571,6 @@ styling for sub comments
 	font-size: 20px;
 	width: 23px;
 	height: 23px;
-	background-size: 23px 23px;
 }
 .submenu_taskdetail_commentbubble_sub [find=text], .submenu_taskdetail_commentbubble_sub [find=name] {
 	font-size: 12px;
