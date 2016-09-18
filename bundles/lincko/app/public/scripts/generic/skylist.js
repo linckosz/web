@@ -1255,6 +1255,40 @@ skylist.prototype.addTask = function(item){
 		Elem.find('[find=card_rightbox] [find=comments_icon]').addClass('skylist_greyColor');
 	}
 
+	var elem_expandable_comments = Elem.find('[find=expandable_comments]')
+		.prop('id',Elem.prop('id')+'_expandable_comments')
+		.click(function(event){
+			event.stopPropagation();
+		});
+	var elem_addNewCommentBubble = taskdetail_generateNewCommentBubble(item['_type'], item['_id'], null, false).addClass('display_none');
+	elem_expandable_comments.prepend(elem_addNewCommentBubble);
+	var elem_addNewCommentBtn = elem_expandable_comments.find('[find=btn_addNew]');
+	elem_addNewCommentBtn.click(function(){
+		elem_addNewCommentBubble.removeClass('display_none');
+		$(this).addClass('display_none');
+		elem_addNewCommentBubble.find('[find=addNewComment_text]').focus();
+	});
+	elem_addNewCommentBubble.find('[find=addNewComment_text]').blur(function(){
+		$(this).val('');
+		elem_addNewCommentBubble.addClass('display_none');
+		elem_addNewCommentBtn.removeClass('display_none');
+	});
+	if(commentCount > 0){
+		var mostRecent_primaryComment = Lincko.storage.sort_items(Lincko.storage.list('comments',null, null, that.list_type, item['_id'], false), 'created_at', 0, -1, false)[0];
+		elem_expandable_comments.prepend(taskdetail_generateCommentThread(mostRecent_primaryComment));
+	}
+	else{
+
+	}
+	Elem.find('[find=card_rightbox] [find=comments_wrapper]').click(function(event){
+		event.stopPropagation();
+		var cb_complete = function(){
+			elem_addNewCommentBtn.click();
+		}
+		that.paperView_toggleExpandable(elem_expandable_comments, cb_complete);
+	});
+
+
 	/*
 	links
 	*/
@@ -1348,7 +1382,7 @@ skylist.prototype.addTask = function(item){
 
 			Elem.find('[find=card_rightbox] [find=links_wrapper]').click(function(event){
 				event.stopPropagation();
-				that.paperView_expandLinks(elem_expandable_links);
+				that.paperView_toggleExpandable(elem_expandable_links);
 			});
 		}
 		else{
@@ -2058,11 +2092,11 @@ skylist.prototype.add_cardEvents = function(Elem){
 	var that = this;
 
 	//icon click action to trigger text click
-	Elem.find('[find=name_icon]').click(function(){
-		Elem.find('[find=name]').click();
+	Elem.find('[find=card_bottom] [find=name_icon]').click(function(){
+		Elem.find('[find=card_bottom] [find=name]').click();
 	});
-	Elem.find('[find=comments_icon]').click(function(){
-		Elem.find('[find=comments]').click();
+	Elem.find('[find=card_bottom] [find=comments_icon]').click(function(){
+		Elem.find('[find=card_bottom] [find=comments]').click();
 	});
 
 	Elem.find('.skylist_leftOptionBox').click(function(event){
@@ -2389,21 +2423,22 @@ skylist.prototype.taskClick = function(event,task_elem){
 	this.openDetail(task_elem);
 }
 
-skylist.prototype.paperView_expandLinks = function(elem_links){
+skylist.prototype.paperView_toggleExpandable = function(elem_expandable, cb_complete){
 	var that = this;
-	elem_links.removeClass('display_none');
-	if(elem_links.css('display') != 'block'){
-		elem_links.velocity("slideDown", {
+	elem_expandable.removeClass('display_none');
+	if(elem_expandable.css('display') != 'block'){
+		elem_expandable.velocity("slideDown", {
 			complete: function(){
+				if(typeof cb_complete == 'function'){ cb_complete(); }
 				that.window_resize();
-				if(myIScrollList[elem_links.prop('id')]){
-					myIScrollList[elem_links.prop('id')].refresh();
+				if(myIScrollList[elem_expandable.prop('id')]){
+					myIScrollList[elem_expandable.prop('id')].refresh();
 				}
 			}
 		});
 	}
 	else{
-		elem_links.velocity("slideUp", {
+		elem_expandable.velocity("slideUp", {
 			complete: function(){
 				that.window_resize();
 			}

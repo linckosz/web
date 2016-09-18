@@ -1754,7 +1754,10 @@ var taskdetail_clean_descriptionFiles = function(elem_description){
 	}
 }
 
-var taskdetail_generateNewCommentBubble = function(parent_type, parent_id, sendAction_fn){
+var taskdetail_generateNewCommentBubble = function(parent_type, parent_id, sendAction_fn, blurRemove){
+	if(typeof blurRemove != 'boolean'){
+		blurRemove = true; //default is true
+	}
 	if(!sendAction_fn){
 		var sendAction_fn = function(parent_type, parent_id, text){
 			var param = {
@@ -1779,13 +1782,15 @@ var taskdetail_generateNewCommentBubble = function(parent_type, parent_id, sendA
 	var elem_addNewComment_text = elem_newCommentBubble.find('[find=addNewComment_text]');
 	elem_addNewComment_text.keyup(function(event) {
 		if (event.keyCode == 13) {
-			sendAction_fn('comments', parent_id, elem_newCommentBubble.find('[find=addNewComment_text]').val());
+			sendAction_fn(parent_type, parent_id, elem_newCommentBubble.find('[find=addNewComment_text]').val());
 			elem_addNewComment_text.blur();
 		}
 	});
-	elem_addNewComment_text.focusout(function(){
-		elem_newCommentBubble.remove();
-	});
+	if(blurRemove){
+		elem_addNewComment_text.focusout(function(){
+			elem_newCommentBubble.remove();
+		});
+	}
 
 	return elem_newCommentBubble;
 }
@@ -1875,7 +1880,6 @@ var taskdetail_generateCommentBubble = function(comment, root_id, sendAction_rep
     	}
 	});
 
-
 	if(!root_id || root_id == 'new' ){
 		elem.find('[find=replyBtn]').addClass('display_none');
 	}
@@ -1894,6 +1898,31 @@ var taskdetail_generateCommentBubble = function(comment, root_id, sendAction_rep
 		});
 	}
 	return elem;
+}
+
+var taskdetail_generateCommentThread = function(rootComment, includeContainer){
+	if(!rootComment || typeof rootComment != 'object') return;
+	if(typeof includeContainer != 'boolean'){ var includeContainer = false; }
+
+	var allComments = Lincko.storage.sort_items(Lincko.storage.list('comments', null, null, 'comments', rootComment['_id'], true), 'created_at', 0, -1, true);
+
+	//var subComments = Lincko.storage.tree('comments', rootComment['_id'], 'children', true, true);
+	
+	var elem_container = $('<div>').attr('rootComment_id', rootComment['_id']);
+
+	//elem_container.append(taskdetail_generateCommentBubble(rootComment, rootComment['_parent'][1]));
+
+	$.each(allComments, function(i, comment){
+		elem_container.append(taskdetail_generateCommentBubble(comment, rootComment['_parent'][1]));
+	});
+
+	if(includeContainer){
+		return elem_container;
+	}
+	else{
+		return elem_container.unwrap();
+	}
+
 }
 
 

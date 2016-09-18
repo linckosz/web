@@ -566,7 +566,7 @@
 }
 
 .skylist_wrapper[view=paper] [find=card_bottom],
-.skylist_wrapper[view=paper] [find=card] input,
+.skylist_wrapper[view=paper] [find=card]>input,
 .skylist_wrapper[view=paper] [find=card_time],
 .skylist_wrapper[view=paper] [find=card_rightOptions]{
 	display:none;
@@ -638,6 +638,7 @@
 .skylist_wrapper[view=paper] .skylist_card_center [find=links_wrapper],
 .skylist_wrapper[view=paper] .skylist_card_center [find=comments_wrapper]{
 	display: inline-block;
+	padding-bottom: 10px;
 }
 
 
@@ -662,7 +663,6 @@
 .skylist_wrapper[view=paper] .skylist_card_center [find=card_leftbox] {
 	vertical-align: top;
 }
-
 
 
 
@@ -712,6 +712,7 @@
 
 
 /*expandables*/
+.skylist_card [find=expandable_comments],
 .skylist_card [find=expandable_links]{
 	width: 500px;
 	overflow: hidden;
@@ -765,6 +766,11 @@
 .skylist_wrapper[view=paper] .skylist_card [find=expandable_links]:hover [find=btn_addNew]{
 	visibility: visible;
 }
+
+.skylist_card [find=expandable_comments] [find=profile_pic]{
+	display: none;
+}
+
 
 /*
  *  END OF paperView-----------------------------------------------
