@@ -1421,6 +1421,17 @@ Lincko.storage.list_links = function(type, id, projectID){
 		});
 	}
 
+	var _notes = Lincko.storage.get(type, id, '_notes');
+	if(_notes){
+		$.each(_notes, function(id, obj){
+			var noteToAdd = Lincko.storage.get('notes',id);
+			if(noteToAdd){
+				if(!links.notes){ links.notes = {}; }
+				links.notes[id] = noteToAdd;
+			}
+		});
+	}
+
 
 	if($.isEmptyObject(links)){ links = false; }
 	return links;

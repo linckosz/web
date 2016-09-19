@@ -23,29 +23,25 @@ submenu_list['itemSelector'] = {
 			if(!subm.param || !subm.param.selection || !subm.param.item){return;}
 
 			var selection = subm.param.selection;
+			//if nothing is selected, then return
+			if(Object.keys(selection.files).length < 1 && Object.keys(selection.notes).length < 1){ return; }
 
 			//handle fake parents using taskdetail_linkQueue
 			if( (!subm.param.item['_id'] || subm.param.item['_id'] == 'new' || subm.param.item['fake']) && subm.param.uniqueID ){
-				$.each(selection.files, function(id, bool){
-					var tempID = Lincko.storage.get('files',id)['temp_id'];
-					if(tempID){
-						taskdetail_linkQueue.queue[tempID] = {
-							uniqueID: subm.param.uniqueID,
-							parent_type: subm.param.item['_type'],
-							id: id,
+				$.each(selection, function(type, obj){
+					$.each(obj, function(id, bool){
+						var tempID = Lincko.storage.get(type, id)['temp_id'];
+						if(tempID){
+							taskdetail_linkQueue.queue[tempID] = {
+								uniqueID: subm.param.uniqueID,
+								parent_type: subm.param.item['_type'],
+								id: id,
+								type: type,
+							}
 						}
-					}
-				});		
-				$.each(selection.notes, function(id, bool){
-					var tempID = Lincko.storage.get('notes',id)['temp_id'];
-					if(tempID){
-						taskdetail_linkQueue.queue[tempID] = {
-							uniqueID: subm.param.uniqueID,
-							parent_type: subm.param.item['_type'],
-							id: id,
-						}
-					}
-				});	
+					});
+				});
+				app_application_lincko.prepare('show_queued_links', true);
 			}
 			else{
 				var item_current = Lincko.storage.data[subm.param.item['_type']][subm.param.item['_id']];
@@ -59,7 +55,7 @@ submenu_list['itemSelector'] = {
 				if(!item_current['_notes']){
 					item_current['_notes'] = {};
 				}
-				$.each(selection.files, function(id, bool){
+				$.each(selection.notes, function(id, bool){
 					item_current['_notes'][id] = { access: true };
 				});
 
@@ -110,6 +106,12 @@ Submenu.prototype.Add_itemSelector = function() {
 	var elem_list_files = elem_list.find('[find=files]');
 	var elem_list_notes = elem_list.find('[find=notes]');
 	var elem_cards_all = null;
+
+	var elem_submit = submenu_wrapper.find('.submenu_title.submenu_top_side_right').addClass('display_none');
+
+
+
+
 
 //variables---------------------------------------------------------------------------------------------------------
 	//default view is files
@@ -165,6 +167,12 @@ Submenu.prototype.Add_itemSelector = function() {
 			else{ this.elem_notesCount.removeClass('display_none'); }
 			/*if(selectedCount < 1){ this.elem_selectedCount.addClass('display_none'); }
 			else{ this.elem_selectedCount.removeClass('display_none'); }*/
+			if(filesCount + notesCount > 0){
+				elem_submit.removeClass('display_none');
+			}
+			else{
+				elem_submit.addClass('display_none');
+			}
 		},
 	}
 	selectionCount.elem_filesCount = elem_menubar.find('[find=files] .submenu_itemSelector_menubar_counter');
@@ -322,7 +330,10 @@ Submenu.prototype.Add_itemSelector = function() {
 	if(items_all.notes){
 		$.each(items_notes, function(i, item){
 			//if it is already linked, skip
-			//toto - add logic here
+			if(!item || (item_parent && item_parent['_notes'] && item_parent['_notes'][item['_id']])){
+				items_all.notes[i] = null;
+				return;
+			}
 
 			var elem_card = skylist.draw_noteCard(item).attr('type',item['_type']).attr('_id',item['_id']).click(card_click);
 			elem_card.find('[find=card_leftOptions]').remove();

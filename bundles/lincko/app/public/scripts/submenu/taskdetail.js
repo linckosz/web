@@ -744,9 +744,18 @@ Submenu.prototype.Add_taskdetail = function() {
 
 
 	/*-----Links------------------*/
-	var generate_linkCard = function(item_link){
-		if(typeof item_link !== 'object'){ item_link = Lincko.storage.get('files',item_link);	}
-		var elem_linkcard = $('#-submenu_taskdetail_links_card').clone().prop('id','').attr('file_id',item_link['_id']).click(function(){
+	var generate_linkCard = function(type, id){
+		var item_link = null;
+		if(typeof type == 'object'){ 
+			item_link = type;
+			var type = item_link['_type'];
+			var id = item_link['_id'];
+		}
+		else{
+			item_link = Lincko.storage.get(type, id);
+		}
+
+		var elem_linkcard = $('#-submenu_taskdetail_links_card').clone().prop('id','').attr(item_link['_type']+'_id', item_link['_id']).click(function(){
 			submenu_Build('taskdetail', true, null, 
 				{
 					"type":item_link['_type'], 
@@ -818,11 +827,12 @@ Submenu.prototype.Add_taskdetail = function() {
 					obj[item_link['_id']] = false;
 					removedFromID = item['_id'];
 				}
-				
-				wrapper_sendAction({
+
+				var param_sendAction = {
 					id: removedFromID,
-					'files>access': obj,
-				}, 'post', route);
+				};
+				param_sendAction[item_link['_type']+'>access'] = obj;
+				wrapper_sendAction(param_sendAction, 'post', route);
 				elem_linkcard.velocity('slideUp',{
 					complete: function(){
 						elem_linkcard.remove();
@@ -1348,6 +1358,8 @@ Submenu.prototype.Add_taskdetail = function() {
 		'submenu_hide_'+that.preview+'_'+that.id,
 		function(){
 			if( (taskid == 'new' && route_delete) || this.action_param.cancel || (item.deleted_at && !route_delete)){
+				//clear any links in the queue that came from this submenu
+				taskdetail_linkQueue.clearQueue_uniqueID(that.param.uniqueID);
 				return false;
 			}
 			var contactServer = false;
@@ -1536,9 +1548,9 @@ Submenu.prototype.Add_taskdetail = function() {
 	if(!item.fake && taskid != 'new'){ registerSync_meta(); }
 
 	//to be used for link sync functions
-	var addTo_linksWrapper = function(id, elem){
+	var addTo_linksWrapper = function(elem, type, id){
 		var elem_linksWrapper = elem.find('[find=links_wrapper]');
-		var elem_toAdd = generate_linkCard(id);
+		var elem_toAdd = generate_linkCard(type, id);
 		elem_linksWrapper.append(elem_toAdd);
 		elem_toAdd.velocity('slideDown');
 		myIScrollList[submenu_content.prop('id')].refresh();
@@ -1551,16 +1563,25 @@ Submenu.prototype.Add_taskdetail = function() {
 			function(){
 				var elem = $('#'+this.id);
 				var item = Lincko.storage.get(that.param.type, taskid);
-				if(!item._files){
+				if(!item._files && !item._notes){
 					return;
 				}
 
-				var link_ids = Object.keys(item._files);
-				elem.find('[find=linkCount]').text(link_ids.length);
-				$.each(link_ids, function(i, id){
-					var elem_linkCard = elem.find('[file_id='+id+']');
+				var linkCount = 0;
+				if(item._files){ linkCount += Object.keys(item._files).length; }
+				if(item._notes){ linkCount += Object.keys(item._notes).length; }
+				elem.find('[find=linkCount]').text(linkCount);
+
+				$.each(item._files, function(id, obj){
+					var elem_linkCard = elem.find('[files_id='+id+']');
 					if(!elem_linkCard.length){
-						addTo_linksWrapper(id, elem);
+						addTo_linksWrapper(elem, 'files', id);
+					}
+				});
+				$.each(item._notes, function(id, obj){
+					var elem_linkCard = elem.find('[notes_id='+id+']');
+					if(!elem_linkCard.length){
+						addTo_linksWrapper(elem, 'notes', id);
 					}
 				});
 
@@ -1574,14 +1595,14 @@ Submenu.prototype.Add_taskdetail = function() {
 	if(taskid == 'new'){
 		app_application_lincko.add(
 			'submenu_taskdetail_link_'+that.md5id,
-			'files',
+			'show_queued_links',
 			function(){
 				var elem = $('#'+this.id);
 				$.each(taskdetail_linkQueue.queue, function(temp_id, obj){
 					if(obj.uniqueID == that.param.uniqueID && !obj.visible){
-						var item = Lincko.storage.list('files',1,{temp_id: temp_id});
-						if(item.length){
-							addTo_linksWrapper(item[0]['_id'], elem);
+						var item = Lincko.storage.get(obj.type, obj.id);
+						if(item){
+							addTo_linksWrapper(elem, obj.type, obj.id);
 							taskdetail_linkQueue.queue[temp_id].visible = true;
 						}
 					}
@@ -1732,7 +1753,7 @@ var taskdetail_clean_descriptionFiles = function(elem_description){
 				if(item_file){
 					if(elem$.hasClass('fa')){
 						elem$.removeClass('linckoEditor_fileProgress').html('&nbsp;').removeAttr('temp_id').removeAttr('contenteditable');
-						elem_new = $('#-linckoEditor_fileWrapper').clone().prop('id','').attr('file_id',item_file['_id']);
+						elem_new = $('#-linckoEditor_fileWrapper').clone().prop('id','').attr('files_id',item_file['_id']);
 						elem_new.find('[find=icon]').append(elem$.clone());
 	            		elem_new.find('[find=name]').text(item_file['+name']);
 	            		/*elem_new.click(function(){
@@ -1932,7 +1953,7 @@ var taskdetail_description_attachFileClick = function(elem_description){
 	if(elem_files.length){
 		$.each(elem_files, function(i, elem){
 			var elem = $(elem);
-			var id = elem.attr('file_id');
+			var id = elem.attr('files_id');
 			if(!id){ return; }
 			elem.click(function(){ 
 				submenu_Build( 'taskdetail', true, null, 
@@ -1961,6 +1982,17 @@ taskdetail_linkQueue = {
 			},
 			etc
 		*/
+	},
+	//to clear queues with a specific uniqueID
+	//used during submenu_hide when task/note creation is cancelled
+	clearQueue_uniqueID: function(uniqueID){
+		if(!uniqueID){return false;}
+
+		$.each(taskdetail_linkQueue.queue, function(temp_id, obj){
+			if(obj.uniqueID && obj.uniqueID == uniqueID){
+				delete taskdetail_linkQueue.queue[temp_id];
+			}
+		});
 	},
 	checkQueue_uniqueID: function(uniqueID){
 		if(!uniqueID){return false;}
@@ -2056,11 +2088,21 @@ taskdetail_linkQueue = {
 
 		var param = {
 			id: queueObj.id,
-			parent_type: queueObj.parent_type,
-			parent_id: queueObj.parent_id,
-		}
+		};
 
-		wrapper_sendAction(param, 'post', 'file/update');
+		//for notes
+		if(queueObj.type || queueObj.type != 'files'){
+			param[queueObj.parent_type+'>access'] = {};
+			param[queueObj.parent_type+'>access'][queueObj.parent_id] = true;
+			wrapper_sendAction(param, 'post', (queueObj.type).slice(0,-1) + '/update');
+		}
+		else{// for files
+			param.parent_type = queueObj.parent_type;
+			param.parent_id = queueObj.parent_id;
+			wrapper_sendAction(param, 'post', 'file/update');
+		}
+		
+
 		delete taskdetail_linkQueue.queue[temp_id];
 		return true;
 
