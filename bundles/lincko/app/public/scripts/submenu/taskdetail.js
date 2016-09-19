@@ -815,24 +815,28 @@ Submenu.prototype.Add_taskdetail = function() {
 
 			//remove linking
 			elem_linkcard.find('[find=removeIcon]').click(function(){
-				var obj = {};
-				var route = routeObj.update;
-
-				if(that.param.type == 'files'){
-					obj[taskid] = false;
-					removedFromID = item_link['_id'];
-					route = item_link['_type'].slice(0, -1)+'/update';
+				if(taskid == 'new' || !item['_id'] || item['_id'] == 'new'){
+					delete taskdetail_linkQueue.queue[item_link['temp_id']];
 				}
 				else{
-					obj[item_link['_id']] = false;
-					removedFromID = item['_id'];
-				}
+					var obj = {};
+					var route = routeObj.update;
+					if(that.param.type == 'files'){
+						obj[taskid] = false;
+						removedFromID = item_link['_id'];
+						route = item_link['_type'].slice(0, -1)+'/update';
+					}
+					else{
+						obj[item_link['_id']] = false;
+						removedFromID = item['_id'];
+					}
 
-				var param_sendAction = {
-					id: removedFromID,
-				};
-				param_sendAction[item_link['_type']+'>access'] = obj;
-				wrapper_sendAction(param_sendAction, 'post', route);
+					var param_sendAction = {
+						id: removedFromID,
+					};
+					param_sendAction[item_link['_type']+'>access'] = obj;
+					wrapper_sendAction(param_sendAction, 'post', route);
+				}
 				elem_linkcard.velocity('slideUp',{
 					complete: function(){
 						elem_linkcard.remove();
@@ -1607,6 +1611,8 @@ Submenu.prototype.Add_taskdetail = function() {
 						}
 					}
 				});
+				var linkCount = elem.find('.submenu_taskdetail_links_card').length;
+				elem_links.find('[find=linkCount]').text(linkCount);
 			}
 		);
 	}
@@ -2052,6 +2058,7 @@ taskdetail_linkQueue = {
 				taskdetail_linkQueue.queue[temp_id] = {
 					uniqueID: uniqueID, //uniqueID is used to identify the task/note to be linked to
 					parent_type: that.action_param.parent_type,
+					type: 'files',
 				};
 				var files_garbage = app_application_garbage.add();
 				app_application_lincko.add(files_garbage, 'files', taskdetail_linkQueue.filesGarbageFn, temp_id);
@@ -2079,6 +2086,7 @@ taskdetail_linkQueue = {
 			}
 			else if(taskdetail_linkQueue.queue[temp_id]){
 				app_application_garbage.remove(that.id);
+				app_application_lincko.prepare('show_queued_links', true);
 			}
 		}	
 	},
