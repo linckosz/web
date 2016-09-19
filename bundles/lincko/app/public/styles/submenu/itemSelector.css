@@ -124,9 +124,6 @@
 .submenu_itemSelector_showSelectedOnly .skylist_card.submenu_itemSelector_cardSelected{
 	display: block;
 }
-.submenu_itemSelector .skylist_card [find=card_bottom]{
-	background-color: #FFFFFF;
-}
 .submenu_itemSelector_cardSelected [find=card_center]{
 	opacity: 0.6;
 }

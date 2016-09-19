@@ -357,6 +357,30 @@ Submenu.prototype.Add_itemSelector = function() {
 	submenu_content.append(submenu_itemSelector);
 
 
+	/*------enquireJS--------------------------------------------------------------------*/
+	var itemSelector_enquire = {};
+	itemSelector_enquire.maxMobileL = {
+		match: function(){
+			elem_list_wrapper.addClass('skylist_maxMobileL');
+		},
+		unmatch: function(){
+			if(!elem_list_wrapper.hasClass('skylist_maxMobileL_force')){
+				elem_list_wrapper.removeClass('skylist_maxMobileL');
+			}
+		}
+	};
+	enquire.register(responsive.maxMobileL, itemSelector_enquire.maxMobileL);
+	/*-----END OF enquireJS----------------------------------------------------------------*/
+
+	app_application_lincko.add(
+		that.id,
+		'submenu_hide_'+that.id,
+		function(){
+			console.log('submenu hide');
+			enquire.unregister(responsive.maxMobileL, itemSelector_enquire.maxMobileL);
+		}
+	);
+
 
 	//Free memory
 	delete submenu_wrapper;
