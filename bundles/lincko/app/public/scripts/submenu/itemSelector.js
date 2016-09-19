@@ -35,7 +35,17 @@ submenu_list['itemSelector'] = {
 							id: id,
 						}
 					}
-				});			
+				});		
+				$.each(selection.notes, function(id, bool){
+					var tempID = Lincko.storage.get('notes',id)['temp_id'];
+					if(tempID){
+						taskdetail_linkQueue.queue[tempID] = {
+							uniqueID: subm.param.uniqueID,
+							parent_type: subm.param.item['_type'],
+							id: id,
+						}
+					}
+				});	
 			}
 			else{
 				var item_current = Lincko.storage.data[subm.param.item['_type']][subm.param.item['_id']];
@@ -45,11 +55,20 @@ submenu_list['itemSelector'] = {
 				$.each(selection.files, function(id, bool){
 					item_current['_files'][id] = { access: true };
 				});
+
+				if(!item_current['_notes']){
+					item_current['_notes'] = {};
+				}
+				$.each(selection.files, function(id, bool){
+					item_current['_notes'][id] = { access: true };
+				});
+
 				app_application_lincko.prepare(subm.param.item['_type']+'_'+subm.param.item['_id'], true);
 
 				wrapper_sendAction({
 					id: subm.param.item['_id'],
 					'files>access': selection.files,
+					'notes>access': selection.notes,
 				}, 'post', subm.param.item['_type'].slice(0, -1)+'/update');
 			}
 		},
