@@ -275,6 +275,74 @@ function wrapper_test(type, RCUD){
 		}
 	}
 
+	if(type=='*' || type=='spaces'){
+		if(RCUD==0){
+			wrapper_sendAction(
+				{
+					"id": 10,
+				},
+				'post',
+				'space/read',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==1){
+			wrapper_sendAction(
+				{
+					"parent_id": 3,
+					"name": "Perso space name", //OPTIONAL {''}
+					//"tasks": false, //OPTIONAL {true}
+					//"notes": false, //OPTIONAL {true}
+					//"files": true, //OPTIONAL {true}
+					//"chats": true, //OPTIONAL {true}
+					//"color": "14", //OPTIONAL {null}
+					//"icon": "fa-angle-double-down", //OPTIONAL {null}
+				},
+				'post',
+				'space/create',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==2){
+			wrapper_sendAction(
+				{
+					"id": 46,
+					//"parent_id": 4, //OPTIONAL
+					//"name": "It's a space name"+Math.floor(Math.random() * 20), //OPTIONAL
+					//"tasks": false, //OPTIONAL {true}
+					//"notes": false, //OPTIONAL {true}
+					//"files": true, //OPTIONAL {true}
+					//"chats": true, //OPTIONAL {true}
+					//"color": "#9E9DAA", //OPTIONAL {null}
+					//"icon": "fa-angle-double-down", //OPTIONAL {null}
+				},
+				'post',
+				'space/update',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==3){
+			wrapper_sendAction(
+				{
+					"id": 16,
+				},
+				'post',
+				'space/delete',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==4){
+			wrapper_sendAction(
+				{
+					"id": 16,
+				},
+				'post',
+				'space/restore',
+				wrapper_test_display
+			);
+		}
+	}
+
 	if(type=='*' || type=='files'){
 		if(RCUD==0){
 			wrapper_sendAction(
