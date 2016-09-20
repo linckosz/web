@@ -68,15 +68,10 @@ Submenu.prototype.Add_ChatContents = function() {
 	position.addClass('overthrow').addClass("submenu_chat_contents");
 	var submenu_wrapper_id=submenu_wrapper.prop("id");
 
-	that.param.chatFeed = new chatFeeder(id,type,position,that);
-	that.param.chatFeed.app_layers_chat_feed_history();
-	that.param.chatFeed.app_layers_uploading_files();
+	that.param.chatFeed = new chatFeed(id,type,position,that);
 
-	/*that.param.chatFeed = new app_submenu_chatFeed();
-	that.param.chatFeed.app_layers_history_launchPage(position, type, id, that);
-	that.param.chatFeed.app_layers_uploading_files(position,type,id,submenu_wrapper_id);*/
-
-
+	
+	var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
 
 
 	if (type == 'history') {
@@ -89,16 +84,11 @@ Submenu.prototype.Add_ChatContents = function() {
 		app_application_lincko.add(this.id+"_chat_contents_wrapper", "projects_" + id, function() {
 
 			var chat_item = that.param.chatFeed;
-			chat_item.app_layers_chat_receive_items();
-			/*chat_item.updateRecalled('projects', id, position, type);
-			chat_item.updateTempComments('projects', id, position, type);
-			chat_item.updateTempUploads('projects', id, position, type);*/
-
-
+			chat_item.app_chat_feed_load_recent();
+			
 
 			var overthrow_id = "overthrow_"+this.action_param[0];
 			var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
-
 
 			if(myIScrollList[overthrow_id] && last && last[0]){
 				if(myIScrollList[overthrow_id].maxScrollY - myIScrollList[overthrow_id].y > -100){
@@ -120,11 +110,8 @@ Submenu.prototype.Add_ChatContents = function() {
 			//toto => there is an undefined somewhere
 
 			var chat_item = that.param.chatFeed;
-			chat_item.app_layers_chat_receive_items();
-		/*	chat_item.format_items('chats', items, position, true);
-			chat_item.updateRecalled('chats', id, position, type);
-			chat_item.updateTempComments('chats', id, position, type);
-			chat_item.updateTempUploads('chats', id, position, type);*/
+			chat_item.app_chat_feed_load_recent();
+
 
 			var overthrow_id = "overthrow_"+this.action_param[0];
 			var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
@@ -143,7 +130,7 @@ Submenu.prototype.Add_ChatContents = function() {
 	}
 
 	app_application_lincko.add(submenu_wrapper_id, 'upload', function(){ //We cannot simplify because Elem is not the HTML object, it's a JS Submenu object
-		that.param.chatFeed.app_layers_uploading_files();
+		that.param.chatFeed.app_chat_feed_uploading_file();
 		var overthrow_id = "overthrow_"+this.action_param[0];
 		var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
 		if(myIScrollList[overthrow_id] && last && last[0]){
@@ -223,7 +210,6 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 			'post',
 			'comment/create',
 			function(msg, data_error, data_status, data_msg) {
-				
 				app_application_lincko.prepare(["chat_contents_wrapper", type+"_" + sub_that.param.id]);
 				app_application_lincko.prepare("submenu_show");
 				var overthrow_id = "overthrow_"+sub_that.id;
@@ -236,14 +222,20 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 					app_submenu_scrollto(myIScrollList[overthrow_id], last[0], scroll_time);
 				}
 
+				var list = data_msg.partial[wrapper_localstorage.uid].comments;
+				$.each(list,function(key,data){
+					if(typeof app_models_chats_send_queue[list[key]['temp_id']] !== 'undefined'){
+						delete app_models_chats_send_queue[list[key]['temp_id']] ;
+					}
+				});
 				//recall comment if in queue
-				if(data_msg.partial && data_msg.partial[wrapper_localstorage.uid] && data_msg.partial[wrapper_localstorage.uid].comments){
-					$.each(data_msg.partial[wrapper_localstorage.uid].comments, function(id, item){
-						if(app_models_chats_recallQueue[item.temp_id]){
-							app_models_chats_recallQueue.sendAction(id);
-						}
-					});
-				}
+				// if(data_msg.partial && data_msg.partial[wrapper_localstorage.uid] && data_msg.partial[wrapper_localstorage.uid].comments){
+				// 	$.each(data_msg.partial[wrapper_localstorage.uid].comments, function(id, item){
+				// 		if(app_models_chats_recallQueue[item.temp_id]){
+				// 			app_models_chats_recallQueue.sendAction(id);
+				// 		}
+				// 	});
+				// }
 			},
 			null,
 			function(jqXHR, settings, temp_id) {
@@ -257,7 +249,7 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 					'timestamp': Math.floor((new Date()).getTime() / 1000),
 					'content' : content.replace(/<(br).*?>/g,"\n"),
 				};
-				sub_that.param.chatFeed.app_layers_chat_send_item(data);
+				sub_that.param.chatFeed.app_chat_feed_send_msg(data);
 
 				var overthrow_id = "overthrow_"+sub_that.id;
 				var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
@@ -276,10 +268,10 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 				
 			},
 			function(){
-				$.each(tmpID,function(i,val){
-					delete app_models_chats_recallQueue[val];
-				});
-				tmpID = [];
+				// $.each(tmpID,function(i,val){
+				// 	delete app_models_chats_recallQueue[val];
+				// });
+				// tmpID = [];
 			}
 		);
 

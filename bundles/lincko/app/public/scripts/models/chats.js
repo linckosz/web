@@ -125,21 +125,45 @@ function app_models_chats_bubble_actionMenu(){
 		/*------------recall chat action----------------*/
 		var elem_recallBtn = elem_actionMenu.find('[find=recall_btn]');
 		elem_recallBtn.on("mousedown touchstart", function(){
-			if(!item_comment && !app_models_chats_recallQueue[commentID]){
-				app_models_chats_recallQueue[commentID] = true;
+			var target = that.closest('[category=comments]');
+			var date = new wrapper_date(Math.floor($.now()/1000));
+
+			var item = {
+				'is_working' : false,
+				'id' : commentID,
+				'style' : typeof target.attr("temp_id") === 'undefined' ? 'id' : 'temp_id',
+				'timestamp' : date.display('time_short'),
 			}
-			else{
+			app_models_chats_recall_queue[commentID] = item;
+
+
+			
+			if(!app_models_chats_recall_queue[commentID]['is_working'] && app_models_chats_recall_queue[commentID]['style'] == 'id')
+			{
 				wrapper_sendAction(
 					{
-						"id": commentID,
+						"id": app_models_chats_recall_queue[commentID]['id'],
 					},
 					'post',
-					'comment/recall'
+					'comment/recall',
+					function(data){
+						delete app_models_chats_recall_queue[commentID];
+					},
+					null,
+					function()
+					{
+						app_models_chats_recall_queue[commentID]['is_working'] = true;
+					}
 				);
-				Lincko.storage.data.comments[commentID].recalled_by = wrapper_localstorage.uid;
-				app_application_lincko.prepare(item_comment['_parent'][0]+'_'+item_comment['_parent'][1], true);
-				that.blur();
 			}
+
+			var elem_id = target.prop('id');
+			var elem = $('#-models_history_comment_recalled').clone();
+			elem.prop('id',elem_id);
+			
+			elem.find("[find=timestamp]").html(date.display('time_short'));
+			elem.find("[find=msg]").text(Lincko.Translation.get('app', 3101, 'html', {username: Lincko.storage.get('users', wrapper_localstorage.uid ,'username')}));
+			target.replaceWith(elem);
 		});
 
 	}//end of timeout_fn
@@ -197,13 +221,36 @@ var app_models_chats_recallQueue = {
 	}
 };
 
+var app_models_chats_send_queue = {};
+var app_models_chats_recall_queue = {};
 
-var app_models_chat_list_cache = {
-	chat_list_cache:{},//static data,class data
-	getChatCache:function(projectID){
+setInterval(function(){
+	$.each(app_models_chats_recall_queue,function(key){
+		if(typeof app_models_chats_recall_queue[key] !== 'undefined'){
+			if(app_models_chats_recall_queue[key]['style'] == 'temp_id')
+			{
+				var list  = Lincko.storage.list('comments', 1,{'temp_id' : app_models_chats_recall_queue[key]['id']});
+				if(list.length > 0 && !app_models_chats_recall_queue[key]['is_working'] )
+				{
+					wrapper_sendAction(
+						{
+							"id": list[0]['_id'],
+						},
+						'post',
+						'comment/recall',
+						function(data){
+							delete app_models_chats_recall_queue[key];
+						},
+						null,
+						function()
+						{
+							app_models_chats_recall_queue[key]['is_working'] = true;
+						}
+					);
+				}
+			}
+		}
 		
-	},
-	setChatCache:function(projectID,data){
+	});
+},1000); 
 
-	},
-}

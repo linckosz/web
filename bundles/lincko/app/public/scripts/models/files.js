@@ -50,7 +50,7 @@ var app_models_fileType = {
  			return "";
  		}
  	},
- 	cutFileTitle(title, prefixLength, suffixLength, type){
+ 	cutFileTitle(title, prefixLength, suffixLength){
 		if(typeof title == 'undefined')
 		{
 			return title;
@@ -66,7 +66,7 @@ var app_models_fileType = {
 
 		var prefix=fileName.substring(0,prefixLength);
 		var suffix=fileName.substring(fileName.length-suffixLength,fileName.length);
-		if(type=="files" && extName!=""){
+		if(extName!=""){
 			title = prefix + "..." + suffix + " ." + extName;
 		} else {
 			title = prefix + "..." + suffix;
