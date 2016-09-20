@@ -129,7 +129,6 @@
 }
 .submenu_itemSelector_cardSelected [find=card_bottom]{
 	opacity: 0.6;
-
 }
 .submenu_itemSelector_cardSelected.skylist_card{
 	background-color: initial;

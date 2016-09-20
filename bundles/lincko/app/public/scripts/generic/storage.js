@@ -1401,13 +1401,15 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 	
 };
 
-//not for URL links, but files linked to a task etc.
+//links are not URL links, but files linked to a task etc.
 Lincko.storage.list_links = function(type, id, projectID){
 	if(!projectID){ projectID = app_content_menu.projects_id; }
+	
+	var links = {};
+	/* old code, for when we could not find links from the file item itself
+	//used to find links in reverse, checking children of every item and see if it has the specified file
 	var project_children = Lincko.storage.tree('projects', projectID, 'children', false, true);
 	if(typeof project_children !== 'object'){ return false; }
-
-	var links = {};
 	for(var category in project_children){
 		//skip for comments and files
 		if(category == 'comments' || category == 'files'){ continue; }
@@ -1420,29 +1422,20 @@ Lincko.storage.list_links = function(type, id, projectID){
 			}
 		}
 	}// end of category loop
+	*/
 
-	var _files = Lincko.storage.get(type, id, '_files');
-	if(_files){
-		$.each(_files, function(id, obj){
-			var fileToAdd = Lincko.storage.get('files',id);
-			if(fileToAdd){
-				if(!links.files){ links.files = {}; }
-				links.files[id] = fileToAdd;
-			}
-		});
-	}
-
-	var _notes = Lincko.storage.get(type, id, '_notes');
-	if(_notes){
-		$.each(_notes, function(id, obj){
-			var noteToAdd = Lincko.storage.get('notes',id);
-			if(noteToAdd){
-				if(!links.notes){ links.notes = {}; }
-				links.notes[id] = noteToAdd;
-			}
-		});
-	}
-
+	$.each(['files', 'notes', 'tasks'], function(i, cat){
+		var _cat = Lincko.storage.get(type, id, '_'+cat);
+		if(_cat){
+			$.each(_cat, function(id, obj){
+				var fileToAdd = Lincko.storage.get(cat, id);
+				if(fileToAdd){
+					if(!links[cat]){ links[cat] = {}; }
+					links[cat][id] = fileToAdd;
+				}
+			});
+		}
+	});
 
 	if($.isEmptyObject(links)){ links = false; }
 	return links;

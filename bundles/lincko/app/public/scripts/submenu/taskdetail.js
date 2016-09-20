@@ -874,10 +874,10 @@ Submenu.prototype.Add_taskdetail = function() {
 	var elem_links_wrapper = elem_links.find('[find=links_wrapper]');
 	
 	var link_count = 0;
-	var item_linkedFiles = Lincko.storage.list_links(that.param.type, taskid, that.param.projID);
-	if(typeof item_linkedFiles == 'object'){
-		for(var category in item_linkedFiles){
-			$.each(item_linkedFiles[category], function(id,item){
+	var item_linked = Lincko.storage.list_links(that.param.type, taskid, that.param.projID); 
+	if(typeof item_linked == 'object'){
+		for(var category in item_linked){
+			$.each(item_linked[category], function(id,item){
 				elem_links_wrapper.append(generate_linkCard(item));
 				link_count++;
 			});
