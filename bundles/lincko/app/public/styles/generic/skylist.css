@@ -368,7 +368,7 @@
 	height: 20px;
 	width: 100%;
 	padding-right: 5px;
-	background-color: rgba(182,214,232,0.1);
+	background-color: #F8FBFD;
 	text-align: right;
 	font-size: 12px;
 	color: #475577;
@@ -616,14 +616,17 @@
 .skylist_wrapper[view=paper] .skylist_card_center{
 	height:initial;
 }
+.skylist_wrapper[view=paper] .skylist_checkbox{
+	margin: 0px 10px;
+}
 .skylist_wrapper[view=paper] .skylist_card_center [find=card_rightbox]{
     visibility: hidden;
     width: 90px;
     display: table-cell;
     vertical-align: top;
     font-size: 14px;
-    padding-top: 10px;
-    padding-left: 10px;
+    /*padding-top: 10px;
+    padding-left: 10px;*/
     padding-right: 10px;
     text-align: right;
 }
@@ -639,7 +642,7 @@
 .skylist_wrapper[view=paper] .skylist_card_center [find=links_wrapper],
 .skylist_wrapper[view=paper] .skylist_card_center [find=comments_wrapper]{
 	display: inline-block;
-	padding-bottom: 10px;
+	padding: 10px 0px;
 }
 
 
@@ -663,6 +666,8 @@
 }
 .skylist_wrapper[view=paper] .skylist_card_center [find=card_leftbox] {
 	vertical-align: top;
+	padding-top: 6px;
+	padding-bottom: 10px;
 }
 
 
@@ -700,6 +705,7 @@
 }
 .skylist_wrapper[view=paper]>.burger_typeTask [find=checkbox_td]{
 	vertical-align: top;
+	padding-top: 10px;
 }
 .skylist_wrapper[view=paper]>.burger_typeTask td.skylist_card_textwrapper{
 	display:block;
@@ -715,12 +721,11 @@
 /*expandables*/
 .skylist_card [find=expandable_comments],
 .skylist_card [find=expandable_links]{
-	width: 500px;
 	overflow: hidden;
 	position: relative;
-	width: 500px;
 	display:none;
 	margin-left: 40px;
+	margin-right: 10px;
 	/*padding-right: 60px;*/
 	padding-bottom: 10px;
 	white-space: nowrap;
@@ -768,10 +773,44 @@
 	visibility: visible;
 }
 
+.skylist_card [find=expandable_comments]{
+	font-size: 12px;
+}
+.skylist_card [find=expandable_comments] .submenu_taskdetail_commentbubble{
+	padding: 0px;
+}
+.skylist_card [find=expandable_comments] .submenu_taskdetail_commentbubble_sub{
+	padding-left: 58px;
+}
+.skylist_card [find=expandable_comments] .submenu_taskdetail_commentbubble_profile{
+	padding: 0px;
+	width: 50px;
+}
 .skylist_card [find=expandable_comments] [find=profile_pic]{
 	display: none;
 }
-
+.skylist_card [find=expandable_comments] [find=name]{
+	text-align: right;
+	color: #374264;
+    font-weight: normal;
+    position: relative;
+    padding-right: 5px;
+}
+.skylist_card [find=expandable_comments] [find=name]:after {
+    content: ':';
+    position: absolute;
+    left: 46px;
+}
+.skylist_card [find=expandable_comments] .submenu_taskdetail_commentbubble_text [find=text]{
+	white-space: normal;
+}
+/*
+.skylist_card [find=expandable_comments] .submenu_taskdetail_commentbubble_text [find=text]:before{
+	content: ':';
+	padding-right: 5px;
+	color: #374264;
+    font-weight: normal;
+}*/
 
 /*
  *  END OF paperView-----------------------------------------------

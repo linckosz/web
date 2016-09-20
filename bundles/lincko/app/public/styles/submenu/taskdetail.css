@@ -539,7 +539,7 @@ styling for addNew
 }
 .submenu_taskdetail_commentbubble_addNew .submenu_taskdetail_commentbubble_quickAction,
 .submenu_taskdetail_commentbubble_addNew .submenu_taskdetail_commentbubble_quickAction [find=text] {
-	display: none;
+	visibility: hidden;
 }
 
 
