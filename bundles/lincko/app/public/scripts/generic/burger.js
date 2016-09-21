@@ -434,6 +434,7 @@ burgerN.slideDown = function(elem_dropdown){
 	param.dropdownOffset
 	param.disable_shortcutUser
 	param.enter_fn
+	param.enter_fn_param
 	param.dropdownOffset
 */
 burgerN.regex = function(elem, item, param){
@@ -765,7 +766,12 @@ burgerN.regex = function(elem, item, param){
 		}
 		else if((event.which || event.keyCode) == 13 ){ //if enter is pressed
 			if(param && param.elem_input && typeof param.enter_fn == 'function'){
-				param.enter_fn();
+				if(param.enter_fn_param){
+					param.enter_fn(param.enter_fn_param);
+				}
+				else{
+					param.enter_fn();
+				}
 			}
 			else{
 				elem.blur();
