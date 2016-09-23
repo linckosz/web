@@ -204,6 +204,8 @@ Lincko.storage.update = function(partial, info){
 	var item_new;
 	var update = false;
 	var update_real = false;
+	var updatedAttributes = {};
+	var currentRange = '';
 	var children_list = {};
 	for(var category in Lincko.storage.data) {
 		children_list[category] = {};
@@ -219,6 +221,9 @@ Lincko.storage.update = function(partial, info){
 		if(typeof Lincko.storage.data[i] == 'undefined'){ Lincko.storage.data[i] = {}; }
 		for(var j in partial[i]) {
 			update_real = false;
+			currentRange = i+'_'+j;
+			updatedAttributes = {};
+			updatedAttributes[currentRange] = {};
 			//If only update_at (parent->touch), we do not prepare for update
 			if(typeof Lincko.storage.data[i][j] != 'undefined'){
 				for(var k in partial[i][j]){
@@ -226,15 +231,18 @@ Lincko.storage.update = function(partial, info){
 					if(k!="_children" && k!="_id" && k!="type" && k!="history" && k!="created_at" && k!="created_by" && k!="updated_by"){
 						if(typeof Lincko.storage.data[i][j][k] == 'undefined'){ //New field
 							update_real = true;
-							break;
+							updatedAttributes[currentRange][k] = true;
+							//break; --> must keep going to get all the attribute that has been changed
 						} else if(typeof Lincko.storage.data[i][j][k] == 'object'){ //Different object
 							if(JSON.stringify(Lincko.storage.data[i][j][k]) != JSON.stringify(partial[i][j][k])){
 								update_real = true;
-								break;
+								updatedAttributes[currentRange][k] = true;
+								//break;
 							}
 						} else if(Lincko.storage.data[i][j][k] != partial[i][j][k]){ //Different value
 							update_real = true;
-							break;
+							updatedAttributes[currentRange][k] = true;
+							//break;
 						}
 					}
 				}
@@ -244,7 +252,7 @@ Lincko.storage.update = function(partial, info){
 			Lincko.storage.data[i][j] = partial[i][j];
 			if(update_real){
 				//console.log("update ==> "+i+'_'+j);
-				app_application_lincko.prepare(i+'_'+j);
+				app_application_lincko.prepare(i+'_'+j, false, updatedAttributes);
 			}
 			update = true;
 		}

@@ -125,7 +125,9 @@ var app_application_lincko = {
 			}
 			//Concatanate
 			for(var field in temp_fields){
-				this._fields[field] = true;
+				if(!this._fields[field]){
+					this._fields[field] = true;
+				}
 			}
 
 			//First we scan all HTML elements
@@ -142,6 +144,13 @@ var app_application_lincko = {
 								|| typeof this._elements[Elem_id].range[field.replace(/_\d+$/, '')] != 'undefined'
 							){
 								try {
+									var updated = {};
+									for(var range in this._elements[Elem_id].range){
+										if(this._fields[range]){
+											updated[range] = this._fields[range];
+										}
+									}
+									this._elements[Elem_id].updated = updated;
 									this._elements[Elem_id].action();
 								} catch(e) {
 									var instance = "Other";
@@ -273,32 +282,61 @@ var app_application_lincko = {
 		update: [default: false]
 			- false: Do nothing, just wait for the timer (every 15s) to launch an update
 			- true: Force update
+		updatedAttributes: optional, will be passed onto sync function to know exactly which attribute was updated
+			{
+				range: {
+					'attribute': true,
+					....
+				},
+				'task_1' {
+					'+title': true,
+				},
+			}
 
 		NOTE: Because JS is not ready yet (obverse() is too new) to observe any object change, we have to add it manually.
 	*/
-	prepare: function(fields, update){
+	prepare: function(fields, update, updatedAttributes){
 		if(typeof fields == 'undefined'){ fields = false; }
 		if(typeof update != 'boolean'){ update = false; }
 		var field;
 		if(typeof fields == 'string' || typeof fields == 'number'){
-			this._fields[fields] = true;
+			if(typeof this._fields[fields] != 'object'){
+				this._fields[fields] = true;
+			}
 		} else if(typeof fields == 'object'){
 			for(var i in fields){
 				if(typeof fields[i] == 'string' || typeof fields[i] == 'number'){
-					this._fields[fields[i]] = true;
+					if(typeof this._fields[fields[i]] != 'object'){
+						this._fields[fields[i]] = true;
+					}
 				}
 			}
 		} else if(fields === true){
 			//Prepare all to be updated
 			for(var id in this._elements){
 				for(var field in this._elements[id].range){
-					this._fields[field] = true;
+					if(typeof this._fields[fields] != 'object'){
+						this._fields[field] = true;
+					}
 				}
 			}
 			for(var field in this._functions.fields){
-				this._fields[field] = true;
+				if(typeof this._fields[fields] != 'object'){
+					this._fields[field] = true;
+				}
 			}
 		}
+
+		//change the field value for those given in updatedAttributes
+		if(typeof updatedAttributes == 'object'){
+			var that = this;
+			$.each(updatedAttributes, function(key, val){
+				if(typeof that._fields[key] != 'object'){
+					that._fields[key] = val;
+				}
+			});
+		}
+
 		//Force to update if update at true
 		if(update){
 			this.update();
