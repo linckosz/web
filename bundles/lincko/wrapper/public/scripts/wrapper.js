@@ -6,7 +6,7 @@ var wrapper_shangzai = {
 		puk: null,
 };
 var wrapper_set_shangzai = true;
-var wrapper_xhr_error = false;
+var wrapper_xhr_error = true; //At false, we make communication error message appearing once, at true never
 var wrapper_signing_out = false;
 
 // Because "const" seems to not work in some browsers
