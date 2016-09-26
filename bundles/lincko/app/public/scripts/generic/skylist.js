@@ -894,19 +894,27 @@ skylist.prototype.addCard = function(item){
 					});
 				}
 				else if(item_new){ //for update
-					elem.velocity('fadeOut',{
-						duration: 200,
-						complete: function(){
-							var elem_toReplace = that.addCard(Lincko.storage.get(that.list_type , item['_id']));
-							if(elem.hasClass('skylist_card_hover')){
-								elem_toReplace.addClass('skylist_card_hover');
+					console.log(this.updated[that.list_type+'_'+item['_id']]);
+					if(that.Lincko_itemsList_filter.view == 'paper' 
+						&& typeof this.updated == 'object' && this.updated[that.list_type+'_'+item['_id']]
+						&& (this.updated[that.list_type+'_'+item['_id']]._files || this.updated[that.list_type+'_'+item['_id']]._children)){ //for now, only for _files and _children (i.e. comments) changes
+						that.paperview_taskCard_update(elem, item_new, this.updated[that.list_type+'_'+item['_id']]);
+					}
+					else{
+						elem.velocity('fadeOut',{
+							duration: 200,
+							complete: function(){
+								var elem_toReplace = that.addCard(Lincko.storage.get(that.list_type , item['_id']));
+								if(elem.hasClass('skylist_card_hover')){
+									elem_toReplace.addClass('skylist_card_hover');
+								}
+								elem.find('input').blur();
+								$(elem.find('[find=card_time_calendar_timestamp]')).datepicker('hide');
+								elem.replaceWith(elem_toReplace);
+								that.DOM_updated();
 							}
-							elem.find('input').blur();
-							$(elem.find('[find=card_time_calendar_timestamp]')).datepicker('hide');
-							elem.replaceWith(elem_toReplace);
-							that.DOM_updated();
-						}
-					});
+						});
+					}
 				}
 			}
 		);
@@ -1030,6 +1038,80 @@ skylist.prototype.addChat = function(item){
 	//that.add_cardEvents(Elem);
 	return Elem;
 }
+
+skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
+	var that = this;
+	console.log(updated);
+	var elem_expandable_links = null;
+	var elem_expandable_links_addNew = null;
+	
+	if(updated._files){
+		elem_expandable_links = elem.children('[find=expandable_links]');
+		if(elem_expandable_links.children('.iscroll_sub_div').length){
+			elem_expandable_links = elem_expandable_links.children('.iscroll_sub_div');
+		}
+		elem_expandable_links_addNew = elem_expandable_links.children('[find=btn_addNew]');
+
+		$.each(item._files, function(fileID, obj){
+			var elem_linkboxExist = elem_expandable_links.children('[_files='+fileID+']');
+			if(!elem_linkbox.length){ return; }
+
+			var elem_linkboxNew = that.make_fileLinkbox(fileID);
+			if(elem_linkboxNew){
+				elem_expandable_links_addNew.before(elem_linkboxNew);
+			}
+		});
+	}
+}
+
+skylist.prototype.make_fileLinkbox = function(fileID){
+	var item_file = null;
+	if(typeof fileID == 'object'){
+		item_file = fileID;
+	}
+	else{
+		item_file = Lincko.storage.get('files', fileID);
+		if(!item_file){ return false; }
+	}
+
+	var fileType_class = 'fa fa-file-o';
+	var elem_linkbox = $('<span></span>');
+	var real_url = null;
+	var thumb_url = null;
+	thumb_url = Lincko.storage.getLinkThumbnail(fileID);
+	real_url = Lincko.storage.getLink(fileID);
+	if(item_file['category'] == 'image'){
+		fileType_class = 'fa fa-file-image-o';
+		elem_linkbox = $('<img />').prop('src',thumb_url).attr('draggable', false).click(fileID, function(event){
+			event.stopPropagation();
+			previewer.pic(event.data);
+		});
+	}
+	else if(item_file['category'] == 'video'){
+		fileType_class = 'fa fa-file-video-o';
+		elem_linkbox = $('<img />').prop('src',thumb_url).attr('draggable', false).click(fileID, function(event){
+			event.stopPropagation();
+			previewer.video(event.data);
+		});
+	}
+	else{
+		fileType_class = app_models_fileType.getClass(item_file.ori_ext);
+		elem_linkbox.addClass(fileType_class).click(function(){
+			submenu_Build(
+			'taskdetail', null, null, {
+				"type":'files', 
+				"id":fileID,
+			}, true);
+		});
+	}
+
+	elem_linkbox = $('<div>').addClass('skylist_paperView_expandable_boxsize').attr('_files', fileID).html(elem_linkbox);
+
+	return elem_linkbox;
+}
+
+
+
 
 skylist.prototype.addTask = function(item){
 	var that = this;
@@ -1318,59 +1400,11 @@ skylist.prototype.addTask = function(item){
 		var elem_btn_addNew = elem_expandable_links.find('[find=btn_addNew]');
 		if(item._files){
 			$.each(item._files, function(fileID, obj){
-				var item_file = Lincko.storage.get('files', fileID);
-				if(!item_file){ return; }
-
-
-				var fileType_class = 'fa fa-file-o';
-				var elem_linkbox = $('<span></span>');
-				var real_url = null;
-				var thumb_url = null;
-				thumb_url = Lincko.storage.getLinkThumbnail(fileID);
-				real_url = Lincko.storage.getLink(fileID);
-				if(item_file['category'] == 'image'){
-					fileType_class = 'fa fa-file-image-o';
-					elem_linkbox = $('<img />').prop('src',thumb_url).attr('draggable', false).click(fileID, function(event){
-						event.stopPropagation();
-						previewer.pic(event.data);
-					});
+				var elem_linkbox = that.make_fileLinkbox(fileID);
+				if(elem_linkbox){
+					elem_btn_addNew.before(elem_linkbox);
 				}
-				else if(item_file['category'] == 'video'){
-					fileType_class = 'fa fa-file-video-o';
-					elem_linkbox = $('<img />').prop('src',thumb_url).attr('draggable', false).click(fileID, function(event){
-						event.stopPropagation();
-						previewer.video(event.data);
-					});
-				}
-				else{
-					fileType_class = app_models_fileType.getClass(item_file.ori_ext);
-					elem_linkbox.addClass(fileType_class).click(function(){
-						submenu_Build(
-						'taskdetail', null, null, {
-							"type":'files', 
-							"id":fileID,
-						}, true);
-					});
-				}
-
-				elem_linkbox = $('<div>').addClass('skylist_paperView_expandable_boxsize').html(elem_linkbox);
-				/*.click(function(){
-					submenu_Build(
-					'taskdetail', null, null, {
-						"type":'files', 
-						"id":fileID,
-					}, true);
-				});*/
-
-				elem_btn_addNew.before(elem_linkbox);
-
-
-				/*var elem_span = $('<span class="skylist_paperView_expandable_boxsize">');
-				var thumb_url = Lincko.storage.getLinkThumbnail(fileID);
-				elem_span.css('background-image','url("'+thumb_url+'")');
-				elem_btn_addNew.before(elem_span);*/
-
-
+				return;
 			});
 		}
 
