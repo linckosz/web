@@ -1,0 +1,161 @@
+.inputter_container{
+	border-top:  1px solid #FBA026;
+	background-color: #ffffff;
+	padding: 10px 0;
+}
+
+.inputter_content_comment,.inputter_content_task
+{
+	height: auto;
+	overflow: hidden;
+	padding:0 10px;
+}
+
+.textarea{
+	-webkit-appearance: textarea;
+	background-color: white;
+	min-height: 20px; 
+	max-height: 300px;
+	outline: 0; 
+	font-size: 12px; 
+	line-height: 24px;
+	padding: 2px;
+	word-wrap: break-word;
+	overflow-x: hidden;
+	overflow-y: auto;
+	text-align: left;
+}
+
+
+.comments_input {
+    font-size: 16px;
+    border: 0px;
+    width: 100%;
+    display: block;
+    resize: none;
+    padding: 0 4px;
+    box-sizing: border-box;
+    height: 72px;
+    cursor: text;
+    color:#000000;
+}
+
+.inputter_content_task
+{
+	
+}
+
+.inputter_content_wrapper{
+
+}
+
+
+
+
+.inputter_menu_wrapper
+{
+	position: absolute;
+	top:11px;
+    right: 0;
+}
+
+.inputter_menu_wrapper ul{
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	height: auto;
+	width :auto;
+}
+
+
+.inputter_munu_item{
+	float:right;
+	overflow: hidden;
+	height: auto;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	width : auto;
+}
+
+.inputter_ico{
+	width:auto;
+	height:30px;
+	font-size: 30px;
+	cursor: pointer; 
+	cursor: hand;
+	color : #FBA026;
+}
+
+.content_margin_col_1{
+	margin-right: 50px;
+}
+
+.content_margin_col_2{
+	margin-right: 90px;
+}
+
+.content_margin_col_3{
+	margin-right: 130px;
+}
+
+.content_margin_col_4{
+	margin-right: 170px;
+}
+
+
+@media only screen and (max-width: 1279px){
+	.inputter_container{
+		border-top: none;
+		background-color:#EFEFEF;;
+	}
+	.comments_input {
+		font-size: 16px;
+		max-height:72px;
+		height: auto;
+	}
+	.inputter_ico{
+		height:24px;
+		font-size: 24px;
+	}
+	.inputter_task .send{
+		
+	}
+	.inputter_comment .send{
+		display: none;
+	}
+	.scissors{
+		display: none;
+	}
+
+	.inputter_menu_wrapper ul{
+		float:right;
+	}
+
+	.icon_float_top{
+		top:11px;
+	}
+
+	.icon_float_bottom{
+		bottom:-3px;
+		top:auto;
+	}
+
+	.content_margin_col_1{
+		margin-right: 44px;
+	}
+
+	.content_margin_col_2{
+		margin-right: 78px;
+	}
+
+	.content_margin_col_3{
+		margin-right: 112px;
+	}
+
+	.content_margin_col_4{
+		margin-right: 146px;
+	}
+
+}
+
+
