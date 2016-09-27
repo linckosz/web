@@ -126,7 +126,8 @@ var app_application_lincko = {
 			//Concatanate
 			for(var field in temp_fields){
 				if(!this._fields[field]){
-					this._fields[field] = true;
+					this._fields[field] = { _children: true };
+					//this._fields[field] = true;
 				}
 			}
 
