@@ -334,6 +334,11 @@ var app_application_lincko = {
 				if(typeof that._fields[key] != 'object'){
 					that._fields[key] = val;
 				}
+				else if(typeof that._fields[key] == 'object' && typeof val == 'object'){
+					$.each(val, function(attribute, obj){
+						that._fields[key][attribute] = true;
+					});
+				}
 			});
 		}
 

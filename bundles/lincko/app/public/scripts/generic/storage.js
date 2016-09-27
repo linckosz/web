@@ -430,11 +430,13 @@ Lincko.storage.childrenList = function(data, children_list, category_focus, cate
 				continue;
 			}
 			if(typeof Lincko.storage.data[category][id]['_children'] != 'undefined'){
+				var updatedAttributes = {};
+				updatedAttributes[category+'_'+id] = {'_children': true };
 				if(typeof children_list[category][id] == 'undefined'){
-					app_application_lincko.prepare(category+'_'+id); //Update everything
+					app_application_lincko.prepare(category+'_'+id, false, updatedAttributes); //Update everything
 					change = true;
 				} else if(children_list[category][id] != JSON.stringify(Lincko.storage.data[category][id]['_children'])){
-					app_application_lincko.prepare(category+'_'+id); //Update everything
+					app_application_lincko.prepare(category+'_'+id, false, updatedAttributes); //Update everything
 					change = true;
 				}
 			}
