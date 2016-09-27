@@ -47,10 +47,10 @@ Submenu_select.new_chat_menu = function(subm) {
 
 var app_submenu_scrollto = function(iScroll, last, scroll_time){
 	if(typeof scroll_time == 'undefined'){
-		scroll_time = 0;
+		scroll_time = 300;
 	}
 	setTimeout(function(){
-		iScroll.scrollToElement(last, scroll_time);
+		iScroll.scrollToElement(last, scroll_time,0,300);
 	}, 50);
 }
 
@@ -60,18 +60,14 @@ Submenu.prototype.Add_ChatContents = function() {
 	var that = this;
 	var id = this.param.id;
 	var type = this.param.type;
-	var latest_comment = 0;
-	var latest_history = 0;
 	var overthrow_id = "overthrow_"+that.id;
 	submenu_wrapper = this.Wrapper();
 	var position = submenu_wrapper.find("[find='submenu_wrapper_content']");
 	position.addClass('overthrow').addClass("submenu_chat_contents");
-	var submenu_wrapper_id=submenu_wrapper.prop("id");
-
+	var submenu_wrapper_id = submenu_wrapper.prop("id");
 	that.param.chatFeed = new chatFeed(id,type,position,that);
 
 	
-	var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
 
 
 	if (type == 'history') {
@@ -86,14 +82,13 @@ Submenu.prototype.Add_ChatContents = function() {
 			var chat_item = that.param.chatFeed;
 			chat_item.app_chat_feed_load_recent();
 			
-
 			var overthrow_id = "overthrow_"+this.action_param[0];
 			var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
 
 			if(myIScrollList[overthrow_id] && last && last[0]){
 				if(myIScrollList[overthrow_id].maxScrollY - myIScrollList[overthrow_id].y > -100){
 					myIScrollList[overthrow_id].refresh();
-					var scroll_time = 0;
+					var scroll_time = 300;
 					if(!supportsTouch || responsive.test("minDesktop")){ scroll_time = 300; }
 					//myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
 					app_submenu_scrollto(myIScrollList[overthrow_id], last[0], scroll_time);
@@ -108,17 +103,15 @@ Submenu.prototype.Add_ChatContents = function() {
 		
 		app_application_lincko.add(this.id+"_chat_contents_wrapper", "chats_" + id, function() {
 			//toto => there is an undefined somewhere
-
 			var chat_item = that.param.chatFeed;
 			chat_item.app_chat_feed_load_recent();
-
 
 			var overthrow_id = "overthrow_"+this.action_param[0];
 			var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
 			if(myIScrollList[overthrow_id] && last && last[0]){
 				if(myIScrollList[overthrow_id].maxScrollY - myIScrollList[overthrow_id].y > -100){
 					myIScrollList[overthrow_id].refresh();
-					var scroll_time = 0;
+					var scroll_time = 300;
 					if(!supportsTouch || responsive.test("minDesktop")){ scroll_time = 300; }
 					//myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
 					app_submenu_scrollto(myIScrollList[overthrow_id], last[0], scroll_time);
@@ -144,11 +137,9 @@ Submenu.prototype.Add_ChatContents = function() {
 		}
 	}, [that.id, id, that.param.chatFeed, position]);
 
-	var type_clear = type;
-	if (type == 'history') {
-		type_clear = 'projects';
-	}
-	app_application_lincko.add("overthrow_"+that.id, "submenu_show_"+that.preview+"_"+that.id, function() {
+	var type_clear = type == 'history' ? 'projects' : type;
+	 app_application_lincko.add("overthrow_"+that.id, "submenu_show_"+that.preview+"_"+that.id, function() {
+	 	var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
 		var submenu_id = this.action_param[0];
 		var scroll_time = this.action_param[1];
 		var overthrow_id = "overthrow_"+submenu_id;
@@ -160,47 +151,31 @@ Submenu.prototype.Add_ChatContents = function() {
 		}
 		this.action_param[1] = 300;
 		app_models_notifier.clearNotification(this.action_param[2], this.action_param[3]);
-	}, [that.id, 0, type_clear, id]);
-
-
-
+	 }, [that.id, 0, type_clear, id]);
+	
 }
 
-Submenu.prototype.New_Add_ChatMenu = function() {
-	var attribute = this.attribute;
+Submenu.prototype.New_Add_ChatMenu  = function()
+{
 	var submenu_wrapper = this.Wrapper();
 	submenu_wrapper.addClass("submenu_chats");
-	var Elem = $('#-submenu_app_chat_bottom').clone();
-	var that = this;
-	Elem.prop("id", '');
-	submenu_wrapper.find("[find=submenu_wrapper_bottom]").addClass('submenu_bottom');
-	submenu_wrapper.find("[find=submenu_wrapper_content]").css('bottom', submenu_wrapper.find("[find=submenu_wrapper_bottom]").height());
-	if ("class" in attribute) {
-		Elem.addClass(attribute['class']);
-	}
-	submenu_wrapper.find("[find=submenu_wrapper_bottom]").addClass("submenu_chats_no_background_image").append(Elem);
-    
-    function show_button(){
-    	if($("#"+that.id).find("[find=chat_textarea]").text().length>0)
-		{
-			$("[find=submenu_app_chat_button_mobile] .send").show();
-			$("[find=submenu_app_chat_button_mobile] .attachment").hide();
-		}
-		else
-		{
-			$("[find=submenu_app_chat_button_mobile] .send").hide();
-			$("[find=submenu_app_chat_button_mobile] .attachment").show();
-		}
-    }
+
+	var position = submenu_wrapper.find("[find=submenu_wrapper_bottom]");
+	position.addClass('submenu_bottom');
+	//(setting,position,submenu,burgerFlag,param,fnUpload,fnSend)
 
 	
-	function send_comments() {
-		var textarea = $("#"+that.id).find("[find=chat_textarea]");
-		var content = textarea.html().replace(/<div>/g,"<br>").replace(/<\/div>/g,"");
+	var param= {
+		type : this.param.type,
+		id : this.param.id,
+	};
+
+	var that = this;
+	function fnSend(msg) {
+		var content = msg;
 		var type = that.param.type == 'history' ? "projects":'chats';
 		var sub_that = that;
 		var tmpID = [];
-		textarea.text('');
 
 		wrapper_sendAction({
 				'comment': content,
@@ -228,14 +203,6 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 						delete app_models_chats_send_queue[list[key]['temp_id']] ;
 					}
 				});
-				//recall comment if in queue
-				// if(data_msg.partial && data_msg.partial[wrapper_localstorage.uid] && data_msg.partial[wrapper_localstorage.uid].comments){
-				// 	$.each(data_msg.partial[wrapper_localstorage.uid].comments, function(id, item){
-				// 		if(app_models_chats_recallQueue[item.temp_id]){
-				// 			app_models_chats_recallQueue.sendAction(id);
-				// 		}
-				// 	});
-				// }
 			},
 			null,
 			function(jqXHR, settings, temp_id) {
@@ -268,82 +235,11 @@ Submenu.prototype.New_Add_ChatMenu = function() {
 				
 			},
 			function(){
-				// $.each(tmpID,function(i,val){
-				// 	delete app_models_chats_recallQueue[val];
-				// });
-				// tmpID = [];
+				
 			}
 		);
 
 	}
-
-	$('.comments_input', submenu_wrapper).on('paste', function(){
-		var that = $(this);
-		setTimeout(function(){
-			that.html(that.html().replace(/<(br).*?>/g,"<br/>").replace(/<(?!br).*?>/g,""));
-		},100);
-	});
-
-	$('.comments_input', submenu_wrapper).on("resize",function(e) {
-		submenu_resize_content();
-	});
-
 	
-
-	$('.comments_input', submenu_wrapper).keyup(function(e) {
-		e.stopPropagation();
-		show_button();
-		if(e.ctrlKey && e.keyCode==13)
-		{
-			return;
-		}
-		if(e.shiftKey && e.keyCode==13)
-		{
-			return;
-		}
-		if(e.which == 13) {
-			$(this).text('');
-		}
-	});
-
-	$('.comments_input', submenu_wrapper).keydown(function(e) {
-		e.stopPropagation();
-		if(e.ctrlKey && e.keyCode==13)
-		{
-			return;
-		}
-		if(e.shiftKey && e.keyCode==13){
-      		e.returnValue=false;
-			return;
-		}
-		if(e.which == 13) {
-			e.preventDefault();
-			send_comments();
-			$(this).text('');
-		}
-	});
-
-	$('.send', submenu_wrapper).on("click", function(e) {
-		send_comments();
-		show_button();
-	});
-
-	$('.attachment',submenu_wrapper).on("click",function(e) {
-		var type = that.param.type == 'history' ? "projects":'chats';
-		var id=that.param.id;
-		app_upload_open_files(type, id,false,true);
-	});
-
-	setTimeout(function(){
-		if(!supportsTouch || responsive.test("minDesktop")){
-			Elem.find(".comments_input").focus();
-		}
-		else {
-			Elem.find(".comments_input").blur();
-		}
-	},500);
-
-	//Free memory
-	delete submenu_wrapper;
-	return Elem;
-};
+	var chat_inputter = new inputter(null,position,submenu_wrapper,true,param,fnSend);
+}

@@ -1,14 +1,16 @@
 
-var inputter = function(setting,position,submenu,burgerFlag,param,fnUpload,fnSend)
+var inputter = function(setting,position,submenu,burgerFlag,param,fnSend,fnUpload)
 {
 	this.position = position;
 	this.submenu = submenu;
 	this.burgerFlag = burgerFlag;
 	this.param = param;
+	this.fnSend = fnSend;
 	this._setting =
 	{
-		type : setting != null && typeof setting.type !== 'undefined' ? setting.type :'task',// comment or task
-		feature : setting != null && typeof setting.feature !== 'undefined' ? setting.feature : [['scissors','send'],'attachment'], // upload+send
+		type : setting != null && typeof setting.type !== 'undefined' ? setting.type :'comment',// comment or task
+		feature : setting != null && typeof setting.feature !== 'undefined' ? setting.feature : ['send','attachment'], // upload+send
+		margin : setting != null && typeof setting.margin !== 'undefined' ? setting.margin : 'margin_style_1_1', // upload+send
 		entry_commit_able : setting != null && typeof setting.entry_commit_able !== 'undefined' ? setting.entry_commit_able : false, //true or false 
 		row : setting != null && typeof setting.row !== 'undefined' ? setting.row : 3,// pc display 3 rows
 		max_row : setting != null && typeof setting.max_row !== 'undefined' ? setting.max_row : 3,
@@ -18,7 +20,76 @@ var inputter = function(setting,position,submenu,burgerFlag,param,fnUpload,fnSen
 		style : setting != null && typeof setting.icon_float !== 'undefined' ? setting.icon_float : 'chatting',//chats or tasks or comments
 	}
 	this.items_build();
+	this.handler_build();
 }
+inputter.prototype.handler_build = function(){
+	var that = this;
+	if(that._setting.type == 'comment')
+	{
+		that.position.find('[find=call_send]').click(function(){
+			var msg = that.position.find('[find=chat_textarea]').html().replace(/<div>/g,"<br>").replace(/<\/div>/g,"");
+			that.fnSend(msg);
+			that.position.find('[find=chat_textarea]').html('');
+			that.position.find('[find=call_send]').addClass('mobile_hide');
+			that.position.find('[find=call_attachment]').removeClass('mobile_hide');
+		});
+
+		that.position.find('[find=call_attachment]').click(function(){
+			var type = that.param.type == 'history' ? "projects":'chats';
+			var id = that.param.id;
+	 		app_upload_open_files(type, id,false,true);
+		});
+
+		that.position.find('[find=chat_textarea]').keyup(function(e) {
+			//e.stopPropagation();
+			if(this.innerText.length > 0)
+			{
+				that.position.find('[find=call_send]').removeClass('mobile_hide');
+				that.position.find('[find=call_attachment]').addClass('mobile_hide');
+			}
+			else
+			{
+				that.position.find('[find=call_send]').addClass('mobile_hide');
+				that.position.find('[find=call_attachment]').removeClass('mobile_hide');
+			}
+
+			if(e.shiftKey && e.keyCode==13)
+			{
+				return;
+			}
+			if( e.keyCode==13)
+			{
+				var msg = that.position.find('[find=chat_textarea]').html().replace(/<div>/g,"<br>").replace(/<\/div>/g,"");
+				that.fnSend(msg);
+				that.position.find('[find=chat_textarea]').html('');
+				that.position.find('[find=call_send]').addClass('mobile_hide');
+				that.position.find('[find=call_attachment]').removeClass('mobile_hide');
+				return;
+			}
+		});
+
+		that.position.find('[find=chat_textarea]').keyup(function(e) {
+			if(e.shiftKey && e.keyCode==13)
+			{
+				e.returnValue=false;
+				return;
+			}
+		});
+	}
+	else(this._setting.type == 'task')
+	{
+		this.position.find('[find=call_send]').click(function(){
+			
+		});
+
+		this.position.find('[find=call_attachment]').click(function(){
+			
+		});
+	}
+}
+
+
+
 
 inputter.prototype.items_build = function(){
 	var wrapper = $('#-inputter_container').clone();
@@ -29,6 +100,7 @@ inputter.prototype.items_build = function(){
 	var content = $('#-inputter_content_'+this._setting.type).clone();
 	content.prop('id','');
 	content.appendTo(wrapper.find('[find=content_wrapper]'));
+	content.addClass(this._setting.margin);
 	if(this.burgerFlag){
 		if(this.fnSend){
 			this.param.enter_fn = this.fnSend;
@@ -36,34 +108,33 @@ inputter.prototype.items_build = function(){
 		burgerN.regex(content.children('[find=chat_textarea]').eq(0), null, this.param);
 	}
 
+	
+
 	var menu = wrapper.find('[find=menu_wrapper]');
-	var content_margin = 30 + 10;
 	var memu_row_max_length = 0;
+	var mobile_row_max_length = 0;
+	var has_scissors = false;
 	for(var i in this._setting.feature)
 	{
 		var row = $('#-inputter_menu_row_wrapper').clone();
 		row.prop('id','');
 		if(typeof this._setting.feature[i] === 'string')
 		{
-			if(memu_row_max_length < 1) 
-			{
-				memu_row_max_length = 1;
-			}
 			var item = $('#-inputter_call_'+this._setting.feature[i]).clone();
 		 	item.prop('id','');
 		 	item.appendTo(row);
 		}
 		else
 		{
-			if(this._setting.feature[i].length > memu_row_max_length) 
-			{
-				memu_row_max_length = this._setting.feature[i].length;
-				content_margin = (30 + 10) * memu_row_max_length + 10;
-			}
+			
 			for(var j = this._setting.feature[i].length - 1 ; j >= 0 ; j -- )
 			{
 				if(typeof this._setting.feature[i][j] === 'string')
 				{
+					if(this._setting.feature[i] == 'scissors')
+					{
+						has_scissors = true;
+					}
 					var item = $('#-inputter_call_'+this._setting.feature[i][j]).clone();
 				 	item.prop('id','');
 				 	item.appendTo(row);
@@ -73,8 +144,12 @@ inputter.prototype.items_build = function(){
 		row.appendTo(menu);
 	}
 
-	wrapper.find('[find=content_wrapper]').css('margin-right',content_margin);
+	if(this._setting.type == 'comment')
+	{
+		menu.find('[find=call_send]').addClass('mobile_hide');
+	}
 
+	
 	if(this._setting.icon_float == 'top')
 	{
 		menu.addClass('icon_float_up');
@@ -87,6 +162,10 @@ inputter.prototype.items_build = function(){
 	if(this._setting.style != 'tasks')
 	{
 		wrapper.find('[find=uploading_wrapper]').remove();
+	}
+	else
+	{
+
 	}
 
 	wrapper.appendTo(this.position);

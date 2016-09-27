@@ -264,6 +264,7 @@ var FileContentCls = function(record,type)
 	this.file_category = Lincko.storage.get(record['_type'], record['_id'],'category');
 	this.file_profile =  Lincko.storage.getLinkThumbnail(record['_id']);
 	this.ext = Lincko.storage.get(record['_type'], record['_id'],'ori_ext');
+	this.temp_id = record['temp_id'];
 }
 
 FileContentCls.prototype.feed_content = function(elem)
@@ -466,7 +467,7 @@ var ActivityCommentContentCls = function(record,type)
 	this.id = record['id'];
 	this.category = record['type'];
 
-	var key = record['type'] == 'files' ? 'name' : 'title';
+	var key = record['par_type'] == 'files' ? '+name' : 'title';
 
 	this.target_id = record['par_id'];
 	this.target_category = record['par_type'];

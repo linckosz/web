@@ -1,26 +1,7 @@
 textarea:focus, input:focus{
-	outline: none;
+	outline: 0;
 }
 
-.textarea{
-	-webkit-appearance: textarea;
-	background-color: white;
-	width: 400px; 
-	min-height: 20px; 
-	max-height: 300px;
-	margin-left: auto; 
-	margin-right: auto; 
-	padding: 3px; 
-	outline: 0; 
-	border: 1px solid #a0b3d6; 
-	font-size: 12px; 
-	line-height: 24px;
-	padding: 2px;
-	word-wrap: break-word;
-	overflow-x: hidden;
-	overflow-y: auto;
-	color: initial;
-}
 
 .submenu_newchat_header {
 	background-color: #679E52;
@@ -81,150 +62,11 @@ textarea:focus, input:focus{
 .submenu_wrapper .submenu_content_chat .skylist .iscroll_sub_div.scrollY {
 	padding-bottom: 0px;
 }
-.submenu_chats .submenu_bottom{
-	height: 100px; /*three lines for desktop, one line(48px) for mobile*/
-	background-image: none;
-}
-
-.chat_bottom .comments_input {
-	font-size: 16px;
-	border: 0px;
-	width: 100%;
-	display: block;
-	resize: none;
-	padding: 4px;
-	box-sizing: border-box;
-	height:72px;
-	cursor: text;
-}
-
-.submenu_app_chat_v_pos {
-	padding-top:14px;
-	padding-bottom:14px;
-	position: relative;
-}
-
-.chat_bottom .icons {
-    position: absolute;
-    right:0;
-	bottom:8px;
-	z-index:999999999;
-}
 
 .submenu_chats_no_background_image {
 	background-image: none !important;
 	background-color: inherit;
 }
 
-.chat_bottom {
-	border-top: 1px solid #FBA026;
-	text-align: left;
-	color: #FBA026;
-	position: relative;
-	height: 100%;
-	background-color: #FFFFFF;
-}
-
-.chat_bottom .input {
-	overflow: hidden;
-	display: block;
-	padding: 0 10px;
-	margin-right:40px;
-}
-
-.submenu_app_chat_button_group{
-	margin:8px 8px 0 0;
-	float:left;
-}
-
-.submenu_app_chat_v_pos [find=submenu_app_chat_button_desktop] {
-	display: block;
-}
-
-.submenu_app_chat_v_pos [find=submenu_app_chat_button_mobile] {
-	display: none;
-}
 
 
-.submenu_app_chat_button{
-	display:block;
-	margin-bottom: 10px;
-}
-
-.attachment {
-	font-size: 30px;
-	cursor: pointer; 
-	cursor: hand;
-}
-
-
-.emoji {
-	display: none;
-}
-
-.send {
-	font-size: 30px;
-	cursor: pointer; 
-	cursor: hand;
-}
-
-
-
-/* Tablet in Landscape */
-@media only screen and (max-width: 1279px){
-	.submenu_app_chat_v_pos [find=submenu_app_chat_button_desktop]
-	{
-		display: none;
-	}
-
-	.submenu_app_chat_v_pos [find=submenu_app_chat_button_mobile]
-	{
-		display: block;
-	}
-
-	.submenu_app_chat_button_group{
-		margin:0 0 0 8px;
-	}
-
-
-	.chat_bottom  {
-		border-top: none;
-		background-color: #EFEFEF;
-		border-radius: 3px;
-	}
-
-	.submenu_app_chat_v_pos {
-		padding:8px 0;
-	}
-
-	.submenu_chats .submenu_bottom{
-		height: 48px; /*three lines for desktop, one line(48px) for mobile*/
-		background-image: url('/lincko/app/images/submenu/top.png');
-		background-repeat: repeat-x;
-	}
-
-	.submenu_chats .comments_input {
-		font-size: 16px;
-		max-height:72px;
-		height: auto;
-	}
-
-	.chat_bottom .icons {
-		position: absolute;
-		right: 0;
-		bottom:2px;
-	}
-
-	.attachment {
-		font-size: 24px;
-		display: block;	
-		cursor: pointer;
-	}
-
-
-	.send {
-		font-size: 24px;
-		display: none;
-	}
-	
-}
