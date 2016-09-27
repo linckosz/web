@@ -207,6 +207,7 @@ Lincko.storage.update = function(partial, info){
 	var updatedAttributes = {};
 	var currentRange = '';
 	var children_list = {};
+	var _children = {};
 	for(var category in Lincko.storage.data) {
 		children_list[category] = {};
 		for(var id in Lincko.storage.data[category]) {
@@ -249,7 +250,16 @@ Lincko.storage.update = function(partial, info){
 			} else {
 				update_real = true;
 			}
-			Lincko.storage.data[i][j] = partial[i][j];
+			//Lincko.storage.data[i][j] = partial[i][j];
+			if(Lincko.storage.data && Lincko.storage.data[i] && Lincko.storage.data[i][j] && Lincko.storage.data[i][j]['_children']){ //to keep _children. partial doesnt include _children. later, childrenList() will rebuild this anyways
+				_children = Lincko.storage.data[i][j]['_children'];
+				Lincko.storage.data[i][j] = partial[i][j];
+				Lincko.storage.data[i][j]._children = _children;
+			}
+			else{
+				Lincko.storage.data[i][j] = partial[i][j];
+			}
+			
 			if(update_real){
 				//console.log("update ==> "+i+'_'+j);
 				app_application_lincko.prepare(i+'_'+j, false, updatedAttributes);
@@ -257,7 +267,7 @@ Lincko.storage.update = function(partial, info){
 			update = true;
 		}
 	}
-	
+
 	if(update){
 		//Lincko.storage.childrenList(partial, children_list);
 		Lincko.storage.childrenList(); //We should not scan the whole database, it slows down the list but Sky had an issue of getting _children visible for notes when adding a comment
@@ -377,7 +387,7 @@ Lincko.storage.childrenList = function(data, children_list, category_focus, cate
 				if(category_id && id != category_id){
 					continue;
 				}
-				if(typeof Lincko.storage.data[category][id]['_children'] != 'undefined'){
+				if(typeof Lincko.storage.data[category][id]['_children'] != 'undefined'){ 
 					children_list[category][id] = JSON.stringify(Lincko.storage.data[category][id]['_children']);
 				}
 				delete Lincko.storage.data[category][id]['_children'];

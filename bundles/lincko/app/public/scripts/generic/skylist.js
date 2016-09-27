@@ -1041,26 +1041,56 @@ skylist.prototype.addChat = function(item){
 
 skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
 	var that = this;
-	console.log(updated);
-	var elem_expandable_links = null;
-	var elem_expandable_links_addNew = null;
 	
-	if(updated._files){
-		elem_expandable_links = elem.children('[find=expandable_links]');
-		if(elem_expandable_links.children('.iscroll_sub_div').length){
-			elem_expandable_links = elem_expandable_links.children('.iscroll_sub_div');
-		}
-		elem_expandable_links_addNew = elem_expandable_links.children('[find=btn_addNew]');
+	//if links were updated
+	if((typeof updated == 'boolean' && updated) || updated._files || updated._notes){
+		var elem_expandable_links = elem.children('[find=expandable_links]');
+		var elem_expandable_links_id = elem_expandable_links.prop('id');
+		var elem_expandable_links_addNew = elem_expandable_links.find('[find=btn_addNew]');
 
-		$.each(item._files, function(fileID, obj){
-			var elem_linkboxExist = elem_expandable_links.children('[_files='+fileID+']');
-			if(!elem_linkbox.length){ return; }
-
-			var elem_linkboxNew = that.make_fileLinkbox(fileID);
-			if(elem_linkboxNew){
-				elem_expandable_links_addNew.before(elem_linkboxNew);
+		if(updated._files){		
+			if(elem_expandable_links.children('.iscroll_sub_div').length){
+				elem_expandable_links = elem_expandable_links.children('.iscroll_sub_div');
 			}
-		});
+
+			$.each(item._files, function(fileID, obj){
+				var elem_linkboxExist = elem_expandable_links.children('[_files='+fileID+']');
+				if(elem_linkboxExist.length){ return; }
+
+				var elem_linkboxNew = that.make_fileLinkbox(fileID);
+				if(elem_linkboxNew){
+					elem_expandable_links_addNew.before(elem_linkboxNew);
+				}
+			});
+		}
+
+		//update count
+		var linkCount = 0;
+		if(item._files){
+			linkCount += Object.keys(item._files).length;
+		}
+		if(item._notes){
+			linkCount += Object.keys(item._notes).length;
+		}	
+		elem.find('[find=linkCount]').text(linkCount);
+
+		//refresh iscroll
+		if(myIScrollList[elem_expandable_links_id]){
+			myIScrollList[elem_expandable_links_id].refresh();
+			elem_expandable_links.find('img').load(function(){
+				myIScrollList[elem_expandable_links_id].refresh();
+			});
+		}
+	}//end of update links
+
+
+
+	//if comments update
+	if((typeof updated == 'boolean' && updated) || updated._children){
+		var mostRecent_primaryComment = Lincko.storage.sort_items(Lincko.storage.list('comments',null, null, that.list_type, item['_id'], false), 'created_at', 0, -1, false)[0];
+		var elem_expandable_comments = elem.find('[find=expandable_comments]');
+		elem_expandable_comments.children('[rootcomment_id]').remove();
+		elem_expandable_comments.prepend(taskdetail_generateCommentThread(mostRecent_primaryComment));
 	}
 }
 

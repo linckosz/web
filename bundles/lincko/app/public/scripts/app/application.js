@@ -115,9 +115,14 @@ var app_application_lincko = {
 				if(match = field.match(/^([a-z_]+)_(\d+)$/, '')){
 					if(temp = Lincko.storage.tree(match[1], match[2], "parents")){
 						for(var type in temp){
-							temp_fields[type] = true;
+							temp_fields[type] = { _children: true };
 							for(var id in temp[type]){
-								temp_fields[type+"_"+id] = true;
+								if(field == type+"_"+id){
+									temp_fields[type+"_"+id] = true;
+								}
+								else{
+									temp_fields[type+"_"+id] = { _children: true };
+								}
 							}
 						}
 					}
@@ -126,10 +131,11 @@ var app_application_lincko = {
 			//Concatanate
 			for(var field in temp_fields){
 				if(!this._fields[field]){
-					this._fields[field] = { _children: true };
+					this._fields[field] = temp_fields[field];
 					//this._fields[field] = true;
 				}
 			}
+
 
 			//First we scan all HTML elements
 			for(var Elem_id in this._elements){
