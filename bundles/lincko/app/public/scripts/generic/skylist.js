@@ -815,13 +815,17 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 		}
 	});*/
 }
+skylist.prototype.iscrollRefresh = function(){
+	var that = this;
+	if( myIScrollList && myIScrollList['skylist_'+that.md5id] ){
+		myIScrollList['skylist_'+that.md5id].refresh();
+	}
+}
 
 skylist.prototype.DOM_updated = function(){
 	var that = this;
 	that.store_all_elem();
-	if( myIScrollList['skylist_'+that.md5id] ){
-		myIScrollList['skylist_'+that.md5id].refresh();
-	}
+	that.iscrollRefresh();
 }
 
 skylist.prototype.addCard_all = function(){
@@ -894,9 +898,9 @@ skylist.prototype.addCard = function(item){
 					});
 				}
 				else if(item_new){ //for update
-					console.log(this.updated[that.list_type+'_'+item['_id']]);
 					if(that.Lincko_itemsList_filter.view == 'paper' 
 						&& typeof this.updated == 'object' && this.updated[that.list_type+'_'+item['_id']]
+						&& Object.keys(this.updated[that.list_type+'_'+item['_id']]).length < 4
 						&& (this.updated[that.list_type+'_'+item['_id']]._files || this.updated[that.list_type+'_'+item['_id']]._children)){ //for now, only for _files and _children (i.e. comments) changes
 						that.paperview_taskCard_update(elem, item_new, this.updated[that.list_type+'_'+item['_id']]);
 					}
@@ -1041,6 +1045,7 @@ skylist.prototype.addChat = function(item){
 
 skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
 	var that = this;
+	var elem_card_rightbox = elem.find('[find=card_rightbox]');
 	
 	//if links were updated
 	if((typeof updated == 'boolean' && updated) || updated._files || updated._notes){
@@ -1074,6 +1079,28 @@ skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
 		}	
 		elem.find('[find=linkCount]').text(linkCount);
 
+
+		//if first file added, reset the buttons and open the expandable
+		if(linkCount == 1){
+			elem_card_rightbox.find('[find=links_icon]').removeClass('skylist_greyColor');
+			elem_expandable_links_addNew.click(function(event){
+				event.stopPropagation();
+				if(item.fake){
+					app_upload_open_files('projects', item._parent[1] , false, true, 'link_queue');
+				}
+				else{
+					app_upload_open_files(that.list_type, item._id, false, true);
+				}
+			});
+
+			elem_card_rightbox.children('[find=links_wrapper]').off('click');
+			elem_card_rightbox.children('[find=links_wrapper]').click(function(event){
+				event.stopPropagation();
+				that.paperView_toggleExpandable($('#'+elem_expandable_links_id));
+			}).click();
+		}
+
+
 		//refresh iscroll
 		if(myIScrollList[elem_expandable_links_id]){
 			myIScrollList[elem_expandable_links_id].refresh();
@@ -1084,14 +1111,46 @@ skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
 	}//end of update links
 
 
-
 	//if comments update
 	if((typeof updated == 'boolean' && updated) || updated._children){
-		var mostRecent_primaryComment = Lincko.storage.sort_items(Lincko.storage.list('comments',null, null, that.list_type, item['_id'], false), 'created_at', 0, -1, false)[0];
 		var elem_expandable_comments = elem.find('[find=expandable_comments]');
-		elem_expandable_comments.children('[rootcomment_id]').remove();
-		elem_expandable_comments.prepend(taskdetail_generateCommentThread(mostRecent_primaryComment));
-	}
+		var primaryComments = Lincko.storage.sort_items(Lincko.storage.list('comments',null, null, that.list_type, item['_id'], false), 'created_at', 0, -1, false);
+
+		$.each(primaryComments, function(i, comment){
+			//redraw any existing comment bubbles
+			if(elem_expandable_comments.children('[rootcomment_id='+comment._id+']').length){
+				elem_expandable_comments.children('[rootcomment_id='+comment._id+']').replaceWith(taskdetail_generateCommentThread(comment));
+				return;
+			}
+
+			//latest comment thread bubble will be drawn no matter what
+			if(i == 0){
+				elem_expandable_comments.children('[find=newPrimaryComment_input]').before(taskdetail_generateCommentThread(comment));
+			}
+		});
+
+		//clean any fake comments
+		$.each(elem_expandable_comments.children('[rootcomment_id]'), function(i, elem){
+			var commentID = $(elem).attr('rootcomment_id');
+			if(!Lincko.storage.get('comments', commentID)){
+				this.remove();
+			}
+		});
+
+		//update count
+		var commentCount = 0;
+		var comments = Lincko.storage.list('comments',null, null, that.list_type, item['_id'], true);
+		commentCount = comments.length;
+		elem.find('[find=commentCount]').html(commentCount);
+		if(commentCount == 0){
+			elem_card_rightbox.find('[find=comments_icon]').addClass('skylist_greyColor');
+		}
+		else{
+			elem_card_rightbox.find('[find=comments_icon]').removeClass('skylist_greyColor');
+		}
+		that.iscrollRefresh();
+	}//end of comments update
+
 }
 
 skylist.prototype.make_fileLinkbox = function(fileID){
@@ -1372,7 +1431,7 @@ skylist.prototype.addTask = function(item){
 		.click(function(event){
 			event.stopPropagation();
 		});
-	var elem_addNewCommentBubble = taskdetail_generateNewCommentBubble(item['_type'], item['_id'], null, false).addClass('display_none');
+	var elem_addNewCommentBubble = taskdetail_generateNewCommentBubble(item['_type'], item['_id'], null, false, true).addClass('display_none').attr('find', 'newPrimaryComment_input');
 	elem_expandable_comments.prepend(elem_addNewCommentBubble);
 	var elem_addNewCommentBtn = elem_expandable_comments.find('[find=btn_addNew]');
 	elem_addNewCommentBtn.click(function(){

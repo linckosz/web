@@ -1781,7 +1781,7 @@ var taskdetail_clean_descriptionFiles = function(elem_description){
 	}
 }
 
-var taskdetail_generateNewCommentBubble = function(parent_type, parent_id, sendAction_fn, blurRemove){
+var taskdetail_generateNewCommentBubble = function(parent_type, parent_id, sendAction_fn, blurRemove, makeFakeComment){
 	if(typeof blurRemove != 'boolean'){
 		blurRemove = true; //default is true
 	}
@@ -1793,6 +1793,10 @@ var taskdetail_generateNewCommentBubble = function(parent_type, parent_id, sendA
 				"comment": text,
 			}
 			wrapper_sendAction(param, 'post', 'comment/create');
+
+			if(makeFakeComment){
+				var fakeComment = taskdetail_makeFakeComment(text, parent_type, parent_id, null, null, true);
+			}
 		}
 	}
 
@@ -1834,6 +1838,8 @@ var taskdetail_generateCommentBubble = function(comment, root_id, sendAction_rep
 				"comment": text,
 			}
 			wrapper_sendAction(param, 'post', 'comment/create');
+
+			var fakeComment = taskdetail_makeFakeComment(text, parent_type, parent_id, null, null, true);
 		}
 	}
 
@@ -1935,7 +1941,7 @@ var taskdetail_generateCommentThread = function(rootComment, includeContainer){
 
 	//var subComments = Lincko.storage.tree('comments', rootComment['_id'], 'children', true, true);
 	
-	var elem_container = $('<div>').attr('rootComment_id', rootComment['_id']);
+	var elem_container = $('<div>').attr('rootcomment_id', rootComment['_id']).attr('rootcomment_tempID', rootComment['temp_id']);
 
 	//elem_container.append(taskdetail_generateCommentBubble(rootComment, rootComment['_parent'][1]));
 
@@ -1973,9 +1979,58 @@ var taskdetail_description_attachFileClick = function(elem_description){
 }
 
 
+var taskdetail_makeFakeComment = function(text, parentType, parentID, fakeID, tempID, triggerSync){
+	function getRandomInt(min, max) {
+		return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
+	if(!fakeID){
+		var fakeID = getRandomInt(100000000000,999999999999);
+	}
+
+	var fakeComment = {
+		_id: fakeID,
+		_type: 'comments',
+		_parent:{
+			0: parentType,
+			1: parentID,
+		},
+		"+comment": text,
+		'fake': true,
+	};
+	if(tempID){
+		fakeComment.temp_id = tempID;
+	}
+	fakeComment.created_at = (new wrapper_date().timestamp);
+	fakeComment.created_by = wrapper_localstorage.uid;
+
+	
+	if(!Lincko.storage.data[parentType][parentID]){
+		return false;
+	}
+	Lincko.storage.data.comments[fakeID] = fakeComment;
+	if(!Lincko.storage.data[parentType][parentID]._children){
+		Lincko.storage.data[parentType][parentID]._children = {};
+	}
+	if(!Lincko.storage.data[parentType][parentID]._children.comments){
+		Lincko.storage.data[parentType][parentID]._children.comments = {};
+	}
+	Lincko.storage.data[parentType][parentID]._children.comments[fakeID] = true;
 
 
-taskdetail_linkQueue = {
+
+	if(triggerSync){
+		var prepare_param = {};
+		prepare_param[parentType+'_'+parentID] = { _children: true };
+		app_application_lincko.prepare(parentType+'_'+parentID, true, prepare_param);
+		delete Lincko.storage.data.comments[fakeComment._id];
+	}
+
+	return Lincko.storage.data.comments[fakeID];
+}
+
+
+
+var taskdetail_linkQueue = {
 	queue:{
 		/* 	temp_id: {
 				projectID: 123,
