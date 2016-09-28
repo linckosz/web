@@ -1611,8 +1611,8 @@ skylist.prototype.addTask = function(item){
 
 	/*duedate = new wrapper_date(item.start + parseInt(item.duration,10));*/
 	duedate = skylist_calcDuedate(item);
-	var now = new wrapper_date($.now()/1000);
-	if( now.time > duedate.time ){
+	var now = new wrapper_date();
+	if( now.time > duedate.time && !item.approved){
 		Elem.addClass('skylist_card_overdue');
 	}
 	if(skylist_textDate(duedate)){
