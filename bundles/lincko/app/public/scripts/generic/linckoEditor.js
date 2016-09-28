@@ -60,15 +60,15 @@ function linckoEditor(elem, toolbarID, param){
 
 	editorInst.addCommand("insertImg", { // create named command
 	    exec: function(editor) {
-	        var picID  = Lincko.storage.get("users", wrapper_localstorage.uid, 'profile_pic');
+	        /*var picID  = Lincko.storage.get("users", wrapper_localstorage.uid, 'profile_pic');
             var thumb_url = app_application_icon_single_user.src;
             if(picID){
                 thumb_url = Lincko.storage.getLinkThumbnail(picID);
-            }
+            }*/
 
             //editor.insertHtml( '<img style="background-image: url("'+thumb_url+'")" />' );
             //editor.insertHtml(elem_img[0].outerHTML);
-            var elem_img = $('<img>').css('background-image','url("'+thumb_url+'")');
+            //var elem_img = $('<img>').css('background-image','url("'+thumb_url+'")');
             //editor.insertHtml('<img src="'+thumb_url+'">');
 
             index = Object.keys(app_upload_files.lincko_files).length;
@@ -198,7 +198,7 @@ function linckoEditor(elem, toolbarID, param){
 	});
 
 	editorInst.ui.addButton('imgBtn', { // add new button and bind our command
-	    label: "Click me",
+	    label: "Insert Image",
 	    command: 'insertImg',
 	    toolbar: 'insert',
 	    icon: "/lincko/app/images/app/linckoeditor/imageupload.png",
