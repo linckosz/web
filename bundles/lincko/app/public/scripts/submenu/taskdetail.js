@@ -855,7 +855,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	var elem_links = $('#-submenu_taskdetail_links').clone().prop('id','submenu_taskdetail_link_'+that.md5id);
 	elem_links.find('[find=new_btn]').click(function(){
 		if(taskid == 'new'){//if 'new' then use queue
-			app_upload_open_files('projects', that.param.projID, false, true, 'link_queue');
+			app_upload_open_files('projects', that.param.projID, false, true, {link_queue: true});
 		}
 		else{
 			app_upload_open_files(that.param.type, taskid, false, true);
@@ -2109,7 +2109,7 @@ var taskdetail_linkQueue = {
 			var temp_id = file.lincko_temp_id;
 
 			//at this point, the file doesnt exist yet, so remaining steps wll be done through filesGarbageFn
-			if(file.lincko_param && file.lincko_param == 'link_queue' && !taskdetail_linkQueue.queue[temp_id]){
+			if(file.lincko_param && file.lincko_param.link_queue && !taskdetail_linkQueue.queue[temp_id]){
 				taskdetail_linkQueue.queue[temp_id] = {
 					uniqueID: uniqueID, //uniqueID is used to identify the task/note to be linked to
 					parent_type: that.action_param.parent_type,

@@ -769,6 +769,28 @@
     padding: 0px 15px;
     vertical-align: top;
 }
+.skylist_paperView_expandable_uploading{
+	width: 75px;
+    font-size: 10px;
+    text-align: center;
+}
+.skylist_paperView_expandable_uploading .fa{
+	line-height: 70px;
+}
+.skylist_paperView_expandable_uploading [find=file_name]{
+	margin-top: 30px;
+    padding: 2px 0px;
+}
+.skylist_paperView_expandable_uploading [find=bar_container]{
+	background-color: rgb(204, 204, 204);
+	height: 4px;
+}
+.skylist_paperView_expandable_uploading [find=bar]{
+	height: 100%;
+	width: 0%;
+	background-color: #FBA026;
+}
+
 .skylist_wrapper[view=paper] .skylist_card [find=expandable_links]:hover [find=btn_addNew]{
 	visibility: visible;
 }

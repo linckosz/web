@@ -1062,6 +1062,12 @@ skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
 				var elem_linkboxExist = elem_expandable_links.children('[_files='+fileID+']');
 				if(elem_linkboxExist.length){ return; }
 
+				//remove loading box
+				var elem_loading = elem_expandable_links.children('[temp_id='+Lincko.storage.get('files', fileID, 'temp_id')+']');
+				if(elem_loading.length){
+					elem_loading.remove();
+				}
+
 				var elem_linkboxNew = that.make_fileLinkbox(fileID);
 				if(elem_linkboxNew){
 					elem_expandable_links_addNew.before(elem_linkboxNew);
@@ -1086,10 +1092,10 @@ skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
 			elem_expandable_links_addNew.click(function(event){
 				event.stopPropagation();
 				if(item.fake){
-					app_upload_open_files('projects', item._parent[1] , false, true, 'link_queue');
+					app_upload_open_files('projects', item._parent[1] , false, true, {link_queue: true, item_parent: item});
 				}
 				else{
-					app_upload_open_files(that.list_type, item._id, false, true);
+					app_upload_open_files(that.list_type, item._id, false, true, {item_parent: item});
 				}
 			});
 
@@ -1501,10 +1507,10 @@ skylist.prototype.addTask = function(item){
 			elem_btn_addNew.click(function(event){
 				event.stopPropagation();
 				if(item.fake){
-					app_upload_open_files('projects', item._parent[1] , false, true, 'link_queue');
+					app_upload_open_files('projects', item._parent[1] , false, true, {item_parent: item, link_queue: true});
 				}
 				else{
-					app_upload_open_files(that.list_type, item._id, false, true);
+					app_upload_open_files(that.list_type, item._id, false, true, {item_parent: item});
 				}
 			});
 
@@ -1518,14 +1524,48 @@ skylist.prototype.addTask = function(item){
 			Elem.find('[find=card_rightbox] [find=links_wrapper]').click(function(event){
 				event.stopPropagation();
 				if(item.fake){
-					app_upload_open_files('projects', item._parent[1] , false, true, 'link_queue');
+					app_upload_open_files('projects', item._parent[1] , false, true, {item_parent: item, link_queue: true});
 				}
 				else{
-					app_upload_open_files(that.list_type, item._id, false, true);
+					app_upload_open_files(that.list_type, item._id, false, true, {item_parent: item});
 				}
 			});
 		}
-	}
+
+		app_application_lincko.add(elem_expandable_links.prop('id'), 'upload', function(){
+			var elem_id = this.id;
+			var parent_type = this.action_param.parent_type;
+			var parent_id = this.action_param.parent_id;
+			$.each(app_upload_files.lincko_files, function(i, lincko_file){
+				//if parent matches
+				if(lincko_file.lincko_parent_type == parent_type && lincko_file.lincko_parent_id == parent_id){
+					var temp_id = lincko_file.lincko_temp_id;
+					var progress = lincko_file.lincko_progress;
+					var status = lincko_file.lincko_status;
+					var elem_temp_id = $('#'+elem_id).find('[temp_id='+temp_id+']');
+					if(status == 'done' && elem_temp_id.length){
+							//elem_temp_id.remove();
+							//elem_temp_id = null;
+					}
+					else if(elem_temp_id.length){
+						//update progress bar or number
+						elem_temp_id.find('[find=bar]').css('width', progress+'%');
+					}
+					else{
+						var loadingBox = $('<div>').addClass('skylist_paperView_expandable_boxsize skylist_paperView_expandable_uploading').attr('temp_id',temp_id);
+						var fileName = $('<div>').text(lincko_file.lincko_name).attr('find','file_name').addClass('ellipsis');
+						var bar_container = $('<div>').attr('find', 'bar_container').html('<div find="bar"></div>');
+						loadingBox.append(fileName);
+						loadingBox.append(bar_container);
+						//loadingBox.html('<div class="fa fa-spinner fa-spin fa-3x fa-fw"></div>');
+						$('#'+elem_id).find('[find=btn_addNew]').before(loadingBox);
+					}
+				}
+			});
+
+		}, {parent_type: item._type, parent_id: item._id});
+	}//end of setup for paperview only
+	
 
 	/*
 	updated_at
