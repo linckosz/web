@@ -861,6 +861,9 @@ Submenu.prototype.Add_taskdetail = function() {
 			app_upload_open_files(that.param.type, taskid, false, true);
 		}
 	});
+	if(that.param.type == 'notes'){
+		elem_links.find('[find=existing_btn]').toggleClass('display_none');
+	}
 	elem_links.find('[find=existing_btn]').click(function(){
 		var param_itemSelector = {
 			item:item, 

@@ -391,9 +391,10 @@ td.submenu_taskdetail_share .fa{
 }
 .submenu_taskdetail_links_notesABC{
 	background-image: url('/lincko/app/images/app/abc.png');
-    background-size: 35px;
+    background-size: 28px;
     background-repeat: no-repeat;
     background-position: center;
+    background-position-x: 0px;
 }
 .submenu_taskdetail_links_card [find=card_center]{
 	height: 64px;

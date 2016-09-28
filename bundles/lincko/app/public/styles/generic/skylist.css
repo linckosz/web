@@ -660,6 +660,7 @@
 }
 .skylist_wrapper[view=paper] .skylist_card [find=title] .burger_tag{
 	display: inline-block;
+	text-decoration: inherit;
 }
 .skylist_wrapper[view=paper] .skylist_card_overdue .burger_tag[find=dateWrapper]{
 	color: #BE2B1f;
