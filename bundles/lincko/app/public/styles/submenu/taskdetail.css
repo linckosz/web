@@ -658,6 +658,12 @@ styling for sub comments
 	.submenu_content_taskdetail_files [find=title_text]{
 		padding-right: 0px;
 	}
+	.submenu_content_taskdetail_files [find=downloadIcon] {
+		line-height: initial;
+		font-size: 26px;
+	    margin: 0px;
+	    padding: 10px;
+	}
 }
 
 /*mobile only*/
