@@ -1475,10 +1475,14 @@ skylist.prototype.addTask = function(item){
 	links
 	*/
 	var linkCount = 0;
-	if(item._files && typeof item._files == 'object'){
-		linkCount = (Object.keys(item._files)).length;
+	var item_linked = Lincko.storage.list_links(item._type, item._id);
+	if(item_linked){
+		$.each(item_linked, function(cat, obj){
+			linkCount += Object.keys(obj).length;
+		});
 	}
 	Elem.find('[find=linkCount]').text(linkCount);
+	
 	if(that.Lincko_itemsList_filter.view == 'paper'){
 		var elem_expandable_links = Elem.find('[find=expandable_links]')
 			.addClass('overthrow')
@@ -2622,10 +2626,11 @@ skylist.prototype.paperView_toggleExpandable = function(elem_expandable, cb_comp
 		elem_expandable.velocity("slideDown", {
 			complete: function(){
 				if(typeof cb_complete == 'function'){ cb_complete(); }
-				that.window_resize();
+				$(window).resize();
+				/*that.window_resize();
 				if(myIScrollList[elem_expandable.prop('id')]){
 					myIScrollList[elem_expandable.prop('id')].refresh();
-				}
+				}*/
 			}
 		});
 	}

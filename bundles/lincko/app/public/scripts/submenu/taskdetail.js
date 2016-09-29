@@ -877,7 +877,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	var elem_links_wrapper = elem_links.find('[find=links_wrapper]');
 	
 	var link_count = 0;
-	var item_linked = Lincko.storage.list_links(that.param.type, taskid, that.param.projID); 
+	var item_linked = Lincko.storage.list_links(that.param.type, taskid); 
 	if(typeof item_linked == 'object'){
 		for(var category in item_linked){
 			$.each(item_linked[category], function(id,item){

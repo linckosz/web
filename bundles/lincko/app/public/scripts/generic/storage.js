@@ -1422,12 +1422,12 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 };
 
 //links are not URL links, but files linked to a task etc.
-Lincko.storage.list_links = function(type, id, projectID){
-	if(!projectID){ projectID = app_content_menu.projects_id; }
-	
+Lincko.storage.list_links = function(type, id/*, projectID*/){
+
 	var links = {};
 	/* old code, for when we could not find links from the file item itself
 	//used to find links in reverse, checking children of every item and see if it has the specified file
+	if(!projectID){ projectID = app_content_menu.projects_id; }
 	var project_children = Lincko.storage.tree('projects', projectID, 'children', false, true);
 	if(typeof project_children !== 'object'){ return false; }
 	for(var category in project_children){
