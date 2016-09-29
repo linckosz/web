@@ -1085,6 +1085,21 @@ skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
 		}	
 		elem.find('[find=linkCount]').text(linkCount);
 
+		//check and remove no longer existing file links
+		var elem_fileboxExist = elem_expandable_links.children('[_files]');
+		if(elem_fileboxExist.length){
+			if(!item._files){
+				elem_fileboxExist.remove();
+			}
+			else{
+				$.each(elem_fileboxExist, function(i, elem){
+					var elem = $(elem);
+					if(!item._files[elem.attr('_files')]){
+						elem.remove();
+					}
+				});
+			}
+		}
 
 		//if first file added, reset the buttons and open the expandable
 		if(linkCount == 1){
@@ -1166,7 +1181,7 @@ skylist.prototype.make_noteLinkbox = function(noteCount, clickFn){
 		}
 	});
 	var elem_icon = $('<div find="icon">').addClass('icon-New-Notes');
-	var elem_noteCount = $('<div find="text">').html(noteCount+'<br/>'+Lincko.Translation.get('app', 63, 'html'));
+	var elem_noteCount = $('<div find="text">').html('<div find="count">'+noteCount+'</div>'+Lincko.Translation.get('app', 63, 'html'));
 	elem_linkbox.append(elem_icon);
 	elem_linkbox.append(elem_noteCount);
 
