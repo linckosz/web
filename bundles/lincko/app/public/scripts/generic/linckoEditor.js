@@ -198,7 +198,7 @@ function linckoEditor(elem, toolbarID, param){
 	});
 
 	editorInst.ui.addButton('imgBtn', { // add new button and bind our command
-	    label: "Insert Image",
+	    label: "Insert Image", //toto
 	    command: 'insertImg',
 	    toolbar: 'insert',
 	    icon: "/lincko/app/images/app/linckoeditor/imageupload.png",
