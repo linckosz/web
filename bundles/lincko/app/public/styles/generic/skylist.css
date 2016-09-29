@@ -965,7 +965,7 @@
 }
 
 /*for paperview*/
-.skylist_maxMobileL .skylist_paperView_expandable_boxsize[find=btn_addNew]{
+.skylist_maxMobileL.skylist_wrapper[view=paper] .skylist_paperView_expandable_boxsize[find=btn_addNew]{
 	visibility: visible;
 }
 .skylist_maxMobileL.skylist_wrapper[view=paper] .skylist_sortBtn{
@@ -974,7 +974,7 @@
 .skylist_maxMobileL.skylist_wrapper[view=paper] .skylist_card_center [find=card_rightbox]{
 	display: none;
 }
-.skylist_maxMobileL .skylist_paperView_expandable_boxsize{
+.skylist_maxMobileL.skylist_wrapper[view=paper] .skylist_paperView_expandable_boxsize{
 	margin: 5px 0px;
 }
 .skylist_maxMobileL.skylist_wrapper[view=paper]>.burger_typeTask{
