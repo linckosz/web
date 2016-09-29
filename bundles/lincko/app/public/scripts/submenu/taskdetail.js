@@ -1697,7 +1697,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			var param = {};
 			param.itemID = item['_id'];
 			param.submenuInst = that;
-			editorInst = linckoEditor('submenu_taskdetail_description_text_'+that.md5id, 'submenu_taskdetail_description_toolbar_'+that.md5id, param );
+			editorInst = linckoEditor('submenu_taskdetail_description_text_'+that.md5id, 'submenu_taskdetail_description_toolbar_'+that.md5id, param/*, elem_links.find('[find=new_btn]')*/);
 		}
 	});
 

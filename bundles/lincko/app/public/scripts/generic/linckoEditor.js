@@ -1,5 +1,5 @@
 /*-----linckoEditor------------------------------------*/
-function linckoEditor(elem, toolbarID, param){
+function linckoEditor(elem, toolbarID, param, uploadFileButton){
 	//editorInst = CKEDITOR.replace(elem);
 	editorInst = CKEDITOR.inline( elem, {
 			// To enable source code editing in a dialog window, inline editors require the "sourcedialog" plugin.
@@ -175,9 +175,11 @@ function linckoEditor(elem, toolbarID, param){
 	            		$('#'+editorInst.Lincko_param.submenuInst.id).trigger('canSave');
 	            	}
 	            	else{
-	            		var progress = app_upload_files.lincko_files[index].lincko_progress;
-		            	editor.Lincko_param.files[elem_img_id].progress = progress;
-		            	$elem_img_id.html(progress);
+	            		if(app_upload_files.lincko_files[index]){
+		            		var progress = app_upload_files.lincko_files[index].lincko_progress;
+			            	editor.Lincko_param.files[elem_img_id].progress = progress;
+			            	$elem_img_id.html(progress);
+			            }
 	            	}
 
 	            	
@@ -191,7 +193,13 @@ function linckoEditor(elem, toolbarID, param){
             	app_upload_open_files('projects', editor.Lincko_param.submenuInst.param.projID, false, true, {link_queue: true});
             }
             else{
-            	app_upload_open_files(editor.Lincko_param.submenuInst.param.type, editor.Lincko_param.submenuInst.param.id, false, true);
+            	if(uploadFileButton){
+            		editor.element.$.blur();
+            		uploadFileButton.click();
+            	}
+            	else{
+            		app_upload_open_files(editor.Lincko_param.submenuInst.param.type, editor.Lincko_param.submenuInst.param.id, false, true);
+        		}
         	}
 
 	    }
