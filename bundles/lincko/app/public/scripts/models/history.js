@@ -138,14 +138,14 @@ var app_models_history = {
 						info[i].date = date.display('time_short');
 					}
 					if(hist_all[i]["type"]=="comments"){
-						if(hist_all[i]["by"]==0){
+						if(hist_all[i]["by"]==0){ //Projects
 							var sentence = app_models_resume_format_sentence(hist_all[i]["id"]);
 							if(sentence===false){
 								//We don't display the message that the user is not concerned
 								continue;
 							}
 							info[i].content = sentence.text();
-						} else if(root_item["single"]){
+						} else if(root_item["single"]){ //Single user to Single User
 							comment = Lincko.storage.get("comments", hist_all[i]["id"]);
 							if(comment['recalled_by']){
 								if(root_item["_type"]=="projects"){
@@ -157,7 +157,7 @@ var app_models_history = {
 							} else {
 								info[i].content = comment['+comment'];
 							}
-						} else {
+						} else { //Chats and Projects
 							comment = Lincko.storage.get("comments", hist_all[i]["id"]);
 							if(comment['recalled_by']){
 								if(root_item["_type"]=="projects"){
@@ -167,8 +167,17 @@ var app_models_history = {
 								var uname = wrapper_to_html(Lincko.storage.get('users', hist_all[i]["by"])['-username']);
 								info[i].content = Lincko.Translation.get('app', 3101, 'html', {username: uname }); //has recalled a message
 							} else {
-								info[i].by = hist_all[i]["by"];
-								info[i].content = comment['+comment'];
+								if(hist_all[i]['par_type']=='projects'){
+									info[i].by = hist_all[i]["by"];
+									info[i].content = comment['+comment'];
+								} else {
+									var hist_info = Lincko.storage.getHistoryInfo(hist_all[i]);
+									if(hist_info.content===false){
+										//We don't display the message that the user is not concerned
+										continue;
+									}
+									info[i].content = hist_info.title;
+								}
 							}
 						}
 					} else {

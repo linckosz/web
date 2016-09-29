@@ -14,28 +14,32 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 	if(!comment){
 		error = true;
 	} else {
-		var temp = JSON.parse(comment);
-		if(temp[0]){ //By default we force to display team in priority
-			uid = 0;
-		} else if(temp[wrapper_localstorage.uid]){
-			uid = wrapper_localstorage.uid;
-		} else {
-			return false;
-		}
-		if($.type(temp) != 'object' || !temp[uid]){
-			error = true;
-			if($.type(temp) == 'number'){
-				base = temp;
-			}
-		} else {
-			var list = temp[uid];
-			if(list[100]){
-				base = 100; //Daily
-			} else if(list[700]){
-				base = 700; //Weekly
+		try {
+			var temp = JSON.parse(comment);
+			if(temp[0]){ //By default we force to display team in priority
+				uid = 0;
+			} else if(temp[wrapper_localstorage.uid]){
+				uid = wrapper_localstorage.uid;
 			} else {
-				error = true;
+				return false;
 			}
+			if($.type(temp) != 'object' || !temp[uid]){
+				error = true;
+				if($.type(temp) == 'number'){
+					base = temp;
+				}
+			} else {
+				var list = temp[uid];
+				if(list[100]){
+					base = 100; //Daily
+				} else if(list[700]){
+					base = 700; //Weekly
+				} else {
+					error = true;
+				}
+			}
+		} catch(err) {
+			error = true;
 		}
 	}
 	if(error){
