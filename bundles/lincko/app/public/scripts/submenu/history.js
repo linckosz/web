@@ -467,13 +467,22 @@ var ActivityCommentContentCls = function(record,type)
 	this.id = record['id'];
 	this.category = record['type'];
 
-	var key = record['par_type'] == 'files' ? '+name' : 'title';
-
+	
 	this.target_id = record['par_id'];
 	this.target_category = record['par_type'];
-	this.target = Lincko.storage.get(record['par_type'] , record['par_id'], key);
-	this.target_type = Lincko.storage.data._history_title[record['par_type']][0];
+	
+	if(this.target_category == 'comments')
+	{
+		var root = Lincko.storage.getCommentRoot(this.target_category,this.target_id, key);
+		this.target_id = root['_id'];
+		this.target_category = root['_type'];
+		record['par_id']  = root['_id'];
+		record['par_type'] = root['_type'];
+	}
+	var key = this.target_category == 'files' ? '+name' : 'title';
 
+	this.target = Lincko.storage.get(this.target_category,this.target_id, key);
+	this.target_type = Lincko.storage.data._history_title[this.target_category][0];
 	var history = Lincko.storage.getHistoryInfo(record);
 	var clone_hist = $.extend(true, {}, history.root.history);
 	var text = history.root.title;
@@ -530,8 +539,10 @@ UploadingContentCls.prototype.feed_content = function(elem)
 		elem.addClass(this.category);
 		elem.find('[find=target]').addClass('upload_file_title').html(this.file_name);
 		elem.find('[find=progress_bar]').css('width', Math.floor(this.progress) + '%');
-		elem.find('[find=progress_text]').addClass('uploading_file_progress_size').html(this.progress * this.file_size 
-		+ ' K of ' + this.file_size + 'KB'); //toto => translation
+
+
+		elem.find('[find=progress_text]').addClass('uploading_file_progress_size').html( parseInt(this.progress * this.file_size / 1024 / 100)
+		+ ' K of ' + parseInt (this.file_size/1024) + 'K'); //toto => translation
 		elem.find(".uploading_action").html(Lincko.Translation.get('app', 7, 'html'));
 
 		if(this.preview == null || this.preview == '')

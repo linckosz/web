@@ -40,6 +40,13 @@ inputter.prototype.handler_build = function(){
 	 		app_upload_open_files(type, id,false,true);
 		});
 
+		// that.position.find('[find=chat_textarea]').on('paste',function(e,data){
+		// 	var data = e.originalEvent.clipboardData.getData('text/plain');
+		// 	e.stopPropagation();
+  		//  e.preventDefault();
+		// 	this.innerHTML = this.innerHTML.replace(/<(br).*?>/g,"<br/>").replace(/<(?!br).*?>/g,"");
+		// });
+
 		that.position.find('[find=chat_textarea]').keyup(function(e) {
 			//e.stopPropagation();
 			if(this.innerText.length > 0)
@@ -53,6 +60,11 @@ inputter.prototype.handler_build = function(){
 				that.position.find('[find=call_attachment]').removeClass('mobile_hide');
 			}
 
+			if((e.ctrlKey && e.keyCode==86) || e.keyCode==91)
+			{
+				this.innerHTML = this.innerHTML.replace(/<(br).*?>/g,"<br/>").replace(/<(?!br).*?>/g,"");
+			}
+
 			if(e.shiftKey && e.keyCode==13)
 			{
 				return;
@@ -60,11 +72,18 @@ inputter.prototype.handler_build = function(){
 			if( e.keyCode==13)
 			{
 				var msg = that.position.find('[find=chat_textarea]').html().replace(/<div>/g,"<br>").replace(/<\/div>/g,"");
-				that.fnSend(msg);
-				that.position.find('[find=chat_textarea]').html('');
-				that.position.find('[find=call_send]').addClass('mobile_hide');
-				that.position.find('[find=call_attachment]').removeClass('mobile_hide');
-				return;
+				if(this.innerText.length > 0)
+				{
+					that.fnSend(msg);
+					that.position.find('[find=chat_textarea]').html('');
+					that.position.find('[find=call_send]').addClass('mobile_hide');
+					that.position.find('[find=call_attachment]').removeClass('mobile_hide');
+					return;
+				}
+				else
+				{
+					base_show_error('不能为空', true);
+				}
 			}
 		});
 
@@ -89,8 +108,6 @@ inputter.prototype.handler_build = function(){
 }
 
 
-
-
 inputter.prototype.items_build = function(){
 	var wrapper = $('#-inputter_container').clone();
 	wrapper.prop('id','');
@@ -108,7 +125,7 @@ inputter.prototype.items_build = function(){
 		burgerN.regex(content.children('[find=chat_textarea]').eq(0), null, this.param);
 	}
 
-	
+
 
 	var menu = wrapper.find('[find=menu_wrapper]');
 	var memu_row_max_length = 0;

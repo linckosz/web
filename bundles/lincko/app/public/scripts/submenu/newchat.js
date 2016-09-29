@@ -47,12 +47,13 @@ Submenu_select.new_chat_menu = function(subm) {
 
 var app_submenu_scrollto = function(iScroll, last, scroll_time){
 	if(typeof scroll_time == 'undefined'){
-		scroll_time = 300;
+		scroll_time = 0;
 	}
 	setTimeout(function(){
-		iScroll.scrollToElement(last, scroll_time,0,300);
+		iScroll.scrollToElement(last, scroll_time);
 	}, 50);
 }
+
 
 
 Submenu.prototype.Add_ChatContents = function() {
@@ -64,11 +65,13 @@ Submenu.prototype.Add_ChatContents = function() {
 	submenu_wrapper = this.Wrapper();
 	var position = submenu_wrapper.find("[find='submenu_wrapper_content']");
 	position.addClass('overthrow').addClass("submenu_chat_contents");
+
+
+
+
+
 	var submenu_wrapper_id = submenu_wrapper.prop("id");
 	that.param.chatFeed = new chatFeed(id,type,position,that);
-
-	
-
 
 	if (type == 'history') {
 		app_models_notifier.clearNotification('projects', id);
@@ -138,8 +141,7 @@ Submenu.prototype.Add_ChatContents = function() {
 	}, [that.id, id, that.param.chatFeed, position]);
 
 	var type_clear = type == 'history' ? 'projects' : type;
-	 app_application_lincko.add("overthrow_"+that.id, "submenu_show_"+that.preview+"_"+that.id, function() {
-	 	var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
+	app_application_lincko.add("overthrow_"+that.id, "submenu_show_"+that.preview+"_"+that.id, function() {
 		var submenu_id = this.action_param[0];
 		var scroll_time = this.action_param[1];
 		var overthrow_id = "overthrow_"+submenu_id;
@@ -149,26 +151,24 @@ Submenu.prototype.Add_ChatContents = function() {
 			//myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
 			app_submenu_scrollto(myIScrollList[overthrow_id], last[0], scroll_time);
 		}
-		this.action_param[1] = 300;
+		this.action_param[1] = 1000;
 		app_models_notifier.clearNotification(this.action_param[2], this.action_param[3]);
-	 }, [that.id, 0, type_clear, id]);
+	}, [that.id, 0, type_clear, id]);
 	
 }
 
 Submenu.prototype.New_Add_ChatMenu  = function()
 {
+	var attribute = this.attribute;
 	var submenu_wrapper = this.Wrapper();
 	submenu_wrapper.addClass("submenu_chats");
+	
+	var that = this;
 
 	var position = submenu_wrapper.find("[find=submenu_wrapper_bottom]");
 	position.addClass('submenu_bottom');
-	//(setting,position,submenu,burgerFlag,param,fnUpload,fnSend)
 
 	
-	var param= {
-		type : this.param.type,
-		id : this.param.id,
-	};
 
 	var that = this;
 	function fnSend(msg) {
@@ -240,6 +240,15 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 		);
 
 	}
-	
+
+	var param= {
+		type : this.param.type,
+		id : this.param.id,
+	};
+
 	var chat_inputter = new inputter(null,position,submenu_wrapper,true,param,fnSend);
+
+
+	var height = position.height();
+	submenu_wrapper.find("[find=submenu_wrapper_content]").css('bottom', height);
 }

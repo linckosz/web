@@ -939,6 +939,21 @@ Lincko.storage.getRoot = function(type, id) {
 	return current;
 }
 
+Lincko.storage.getCommentRoot = function(type, id) {
+	var current = Lincko.storage.get(type, id);
+	var parent = Lincko.storage.getParent(type, id);
+	while(parent){
+		type = parent["_type"];
+		id = parent["_id"];
+		if(type=="workspaces" || type=="chats" || type == "projects" ){ //Do not scan until workspace
+			break;
+		}
+		current = parent;
+		parent = Lincko.storage.getParent(type, id);
+	}
+	return current;
+}
+
 Lincko.storage.isProjectActivity = function(type, id) {
 	var current = Lincko.storage.get(type, id);
 	var parent = Lincko.storage.getParent(type, id);
