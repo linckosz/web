@@ -50,7 +50,7 @@ var app_models_fileType = {
  			return "";
  		}
  	},
- 	cutFileTitle(title, prefixLength, suffixLength){
+ 	cutFileTitle:function(title, prefixLength, suffixLength){
 		if(typeof title == 'undefined')
 		{
 			return title;

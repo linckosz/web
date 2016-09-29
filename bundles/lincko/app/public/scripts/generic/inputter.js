@@ -82,8 +82,7 @@ inputter.prototype.handler_build = function(){
 				}
 				else
 				{
-					
-					base_show_error(Lincko.Translation.get('app', 64, 'js'), true);
+					base_show_error(Lincko.Translation.get('app', 64, 'js'), true);//no empty
 				}
 			}
 		});
@@ -114,7 +113,6 @@ inputter.prototype.items_build = function(){
 	wrapper.prop('id','');
 	wrapper.addClass('inputter_'+this._setting.type);
 
-
 	var content = $('#-inputter_content_'+this._setting.type).clone();
 	content.prop('id','');
 	content.appendTo(wrapper.find('[find=content_wrapper]'));
@@ -125,8 +123,6 @@ inputter.prototype.items_build = function(){
 		}
 		burgerN.regex(content.children('[find=chat_textarea]').eq(0), null, this.param);
 	}
-
-
 
 	var menu = wrapper.find('[find=menu_wrapper]');
 	var memu_row_max_length = 0;

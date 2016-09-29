@@ -151,8 +151,10 @@ BaseItemCls.prototype.item_display = function(position,subm,mode)
 			elem.find("[find=icon]").css('background-image','url("' +  app_application_icon_roboto.src + '")');
 			elem.find("[find=author]").html(Lincko.Translation.get('app', 0, 'html')); 
 		} else {
+			var profile =  Lincko.storage.getLinkThumbnail(Lincko.storage.get("users",this.user_id , 'profile_pic'));
 			elem.find("[find=icon]").css('background-image','url("' + this.profile + '")');
-			elem.find("[find=author]").text(this.user_name);
+			var user_name = Lincko.storage.get('users', this.user_id ,'username');
+			elem.find("[find=author]").text(user_name);
 		}
 		var date = new wrapper_date(this.timestamp);
 		elem.find(".time", "[find=timestamp]").html(date.display('time_short'));
@@ -197,7 +199,9 @@ BaseItemCls.prototype.item_display = function(position,subm,mode)
 				}
 				break;
 			case 'insert' :
-				elem.appendTo(position.find(".chat_contents_wrapper"));
+				//elem.appendTo(position.find(".chat_contents_wrapper"));
+				var help = $('#' + subm.id + '_help_iscroll');
+				help.before(elem);
 				if(this.timeline != null)
 				{
 					elem.before(line);
@@ -640,7 +644,7 @@ chatFeed.prototype.create_iscroll_container = function()
 {
 	this.position.addClass('overthrow').addClass("submenu_chat_contents");
 	this.position.empty();
-	$('<div>').addClass('chat_contents_wrapper').prop("id", this.submenu.id+'_chat_contents_wrapper').appendTo(this.position);
+	$('<div>').addClass('chat_contents_wrapper').prop('id', this.submenu.id+'_chat_contents_wrapper').appendTo(this.position).append($('#'+'-help_iscroll').clone().prop('id',this.submenu.id+'_help_iscroll'));
 }
 
 chatFeed.prototype.app_chat_feed_data_history = function()

@@ -50,6 +50,7 @@ var app_submenu_scrollto = function(iScroll, last, scroll_time){
 		scroll_time = 0;
 	}
 	setTimeout(function(){
+		submenu_resize_content();
 		iScroll.scrollToElement(last, scroll_time);
 	}, 50);
 }
@@ -65,10 +66,6 @@ Submenu.prototype.Add_ChatContents = function() {
 	submenu_wrapper = this.Wrapper();
 	var position = submenu_wrapper.find("[find='submenu_wrapper_content']");
 	position.addClass('overthrow').addClass("submenu_chat_contents");
-
-
-
-
 
 	var submenu_wrapper_id = submenu_wrapper.prop("id");
 	that.param.chatFeed = new chatFeed(id,type,position,that);
@@ -86,15 +83,14 @@ Submenu.prototype.Add_ChatContents = function() {
 			chat_item.app_chat_feed_load_recent();
 			
 			var overthrow_id = "overthrow_"+this.action_param[0];
-			var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
+			var help_iscroll_elem = $('#'+that.id+'_help_iscroll').get(0);
 
-			if(myIScrollList[overthrow_id] && last && last[0]){
+			if(myIScrollList[overthrow_id] && help_iscroll_elem){
 				if(myIScrollList[overthrow_id].maxScrollY - myIScrollList[overthrow_id].y > -100){
 					myIScrollList[overthrow_id].refresh();
 					var scroll_time = 300;
 					if(!supportsTouch || responsive.test("minDesktop")){ scroll_time = 300; }
-					//myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
-					app_submenu_scrollto(myIScrollList[overthrow_id], last[0], scroll_time);
+					app_submenu_scrollto(myIScrollList[overthrow_id], help_iscroll_elem, scroll_time);
 				}
 			}
 			app_models_notifier.clearNotification('projects', id);
@@ -110,14 +106,14 @@ Submenu.prototype.Add_ChatContents = function() {
 			chat_item.app_chat_feed_load_recent();
 
 			var overthrow_id = "overthrow_"+this.action_param[0];
-			var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
-			if(myIScrollList[overthrow_id] && last && last[0]){
+			var help_iscroll_elem =  $('#'+that.id+'_help_iscroll').get(0);
+
+			if(myIScrollList[overthrow_id] && help_iscroll_elem){
 				if(myIScrollList[overthrow_id].maxScrollY - myIScrollList[overthrow_id].y > -100){
 					myIScrollList[overthrow_id].refresh();
 					var scroll_time = 300;
 					if(!supportsTouch || responsive.test("minDesktop")){ scroll_time = 300; }
-					//myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
-					app_submenu_scrollto(myIScrollList[overthrow_id], last[0], scroll_time);
+					app_submenu_scrollto(myIScrollList[overthrow_id], help_iscroll_elem, scroll_time);
 				}
 			}
 			app_models_notifier.clearNotification('chats', this.action_param[1]);
@@ -127,15 +123,17 @@ Submenu.prototype.Add_ChatContents = function() {
 
 	app_application_lincko.add(submenu_wrapper_id, 'upload', function(){ //We cannot simplify because Elem is not the HTML object, it's a JS Submenu object
 		that.param.chatFeed.app_chat_feed_uploading_file();
+
 		var overthrow_id = "overthrow_"+this.action_param[0];
-		var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
-		if(myIScrollList[overthrow_id] && last && last[0]){
+		var help_iscroll_elem =  $('#'+that.id+'_help_iscroll').get(0);
+
+
+		if(myIScrollList[overthrow_id] && help_iscroll_elem){
 			if(myIScrollList[overthrow_id].maxScrollY - myIScrollList[overthrow_id].y > -100){
 				myIScrollList[overthrow_id].refresh();
 				var scroll_time = 0;
 				if(!supportsTouch || responsive.test("minDesktop")){ scroll_time = 300; }
-				//myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
-				app_submenu_scrollto(myIScrollList[overthrow_id], last[0], scroll_time);
+				app_submenu_scrollto(myIScrollList[overthrow_id], help_iscroll_elem, scroll_time);
 			}
 		}
 	}, [that.id, id, that.param.chatFeed, position]);
@@ -145,16 +143,18 @@ Submenu.prototype.Add_ChatContents = function() {
 		var submenu_id = this.action_param[0];
 		var scroll_time = this.action_param[1];
 		var overthrow_id = "overthrow_"+submenu_id;
-		var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
-		if(myIScrollList[overthrow_id] && last && last[0]){
+
+		var help_iscroll_elem =  $('#'+that.id+'_help_iscroll').get(0);
+
+		if(myIScrollList[overthrow_id] && help_iscroll_elem){
 			myIScrollList[overthrow_id].refresh();
-			//myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
-			app_submenu_scrollto(myIScrollList[overthrow_id], last[0], scroll_time);
+			app_submenu_scrollto(myIScrollList[overthrow_id], help_iscroll_elem, scroll_time);
 		}
 		this.action_param[1] = 1000;
 		app_models_notifier.clearNotification(this.action_param[2], this.action_param[3]);
 	}, [that.id, 0, type_clear, id]);
-	
+
+
 }
 
 Submenu.prototype.New_Add_ChatMenu  = function()
@@ -167,8 +167,6 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 
 	var position = submenu_wrapper.find("[find=submenu_wrapper_bottom]");
 	position.addClass('submenu_bottom');
-
-	
 
 	var that = this;
 	function fnSend(msg) {
