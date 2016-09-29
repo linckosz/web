@@ -747,7 +747,8 @@
 }
 .skylist_paperView_expandable_boxsize{
 	height: 75px;
-	font-size: 60px;
+	font-size: 40px;
+	text-align: center;
 	display: inline-block;
 	max-width: 180px;
 	overflow: hidden;
@@ -762,6 +763,13 @@
 }
 .skylist_paperView_expandable_boxsize .fa{
 	padding: 0px 10px;
+}
+.skylist_paperView_expandable_boxsize [find=text]{
+	font-size: 12px;
+	width: 65px;
+}
+.skylist_paperView_expandable_boxsize[find=notes] [find=icon]{
+	color: #fbd226;
 }
 .skylist_paperView_expandable_boxsize[find=btn_addNew]{
     visibility: hidden;

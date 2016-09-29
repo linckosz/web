@@ -1159,6 +1159,20 @@ skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
 
 }
 
+skylist.prototype.make_noteLinkbox = function(noteCount, clickFn){
+	var elem_linkbox = $('<div>').addClass('skylist_paperView_expandable_boxsize').attr('find','notes').click(function(){
+		if(typeof clickFn == 'function'){
+			clickFn();
+		}
+	});
+	var elem_icon = $('<div find="icon">').addClass('icon-New-Notes');
+	var elem_noteCount = $('<div find="text">').html(noteCount+'<br/>'+Lincko.Translation.get('app', 63, 'html'));
+	elem_linkbox.append(elem_icon);
+	elem_linkbox.append(elem_noteCount);
+
+	return elem_linkbox;
+}
+
 skylist.prototype.make_fileLinkbox = function(fileID){
 	var item_file = null;
 	if(typeof fileID == 'object'){
@@ -1201,7 +1215,8 @@ skylist.prototype.make_fileLinkbox = function(fileID){
 	}
 
 	elem_linkbox = $('<div>').addClass('skylist_paperView_expandable_boxsize').attr('_files', fileID).html(elem_linkbox);
-
+	var elem_name = $('<div find="text">').addClass('ellipsis').html(item_file['+name']);
+	elem_linkbox.append(elem_name);
 	return elem_linkbox;
 }
 
@@ -1482,7 +1497,7 @@ skylist.prototype.addTask = function(item){
 		});
 	}
 	Elem.find('[find=linkCount]').text(linkCount);
-	
+
 	if(that.Lincko_itemsList_filter.view == 'paper'){
 		var elem_expandable_links = Elem.find('[find=expandable_links]')
 			.addClass('overthrow')
@@ -1505,6 +1520,10 @@ skylist.prototype.addTask = function(item){
 				}
 				return;
 			});
+		}
+		if(item._notes){
+			var notesCount = Object.keys(item._notes).length;
+			elem_btn_addNew.before(that.make_noteLinkbox(notesCount, function(){Elem.click();}));
 		}
 
 		if(linkCount > 0){
