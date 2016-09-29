@@ -82,7 +82,8 @@ inputter.prototype.handler_build = function(){
 				}
 				else
 				{
-					base_show_error('不能为空', true);
+					
+					base_show_error(Lincko.Translation.get('app', 64, 'js'), true);
 				}
 			}
 		});
