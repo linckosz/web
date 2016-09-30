@@ -47,8 +47,7 @@ inputter.prototype.handler_build = function(){
 			// this.innerHTML = this.innerHTML.replace(/<(br).*?>/g,"<br/>").replace(/<(?!br).*?>/g,"");
 		});
 
-		that.position.find('[find=chat_textarea]').keyup(function(e) {
-			//e.stopPropagation();
+		that.position.find('[find=chat_textarea]').keyup(function(e){
 			if($.trim(this.innerText).length > 0)
 			{
 				that.position.find('[find=call_send]').removeClass('mobile_hide');
@@ -59,40 +58,48 @@ inputter.prototype.handler_build = function(){
 				that.position.find('[find=call_send]').addClass('mobile_hide');
 				that.position.find('[find=call_attachment]').removeClass('mobile_hide');
 			}
-
 			if((e.ctrlKey && e.keyCode==86) || e.keyCode==91)
 			{
 				this.innerHTML = this.innerHTML.replace(/<(br).*?>/g,"<br/>").replace(/<(?!br).*?>/g,"");
 			}
-
-			if(e.shiftKey && e.keyCode==13)
-			{
-				return;
-			}
-			if( e.keyCode==13)
-			{
-				var msg = that.position.find('[find=chat_textarea]').html().replace(/<div>/g,"<br>").replace(/<\/div>/g,"");
-				if(this.innerText.length > 0)
-				{
-					that.fnSend(msg);
-					that.position.find('[find=chat_textarea]').html('');
-					that.position.find('[find=call_send]').addClass('mobile_hide');
-					that.position.find('[find=call_attachment]').removeClass('mobile_hide');
-					return;
-				}
-				else
-				{
-					base_show_error(Lincko.Translation.get('app', 64, 'js'), true);//no empty
-				}
-			}
 		});
 
-		that.position.find('[find=chat_textarea]').keyup(function(e) {
-			if(e.shiftKey && e.keyCode==13)
+		that.position.find('[find=chat_textarea]').keypress(function(e){
+			e.stopPropagation();
+			
+
+			
+			if( e.keyCode==13)
 			{
-				e.returnValue=false;
-				return;
+				if(e.shiftKey)
+				{
+
+					e.returnValue=false;
+					return;
+				}	
+				else
+				{
+					e.preventDefault();
+					var msg = that.position.find('[find=chat_textarea]').html().replace(/<div>/g,"<br>").replace(/<\/div>/g,"");
+					if(this.innerText.length > 0)
+					{
+						that.fnSend(msg);
+						that.position.find('[find=chat_textarea]').html('');
+						that.position.find('[find=call_send]').addClass('mobile_hide');
+						that.position.find('[find=call_attachment]').removeClass('mobile_hide');
+						return;
+					}
+					else
+					{
+						base_show_error(Lincko.Translation.get('app', 64, 'js'), true);//no empty
+					}
+				}
+				
 			}
+
+		});
+		that.position.find('[find=chat_textarea]').keyup(function(e) {
+			
 		});
 	}
 	else(this._setting.type == 'task')

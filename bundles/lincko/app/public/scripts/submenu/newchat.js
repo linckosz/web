@@ -244,7 +244,7 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 		id : this.param.id,
 	};
 
-	var chat_inputter = new inputter(null,position,submenu_wrapper,true,param,fnSend);
+	var chat_inputter = new inputter(null,position,submenu_wrapper,false,param,fnSend);
 
 
 	var height = position.height();
