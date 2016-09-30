@@ -40,16 +40,16 @@ inputter.prototype.handler_build = function(){
 	 		app_upload_open_files(type, id,false,true);
 		});
 
-		// that.position.find('[find=chat_textarea]').on('paste',function(e,data){
-		// 	var data = e.originalEvent.clipboardData.getData('text/plain');
-		// 	e.stopPropagation();
-  		//  e.preventDefault();
-		// 	this.innerHTML = this.innerHTML.replace(/<(br).*?>/g,"<br/>").replace(/<(?!br).*?>/g,"");
-		// });
+		that.position.find('[find=chat_textarea]').on('paste',function(e,data){
+			// var data = e.originalEvent.clipboardData.getData('text/plain');
+			// e.stopPropagation();
+			// e.preventDefault();
+			// this.innerHTML = this.innerHTML.replace(/<(br).*?>/g,"<br/>").replace(/<(?!br).*?>/g,"");
+		});
 
 		that.position.find('[find=chat_textarea]').keyup(function(e) {
 			//e.stopPropagation();
-			if(this.innerText.length > 0)
+			if($.trim(this.innerText).length > 0)
 			{
 				that.position.find('[find=call_send]').removeClass('mobile_hide');
 				that.position.find('[find=call_attachment]').addClass('mobile_hide');
