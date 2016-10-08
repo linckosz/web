@@ -6,6 +6,10 @@ var app_models_history = {
 
 	hist_root: {},
 
+	reset: function(){
+		app_models_history.hist_root = {};
+	},
+
 	tabList: function(limit, parent_type, parent_id){
 		if(typeof limit != 'number' || limit<=0){ limit = false; }
 		if(typeof parent_type == 'undefined'){ parent_type = false; }
@@ -69,6 +73,16 @@ var app_models_history = {
 						continue;
 					}
 				}
+
+				//Skip recalled for projects
+				if(root_item["_type"]=="projects" && hist_all[i]["type"]=="comments"){
+					comment = Lincko.storage.get("comments", hist_all[i]["id"]);
+					if(comment['recalled_by']){
+						//We don't display recalled messages in activity short description
+						continue;
+					}
+				}
+
 				if(app_models_history.hist_root[root_name] && app_models_history.hist_root[root_name].name == name && app_models_history.hist_root[root_name].timestamp == hist_all[i]["timestamp"]){
 					date.setTime(app_models_history.hist_root[root_name].timestamp);
 					if(hist_all[i]["timestamp"] < startOfDay){ //Previous date
@@ -176,7 +190,12 @@ var app_models_history = {
 										//We don't display the message that the user is not concerned
 										continue;
 									}
-									info[i].content = hist_info.title;
+									if(root_item["_type"]=="projects"){
+										info[i].content = hist_info.title;
+									} else {
+										info[i].by = hist_all[i]["by"];
+										info[i].content = hist_info.content;
+									}
 								}
 							}
 						}
@@ -205,3 +224,4 @@ var app_models_history = {
 		return histList;
 	},
 };
+

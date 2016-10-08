@@ -28,6 +28,15 @@ submenu_list['newchat'] = {
 			submenu_Build('new_group', true, false, {type: 'chats', alwaysMe:true, }, subm.preview);
 		}
 	},
+	"_pre_action": {
+		"style": "preAction",
+		"action": function(Elem, subm){
+			subm.param.route = 'comment/create';
+			if(subm.param.type=='chats'){
+				subm.param.route = 'message/create';
+			}
+		},
+	},
 	"new_chat_menu": {
 		"style": "new_chat_menu",
 		"title": "",
@@ -181,7 +190,7 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 				'parent_id': that.param.id,
 			},
 			'post',
-			'comment/create',
+			that.param.route, //'comment/create',
 			function(msg, data_error, data_status, data_msg) {
 				app_application_lincko.prepare(["chat_contents_wrapper", type+"_" + sub_that.param.id]);
 				app_application_lincko.prepare("submenu_show");

@@ -97,7 +97,8 @@ var mainMenu = {
 		mainMenu.projectSelect();
 	},
 
-	initChatTab: function(){
+	initChatTab: function(force){
+		if(typeof force == 'undefined'){ force=false; }
 		var not_all = false;
 		var temp = app_models_history.tabList();
 		for(var i in temp){
@@ -106,7 +107,10 @@ var mainMenu = {
 				break;
 			}
 		}
-		var histList = app_models_history.tabList(5);
+		if(temp.length > 5){
+			temp.length = 5;
+		}
+		var histList = temp;
 		var content;
 		if(histList.length>0){
 			$("#app_project_chats_all").removeClass('app_project_tab_force_radius');
@@ -156,7 +160,7 @@ var mainMenu = {
 			} else {
 				item.find("[find=app_project_chats_notif]").addClass('display_none');
 			}
-			if(name!=item.attr('name') || timestamp!=parseInt(item.attr('timestamp'), 10)){
+			if(force || name!=item.attr('name') || timestamp!=parseInt(item.attr('timestamp'), 10)){
 				item.find("[find=app_project_chats_title]").html(wrapper_to_html(histList[i]['title']));
 				item.find("[find=app_project_chats_date]").html(wrapper_to_html(histList[i]['date']));
 				content = wrapper_to_html(wrapper_flat_text(histList[i]['content']));
@@ -247,7 +251,6 @@ function app_project_quick_access_title(){
 
 
 
-
 app_application_lincko.add("app_project_projects_tab", ["projects", "settings"], function() {
 	mainMenu.projectSelect();
 	if(app_project_update_block){
@@ -270,6 +273,12 @@ app_application_lincko.add("app_project_quick_access_chat", "users", function() 
 		$('#app_project_quick_access_chat').find("[find=notif]").removeClass('display_none');
 	} else {
 		$('#app_project_quick_access_chat').find("[find=notif]").addClass('display_none');
+	}
+	app_models_history.reset();
+	if(app_project_update_block){
+		app_project_update_launch_chats = true;
+	} else {
+		mainMenu.initChatTab(true);
 	}
 });
 

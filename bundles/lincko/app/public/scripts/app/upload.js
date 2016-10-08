@@ -298,9 +298,9 @@ $(function () {
 					var temp_index = this.action_param;
 					if(app_upload_files.lincko_files[temp_index].lincko_start){
 						app_upload_files.lincko_files[temp_index].lincko_start = false;
-						app_upload_auto_launcher_timeout = setTimeout(function() {
+						setTimeout(function(temp_index) {
 							app_upload_files.lincko_files[temp_index].submit();
-						}, 300);
+						}, 300, temp_index);
 						app_application_garbage.remove(this.id);
 					}
 				}, temp_index);
@@ -309,7 +309,7 @@ $(function () {
 			clearTimeout(app_upload_auto_launcher_timeout);
 			app_upload_auto_launcher_timeout = setTimeout(function() {
 				app_upload_auto_launcher.init();
-			}, 500);
+			}, 50);
 			
 
 			//This is used to force the preview to appear because the preview variable is not available at once right after the object creation

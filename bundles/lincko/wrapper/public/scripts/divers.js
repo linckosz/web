@@ -217,6 +217,60 @@ function wrapper_test(type, RCUD){
 		}
 	}
 
+	if(type=='*' || type=='messages'){
+		if(RCUD==0){
+			wrapper_sendAction(
+				{
+					"id": 124,
+				},
+				'post',
+				'message/read',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==1){
+			wrapper_sendAction(
+				{
+					"parent_id": 5,
+					"comment": "안녕하세요",
+				},
+				'post',
+				'message/create',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==2){ //Work within 2 minutes
+			wrapper_sendAction(
+				{
+					"id": 147,
+				},
+				'post',
+				'message/recall',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==3){
+			wrapper_sendAction(
+				{
+					"id": 137,
+				},
+				'post',
+				'message/delete',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==4){
+			wrapper_sendAction(
+				{
+					"id": 137,
+				},
+				'post',
+				'message/restore',
+				wrapper_test_display
+			);
+		}
+	}
+
 	if(type=='*' || type=='notes'){
 		if(RCUD==0){
 			wrapper_sendAction(

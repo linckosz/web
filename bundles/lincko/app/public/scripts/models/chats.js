@@ -26,7 +26,6 @@ function app_models_chats_bubble_actionMenu(){
 						return false;
 					}
 				})
-					
 			});
 		}
 		else if(parent[0] == 'projects'){ //if comment's direct parent is project
