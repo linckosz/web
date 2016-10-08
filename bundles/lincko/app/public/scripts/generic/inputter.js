@@ -22,6 +22,32 @@ var inputter = function(setting,position,submenu,burgerFlag,param,fnSend,fnUploa
 	this.items_build();
 	this.handler_build();
 }
+
+function processPaste (elem, pastedData) {
+    // Do whatever with gathered data;
+    alert(pastedData);
+    elem.focus();
+}
+
+
+var waitForPastedData = function(elem, savedContent) {
+	// If data has been processes by browser, process it
+	if (elem.childNodes && elem.childNodes.length > 0) {
+		// Retrieve pasted content via innerHTML
+		// (Alternatively loop through elem.childNodes or elem.getElementsByTagName here)
+		var pastedData = elem.innerHTML;
+		// Restore saved content
+		elem.innerHTML = "";
+		elem.appendChild(savedContent);
+		// Call callback
+		processPaste(elem, pastedData);
+	}
+	else {
+        setTimeout(function () {
+        	waitForPastedData(elem, savedContent)
+        }, 200);
+    }
+}
 inputter.prototype.handler_build = function(){
 	var that = this;
 	if(that._setting.type == 'comment')
@@ -41,10 +67,10 @@ inputter.prototype.handler_build = function(){
 		});
 
 		that.position.find('[find=chat_textarea]').on('paste',function(e,data){
-			// var data = e.originalEvent.clipboardData.getData('text/plain');
-			// e.stopPropagation();
-			// e.preventDefault();
-			// this.innerHTML = this.innerHTML.replace(/<(br).*?>/g,"<br/>").replace(/<(?!br).*?>/g,"");
+			var target = this;
+			setTimeout(function(){
+				target.innerHTML = target.innerHTML.replace(/<(br).*?>/g,"<br/>").replace(/<(?!br).*?>/g,"");
+			},5);
 		});
 
 		that.position.find('[find=chat_textarea]').keyup(function(e){
@@ -58,17 +84,10 @@ inputter.prototype.handler_build = function(){
 				that.position.find('[find=call_send]').addClass('mobile_hide');
 				that.position.find('[find=call_attachment]').removeClass('mobile_hide');
 			}
-			if((e.ctrlKey && e.keyCode==86) || e.keyCode==91)
-			{
-				this.innerHTML = this.innerHTML.replace(/<(br).*?>/g,"<br/>").replace(/<(?!br).*?>/g,"");
-			}
 		});
 
 		that.position.find('[find=chat_textarea]').keypress(function(e){
 			e.stopPropagation();
-			
-
-			
 			if( e.keyCode==13)
 			{
 				if(e.shiftKey)
@@ -96,6 +115,7 @@ inputter.prototype.handler_build = function(){
 				}
 				
 			}
+
 
 		});
 		that.position.find('[find=chat_textarea]').keyup(function(e) {
@@ -188,7 +208,6 @@ inputter.prototype.items_build = function(){
 	{
 
 	}
-
 	wrapper.appendTo(this.position);
 }
 
