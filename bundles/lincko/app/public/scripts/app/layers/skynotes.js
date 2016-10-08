@@ -150,10 +150,14 @@ app_layers_dev_skynotes_ClassTextEditor.prototype.construct = function(){
 	easyeditor_toolbar.click(function(){
 		if (responsive.test("maxMobileL")){
 			if ( easyeditor_toolbar.height() > easyeditor_toolbar.width() ){
-				easyeditor_toolbar.velocity({height:60});
+				easyeditor_toolbar.velocity({height:60}, {
+					mobileHA: hasGood3Dsupport,
+				});
 			}
 			else {
-				easyeditor_toolbar.velocity({height:325});
+				easyeditor_toolbar.velocity({height:325}, {
+					mobileHA: hasGood3Dsupport,
+				});
 			}
 		}
 	});

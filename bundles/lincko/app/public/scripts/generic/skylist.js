@@ -344,7 +344,7 @@ skylist.prototype.subConstruct_default = function(){
 							elem_toReplace.replaceWith(elem_newCard);
 							that.DOM_updated();
 
-							//elem_newCard.velocity('fadeOut',{duration: 200}).velocity('fadeIn');
+							//elem_newCard.velocity('fadeOut',{mobileHA: hasGood3Dsupport, duration: 200,}).velocity('fadeIn', {mobileHA: hasGood3Dsupport,});
 
 							delete Lincko.storage.data[fakeItem._type][fakeItem['_id']];
 							fakeItems_obj[fakeItem.temp_id].elem_replaced = true;
@@ -369,6 +369,7 @@ skylist.prototype.subConstruct_default = function(){
 							$(elem_cards[i_old]).after(elem_newCard);
 						}
 						elem_newCard.velocity('slideDown',{
+							mobileHA: hasGood3Dsupport,
 							complete: function(){
 								$(this).attr('style','');
 								that.DOM_updated();
@@ -770,6 +771,7 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 	}
 
 	iscroll_elem.children().not('.burger_typeTask').velocity("fadeIn",{
+		mobileHA: hasGood3Dsupport,
 		complete: 200,
 		complete: function(){
 			that.store_all_elem();
@@ -781,6 +783,7 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 	return;
 
 	/*that.list.velocity("fadeOut",{
+		mobileHA: hasGood3Dsupport,
 		duration: 200,
 		complete: function(){
 			if( that.list.find('.iscroll_sub_div').length > 0 ){
@@ -809,6 +812,7 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 		}
 	})
 	.velocity("fadeIn",{
+		mobileHA: hasGood3Dsupport,
 		duration: 200,
 		complete: function(){
 			that.window_resize();
@@ -886,6 +890,7 @@ skylist.prototype.addCard = function(item){
 				var item_new = Lincko.storage.get(that.list_type , item['_id']);
 				if( /*!item_new ||*/ (typeof item_new == 'object' && 'deleted_at' in item_new && item_new['deleted_at']) || (typeof item_new == 'object' && item_new._parent[1] != app_content_menu.projects_id) ){ //for delete
 					elem.velocity('slideUp',{
+						mobileHA: hasGood3Dsupport,
 						complete: function(){
 							$(this).remove();
 							if( that.list_subwrapper.find('[find=card]').length < 1 ){
@@ -906,6 +911,7 @@ skylist.prototype.addCard = function(item){
 					}
 					else{
 						elem.velocity('fadeOut',{
+							mobileHA: hasGood3Dsupport,
 							duration: 200,
 							complete: function(){
 								var elem_toReplace = that.addCard(Lincko.storage.get(that.list_type , item['_id']));
@@ -2461,7 +2467,10 @@ skylist.prototype.on_mousemove = function(event){
 				that.options_startL = that.window_width;
 			}
 			if( that.actiontask.data('options') ){
-				that.actiontask.find('.app_layers_dev_skytasks_taskblur').velocity('fadeIn',500);
+				that.actiontask.find('.app_layers_dev_skytasks_taskblur').velocity('fadeIn', {
+					mobileHA: hasGood3Dsupport,
+					duration: 500,
+				});
 				that.actiontask.find('[find=task_center]').css('opacity',0.6);
 			}
 		}
@@ -2494,7 +2503,9 @@ skylist.prototype.on_mouseup = function(){
 		if( parseInt(that.actiontask.css('left'),10) < 0 ){
 			var rightOptions_totalW = that.elem_rightOptions_count*that.elem_rightOptions_width;
 			if( (parseInt(that.actiontask.css('left'),10) <= -rightOptions_totalW ) || that.delX_now < 0 ) {
-				that.actiontask.velocity({ left: -rightOptions_totalW });
+				that.actiontask.velocity({ left: -rightOptions_totalW }, {
+					mobileHA: hasGood3Dsupport,
+				});
 			}
 			else if (that.delX_now >= 0){
 				that.clearOptions(that.actiontask);
@@ -2505,7 +2516,9 @@ skylist.prototype.on_mouseup = function(){
 		else{
 			var leftOptions_totalW = that.elem_leftOptions_count*that.elem_leftOptions_width;
 			if( parseInt(that.actiontask.css('left'),10) >= leftOptions_totalW  ){
-				that.actiontask.velocity({ left: leftOptions_totalW });
+				that.actiontask.velocity({ left: leftOptions_totalW }, {
+					mobileHA: hasGood3Dsupport,
+				});
 			}
 			else{
 				that.clearOptions(that.actiontask);
@@ -2527,6 +2540,7 @@ skylist.prototype.clearOptions = function(elem_task, begin_fn, complete_fn){
 	else if(that.actiontask){
 		that.actiontask.data('options',false);
 		elem_task.velocity( {left: 0},{
+			mobileHA: hasGood3Dsupport,
 			begin: begin_fn,
 			complete: function(){
 				that.actiontask.find('[find=card_leftOptions]').removeAttr('style');
@@ -2658,6 +2672,7 @@ skylist.prototype.paperView_toggleExpandable = function(elem_expandable, cb_comp
 	elem_expandable.removeClass('display_none');
 	if(elem_expandable.css('display') != 'block'){
 		elem_expandable.velocity("slideDown", {
+			mobileHA: hasGood3Dsupport,
 			complete: function(){
 				if(typeof cb_complete == 'function'){ cb_complete(); }
 				$(window).resize();
@@ -2670,6 +2685,7 @@ skylist.prototype.paperView_toggleExpandable = function(elem_expandable, cb_comp
 	}
 	else{
 		elem_expandable.velocity("slideUp", {
+			mobileHA: hasGood3Dsupport,
 			complete: function(){
 				that.window_resize();
 			}
@@ -2757,6 +2773,7 @@ skylist.prototype.menu_construct = function(){
 		if( elem_filter_pane.css('display')=='none' ){
 			elem_filterBtn.attr('active',true);
 			elem_filter_pane.velocity('slideDown',{
+				mobileHA: hasGood3Dsupport,
 				complete: function(){
 					elem_filter_pane.focus();
 				}
@@ -2768,7 +2785,9 @@ skylist.prototype.menu_construct = function(){
 	});
 	that.elem_navbar.find('.skylist_menu_navbar_filter_pane').blur(function(){
 		elem_filterBtn.attr('active',false);
-		$(this).velocity('slideUp');
+		$(this).velocity('slideUp', {
+			mobileHA: hasGood3Dsupport,
+		});
 	});
 
 
@@ -2924,6 +2943,7 @@ skylist.prototype.menu_construct = function(){
 			}
 			
 			that.elem_sorts_text[that.sort_array[that.sortnum_new]].velocity({left: 0},{
+				mobileHA: hasGood3Dsupport,
 				complete: function(){
 					if( that.Lincko_itemsList_filter.duedate == null){
 						that.Lincko_itemsList_filter.duedate = -1;
@@ -2934,7 +2954,7 @@ skylist.prototype.menu_construct = function(){
 				}
 			});
 			that.menu_makeSelection(that.sort_array[that.sortnum_new]);
-			//that.elem_sorts_text[that.sort_array[that.sortnum]].velocity({opacity:0},500); 
+			//that.elem_sorts_text[that.sort_array[that.sortnum]].velocity({opacity:0}, {mobileHA: hasGood3Dsupport, duration: 500,}); 
 		
 		}
 
@@ -3128,7 +3148,12 @@ skylist.prototype.updateFakeCards = function(){
 					$(elem.find('[find=card_time_calendar_timestamp]')).datepicker('hide');
 				}
 				elem.replaceWith(elem_newCard);
-				elem_newCard.velocity('fadeOut',{duration: 200}).velocity('fadeIn');
+				elem_newCard.velocity('fadeOut',{
+					mobileHA: hasGood3Dsupport,
+					duration: 200,
+				}).velocity('fadeIn', {
+					mobileHA: hasGood3Dsupport,
+				});
 				updated = true;
 			}
 		});

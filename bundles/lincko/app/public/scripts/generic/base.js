@@ -73,6 +73,7 @@ function base_show_error(msg, error) {
 		$('#base_error').html(msg);
 		if($('#base_error').is(':hidden')){
 			$("#base_error").velocity("transition.slideRightBigIn", {
+				mobileHA: hasGood3Dsupport,
 				duration: 260,
 				delay: 120,
 			});
@@ -87,6 +88,7 @@ function base_hide_error() {
 	clearTimeout(base_error_timing);
 	if($('#base_error').is(':visible')){
 		$("#base_error").velocity("transition.slideRightBigOut", {
+			mobileHA: hasGood3Dsupport,
 			duration: 160,
 			delay: 80,
 			complete: function(){

@@ -17,6 +17,8 @@
 	-moz-transform: translate(-50%,-50%);
 	-ms-transform: translate(-50%,-50%);
 	-o-transform: translate(-50%,-50%);
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
 	width: 80%;
 	height: 80%;
 	background-color: rgba(0, 0, 0, 0.6);
@@ -43,6 +45,8 @@
 	-moz-transform: translate(50%,-50%);
 	-ms-transform: translate(50%,-50%);
 	-o-transform: translate(50%,-50%);
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
 	cursor: pointer;
 	font-size: 26px;
 }
@@ -56,6 +60,8 @@
 	-moz-transform: translate(-50%,-50%);
 	-ms-transform: translate(-50%,-50%);
 	-o-transform: translate(-50%,-50%);
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
 	height: 70%;
 	width: 80%;
 	text-align: center;

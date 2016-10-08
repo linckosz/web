@@ -410,6 +410,7 @@ enquire.register(responsive.noMobileL, function() {
 		$('#app_application_content').velocity(
 			{ blur: 0 },
 			{
+				mobileHA: hasGood3Dsupport,
 				duration: 200,
 				delay: 100,
 				easing: [ 4 ],
@@ -423,6 +424,7 @@ enquire.register(responsive.isMobileL, function() {
 		$('#app_application_content').velocity(
 			{ blur: 4 },
 			{
+				mobileHA: hasGood3Dsupport,
 				duration: 200,
 				delay: 100,
 				easing: [ 4 ],
@@ -475,6 +477,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 			Blur.velocity(
 				{ blur: 0 },
 				{
+					mobileHA: hasGood3Dsupport,
 					duration: time,
 					delay: delay,
 					easing: [ 4 ],
@@ -484,6 +487,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 		$("#app_project_header").velocity(
 			{ opacity: 0 },
 			{
+				mobileHA: hasGood3Dsupport,
 				duration: time-Math.floor(2*time/3),
 				delay: delay,
 				easing: [ 4 ],
@@ -516,6 +520,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 		Elem.css('width', width).velocity(
 			{width: 0},
 			{
+				mobileHA: hasGood3Dsupport,
 				duration: time,
 				delay: delay,
 				progress: function(){
@@ -557,6 +562,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				Blur.velocity(
 					{ blur: 4 },
 					{
+						mobileHA: hasGood3Dsupport,
 						duration: time,
 						delay: delay,
 						easing: [ 4 ],
@@ -570,6 +576,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 		.velocity(
 			{ opacity: 1 },
 			{
+				mobileHA: hasGood3Dsupport,
 				duration: time-Math.floor(2*time/3),
 				delay: delay+Math.floor(2*time/3),
 				easing: [ 4 ],
@@ -605,6 +612,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 		Elem.css('width', 0).velocity(
 			{width: width},
 			{
+				mobileHA: hasGood3Dsupport,
 				duration: time,
 				delay: delay,
 				progress: function(){

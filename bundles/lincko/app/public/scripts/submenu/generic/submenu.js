@@ -840,6 +840,7 @@ Submenu.prototype.showSubmenu = function(time, delay, animate) {
 		if (that.layer <= 3) { submenu_wrapper.css('z-index', submenu_zindex[this.preview]); } //This insure for the 1/3 version to go below the previous one
 		submenu_wrapper.velocity(
 			"transition.slideLeftBigIn", {
+				mobileHA: hasGood3Dsupport,
 				duration: time,
 				delay: delay,
 				easing: [.38, .1, .13, .9],
@@ -850,6 +851,7 @@ Submenu.prototype.showSubmenu = function(time, delay, animate) {
 						//The blur is hard to calculate, it creates some flickering
 						if (wrapper_browser('webkit')) {
 							$('#app_content_dynamic').velocity({ blur: 2 }, {
+								mobileHA: hasGood3Dsupport,
 								duration: time,
 								delay: delay,
 								easing: [4],
@@ -880,6 +882,7 @@ Submenu.prototype.showSubmenu = function(time, delay, animate) {
 		}
 		submenu_wrapper.velocity(
 			animation, {
+				mobileHA: hasGood3Dsupport,
 				duration: Math.floor(1.5 * time),
 				delay: delay,
 				easing: [.38, .1, .13, .9],
@@ -929,6 +932,7 @@ Submenu.prototype.showPreview = function(time, delay, animate) {
 		animation = animation_map_preview[this.inAnimation]['desktop'];
 		submenu_wrapper.velocity("stop", true).velocity(
 			animation, {
+				mobileHA: hasGood3Dsupport,
 				duration: time,
 				delay: delay,
 				easing: [.38, .1, .13, .9],
@@ -954,6 +958,7 @@ Submenu.prototype.showPreview = function(time, delay, animate) {
 		animation = animation_map_preview[this.inAnimation]['mobile'];
 		submenu_wrapper.velocity("stop", true).velocity(
 			animation, {
+				mobileHA: hasGood3Dsupport,
 				duration: Math.floor(1.5 * time),
 				delay: delay,
 				easing: [.38, .1, .13, .9],
@@ -1028,6 +1033,7 @@ Submenu.prototype.hideSubmenu = function(time, delay, animate) {
 		if (that.layer <= 3) { submenu_wrapper.css('z-index', submenu_zindex[this.preview]); } //This insure for the 1/3 version to go below the previous one
 		submenu_wrapper.velocity(
 			"transition.slideLeftBigOut", {
+				mobileHA: hasGood3Dsupport,
 				duration: time,
 				delay: delay,
 				easing: [.38, .1, .13, .9],
@@ -1045,6 +1051,7 @@ Submenu.prototype.hideSubmenu = function(time, delay, animate) {
 		}
 		submenu_wrapper.velocity(
 			animation, {
+				mobileHA: hasGood3Dsupport,
 				duration: Math.floor(1.5 * time),
 				delay: delay,
 				easing: [.38, .1, .13, .9],
@@ -1076,6 +1083,7 @@ Submenu.prototype.hidePreview = function(time, delay, animate) {
 		animation = animation_map_preview[this.outAnimation]['desktop'];
 		submenu_wrapper.velocity("stop", true).velocity(
 			animation, {
+				mobileHA: hasGood3Dsupport,
 				duration: time,
 				delay: delay,
 				easing: [.38, .1, .13, .9],
@@ -1090,6 +1098,7 @@ Submenu.prototype.hidePreview = function(time, delay, animate) {
 		animation = animation_map_preview[this.outAnimation]['mobile'];
 		submenu_wrapper.velocity("stop", true).velocity(
 			animation, {
+				mobileHA: hasGood3Dsupport,
 				duration: Math.floor(1.5 * time),
 				delay: delay,
 				easing: [.38, .1, .13, .9],
@@ -1321,6 +1330,7 @@ enquire.register(responsive.minDesktop, function() {
 	//The blur is hard to calculate, it creates some flickering
 	if (wrapper_browser('webkit') && submenu_Getnext() > 1 && $('#app_content_dynamic').hasClass('app_application_submenu_blur')) {
 		$('#app_content_dynamic').velocity({ blur: 2 }, {
+			mobileHA: hasGood3Dsupport,
 			duration: 200,
 			delay: 100,
 			easing: [4],
@@ -1331,6 +1341,7 @@ enquire.register(responsive.maxTablet, function() {
 	//The blur is hard to calculate, it creates some flickering
 	if (wrapper_browser('webkit') && submenu_Getnext() > 1 && $('#app_content_dynamic').hasClass('app_application_submenu_blur')) {
 		$('#app_content_dynamic').velocity({ blur: 0 }, {
+			mobileHA: hasGood3Dsupport,
 			duration: 200,
 			delay: 100,
 			easing: [4],
@@ -1367,6 +1378,7 @@ function submenu_content_unblur() {
 	//Checking animate helps only to know if we pushed the button close
 	if (wrapper_browser('webkit')) {
 		$('#app_content_dynamic').velocity({ blur: 0 }, {
+			mobileHA: hasGood3Dsupport,
 			duration: 100,
 			delay: 100,
 			easing: [1],

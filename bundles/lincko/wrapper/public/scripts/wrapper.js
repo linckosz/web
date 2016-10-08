@@ -403,8 +403,9 @@ var wrapper_IScroll_options = {
 	shrinkScrollbars: 'clip',
 	scrollbars: 'custom',
 	preventDefaultException: {tagName:/.*/},
+	HWCompositing: hasGood3Dsupport,
 
-	//[Mobile devices] The disavantage is that on desktop the clikc event will be launch after a mouse move (= scroll)
+	//[Mobile devices] The disavantage is that on desktop the click event will be launch after a mouse move (= scroll)
 	//click: false,
 	//[Desktop] The disavantage is that we don't see the mouse click by css (:active)
 	//click: true,

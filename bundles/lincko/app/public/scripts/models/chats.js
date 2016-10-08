@@ -65,6 +65,7 @@ function app_models_chats_bubble_actionMenu(){
 				event.stopPropagation();
 				that.blur();
 				elem_translatedText.velocity('slideUp',{
+					mobileHA: hasGood3Dsupport,
 					complete: function(){
 						elem_translatedText.remove();
 						var iscroll_id = that.closest('.overthrow').prop('id');
@@ -92,6 +93,7 @@ function app_models_chats_bubble_actionMenu(){
 			    		elem_translated.find('[find=text]').text(data);
 			    		that.append(elem_translated);
 			    		elem_translated.velocity('slideDown',{
+			    			mobileHA: hasGood3Dsupport,
 			    			complete: function(){
 			    				var iscroll_id = that.closest('.overthrow').prop('id');
 			    				myIScrollList[iscroll_id].refresh();

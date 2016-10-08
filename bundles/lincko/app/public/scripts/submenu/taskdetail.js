@@ -653,6 +653,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		elem.find('.submenu_taskdetail_meta_actions').click(function(){
 			if(action_menu_opened){
 				elem_action_menu.velocity({width:0},{
+					mobileHA: hasGood3Dsupport,
 					begin: function(){
 						elem_action_menu.css('display','initial');
 					},
@@ -664,6 +665,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			}
 			else{
 				elem_action_menu.velocity({width:25},{
+					mobileHA: hasGood3Dsupport,
 					begin: function(){
 						elem_action_menu.css('display','initial');
 					},
@@ -838,6 +840,7 @@ Submenu.prototype.Add_taskdetail = function() {
 					wrapper_sendAction(param_sendAction, 'post', route);
 				}
 				elem_linkcard.velocity('slideUp',{
+					mobileHA: hasGood3Dsupport,
 					complete: function(){
 						elem_linkcard.remove();
 					},
@@ -1034,6 +1037,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			    		elem_textTranslated.html(data).removeClass('display_none');
 			    		elem_translateBtn.html(untranslate_str);
 			    		elem_textTranslated.velocity('slideDown',{
+			    			mobileHA: hasGood3Dsupport,
 			    			complete: function(){
 			    				elem_translateBtn.removeAttr('style');
 			    			}
@@ -1044,6 +1048,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			else{
 	    		elem_translateBtn.html(translate_str);
 	    		elem_textTranslated.velocity('slideUp',{
+	    			mobileHA: hasGood3Dsupport,
 	    			complete: function(){
 	    				elem_textTranslated.html('').addClass('display_none');
 	    				elem_translateBtn.removeAttr('style');
@@ -1138,6 +1143,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			var elem_commentCount = elem_submenu_taskdetail_comments.find('[find=commentCount]');
 			var commentCount = parseInt(elem_commentCount.html(),10);
 			elem_commentCount.velocity('fadeOut',{
+				mobileHA: hasGood3Dsupport,
 				duration: 200,
 				complete: function(){
 					$(this).html(commentCount+1).attr('style','');
@@ -1191,6 +1197,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		if(animation){
 			elem_comments_main.prepend(elem_toShow_wrapper);
 			elem_toShow_wrapper.velocity('slideDown',{
+				mobileHA: hasGood3Dsupport,
 				duration: 500,
 				complete: function(){
 					elem_toShow_wrapper.children().unwrap();
@@ -1269,6 +1276,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		var elem_arrow = elem_btn.find('[find=icon_arrow]');
 		if( elem_content.css('display')!='none' ){
 			elem_content.velocity('slideUp',{
+				mobileHA: hasGood3Dsupport,
 				begin: function(){
 					elem_content.css({
 						'background-color':'#FBFBFB',
@@ -1281,6 +1289,8 @@ Submenu.prototype.Add_taskdetail = function() {
 			});
 			elem_arrow.velocity({
 				'rotateZ': -90,
+			}, {
+				mobileHA: hasGood3Dsupport,
 			});
 		}
 		else{
@@ -1296,6 +1306,8 @@ Submenu.prototype.Add_taskdetail = function() {
 			});
 			elem_arrow.velocity({
 				'rotateZ': 0,
+			}, {
+				mobileHA: hasGood3Dsupport,
 			});
 		}
 	}
@@ -1539,6 +1551,7 @@ Submenu.prototype.Add_taskdetail = function() {
 				var elem = $('#'+this.id);
 				var elem_new = $('#-submenu_taskdetail_meta').clone().prop('id','submenu_taskdetail_meta_'+that.md5id);
 				elem.velocity('fadeIn',{
+					mobileHA: hasGood3Dsupport,
 					duration: 200,
 					before: function(){
 					},
@@ -1559,7 +1572,9 @@ Submenu.prototype.Add_taskdetail = function() {
 		var elem_linksWrapper = elem.find('[find=links_wrapper]');
 		var elem_toAdd = generate_linkCard(type, id);
 		elem_linksWrapper.append(elem_toAdd);
-		elem_toAdd.velocity('slideDown');
+		elem_toAdd.velocity('slideDown', {
+			mobileHA: hasGood3Dsupport,
+		});
 		myIScrollList[submenu_content.prop('id')].refresh();
 	}
 
@@ -1898,6 +1913,7 @@ var taskdetail_generateCommentBubble = function(comment, root_id, sendAction_rep
 		    		elem_textTranslated.html(data).removeClass('display_none');
 		    		elem_translateBtn.html(untranslate_str);
 		    		elem_textTranslated.velocity('slideDown',{
+		    			mobileHA: hasGood3Dsupport,
 		    			complete: function(){
 		    				elem_translateBtn.removeAttr('style');
 		    			}
@@ -1908,6 +1924,7 @@ var taskdetail_generateCommentBubble = function(comment, root_id, sendAction_rep
 		else{
     		elem_translateBtn.html(translate_str);
     		elem_textTranslated.velocity('slideUp',{
+    			mobileHA: hasGood3Dsupport,
     			complete: function(){
     				elem_textTranslated.html('').addClass('display_none');
     				elem_translateBtn.removeAttr('style');

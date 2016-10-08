@@ -44,6 +44,7 @@ function app_layers_chats_feedChat(parent) {
 				list_dom[ Elem.prop('id') ] = Elem.attr('timestamp');
 				if(typeof list[Elem.prop('id')] == "undefined"){ //remove
 					Elem.velocity('slideUp', {
+						mobileHA: hasGood3Dsupport,
 						complete: function(){
 							$(this).remove();
 						}

@@ -71,6 +71,18 @@ $.fn.hasScrollBar = function() {
 	return this.get(0).scrollHeight > this.height();
 };
 
+//http://artsy.github.io/blog/2012/10/18/so-you-want-to-do-a-css3-3d-transform/
+var hasGood3Dsupport =
+	   'WebkitPerspective' in document.body.style
+	|| 'MozPerspective' in document.body.style
+	|| 'msPerspective' in document.body.style
+	|| 'OPerspective' in document.body.style
+	|| 'perspective' in document.body.style
+;
+//Safari is
+if(navigator.userAgent.match(/iPhone|iPad|iPod/i)){
+	hasGood3Dsupport = false;
+}
 
 function wrapper_test(type, RCUD){
 	if(typeof type==="undefined"){ type = null; }

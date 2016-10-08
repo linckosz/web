@@ -548,11 +548,19 @@ var submenu_chat_label = function(that, sub_that, focus, force) {
 	var val = $.trim(input.val());
 	if(val.length<=0){
 		if(text_help.is(':hidden')){
-			text_help.velocity("transition.fadeIn", { duration: 300, delay: 100, });
+			text_help.velocity("transition.fadeIn", {
+				mobileHA: hasGood3Dsupport,
+				duration: 300,
+				delay: 100,
+			});
 		}
 	} else {
 		if(text_help.is(':visible')){
-			text_help.velocity("transition.fadeOut", { duration: 300, delay: 100, });
+			text_help.velocity("transition.fadeOut", {
+				mobileHA: hasGood3Dsupport,
+				duration: 300,
+				delay: 100,
+			});
 		}
 	}
 	if(focus){
@@ -727,6 +735,7 @@ Submenu.prototype.Add_ChatContent = function() {
 				list_dom[ Elem.prop('id') ] = Elem.attr('timestamp');
 				if(typeof list[Elem.prop('id')] == "undefined"){ //remove
 					Elem.velocity('slideUp', {
+						mobileHA: hasGood3Dsupport,
 						complete: function(){
 							$(this).remove();
 						}

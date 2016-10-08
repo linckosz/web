@@ -51,6 +51,8 @@
 	-moz-transform: translateY(-50%);
 	-ms-transform: translateY(-50%);
 	-o-transform: translateY(-50%);
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
 }
 
 #app_project_logo {
@@ -328,6 +330,8 @@
 	-moz-transform: translateY(-50%);
 	-ms-transform: translateY(-50%);
 	-o-transform: translateY(-50%);
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
 	cursor: pointer; cursor: hand;
 }
 
@@ -359,6 +363,8 @@
 	-moz-transform: translateY(-50%);
 	-ms-transform: translateY(-50%);
 	-o-transform: translateY(-50%);
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
 }
 .app_project_chats_picture > span {
 	width: 36px;

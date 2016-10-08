@@ -7,6 +7,8 @@
     -o-transform: scaleX(-1);
     -webkit-transform: scaleX(-1);
     transform: scaleX(-1);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
     filter: FlipH;
     -ms-filter: "FlipH";
 }
@@ -17,6 +19,8 @@
     -moz-transform: rotate(180deg);
     -o-transform: rotate(180deg);
     transform: rotate(180deg);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 .app_models_files_imageOrientation4{
 	/*4 => vertical flip (y)*/
@@ -24,6 +28,8 @@
     -o-transform: scaleY(-1);
     -webkit-transform: scaleY(-1);
     transform: scaleY(-1);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
     filter: FlipV;
     -ms-filter: "FlipV";
 }
@@ -34,6 +40,8 @@
     -moz-transform: rotate(90deg) scaleY(-1);
     -o-transform: rotate(90deg) scaleY(-1);
     transform: rotate(90deg) scaleY(-1);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 .app_models_files_imageOrientation6{
 	/*6 => Rotate 90 clockwise*/
@@ -42,6 +50,8 @@
     -moz-transform: rotate(90deg);
     -o-transform: rotate(90deg);
     transform: rotate(90deg);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 .app_models_files_imageOrientation7{
 	/*7 => Rotate 90 clockwise and flip horizontally (90 + x)*/
@@ -50,6 +60,8 @@
     -moz-transform: rotate(90deg) scaleX(-1);
     -o-transform: rotate(90deg) scaleX(-1);
     transform: rotate(90deg) scaleX(-1);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 .app_models_files_imageOrientation8{
 	/*8 => Rotate 270 clockwise (270)*/
@@ -58,4 +70,6 @@
     -moz-transform: rotate(270deg);
     -o-transform: rotate(270deg);
     transform: rotate(270deg);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }

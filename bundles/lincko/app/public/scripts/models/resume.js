@@ -237,6 +237,7 @@ var app_models_resume_listup = function(Elem, list, color, link, comments_id){
 			}
 		}
 		div.velocity("slideDown", {
+			mobileHA: hasGood3Dsupport,
 			duration: 200,
 			complete: function(){
 				var wrapper = $(this).closest('.submenu_wrapper');
@@ -253,6 +254,7 @@ var app_models_resume_listup = function(Elem, list, color, link, comments_id){
 	} else {
 		var link_old = div.attr('link');
 		div.velocity("slideUp", {
+			mobileHA: hasGood3Dsupport,
 			duration: 300,
 			complete: function(){
 				$(this).empty();

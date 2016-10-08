@@ -397,6 +397,7 @@ burgerN.destroy = function(elem_dropdown){
 	var duration = burgerN.dropdownTime;
 	if(elem_dropdown){
 		elem_dropdown.velocity('slideUp',{
+			mobileHA: hasGood3Dsupport,
 			duration: duration,
 			complete: function(){
 				elem_dropdown.remove();
@@ -418,6 +419,7 @@ burgerN.slideDown = function(elem_dropdown){
 	}
 	
 	elem_dropdown.velocity("slideDown",{
+		mobileHA: hasGood3Dsupport,
 		duration: that.dropdownTime,
 		complete:function(){
 			if(elem_dropdown.find('.overthrow')){
@@ -1386,6 +1388,7 @@ var burger = function(elem, burger_mode, item){
 		burger_startIndex = null;
 		if(elem_dropdown){
 			elem_dropdown.velocity('slideUp',{
+				mobileHA: hasGood3Dsupport,
 				duration: dropdown_duration,
 				complete: function(){
 					elem_dropdown.remove();
@@ -1476,6 +1479,7 @@ var burger = function(elem, burger_mode, item){
 
 				$('#app_content_dynamic_sub').append(elem_dropdown);
 				elem_dropdown.velocity("slideDown",{
+					mobileHA: hasGood3Dsupport,
 					duration: dropdown_duration,
 				});
 				
@@ -1586,6 +1590,7 @@ var burger = function(elem, burger_mode, item){
 					.css('top',top)
 					.css('position','absolute')
 					.velocity("slideDown", {
+						mobileHA: hasGood3Dsupport,
 						duration: dropdown_duration,
 					});
 					/*
