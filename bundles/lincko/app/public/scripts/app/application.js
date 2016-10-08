@@ -406,7 +406,7 @@ var app_application = {
 
 enquire.register(responsive.noMobileL, function() {
 	//The blur is hard to calculate, it creates some flickering
-	if(wrapper_browser('webkit') && $('#app_application_project').hasClass('app_application_visible')){
+	if(hasGood3Dsupport && wrapper_browser('webkit') && $('#app_application_project').hasClass('app_application_visible')){
 		$('#app_application_content').velocity(
 			{ blur: 0 },
 			{
@@ -420,7 +420,7 @@ enquire.register(responsive.noMobileL, function() {
 });
 enquire.register(responsive.isMobileL, function() {
 	//The blur is hard to calculate, it creates some flickering
-	if(wrapper_browser('webkit') && $('#app_application_project').hasClass('app_application_visible')){
+	if(hasGood3Dsupport && wrapper_browser('webkit') && $('#app_application_project').hasClass('app_application_visible')){
 		$('#app_application_content').velocity(
 			{ blur: 4 },
 			{
@@ -473,7 +473,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 			$(this).removeClass('app_application_width').css('width', width_child);
 		});
 		//The blur is hard to calculate, it creates some flickering
-		if(wrapper_browser('webkit')){
+		if(hasGood3Dsupport && wrapper_browser('webkit')){
 			Blur.velocity(
 				{ blur: 0 },
 				{
@@ -558,7 +558,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 
 		if(responsive.test("isMobileL") || force_blur){
 			//The blur is hard to calculate, it creates some flickering
-			if(wrapper_browser('webkit')){
+			if(hasGood3Dsupport && wrapper_browser('webkit')){
 				Blur.velocity(
 					{ blur: 4 },
 					{

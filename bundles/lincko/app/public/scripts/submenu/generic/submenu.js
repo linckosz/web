@@ -849,7 +849,7 @@ Submenu.prototype.showSubmenu = function(time, delay, animate) {
 					submenu_resize_content();
 					if (responsive.test("minDesktop")) {
 						//The blur is hard to calculate, it creates some flickering
-						if (wrapper_browser('webkit')) {
+						if (hasGood3Dsupport && wrapper_browser('webkit')) {
 							$('#app_content_dynamic').velocity({ blur: 2 }, {
 								mobileHA: hasGood3Dsupport,
 								duration: time,
@@ -1328,7 +1328,7 @@ function submenu_Build(menu, next, hide, param, preview) {
 
 enquire.register(responsive.minDesktop, function() {
 	//The blur is hard to calculate, it creates some flickering
-	if (wrapper_browser('webkit') && submenu_Getnext() > 1 && $('#app_content_dynamic').hasClass('app_application_submenu_blur')) {
+	if (hasGood3Dsupport && wrapper_browser('webkit') && submenu_Getnext() > 1 && $('#app_content_dynamic').hasClass('app_application_submenu_blur')) {
 		$('#app_content_dynamic').velocity({ blur: 2 }, {
 			mobileHA: hasGood3Dsupport,
 			duration: 200,
@@ -1339,7 +1339,7 @@ enquire.register(responsive.minDesktop, function() {
 });
 enquire.register(responsive.maxTablet, function() {
 	//The blur is hard to calculate, it creates some flickering
-	if (wrapper_browser('webkit') && submenu_Getnext() > 1 && $('#app_content_dynamic').hasClass('app_application_submenu_blur')) {
+	if (hasGood3Dsupport && wrapper_browser('webkit') && submenu_Getnext() > 1 && $('#app_content_dynamic').hasClass('app_application_submenu_blur')) {
 		$('#app_content_dynamic').velocity({ blur: 0 }, {
 			mobileHA: hasGood3Dsupport,
 			duration: 200,
@@ -1376,7 +1376,7 @@ function submenu_content_unblur() {
 	$('#app_content_dynamic').removeClass('app_application_submenu_blur');
 	//The blur is hard to calculate, it creates some flickering
 	//Checking animate helps only to know if we pushed the button close
-	if (wrapper_browser('webkit')) {
+	if (hasGood3Dsupport && wrapper_browser('webkit')) {
 		$('#app_content_dynamic').velocity({ blur: 0 }, {
 			mobileHA: hasGood3Dsupport,
 			duration: 100,
