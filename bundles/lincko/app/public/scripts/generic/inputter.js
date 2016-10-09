@@ -23,31 +23,6 @@ var inputter = function(setting,position,submenu,burgerFlag,param,fnSend,fnUploa
 	this.handler_build();
 }
 
-function processPaste (elem, pastedData) {
-    // Do whatever with gathered data;
-    alert(pastedData);
-    elem.focus();
-}
-
-
-var waitForPastedData = function(elem, savedContent) {
-	// If data has been processes by browser, process it
-	if (elem.childNodes && elem.childNodes.length > 0) {
-		// Retrieve pasted content via innerHTML
-		// (Alternatively loop through elem.childNodes or elem.getElementsByTagName here)
-		var pastedData = elem.innerHTML;
-		// Restore saved content
-		elem.innerHTML = "";
-		elem.appendChild(savedContent);
-		// Call callback
-		processPaste(elem, pastedData);
-	}
-	else {
-        setTimeout(function () {
-        	waitForPastedData(elem, savedContent)
-        }, 200);
-    }
-}
 inputter.prototype.handler_build = function(){
 	var that = this;
 	if(that._setting.type == 'comment')

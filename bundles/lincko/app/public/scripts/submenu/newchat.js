@@ -218,7 +218,7 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 
 				var data = {
 					'id': temp_id,
-					'category':'comments',
+					'category': that.param.type == 'chats' ? "messages":'comments',
 					'by':  wrapper_localstorage.uid,
 					'timestamp': Math.floor((new Date()).getTime() / 1000),
 					'content' : content.replace(/<(br).*?>/g,"\n"),
@@ -248,7 +248,7 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 
 	}
 
-	var param= {
+	var param = {
 		type : this.param.type,
 		id : this.param.id,
 	};

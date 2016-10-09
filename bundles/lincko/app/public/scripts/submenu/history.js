@@ -1,7 +1,6 @@
 /* Category 31 */
 var BaseItemCls = function(record,type)
 {
-	this.record = record;
 	this.style = '';
 
 	//according to type
@@ -49,7 +48,7 @@ var BaseItemCls = function(record,type)
 			{
 				this.style = 'file';
 			}
-			else if(record['_type'] == 'comments')
+			else if(record['_type'] == 'comments' || record['_type'] == 'messages')
 			{
 				this.style = 'comment';
 			}
@@ -210,9 +209,9 @@ BaseItemCls.prototype.item_display = function(position,subm,mode)
 			case 'change' :
 					var temp_elem_id = subm.id + '_' + this.data.category + '_models_thistory_' + this.data.temp_id 
 					+ (typeof this.data.hist !== 'undefined' && this.data.hist != 0 ?  '_'+ this.data.hist : '');
-					if(this.data.category == 'comments')
+					if(this.data.category == 'comments' || this.data.category == 'messages' )
 					{
-						$('#'+temp_elem_id).attr('comment_id',this.data.id);
+						$('#'+temp_elem_id).attr(this.data.category + '_id',this.data.id);
 
 						$('#'+temp_elem_id).removeAttr('temp_id');
 					}
@@ -331,7 +330,6 @@ var CommentContentCls = function(record,type)
 {
 	this.id = 0;
 	this.temp_id = 0;
-	this.category = 'comments';
 	this.content ='';
 	this.is_recalled = false;
 
@@ -343,26 +341,29 @@ var CommentContentCls = function(record,type)
 			this.temp_id = item['temp_id'];
 			this.content = item['+comment'];
 			this.is_recalled = item['recalled_by'] != null; 
+			this.category = 'comments';
 			break;
 		case 'chats' :
 			this.id = record['_id'];
 			this.temp_id = record['temp_id'];
 			this.content = record['+comment'];
 			this.is_recalled = record['recalled_by'] != null; 
+			this.category = 'messages';
 			break;
 		default:
 			this.id = record['id'];
 			this.temp_id = record['temp_id'];
 			this.content = record['content'];
 			this.is_recalled = record['is_recalled']; 
+			this.category = record['category']; 
 			break;
 	}
 }
 
 CommentContentCls.prototype.feed_content = function(elem)
 {
-	elem.attr('category','comments');
-	elem.attr('comment_id',this.id);
+	elem.attr('category',this.category);
+	elem.attr(this.category + '_id',this.id);
 	if(this.id == this.temp_id)
 	{
 		elem.attr('temp_id',this.temp_id);
@@ -486,7 +487,6 @@ var ActivityCommentContentCls = function(record,type)
 	var key = this.target_category == 'files' ? '+name' : 'title';
 
 	this.target = Lincko.storage.get(this.target_category,this.target_id, key);
-	this.target_type = Lincko.storage.data._history_title[this.target_category][0];
 	var history = Lincko.storage.getHistoryInfo(record);
 	var clone_hist = $.extend(true, {}, history.root.history);
 	var text = history.root.title;
@@ -499,7 +499,6 @@ var ActivityCommentContentCls = function(record,type)
 ActivityCommentContentCls.prototype.feed_content = function(elem)
 {
 	elem.find("[find=target]").html(this.target);
-	elem.find("[find=target_type]").html(this.target_type);
 	elem.find("[find=action]").html(wrapper_to_html($.trim(this.action).ucfirst()));
 }
 
@@ -586,6 +585,16 @@ var chatFeed = function(id,type,position,submenu)
 	this.page_count = 15;
 	this.current_page = 0 ;
 
+	this.current = null;
+	this.pre = {
+		att: null,
+		by: null,
+		cod: null,
+		id: null,
+		type: null,
+		timestamp: null,
+	};
+
 	var data = this.app_chat_feed_data_init();
 	data = this.app_chat_feed_timeline(data);
 
@@ -658,8 +667,32 @@ chatFeed.prototype.app_chat_feed_data_history = function()
 chatFeed.prototype.app_chat_feed_data_format = function(data)
 {
 	var records = [];
+	
 	for(var i in data)
 	{
+		this.current = data[i];
+		if(
+			   this.type == 'history'
+			&& this.pre.cod !== null
+			&& this.current.att === this.pre.att
+			&& this.current.by === this.pre.by
+			&& this.current.cod === this.pre.cod
+			&& this.current.id === this.pre.id
+			&& this.current.type === this.pre.type
+			&& this.current.timestamp > this.pre.timestamp - (4*3600) //Need 4H gap
+		){
+			continue;
+		}
+		if (this.type == 'history'){
+			this.pre = {
+				att: this.current.att,
+				by: this.current.by,
+				cod: this.current.cod,
+				id: this.current.id,
+				type: this.current.type,
+				timestamp: this.current.timestamp,
+			};
+		}
 		var item = new BaseItemCls(data[i],this.type);
 		if(item.style != '' && item.data.category !='')
 		{
@@ -710,17 +743,10 @@ chatFeed.prototype.app_chat_feed_data_running = function()
 	return data;
 }
 
-chatFeed.prototype.app_chat_feed_data_no_cache_format = function()
-{
-	var data = this.app_chat_feed_data_running();
-	var records = this.app_chat_feed_data_format(data);
-	return records;
-}
-
 chatFeed.prototype.app_chat_feed_data_init = function()
 {
 	var cache = this.app_chat_feed_data_cache();
-	var no_cache = this.app_chat_feed_data_no_cache_format();
+	var no_cache = this.app_chat_feed_data_format(this.app_chat_feed_data_running());
 	if(no_cache.length > 0)
 	{
 		var records = [];
@@ -803,7 +829,7 @@ chatFeed.prototype.app_chat_feed_send_msg = function(data)
 chatFeed.prototype.app_chat_feed_load_recent = function()
 {
 	var mode = 'insert';
-	var data  = this.app_chat_feed_data_no_cache_format();
+	var data = this.app_chat_feed_data_format(this.app_chat_feed_data_running());
 
 	for( var i = data.length - 1; i >= 0; i-- )
 	{

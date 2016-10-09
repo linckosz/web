@@ -4,16 +4,17 @@ function app_models_chats_bubble_actionMenu(){
 	var untranslate_str = Lincko.Translation.get('app', 57, 'html'); //untranslate
 	var timeout_fn = function(that){
 		that.find('[find=content]').focus();
-		var elem_historyWrapper = that.closest('[category=comments]');
+		var elem_historyWrapper = that.closest('.models_history_wrapper');
+		var category = elem_historyWrapper.attr('category');
 		var elem_actionMenu = that.find('[find=actionMenu]');
 		if(elem_actionMenu.length || elem_historyWrapper.length < 1){
 			return false;
 		}
-		var commentID = elem_historyWrapper.attr('comment_id');
-		var item_comment = Lincko.storage.get('comments', commentID);
+		var commentID = elem_historyWrapper.attr(category+'_id');
+		var item_comment = Lincko.storage.get(category, commentID);
 
 		var projectID = Lincko.storage.getMyPlaceholder()['_id']; //default is personal space
-		var parent = Lincko.storage.get('comments', commentID, '_parent');
+		var parent = Lincko.storage.get(category, commentID, '_parent');
 		if(!parent){ //comment doesnt exist (e.g. has tempID)
 			var submenuID = that.closest('.submenu_wrapper').prop('id');
 			$.each(submenu_obj,function(submenuType, submenus){
@@ -126,7 +127,7 @@ function app_models_chats_bubble_actionMenu(){
 		/*------------recall chat action----------------*/
 		var elem_recallBtn = elem_actionMenu.find('[find=recall_btn]');
 		elem_recallBtn.on("mousedown touchstart", function(){
-			var target = that.closest('[category=comments]');
+			var target = that.closest('[category=' + category + ']');
 			var date = new wrapper_date(Math.floor($.now()/1000));
 
 			var item = {
@@ -134,11 +135,10 @@ function app_models_chats_bubble_actionMenu(){
 				'id' : commentID,
 				'style' : typeof target.attr("temp_id") === 'undefined' ? 'id' : 'temp_id',
 				'timestamp' : date.display('time_short'),
+				'category' : category,
 			}
 			app_models_chats_recall_queue[commentID] = item;
 
-
-			
 			if(!app_models_chats_recall_queue[commentID]['is_working'] && app_models_chats_recall_queue[commentID]['style'] == 'id')
 			{
 				wrapper_sendAction(
@@ -146,7 +146,7 @@ function app_models_chats_bubble_actionMenu(){
 						"id": app_models_chats_recall_queue[commentID]['id'],
 					},
 					'post',
-					'comment/recall',
+					category == 'comments' ? 'comment/recall' : 'message/recall',
 					function(data){
 						delete app_models_chats_recall_queue[commentID];
 					},
@@ -230,7 +230,8 @@ setInterval(function(){
 		if(typeof app_models_chats_recall_queue[key] !== 'undefined'){
 			if(app_models_chats_recall_queue[key]['style'] == 'temp_id')
 			{
-				var list  = Lincko.storage.list('comments', 1,{'temp_id' : app_models_chats_recall_queue[key]['id']});
+				var category = app_models_chats_recall_queue[key]['category'];
+				var list  = Lincko.storage.list(category, 1,{'temp_id' : app_models_chats_recall_queue[key]['id']});
 				if(list.length > 0 && !app_models_chats_recall_queue[key]['is_working'] )
 				{
 					wrapper_sendAction(
@@ -238,7 +239,7 @@ setInterval(function(){
 							"id": list[0]['_id'],
 						},
 						'post',
-						'comment/recall',
+						category == 'comments' ? 'comment/recall' : 'message/recall',
 						function(data){
 							delete app_models_chats_recall_queue[key];
 						},
