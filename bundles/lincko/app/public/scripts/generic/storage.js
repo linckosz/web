@@ -1,5 +1,6 @@
 var storage_first_request = true; //Help to launch getSchema within getLatest only once at the beginning to insure nothing is missing
 var storage_first_launch = true;
+var storage_keep_messages = false; //At false in .schema we delete messages, but at true we keep them because we may return only a part of
 /* PRIVATE METHOD */
 /*
 	NOTE: Do not add this callback to wrapper_sendAction, because wrapper_ajax already launches it internally
@@ -291,6 +292,8 @@ Lincko.storage.update = function(partial, info){
 //Function that check the javascript database schema
 /* PRIVATE METHOD */
 Lincko.storage.schema = function(schema){
+	if(typeof schema=='undefined'){ schema = {}; }
+
 	var update = false;
 	var missing = {};
 
@@ -305,6 +308,10 @@ Lincko.storage.schema = function(schema){
 		} else {
 			for(var j in Lincko.storage.data[i]) {
 				category = false;
+				//We clean at the very first schema, but then we keep messages because the user may go up in history
+				if(typeof schema[i][j] == 'messages' && storage_keep_messages){
+					continue;
+				}
 				if(
 					   typeof schema[i][j] == 'undefined'
 					//|| (typeof Lincko.storage.data[i][j]['deleted_at'] != 'undefined' && Lincko.storage.data[i][j]['deleted_at']==null && schema[i][j]==false) //We keep deleted items
@@ -318,6 +325,8 @@ Lincko.storage.schema = function(schema){
 			}
 		}
 	}
+
+	storage_keep_messages = true;
 
 	//Step 2: Get all missing data
 	//No need update=true because later will it call update() which has it
@@ -357,6 +366,7 @@ Lincko.storage.schema = function(schema){
 Lincko.storage.firstLatest = function(){
 	if(storage_first_request){
 		storage_first_request = false;
+		storage_keep_messages = false; //The first time we open the application, we clean the local database
 		Lincko.storage.getSchema();
 		if(!$.isEmptyObject(Lincko.storage.data)){
 			Lincko.storage.display(true, true); //I don't think we need to force, probability of mismatching is almost null
@@ -1688,7 +1698,7 @@ var storage_check_timing = {
 
 $(window).on({
 	//now + 60s (clear)
-	blur:		function(){ storage_check_timing.set(storage_check_timing.slow, true, true); },
+	blur:		function(){ storage_check_timing.set(storage_check_timing.slow, false, false); },
 	//now + 30s (clear)
 	focus:		function(){ storage_check_timing.set(storage_check_timing.medium, true, true); },
 	//15s (clear 1st + 60s)

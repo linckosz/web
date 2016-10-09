@@ -254,7 +254,7 @@ function wrapper_test(type, RCUD){
 		else if(RCUD==2){ //Work within 2 minutes
 			wrapper_sendAction(
 				{
-					"id": 147,
+					"id": 6095,
 				},
 				'post',
 				'message/recall',
@@ -278,6 +278,18 @@ function wrapper_test(type, RCUD){
 				},
 				'post',
 				'message/restore',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==5){
+			wrapper_sendAction(
+				{
+					"parent_id": 580, //Chats ID
+					"id_max": 6100, //OPTIONAL {false} Get all IDs below this ID (not included) , false value returns from the newest
+					"row_number": 15, //OPTIONAL {30} Number of rows to get
+				},
+				'post',
+				'message/collect',
 				wrapper_test_display
 			);
 		}
