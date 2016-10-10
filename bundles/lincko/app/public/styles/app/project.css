@@ -189,7 +189,7 @@
 
 .app_project_tab > div {
 	position: relative;
-	width: 92%;
+	width: 94%;
 	padding: 8px 0;
 	background-color: rgba(255, 255, 255, 0.47);
 	font-size: 16px;
@@ -198,6 +198,8 @@
 	cursor: pointer; cursor: hand;
 	border: 2px solid transparent;
 	margin: 1px auto;
+	min-height: 42px;
+    box-sizing: border-box;
 }
 
 .app_project_tab > div:hover {

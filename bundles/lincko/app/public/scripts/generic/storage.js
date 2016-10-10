@@ -251,7 +251,7 @@ Lincko.storage.update = function(partial, info){
 			} else {
 				update_real = true;
 			}
-			//Lincko.storage.data[i][j] = partial[i][j];
+
 			if(Lincko.storage.data && Lincko.storage.data[i] && Lincko.storage.data[i][j] && Lincko.storage.data[i][j]['_children']){ //to keep _children. partial doesnt include _children. later, childrenList() will rebuild this anyways
 				_children = Lincko.storage.data[i][j]['_children'];
 				Lincko.storage.data[i][j] = partial[i][j];
@@ -259,6 +259,30 @@ Lincko.storage.update = function(partial, info){
 			}
 			else{
 				Lincko.storage.data[i][j] = partial[i][j];
+			}
+
+			//build "new" for item
+			Lincko.storage.data[i][j]['new'] = false; //If the table need to be shown as viewed, if it doesn't exist we consider it's already viewed
+			if(typeof Lincko.storage.data[i][j]['viewed_by'] != 'undefined'){
+				if(Lincko.storage.data[i][j]['viewed_by'].indexOf(';'+wrapper_localstorage.uid+';') == -1){
+					Lincko.storage.data[i][j]['new'] = true;
+				}
+				delete Lincko.storage.data[i][j]['viewed_by'];
+			}
+
+			//build "not" for history
+			if(typeof Lincko.storage.data[i][j]['history'] != 'undefined'){
+				for(var timestamp in Lincko.storage.data[i][j]['history']){
+					for(var k in Lincko.storage.data[i][j]['history'][timestamp]){
+						Lincko.storage.data[i][j]['history'][timestamp][k]['not'] = false;
+						if(typeof Lincko.storage.data[i][j]['history'][timestamp][k]['notid'] != 'undefined'){
+							if(Lincko.storage.data[i][j]['history'][timestamp][k]['notid'].indexOf(';'+wrapper_localstorage.uid+';') == -1){
+								Lincko.storage.data[i][j]['history'][timestamp][k]['not'] = true;
+							}
+						}
+						delete Lincko.storage.data[i][j]['history'][timestamp][k]['notid'];
+					}
+				}
 			}
 			
 			if(update_real){
@@ -1262,8 +1286,8 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 							//We do not keep copy of Old in Lincko.storage.data, we just need to keep it from origin 'data' item, because there is 2 cases scenario:
 							// 1) Get Old from item itself
 							// 2) Old is not available offline, so we download it before displaying (POST | 'data/history')
-							item = history_items[cat][id]['history'][timestamp][history_id];
-							item.hist = parseInt(history_id, 10);;
+							item = $.extend({}, history_items[cat][id]['history'][timestamp][history_id]);
+							item.hist = parseInt(history_id, 10);
 							item.type = cat;
 							item.par_type = parent[0];
 							item.par_id = parent[1];
