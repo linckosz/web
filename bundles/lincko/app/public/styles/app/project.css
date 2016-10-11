@@ -199,7 +199,7 @@
 	border: 2px solid transparent;
 	margin: 1px auto;
 	min-height: 42px;
-    box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 .app_project_tab > div:hover {

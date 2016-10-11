@@ -995,6 +995,7 @@
 .skylist_chat_card_center {
 	height: 50px;
 	table-layout: fixed;
+	cursor: inherit;
 }
 
 .skylist_maxMobileL .skylist_chat_card_center [find=title]{

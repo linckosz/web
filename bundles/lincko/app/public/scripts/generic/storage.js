@@ -18,7 +18,8 @@ var storage_cb_success = function(msg, err, status, data){
 		if(Lincko.storage.update(data.partial[wrapper_localstorage.uid], info)){
 			if(info === 'reset'){
 				Lincko.storage.schema(data.partial[wrapper_localstorage.uid]);
-				wrapper_localstorage.encrypt('data', JSON.stringify(Lincko.storage.data));
+				//wrapper_localstorage.encrypt('data', JSON.stringify(Lincko.storage.data));
+				storage_local_storage.launch_data();
 				wrapper_localstorage.cleanLocalWorkspace();
 				schema = false;
 			}
@@ -31,9 +32,42 @@ var storage_cb_success = function(msg, err, status, data){
 	}
 	//Update the last visit day only if we are sure the update is finish
 	if(allow_set_lastvisit && $.type(data) === 'object' && typeof data.lastvisit === 'number'){
-		Lincko.storage.setLastVisit(data.lastvisit);
+		//Lincko.storage.setLastVisit(data.lastvisit);
+		storage_local_storage.launch_lastvist(data.lastvisit);
 	}
 	Lincko.storage.firstLatest();
+};
+
+//Help to record local_storage in another thread and with a delay to limit impact on immediate JS updates
+var storage_local_storage = {
+	data: false,
+	lastvisit: false,
+	timeout: null,
+
+	launch_data: function(){
+		storage_local_storage.data = true;
+		storage_local_storage.timer();
+	},
+
+	launch_lastvist: function(lastvisit){
+		storage_local_storage.lastvisit = lastvisit;
+		storage_local_storage.timer();
+	},
+
+	timer: function(){
+		clearTimeout(storage_local_storage.timeout);
+		storage_local_storage.timeout = setTimeout(function(){
+			if(storage_local_storage.data!==false){
+				wrapper_localstorage.encrypt('data', JSON.stringify(Lincko.storage.data));
+			}
+			if(storage_local_storage.lastvisit!==false){
+				Lincko.storage.setLastVisit(storage_local_storage.lastvisit);
+			}
+			storage_local_storage.data = false;
+			storage_local_storage.lastvisit = false;
+		}, 3000);
+	},
+
 };
 
 Lincko.storage.getParent = function(type, id, attr) {
@@ -297,7 +331,8 @@ Lincko.storage.update = function(partial, info){
 		//Lincko.storage.childrenList(partial, children_list);
 		Lincko.storage.childrenList(); //We should not scan the whole database, it slows down the list but Sky had an issue of getting _children visible for notes when adding a comment
 		Lincko.storage.display();
-		wrapper_localstorage.encrypt('data', JSON.stringify(Lincko.storage.data));
+		//wrapper_localstorage.encrypt('data', JSON.stringify(Lincko.storage.data));
+		storage_local_storage.launch_data();
 		if(!info){
 			//Lincko.storage.getSchema(); //toto => is it usefull to check the schema here?
 		}
@@ -488,7 +523,8 @@ Lincko.storage.childrenList = function(data, children_list, category_focus, cate
 	}
 
 	if(change){
-		wrapper_localstorage.encrypt('data', JSON.stringify(Lincko.storage.data));
+		//wrapper_localstorage.encrypt('data', JSON.stringify(Lincko.storage.data));
+		storage_local_storage.launch_data();
 	}
 	
 	app_application_lincko.prepare(false, true); //Luanch updates

@@ -299,7 +299,7 @@ function wrapper_test(type, RCUD){
 		if(RCUD==0){
 			wrapper_sendAction(
 				{
-					"id": 10,
+					"id": 176,
 				},
 				'post',
 				'note/read',
@@ -309,7 +309,7 @@ function wrapper_test(type, RCUD){
 		else if(RCUD==1){
 			wrapper_sendAction(
 				{
-					"parent_id": 4,
+					"parent_id": 3,
 					"title": "It's a note title", //OPTIONAL {''}
 					"comment": "It's a note content",
 				},
@@ -321,7 +321,7 @@ function wrapper_test(type, RCUD){
 		else if(RCUD==2){
 			wrapper_sendAction(
 				{
-					"id": 46,
+					"id": 176,
 					//"parent_id": 4, //OPTIONAL
 					//"title": "It's a note title"+Math.floor(Math.random() * 20), //OPTIONAL
 					"comment": "It's a note content"+Math.floor(Math.random() * 20), //OPTIONAL
@@ -334,7 +334,7 @@ function wrapper_test(type, RCUD){
 		else if(RCUD==3){
 			wrapper_sendAction(
 				{
-					"id": 16,
+					"id": 176,
 				},
 				'post',
 				'note/delete',
@@ -344,7 +344,7 @@ function wrapper_test(type, RCUD){
 		else if(RCUD==4){
 			wrapper_sendAction(
 				{
-					"id": 16,
+					"id": 176,
 				},
 				'post',
 				'note/restore',
