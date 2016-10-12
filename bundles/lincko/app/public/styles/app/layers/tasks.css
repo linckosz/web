@@ -10,6 +10,24 @@
 }
 
 
+/*
+----hover----
+*/
+.app_layers_tasks_tasklist .skylist_card:hover .skylist_card_center, 
+.app_layers_tasks_tasklist .skylist_card_hover .skylist_card_center {
+	background: #e7e9ed;
+}
+.app_layers_tasks_tasklist .skylist_card:hover .skylist_card_bottom, 
+.app_layers_tasks_tasklist .skylist_card_hover .skylist_card_bottom {
+	background: #e7e9ed;
+}
+/*
+----end hover----
+*/
+
+
+
+
 /*MobileL and down */
 @media only screen and (max-width: 900px) {
 	.app_layers_tasks_tasklist .skylist_card_center [find=title]{

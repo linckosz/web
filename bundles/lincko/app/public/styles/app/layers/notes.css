@@ -29,6 +29,21 @@
 	height: initial;
 }
 
+/*
+----hover----
+*/
+.app_layers_notes_noteslist .skylist_card:hover .skylist_card_center, 
+.app_layers_notes_noteslist .skylist_card_hover .skylist_card_center {
+	background: #fff1b9;
+}
+.app_layers_notes_noteslist .skylist_card:hover .skylist_card_bottom, 
+.app_layers_notes_noteslist .skylist_card_hover .skylist_card_bottom {
+	background: #fff1b9;
+}
+/*
+----end hover----
+*/
+
 
 
 /*MobileL and down */

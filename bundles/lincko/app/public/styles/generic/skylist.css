@@ -597,6 +597,7 @@
 .skylist_wrapper[view=paper] .skylist_card_hover [find=card_leftbox],
 .skylist_wrapper[view=paper] .skylist_card_hover [find=card_textwrapper]{
 	background-color: #DBEBF4;
+	background: #e7e9ed;
 }
 
 
@@ -635,9 +636,11 @@
 }
 .skylist_wrapper[view=paper] .skylist_card:hover [find=card_leftbox]{
 	background-color: #DBEBF4;
+	background: #e7e9ed;
 }
 .skylist_wrapper[view=paper] ..skylist_card:hover [find=card_textwrapper]{
 	background-color: #DBEBF4;
+	background: #e7e9ed;
 }
 .skylist_wrapper[view=paper] .skylist_card_center [find=links_wrapper],
 .skylist_wrapper[view=paper] .skylist_card_center [find=comments_wrapper]{

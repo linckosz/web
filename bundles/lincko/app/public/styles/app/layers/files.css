@@ -38,6 +38,24 @@
 	color: #4E2A84;
 }
 
+
+/*
+----hover----
+*/
+.app_layers_files_fileslist .skylist_card:hover .skylist_card_center, 
+.app_layers_files_fileslist .skylist_card_hover .skylist_card_center {
+	background: #e6e1ed;
+}
+.app_layers_files_fileslist .skylist_card:hover .skylist_card_bottom, 
+.app_layers_files_fileslist .skylist_card_hover .skylist_card_bottom {
+	background: #e6e1ed;
+}
+/*
+----end hover----
+*/
+
+
+
 /*MobileL and down */
 @media only screen and (max-width: 900px) {
 	.app_layers_files_fileslist .skylist_card_center [find=title]{
