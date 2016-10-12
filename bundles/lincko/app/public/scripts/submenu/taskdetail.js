@@ -745,6 +745,41 @@ Submenu.prototype.Add_taskdetail = function() {
 	}
 
 
+	/*-----subtasks---------------------*/
+	var generate_subtaskCard = function(task_id){
+		if(!task_id){
+			task_id = 'new';
+		}
+		var elem_subtaskCard = $('#-submenu_taskdetail_subtasks_card').clone().prop('id','').attr('task_id',task_id);
+		return elem_subtaskCard;
+	}
+
+
+
+
+	var elem_subtasks = $('#-submenu_taskdetail_subtasks').clone().prop('id','submenu_taskdetail_subtasks_'+that.md5id);
+	var elem_subtasks_wrapper = elem_subtasks.find('[find=subtasks_wrapper]');
+	var elem_newSubtask = elem_subtasks.find('[find=newSubtask]');
+	var elem_newSubtask_title = elem_newSubtask.find('[find=title]').focus();
+	var elem_newSubtask_btn = elem_subtasks.find('[find=new_btn]').click(function(){
+		elem_newSubtask.removeClass('display_none');
+		elem_newSubtask_title.focus();
+	});
+	elem_newSubtask_title.blur(function(){
+		$(this).html('');
+		elem_newSubtask.addClass('display_none');
+	});
+
+
+	elem_subtasks_wrapper.append(generate_subtaskCard(123));
+	submenu_taskdetail.append(elem_subtasks);
+	/*-----END OF subtasks--------------*/
+
+
+
+
+
+
 	/*-----Links------------------*/
 	var generate_linkCard = function(type, id){
 		var item_link = null;

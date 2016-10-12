@@ -349,8 +349,31 @@ td.submenu_taskdetail_share .fa{
 	font-size: 40px;
 }
 */
+.submenu_taskdetail_subtasks_card{
+	height: 40px;
+}
+.submenu_taskdetail_subtasks_card [find=subtasks_card_table]{
+	height: 100%;
+}
 
+.submenu_taskdetail_subtasks_card [find=checkbox]{
+	border: solid 1px #615577;
+    border-radius: 4px;
+    font-size: 15px;
+}
+.submenu_taskdetail_subtasks_card [find=title_td]{
+	width: 100%;
+}
+.submenu_taskdetail_subtasks_card [find=removeIcon]{
+	visibility: hidden;
+	font-size: 24px;
+	color: #53ADD2;
+}
+.submenu_taskdetail_subtasks_card:hover [find=removeIcon]{
+	visibility: initial;
+}
 
+.submenu_taskdetail_subtasks [find=new_btn],
 .submenu_taskdetail_links [find=new_btn],
 .submenu_taskdetail_links [find=existing_btn]{
 	background-color: #f7fafc;
@@ -364,6 +387,7 @@ td.submenu_taskdetail_share .fa{
 	margin-top: 14px;
 	margin-bottom: 36px;
 }
+.submenu_taskdetail_subtasks [find=new_btn],
 .submenu_taskdetail_links [find=new_btn]{
 	width: 115px;
 }

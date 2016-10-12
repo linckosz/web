@@ -56,6 +56,41 @@
 	</span>
 </div>
 
+
+<div id="-submenu_taskdetail_subtasks" class="submenu_taskdetail_subtasks">
+	<table class="submenu_taskdetail_collapsable_button submenu_taskdetail_paddingLeft">
+		<td find="icon_arrow" class="icon-Accordion base_color_text_linckoOrange"></td>
+		<td>Subtasks{# toto Subtasks #}</td>
+		<td>(<span find="subtaskCount"></span>)</td>
+		<td class="icon-links" find="icomoon"></td>
+	</table>
+	<div find="subtasks_wrapper" class="needsclick submenu_taskdetail_collapsable_content">
+	</div>
+	<table find="newSubtask" class="display_none submenu_taskdetail_paddingLeft submenu_taskdetail_subtasks_card">
+		<td><span find="checkbox" class="fa fa-check"></span></td>
+		<td><div find="title" contenteditable="true"></div></td>
+	</table>
+	<div find="subtasks_btns" class="submenu_taskdetail_paddingLeft">
+		<span find="new_btn" class="skylist_clickable needsclick" >New Subtask{# toto New Subtask #}</span>
+		<span find="existing_btn" class="skylist_clickable needsclick display_none" >Existing Task {#toto Existing Task#}</span>
+	</div>
+</div>
+
+<div id="-submenu_taskdetail_subtasks_card" class="submenu_taskdetail_subtasks_card submenu_taskdetail_paddingLeft needsclick skylist_clickable">
+	<table find="subtasks_card_table">
+		<tr>
+			<td>
+				<span find="checkbox" class="fa fa-check"></span>
+			</td>
+			<td find="title_td"><div find="title" contenteditable="true">Title toto</div></td>
+			<td>
+				<span find="removeIcon" class="icon-Remove"></span>
+			</td>
+		</tr>
+	</table>
+</div>
+
+
 <div id="-submenu_taskdetail_links" class="submenu_taskdetail_links">
 	<table class="submenu_taskdetail_collapsable_button submenu_taskdetail_paddingLeft">
 		<td find="icon_arrow" class="icon-Accordion base_color_text_linckoOrange"></td>
