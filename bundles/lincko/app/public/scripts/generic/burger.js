@@ -806,7 +806,7 @@ burgerN.draw_projects = function(projects,option_fn){
 	if(Lincko.storage.getSettings().latestvisitProjects){
 		$.each(Lincko.storage.getSettings().latestvisitProjects, function(i, id){
 			var project = Lincko.storage.get('projects',id);
-			if(project.personal_private){ return; }
+			if(!project || project.personal_private){ return; }
 			else{
 				latest_projects.push(project);
 			}
