@@ -224,7 +224,7 @@ Submenu.prototype.Add_itemSelector = function() {
 
 	//build searchbar
 	var searchbarInst = null;
-	var searchbar_keyup = function(words){ 
+	var searchbar_keyup = function(words){
 		var filteredIDs = [];
 		if(!words.length){
 			elem_cards_all.removeClass('display_none');

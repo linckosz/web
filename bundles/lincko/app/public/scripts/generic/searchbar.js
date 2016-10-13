@@ -95,7 +95,7 @@ var searchbar = {
 					burgerOnly = '++';
 				}
 
-				userid_array = searchbar.searchByUsername(word);
+				userid_array = searchbar.searchByUsername(word); //this takes a long time
 				if(!word.length || (Lincko.storage.searchArray('word', word, [item]).length > 0 && !burgerOnly) ){
 					push = true;
 					break;
