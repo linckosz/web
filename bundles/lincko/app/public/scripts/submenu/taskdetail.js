@@ -746,47 +746,89 @@ Submenu.prototype.Add_taskdetail = function() {
 
 
 	/*-----subtasks---------------------*/
-	var generate_subtaskCard = function(task_id){
-		if(!task_id){
-			task_id = 'new';
-		}
-		var elem_subtaskCard = $('#-submenu_taskdetail_subtasks_card').clone().prop('id','').attr('task_id',task_id);
-		elem_subtaskCard.find('[find=checkbox]').click(function(){
-			elem_subtaskCard.toggleClass('submenu_taskdetail_subtasks_card_checked');
-		});
-		elem_subtaskCard.find('[find=removeIcon]').click(function(){
-			elem_subtaskCard.velocity('slideUp',{
-				complete: function(){
-					elem_subtaskCard.remove();
-				},
+	if(that.param.type == 'tasks'){
+		var generate_subtaskCard = function(task_id){
+			var subtask = null;
+			if(!task_id){
+				task_id = 'new';
+			}
+			else{
+				subtask = Lincko.storage.get('tasks', task_id);
+			}
+
+			//build subtaskCard
+			var elem_subtaskCard = $('#-submenu_taskdetail_subtasks_card').clone().prop('id','').attr('task_id',task_id);
+			if(subtask){
+				elem_subtaskCard.find('[find=title]').text(subtask['+title']);
+				if(subtask.approved){
+					elem_subtaskCard.addClass('submenu_taskdetail_subtasks_card_checked');
+					elem_subtaskCard.find('[find=title]').attr('contenteditable', false);
+				}
+			}
+
+			elem_subtaskCard.find('[find=checkbox]').click(function(){
+				elem_subtaskCard.toggleClass('submenu_taskdetail_subtasks_card_checked');
+				var approved = elem_subtaskCard.hasClass('submenu_taskdetail_subtasks_card_checked');
+				elem_subtaskCard.find('[find=title]').attr('contenteditable', !approved);
+				wrapper_sendAction({id: task_id, approved: approved}, 'post', 'task/update');
 			});
+			elem_subtaskCard.find('[find=removeIcon]').click(function(){
+				elem_subtaskCard.velocity('slideUp',{
+					complete: function(){
+						elem_subtaskCard.remove();
+					},
+				});
+			});
+
+			//dont use hover mechanism for touch devices
+			if(supportsTouch){
+				elem_subtaskCard.addClass('submenu_taskdetail_subtasks_card_noHover');
+			}
+
+			return elem_subtaskCard;
+		}
+
+		var elem_subtasks = $('#-submenu_taskdetail_subtasks').clone().prop('id','submenu_taskdetail_subtasks_'+that.md5id);
+		var elem_subtasks_wrapper = elem_subtasks.find('[find=subtasks_wrapper]');
+		var elem_newSubtask = elem_subtasks.find('[find=newSubtask]');
+		var elem_newSubtask_title = elem_newSubtask.find('[find=title]').focus();
+		var elem_newSubtask_btn = elem_subtasks.find('[find=new_btn]').click(function(){
+			elem_newSubtask.removeClass('display_none');
+			elem_newSubtask_title.focus();
+		});
+		elem_newSubtask_title.blur(function(){
+			$(this).html('');
+			elem_newSubtask.addClass('display_none');
+		});
+		elem_newSubtask_title.keypress(function(event){
+			if((event.which || event.keyCode) == 13){ //if enter is pressed
+				event.preventDefault();
+				var param = {
+					parent_id: that.param.projID, 
+					title: $(this).text(),
+					'tasksup>access': {taskid: true},
+				};
+				wrapper_sendAction(param, 'post', 'task/create');
+				$(this).blur();
+			}
 		});
 
+		var subtask_count = 0;
+		if(item._tasksdown){
+			$.each(item._tasksdown, function(subtask_id, obj){
+				var subtask = Lincko.storage.get('tasks', subtask_id);
+				//dont show if task doesnt exist or it doesnt match the project of the parent task
+				if(!subtask || subtask._parent[1] != that.param.projID ) return;
+				else{
+					elem_subtasks_wrapper.append(generate_subtaskCard(subtask_id));
+					subtask_count++;
+				}
+			});
+		}
+		elem_subtasks.find('[find=subtaskCount]').text(subtask_count);
 
-
-
-		return elem_subtaskCard;
-	}
-
-	var elem_subtasks = $('#-submenu_taskdetail_subtasks').clone().prop('id','submenu_taskdetail_subtasks_'+that.md5id);
-	var elem_subtasks_wrapper = elem_subtasks.find('[find=subtasks_wrapper]');
-	var elem_newSubtask = elem_subtasks.find('[find=newSubtask]');
-	var elem_newSubtask_title = elem_newSubtask.find('[find=title]').focus();
-	var elem_newSubtask_btn = elem_subtasks.find('[find=new_btn]').click(function(){
-		elem_newSubtask.removeClass('display_none');
-		elem_newSubtask_title.focus();
-	});
-	elem_newSubtask_title.blur(function(){
-		$(this).html('');
-		elem_newSubtask.addClass('display_none');
-	});
-
-	var subtask_count = 0;
-	elem_subtasks.find('[find=subtaskCount]').text(subtask_count);
-
-
-	elem_subtasks_wrapper.append(generate_subtaskCard(123));
-	submenu_taskdetail.append(elem_subtasks);
+		submenu_taskdetail.append(elem_subtasks);
+	};
 	/*-----END OF subtasks--------------*/
 
 

@@ -366,24 +366,34 @@ td.submenu_taskdetail_share .fa{
 .submenu_taskdetail_subtasks_card [find=checkbox]:before{
 	visibility: hidden;
 }
-.submenu_taskdetail_subtasks_card_checked [find=checkbox]:before{
-	visibility: initial;
-}
 .submenu_taskdetail_subtasks_card [find=title_td]{
 	width: 100%;
 }
 .submenu_taskdetail_subtasks_card [find=title]{
 	overflow: hidden;
 	height: 20px;
+	padding-left: 1px;
 }
 .submenu_taskdetail_subtasks_card [find=removeIcon]{
 	visibility: hidden;
 	font-size: 24px;
 	color: #53ADD2;
+	padding-right: 4px;
 }
 .submenu_taskdetail_subtasks_card:hover [find=removeIcon]{
 	visibility: initial;
 }
+
+.submenu_taskdetail_subtasks_card_checked [find=checkbox]:before{
+	visibility: initial;
+}
+.submenu_taskdetail_subtasks_card_checked [find=title]{
+	text-decoration: line-through;
+}
+.submenu_taskdetail_subtasks_card_noHover [find=removeIcon]{
+	visibility: initial;
+}
+
 
 .submenu_taskdetail_subtasks [find=new_btn],
 .submenu_taskdetail_links [find=new_btn],

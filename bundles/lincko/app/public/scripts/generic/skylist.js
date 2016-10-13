@@ -439,7 +439,12 @@ skylist.prototype.generate_Lincko_itemsList = function(){
 		if( that.list_type == "tasks" ){
 			var item;
 			for( var i in that.Lincko_itemsList ){
-				that.Lincko_itemsList[i]['duedate'] = that.Lincko_itemsList[i]['start'] + that.Lincko_itemsList[i]['duration'];
+				if(that.Lincko_itemsList[i]._tasksup){ //dont show subtasks (i.e. tasks with _tasksup)
+					delete that.Lincko_itemsList[i];
+				}
+				else{
+					that.Lincko_itemsList[i]['duedate'] = that.Lincko_itemsList[i]['start'] + that.Lincko_itemsList[i]['duration'];
+				}
 			}
 			that.Lincko_itemsList = Lincko.storage.sort_items(that.Lincko_itemsList, 'duedate', 0, -1, true);
 		}
