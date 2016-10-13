@@ -627,7 +627,14 @@ skylist.prototype.filter_by_search = function(items, filter){
 		items_filtered = that.search_chat(items, filter_array);
 	}
 	else{
-		var item = null;
+
+		$.each(searchbar.filterLinckoItems(items, filter_array), function(i, item){
+			items_filtered.push(item);
+		});
+
+
+
+		/*var item = null;
 		var push = false;
 		var word = null;
 		var userid_array = null;
@@ -687,6 +694,7 @@ skylist.prototype.filter_by_search = function(items, filter){
 			}
 
 		}//END OF for items
+		*/
 	}
 	return items_filtered;
 }
@@ -2802,8 +2810,17 @@ skylist.prototype.menu_construct = function(){
 	}
 
 
+	//build searchbar
+	var searchbarInst = null;
+	var searchbar_keyup = function(words){
+		that.tasklist_update('search',words);
+	}
+	searchbarInst = searchbar.construct(searchbar_keyup);
+	that.elem_navbar.append(searchbarInst.elem.addClass('skylist_menu_navbar_search'));
+
+
 	//burger(that.elem_navbar.find('[find=search_textbox]'), 'regex');
-	var elem_search_input = that.elem_navbar.find('[find=search_textbox]');
+	/*var elem_search_input = that.elem_navbar.find('[find=search_textbox]');
 	var elem_search_overlay = that.elem_navbar.find('.skylist_menu_navbar_search_overlay');
 	var elem_search_clear = that.elem_navbar.find('[find=search_clear]');
 
@@ -2844,7 +2861,7 @@ skylist.prototype.menu_construct = function(){
 			elem_search_clear.addClass('display_none');
 			elem_search_overlay.removeClass('display_none');
 		}
-	});
+	});*/
 	
 	that.list_wrapper.append(that.elem_navbar);
 

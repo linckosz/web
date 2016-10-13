@@ -224,15 +224,16 @@ Submenu.prototype.Add_itemSelector = function() {
 
 	//build searchbar
 	var searchbarInst = null;
-	var searchbar_keyup = function(words){
+	var searchbar_keyup = function(words){ 
 		var filteredIDs = [];
-		$.each(searchbar.filterLinckoItems(items_all[currentView], words), function(i, item){
-			filteredIDs.push(item['_id']);
-		});
-		if(filteredIDs.length == items_all[currentView].length){
+		if(!words.length){
 			elem_cards_all.removeClass('display_none');
 		}
 		else{
+			$.each(searchbar.filterLinckoItems(items_all[currentView], words), function(i, item){
+				filteredIDs.push(item['_id']);
+			});
+
 			$.each(elem_cards_all, function(i, elem){
 				var elem = $(elem);
 				var type = elem.attr('type');
