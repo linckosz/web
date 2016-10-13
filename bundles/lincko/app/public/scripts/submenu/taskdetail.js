@@ -751,11 +751,22 @@ Submenu.prototype.Add_taskdetail = function() {
 			task_id = 'new';
 		}
 		var elem_subtaskCard = $('#-submenu_taskdetail_subtasks_card').clone().prop('id','').attr('task_id',task_id);
+		elem_subtaskCard.find('[find=checkbox]').click(function(){
+			elem_subtaskCard.toggleClass('submenu_taskdetail_subtasks_card_checked');
+		});
+		elem_subtaskCard.find('[find=removeIcon]').click(function(){
+			elem_subtaskCard.velocity('slideUp',{
+				complete: function(){
+					elem_subtaskCard.remove();
+				},
+			});
+		});
+
+
+
+
 		return elem_subtaskCard;
 	}
-
-
-
 
 	var elem_subtasks = $('#-submenu_taskdetail_subtasks').clone().prop('id','submenu_taskdetail_subtasks_'+that.md5id);
 	var elem_subtasks_wrapper = elem_subtasks.find('[find=subtasks_wrapper]');
@@ -769,6 +780,9 @@ Submenu.prototype.Add_taskdetail = function() {
 		$(this).html('');
 		elem_newSubtask.addClass('display_none');
 	});
+
+	var subtask_count = 0;
+	elem_subtasks.find('[find=subtaskCount]').text(subtask_count);
 
 
 	elem_subtasks_wrapper.append(generate_subtaskCard(123));

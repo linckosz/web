@@ -218,6 +218,7 @@ td.submenu_taskdetail_share .fa{
 	font-size: 25px;
 }
 .submenu_taskdetail_collapsable_button td[find=icomoon]{
+	display: table-cell;
 	width: 100%;
     font-size: 20px;
     line-height: 24px;
@@ -357,12 +358,23 @@ td.submenu_taskdetail_share .fa{
 }
 
 .submenu_taskdetail_subtasks_card [find=checkbox]{
+	margin: 0px 4px;
 	border: solid 1px #615577;
     border-radius: 4px;
     font-size: 15px;
 }
+.submenu_taskdetail_subtasks_card [find=checkbox]:before{
+	visibility: hidden;
+}
+.submenu_taskdetail_subtasks_card_checked [find=checkbox]:before{
+	visibility: initial;
+}
 .submenu_taskdetail_subtasks_card [find=title_td]{
 	width: 100%;
+}
+.submenu_taskdetail_subtasks_card [find=title]{
+	overflow: hidden;
+	height: 20px;
 }
 .submenu_taskdetail_subtasks_card [find=removeIcon]{
 	visibility: hidden;
