@@ -40,11 +40,13 @@ var searchbar = {
 			}, keyup_fn_delay);
 		});
 
-		elem_clear_btn.click(function(){
+		elem_clear_btn.click(function(event){
+			event.preventDefault();
 			clearTimeout(keyupTimeout);
 			elem_input.val('');
 			$(this).addClass('display_none');
 			keyup_fn('');
+			elem_input.blur();
 		});
 
 		return {
@@ -55,7 +57,7 @@ var searchbar = {
 			clear: function(){
 				if(!this.cleared()){
 					this.elem_clear_btn.click();
-					this.elem_input.blur();
+					//this.elem_input.blur();
 				}
 			},
 			cleared: function(){
@@ -67,6 +69,9 @@ var searchbar = {
 	//items must be array of Lincko.storage.data items such as tasks, notes, files, etc
 	filterLinckoItems: function(items, searchTerms){
 		if(!items){return false;}
+		else if( !searchTerms.length ){ //if searchTerm is empty string ""
+			return items;
+		}
 		var items_filtered = [];
 		var item = null;
 		var push = false;
