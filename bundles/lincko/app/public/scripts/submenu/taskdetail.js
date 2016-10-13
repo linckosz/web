@@ -773,6 +773,9 @@ Submenu.prototype.Add_taskdetail = function() {
 				wrapper_sendAction({id: task_id, approved: approved}, 'post', 'task/update');
 			});
 			elem_subtaskCard.find('[find=removeIcon]').click(function(){
+				if(subtask){
+					wrapper_sendAction({id: task_id}, 'post', 'task/delete');
+				}
 				elem_subtaskCard.velocity('slideUp',{
 					complete: function(){
 						elem_subtaskCard.remove();
@@ -818,7 +821,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			$.each(item._tasksdown, function(subtask_id, obj){
 				var subtask = Lincko.storage.get('tasks', subtask_id);
 				//dont show if task doesnt exist or it doesnt match the project of the parent task
-				if(!subtask || subtask._parent[1] != that.param.projID ) return;
+				if(!subtask || subtask.deleted_at || subtask._parent[1] != that.param.projID ) return;
 				else{
 					elem_subtasks_wrapper.append(generate_subtaskCard(subtask_id));
 					subtask_count++;
