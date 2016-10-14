@@ -747,35 +747,79 @@ Submenu.prototype.Add_taskdetail = function() {
 
 	/*-----subtasks---------------------*/
 	if(that.param.type == 'tasks'){
-		var generate_subtaskCard = function(task_id){
+
+		var elem_subtasks = $('#-submenu_taskdetail_subtasks').clone().prop('id','submenu_taskdetail_subtasks_'+that.md5id);
+		var elem_subtasks_wrapper = elem_subtasks.find('[find=subtasks_wrapper]');
+		var elem_newSubtask = elem_subtasks.find('[find=newSubtask]');
+
+		var subtask_count = 0;
+		if(item._tasksdown){
+			$.each(item._tasksdown, function(subtask_id, obj){
+				var subtask = Lincko.storage.get('tasks', subtask_id);
+				//dont show if task doesnt exist or it doesnt match the project of the parent task
+				if(!subtask || subtask.deleted_at || subtask._parent[1] != that.param.projID ) return;
+				else{
+					elem_subtasks_wrapper.append(generate_subtaskCard(subtask_id));
+					subtask_count++;
+				}
+			});
+		}
+		var elem_subtaskCount = elem_subtasks.find('[find=subtaskCount]');
+		elem_subtaskCount.text(subtask_count);
+
+
+
+		var generate_subtaskCard = function(task_id, title){
 			var subtask = null;
-			if(!task_id){
-				task_id = 'new';
-			}
-			else{
+			var elem_subtaskCard = $('#-submenu_taskdetail_subtasks_card').clone().prop('id','');
+			if(task_id){
 				subtask = Lincko.storage.get('tasks', task_id);
 			}
 
-			//build subtaskCard
-			var elem_subtaskCard = $('#-submenu_taskdetail_subtasks_card').clone().prop('id','').attr('task_id',task_id);
-			if(subtask){
+			if(!task_id || !subtask){ //fake subtask
+				task_id = taskdetail_getRandomInt();
+				elem_subtaskCard.find('[find=title]').text(title);
+				if(!taskdetail_subtaskQueue.queue[that.param.uniqueID]){
+						taskdetail_subtaskQueue.queue[that.param.uniqueID] = {};
+					}
+					taskdetail_subtaskQueue.queue[that.param.uniqueID][task_id] = {
+						param: {
+							parent_id: that.param.projID, 
+							title: title,
+						}
+					};
+			}
+			else{
 				elem_subtaskCard.find('[find=title]').text(subtask['+title']);
 				if(subtask.approved){
 					elem_subtaskCard.addClass('submenu_taskdetail_subtasks_card_checked');
 					elem_subtaskCard.find('[find=title]').attr('contenteditable', false);
 				}
 			}
+			elem_subtaskCard.attr('task_id',task_id);
+
 
 			elem_subtaskCard.find('[find=checkbox]').click(function(){
+				task_id = elem_subtaskCard.attr('task_id');
 				elem_subtaskCard.toggleClass('submenu_taskdetail_subtasks_card_checked');
 				var approved = elem_subtaskCard.hasClass('submenu_taskdetail_subtasks_card_checked');
 				elem_subtaskCard.find('[find=title]').attr('contenteditable', !approved);
-				wrapper_sendAction({id: task_id, approved: approved}, 'post', 'task/update');
+				if(!subtask){ //new task
+					taskdetail_subtaskQueue.queue[that.param.uniqueID][task_id].param.approved = approved;
+				}
+				else{
+					wrapper_sendAction({id: task_id, approved: approved}, 'post', 'task/update');
+				}
 			});
 			elem_subtaskCard.find('[find=removeIcon]').click(function(){
-				if(subtask){
+				task_id = elem_subtaskCard.attr('task_id');
+				if(!subtask){ //new task
+					delete taskdetail_subtaskQueue.queue[that.param.uniqueID][task_id];
+				}
+				else{
 					wrapper_sendAction({id: task_id}, 'post', 'task/delete');
 				}
+				elem_subtaskCount.text(parseInt(elem_subtaskCount.text(),10) -1 );
 				elem_subtaskCard.velocity('slideUp',{
 					complete: function(){
 						elem_subtaskCard.remove();
@@ -791,10 +835,8 @@ Submenu.prototype.Add_taskdetail = function() {
 			return elem_subtaskCard;
 		}
 
-		var elem_subtasks = $('#-submenu_taskdetail_subtasks').clone().prop('id','submenu_taskdetail_subtasks_'+that.md5id);
-		var elem_subtasks_wrapper = elem_subtasks.find('[find=subtasks_wrapper]');
-		var elem_newSubtask = elem_subtasks.find('[find=newSubtask]');
-		var elem_newSubtask_title = elem_newSubtask.find('[find=title]').focus();
+
+		var elem_newSubtask_title = elem_newSubtask.find('[find=title]');
 		var elem_newSubtask_btn = elem_subtasks.find('[find=new_btn]').click(function(){
 			elem_newSubtask.removeClass('display_none');
 			elem_newSubtask_title.focus();
@@ -806,29 +848,52 @@ Submenu.prototype.Add_taskdetail = function() {
 		elem_newSubtask_title.keypress(function(event){
 			if((event.which || event.keyCode) == 13){ //if enter is pressed
 				event.preventDefault();
+
+				var subtask_title = $.trim($(this).text());
+				if(!subtask_title.length){
+					$(this).blur();
+					return false;
+				}
+
 				var param = {
 					parent_id: that.param.projID, 
-					title: $(this).text(),
-					'tasksup>access': {taskid: true},
+					title: subtask_title,
+					duration: 0,
 				};
-				wrapper_sendAction(param, 'post', 'task/create');
-				$(this).blur();
+				if(taskid == 'new'){
+					var fakeID = taskdetail_getRandomInt();
+					elem_subtasks_wrapper.append(generate_subtaskCard(fakeID, subtask_title));
+				}
+				else{
+					param['tasksup>access'] = {taskid: true};
+					var tempID = null;
+					var cb_begin = function(jqXHR, settings, temp_id){
+						elem_subtasks_wrapper.append(generate_subtaskCard(temp_id, subtask_title));
+						tempID = temp_id;
+					}
+					var cb_success = function(msg, data_error, data_status, data_msg){
+						var elem_toUpdate = elem_subtasks_wrapper.find('task_id', tempID);
+						if(elem_toUpdate.length){
+							var real_subtask = Lincko.storage.list('tasks',1,{temp_id: tmpID});
+							if(real_subtask && real_subtask._id){
+								elem_toUpdate.attr('task_id', real_subtask._id);
+							}
+						}
+					}
+					var cb_error = function(){
+						var elem_toRemove = elem_subtasks_wrapper.find('task_id', tempID);
+						if(elem_toRemove.length){
+							elem_toRemove.remove();
+						}
+					}
+					wrapper_sendAction(param, 'post', 'task/create', cb_success, cb_error, cb_begin);
+				}
+			
+				elem_subtaskCount.text(parseInt(elem_subtaskCount.text(),10) +1 );
+				$(this).html('');
 			}
 		});
 
-		var subtask_count = 0;
-		if(item._tasksdown){
-			$.each(item._tasksdown, function(subtask_id, obj){
-				var subtask = Lincko.storage.get('tasks', subtask_id);
-				//dont show if task doesnt exist or it doesnt match the project of the parent task
-				if(!subtask || subtask.deleted_at || subtask._parent[1] != that.param.projID ) return;
-				else{
-					elem_subtasks_wrapper.append(generate_subtaskCard(subtask_id));
-					subtask_count++;
-				}
-			});
-		}
-		elem_subtasks.find('[find=subtaskCount]').text(subtask_count);
 
 		submenu_taskdetail.append(elem_subtasks);
 	};
@@ -1473,6 +1538,9 @@ Submenu.prototype.Add_taskdetail = function() {
 			if( (taskid == 'new' && route_delete) || this.action_param.cancel || (item.deleted_at && !route_delete)){
 				//clear any links in the queue that came from this submenu
 				taskdetail_linkQueue.clearQueue_uniqueID(that.param.uniqueID);
+				if(that.param.type == 'tasks'){
+					taskdetail_subtaskQueue.clearQueue(that.param.uniqueID);
+				}
 				return false;
 			}
 			var contactServer = false;
@@ -1494,10 +1562,20 @@ Submenu.prototype.Add_taskdetail = function() {
 						//for new items, check and update linkQueue
 						if(taskid = 'new'){
 							taskdetail_linkQueue.queueUpdate_cbSuccess(that.param.uniqueID, item_real._type, item_real._id, uploadGarbageID);
+							if(that.param.type == 'tasks'){
+								taskdetail_subtaskQueue.runQueue(that.param.uniqueID, item_real.id);
+							}
 						}
 					}
 				}
 				tmpID = null;
+			}
+			var cb_complete = function(){
+				if(taskid == 'new'){
+					if(that.param.type == 'tasks'){
+						taskdetail_subtaskQueue.clearQueue(that.param.uniqueID);
+					}
+				}
 			}
 
 			//param values that are common to all
@@ -1595,10 +1673,10 @@ Submenu.prototype.Add_taskdetail = function() {
 					route += '/update';
 				}
 				if(taskid != 'new' && route == 'task/update'){
-					skylist.sendAction.tasks(param, item, route, cb_success, null, cb_begin);
+					skylist.sendAction.tasks(param, item, route, cb_success, null, cb_begin, cb_complete);
 				}
 				else{
-					wrapper_sendAction( param,'post',route, cb_success, null, cb_begin);
+					wrapper_sendAction( param,'post',route, cb_success, null, cb_begin, cb_complete);
 				}
 			}
 		}, this
@@ -2092,13 +2170,24 @@ var taskdetail_description_attachFileClick = function(elem_description){
 	}
 }
 
+var taskdetail_getRandomInt = function(min, max){
+	function getRandomInt(min, max) {
+		return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
+	if(min && max){
+		return getRandomInt(min,max);
+	}
+	else{
+		return getRandomInt(100000000000,999999999999);
+	}
+}
 
 var taskdetail_makeFakeComment = function(text, parentType, parentID, fakeID, tempID, triggerSync){
 	function getRandomInt(min, max) {
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 	}
 	if(!fakeID){
-		var fakeID = getRandomInt(100000000000,999999999999);
+		var fakeID = taskdetail_getRandomInt();
 	}
 
 	var fakeComment = {
@@ -2141,6 +2230,60 @@ var taskdetail_makeFakeComment = function(text, parentType, parentID, fakeID, te
 
 	return Lincko.storage.data.comments[fakeID];
 }
+
+
+/*
+	queuing subtasks for new task
+	queue is unique to each submenu, separated by the submenu unique ID (that.param.uniqueID)
+	individual submenu uniqueID object is separated by fake subtaskIDs
+	queue for a submenu_uniqueID is cleared if a new task is cancelled and upon task creation cb_complete
+*/
+var taskdetail_subtaskQueue = {
+	queue:{
+		/*
+			submenu_uniqueID: {
+				fake_subtaskID:{
+					param: {
+						
+					}
+				}
+				fake_subtaskID2:{
+					param: {
+						
+					}
+				}	
+			},
+			submenu_uniqueID2: {
+				fake_subtaskID:{
+					param: {
+						
+					}
+				}	
+			},
+
+		*/
+	},
+	clearQueue: function(submenu_uniqueID){
+		delete taskdetail_subtaskQueue.queue[submenu_uniqueID];
+	},
+	runQueue: function(submenu_uniqueID, tasksupID){
+		if(submenu_uniqueID || !tasksupID){return false;}
+		if(taskdetail_subtaskQueue.queue[submenu_uniqueID]){
+			$.each(taskdetail_subtaskQueue.queue[submenu_uniqueID], function(fake_subtaskID, obj){
+				var param = obj.param;
+				if(!param){return;}
+				param['tasksup>access'] = {tasksupID: true};
+				param.duration = 0; //no duedate for subtasks
+				wrapper_sendAction(param, 'post', 'task/create');
+				delete taskdetail_subtaskQueue.queue[submenu_uniqueID][fake_subtaskID];
+			});
+		}
+	},
+}
+
+
+
+
 
 
 
