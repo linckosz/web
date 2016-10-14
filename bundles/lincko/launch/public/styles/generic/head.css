@@ -152,7 +152,7 @@
 
 
 #head_language_image {
-	z-index: -1;
+	z-index: 1;
 	height: 24px;
 	width: 24px;
 	margin-left: 4px;

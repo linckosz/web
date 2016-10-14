@@ -326,9 +326,11 @@ Lincko.storage.update = function(partial, info){
 	}
 
 	if(update){
-		//Lincko.storage.childrenList(partial, children_list);
-		Lincko.storage.childrenList(); //We should not scan the whole database, it slows down the list but Sky had an issue of getting _children visible for notes when adding a comment
-		Lincko.storage.display();
+		setTimeout(function(){
+			//Lincko.storage.childrenList(partial, children_list);
+			Lincko.storage.childrenList(); //We should not scan the whole database, it slows down the list but Sky had an issue of getting _children visible for notes when adding a comment
+			Lincko.storage.display();
+		}, 300);
 		storage_local_storage.launch_data();
 		if(storage_first_launch){
 			storage_first_launch = false; //Help to trigger some action once the database is downloaded
@@ -407,8 +409,10 @@ Lincko.storage.schema = function(schema){
 	}
 
 	if(update){
-		Lincko.storage.childrenList();
-		Lincko.storage.display();
+		setTimeout(function(){
+			Lincko.storage.childrenList();
+			Lincko.storage.display();
+		}, 300);
 		return true;
 	}
 	
@@ -1779,20 +1783,28 @@ JSfiles.finish(function(){
 		Lincko.storage.settingsLocal = Lincko.storage.getSettings();
 	}
 
-	wrapper_load_progress.move(65);
-	Lincko.storage.childrenList();
 	wrapper_load_progress.move(70);
 	if($.isEmptyObject(Lincko.storage.data)){
 		Lincko.storage.setLastVisit(0);
 		Lincko.storage.getLatest();
 	} else {
 		storage_first_launch = false; //Help to trigger some action once the database is downloaded
-		app_application_lincko.prepare('first_launch', true);
-		Lincko.storage.display(true, true);
+		setTimeout(function(){
+			//app_application_lincko.prepare('first_launch', true);
+			app_application_lincko.prepare('first_launch');
+			Lincko.storage.display(true, true);
+			wrapper_load_progress.move(100);
+		}, 100);
+
+		//Try to extra Children list process because heavy CPU usage
+		setTimeout(function(){
+			Lincko.storage.childrenList();
+		}, 300);
+
 		setTimeout(function(){
 			Lincko.storage.getLatest();
 		}, 1000);
-		wrapper_load_progress.move(100);
+
 	}
 	//Launch the time interval for back server data check
 	storage_check_timing.launch();

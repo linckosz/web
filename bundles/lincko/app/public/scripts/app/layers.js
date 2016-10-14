@@ -1,22 +1,33 @@
 var app_layers = true;
 
-var app_layers_changePage = function(menu, param){
+var app_layers_changePage = function(menu, param, now){
 	if(typeof param === 'undefined'){ param = null; }
-	var timing = 150;
-	var delay = 60;
-	var layer = $('#app_layers_content');
-	if(!layer.html()){ timing = 0; }
-	var Sequence = [
-		{ e: layer, p: { opacity: 0, }, o: { duration: timing, delay: delay, } },
-		{ e: layer, p: { opacity: 1, }, o: { duration: 50, sequenceQueue: true,
-			begin: function(){
-				app_layers_launchMenu(menu, param);
-				wrapper_IScroll();
-				submenu_Hideall(true);
-			},
-		} },
-	];
-	$.Velocity.RunSequence(Sequence);
+	if(typeof now === 'undefined'){ now = false; }
+	if(now){
+		app_layers_launchMenu(menu, param);
+		wrapper_IScroll();
+		submenu_Hideall(true);
+	} else {
+		var appear_time = 50;
+		var timing = 150;
+		var delay = 60;
+		if(responsive.test("maxMobileL")){
+			appear_time = 0;
+		}
+		var layer = $('#app_layers_content');
+		if(!layer.html()){ timing = 0; }
+		var Sequence = [
+			{ e: layer, p: { opacity: 0, }, o: { duration: timing, delay: delay, } },
+			{ e: layer, p: { opacity: 1, }, o: { duration: appear_time, sequenceQueue: true,
+				begin: function(){
+					app_layers_launchMenu(menu, param);
+					wrapper_IScroll();
+					submenu_Hideall(true);
+				},
+			} },
+		];
+		$.Velocity.RunSequence(Sequence);
+	}
 }
 
 var app_layers_menu = null;

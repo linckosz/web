@@ -337,7 +337,7 @@ wrapper_localstorage.encrypt = function (link, data, tryit){
 		} catch(e) {
 			if(tryit){
 				if(wrapper_localstorage.cleanLocalWorkspace()){ //Delete other workspace data, and try one more time to store
-					result = wrapper_localstorage.encrypt(link, txt, false);
+					result = wrapper_localstorage.encrypt(link, data, false);
 				} else {
 					tryit = false;
 				}

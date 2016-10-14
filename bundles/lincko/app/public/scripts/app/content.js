@@ -64,6 +64,11 @@ var app_content_menu = {
 
 		var list = [];
 		var title = base_myplaceholder;
+		var new_project = false;
+
+		if(app_content_menu.projects_id != projects_id){
+			new_project = true;
+		}
 
 		if(projects_id >= 0){
 			var project = Lincko.storage.get("projects", projects_id);
@@ -169,9 +174,16 @@ var app_content_menu = {
 			}
 		}, projects_id);
 
-		app_layers_changePage(menu, param);
+		
 
-		if(responsive.test("maxMobileL")){ app_application.forceClose(); }
+		if(responsive.test("maxMobileL")){
+			app_layers_changePage(menu, param, new_project);
+			setTimeout(function(){
+				app_application.forceClose();
+			}, 0);
+		} else {
+			app_layers_changePage(menu, param);
+		}
 
 		//Keep a record offline for future page opening
 		var old_page = {

@@ -228,7 +228,7 @@ html, .font_sans_serif {
 	width: 0 !important;
 	height: 0 !important;
 	visibility: hidden !important;
-	z-index: -1 !important;
+	z-index: 1 !important;
 	position: absolute !important;
 }
 
