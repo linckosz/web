@@ -3203,7 +3203,7 @@ skylist.prototype.filter_updateSettings = function(sendAction){
 	wrapper_sendAction({settings: JSON.stringify(settings_new)}, 'post', 'data/settings');
 	//offline settings
 	/*Lincko.storage.settings = settings_new;
-	wrapper_localstorage.encrypt('settings', JSON.stringify(Lincko.storage.settings));*/
+	wrapper_localstorage.encrypt('settings', Lincko.storage.settings);*/
 }
 
 

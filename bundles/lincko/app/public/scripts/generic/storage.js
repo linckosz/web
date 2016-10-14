@@ -18,7 +18,6 @@ var storage_cb_success = function(msg, err, status, data){
 		if(Lincko.storage.update(data.partial[wrapper_localstorage.uid], info)){
 			if(info === 'reset'){
 				Lincko.storage.schema(data.partial[wrapper_localstorage.uid]);
-				//wrapper_localstorage.encrypt('data', JSON.stringify(Lincko.storage.data));
 				storage_local_storage.launch_data();
 				wrapper_localstorage.cleanLocalWorkspace();
 				schema = false;
@@ -32,7 +31,6 @@ var storage_cb_success = function(msg, err, status, data){
 	}
 	//Update the last visit day only if we are sure the update is finish
 	if(allow_set_lastvisit && $.type(data) === 'object' && typeof data.lastvisit === 'number'){
-		//Lincko.storage.setLastVisit(data.lastvisit);
 		storage_local_storage.launch_lastvist(data.lastvisit);
 	}
 	Lincko.storage.firstLatest();
@@ -58,7 +56,7 @@ var storage_local_storage = {
 		clearTimeout(storage_local_storage.timeout);
 		storage_local_storage.timeout = setTimeout(function(){
 			if(storage_local_storage.data!==false){
-				wrapper_localstorage.encrypt('data', JSON.stringify(Lincko.storage.data));
+				wrapper_localstorage.encrypt('data', Lincko.storage.data);
 			}
 			if(storage_local_storage.lastvisit!==false){
 				Lincko.storage.setLastVisit(storage_local_storage.lastvisit);
@@ -331,11 +329,7 @@ Lincko.storage.update = function(partial, info){
 		//Lincko.storage.childrenList(partial, children_list);
 		Lincko.storage.childrenList(); //We should not scan the whole database, it slows down the list but Sky had an issue of getting _children visible for notes when adding a comment
 		Lincko.storage.display();
-		//wrapper_localstorage.encrypt('data', JSON.stringify(Lincko.storage.data));
 		storage_local_storage.launch_data();
-		if(!info){
-			//Lincko.storage.getSchema(); //toto => is it usefull to check the schema here?
-		}
 		if(storage_first_launch){
 			storage_first_launch = false; //Help to trigger some action once the database is downloaded
 			app_application_lincko.prepare('first_launch', true);
@@ -523,7 +517,6 @@ Lincko.storage.childrenList = function(data, children_list, category_focus, cate
 	}
 
 	if(change){
-		//wrapper_localstorage.encrypt('data', JSON.stringify(Lincko.storage.data));
 		storage_local_storage.launch_data();
 	}
 	
@@ -1777,7 +1770,7 @@ JSfiles.finish(function(){
 		//Force to redownload all data to get language support
 		Lincko.storage.setLastVisit(0);
 	} else {
-		Lincko.storage.data = JSON.parse(wrapper_localstorage.decrypt('data'));
+		Lincko.storage.data = wrapper_localstorage.decrypt('data');
 	}
 	if(!Lincko.storage.data){
 		Lincko.storage.data = {};

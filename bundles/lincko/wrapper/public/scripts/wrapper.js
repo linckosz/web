@@ -116,7 +116,7 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 			}
 			if(data.shangzai && data.shangzai.puk){
 				wrapper_shangzai = data.shangzai;
-				wrapper_localstorage.encrypt('shangzai', JSON.stringify(data.shangzai));
+				wrapper_localstorage.encrypt('shangzai', data.shangzai);
 				wrapper_set_shangzai = false;
 			}
 
@@ -313,7 +313,6 @@ function wrapper_get_shangzai(field){
 	} else if(wrapper_shangzai[field]){
 		result = wrapper_shangzai[field];
 	} else if(shangzai = wrapper_localstorage.decrypt('shangzai')){
-		shangzai = JSON.parse(shangzai);
 		if(shangzai[field]){
 			result = wrapper_shangzai[field] = shangzai[field];
 		}
@@ -321,7 +320,7 @@ function wrapper_get_shangzai(field){
 	return result;
 }
 
-wrapper_localstorage.encrypt = function (link, txt, tryit){
+wrapper_localstorage.encrypt = function (link, data, tryit){
 	if(typeof tryit === 'undefined'){ tryit = true; }
 	var result = false;
 	//If we over quota once, we do not continue to avoid CPU usage, it slow down the first loading but it's an easy solution
@@ -330,9 +329,11 @@ wrapper_localstorage.encrypt = function (link, txt, tryit){
 		return true;
 	} else {
 		try {
-			var store_txt = this.sha+btoa(utf8_encode(txt));
+			//var store_data = this.sha+btoa(utf8_encode(data)); //Don't use btoa, it's too heavy
+			//var store_data = LZString.compressToUTF16(JSON.stringify(data)); //Good
+			var store_data = LZipper.compress(link+this.sha+utf8_encode(JSON.stringify(data))); //Best
 			var time = 1000*3600*24*31; //Keep the value for 1 month
-			result = amplify.store(this.prefix+link, store_txt, { expires: time });
+			result = amplify.store(this.prefix+link, store_data, { expires: time });
 		} catch(e) {
 			if(tryit){
 				if(wrapper_localstorage.cleanLocalWorkspace()){ //Delete other workspace data, and try one more time to store
@@ -341,7 +342,7 @@ wrapper_localstorage.encrypt = function (link, txt, tryit){
 					tryit = false;
 				}
 			}
-			if(!tryit){ //If cannot, just delete teh data
+			if(!tryit){ //If cannot, just delete the data
 				this.quota[link] = false;
 				amplify.store(this.prefix+link, null);
 				console.log(e);
@@ -349,6 +350,23 @@ wrapper_localstorage.encrypt = function (link, txt, tryit){
 		}
 	}
 	return result;
+};
+
+wrapper_localstorage.decrypt = function (link){
+	var txt = false;
+	var temp;
+	//If we cannot decrypt, the data might be conrupted, so we delete it
+	try {
+		temp = LZipper.decompress(amplify.store(this.prefix+link));
+		if(temp.indexOf(link+this.sha)===0){
+			data = temp.substr(link.length+this.sha.length);
+			return JSON.parse(utf8_decode(data)); //Best
+		}
+	} catch(e) {
+		amplify.store(this.prefix+link, null);
+		txt = false;
+	}
+	return txt;
 };
 
 //Force to delete all data that are not linked to the workspace to release some space
@@ -371,23 +389,6 @@ wrapper_localstorage.cleanLocalUser = function(){
 			amplify.store(storeKey, null);
 		}
 	});
-};
-
-wrapper_localstorage.decrypt = function (link){
-	var txt = false;
-	var temp;
-	//If we cannot decrypt, the data might be conrupted, so we delete it
-	try {
-		temp = amplify.store(this.prefix+link);
-		if(temp.indexOf(this.sha)===0){
-			txt = temp.substr(this.sha.length);
-			return utf8_decode(atob(txt));
-		}
-	} catch(e) {
-		amplify.store(this.prefix+link, null);
-		txt = false;
-	}
-	return txt;
 };
 
 //Default is Mobile

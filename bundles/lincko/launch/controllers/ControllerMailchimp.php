@@ -46,6 +46,7 @@ class ControllerMailchimp extends Controller {
 		curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
 		curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
 		curl_setopt($ch, CURLOPT_FORBID_REUSE, true);
+		curl_setopt($ch, CURLOPT_ENCODING, 'gzip');
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 				'Authorization: Basic '.$auth,
 				'Access-Control-Allow-Origin: *',

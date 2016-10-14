@@ -179,7 +179,7 @@ var app_content_menu = {
 			menu: menu,
 			param: param,
 		};
-		wrapper_localstorage.encrypt('old_page', JSON.stringify(old_page));
+		wrapper_localstorage.encrypt('old_page', old_page);
 
 		//keep track of visited projects (offline)
 		/*if(!Lincko.storage.settings.latestvisitProjects.length || Lincko.storage.settings.latestvisitProjects[0] != projects_id){
@@ -187,7 +187,7 @@ var app_content_menu = {
 			if(i > -1){ Lincko.storage.settings.latestvisitProjects.splice(i,1) }
 
 			Lincko.storage.settings.latestvisitProjects.unshift(projects_id);
-			wrapper_localstorage.encrypt('settings', JSON.stringify(Lincko.storage.settings));
+			wrapper_localstorage.encrypt('settings', Lincko.storage.settings);
 		}*/
 
 		//keep track of visited projects (online)
@@ -255,7 +255,7 @@ var app_content_menu_first_launch = true;
 var app_content_menu_default = function(){
 	if(app_content_menu_first_launch && Lincko.storage.getMyPlaceholder() !== false){
 		app_content_menu_first_launch = false;
-		var old_page = JSON.parse(wrapper_localstorage.decrypt('old_page'));
+		var old_page = wrapper_localstorage.decrypt('old_page');
 		if(old_page){
 			app_content_menu.selection(old_page.projects_id, old_page.menu, old_page.param);
 		} else {

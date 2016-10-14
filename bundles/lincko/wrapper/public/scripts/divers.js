@@ -84,6 +84,7 @@ if(navigator.userAgent.match(/iPhone|iPad|iPod/i)){
 	hasGood3Dsupport = false;
 }
 
+var wrapper_test_result = null;
 function wrapper_test(type, RCUD){
 	if(typeof type==="undefined"){ type = null; }
 	if(typeof RCUD==="undefined"){ RCUD = -1; }
@@ -93,11 +94,11 @@ function wrapper_test(type, RCUD){
 
 	function wrapper_test_display(msg, data_error, data_status, data_msg){
 		console.log(data_msg);
+		wrapper_test_result = data_msg;
 	}
 
 	function wrapper_test_begin(jqXHR, settings, temp_id){
 		console.log(temp_id);
-
 		var param = {};
 		if(settings.data){
 			var data = JSON.parse(settings.data);
@@ -110,6 +111,17 @@ function wrapper_test(type, RCUD){
 			}
 		}
 		console.log(param);
+	}
+
+	if(type=='test'){
+		if(RCUD==0){
+			wrapper_sendAction(
+				null,
+				'get',
+				'test',
+				wrapper_test_display
+			);
+		}
 	}
 
 	if(type=='*' || type=='chats'){
@@ -628,14 +640,17 @@ function wrapper_test(type, RCUD){
 		else if(RCUD==1){
 			wrapper_sendAction(
 				{
-					"parent_id": 4,
-					"title": "It's a note title",
-					"comment": "It's a note content", //OPTIONAL {''}
+					"parent_id": 3,
+					"title": "It's a task title",
+					"comment": "It's a task content", //OPTIONAL {''}
 					//"start": 1462110422, //OPTIONAL { current_timestamp }
 					"duration": 86400, //OPTIONAL {86400}
 					//"fixed": 1, //OPTIONAL {0}
 					"status": 0, //OPTIONAL {0}
 					"progress": 50, //OPTIONAL {0}
+					"tasksup>access": {
+						57: true,
+					},
 				},
 				'post',
 				'task/create',
