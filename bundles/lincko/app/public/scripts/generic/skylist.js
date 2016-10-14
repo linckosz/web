@@ -1561,6 +1561,9 @@ skylist.prototype.addTask = function(item){
 		}
 
 		if(linkCount > 0){
+			if(supportsTouch){ //for touch devices, always keep the expandable links open
+				elem_expandable_links.css('display','block');
+			}
 			elem_btn_addNew.click(function(event){
 				event.stopPropagation();
 				if(item.fake){
