@@ -751,23 +751,8 @@ Submenu.prototype.Add_taskdetail = function() {
 		var elem_subtasks = $('#-submenu_taskdetail_subtasks').clone().prop('id','submenu_taskdetail_subtasks_'+that.md5id);
 		var elem_subtasks_wrapper = elem_subtasks.find('[find=subtasks_wrapper]');
 		var elem_newSubtask = elem_subtasks.find('[find=newSubtask]');
-
-		var subtask_count = 0;
-		if(item._tasksdown){
-			$.each(item._tasksdown, function(subtask_id, obj){
-				var subtask = Lincko.storage.get('tasks', subtask_id);
-				//dont show if task doesnt exist or it doesnt match the project of the parent task
-				if(!subtask || subtask.deleted_at || subtask._parent[1] != that.param.projID ) return;
-				else{
-					elem_subtasks_wrapper.append(generate_subtaskCard(subtask_id));
-					subtask_count++;
-				}
-			});
-		}
 		var elem_subtaskCount = elem_subtasks.find('[find=subtaskCount]');
-		elem_subtaskCount.text(subtask_count);
-
-
+		
 
 		var generate_subtaskCard = function(task_id, title){
 			var subtask = null;
@@ -777,7 +762,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			}
 
 			if(!task_id || !subtask){ //fake subtask
-				task_id = taskdetail_getRandomInt();
+				if(!task_id){ task_id = taskdetail_getRandomInt(); }
 				elem_subtaskCard.find('[find=title]').text(title);
 			}
 			else{
@@ -791,7 +776,8 @@ Submenu.prototype.Add_taskdetail = function() {
 
 
 			elem_subtaskCard.find('[find=checkbox]').click(function(){
-				task_id = elem_subtaskCard.attr('task_id');
+				task_id = parseInt(elem_subtaskCard.attr('task_id'),10);
+				subtask = Lincko.storage.get('tasks', task_id);
 				elem_subtaskCard.toggleClass('submenu_taskdetail_subtasks_card_checked');
 				var approved = elem_subtaskCard.hasClass('submenu_taskdetail_subtasks_card_checked');
 				elem_subtaskCard.find('[find=title]').attr('contenteditable', !approved);
@@ -803,7 +789,8 @@ Submenu.prototype.Add_taskdetail = function() {
 				}
 			});
 			elem_subtaskCard.find('[find=removeIcon]').click(function(){
-				task_id = elem_subtaskCard.attr('task_id');
+				task_id = parseInt(elem_subtaskCard.attr('task_id'),10);
+				subtask = Lincko.storage.get('tasks', task_id);
 				if(!subtask){ //new task
 					delete taskdetail_subtaskQueue.queue[that.param.uniqueID][task_id];
 				}
@@ -825,6 +812,21 @@ Submenu.prototype.Add_taskdetail = function() {
 
 			return elem_subtaskCard;
 		}
+
+
+		var subtask_count = 0;
+		if(item._tasksdown){
+			$.each(item._tasksdown, function(subtask_id, obj){
+				var subtask = Lincko.storage.get('tasks', subtask_id);
+				//dont show if task doesnt exist or it doesnt match the project of the parent task
+				if(!subtask || subtask.deleted_at || subtask._parent[1] != that.param.projID ) return;
+				else{
+					elem_subtasks_wrapper.append(generate_subtaskCard(subtask_id));
+					subtask_count++;
+				}
+			});
+		}
+		elem_subtaskCount.text(subtask_count);
 
 
 		var elem_newSubtask_title = elem_newSubtask.find('[find=title]');
@@ -865,16 +867,17 @@ Submenu.prototype.Add_taskdetail = function() {
 					};
 				}
 				else{
-					param['tasksup>access'] = {taskid: true};
+					param['tasksup>access'] = {};
+					param['tasksup>access'][taskid] = true;
 					var tempID = null;
 					var cb_begin = function(jqXHR, settings, temp_id){
 						elem_subtasks_wrapper.append(generate_subtaskCard(temp_id, subtask_title));
 						tempID = temp_id;
 					}
 					var cb_success = function(msg, data_error, data_status, data_msg){
-						var elem_toUpdate = elem_subtasks_wrapper.find('task_id', tempID);
+						var elem_toUpdate = elem_subtasks_wrapper.find('[task_id='+tempID+']');
 						if(elem_toUpdate.length){
-							var real_subtask = Lincko.storage.list('tasks',1,{temp_id: tmpID});
+							var real_subtask = Lincko.storage.list('tasks',1,{temp_id: tempID})[0];
 							if(real_subtask && real_subtask._id){
 								elem_toUpdate.attr('task_id', real_subtask._id);
 							}
@@ -2269,10 +2272,11 @@ var taskdetail_subtaskQueue = {
 	runQueue: function(submenu_uniqueID, tasksupID){
 		if(!submenu_uniqueID || !tasksupID){return false;}
 		if(taskdetail_subtaskQueue.queue[submenu_uniqueID]){
-			$.each(taskdetail_subtaskQueue.queue[submenu_uniqueID], function(fake_subtaskID, obj){ 
+			$.each(taskdetail_subtaskQueue.queue[submenu_uniqueID], function(fake_subtaskID, obj){
 				var param = obj.param;
 				if(!param){return;}
-				param['tasksup>access'] = {tasksupID: true};
+				param['tasksup>access'] = {};
+				param['tasksup>access'][tasksupID] = true;
 				param.duration = 0; //no duedate for subtasks
 				wrapper_sendAction(param, 'post', 'task/create');
 				delete taskdetail_subtaskQueue.queue[submenu_uniqueID][fake_subtaskID];
