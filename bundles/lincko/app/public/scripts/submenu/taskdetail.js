@@ -779,15 +779,6 @@ Submenu.prototype.Add_taskdetail = function() {
 			if(!task_id || !subtask){ //fake subtask
 				task_id = taskdetail_getRandomInt();
 				elem_subtaskCard.find('[find=title]').text(title);
-				if(!taskdetail_subtaskQueue.queue[that.param.uniqueID]){
-						taskdetail_subtaskQueue.queue[that.param.uniqueID] = {};
-					}
-					taskdetail_subtaskQueue.queue[that.param.uniqueID][task_id] = {
-						param: {
-							parent_id: that.param.projID, 
-							title: title,
-						}
-					};
 			}
 			else{
 				elem_subtaskCard.find('[find=title]').text(subtask['+title']);
@@ -863,6 +854,15 @@ Submenu.prototype.Add_taskdetail = function() {
 				if(taskid == 'new'){
 					var fakeID = taskdetail_getRandomInt();
 					elem_subtasks_wrapper.append(generate_subtaskCard(fakeID, subtask_title));
+					if(!taskdetail_subtaskQueue.queue[that.param.uniqueID]){
+						taskdetail_subtaskQueue.queue[that.param.uniqueID] = {};
+					}
+					taskdetail_subtaskQueue.queue[that.param.uniqueID][fakeID] = {
+						param: {
+							parent_id: that.param.projID, 
+							title: subtask_title,
+						}
+					};
 				}
 				else{
 					param['tasksup>access'] = {taskid: true};
@@ -1563,7 +1563,7 @@ Submenu.prototype.Add_taskdetail = function() {
 						if(taskid = 'new'){
 							taskdetail_linkQueue.queueUpdate_cbSuccess(that.param.uniqueID, item_real._type, item_real._id, uploadGarbageID);
 							if(that.param.type == 'tasks'){
-								taskdetail_subtaskQueue.runQueue(that.param.uniqueID, item_real.id);
+								taskdetail_subtaskQueue.runQueue(that.param.uniqueID, item_real._id);
 							}
 						}
 					}
@@ -2267,9 +2267,9 @@ var taskdetail_subtaskQueue = {
 		delete taskdetail_subtaskQueue.queue[submenu_uniqueID];
 	},
 	runQueue: function(submenu_uniqueID, tasksupID){
-		if(submenu_uniqueID || !tasksupID){return false;}
+		if(!submenu_uniqueID || !tasksupID){return false;}
 		if(taskdetail_subtaskQueue.queue[submenu_uniqueID]){
-			$.each(taskdetail_subtaskQueue.queue[submenu_uniqueID], function(fake_subtaskID, obj){
+			$.each(taskdetail_subtaskQueue.queue[submenu_uniqueID], function(fake_subtaskID, obj){ 
 				var param = obj.param;
 				if(!param){return;}
 				param['tasksup>access'] = {tasksupID: true};

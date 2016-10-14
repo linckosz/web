@@ -351,12 +351,16 @@ td.submenu_taskdetail_share .fa{
 }
 */
 .submenu_taskdetail_subtasks_card{
-	height: 40px;
+	/*height: 40px;*/
 }
 .submenu_taskdetail_subtasks_card [find=subtasks_card_table]{
 	height: 100%;
 }
-
+.submenu_taskdetail_subtasks_card [find=checkbox_td]{
+    vertical-align: top;
+    padding-top: 6px;
+    padding-bottom: 10px;
+}
 .submenu_taskdetail_subtasks_card [find=checkbox]{
 	margin: 0px 4px;
 	border: solid 1px #615577;
@@ -370,8 +374,8 @@ td.submenu_taskdetail_share .fa{
 	width: 100%;
 }
 .submenu_taskdetail_subtasks_card [find=title]{
-	overflow: hidden;
-	height: 20px;
+	/*overflow: hidden;
+	height: 20px;*/
 	padding-left: 1px;
 }
 .submenu_taskdetail_subtasks_card [find=removeIcon]{
