@@ -477,6 +477,20 @@ td.submenu_taskdetail_share .fa{
 	display: initial;
 }
 
+.submenu_taskdetail_links_card_uploading [find=bar_container]{
+	margin-top: 4px;
+	background-color: #979797;
+	width: 100px;
+	height: 1px;
+}
+.submenu_taskdetail_links_card_uploading [find=bar]{
+	background-color: #fba026;
+	height: 100%;
+	width: 0%;
+}
+.submenu_taskdetail_links_card_uploading [find=description]{
+	display: none;
+}
 
 
 .submenu_taskdetail_comments {

@@ -1820,20 +1820,88 @@ Submenu.prototype.Add_taskdetail = function() {
 	var addTo_linksWrapper = function(elem, type, id){
 		var elem_linksWrapper = elem.find('[find=links_wrapper]');
 		var elem_toAdd = generate_linkCard(type, id);
-		elem_linksWrapper.append(elem_toAdd);
-		elem_toAdd.velocity('slideDown', {
-			mobileHA: hasGood3Dsupport,
-		});
+		var temp_id = Lincko.storage.get(type, id, 'temp_id');
+		var elem_temp = null;
+		if(temp_id){
+			elem_temp = elem_linksWrapper.find('[temp_id='+temp_id+']');
+			if(elem_temp.length){
+				elem_temp.replaceWith(elem_toAdd);
+			}
+		}
+		else{
+			elem_linksWrapper.append(elem_toAdd);
+			elem_toAdd.velocity('slideDown', {
+				mobileHA: hasGood3Dsupport,
+			});
+		}
 		myIScrollList[submenu_content.prop('id')].refresh();
 	}
 
 	var registerSync_links = function(){
 		app_application_lincko.add(
 			'submenu_taskdetail_link_'+that.md5id,
-			that.param.type+'_'+item['_id'],
+			[that.param.type+'_'+item['_id'], 'upload'],
 			function(){
 				var elem = $('#'+this.id);
 				var item = Lincko.storage.get(that.param.type, taskid);
+
+				//for upload
+				if(this.updated && this.updated.upload){
+
+					//check card with temp_ids, and if file finished uploading, then update the parent item accordingly
+					var elem_temp_id = elem.find('[temp_id]');
+					$.each(elem_temp_id, function(i, elem){
+						var temp_id = $(elem).attr('temp_id');
+						var item_file = Lincko.storage.list('files',1,{temp_id: temp_id})[0];
+						if(item_file){
+							if(!Lincko.storage.data[that.param.type][taskid]._files){
+								Lincko.storage.data[that.param.type][taskid]._files = {};
+							}
+							if(Lincko.storage.data[that.param.type][taskid]._files[item_file._id]){return;}
+
+							Lincko.storage.data[that.param.type][taskid]._files[item_file._id] = true;
+							item = Lincko.storage.get(that.param.type, taskid);
+						}
+					});
+
+
+					$.each(app_upload_files.lincko_files, function(i, lincko_file){
+						if(lincko_file.lincko_parent_type == that.param.type && lincko_file.lincko_parent_id == taskid){ //if parent type and id matches
+							var temp_id = lincko_file.lincko_temp_id;
+							var progress = lincko_file.lincko_progress;
+							var status = lincko_file.lincko_status;
+							var elem_temp_id = elem.find('[temp_id='+temp_id+']');
+							if(status == 'done' && elem_temp_id.length){
+									//elem_temp_id.remove();
+									//elem_temp_id = null;
+							}
+							else if(elem_temp_id.length){
+								//update progress bar or number
+								elem_temp_id.find('[find=bar]').css('width', progress+'%');
+
+								//once local image preview is available, add the img
+								if(!elem_temp_id.find('[find=card_leftbox] img').length && lincko_file.files[0] && lincko_file.files[0].preview){
+									var local_url = lincko_file.files[0].preview.toDataURL();
+					            	var img = new Image();
+	            					img.src = local_url;
+	            					elem_temp_id.find('[find=card_leftbox]').append(img);
+								}
+
+							}
+							else{
+								var elem_linkcard = $('#-submenu_taskdetail_links_card').clone().prop('id','').attr('temp_id', temp_id).addClass('submenu_taskdetail_links_card_uploading');
+								var bar_container = $('<div>').attr('find', 'bar_container').html('<div find="bar"></div>');
+								elem_linkcard.find('[find=title]').text(lincko_file.lincko_name).after(bar_container);
+
+								elem.find('[find=links_wrapper]').append(elem_linkcard);
+							}
+
+						}
+					});
+				}
+
+
+
 				if(!item._files && !item._notes){
 					return;
 				}
