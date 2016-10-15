@@ -22,7 +22,7 @@ var app_layers_notes_feedPage = function(param){
 	if(typeof param === 'undefined'){ param = null; }
 	var position = $('#app_layers_notes');
 	var Elem;
-	position.empty();
+	position.recursiveEmpty();
 
 	Elem = $('#-app_layers_notes_noteslist').clone();
 	Elem.prop('id','app_layers_notes_noteslist');

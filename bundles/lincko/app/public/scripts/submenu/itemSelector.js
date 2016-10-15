@@ -383,6 +383,7 @@ Submenu.prototype.Add_itemSelector = function() {
 
 
 	//Free memory
+	submenu_wrapper = null;
 	delete submenu_wrapper;
 	return true;
 }

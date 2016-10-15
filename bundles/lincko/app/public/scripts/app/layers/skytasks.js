@@ -45,7 +45,7 @@ var app_layers_skytasks_feedPage = function(){
 	console.log('skytasks_feedPage');
 	var position = $('#app_layers_skytasks');
 	var Elem;
-	position.empty();
+	position.recursiveEmpty();
 
 	Elem = $('#-app_layers_skytasks_tasklist').clone();
 	Elem.prop('id','app_layers_skytasks_tasklist');

@@ -654,7 +654,7 @@ burgerN.regex = function(elem, item, param){
 					}
 				}
 			}
-			elem_dropdown.empty();
+			elem_dropdown.recursiveEmpty();
 			burger_str = elem.text().substring(burger_startIndex, burger_regex_getCaretOffset(elem).caretOffset);
 
 			if(currentMode == that.shortcut.user){
@@ -669,10 +669,10 @@ burgerN.regex = function(elem, item, param){
 					});
 				}
 
-				//elem_dropdown.empty().html(burgerN.draw_contacts(contactsID_obj_search, userClick_fn).children());
+				//elem_dropdown.recursiveEmpty().html(burgerN.draw_contacts(contactsID_obj_search, userClick_fn).children());
 
 				var elem_dropdown_new = burgerN.draw_contacts(contactsID_obj_search, userClick_fn);
-				elem_dropdown.empty().html(elem_dropdown_new.children());
+				elem_dropdown.recursiveEmpty().html(elem_dropdown_new.children());
 				var elem_height = elem_dropdown_new.height();
 				if(elem_height){
 					elem_dropdown.height(elem_height);
@@ -683,10 +683,10 @@ burgerN.regex = function(elem, item, param){
 				wrapper_IScroll();
 			}
 			else if(currentMode == that.shortcut.date || currentMode == that.shortcut.dateAlt){
-				//elem_dropdown.empty().html(burgerN.draw_dates(burger_str, dateClick_fn).children());
+				//elem_dropdown.recursiveEmpty().html(burgerN.draw_dates(burger_str, dateClick_fn).children());
 
 				var elem_dropdown_new = burgerN.draw_dates(burger_str, dateClick_fn);
-				elem_dropdown.empty().html(elem_dropdown_new.children());
+				elem_dropdown.recursiveEmpty().html(elem_dropdown_new.children());
 				var elem_height = elem_dropdown_new.height();
 				if(elem_height){
 					elem_dropdown.height(elem_height);
@@ -1419,7 +1419,7 @@ var burger = function(elem, burger_mode, item){
 				console.log('burger_str: '+burger_str);
 				console.log('current caret: '+burger_regex_getCaretOffset(elem).caretOffset);
 				var search_result = Lincko.storage.search('word',burger_str,burger_type)[burger_type];
-				elem_dropdown.empty();
+				elem_dropdown.recursiveEmpty();
 				if( !$.isEmptyObject(search_result) ){
 					for( var i in search_result ){
 						var username = search_result[i]['-username'];
@@ -1450,7 +1450,7 @@ var burger = function(elem, burger_mode, item){
 				//var coord = getSelectionCoords();
 				burger_startIndex = coord.caretOffset;
 				console.log('burger_startIndex: '+burger_startIndex);
-				elem_dropdown.empty().css({'top':coord.y, 'left':coord.x});
+				elem_dropdown.recursiveEmpty().css({'top':coord.y, 'left':coord.x});
 
 				var search_result = Lincko.storage.search('category',null,burger_type)[burger_type];
 				if( !$.isEmptyObject(search_result) ){
@@ -1525,9 +1525,9 @@ var burger = function(elem, burger_mode, item){
 				}
 
 
-				//elem_dropdown.empty().insertAfter(elem);
-				//elem_dropdown.empty().appendTo('#app_layers_content');
-				elem_dropdown.empty().appendTo('#app_application_main');
+				//elem_dropdown.recursiveEmpty().insertAfter(elem);
+				//elem_dropdown.recursiveEmpty().appendTo('#app_layers_content');
+				elem_dropdown.recursiveEmpty().appendTo('#app_application_main');
 				burger_on = true;
 				//var coord = $(this).position();
 				var coord = $(this).offset();
@@ -1686,8 +1686,8 @@ function burger_calendar_linckofy(inst, inline_datepicker){
 		*/
 
 		elem_datepicker.prepend(elem_calendarPrepend);
-		elem_datepicker.find('.ui-datepicker-next').empty().addClass('icon-Forward');
-		elem_datepicker.find('.ui-datepicker-prev').empty().addClass('icon-Forward fa-flip-horizontal');
+		elem_datepicker.find('.ui-datepicker-next').recursiveEmpty().addClass('icon-Forward');
+		elem_datepicker.find('.ui-datepicker-prev').recursiveEmpty().addClass('icon-Forward fa-flip-horizontal');
 		var elem_prepend_today = elem_datepicker.find('[find=today_btn]');
 		var elem_prepend_tomorrow =  elem_datepicker.find('[find=tomorrow_btn]');
 		var elem_prepend_twoDays = elem_datepicker.find('[find=twoDays_btn]');

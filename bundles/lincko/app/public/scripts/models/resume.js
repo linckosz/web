@@ -257,7 +257,7 @@ var app_models_resume_listup = function(Elem, list, color, link, comments_id){
 			mobileHA: hasGood3Dsupport,
 			duration: 300,
 			complete: function(){
-				$(this).empty();
+				$(this).recursiveEmpty();
 				div.attr('link', '');
 				if(link != link_old){
 					app_models_resume_listup(Elem, list, color, link, comments_id);

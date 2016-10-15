@@ -115,7 +115,7 @@ Submenu_select.chat_add_user = function(subm){
 Submenu.prototype.Add_ChatMenu = function() {
 	var attribute = this.attribute;
 	var submenu_wrapper = this.Wrapper();
-	submenu_wrapper.find("[find=submenu_wrapper_content]").empty();
+	submenu_wrapper.find("[find=submenu_wrapper_content]").recursiveEmpty();
 	var Elem = $('#-submenu_app_chat_chatmenu').clone();
 	var that = this;
 	Elem.prop("id", this.id+"_submenu_app_chat_chatmenu");
@@ -164,6 +164,7 @@ Submenu.prototype.Add_ChatMenu = function() {
 	}
 	
 	//Free memory
+	submenu_wrapper = null;
 	delete submenu_wrapper;
 	return true;
 };
@@ -180,7 +181,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 	var thumbnail = false;
 	var wrapper_content_id = this.id+"_chat_contacts";
 
-	submenu_wrapper.find("[find=submenu_wrapper_content]").empty();
+	submenu_wrapper.find("[find=submenu_wrapper_content]").recursiveEmpty();
 	submenu_wrapper.find("[find=submenu_wrapper_content]").prop("id", wrapper_content_id);
 
 	var temp = Lincko.storage.list('users', null);
@@ -692,7 +693,7 @@ Submenu.prototype.Add_ChatContent = function() {
 	var submenu_wrapper = this.Wrapper();
 	var position = submenu_wrapper.find("[find=submenu_wrapper_content]");
 	position.addClass('overthrow');
-	position.empty();
+	position.recursiveEmpty();
 
 	var chatlist_subConstruct = function(){
 		this.list_wrapper.addClass("skylist_maxMobileL_force").addClass('submenu_content_chat');
@@ -790,6 +791,7 @@ Submenu.prototype.Add_ChatContent = function() {
 	);
 
 	//Free memory
+	submenu_wrapper = null;
 	delete submenu_wrapper;
 	return true;
 };

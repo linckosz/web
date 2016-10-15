@@ -227,7 +227,7 @@ app_submenu_chatFeed.prototype.renderLine = function(timestamp) {
 app_submenu_chatFeed.prototype.app_layers_history_launchPage = function(position, type, projectId, subm) {
 		this.subm = subm;
 		position.addClass('overthrow').addClass("submenu_chat_contents");
-		position.empty();
+		position.recursiveEmpty();
 		this.app_layers_history_feedPage(position, type, projectId);
 		wrapper_IScroll_refresh();
 		wrapper_IScroll();

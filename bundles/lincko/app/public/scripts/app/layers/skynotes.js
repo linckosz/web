@@ -12,7 +12,7 @@ function app_layers_skynotes_launchPage(){
 var app_layers_skynotes_feedPage = function(){
 	var position = $('#app_layers_skynotes');
 	var Elem;
-	position.empty();
+	position.recursiveEmpty();
 
 	//var elem_easyeditor_wrapper;
 
@@ -42,7 +42,7 @@ var app_layers_skynotes_feedPage = function(){
 
 
 var app_layers_dev_skynotes_ClassTextEditor = function(elem){
-	elem.empty();
+	elem.recursiveEmpty();
 	this.elem_wrapper = elem;
 	this.elem_wrapper_inner;
 	this.elem_wrapper_inner_clone;

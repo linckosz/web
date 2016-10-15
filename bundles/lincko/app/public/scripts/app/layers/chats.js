@@ -109,6 +109,6 @@ var app_layers_chats_feedPage = function(param) {
 	if (typeof param === 'undefined') { param = null; }
 	var position = $('#app_layers_chats');
 	position.addClass('overthrow');
-	position.empty();
+	position.recursiveEmpty();
 	app_layers_chats_feedChat(position);
 }

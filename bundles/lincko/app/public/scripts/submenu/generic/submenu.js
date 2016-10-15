@@ -233,6 +233,7 @@ function Submenu(menu, next, param, preview) {
 		wrapper_IScroll_refresh();
 		wrapper_IScroll();
 		//Free memory
+		submenu_wrapper = null;
 		delete submenu_wrapper;
 	}
 	Constructor(this);
@@ -261,6 +262,7 @@ Submenu.prototype.Add_MenuTitle = function() {
 	}
 	submenu_wrapper.find("[find=submenu_wrapper_title]").html(title);
 	//Free memory
+	submenu_wrapper = null;
 	delete submenu_wrapper;
 	return Elem;
 };
@@ -320,6 +322,7 @@ Submenu.prototype.Add_CustomisedTitle = function() {
 	submenu_wrapper.prepend(Elem);
 
 	//Free memory
+	submenu_wrapper = null;
 	delete submenu_wrapper;
 	return Elem;
 }
@@ -338,6 +341,7 @@ Submenu.prototype.Add_TitleSmall = function() {
 		attribute.now(Elem, that);
 	}
 	submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
+	submenu_wrapper = null;
 	//Free memory
 	delete submenu_wrapper;
 	return Elem;
@@ -726,6 +730,7 @@ Submenu.prototype.Add_SubmitForm = function() {
 	}
 	submenu_wrapper.find("[find=submenu_wrapper_content]").wrap(ElemForm);
 	//Free memory
+	submenu_wrapper = null;
 	delete submenu_wrapper;
 	return ElemForm;
 };
@@ -746,6 +751,7 @@ Submenu.prototype.Add_MenuForm = function() {
 		});
 	}
 	submenu_wrapper.wrapInner(ElemForm);
+	submenu_wrapper = null;
 	//Free memory
 	delete submenu_wrapper;
 	return ElemForm;
@@ -787,6 +793,7 @@ Submenu.prototype.Add_MenuBottomButton = function() {
 		submenu_wrapper.find("[find=submenu_wrapper_bottom]").find(".submenu_bottom_cell").append(Elem.children());
 	}
 	//Free memory
+	submenu_wrapper = null;
 	delete submenu_wrapper;
 	return Elem;
 };
@@ -1064,6 +1071,7 @@ Submenu.prototype.hideSubmenu = function(time, delay, animate) {
 		);
 	}
 	//Free memory
+	submenu_wrapper = null;
 	delete submenu_wrapper;
 }
 
@@ -1111,6 +1119,7 @@ Submenu.prototype.hidePreview = function(time, delay, animate) {
 		);
 	}
 	//Free memory
+	submenu_wrapper = null;
 	delete submenu_wrapper;
 }
 
@@ -1161,7 +1170,8 @@ Submenu.prototype.Hide = function(animate) {
 Submenu.prototype.Remove = function() {
 	var that = this;
 	var stack = this.preview ? submenu_obj["preview"] : submenu_obj["submenu"];
-	$('#' + this.id).hide().remove();
+	$('#' + this.id).recursiveEmpty().hide().remove();
+	//Free memory
 	stack[this.layer] = null;
 	delete stack[this.layer];
 	app_application_submenu_position();

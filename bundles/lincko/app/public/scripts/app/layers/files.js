@@ -21,7 +21,7 @@ var app_layers_files_feedPage = function(param){
 	if(typeof param === 'undefined'){ param = null; }
 	var position = $('#app_layers_files');
 	var Elem;
-	position.empty();
+	position.recursiveEmpty();
 
 	Elem = $('#-app_layers_files_fileslist').clone();
 	Elem.prop('id','app_layers_files_fileslist');

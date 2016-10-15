@@ -166,7 +166,7 @@ var skylist_enquire = {};
 
 skylist.prototype.construct = function(){
 	var that = this;
-	that.list_wrapper = that.list_wrapper.empty().addClass('skylist_wrapper');
+	that.list_wrapper = that.list_wrapper.recursiveEmpty().addClass('skylist_wrapper');
 	that.list_subwrapper = $('#-skylist_subwrapper').clone().prop('id','');
 
 	that.filter_updateSettings(false); //must be before menu_construct to know which filter to be on when loaded
@@ -406,7 +406,7 @@ skylist.prototype.destroy = function(){
 	delete skylist_enquire[that.md5id];
 
 
-	that.list_wrapper.empty();
+	that.list_wrapper.recursiveEmpty();
 	$(window).off("resize.skylist_"+that.md5id);
 	$('body').off("mouseleave.skylist_"+that.md5id);
 	$(document).off("submenuHide.skylist_"+that.md5id);
@@ -787,9 +787,9 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 		duration: 200,
 		complete: function(){
 			if( that.list.find('.iscroll_sub_div').length > 0 ){
-				iscroll_elem = that.list.find('.iscroll_sub_div').empty();
+				iscroll_elem = that.list.find('.iscroll_sub_div').recursiveEmpty();
 			}else{
-				iscroll_elem = that.list.empty();
+				iscroll_elem = that.list.recursiveEmpty();
 			}
 
 			if(that.list_type == 'tasks'){
@@ -1254,7 +1254,7 @@ skylist.prototype.addTask = function(item){
 
 	var Elem_checkbox = $('#-skylist_checkbox').clone().prop('id','');
 	Elem.find('[find=card_leftbox]').html(Elem_checkbox);
-	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').empty();
+	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').recursiveEmpty();
 	var created_by;
 	var in_charge = '';
 	var in_chargeID = null;
@@ -1751,7 +1751,7 @@ skylist.prototype.addTask = function(item){
 
 skylist.draw_noteCard = function(item){
 	var Elem = $('#-skylist_card').clone().removeAttr('id');
-	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').empty();
+	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').recursiveEmpty();
 	var updated_by;
 	var updated_at;
 
@@ -1877,7 +1877,7 @@ skylist.prototype.addNote = function(item){
 */
 
 	var Elem = $('#-skylist_card').clone();
-	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').empty();
+	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').recursiveEmpty();
 	var updated_by;
 	var updated_at;
 
@@ -1996,7 +1996,7 @@ skylist.prototype.addNote = function(item){
 skylist.draw_fileCard = function(item){
 	if(!item['_perm'] || typeof item['_perm'] !== 'object'){ return false; }
 	var Elem = $('#-skylist_card').clone().removeAttr('id');
-	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').empty();
+	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').recursiveEmpty();
 	var updated_by;
 	var updated_at;
 
@@ -2168,7 +2168,7 @@ skylist.prototype.addFile = function(item){
 */
 
 	var Elem = $('#-skylist_card').clone();
-	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').empty();
+	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').recursiveEmpty();
 	var updated_by;
 	var updated_at;
 

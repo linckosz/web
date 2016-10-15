@@ -1254,7 +1254,7 @@ Submenu.prototype.Add_taskdetail = function() {
 
 	
 	elem_addNewComment_btn.click(function(){
-		elem_addNewComment_text.empty();
+		elem_addNewComment_text.recursiveEmpty();
 		toggleNewComment();
 		elem_addNewComment_text.focus();
 	});

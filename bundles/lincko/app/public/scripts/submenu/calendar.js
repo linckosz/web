@@ -110,6 +110,7 @@ Submenu.prototype.Add_calendar = function() {
 
 
 	//Free memory
+	submenu_wrapper = null;
 	delete submenu_wrapper;
 	return true;
 }

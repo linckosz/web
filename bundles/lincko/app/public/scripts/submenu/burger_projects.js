@@ -91,6 +91,7 @@ Submenu.prototype.Add_burger_projects = function() {
 
 
 	//Free memory
+	submenu_wrapper = null;
 	delete submenu_wrapper;
 	return true;
 }

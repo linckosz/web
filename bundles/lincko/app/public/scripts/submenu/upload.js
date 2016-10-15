@@ -127,6 +127,7 @@ Submenu.prototype.Add_MenuAppUploadAllForm = function() {
 		}
 	);
 	//Free memory
+	submenu_wrapper = null;
 	delete submenu_wrapper;
 	return true;
 };
@@ -498,6 +499,7 @@ Submenu.prototype.Add_MenuAppUploadSubFile = function() {
 		}
 	}
 	//Free memory
+	submenu_wrapper = null;
 	delete submenu_wrapper;
 	return true;
 };

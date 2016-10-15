@@ -27,6 +27,8 @@ var app_layers_changePage = function(menu, param, now){
 			} },
 		];
 		$.Velocity.RunSequence(Sequence);
+		layer = null;
+		delete layer;
 	}
 }
 
@@ -40,7 +42,7 @@ var app_layers_launchMenu = function(menu, param){
 		window['app_layers_'+app_layers_menu+'_closePage']();
 	}
 
-	layer.empty();
+	layer.recursiveEmpty();
 	menu = menu.toLowerCase();
 
 	app_layers_menu = menu;
@@ -56,5 +58,8 @@ var app_layers_launchMenu = function(menu, param){
 		layer.html(Lincko.Translation.get('app', 42, 'html')); //Page not found
 		return false;
 	}
+
+	layer = null;
+	delete layer;
 
 };

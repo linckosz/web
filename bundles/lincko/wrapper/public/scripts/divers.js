@@ -41,6 +41,46 @@ var wrapper_to_url = function(text){
 	return text;
 }
 
+
+
+//Help to detach all Nodes
+jQuery.prototype.recursiveEmpty = function(delay){
+	if(typeof delay == 'undefined'){ delay = 1000; } //By default delay by 1s
+	if(delay>0){
+		var Children = this.contents();
+		setTimeout(function(Children){
+			Children
+				.contents().each(function () {
+					$(this)
+						.recursiveEmpty(0)
+						.removeData()
+						.remove();
+				});
+		}, delay, Children);
+	} else {
+		this
+			.contents().each(function () {
+				$(this)
+					.recursiveEmpty(0)
+					.removeData()
+					.remove();
+			});
+	}
+
+	this
+		.unbind()
+		.removeAttr()
+		.empty();
+
+	return this;
+}
+
+var wrapper_RecursiveUnbind = function(Elem, delay) {
+	if(typeof delay == 'undefined'){ delay = 0; }
+	Elem.recursiveEmpty(delay);
+}
+
+
 var supportsTouch = 'ontouchstart' in window || navigator.msMaxTouchPoints;
 
 var parseHTML = function(text) {

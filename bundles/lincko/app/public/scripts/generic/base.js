@@ -92,7 +92,7 @@ function base_hide_error() {
 			duration: 160,
 			delay: 80,
 			complete: function(){
-				$('#base_error').empty();
+				$('#base_error').recursiveEmpty();
 			},
 		});
 	}
