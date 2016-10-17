@@ -65,3 +65,17 @@
 		<img class="submenu_icon submenu_icon_next floatright" src="{{ _filelatest('/lincko/app/images/submenu/next.png') }}">
 	</span>
 </label>
+
+<div id="-submenu_diy" class="base_optionTab submenu_deco_read submenu_deco_neutral" find="diy_tab">
+	<label class="submenu_input_text submenu_diy_input" for="">
+		<input type="text" find="submenu_input_text" class="selectable" />
+		<span find="submenu_diy_delete" class="submenu_diy_delete">{{ _trans('app', 1, 5, 'html')|lower }}{# delete #}</span>
+	</label>
+	<label class="submenu_input_textarea submenu_diy_textarea" for="">
+		<textarea find="submenu_input_textarea" class="selectable" ></textarea>
+	</label>
+</div>
+
+<div id="-submenu_small_button" class="base_optionTab submenu_deco_read submenu_deco_neutral">
+	<span find="submenu_small_button_title" class="submenu_small_button"></span>
+</div>

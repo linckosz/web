@@ -97,6 +97,28 @@
 	box-sizing: border-box
 }
 
+.models_projects_new_field {
+	text-align: center !important;
+	cursor: default !important;
+	background-color: transparent !important;
+	border-style: none !important;
+}
+
+.models_projects_new_field_button {
+	display: inline-block !important;
+	padding: 6px 32px !important;
+	color: #FFFFFF !important;
+	background-color: #7BB1A9 !important;
+	border: solid 2px transparent;
+	border-radius: 4px;
+	cursor: pointer; cursor: hand;
+	box-sizing: border-box;
+}
+
+.models_projects_new_field_button:hover {
+	border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
 /* Mobile phone in Portrait */
 @media only screen and (max-width: 479px){
 	.models_projects_standard {

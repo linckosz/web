@@ -52,8 +52,8 @@ function app_models_chats_bubble_actionMenu(){
 		}
 
 		var that_clone = that.clone();
-		that_clone.find('[find=translated_text]').remove();
-		that_clone.find('[find=actionMenu]').remove();
+		that_clone.find('[find=translated_text]').recursiveRemove();
+		that_clone.find('[find=actionMenu]').recursiveRemove();
 		var textToAction = $.trim(that_clone.text());		
 		
 		var elem_translateBtn = elem_actionMenu.find('[find=translate_btn]');
@@ -68,7 +68,7 @@ function app_models_chats_bubble_actionMenu(){
 				elem_translatedText.velocity('slideUp',{
 					mobileHA: hasGood3Dsupport,
 					complete: function(){
-						elem_translatedText.remove();
+						elem_translatedText.recursiveRemove();
 						var iscroll_id = that.closest('.overthrow').prop('id');
 	    				myIScrollList[iscroll_id].refresh();
 					}
@@ -195,7 +195,7 @@ function app_models_chats_bubble_actionMenu(){
 			var that = $(this);
 			if(that.has('[contenteditable]').length){
 				var sel = getSelection().toString();
-				that.find('[find=actionMenu]').remove();
+				that.find('[find=actionMenu]').recursiveRemove();
 				if(!sel){
 					timeout_fn(that);
 				}
@@ -205,7 +205,7 @@ function app_models_chats_bubble_actionMenu(){
 
 	$("body").on("blur", '.models_history_content', function() {
 		var that = $(this);
-		that.find('[find=actionMenu]').remove();
+		that.find('[find=actionMenu]').recursiveRemove();
 	});
 }
 app_models_chats_bubble_actionMenu();

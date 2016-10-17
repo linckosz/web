@@ -772,7 +772,7 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 	}
 	cards_elem = iscroll_elem.children().not('.burger_typeTask');
 
-	cards_elem.remove();
+	cards_elem.recursiveRemove();
 	if( items_filtered.length < 1 ){
 		iscroll_elem.append(that.noResult_str);
 	}
@@ -905,7 +905,7 @@ skylist.prototype.addCard = function(item){
 					elem.velocity('slideUp',{
 						mobileHA: hasGood3Dsupport,
 						complete: function(){
-							$(this).remove();
+							$(this).recursiveRemove();
 							if( that.list_subwrapper.find('[find=card]').length < 1 ){
 								that.tasklist_update();
 							}
@@ -1084,7 +1084,7 @@ skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
 				//remove loading box
 				var elem_loading = elem_expandable_links.children('[temp_id='+Lincko.storage.get('files', fileID, 'temp_id')+']');
 				if(elem_loading.length){
-					elem_loading.remove();
+					elem_loading.recursiveRemove();
 				}
 
 				var elem_linkboxNew = that.make_fileLinkbox(fileID);
@@ -1108,13 +1108,13 @@ skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
 		var elem_fileboxExist = elem_expandable_links.children('[_files]');
 		if(elem_fileboxExist.length){
 			if(!item._files){
-				elem_fileboxExist.remove();
+				elem_fileboxExist.recursiveRemove();
 			}
 			else{
 				$.each(elem_fileboxExist, function(i, elem){
 					var elem = $(elem);
 					if(!item._files[elem.attr('_files')]){
-						elem.remove();
+						elem.recursiveRemove();
 					}
 				});
 			}
@@ -1173,7 +1173,7 @@ skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
 		$.each(elem_expandable_comments.children('[rootcomment_id]'), function(i, elem){
 			var commentID = $(elem).attr('rootcomment_id');
 			if(!Lincko.storage.get('comments', commentID)){
-				this.remove();
+				this.recursiveRemove();
 			}
 		});
 
@@ -1623,7 +1623,7 @@ skylist.prototype.addTask = function(item){
 					var status = lincko_file.lincko_status;
 					var elem_temp_id = $('#'+elem_id).find('[temp_id='+temp_id+']');
 					if(status == 'done' && elem_temp_id.length){
-							//elem_temp_id.remove();
+							//elem_temp_id.recursiveRemove();
 							//elem_temp_id = null;
 					}
 					else if(elem_temp_id.length){

@@ -372,7 +372,7 @@ var app_application_garbage = {
 	remove: function(garbage_id){
 		//Check that it's a garbage before to remove
 		if(garbage_id.indexOf('app_application_garbage_')===0){
-			$("#"+garbage_id).remove();
+			$("#"+garbage_id).recursiveRemove();
 		}
 	},
 }

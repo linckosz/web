@@ -75,6 +75,16 @@ jQuery.prototype.recursiveEmpty = function(delay){
 	return this;
 }
 
+//Help to detach all Nodes
+jQuery.prototype.recursiveRemove = function(delay){
+	if(typeof delay == 'undefined'){ delay = 1000; } //By default delay by 1s
+	this
+		.recursiveEmpty(delay)
+		.removeData()
+		.remove();
+	return this;
+}
+
 var wrapper_RecursiveUnbind = function(Elem, delay) {
 	if(typeof delay == 'undefined'){ delay = 0; }
 	Elem.recursiveEmpty(delay);
@@ -549,13 +559,20 @@ function wrapper_test(type, RCUD){
 		else if(RCUD==2){
 			wrapper_sendAction(
 				{
-					"id": 47,
+					"id": 61,
 					//"parent_id": 0, //OPTIONAL
 					//"title": "项目 "+Math.floor(Math.random() * 20), //OPTIONAL
 					//"description": "It's a project content"+Math.floor(Math.random() * 20), //OPTIONAL
 					"users>access": {
 						15:  true,//[true,false][Math.round(Math.random())],
 					},
+					"diy": JSON.stringify([ //Must be a array of multiple arrays [key, value], and stringified
+						['field 1', 123],
+						['field 2', 'abc def'],
+						['field 3', true],
+						['field 4', ['a', 'b', 'c']], //Every value as array will be converted as an object {0:'a', 1:'b', 2:'c'}
+						['field 5', {a:1, b:2, c:3}],
+					]),
 				},
 				'post',
 				'project/update',

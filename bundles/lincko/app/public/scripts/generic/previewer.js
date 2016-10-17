@@ -18,13 +18,13 @@ var previewer = (function() {
 		popout.find('.pic_preview_icon').attr("href", download);
 		$("body").append(popout);
 		popout.find('.close').click(Elem_id, function(event) {
-			$('#'+event.data).remove();
+			$('#'+event.data).recursiveRemove();
 		});
 
 		popout.find('.pic_preview_wrapper').click(function(event){
 			if(!responsive.test("maxMobileL")){return; }
 			if($(event.target).hasClass('pic_preview_wrapper') || $(event.target).hasClass('pic_wrapper')){
-				$('#'+Elem_id).remove();
+				$('#'+Elem_id).recursiveRemove();
 			}
 		});
 
@@ -49,7 +49,7 @@ var previewer = (function() {
 		thumbnail = Lincko.storage.thumbnail.video; //toto => temp solution because no video thumbnail yet
 		popout.find('.player_preview_wrapper').setupPlayer(url, thumbnail);
 		popout.find('.close').click(Elem_id, function(event) {
-			$('#'+event.data).remove();
+			$('#'+event.data).recursiveRemove();
 		});
 		return popout;
 	}

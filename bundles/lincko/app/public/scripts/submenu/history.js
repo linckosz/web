@@ -532,9 +532,9 @@ UploadingContentCls.prototype.feed_content = function(elem)
 {
 
 	if(this.progress >=100 && this.uploading_status === 'done'){
-		elem.find('.progress_bar_wrapper').remove();
-		elem.find('[find=progress_text]').remove();
-		elem.find('.uploading_action').remove();
+		elem.find('.progress_bar_wrapper').recursiveRemove();
+		elem.find('[find=progress_text]').recursiveRemove();
+		elem.find('.uploading_action').recursiveRemove();
 	} 
 	else
 	{
@@ -609,7 +609,7 @@ var chatFeed = function(id,type,position,submenu)
 		var IScroll = myIScrollList[that.position.prop('id')];
 		IScroll.on('scrollEnd', function(){
 			if(this.y == 0){
-				that.position.find(".models_history_loading").remove();
+				that.position.find(".models_history_loading").recursiveRemove();
 				var first_li = that.position.find('li').eq(0);
 				that.app_chat_feed_layer_display();
 				IScroll.refresh();
@@ -768,7 +768,7 @@ chatFeed.prototype.app_chat_feed_layer_display = function()
 	{
 		if(this.position.find('.models_history_loading').length>0)
 		{
-			this.position.find('.models_history_loading').remove();
+			this.position.find('.models_history_loading').recursiveRemove();
 		}
 		var last_page_index = (this.current_page + 1) * this.page_count  - 1;
 		for(var i = this.current_page * this.page_count; i <= last_page_index && i < this.records.length ;i ++ )

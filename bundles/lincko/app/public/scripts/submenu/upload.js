@@ -27,7 +27,7 @@ Submenu_select.app_upload_sub = function(Elem){
 };
 
 Submenu.prototype.Add_MenuAppUploadAllForm = function() {
-	submenu_wrapper = this.Wrapper();
+	var submenu_wrapper = this.Wrapper();
 	var Elem = null;
 	var Elem_bt = null;
 	var Elem_ct = null;
@@ -127,7 +127,7 @@ Submenu.prototype.Add_MenuAppUploadAllForm = function() {
 		}
 	);
 	//Free memory
-	submenu_wrapper = null;
+	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
 	delete submenu_wrapper;
 	return true;
 };
@@ -313,7 +313,7 @@ Submenu.prototype.Add_MenuAppUploadAllFile = function(e) {
 
 Submenu.prototype.Add_MenuAppUploadSubFile = function() {
 	var attribute = this.attribute;
-	submenu_wrapper = this.Wrapper();
+	var submenu_wrapper = this.Wrapper();
 	if(typeof attribute === 'undefined'){ attribute = {}; }
 	var Elem = null;
 	var Elem_bt = null;
@@ -499,7 +499,7 @@ Submenu.prototype.Add_MenuAppUploadSubFile = function() {
 		}
 	}
 	//Free memory
-	submenu_wrapper = null;
+	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
 	delete submenu_wrapper;
 	return true;
 };

@@ -1038,14 +1038,14 @@ Submenu.prototype.Add_taskdetail = function() {
 				elem_linkcard.velocity('slideUp',{
 					mobileHA: hasGood3Dsupport,
 					complete: function(){
-						elem_linkcard.remove();
+						elem_linkcard.recursiveRemove();
 					},
 				});
 			});
 		}
 		else{
 			//cannot remove links from file detail page
-			elem_linkcard.find('[find=action_div]').remove();
+			elem_linkcard.find('[find=action_div]').recursiveRemove();
 		}
 
 		return elem_linkcard;
@@ -1280,7 +1280,7 @@ Submenu.prototype.Add_taskdetail = function() {
 					}
 				});
 				elem_addNewComment_text.focusout(function(){
-					elem_replyBubble.remove();
+					elem_replyBubble.recursiveRemove();
 				});
 
 				elem_replyTo.after(elem_replyBubble);
@@ -1314,7 +1314,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		var cb_error = function(xhr_err, ajaxOptions, thrownError){
 			if(!document.getElementById('taskdetail_'+that.md5id)){ return; }
 			var elem_toRemove = submenu_taskdetail.find('[comment_id='+tmpID+']').closest('.submenu_taskdetail_commentbubble');
-			elem_toRemove.remove();
+			elem_toRemove.recursiveRemove();
 			tmpID = null;
 			var elem_commentCount = elem_submenu_taskdetail_comments.find('[find=commentCount]');
 			var commentCount = parseInt(elem_commentCount.html(),10);
@@ -2071,8 +2071,8 @@ Submenu.prototype.Add_taskdetail = function() {
 		}
 	}
 
-
 	//Free memory
+	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
 	delete submenu_wrapper;
 	return true;
 };
@@ -2154,7 +2154,7 @@ var taskdetail_generateNewCommentBubble = function(parent_type, parent_id, sendA
 	});
 	if(blurRemove){
 		elem_addNewComment_text.focusout(function(){
-			elem_newCommentBubble.remove();
+			elem_newCommentBubble.recursiveRemove();
 		});
 	}
 

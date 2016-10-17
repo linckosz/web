@@ -320,8 +320,8 @@ Submenu.prototype.Add_itemSelector = function() {
 			}
 
 			var elem_card = skylist.draw_fileCard(item).attr('type',item['_type']).attr('_id',item['_id']).click(card_click);
-			elem_card.find('[find=card_leftOptions]').remove();
-			elem_card.find('[find=card_rightOptions]').remove();
+			elem_card.find('[find=card_leftOptions]').recursiveRemove();
+			elem_card.find('[find=card_rightOptions]').recursiveRemove();
 
 			elem_list_files.append(elem_card);
 			elem_list_files.addClass('app_layers_files_fileslist');
@@ -337,8 +337,8 @@ Submenu.prototype.Add_itemSelector = function() {
 			}
 
 			var elem_card = skylist.draw_noteCard(item).attr('type',item['_type']).attr('_id',item['_id']).click(card_click);
-			elem_card.find('[find=card_leftOptions]').remove();
-			elem_card.find('[find=card_rightOptions]').remove();
+			elem_card.find('[find=card_leftOptions]').recursiveRemove();
+			elem_card.find('[find=card_rightOptions]').recursiveRemove();
 
 			elem_list_notes.append(elem_card);
 			elem_list_notes.addClass('app_layers_notes_noteslist');
@@ -384,7 +384,7 @@ Submenu.prototype.Add_itemSelector = function() {
 
 
 	//Free memory
-	submenu_wrapper = null;
+	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
 	delete submenu_wrapper;
 	return true;
 }

@@ -164,7 +164,7 @@ Submenu.prototype.Add_ChatMenu = function() {
 	}
 	
 	//Free memory
-	submenu_wrapper = null;
+	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
 	delete submenu_wrapper;
 	return true;
 };
@@ -281,6 +281,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 		delete Elem;
 	}
 	$(window).resize();
+	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
 	delete submenu_wrapper;
 
 	return true;
@@ -424,6 +425,7 @@ Submenu.prototype.Add_ChatAddUser = function() {
 	submenu_chat_new_user_result(that);
 
 	$(window).resize();
+	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
 	delete submenu_wrapper;
 	return true;
 };
@@ -738,7 +740,7 @@ Submenu.prototype.Add_ChatContent = function() {
 					Elem.velocity('slideUp', {
 						mobileHA: hasGood3Dsupport,
 						complete: function(){
-							$(this).remove();
+							$(this).recursiveRemove();
 						}
 					});
 				} else if(list[Elem.prop('id')] != Elem.attr('timestamp')){ //update (move place)
@@ -791,7 +793,7 @@ Submenu.prototype.Add_ChatContent = function() {
 	);
 
 	//Free memory
-	submenu_wrapper = null;
+	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
 	delete submenu_wrapper;
 	return true;
 };

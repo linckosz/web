@@ -127,7 +127,6 @@ submenu_list['app_project_edit'] = {
 		"style": "project_deletion",
 		"title": Lincko.Translation.get('app', 22, 'html'), //Delete
 		"name": "deletion",
-		"value": "",
 		"class": "models_projects_deletion display_none", //toto => delete display_none to use it
 		"action": function(Elem, subm){
 			var projects_id = subm.param;
@@ -141,9 +140,225 @@ submenu_list['app_project_edit'] = {
 					'project/delete'
 				);
 			}
-		}
+		},
 	},
-	
+	/*
+	"optional_fields": {
+		"style": "title_small",
+		"title": Lincko.Translation.get('app', 65, 'html'), //Custom fields
+		"class": "submenu_title_small_top",
+	},
+	"new_field": {
+		"style": "project_new_field",
+		"title": Lincko.Translation.get('app', 66, 'html'), //Add a new field
+		"name": "newfield",
+		"class": "models_projects_new_field",
+		"action": function(Elem, subm){
+			var projects_id = subm.param;
+			var diy = Lincko.storage.get('projects', subm.param, 'diy');
+			if(diy.length>0){
+				diy = JSON.parse(diy);
+				if($.isArray(diy)){
+					var i = diy.length;
+					var tab = subm.Add_ProjectDIY(subm, ['',''], i, true);
+					tab.find("[find=submenu_input_text]").focus();
+				}
+			}
+		},
+	},
+	"post_action": {
+		"style": "postAction",
+		"action": function(Elem, subm){
+			app_models_projects_build_diy(Elem, subm);
+		},
+	},
+	*/
+};
+
+var app_models_projects_build_diy = function(Elem, subm){
+	var projects_id = subm.param;
+	var diy = Lincko.storage.get('projects', subm.param, 'diy');
+	if(diy.length>0){
+		diy = JSON.parse(diy);
+		if($.isArray(diy)){
+			for(var i in diy){
+				if($.isArray(diy[i]) && diy[i].length==2){
+					subm.Add_ProjectDIY(subm, diy[i], i);
+				}
+			}
+		}
+	}
+};
+
+var app_models_projects_build_diy_value = function(subm){
+	var Elem = subm.Wrapper();
+	var list = Elem.find("[diy]").get();
+	var type, key, field, value;
+	var temp = {};
+	var result = [];
+	for(var i in list){
+		if(list[i].attributes){
+			diy = list[i].attributes.diy;
+			if(diy){
+				diy = diy.value.split("_");
+				type = diy[1];
+				key = diy[0];
+				field = false;
+				value = false;
+				if(type && key){
+					key = parseInt(key, 10);
+					if(!result[key]){
+						result[key] = [];
+					}
+					if(type=="key"){
+						temp[key][0] = $(list[i]).val();
+					}
+					if(type=="val"){
+						temp[key][1] = $(list[i]).val();
+					}
+				}
+			}
+		}
+	}
+	for(var i in temp){
+		if($.isArray(result[i]) && result[i].length!=2){
+			result[i] = temp[i];
+		}
+	}
+	console.log(result);
+	result = JSON.stringify(result);
+	return result;
+}
+
+var app_models_projects_build_diy_update = function(subm){
+	var param = {
+		id: subm.param,
+		diy: app_models_projects_build_diy_value(subm),
+	}
+	wrapper_sendAction(
+		param,
+		'post',
+		'project/update'
+	);
+}
+
+Submenu.prototype.Add_ProjectDIY = function(subm, diy, i, animation) {
+	var that = this;
+	var submenu_wrapper = this.Wrapper();
+	var attribute = this.attribute;
+	var Elem = $('#-submenu_diy').clone();
+	var project_id = this.param;
+	if(typeof animation == "undefined"){ animation = false; }
+	Elem.prop("id", '');
+	Elem.css('height', 'auto').css('display', 'block');
+	if($.isArray(diy) && diy.length==2){
+		if(typeof diy[1] == "object"){
+			diy[1] = JSON.stringify(diy[1]);
+		}
+		var input = Elem.find("[find=submenu_input_text]")
+			.val(diy[0]) //Key
+			.attr("diy", i+"_key")
+			.blur(
+				subm,
+				function(event){
+					event.stopPropagation();
+					app_models_projects_build_diy_update(event.data);
+				}
+			);
+		var textarea = Elem.find("[find=submenu_input_textarea]")
+			.attr("diy", i+"_val")
+			.html(diy[1]) //Value
+			.blur(
+				subm,
+				function(event){
+					event.stopPropagation();
+					app_models_projects_build_diy_update(event.data);
+				}
+			);
+		Elem.find("[find=submenu_diy_delete]").click([Elem, subm], function(event){
+			var Elem = event.data[0];
+			var subm = event.data[1];
+			Elem.velocity('slideUp',{
+				mobileHA: hasGood3Dsupport,
+				complete: function(){
+					this.recursiveRemove();
+					app_models_projects_build_diy_update(subm);
+					submenu_resize_content();
+					$(window).resize();
+				}
+			});
+		});
+		var position = submenu_wrapper.find("[find=newfield]");
+		position.first().before(Elem);
+		if(animation){
+			Elem.velocity('slideDown',{
+				mobileHA: hasGood3Dsupport,
+				complete: function(){
+					submenu_resize_content();
+					$(window).resize();
+				}
+			});
+		} else {
+			submenu_resize_content();
+			$(window).resize();
+		}
+		//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
+		delete submenu_wrapper;
+		return Elem;
+	}
+	return false;	
+}
+
+Submenu.prototype.Add_ProjectDeletion = function(subm) {
+	var that = this;
+	var submenu_wrapper = this.Wrapper();
+	var attribute = this.attribute;
+	var Elem = $('#-submenu_button').clone();
+	var preview = this.preview;
+	Elem.prop("id", '');
+	Elem.find("[find=submenu_button_title]").addClass("models_projects_deletion_button").html(attribute.title);
+	Elem.find("[find=submenu_button_value]").recursiveRemove();
+	if ("action" in attribute) {
+		if (!("action_param" in attribute)) {
+			attribute.action_param = null;
+		}
+		Elem.find("[find=submenu_button_title]").click(attribute.action_param, function(event){
+			attribute.action(Elem, that, event.data);
+		});
+	}
+	if ("class" in attribute) {
+		Elem.addClass(attribute['class']);
+	}
+	submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
+	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
+	delete submenu_wrapper;
+	return Elem;
+};
+
+Submenu.prototype.Add_ProjectNewField = function(subm) {
+	var that = this;
+	var submenu_wrapper = this.Wrapper();
+	var attribute = this.attribute;
+	var Elem = $('#-submenu_button').clone();
+	var preview = this.preview;
+	Elem.prop("id", '').attr("find", "newfield");
+	Elem.find("[find=submenu_button_title]").addClass("models_projects_new_field_button").html(attribute.title);
+	Elem.find("[find=submenu_button_value]").recursiveRemove();
+	if ("action" in attribute) {
+		if (!("action_param" in attribute)) {
+			attribute.action_param = null;
+		}
+		Elem.find("[find=submenu_button_title]").click(attribute.action_param, function(event){
+			attribute.action(Elem, that, event.data);
+		});
+	}
+	if ("class" in attribute) {
+		Elem.addClass(attribute['class']);
+	}
+	submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
+	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
+	delete submenu_wrapper;
+	return Elem;
 };
 
 Submenu_select.project_title_edit = function(subm) {
@@ -160,6 +375,10 @@ Submenu_select.project_team_edit = function(subm){
 
 Submenu_select.project_deletion = function(subm){
 	subm.Add_ProjectDeletion(subm);
+};
+
+Submenu_select.project_new_field = function(subm){
+	subm.Add_ProjectNewField(subm);
 };
 
 Submenu_select.project_id = function(subm){
@@ -184,6 +403,7 @@ Submenu.prototype.Add_ProjectTitleEdit = function(subm) {
 					id: event.data[0],
 					title: event.data[1].val(),
 				}
+				//toto => improve to not sendAction if no change
 				wrapper_sendAction(
 					param,
 					'post',
@@ -200,6 +420,7 @@ Submenu.prototype.Add_ProjectTitleEdit = function(subm) {
 						id: event.data[0],
 						title: event.data[1].val(),
 					}
+					//toto => improve to not sendAction if no change
 					wrapper_sendAction(
 						param,
 						'post',
@@ -219,7 +440,7 @@ Submenu.prototype.Add_ProjectDeletion = function(subm) {
 	var preview = this.preview;
 	Elem.prop("id", '');
 	Elem.find("[find=submenu_button_title]").addClass("models_projects_deletion_button").html(attribute.title);
-	Elem.find("[find=submenu_button_value]").remove();
+	Elem.find("[find=submenu_button_value]").recursiveRemove();
 	if ("action" in attribute) {
 		if (!("action_param" in attribute)) {
 			attribute.action_param = null;
@@ -232,6 +453,7 @@ Submenu.prototype.Add_ProjectDeletion = function(subm) {
 		Elem.addClass(attribute['class']);
 	}
 	submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
+	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
 	delete submenu_wrapper;
 	return Elem;
 };
@@ -252,6 +474,7 @@ Submenu.prototype.Add_ProjectDescriptionEdit = function() {
 					id: event.data[0],
 					description: event.data[1].val(),
 				}
+				//toto => improve to not sendAction if no change
 				wrapper_sendAction(
 					param,
 					'post',

@@ -101,7 +101,7 @@ function Mobile_menu_Hide(id){
 			delay: 100,
 			easing: [ .38, .1, .13, .9 ],
 			complete: function(){
-				Elem.hide().remove();
+				Elem.hide().recursiveRemove();
 				Elem = null;
 			}
 		}

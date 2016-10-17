@@ -177,7 +177,7 @@ inputter.prototype.items_build = function(){
 
 	if(this._setting.style != 'tasks')
 	{
-		wrapper.find('[find=uploading_wrapper]').remove();
+		wrapper.find('[find=uploading_wrapper]').recursiveRemove();
 	}
 	else
 	{

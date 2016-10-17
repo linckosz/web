@@ -192,7 +192,11 @@
 	cursor: default !important;
 }
 
-
+.submenu_deco_neutral {
+	color: #6F7377;
+	background-color: #FFFFFF !important;
+	border-bottom: none !important;
+}
 
 .submenu_deco_fix {
 	background-color: #FFFFFF !important;
@@ -388,8 +392,36 @@
 	font-size: 14px;
 }
 
-#app_application_submenu_block .submenu_wrapper {
-	/*width: 33.33%;*/
+.submenu_diy_input {
+	margin-top: 10px;
+	margin-bottom: 5px;
+}
+
+.submenu_diy_textarea {
+	margin-top: 5px;
+	margin-bottom: 10px;
+}
+
+.submenu_diy_input > input {
+	width: 50% !important;
+	background: #E3E3E3;
+	background-color: #E3E3E3;
+	background: -webkit-linear-gradient(#FFFFFF,#E3E3E3) !important; /* For Safari 5.1 to 6.0 */
+	background: -o-linear-gradient(#FFFFFF,#E3E3E3) !important; /* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(#FFFFFF,#E3E3E3) !important; /* For Firefox 3.6 to 15 */
+	background: linear-gradient(#FFFFFF,#E3E3E3) !important; /* Standard syntax */
+}
+
+.submenu_diy_delete {
+	margin-left: 12px;
+	text-align: right;
+	color: #BE2B1F;
+	font-size: 12px;
+	cursor: pointer;
+}
+
+.submenu_diy_delete:hover {
+	text-decoration: underline;
 }
 
 /* Start app_project */

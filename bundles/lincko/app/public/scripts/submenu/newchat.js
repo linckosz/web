@@ -72,7 +72,7 @@ Submenu.prototype.Add_ChatContents = function() {
 	var id = this.param.id;
 	var type = this.param.type;
 	var overthrow_id = "overthrow_"+that.id;
-	submenu_wrapper = this.Wrapper();
+	var submenu_wrapper = this.Wrapper();
 	var position = submenu_wrapper.find("[find='submenu_wrapper_content']");
 	position.addClass('overthrow').addClass("submenu_chat_contents");
 

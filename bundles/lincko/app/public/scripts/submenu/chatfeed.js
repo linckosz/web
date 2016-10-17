@@ -118,7 +118,7 @@ function app_submenu_chatFeed() {
 						var file = app_upload_files.lincko_files[i];
 						file.lincko_status = 'deleted';
 						$('#app_upload_fileupload').fileupload('option').destroy(e, file);
-						$(elem).parents(".models_history_wrapper").remove();
+						$(elem).parents(".models_history_wrapper").recursiveRemove();
 						break;
 					}
 				}
@@ -130,7 +130,7 @@ function app_submenu_chatFeed() {
 				var file = app_upload_files.lincko_files[id];
 				file.lincko_status = 'abort';
 				file.abort();
-				$(elem).parents(".models_history_wrapper").remove();
+				$(elem).parents(".models_history_wrapper").recursiveRemove();
 			}
 			return false;
 		},
@@ -241,7 +241,7 @@ app_submenu_chatFeed.prototype.app_layers_uploading_files = function(position, t
 		if(files[i].lincko_parent_type!=_type||files[i].lincko_parent_id != id) {continue;}
 		if(files[i].lincko_status=="deleted")
 		{
-			$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id).remove();
+			$("#"+submenu_wrapper_id+"_uploading_file_"+files[i].lincko_temp_id).recursiveRemove();
 		}
 		else{
 			//FIXME: Only filters files inside this chats.
@@ -452,7 +452,7 @@ app_submenu_chatFeed.prototype.updateRecalled = function(parentType, parentID, p
 			replaceWith.setTemplate();
 			replaceWith = replaceWith.renderChatTemplate(null,true);
 			toReplace.before(replaceWith);
-			toReplace.remove();
+			toReplace.recursiveRemove();
 		}
 	});
 };
@@ -472,7 +472,7 @@ app_submenu_chatFeed.prototype.updateTempComments = function(parentType, parentI
 		replaceWith = replaceWith.renderChatTemplate(null, true);
 		elem.before(replaceWith);
 		elem.removeAttr('temp_id');
-		elem.remove();
+		elem.recursiveRemove();
 	});
 };
 
@@ -492,7 +492,7 @@ app_submenu_chatFeed.prototype.updateTempUploads = function(parentType, parentID
 		if(chatType!='history'){
 			elem.before(replaceWith);
 		}
-		elem.remove();
+		elem.recursiveRemove();
 	});
 };
 
@@ -530,7 +530,7 @@ BaseHistoryCls.prototype.renderChatTemplate = function(index, replace) {
 	//Do not duplicate chat messages (unless it is trying to replace the existing element e.g. during updateRecall)
 	if($("#"+Elem_id).length>0){
 		if(replace){
-			$("#"+Elem_id).remove();
+			$("#"+Elem_id).recursiveRemove();
 		} else {
 			return false;
 		}

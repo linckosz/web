@@ -400,7 +400,7 @@ burgerN.destroy = function(elem_dropdown){
 			mobileHA: hasGood3Dsupport,
 			duration: duration,
 			complete: function(){
-				elem_dropdown.remove();
+				elem_dropdown.recursiveRemove();
 			}
 		});
 	 }
@@ -472,7 +472,7 @@ burgerN.regex = function(elem, item, param){
 		var textLength = elem.text().length;
 		//remove other @user spans
 		if(username){
-			elem.find('span[userid]').remove();
+			elem.find('span[userid]').recursiveRemove();
 		}
 		//adjust for deleted spans
 		caretIndex_new -= textLength - elem.text().length;
@@ -530,7 +530,7 @@ burgerN.regex = function(elem, item, param){
 		var caretIndex_new = caretIndex;
 
 		var textLength = elem.text().length;
-		elem.find('span[find=dateWrapper]').remove();
+		elem.find('span[find=dateWrapper]').recursiveRemove();
 		//adjust for deleted spans
 		caretIndex_new -= textLength - elem.text().length;
 
@@ -1391,7 +1391,7 @@ var burger = function(elem, burger_mode, item){
 				mobileHA: hasGood3Dsupport,
 				duration: dropdown_duration,
 				complete: function(){
-					elem_dropdown.remove();
+					elem_dropdown.recursiveRemove();
 				}
 			});
 		 }

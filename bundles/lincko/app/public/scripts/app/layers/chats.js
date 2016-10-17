@@ -46,7 +46,7 @@ function app_layers_chats_feedChat(parent) {
 					Elem.velocity('slideUp', {
 						mobileHA: hasGood3Dsupport,
 						complete: function(){
-							$(this).remove();
+							$(this).recursiveRemove();
 						}
 					});
 				} else if(list[Elem.prop('id')] != Elem.attr('timestamp')){ //update (move place)

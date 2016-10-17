@@ -147,7 +147,7 @@ Submenu.prototype.Add_MenuProjects = function() {
 		var projects_id = this.action_param;
 		var project = Lincko.storage.get("projects", projects_id);
 		if(project && project["deleted_at"]!=null){
-			Elem.remove();
+			Elem.recursiveRemove();
 			return true;
 		}
 		if(projects_id == Lincko.storage.getMyPlaceholder()['_id']){
