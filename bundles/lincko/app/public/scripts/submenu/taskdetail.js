@@ -752,7 +752,6 @@ Submenu.prototype.Add_taskdetail = function() {
 		var elem_subtasks_wrapper = elem_subtasks.find('[find=subtasks_wrapper]');
 		var elem_newSubtask = elem_subtasks.find('[find=newSubtask]');
 		var elem_subtaskCount = elem_subtasks.find('[find=subtaskCount]');
-		
 
 		var generate_subtaskCard = function(task_id, title){
 			var subtask = null;
@@ -761,18 +760,42 @@ Submenu.prototype.Add_taskdetail = function() {
 				subtask = Lincko.storage.get('tasks', task_id);
 			}
 
+			var elem_subtaskCard_title = elem_subtaskCard.find('[find=title]');
+
 			if(!task_id || !subtask){ //fake subtask
 				if(!task_id){ task_id = taskdetail_getRandomInt(); }
-				elem_subtaskCard.find('[find=title]').text(title);
+				elem_subtaskCard_title.text(title);
 			}
 			else{
-				elem_subtaskCard.find('[find=title]').text(subtask['+title']);
+				elem_subtaskCard_title.text(subtask['+title']);
 				if(subtask.approved){
 					elem_subtaskCard.addClass('submenu_taskdetail_subtasks_card_checked');
 					elem_subtaskCard.find('[find=title]').attr('contenteditable', false);
 				}
 			}
 			elem_subtaskCard.attr('task_id',task_id);
+
+
+			var update_subtaskTitle = function(new_title){
+				task_id = parseInt(elem_subtaskCard.attr('task_id'),10);
+				subtask = Lincko.storage.get('tasks', task_id);
+				if(subtask && new_title != subtask['+title']){
+					wrapper_sendAction({id: task_id, title: new_title}, 'post', 'task/update');
+				}
+			}
+
+			elem_subtaskCard_title.blur(function(){
+				var subtask_title = $.trim($(this).text());
+				$(this).html(subtask_title);
+				update_subtaskTitle(subtask_title);
+			});
+
+			elem_subtaskCard_title.keypress(function(event){
+				if((event.which || event.keyCode) == 13){ //if enter is pressed
+					event.preventDefault();
+					$(this).blur();
+				}
+			});
 
 
 			elem_subtaskCard.find('[find=checkbox]').click(function(){
@@ -835,6 +858,12 @@ Submenu.prototype.Add_taskdetail = function() {
 			elem_newSubtask_title.focus();
 		});
 		elem_newSubtask_title.blur(function(){
+			var text = $.trim($(this).text());
+			if(text.length){//if there is text, trigger enter
+				var e = jQuery.Event("keypress");
+				e.keyCode = e.which = 13; // enter key
+				$(this).trigger(e);
+			}
 			$(this).html('');
 			elem_newSubtask.addClass('display_none');
 		});
@@ -894,6 +923,11 @@ Submenu.prototype.Add_taskdetail = function() {
 			
 				elem_subtaskCount.text(parseInt(elem_subtaskCount.text(),10) +1 );
 				$(this).html('');
+
+				myIScrollList[submenu_content.prop('id')].refresh();
+				if( responsive.test("maxMobileL") ){
+					myIScrollList[submenu_content.prop('id')].scrollBy(0, -elem_subtasks_wrapper.children('div').eq(0).outerHeight());
+				}
 			}
 		});
 
@@ -1742,6 +1776,46 @@ Submenu.prototype.Add_taskdetail = function() {
 	}
 	if(!item.fake && taskid != 'new'){ registerSync_meta(); }
 
+
+	var registerSync_subtasks = function(){
+		app_application_lincko.add(
+			'submenu_taskdetail_subtasks_'+that.md5id,
+			that.param.type+'_'+item['_id'],
+			function(){
+				if(this.updated && this.updated[that.param.type+'_'+item['_id']]._tasksdown){
+					item = Lincko.storage.get('tasks', item['_id']);
+
+					var subtask_count = 0;
+					if(item._tasksdown){
+						$.each(item._tasksdown, function(subtask_id, obj){
+							var subtask = Lincko.storage.get('tasks', subtask_id);
+
+							//dont show if task doesnt exist or it doesnt match the project of the parent task
+							if(!subtask || subtask.deleted_at || subtask._parent[1] != that.param.projID ) return;
+							else{
+								if(subtask.temp_id && elem_subtasks_wrapper.children('[task_id='+subtask.temp_id+']').length){ //if any temp task, modify
+									elem_subtasks_wrapper.children('[task_id='+subtask.temp_id+']').eq(0).attr('task_id', subtask_id);
+								}
+								else if(!elem_subtasks_wrapper.children('[task_id='+subtask_id+']').length){
+									elem_subtasks_wrapper.append(generate_subtaskCard(subtask_id));
+								}
+								subtask_count++;
+							}
+						});
+					}
+					elem_subtaskCount.text(subtask_count);
+
+				}
+			}
+		);
+	}
+	if(!item.fake && that.param.type == 'tasks' && taskid != 'new'){ registerSync_subtasks(); }
+
+
+
+
+
+
 	//to be used for link sync functions
 	var addTo_linksWrapper = function(elem, type, id){
 		var elem_linksWrapper = elem.find('[find=links_wrapper]');
@@ -2273,12 +2347,20 @@ var taskdetail_subtaskQueue = {
 		if(!submenu_uniqueID || !tasksupID){return false;}
 		if(taskdetail_subtaskQueue.queue[submenu_uniqueID]){
 			$.each(taskdetail_subtaskQueue.queue[submenu_uniqueID], function(fake_subtaskID, obj){
+				
 				var param = obj.param;
 				if(!param){return;}
 				param['tasksup>access'] = {};
 				param['tasksup>access'][tasksupID] = true;
 				param.duration = 0; //no duedate for subtasks
-				wrapper_sendAction(param, 'post', 'task/create');
+
+				var cb_success = function(){
+					var prepare_param = {};
+					prepare_param['tasks_'+tasksupID] = { _tasksdown: true };
+					app_application_lincko.prepare('tasks_'+tasksupID, true, prepare_param);
+				}
+
+				wrapper_sendAction(param, 'post', 'task/create', cb_success);
 				delete taskdetail_subtaskQueue.queue[submenu_uniqueID][fake_subtaskID];
 			});
 		}

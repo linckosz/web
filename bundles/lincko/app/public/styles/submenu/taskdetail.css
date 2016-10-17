@@ -352,6 +352,7 @@ td.submenu_taskdetail_share .fa{
 */
 .submenu_taskdetail_subtasks_card{
 	/*height: 40px;*/
+	color: #475577;
 }
 .submenu_taskdetail_subtasks_card [find=subtasks_card_table]{
 	height: 100%;
@@ -359,7 +360,7 @@ td.submenu_taskdetail_share .fa{
 .submenu_taskdetail_subtasks_card [find=checkbox_td]{
     vertical-align: top;
     padding-top: 6px;
-    padding-bottom: 10px;
+    padding-bottom: 4px;
 }
 .submenu_taskdetail_subtasks_card [find=checkbox]{
 	margin: 0px 4px;
