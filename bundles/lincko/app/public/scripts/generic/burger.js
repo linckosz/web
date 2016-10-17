@@ -455,7 +455,7 @@ burgerN.regex = function(elem, item, param){
 	var currentMode = null; //'@' or '++'
 
 	var destroy = function(){
-		burgerN.destroy(elem_dropdown);
+		//burgerN.destroy(elem_dropdown);
 		elem_dropdown = null;
 		burger_str = "";
 		burger_startIndex = null;
@@ -729,6 +729,7 @@ burgerN.regex = function(elem, item, param){
 					'top':coord.y, 
 					'left':coord.x, 
 					'bottom':$(window).height()-coord.y + dropdownOffset,
+					'z-index' : 99999,
 				});
 
 			$('#app_content_dynamic_sub').append(elem_dropdown);

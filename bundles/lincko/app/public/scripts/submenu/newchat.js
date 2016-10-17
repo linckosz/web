@@ -178,7 +178,7 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 	position.addClass('submenu_bottom');
 
 	var that = this;
-	function fnSend(msg) {
+	function fnSendMsg(msg) {
 		var content = msg;
 		var type = that.param.type == 'history' ? "projects":'chats';
 		var sub_that = that;
@@ -245,16 +245,43 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 				
 			}
 		);
-
 	}
 
-	var param = {
-		type : this.param.type,
-		id : this.param.id,
+	
+	var layer = {
+		row : 3,
+		max_row : 3,
+		mobile_row : 1,
+		mobile_max_row : 3,
+		mobile_backgroup_flag : true,
+		//mobile_input_border_flag : true,
+		top_line : true,
+		mobile_top_line : false,
+		enter : fnSendMsg,
+		auto_upload : true,
+		menu :
+		[	
+			
+			[
+			// {
+			// 	element : 'btScissors',
+			// 	mobile_hide : true,
+			// },
+			{
+				element : 'btSend',
+				mobile_hide : true,
+				empty : 'hide',
+				click : fnSendMsg,
+			},],
+			[{
+				element : 'btAttachment',
+				empty : 'show',
+			},],
+		],
 	};
 
-	var chat_inputter = new inputter(null,position,submenu_wrapper,false,param,fnSend);
-
+	var type = that.param.type == 'history' ? "projects":'chats';
+	var chat_inputter = new inputter(this,position,type,that.param.id,layer,false);
 
 	var height = position.height();
 	submenu_wrapper.find("[find=submenu_wrapper_content]").css('bottom', height);

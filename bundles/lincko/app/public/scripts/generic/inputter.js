@@ -1,192 +1,391 @@
 
-var inputter = function(setting,position,submenu,burgerFlag,param,fnSend,fnUpload)
+var inputter = function(submenu,position,type,pid,layer,burger)
 {
-	this.position = position;
-	this.submenu = submenu;
-	this.burgerFlag = burgerFlag;
-	this.param = param;
-	this.fnSend = fnSend;
-	this._setting =
+	this.elements_lib = 
 	{
-		type : setting != null && typeof setting.type !== 'undefined' ? setting.type :'comment',// comment or task
-		feature : setting != null && typeof setting.feature !== 'undefined' ? setting.feature : ['send','attachment'], // upload+send
-		margin : setting != null && typeof setting.margin !== 'undefined' ? setting.margin : 'margin_style_1_1', // upload+send
-		entry_commit_able : setting != null && typeof setting.entry_commit_able !== 'undefined' ? setting.entry_commit_able : false, //true or false 
-		row : setting != null && typeof setting.row !== 'undefined' ? setting.row : 3,// pc display 3 rows
-		max_row : setting != null && typeof setting.max_row !== 'undefined' ? setting.max_row : 3,
-		mobile_row : setting != null && typeof setting.mobile_row !== 'undefined' ? setting.mobile_row : 1,//it display 1 row default on mobile
-		mobile_max_row :  setting != null && typeof setting.mobile_max_row !== 'undefined' ? setting.mobile_max_row : 3,// if overflow 1 row,it can display 3 row on mobile
-		icon_float : setting != null && typeof setting.icon_float !== 'undefined' ? setting.icon_float : 'top', //when input overflow,where icons float
-		style : setting != null && typeof setting.icon_float !== 'undefined' ? setting.icon_float : 'chatting',//chats or tasks or comments
+		chkTaskFinish :
+		{
+			target : 'checkbox',
+		},
+		btSend:
+		{
+			target : 'send',
+		},
+		btScissors:
+		{
+			target : 'scissors',
+			mobile_hide : true ,
+		},
+		btAttachment:
+		{
+			target : 'attachment',
+		},
 	}
-	this.items_build();
-	this.handler_build();
+
+	this.submenu = submenu;
+	this.position = position;
+	this.type = type ;
+	this.pid = pid;
+	this.layer = layer;
+	this.burger = burger;
+	this.buildLayer();
+	
+	
 }
 
-inputter.prototype.handler_build = function(){
-	var that = this;
-	if(that._setting.type == 'comment')
+inputter.prototype.buildLayer = function()
+{
+
+	var that = this ;
+	var container = $('#-inputter_container').clone();
+	container.prop('id',this.submenu.id+'_inputter_container');
+
+
+	if(this.layer.hasOwnProperty('mobile_backgroup_flag') && this.layer['mobile_backgroup_flag'])
 	{
-		that.position.find('[find=call_send]').click(function(){
-			var msg = that.position.find('[find=chat_textarea]').html().replace(/<div>/g,"<br>").replace(/<\/div>/g,"");
-			that.fnSend(msg);
-			that.position.find('[find=chat_textarea]').html('');
-			that.position.find('[find=call_send]').addClass('mobile_hide');
-			that.position.find('[find=call_attachment]').removeClass('mobile_hide');
-		});
+		container.addClass('inputter_mobile_backgroup_gray');
+	}
+	
 
-		that.position.find('[find=call_attachment]').click(function(){
-			var type = that.param.type == 'history' ? "projects":'chats';
-			var id = that.param.id;
-	 		app_upload_open_files(type, id,false,true);
-		});
+	var line = this.layer.hasOwnProperty('top_line') && this.layer['top_line'] ? 1 : 0;
+	var mobile_line = this.layer.hasOwnProperty('mobile_top_line') && this.layer['mobile_top_line'] ? 1 : 0;
+	container.addClass('inputter_line_' + line + mobile_line);
 
-		that.position.find('[find=chat_textarea]').on('paste',function(e,data){
-			var target = this;
-			setTimeout(function(){
-				target.innerHTML = target.innerHTML.replace(/<(br).*?>/g,"<br/>").replace(/<(?!br).*?>/g,"");
-			},5);
-		});
 
-		that.position.find('[find=chat_textarea]').keyup(function(e){
-			if($.trim(this.innerText).length > 0)
+	var menu = container.find('[find=menu_wrapper]');
+
+	var col_count = 0;
+	var max_col_count  = 0;
+
+	var mobile_col_count  = 0;
+	
+	if(this.layer.hasOwnProperty('menu'))
+	{
+		mobile_col_count = 0;
+		for(var i in this.layer['menu'])
+		{
+			col_count = 0;
+			var row = $('#-inputter_menu_row').clone();
+			row.prop('id','');
+
+			if($.isArray(this.layer['menu'][i]))
 			{
-				that.position.find('[find=call_send]').removeClass('mobile_hide');
-				that.position.find('[find=call_attachment]').addClass('mobile_hide');
+				for(var j = this.layer['menu'][i].length -1 ; j >= 0 ; j-- )//in this.layer['menu'][i])
+				{
+					var tmp = this.layer['menu'][i][j];
+					var elem = this.layer['menu'][i][j]['element'];
+					if(typeof this.elements_lib[elem] !== 'undefined')
+					{
+						var item = $('#-inputter_element_'+this.elements_lib[elem]['target']).clone();
+						item.prop('id',this.submenu.id +'_'+ this.elements_lib[elem]['target']);
+						item.appendTo(row);
+
+						if((this.elements_lib[elem].hasOwnProperty('mobile_hide') && this.elements_lib[elem]['mobile_hide'])
+						|| (this.layer['menu'][i][j].hasOwnProperty('mobile_hide') && this.layer['menu'][i][j]['mobile_hide']))
+						{
+							item.addClass('mobile_hide');
+						}
+						else{
+							mobile_col_count ++ ;
+						}
+
+						if(this.layer['menu'][i][j].hasOwnProperty('empty'))
+						{
+							item.addClass('empty_' + this.layer['menu'][i][j]['empty']);
+						}
+
+					
+						switch(this.elements_lib[elem]['target'])
+						{
+							case 'send':
+								if(this.layer['menu'][i][j].hasOwnProperty('click'))
+								{
+									var fn = this.layer['menu'][i][j]['click'];
+									item.click(fn,function(event){
+										var msg = container.find('[find=chat_textarea]').get(0).innerHTML.replace(/<div>/g,"<br>").replace(/<\/div>/g,"");
+										var fn = event.data;
+										fn(msg);
+										
+										container.find('[find=chat_textarea]').get(0).innerHTML = '';
+										
+										$('.empty_show').removeClass('mobile_hide');
+										$('.empty_hide').addClass('mobile_hide');
+									});
+								}
+								break;
+							case 'attachment' :
+								var auto_upload = this.layer.hasOwnProperty('auto_upload') ? this.layer['auto_upload'] : true;
+								item.click({'type':this.type,'pid':this.pid},function(event){
+									var type = event.data.type ;
+									var pid = event.data.pid ;
+									app_upload_open_files(type, pid,false,auto_upload,'inputter_files_'+type+'_'+pid);
+								});
+								if(!this.layer['menu'][i].hasOwnProperty('click') && !auto_upload)
+								{
+									
+									app_application_lincko.add(this.submenu.id+'_inputter_container', 'upload', 
+									function(){
+										var files_queue = container.find('[find=files_queue]').get(0);
+										var files = app_upload_files.lincko_files;
+										for(var z in files)
+										{
+											if(files[z].lincko_parent_type == this.action_param[0]
+											&&files[z].lincko_parent_id == this.action_param[1]
+											&&files[z].lincko_param == 'inputter_files_' + this.action_param[0]+'_'+this.action_param[1])
+											{
+												if($('#inputter_element_uploading_item_'+files[z].lincko_temp_id).length == 0)
+												{
+													var item = $('#-inputter_element_uploading_item').clone();
+													item.prop('id','inputter_element_uploading_item_'+files[z].lincko_temp_id);
+													item.appendTo(files_queue);
+												}
+												else{
+													var target = $('#inputter_element_uploading_item_'+files[z].lincko_temp_id);
+													var preview = null;
+													try{
+														preview = files[z].files[0].preview.toDataURL();
+													}
+													catch(e)
+													{
+														
+													}
+													if(preview == null || preview == '')
+													{
+														target.find(".shortcut_pic").addClass('display_none');
+														target.find(".shortcut_ico").removeClass('display_none').find("i").addClass(app_models_fileType.getClass(app_models_fileType.getExt(files[z].lincko_name)));
+														
+													}else
+													{
+														target.find(".shortcut_ico").addClass('display_none');
+														target.find(".shortcut_pic")
+																.removeClass('display_none')
+																.attr('src',preview);
+													}
+												}
+											}
+											
+										}
+										
+									},[this.type,this.pid]);
+									
+									
+								}
+								break;
+						}
+						item.appendTo(row);
+						col_count ++;
+					}
+					
+				}
 			}
 			else
 			{
-				that.position.find('[find=call_send]').addClass('mobile_hide');
-				that.position.find('[find=call_attachment]').removeClass('mobile_hide');
-			}
-		});
-
-		that.position.find('[find=chat_textarea]').keypress(function(e){
-			e.stopPropagation();
-			if( e.keyCode==13)
-			{
-				if(e.shiftKey)
+				var elem = this.layer['menu'][i]['element'];
+				if(typeof this.elements_lib[elem] !== 'undefined')
 				{
+					var item = $('#-inputter_element_'+this.elements_lib[elem]['target']).clone();
+					item.prop('id',this.submenu.id +'_'+ this.elements_lib[elem]['target']);
+					if((this.elements_lib[elem].hasOwnProperty('mobile_hide') && this.elements_lib[elem]['mobile_hide'])
+						|| (this.layer['menu'][i].hasOwnProperty('mobile_hide') && this.layer['menu'][i]['mobile_hide']))
+					{
+						item.addClass('mobile_hide');
+					}
+					else{
+						mobile_col_count ++ ;
+					}
 
-					e.returnValue=false;
-					return;
-				}	
-				else
-				{
-					e.preventDefault();
-					var msg = that.position.find('[find=chat_textarea]').html().replace(/<div>/g,"<br>").replace(/<\/div>/g,"");
-					if(this.innerText.length > 0)
+					if(this.layer['menu'][i].hasOwnProperty('empty'))
 					{
-						that.fnSend(msg);
-						that.position.find('[find=chat_textarea]').html('');
-						that.position.find('[find=call_send]').addClass('mobile_hide');
-						that.position.find('[find=call_attachment]').removeClass('mobile_hide');
-						return;
+						item.addClass('empty_' + this.layer['menu'][i]['empty']);
 					}
-					else
+
+					
+
+					switch(this.elements_lib[elem]['target'])
 					{
-						base_show_error(Lincko.Translation.get('app', 64, 'js'), true);//no empty
+						case 'send':
+							if(this.layer['menu'][i].hasOwnProperty('click'))
+							{
+								var fn = this.layer['menu'][i]['click'];
+								item.click(fn,function(event){
+									var msg = container.find('[find=chat_textarea]').get(0).innerHTML.replace(/<div>/g,"<br>").replace(/<\/div>/g,"");
+									var fn = event.data;
+									fn(msg);
+									container.find('[find=chat_textarea]').get(0).innerHTML = '';
+									
+									$('.empty_show').removeClass('mobile_hide');
+									$('.empty_hide').addClass('mobile_hide');
+								});
+							}
+							break;
+						case 'attachment' :
+							var auto_upload = this.layer.hasOwnProperty('auto_upload') ? this.layer['auto_upload'] : true;
+							item.click({'type':this.type,'pid':this.pid},function(event){
+								var type = event.data.type ;
+								var pid = event.data.pid ;
+								app_upload_open_files(type, pid,false,auto_upload,'inputter_files_'+type+'_'+pid);
+							});
+							if(!this.layer['menu'][i].hasOwnProperty('click') && !auto_upload)
+							{
+								app_application_lincko.add(this.submenu.id+'_inputter_container', 'upload', 
+								function(){
+									var files_queue = container.find('[find=files_queue]').get(0);
+									var files = app_upload_files.lincko_files;
+									for(var z in files)
+									{
+										if(files[z].lincko_parent_type == this.action_param[0]
+										&&files[z].lincko_parent_id == this.action_param[1]
+										&&files[z].lincko_param == 'inputter_files_' + this.action_param[0]+'_'+this.action_param[1])
+										{
+											if($('#inputter_element_uploading_item_'+files[z].lincko_temp_id).length == 0)
+											{
+												var item = $('#-inputter_element_uploading_item').clone();
+												item.prop('id','inputter_element_uploading_item_'+files[z].lincko_temp_id);
+												item.appendTo(files_queue);
+											}
+											else{
+												var target = $('#inputter_element_uploading_item_'+files[z].lincko_temp_id);
+												var preview = null;
+												try{
+													preview = files[z].files[0].preview.toDataURL();
+												}
+												catch(e)
+												{
+													
+												}
+												if(preview == null || preview == '')
+												{
+													target.find(".shortcut_pic").addClass('display_none');
+													target.find(".shortcut_ico").removeClass('display_none').find("i").addClass(app_models_fileType.getClass(app_models_fileType.getExt(files[z].lincko_name)));
+													
+												}else
+												{
+													target.find(".shortcut_ico").addClass('display_none');
+													target.find(".shortcut_pic")
+															.removeClass('display_none')
+															.attr('src',preview);
+												}
+											}
+										}
+										
+									}
+									
+								},[this.type,this.pid]);
+							}
+							break;
 					}
+
+					item.appendTo(row);
+					col_count ++;
 				}
-				
 			}
-
-
-		});
-		that.position.find('[find=chat_textarea]').keyup(function(e) {
-			
-		});
-	}
-	else(this._setting.type == 'task')
-	{
-		this.position.find('[find=call_send]').click(function(){
-			
-		});
-
-		this.position.find('[find=call_attachment]').click(function(){
-			
-		});
-	}
-}
-
-
-inputter.prototype.items_build = function(){
-	var wrapper = $('#-inputter_container').clone();
-	wrapper.prop('id','');
-	wrapper.addClass('inputter_'+this._setting.type);
-
-	var content = $('#-inputter_content_'+this._setting.type).clone();
-	content.prop('id','');
-	content.appendTo(wrapper.find('[find=content_wrapper]'));
-	content.addClass(this._setting.margin);
-	if(this.burgerFlag){
-		if(this.fnSend){
-			this.param.enter_fn = this.fnSend;
+			row.appendTo(menu);	
+			if(col_count  > max_col_count){
+				max_col_count  = col_count;
+			}
 		}
-		burgerN.regex(content.children('[find=chat_textarea]').eq(0), null, this.param);
+		
 	}
 
-	var menu = wrapper.find('[find=menu_wrapper]');
-	var memu_row_max_length = 0;
-	var mobile_row_max_length = 0;
-	var has_scissors = false;
-	for(var i in this._setting.feature)
+	var content = container.find('[find=content_wrapper]');
+	content.addClass('margin-right-' + max_col_count);
+	content.addClass('mobile-margin-right-' + mobile_col_count);
+
+	var input = $('#-inputter_element_content').clone();
+	input.prop('id','');
+	input.appendTo(content);
+	input.find('[find=chat_textarea]').keyup(function(){});
+
+
+	if(this.layer.hasOwnProperty('row'))
 	{
-		var row = $('#-inputter_menu_row_wrapper').clone();
-		row.prop('id','');
-		if(typeof this._setting.feature[i] === 'string')
+		input.find('[find=chat_textarea]').addClass('inputter_min_row_'+this.layer['row']);
+	}
+
+	if(this.layer.hasOwnProperty('max_row'))
+	{
+		input.find('[find=chat_textarea]').addClass('inputter_max_row_'+this.layer['max_row']);
+	}
+
+
+	if(this.layer.hasOwnProperty('mobile_row'))
+	{
+		input.find('[find=chat_textarea]').addClass('inputter_mobile_min_row_'+this.layer['mobile_row']);
+	}
+
+	if(this.layer.hasOwnProperty('mobile_max_row'))
+	{
+		input.find('[find=chat_textarea]').addClass('inputter_mobile_max_row_'+this.layer['mobile_max_row']);
+	}
+
+	if(this.layer.hasOwnProperty('mobile_input_border_flag'))
+	{
+		input.find('[find=chat_textarea]').addClass('inputter_mobile_input_border_orange');
+	}
+
+	input.find('[find=chat_textarea]').on('keyup',function(){
+		if($.trim(this.innerText).length > 0)
 		{
-			var item = $('#-inputter_call_'+this._setting.feature[i]).clone();
-		 	item.prop('id','');
-		 	item.appendTo(row);
+			$('.empty_show').addClass('mobile_hide');
+			$('.empty_hide').removeClass('mobile_hide');
 		}
 		else
 		{
-			
-			for(var j = this._setting.feature[i].length - 1 ; j >= 0 ; j -- )
+			$('.empty_show').removeClass('mobile_hide');
+			$('.empty_hide').addClass('mobile_hide');
+		}
+	});
+
+	input.find('[find=chat_textarea]').on('paste',function(e,data){
+		var target = this;
+		setTimeout(function(){
+			target.innerHTML = target.innerHTML.replace(/<(br).*?>/g,"<br/>").replace(/<(?!br).*?>/g,"");
+		},5);
+	});
+
+
+	input.find('[find=chat_textarea]').keypress(function(e){
+		e.stopPropagation();
+		if(e.keyCode==13)
+		{
+			if(e.shiftKey)
 			{
-				if(typeof this._setting.feature[i][j] === 'string')
+				e.returnValue=false;
+				return;
+			}	
+			else
+			{
+				e.preventDefault();
+				var msg = this.innerHTML.replace(/<div>/g,"<br>").replace(/<\/div>/g,"");
+
+				if(this.innerText.length > 0 && that.layer.hasOwnProperty('enter'))
 				{
-					if(this._setting.feature[i] == 'scissors')
-					{
-						has_scissors = true;
-					}
-					var item = $('#-inputter_call_'+this._setting.feature[i][j]).clone();
-				 	item.prop('id','');
-				 	item.appendTo(row);
+					var fn = that.layer['enter'];
+					fn(msg);
+					this.html('');
+					$('.empty_show').removeClass('mobile_hide');
+					$('.empty_hide').addClass('mobile_hide');
+					return;
+				}
+				else
+				{
+					base_show_error(Lincko.Translation.get('app', 64, 'js'), true);//no empty
 				}
 			}
+			
 		}
-		row.appendTo(menu);
-	}
+	});
 
-	if(this._setting.type == 'comment')
-	{
-		menu.find('[find=call_send]').addClass('mobile_hide');
-	}
-
+	setTimeout(function(){
+		input.find('[find=chat_textarea]').get(0).focus();
+	},200);
 	
-	if(this._setting.icon_float == 'top')
-	{
-		menu.addClass('icon_float_up');
-	}
-	else
-	{
-		menu.addClass('icon_float_bottom');
+
+
+	if(this.burger){
+		burgerN.regex(input.find('[find=chat_textarea]').eq(0), null, {'type':this.type,'id':pid});	
 	}
 
-	if(this._setting.style != 'tasks')
-	{
-		wrapper.find('[find=uploading_wrapper]').recursiveRemove();
-	}
-	else
-	{
-
-	}
-	wrapper.appendTo(this.position);
+	container.appendTo(this.position);
 }
 
-inputter.prototype.files_refresh = function()
-{
-	
-}

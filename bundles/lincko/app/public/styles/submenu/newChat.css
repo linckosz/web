@@ -72,14 +72,4 @@ textarea:focus, input:focus{
 	z-index:9999999;
 }
 
-.submenu_chats .submenu_bottom{
-	height: 93px;
-	
-}
-
-@media only screen and (max-width: 1279px){
-	.submenu_chats .submenu_bottom{
-		height: 52px !important;
-	}
-}
 

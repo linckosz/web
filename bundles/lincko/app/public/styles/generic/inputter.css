@@ -1,4 +1,282 @@
+.comments_input{
+	line-height: 24px;
+	font-size: 16px;
+	padding: 4px;
+	overflow-y:auto;
+	text-align: left;
+	outline: 0; 
+	color:black;
+	background-color: white;
+}
+
+.submenu_chats .submenu_bottom{
+	height:auto;
+}
+
 .inputter_container{
+	background-color: #ffffff;
+	height:auto;
+	overflow : hidden;
+	padding:8px;
+}
+
+.inputter_container ul,.inputter_container ul li
+{
+	height:auto;
+	overflow : hidden;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+
+.inputter_line_10{
+	border-top:  1px solid #FBA026;
+}
+
+.inputter_line_01{
+	border-top: none;
+}
+
+.inputter_line_11{
+	border-top:  1px solid #FBA026;
+}
+
+.inputter_row{
+	height:auto;
+}
+
+.inputter_min_row_1{
+	min-height : 24px;
+}
+
+.inputter_min_row_2{
+	min-height : 48px;
+}
+
+.inputter_min_row_3{
+	min-height : 72px;
+}
+
+.inputter_min_row_4{
+	min-height : 96px;
+}
+
+.inputter_min_row_5{
+	min-height : 120px;
+}
+
+
+
+.inputter_max_row_1{
+	max-height : 24px;
+}
+
+.inputter_max_row_2{
+	max-height : 48px;
+}
+
+.inputter_max_row_3{
+	max-height : 72px;
+}
+
+.inputter_max_row_4{
+	max-height : 96px;
+}
+
+.inputter_max_row_5{
+	max-height : 120px;
+}
+
+
+.inputter_ico{
+	width:auto;
+	height:30px;
+	font-size: 30px;
+	cursor: pointer; 
+	cursor: hand;
+	color : #FBA026;
+}
+
+.inputter_content{
+	height:auto;
+}
+.inputter_menu_wrapper{
+	position : absolute;
+	top : 10px;
+	right : 0;
+	width : auto;
+	height : auto;
+	overflow: hidden;
+
+}
+.inputter_menu_wrapper ul{
+	width : auto;
+	height : auto;
+	overflow : hidden;
+}
+
+.inputter_menu_wrapper ul li{
+	float : right;
+	margin-right:10px;
+	margin-bottom: 10px;
+}
+
+
+.margin-right-1{
+	margin-right:40px;
+}
+
+
+.margin-right-2{
+	margin-right:80px;
+}
+
+.margin-right-3{
+	margin-right:120px;
+}
+
+.margin-right-4{
+	margin-right:160px;
+}
+
+.margin-right-5{
+	margin-right:200px;
+}
+
+.inputter_uploading_wrapper{
+	height: auto;
+}
+
+.inputter_uploading_wrapper ul{
+	height: auto;
+	text-align: left;
+}
+
+.inputter_uploading_wrapper ul li
+{
+	height: 30px;
+    text-align: center;
+    display: inline-block;
+    max-width: 50px;
+    overflow: hidden;
+    margin: 5px 5px;
+    vertical-align: text-top;
+}
+
+.inputter_uploading_wrapper ul li img
+{
+	height:30px;
+	width:auto;
+}
+
+.inputter_uploading_wrapper ul li span
+{
+	font-size: 25px;
+}
+    
+
+@media only screen and (max-width: 1279px){
+	.inputter_line_10{
+		border-top: none;
+	}
+
+	.inputter_line_01{
+		border-top:  1px solid #FBA026;
+	}
+
+	.inputter_menu_wrapper ul{
+		float:right;
+	}
+
+	.mobile_hide{
+		display : none;
+	}
+
+
+
+	.mobile-margin-right-1{
+		margin-right:40px !important;
+	}
+
+
+	.mobile-margin-right-2{
+		margin-right:80px !important;
+	}
+
+	.mobile-margin-right-3{
+		margin-right:120px !important;
+	}
+
+	.mobile-margin-right-4{
+		margin-right:160px !important;
+	}
+
+	.mobile-margin-right-5{
+		margin-right:200px !important;
+	}
+
+
+
+	.inputter_mobile_min_row_1{
+		min-height : 24px !important;
+	}
+
+	.inputter_mobile_min_row_2{
+		min-height : 48px !important;
+	}
+
+	.inputter_mobile_min_row_3{
+		min-height : 72px !important;
+	}
+
+	.inputter_mobile_min_row_4{
+		min-height : 96px !important;
+	}
+
+	.inputter_mobile_min_row_5{
+		min-height : 120px !important;
+	}
+
+	.inputter_mobile_max_row_1{
+		max-height : 24px !important;
+	}
+
+	.inputter_mobile_max_row_2{
+		max-height : 48px !important;
+	}
+
+	.inputter_mobile_max_row_3{
+		max-height : 72px !important;
+	}
+
+	.inputter_mobile_max_row_4{
+		max-height : 96px !important;
+	}
+
+	.inputter_mobile_max_row_5{
+		max-height : 120px !important;
+	}
+
+	.inputter_mobile_backgroup_gray{
+		background-color: #EFEFEF;
+	}
+
+	.inputter_mobile_input_border_orange{
+		border-radius: 3px;
+		background-color: #fffdfd;
+		border : 1px solid #FBA026 !important;
+		border-color:#FBA026 !important;
+	}
+
+	.inputter_uploading_wrapper{
+		display: none;
+	}
+
+}
+
+
+/*.inputter_container{
 	border-top:  1px solid #FBA026;
 	background-color: #ffffff;
 	padding: 10px 0;
@@ -157,9 +435,6 @@
 	    display: none;
 	}
 
-	
-
-
-}
+}*/
 
 

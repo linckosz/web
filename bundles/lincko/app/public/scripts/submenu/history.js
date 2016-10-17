@@ -879,7 +879,7 @@ chatFeed.prototype.app_chat_feed_uploading_file = function()
 		}
 		catch(e)
 		{
-
+			
 		}
 
 		var record =
