@@ -77,9 +77,10 @@ Submenu.prototype.Add_ChatContents = function() {
 	position.addClass('overthrow').addClass("submenu_chat_contents");
 
 	var submenu_wrapper_id = submenu_wrapper.prop("id");
-	that.param.chatFeed = new chatFeed(id,type,position,that);
+
 
 	if (type == 'history') {
+		that.param.chatFeed = new historyFeed(id,type,position,that);
 		app_models_notifier.clearNotification('projects', id);
 		var hist = Lincko.storage.hist(null, -1, false, 'projects', id, false);
 		if(hist.length > 0)
@@ -107,6 +108,7 @@ Submenu.prototype.Add_ChatContents = function() {
 		}, [that.id, id, that.param.chatFeed, position]);
 	}
 	else {
+		that.param.chatFeed = new chatFeed(id,type,position,that);
 		app_models_notifier.clearNotification('chats', id);
 		
 		app_application_lincko.add(this.id+"_chat_contents_wrapper", "chats_" + id, function() {
@@ -204,7 +206,8 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 					app_submenu_scrollto(myIScrollList[overthrow_id], last[0], scroll_time);
 				}
 
-				var list = data_msg.partial[wrapper_localstorage.uid].comments;
+				var key = type == 'projects' ? 'comments' : 'messages';
+				var list = data_msg.partial[wrapper_localstorage.uid][key];
 				$.each(list,function(key,data){
 					if(typeof app_models_chats_send_queue[list[key]['temp_id']] !== 'undefined'){
 						delete app_models_chats_send_queue[list[key]['temp_id']] ;

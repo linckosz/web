@@ -362,7 +362,7 @@ inputter.prototype.buildLayer = function()
 				{
 					var fn = that.layer['enter'];
 					fn(msg);
-					this.html('');
+					$(this).html('');
 					$('.empty_show').removeClass('mobile_hide');
 					$('.empty_hide').addClass('mobile_hide');
 					return;
@@ -379,6 +379,12 @@ inputter.prototype.buildLayer = function()
 	setTimeout(function(){
 		input.find('[find=chat_textarea]').get(0).focus();
 	},200);
+
+
+	input.find('[find=chat_textarea]').focus(function(){
+		submenu_resize_content();
+	});
+	
 	
 
 
