@@ -1335,7 +1335,7 @@ Submenu.prototype.Add_taskdetail = function() {
 				submenu_taskdetail.find('.submenu_taskdetail_comments_main').append(taskdetail_generateCommentBubble(commentObj, item['_id'], sendAction_newComment));
 			}
 			else{
-				submenu_taskdetail.find('[comment_id=new]').closest('.submenu_taskdetail_commentbubble').replaceWith(taskdetail_generateCommentBubble(commentObj, item['_id'], sendAction_newComment));
+				submenu_taskdetail.find('[comment_id=new]').closest('.submenu_taskdetail_commentbubble[parent_id='+parent_id+']').replaceWith(taskdetail_generateCommentBubble(commentObj, item['_id'], sendAction_newComment));
 			}
 			var elem_commentCount = elem_submenu_taskdetail_comments.find('[find=commentCount]');
 			var commentCount = parseInt(elem_commentCount.html(),10);
@@ -1457,12 +1457,14 @@ Submenu.prototype.Add_taskdetail = function() {
 	});
 	elem_addNewComment_text.keyup(function (event) {
 		if (event.keyCode == 13) {
-			sendAction_newComment(that.param.type, taskid, elem_addNewComment_text.val());
-			elem_addNewComment_text.blur();
+			sendAction_newComment(that.param.type, taskid, $(this).val());
+			$(this).val('').blur();
 		}
 	});
 	elem_addNewComment_text.focusout(function(event){
-		toggleNewComment();
+		if(!$.trim(elem_addNewComment_text.val()).length){
+			toggleNewComment();
+		}
 	});
 
 	/*attach collapsable_fn*/
@@ -2161,7 +2163,8 @@ var taskdetail_generateNewCommentBubble = function(parent_type, parent_id, sendA
 	}
 
 	var elem_newCommentBubble = $('#-submenu_taskdetail_commentbubble').clone().prop('id','')
-		.addClass('submenu_taskdetail_commentbubble_me submenu_taskdetail_commentbubble_addNew');
+		.addClass('submenu_taskdetail_commentbubble_me submenu_taskdetail_commentbubble_addNew')
+		.attr('parent_id', parent_id);
 	if(parent_type == 'comments'){
 		elem_newCommentBubble.addClass('submenu_taskdetail_commentbubble_sub');
 	}
@@ -2179,7 +2182,9 @@ var taskdetail_generateNewCommentBubble = function(parent_type, parent_id, sendA
 	});
 	if(blurRemove){
 		elem_addNewComment_text.focusout(function(){
-			elem_newCommentBubble.recursiveRemove();
+			if(!$.trim(elem_addNewComment_text.val()).length){
+				elem_newCommentBubble.recursiveRemove();
+			}
 		});
 	}
 
@@ -2286,10 +2291,17 @@ var taskdetail_generateCommentBubble = function(comment, root_id, sendAction_rep
 			if(!Lincko.storage.get('comments',parentID)){
 				return false;
 			}
-
-			var elem_replyBubble = taskdetail_generateNewCommentBubble('comments', parentID, sendAction_reply);
-			elem_replyTo.after(elem_replyBubble);
-			elem_replyBubble.find('[find=addNewComment_text]').focus();
+			
+			//check if next sibling is already a new comment input
+			var elem_nextSibling = elem_replyTo.next().eq(0);
+			if(elem_nextSibling.length && elem_nextSibling.attr('parent_id') == parentID && elem_nextSibling.find('[comment_id=new]').length){//if true, the next sibling is already an input
+				elem_nextSibling.find('input[find=addNewComment_text]').focus();
+			}
+			else{
+				var elem_replyBubble = taskdetail_generateNewCommentBubble('comments', parentID, sendAction_reply);
+				elem_replyTo.after(elem_replyBubble);
+				elem_replyBubble.find('[find=addNewComment_text]').focus();
+			}			
 		});
 	}
 	return elem;
