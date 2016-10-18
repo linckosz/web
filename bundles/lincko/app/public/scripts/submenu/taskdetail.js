@@ -1054,7 +1054,8 @@ Submenu.prototype.Add_taskdetail = function() {
 	var elem_links = $('#-submenu_taskdetail_links').clone().prop('id','submenu_taskdetail_link_'+that.md5id);
 	elem_links.find('[find=new_btn]').click(function(){
 		if(taskid == 'new'){//if 'new' then use queue
-			app_upload_open_files('projects', that.param.projID, false, true, {link_queue: true});
+			app_upload_open_files('projects', that.param.projID, false, false, that.param.uniqueID);
+			//app_upload_open_files('projects', that.param.projID, false, true, {link_queue: true});
 		}
 		else{
 			app_upload_open_files(that.param.type, taskid, false, true);
@@ -1575,6 +1576,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			if( (taskid == 'new' && route_delete) || this.action_param.cancel || (item.deleted_at && !route_delete)){
 				//clear any links in the queue that came from this submenu
 				taskdetail_linkQueue.clearQueue_uniqueID(that.param.uniqueID);
+				taskdetail_uploadManager(that.param.uniqueID, null, null, null, true);
 				if(that.param.type == 'tasks'){
 					taskdetail_subtaskQueue.clearQueue(that.param.uniqueID);
 				}
@@ -1602,6 +1604,7 @@ Submenu.prototype.Add_taskdetail = function() {
 							if(that.param.type == 'tasks'){
 								taskdetail_subtaskQueue.runQueue(that.param.uniqueID, item_real._id);
 							}
+							taskdetail_uploadManager(that.param.uniqueID, null, item_real._type, item_real._id);
 						}
 					}
 				}
@@ -1612,6 +1615,7 @@ Submenu.prototype.Add_taskdetail = function() {
 					if(that.param.type == 'tasks'){
 						taskdetail_subtaskQueue.clearQueue(that.param.uniqueID);
 					}
+					taskdetail_uploadManager(that.param.uniqueID, null, null, null, true);
 				}
 			}
 
@@ -1866,7 +1870,8 @@ Submenu.prototype.Add_taskdetail = function() {
 
 
 					$.each(app_upload_files.lincko_files, function(i, lincko_file){
-						if(lincko_file.lincko_parent_type == that.param.type && lincko_file.lincko_parent_id == taskid){ //if parent type and id matches
+						if((lincko_file.lincko_parent_type == that.param.type && lincko_file.lincko_parent_id == taskid) 
+							|| lincko_file.lincko_param == that.param.uniqueID ){ //if parent type and id matches
 							var temp_id = lincko_file.lincko_temp_id;
 							var progress = lincko_file.lincko_progress;
 							var status = lincko_file.lincko_status;
@@ -1893,13 +1898,23 @@ Submenu.prototype.Add_taskdetail = function() {
 								var bar_container = $('<div>').attr('find', 'bar_container').html('<div find="bar"></div>');
 								elem_linkcard.find('[find=title]').text(lincko_file.lincko_name).after(bar_container);
 
+								elem_linkcard.find('[find=removeIcon]').click(function(){
+									taskdetail_uploadManager(that.param.uniqueID, temp_id, null, null, true);
+									elem_linkcard.velocity('slideUp',{
+										complete: function(){
+											elem_linkcard.recursiveEmpty().remove();
+											//elem_linkcard.recursiveRemove(); toto
+										},
+									});
+
+								});
+
 								elem.find('[find=links_wrapper]').append(elem_linkcard);
 							}
 
 						}
 					});
 				}
-
 
 
 				if(!item._files && !item._notes){
@@ -1923,15 +1938,14 @@ Submenu.prototype.Add_taskdetail = function() {
 						addTo_linksWrapper(elem, 'notes', id);
 					}
 				});
-
 			}
 		);
 	}
-	if(!item.fake && taskid != 'new'){ registerSync_links(); }
+	if(!item.fake){ registerSync_links(); }
 	
 
-	//if 'new', will override the sync function above
-	if(taskid == 'new'){
+	//if 'new', will override the sync function above ***taskdetail_linkQueue no longer used***
+	/*if(taskid == 'new'){
 		app_application_lincko.add(
 			'submenu_taskdetail_link_'+that.md5id,
 			'show_queued_links',
@@ -1950,7 +1964,7 @@ Submenu.prototype.Add_taskdetail = function() {
 				elem_links.find('[find=linkCount]').text(linkCount);
 			}
 		);
-	}
+	}*/
 
 	var registerSync_comments = function(){
 		app_application_lincko.add(
@@ -2375,6 +2389,48 @@ var taskdetail_makeFakeComment = function(text, parentType, parentID, fakeID, te
 
 	return Lincko.storage.data.comments[fakeID];
 }
+
+
+//function used for new tasks
+//manages app_upload_files object
+var taskdetail_uploadManager = function(uniqueID, temp_id, new_parent_type, new_parent_id, remove){
+	if(!uniqueID){ return false; }
+
+	var operation = null;
+	if(remove){
+		operation = function(i){//delete
+			var e; //undefined
+			$('#app_upload_fileupload').fileupload('option').destroy(e, app_upload_files.lincko_files[i]);
+		}
+	}
+	else{
+		operation = function(i){//start upload
+			if(new_parent_type){
+				app_upload_files.lincko_files[i].lincko_parent_type = new_parent_type;
+			}
+			if(new_parent_id){
+				app_upload_files.lincko_files[i].lincko_parent_id = new_parent_id;
+			}
+			app_upload_files.lincko_files[i].submit();
+		}
+	}
+	
+	$.each(app_upload_files.lincko_files, function(i, lincko_file){
+		if(lincko_file.lincko_param == uniqueID ){
+			if(temp_id){
+				if(temp_id == lincko_file.lincko_temp_id){
+					operation(i);
+				}
+			}
+			else{
+				operation(i);
+			}
+		}
+	});
+
+}
+
+
 
 
 /*
