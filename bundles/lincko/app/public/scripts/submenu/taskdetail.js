@@ -1451,7 +1451,7 @@ Submenu.prototype.Add_taskdetail = function() {
 
 	
 	elem_addNewComment_btn.click(function(){
-		elem_addNewComment_text.recursiveEmpty();
+		elem_addNewComment_text.empty(); //DONT USE .recursiveEmpty() HERE! it will remove the keyup and focusout events
 		toggleNewComment();
 		elem_addNewComment_text.focus();
 	});
