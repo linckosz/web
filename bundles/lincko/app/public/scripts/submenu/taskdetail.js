@@ -2093,7 +2093,7 @@ Submenu.prototype.Add_taskdetail = function() {
 
 
 //check description for any broken images, and updated them of image is available
-var taskdetail_clean_descriptionFiles = function(elem_description){
+var taskdetail_clean_descriptionFiles = function(elem_description){ //this function breaks if temp_id is not available
 	var elem_tempFiles = elem_description.find('span[temp_id]');
 	if(elem_tempFiles.length){
 		$.each(elem_tempFiles, function(i, elem){
