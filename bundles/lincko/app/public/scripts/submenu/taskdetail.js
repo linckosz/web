@@ -2013,18 +2013,29 @@ Submenu.prototype.Add_taskdetail = function() {
 	var elem_description_text = submenu_wrapper.find('[find=description_text]').prop('contenteditable','true').prop('id','submenu_taskdetail_description_text_'+that.md5id);
 
 	//div for the toolbar
-	var elem_editorToolbar = $('<div>').prop('id','submenu_taskdetail_description_toolbar_'+that.md5id).addClass('taskdetail_editorToolbar needsclick');
+	var elem_editorToolbar = $('<div>').prop('id','submenu_taskdetail_description_toolbar_'+that.md5id).addClass('taskdetail_editorToolbar needsclick').css('visibility', 'hidden');
 	elem_description_text.before(elem_editorToolbar);
 
+
+
 	var editorInst = null;
-	elem_editorToolbar.click(function(){
+	var editor_param = {};
+	editor_param.itemID = item['_id'];
+	editor_param.submenuInst = that;
+	editorInst = linckoEditor('submenu_taskdetail_description_text_'+that.md5id, 'submenu_taskdetail_description_toolbar_'+that.md5id, editor_param/*, elem_links.find('[find=new_btn]')*/);
+
+
+
+	/*elem_editorToolbar.click(function(){ return;
 		if(!editorInst){
 			elem_description_text.focus();
 		}
-	});
-	elem_description_text.focus(function(){
+	});*/
+	elem_description_text.focus(function(){ 
+		elem_editorToolbar.removeAttr('style');
+		$(this).off('focus');
+		return;
 		if(!editorInst){
-
 			var param = {};
 			param.itemID = item['_id'];
 			param.submenuInst = that;
