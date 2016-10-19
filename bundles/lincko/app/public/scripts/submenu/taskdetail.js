@@ -2028,8 +2028,10 @@ Submenu.prototype.Add_taskdetail = function() {
 	var editor_param = {};
 	editor_param.itemID = item['_id'];
 	editor_param.submenuInst = that;
-	editorInst = linckoEditor('submenu_taskdetail_description_text_'+that.md5id, 'submenu_taskdetail_description_toolbar_'+that.md5id, editor_param/*, elem_links.find('[find=new_btn]')*/);
-
+	if(that.param.type != 'files'){
+		editorInst = linckoEditor('submenu_taskdetail_description_text_'+that.md5id, 'submenu_taskdetail_description_toolbar_'+that.md5id, editor_param/*, elem_links.find('[find=new_btn]')*/);
+	}
+	
 
 
 	/*elem_editorToolbar.click(function(){ return;
