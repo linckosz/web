@@ -376,9 +376,13 @@ inputter.prototype.buildLayer = function()
 		}
 	});
 
-	setTimeout(function(){
+
+	if(!supportsTouch){
+		setTimeout(function(){
 		input.find('[find=chat_textarea]').get(0).focus();
-	},200);
+		},200);
+	}
+	
 
 
 	input.find('[find=chat_textarea]').focus(function(){

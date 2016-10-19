@@ -27,7 +27,6 @@ var chatFeed = function(id,type,position,submenu)
 	this.records = [] ;
 	
 	this.create_iscroll_container();
-
 	this.app_chat_feed_data_init();
 	this.app_chat_feed_layer_display();
 	this.app_chat_feed_temp_history();
@@ -44,7 +43,7 @@ var chatFeed = function(id,type,position,submenu)
 		IScroll.on('scrollEnd', function(){
 			if(this.collecting)
 			{
-				setTimeOut(function(){
+				setTimeout(function(){
 						if(this.y == 0 && !that.loading){
 						that.loading = true;
 						that.position.find(".models_history_loading").remove();
@@ -220,7 +219,7 @@ chatFeed.prototype.app_chat_feed_more_msg = function(){
 				{
 					that.msg_over = true;
 				}
-				setTimeOut(function(){
+				setTimeout(function(){
 					that.collecting = false;
 				},500);
 				
