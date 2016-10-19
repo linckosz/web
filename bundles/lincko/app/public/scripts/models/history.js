@@ -31,6 +31,7 @@ var app_models_history = {
 		var root_name;
 		var name;
 		var comment;
+		var message;
 		var content;
 		var src;
 		var perso;
@@ -197,6 +198,30 @@ var app_models_history = {
 										info[i].content = hist_info.content;
 									}
 								}
+							}
+						}
+					} else if(hist_all[i]["type"]=="messages"){
+						if(root_item["single"]){ //Single user to Single User
+							message = Lincko.storage.get("messages", hist_all[i]["id"]);
+							if(message['recalled_by']){
+								var uname = wrapper_to_html(Lincko.storage.get('users', hist_all[i]["by"])['-username']);
+								info[i].content = Lincko.Translation.get('app', 3101, 'html', {username: uname }); //has recalled a message
+							} else {
+								info[i].content = message['+comment'];
+							}
+						} else { //Chats and Projects
+							message = Lincko.storage.get("messages", hist_all[i]["id"]);
+							if(message['recalled_by']){
+								var uname = wrapper_to_html(Lincko.storage.get('users', hist_all[i]["by"])['-username']);
+								info[i].content = Lincko.Translation.get('app', 3101, 'html', {username: uname }); //has recalled a message
+							} else {
+								var hist_info = Lincko.storage.getHistoryInfo(hist_all[i]);
+								if(hist_info.content===false){
+									//We don't display the message that the user is not concerned
+									continue;
+								}
+								info[i].by = hist_all[i]["by"];
+								info[i].content = hist_info.content;
 							}
 						}
 					} else {
