@@ -4,12 +4,16 @@ function app_models_chats_bubble_actionMenu(){
 	var untranslate_str = Lincko.Translation.get('app', 57, 'html'); //untranslate
 	var timeout_fn = function(that){
 		that.find('[find=content]').focus();
-		var elem_historyWrapper = that.closest('.models_history_wrapper');
-		var category = elem_historyWrapper.attr('category');
+
+		var elem_historyWrapper = that.closest('[category=comments]').length < 1 
+		? that.closest('[category=messages]') : that.closest('[category=comments]')  ;
 		var elem_actionMenu = that.find('[find=actionMenu]');
+
 		if(elem_actionMenu.length || elem_historyWrapper.length < 1){
 			return false;
 		}
+
+		var category = elem_historyWrapper.attr('category');
 		var commentID = elem_historyWrapper.attr(category+'_id');
 		var item_comment = Lincko.storage.get(category, commentID);
 
