@@ -42,7 +42,6 @@ var chatFeed = function(id,type,position,submenu)
 	wrapper_IScroll_cb_creation[that.position.prop('id')] = function(){
 		var IScroll = myIScrollList[that.position.prop('id')];
 		IScroll.on('scrollEnd', function(){
-			debugger;
 			if(this.collecting)
 			{
 				setTimeOut(function(){
@@ -55,7 +54,7 @@ var chatFeed = function(id,type,position,submenu)
 						IScroll.scrollToElement(first_li.get(0), 0, 0, -30);
 						that.loading = false;
 					}
-				},1000);
+				},2000);
 			}
 			else
 			{
@@ -215,7 +214,6 @@ chatFeed.prototype.app_chat_feed_more_msg = function(){
 			'post',
 			 'message/collect',
 			function(msg, data_error, data_status, data_msg) {//result
-				debugger;
 				var length = Object.keys(data_msg.partial[wrapper_localstorage.uid]['messages']).length;
 				that.msg_hide_count = that.msg_hide_count + length;
 				if(length < that.page_count * 20)
@@ -224,7 +222,7 @@ chatFeed.prototype.app_chat_feed_more_msg = function(){
 				}
 				setTimeOut(function(){
 					that.collecting = false;
-				},2000);
+				},500);
 				
 			},
 			null,
