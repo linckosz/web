@@ -737,7 +737,7 @@ skylist.prototype.isDueThisTime = function(item, time){
 	return isDueThisTime;
 }
 
-skylist.prototype.list_filter = function(){
+skylist.prototype.list_filter = function(filter_type){
 	var that = this;
 	that.list_wrapper.attr('view', that.Lincko_itemsList_filter.view);
 	that.generate_Lincko_itemsList();
@@ -750,7 +750,9 @@ skylist.prototype.list_filter = function(){
 		items_filtered = that.filter_by_sort_alt( items_filtered, that.Lincko_itemsList_filter.sort_alt );
 		items_filtered = that.filter_by_hide_completed( items_filtered, that.Lincko_itemsList_filter.hide_completed );
 	}
-	that.filter_updateSettings();
+	if(filter_type != 'search'){ //dont update settings object if it is just search
+		that.filter_updateSettings();
+	}
 
 	return items_filtered;
 }
@@ -761,7 +763,7 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 	if( type ){
 		that.Lincko_itemsList_filter[type] = filter_by;
 	}
-	var items_filtered = that.list_filter();
+	var items_filtered = that.list_filter(type, filter_by);
 
 	var iscroll_elem;
 	var cards_elem;
