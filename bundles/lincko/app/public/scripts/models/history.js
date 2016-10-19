@@ -163,6 +163,7 @@ var app_models_history = {
 						} else if(root_item["single"]){ //Single user to Single User
 							comment = Lincko.storage.get("comments", hist_all[i]["id"]);
 							if(comment['recalled_by']){
+								continue; //Don't display any recalled
 								if(root_item["_type"]=="projects"){
 									//We don't display recalled messages in activity short description
 									continue;
@@ -175,6 +176,7 @@ var app_models_history = {
 						} else { //Chats and Projects
 							comment = Lincko.storage.get("comments", hist_all[i]["id"]);
 							if(comment['recalled_by']){
+								continue; //Don't display any recalled
 								if(root_item["_type"]=="projects"){
 									//We don't display recalled messages in activity short description
 									continue;
@@ -204,6 +206,7 @@ var app_models_history = {
 						if(root_item["single"]){ //Single user to Single User
 							message = Lincko.storage.get("messages", hist_all[i]["id"]);
 							if(message['recalled_by']){
+								continue; //Don't display any recalled
 								var uname = wrapper_to_html(Lincko.storage.get('users', hist_all[i]["by"])['-username']);
 								info[i].content = Lincko.Translation.get('app', 3101, 'html', {username: uname }); //has recalled a message
 							} else {
@@ -212,6 +215,7 @@ var app_models_history = {
 						} else { //Chats and Projects
 							message = Lincko.storage.get("messages", hist_all[i]["id"]);
 							if(message['recalled_by']){
+								continue; //Don't display any recalled
 								var uname = wrapper_to_html(Lincko.storage.get('users', hist_all[i]["by"])['-username']);
 								info[i].content = Lincko.Translation.get('app', 3101, 'html', {username: uname }); //has recalled a message
 							} else {
