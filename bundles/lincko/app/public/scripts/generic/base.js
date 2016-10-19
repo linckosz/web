@@ -125,3 +125,31 @@ function base_form_field_show_error(input){
 		},
 	});
 }
+
+/*
+	elem: DOM element ID in string form
+	fn_run: function to run when the DOM elem specified above is ready
+	after creating an instance, use the instance.run function to start the DOM check
+*/
+function base_runOnElemLoad(elem, fn_run){
+	if(!elem || typeof fn_run != 'function'){ return false; }
+
+	this.that = this;
+	var that = this;
+
+	that.elem = elem;
+	that.fn_run = fn_run;
+
+}
+base_runOnElemLoad.prototype.run = function(checkTime){
+	var that = this;
+	if(typeof checkTime != 'number'){ var checkTime = 50; /*default*/ }
+
+	if($('#'+that.elem).is(':visible')){
+		that.fn_run();
+		delete that;
+	}
+	else{
+		setTimeout(function(){ that.run(checkTime); }, checkTime);
+	}
+}

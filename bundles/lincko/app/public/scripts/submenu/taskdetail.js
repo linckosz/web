@@ -2047,7 +2047,23 @@ Submenu.prototype.Add_taskdetail = function() {
 	editor_param.itemID = item['_id'];
 	editor_param.submenuInst = that;
 	if(that.param.type != 'files'){
-		editorInst = linckoEditor('submenu_taskdetail_description_text_'+that.md5id, 'submenu_taskdetail_description_toolbar_'+that.md5id, editor_param/*, elem_links.find('[find=new_btn]')*/);
+
+		var onLoad_description = new base_runOnElemLoad('submenu_taskdetail_description_text_'+that.md5id, 
+			function(){
+				 editorInst = linckoEditor('submenu_taskdetail_description_text_'+that.md5id, 'submenu_taskdetail_description_toolbar_'+that.md5id, editor_param);
+
+				 if(taskid == 'new'){
+					if(that.param.type == 'tasks'){
+						elem_title_text.focus();
+					}
+					else if(that.param.type == 'notes'){
+						elem_description_text.focus();
+					}
+				}
+			}
+		);
+		onLoad_description.run();
+
 	}
 	
 
@@ -2065,6 +2081,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			var param = {};
 			param.itemID = item['_id'];
 			param.submenuInst = that;
+
 			editorInst = linckoEditor('submenu_taskdetail_description_text_'+that.md5id, 'submenu_taskdetail_description_toolbar_'+that.md5id, param/*, elem_links.find('[find=new_btn]')*/);
 		}
 	});
@@ -2102,25 +2119,6 @@ Submenu.prototype.Add_taskdetail = function() {
 		}
 	});*/
 	/*----------END OF EASY EDITOR SETUP---------------------------------------------*/
-
-	//set the focus upon opening detail pane
-	if(taskid == 'new'){
-		if(that.param.type == 'tasks'){
-			/*app_application_lincko.add(submenu_taskdetail.prop('id'), 'submenu_show', function(){
-				console.log('submenu_show tasklist');
-				console.log(elem_title_text);
-				elem_title_text.focus();
-			});*/
-			setTimeout(function(){
-				elem_title_text.focus();
-			},300);
-		}
-		else if(that.param.type == 'notes'){
-			setTimeout(function(){
-				elem_description_text.focus();
-			},300);
-		}
-	}
 
 	//Free memory
 	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
