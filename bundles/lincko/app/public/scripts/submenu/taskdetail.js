@@ -1612,12 +1612,16 @@ Submenu.prototype.Add_taskdetail = function() {
 				}
 				tmpID = null;
 			}
+			var cb_error = function(){
+				if(taskid == 'new'){
+					taskdetail_uploadManager(that.param.uniqueID, null, null, null, true);
+				}
+			}
 			var cb_complete = function(){
 				if(taskid == 'new'){
 					if(that.param.type == 'tasks'){
 						taskdetail_subtaskQueue.clearQueue(that.param.uniqueID);
 					}
-					taskdetail_uploadManager(that.param.uniqueID, null, null, null, true);
 				}
 			}
 
@@ -1716,10 +1720,10 @@ Submenu.prototype.Add_taskdetail = function() {
 					route += '/update';
 				}
 				if(taskid != 'new' && route == 'task/update'){
-					skylist.sendAction.tasks(param, item, route, cb_success, null, cb_begin, cb_complete);
+					skylist.sendAction.tasks(param, item, route, cb_success, cb_error, cb_begin, cb_complete);
 				}
 				else{
-					wrapper_sendAction( param,'post',route, cb_success, null, cb_begin, cb_complete);
+					wrapper_sendAction( param,'post',route, cb_success, cb_error, cb_begin, cb_complete);
 				}
 			}
 		}, this
