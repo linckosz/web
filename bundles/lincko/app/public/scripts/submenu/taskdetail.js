@@ -1831,29 +1831,47 @@ Submenu.prototype.Add_taskdetail = function() {
 		var elem_linksWrapper = elem.find('[find=links_wrapper]');
 		var elem_toAdd = generate_linkCard(type, id);
 		var temp_id = Lincko.storage.get(type, id, 'temp_id');
-		var elem_temp = null;
+		var elem_temp = [];
 		if(temp_id){
 			elem_temp = elem_linksWrapper.find('[temp_id='+temp_id+']');
-			if(elem_temp.length){
-				elem_temp.replaceWith(elem_toAdd);
-			}
+		}
+		if(elem_temp.length){
+			elem_temp.replaceWith(elem_toAdd);
 		}
 		else{
 			elem_linksWrapper.append(elem_toAdd);
 			elem_toAdd.velocity('slideDown', {
 				mobileHA: hasGood3Dsupport,
+				complete: function(){
+					myIScrollList[submenu_content.prop('id')].refresh();
+				}
 			});
 		}
-		myIScrollList[submenu_content.prop('id')].refresh();
 	}
 
 	var registerSync_links = function(){
 		app_application_lincko.add(
 			'submenu_taskdetail_link_'+that.md5id,
-			[that.param.type+'_'+item['_id'], 'upload'],
+			[that.param.type+'_'+item['_id'], 'upload', 'show_queued_links'/*for new tasks/notes adding exising files/notes*/],
 			function(){
 				var elem = $('#'+this.id);
 				var item = Lincko.storage.get(that.param.type, taskid);
+
+				//for show_queued_links
+				if(this.updated && this.updated.show_queued_links){
+					$.each(taskdetail_linkQueue.queue, function(temp_id, obj){
+						if(obj.uniqueID == that.param.uniqueID && !obj.visible){
+							var item = Lincko.storage.get(obj.type, obj.id);
+							if(item){
+								addTo_linksWrapper(elem, obj.type, obj.id);
+								taskdetail_linkQueue.queue[temp_id].visible = true;
+							}
+						}
+					});
+					var linkCount = elem.find('.submenu_taskdetail_links_card').length;
+					elem_links.find('[find=linkCount]').text(linkCount);
+				}
+
 
 				//for upload
 				if(this.updated && this.updated.upload){
