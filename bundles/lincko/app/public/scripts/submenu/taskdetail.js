@@ -755,7 +755,7 @@ Submenu.prototype.Add_taskdetail = function() {
 
 		var generate_subtaskCard = function(task_id, title){
 			var subtask = null;
-			var elem_subtaskCard = $('#-submenu_taskdetail_subtasks_card').clone().prop('id','');
+			var elem_subtaskCard = $('#-submenu_taskdetail_subtasks_card').clone().prop('id','').removeClass('skylist_clickable');
 			if(task_id){
 				subtask = Lincko.storage.get('tasks', task_id);
 			}

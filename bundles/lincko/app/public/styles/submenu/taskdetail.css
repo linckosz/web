@@ -363,10 +363,13 @@ td.submenu_taskdetail_share .fa{
     padding-bottom: 4px;
 }
 .submenu_taskdetail_subtasks_card [find=checkbox]{
+	cursor: pointer;
+    cursor: hand;
 	margin: 0px 4px;
 	border: solid 1px #615577;
     border-radius: 4px;
     font-size: 15px;
+
 }
 .submenu_taskdetail_subtasks_card [find=checkbox]:before{
 	visibility: hidden;
