@@ -1686,8 +1686,8 @@ function burger_calendar_linckofy(inst, inline_datepicker){
 		*/
 
 		elem_datepicker.prepend(elem_calendarPrepend);
-		elem_datepicker.find('.ui-datepicker-next').recursiveEmpty().addClass('icon-Forward');
-		elem_datepicker.find('.ui-datepicker-prev').recursiveEmpty().addClass('icon-Forward fa-flip-horizontal');
+		elem_datepicker.find('.ui-datepicker-next').empty().addClass('icon-Forward'); //DONT USE .recursiveEmpty() HERE
+		elem_datepicker.find('.ui-datepicker-prev').empty().addClass('icon-Forward fa-flip-horizontal'); //DONT USE .recursiveEmpty() HERE
 		var elem_prepend_today = elem_datepicker.find('[find=today_btn]');
 		var elem_prepend_tomorrow =  elem_datepicker.find('[find=tomorrow_btn]');
 		var elem_prepend_twoDays = elem_datepicker.find('[find=twoDays_btn]');
