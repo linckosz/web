@@ -146,6 +146,7 @@ BaseItemCls.prototype.item_display = function(position,subm,mode)
 		elem.addClass(this.data.category);
 
 		if(this.user_id == 0){
+			elem.find(".models_history_content").addClass("report");
 			elem.find("[find=icon]").css('border-color', 'transparent');
 			elem.find("[find=icon]").css('background-image','url("' +  app_application_icon_roboto.src + '")');
 			elem.find("[find=author]").html(Lincko.Translation.get('app', 0, 'html')); 
