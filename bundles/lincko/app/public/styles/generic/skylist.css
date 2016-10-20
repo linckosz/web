@@ -368,7 +368,7 @@
 	right: 0px;
 	opacity: 0;
 	width: 50px;
-	z-index: 1;
+	z-index: 0;
 }
 
 .skylist_card_bottom {
