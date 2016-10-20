@@ -139,7 +139,7 @@ function base_runOnElemLoad(elem, fn_run){
 
 	that.elem = elem;
 	that.fn_run = fn_run;
-
+	that.timeoutVar = null;
 }
 base_runOnElemLoad.prototype.run = function(checkTime){
 	var that = this;
@@ -147,9 +147,11 @@ base_runOnElemLoad.prototype.run = function(checkTime){
 
 	if($('#'+that.elem).is(':visible')){
 		that.fn_run();
+		clearTimeout(that.timeoutVar);
 		delete that;
 	}
 	else{
-		setTimeout(function(){ that.run(checkTime); }, checkTime);
+		clearTimeout(that.timeoutVar);
+		that.timeoutVar = setTimeout(function(){ that.run(checkTime); }, checkTime);
 	}
 }
