@@ -2358,7 +2358,9 @@ skylist.prototype.add_cardEvents = function(Elem){
 	});
 
 	Elem.find('.skylist_leftOptionBox').click(function(event){
+		var canDelete = true;
 		var itemID = Elem.data('item_id');
+		var itemObj = Lincko.storage.get(that.list_type, itemID);
 		var route = '';
 		if( that.list_type == "tasks" ){
 			route = "task/delete";
@@ -2368,9 +2370,12 @@ skylist.prototype.add_cardEvents = function(Elem){
 		}
 		else if( that.list_type == "files" ){
 			route = "file/delete";
+			if(itemObj._tasks || itemObj._notes){
+				canDelete = false;
+			}
 		}
-		
-		if(route && Lincko.storage.canI('delete', that.list_type, itemID)){
+
+		if(canDelete && route && Lincko.storage.canI('delete', that.list_type, itemID) || canDelete){
 			event.stopPropagation();
 			event.preventDefault();
 			var begin_fn = function(){
