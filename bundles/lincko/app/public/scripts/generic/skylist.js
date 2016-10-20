@@ -2722,11 +2722,17 @@ skylist.prototype.paperView_toggleExpandable = function(elem_expandable, cb_comp
 
 skylist.prototype.openDetail = function(/*open,*/ task_elem){
 	var that = this;
+	var item_id = task_elem.data('item_id');
+	var item = Lincko.storage.get(that.list_type, item_id);
+	if(!item || item.fake){ //prevent fake items from opening
+		return false;
+	}
+
 	//that.list.removeClass('skylist_noPreviewLayer');
 	var openSuccess = submenu_Build(
 	'taskdetail', null, null, {
 		"type":that.list_type, 
-		"id":task_elem.data('item_id'),
+		"id":item_id,
 	}, true);
 	if( openSuccess ){
 		that.elem_card_all.removeClass('skylist_card_hover');
