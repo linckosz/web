@@ -1718,16 +1718,16 @@ function burger_calendar_linckofy(inst, inline_datepicker){
 
 		var date = new wrapper_date(parseInt(inst.lastVal,10)/1000);
 		if( date.happensSomeday(0) ){
-			elem_prepend_today.addClass('burger_calenar_prepend_active');
+			elem_prepend_today.addClass('burger_calendar_prepend_active');
 		}
 		else if( date.happensSomeday(1) ){
-			elem_prepend_tomorrow.addClass('burger_calenar_prepend_active');
+			elem_prepend_tomorrow.addClass('burger_calendar_prepend_active');
 		}
 		else if( date.happensSomeday(2) ){
-			elem_prepend_twoDays.addClass('burger_calenar_prepend_active');
+			elem_prepend_twoDays.addClass('burger_calendar_prepend_active');
 		}
 		else if( date.happensSomeday(7) ){
-			elem_prepend_oneWeek.addClass('burger_calenar_prepend_active');
+			elem_prepend_oneWeek.addClass('burger_calendar_prepend_active');
 		}
 	},10);
 

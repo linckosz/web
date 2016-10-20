@@ -1449,7 +1449,7 @@ skylist.prototype.addTask = function(item){
 	//Elem.find('[find=name_hidden]').toggleClass('display_none');
 	Elem.find('[find=name]').html(in_charge);
 	//burger(Elem.find('input[find=name_hidden]'), '_users', item);
-	if( !Lincko.storage.get("projects", app_content_menu.projects_id, 'personal_private') ){
+	if( !Lincko.storage.get("projects", app_content_menu.projects_id, 'personal_private') && !responsive.test("maxMobileL") ){
 		burgerN.assignTask(Elem.find('input[find=name_hidden]'), item);
 	}
 	
@@ -1703,30 +1703,34 @@ skylist.prototype.addTask = function(item){
 
 	elem_calendar.html(duedate);
 	elem_calendar_timestamp.val((item['start']+item['duration'])*1000);
-	burger_calendar(elem_calendar_timestamp, elem_calendar );
-	elem_calendar_timestamp.change(function(){
-		var duration_timestamp = $(this).val()/1000 - item['start'];
-		if( duration_timestamp < 0 ){
-			console.log(item['start']+' duedate cant be before start date.');
-		}
-		else{
-			var route = '';
-			if( that.list_type == "tasks" ){
-				route = 'task/update';
+	
+	//enable calendar burger for landscape tablet and up
+	if(!responsive.test("maxMobileL")){
+		burger_calendar(elem_calendar_timestamp, elem_calendar );
+		elem_calendar_timestamp.change(function(){
+			var duration_timestamp = $(this).val()/1000 - item['start'];
+			if( duration_timestamp < 0 ){
+				console.log(item['start']+' duedate cant be before start date.');
 			}
+			else{
+				var route = '';
+				if( that.list_type == "tasks" ){
+					route = 'task/update';
+				}
 
-			/*wrapper_sendAction({
-				id: item['_id'],
-				duration: duration_timestamp,
-			}, 'post', route);*/
-
-			skylist.sendAction.tasks(
-				{
+				/*wrapper_sendAction({
 					id: item['_id'],
 					duration: duration_timestamp,
-				}, item, route);
-		}
-	});
+				}, 'post', route);*/
+
+				skylist.sendAction.tasks(
+					{
+						id: item['_id'],
+						duration: duration_timestamp,
+					}, item, route);
+			}
+		});
+	}
 
 	/*
 	rightOptions - duedate

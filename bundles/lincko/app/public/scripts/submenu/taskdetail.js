@@ -602,7 +602,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			}
 			
 
-			//---duedate calenar
+			//---duedate calednar
 			var elem_timestamp = elem.find('[find=duedate_timestamp]');
 			var elem_display = elem.find("[find=duedate_text]").addClass('skylist_clickable');
 			elem_timestamp.val((item['start'] + duration_timestamp)*1000);
