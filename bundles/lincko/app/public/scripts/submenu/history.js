@@ -656,7 +656,7 @@ historyFeed.prototype.app_chat_feed_timeline = function(data)
 historyFeed.prototype.create_iscroll_container = function()
 {
 	this.position.addClass('overthrow').addClass("submenu_chat_contents");
-	this.position.recursiveEmpty();
+	this.position.empty();
 	$('<div>').addClass('chat_contents_wrapper').prop('id', this.submenu.id+'_chat_contents_wrapper').appendTo(this.position).append($('#'+'-help_iscroll').clone().prop('id',this.submenu.id+'_help_iscroll'));
 }
 

@@ -1214,7 +1214,7 @@ Submenu.prototype.Hide = function(animate) {
 Submenu.prototype.Remove = function() {
 	var that = this;
 	var stack = this.preview ? submenu_obj["preview"] : submenu_obj["submenu"];
-	$('#' + this.id).recursiveEmpty().hide().recursiveRemove();
+	$('#' + this.id).hide().recursiveRemove();
 	//Free memory
 	stack[this.layer] = null;
 	delete stack[this.layer];
