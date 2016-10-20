@@ -753,10 +753,10 @@ Submenu.prototype.Add_taskdetail = function() {
 		var elem_newSubtask = elem_subtasks.find('[find=newSubtask]');
 		var elem_subtaskCount = elem_subtasks.find('[find=subtaskCount]');
 
-		var generate_subtaskCard = function(task_id, title){
+		var generate_subtaskCard = function(task_id, title){ 
 			var subtask = null;
 			var elem_subtaskCard = $('#-submenu_taskdetail_subtasks_card').clone().prop('id','').removeClass('skylist_clickable');
-			if(task_id){
+			if($.isNumeric(task_id)){
 				subtask = Lincko.storage.get('tasks', task_id);
 			}
 
@@ -908,7 +908,7 @@ Submenu.prototype.Add_taskdetail = function() {
 						if(elem_toUpdate.length){
 							var real_subtask = Lincko.storage.list('tasks',1,{temp_id: tempID})[0];
 							if(real_subtask && real_subtask._id){
-								elem_toUpdate.attr('task_id', real_subtask._id);
+								elem_toUpdate.attr('task_id', real_subtask._id); 
 							}
 						}
 					}
