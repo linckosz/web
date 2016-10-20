@@ -1707,30 +1707,30 @@ skylist.prototype.addTask = function(item){
 	//enable calendar burger for landscape tablet and up
 	if(!responsive.test("maxMobileL")){
 		burger_calendar(elem_calendar_timestamp, elem_calendar );
-		elem_calendar_timestamp.change(function(){
-			var duration_timestamp = $(this).val()/1000 - item['start'];
-			if( duration_timestamp < 0 ){
-				console.log(item['start']+' duedate cant be before start date.');
+	}
+	elem_calendar_timestamp.change(function(){
+		var duration_timestamp = $(this).val()/1000 - item['start'];
+		if( duration_timestamp < 0 ){
+			console.log(item['start']+' duedate cant be before start date.');
+		}
+		else{
+			var route = '';
+			if( that.list_type == "tasks" ){
+				route = 'task/update';
 			}
-			else{
-				var route = '';
-				if( that.list_type == "tasks" ){
-					route = 'task/update';
-				}
 
-				/*wrapper_sendAction({
+			/*wrapper_sendAction({
+				id: item['_id'],
+				duration: duration_timestamp,
+			}, 'post', route);*/
+
+			skylist.sendAction.tasks(
+				{
 					id: item['_id'],
 					duration: duration_timestamp,
-				}, 'post', route);*/
-
-				skylist.sendAction.tasks(
-					{
-						id: item['_id'],
-						duration: duration_timestamp,
-					}, item, route);
-			}
-		});
-	}
+				}, item, route);
+		}
+	});
 
 	/*
 	rightOptions - duedate
