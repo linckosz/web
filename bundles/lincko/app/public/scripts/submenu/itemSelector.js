@@ -30,7 +30,14 @@ submenu_list['itemSelector'] = {
 			if( (!subm.param.item['_id'] || subm.param.item['_id'] == 'new' || subm.param.item['fake']) && subm.param.uniqueID ){
 				$.each(selection, function(type, obj){
 					$.each(obj, function(id, bool){
-						var tempID = Lincko.storage.get(type, id)['temp_id'];
+						taskdetail_linkQueue.queue[id] = {
+							uniqueID: subm.param.uniqueID,
+							parent_type: subm.param.item['_type'],
+							id: id,
+							type: type,
+						}
+
+						/*var tempID = Lincko.storage.get(type, id)['temp_id'];
 						if(tempID){
 							taskdetail_linkQueue.queue[tempID] = {
 								uniqueID: subm.param.uniqueID,
@@ -38,7 +45,7 @@ submenu_list['itemSelector'] = {
 								id: id,
 								type: type,
 							}
-						}
+						}*/
 					});
 				});
 				app_application_lincko.prepare('show_queued_links', true);
