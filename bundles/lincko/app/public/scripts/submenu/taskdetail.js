@@ -586,6 +586,10 @@ Submenu.prototype.Add_taskdetail = function() {
 					if(in_charge_id){
 						var username = Lincko.storage.get("users", in_charge_id, "username");
 						elem_in_charge.html(username);
+						if(!item['_users']){
+							item['_users'] = {};
+						}
+						item['_users'][in_charge_id] = {};
 						item['_users'][in_charge_id]['in_charge'] = true;
 					}
 					else{ //nobody in charnge
