@@ -1737,26 +1737,28 @@ function burger_calendar_linckofy(inst, inline_datepicker){
 
 function burger_calendar (elem_timestamp, elem_display){
 	var elem_input;
-	elem_timestamp.datepicker(
-	{
-		//altFormat: "M d",
-		//altField: elem_alt,
-		dayNamesMin: burgerN.daysVeryShortArray,
-		monthNames: burgerN.monthsArray,
-		showOtherMonths: true,
-		dateFormat: '@',
-		gotoCurrent: true,
-		minDate: 0,
-		showAnim: "slideDown",
-		beforeShow: function(input, inst){
-			$('#ui-datepicker-div').addClass('burger_calendar');
-			elem_input = input;
-			burger_calendar_linckofy(inst);
-		},
-		onChangeMonthYear: function(year, month, inst){
-			burger_calendar_linckofy(inst);
-		},
-	});
+	if(!responsive.test("maxMobileL")){ //attach datepicker directly to the input for landscape tablet and up
+		elem_timestamp.datepicker(
+		{
+			//altFormat: "M d",
+			//altField: elem_alt,
+			dayNamesMin: burgerN.daysVeryShortArray,
+			monthNames: burgerN.monthsArray,
+			showOtherMonths: true,
+			dateFormat: '@',
+			gotoCurrent: true,
+			minDate: 0,
+			showAnim: "slideDown",
+			beforeShow: function(input, inst){
+				$('#ui-datepicker-div').addClass('burger_calendar');
+				elem_input = input;
+				burger_calendar_linckofy(inst);
+			},
+			onChangeMonthYear: function(year, month, inst){
+				burger_calendar_linckofy(inst);
+			},
+		});
+	}
 
 	elem_display.click(function(){
 		elem_timestamp.click();
