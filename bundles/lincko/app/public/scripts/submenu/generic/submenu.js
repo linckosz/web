@@ -239,6 +239,8 @@ function Submenu(menu, next, param, preview) {
 		//Free memory
 		//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
 		delete submenu_wrapper;
+
+		return Elem;
 	}
 	Constructor(this);
 }
@@ -1374,8 +1376,10 @@ function submenu_Build(menu, next, hide, param, preview) {
 			$('#app_application_submenu_block').show();
 			$('#app_content_dynamic').addClass('app_application_submenu_blur');
 		}
-		stack[temp.layer] = temp;
+		var layer = temp.layer;
+		stack[layer] = temp;
 		temp = null;
+		return stack[layer];
 	}
 	return true;
 }
