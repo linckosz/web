@@ -774,7 +774,7 @@ Submenu.prototype.Add_taskdetail = function() {
 				elem_subtaskCard_title.text(subtask['+title']);
 				if(subtask.approved){
 					elem_subtaskCard.addClass('submenu_taskdetail_subtasks_card_checked');
-					elem_subtaskCard.find('[find=title]').attr('contenteditable', false);
+					//elem_subtaskCard.find('[find=title]').attr('contenteditable', false);
 				}
 			}
 			elem_subtaskCard.attr('task_id',task_id);
@@ -807,7 +807,7 @@ Submenu.prototype.Add_taskdetail = function() {
 				subtask = Lincko.storage.get('tasks', task_id);
 				elem_subtaskCard.toggleClass('submenu_taskdetail_subtasks_card_checked');
 				var approved = elem_subtaskCard.hasClass('submenu_taskdetail_subtasks_card_checked');
-				elem_subtaskCard.find('[find=title]').attr('contenteditable', !approved);
+				//elem_subtaskCard.find('[find=title]').attr('contenteditable', !approved);
 				if(!subtask){ //new task
 					taskdetail_subtaskQueue.queue[that.param.uniqueID][task_id].param.approved = approved;
 				}
