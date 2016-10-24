@@ -895,6 +895,7 @@ skylist.prototype.addCard = function(item){
 	if(elem_card == false){ return $('<div>'); }
 
 
+	//this sync function is only to handle deletion and update. for creation, check the project sync function
 	if( that.list_type == 'tasks' || that.list_type == 'notes' || that.list_type == 'files' ){
 		//elem_card.find('[find=card_spacestick]').removeClass('display_none');
 		app_application_lincko.add(
@@ -903,6 +904,7 @@ skylist.prototype.addCard = function(item){
 			function(){
 				var elem = $('#'+this.id);
 				var item_new = Lincko.storage.get(that.list_type , item['_id']);
+
 				if( /*!item_new ||*/ (typeof item_new == 'object' && 'deleted_at' in item_new && item_new['deleted_at']) || (typeof item_new == 'object' && item_new._parent[1] != app_content_menu.projects_id) ){ //for delete
 					elem.velocity('slideUp',{
 						mobileHA: hasGood3Dsupport,
@@ -918,7 +920,15 @@ skylist.prototype.addCard = function(item){
 					});
 				}
 				else if(item_new){ //for update
-					if(that.Lincko_itemsList_filter.view == 'paper' 
+
+					//do nothing ifs (dont do anything if only a single attribute is updated and the updated attribute is 'viewed_by' or 'new')
+					if(	typeof this.updated == 'object' && this.updated[that.list_type+'_'+item['_id']]
+						&& Object.keys(this.updated[that.list_type+'_'+item['_id']]).length == 1 
+						&& (	this.updated[that.list_type+'_'+item['_id']].viewed_by
+								|| this.updated[that.list_type+'_'+item['_id']].new ) ){
+						//do nothing
+					}
+					else if(that.Lincko_itemsList_filter.view == 'paper' 
 						&& typeof this.updated == 'object' && this.updated[that.list_type+'_'+item['_id']]
 						&& Object.keys(this.updated[that.list_type+'_'+item['_id']]).length < 4
 						&& (this.updated[that.list_type+'_'+item['_id']]._files || this.updated[that.list_type+'_'+item['_id']]._children)){ //for now, only for _files and _children (i.e. comments) changes
@@ -943,7 +953,7 @@ skylist.prototype.addCard = function(item){
 				}
 			}
 		);
-	} //END OF 'tasks' || 'notes'
+	} //END OF 'tasks' || 'notes' || 'files'
 	else if (that.list_type == 'chats' || that.list_type == 'global_chats') {
 		//toto => rebuild the chat list here
 		//console.log(that.list_type);
@@ -1192,12 +1202,12 @@ skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
 				elem_expandable_comments.children('[find=newPrimaryComment_input]').before(taskdetail_generateCommentThread(comment));
 			}
 		});
-
+		
 		//clean any fake comments
 		$.each(elem_expandable_comments.children('[rootcomment_id]'), function(i, elem){
 			var commentID = $(elem).attr('rootcomment_id');
 			if(!Lincko.storage.get('comments', commentID)){
-				this.recursiveRemove();
+				$(elem).recursiveRemove();
 			}
 		});
 
