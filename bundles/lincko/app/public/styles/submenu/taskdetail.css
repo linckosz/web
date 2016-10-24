@@ -433,11 +433,11 @@ td.submenu_taskdetail_share .fa{
 .submenu_taskdetail_links_card [find=card_leftbox]{
     font-size: 36px;
     display: table-cell;
-    padding: 0px;
-    padding-right: 18px;
+    padding: 0px 8px;
     height: 64px;
-    width: 50px;
+    width: 80px;
     box-sizing: border-box;
+    text-align: center;
 }
 .submenu_taskdetail_links_card [find=card_leftbox] img{
 	vertical-align: middle;
