@@ -3108,7 +3108,7 @@ skylist.prototype.addFilter_tasks = function(elem_filter_pane){
 	that.elem_navbar.find('[find=radio_wrapper] .skylist_menu_navbar_filter_pane_optionWrapper').click(function(){
 		var elem_radio = $(this).closest('[find=radio_wrapper]').find('.skylist_menu_navbar_filter_pane_optionWrapper [find=radio]');
 		if( $(this).find('[find=radio]').hasClass('fa-circle') ){
-			that.tasklist_update('sort_alt', !that.Lincko_itemsList_filter.sort_alt );
+			that.tasklist_update('sort_alt', that.Lincko_itemsList_filter.sort_alt );
 			elem_filterIcon.click();
 			return false;
 		}
