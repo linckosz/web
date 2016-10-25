@@ -710,8 +710,10 @@ skylist.prototype.DOM_updated = function(){
 skylist.prototype.addCard_all = function(){
 	var that = this;
 	if(that.list_type == 'tasks'){
-		that.list_wrapper.append(burgerN.typeTask(null, that, 30));
-		that.list.append(burgerN.typeTask(null, that));
+		that.list.append(burgerN.typeTask(null, that)); //top
+		that.list_wrapper.append(burgerN.typeTask(null, that, 30)); //bottom
+
+		that.paperView_inputter(that.list_wrapper, 'projects', app_content_menu.projects_id);
 	}
 	
 	var items;
@@ -2374,6 +2376,11 @@ skylist.prototype.taskClick = function(event,task_elem){
 	this.openDetail(task_elem);
 }
 
+/*
+	---------------------------------
+	|	BEGIN paperview methods		|
+	---------------------------------
+*/
 skylist.prototype.paperView_toggleExpandable = function(elem_expandable, cb_complete){
 	var that = this;
 	elem_expandable.removeClass('display_none');
@@ -2399,6 +2406,58 @@ skylist.prototype.paperView_toggleExpandable = function(elem_expandable, cb_comp
 		});
 	}
 }
+
+skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_type, upload_parent_id){
+	var that = this;
+
+	var fn_createTask = function(){
+		console.log('skylist inputer fn_createTask');
+	}
+
+	var inputter_setting = {
+        row : 3,
+        max_row : 3,
+        mobile_row : 1,
+        mobile_max_row : 3,
+        mobile_backgroup_flag : true,
+        mobile_input_border_flag : true,
+        top_line : true,
+        mobile_top_line : false,
+        enter : fn_createTask,
+        auto_upload : true,
+        menu :
+        [    
+            [
+
+            //{
+            //    element : 'btScissors',
+            //    mobile_hide : true,
+            //},
+            {
+                element : 'btSend',
+                mobile_hide : true,
+                empty : 'hide',
+                click : fn_createTask,
+            },],
+            [{
+                element : 'btAttachment',
+                empty : 'show',
+            },],
+        ],
+    };
+
+	var submenu = {};
+	submenu.id = 'skylist_'+that.list_type+'_'+that.md5id;
+
+var paperview_inputter = new inputter(submenu, elem_appendTo, upload_parent_type, upload_parent_id, inputter_setting, true);
+
+return true;
+}
+/*
+	---------------------------------
+	|	END OF paperview methods	|
+	---------------------------------
+*/
 
 skylist.prototype.openDetail = function(/*open,*/ task_elem){
 	var that = this;

@@ -155,3 +155,7 @@ base_runOnElemLoad.prototype.run = function(checkTime){
 		that.timeoutVar = setTimeout(function(){ that.run(checkTime); }, checkTime);
 	}
 }
+
+function base_getRandomInt(min, max){
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
