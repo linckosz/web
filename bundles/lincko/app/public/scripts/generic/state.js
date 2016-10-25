@@ -45,11 +45,13 @@ $(window).bind('popstate', function(){
 				app_generic_state.close_timer = setTimeout(function(){
 					base_hide_error();
 					app_generic_state.reset();
+					app_generic_state.openItem();
 					window.history.pushState(app_generic_state.default, app_generic_state.getTitle(), "/");
 					app_generic_state.close_timer = false;
 				}, 3000);
 			} else {
 				app_generic_state.reset();
+				app_generic_state.openItem();
 				window.history.replaceState(app_generic_state.default, app_generic_state.getTitle(), "/");
 			}
 		} else if(!change){
@@ -60,9 +62,9 @@ $(window).bind('popstate', function(){
 	app_generic_state.manual = true;
 });
 
-$(window).on('hashchange', function() {
-	app_generic_state.openItem();
-});
+// $(window).on('hashchange', function() {
+// 	app_generic_state.openItem();
+// });
 
 
 var app_generic_state = {
@@ -295,15 +297,64 @@ var app_generic_state = {
 	},
 
 	model_action: {
-		
 		projects: function(item){
 			app_content_menu.selection(item._id);
 		},
-
 		tasks: function(item){
-			console.log('do something to open task');
+			var target_id = 0;
+			if(item._tasksup ==  null)
+			{
+				 target_id = item._id;
+			}
+			else
+			{
+				target_id = Object.keys(item._tasksup)[0];
+			}
+			app_content_menu.selection(item._parent[1], 'tasks');
+			var model_timer = setInterval(function(id){
+				if(!app_content_menu_first_launch){
+					submenu_Build('taskdetail', true, null, {'type':'tasks', 'id':id,}, true);
+					clearInterval(model_timer);
+				}
+			}, 1000, target_id);
 		},
-
+		notes: function(item){
+			app_content_menu.selection(item._parent[1], 'notes');
+			var model_timer = setInterval(function(id){
+				if(!app_content_menu_first_launch){
+					submenu_Build('taskdetail', true, null, {'type':'notes', 'id':id,}, true);
+					clearInterval(model_timer);
+				}
+			}, 1000, item._id);
+		},
+		files: function(item){
+			var pid = 0 ; 
+			if(item._type != 'chats')
+			{
+				pid = Lincko.storage.get('chats',item._parent[1],'parent')[1];
+			}
+			else
+			{
+				pid = item._parent[1];
+			}
+			app_content_menu.selection(pid, 'files');
+			var model_timer = setInterval(function(id,type){
+				if(!app_content_menu_first_launch){
+					submenu_Build('taskdetail', true, null, {'type':'files', 'id':id,}, true);
+					clearInterval(model_timer);
+				}
+			}, 1000, item._id,item._parent[0]);
+		},
+		chats: function(item){
+			app_content_menu.selection(item._parent[1], 'chats');
+			var model_timer = setInterval(function(id,type,title){
+				if(!app_content_menu_first_launch){
+					submenu_Build("newchat", true, false, {'type': 'chats','id': id,'title': title}, true);
+					clearInterval(model_timer);
+				}
+			}, 1000, item._id,item._parent[0],item['+title']);
+		},
+			
 	},
 
 };

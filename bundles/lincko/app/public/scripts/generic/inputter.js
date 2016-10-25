@@ -127,6 +127,8 @@ inputter.prototype.buildLayer = function()
 									function(){
 										var files_queue = container.find('[find=files_queue]').get(0);
 										var files = app_upload_files.lincko_files;
+
+										var count = 0;
 										for(var z in files)
 										{
 											if(files[z].lincko_parent_type == this.action_param[0]
@@ -156,17 +158,27 @@ inputter.prototype.buildLayer = function()
 														
 													}else
 													{
+														if(count == 0)
+														{
+
+															$('#'+this.action_param[2]+'_attachment').addClass('mobile_hide');
+														}
 														target.find(".shortcut_ico").addClass('display_none');
 														target.find(".shortcut_pic")
 																.removeClass('display_none')
 																.attr('src',preview);
 													}
 												}
+												count ++;
 											}
 											
 										}
+										if(count == 0)
+										{
+											$('#'+this.action_param[2]+'_attachment').removeClass('mobile_hide');
+										}
 										
-									},[this.type,this.pid]);
+									},[this.type,this.pid,this.submenu.id]);
 									
 									
 								}
@@ -231,6 +243,8 @@ inputter.prototype.buildLayer = function()
 								function(){
 									var files_queue = container.find('[find=files_queue]').get(0);
 									var files = app_upload_files.lincko_files;
+
+									var count = 0;
 									for(var z in files)
 									{
 										if(files[z].lincko_parent_type == this.action_param[0]
@@ -260,17 +274,26 @@ inputter.prototype.buildLayer = function()
 													
 												}else
 												{
+													if(count == 0)
+													{
+														$('#'+this.action_param[2]+'_attachment').addClass('mobile_hide');
+													}
 													target.find(".shortcut_ico").addClass('display_none');
 													target.find(".shortcut_pic")
 															.removeClass('display_none')
 															.attr('src',preview);
 												}
 											}
+											count ++;
 										}
 										
 									}
+									if(count == 0)
+									{
+										$('#'+this.action_param[2]+'_attachment').removeClass('mobile_hide');
+									}
 									
-								},[this.type,this.pid]);
+								},[this.type,this.pid,this.submenu.id]);
 							}
 							break;
 					}
