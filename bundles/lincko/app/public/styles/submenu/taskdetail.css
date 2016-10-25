@@ -351,6 +351,33 @@ td.submenu_taskdetail_share .fa{
 	font-size: 40px;
 }
 */
+
+.submenu_taskdetail_progressBar_wrapper [find=container]{
+	position: relative;
+	background-color: #d8d8d8;
+    height: 20px;
+}
+.submenu_taskdetail_progressBar_wrapper [find=bar]{
+	position: absolute;
+	z-index: 10;
+    width: 0%;
+    background-color: #5bb0d4;
+    height: 100%;
+}
+.submenu_taskdetail_progressBar_wrapper [find=zero_text]{
+	position: absolute;
+	z-index: 5;
+	padding-left: 10px;
+}
+.submenu_taskdetail_progressBar_wrapper [find=percent]{
+    float: right;
+    color: #FFFFFF;
+    padding-right: 12px;
+}
+.submenu_taskdetail_progressBar_wrapper [find=percent]:after{
+	content:'%';
+}
+
 .submenu_taskdetail_subtasks_card{
 	/*height: 40px;*/
 	color: #475577;

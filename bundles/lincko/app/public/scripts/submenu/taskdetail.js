@@ -226,6 +226,28 @@ Submenu.prototype.Add_taskdetail = function() {
 	var in_charge = '';
 	var in_charge_id = null;
 
+	var progressBarController = {
+		completed: 0,
+		total: 0,
+		elem_bar: null,
+		elem_percent: null,
+		updateBar: function(){
+			if(this.elem_bar){
+				this.elem_bar.css('width', this.getPercent()+'%');
+				if(this.elem_percent){
+					this.elem_percent.text(this.getPercent());
+				}
+				return true;
+			}
+			else{
+				return false;
+			}
+		},
+		getPercent: function(){
+			return Math.round( (this.completed / this.total)*100 );
+		},
+	};
+
 	var uploadGarbageID = null;
 	//only for new items add link queueing system
 	if(taskid == 'new'){
@@ -310,8 +332,6 @@ Submenu.prototype.Add_taskdetail = function() {
 			});
 		}		
 	}
-
-	
 
 
 	/*---tasktitle---*/
@@ -814,6 +834,15 @@ Submenu.prototype.Add_taskdetail = function() {
 				else{
 					wrapper_sendAction({id: task_id, approved: approved}, 'post', 'task/update');
 				}
+
+				if(approved){
+					progressBarController.completed++;
+					progressBarController.updateBar();
+				}
+				else{
+					progressBarController.completed--;
+					progressBarController.updateBar();
+				}
 			});
 			elem_subtaskCard.find('[find=removeIcon]').click(function(){
 				task_id = parseInt(elem_subtaskCard.attr('task_id'),10);
@@ -825,6 +854,11 @@ Submenu.prototype.Add_taskdetail = function() {
 					wrapper_sendAction({id: task_id}, 'post', 'task/delete');
 				}
 				elem_subtaskCount.text(parseInt(elem_subtaskCount.text(),10) -1 );
+				progressBarController.total--;
+				if(elem_subtaskCard.hasClass('submenu_taskdetail_subtasks_card_checked')){
+					progressBarController.completed--;
+				}
+				progressBarController.updateBar();
 				elem_subtaskCard.velocity('slideUp',{
 					complete: function(){
 						elem_subtaskCard.remove();
@@ -850,9 +884,13 @@ Submenu.prototype.Add_taskdetail = function() {
 				else{
 					elem_subtasks_wrapper.append(generate_subtaskCard(subtask_id));
 					subtask_count++;
+					if(subtask.approved){
+						progressBarController.completed++;
+					}
 				}
 			});
 		}
+		progressBarController.total = subtask_count;
 		elem_subtaskCount.text(subtask_count);
 
 
@@ -904,8 +942,10 @@ Submenu.prototype.Add_taskdetail = function() {
 					param['tasksup>access'][taskid] = true;
 					var tempID = null;
 					var cb_begin = function(jqXHR, settings, temp_id){
-						elem_subtasks_wrapper.append(generate_subtaskCard(temp_id, subtask_title));
 						tempID = temp_id;
+						elem_subtasks_wrapper.append(generate_subtaskCard(temp_id, subtask_title));
+						progressBarController.total++;
+						progressBarController.updateBar();
 					}
 					var cb_success = function(msg, data_error, data_status, data_msg){
 						var elem_toUpdate = elem_subtasks_wrapper.find('[task_id='+tempID+']');
@@ -937,6 +977,18 @@ Submenu.prototype.Add_taskdetail = function() {
 
 
 		submenu_taskdetail.append(elem_subtasks);
+
+
+		/*---progress bar setup-----------------------*/
+		var elem_progressbar = $('#-submenu_taskdetail_progressBar_wrapper').clone().prop('id','submenu_taskdetail_progressBar_wrapper_'+that.md5id);
+
+		progressBarController.elem_bar = elem_progressbar.find('[find=bar]').eq(0);
+		progressBarController.elem_percent = elem_progressbar.find('[find=percent]').eq(0);
+		progressBarController.updateBar();
+
+		elem_meta.before(elem_progressbar);
+		/*--- END OF progress bar-------------------*/
+
 	};
 	/*-----END OF subtasks--------------*/
 
