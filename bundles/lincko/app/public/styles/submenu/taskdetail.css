@@ -368,6 +368,7 @@ td.submenu_taskdetail_share .fa{
 	position: absolute;
 	z-index: 5;
 	padding-left: 10px;
+	color: #FFFFFF;
 }
 .submenu_taskdetail_progressBar_wrapper [find=percent]{
     float: right;
