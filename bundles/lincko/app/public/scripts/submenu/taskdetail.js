@@ -241,10 +241,18 @@ Submenu.prototype.Add_taskdetail = function() {
 			}
 			else{
 				this.elem_container.removeClass('display_none');
-				this.elem_bar.css('width', this.getPercent()+'%');
 				if(this.elem_percent){
 					this.elem_percent.text(this.getPercent());
 				}
+
+				if(this.elem_bar.is(':visible')){
+					this.elem_bar.velocity('stop', true);
+					this.elem_bar.velocity({width: this.getPercent()+'%'});
+				}
+				else{
+					this.elem_bar.css('width', this.getPercent()+'%');
+				}
+
 				return true;
 			}
 		},
