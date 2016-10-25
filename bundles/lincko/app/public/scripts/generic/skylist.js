@@ -3329,7 +3329,15 @@ skylist.sendAction = {
 				param.id = id;
 			}
 			if(Object.keys(param).length < 2){ return; }//if param only has id, no point to sendAction
+
 			wrapper_sendAction(param, 'post', action, cb_success, cb_error, cb_begin, cb_complete);
+
+			//if the task's project id is updated, its subtasks must follow to the new project
+			if(param.parent_id && item._tasksdown){
+				$.each(item._tasksdown, function(subtask_id, obj){
+					wrapper_sendAction({id: subtask_id, parent_id: param.parent_id}, 'post', 'task/update');
+				});
+			}
 		}
 
 
