@@ -229,18 +229,23 @@ Submenu.prototype.Add_taskdetail = function() {
 	var progressBarController = {
 		completed: 0,
 		total: 0,
+		elem_container: null,
 		elem_bar: null,
 		elem_percent: null,
 		updateBar: function(){
-			if(this.elem_bar){
+			if(!this.elem_container || !this.elem_bar){ return false; }
+
+			if(this.total == 0){
+				this.elem_container.addClass('display_none');
+				return true;
+			}
+			else{
+				this.elem_container.removeClass('display_none');
 				this.elem_bar.css('width', this.getPercent()+'%');
 				if(this.elem_percent){
 					this.elem_percent.text(this.getPercent());
 				}
 				return true;
-			}
-			else{
-				return false;
 			}
 		},
 		getPercent: function(){
@@ -982,6 +987,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		/*---progress bar setup-----------------------*/
 		var elem_progressbar = $('#-submenu_taskdetail_progressBar_wrapper').clone().prop('id','submenu_taskdetail_progressBar_wrapper_'+that.md5id);
 
+		progressBarController.elem_container = elem_progressbar.find('[find=container]').eq(0);
 		progressBarController.elem_bar = elem_progressbar.find('[find=bar]').eq(0);
 		progressBarController.elem_percent = elem_progressbar.find('[find=percent]').eq(0);
 		progressBarController.updateBar();
