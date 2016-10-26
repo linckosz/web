@@ -226,6 +226,8 @@ Submenu.prototype.Add_taskdetail = function() {
 	var in_charge = '';
 	var in_charge_id = null;
 
+	var nextSubtaskFav = 0;
+
 	var progressBarController = {
 		completed: 0,
 		total: 0,
@@ -784,7 +786,6 @@ Submenu.prototype.Add_taskdetail = function() {
 
 	/*-----subtasks---------------------*/
 	if(that.param.type == 'tasks'){
-
 		var elem_subtasks = $('#-submenu_taskdetail_subtasks').clone().prop('id','submenu_taskdetail_subtasks_'+that.md5id);
 		var elem_subtasks_wrapper = elem_subtasks.find('[find=subtasks_wrapper]');
 		var elem_newSubtask = elem_subtasks.find('[find=newSubtask]');
@@ -890,7 +891,10 @@ Submenu.prototype.Add_taskdetail = function() {
 
 		var subtask_count = 0;
 		if(item._tasksdown){
-			$.each(item._tasksdown, function(subtask_id, obj){
+			//set the fav index to be used for the next subtask to be added
+			nextSubtaskFav = taskdetail_tools.nextSubtaskFav(item._tasksdown);
+
+			$.each(taskdetail_tools.list_subtaskFav(item._tasksdown), function(i, subtask_id){
 				var subtask = Lincko.storage.get('tasks', subtask_id);
 				//dont show if task doesnt exist or it doesnt match the project of the parent task
 				if(!subtask || subtask.deleted_at || subtask._parent[1] != that.param.projID ) return;
@@ -945,16 +949,14 @@ Submenu.prototype.Add_taskdetail = function() {
 					if(!taskdetail_subtaskQueue.queue[that.param.uniqueID]){
 						taskdetail_subtaskQueue.queue[that.param.uniqueID] = {};
 					}
-					taskdetail_subtaskQueue.queue[that.param.uniqueID][fakeID] = {
-						param: {
-							parent_id: that.param.projID, 
-							title: subtask_title,
-						}
-					};
+					taskdetail_subtaskQueue.queue[that.param.uniqueID][fakeID] = { param: param, fav: nextSubtaskFav };
+					nextSubtaskFav++;
 				}
 				else{
 					param['tasksup>access'] = {};
 					param['tasksup>access'][taskid] = true;
+					param['tasksup>fav'] = {};
+					param['tasksup>fav'][taskid] = nextSubtaskFav; nextSubtaskFav++;
 					var tempID = null;
 					var cb_begin = function(jqXHR, settings, temp_id){
 						tempID = temp_id;
@@ -967,7 +969,7 @@ Submenu.prototype.Add_taskdetail = function() {
 						if(elem_toUpdate.length){
 							var real_subtask = Lincko.storage.list('tasks',1,{temp_id: tempID})[0];
 							if(real_subtask && real_subtask._id){
-								elem_toUpdate.attr('task_id', real_subtask._id); 
+								elem_toUpdate.attr('task_id', real_subtask._id);
 							}
 						}
 					}
@@ -2595,14 +2597,26 @@ var taskdetail_subtaskQueue = {
 				param['tasksup>access'][tasksupID] = true;
 				param.duration = 0; //no duedate for subtasks
 
+				//if fav number is set, update the parent task
+				if(typeof obj.fav != 'undefined'){
+					param['tasksup>fav'] = {};
+					param['tasksup>fav'][tasksupID] = obj.fav;
+				}
+
+				var tmpID = null;
+				var cb_begin = function(jqXHR, settings, temp_id){
+					tmpID = temp_id;
+				}
 				var cb_success = function(){
 					var prepare_param = {};
 					prepare_param['tasks_'+tasksupID] = { _tasksdown: true };
 					app_application_lincko.prepare('tasks_'+tasksupID, true, prepare_param);
 				}
+				var cb_complete = function(){
+					delete taskdetail_subtaskQueue.queue[submenu_uniqueID][fake_subtaskID];
+				}
 
-				wrapper_sendAction(param, 'post', 'task/create', cb_success);
-				delete taskdetail_subtaskQueue.queue[submenu_uniqueID][fake_subtaskID];
+				wrapper_sendAction(param, 'post', 'task/create', cb_success, null/*cb_error*/, cb_begin, cb_complete);
 			});
 		}
 	},
@@ -2848,6 +2862,45 @@ taskdetail_tools = {
 		}
 
 		return false;
+	},
+
+
+	nextSubtaskFav: function(item_tasksdown){
+		if(typeof item_tasksdown != 'object'){ return false; }
+		var nextFav = 0;
+
+		$.each(item_tasksdown, function(subtask_id, obj){
+			if(!obj.fav){ return; }
+			if(obj.fav > nextFav){ nextFav = obj.fav; }
+		});
+
+		return nextFav;
+	},
+
+	list_subtaskFav: function(item_tasksdown){
+		if(typeof item_tasksdown != 'object'){ return false; }
+		
+		var list = Object.keys(item_tasksdown);
+		var item_tasksdown_array = [];
+		$.each(list, function(i, subtask_id){
+			item_tasksdown_array.push(
+				{
+					id: subtask_id,
+					fav: item_tasksdown[subtask_id].fav,
+				}
+			);
+		});
+		
+		item_tasksdown_array.sort(function(subtask1, subtask2){ //lower fav number first
+			return subtask1.fav - subtask2.fav;
+		});
+
+		list = [];
+		$.each(item_tasksdown_array, function(i, obj){
+			list.push(obj.id);
+		});
+
+		return list;
 	},
 
 }
