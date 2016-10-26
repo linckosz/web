@@ -62,7 +62,9 @@
 
 .submenu_taskdetail_tasktitle {
 	width: 100%;
-	height: 60px;
+	/*height: 60px;*/
+	min-height: 60px; /*make title have extendable title. max-height is set for the child div*/
+
 }
 .submenu_taskdetail_tasktitle td {
 	height: 100%;
@@ -76,13 +78,13 @@ td.app_layers_dev_skytasks_checkbox {
 	margin-right: 10px;
 }
 .submenu_taskdetail_tasktitle [find=title_text] {
-	max-height: 54px;
+	max-height: 110px;
 	min-height: 27px;
 	overflow: hidden;
 	overflow-y: auto;
 	word-wrap: break-word;
 	word-break: break-all;
-	text-overflow: ellipsis;
+	/*text-overflow: ellipsis;*/
 	box-sizing: border-box;
 	color:#475577;
 	font-size: 20px;
