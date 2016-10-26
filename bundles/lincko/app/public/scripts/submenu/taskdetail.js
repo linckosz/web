@@ -940,6 +940,8 @@ Submenu.prototype.Add_taskdetail = function() {
 				if(taskid == 'new'){
 					var fakeID = taskdetail_getRandomInt();
 					elem_subtasks_wrapper.append(generate_subtaskCard(fakeID, subtask_title));
+					progressBarController.total++;
+					progressBarController.updateBar();
 					if(!taskdetail_subtaskQueue.queue[that.param.uniqueID]){
 						taskdetail_subtaskQueue.queue[that.param.uniqueID] = {};
 					}
