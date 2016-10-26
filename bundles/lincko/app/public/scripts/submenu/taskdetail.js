@@ -1924,12 +1924,12 @@ Submenu.prototype.Add_taskdetail = function() {
 	var registerSync_links = function(){
 		app_application_lincko.add(
 			'submenu_taskdetail_link_'+that.md5id,
-			[that.param.type+'_'+item['_id'], 'upload', 'show_queued_links'/*for new tasks/notes adding exising files/notes*/],
+			[that.param.type+'_'+item['_id'], 'upload', 'show_queued_links'/*for new tasks/notes adding exising files/notes -- this is no longer used*/],
 			function(){
 				var elem = $('#'+this.id);
 				var item = Lincko.storage.get(that.param.type, taskid);
 
-				//for show_queued_links
+				//for show_queued_links -- this is no longer used, file uploading to new tasks/notes are taken care of my takelist_uploadManager
 				if(this.updated && this.updated.show_queued_links){
 					$.each(taskdetail_linkQueue.queue, function(temp_id, obj){
 						if(obj.uniqueID == that.param.uniqueID && !obj.visible){

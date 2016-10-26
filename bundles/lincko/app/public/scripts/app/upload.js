@@ -249,6 +249,7 @@ $(function () {
 
 			if(app_upload_auto_launcher.temp_id){
 				app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_temp_id = app_upload_auto_launcher.temp_id;
+				app_upload_auto_launcher.temp_id = md5(Math.random());
 			} else {
 				app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_temp_id = md5(Math.random());
 			}
