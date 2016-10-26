@@ -76,9 +76,10 @@ td.app_layers_dev_skytasks_checkbox {
 	margin-right: 10px;
 }
 .submenu_taskdetail_tasktitle [find=title_text] {
-	max-height: 50px;
+	max-height: 54px;
 	min-height: 27px;
 	overflow: hidden;
+	overflow-y: auto;
 	word-wrap: break-word;
 	word-break: break-all;
 	text-overflow: ellipsis;
