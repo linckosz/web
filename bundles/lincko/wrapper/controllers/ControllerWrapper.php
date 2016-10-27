@@ -140,6 +140,9 @@ class ControllerWrapper extends Controller {
 			if($this->form_id){
 				$json_result->form_id = $this->form_id;
 			}
+			//We add current language to refresh the application if the settings changed
+			$json_result->language = $this->json['language'];
+			
 			print_r(json_encode($json_result)); //production output
 			//print_r($json_result->msg); //for test
 			//print_r($result); //for test

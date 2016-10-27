@@ -27,10 +27,12 @@
 }
 
 .app_content_top_title {
+	position: relative;
 	vertical-align: middle;
-	text-align: center;
+	text-align: left;
 	width: auto;
-	padding: 0 24px;
+	padding: 0 24px 0 12px;
+	font-weight: 200;
 }
 
 #app_content_top_project {
@@ -223,6 +225,33 @@
 	padding: 8px 4px;
 }
 
+.app_content_cursor_default {
+	cursor: default;
+}
+
+#app_content_statistics_settings {
+	font-size: 28px;
+	float: right;
+	cursor: pointer;
+}
+
+#app_content_statistics_settings:hover {
+	color: #FEFF9A;
+}
+
+#app_content_top_title_settings {
+	position: absolute;
+	top: 0;
+	right: 0;
+	font-size: 14px;
+	margin-right: -14px;
+}
+
+#app_content_top_title_menu {
+	position: relative;
+}
+
+
 /* Mobile phone in Portrait maximum */
 @media only screen and (max-width: 479px){
 	#app_content_top {
@@ -266,6 +295,9 @@
 	}
 	.with_preview > #app_content_dynamic_layers {
 		margin-right: 0;
+	}
+	.app_content_top_title {
+		padding-left: 0px;
 	}
 }
 

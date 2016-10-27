@@ -142,6 +142,16 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 
 			// Below is the production information with "dataType: 'json'"
 			cb_success(msg, data.error, data.status, data.msg);
+
+			//If the language changed, we force to refresh the page
+			if(typeof data.language != 'undefined'){
+				setTimeout(function(language){
+					if(app_language_short != language){
+						window.location.href = wrapper_link['root'];
+					}
+				}, 500, data.language);
+			}
+
 		},
 		error: function(xhr_err, ajaxOptions, thrownError){
 			//Get back the form object if it was sent from a form
@@ -151,14 +161,27 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 				+'ajaxOptions => '+ajaxOptions
 				+'\n'
 				+'thrownError => '+thrownError;
-			if(!wrapper_xhr_error && ajaxOptions!='abort' && ajaxOptions!='timeout'){
+
+			var show_error = true;
+			if(typeof this.show_error != 'undefined'){
+				show_error = this.show_error;
+			}
+			if(show_error && !wrapper_xhr_error && ajaxOptions!='abort' && ajaxOptions!='timeout'){
 				JSerror.sendError(msg, '/wrapper.js/wrapper_ajax().error()', 0);
 				wrapper_xhr_error = true; //Make this message appearing only once
 			}
-			if(ajaxOptions!='abort'){
+			if(show_error && ajaxOptions!='abort'){
 				console.log(msg);
 			}
 			cb_error(xhr_err, ajaxOptions, thrownError);
+			
+			if(ajaxOptions!='abort'){
+				//Keep retry every 5s
+				setTimeout(function(ajax_call){
+					$.ajax(ajax_call);
+				}, 5000, this);
+			}
+			this.show_error = false;
 		},
 		complete: function(){
 			//Get back the form object if it was sent from a form

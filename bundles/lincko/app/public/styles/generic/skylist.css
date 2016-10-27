@@ -1008,6 +1008,10 @@
 	cursor: inherit;
 }
 
+.skylist_chat_card_center [find=title]{
+	cursor: inherit;
+}
+
 .skylist_maxMobileL .skylist_chat_card_center [find=title]{
 	padding-right: 80px;
 }

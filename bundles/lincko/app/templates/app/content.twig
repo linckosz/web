@@ -16,7 +16,10 @@
 		<td class="app_content_top_cell"></td>
 		<td class="app_content_top_cell app_content_top_title">
 			<div id="app_content_top_title" class="ellipsis">
-				<span id="app_content_top_title_menu" class="base_pointer" alt="{{ _trans('app', 4, 11, 'html') }}{# Select project #}" title="{{ _trans('app', 4, 11, 'html') }}{# select project #}"></span>
+				<span id="app_content_top_title_menu" class="base_pointer">
+					<span id="app_content_top_title_settings" class="icon-Settings"></span>
+					<span id="app_content_top_title_project" alt="{{ _trans('app', 4, 11, 'html') }}{# Select project #}" title="{{ _trans('app', 4, 11, 'html') }}{# select project #}"></span>
+				</span>
 			</div>
 		</td>
 		<td class="app_content_top_cell">
@@ -76,6 +79,7 @@
 	<div id="app_content_dynamic_sub">{# DO NOT DELETE #}
 		<div id="app_content_submenu_preview">
 			<div id="app_content_submenu_preview_statistics">
+				<div id="app_content_statistics_settings" class="icon-Settings display_none"></div>
 				<div class="app_content_statistics_stats">
 					<span class="icon-Tasks"></span>
 					<span find="app_content_statistics_stats_tasks">0</span>

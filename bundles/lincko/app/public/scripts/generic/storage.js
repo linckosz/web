@@ -185,7 +185,7 @@ Lincko.storage.getLatest = function(force){
 		'show_error': false,
 	};
 	//This helps to avoid too many backend runs
-	if(storage_ajax_latest[lastvisit] && storage_ajax_latest[lastvisit]!=4){
+	if(storage_ajax_latest[lastvisit] && storage_ajax_latest[lastvisit]['readyState']!=4){
 		return true; //Don't launch anymore latest if one is already running
 	} else {
 		for(var i in storage_ajax_latest){
@@ -197,7 +197,7 @@ Lincko.storage.getLatest = function(force){
 				delete storage_ajax_latest[i];
 			}
 		}
-		wrapper_sendAction(arr, 'post', 'data/latest', null, null, null, function(){
+		wrapper_sendAction(arr, 'post', 'data/latest', function(){
 			var lastvisit = arr.lastvisit;
 			storage_ajax_latest[lastvisit] = null;
 			delete storage_ajax_latest[lastvisit];

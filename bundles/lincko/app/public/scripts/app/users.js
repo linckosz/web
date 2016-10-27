@@ -1,7 +1,7 @@
 submenu_list['app_projects_users_contacts'] = {
 	"_title": {
 		"style": "customized_title",
-		"title": Lincko.Translation.get('app', 31, 'html'), //Team
+		"title": Lincko.Translation.get('app', 31, 'html'), //Add Teammates
 	},
 	"left_button": {
 		"style": "title_left_button",
