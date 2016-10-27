@@ -268,10 +268,25 @@ var app_generic_state = {
 		return this.started;
 	},
 
-	getItem: function(){
+	getItem: function(url){
 		if(!this.allowed){ return false; }
+		if(typeof url == 'undefined'){ url = false; }
 		this.quick_item = false;
-		var hash = location.hash.substr(1).split("-");
+
+		if(url){
+			var location_hash = url.split("#");
+			if(location_hash.length == 2)
+			{
+				var hash = location_hash[1].split("-");//url ='https://lincko.com/#tasks-56';
+			}
+			else
+			{
+				hash = [];
+			}
+		} else {
+			var hash = location.hash.substr(1).split("-");
+		}
+		
 		if(hash.length==2){
 			var type = hash[0];
 			var id = parseInt(hash[1], 10);
@@ -279,23 +294,22 @@ var app_generic_state = {
 		}
 		return this.quick_item;
 	},
-
-	openItem: function(old){
+	openItem: function(old, url){
+		debugger;
 		if(!this.allowed){ return false; }
+		if(typeof url == 'undefined'){ url = false; }
 		if(typeof old == 'undefined'){ old = false; }
 		if(old){
 			var item = this.quick_item;
 		} else { //get url hash
-			var item = this.getItem();
+			var item = this.getItem(url);
 		}
 		window.history.replaceState(this.current, this.getTitle(), "/"); //This is just to clean the url
 		//console.log(item);
-		
 		if(typeof this.model_action[item._type] == 'function'){
 			this.model_action[item._type](item);
 		}
 	},
-
 	model_action: {
 		projects: function(item){
 			app_content_menu.selection(item._id);
@@ -311,21 +325,36 @@ var app_generic_state = {
 				target_id = Object.keys(item._tasksup)[0];
 			}
 			app_content_menu.selection(item._parent[1], 'tasks');
-			var model_timer = setInterval(function(id){
-				if(!app_content_menu_first_launch){
-					submenu_Build('taskdetail', true, null, {'type':'tasks', 'id':id,}, true);
-					clearInterval(model_timer);
-				}
-			}, 1000, target_id);
+			if(app_content_menu_first_launch)
+			{
+				submenu_Build('taskdetail', true, null, {'type':'tasks', 'id':target_id,}, true);
+			}
+			else
+			{
+				var model_timer = setInterval(function(id){
+					if(!app_content_menu_first_launch){
+						submenu_Build('taskdetail', true, null, {'type':'tasks', 'id':id,}, true);
+						clearInterval(model_timer);
+					}
+				}, 1000, target_id);
+			}
 		},
 		notes: function(item){
 			app_content_menu.selection(item._parent[1], 'notes');
-			var model_timer = setInterval(function(id){
-				if(!app_content_menu_first_launch){
-					submenu_Build('taskdetail', true, null, {'type':'notes', 'id':id,}, true);
-					clearInterval(model_timer);
-				}
-			}, 1000, item._id);
+			if(app_content_menu_first_launch)
+			{
+				submenu_Build('taskdetail', true, null, {'type':'notes', 'id':item._id,}, true);
+			}
+			else
+			{
+				var model_timer = setInterval(function(id){
+					if(!app_content_menu_first_launch){
+						submenu_Build('taskdetail', true, null, {'type':'notes', 'id':id,}, true);
+						clearInterval(model_timer);
+					}
+				}, 1000, item._id);
+			}
+			
 		},
 		files: function(item){
 			var pid = 0 ; 
@@ -338,28 +367,43 @@ var app_generic_state = {
 				pid = item._parent[1];
 			}
 			app_content_menu.selection(pid, 'files');
-			var model_timer = setInterval(function(id,type){
-				if(!app_content_menu_first_launch){
-					submenu_Build('taskdetail', true, null, {'type':'files', 'id':id,}, true);
-					clearInterval(model_timer);
-				}
-			}, 1000, item._id,item._parent[0]);
+
+			if(app_content_menu_first_launch)
+			{
+				submenu_Build('taskdetail', true, null, {'type':'files', 'id':item._id,}, true);
+			}
+			else
+			{
+				var model_timer = setInterval(function(id){
+					if(!app_content_menu_first_launch){
+						submenu_Build('taskdetail', true, null, {'type':'files', 'id':id,}, true);
+						clearInterval(model_timer);
+					}
+				}, 1000, item._id);
+			}
+			
 		},
 		chats: function(item){
 			app_content_menu.selection(item._parent[1], 'chats');
-			var model_timer = setInterval(function(id,type,title){
-				if(!app_content_menu_first_launch){
-					submenu_Build("newchat", true, false, {'type': 'chats','id': id,'title': title}, true);
-					clearInterval(model_timer);
-				}
-			}, 1000, item._id,item._parent[0],item['+title']);
+			if(app_content_menu_first_launch)
+			{
+				submenu_Build("newchat", true, false, {'type': 'chats','id': item._id,'title': item['+title']}, true);
+			}
+			else
+			{
+				var model_timer = setInterval(function(id,title){
+					if(!app_content_menu_first_launch){
+						submenu_Build("newchat", true, false, {'type': 'chats','id': id,'title': title}, true);
+						clearInterval(model_timer);
+					}
+				}, 1000, item._id,item['+title']);
+			}
+			
 		},
 			
 	},
 
 };
-
-
 
 var app_generic_state_garbage = app_application_garbage.add();
 app_application_lincko.add(app_generic_state_garbage, 'first_launch', function() {

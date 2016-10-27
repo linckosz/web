@@ -7,9 +7,9 @@
 <div id="end_inputter" class="visibility_hidden"></div>
 <div class="display_none">
 	<div id="-inputter_container" class="inputter_container">
-		<div find = "sub_wrapper" class = "inputter_sub_wrapper"></div>
+		<div find = "left_menu_wrapper" class = "inputter_left_menu_wrapper"></div>
 		<div find = "content_wrapper" class = "inputter_content_wrapper"></div>
-		<div find = "menu_wrapper" class = "inputter_menu_wrapper"></div>
+		<div find = "right_menu_wrapper" class = "inputter_right_menu_wrapper"></div>
 		<div find = "uploading_wrapper" class = "inputter_uploading_wrapper">
 			<ul find = "files_queue">
 				
@@ -19,6 +19,7 @@
 
 
 	<ul id="-inputter_menu_row">
+		
 	</ul>
 
 	<div id="-inputer_element_set">
@@ -26,13 +27,21 @@
 			<div find="chat_textarea" contenteditable="true" class="textarea comments_input" autofocus="autofocus"></div>
 		</div>
 		
-		<span find="checkbox"  id="-inputter_element_checkbox"  class="skylist_checkbox fa fa-check needsclick"></span>
-
+		<li find="checkbox" id="-inputter_element_checkbox" class="inputter_element_checkbox chk">
+			<span class="inputter_checkbox fa fa-check needsclick"></span>
+			
+		</li>
 		<li find='send' id="-inputter_element_send" class="inputter_munu_item send">
 			<span class="inputter_ico  fa fa-send-o needsclick"></span>
 		</li>
 		<li find='attachment' id="-inputter_element_attachment" class="inputter_munu_item attachment">
 			<span class="inputter_ico  icon-Add needsclick"></span>
+			<div class="inputter_preview needsclick desktop_hide">
+				<span find="shortcut_ico" class="shortcut_ico">
+					<i class="fa"></i>
+				</span>
+				<img find="shortcut_pic" class="shortcut_pic"/>
+			</div>
 		</li>
 		<li find='scissors'  id="-inputter_element_scissors"  class="inputter_munu_item scissors">
 			<span class="inputter_ico fa fa-scissors needsclick"></span>

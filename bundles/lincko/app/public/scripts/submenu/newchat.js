@@ -180,7 +180,7 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 	position.addClass('submenu_bottom');
 
 	var that = this;
-	function fnSendMsg(msg) {
+	function fnSendMsg(elem,msg) {
 		var content = msg;
 		var type = that.param.type == 'history' ? "projects":'chats';
 		var sub_that = that;
@@ -238,10 +238,10 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 					app_submenu_scrollto(myIScrollList[overthrow_id], last[0], scroll_time);
 				}
 				
-				var textarea = $("#"+sub_that.id).find("[find=chat_textarea]");
-				textarea.text('');
+				//var textarea = $("#"+sub_that.id).find("[find=chat_textarea]");
+				$(elem).text('');
 				app_application_lincko.prepare(["chat_contents_wrapper", "chats_" + sub_that.param.id]);
-				textarea.focus();
+				$(elem).focus();
 				
 			},
 			function(){
@@ -257,34 +257,43 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 		mobile_row : 1,
 		mobile_max_row : 3,
 		mobile_backgroup_flag : true,
-		//mobile_input_border_flag : true,
+		mobile_input_border_flag : true,
 		top_line : true,
 		mobile_top_line : false,
 		enter : fnSendMsg,
 		auto_upload : true,
-		menu :
+
+		left_menu :
+		[
+			// [{
+			// 	element :'chkTask',
+			// }],
+		],
+		right_menu :
 		[	
-			
 			[
-			// {
-			// 	element : 'btScissors',
-			// 	mobile_hide : true,
-			// },
-			{
-				element : 'btSend',
-				mobile_hide : true,
-				empty : 'hide',
-				click : fnSendMsg,
-			},],
-			[{
-				element : 'btAttachment',
-				empty : 'show',
-			},],
+				// {
+				// 	element : 'btScissors',
+				// 	mobile_hide : true,
+				// },
+				{
+					element : 'btSend',
+					mobile_hide : true,
+					empty : 'hide',
+					click : fnSendMsg,
+				},
+			],
+			[
+				{
+					element : 'btAttachment',
+					empty : 'show',
+				},
+			],
 		],
 	};
 
 	var type = that.param.type == 'history' ? "projects":'chats';
-	var chat_inputter = new inputter(this,position,type,that.param.id,layer,false);
+	var chat_inputter = new inputter(this.id,position,type,that.param.id,layer,null);
 
 	var height = position.height();
 	submenu_wrapper.find("[find=submenu_wrapper_content]").css('bottom', height);
