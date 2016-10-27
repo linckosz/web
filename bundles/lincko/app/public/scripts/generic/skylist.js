@@ -456,8 +456,6 @@ skylist.prototype.generate_Lincko_itemsList = function(){
 
 skylist.prototype.store_all_elem = function(){
 	if(typeof this.list != "undefined"){
-		//should be lanunched when all DOM is loaded
-		//this.elem_taskblur_all = this.tasklist.find('.app_layers_dev_skytasks_taskblur');
 		this.elem_cardcenter_all = this.list.find('[find=card_center]');
 		this.elem_leftOptions_all = this.list.find('[find=card_leftOptions]');
 		this.elem_rightOptions_all = this.list.find('[find=card_leftOptions]');
@@ -471,26 +469,6 @@ skylist.prototype.window_resize = function(){
 	that.editing_focus = false;
 	that.setHeight();
 	that.clearOptions();
-/*
-	if( responsive.test("isMobile") ){
-		that.isMobile();
-	}
-	if( responsive.test("minMobileL") ){
-		that.minMobileL();
-	}
-	if( responsive.test("maxMobileL") ){
-		that.maxMobileL();
-	}
-	if( responsive.test("minTablet") ){
-		that.minTablet();
-	}	
-
-	if(!responsive.test("minTablet") ){
-		that.list_wrapper
-			.removeClass('app_layers_dev_skytasks_simpleDesktop')
-			.removeClass('app_layers_dev_skytasks_simpleDesktop2');
-	}
-	*/
 
 	if( myIScrollList['skylist_'+that.md5id] ){
 		myIScrollList['skylist_'+that.md5id].refresh();
@@ -536,11 +514,6 @@ skylist.prototype.filter_by_duedate = function(items, filter){
 		items_filtered = items; 
 	}
 	else if( filter < 2 ){
-		/*
-		if 		( filter == Lincko.Translation.get('app', 3302, 'html').toUpperCase() ){filter = 0}
-		else if ( filter == Lincko.Translation.get('app', 3303, 'html').toUpperCase() ){filter = 1}
-		else if ( filter == 'Spaces' ){}
-		*/
 
 		for( var i in items ){
 			item = items[i];
@@ -550,20 +523,7 @@ skylist.prototype.filter_by_duedate = function(items, filter){
 			}
 		}
 	}
-	/*
-	if 		( filter == Lincko.Translation.get('app', 3302, 'html').toUpperCase()/*today ){filter_num = 0}
-	/*else if ( filter == Lincko.Translation.get('app', 3303, 'html').toUpperCase()/*tomorrow ){filter_num = 1}
-	/*else if ( filter == 'Spaces' ){}
-	else{ filter_num = null }
-
-	for (var i in items){
-		item = items[i];
-		duedate = app_layers_dev_skytasks_calcDuedate(item);
-		if(filter_num == null || duedate.happensSomeday(filter_num)){
-			items_filtered.push(item);
-		}
-	}
-	*/
+	
 	this.Lincko_itemsList_filter.duedate = filter;
 	return items_filtered;
 }
@@ -631,70 +591,6 @@ skylist.prototype.filter_by_search = function(items, filter){
 		$.each(searchbar.filterLinckoItems(items, filter_array), function(i, item){
 			items_filtered.push(item);
 		});
-
-
-
-		/*var item = null;
-		var push = false;
-		var word = null;
-		var userid_array = null;
-		var userid = null;
-		for( var i=0; i < items.length; i++){ //for each item
-			item = items[i];
-			push = false;
-
-			for( var j=0; j < filter_array.length; j++){ //for each word
-				word = filter_array[j];
-				var burgerOnly = false;
-				if( word[0] == '@'){
-					word = word.slice(1);
-					burgerOnly = '@';
-				}
-				else if(word.substring(0,2) == '++'){
-					word = word.slice(2);
-					burgerOnly = '++';
-				}
-
-				userid_array = that.search_by_username(word);
-				if(!word.length || (Lincko.storage.searchArray('word', word, [item]).length > 0 && !burgerOnly) ){
-					push = true;
-					break;
-				}
-				else if( userid_array.length && (burgerOnly == false || burgerOnly == '@') ){ //userOnly both true/false
-					for( var k=0; k < userid_array.length; k++){
-						userid = userid_array[k];
-						if( that.list_type == 'tasks' ){
-							if(!item['_users']){ //not assigned
-								break;
-							}
-							else if( userid in item['_users'] && item['_users'][userid]['in_charge'] ){
-								push = true;
-								break;
-							}
-						}
-						else if( that.list_type == 'notes' || that.list_type == 'files' ){
-							if( item['updated_by'] == userid ){
-								push = true;
-								break;
-							}
-						}
-					}//END OF for each userid_array
-					if(push){
-						break;
-					}
-				}
-				else if( that.isDueThisTime(item, word) && (burgerOnly == false || burgerOnly == '++') ){
-					push = true;
-					break;
-				}
-			}//END OF for word
-
-			if(push){
-				items_filtered.push(item);
-			}
-
-		}//END OF for items
-		*/
 	}
 	return items_filtered;
 }
@@ -796,43 +692,7 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 
 
 	return;
-
-	/*that.list.velocity("fadeOut",{
-		mobileHA: hasGood3Dsupport,
-		duration: 200,
-		complete: function(){
-			if( that.list.find('.iscroll_sub_div').length > 0 ){
-				iscroll_elem = that.list.find('.iscroll_sub_div').recursiveEmpty();
-			}else{
-				iscroll_elem = that.list.recursiveEmpty();
-			}
-
-			if(that.list_type == 'tasks'){
-				iscroll_elem.append(burgerN.typeTask(null, that));
-			}
-
-			if( items_filtered.length < 1 ){
-				var noResultString = that.noResult_str;
-				iscroll_elem.append(noResultString);
-			}
-			else{
-				for (var i in items_filtered){
-					item = items_filtered[i];
-					iscroll_elem.append(that.addCard(item));
-				}
-			}
-			
-			that.store_all_elem();
-			that.window_resize();
-		}
-	})
-	.velocity("fadeIn",{
-		mobileHA: hasGood3Dsupport,
-		duration: 200,
-		complete: function(){
-			that.window_resize();
-		}
-	});*/
+	
 }
 skylist.prototype.iscrollRefresh = function(){
 	var that = this;
@@ -1426,18 +1286,6 @@ skylist.prototype.addTask = function(item){
 				if(duration){
 					param.duration = duration;
 				}
-
-
-
-				/*wrapper_sendAction({
-				id: item['_id'],
-				title: new_text,
-				}, 'post', 'task/update', 
-				function(msg, data_error, data_status, data_msg){ 
-					if(data_error){
-						app_application_lincko.prepare(item['_type']+'_'+item['_id']);
-					}
-				}, function(){ app_application_lincko.prepare(item['_type']+'_'+item['_id']); });*/
 
 
 				skylist.sendAction.tasks(
@@ -2206,169 +2054,6 @@ skylist.prototype.addFile = function(item){
 	that.add_cardEvents(Elem);
 
 	return Elem;
-
-
-
-
-
-
-
-
-
-
-
-/*
-	if there is no issue, delete code below
-*/
-
-	var Elem = $('#-skylist_card').clone();
-	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').recursiveEmpty();
-	var updated_by;
-	var updated_at;
-
-	if(item == null){
-		item = {};
-		item['_id'] = 'new';
-
-	}
-	Elem.prop('id','skylist_card_'+that.md5id+'_'+item['_id']);
-
-	/*
-	title
-	*/
-	var elem_title = Elem.find('[find=title]');
-	elem_title.html(item['+name']);
-	
-	var contenteditable = false;
-	if( typeof item == 'object' && '_perm' in item && wrapper_localstorage.uid in item['_perm'] && item['_perm'][wrapper_localstorage.uid][0] > 1 ){ //RCU and beyond
-		contenteditable = true; 
-	}
-	if(contenteditable){
-		elem_title.on('mousedown touchstart', function(event){ 
-			if( responsive.test("maxMobileL") ){ return true; }
-			that.editing_target = $(this);
-			clearTimeout(that.editing_timeout);
-			that.editing_timeout = setTimeout(function(){
-				that.editing_target.attr('contenteditable',contenteditable);
-				that.editing_target.focus();
-			},1000);
-		});
-		elem_title.on('mouseup touchend', function(event){
-			clearTimeout(that.editing_timeout);
-		});
-		elem_title.keydown(function(event){
-			if(event.keyCode == 13){
-				event.preventDefault();
-				$(this).focusout();
-				$(this).blur();
-			}
-		});
-		elem_title.blur(function(){
-			that.editing_target.attr('contenteditable',false);
-			var new_text = $(this).html();
-			if(new_text != item['+name']){
-				wrapper_sendAction({
-				id: item['_id'],
-				name: new_text,
-				}, 'post', 'file/update', 
-				function(msg, data_error, data_status, data_msg){ 
-					if(data_error){
-						app_application_lincko.prepare(item['_type']+'_'+item['_id']);
-					}
-				}, function(){ app_application_lincko.prepare(item['_type']+'_'+item['_id']); });
-			}
-		});
-	}
-
-
-
-
-	/*
-	 file description and preview image
-	 */
-	 var fileType_class = 'fa fa-file-o';
-	 var elem_leftbox = $('<span></span>').addClass('skylist_card_leftbox_fileIcon');
-	 var real_url = null;
-	 var thumb_url = null;
-	 if(item['category'] == 'image'){
-		fileType_class = 'fa fa-file-image-o';
-		thumb_url = Lincko.storage.getLinkThumbnail(item['_id']);
-		real_url = Lincko.storage.getLink(item['_id']);
-		elem_leftbox = $('<img />').prop('src',thumb_url).click(item['_id'], function(event){
-			event.stopPropagation();
-			previewer.pic(event.data);
-		});
-	 }
-	 else if(item['category'] == 'video'){
-		fileType_class = 'fa fa-file-video-o';
-		thumb_url = Lincko.storage.getLinkThumbnail(item['_id']);
-		real_url = Lincko.storage.getLink(item['_id']);
-		elem_leftbox = $('<img />').prop('src',thumb_url).click(item['_id'], function(event){
-			event.stopPropagation();
-			previewer.video(event.data);
-		});
-	 }
-	 else{
-	 	fileType_class = app_models_fileType.getClass(item.ori_ext);
-	 	elem_leftbox.addClass(fileType_class);
-	 }
-
-	var elem_fileType = $('<div>'+Lincko.Translation.get('app', 3602, 'html')+': '+item['category']+', '+item['ori_ext'].toUpperCase()+'</div>');
-	Elem.find('[find=description]').html(elem_fileType);
-	Elem.find('[find=card_leftbox]').append(elem_leftbox);
-
-
-
-
-	/*updated_by*/
-	updated_by = item['updated_by'];
-	updated_by = Lincko.storage.get("users", updated_by,"username");
-	Elem.find('[find=name]').html(updated_by);
-	
-
-	/*
-	comments
-	*/
-	var commentCount = 0;
-	var comments = Lincko.storage.list('comments',null, null, that.list_type, item['_id'], true);
-	commentCount = comments.length;
-	Elem.find('[find=commentCount]').html(commentCount);
-
-	updated_at = new wrapper_date(item['updated_at']);
-	if(skylist_textDate(updated_at)){
-		updated_at = skylist_textDate(updated_at);
-	}
-	else{
-		updated_at = updated_at.display('date_very_short');
-	}
-	Elem.find('[find=card_time]').html(updated_at);
-
-
-	/*
-	updated_by (quickInfo)
-	*/
-	var fileSize = app_layers_files_bitConvert(item['size']);
-	var sizeUnit = fileSize.unit;
-	var sizeNum = fileSize.val;
-
-	Elem.find('[find=quickInfo1]').html(Lincko.Translation.get('app', 3603, 'html')+': ');
-	Elem.find('[find=quickInfo2]').html(sizeNum+' '+sizeUnit);
-
-
-	Elem.data('item_id',item['_id']);
-	Elem.data('options',false);
-
-	
-	Elem.on('click', function(event){
-		if( that.panyes == false ){
-			that.taskClick(event,this);
-		}
-	});
-
-
-	that.add_cardEvents(Elem);
-
-	return Elem;
 }
 
 skylist.prototype.add_rightOptionsBox = function(text, icon_class){
@@ -2638,33 +2323,6 @@ skylist.prototype.setHeight = function(){
 	that.list_wrapper.height(parentH);
 	that.list_subwrapper.height(parentH - that.list_subwrapper.position()['top'] - paperView_typeTask_H);
 
-	
-
-/*
-
-	var parentH = 0;
-	var elem_parent = that.list_wrapper.parent();
-	if(elem_parent.hasClass('submenu_wrapper')){
-		parentH = elem_parent.height();
-		var elem_submenu_bottom = elem_parent.find('[find=submenu_wrapper_bottom]');
-		if(elem_submenu_bottom){
-			parentH -= elem_submenu_bottom.outerHeight();
-		}
-	}
-	else{
-		parentH = $(window).height();
-		if(responsive.test("maxMobileL")){
-			height -= $('#app_content_menu').outerHeight();
-		}
-	}
-
-	var height = parentH - $('#app_content_top').outerHeight(); /*- $('#app_layers_dev_skytasks_navbar').outerHeight()*/
-/*	
-	that.list_wrapper.height(height);
-	that.list_subwrapper.height(height - that.elem_navbar.outerHeight());
-	*/
-	//[toto] Bruno => a proposal to make it compatible with submenu/preview
-	//that.list_subwrapper.height(that.list_wrapper.parent().height() - that.list_subwrapper.position()['top']);
 }
 
 skylist.prototype.checkboxClick = function(event,elem_checkbox){
@@ -2695,16 +2353,6 @@ skylist.prototype.checkboxClick = function(event,elem_checkbox){
 	Lincko.storage.data.tasks[task._id].approved = approved;
 	app_application_lincko.prepare('tasks_'+task._id, true);
 
-/*
-	var detail = $('#app_layers_skytasks_detail');
-	if( !detail.hasClass('display_none') ){
-		var taskid_detail = detail.find('[find=taskid]').html();
-		var taskid_task = task.data('taskid');
-		if( taskid_detail == taskid_task ){
-			detail.find('.app_layers_skytasks_checkbox label').toggleClass("app_layers_skytasks_detail_checked");
-		}
-	}
-*/
 }
 
 skylist.prototype.taskClick = function(event,task_elem){
@@ -2810,23 +2458,6 @@ skylist.prototype.menu_construct = function(){
 		elem_people1.toggleClass('skylist_menu_selected');
 		elem_people2.toggleClass('skylist_menu_selected');
 	}
-
-/*
-	that.elem_navbar.find('[people]').on('click', function(){
-		var selection = $(this);
-		if(selection.hasClass('skylist_menu_selected')){
-			//return false;
-		}
-		$('#skylist_menu_navbar [people]').removeClass('skylist_menu_selected');
-		selection.addClass('skylist_menu_selected');
-		if( selection.attr('people') == 1 ){
-			that.tasklist_update( 'people', wrapper_localstorage.uid );
-		}
-		else{
-			that.tasklist_update( 'people', null );
-		}
-	});
-	*/
 	
 
 	/*
@@ -2869,51 +2500,6 @@ skylist.prototype.menu_construct = function(){
 	}
 	searchbarInst = searchbar.construct(searchbar_keyup);
 	that.elem_navbar.append(searchbarInst.elem.addClass('skylist_menu_navbar_search'));
-
-
-	//burger(that.elem_navbar.find('[find=search_textbox]'), 'regex');
-	/*var elem_search_input = that.elem_navbar.find('[find=search_textbox]');
-	var elem_search_overlay = that.elem_navbar.find('.skylist_menu_navbar_search_overlay');
-	var elem_search_clear = that.elem_navbar.find('[find=search_clear]');
-
-	elem_search_overlay.click(function(){
-		$(this).addClass('display_none');
-		elem_search_input.focus();
-	});
-
-	elem_search_clear.on('mousedown touchstart', function(event){
-		event.preventDefault();
-		elem_search_input.val('');
-		elem_search_input.keyup();
-	});
-
-	elem_search_input.focus(function(){
-		elem_search_clear.removeClass('display_none');
-	});
-
-	elem_search_input.keyup(function(event){
-		var search_term = $(this).val();
-		clearTimeout(that.searchTimeout);
-		if(event.keyCode == 13){
-			that.tasklist_update('search',search_term);
-		}
-		else{
-			that.searchTimeout = setTimeout(function(){
-				if( that.Lincko_itemsList_filter.search == search_term ){
-					return false;
-				}
-				that.tasklist_update('search',search_term);
-			},400);
-		}
-	});
-
-	elem_search_input.blur(function(event){
-		if( $(this).val() == '' ){
-			elem_search_input.keyup();
-			elem_search_clear.addClass('display_none');
-			elem_search_overlay.removeClass('display_none');
-		}
-	});*/
 	
 	that.list_wrapper.append(that.elem_navbar);
 
