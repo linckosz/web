@@ -295,7 +295,6 @@ var app_generic_state = {
 		return this.quick_item;
 	},
 	openItem: function(old, url){
-		debugger;
 		if(!this.allowed){ return false; }
 		if(typeof url == 'undefined'){ url = false; }
 		if(typeof old == 'undefined'){ old = false; }

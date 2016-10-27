@@ -44,7 +44,6 @@
 
 var inputter = function(panel_id,position,upload_ptype,upload_pid,layer,burger)
 {
-	debugger;
 	this.elements_lib = 
 	{
 		chkTask :
@@ -236,11 +235,6 @@ inputter.prototype.buildLayer = function()
 									var type = event.data.type ;
 									var pid = event.data.pid ;
 									app_upload_open_files(type, pid,false,auto_upload,'inputter_files_'+type+'_'+pid);
-
-									if(!auto_upload && $('#'))
-									{
-
-									}
 								});
 								if(!this.layer['right_menu'][i].hasOwnProperty('click') && !auto_upload)
 								{
@@ -467,5 +461,20 @@ inputter.prototype.buildLayer = function()
 	}
 
 	container.appendTo(this.position);
+
+
+	enquire.register(responsive.minDesktop, function(){
+		$(".submenu_chats .inputter_container").removeClass('no_desktop_style');
+	});
+
+	enquire.register(responsive.noDesktop, function(){
+		$(".submenu_chats .inputter_container").addClass('no_desktop_style');
+	});
+
+
 }
+
+
+
+
 

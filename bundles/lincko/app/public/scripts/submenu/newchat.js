@@ -237,8 +237,7 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 					//myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
 					app_submenu_scrollto(myIScrollList[overthrow_id], last[0], scroll_time);
 				}
-				
-				//var textarea = $("#"+sub_that.id).find("[find=chat_textarea]");
+								//var textarea = $("#"+sub_that.id).find("[find=chat_textarea]");
 				$(elem).text('');
 				app_application_lincko.prepare(["chat_contents_wrapper", "chats_" + sub_that.param.id]);
 				$(elem).focus();
@@ -257,7 +256,7 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 		mobile_row : 1,
 		mobile_max_row : 3,
 		mobile_backgroup_flag : true,
-		mobile_input_border_flag : true,
+		//mobile_input_border_flag : true,
 		top_line : true,
 		mobile_top_line : false,
 		enter : fnSendMsg,
