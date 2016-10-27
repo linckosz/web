@@ -211,6 +211,32 @@ burgerN.ChineseNumberConverter = function(input){
 
 }
 
+var burger_parseHTML = function(elem){
+	if(!elem){ return false; }
+	else if(!elem instanceof $){
+		var elem = $(elem);
+	}
+
+	var parsedData = {
+		text: null,
+		userid: null,
+		timestamp: null,
+	}
+
+	//get text
+	parsedData.text = $.trim(elem.contents().filter(function() {
+	  return this.nodeType == 3;
+	}).text());
+
+	//get userid
+	parsedData.userid = elem.find('[userid]').eq(0).attr('userid');
+
+	//get date
+	parsedData.timestamp = elem.find('[find=dateWrapper]').eq(0).attr('val');
+
+	return parsedData;
+
+}
 
 burgerN.typeTask = function(projectID, skylistInst, dropdownOffset){
 	if(!projectID){
@@ -768,12 +794,14 @@ burgerN.regex = function(elem, item, param){
 			that.slideDown(elem_dropdown);
 		}
 		else if((event.which || event.keyCode) == 13 ){ //if enter is pressed
-			if(param && param.elem_input && typeof param.enter_fn == 'function'){
+			if(param /*&& param.elem_input*/ && typeof param.enter_fn == 'function'){
+				var parsedData = burger_parseHTML(elem);
+
 				if(param.enter_fn_param){
-					param.enter_fn(param.enter_fn_param);
+					param.enter_fn(parsedData, param.enter_fn_param);
 				}
 				else{
-					param.enter_fn();
+					param.enter_fn(parsedData);
 				}
 			}
 			else{

@@ -2410,46 +2410,66 @@ skylist.prototype.paperView_toggleExpandable = function(elem_expandable, cb_comp
 skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_type, upload_parent_id){
 	var that = this;
 
-	var fn_createTask = function(){
+	var fn_createTask = function(parsedData, enter_fn_param){
 		console.log('skylist inputer fn_createTask');
+		console.log(that);
+		console.log(parsedData);
 	}
 
-	var inputter_setting = {
-        row : 3,
-        max_row : 3,
-        mobile_row : 1,
-        mobile_max_row : 3,
-        mobile_backgroup_flag : true,
-        mobile_input_border_flag : true,
-        top_line : true,
-        mobile_top_line : false,
-        enter : fn_createTask,
-        auto_upload : true,
-        menu :
-        [    
-            [
+	var inputter_setting = {												
+		row : 3,//desktop height
+		max_row : 3,//desk top max height
+		mobile_row : 1,//mobile height
+		mobile_max_row : 3,//mobile max height
+		mobile_backgroup_flag : true, //gray-true;white-false
+		mobile_input_border_flag : true, //input border;orange
+		top_line : true, //inputter top line for desktop;orange
+		mobile_top_line : false, //mobile inputter top line
+		enter : fn_createTask, //enter event
+		auto_upload : true,	
+		menu :	
+		[															
+			[														
+				{													
+					element : 'btScissors',							
+					mobile_hide : true,								
+				},													
+				{													
+					element : 'btSend',								
+					mobile_hide : true,								
+					empty : 'hide',									
+					click : fn_createTask,								
+				},													
+			],														
+			[														
+				{													
+					element : 'btAttachment',						
+					empty : 'show',									
+				},													
+			],														
+		],															
+	};
 
-            //{
-            //    element : 'btScissors',
-            //    mobile_hide : true,
-            //},
-            {
-                element : 'btSend',
-                mobile_hide : true,
-                empty : 'hide',
-                click : fn_createTask,
-            },],
-            [{
-                element : 'btAttachment',
-                empty : 'show',
-            },],
-        ],
-    };
+	/* burgerN.regex param
+		param.elem_input
+		param.projectID
+		param.dropdownOffset
+		param.disable_shortcutUser
+		param.enter_fn
+		param.enter_fn_param
+		param.dropdownOffset
+	*/
+	var burgerParam = {
+		dropdownOffset: 20,
+		enter_fn: fn_createTask,/*function(){
+			fn_createTask();
+		},*/
+		enter_fn_param: {},
+	};
 
-	var submenu = {};
-	submenu.id = 'skylist_'+that.list_type+'_'+that.md5id;
 
-var paperview_inputter = new inputter(submenu, elem_appendTo, upload_parent_type, upload_parent_id, inputter_setting, true);
+
+var paperview_inputter = new inputter('skylist_'+that.list_type+'_'+that.md5id, elem_appendTo, upload_parent_type, upload_parent_id, inputter_setting, burgerParam);
 
 return true;
 }
