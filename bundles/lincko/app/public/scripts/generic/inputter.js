@@ -71,10 +71,71 @@ var inputter = function(panel_id,position,upload_ptype,upload_pid,layer,burger)
 	this.upload_pid = upload_pid;
 	this.layer = layer;
 	this.burger = burger;
+	this.hasTask = false;
 	this.task_completed = false;
 	this.buildLayer();
-
 }
+
+inputter.prototype.getContent = function()
+{
+
+	var container = $('#'+this.panel_id+'_inputter_container');
+	var text = container.find('[find=chat_textarea]').get(0).innerHTML.replace(/<div>/g,"<br>").replace(/<\/div>/g,"");
+	var html = container.find('[find=chat_textarea]').get(0).innerHTML;
+	var files = app_upload_files.lincko_files;
+	var files_index = [];
+	for(var i in files)
+	{
+		if(files[i].lincko_parent_type == this.upload_ptype
+			&&files[i].lincko_parent_id == this.upload_pid
+			&&files[i].lincko_param == 'inputter_files_' + this.upload_ptype +'_'+this.upload_pid)
+		{
+			files_index.push(files[i].lincko_files_index);
+		}
+	}
+
+	var data = {
+		elem:container.find('[find=chat_textarea]'),
+		text:text,
+		html:html,
+		files_index:files_index,
+		checked:this.task_completed,
+	}
+
+
+
+	return data;
+} 
+
+
+inputter.prototype.clearContent = function()
+{
+	this.task_completed = false;
+
+	var auto_upload = this.layer.hasOwnProperty('auto_upload') ? this.layer['auto_upload'] : true;
+	if(!auto_upload)
+	{
+		for(var i in app_upload_files.lincko_files)
+		{
+			if(app_upload_files.lincko_files[i].lincko_parent_type == this.upload_ptype
+				&&app_upload_files.lincko_files[i].lincko_parent_id == this.upload_pid
+				&&app_upload_files.lincko_files[i].lincko_param == 'inputter_files_' + this.upload_ptype +'_'+this.upload_pid)
+			{
+				var e; //undefined
+				$('#app_upload_fileupload').fileupload('option').destroy(e, app_upload_files.lincko_files[i]);
+			}
+		}
+	}
+
+	var container = $('#'+this.panel_id+'_inputter_container');
+	container.find('[find=chat_textarea]').get(0).innerHTML = '';
+	container.find('[find=checkbox]').removeClass('inputter_container_checked');
+	container.find('[find=files_queue]').html('');
+
+
+} 
+
+
 
 inputter.prototype.buildLayer = function()
 {
@@ -143,16 +204,17 @@ inputter.prototype.buildLayer = function()
 						switch(this.elements_lib[elem]['target'])
 						{
 							case 'checkbox':
+								this.hasTask = true;
 								item.click(function(){
-									if($(this).hasClass('inputter_container_checked'))
+									if(that.task_completed)
 									{
 										$(this).removeClass('inputter_container_checked');
-										this.task_completed = false;
+										that.task_completed = false;
 									}
 									else
 									{
 										$(this).addClass('inputter_container_checked');
-										this.task_completed = true;
+										that.task_completed = true;
 									}
 								});
 								break;
@@ -210,20 +272,14 @@ inputter.prototype.buildLayer = function()
 							item.addClass('empty_' + this.layer['right_menu'][i][j]['empty']);
 						}
 
-					
 						switch(this.elements_lib[elem]['target'])
 						{
 							case 'send':
 								if(this.layer['right_menu'][i][j].hasOwnProperty('click'))
 								{
-									var fn = this.layer['right_menu'][i][j]['click'];
-									item.click(fn,function(event){
-										var msg = container.find('[find=chat_textarea]').get(0).innerHTML.replace(/<div>/g,"<br>").replace(/<\/div>/g,"");
+									item.click(this.layer['right_menu'][i][j]['click'],function(event){
 										var fn = event.data;
-										fn(msg);
-										
-										container.find('[find=chat_textarea]').get(0).innerHTML = '';
-										
+										fn(that);
 										$('.empty_show').removeClass('mobile_hide');
 										$('.empty_hide').addClass('mobile_hide');
 									});
@@ -296,8 +352,6 @@ inputter.prototype.buildLayer = function()
 															    .find(".shortcut_ico")
 																.addClass('display_none');
 
-
-
 															var width =  files[z].files[0].preview.width;
 															var height =  files[z].files[0].preview.height;
 															var width_style  = width > height ? 30 : 'auto';
@@ -328,6 +382,19 @@ inputter.prototype.buildLayer = function()
 										if(count == 0)
 										{
 											$('#'+this.action_param[2]+'_attachment .inputter_ico').removeClass('mobile_hide');
+
+											$('#'+this.action_param[2]+'_attachment .inputter_preview')
+																.find(".shortcut_pic")
+																.addClass('display_none')
+																.attr('src','');
+
+											$('#'+this.action_param[2]+'_attachment .inputter_preview')
+												.find('.shortcut_ico')
+												.addClass('display_none')
+												.find('i')
+												.removeClass()
+												.addClass('fa')
+												.addClass('inputter_preview_icon');
 										}
 										
 									},[this.upload_ptype,this.upload_pid,this.panel_id]);
@@ -386,9 +453,13 @@ inputter.prototype.buildLayer = function()
 		input.find('[find=chat_textarea]').addClass('inputter_mobile_max_row_'+this.layer['mobile_max_row']);
 	}
 
+
 	if(this.layer.hasOwnProperty('mobile_input_border_flag'))
 	{
-		input.find('[find=chat_textarea]').addClass('inputter_mobile_input_border_orange');
+		if(this.layer['mobile_input_border_flag'])
+		{
+			input.find('[find=chat_textarea]').addClass('inputter_mobile_input_border_orange');
+		}
 	}
 
 	input.find('[find=chat_textarea]').on('keyup',function(){
@@ -425,14 +496,12 @@ inputter.prototype.buildLayer = function()
 			else
 			{
 				e.preventDefault();
-				var msg = this.innerHTML.replace(/<div>/g,"<br>").replace(/<\/div>/g,"");
-
 				if(this.innerText.length > 0 && that.layer.hasOwnProperty('enter'))
 				{
 					if(that.burger == null)
 					{
 						var fn = that.layer['enter'];
-						fn(this,msg);
+						fn(that);
 					}
 					$('.empty_show').removeClass('mobile_hide');
 					$('.empty_hide').addClass('mobile_hide');
@@ -449,28 +518,53 @@ inputter.prototype.buildLayer = function()
 
 
 
-
-	if(!supportsTouch){
+	if(!supportsTouch && !this.hasTask){
 		setTimeout(function(){
 		input.find('[find=chat_textarea]').get(0).focus();
 		},200);
 	}
+
+	if(this.hasTask)
+	{
+		var defaultPhrase = Lincko.Translation.get('app', 2204, 'html'); //type here to add a task
+		input.find('[find=chat_textarea]').get(0).innerText = defaultPhrase;
+
+		var cancelBlur = false;
+		input.find('[find=chat_textarea]').focus(function(event, param){
+			if(typeof param == 'object' && param.cancelBlur){ cancelBlur = true; }
+
+			//$(this).closest('[find=toggleOpacity]').removeClass('burger_typeTask_opacity');
+			if($(this).html() == defaultPhrase){
+				$(this).text('');
+				burgerN.placeCaretAtEnd($(this));
+			}
+		});
+		input.find('[find=chat_textarea]').blur(function(event){
+			if(cancelBlur){
+				event.preventDefault();
+				cancelBlur = false;
+				return;
+			}
+			
+			//$(this).closest('[find=toggleOpacity]').addClass('burger_typeTask_opacity');
+			if($(this).html() == ''){
+				$(this).html(defaultPhrase);
+			}
+		});
+	}
+	
+
+
 	
 	if(this.burger != null){
+		if(that.burger.enter_fn_param == 'inputter')
+		{
+			that.burger.enter_fn_param = this;
+		}	
 		burgerN.regex(input.find('[find=chat_textarea]').eq(0), null, that.burger);	
 	}
 
 	container.appendTo(this.position);
-
-
-	enquire.register(responsive.minDesktop, function(){
-		$(".submenu_chats .inputter_container").removeClass('no_desktop_style');
-	});
-
-	enquire.register(responsive.noDesktop, function(){
-		$(".submenu_chats .inputter_container").addClass('no_desktop_style');
-	});
-
 
 }
 

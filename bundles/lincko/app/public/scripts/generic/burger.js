@@ -223,6 +223,7 @@ burgerN.typeTask = function(projectID, skylistInst, dropdownOffset){
 	var elem_typeTask = $('#-burger_typeTask').clone().prop('id','');
 	var elem_typingArea = elem_typeTask.find('[find=text]');
 
+
 	var defaultPhrase = Lincko.Translation.get('app', 2204, 'html'); //type here to add a task
 	elem_typingArea.text(defaultPhrase);
 

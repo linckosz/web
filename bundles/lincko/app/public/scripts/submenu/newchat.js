@@ -175,17 +175,23 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 	submenu_wrapper.addClass("submenu_chats");
 	
 	var that = this;
-
 	var position = submenu_wrapper.find("[find=submenu_wrapper_bottom]");
 	position.addClass('submenu_bottom');
 
-	var that = this;
-	function fnSendMsg(elem,msg) {
-		var content = msg;
+	function fnSendMsg(inputter) {
+		var data = inputter.getContent();
+		var elem = data.elem;
+		var content = data.text;
 		var type = that.param.type == 'history' ? "projects":'chats';
 		var sub_that = that;
 		var tmpID = [];
 
+		inputter.clearContent();
+
+		if($.trim(content)==''){ 
+			base_show_error(Lincko.Translation.get('app', 64, 'html'),true);
+			return false; 
+		}
 		wrapper_sendAction({
 				'comment': content,
 				'parent_type': type,
@@ -217,7 +223,6 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 			null,
 			function(jqXHR, settings, temp_id) {
 				tmpID.push(temp_id);
-				if($.trim(content)==''){ return false; }
 
 				var data = {
 					'id': temp_id,
@@ -237,7 +242,7 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 					//myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
 					app_submenu_scrollto(myIScrollList[overthrow_id], last[0], scroll_time);
 				}
-								//var textarea = $("#"+sub_that.id).find("[find=chat_textarea]");
+
 				$(elem).text('');
 				app_application_lincko.prepare(["chat_contents_wrapper", "chats_" + sub_that.param.id]);
 				$(elem).focus();
@@ -256,18 +261,18 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 		mobile_row : 1,
 		mobile_max_row : 3,
 		mobile_backgroup_flag : true,
-		//mobile_input_border_flag : true,
+		mobile_input_border_flag : false,
 		top_line : true,
 		mobile_top_line : false,
 		enter : fnSendMsg,
 		auto_upload : true,
 
-		left_menu :
-		[
-			// [{
-			// 	element :'chkTask',
-			// }],
-		],
+		// left_menu :
+		// [
+		// 	[{
+		// 		element :'chkTask',
+		// 	}],
+		// ],
 		right_menu :
 		[	
 			[
@@ -290,6 +295,14 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 			],
 		],
 	};
+
+	// var burgerParm = 
+	// {
+	// 	shiftEnter : true,
+	// 	dropdownOffset : 20,
+	// 	enter_fn_param : 'inputter',
+	// 	enter_fn : that.layer['enter'],
+	// }
 
 	var type = that.param.type == 'history' ? "projects":'chats';
 	var chat_inputter = new inputter(this.id,position,type,that.param.id,layer,null);
