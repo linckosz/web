@@ -504,6 +504,9 @@
  .skylist_wrapper>.burger_typeTask{
  	display:none;
  }
+.skylist_wrapper>.inputter_container{
+ 	display:none;
+ }
 .skylist_checkbox {
 	cursor: pointer;
 	/* background-color: #EFEFEF; */
