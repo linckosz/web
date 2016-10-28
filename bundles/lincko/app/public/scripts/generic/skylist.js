@@ -1303,7 +1303,6 @@ skylist.prototype.addTask = function(item){
 
 			}
 		});
-		//burger(Elem.find('[find=title]'), 'regex');
 		burgerN.regex(Elem.find('[find=title]'), item);
 	}
 
@@ -1330,7 +1329,6 @@ skylist.prototype.addTask = function(item){
 
 	//Elem.find('[find=name_hidden]').toggleClass('display_none');
 	Elem.find('[find=name]').html(in_charge);
-	//burger(Elem.find('input[find=name_hidden]'), '_users', item);
 	if( !Lincko.storage.get("projects", app_content_menu.projects_id, 'personal_private') && !responsive.test("maxMobileL") ){
 		burgerN.assignTask(Elem.find('input[find=name_hidden]'), item);
 	}

@@ -604,7 +604,6 @@ Submenu.prototype.Add_taskdetail = function() {
 			var elem_in_charge = elem.find('[find=user_text]');
 			var elem_in_charge_hidden = elem.find('[find=user_text_hidden]').addClass('skylist_clickable');
 			elem_in_charge.html(in_charge);
-			//burger(elem_in_charge_hidden, '_users', item);
 
 			
 			if( !Lincko.storage.get("projects", that.param.projID, 'personal_private') ){
