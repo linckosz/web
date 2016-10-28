@@ -2410,10 +2410,124 @@ skylist.prototype.paperView_toggleExpandable = function(elem_expandable, cb_comp
 skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_type, upload_parent_id){
 	var that = this;
 
-	var fn_createTask = function(parsedData, enter_fn_param){
-		console.log('skylist inputer fn_createTask');
-		console.log(that);
-		console.log(parsedData);
+	var paperview_inputter = null;
+
+	var fn_createTask = function(parsedData, enter_fn_param){ console.log(that);
+		var title = parsedData.text;
+		var parent_id = app_content_menu.projects_id;
+
+		//default not assigned
+		var in_charge_id = null;
+		if(parsedData.userid){
+			in_charge_id = parsedData.userid;
+		}
+		if(Lincko.storage.get('projects', parent_id, 'personal_private')){
+		//if project is personal, default to self
+			in_charge_id = wrapper_localstorage.uid;
+		}
+		else if(that && that.Lincko_itemsList_filter && that.Lincko_itemsList_filter.people){
+		//default to current filtered person, if any
+			in_charge_id = that.Lincko_itemsList_filter.people;
+		}
+
+
+		var param = {
+			title: title,
+			parent_id: parent_id,
+		}
+
+		//set in charge if not unassigned
+		if(in_charge_id){
+			param['users>in_charge'] = {};
+			param['users>in_charge'][in_charge_id] = true;
+		}
+
+		//date logic
+		var duration = null;
+		var time_now = new wrapper_date();
+		var timestamp = parsedData.timestamp;
+		if(typeof timestamp != 'number' && typeof timestamp != 'string' 
+			&& that 
+			&& that.Lincko_itemsList_filter 
+			&& that.Lincko_itemsList_filter.duedate 
+			&& that.Lincko_itemsList_filter.duedate == 0 ){ //if no burger time, and filter is set to today, then make it due end of today
+			duration = time_now.getEndofDay() - time_now.timestamp;
+		}
+		if(timestamp == 0){
+			duration = time_now.getEndofDay() - time_now.timestamp;
+		}
+		else if(timestamp == 1){
+			//do nothing, use DefaultDuration and also dont follow filter
+		}
+		else{ //val == due date timestamp in seconds
+			duration = timestamp - time_now.timestamp;
+		}
+
+		param.start =  time_now.timestamp;
+		if(duration){
+			param.duration = duration;
+		}
+
+		var item = {
+			'+title': title,
+			'_parent': ['projects', parent_id],
+			'_perm': Lincko.storage.get('projects', parent_id, '_perm'),
+			'_type': 'tasks',
+			'_users': {},
+			'created_at':time_now.timestamp,
+			'start': time_now.timestamp,
+			'duration': duration,
+			'updated_by': wrapper_localstorage.uid,
+			'updated_at': time_now.timestamp,
+			'new': true,
+		}
+		item['_users'][in_charge_id] = {
+			approver: true,
+			in_charge: true,
+		}
+
+		if(that.Lincko_itemsList_filter.view == 'paper'){
+			item.paperView = true;
+		}
+		
+
+		var tempID = null;
+		var fakeID = base_getRandomInt(100000000000,999999999999);
+		var cb_begin = function(jqXHR, settings, temp_id){
+			tempID = temp_id;
+			item['temp_id'] = temp_id;
+			item['_id'] = fakeID;
+			item['fake'] = true;
+			Lincko.storage.data.tasks[fakeID] = item;
+			if(!('_children' in Lincko.storage.data.projects[parent_id])){
+				Lincko.storage.data.projects[parent_id]['_children'] = {};
+			}
+			if(!('tasks' in Lincko.storage.data.projects[parent_id]['_children'])){
+				Lincko.storage.data.projects[parent_id]['_children']['tasks'] = {};
+			}
+			Lincko.storage.data.projects[parent_id]['_children']['tasks'][fakeID] = true;
+			app_application_lincko.prepare('projects_'+parent_id, true);
+			skylist.sendActionQueue.tasks[temp_id] = [];
+		}
+
+		var cb_success = function(){
+			skylist.sendActionQueue.tasks.run(tempID);
+		}	
+
+		var cb_error = function(){
+			delete skylist.sendActionQueue.tasks[tempID];
+		}
+
+		var cb_complete = function(){
+			app_application_lincko.prepare('projects_'+parent_id, true);
+			var fakeTask = Lincko.storage.get('tasks',fakeID);
+			if(fakeTask){
+				delete Lincko.storage.data.tasks[fakeID];
+			}
+		}
+
+		wrapper_sendAction(param, 'post', 'task/create', cb_success, null, cb_begin, cb_complete);
+		return true;
 	}
 
 	var inputter_setting = {												
@@ -2426,12 +2540,12 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 		top_line : true, //inputter top line for desktop;orange
 		mobile_top_line : false, //mobile inputter top line
 		enter : fn_createTask, //enter event
-		auto_upload : true,	
-		menu :	
+		auto_upload : false,	
+		right_menu :	
 		[															
 			[														
 				{													
-					element : 'btScissors',							
+					element : 'btScissors1',							
 					mobile_hide : true,								
 				},													
 				{													
@@ -2458,18 +2572,18 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 		param.enter_fn
 		param.enter_fn_param
 		param.dropdownOffset
+		param.shiftEnter
 	*/
 	var burgerParam = {
 		dropdownOffset: 20,
-		enter_fn: fn_createTask,/*function(){
-			fn_createTask();
-		},*/
+		enter_fn: fn_createTask,
 		enter_fn_param: {},
+		shiftEnter: false,
 	};
 
 
 
-var paperview_inputter = new inputter('skylist_'+that.list_type+'_'+that.md5id, elem_appendTo, upload_parent_type, upload_parent_id, inputter_setting, burgerParam);
+paperview_inputter = new inputter('skylist_'+that.list_type+'_'+that.md5id, elem_appendTo, upload_parent_type, upload_parent_id, inputter_setting, burgerParam);
 
 return true;
 }

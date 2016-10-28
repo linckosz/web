@@ -232,7 +232,7 @@ var burger_parseHTML = function(elem){
 	parsedData.userid = elem.find('[userid]').eq(0).attr('userid');
 
 	//get date
-	parsedData.timestamp = elem.find('[find=dateWrapper]').eq(0).attr('val');
+	parsedData.timestamp = parseInt(elem.find('[find=dateWrapper]').eq(0).attr('val'), 10);
 
 	return parsedData;
 
@@ -465,6 +465,7 @@ burgerN.slideDown = function(elem_dropdown){
 	param.enter_fn
 	param.enter_fn_param
 	param.dropdownOffset
+	param.shiftEnter
 */
 burgerN.regex = function(elem, item, param){
 	var that = this;
@@ -607,7 +608,13 @@ burgerN.regex = function(elem, item, param){
 	//adding linebreak happens on keypress, not on keyup
 	elem.keypress(function(event){
 		if((event.which || event.keyCode) == 13){ //if enter is pressed
-			event.preventDefault();
+			if(param.shiftEnter && event.shiftKey){
+				event.returnValue=false;
+				return;
+			}	
+			else{
+				event.preventDefault();
+			}
 		}
 	});
 
