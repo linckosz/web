@@ -129,9 +129,15 @@ var hasGood3Dsupport =
 	|| 'OPerspective' in document.body.style
 	|| 'perspective' in document.body.style
 ;
-//Safari is
+
 if(navigator.userAgent.match(/iPhone|iPad|iPod/i)){
 	hasGood3Dsupport = false;
+}
+
+//Safari is
+var isSafariIOS = false;
+if(navigator.userAgent.match(/iPhone|iPad|iPod/i) && navigator.userAgent.match(/Safari/i)){
+	isSafariIOS = true;
 }
 
 var wrapper_test_result = null;

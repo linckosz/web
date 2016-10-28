@@ -76,7 +76,7 @@ html, body {
 
 .base_wrapper {
 	background-color: #FFFFFF;
-	position: fixed;
+	position: relative;
 	font-size: 14px;
 	width: 100%;
 	height: 100%;
@@ -85,13 +85,8 @@ html, body {
 	overflow: hidden;
 }
 
-.base_content {
-	width: 100%;
-	top: 0px;
-	bottom: 0px;
-	position: absolute;
-	overflow: hidden;
-	overflow-y: auto;
+.base_wrapper_scroll_y {
+	overflow-y: auto !important;
 }
 
 .base_table {
@@ -263,6 +258,7 @@ html, .font_sans_serif {
 	position: absolute;
 	z-index: 1;
 	border: none;
+	height: 0;
 }
 
 /* Maximum Mobile phone in Portrait */

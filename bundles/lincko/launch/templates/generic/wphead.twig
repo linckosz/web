@@ -80,7 +80,9 @@
 	dropmenu_selected_img.src = "{{ _filelatest('/lincko/launch/images/generic/wphead/selected.png') }}";
 
 	JSfiles.finish(function(){
-		$('#base_iframe_message').prop('data', wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix']);
+		$('#base_iframe_message')
+			.prop('src', wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix'])
+			.prop('data', wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix']);
 		wphead_active_menu('overview');
 		$(window).resize();
 	});

@@ -2,6 +2,8 @@
 {% block base %}
 	<body class="unselectable">
 		<script>
+		//No need analytics since it's used in blog website
+			/*
 			//Google analytics
 			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -18,6 +20,7 @@
 			document,'script','https://connect.facebook.net/en_US/fbevents.js');
 			fbq('init', '931792103613276');
 			fbq('track', "PageView");
+			*/
 		</script>
 		<script>
 			var base_input_field = {};
@@ -31,9 +34,7 @@
 		<div id="base_error"></div>
 		<div class="base_wrapper" id="base_wrapper">
 			{% include '/bundles/lincko/launch/templates/generic/wphead.twig' %}
-			<div class="base_content" id="base_content">
-				<object class="base_iframe_message overthrow" id="base_iframe_message" data="" type="text/html"></object>
-			</div>
+			<object class="base_iframe_message" id="base_iframe_message" data="" type="text/html"></object>
 		</div>
 	</body>
 {% endblock %}

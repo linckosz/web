@@ -28,17 +28,23 @@ $('#wphead_menu').click(function(){
 });
 
 $('#wphead_bar_blog').click(function(){
-	$('#base_iframe_message').prop('data', wphead_link['blog_prefix']);
+	$('#base_iframe_message')
+		.prop('src', wphead_link['blog_prefix'])
+		.prop('data', wphead_link['blog_prefix']);
 	wphead_active_menu('blog');
 });
 
 $('#wphead_bar_features').click(function(){
-	$('#base_iframe_message').prop('data', wphead_link['blog_prefix']+'/features'+wphead_link['blog_suffix']);
+	$('#base_iframe_message')
+		.prop('src', wphead_link['blog_prefix']+'/features'+wphead_link['blog_suffix'])
+		.prop('data', wphead_link['blog_prefix']+'/features'+wphead_link['blog_suffix']);
 	wphead_active_menu('features');
 });
 
 $('#wphead_bar_overview').click(function(){
-	$('#base_iframe_message').prop('data', wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix']);
+	$('#base_iframe_message')
+		.prop('src', wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix'])
+		.prop('data', wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix']);
 	wphead_active_menu('overview');
 });
 
@@ -48,6 +54,9 @@ var wphead_active_menu = function(menu){
 	if(typeof menu == 'undefined'){
 		menu = wphead_active_current_menu;
 	} else {
+		if(wphead_active_current_menu != menu){
+			$('body').scrollTop(0);
+		}
 		wphead_active_current_menu = menu;
 	}
 	
@@ -62,13 +71,19 @@ var wphead_active_menu = function(menu){
 	if($('#dropmenu_settings_'+menu).length>0){
 		$('#dropmenu_settings_'+menu).addClass('wphead_dropmenu_first_active');
 	}
+
+
 }
 
 $(window).resize(function(){
-	var body_height = $('body').innerHeight();
+	var body_height = $(window).innerHeight();
 	$('#wphead_dropmenu').css('max-height', body_height - $('#wphead_dropmenu').offset()['top']);
-	$('#base_iframe_message').css('height', body_height - $('#base_iframe_message').offset()['top']);
-	wrapper_IScroll();
+	//We can work with Scrolled iFrame for all browsaers, expect Safari on iOS
+	//For Safari iOS we don't need to resize since we force the object to be the full size
+	if(!isSafariIOS){
+		$('#base_iframe_message').css('height', body_height - $('#base_iframe_message').offset()['top']);
+	}
+	wrapper_IScroll(); //Need it for dropmenu
 });
 
 dropmenu_list['settings'] = $.extend(
@@ -78,7 +93,9 @@ dropmenu_list['settings'] = $.extend(
 			"title": Lincko.Translation.get('web', 2001, 'html'), //Overview
 			"action": function(url){
 				if(url != $('#base_iframe_message').prop('data')){
-					$('#base_iframe_message').prop('data', url);
+					$('#base_iframe_message')
+						.prop('src', url)
+						.prop('data', url);
 					wphead_active_menu('overview');
 				}
 			},
@@ -91,7 +108,9 @@ dropmenu_list['settings'] = $.extend(
 			"title": Lincko.Translation.get('web', 2002, 'html'), //Features
 			"action": function(url){
 				if(url != $('#base_iframe_message').prop('data')){
-					$('#base_iframe_message').prop('data', url);
+					$('#base_iframe_message')
+						.prop('src', url)
+						.prop('data', url);
 					wphead_active_menu('features');
 				}
 			},
@@ -104,7 +123,9 @@ dropmenu_list['settings'] = $.extend(
 			"title": Lincko.Translation.get('web', 2003, 'html'), //Blog
 			"action": function(url){
 				if(url != $('#base_iframe_message').prop('data')){
-					$('#base_iframe_message').prop('data', url);
+					$('#base_iframe_message')
+						.prop('src', url)
+						.prop('data', url);
 					wphead_active_menu('blog');
 				}
 			},

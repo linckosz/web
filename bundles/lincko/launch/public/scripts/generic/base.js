@@ -83,3 +83,18 @@ $("img[name=captcha]").click(function(){
 	$("img[name=captcha]").prop("src",IMGcaptcha.src);
 });
 
+JSfiles.finish(function(){
+	//If Safari iOS we make the object bigger and indeed allow the scroll of the main page (not inside the iFrame)
+	if(isSafariIOS){
+		$('#base_wrapper').addClass('base_wrapper_scroll_y');
+		window.addEventListener("message", receiveMessage, false);
+		function receiveMessage(event){
+		    var child_body_height = event.data;
+			if(child_body_height > 0){
+				var wrapper_height = $('#base_iframe_message').offset()['top'] + child_body_height;
+				$('#base_iframe_message').css('height', child_body_height);
+				$('#base_wrapper').css('height', wrapper_height);
+			}
+		}
+	}
+});

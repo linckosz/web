@@ -45,15 +45,17 @@
 }
 
 .table_cell_center_link > span {
-	border-bottom: solid 1px transparent;
+	/*border-bottom: solid 1px transparent;*/
 }
 
 .table_cell_center_link:hover > span {
-	border-bottom: dotted 1px #FFFFFF;
+	/*border-bottom: dotted 1px #FFFFFF;*/
+	color: #FBA026;
 }
 
 .table_cell_center_link_active > span {
-	border-bottom: solid 1px #FFFFFF !important;
+	/*border-bottom: solid 1px #FFFFFF !important;*/
+	color: #FBA026 !important;
 	cursor: default;
 }
 
@@ -199,7 +201,7 @@
 
 #wphead_dropmenu {
 	display: none;
-	position: absolute;
+	position: fixed;
 	top: 49px;
 	z-index: 1000;
 	text-align: center;
