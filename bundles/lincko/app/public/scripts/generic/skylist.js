@@ -2412,7 +2412,11 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 
 	var paperview_inputter = null;
 
-	var fn_createTask = function(parsedData, enter_fn_param){ console.log(that);
+	var fn_createTask = function(parsedData, enter_fn_param){
+		if(parsedData instanceof inputter){
+			parsedData = burger_parseHTML(inputter.data.elem);
+		}
+
 		var title = parsedData.text;
 		var parent_id = app_content_menu.projects_id;
 
@@ -2443,7 +2447,7 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 		}
 
 		//date logic
-		var duration = null;
+		var duration = 86400; //default
 		var time_now = new wrapper_date();
 		var timestamp = parsedData.timestamp;
 		if(typeof timestamp != 'number' && typeof timestamp != 'string' 
@@ -2453,13 +2457,13 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 			&& that.Lincko_itemsList_filter.duedate == 0 ){ //if no burger time, and filter is set to today, then make it due end of today
 			duration = time_now.getEndofDay() - time_now.timestamp;
 		}
-		if(timestamp == 0){
+		else if(timestamp == 0){
 			duration = time_now.getEndofDay() - time_now.timestamp;
 		}
 		else if(timestamp == 1){
 			//do nothing, use DefaultDuration and also dont follow filter
 		}
-		else{ //val == due date timestamp in seconds
+		else if(timestamp){ //val == due date timestamp in seconds
 			duration = timestamp - time_now.timestamp;
 		}
 
@@ -2571,7 +2575,6 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 		param.disable_shortcutUser
 		param.enter_fn
 		param.enter_fn_param
-		param.dropdownOffset
 		param.shiftEnter
 	*/
 	var burgerParam = {

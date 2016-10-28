@@ -219,8 +219,8 @@ var burger_parseHTML = function(elem){
 
 	var parsedData = {
 		text: null,
-		userid: null,
-		timestamp: null,
+		userid: null, //@
+		timestamp: null, //++
 	}
 
 	//get text
@@ -232,7 +232,11 @@ var burger_parseHTML = function(elem){
 	parsedData.userid = elem.find('[userid]').eq(0).attr('userid');
 
 	//get date
-	parsedData.timestamp = parseInt(elem.find('[find=dateWrapper]').eq(0).attr('val'), 10);
+	var timestamp = elem.find('[find=dateWrapper]').eq(0).attr('val');
+	if(timestamp){
+		parsedData.timestamp = parseInt(timestamp, 10);
+	}
+	
 
 	return parsedData;
 
@@ -284,12 +288,8 @@ burgerN.typeTask = function(projectID, skylistInst, dropdownOffset){
 	//disable '@' for burgerN.regex if its personal space
 	param.disable_shortcutUser = Lincko.storage.get('projects', projectID, 'personal_private');
 
-	param.enter_fn = function(){
-
-		//remove all child DOMs (<span>) from title
-		var title = $.trim($(elem_typingArea).contents().filter(function() {
-		  return this.nodeType == 3;
-		}).text());
+	param.enter_fn = function(parsedData){
+		var title = parsedData.text;
 
 		var tempID = null;
 		var param = {
@@ -297,53 +297,53 @@ burgerN.typeTask = function(projectID, skylistInst, dropdownOffset){
 			parent_id: projectID,
 		}
 
+
 		//default not assigned
 		var in_charge_id = null;
-		//if project is personal, default to self
+		if(parsedData.userid){
+			in_charge_id = parsedData.userid;
+		}
 		if(Lincko.storage.get('projects', projectID, 'personal_private')){
+		//if project is personal, default to self
 			in_charge_id = wrapper_localstorage.uid;
 		}
-		else if(skylistInst && skylistInst.Lincko_itemsList_filter && skylistInst.Lincko_itemsList_filter.people){ //default to current filtered person, if any
+		else if(skylistInst && skylistInst.Lincko_itemsList_filter && skylistInst.Lincko_itemsList_filter.people){
+		//default to current filtered person, if any
 			in_charge_id = skylistInst.Lincko_itemsList_filter.people;
 		}
 
-		//if specific person was assigned, override default
-		var elem_users = elem_typingArea.find('[userid]');
-		if(elem_users.length){
-			in_charge_id = $(elem_users[0]).attr('userid');
-		}
+
 		//set in charge if not unassigned
 		if(in_charge_id){
 			param['users>in_charge'] = {};
 			param['users>in_charge'][in_charge_id] = true;
 		}
 
-
 		//date logic
 		var duration = defaultDuration;
 		var time_now = new wrapper_date();
-		var elem_dateWrapper = elem_typingArea.find('[find=dateWrapper]');
-		if(elem_dateWrapper.length){
-			var timestamp = elem_dateWrapper.attr('val');
-			if(timestamp == 0){
-				duration = time_now.getEndofDay() - time_now.timestamp;
-			}
-			else if(timestamp == 1){
-				//do nothing, use DefaultDuration and also dont follow filter
-			}
-			else{ //val == due date timestamp in seconds
-				duration = timestamp - time_now.timestamp;
-			}
+		var timestamp = parsedData.timestamp;
+		if(typeof timestamp != 'number' && typeof timestamp != 'string' 
+			&& skylistInst 
+			&& skylistInst.Lincko_itemsList_filter 
+			&& skylistInst.Lincko_itemsList_filter.duedate 
+			&& skylistInst.Lincko_itemsList_filter.duedate == 0 ){ //if no burger time, and filter is set to today, then make it due end of today
+			duration = time_now.getEndofDay() - time_now.timestamp;
 		}
-		else{
-			//modify duration based on current skylistFilter
-			if(skylistInst && skylistInst.Lincko_itemsList_filter && skylistInst.Lincko_itemsList_filter.duedate 
-				&& skylistInst.Lincko_itemsList_filter.duedate == 0){
-				duration = time_now.getEndofDay() - time_now.timestamp;
-			}
+		else if(timestamp == 0){
+			duration = time_now.getEndofDay() - time_now.timestamp;
 		}
+		else if(timestamp == 1){
+			//do nothing, use DefaultDuration and also dont follow filter
+		}
+		else if(timestamp){ //val == due date timestamp in seconds
+			duration = timestamp - time_now.timestamp;
+		}
+
 		param.start =  time_now.timestamp;
-		param.duration = duration;
+		if(duration){
+			param.duration = duration;
+		}
 
 		var item = {
 			'+title': title,
