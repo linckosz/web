@@ -97,27 +97,34 @@
 		</div>
 		<div find='card_rightOptions' class="skylist_card_rightOptions maxMobileL skylist_clickable"></div>
 		<table find='card_center' class="skylist_card_center">
-			<tr>
-				<td find='card_spacestick' class="skylist_card_spacestick display_none">&nbsp;</td>
-				<td find='card_leftbox' class="skylist_card_center_leftbox"></td>
-				<td find='card_textwrapper' class="skylist_card_textwrapper">
-					<div find='title' contenteditable="false" class="selectable"></div>
-					<div find='description'></div>
-				</td>
-				<td find='card_rightbox'>
-					<span find='links_wrapper'>
-						<span find="links_icon" class="icon-links"></span>
-						<span find='links' class="skylist_icon_text">(<span find="linkCount"></span>)</span>
-					</span>
-					<span find='comments_wrapper'>
-						<span find="comments_icon" class="icon-Pencil"></span>
-						<span find='comments' class="skylist_icon_text">(<span find="commentCount"></span>)</span>
-					</span>
-				</td>
-				<input type="text" find="card_time_calendar_timestamp" class="skylist_card_time_hidden skylist_clickable display_none" readonly="readonly"/>
-				<span find='card_time' class="skylist_card_time floatright skylist_paddingRight"></span>
-			</tr>
+			<tbody>
+				<tr>
+					<td find='card_spacestick' class="skylist_card_spacestick display_none">&nbsp;</td>
+					<td find='card_leftbox' class="skylist_card_center_leftbox"></td>
+					<td find='card_textwrapper' class="skylist_card_textwrapper">
+						<div find='title' contenteditable="false" class="selectable"></div>
+						<div find='description'></div>
+					</td>
+					<td find='card_rightbox'>
+						<span find='links_wrapper'>
+							<span find="links_icon" class="icon-links"></span>
+							<span find='links' class="skylist_icon_text">(<span find="linkCount"></span>)</span>
+						</span>
+						<span find='comments_wrapper'>
+							<span find="comments_icon" class="icon-Pencil"></span>
+							<span find='comments' class="skylist_icon_text">(<span find="commentCount"></span>)</span>
+						</span>
+					</td>
+					<input type="text" find="card_time_calendar_timestamp" class="skylist_card_time_hidden skylist_clickable display_none" readonly="readonly"/>
+					<span find='card_time' class="skylist_card_time floatright skylist_paddingRight"></span>
+				</tr>
+			</tbody>
 		</table>
+		<div class="skylist_card_progress skylist_card_progress_hidden">
+			<div find="bar">
+				<div find="percent"></div>
+			</div>
+		</div>
 		<div find="expandable_links">
 				<span find="btn_addNew" class="skylist_paperView_expandable_boxsize icon-Big-Add needsclick"></span>
 		</div>

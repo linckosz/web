@@ -21,6 +21,10 @@
 .app_layers_tasks_tasklist .skylist_card_hover .skylist_card_bottom {
 	background: #e7e9ed;
 }
+.app_layers_tasks_tasklist .skylist_card:hover .skylist_card_progress_hidden, 
+.app_layers_tasks_tasklist .skylist_card_hover .skylist_card_progress_hidden {
+	background: #e7e9ed;
+}
 /*
 ----end hover----
 */

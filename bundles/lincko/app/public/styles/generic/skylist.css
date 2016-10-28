@@ -501,6 +501,40 @@
 /*
  * For tasklist----------------------------------------------
  */
+.skylist_card_progress.skylist_card_progress_hidden{
+	background-color: #FFFFFF;
+}
+.skylist_card_progress.skylist_card_progress_hidden:after{
+	display: none;
+}
+.skylist_card_progress{
+    position: relative;
+    background-color: #d8d8d8;
+    color: #FFFFFF;
+    height: 10px;
+    padding-left: 5px;
+    font-size: 9px;
+}
+.skylist_card_progress:after{
+	content: '0%';
+	left: 0px;
+}
+.skylist_card_progress [find=bar]{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 0%;
+    background-color: #5bb0d4;
+    height: 100%;
+}
+.skylist_card_progress [find=percent]{
+	float: right;
+}
+.skylist_card_progress [find=percent]:after{
+	content: '%';
+	padding-right: 5px;
+}
+
  .skylist_wrapper>.burger_typeTask{
  	display:none;
  }
@@ -684,7 +718,9 @@
 	padding-bottom: 10px;
 }
 
-
+.skylist_wrapper[view=paper] .skylist_card .skylist_card_progress{
+	display: none;
+}
 
 
 /*

@@ -1440,6 +1440,26 @@ skylist.prototype.addTask = function(item){
 
 
 	/*
+	progress bar
+	*/
+	if(item._tasksdown){
+		var elem_progress = Elem.find('.skylist_card_progress');
+		elem_progress.removeClass('skylist_card_progress_hidden');
+		var subtasks_totalCount = (Object.keys(item._tasksdown)).length;
+		var subtasks_approvedCount = 0;
+		$.each(item._tasksdown, function(subtask_id, obj){
+			var subtask = Lincko.storage.get('tasks', subtask_id);
+			if(subtask && subtask.approved){
+				subtasks_approvedCount++;
+			}
+		});
+		var progressPercent = Math.round( (subtasks_approvedCount / subtasks_totalCount)*100 );
+		elem_progress.find('[find=bar]').css('width', progressPercent+'%');
+		elem_progress.find('[find=percent]').text(progressPercent);
+	}
+
+
+	/*
 	links
 	*/
 	var linkCount = 0;
