@@ -502,6 +502,7 @@
  * For tasklist----------------------------------------------
  */
 .skylist_card_progress.skylist_card_progress_hidden{
+	display: none;
 	background-color: #FFFFFF;
 }
 .skylist_card_progress.skylist_card_progress_hidden:after{
