@@ -3016,7 +3016,9 @@ skylist.prototype.addFilter_tasks = function(elem_filter_pane){
 			elem_filterIcon.click();
 		}
 	});
-	that.elem_navbar.find('[find=checkbox_wrapper] .skylist_menu_navbar_filter_pane_optionWrapper').click(function(){
+
+	//checkbox - show completed
+	that.elem_navbar.find('[find=checkbox_wrapper] [find=row_completed]').click(function(){
 		$(this).find('[find=checkbox]').toggleClass('fa-check');
 		that.tasklist_update('hide_completed', !that.Lincko_itemsList_filter.hide_completed );
 		elem_filterIcon.click();

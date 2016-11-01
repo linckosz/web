@@ -200,6 +200,9 @@
 .skylist_filter_tasks_view_wrapper .skylist_lightblueBG [find=icon]{
 	color: #FBA026;
 }
+.skylist_menu_navbar_filter_pane_optionWrapper [find=row_expandLinks]{
+	display: none;
+}
 
 .skylist_menu_navbar_search{
 	/* old search button at the top right corner
@@ -594,6 +597,9 @@
 /*
  *  paperView---------------------------------------------------
  */
+ .skylist_wrapper[view=paper] .skylist_menu_navbar_filter_pane_optionWrapper [find=row_expandLinks]{
+ 	display: table-row;
+ }
 .skylist_sortBtn {
 	display: none;
 	cursor: pointer; cursor: hand;
