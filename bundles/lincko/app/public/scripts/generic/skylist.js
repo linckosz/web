@@ -2160,7 +2160,7 @@ skylist.prototype.add_cardEvents = function(Elem){
 			}
 		}
 
-		if(canDelete && route && Lincko.storage.canI('delete', that.list_type, itemID) || canDelete){
+		if(canDelete && route && Lincko.storage.canI('delete', that.list_type, itemID)){
 			event.stopPropagation();
 			event.preventDefault();
 			var begin_fn = function(){
