@@ -2666,15 +2666,15 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 				},													
 				{													
 					element : 'btSend',								
-					mobile_hide : true,								
-					empty : 'hide',									
+					//mobile_hide : true,								
+					//empty : 'hide',									
 					click : fn_createTask,								
 				},													
 			],														
 			[														
 				{													
 					element : 'btAttachment',						
-					empty : 'show',									
+					//empty : 'show',									
 				},													
 			],														
 		],															

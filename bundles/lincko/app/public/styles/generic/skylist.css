@@ -776,20 +776,30 @@
 	display: none;
 }
 .skylist_wrapper[view=paper]>.inputter_container{
-	padding: 0px 1px;
 	margin-bottom: 0px;
 	border-top: solid 1px #fba026;
 	display:initial;
 	position: absolute;
-	height: 120px;
 	bottom: 0px;
 	left: 10px;
 	right: 10px;
 	z-index: 100;
 }
+.skylist_wrapper[view=paper]>.inputter_container .inputter_left_menu_wrapper{
+	top: 12px;
+	left: 2px;
+}
 
-
-
+.skylist_wrapper[view=paper]>.inputter_container .inputter_content_wrapper{
+	margin-left: 0px;
+}
+.skylist_wrapper[view=paper]>.inputter_container .textarea{
+	padding-left: 40px;
+	opacity: 0.6;
+}
+.skylist_wrapper[view=paper]>.inputter_container .textarea:focus{
+	opacity: 1;
+}
 
 
 /*expandables*/
@@ -1050,11 +1060,17 @@
 .skylist_maxMobileL.skylist_wrapper[view=paper] .skylist_paperView_expandable_boxsize{
 	margin: 5px 0px;
 }
+
+/*burger_typeTask (not used anymore)*/
 .skylist_maxMobileL.skylist_wrapper[view=paper]>.burger_typeTask{
 	height: 50px;
 }
 .skylist_maxMobileL.skylist_wrapper[view=paper]>.burger_typeTask td.skylist_card_textwrapper [find=text]{
 	height: 40px;
+	font-size: 14px;
+}
+
+.skylist_maxMobileL.skylist_wrapper[view=paper]>.inputter_container .textarea{
 	font-size: 14px;
 }
 /*
