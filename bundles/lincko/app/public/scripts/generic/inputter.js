@@ -88,7 +88,7 @@ inputter.prototype.getContent = function()
 	{
 		if(files[i].lincko_parent_type == this.upload_ptype
 			&&files[i].lincko_parent_id == this.upload_pid
-			&&files[i].lincko_param == 'inputter_files_' + this.upload_ptype +'_'+this.upload_pid)
+			&&files[i].lincko_param == this.panel_id)
 		{
 			files_index.push(files[i].lincko_files_index);
 		}
@@ -119,7 +119,7 @@ inputter.prototype.clearContent = function()
 		{
 			if(app_upload_files.lincko_files[i].lincko_parent_type == this.upload_ptype
 				&&app_upload_files.lincko_files[i].lincko_parent_id == this.upload_pid
-				&&app_upload_files.lincko_files[i].lincko_param == 'inputter_files_' + this.upload_ptype +'_'+this.upload_pid)
+				&&app_upload_files.lincko_files[i].lincko_param == this.panel_id)
 			{
 				var e; //undefined
 				$('#app_upload_fileupload').fileupload('option').destroy(e, app_upload_files.lincko_files[i]);
@@ -298,10 +298,11 @@ inputter.prototype.buildLayer = function()
 								break;
 							case 'attachment' :
 								var auto_upload = this.layer.hasOwnProperty('auto_upload') ? this.layer['auto_upload'] : true;
-								item.click({'type':this.upload_ptype,'pid':this.upload_pid},function(event){
+								item.click({'type':this.upload_ptype,'pid':this.upload_pid,'panel_id':this.panel_id},function(event){
 									var type = event.data.type ;
 									var pid = event.data.pid ;
-									app_upload_open_files(type, pid,false,auto_upload,'inputter_files_'+type+'_'+pid);
+									var panel_id = event.data.panel_id ;
+									app_upload_open_files(type, pid,false,auto_upload,panel_id);
 								});
 								if(!this.layer['right_menu'][i].hasOwnProperty('click') && !auto_upload)
 								{
@@ -316,7 +317,7 @@ inputter.prototype.buildLayer = function()
 										{
 											if(files[z].lincko_parent_type == this.action_param[0]
 											&&files[z].lincko_parent_id == this.action_param[1]
-											&&files[z].lincko_param == 'inputter_files_' + this.action_param[0]+'_'+this.action_param[1])
+											&&files[z].lincko_param == this.action_param[2])
 											{
 												if($('#inputter_element_uploading_item_'+files[z].lincko_temp_id).length == 0)
 												{
@@ -502,6 +503,7 @@ inputter.prototype.buildLayer = function()
 
 
 	input.find('[find=chat_textarea]').keypress(function(e){
+
 		e.stopPropagation();
 		if(e.keyCode==13)
 		{

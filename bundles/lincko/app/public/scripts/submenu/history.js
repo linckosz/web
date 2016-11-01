@@ -878,7 +878,9 @@ historyFeed.prototype.app_chat_feed_uploading_file = function()
 
 	for(var i in files)
 	{
-		if(files[i].lincko_parent_type != _type || files[i].lincko_parent_id != this.id ) {continue;}
+		if(files[i].lincko_parent_type != _type 
+			|| files[i].lincko_parent_id != this.id 
+			|| files[i].lincko_param != this.submenu.id  ) {continue;}
 		var preview = null;
 		try{
 			preview = files[i].files[0].preview.toDataURL();
