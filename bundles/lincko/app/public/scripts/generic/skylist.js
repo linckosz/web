@@ -2384,7 +2384,8 @@ skylist.prototype.setHeight = function(){
 
 	var paperView_typeTask_H = 0;
 	if(that.Lincko_itemsList_filter.view == 'paper'){
-		paperView_typeTask_H = that.list_wrapper.children('.burger_typeTask').outerHeight();
+		//paperView_typeTask_H = that.list_wrapper.children('.burger_typeTask').outerHeight();
+		paperView_typeTask_H = that.list_wrapper.children('.inputter_container').outerHeight();
 	}
 
 
