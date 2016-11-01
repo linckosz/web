@@ -701,6 +701,7 @@
 .skylist_wrapper[view=paper] .skylist_card [find=title]{
 	text-decoration: inherit;
 	display: inline-block;
+	display: block;
 	cursor: text;
 	max-height: none;
 	font-size: 14px;
@@ -715,8 +716,8 @@
 }
 .skylist_wrapper[view=paper] .skylist_card_center [find=card_leftbox] {
 	vertical-align: top;
-	padding-top: 6px;
-	padding-bottom: 10px;
+	padding-top: 8px;
+	/*padding-bottom: 10px;*/
 }
 
 .skylist_wrapper[view=paper] .skylist_card .skylist_card_progress{
