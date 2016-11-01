@@ -786,15 +786,15 @@
 	z-index: 100;
 }
 .skylist_wrapper[view=paper]>.inputter_container .inputter_left_menu_wrapper{
-	top: 12px;
-	left: 2px;
+	/*top: 12px;
+	left: 2px;*/
 }
 
 .skylist_wrapper[view=paper]>.inputter_container .inputter_content_wrapper{
-	margin-left: 0px;
+	/*margin-left: 0px;*/
 }
 .skylist_wrapper[view=paper]>.inputter_container .textarea{
-	padding-left: 40px;
+	/*padding-left: 40px;*/
 	opacity: 0.6;
 }
 .skylist_wrapper[view=paper]>.inputter_container .textarea:focus{
