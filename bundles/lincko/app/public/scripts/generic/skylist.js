@@ -1172,7 +1172,8 @@ skylist.prototype.make_fileLinkbox = function(fileID){
 	}
 	else{
 		fileType_class = app_models_fileType.getClass(item_file.ori_ext);
-		elem_linkbox.addClass(fileType_class).click(function(){
+		elem_linkbox.addClass(fileType_class).click(function(event){
+			event.stopPropagation();
 			submenu_Build(
 			'taskdetail', null, null, {
 				"type":'files', 
@@ -1297,9 +1298,7 @@ skylist.prototype.addTask = function(item){
 			var new_text = $.trim($(this).contents().filter(function() {
 			  return this.nodeType == 3;
 			}).text());
-			$(this).html(new_text);
-
-
+			
 
 			if(new_text != item['+title'] || inChargeID_new || duration){
 				var param = {
@@ -1339,6 +1338,12 @@ skylist.prototype.addTask = function(item){
 				);
 
 			}
+			else{ //if no need to update
+				$(this).html(new_text);
+				if(that.Lincko_itemsList_filter.view == 'paper'){
+					$(this).append(burger_spanUser(in_chargeID)).append(burger_spanDate(item['start']+item['duration']));
+				}
+			}
 		});
 		burgerN.regex(Elem.find('[find=title]'), item);
 	}
@@ -1358,10 +1363,7 @@ skylist.prototype.addTask = function(item){
 	}
 
 	if(that.Lincko_itemsList_filter.view == 'paper'){
-		var elem_atUser = $('<span contenteditable="false"></span>');
-		elem_atUser.attr('userid',in_chargeID).attr('find','name');
-		elem_atUser.addClass('burger_tag');
-			elem_title.append(elem_atUser);
+		elem_title.append(burger_spanUser(in_chargeID, in_charge));
 	}
 
 	//Elem.find('[find=name_hidden]').toggleClass('display_none');
@@ -1401,10 +1403,7 @@ skylist.prototype.addTask = function(item){
 	}
 
 	var elem_expandable_comments = Elem.find('[find=expandable_comments]')
-		.prop('id',Elem.prop('id')+'_expandable_comments')
-		.click(function(event){
-			event.stopPropagation();
-		});
+		.prop('id',Elem.prop('id')+'_expandable_comments');
 	var elem_addNewCommentBubble = taskdetail_generateNewCommentBubble(item['_type'], item['_id'], null, false, true).addClass('display_none').attr('find', 'newPrimaryComment_input');
 	elem_expandable_comments.prepend(elem_addNewCommentBubble);
 	var elem_addNewCommentBtn = elem_expandable_comments.find('[find=btn_addNew]');
@@ -1474,10 +1473,7 @@ skylist.prototype.addTask = function(item){
 	if(that.Lincko_itemsList_filter.view == 'paper'){
 		var elem_expandable_links = Elem.find('[find=expandable_links]')
 			.addClass('overthrow')
-			.prop('id',Elem.prop('id')+'_expandable_links')
-			.click(function(event){
-				event.stopPropagation();
-			});
+			.prop('id',Elem.prop('id')+'_expandable_links');
 		wrapper_IScroll_options_new[elem_expandable_links.prop('id')] = { 
 			scrollX: true, 
 			scrollY: false, 
@@ -1636,11 +1632,7 @@ skylist.prototype.addTask = function(item){
 	}
 
 	if(that.Lincko_itemsList_filter.view == 'paper'){
-		var elem_ppDate = $('<span find="dateWrapper" contenteditable="false"></span>');
-		elem_ppDate.attr('val',(item['start']+item['duration']));
-		elem_ppDate.text(duedate);
-		elem_ppDate.addClass('burger_tag');
-		elem_title.append(elem_ppDate);
+		elem_title.append(burger_spanDate(item['start']+item['duration'], duedate));
 		elem_title.append(' ');
 	}
 	
@@ -2433,6 +2425,13 @@ skylist.prototype.taskClick = function(event,task_elem){
 	if( target.is('[find=checkbox]') || target.is('label') || target.is('input') || target.attr('contenteditable')=="true" || that.editing_focus || that.is_scrolling || that.elem_navbar.find('.skylist_menu_navbar_filter_pane').css('display') != 'none' || $('#burger_dropdown').length > 0 || $('#ui-datepicker-div').css('display') == 'block' ){
 		return;
 	}
+
+
+	//comment expandable
+	if(target.is('[find=btn_addNew]') || target.hasClass('skylist_clickable')){
+		return;
+	}
+
 	
 	//clicking on the task will close options
 	var task_elem_left = parseInt(task_elem.css('left'),10);

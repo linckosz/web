@@ -1616,6 +1616,73 @@ function burger_calendar (elem_timestamp, elem_display){
 	});
 }
 
+
+
+//can also add code to generate the text given the userid
+var burger_spanUser = function(userid, text){
+	if(!text){
+		var text = Lincko.storage.get("users", userid ,"username");
+	}
+
+	if(!text){
+		text = Lincko.Translation.get('app', 3608, 'html'); //'Not Assigned'
+	}
+
+	var elem = $('<span contenteditable="false"></span>')
+		.attr('userid',userid)
+		.attr('find','name')
+		.text(text)
+		.addClass('burger_tag');
+	return elem;
+}
+
+//can also add code to generate the text given the timestamp
+var burger_spanDate = function(timestamp, text){
+	if(!text){
+		var text = burger_timestampToText(timestamp);
+	}
+
+	var elem = $('<span find="dateWrapper" contenteditable="false"></span>')
+		.attr('val',timestamp)
+		.text(text)
+		.addClass('burger_tag');
+	return elem;
+}
+
+
+var burger_timestampToText = function(timestamp){
+	var date = null;
+	if(timestamp instanceof wrapper_date){
+		date = timestamp;
+	}
+	else{
+		date = new wrapper_date(timestamp);
+	}
+
+	//returns text for TODAY, TOMORROW, YESTERDAY, or the wrapper_date very_short form text
+	if( date.happensSomeday(0) ){
+		return Lincko.Translation.get('app', 3302, 'html').toUpperCase()/*today*/;
+	}
+	else if( date.happensSomeday(1) ){
+		return Lincko.Translation.get('app', 3303, 'html').toUpperCase()/*tomorrow*/;
+	}
+	else if( date.happensSomeday(-1) ){
+		return Lincko.Translation.get('app', 3304, 'html').toUpperCase()/*yesterday*/;
+	}
+	else{
+		return date.display('date_very_short');
+	}
+}
+
+
+
+
+
+
+
+
+
+
 function burger_regex_getCaretOffset(elem, noElemHeight) {
 	//http://stackoverflow.com/questions/6846230/coordinates-of-selected-text-in-browser-page
 	//http://stackoverflow.com/questions/4811822/get-a-ranges-start-and-end-offsets-relative-to-its-parent-container/4812022#4812022
