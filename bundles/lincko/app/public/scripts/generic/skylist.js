@@ -2689,13 +2689,17 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 		param.shiftEnter
 	*/
 	var burgerParam = {
-		dropdownOffset: 20,
+		dropdownOffset: 30,
 		enter_fn: fn_createTask,
 		enter_fn_param: 'inputter',
 		shiftEnter: false,
 	};
 
-
+	//if parent project is personal, no '@' shortcut
+	var parent_entity = Lincko.storage.get(upload_parent_type, upload_parent_id);
+	if(parent_entity.personal_private){
+		burgerParam.disable_shortcutUser = true;
+	}
 
 	that.inputterInst = new inputter('skylist_'+that.list_type+'_'+that.md5id, elem_appendTo, upload_parent_type, upload_parent_id, inputter_setting, burgerParam);
 
