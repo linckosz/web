@@ -515,6 +515,7 @@
     height: 10px;
     padding-left: 5px;
     font-size: 9px;
+    line-height: 11px;
 }
 .skylist_card_progress:after{
 	content: '0%';
@@ -530,6 +531,7 @@
 }
 .skylist_card_progress [find=percent]{
 	float: right;
+	line-height: 11px;
 }
 .skylist_card_progress [find=percent]:after{
 	content: '%';
