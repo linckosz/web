@@ -255,6 +255,7 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 	}
 
 	
+	
 	var layer = {
 		row : 3,
 		max_row : 3,

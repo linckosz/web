@@ -566,6 +566,7 @@ inputter.prototype.buildLayer = function()
 
 	container.appendTo(this.position);
 
+
 }
 
 
