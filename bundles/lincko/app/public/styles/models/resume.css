@@ -61,3 +61,7 @@
 	padding: 0 12px 0 6px;
 	color: #F9A550;
 }
+
+.app_models_resume_onboarding_answer {
+	cursor: pointer;
+}
