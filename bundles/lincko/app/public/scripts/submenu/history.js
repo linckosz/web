@@ -168,6 +168,7 @@ BaseItemCls.prototype.item_display = function(position,subm,mode)
 	{
 		template = "-models_history_line" ;
 		var line = $("#" + template).clone();
+		line.prop('id','');
 		var today = Math.floor((new Date()).getTime() / 86400000);
 
 		if (this.timeline  == today * 86400) {

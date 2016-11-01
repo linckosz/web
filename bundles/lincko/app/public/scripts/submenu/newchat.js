@@ -266,7 +266,7 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 		top_line : true,
 		mobile_top_line : false,
 		enter : fnSendMsg,
-		auto_upload : true,
+		auto_upload : false,
 
 		// left_menu :
 		// [
@@ -306,7 +306,7 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 	// }
 
 	var type = that.param.type == 'history' ? "projects":'chats';
-	var chat_inputter = new inputter(this.id,position,type,that.param.id,layer,null);
+	var chat_inputter = new inputter(this.id,position,type,that.param.id,layer,{});
 
 	var height = position.height();
 	submenu_wrapper.find("[find=submenu_wrapper_content]").css('bottom', height);

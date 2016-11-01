@@ -164,10 +164,13 @@ inputter.prototype.buildLayer = function()
 
 	var mobile_left_col_count  = 0;
 	var mobile_right_col_count  = 0;
+
+	var left_padding_col_count = 0;
 	
 	if(this.layer.hasOwnProperty('left_menu'))
 	{
 		mobile_left_col_count = 0;
+		left_padding_col_count = 0;
 		for(var i in this.layer['left_menu'])
 		{
 			col_count = 0;
@@ -191,8 +194,12 @@ inputter.prototype.buildLayer = function()
 						{
 							item.addClass('mobile_hide');
 						}
-						else{
+						else if(elem != 'chkTask'){
 							mobile_left_col_count ++ ;
+						}
+						else if (elem == 'chkTask')
+						{
+							left_padding_col_count++;
 						}
 
 						if(this.layer['left_menu'][i][j].hasOwnProperty('empty'))
@@ -222,14 +229,18 @@ inputter.prototype.buildLayer = function()
 								break;
 						}
 						item.appendTo(row);
-						col_count ++;
+						if(elem != 'chkTask')
+						{
+							col_count ++;
+						}
+						
 					}
 					
 				}
 			}
 
 			row.appendTo(left_menu);	
-			if(col_count  > max_left_col_count){
+			if(col_count > max_left_col_count){
 				max_left_col_count  = col_count;
 			}
 		}
@@ -340,6 +351,9 @@ inputter.prototype.buildLayer = function()
 																.addClass(app_models_fileType.getClass(app_models_fileType.getExt(files[z].lincko_name)));
 														}
 
+
+														
+														target.attr('title',files[z].lincko_name);
 														target.find(".shortcut_pic").addClass('display_none');
 														target.find(".shortcut_ico").removeClass('display_none').find("i").addClass(app_models_fileType.getClass(app_models_fileType.getExt(files[z].lincko_name)));
 													}else
@@ -369,6 +383,7 @@ inputter.prototype.buildLayer = function()
 																.css('padding-left',padding_left_style);
 
 														}
+														target.attr('title',files[z].lincko_name);
 														target.find(".shortcut_ico").addClass('display_none');
 														target.find(".shortcut_pic")
 																.removeClass('display_none')
@@ -430,6 +445,8 @@ inputter.prototype.buildLayer = function()
 	input.prop('id','');
 	input.appendTo(content);
 	input.find('[find=chat_textarea]').keyup(function(){});
+
+	input.find('[find=chat_textarea]').addClass('padding-left-' + left_padding_col_count);
 
 
 	if(this.layer.hasOwnProperty('row'))
