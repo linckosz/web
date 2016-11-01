@@ -84,7 +84,7 @@ var mainMenu = {
 			}
 			if(pid!=parseInt(item.attr('pid'), 10) || timestamp!=parseInt(item.attr('timestamp'), 10)){
 				item.find("[find=app_project_projects_title]").html(wrapper_to_html(projectList[i]['+title']));
-				tasks = app_models_projects_adjust_format(Lincko.storage.list('tasks', null, {approved: false,}, 'projects', pid, true).length);
+				tasks = app_models_projects_adjust_format(Lincko.storage.list('tasks', null, {approved: false, _tasksup: null,}, 'projects', pid, true).length);
 				notes = app_models_projects_adjust_format(Lincko.storage.list('notes', null, null, 'projects', pid, true).length);
 				files = app_models_projects_adjust_format(Lincko.storage.list('files', null, null, 'projects', pid, true).length);
 				item.find("[find=app_project_projects_tasks]").html(wrapper_to_html(tasks));

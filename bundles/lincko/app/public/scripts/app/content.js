@@ -260,7 +260,7 @@ app_application_lincko.add("app_content_submenu_preview_statistics", "projects",
 			if(!app_models_projects_chart_tasks_data("app_content_submenu_preview_statistics", projects_id, false, chart_options)){
 				Elem.find("[find=tasks_statistics]").css("visibility", "hidden");
 			}
-			var tasks = Lincko.storage.list('tasks', null, {approved: false,}, 'projects', projects_id, true).length;
+			var tasks = Lincko.storage.list('tasks', null, {approved: false, _tasksup: null,}, 'projects', projects_id, true).length;
 			var notes = Lincko.storage.list('notes', null, null, 'projects', projects_id, true).length;
 			var files = Lincko.storage.list('files', null, null, 'projects', projects_id, true).length;
 			Elem.find("[find=app_content_statistics_stats_tasks]").html(wrapper_to_html(tasks));
