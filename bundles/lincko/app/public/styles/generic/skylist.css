@@ -717,8 +717,8 @@
 }
 .skylist_wrapper[view=paper] .skylist_card_center [find=card_leftbox] {
 	vertical-align: top;
-	padding-top: 8px;
-	/*padding-bottom: 10px;*/
+	padding-top: 6px;
+	padding-bottom: 10px; /*for mobile*/
 }
 
 .skylist_wrapper[view=paper] .skylist_card .skylist_card_progress{
