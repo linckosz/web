@@ -189,7 +189,6 @@ BaseItemCls.prototype.item_display = function(position,subm,mode)
 					loading_elem.addClass('models_history_loading_hide');
 					elem.before(loading_elem);
 				}
-				var timeline = new wrapper_date(this.timestamp).getDayStartTimestamp();
 				if(typeof subm.param.prev_timeline == 'undefined'){
 					subm.param.prev_timeline = timeline;
 				} else if(timeline < subm.param.prev_timeline){
@@ -212,10 +211,8 @@ BaseItemCls.prototype.item_display = function(position,subm,mode)
 				}
 				break;
 			case 'insert' :
-				//elem.appendTo(position.find(".chat_contents_wrapper"));
 				var help = $('#' + subm.id + '_help_iscroll');
 				help.before(elem);
-				var timeline = new wrapper_date(this.timestamp).getDayStartTimestamp();
 				if(timeline > subm.param.earliest_timeline){
 					var line = $("#-models_history_line").clone();
 					line.prop('id','');
@@ -241,6 +238,7 @@ BaseItemCls.prototype.item_display = function(position,subm,mode)
 						$('#'+temp_elem_id).removeAttr('temp_id');
 					}
 					$('#'+temp_elem_id).prop('id',elem_id);
+				break;
 			case 'replace' :
 				if(this.data.category == 'files')
 				{
@@ -255,6 +253,7 @@ BaseItemCls.prototype.item_display = function(position,subm,mode)
 			case 'refresh' :
 				elem = $('#'+elem_id);
 				this.feed_content(elem);
+				break;
 			default :
 				break;
 		}

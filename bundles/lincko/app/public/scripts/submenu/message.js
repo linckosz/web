@@ -1,7 +1,6 @@
 /*
 * chatFeed
 */
-var that = {};
 var chatFeed = function(id,type,position,submenu)
 {
 	this.max_id;
@@ -241,7 +240,6 @@ chatFeed.prototype.app_chat_feed_more_msg = function(){
 		var suffix;
 		for(var i in data)
 		{
-
 			if(i < this.page_count)//first page
 			{
 				suffix = '_' + data[i]['_type'] + '_models_thistory_' + data[i]['_id'];
