@@ -58,12 +58,14 @@
 	</div>
 	<div id="-skylist_filter_tasks_divider" class="skylist_menu_navbar_filter_pane_divider"></div>
 	<div id="-skylist_filter_tasks_checkbox_wrapper" find="checkbox_wrapper" class="skylist_clickable">
-		<table class="skylist_menu_navbar_filter_pane_optionWrapper">
-			<tr find="row_completed">
+		<table find="tb_completed" class="skylist_menu_navbar_filter_pane_optionWrapper">
+			<tr>
 				<td find="checkbox" class="skylist_menu_navbar_filter_pane_checkbox fa fa-check"></td>
 				<td find="text">{{ _trans('app', 13, 5, 'html') }}{#Show completed tasks#}</td>
 			</tr>
-			<tr find="row_expandLinks">
+		</table>
+		<table find="tb_showLinks" class="skylist_menu_navbar_filter_pane_optionWrapper">
+			<tr>
 				<td find="checkbox" class="skylist_menu_navbar_filter_pane_checkbox fa fa-check"></td>
 				<td find="text">toto expand links</td>
 			</tr>

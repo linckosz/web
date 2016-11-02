@@ -200,7 +200,7 @@
 .skylist_filter_tasks_view_wrapper .skylist_lightblueBG [find=icon]{
 	color: #FBA026;
 }
-.skylist_menu_navbar_filter_pane_optionWrapper [find=row_expandLinks]{
+.skylist_menu_navbar_filter_pane_optionWrapper[find=tb_showLinks]{
 	display: none;
 }
 
@@ -597,7 +597,7 @@
 /*
  *  paperView---------------------------------------------------
  */
- .skylist_wrapper[view=paper] .skylist_menu_navbar_filter_pane_optionWrapper [find=row_expandLinks]{
+ .skylist_wrapper[view=paper] .skylist_menu_navbar_filter_pane_optionWrapper[find=tb_showLinks]{
  	display: table-row;
  }
 .skylist_sortBtn {

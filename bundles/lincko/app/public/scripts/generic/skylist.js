@@ -124,6 +124,7 @@ var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct, ri
 		'search': '',
 		'sort_alt': false,
 		'hide_completed': false,
+		'showLinks': false,
 		'view': 'card',
 	};
 	/*if( Lincko.storage.get("projects", app_content_menu.projects_id, 'personal_private') ){
@@ -646,10 +647,15 @@ skylist.prototype.list_filter = function(filter_type){
 	if( that.list_type == "tasks" || that.list_type == "notes" || that.list_type == "files" ){
 		items_filtered = that.filter_by_search( items_filtered, that.Lincko_itemsList_filter.search );
 		items_filtered = that.filter_by_people( items_filtered, that.Lincko_itemsList_filter.people );
+	}
+
+	if(that.list_type == "tasks"){
 		items_filtered = that.filter_by_duedate( items_filtered, that.Lincko_itemsList_filter.duedate );
 		items_filtered = that.filter_by_sort_alt( items_filtered, that.Lincko_itemsList_filter.sort_alt );
 		items_filtered = that.filter_by_hide_completed( items_filtered, that.Lincko_itemsList_filter.hide_completed );
 	}
+
+
 	if(filter_type != 'search'){ //dont update settings object if it is just search
 		that.filter_updateSettings();
 	}
@@ -685,11 +691,17 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 		}
 	}
 
+	
+
 	iscroll_elem.children().not('.burger_typeTask').velocity("fadeIn",{
 		mobileHA: hasGood3Dsupport,
 		complete: 200,
 		complete: function(){
 			that.store_all_elem();
+			//paperview - showLink filter
+			if(that.Lincko_itemsList_filter.view == 'paper'){
+				that.paperview_filter_showLinks();
+			}
 			that.window_resize();
 		}
 	});
@@ -741,6 +753,11 @@ skylist.prototype.addCard_all = function(){
 		}, 0);
 	}
 	that.store_all_elem();
+	
+	//paperview - showLink filter
+	if(that.Lincko_itemsList_filter.view == 'paper'){
+		that.paperview_filter_showLinks();
+	}
 }
 skylist.prototype.addCard = function(item){
 	var that = this;
@@ -961,6 +978,39 @@ skylist.prototype.addChat = function(item){
 	//that.add_cardEvents(Elem);
 	return Elem;
 }
+
+//showLinks : boolean
+//if showLinks not provided, it will use current filter setting
+skylist.prototype.paperview_filter_showLinks = function(showLinks){
+	var that = this;
+	if(showLinks && typeof showLinks != 'boolean'){ return; }
+	if(typeof showLinks != 'boolean'){
+		var showLinks = that.Lincko_itemsList_filter.showLinks;
+	}
+
+	var elem_expandable = that.elem_card_all.find('[find=expandable_links]');
+	if(showLinks){
+		$.each(elem_expandable, function(i, elem){
+			if($(elem).find('.skylist_paperView_expandable_boxsize:not([find=btn_addNew])').length > 0){
+				$(elem).removeClass('display_none').css('display', 'block');
+			}
+		});
+	}
+	else{
+		$.each(elem_expandable, function(i, elem){
+			$(elem).removeAttr('style');
+		});
+	}
+	
+
+	$(window).resize();
+
+	if(typeof showLinks == 'boolean' && showLinks != that.Lincko_itemsList_filter.showLinks){
+		that.Lincko_itemsList_filter.showLinks = showLinks;
+		that.filter_updateSettings();
+	}
+}
+
 
 //returns true if task should be partially redrawn for the paperview
 //updated is this.updated[tasks_id] from syncfunction
@@ -2998,7 +3048,7 @@ skylist.prototype.addFilter_tasks = function(elem_filter_pane){
 	$('#-skylist_filter_tasks_view_wrapper').clone().prop('id','').appendTo(elem_block1);
 	$('#-skylist_filter_tasks_radio_wrapper').clone().prop('id','').appendTo(elem_block2);
 	$('#-skylist_filter_tasks_divider').clone().prop('id','').appendTo(elem_block2);
-	$('#-skylist_filter_tasks_checkbox_wrapper').clone().prop('id','').appendTo(elem_block2);
+	var elem_checkboxWrapper = $('#-skylist_filter_tasks_checkbox_wrapper').clone().prop('id','').appendTo(elem_block2);
 
 	var elem_filterIcon = that.elem_navbar.find('.skylist_menu_navbar_filter_icon');
 
@@ -3018,11 +3068,20 @@ skylist.prototype.addFilter_tasks = function(elem_filter_pane){
 	});
 
 	//checkbox - show completed
-	that.elem_navbar.find('[find=checkbox_wrapper] [find=row_completed]').click(function(){
+	elem_checkboxWrapper.find('[find=tb_completed]').click(function(){
 		$(this).find('[find=checkbox]').toggleClass('fa-check');
 		that.tasklist_update('hide_completed', !that.Lincko_itemsList_filter.hide_completed );
 		elem_filterIcon.click();
 	});
+
+	//checkbox - showLinks
+	elem_checkboxWrapper.find('[find=tb_showLinks]').click(function(){
+		var elem_checkbox = $(this).find('[find=checkbox]');
+		elem_checkbox.toggleClass('fa-check');
+		that.paperview_filter_showLinks(elem_checkbox.hasClass('fa-check'));
+		elem_filterIcon.click();
+	});
+
 
 	that.elem_navbar.find('[find=card]').click(function(){
 		that.Lincko_itemsList_filter.view = 'card';
@@ -3044,8 +3103,9 @@ skylist.prototype.addFilter_tasks = function(elem_filter_pane){
 	if(that.Lincko_itemsList_filter.sort_alt){
 		that.elem_navbar.find('[find=radio_wrapper] [find=radio]').toggleClass('fa-circle');
 	}
+
 	if(that.Lincko_itemsList_filter.hide_completed){
-		that.elem_navbar.find('[find=checkbox_wrapper] [find=checkbox]').toggleClass('fa-check');
+		that.elem_navbar.find('[find=checkbox_wrapper] [find=tb_completed] [find=checkbox]').removeClass('fa-check');
 	}
 
 	if(that.Lincko_itemsList_filter.view == 'card'){
@@ -3053,6 +3113,10 @@ skylist.prototype.addFilter_tasks = function(elem_filter_pane){
 	}
 	else if(that.Lincko_itemsList_filter.view == 'paper'){
 		elem_block1.find('td[find=paper]').addClass('skylist_lightblueBG');
+	}
+
+	if(!that.Lincko_itemsList_filter.showLinks){
+		that.elem_navbar.find('[find=checkbox_wrapper] [find=tb_showLinks] [find=checkbox]').removeClass('fa-check');
 	}
 
 
