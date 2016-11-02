@@ -81,6 +81,7 @@ Submenu.prototype.Add_ChatContents = function() {
 
 	if (type == 'history') {
 		that.param.chatFeed = new historyFeed(id,type,position,that);
+
 		app_models_notifier.clearNotification('projects', id);
 		var hist = Lincko.storage.hist(null, -1, false, 'projects', id, false);
 		if(hist.length > 0)
@@ -109,6 +110,7 @@ Submenu.prototype.Add_ChatContents = function() {
 	}
 	else {
 		that.param.chatFeed = new chatFeed(id,type,position,that);
+
 		app_models_notifier.clearNotification('chats', id);
 		
 		app_application_lincko.add(this.id+"_chat_contents_wrapper", "chats_" + id, function() {

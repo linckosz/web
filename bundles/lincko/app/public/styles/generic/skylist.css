@@ -494,7 +494,7 @@
 	background: #D6E8F2;
 }
 
-.skylist_chat_card_hover {
+.skylist_chat_card_hover, .skylist_chat_card_center:hover {
 	background: #DCE6D8 !important;
 }
 

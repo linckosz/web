@@ -101,11 +101,15 @@
 	cursor: hand;
 }
 
-.models_history_loading{
+.models_history_loading {
 	text-align: center;
 	line-height: 30px;
 	height:auto;
 	overflow:hidden;
+}
+
+.models_history_loading_hide {
+	visibility: hidden;
 }
 
 .models_history_loading i

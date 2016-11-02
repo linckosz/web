@@ -1,6 +1,7 @@
 /*
 * chatFeed
 */
+var that = {};
 var chatFeed = function(id,type,position,submenu)
 {
 	this.max_id;
@@ -12,12 +13,14 @@ var chatFeed = function(id,type,position,submenu)
 
 	this.page_count = 15;
 	this.current_page = 0 ;
+	this.page_top = false ;
 
 	this.current = null;
 	this.msg_hide_count = 0;
 	this.msg_over = false;
 	this.top_msg_id = 0;
 	this.top_time = 0;
+	this.last_data = false;
 
 	this.current_data = [];
 	this.next_data = [];
@@ -25,51 +28,106 @@ var chatFeed = function(id,type,position,submenu)
 	this.running_last_time = 0;
 
 	this.records = [] ;
-	
+
+	this.collecting = false;
+	this.loading = false;
+
+	var that = this;
+
+	var loading_timer = false;
+	wrapper_IScroll_cb_creation[that.position.prop('id')] = function(){
+
+		var IScroll = myIScrollList[that.position.prop('id')];
+		var events_list = [
+			'wheel',
+			'mousewheel',
+			'DOMMouseScroll',
+		];
+		for(var i in events_list){
+			that.position.on(events_list[i], IScroll, function(event){
+				if(!loading_timer){
+					if(IScroll.y >= 0){
+						that.position.find(".models_history_loading").removeClass('models_history_loading_hide');
+					} else if(IScroll.y < -30){
+						that.position.find(".models_history_loading").addClass('models_history_loading_hide');
+					}
+					loading_timer = setTimeout(function(IScroll){
+						if(that.collecting)
+						{
+							setTimeout(function(){
+								if(IScroll.y >= 0){
+									that.loading = true;
+									that.position.find(".models_history_loading").remove();
+									var first_li = that.position.find('li').eq(0);
+									that.app_chat_feed_layer_display();
+									IScroll.refresh();
+									IScroll.scrollToElement(first_li.get(0), 0, 0, -30);
+								}
+							}, 2000);
+						}
+						else
+						{
+							if(IScroll.y >= 0){
+								that.loading = true;
+								that.position.find(".models_history_loading").remove();
+								var first_li = that.position.find('li').eq(0);
+								that.app_chat_feed_layer_display();
+								IScroll.refresh();
+								IScroll.scrollToElement(first_li.get(0), 0, 0, -30);
+							}
+						}
+						clearTimeout(loading_timer);
+						loading_timer = false;
+					}, 100, event.data);
+				}
+			});
+			//This is used when we move the bar manually
+			IScroll.on('scrollEnd', function(){
+				if(!loading_timer){
+					if(IScroll.y >= 0){
+						that.position.find(".models_history_loading").removeClass('models_history_loading_hide');
+					} else if(IScroll.y < -30){
+						that.position.find(".models_history_loading").addClass('models_history_loading_hide');
+					}
+					loading_timer = setTimeout(function(IScroll){
+						if(that.collecting)
+						{
+							setTimeout(function(){
+								if(IScroll.y >= 0){
+									that.loading = true;
+									that.position.find(".models_history_loading").remove();
+									var first_li = that.position.find('li').eq(0);
+									that.app_chat_feed_layer_display();
+									IScroll.refresh();
+									IScroll.scrollToElement(first_li.get(0), 0, 0, -30);
+								}
+							}, 2000);
+						}
+						else
+						{
+							if(IScroll.y >= 0){
+								that.loading = true;
+								that.position.find(".models_history_loading").remove();
+								var first_li = that.position.find('li').eq(0);
+								that.app_chat_feed_layer_display();
+								IScroll.refresh();
+								IScroll.scrollToElement(first_li.get(0), 0, 0, -30);
+							}
+						}
+						clearTimeout(loading_timer);
+						loading_timer = false;
+					}, 100, this);
+				}
+			});
+		}
+
+	}
+
 	this.create_iscroll_container();
 	this.app_chat_feed_data_init();
 	this.app_chat_feed_layer_display();
 	this.app_chat_feed_temp_history();
 	this.app_chat_feed_recall_init();
-
-	this.collecting = false;
-	this.loading = false;
-
-	that = this;
-
-	
-	wrapper_IScroll_cb_creation[that.position.prop('id')] = function(){
-		var IScroll = myIScrollList[that.position.prop('id')];
-		IScroll.on('scrollEnd', function(){
-			if(this.collecting)
-			{
-				setTimeout(function(){
-						if(this.y == 0 && !that.loading){
-						that.loading = true;
-						that.position.find(".models_history_loading").remove();
-						var first_li = that.position.find('li').eq(0);
-						that.app_chat_feed_layer_display();
-						IScroll.refresh();
-						IScroll.scrollToElement(first_li.get(0), 0, 0, -30);
-						that.loading = false;
-					}
-				},2000);
-			}
-			else
-			{
-				if(this.y == 0 && !that.loading){
-					that.loading = true;
-					that.position.find(".models_history_loading").remove();
-					var first_li = that.position.find('li').eq(0);
-					that.app_chat_feed_layer_display();
-					IScroll.refresh();
-					IScroll.scrollToElement(first_li.get(0), 0, 0, -30);
-					that.loading = false;
-				}
-			}
-		});
-	}
-
 
 }
 
@@ -127,7 +185,7 @@ chatFeed.prototype.app_chat_feed_data_format = function(data)
 
 chatFeed.prototype.app_chat_feed_data_running = function()
 {
-	var data = Lincko.storage.list(null, null , this.running_last_time == 0 ? null : {'created_at': [">=", this.running_last_time]}, 'chats', this.id, true);
+	var data = Lincko.storage.list(null, null , this.running_last_time == 0 ? null : {'created_at': [">=", this.running_last_time], '_type': ['!=', 'chats'],}, 'chats', this.id, true);
 	this.running_last_time = data.length > 0 ? data[0]['created_at'] : 0 ;
 	return data;
 }
@@ -135,27 +193,24 @@ chatFeed.prototype.app_chat_feed_data_running = function()
 
 chatFeed.prototype.app_chat_feed_data_init = function()
 {
-	var all_msg = Lincko.storage.list('messages', null , null, 'chats', this.id, true);
-	this.msg_hide_count = all_msg.length;
-	
-	if(this.msg_hide_count > 0)
-	{
-		this.top_msg_id = all_msg[0]['_id'];
-	}
 
-	var data = Lincko.storage.list(null, null , null, 'chats', this.id, true);
+	var data = Lincko.storage.list(null, null , {'_type': ['!=', 'chats'],}, 'chats', this.id, true);
 	this.running_last_time = data.length > 0 ? data[0]['created_at'] : 0 ;
 
+	var suffix;
 	for(var i in data)
 	{
 		if(i < this.page_count)//first page
 		{
+			suffix = '_' + data[i]['_type'] + '_models_thistory_' + data[i]['_id'];
 			this.records.push(new BaseItemCls(data[i],this.type));
 			if(data[i]['_type']=='messages')
 			{
 				this.msg_hide_count = this.msg_hide_count -1 ;
 				this.top_msg_id = data[i]['_id'];
 			}
+			this.last_data = suffix;
+			this.top_time = data[i]['created_at'];
 		}
 		else if(i == this.page_count)
 		{
@@ -165,89 +220,127 @@ chatFeed.prototype.app_chat_feed_data_init = function()
 			}
 			break;
 		}
-		this.top_time = data[i]['created_at'];
+	}
+
+	var display_date = true;
+	for(var i in this.records){
+		if(this.records[i].lazy){
+			display_date = false;
+		}
+	}
+	if(display_date){
+		this.msg_over = true;
 	}
 
 }
 
 chatFeed.prototype.app_chat_feed_more_msg = function(){
 	this.records = [];
-	var data = Lincko.storage.list(null, null , {'created_at': ['<=', this.top_time]}, 'chats', this.id, true);
-	for(var i in data)
-	{
-		if(i < this.page_count)//first page
+	if(!this.collecting){
+		var data = Lincko.storage.list(null, null , {'created_at': ['<=', this.top_time], '_type': ['!=', 'chats']}, 'chats', this.id, true);
+		var suffix;
+		for(var i in data)
 		{
-			
-			var elem_id = this.submenu.id + '_messages_models_thistory_' + data[i]['_id'] ;
 
-			if($('#'+elem_id).length == 0)
+			if(i < this.page_count)//first page
 			{
-				this.records.push(new BaseItemCls(data[i],this.type));
-				if(data[i]['_type'] == 'messages' && $('#'+elem_id).length == 0)
+				suffix = '_' + data[i]['_type'] + '_models_thistory_' + data[i]['_id'];
+
+				var elem_id = this.submenu.id + suffix ;
+
+				if($('#'+elem_id).length <= 0)
 				{
-					this.msg_hide_count = this.msg_hide_count -1 ;
-					this.top_msg_id = data[i]['_id'];
+					this.records.push(new BaseItemCls(data[i],this.type));
+					if(data[i]['_type'] == 'messages' && $('#'+elem_id).length == 0)
+					{
+						this.msg_hide_count = this.msg_hide_count -1 ;
+						this.top_msg_id = data[i]['_id'];
+					}
 				}
+				this.last_data = suffix;
+				this.top_time = data[i]['created_at'];
+			}
+			else if(i == this.page_count)
+			{
+				if(this.records.length > 0)
+				{
+					this.records[this.records.length - 1]['lazy'] = true;
+				}
+				break;
 			}
 		}
-		else if(i == this.page_count)
-		{
-			if(this.records.length > 0)
-			{
-				this.records[this.records.length - 1]['lazy'] = true;
-			}
-			break;
-		}
-		this.top_time = data[i]['created_at'];
-	}
 
-	if(this.msg_hide_count < (this.page_count) && !this.msg_over)
-	{
-		var that = this;
-		wrapper_sendAction(
-			{
-				"parent_id": that.id, //Chats ID
-				"id_max": that.top_msg_id, //OPTIONAL {false} Get all IDs below this ID (not included) , false value returns from the newest
-				"row_number": (that.page_count * 20), //OPTIONAL {30} Number of rows to get
-			},
-			'post',
-			 'message/collect',
-			function(msg, data_error, data_status, data_msg) {//result
-				var length = Object.keys(data_msg.partial[wrapper_localstorage.uid]['messages']).length;
-				that.msg_hide_count = that.msg_hide_count + length;
-				if(length < that.page_count * 20)
+		if(this.msg_hide_count < (this.page_count) && !this.msg_over)
+		{
+			var that = this;
+			this.collecting = true;
+			wrapper_sendAction(
 				{
-					that.msg_over = true;
-				}
-				setTimeout(function(){
+					"parent_id": that.id, //Chats ID
+					"id_max": that.top_msg_id, //OPTIONAL {false} Get all IDs below this ID (not included) , false value returns from the newest
+					"row_number": (that.page_count * 20), //OPTIONAL {30} Number of rows to get
+				},
+				'post',
+				 'message/collect',
+				function(msg, data_error, data_status, data_msg) {//result
+					var length = Object.keys(data_msg.partial[wrapper_localstorage.uid]['messages']).length;
+					that.msg_hide_count = that.msg_hide_count + length;
+					if(length < that.page_count * 20)
+					{
+						that.msg_over = true;
+					}
+				},
+				null,
+				function(){
+					that.collecting = true; //Have to reset to true in begin in case of retry ajax
+				},
+				function(){
 					that.collecting = false;
-				},500);
-				
-			},
-			null,
-			function(jqXHR, settings, temp_id) {//before
-				that.collecting = true;
-			},
-			function(){
-				
-			}
-		);
+				}
+			);
+		}
 	}
+
+	return this.records.length;
 }
 
 
 chatFeed.prototype.app_chat_feed_layer_display = function()
 {
-	
-	for(var i in this.records)
-	{
-		var elem_id = this.submenu.id + '_messages_models_thistory_' + this.records[i]['_id'] ;
-		if($('#'+elem_id).length == 0 && this.records[i].data != null)
+	if(!this.page_top){
+		for(var i in this.records)
 		{
-			this.records[i].item_display(this.position,this.submenu,'history');
+			if(typeof this.records[i]['data'] == 'undefined' || this.records[i]['data']['category'] == null){
+				continue;
+			}
+			var elem_id = this.submenu.id + '_' + this.records[i]['data']['category'] + '_models_thistory_' + this.records[i]['data']['id'];
+			if($('#'+elem_id).length <= 0 && this.records[i].data != null)
+			{
+				this.records[i].item_display(this.position,this.submenu,'history');
+			}
+		}
+		var length = this.app_chat_feed_more_msg();
+		if(length<=0 && this.msg_over && !this.page_top)
+		{
+			var line = false;
+			var timeline = new wrapper_date(this.top_time).getDayStartTimestamp();
+			if(typeof this.submenu.param.prev_timeline != 'undefined'){
+				//Create the line first
+				var line = $("#-models_history_line").clone();
+				line.prop('id','');
+				var w_date = new wrapper_date(this.submenu.param.prev_timeline);
+				if (w_date.happensToday()) {
+					line.find(".history_time").html(Lincko.Translation.get('app', 3302, 'html').toUpperCase()); //Today
+				} else if (w_date.happensSomeday(-1)) {
+					line.find(".history_time").html(Lincko.Translation.get('app', 3304, 'html').toUpperCase()); //Yesterday
+				} else {
+					line.find(".history_time").html(new wrapper_date(this.submenu.param.prev_timeline).display('date_very_short')); // Oct 28
+				}
+				this.position.find(".chat_contents_wrapper").before(line);
+			}
+			this.page_top = true;
 		}
 	}
-	this.app_chat_feed_more_msg();
 }
 
 chatFeed.prototype.app_chat_feed_temp_history = function()

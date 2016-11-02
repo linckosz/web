@@ -127,7 +127,7 @@ BaseItemCls.prototype.template_render = function()
 
 BaseItemCls.prototype.item_display = function(position,subm,mode)
 {
-	var template = this.template_render();	
+	var template = this.template_render();
 	var elem_id = subm.id + '_' + this.data.category + '_models_thistory_' + this.data.id 
 				+ (typeof this.data.hist !== 'undefined' && this.data.hist != 0 ?  '_'+ this.data.hist : '');
 	var elem = $('#' + template).clone();
@@ -164,23 +164,17 @@ BaseItemCls.prototype.item_display = function(position,subm,mode)
 		if(this.style == 'activity' || this.style == 'file') this.feed_action(elem,subm);
 	}
 
-	if(this.timeline != null)
-	{
-		template = "-models_history_line" ;
-		var line = $("#" + template).clone();
-		line.prop('id','');
-		var today = Math.floor((new Date()).getTime() / 86400000);
+	var timestamp = parseInt(this.timestamp, 10);
+	var timeline = new wrapper_date(this.timestamp).getDayStartTimestamp();
 
-		if (this.timeline  == today * 86400) {
-			line.find(".history_time").html(Lincko.Translation.get('app', 3302, 'html').toUpperCase());
-		}
-		else if (this.timeline  == (today - 1) * 86400) {
-			line.find(".history_time").html(Lincko.Translation.get('app', 3304, 'html').toUpperCase());
-		}
-		else{
-			line.find(".history_time").html(new wrapper_date(this.timeline).display('date_very_short'));
-		}
-		
+	//Keep a record of the earliest timeline of the submenu to know
+	if(typeof subm.param.earliest_timeline == 'undefined'){
+		subm.param.earliest_timeline = 0;
+	}
+
+	//Keep a record of the earliest message of the submenu to know
+	if(typeof subm.param.earliest_msg == 'undefined'){
+		subm.param.earliest_msg = 0;
 	}
 
 	try{
@@ -192,20 +186,49 @@ BaseItemCls.prototype.item_display = function(position,subm,mode)
 				{
 					var loading_elem =  $("#-models_history_loading").clone();
 					loading_elem.removeAttr('id');
+					loading_elem.addClass('models_history_loading_hide');
 					elem.before(loading_elem);
 				}
-				if(this.timeline != null)
-				{
-					elem.before(line);
+				var timeline = new wrapper_date(this.timestamp).getDayStartTimestamp();
+				if(typeof subm.param.prev_timeline == 'undefined'){
+					subm.param.prev_timeline = timeline;
+				} else if(timeline < subm.param.prev_timeline){
+					//Create the line first
+					var line = $("#-models_history_line").clone();
+					line.prop('id','');
+					var w_date = new wrapper_date(subm.param.prev_timeline);
+					if (w_date.happensToday()) {
+						line.find(".history_time").html(Lincko.Translation.get('app', 3302, 'html').toUpperCase()); //Today
+					} else if (w_date.happensSomeday(-1)) {
+						line.find(".history_time").html(Lincko.Translation.get('app', 3304, 'html').toUpperCase()); //Yesterday
+					} else {
+						line.find(".history_time").html(new wrapper_date(subm.param.prev_timeline).display('date_very_short')); // Oct 28
+					}
+					subm.param.prev_timeline = timeline;
+					elem.after(line);
+				}
+				if(timeline > subm.param.earliest_timeline){
+					subm.param.earliest_timeline = timeline;
 				}
 				break;
 			case 'insert' :
 				//elem.appendTo(position.find(".chat_contents_wrapper"));
 				var help = $('#' + subm.id + '_help_iscroll');
 				help.before(elem);
-				if(this.timeline != null)
-				{
+				var timeline = new wrapper_date(this.timestamp).getDayStartTimestamp();
+				if(timeline > subm.param.earliest_timeline){
+					var line = $("#-models_history_line").clone();
+					line.prop('id','');
+					var w_date = new wrapper_date(timeline);
+					if (w_date.happensToday()) {
+						line.find(".history_time").html(Lincko.Translation.get('app', 3302, 'html').toUpperCase()); //Today
+					} else if (w_date.happensSomeday(-1)) {
+						line.find(".history_time").html(Lincko.Translation.get('app', 3304, 'html').toUpperCase()); //Yesterday
+					} else {
+						line.find(".history_time").html(new wrapper_date(timeline).display('date_very_short')); // Oct 28
+					}
 					elem.before(line);
+					subm.param.earliest_timeline = timeline;
 				}
 				break;
 			case 'change' :
@@ -240,6 +263,15 @@ BaseItemCls.prototype.item_display = function(position,subm,mode)
 	catch(e){
 
 	}
+
+	if(timeline > subm.param.earliest_timeline){
+		subm.param.earliest_timeline = timeline;
+	}
+	if(timestamp > subm.param.earliest_msg){
+		subm.param.earliest_msg = timestamp;
+	}
+
+	subm.param.last_msg = this;
 	
 }
 
@@ -587,6 +619,7 @@ var historyFeed = function(id,type,position,submenu)
 
 	this.page_count = 15;
 	this.current_page = 0 ;
+	this.page_top = false ;
 
 	this.current = null;
 	this.pre = {
@@ -607,21 +640,61 @@ var historyFeed = function(id,type,position,submenu)
 	this.app_chat_feed_temp_history();
 	this.app_chat_feed_recall_init();
 
-	that = this;
+	var that = this;
 
-	var loading = false;
+	var loading_timer = false;
 	wrapper_IScroll_cb_creation[that.position.prop('id')] = function(){
+		
 		var IScroll = myIScrollList[that.position.prop('id')];
-		IScroll.on('scrollEnd', function(){
-			if(this.y == 0 && !loading){
-				that.position.find(".models_history_loading").remove();
-				var first_li = that.position.find('li').eq(0);
-				that.app_chat_feed_layer_display();
-				IScroll.refresh();
-				IScroll.scrollToElement(first_li.get(0), 0, 0, -30);
-				loading = false;
-			}
-		});
+		var events_list = [
+			'wheel',
+			'mousewheel',
+			'DOMMouseScroll',
+		];
+		for(var i in events_list){
+			that.position.on(events_list[i], IScroll, function(event){
+				if(!loading_timer){
+					if(IScroll.y >= 0){
+						that.position.find(".models_history_loading").removeClass('models_history_loading_hide');
+					} else if(IScroll.y < -30){
+						that.position.find(".models_history_loading").addClass('models_history_loading_hide');
+					}
+					loading_timer = setTimeout(function(IScroll){
+						if(IScroll.y >= 0){
+							that.position.find(".models_history_loading").remove();
+							var first_li = that.position.find('li').eq(0);
+							that.app_chat_feed_layer_display();
+							IScroll.refresh();
+							IScroll.scrollToElement(first_li.get(0), 0, 0, -30);
+						}
+						clearTimeout(loading_timer);
+						loading_timer = false;
+					}, 100, event.data);
+				}
+			});
+			//This is used when we move the bar manually
+			IScroll.on('scrollEnd', function(){
+				if(!loading_timer){
+					if(IScroll.y >= 0){
+						that.position.find(".models_history_loading").removeClass('models_history_loading_hide');
+					} else if(IScroll.y < -30){
+						that.position.find(".models_history_loading").addClass('models_history_loading_hide');
+					}
+					loading_timer = setTimeout(function(IScroll){
+						if(IScroll.y >= 0){
+							that.position.find(".models_history_loading").remove();
+							var first_li = that.position.find('li').eq(0);
+							that.app_chat_feed_layer_display();
+							IScroll.refresh();
+							IScroll.scrollToElement(first_li.get(0), 0, 0, -30);
+						}
+						clearTimeout(loading_timer);
+						loading_timer = false;
+					}, 100, this);
+				}
+			});
+		}
+
 	}
 
 
@@ -784,6 +857,27 @@ historyFeed.prototype.app_chat_feed_layer_display = function()
 			this.records[i].item_display(this.position,this.submenu,'history');
 		}
 		this.current_page ++ ;
+	} else if(!this.page_top){
+		//If we reach the latest message, we display the date
+		if(this.records.length>0){
+			var record = this.records[this.records.length-1];
+			var timeline = new wrapper_date(record.timestamp).getDayStartTimestamp();
+			if(typeof this.submenu.param.prev_timeline != 'undefined'){
+				//Create the line first
+				var line = $("#-models_history_line").clone();
+				line.prop('id','');
+				var w_date = new wrapper_date(this.submenu.param.prev_timeline);
+				if (w_date.happensToday()) {
+					line.find(".history_time").html(Lincko.Translation.get('app', 3302, 'html').toUpperCase()); //Today
+				} else if (w_date.happensSomeday(-1)) {
+					line.find(".history_time").html(Lincko.Translation.get('app', 3304, 'html').toUpperCase()); //Yesterday
+				} else {
+					line.find(".history_time").html(new wrapper_date(this.submenu.param.prev_timeline).display('date_very_short')); // Oct 28
+				}
+				this.position.find(".chat_contents_wrapper").before(line);
+			}
+		}
+		this.page_top = true;
 	}
 	
 }

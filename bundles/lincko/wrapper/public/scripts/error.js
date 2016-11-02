@@ -21,7 +21,7 @@ var JSerror = new function() {
 			that.setup();
 		}
 
-		message = JSON.stringify(message, null, 4)
+		message = JSON.stringify(message, null, 4);
 
 		var log = "COMP: "+this.yourplatform+" / "+this.youroscpu+" / "+this.colourbits+" / "+this.yourscreen+" / Javascript "+this.jsversion+" / "+this.javasupport+"\nBROW: "+this.yourappalt+"\nLINE: "+linenumber;
 		if(typeof colnumber!=='undefined' && colnumber!==null){
@@ -37,8 +37,6 @@ var JSerror = new function() {
 			type: 'POST', //Ajax calls will queue GET request only, that can timeout if the url is the same, but the PHP code still processing in background
 			data: JSON.stringify(log),
 			contentType: 'application/json; charset=UTF-8',
-			complete: function(){
-			},
 		});
 		return true;
 	};
@@ -75,7 +73,7 @@ var JSerror = new function() {
 }
 
 window.onerror = function(message, url, linenumber, colnumber, error){
-	if(typeof colnumber==='undefined'){ colnumber = null; }
-	if(typeof error==='undefined'){ error = null; }
+	if(typeof colnumber=='undefined'){ colnumber = null; }
+	if(typeof error=='undefined'){ error = null; }
 	return JSerror.sendError(message, url, linenumber, colnumber, error);
 }
