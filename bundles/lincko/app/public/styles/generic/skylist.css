@@ -792,8 +792,13 @@
 	z-index: 100;
 }
 .skylist_wrapper[view=paper]>.inputter_container .inputter_left_menu_wrapper{
-	/*top: 12px;
-	left: 2px;*/
+	z-index: 10;
+}
+.skylist_wrapper[view=paper]>.inputter_container .inputter_left_menu_wrapper .inputter_checkbox{
+	opacity: 0.3;
+}
+.skylist_wrapper[view=paper]>.inputter_container .inputter_left_menu_wrapper .inputter_container_checked .inputter_checkbox{
+	opacity: 1;
 }
 
 .skylist_wrapper[view=paper]>.inputter_container .inputter_content_wrapper{
@@ -801,7 +806,7 @@
 }
 .skylist_wrapper[view=paper]>.inputter_container .textarea{
 	/*padding-left: 40px;*/
-	opacity: 0.6;
+	opacity: 0.4;
 }
 .skylist_wrapper[view=paper]>.inputter_container .textarea:focus{
 	opacity: 1;
