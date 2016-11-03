@@ -25,6 +25,7 @@ var app_models_history = {
 		var histList = [];
 		var hist_num = {};
 		var item;
+		var deleted_at;
 		var root_item;
 		var root_name;
 		var name;
@@ -82,11 +83,20 @@ var app_models_history = {
 					}
 				}
 
-				//Skip recalled for projects
+				//Skip recalled for chats
 				if(root_item["_type"]=="chats" && hist_all[i]["type"]=="messages"){
 					message = Lincko.storage.get("messages", hist_all[i]["id"]);
 					if(message['recalled_by']){
 						//We don't display recalled messages in activity short description
+						continue;
+					}
+				}
+
+				//Skip deleted items for chats
+				if(root_item["_type"]=="chats"){
+					deleted_at = Lincko.storage.get(hist_all[i]["type"], hist_all[i]["id"], 'deleted_at');
+					if(deleted_at){
+						//We don't display deleted items in activity short description
 						continue;
 					}
 				}
