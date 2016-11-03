@@ -245,7 +245,7 @@ $(function () {
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_parent_id = app_upload_auto_launcher.parent_id;
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_parent_type = app_upload_auto_launcher.parent_type;
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_start = app_upload_auto_launcher.start;
-			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_try = 3;
+			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_try = 1;
 
 			if(app_upload_auto_launcher.temp_id){
 				app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_temp_id = app_upload_auto_launcher.temp_id;
@@ -359,11 +359,17 @@ $(function () {
 					app_upload_files.lincko_files[data.lincko_files_index].lincko_status = 'restart';
 					app_upload_files.lincko_files[data.lincko_files_index].lincko_error = Lincko.Translation.get('app', 59, 'html'); //Your file upload is restarting
 					var data_bis = data;
+					wrapper_set_shangzai = true;
 					wrapper_force_resign(function(){
 						setTimeout(function(data_bis){
 							data_bis.submit();
 						}, 600, data_bis);
 					});
+				} else if(app_upload_files.lincko_files[data.lincko_files_index].lincko_try<=0){
+					wrapper_set_shangzai = true;
+					if(typeof Lincko.storage != 'undefined'){
+						Lincko.storage.getLastVisit();
+					}
 				}
 			} else {
 				app_upload_files.lincko_files[data.lincko_files_index].lincko_status = 'done';

@@ -1,5 +1,3 @@
-
-
 var wrapper_xhr;
 var wrapper_run = {}; //Keep a track of all form running
 var wrapper_totalxhr = 0;
@@ -55,7 +53,7 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 
 	//initialize file uploading
 	if(wrapper_set_shangzai){
-		param[param.length] = {name:'set_shangzai', value:wrapper_set_shangzai};
+		param[param.length] = {name:'set_shangzai', value:true};
 	}
 
 	//Create a unique instance of the form for each ajax call
@@ -176,13 +174,15 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 				console.log(msg);
 			}
 			cb_error(xhr_err, ajaxOptions, thrownError);
-			
+			/*
 			if(ajaxOptions!='abort'){
 				//Keep retry every 5s
 				setTimeout(function(ajax_call){
-					$.ajax(ajax_call);
+					//To retry a timeout is dangerous, it is repeating exponentially the calls. PHP process is working but take longer than ajax timeout
+					//$.ajax(ajax_call);
 				}, 5000, this);
 			}
+			*/
 			this.show_error = false;
 		},
 		complete: function(){
@@ -315,7 +315,7 @@ function wrapper_force_resign(cb_success, cb_error, cb_begin, cb_complete){
 	if(typeof cb_error==="undefined" || cb_error===null){ cb_error = function(){}; }
 	if(typeof cb_begin==="undefined" || cb_begin===null){ cb_begin = function(){}; }
 	if(typeof cb_complete==="undefined" || cb_complete===null){ cb_complete = function(){}; }
-	wrapper_sendAction('', 'get', 'user/resign', cb_success, cb_error, cb_begin, cb_complete);
+	wrapper_sendAction('', 'post', 'user/resign', cb_success, cb_error, cb_begin, cb_complete);
 	return true;
 }
 
