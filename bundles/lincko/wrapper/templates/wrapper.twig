@@ -91,6 +91,11 @@ if(!window.console){
 	};
 }
 
+var app_language_short = "{{ _language() }}";
+var app_language_group = parseInt("{{ _trans('app', 0, 0) }}", 10); //(integer) Group number for burger feature
+var app_language_month = "{{ _trans('app', 0, 1) }}"; //month
+var app_language_day = "{{ _trans('app', 0, 2) }}"; //day
+
 var wrapper_link = [];
 wrapper_link['root'] = top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"{{ urlFor('root') }}";
 wrapper_link['home'] = top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"{{ urlFor('home') }}";

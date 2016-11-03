@@ -148,7 +148,7 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 			//If the language changed, we force to refresh the page
 			if(typeof data.language != 'undefined'){
 				setTimeout(function(language){
-					if(app_language_short != language){
+					if(typeof app_language_short != 'undefined' && app_language_short != language){
 						window.location.href = wrapper_link['root'];
 					}
 				}, 500, data.language);
