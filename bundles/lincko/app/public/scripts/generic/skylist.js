@@ -1022,7 +1022,7 @@ skylist.prototype.paperview_partialUpdate = function(updated_tasks){
 	var partialUpdateList = {
 		_files : true,
 		_children : true, //(i.e. comments)
-		_users : true,
+		//_users : true, toto - handle this in the next release
 		updated_at : true,
 		viewed_by : true,
 		_tasksdown: true,
