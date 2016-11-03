@@ -195,4 +195,10 @@ function base_lincko_tag_to_html(source)
 
 
 
-
+//Returns true if it is a DOM element    
+function base_isElement(o){
+	  return (
+	    typeof HTMLElement === "object" ? o instanceof HTMLElement : //DOM2
+	    o && typeof o === "object" && o !== null && o.nodeType === 1 && typeof o.nodeName==="string"
+	);
+}

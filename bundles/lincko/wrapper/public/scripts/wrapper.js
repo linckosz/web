@@ -424,7 +424,7 @@ wrapper_localstorage.cleanLocalUser = function(){
 //Default is Mobile
 var wrapper_IScroll_options = {
 	click: false, //At true, on mobile it works but but the element doesn't flash
-	keyBindings: true,
+	keyBindings: false, //toto
 	mouseWheel: true,
 	scrollbars: true,
 	scrollX: false,

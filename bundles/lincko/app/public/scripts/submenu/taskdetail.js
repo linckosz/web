@@ -553,8 +553,18 @@ Submenu.prototype.Add_taskdetail = function() {
 		else{
 			elem_projects.html(project['+title']);
 		}
+
+		//toto begin
+		var fn_burger_projects = function(elem_option){
+			console.log(elem_option);
+			console.log(item);
+		};
+		elem_projects_input.click(function(){
+			var burger_toto = new burger_dropdown('toto', 'projects', elem_projects_input, null, fn_burger_projects, null); 
+		});
+		//toto burgerN.assignProject(elem_projects_input, item);
+		//toto end
 		
-		burgerN.assignProject(elem_projects_input, item);
 		elem_projects_input.change(function(){
 			var project = Lincko.storage.get('projects',$(this).val());
 			if(project.personal_private){
