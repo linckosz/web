@@ -87,8 +87,8 @@ inputter.prototype.getContent = function()
 	for(var i in files)
 	{
 		if(files[i].lincko_parent_type == this.upload_ptype
-			&&files[i].lincko_parent_id == this.upload_pid
-			&&files[i].lincko_param == this.panel_id)
+			&& files[i].lincko_parent_id == this.upload_pid
+			&& files[i].lincko_param == this.panel_id)
 		{
 			files_index.push(files[i].lincko_files_index);
 		}
@@ -115,8 +115,8 @@ inputter.prototype.destroy = function()
 		for(var i in app_upload_files.lincko_files)
 		{
 			if(app_upload_files.lincko_files[i].lincko_parent_type == this.upload_ptype
-				&&app_upload_files.lincko_files[i].lincko_parent_id == this.upload_pid
-				&&app_upload_files.lincko_files[i].lincko_param == this.panel_id)
+				&& app_upload_files.lincko_files[i].lincko_parent_id == this.upload_pid
+				&& app_upload_files.lincko_files[i].lincko_param == this.panel_id)
 			{
 				var e; //undefined
 				$('#app_upload_fileupload').fileupload('option').destroy(e, app_upload_files.lincko_files[i]);
@@ -137,8 +137,8 @@ inputter.prototype.clearContent = function()
 		for(var i in app_upload_files.lincko_files)
 		{
 			if(app_upload_files.lincko_files[i].lincko_parent_type == this.upload_ptype
-				&&app_upload_files.lincko_files[i].lincko_parent_id == this.upload_pid
-				&&app_upload_files.lincko_files[i].lincko_param == this.panel_id)
+				&& app_upload_files.lincko_files[i].lincko_parent_id == this.upload_pid
+				&& app_upload_files.lincko_files[i].lincko_param == this.panel_id)
 			{
 				var e; //undefined
 				$('#app_upload_fileupload').fileupload('option').destroy(e, app_upload_files.lincko_files[i]);
@@ -315,8 +315,8 @@ inputter.prototype.buildLayer = function()
 									for(var i in files)
 									{
 										if(files[i].lincko_parent_type == that.upload_ptype
-											&&files[i].lincko_parent_id == that.upload_pid
-											&&files[i].lincko_param == that.panel_id)
+											&& files[i].lincko_parent_id == that.upload_pid
+											&& files[i].lincko_param == that.panel_id)
 										{
 											files_count++;
 										}
@@ -325,7 +325,7 @@ inputter.prototype.buildLayer = function()
 									if(that.hasTask)
 									{
 										
-										if(innerText == Lincko.Translation.get('app', 2204, 'html'))
+										if(innerText == Lincko.Translation.get('app', 2204, 'html'))//type here to add a task
 										{
 											content.find('[find=chat_textarea]').get(0).innerText = '';
 											innerText = '';
@@ -352,15 +352,13 @@ inputter.prototype.buildLayer = function()
 										}
 										else
 										{
-											base_show_error(Lincko.Translation.get('app', 64, 'js'), true);//no empty
+											base_show_error(Lincko.Translation.get('app', 64, 'js'), true);//can not be empty
 										}
 
 										if(that.hasTask)
 										{
-											content.find('[find=chat_textarea]').get(0).innerText = Lincko.Translation.get('app', 2204, 'html');
+											content.find('[find=chat_textarea]').get(0).innerText = Lincko.Translation.get('app', 2204, 'html');//type here to add a task
 										}
-
-										
 									});
 								}
 								break;
@@ -384,8 +382,8 @@ inputter.prototype.buildLayer = function()
 										for(var z in files)
 										{
 											if(files[z].lincko_parent_type == this.action_param[0]
-											&&files[z].lincko_parent_id == this.action_param[1]
-											&&files[z].lincko_param == this.action_param[2])
+											&& files[z].lincko_parent_id == this.action_param[1]
+											&& files[z].lincko_param == this.action_param[2])
 											{
 												if($('#inputter_element_uploading_item_'+files[z].lincko_temp_id).length == 0)
 												{
@@ -605,8 +603,8 @@ inputter.prototype.buildLayer = function()
 				for(var i in files)
 				{
 					if(files[i].lincko_parent_type == that.upload_ptype
-						&&files[i].lincko_parent_id == that.upload_pid
-						&&files[i].lincko_param == that.panel_id)
+						&& files[i].lincko_parent_id == that.upload_pid
+						&& files[i].lincko_param == that.panel_id)
 					{
 						files_count++;
 					}
@@ -635,7 +633,7 @@ inputter.prototype.buildLayer = function()
 				else
 				{
 					flag = false;
-					base_show_error(Lincko.Translation.get('app', 64, 'js'), true);//no empty
+					base_show_error(Lincko.Translation.get('app', 64, 'js'), true);//Can not be empty
 					return false;
 				}
 			}
