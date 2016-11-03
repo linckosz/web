@@ -107,6 +107,25 @@ inputter.prototype.getContent = function()
 	return data;
 } 
 
+inputter.prototype.destroy = function()
+{
+	var auto_upload = this.layer.hasOwnProperty('auto_upload') ? this.layer['auto_upload'] : true;
+	if(!auto_upload)
+	{
+		for(var i in app_upload_files.lincko_files)
+		{
+			if(app_upload_files.lincko_files[i].lincko_parent_type == this.upload_ptype
+				&&app_upload_files.lincko_files[i].lincko_parent_id == this.upload_pid
+				&&app_upload_files.lincko_files[i].lincko_param == this.panel_id)
+			{
+				var e; //undefined
+				$('#app_upload_fileupload').fileupload('option').destroy(e, app_upload_files.lincko_files[i]);
+			}
+		}
+	}
+	$('#'+this.panel_id+'_inputter_container').recursiveRemove();
+	delete this;
+}
 
 inputter.prototype.clearContent = function()
 {
@@ -131,8 +150,6 @@ inputter.prototype.clearContent = function()
 	container.find('[find=chat_textarea]').get(0).innerHTML = '';
 	container.find('[find=checkbox]').removeClass('inputter_container_checked');
 	container.find('[find=files_queue]').html('');
-
-
 } 
 
 
@@ -223,6 +240,8 @@ inputter.prototype.buildLayer = function()
 										$(this).addClass('inputter_container_checked');
 										that.task_completed = true;
 									}
+
+
 								});
 								break;
 							default :
@@ -289,10 +308,59 @@ inputter.prototype.buildLayer = function()
 								if(this.layer['right_menu'][i][j].hasOwnProperty('click'))
 								{
 									item.click(this.layer['right_menu'][i][j]['click'],function(event){
-										var fn = event.data;
-										fn(that);
-										$('.empty_show').removeClass('mobile_hide');
-										$('.empty_hide').addClass('mobile_hide');
+
+
+									var files = app_upload_files.lincko_files;
+									var files_count = 0;
+									for(var i in files)
+									{
+										if(files[i].lincko_parent_type == that.upload_ptype
+											&&files[i].lincko_parent_id == that.upload_pid
+											&&files[i].lincko_param == that.panel_id)
+										{
+											files_count++;
+										}
+									}
+									var innerText = content.find('[find=chat_textarea]').get(0).innerText;
+									if(that.hasTask)
+									{
+										
+										if(innerText == Lincko.Translation.get('app', 2204, 'html'))
+										{
+											content.find('[find=chat_textarea]').get(0).innerText = '';
+											innerText = '';
+										}
+									}
+									if(
+										(innerText.length > 0 && that.layer.hasOwnProperty('enter') && !that.hasTask)
+										|| ((innerText.length > 0 || files_count > 0) && that.layer.hasOwnProperty('enter') && that.hasTask)
+									  )
+										{
+											var fn = event.data;
+											fn(that);
+
+											content.removeClass('mobile-margin-right-' + mobile_show_count);
+
+											$('.empty_show').removeClass('mobile_hide');
+											$('.empty_hide').addClass('mobile_hide');
+
+											mobile_show_count = right_menu.find("li:not(.mobile_hide)").length;
+											content.addClass('mobile-margin-right-' + mobile_show_count);
+
+
+											
+										}
+										else
+										{
+											base_show_error(Lincko.Translation.get('app', 64, 'js'), true);//no empty
+										}
+
+										if(that.hasTask)
+										{
+											content.find('[find=chat_textarea]').get(0).innerText = Lincko.Translation.get('app', 2204, 'html');
+										}
+
+										
 									});
 								}
 								break;
@@ -445,10 +513,10 @@ inputter.prototype.buildLayer = function()
 	var input = $('#-inputter_element_content').clone();
 	input.prop('id','');
 	input.appendTo(content);
-	input.find('[find=chat_textarea]').keyup(function(){});
 
 	input.find('[find=chat_textarea]').addClass('padding-left-' + left_padding_col_count);
 
+	
 
 	if(this.layer.hasOwnProperty('row'))
 	{
@@ -480,7 +548,16 @@ inputter.prototype.buildLayer = function()
 		}
 	}
 
-	input.find('[find=chat_textarea]').on('keyup',function(){
+	var mobile_show_count = 0 ;
+	mobile_show_count = mobile_right_col_count;
+
+	input.find('[find=chat_textarea]').on('keyup',function(e){
+		if(!flag && e.keyCode == 13 && that.hasTask){
+			e.which = null;
+			e.keyCode = null;
+			e.preventDefault();
+		}
+
 		if($.trim(this.innerText).length > 0)
 		{
 			$('.empty_show').addClass('mobile_hide');
@@ -491,6 +568,14 @@ inputter.prototype.buildLayer = function()
 			$('.empty_show').removeClass('mobile_hide');
 			$('.empty_hide').addClass('mobile_hide');
 		}
+
+		content.removeClass('mobile-margin-right-' + mobile_show_count);
+		//content.addClass('mobile-margin-right-' + mobile_right_col_count);
+
+		var left_menu = container.find('[find=left_menu_wrapper]');
+		var right_menu = container.find('[find=right_menu_wrapper]');
+		mobile_show_count = right_menu.find("li:not(.mobile_hide)").length;
+		content.addClass('mobile-margin-right-' + mobile_show_count);
 	});
 
 	input.find('[find=chat_textarea]').on('paste',function(e,data){
@@ -501,9 +586,8 @@ inputter.prototype.buildLayer = function()
 	});
 
 
-
+	var flag = true;
 	input.find('[find=chat_textarea]').keypress(function(e){
-
 		e.stopPropagation();
 		if(e.keyCode==13)
 		{
@@ -515,20 +599,44 @@ inputter.prototype.buildLayer = function()
 			else
 			{
 				e.preventDefault();
-				if(this.innerText.length > 0 && that.layer.hasOwnProperty('enter'))
+				var files = app_upload_files.lincko_files;
+				var files_count = 0;
+
+				for(var i in files)
 				{
+					if(files[i].lincko_parent_type == that.upload_ptype
+						&&files[i].lincko_parent_id == that.upload_pid
+						&&files[i].lincko_param == that.panel_id)
+					{
+						files_count++;
+					}
+				}
+
+				if(
+					(this.innerText.length > 0 && that.layer.hasOwnProperty('enter') && !that.hasTask)
+					|| ((this.innerText.length > 0 || files_count > 0) && that.layer.hasOwnProperty('enter') && that.hasTask)
+				  )
+				{
+					flag = true;
+					content.removeClass('mobile-margin-right-' + mobile_show_count);
 					if(that.burger == null)
 					{
 						var fn = that.layer['enter'];
 						fn(that);
 					}
+
 					$('.empty_show').removeClass('mobile_hide');
 					$('.empty_hide').addClass('mobile_hide');
+
+					mobile_show_count = right_menu.find("li:not(.mobile_hide)").length;
+					content.addClass('mobile-margin-right-' + mobile_show_count);
 					return;
 				}
 				else
 				{
+					flag = false;
 					base_show_error(Lincko.Translation.get('app', 64, 'js'), true);//no empty
+					return false;
 				}
 			}
 			
