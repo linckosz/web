@@ -36,6 +36,8 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 				}
 			} else if(temp['quote']){
 				format = 'quote';
+			} else if($.type(temp) == 'object'){
+				return false; //Do not display any json that cannot be interpreted
 			} else {
 				format = false;
 			}
