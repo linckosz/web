@@ -125,7 +125,7 @@ var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct, ri
 		'sort_alt': false,
 		'hide_completed': false,
 		'showLinks': true,
-		'view': 'paper',
+		'view': 'card',
 	};
 	/*if( Lincko.storage.get("projects", app_content_menu.projects_id, 'personal_private') ){
 		this.Lincko_itemsList_filter.people = null;
