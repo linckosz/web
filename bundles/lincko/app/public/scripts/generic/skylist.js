@@ -127,6 +127,9 @@ var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct, ri
 		'showLinks': true,
 		'view': 'card',
 	};
+	if(that.list_type == 'tasks'){
+		that.Lincko_itemsList_filter.view = 'paper';
+	}
 	/*if( Lincko.storage.get("projects", app_content_menu.projects_id, 'personal_private') ){
 		this.Lincko_itemsList_filter.people = null;
 	}*/
