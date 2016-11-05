@@ -700,7 +700,7 @@ Submenu.prototype.Add_ChatContent = function() {
 	var chatlist_subConstruct = function(){
 		this.list_wrapper.addClass("skylist_maxMobileL_force").addClass('submenu_content_chat');
 		this.elem_newcardCircle.click([that.layer+1, that.preview], function(event) {
-			submenu_Build("new_group", event.data[0], false, {alwaysMe: true}, event.data[1]);
+			submenu_Build("new_group", event.data[0], false, {type: 'chats', alwaysMe: true}, event.data[1]);
 		})
 		.appendTo(this.list_wrapper);
 	}

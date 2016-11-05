@@ -8,6 +8,11 @@ var app_models_history = {
 		app_models_history.hist_root = {};
 	},
 
+	refresh: function(type, id){
+		app_models_history.hist_root[type+'_'+id] = null;
+		delete app_models_history.hist_root[type+'_'+id];
+	},
+
 	tabList: function(limit, parent_type, parent_id){
 		if(typeof limit != 'number' || limit<=0){ limit = false; }
 		if(typeof parent_type == 'undefined'){ parent_type = false; }
@@ -94,6 +99,10 @@ var app_models_history = {
 
 				//Skip deleted items for chats
 				if(root_item["_type"]=="chats"){
+					if(hist_all[i]["type"]=='chats'){
+						//We don't display in chats the chats itself
+						continue;
+					}
 					deleted_at = Lincko.storage.get(hist_all[i]["type"], hist_all[i]["id"], 'deleted_at');
 					if(deleted_at){
 						//We don't display deleted items in activity short description

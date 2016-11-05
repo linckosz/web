@@ -7,7 +7,7 @@ var chatlist_subConstruct = function(){
 		}
 		var submenu_projects_id = app_content_menu.projects_id;
 		that.elem_newcardCircle.click( function() {
-			submenu_Build("new_group", false, false, {proid: submenu_projects_id, alwaysMe:true, }, true);
+			submenu_Build("new_group", false, false, {type: 'chats', proid: submenu_projects_id, alwaysMe:true, }, true);
 		})
 		.appendTo(that.list_wrapper);
 }

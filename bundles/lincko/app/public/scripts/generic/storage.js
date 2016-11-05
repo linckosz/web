@@ -319,6 +319,7 @@ Lincko.storage.update = function(partial, info){
 			
 			if(update_real){
 				//console.log("update ==> "+i+'_'+j);
+				app_models_history.refresh(i, j); //It helps to force updating any history info tab in the application
 				app_application_lincko.prepare(i+'_'+j, false, updatedAttributes);
 			}
 			update = true;

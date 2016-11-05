@@ -20,12 +20,14 @@ submenu_list['newchat'] = {
 	"right_button": {
 		"style": "title_right_button",
 		"title": "",
-		"class": "icon-SmallPersonaiconBlack base_pointer chat_add_person display_none",
+		"class": "icon-Settings base_pointer submenu_chats_settings",
 		"action": function(Elem, subm) {
-			var all_users = [];
-			var checked_users = [];
-			var userList = [];
-			submenu_Build('new_group', true, false, {type: 'chats', alwaysMe:true, }, subm.preview);
+			if(subm.param.type == 'chats'){
+				var all_users = [];
+				var checked_users = [];
+				var userList = [];
+				submenu_Build('edit_group', true, false, {type: 'chats', id: subm.param.id, alwaysMe:true, }, subm.preview);
+			}
 		}
 	},
 	"_pre_action": {
@@ -44,6 +46,14 @@ submenu_list['newchat'] = {
 	"chat_contents": {
 		"style": "chat_contents",
 		"title": "",
+	},
+	"_post_action": {
+		"style": "postAction",
+		"action": function(Elem, subm){
+			if(subm.param.type!='chats'){
+				Elem.find('.submenu_chats_settings').addClass('display_none');
+			}
+		},
 	},
 };
 

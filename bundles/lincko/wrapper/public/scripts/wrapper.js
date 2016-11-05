@@ -345,6 +345,7 @@ function wrapper_get_shangzai(field){
 	return result;
 }
 
+wrapper_localstorage.encrypt_timer = [];
 wrapper_localstorage.encrypt = function (link, data, tryit){
 	if(typeof tryit === 'undefined'){ tryit = true; }
 	var result = false;
@@ -353,26 +354,30 @@ wrapper_localstorage.encrypt = function (link, data, tryit){
 	if(typeof this.quota[link] !== 'undefined' && !this.quota[link]){
 		return true;
 	} else {
-		try {
-			//var store_data = this.sha+btoa(utf8_encode(data)); //Don't use btoa, it's too heavy
-			//var store_data = LZString.compressToUTF16(JSON.stringify(data)); //Good
-			var store_data = LZipper.compress(link+this.sha+utf8_encode(JSON.stringify(data))); //Best
-			var time = 1000*3600*24*31; //Keep the value for 1 month
-			result = amplify.store(this.prefix+link, store_data, { expires: time });
-		} catch(e) {
-			if(tryit){
-				if(wrapper_localstorage.cleanLocalWorkspace()){ //Delete other workspace data, and try one more time to store
-					result = wrapper_localstorage.encrypt(link, data, false);
-				} else {
-					tryit = false;
+		clearTimeout(wrapper_localstorage.encrypt_timer[link]);
+		wrapper_localstorage.encrypt_timer[link] = setTimeout(function(link, data, tryit){
+			try {
+				//var store_data = wrapper_localstorage.sha+btoa(utf8_encode(data)); //Don't use btoa, it's too heavy
+				//var store_data = LZString.compressToUTF16(JSON.stringify(data)); //Good
+				var store_data = LZipper.compress(link+wrapper_localstorage.sha+utf8_encode(JSON.stringify(data))); //Best
+				var time = 1000*3600*24*31; //Keep the value for 1 month
+				result = amplify.store(wrapper_localstorage.prefix+link, store_data, { expires: time });
+			} catch(e) {
+				if(tryit){
+					if(wrapper_localstorage.cleanLocalWorkspace()){ //Delete other workspace data, and try one more time to store
+						result = wrapper_localstorage.encrypt(link, data, false);
+					} else {
+						tryit = false;
+					}
+				}
+				if(!tryit){ //If cannot, just delete the data
+					wrapper_localstorage.quota[link] = false;
+					amplify.store(wrapper_localstorage.prefix+link, null);
+					console.log(e);
 				}
 			}
-			if(!tryit){ //If cannot, just delete the data
-				this.quota[link] = false;
-				amplify.store(this.prefix+link, null);
-				console.log(e);
-			}
-		}
+		}, 0, link, data, tryit); //In another thread to not block the code running
+		return true;
 	}
 	return result;
 };

@@ -68,8 +68,12 @@ textarea:focus, input:focus{
 	background-color: inherit;
 }
 
-.submenu_chats{
-	z-index:9999999;
+.submenu_chats {
+	z-index: 9999999;
+}
+
+.submenu_chats_settings {
+	font-size: 28px !important;
 }
 
 
