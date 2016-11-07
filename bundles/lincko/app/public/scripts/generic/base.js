@@ -159,3 +159,6 @@ base_runOnElemLoad.prototype.run = function(checkTime){
 function base_getRandomInt(min, max){
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+
+
