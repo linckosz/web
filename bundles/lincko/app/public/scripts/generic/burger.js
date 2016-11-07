@@ -7,6 +7,105 @@
 
 
 
+var burger_attach_clickHandler = {
+
+	in_charge: function(elem, lincko_type, lincko_id, cb_create, cb_select, cb_destroy){
+		if(!elem instanceof $){ elem = $(elem); }
+		if(typeof cb_create != 'function'){ cb_create = null; }
+		if(typeof cb_select != 'function'){ cb_select = null; }
+		if(typeof cb_destroy != 'function'){ cb_destroy = null; }
+
+		
+		var list = burger_list.in_charge(lincko_type, lincko_id);
+		var dropdownInst = null;
+		elem.click(function(){
+			if( (!dropdownInst || dropdownInst.destroyed) && Lincko.storage.canI('edit', lincko_type, lincko_id)){
+				dropdownInst = new burger_dropdown('toto', list, elem, null, null, cb_select, null, false); 
+			}
+		});
+
+		return dropdownInst;
+	},
+
+	projects: function(elem, lincko_type, lincko_id, cb_create, cb_select, cb_destroy){
+		if(!elem instanceof $){ elem = $(elem); }
+		if(typeof cb_create != 'function'){ cb_create = null; }
+		if(typeof cb_select != 'function'){ cb_select = null; }
+		if(typeof cb_destroy != 'function'){ cb_destroy = null; }
+
+		var dropdownInst = null;
+		elem.click(function(){
+			if( (!dropdownInst || dropdownInst.destroyed) && Lincko.storage.canI('edit', lincko_type, lincko_id)){
+				dropdownInst = new burger_dropdown('toto', 'projects', elem, null, null, cb_select, null, false); 
+			}
+		});
+
+		return dropdownInst;
+	},
+
+}
+
+
+
+
+
+
+var burger_list = function(lincko_type, lincko_id, burger_type){
+	/*	lincko_type : 'tasks'
+		lincko_id : 123
+		burger_type : 'users'
+	*/
+	return burger_list[burger_type](lincko_type, lincko_id);
+}
+
+//can accept any lincko types, including projects
+burger_list.in_charge = function(lincko_type, lincko_id){
+	var item = null;
+	var accessList = [];
+	if(lincko_type == 'projects'){
+		if(!lincko_id){ var lincko_id = app_content_menu.projects_id; }
+		accessList = Lincko.storage.whoHasAccess('projects', lincko_id);
+	}
+	else{
+		item = Lincko.storage.get(lincko_type, lincko_id);
+		if(!item){
+			return false;
+		}
+		else{
+			accessList = Lincko.storage.whoHasAccess(item['_type'], item['_id']);
+		}
+	}
+
+	var userList = [];
+	for (var i = 0; i < accessList.length; i++) {
+		var userid = accessList[i]; 
+		var user = {
+			val: userid,
+			text: Lincko.storage.get("users", userid,"username"),
+			imgURL: Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", userid, 'profile_pic')),
+		};
+
+		if( typeof item == 'object' && item['_users']  && userid in item['_users'] && item['_users'][userid]['in_charge'] ){
+			user.preSelect = true;
+		}
+		else{
+			user.preSelect = false;
+		}
+
+		userList.push(user);
+	}
+
+
+	return userList;
+}
+burger_list.projects = function(){
+
+}
+burger_list.spaces = function(){
+
+}
+
+
 var burger_global_dropdown = {
 	list: {
 		/*	id_dropdown: instance,
@@ -27,13 +126,34 @@ var burger_global_dropdown = {
 	position: jquery elem or [left, top]
 	submenu: bool
 */
-var burger_dropdown = function(id, type, position, vOffset, cb_select, submenu){
-	if(!type || typeof cb_select != 'function'){ return false; }
+var burger_dropdown = function(id, data, position, vOffset, cb_create, cb_select, cb_destroy, submenu, flipped){
+	if(!data || typeof cb_select != 'function'){ return false; }
 	if(typeof submenu != 'boolean'){ var submenu = false; }
 	if(!position){ var position = [0,0]; }
 	else if(base_isElement(position) && !position instanceof $){ var position = $(position); }
 
+
+
 	var that = this;
+
+	//burger settings
+	that.elem = null;
+	that.data = data;
+	that.md5id = md5(Math.random());
+	that.id_dropdown = 'burger_dropdown_'+that.md5id;
+	that.id_iscroll = 'burger_iscroll_'+that.md5id;
+	that.iscroll = null; //iscroll instance
+	that.time = 200;
+	that.count_show = 5;
+	that.count_total = 1000;
+	that.width = 200;
+	that.optionH = 50;
+	that.i_current = false;
+	that.i_pre = false;
+	that.cb_select = cb_select;
+	that.submenu = submenu;
+	that.hidden = false;
+	that.destroyed = false;
 
 	//left and top css values for the dropdown
 	that.coord = {
@@ -79,39 +199,24 @@ var burger_dropdown = function(id, type, position, vOffset, cb_select, submenu){
 	}
 
 
-
-	//burger settings
-	that.elem = null;
-	that.type = type;
-	that.md5id = md5(Math.random());
-	that.id_dropdown = 'burger_dropdown_'+that.md5id;
-	that.id_iscroll = 'burger_iscroll_'+that.md5id;
-	that.iscroll = null; //iscroll instance
-	that.time = 200;
-	that.count_show = 5;
-	that.count_total = 1000;
-	that.width = 200;
-	that.optionH = 50;
-	that.i_current = false;
-	that.i_pre = false;
-	that.cb_select = cb_select;
-	that.submenu = submenu;
-
 	that.construct();
 }
 
 burger_dropdown.prototype.construct = function(){
 	var that = this;
-	that.build_elem(that.type);
+	that.build_elem();
 	that.show();
 	burger_global_dropdown.list[that.id_dropdown] = that;
 }
 
-burger_dropdown.prototype.build_elem = function(type){
+burger_dropdown.prototype.build_elem = function(){
 	var that = this;
 	var elem_dropdown = null;
-	if(type == 'projects'){
+	if(that.data == 'projects'){
 		elem_dropdown = that.build_elem_projects();
+	}
+	else{
+		elem_dropdown = that.build_elem_data();
 	}
 
 	elem_dropdown.css({
@@ -126,17 +231,15 @@ burger_dropdown.prototype.build_elem = function(type){
 
 
     elem_dropdown.focus(function(){
-    	console.log('focus');
     })
     elem_dropdown.blur(function(){
-    	console.log('blur');
     	that.hide();
     });
 
     elem_dropdown.find('.burger_option').hover(function(){ //hoverin
-    	console.log('hoverin');
+
     }, function(){ //hoverout
-    	console.log('hoverout');
+
     });
 
     elem_dropdown.keydown(function(event){
@@ -151,7 +254,7 @@ burger_dropdown.prototype.build_elem = function(type){
 				elem_selected = elem_dropdown.find('.burger_option').eq(0);
 			}
 
-			that.cb_select(elem_selected);
+			elem_selected.click();
 			that.hide();
     		return;
     	}
@@ -176,7 +279,6 @@ burger_dropdown.prototype.build_elem = function(type){
     		elem_dropdown.find('.burger_option').removeClass('burger_option_selected');
     	}
     	elem_selected = elem_dropdown.find('.burger_option').eq(that.i_current).addClass('burger_option_selected');
-
     	that.iscroll.scrollToElement(elem_selected.get(0));
     });
 
@@ -184,6 +286,58 @@ burger_dropdown.prototype.build_elem = function(type){
 
 
 	that.elem = elem_dropdown;
+	return elem_dropdown;
+}
+
+burger_dropdown.prototype.build_elem_data = function(){
+	var that = this;
+	var data = that.data;
+
+	var elem_dropdown = $('#-burger_dropdown').clone().prop('id','');
+	var elem_option = $('#-burger_option').clone().prop('id','').addClass('burger_option_users');
+
+	//if there is no contacts to display
+	if(data.length < 1){
+		elem_option.find('[find=text]').html(Lincko.Translation.get('app', 2205, 'html'));/*no match*/
+		elem_option.find('[find=image]').addClass('display_none');
+		elem_dropdown.find('[find=wrapper]').append(elem_option);
+		return elem_dropdown;
+	}
+
+
+	$.each(data, function(i, obj){
+		var elem_option_clone = elem_option.clone();
+		if(obj.text){
+			elem_option_clone.find('[find=text]').text(obj.text);
+		}
+		if(obj.val){
+			elem_option_clone.attr('val', obj.val);
+		}
+		if(obj.preSelect){
+			elem_option_clone.addClass('burger_option_preSelect');
+		}
+		if(obj.imgURL){
+			elem_option_clone.find('[find=image]')
+				.removeClass('icon-SmallPersonaiconBlack')
+				.css('background-image','url("'+obj.imgURL+'")');
+		}
+		if(typeof that.cb_select == 'function'){
+			elem_option_clone.click(function(){
+				that.cb_select(obj);
+				that.hide();
+			});
+		}
+
+		elem_dropdown.find('[find=wrapper]').append(elem_option_clone);
+	});
+
+	that.count_total = data.length;
+
+	if(data.length > that.count_show){
+		elem_dropdown.css({'height': that.optionH*that.count_show, 'width': that.width});
+		elem_dropdown.find('[find=wrapper]').addClass('overthrow');
+	}
+
 	return elem_dropdown;
 }
 
@@ -234,6 +388,7 @@ burger_dropdown.prototype.hide = function(){
 			mobileHA: hasGood3Dsupport,
 			duration: that.time,
 			complete: function(){
+				that.hidden = true;
 				that.destroy();
 			}
 		});
@@ -241,6 +396,7 @@ burger_dropdown.prototype.hide = function(){
 }
 burger_dropdown.prototype.destroy = function(){
 	var that = this;
+	that.destroyed = true;
 	that.elem.recursiveRemove();
 	delete burger_global_dropdown.list[that.id_dropdown];
 	delete this;
@@ -1862,7 +2018,7 @@ function burger_calendar (elem_timestamp, elem_display){
 
 
 
-//can also add code to generate the text given the userid
+//future modification: generate the text given the userid
 var burger_spanUser = function(userid, text){
 	if(!text){
 		var text = Lincko.storage.get("users", userid ,"username");
@@ -1880,7 +2036,7 @@ var burger_spanUser = function(userid, text){
 	return elem;
 }
 
-//can also add code to generate the text given the timestamp
+//future modification: generate the text given the timestamp
 var burger_spanDate = function(timestamp, text){
 	if(!text){
 		var text = burger_timestampToText(timestamp);

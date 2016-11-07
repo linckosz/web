@@ -34,7 +34,7 @@
 	width: 200px;
 	overflow: hidden;
 }
-.burger_option:hover, .burger_option_selected {
+.burger_option:hover, .burger_option_selected, .burger_option_preSelect {
 	background: #B6D6E8;
 }
 .burger_option [find=image], 

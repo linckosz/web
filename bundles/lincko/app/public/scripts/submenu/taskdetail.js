@@ -555,13 +555,19 @@ Submenu.prototype.Add_taskdetail = function() {
 		}
 
 		//toto begin
+		var burger_toto = null;
 		var fn_burger_projects = function(elem_option){
 			console.log(elem_option);
 			console.log(item);
 		};
-		elem_projects_input.click(function(){
-			var burger_toto = new burger_dropdown('toto', 'projects', elem_projects_input, null, fn_burger_projects, null); 
-		});
+
+		//burger_toto = burger_attach_clickHandler.projects(elem_projects_input, item['_type'], item['_id'], null, fn_burger_projects);
+		burger_toto = burger_attach_clickHandler.in_charge(elem_projects_input, item['_type'], item['_id'], null, fn_burger_projects);
+		/*elem_projects_input.click(function(){
+			if(!burger_toto || burger_toto.hidden){
+				burger_toto = new burger_dropdown('toto', 'projects', elem_projects_input, null, null, fn_burger_projects, null, false); 
+			}
+		});*/
 		//toto burgerN.assignProject(elem_projects_input, item);
 		//toto end
 		
