@@ -1422,6 +1422,18 @@ function submenu_content_block_hide(preview) {
 	}
 }
 
+jQuery.prototype.submenu_getWrapper = function(){
+	var wrapper = $(this).closest('.submenu_wrapper');
+	if(wrapper.length > 0 && wrapper[0].id){
+		wrapper[0].id
+		var subm = submenu_getById("1_submenu_wrapper_newchat_true");
+		if(subm){
+			return [subm, wrapper];
+		}
+	}
+	return false;
+}
+
 function submenu_content_unblur() {
 	// This method is only called by submenu, not preview
 	//submenu_show

@@ -239,7 +239,7 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 		}
 		if(span_arr.length>0){
 			//This function should be internally launched once the DOM of the chat is finished to be drawn, otherwise we may not be able to find the position where to insert the answers
-			app_models_even_fn(comments_id, span_arr); //toto
+			app_models_evan_fn(comments_id, span_arr); //toto
 		}
 		return span;
 	} else if(format == 'quote'){
@@ -265,15 +265,17 @@ var app_models_sky_fn = function(current, next, param){
 	console.log(param);
 };
 
-var app_models_even_fn = function(current, span_arr){
+var app_models_evan_fn = function(current, span_arr){
 	console.log('app_models_even_fn: '+current);
 	console.log(span_arr);
+	console.log($('#1_submenu_wrapper_newchat_true_comments_models_thistory_25106').length);
 };
 
 var app_models_resume_onboarding_continue = function(current, next){
 	var data = {
 		current: current,
 		next: next,
+		answer: Lincko.Translation.get('app', next, 'pure'),
 	};
 	wrapper_sendAction(data, 'post', 'onboarding/next');
 };

@@ -1,5 +1,6 @@
 var storage_first_request = true; //Help to launch getSchema within getLatest only once at the beginning to insure nothing is missing
 var storage_first_launch = true;
+var storage_first_onboarding = true;
 var storage_keep_messages = false; //At false in .schema we delete messages, but at true we keep them because we may return only a part of
 /* PRIVATE METHOD */
 /*
@@ -35,6 +36,18 @@ var storage_cb_success = function(msg, err, status, data){
 	}
 	Lincko.storage.firstLatest();
 };
+
+//Launch the onboadring sync the first time it receive the database
+var storage_launch_onboarding = function(){
+	if(storage_first_onboarding){
+		setTimeout(function(){
+			app_application_lincko.prepare('launch_onboarding', true);
+		}, 300); //The few ms help to make sure we finish previous operation that may make the focus lost
+		storage_first_onboarding = false;
+		return true;
+	}
+	return false;
+}
 
 //Help to record local_storage in another thread and with a delay to limit impact on immediate JS updates
 var storage_local_storage = {
@@ -201,6 +214,7 @@ Lincko.storage.getLatest = function(force){
 			var lastvisit = arr.lastvisit;
 			storage_ajax_latest[lastvisit] = null;
 			delete storage_ajax_latest[lastvisit];
+			storage_launch_onboarding();
 		});
 		storage_ajax_latest[lastvisit] = wrapper_xhr;
 	}
@@ -225,7 +239,9 @@ Lincko.storage.getMissing = function(missing){
 			'show_error': false,
 		};
 		arr.partial[wrapper_localstorage.uid] = missing;
-		wrapper_sendAction(arr, 'post', 'data/missing', null);
+		wrapper_sendAction(arr, 'post', 'data/missing', function(){
+			storage_launch_onboarding();
+		});
 	}
 };
 
