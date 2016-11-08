@@ -22,7 +22,7 @@ submenu_list['newchat'] = {
 		"title": "",
 		"class": "icon-Settings base_pointer submenu_chats_settings",
 		"action": function(Elem, subm) {
-			if(subm.param.type == 'chats'){
+			if(subm.param.type == 'chats' && !Lincko.storage.get('chats', subm.param.id, 'single')){
 				var all_users = [];
 				var checked_users = [];
 				var userList = [];
@@ -50,7 +50,7 @@ submenu_list['newchat'] = {
 	"_post_action": {
 		"style": "postAction",
 		"action": function(Elem, subm){
-			if(subm.param.type!='chats'){
+			if(subm.param.type!='chats' || Lincko.storage.get('chats', subm.param.id, 'single')){
 				Elem.find('.submenu_chats_settings').addClass('display_none');
 			}
 		},
