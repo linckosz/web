@@ -289,32 +289,45 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 };
 
 
-
 var app_models_evan_fn = function(current, span_arr){
-	console.log(current);
-	var createInterval = setInterval(function(current){
-		var dom = $('#1_submenu_wrapper_newchat_true_comments_models_thistory_'+current);
-		if(dom.length > 0)
-		{
-			
-			var options = $('#-models_history_answer_options').clone();
-			for(var i in span_arr)
-			{
-				options.append(span_arr[i]);
-			}
-			
-			options.prop('id','1_submenu_wrapper_newchat_true_models_history_answer_options_'+current);
-			dom.after(options);
-			clearInterval(createInterval);
-		}
-	},1000,current);
 
 	
 
-	// console.log('app_models_even_fn: '+current);
-	// console.log(span_arr);
-	// console.log($('#1_submenu_wrapper_newchat_true_comments_models_thistory_26289').length);
+
+	var createInterval = setInterval(function(current){
+		var dom = $('#1_submenu_wrapper_newchat_false_comments_models_thistory_'+current);
+		var answer = $('#models_history_answer_options_'+current);
+		if(dom.length > 0 )
+		{
+			if(answer.length == 0)
+			{
+				var options = $('#-models_history_answer_options').clone();
+				options.prop('id','models_history_answer_options_'+current)
+				options.addClass('models_history_self');
+				for(var i in span_arr)
+				{
+					options.append(span_arr[i]);
+				}
+
+				dom.after(options);
+				options.velocity("bruno.slideRightIn", { duration: 1000 });
+				
+			}
+			clearInterval(createInterval);
+		}
+	},500,current);
 };
+
+$("body").on("click", '.app_models_resume_onboarding_answer',function(){
+	var options = $(this).closest('.models_history_answer_options');
+	options.velocity("bruno.slideRightOut", { 
+		duration: 500,
+		complete:function(){
+			options.remove();
+		} 
+	});
+	
+});
 
 var app_models_resume_onboarding_continue = function(current, next, text_id){
 	var answer = false;

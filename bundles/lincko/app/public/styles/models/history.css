@@ -395,6 +395,18 @@
 	-khtml-opacity:0.7;
 }
 
+.models_history_answer_options{
+	 margin:10px;
+	 height: auto;
+	 overflow:hidden;
+}
+.app_models_resume_onboarding_answer{
+	border-radius: 8px;
+    padding: 5px 8px;
+    background-color: rgba(103, 158, 82, 0.22);
+    margin: 5px;
+}
+
 /* Mobile phone in Portrait */
 
 @media only screen and (max-width: 479px) {
