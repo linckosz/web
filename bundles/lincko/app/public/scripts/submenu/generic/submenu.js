@@ -1425,8 +1425,7 @@ function submenu_content_block_hide(preview) {
 jQuery.prototype.submenu_getWrapper = function(){
 	var wrapper = $(this).closest('.submenu_wrapper');
 	if(wrapper.length > 0 && wrapper[0].id){
-		wrapper[0].id
-		var subm = submenu_getById("1_submenu_wrapper_newchat_true");
+		var subm = submenu_getById(wrapper[0].id);
 		if(subm){
 			return [subm, wrapper];
 		}

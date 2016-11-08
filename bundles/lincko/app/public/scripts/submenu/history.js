@@ -633,12 +633,6 @@ var historyFeed = function(id,type,position,submenu)
 	var data = this.app_chat_feed_data_init();
 	data = this.app_chat_feed_timeline(data);
 
-	this.records = data ;
-	this.create_iscroll_container();
-	this.app_chat_feed_layer_display();
-	this.app_chat_feed_temp_history();
-	this.app_chat_feed_recall_init();
-
 	var that = this;
 
 	var loading_timer = false;
@@ -696,6 +690,11 @@ var historyFeed = function(id,type,position,submenu)
 
 	}
 
+	this.records = data ;
+	this.create_iscroll_container();
+	this.app_chat_feed_layer_display();
+	this.app_chat_feed_temp_history();
+	this.app_chat_feed_recall_init();
 
 }
 
@@ -856,7 +855,8 @@ historyFeed.prototype.app_chat_feed_layer_display = function()
 			this.records[i].item_display(this.position,this.submenu,'history');
 		}
 		this.current_page ++ ;
-	} else if(!this.page_top){
+	}
+	if(!this.page_top){
 		//If we reach the latest message, we display the date
 		if(this.records.length>0){
 			var record = this.records[this.records.length-1];
