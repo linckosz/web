@@ -1,0 +1,14 @@
+.onboardingTrip_overlay_master{
+	position: absolute;
+	z-index: 999999;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	background-color: lightcyan;
+	opacity: 0.4;
+}
+.onboardingTrip_overlay_content_top{
+	bottom: initial;
+	height: 48px;
+}
