@@ -209,9 +209,10 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 				text = wrapper_to_html(Lincko.Translation.get('app', i, 'html'));
 				span_arr[j] = $('<span>').html(text).addClass('app_models_resume_onboarding_answer');
 				if(answer[0]=='action'){
-					span_arr[j].click([comments_id, answer], function(event){
+					span_arr[j].click([comments_id, answer, i], function(event){
 						var current = event.data[0];
 						var answer = event.data[1];
+						var text_id = event.data[2];
 						var param = [];
 						for(var k in answer){
 							if(k>=2){
@@ -220,16 +221,17 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 						}
 						if(param.length>0){
 							//This function must call "app_models_resume_onboarding_continue(current, next)" once the action is completed
-							app_models_sky_fn(current, next, param); //toto
+							app_models_sky_fn(current, next, text_id, param); //toto
 						} else {
-							app_models_resume_onboarding_continue(current, next);
+							app_models_resume_onboarding_continue(current, next, text_id);
 						}
 					});
 					//span_arr[j].click();
 				} else if(answer[0]=='now'){
-					span_arr[j].click([comments_id, answer], function(event){
+					span_arr[j].click([comments_id, answer, i], function(event){
 						var current = event.data[0];
 						var answer = event.data[1];
+						var text_id = event.data[2];
 						var param = [];
 						for(var k in answer){
 							if(k>=2){
@@ -238,9 +240,9 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 						}
 						if(param.length>0){
 							//This function must call "app_models_resume_onboarding_continue(current, next)" once the action is completed
-							app_models_sky_fn(current, next, param); //toto
+							app_models_sky_fn(current, next, text_id, param); //toto
 						} else {
-							app_models_resume_onboarding_continue(current, next);
+							app_models_resume_onboarding_continue(current, next, text_id);
 						}
 					});
 				} else {
@@ -249,6 +251,7 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 					setTimeout(function(event){
 						var current = event.data[0];
 						var answer = event.data[1];
+						var text_id = event.data[2];
 						var param = [];
 						for(var k in answer){
 							if(k>=2){
@@ -257,11 +260,11 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 						}
 						if(param.length>0){
 							//This function must call "app_models_resume_onboarding_continue(current, next)" once the action is completed
-							app_models_sky_fn(current, next, param); //toto
+							app_models_sky_fn(current, next, text_id, param); //toto
 						} else {
-							app_models_resume_onboarding_continue(current, next);
+							app_models_resume_onboarding_continue(current, next, text_id);
 						}
-					}, 2000, [comments_id, answer]); //Delay 2s to launch the action
+					}, 2000, [comments_id, answer, i]); //Delay 2s to launch the action
 				}
 				j = span_arr.length;
 			}
@@ -289,8 +292,8 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 
 };
 
-var app_models_sky_fn = function(current, next, param){
-	console.log('app_models_sky_fn: '+current+' => '+next);
+var app_models_sky_fn = function(current, next, text_id, param){
+	console.log('app_models_sky_fn: '+current+' => '+next+' => '+text_id);
 	console.log(param);
 };
 
@@ -300,11 +303,11 @@ var app_models_evan_fn = function(current, span_arr){
 	console.log($('#1_submenu_wrapper_newchat_true_comments_models_thistory_25106').length);
 };
 
-var app_models_resume_onboarding_continue = function(current, next){
+var app_models_resume_onboarding_continue = function(current, next, text_id){
 	var data = {
 		current: current,
 		next: next,
-		answer: Lincko.Translation.get('app', next, 'pure'),
+		answer: Lincko.Translation.get('app', text_id, 'pure'),
 	};
 	wrapper_sendAction(data, 'post', 'onboarding/next');
 };
