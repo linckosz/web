@@ -232,21 +232,24 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 					span_arr[j] = null;
 					delete span_arr[j];
 					setTimeout(function(data){
-						var current = data[0];
-						var answer = data[1];
-						var next = answer[1];
-						var text_id = data[2];
-						var param = [];
-						for(var k in answer){
-							if(k>=2){
-								param.push(answer[k]);
+						var sub = span.submenu_getWrapper();
+						if(sub && sub[0]['param']['type'] == 'projects'){ //We launch it in activity feed only
+							var current = data[0];
+							var answer = data[1];
+							var next = answer[1];
+							var text_id = data[2];
+							var param = [];
+							for(var k in answer){
+								if(k>=2){
+									param.push(answer[k]);
+								}
 							}
-						}
-						if(param.length>0){
-							//This function must call "app_models_resume_onboarding_continue(current, next)" once the action is completed
-							app_models_sky_fn(current, next, text_id, param); //toto
-						} else {
-							app_models_resume_onboarding_continue(current, next, text_id);
+							if(param.length>0){
+								//This function must call "app_models_resume_onboarding_continue(current, next)" once the action is completed
+								app_models_sky_fn(current, next, text_id, param); //toto
+							} else {
+								app_models_resume_onboarding_continue(current, next, text_id);
+							}
 						}
 					}, 2000, [comments_id, answer, i]); //Delay 2s to launch the action
 				} else {
