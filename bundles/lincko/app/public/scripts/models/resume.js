@@ -301,10 +301,14 @@ var app_models_evan_fn = function(current, span_arr){
 };
 
 var app_models_resume_onboarding_continue = function(current, next, text_id){
+	var answer = false;
+	if(typeof text_id != 'undefined'){
+		answer = Lincko.Translation.get('app', text_id, 'pure');
+	}
 	var data = {
 		current: current,
 		next: next,
-		answer: Lincko.Translation.get('app', text_id, 'pure'),
+		answer: answer,
 	};
 	wrapper_sendAction(data, 'post', 'onboarding/next');
 };
