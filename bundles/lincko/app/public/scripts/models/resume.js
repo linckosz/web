@@ -290,10 +290,6 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 
 
 var app_models_evan_fn = function(current, span_arr){
-
-	
-
-
 	var createInterval = setInterval(function(current){
 		var dom = $('#1_submenu_wrapper_newchat_false_comments_models_thistory_'+current);
 		var answer = $('#models_history_answer_options_'+current);
@@ -325,8 +321,7 @@ $("body").on("click", '.app_models_resume_onboarding_answer',function(){
 		complete:function(){
 			options.remove();
 		} 
-	});
-	
+	});	
 });
 
 var app_models_resume_onboarding_continue = function(current, next, text_id){
