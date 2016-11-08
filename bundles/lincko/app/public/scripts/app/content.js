@@ -286,6 +286,9 @@ var app_content_menu_first_launch = true;
 var app_content_menu_default = function(){
 	if(app_content_menu_first_launch && Lincko.storage.getMyPlaceholder() !== false){
 		app_content_menu_first_launch = false;
+		if(onboarding_launched){
+			return false; 
+		}
 		var old_page = wrapper_localstorage.decrypt('old_page');
 		if(old_page){
 			app_content_menu.selection(old_page.projects_id, old_page.menu, old_page.param);

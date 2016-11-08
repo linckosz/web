@@ -1,4 +1,10 @@
-var onboardingTrip_overlays = {
+var onboarding_launched = false; //no onboaring. update status during launch_onboarding sync function
+
+var onboarding_action_launch = function(current, next, param){
+
+}
+
+var onboarding_overlays = {
 	ini: function(){
 		this.show.that = this;
 		this.master.that = this;
@@ -8,9 +14,9 @@ var onboardingTrip_overlays = {
 		return this;
 	},
 	id: {
-		master: 'onboardingTrip_overlay_master',
-		content_menu: 'onboardingTrip_overlay_content_menu',
-		content_top: 'onboardingTrip_overlay_content_top',
+		master: 'onboarding_overlay_master',
+		content_menu: 'onboarding_overlay_content_menu',
+		content_top: 'onboarding_overlay_content_top',
 	},
 
 	off: function(){
@@ -29,7 +35,7 @@ var onboardingTrip_overlays = {
 	},
 
 	build_elem: function(id){
-		return $('<div>').prop('id',id).addClass('onboardingTrip_overlay_master '+id);
+		return $('<div>').prop('id',id).addClass('onboarding_overlay_master '+id);
 	},
 
 	//control overlay over main menu or the content area
@@ -94,7 +100,7 @@ var onboardingTrip_overlays = {
 }.ini();
 
 
-var onboardingTrip = {
+var onboarding = {
 
 	initialize: function(){
 
@@ -108,13 +114,19 @@ var onboardingTrip = {
 
 
 
-var onboardingTrip_garbageID = app_application_garbage.add('onboardingTrip_garbage');
-app_application_lincko.add(onboardingTrip_garbageID, 'launch_onboarding', function(){
+var onboarding_garbageID = app_application_garbage.add('onboarding_garbage');
+app_application_lincko.add(onboarding_garbageID, 'launch_onboarding', function(){
+	if(onboarding_launched){ return; }
 
-	//var id_onboardingProject = Lincko.storage.data.setting;
+	if(!Lincko.storage.data.settings 
+		|| !Lincko.storage.data.settings[wrapper_localstorage.uid] 
+		|| !Lincko.storage.data.settings[wrapper_localstorage.uid].onboarding){ return false; }
+	
+	var ob_settings = JSON.parse(Lincko.storage.data.settings[wrapper_localstorage.uid].onboarding);
+	var id_pj_onboarding = ob_settings.projects[1];
 
 
-	var linckoComments = Lincko.storage.list('comments', null, {created_by: 0}, null, null, false);
+	var linckoComments = Lincko.storage.list('comments', null, {created_by: 0}, 'projects', id_pj_onboarding, false);
 	var ob_list = [];
 	$.each(linckoComments, function(i, comment){
 		var comment_ob = JSON.parse(comment['+comment']);
@@ -126,11 +138,36 @@ app_application_lincko.add(onboardingTrip_garbageID, 'launch_onboarding', functi
 	var ob_latest = ob_list[0];
 	var onboardingNumber = Object.keys(ob_latest)[0];
 
-	var preview = false;
+	console.log(ob_latest);
+
+	if(onboardingNumber){
+		onboarding_launched = true;
+		var preview = true;
+		app_content_menu.selection(id_pj_onboarding, 'chats');
+		app_application.project();
+		onboarding_overlays.show.content_sub();
+
+		var submenu_timer = setInterval(function(){
+			if(!app_content_menu_first_launch){
+				clearInterval(submenu_timer);
+				var submenuInst = submenu_Build("newchat", false, false, {
+					type: 'history',
+					id: id_pj_onboarding,
+					title: Lincko.storage.get('projects', id_pj_onboarding, '+title'),
+				}, preview);
+			}
+		}, 500);
+	}
+
+	if(onboardingNumber == 10001){ //beginning
+		
+	}
+
+	
 	var id_elem_ob_chat = submenu_get('newchat', preview);
 
 	//id_elem_ob_chat
 
 
-	app_application_garbage.remove(onboardingTrip_garbageID);
+	app_application_garbage.remove(onboarding_garbageID);
 });
