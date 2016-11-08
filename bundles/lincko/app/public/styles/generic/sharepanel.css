@@ -1,0 +1,24 @@
+.public_sharepanel,.public_sharepanel ul,.public_sharepanel ul li{
+	height:auto;
+	overflow: hidden;
+	width: auto;
+	padding: 0;
+	margin: 0;
+}
+.public_sharepanel{
+	position: absolute;
+	z-index: 999999;
+	background-color: #ffffff;
+}
+.public_sharepanel ul li a
+{
+	display: block;
+	line-height: 20px;
+	height:20px;
+	color:#000000;
+	padding:0 10px;
+}
+.sharepanel_item_icon{
+	width:20px;
+	height: 20px;
+}

@@ -1,0 +1,23 @@
+<div id="begin_sharepanel" class="visibility_hidden">
+	<script>
+		JSfiles.later("{{ _filelatest('/lincko/app/scripts/generic/sharepanel.js') }}");
+	</script>
+	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/generic/sharepanel.css') }}" type="text/css" />
+</div>
+<div id="end_sharepanel" class="visibility_hidden"></div>
+<div class="display_none">
+	<div id="-public_sharepanel" class="public_sharepanel">
+		<ul find="sharepanel_items">
+			
+		</ul>
+	</div>
+	<li id="-sharepanel_item" class="sharepanel_item">
+		<a>
+			<span find="ico" class="sharepanel_item_icon">
+			</span>
+			<span find="title" class="sharepanel_item_title">
+				复制链接
+			</span>
+		</a>
+	</li>
+</div>

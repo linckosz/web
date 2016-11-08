@@ -303,7 +303,7 @@ var app_models_evan_fn = function(current, span_arr){
 				options.addClass('models_history_self');
 				for(var i in span_arr)
 				{
-					options.append(span_arr[i]);
+					options.find('[find=answers_wrapper]').append(span_arr[i]);
 				}
 
 				dom.after(options);

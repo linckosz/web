@@ -354,7 +354,8 @@ var ReportContentCls = function(record,type)
 
 ReportContentCls.prototype.feed_content = function(elem)
 {
-	elem.find("[find=content]").append(app_models_resume_format_sentence(this.id));
+	var content = app_models_resume_format_sentence(this.id);
+	elem.find("[find=content]").append(content);
 }
 
 ReportContentCls.prototype.feed_action = function(elem,subm){}

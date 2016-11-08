@@ -395,16 +395,24 @@
 	-khtml-opacity:0.7;
 }
 
+
+.answers_wrapper
+{
+	height: auto;
+	overflow: hidden;
+}
 .models_history_answer_options{
 	 margin:10px;
 	 height: auto;
 	 overflow:hidden;
 }
 .app_models_resume_onboarding_answer{
+	display: inline-block;
 	border-radius: 8px;
     padding: 5px 8px;
     background-color: rgba(103, 158, 82, 0.22);
     margin: 5px;
+    float:none;
 }
 
 
