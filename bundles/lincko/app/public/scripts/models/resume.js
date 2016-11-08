@@ -222,7 +222,7 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 						}
 						if(param.length>0){
 							//This function must call "app_models_resume_onboarding_continue(current, next)" once the action is completed
-							app_models_sky_fn(current, next, text_id, param); //toto
+							onboarding_action_launch(current, next, text_id, param);
 						} else {
 							app_models_resume_onboarding_continue(current, next, text_id);
 						}
@@ -246,7 +246,7 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 							}
 							if(param.length>0){
 								//This function must call "app_models_resume_onboarding_continue(current, next)" once the action is completed
-								app_models_sky_fn(current, next, text_id, param); //toto
+								onboarding_action_launch(current, next, text_id, param);
 							} else {
 								app_models_resume_onboarding_continue(current, next, text_id);
 							}
@@ -288,11 +288,6 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 
 };
 
-var app_models_sky_fn = function(current, next, text_id, param){
-	console.log('app_models_sky_fn: '+current+' => '+next+' => '+text_id);
-	console.log(param);
-	app_models_resume_onboarding_continue(current, next, text_id);
-};
 
 var app_models_evan_fn = function(current, span_arr){
 	console.log('app_models_even_fn: '+current);
