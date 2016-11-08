@@ -228,30 +228,12 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 					});
 					//span_arr[j].click();
 				} else if(answer[0]=='now'){
-					span_arr[j].click([comments_id, answer, i], function(event){
-						var current = event.data[0];
-						var answer = event.data[1];
-						var text_id = event.data[2];
-						var param = [];
-						for(var k in answer){
-							if(k>=2){
-								param.push(answer[k]);
-							}
-						}
-						if(param.length>0){
-							//This function must call "app_models_resume_onboarding_continue(current, next)" once the action is completed
-							app_models_sky_fn(current, next, text_id, param); //toto
-						} else {
-							app_models_resume_onboarding_continue(current, next, text_id);
-						}
-					});
-				} else {
 					span_arr[j] = null;
 					delete span_arr[j];
-					setTimeout(function(event){
-						var current = event.data[0];
-						var answer = event.data[1];
-						var text_id = event.data[2];
+					setTimeout(function(data){
+						var current = data[0];
+						var answer = data[1];
+						var text_id = data[2];
 						var param = [];
 						for(var k in answer){
 							if(k>=2){
@@ -265,6 +247,13 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 							app_models_resume_onboarding_continue(current, next, text_id);
 						}
 					}, 2000, [comments_id, answer, i]); //Delay 2s to launch the action
+				} else {
+					span_arr[j].click([comments_id, next], function(event){
+						var current = event.data[0];
+						var next = event.data[1];
+						app_models_resume_onboarding_continue(current, next);
+					});
+					//span_arr[j].click();
 				}
 				j = span_arr.length;
 			}
