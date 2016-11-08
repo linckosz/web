@@ -212,6 +212,7 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 					span_arr[j].click([comments_id, answer, i], function(event){
 						var current = event.data[0];
 						var answer = event.data[1];
+						var next = answer[1];
 						var text_id = event.data[2];
 						var param = [];
 						for(var k in answer){
@@ -233,6 +234,7 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 					setTimeout(function(data){
 						var current = data[0];
 						var answer = data[1];
+						var next = answer[1];
 						var text_id = data[2];
 						var param = [];
 						for(var k in answer){
@@ -248,10 +250,12 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 						}
 					}, 2000, [comments_id, answer, i]); //Delay 2s to launch the action
 				} else {
-					span_arr[j].click([comments_id, next], function(event){
+					span_arr[j].click([comments_id, answer, i], function(event){
 						var current = event.data[0];
-						var next = event.data[1];
-						app_models_resume_onboarding_continue(current, next);
+						var answer = event.data[1];
+						var next = answer[1];
+						var text_id = event.data[2];
+						app_models_resume_onboarding_continue(current, next, text_id);
 					});
 					//span_arr[j].click();
 				}
