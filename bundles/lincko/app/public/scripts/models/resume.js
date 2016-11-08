@@ -290,6 +290,7 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 
 
 var app_models_evan_fn = function(current, span_arr){
+	console.log(current);
 	var createInterval = setInterval(function(current){
 		var dom = $('#1_submenu_wrapper_newchat_false_comments_models_thistory_'+current);
 		var answer = $('#models_history_answer_options_'+current);
