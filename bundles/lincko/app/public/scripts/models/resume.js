@@ -289,10 +289,31 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 };
 
 
+
 var app_models_evan_fn = function(current, span_arr){
-	console.log('app_models_even_fn: '+current);
-	console.log(span_arr);
-	console.log($('#1_submenu_wrapper_newchat_true_comments_models_thistory_25106').length);
+	console.log(current);
+	var createInterval = setInterval(function(current){
+		var dom = $('#1_submenu_wrapper_newchat_true_comments_models_thistory_'+current);
+		if(dom.length > 0)
+		{
+			
+			var options = $('#-models_history_answer_options').clone();
+			for(var i in span_arr)
+			{
+				options.append(span_arr[i]);
+			}
+			
+			options.prop('id','1_submenu_wrapper_newchat_true_models_history_answer_options_'+current);
+			dom.after(options);
+			clearInterval(createInterval);
+		}
+	},1000,current);
+
+	
+
+	// console.log('app_models_even_fn: '+current);
+	// console.log(span_arr);
+	// console.log($('#1_submenu_wrapper_newchat_true_comments_models_thistory_26289').length);
 };
 
 var app_models_resume_onboarding_continue = function(current, next, text_id){
