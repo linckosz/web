@@ -1,15 +1,30 @@
-var onboarding_launched = true; //no onboaring. update status during launch_onboarding sync function
+var onboarding_launched = false; //no onboaring. update status during launch_onboarding sync function
 
 var onboarding_action_launch = function(current, next, text_id, param){
 	console.log('onboarding_action_launch: '+current+' => '+next+' => '+text_id);
 	var fn_continue = function(){
 		app_models_resume_onboarding_continue(current, next, text_id);
 		onboarding_overlays.show.content_sub();
+		onboarding_script_fn.toChat();
 	}
 	onboarding_script_fn[param[1]](fn_continue);
 }
 
-var onboarding_script_fn = {};
+var onboarding_script_fn = {
+	id_pj_onboarding: null,
+	toChat: function(id){
+		if(id){ this.id_pj_onboarding = id; }
+		else if(this.id_pj_onboarding){ var id = this.id_pj_onboarding; }
+		else{ return false; }
+
+		var preview = false;
+		return submenu_Build("newchat", false, false, {
+			type: 'history',
+			id: id,
+			title: Lincko.storage.get('projects', id, '+title'),
+		}, preview);
+	},
+};
 onboarding_script_fn[1] = function(fn_continue){
 	//[1] Update my username, profile photo, and/or language
 	$(document).on("submenuHide.onboarding", function(){
@@ -160,7 +175,7 @@ var onboarding_overlays = {
 
 
 var onboarding_garbageID = app_application_garbage.add('onboarding_garbage');
-app_application_lincko.add(onboarding_garbageID, 'launch_onboarding', function(){
+app_application_lincko.add(onboarding_garbageID, 'launch_onboarding', function(){ return; //toto
 	if(onboarding_launched){ return; }
 
 	if(!Lincko.storage.data.settings 
@@ -184,7 +199,7 @@ app_application_lincko.add(onboarding_garbageID, 'launch_onboarding', function()
 
 	if(onboardingNumber){
 		onboarding_launched = true;
-		var preview = true;
+		var preview = false;
 		app_content_menu.selection(id_pj_onboarding, 'chats');
 		app_application.project();
 		onboarding_overlays.show.content_sub();
@@ -192,11 +207,7 @@ app_application_lincko.add(onboarding_garbageID, 'launch_onboarding', function()
 		var submenu_timer = setInterval(function(){
 			if(!app_content_menu_first_launch){
 				clearInterval(submenu_timer);
-				var submenuInst = submenu_Build("newchat", false, false, {
-					type: 'history',
-					id: id_pj_onboarding,
-					title: Lincko.storage.get('projects', id_pj_onboarding, '+title'),
-				}, preview);
+				var submenuInst = onboarding_script_fn.toChat(id_pj_onboarding);
 			}
 		}, 500);
 	}
