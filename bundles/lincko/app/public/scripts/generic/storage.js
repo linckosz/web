@@ -1511,7 +1511,8 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 
 	if(array_items.length>0){
 		if(type=='notifications'){
-			results = Lincko.storage.sort_items(array_items, 'timestamp', page_start, page_end, false); //From newest (big timestamp) to oldest (small timestamp)
+			results = Lincko.storage.sort_items(array_items, 'id', page_start, page_end, false); //From newest (big timestamp) to oldest (small timestamp)
+			results = Lincko.storage.sort_items(results, 'timestamp', page_start, page_end, false); //From newest (big timestamp) to oldest (small timestamp)
 		} else {
 			results = Lincko.storage.sort_items(array_items, 'created_at', page_start, page_end, false); //From newest (big timestamp) to oldest (small timestamp)
 		}
