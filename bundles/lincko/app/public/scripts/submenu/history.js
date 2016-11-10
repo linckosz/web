@@ -356,7 +356,7 @@ var ReportContentCls = function(record,type)
 ReportContentCls.prototype.feed_content = function(elem)
 {
 	var content = app_models_resume_format_sentence(this.id);
-	if(content.hasClass("onbording"))
+	if(content.hasClass("onboarding"))
 	{
 		var obj = JSON.parse(this.content);
 		if(typeof obj.ob['10014'] !== 'undefined')//quick create a task
@@ -364,8 +364,8 @@ ReportContentCls.prototype.feed_content = function(elem)
 			elem.attr('comments_id',this.id);
 			elem.attr('category',this.category);
 		}
-		elem.attr('onbording_id',this.id);
-		elem.find(".models_history_content").addClass("onbording");
+		elem.attr('onboarding_id',this.id);
+		elem.find(".models_history_content").addClass("onboarding");
 	}
 	else if(content.hasClass("report"))
 	{
@@ -419,7 +419,7 @@ CommentContentCls.prototype.feed_content = function(elem)
 	{
 		elem.attr('temp_id',this.temp_id);
 	}
-	elem.find("[find=content]").append(base_lincko_link_to_html(wrapper_to_html(this.content)));
+	elem.find("[find=content]").append(base_lincko_tag_to_html(wrapper_to_html(this.content)));
 }
 
 CommentContentCls.prototype.feed_action = function(elem,subm){}

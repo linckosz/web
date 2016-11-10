@@ -199,7 +199,7 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 		var text = wrapper_to_html(Lincko.Translation.get('app', sentence, 'html'));
 		text = base_lincko_tag_to_html(text);
 		var span = $('<span>').html(text);
-		span.addClass('onbording');
+		span.addClass('onboarding');
 		var span_arr = [];
 		var j = 0;
 		var next = false;
@@ -282,7 +282,7 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 				Lincko.Translation.get('app', random_quote, 'html') //“Knowing trees, I understand the meaning of patience. Knowing grass, I can appreciate persistence.” – Hal Borland
 			));
 	} else if(!format){
-		return $('<span>').html(wrapper_to_html(comment));
+		return $('<span>').html(base_lincko_tag_to_html(wrapper_to_html(comment)));
 	}
 
 	return false;
@@ -292,7 +292,7 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 
 var app_models_evan_fn = function(current, span_arr){
 	var createInterval = setInterval(function(current){
-		var dom = $('[onbording_id='+current+']');
+		var dom = $('[onboarding_id='+current+']');
 		var answer = $('#models_history_answer_options_'+current);
 		if(dom.length > 0 )
 		{
