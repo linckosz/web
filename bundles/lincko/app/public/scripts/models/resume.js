@@ -299,7 +299,7 @@ var app_models_resume_format_answer = function(text) {
 
 
 var app_models_evan_fn = function(current, span_arr){
-	var createInterval = setInterval(function(current){
+	setTimeout(function(current,span_arr){
 		var dom = $('[onboarding_id='+current+']');
 		var answer = $('#models_history_answer_options_'+current);
 		if(dom.length > 0 )
@@ -318,9 +318,6 @@ var app_models_evan_fn = function(current, span_arr){
 				
 				options.velocity("bruno.slideRightIn", { 
 					duration: 1000,
-					complete:function(){
-						
-					}
 				});
 
 				var submenu = dom.submenu_getWrapper()[0];
@@ -329,11 +326,9 @@ var app_models_evan_fn = function(current, span_arr){
 				var last = $('#'+submenu.id+'_help_iscroll').get(0);
 				submenu_resize_content();
 				iScroll.scrollToElement(last, 0);
-				
 			}
-			clearInterval(createInterval);
 		}
-	},500,current);
+	},5,current,span_arr);
 };
 
 $("body").on("click", '.app_models_resume_onboarding_answer',function(){
@@ -343,6 +338,7 @@ $("body").on("click", '.app_models_resume_onboarding_answer',function(){
 		complete:function(){
 			options.remove();
 
+			var dom = $('[onboarding_id='+current+']');
 			var submenu = dom.submenu_getWrapper()[0];
 			var overthrow_id = "overthrow_"+submenu.id;
 			var iScroll = myIScrollList[overthrow_id];

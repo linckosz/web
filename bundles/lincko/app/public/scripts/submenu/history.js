@@ -359,6 +359,8 @@ ReportContentCls.prototype.feed_content = function(elem)
 	if(content.hasClass("onboarding"))
 	{
 		var obj = JSON.parse(this.content);
+
+		
 		if(typeof obj.ob['10014'] !== 'undefined')//quick create a task
 		{
 			elem.attr('comments_id',this.id);
