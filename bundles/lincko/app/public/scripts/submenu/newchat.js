@@ -57,11 +57,12 @@ submenu_list['newchat'] = {
 			//if during onbarding and activity feed is of onboarding project: disable close button
 			if(onboarding.on && subm.param 
 				&& subm.param.type && subm.param.type == 'history' 
-				&& subm.param.id && subm.param.id == onboarding.project_id){
+				&& subm.param.id && subm.param.id == onboarding.project_id
+				&& !Elem.find('.submenu_top_side_left').hasClass('display_none')){
 				Elem.find('.submenu_top_side_left').addClass('display_none');
-				onboarding.clear_fn_list['activityfeed_remove_display_none'] = function(){
+				onboarding.clear_fn_list.push(function(){
 					Elem.find('.submenu_top_side_left').removeClass('display_none');
-				}
+				});
 			}
 
 		},

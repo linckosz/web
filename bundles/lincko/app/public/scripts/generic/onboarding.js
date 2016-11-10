@@ -4,8 +4,9 @@ var onboarding = {
 	project_id: null,
 	overlays: {},
 
-	clear_fn_list: {}, //any function that needs to be run on onboarding.clear can be put here
+	clear_fn_list: [], //any function that needs to be run on onboarding.clear can be put here
 	clear: function(submenuHide){
+		var that = this;
 		onboarding.on = false;
 		this.scripts.completed = {};
 		onboarding.overlays.off();
@@ -13,10 +14,10 @@ var onboarding = {
 			submenu_Hideall();
 		}
 		
-		$.each(this.clear_fn_list, function(key, fn){
+		$.each(this.clear_fn_list, function(i, fn){
 			if(typeof fn == 'function'){ fn(); }
-			delete this.clear_fn_list;
 		});
+		that.clear_fn_list = [];
 	},
 
 	//preview true/false for the linckoBot chat submenu
@@ -162,8 +163,8 @@ onboarding.overlays = {
 
 }.ini();
 
+//[1] Update my username, profile photo, and/or language
 onboarding.scripts[1] = function(fn_continue){
-	//[1] Update my username, profile photo, and/or language
 	submenu_Build("settings", submenu_Getnext());
 	$(document).on("submenuHide.onboarding", function(){
 		if(!submenu_get('settings')){
@@ -331,17 +332,24 @@ app_application_lincko.add(id_onboarding_garbage_launch, 'launch_onboarding', fu
 	var ob_latest = ob_list[0];
 	var onboardingNumber = Object.keys(ob_latest)[0];
 
-	if(onboardingNumber && onboardingNumber != 10019 /*end*/){
+	if(onboardingNumber && onboardingNumber != 10019 /*NOT end*/){
 		onboarding.on = true;
 		var preview = false;
-		app_content_menu.selection(id_pj_onboarding, 'chats');
+		app_content_menu.selection(id_pj_onboarding);
 		app_application.project();
 		onboarding.overlays.show.content_sub();
+
+		var onboardingDelay = 0;
+		if(responsive.test('maxMobileL')){
+			onboardingDelay = 2000;
+		}
 
 		var submenu_timer = setInterval(function(){
 			if(!app_content_menu_first_launch){
 				clearInterval(submenu_timer);
-				var submenuInst = onboarding.toBot(id_pj_onboarding);
+				setTimeout(function(){
+					onboarding.toBot(id_pj_onboarding);
+				}, onboardingDelay);
 			}
 		}, 500);
 	}
