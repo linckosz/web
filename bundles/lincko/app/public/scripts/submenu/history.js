@@ -146,7 +146,6 @@ BaseItemCls.prototype.item_display = function(position,subm,mode)
 		elem.addClass(this.data.category);
 
 		if(this.user_id == 0){
-			elem.find(".models_history_content").addClass("report");
 			elem.find("[find=icon]").css('border-color', 'transparent');
 			elem.find("[find=icon]").css('background-image','url("' +  app_application_icon_roboto.src + '")');
 			elem.find("[find=author]").html(Lincko.Translation.get('app', 0, 'html')); 
@@ -346,6 +345,8 @@ var ReportContentCls = function(record,type)
 {
 	this.id = record['id'];
 	this.category = 'comments';
+	var item = Lincko.storage.get('comments',record['id']);
+	this.content = item['+comment'];
 	if(app_models_resume_format_sentence(this.id) == false)
 	{
 		this.category = '';
@@ -355,6 +356,22 @@ var ReportContentCls = function(record,type)
 ReportContentCls.prototype.feed_content = function(elem)
 {
 	var content = app_models_resume_format_sentence(this.id);
+	if(content.hasClass("onbording"))
+	{
+		var obj = JSON.parse(this.content);
+		if(typeof obj.ob['10014'] !== 'undefined')//quick create a task
+		{
+			elem.attr('comments_id',this.id);
+			elem.attr('category',this.category);
+		}
+		elem.attr('onbording_id',this.id);
+		elem.find(".models_history_content").addClass("onbording");
+	}
+	else if(content.hasClass("report"))
+	{
+		elem.find(".models_history_content").addClass("report");
+	}
+	
 	elem.find("[find=content]").append(content);
 }
 
@@ -402,7 +419,7 @@ CommentContentCls.prototype.feed_content = function(elem)
 	{
 		elem.attr('temp_id',this.temp_id);
 	}
-	elem.find("[find=content]").append(wrapper_to_html(this.content));
+	elem.find("[find=content]").append(base_lincko_link_to_html(wrapper_to_html(this.content)));
 }
 
 CommentContentCls.prototype.feed_action = function(elem,subm){}

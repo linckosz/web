@@ -400,6 +400,8 @@
 {
 	height: auto;
 	overflow: hidden;
+	width: auto;
+	text-align: right;
 }
 .models_history_answer_options{
 	 margin:10px;
@@ -413,8 +415,12 @@
     background-color: rgba(103, 158, 82, 0.22);
     margin: 5px;
     float:none;
+    text-align: left;
 }
 
+.models_history_standard_content img{
+	max-width:100%;
+}
 
 /* Mobile phone in Portrait */
 

@@ -143,7 +143,7 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 			span.append(cell_info);
 			span.append('<div find="result" link="" class="ellipsis"></div>');
 		}
-		span.addClass('app_models_resume_span unselectable');
+		span.addClass('app_models_resume_span unselectable report');
 		span.attr('find', 'anchor_'+comments_id);
 		var result = {};
 		//Attach event click
@@ -193,12 +193,13 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 				.addClass(links[i][1]);
 			}
 		}
-
 		return span;
 
 	} else if(format == 'onboarding'){
 		var text = wrapper_to_html(Lincko.Translation.get('app', sentence, 'html'));
+		text = base_lincko_tag_to_html(text);
 		var span = $('<span>').html(text);
+		span.addClass('onbording');
 		var span_arr = [];
 		var j = 0;
 		var next = false;
@@ -291,7 +292,7 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 
 var app_models_evan_fn = function(current, span_arr){
 	var createInterval = setInterval(function(current){
-		var dom = $('#1_submenu_wrapper_newchat_false_comments_models_thistory_'+current);
+		var dom = $('[onbording_id='+current+']');
 		var answer = $('#models_history_answer_options_'+current);
 		if(dom.length > 0 )
 		{
@@ -306,7 +307,20 @@ var app_models_evan_fn = function(current, span_arr){
 				}
 
 				dom.after(options);
-				options.velocity("bruno.slideRightIn", { duration: 1000 });
+				
+				options.velocity("bruno.slideRightIn", { 
+					duration: 1000,
+					complete:function(){
+						
+					}
+				});
+
+				var submenu = dom.submenu_getWrapper()[0];
+				var overthrow_id = "overthrow_"+submenu.id;
+				var iScroll = myIScrollList[overthrow_id];
+				var last = $('#'+submenu.id+'_help_iscroll').get(0);
+				submenu_resize_content();
+				iScroll.scrollToElement(last, 0);
 				
 			}
 			clearInterval(createInterval);
@@ -320,8 +334,17 @@ $("body").on("click", '.app_models_resume_onboarding_answer',function(){
 		duration: 500,
 		complete:function(){
 			options.remove();
+
+			var submenu = dom.submenu_getWrapper()[0];
+			var overthrow_id = "overthrow_"+submenu.id;
+			var iScroll = myIScrollList[overthrow_id];
+			var last = $('#'+submenu.id+'_help_iscroll').get(0);
+			submenu_resize_content();
+			iScroll.scrollToElement(last, 0);
 		} 
 	});	
+
+	
 });
 
 var app_models_resume_onboarding_continue = function(current, next, text_id){

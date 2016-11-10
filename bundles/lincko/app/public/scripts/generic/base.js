@@ -160,5 +160,39 @@ function base_getRandomInt(min, max){
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+/*
+[image] to <img/>
+*/
+function base_lincko_img_to_html(source)
+{
+	var reg = new RegExp("\\[image\\]([\\s\\S]*)\\[\\/image\\]","gi");
+	source = source.replace(reg, '<img src="$1"/>');
+	return source;
+}
+
+/*
+text to <a></a>
+*/
+function base_lincko_link_to_html(source)
+{
+	// var reg = new RegExp("(http:\\/\\/)?([A-Za-z0-9]+\\.[A-Za-z0-9]+[\\/=\\?%\\-&_~`@[\\]\\':+!]*([^<>])*)","gi");
+	// source = source.replace(reg, '<a target="_blank" href="$1$2">$1$2</a>');
+	return source;
+}
+
+
+function base_lincko_tag_to_html(source)
+{
+	//[image]
+	source = base_lincko_img_to_html(source);
+
+	//url
+	source = base_lincko_link_to_html(source);
+
+	//[vedio]
+	return source;
+}
+
+
 
 
