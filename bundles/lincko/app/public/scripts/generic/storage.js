@@ -682,6 +682,14 @@ Lincko.storage.getSettings = function(){
 	return settings;
 }
 
+Lincko.storage.getOnboarding = function(){
+	var onboarding = Lincko.storage.get("settings", wrapper_localstorage.uid, "onboarding");
+	if(onboarding){
+		onboarding = JSON.parse(onboarding);
+	}
+	return onboarding;
+}
+
 Lincko.storage.list_latestProjects = function(){
 	var settings = Lincko.storage.getSettings();
 	if(!settings.latestvisitProjects){
