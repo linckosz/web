@@ -222,7 +222,7 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 						}
 						if(param.length>0){
 							//This function must call "app_models_resume_onboarding_continue(current, next)" once the action is completed
-							onboarding_action_launch(current, next, text_id, param);
+							onboarding.action_launch(current, next, text_id, param);
 						} else {
 							app_models_resume_onboarding_continue(current, next, text_id);
 						}
@@ -232,8 +232,8 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 					span_arr[j] = null;
 					delete span_arr[j];
 					setTimeout(function(data){
-						var sub = span.submenu_getWrapper();
-						if(sub && sub[0]['param']['type'] == 'projects'){ //We launch it in activity feed only
+						var sub = span.submenu_getWrapper(); 
+						if(sub && sub[0]['param']['type'] == 'history'){ //We launch it in activity feed only
 							var current = data[0];
 							var answer = data[1];
 							var next = answer[1];
@@ -246,7 +246,7 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 							}
 							if(param.length>0){
 								//This function must call "app_models_resume_onboarding_continue(current, next)" once the action is completed
-								onboarding_action_launch(current, next, text_id, param);
+								onboarding.action_launch(current, next, text_id, param);
 							} else {
 								app_models_resume_onboarding_continue(current, next, text_id);
 							}
@@ -290,7 +290,6 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 
 
 var app_models_evan_fn = function(current, span_arr){
-	console.log(current);
 	var createInterval = setInterval(function(current){
 		var dom = $('#1_submenu_wrapper_newchat_false_comments_models_thistory_'+current);
 		var answer = $('#models_history_answer_options_'+current);

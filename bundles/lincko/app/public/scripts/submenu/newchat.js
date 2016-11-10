@@ -53,6 +53,17 @@ submenu_list['newchat'] = {
 			if(subm.param.type!='chats' || Lincko.storage.get('chats', subm.param.id, 'single')){
 				Elem.find('.submenu_chats_settings').addClass('display_none');
 			}
+
+			//if during onbarding and activity feed is of onboarding project: disable close button
+			if(onboarding.on && subm.param 
+				&& subm.param.type && subm.param.type == 'history' 
+				&& subm.param.id && subm.param.id == onboarding.project_id){
+				Elem.find('.submenu_top_side_left').addClass('display_none');
+				onboarding.clear_fn_list['activityfeed_remove_display_none'] = function(){
+					Elem.find('.submenu_top_side_left').removeClass('display_none');
+				}
+			}
+
 		},
 	},
 };

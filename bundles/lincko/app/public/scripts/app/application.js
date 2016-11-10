@@ -745,7 +745,7 @@ $('#app_application_submenu_block')
 		}
 	})
 	.mouseup(function(event){
-		if(app_application_submenu_block_mousedown && $(event.target).prop('id') == 'app_application_submenu_block'){
+		if(app_application_submenu_block_mousedown && $(event.target).prop('id') == 'app_application_submenu_block' && !onboarding.on){ //off during onboarding
 			submenu_Hideall(false); //false -> dont hide preview
 		}
 		app_application_submenu_block_mousedown = false;

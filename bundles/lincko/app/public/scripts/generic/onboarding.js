@@ -1,84 +1,73 @@
-var onboarding_launched = false; //no onboaring. update status during launch_onboarding sync function
+var onboarding = {
+	forceOff: true,
+	on: false, //will be set to true for the duration of onboarding
+	project_id: null,
+	overlays: {},
 
-var onboarding_action_launch = function(current, next, text_id, param){
-	console.log('onboarding_action_launch: '+current+' => '+next+' => '+text_id);
-	var fn_continue = function(){
-		app_models_resume_onboarding_continue(current, next, text_id);
-		onboarding_overlays.show.content_sub();
-		onboarding_script_fn.toChat();
-	}
-	onboarding_script_fn[param[1]](fn_continue);
-}
-
-var onboarding_script_fn = {
-	id_pj_onboarding: null,
-	toChat: function(id){
-		if(id){ this.id_pj_onboarding = id; }
-		else if(this.id_pj_onboarding){ var id = this.id_pj_onboarding; }
-		else{ return false; }
-
-		var preview = false;
-		return submenu_Build("newchat", false, false, {
-			type: 'history',
-			id: id,
-			title: Lincko.storage.get('projects', id, '+title'),
-		}, preview);
+	clear_fn_list: {}, //any function that needs to be run on onboarding.clear can be put here
+	clear: function(submenuHide){
+		onboarding.on = false;
+		this.scripts.completed = {};
+		onboarding.overlays.off();
+		if(submenuHide){
+			submenu_Hideall();
+		}
+		
+		$.each(this.clear_fn_list, function(key, fn){
+			if(typeof fn == 'function'){ fn(); }
+			delete this.clear_fn_list;
+		});
 	},
-};
-onboarding_script_fn[1] = function(fn_continue){
-	//[1] Update my username, profile photo, and/or language
-	$(document).on("submenuHide.onboarding", function(){
-		if(!submenu_get('settings')){
-			$(document).off("submenuHide.onboarding");
-			fn_continue();
+
+	//preview true/false for the linckoBot chat submenu
+	preview: false,
+	//linckoBot chat submenu control
+	toBot: function(id){
+		if(id){ this.project_id = id; }
+		else if(this.project_id){ var id = this.project_id; }
+		else{ return false; }
+		var preview = this.preview;
+
+		var chatSubmenu = submenu_get('newchat', preview);
+		if(chatSubmenu && chatSubmenu.param && chatSubmenu.param.type && chatSubmenu.param.type == 'history'){ //if activity feed is open
+			return chatSubmenu;
 		}
-	});
-	submenu_Build("settings");
-}
-onboarding_script_fn[2] = function(fn_continue){
-	//[2] Chat closes and Project opened - shows task lists
-	/*
-	Script: 
-	Get started using Lincko @Username ++Today (marked as completed)
-	(action) Mark this task complete @Username ++Today
-	(action) Open this task or the task above by clicking or tapping on it. Each task can be assigned an owner, a due date, have subtasks, comments from the team, and link to files or notes. 
-	(action) Create a new task and assign it to the Monkey King by typing a task below. Use @ to assign to the Monkey King. Use ++ to assign today as the due date.
-	(continue condition) Once all the above has been completed - the LinckoBot will reapear and take you the rest of the way :)
-	*/
-	app_content_menu.change('tasks');
-
-}
-onboarding_script_fn[3] = function(fn_continue){
-	//[3] Take them to a special invite screen - where the can add people - or - 
-
-}
-onboarding_script_fn[4] = function(fn_continue){
-	//[4] once the user clicks - and the task is created - chat continues
-}
-onboarding_script_fn[5] = function(fn_continue){
-	//[5] Open project creation submenu, focus on title then create button
-	var count_prev = Lincko.storage.list('projects').length;
-	var onboarding_garbageID = app_application_garbage.add('onboarding_garbage_script_5');
-	app_application_lincko.add(onboarding_garbageID, 'projects', function(){
-		if(count_prev < Lincko.storage.list('projects').length){
-			fn_continue();
-			app_application_garbage.remove(onboarding_garbageID);
+		else{
+			return submenu_Build("newchat", false, false, {
+				type: 'history',
+				id: id,
+				title: Lincko.storage.get('projects', id, '+title'),
+			}, preview);
+		}		
+	},
+	
+	//used in resume.js
+	action_launch: function(current, next, text_id, param){
+		if(this.scripts.completed[param[1]]){ return false; } //check if the script has already been ran
+		var that = this;
+		//console.log('onboarding.action_launch: '+current+' => '+next+' => '+text_id);
+		var fn_continue = function(){ 
+			that.scripts.completed[param[1]] = true;
+			//console.log('fn_continue (onboarding.script '+param[1]+')');
+			//console.log('fn_continue: '+current+' => '+next+' => '+text_id);
+			app_models_resume_onboarding_continue(current, next, text_id);
+			that.overlays.show.content_sub();
+			that.toBot();
 		}
-	});
-	submenu_Build("app_project_new");
-}
-onboarding_script_fn[6] = function(fn_continue){
-	
-}
-onboarding_script_fn[7] = function(fn_continue){
-	
-}
-onboarding_script_fn[8] = function(fn_continue){
-	
-}
+		this.scripts[param[1]](fn_continue);
+	},
 
+	//holds all the functions to be run for each action number
+	scripts: {
+		completed: {
+			//1: true,
+			//2: true,
+			//etc
+		},
+	},
 
-var onboarding_overlays = {
+}
+onboarding.overlays = {
 	ini: function(){
 		this.show.that = this;
 		this.master.that = this;
@@ -173,10 +162,151 @@ var onboarding_overlays = {
 
 }.ini();
 
+onboarding.scripts[1] = function(fn_continue){
+	//[1] Update my username, profile photo, and/or language
+	submenu_Build("settings", submenu_Getnext());
+	$(document).on("submenuHide.onboarding", function(){
+		if(!submenu_get('settings')){
+			$(document).off("submenuHide.onboarding");
+			fn_continue();
+		}
+	});
+}
 
-var onboarding_garbageID = app_application_garbage.add('onboarding_garbage');
-app_application_lincko.add(onboarding_garbageID, 'launch_onboarding', function(){ return; //toto
-	if(onboarding_launched){ return; }
+//[2] Chat closes and Project opened - shows task lists
+onboarding.scripts[2] = function(fn_continue){
+	/*
+	Script: 
+	Get started using Lincko @Username ++Today (marked as completed)
+	(action1) Mark this task complete @Username ++Today
+	(action2) Open this task or the task above by clicking or tapping on it. Each task can be assigned an owner, a due date, have subtasks, comments from the team, and link to files or notes. 
+	(action3) Create a new task and assign it to the Monkey King by typing a task below. Use @ to assign to the Monkey King. Use ++ to assign today as the due date.
+	(continue condition) Once all the above has been completed - the LinckoBot will reapear and take you the rest of the way :)
+	*/
+
+	//must complete all conditions to move on
+	var conditions = {
+		1: false,
+		2: false,
+		3: false,
+	}
+	var condition_complete = function(num){
+		conditions[num] = true;
+		var allComplete = true;
+		$.each(conditions, function(i, bool){
+			if(!bool){ 
+				allComplete = false;
+				return false; 
+			}
+		});
+
+		//if nothing returns false
+		if(allComplete){
+			fn_continue();
+		}
+	}
+	submenu_Hideall();
+	app_content_menu.change('tasks');
+	
+
+	//action 1 - mark task_target complete
+	var tasks_initial = Lincko.storage.list('tasks', null, null, 'projects', app_content_menu.projects_id, false);
+	var task_target = null;
+	$.each(tasks_initial, function(i, task){
+		if(!task.approved){
+			task_target = task;
+			return false;
+		}
+	});
+	var onboarding_garbage_action1 = app_application_garbage.add('onboarding_garbage_script_2_1');
+	app_application_lincko.add(onboarding_garbage_action1, 'tasks_'+task_target['_id'], function(){
+		if(Lincko.storage.get('tasks', task_target['_id']).approved){
+			app_application_garbage.remove(onboarding_garbage_action1);
+			condition_complete(1);
+		}
+	});
+
+
+	//action 2 - open a task
+	$(document).on("submenuHide.onboarding", function(){
+		if(!submenu_get('taskdetail', true)){ //check submenu
+			$(document).off("submenuHide.onboarding");
+			condition_complete(2);
+		}
+		else if(!submenu_get('taskdetail', false)){ //check preview
+			$(document).off("submenuHide.onboarding");
+			condition_complete(2);
+		}
+	});
+
+
+	//action 3 - create a task assigned to monkeyKing (user 1)
+	var onboarding_garbage_action2 = app_application_garbage.add('onboarding_garbage_script_2_2');
+	app_application_lincko.add(onboarding_garbage_action2, 'projects_'+app_content_menu.projects_id, function(){ console.log('script 2-2 projects sync');
+		var tasks = Lincko.storage.list('tasks', null, {created_by: wrapper_localstorage.uid}, 'projects', app_content_menu.projects_id, false);
+		$.each(tasks, function(i, task){
+			if(task['_users'] && task['_users'][1/*monkeyKing*/] && task['_users'][1/*monkeyKing*/]['in_charge']){
+				app_application_garbage.remove(onboarding_garbage_action2);
+				condition_complete(3);
+				return false;
+			}
+		});
+	});
+
+}
+
+//[3] Take them to a special invite screen - where the can add people - or - 
+onboarding.scripts[3] = function(fn_continue){
+	
+
+}
+
+//[4] once the user clicks - and the task is created - chat continues
+onboarding.scripts[4] = function(fn_continue){
+	var iniCount = Lincko.storage.list('tasks', null, null, 'projects', app_content_menu.projects_id, false).length;
+	var onboarding_garbageID = app_application_garbage.add('onboarding_garbage_script_4'); console.log('script4 garbage created');
+	app_application_lincko.add(onboarding_garbageID, 'projects_'+app_content_menu.projects_id, function(){ console.log('projects sync');
+		var count = Lincko.storage.list('tasks', null, null, 'projects', app_content_menu.projects_id, false).length;
+		if(count > iniCount){ //new task created
+			app_application_garbage.remove(onboarding_garbageID);
+			fn_continue();
+		}
+	});
+}
+
+//[5] Open project creation submenu, focus on title then create button
+onboarding.scripts[5] = function(fn_continue){
+	submenu_Build("app_project_new", submenu_Getnext());
+	var count_prev = Lincko.storage.list('projects').length;
+
+	var id_onboarding_garbage = app_application_garbage.add('onboarding_garbage_script_5');
+	var id_onboarding_submenu_hide = app_application_garbage.add('onboarding_garbage_script_5_submenu_hide');
+
+	var script5_complete = function(){
+		app_application_garbage.remove(id_onboarding_garbage);
+		app_application_garbage.remove(id_onboarding_submenu_hide);
+		fn_continue();
+		onboarding.clear();
+	}
+	app_application_lincko.add(id_onboarding_garbage, 'projects', function(){
+		if(count_prev < Lincko.storage.list('projects').length){
+			script5_complete();
+		}
+	});
+	app_application_lincko.add(id_onboarding_garbage, 'submenu_hide', function(){
+		if(!submenu_get('app_project_new')){
+			script5_complete();
+		}
+	});
+}
+
+
+var id_onboarding_garbage_launch = app_application_garbage.add('onboarding_garbage_launch');
+app_application_lincko.add(id_onboarding_garbage_launch, 'launch_onboarding', function(){
+	if(onboarding.on || onboarding.forceOff ){ 
+		app_application_garbage.remove(id_onboarding_garbage_launch);
+		return; 
+	}
 
 	if(!Lincko.storage.data.settings 
 		|| !Lincko.storage.data.settings[wrapper_localstorage.uid] 
@@ -198,16 +328,16 @@ app_application_lincko.add(onboarding_garbageID, 'launch_onboarding', function()
 	var onboardingNumber = Object.keys(ob_latest)[0];
 
 	if(onboardingNumber){
-		onboarding_launched = true;
+		onboarding.on = true;
 		var preview = false;
 		app_content_menu.selection(id_pj_onboarding, 'chats');
 		app_application.project();
-		onboarding_overlays.show.content_sub();
+		onboarding.overlays.show.content_sub();
 
 		var submenu_timer = setInterval(function(){
 			if(!app_content_menu_first_launch){
 				clearInterval(submenu_timer);
-				var submenuInst = onboarding_script_fn.toChat(id_pj_onboarding);
+				var submenuInst = onboarding.toBot(id_pj_onboarding);
 			}
 		}, 500);
 	}
@@ -216,5 +346,5 @@ app_application_lincko.add(onboarding_garbageID, 'launch_onboarding', function()
 		
 	}
 
-	app_application_garbage.remove(onboarding_garbageID);
+	app_application_garbage.remove(id_onboarding_garbage_launch);
 });
