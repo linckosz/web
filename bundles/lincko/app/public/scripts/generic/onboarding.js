@@ -242,7 +242,7 @@ onboarding.scripts[2] = function(fn_continue){
 
 	//action 3 - create a task assigned to monkeyKing (user 1)
 	var onboarding_garbage_action2 = app_application_garbage.add('onboarding_garbage_script_2_2');
-	app_application_lincko.add(onboarding_garbage_action2, 'projects_'+app_content_menu.projects_id, function(){ console.log('script 2-2 projects sync');
+	app_application_lincko.add(onboarding_garbage_action2, 'projects_'+app_content_menu.projects_id, function(){
 		var tasks = Lincko.storage.list('tasks', null, {created_by: wrapper_localstorage.uid}, 'projects', app_content_menu.projects_id, false);
 		$.each(tasks, function(i, task){
 			if(task['_users'] && task['_users'][1/*monkeyKing*/] && task['_users'][1/*monkeyKing*/]['in_charge']){
@@ -257,15 +257,21 @@ onboarding.scripts[2] = function(fn_continue){
 
 //[3] Take them to a special invite screen - where the can add people - or - 
 onboarding.scripts[3] = function(fn_continue){
-	
-
+	submenu_Build('chat_list', submenu_Getnext(), null, true, false);
+	var id_onboarding_submenu_hide = app_application_garbage.add('onboarding_garbage_script_3_submenu_hide');
+	app_application_lincko.add(id_onboarding_submenu_hide, 'submenu_hide', function(){
+		if(!submenu_get('chat_list')){
+			app_application_garbage.remove(id_onboarding_submenu_hide);
+			fn_continue();
+		}
+	});
 }
 
 //[4] once the user clicks - and the task is created - chat continues
 onboarding.scripts[4] = function(fn_continue){
 	var iniCount = Lincko.storage.list('tasks', null, null, 'projects', app_content_menu.projects_id, false).length;
-	var onboarding_garbageID = app_application_garbage.add('onboarding_garbage_script_4'); console.log('script4 garbage created');
-	app_application_lincko.add(onboarding_garbageID, 'projects_'+app_content_menu.projects_id, function(){ console.log('projects sync');
+	var onboarding_garbageID = app_application_garbage.add('onboarding_garbage_script_4');
+	app_application_lincko.add(onboarding_garbageID, 'projects_'+app_content_menu.projects_id, function(){
 		var count = Lincko.storage.list('tasks', null, null, 'projects', app_content_menu.projects_id, false).length;
 		if(count > iniCount){ //new task created
 			app_application_garbage.remove(onboarding_garbageID);
@@ -279,23 +285,21 @@ onboarding.scripts[5] = function(fn_continue){
 	submenu_Build("app_project_new", submenu_Getnext());
 	var count_prev = Lincko.storage.list('projects').length;
 
-	var id_onboarding_garbage = app_application_garbage.add('onboarding_garbage_script_5');
 	var id_onboarding_submenu_hide = app_application_garbage.add('onboarding_garbage_script_5_submenu_hide');
 
-	var script5_complete = function(){
-		app_application_garbage.remove(id_onboarding_garbage);
-		app_application_garbage.remove(id_onboarding_submenu_hide);
-		fn_continue();
-		onboarding.clear();
-	}
-	app_application_lincko.add(id_onboarding_garbage, 'projects', function(){
-		if(count_prev < Lincko.storage.list('projects').length){
-			script5_complete();
-		}
-	});
-	app_application_lincko.add(id_onboarding_garbage, 'submenu_hide', function(){
+	app_application_lincko.add(id_onboarding_submenu_hide, 'submenu_hide', function(){
 		if(!submenu_get('app_project_new')){
-			script5_complete();
+			app_application_garbage.remove(id_onboarding_submenu_hide);
+			fn_continue();
+			if(count_prev < Lincko.storage.list('projects').length){ //new project
+				setTimeout(function(){
+					onboarding.clear();
+					onboarding.toBot();
+				}, 2000); //2 sec to allow user to see that he is taken to a newly created project, then pop open bot
+			}
+			else{ //no new project
+				onboarding.clear();
+			}
 		}
 	});
 }
@@ -327,7 +331,7 @@ app_application_lincko.add(id_onboarding_garbage_launch, 'launch_onboarding', fu
 	var ob_latest = ob_list[0];
 	var onboardingNumber = Object.keys(ob_latest)[0];
 
-	if(onboardingNumber){
+	if(onboardingNumber && onboardingNumber != 10019 /*end*/){
 		onboarding.on = true;
 		var preview = false;
 		app_content_menu.selection(id_pj_onboarding, 'chats');
@@ -340,10 +344,6 @@ app_application_lincko.add(id_onboarding_garbage_launch, 'launch_onboarding', fu
 				var submenuInst = onboarding.toBot(id_pj_onboarding);
 			}
 		}, 500);
-	}
-
-	if(onboardingNumber == 10001){ //beginning
-		
 	}
 
 	app_application_garbage.remove(id_onboarding_garbage_launch);
