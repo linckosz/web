@@ -20,13 +20,13 @@ submenu_list['newchat'] = {
 	"right_button": {
 		"style": "title_right_button",
 		"title": "",
-		"class": "icon-Settings base_pointer submenu_chats_settings",
+		"class": "icon-largerGroup base_pointer submenu_chats_settings",
 		"action": function(Elem, subm) {
 			if(subm.param.type == 'chats' && !Lincko.storage.get('chats', subm.param.id, 'single')){
 				var all_users = [];
 				var checked_users = [];
 				var userList = [];
-				submenu_Build('edit_group', true, false, {type: 'chats', id: subm.param.id, alwaysMe:true, }, subm.preview);
+				submenu_Build('edit_group', -1, true, {type: 'chats', id: subm.param.id, alwaysMe:true, }, subm.preview);
 			}
 		}
 	},

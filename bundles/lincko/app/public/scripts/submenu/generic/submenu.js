@@ -1357,9 +1357,10 @@ function submenu_Build(menu, next, hide, param, preview) {
 	}
 
 	//If the tab already exists, just close it if we launch again the action
+	
 	if (hide) {
 		for (var index in stack) {
-			if (stack[index].menu === menu) {
+			if (stack[index].menu == menu) {
 				submenu_Clean(next, true, preview);
 				return false;
 			}
