@@ -359,12 +359,18 @@ ReportContentCls.prototype.feed_content = function(elem)
 	if(content.hasClass("onboarding"))
 	{
 		var obj = JSON.parse(this.content);
-
-		
-		if(typeof obj.ob['10014'] !== 'undefined')//quick create a task
+		var onboarding = Lincko.storage.getOnboarding();
+		if(typeof onboarding.comments != 'undefined')
 		{
-			elem.attr('comments_id',this.id);
-			elem.attr('category',this.category);
+			if(typeof  onboarding.comments[4] != 'undefined')
+			{
+				var comment_id = onboarding.comments[4];
+				if(this.id == comment_id)//quick create a task
+				{
+					elem.attr('comments_id',this.id);
+					elem.attr('category',this.category);
+				}
+			}
 		}
 		elem.attr('onboarding_id',this.id);
 		elem.find(".models_history_content").addClass("onboarding");
