@@ -44,13 +44,12 @@ var onboarding = {
 	
 	//used in resume.js
 	action_launch: function(current, next, text_id, param){
+		if(!this.on){ return false; } //ignore action_launch calls if onboarding is not on
 		if(this.scripts.completed[param[1]]){ return false; } //check if the script has already been ran
 		var that = this;
 		//console.log('onboarding.action_launch: '+current+' => '+next+' => '+text_id);
 		var fn_continue = function(){ 
 			that.scripts.completed[param[1]] = true;
-			//console.log('fn_continue (onboarding.script '+param[1]+')');
-			//console.log('fn_continue: '+current+' => '+next+' => '+text_id);
 			app_models_resume_onboarding_continue(current, next, text_id);
 			that.overlays.show.content_sub();
 			that.toBot();
@@ -293,6 +292,7 @@ onboarding.scripts[5] = function(fn_continue){
 		if(!submenu_get('app_project_new')){
 			app_application_garbage.remove(id_onboarding_submenu_hide);
 			fn_continue();
+			/*
 			if(count_prev < Lincko.storage.list('projects').length){ //new project
 				setTimeout(function(){
 					onboarding.clear();
@@ -302,6 +302,7 @@ onboarding.scripts[5] = function(fn_continue){
 			else{ //no new project
 				onboarding.clear();
 			}
+			*/
 		}
 	});
 }
@@ -314,30 +315,17 @@ app_application_lincko.add(id_onboarding_garbage_launch, 'launch_onboarding', fu
 		return; 
 	}
 
-	if(!Lincko.storage.data.settings 
-		|| !Lincko.storage.data.settings[wrapper_localstorage.uid] 
-		|| !Lincko.storage.data.settings[wrapper_localstorage.uid].onboarding){ return false; }
-	
-	var ob_settings = JSON.parse(Lincko.storage.data.settings[wrapper_localstorage.uid].onboarding);
-	var id_pj_onboarding = ob_settings.projects[1];
+	var ob_settings = Lincko.storage.getOnboarding();
+	var id_pj_welcome = ob_settings.projects[1]; //script 1
+	var status_ob_welcome = ob_settings.sequence[1];
 
-	var linckoComments = Lincko.storage.list('comments', null, {created_by: 0}, 'projects', id_pj_onboarding, false);
-	var ob_list = [];
-	$.each(linckoComments, function(i, comment){
-		var comment_ob = JSON.parse(comment['+comment']);
-		if(comment_ob.ob){
-			ob_list.push(comment_ob.ob);
-		}
-	});
-	var ob_latest = ob_list[0];
-	if(!ob_latest){ return; }
-
-	var onboardingNumber = Object.keys(ob_latest)[0];
-
-	if(onboardingNumber && onboardingNumber != 10019 /*NOT end*/){
+	//exit if welcome pj doesnt exist or onboarding is finished
+	if(!Lincko.storage.get('projects', id_pj_welcome) || !status_ob_welcome){
+		return;
+	}
+	else{ //start onboarding
 		onboarding.on = true;
-		var preview = false;
-		app_content_menu.selection(id_pj_onboarding);
+		app_content_menu.selection(id_pj_welcome);
 		app_application.project();
 		onboarding.overlays.show.content_sub();
 
@@ -350,11 +338,35 @@ app_application_lincko.add(id_onboarding_garbage_launch, 'launch_onboarding', fu
 			if(!app_content_menu_first_launch){
 				clearInterval(submenu_timer);
 				setTimeout(function(){
-					onboarding.toBot(id_pj_onboarding);
+					onboarding.toBot(id_pj_welcome);
 				}, onboardingDelay);
 			}
 		}, 500);
-	}
+
+		//ESC during onboarding to clear
+		$(document).on('keyup.onboarding', function(event){
+			if (event.which == 27) { //ESC
+		       $(document).off('keyup.onboarding');
+		       onboarding.clear();
+		    }
+		});
+
+		//watch for end of onboarding in the 'settings' sync function
+		var id_onboarding_garbage_settings = app_application_garbage.add('onboarding_garbage_settings');
+		app_application_lincko.add(id_onboarding_garbage_settings, 'settings', function(){ 
+			var ob_settings = Lincko.storage.getOnboarding();
+			var status_ob_welcome = ob_settings.sequence[1];
+
+			//if onboarding is complete, unlock all Lincko
+			if(!status_ob_welcome){
+				onboarding.clear();
+				onboarding.toBot();
+				app_application_garbage.remove(id_onboarding_garbage_settings);
+			}
+		});
+	}//END OF start onboarding
 
 	app_application_garbage.remove(id_onboarding_garbage_launch);
+
 });
+
