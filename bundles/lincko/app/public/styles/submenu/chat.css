@@ -28,6 +28,8 @@
 	opacity:0.40;
 	-moz-opacity:0.40;
 	-khtml-opacity:0.40;
+	padding-top: 6px;
+	padding-bottom: 6px;
 }
 
 .submenu_app_chat_chatmenu_icon:hover {

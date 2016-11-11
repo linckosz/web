@@ -228,7 +228,6 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 							app_models_resume_onboarding_continue(current, next, text_id);
 						}
 					});
-					//span_arr[j].click();
 				} else if(answer[0]=='now'){
 					span_arr[j] = null;
 					delete span_arr[j];
@@ -261,7 +260,6 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 						var text_id = event.data[2];
 						app_models_resume_onboarding_continue(current, next, text_id);
 					});
-					//span_arr[j].click();
 				}
 				j = span_arr.length;
 			}
@@ -288,6 +286,16 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 	return false;
 
 };
+
+var app_models_resume_format_answer = function(text) {
+	try {
+		var temp = JSON.parse(text);
+		if($.type(temp) == 'object' && temp['answer']){
+			text = Lincko.Translation.get('app', temp['answer'], 'pure');
+		}
+	} catch(err) {}
+	return text;
+}
 
 
 var app_models_evan_fn = function(current, span_arr){
@@ -350,7 +358,8 @@ $("body").on("click", '.app_models_resume_onboarding_answer',function(){
 var app_models_resume_onboarding_continue = function(current, next, text_id){
 	var answer = false;
 	if(typeof text_id != 'undefined'){
-		answer = Lincko.Translation.get('app', text_id, 'pure');
+		//answer = Lincko.Translation.get('app', text_id, 'pure');
+		answer = JSON.stringify({answer: text_id,}); //Give a code to be able to translate in live the answers
 	}
 	var data = {
 		current: current,

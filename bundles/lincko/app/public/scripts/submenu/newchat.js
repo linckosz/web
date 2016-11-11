@@ -2,14 +2,21 @@ submenu_list['newchat'] = {
 	//Set the title of the top
 	"_title": {
 		"style": "customized_title",
-		"title": function(elem){
-			if(elem.param.type == "history"){
-				return '<span class="icon-projectActivity submenu_title_center_icon minMobileL">&nbsp;</span>'+elem.param.title;
+		"title": function(subm){
+			if(subm.param.type == "history"){
+				return '<span class="icon-projectActivity submenu_title_center_icon minMobileL">&nbsp;</span>'+subm.param.title;
 			} else {
-				return elem.param.title;
+				return subm.param.title;
 			}
 		}, //chat room you are in
 		"class": "submenu_newchat_header",
+		"now": function(Elem, subm){
+			Elem.find("[find=submenu_title]").prop('id', subm.id+'_customized_title')
+			app_application_lincko.add(subm.id+'_customized_title', subm.param.type+"_"+subm.param.id, function() {
+				var title = Lincko.storage.getPlus(subm.param.type, subm.param.id);
+				Elem.find("[find=submenu_title]").html(title);
+			});
+		},
 	},
 	"left_button": {
 		"style": "title_left_button",
@@ -23,9 +30,6 @@ submenu_list['newchat'] = {
 		"class": "icon-largerGroup base_pointer submenu_chats_settings",
 		"action": function(Elem, subm) {
 			if(subm.param.type == 'chats' && !Lincko.storage.get('chats', subm.param.id, 'single')){
-				var all_users = [];
-				var checked_users = [];
-				var userList = [];
 				submenu_Build('edit_group', -1, true, {type: 'chats', id: subm.param.id, alwaysMe:true, }, subm.preview);
 			}
 		}
@@ -52,9 +56,24 @@ submenu_list['newchat'] = {
 		"action": function(Elem, subm){
 			if(subm.param.type!='chats' || Lincko.storage.get('chats', subm.param.id, 'single')){
 				Elem.find('.submenu_chats_settings').addClass('display_none');
+			} else {
+				var number = $('<span>').addClass('submenu_chats_settings_number').prop('id', subm.id + '_settings_number');
+				app_application_lincko.add(subm.id+'_settings_number', subm.param.type+"_"+subm.param.id, function() {
+					var number = $('#'+this.id);
+					var perm = Lincko.storage.get(subm.param.type, subm.param.id, '_perm');
+					var value = 0;
+					for(var i in perm){
+						value++;
+					}
+					if(value>0){
+						number.html(value);
+					}
+				});
+				Elem.find('.submenu_chats_settings').append(number);
+				app_application_lincko.prepare(subm.param.type+"_"+subm.param.id, true);
 			}
-
-			//if during onbarding and activity feed is of onboarding project: disable close button
+			
+			//if during onboarding and activity feed is of onboarding project: disable close button
 			if(onboarding.on && subm.param 
 				&& subm.param.type && subm.param.type == 'history' 
 				&& subm.param.id && subm.param.id == onboarding.project_id
@@ -85,8 +104,6 @@ var app_submenu_scrollto = function(iScroll, last, scroll_time){
 		iScroll.scrollToElement(last, scroll_time);
 	}, 50);
 }
-
-
 
 Submenu.prototype.Add_ChatContents = function() {
 	var attribute = this.attribute;

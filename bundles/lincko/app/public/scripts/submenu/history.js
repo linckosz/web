@@ -419,7 +419,7 @@ CommentContentCls.prototype.feed_content = function(elem)
 	{
 		elem.attr('temp_id',this.temp_id);
 	}
-	elem.find("[find=content]").append(base_lincko_tag_to_html(wrapper_to_html(this.content)));
+	elem.find("[find=content]").append(base_lincko_tag_to_html(wrapper_to_html(app_models_resume_format_answer(this.content))));
 }
 
 CommentContentCls.prototype.feed_action = function(elem,subm){}

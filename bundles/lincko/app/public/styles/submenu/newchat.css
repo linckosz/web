@@ -76,4 +76,10 @@ textarea:focus, input:focus{
 	font-size: 28px !important;
 }
 
-
+.submenu_chats_settings_number {
+	position: absolute;
+	top: 6px;
+	right: 12px;
+	font-size: 10px;
+	line-height: 1;
+}

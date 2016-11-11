@@ -756,6 +756,7 @@ Lincko.storage.getHistoryInfo = function(history){
 			result.content = app_models_resume_format_sentence(history.id);
 			return result;
 		}
+		result.content = app_models_resume_format_answer(result.content);
 		
 		var item = Lincko.storage.data[history.type][history.id];
 		//Add to the content the main title (such as "project name")

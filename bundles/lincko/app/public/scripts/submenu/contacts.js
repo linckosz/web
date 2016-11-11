@@ -138,6 +138,21 @@ submenu_list['edit_group'] = {
 		"class": "base_pointer",
 	},
 
+	"pre_action": {
+		"style": "preAction",
+		"action": function(Elem, subm){
+			subm.param.lock = false;
+			var item = Lincko.storage.get(subm.param.type, subm.param.id);
+			subm.param.created_by = item['created_by'];
+			if(subm.param.type=='chats') {
+				var parent_type = Lincko.storage.getParent(subm.param.type, subm.param.id, '_type');
+				if(item['single'] || (subm.param.created_by != wrapper_localstorage.uid && parent_type!='projects' )){
+					subm.param.lock = true;
+				}
+			}
+		},
+	},
+
 	"title": {
 		"style": "input_text",
 		"title": Lincko.Translation.get('app', 28, 'html'), //Title
@@ -145,10 +160,15 @@ submenu_list['edit_group'] = {
 		"value": "",
 		"class": "submenu_input_text",
 		"now": function(Elem, subm){
-			var value = Lincko.storage.getPlus(subm.param.type, subm.param.id)
+			var value = Lincko.storage.getPlus(subm.param.type, subm.param.id);
 			var input = Elem.find("[find=submenu_input]");
 			input.prop('value', value);
-			if(subm.param.type=='chats') {
+			if(subm.param.lock){
+				Elem.find("[find=submenu_title]").css('visibility', 'hidden').remove();
+				Elem.find("[find=submenu_input]").after("<div find='submenu_title_div'>").remove();
+				var div = Elem.find("[find=submenu_title_div]");
+				div.html(value).addClass('submenu_contact_title');
+			} else if(subm.param.type=='chats') {
 				input.on({
 					change: function(event){ submenu_contacts_update.chats_title(event.data, this); },
 					past: function(event){ submenu_contacts_update.chats_title(event.data, this); },
@@ -190,6 +210,9 @@ var submenu_contacts_update = {
 		if(typeof submenu_contacts_update.chats_contacts_list_ori[uid] == 'boolean' && submenu_contacts_update.chats_contacts_list_ori[uid] != checked){
 			if(!checked && subm.param.alwaysMe && uid == wrapper_localstorage.uid){
 				return false; //Cannot disallow yourself
+			}
+			if(!checked && subm.param.created_by && uid == subm.param.created_by){
+				return false; //Cannot disallow the owner
 			}
 			submenu_contacts_update.chats_contacts_list[uid] = checked;
 		} else {
@@ -308,6 +331,19 @@ Submenu.prototype.Add_ContactContents = function(live) {
 	if(this.param.type=='chats' && this.param.id > 0){
 		var perm_chats = Lincko.storage.get(this.param.type, this.param.id, "_perm");
 		var perm_parent = Lincko.storage.getParent(this.param.type, this.param.id, "_perm");
+		
+		if(!perm_parent){ //For root get the whole visible list and chats list together
+			perm_parent = {};
+			perm_parent[wrapper_localstorage.uid] = true;
+			var others = Lincko.storage.list('users', null, { _id: ['!=', wrapper_localstorage.uid], _visible: true, });
+			for(var i in others){
+				perm_parent[others[i]['_id']] = true;
+			}
+			for(var i in perm_chats){
+				perm_parent[i] = true;
+			}
+		}
+		
 		if(perm_chats && perm_parent){
 			this.param.contactsID = {};
 			for(var uid in perm_parent){
@@ -335,13 +371,16 @@ Submenu.prototype.Add_ContactContents = function(live) {
 		}
 		Elem.find('.id').val(uid);
 		submenu_contacts_update.chats_contacts_list_ori[uid] = false;
-		if (contacts[uid].checked == true || (that.param && that.param.alwaysMe && uid == wrapper_localstorage.uid) ) {
+		if (contacts[uid].checked == true || (that.param && that.param.alwaysMe && uid == wrapper_localstorage.uid) || uid == that.param.created_by ) {
 			Elem.find('.check').addClass('checked');
 			submenu_contacts_update.chats_contacts_list_ori[uid] = true;
+			if(uid == that.param.created_by || uid == wrapper_localstorage.uid){
+				Elem.find('.check').addClass('admin').off('click');
+			}
 		}
 		Elem.click(position, function(event) {
 			var position = event.data;
-			if($(this).find('.checked').length == 0 || (that.param && that.param.alwaysMe && $(this).find('.id').val() == wrapper_localstorage.uid) ) {
+			if($(this).find('.checked').length == 0 || (that.param && that.param.alwaysMe && $(this).find('.id').val() == wrapper_localstorage.uid) || $(this).find('.id').val() == that.param.created_by ) {
 				$(this).find('.check').addClass('checked');
 				if(live){
 					var uid = parseInt($(this).find('.id').val(), 10);

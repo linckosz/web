@@ -218,6 +218,8 @@ var app_models_history = {
 								}
 							}
 						}
+						//For user answers, convert object to test
+						info[i].content = app_models_resume_format_answer(info[i].content);
 					} else if(hist_all[i]["type"]=="messages"){
 						if(root_item["single"]){ //Single user to Single User
 							message = Lincko.storage.get("messages", hist_all[i]["id"]);
