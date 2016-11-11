@@ -1,5 +1,5 @@
 var onboarding = {
-	forceOff: true,
+	forceOff: false,
 	on: false, //will be set to true for the duration of onboarding
 	project_id: null,
 	overlays: {},
@@ -207,7 +207,8 @@ onboarding.scripts[2] = function(fn_continue){
 		}
 	}
 	submenu_Hideall();
-	app_content_menu.change('tasks');
+	app_content_menu.selection(onboarding.project_id, 'tasks');
+	//app_content_menu.change('tasks');
 	
 
 	//action 1 - mark task_target complete
@@ -328,8 +329,9 @@ app_application_lincko.add(id_onboarding_garbage_launch, 'launch_onboarding', fu
 			ob_list.push(comment_ob.ob);
 		}
 	});
-
 	var ob_latest = ob_list[0];
+	if(!ob_latest){ return; }
+
 	var onboardingNumber = Object.keys(ob_latest)[0];
 
 	if(onboardingNumber && onboardingNumber != 10019 /*NOT end*/){
