@@ -336,19 +336,23 @@ $("body").on("click", '.app_models_resume_onboarding_answer',function(){
 	options.velocity("bruno.slideRightOut", { 
 		duration: 500,
 		complete:function(){
-			options.remove();
-
+			options.recursiveRemove();
 			var dom = $('[onboarding_id='+current+']');
-			var submenu = dom.submenu_getWrapper()[0];
-			var overthrow_id = "overthrow_"+submenu.id;
-			var iScroll = myIScrollList[overthrow_id];
-			var last = $('#'+submenu.id+'_help_iscroll').get(0);
-			submenu_resize_content();
-			iScroll.scrollToElement(last, 0);
+			if(dom.length > 0 )
+			{
+				var submenu = dom.submenu_getWrapper()[0];
+				var overthrow_id = "overthrow_"+submenu.id;
+				var iScroll = myIScrollList[overthrow_id];
+				var last = $('#'+submenu.id+'_help_iscroll').get(0);
+				submenu_resize_content();
+				iScroll.scrollToElement(last, 0);
+			}
 		} 
 	});	
+});
 
-	
+$("body").on("click",".onboarding img",function(){
+	previewer['pic']($(this).attr("src"));
 });
 
 var app_models_resume_onboarding_continue = function(current, next, text_id){

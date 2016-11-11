@@ -379,6 +379,19 @@ ReportContentCls.prototype.feed_content = function(elem)
 	{
 		elem.find(".models_history_content").addClass("report");
 	}
+
+	
+	try{
+		var regExp = new RegExp("^<img[^>]+src\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>$", "gi");
+		if(content.html().match(regExp))
+		{
+			elem.addClass("remove_bg");
+		}
+	}
+	catch(e)
+	{
+		console.log(e);
+	}
 	
 	elem.find("[find=content]").append(content);
 }

@@ -1,11 +1,24 @@
 var previewer = (function() {
 	function pic_preview(id) {
-		var name = Lincko.storage.get("files", id, "name");
-		var orientation = Lincko.storage.get("files", id, "orientation");
-		var url = Lincko.storage.getLink(id);
-		var thumbnail = Lincko.storage.getLinkThumbnail(id);
-		var download = Lincko.storage.getDownload(id);
-
+		var isNum = !isNaN(id);
+		var name ="";
+		var orientation = false;
+		var url = id;
+		var thumbnail = "";
+		var download = "";
+		if(isNum)
+		{
+			name = Lincko.storage.get("files", id, "name");
+			orientation = Lincko.storage.get("files", id, "orientation");
+			url = Lincko.storage.getLink(id);
+			thumbnail = Lincko.storage.getLinkThumbnail(id);
+			download = Lincko.storage.getDownload(id);
+		}
+		else
+		{
+			id = md5(Math.random());
+		}
+		
 		var popout = $('#-pic_preview_full_screen').clone();
 		var Elem_id = 'pic_preview_full_screen_'+id;
 		popout.prop("id", Elem_id);
@@ -15,7 +28,15 @@ var previewer = (function() {
 		}
 		popout.find('.pic_preview_name').html(wrapper_to_html(name));
 		//popout.find('img').attr('src', url); //toto - is this duplicate for a reason?
-		popout.find('.pic_preview_icon').attr("href", download);
+
+		if(download == "")
+		{
+			popout.find('.pic_preview_icon').hide();
+		}
+		else
+		{
+			popout.find('.pic_preview_icon').attr("href", download);
+		}
 		$("body").append(popout);
 		popout.find('.close').click(Elem_id, function(event) {
 			$('#'+event.data).recursiveRemove();

@@ -422,6 +422,20 @@
 	max-width:100%;
 }
 
+.onboarding img{
+	cursor: pointer;
+}
+
+.remove_bg .onboarding{
+	background-color: white;
+	padding:0;
+}
+.remove_bg .onboarding img{
+	border-radius: 8px;
+	border:1px solid rgba(182, 214, 232, 0.20);
+}
+	
+
 /* Mobile phone in Portrait */
 
 @media only screen and (max-width: 479px) {
