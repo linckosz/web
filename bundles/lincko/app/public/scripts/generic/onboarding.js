@@ -7,7 +7,7 @@ var onboarding = {
 	launch: function(){ //return true if launched, return false if conditions are not fit for launch
 
 		if(onboarding.on || onboarding.forceOff){ 
-			return false;
+			return false; //onboarding launch fail
 		}
 
 		var ob_settings = Lincko.storage.getOnboarding();
@@ -26,7 +26,7 @@ var onboarding = {
 
 			var onboardingDelay = 0;
 			if(responsive.test('maxMobileL')){
-				onboardingDelay = 2000;
+				onboardingDelay = 2000; //2s to show main menu is open
 			}
 
 			var submenu_timer = setInterval(function(){
