@@ -366,6 +366,10 @@ Submenu.prototype.Add_ContactContents = function(live) {
 		thumbnail = Lincko.storage.getLinkThumbnail(contacts[uid].profile_pic);
 		if(thumbnail){
 			Elem.find("[find=picture_src]").css('background-image','url("'+thumbnail+'")');
+		} else if(uid==0){ //LinckoBot
+			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_roboto.src+'")');
+		} else if(uid==1){ //Monkey King
+			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_monkeyking.src+'")');
 		} else {
 			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_single_user.src+'")');
 		}

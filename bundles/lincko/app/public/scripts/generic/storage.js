@@ -752,7 +752,7 @@ Lincko.storage.getHistoryInfo = function(history){
 		result.date = date.display('date_very_short');
 
 		//console.log(history);
-		if(history.type=="comments" && history.by==0){
+		if(history.type=="comments" && (history.by==0 || history.by==1)){
 			result.content = app_models_resume_format_sentence(history.id);
 			return result;
 		}

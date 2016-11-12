@@ -370,7 +370,11 @@ Submenu.prototype.Add_ProfilePhoto = function() {
 		var src = Lincko.storage.getLinkThumbnail(perso['profile_pic']);
 		if(src){
 			Elem_pic.css('background-image','url("'+src+'")');
-		}
+		} 
+	} else if(users_id==0){ //LinckoBot
+		Elem_pic.css('background-image','url("'+app_application_icon_roboto.src+'")');
+	} else if(users_id==1){ //Monkey King
+		Elem_pic.css('background-image','url("'+app_application_icon_monkeyking.src+'")');
 	}
 
 	if(users_id == wrapper_localstorage.uid){
@@ -404,6 +408,10 @@ Submenu.prototype.Add_ProfilePhoto = function() {
 				if(src){
 					Elem_pic.css('background-image','url("'+src+'")');
 				}
+			} else if(this.action_param==0){ //LinckoBot
+				Elem_pic.css('background-image','url("'+app_application_icon_roboto.src+'")');
+			} else if(this.action_param==1){ //Monkey King
+				Elem_pic.css('background-image','url("'+app_application_icon_monkeyking.src+'")');
 			}
 		} else if(this.action_param == wrapper_localstorage.uid){
 			var data = false;

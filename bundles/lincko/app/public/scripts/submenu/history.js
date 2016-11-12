@@ -25,11 +25,15 @@ var BaseItemCls = function(record,type)
 			this.profile = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", record["by"], 'profile_pic'));
 			if(!this.profile){
 				this.profile = app_application_icon_single_user.src;
+			} else if(record["by"]==0){ //LinckoBot
+				this.profile = app_application_icon_roboto.src;
+			} else if(record["by"]==1){ //MonkeyKing
+				this.profile = app_application_icon_monkeyking.src;
 			}
 			this.timestamp = record["timestamp"];
 			if(record['type'] == 'comments' && record['par_type'] == 'projects')
 			{
-				this.style = record['by'] == 0 ? 'report' : 'comment';
+				this.style = (record['by'] == 0 || record['by'] == 1) ? 'report' : 'comment';
 			}
 			else
 			{
@@ -42,6 +46,10 @@ var BaseItemCls = function(record,type)
 			this.profile = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", record["created_by"],'profile_pic'));
 			if(!this.profile){
 				this.profile = app_application_icon_single_user.src;
+			} else if(record["created_by"]==0){ //LinckoBot
+				this.profile = app_application_icon_roboto.src;
+			} else if(record["created_by"]==1){ //MonkeyKing
+				this.profile = app_application_icon_monkeyking.src;
 			}
 			this.timestamp = record["created_at"];
 			if(record['_type'] == 'files')
@@ -145,10 +153,14 @@ BaseItemCls.prototype.item_display = function(position,subm,mode)
 		elem.addClass(wrapper_localstorage.uid === parseInt(this.user_id, 10) ? 'models_history_self' : 'models_history_others');
 		elem.addClass(this.data.category);
 
-		if(this.user_id == 0){
+		if(this.user_id == 0){ //LinckoBot
 			elem.find("[find=icon]").css('border-color', 'transparent');
 			elem.find("[find=icon]").css('background-image','url("' +  app_application_icon_roboto.src + '")');
-			elem.find("[find=author]").html(Lincko.Translation.get('app', 0, 'html')); 
+			elem.find("[find=author]").html(Lincko.Translation.get('app', 0, 'html'));  //LinckoBot
+		} else if(this.user_id == 1){ //MonkeyKing
+			elem.find("[find=icon]").css('border-color', 'transparent');
+			elem.find("[find=icon]").css('background-image','url("' +  app_application_icon_monkeyking.src + '")');
+			elem.find("[find=author]").html(Lincko.Translation.get('app', 67, 'html')); //Monkey King
 		} else {
 			var profile =  Lincko.storage.getLinkThumbnail(Lincko.storage.get("users",this.user_id , 'profile_pic'));
 			elem.find("[find=icon]").css('background-image','url("' + this.profile + '")');
@@ -159,7 +171,7 @@ BaseItemCls.prototype.item_display = function(position,subm,mode)
 		elem.find(".time", "[find=timestamp]").html(date.display('time_short'));
 		elem.find(".date", "[find=timestamp]").html(date.display('date_short'));
 		this.feed_profile_action(elem,this.user_id,subm);
-		this.feed_content(elem);
+		this.feed_content(elem, subm);
 		if(this.style == 'activity' || this.style == 'file') this.feed_action(elem,subm);
 	}
 
@@ -251,7 +263,7 @@ BaseItemCls.prototype.item_display = function(position,subm,mode)
 				break;
 			case 'refresh' :
 				elem = $('#'+elem_id);
-				this.feed_content(elem);
+				this.feed_content(elem, subm);
 				break;
 			default :
 				break;
@@ -280,9 +292,9 @@ BaseItemCls.prototype.feed_profile_action = function(elem,userid,subm)
 	});
 }
 
-BaseItemCls.prototype.feed_content = function(elem)
+BaseItemCls.prototype.feed_content = function(elem, subm)
 {
-	this.data.feed_content(elem);
+	this.data.feed_content(elem, subm);
 }
 
 BaseItemCls.prototype.feed_action = function(elem,subm)
@@ -353,18 +365,18 @@ var ReportContentCls = function(record,type)
 	}
 }
 
-ReportContentCls.prototype.feed_content = function(elem)
+ReportContentCls.prototype.feed_content = function(elem, subm)
 {
-	var content = app_models_resume_format_sentence(this.id);
+	var content = app_models_resume_format_sentence(this.id, 1, subm);
 	if(content.hasClass("onboarding"))
 	{
 		var obj = JSON.parse(this.content);
 		var onboarding = Lincko.storage.getOnboarding();
 		if(typeof onboarding.comments != 'undefined')
 		{
-			if(typeof  onboarding.comments[4] != 'undefined')
+			if(typeof  onboarding.comments[1] != 'undefined')
 			{
-				var comment_id = onboarding.comments[4];
+				var comment_id = onboarding.comments[1];
 				if(this.id == comment_id)//quick create a task
 				{
 					elem.attr('comments_id',this.id);

@@ -55,7 +55,7 @@
 				},
 				"class": "wphead_dropmenu_first",
 			},
-		{% elseif invitation_code %}
+		{% else %}
 			"joinus": {
 				"style": "button",
 				"title": "{{ _trans('web', 1, 8, 'js') }}", //Join us
@@ -64,7 +64,6 @@
 				},
 				"class": "wphead_dropmenu_first",
 			},
-		{% else %}
 			"signin": {
 				"style": "button",
 				"title": "{{ _trans('web', 1, 9, 'js') }}", //Sign in

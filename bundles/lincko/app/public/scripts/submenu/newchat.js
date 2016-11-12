@@ -11,11 +11,14 @@ submenu_list['newchat'] = {
 		}, //chat room you are in
 		"class": "submenu_newchat_header",
 		"now": function(Elem, subm){
-			Elem.find("[find=submenu_title]").prop('id', subm.id+'_customized_title')
-			app_application_lincko.add(subm.id+'_customized_title', subm.param.type+"_"+subm.param.id, function() {
-				var title = Lincko.storage.getPlus(subm.param.type, subm.param.id);
-				Elem.find("[find=submenu_title]").html(title);
-			});
+			Elem.find("[find=submenu_title]").prop('id', subm.id+'_customized_title');
+			var single = Lincko.storage.get(subm.param.type, subm.param.id, 'single');
+			if(!single){
+				app_application_lincko.add(subm.id+'_customized_title', subm.param.type+"_"+subm.param.id, function() {
+					var title = Lincko.storage.getPlus(subm.param.type, subm.param.id);
+					Elem.find("[find=submenu_title]").html(title);
+				});
+			}
 		},
 	},
 	"left_button": {

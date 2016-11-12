@@ -1210,6 +1210,10 @@ burgerN.draw_contacts = function(contacts,option_fn){
 		if(picID){
 			var thumb_url = Lincko.storage.getLinkThumbnail(picID);
 			elem_option_clone.find('[find=image]').removeClass('icon-SmallPersonaiconBlack').css('background-image','url("'+thumb_url+'")');
+		} else if(userid==0){ //LinckoBot icon
+			elem_option_clone.find('[find=image]').removeClass('icon-SmallPersonaiconBlack').css('background-image','url("'+app_application_icon_roboto.src+'")');
+		} else if(userid==1){ //Monkey King icon
+			elem_option_clone.find('[find=image]').removeClass('icon-SmallPersonaiconBlack').css('background-image','url("'+app_application_icon_monkeyking.src+'")');
 		}
 		if( in_charge ){
 			elem_option_clone.addClass('burger_option_selected');

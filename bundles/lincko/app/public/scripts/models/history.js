@@ -156,6 +156,11 @@ var app_models_history = {
 								perso = Lincko.storage.get('users', j);
 								info[i].title = perso["-username"];
 								src = Lincko.storage.getLinkThumbnail(perso['profile_pic']);
+								if(j==0){
+									src = app_application_icon_roboto.src;
+								} else if(j==1){
+									src = app_application_icon_monkeyking.src;
+								}
 								break;
 							}
 						}
@@ -179,7 +184,7 @@ var app_models_history = {
 						info[i].date = date.display('time_short');
 					}
 					if(hist_all[i]["type"]=="comments"){
-						if(hist_all[i]["by"]==0){ //Projects
+						if(hist_all[i]["by"]==0 || hist_all[i]["by"]==1){ //Projects
 							var sentence = app_models_resume_format_sentence(hist_all[i]["id"]);
 							if(sentence===false){
 								//We don't display the message that the user is not concerned

@@ -3,8 +3,9 @@
 	app_models_resume_format_sentence(9984);
 	app_models_resume_format_sentence(9984, 1);
 */
-var app_models_resume_format_sentence = function(comments_id, type) {
+var app_models_resume_format_sentence = function(comments_id, type, subm) {
 	if(typeof type == 'undefined'){ type = 1; }
+	if(typeof subm == 'undefined'){ subm = false; }
 
 	var comment = Lincko.storage.get('comments', comments_id, 'comment');
 	var sentence = '';
@@ -210,11 +211,12 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 				text = wrapper_to_html(Lincko.Translation.get('app', i, 'html'));
 				span_arr[j] = $('<span>').html(text).addClass('app_models_resume_onboarding_answer');
 				if(answer[0]=='action'){
-					span_arr[j].click([comments_id, answer, i], function(event){
+					span_arr[j].click([comments_id, answer, i, subm], function(event){
 						var current = event.data[0];
 						var answer = event.data[1];
 						var next = answer[1];
 						var text_id = event.data[2];
+						var subm = event.data[3];
 						var param = [];
 						for(var k in answer){
 							if(k>=2){
@@ -223,17 +225,17 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 						}
 						if(param.length>0){
 							//This function must call "app_models_resume_onboarding_continue(current, next)" once the action is completed
-							onboarding.action_launch(current, next, text_id, param);
+							onboarding.action_launch(current, next, text_id, param, subm);
 						} else {
-							app_models_resume_onboarding_continue(current, next, text_id);
+							app_models_resume_onboarding_continue(current, next, text_id, subm);
 						}
 					});
 				} else if(answer[0]=='now'){
 					span_arr[j] = null;
 					delete span_arr[j];
 					setTimeout(function(data){
-						var sub = span.submenu_getWrapper(); 
-						if(sub && sub[0]['param']['type'] == 'history'){ //We launch it in activity feed only
+						var subm = data[3];
+						if(subm && subm['param']['type'] == 'history'){ //We launch it in activity feed only
 							var current = data[0];
 							var answer = data[1];
 							var next = answer[1];
@@ -246,19 +248,20 @@ var app_models_resume_format_sentence = function(comments_id, type) {
 							}
 							if(param.length>0){
 								//This function must call "app_models_resume_onboarding_continue(current, next)" once the action is completed
-								onboarding.action_launch(current, next, text_id, param);
+								onboarding.action_launch(current, next, text_id, param, subm);
 							} else {
-								app_models_resume_onboarding_continue(current, next, text_id);
+								app_models_resume_onboarding_continue(current, next, text_id, subm);
 							}
 						}
-					}, 2000, [comments_id, answer, i]); //Delay 2s to launch the action
+					}, 2000, [comments_id, answer, i, subm]); //Delay 2s to launch the action
 				} else {
-					span_arr[j].click([comments_id, answer, i], function(event){
+					span_arr[j].click([comments_id, answer, i, subm], function(event){
 						var current = event.data[0];
 						var answer = event.data[1];
 						var next = answer[1];
 						var text_id = event.data[2];
-						app_models_resume_onboarding_continue(current, next, text_id);
+						var subm = event.data[3];
+						app_models_resume_onboarding_continue(current, next, text_id, subm);
 					});
 				}
 				j = span_arr.length;
@@ -298,7 +301,7 @@ var app_models_resume_format_answer = function(text) {
 }
 
 
-var app_models_evan_fn = function(current, span_arr){
+var app_models_evan_fn = function(current, span_arr, subm){
 	setTimeout(function(current,span_arr){
 		var dom = $('[onboarding_id='+current+']');
 		var answer = $('#models_history_answer_options_'+current);
@@ -355,9 +358,9 @@ $("body").on("click",".onboarding img",function(){
 	previewer['pic']($(this).attr("src"));
 });
 
-var app_models_resume_onboarding_continue = function(current, next, text_id){
+var app_models_resume_onboarding_continue = function(current, next, text_id, subm){
 	var answer = false;
-	if(typeof text_id != 'undefined'){
+	if(typeof text_id != 'undefined' && text_id>0){
 		//answer = Lincko.Translation.get('app', text_id, 'pure');
 		answer = JSON.stringify({answer: text_id,}); //Give a code to be able to translate in live the answers
 	}

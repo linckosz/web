@@ -356,7 +356,11 @@ chatFeed.prototype.app_chat_feed_send_msg = function(data)
 {
 	var profile = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users",data.by,'profile_pic'));
 	if(!profile){
-			profile = app_application_icon_single_user.src;
+		profile = app_application_icon_single_user.src;
+	} else if(data.by==0){ //LinckoBot
+		profile = app_application_icon_roboto.src;
+	} else if(data.by==1){ //Monkey King
+		profile = app_application_icon_monkeyking.src;
 	}
 	var msg = 
 	{

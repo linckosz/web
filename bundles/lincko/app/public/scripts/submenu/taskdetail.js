@@ -1270,7 +1270,10 @@ Submenu.prototype.Add_taskdetail = function() {
 		var thumb_url = app_application_icon_single_user.src;
 		if(picID){
 			thumb_url = Lincko.storage.getLinkThumbnail(picID);
-			
+		} else if(comment['created_by']==0){ //LinckoBot
+			thumb_url = app_application_icon_roboto.src;
+		} else if(comment['created_by']==1){ //Monkey King
+			thumb_url = app_application_icon_monkeyking.src;
 		}
 		elem.find('[find=profile_pic]').css('background-image','url("'+thumb_url+'")');
 
@@ -2318,7 +2321,10 @@ var taskdetail_generateCommentBubble = function(comment, root_id, sendAction_rep
 	var thumb_url = app_application_icon_single_user.src;
 	if(picID){
 		thumb_url = Lincko.storage.getLinkThumbnail(picID);
-		
+	} else if(comment['created_by']==0){ //LinckoBot
+		thumb_url = app_application_icon_roboto.src;
+	} else if(comment['created_by']==1){ //Monkey King
+		thumb_url = app_application_icon_monkeyking.src;
 	}
 	elem.find('[find=profile_pic]').css('background-image','url("'+thumb_url+'")');
 

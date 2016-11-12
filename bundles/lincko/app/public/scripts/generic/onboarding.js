@@ -43,14 +43,14 @@ var onboarding = {
 	},
 	
 	//used in resume.js
-	action_launch: function(current, next, text_id, param){
+	action_launch: function(current, next, text_id, param, subm){
 		if(!this.on){ return false; } //ignore action_launch calls if onboarding is not on
 		if(this.scripts.completed[param[1]]){ return false; } //check if the script has already been ran
 		var that = this;
 		//console.log('onboarding.action_launch: '+current+' => '+next+' => '+text_id);
 		var fn_continue = function(){ 
 			that.scripts.completed[param[1]] = true;
-			app_models_resume_onboarding_continue(current, next, text_id);
+			app_models_resume_onboarding_continue(current, next, text_id, subm);
 			that.overlays.show.content_sub();
 			that.toBot();
 		}

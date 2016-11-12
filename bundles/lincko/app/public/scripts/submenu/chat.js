@@ -213,6 +213,10 @@ Submenu.prototype.Add_ChatContacts = function() {
 		thumbnail = Lincko.storage.getLinkThumbnail(contacts[i]['profile_pic']);
 		if(thumbnail){
 			Elem.find("[find=picture_src]").css('background-image','url("'+thumbnail+'")');
+		} else if(contacts[i]['_id']==0){ //LinckoBot
+			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_roboto.src+'")');
+		} else if(contacts[i]['_id']==1){ //Monkey King
+			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_monkeyking.src+'")');
 		} else {
 			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_single_user.src+'")');
 		}
@@ -268,6 +272,10 @@ Submenu.prototype.Add_ChatContacts = function() {
 		thumbnail = Lincko.storage.getLinkThumbnail(contacts[i]['profile_pic']);
 		if(thumbnail){
 			Elem.find("[find=picture_src]").css('background-image','url("'+thumbnail+'")');
+		} else if(contacts[i]['_id']==0){ //LinckoBot
+			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_roboto.src+'")');
+		} else if(contacts[i]['_id']==1){ //Monkey King
+			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_monkeyking.src+'")');
 		} else {
 			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_single_user.src+'")');
 		}
@@ -476,6 +484,10 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 		var thumbnail = Lincko.storage.getLinkThumbnail(data['profile_pic']);
 		if(thumbnail){
 			Elem_user.find("[find=picture_src]").css('background-image','url("'+thumbnail+'")');
+		} else if(data['id']==0){ //LinckoBot
+			Elem_user.find("[find=picture_src]").css('background-image','url("'+app_application_icon_roboto.src+'")');
+		} else if(data['id']==1){ //Monkey King
+			Elem_user.find("[find=picture_src]").css('background-image','url("'+app_application_icon_monkeyking.src+'")');
 		} else {
 			Elem_user.find("[find=picture_src]").css('background-image','url("'+app_application_icon_single_user.src+'")');
 		}
@@ -505,6 +517,10 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 			var thumbnail = Lincko.storage.getLinkThumbnail(data['profile_pic']);
 			if(thumbnail){
 				Elem_user.find("[find=picture_src]").css('background-image','url("'+thumbnail+'")');
+			} else if(data['id']==0){ //LinckoBot
+				Elem_user.find("[find=picture_src]").css('background-image','url("'+app_application_icon_roboto.src+'")');
+			} else if(data['id']==1){ //Monkey King
+				Elem_user.find("[find=picture_src]").css('background-image','url("'+app_application_icon_monkeyking.src+'")');
 			} else {
 				Elem_user.find("[find=picture_src]").css('background-image','url("'+app_application_icon_single_user.src+'")');
 			}
@@ -520,6 +536,10 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 			var thumbnail = Lincko.storage.getLinkThumbnail(data['profile_pic']);
 			if(thumbnail){
 				Elem_user.find("[find=picture_src]").css('background-image','url("'+thumbnail+'")');
+			} else if(data['id']==0){ //LinckoBot
+				Elem_user.find("[find=picture_src]").css('background-image','url("'+app_application_icon_roboto.src+'")');
+			} else if(data['id']==1){ //Monkey King
+				Elem_user.find("[find=picture_src]").css('background-image','url("'+app_application_icon_monkeyking.src+'")');
 			} else {
 				Elem_user.find("[find=picture_src]").css('background-image','url("'+app_application_icon_single_user.src+'")');
 			}

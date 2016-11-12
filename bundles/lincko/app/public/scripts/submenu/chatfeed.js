@@ -564,6 +564,10 @@ BaseHistoryCls.prototype.renderChatTemplate = function(index, replace) {
 		var img = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", this.item.created_by, 'profile_pic'));
 		if(!img){
 			img = app_application_icon_single_user.src;
+		} else if(this.item.created_by==0){ //LinckoBot
+			img = app_application_icon_roboto.src;
+		} else if(this.item.created_by==1){ //Monkey King
+			img = app_application_icon_monkeyking.src;
 		}
 
 		Elem.find("[find=icon]").click(this.item.created_by, function(event){
