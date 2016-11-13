@@ -184,7 +184,7 @@ chatFeed.prototype.app_chat_feed_data_format = function(data)
 
 chatFeed.prototype.app_chat_feed_data_running = function()
 {
-	var data = Lincko.storage.list(null, null , this.running_last_time == 0 ? null : {'created_at': [">=", this.running_last_time], '_type': ['!=', 'chats'],}, 'chats', this.id, true);
+	var data = Lincko.storage.list(null, null , this.running_last_time == 0 ? null : {'created_at': [">=", this.running_last_time], '_type': ['!=', 'chats'],}, 'chats', this.id, false);
 	this.running_last_time = data.length > 0 ? data[0]['created_at'] : 0 ;
 	return data;
 }
@@ -193,7 +193,7 @@ chatFeed.prototype.app_chat_feed_data_running = function()
 chatFeed.prototype.app_chat_feed_data_init = function()
 {
 
-	var data = Lincko.storage.list(null, null , {'_type': ['!=', 'chats'],}, 'chats', this.id, true);
+	var data = Lincko.storage.list(null, null , {'_type': ['!=', 'chats'],}, 'chats', this.id, false);
 	this.running_last_time = data.length > 0 ? data[0]['created_at'] : 0 ;
 
 	var suffix;
@@ -236,7 +236,7 @@ chatFeed.prototype.app_chat_feed_data_init = function()
 chatFeed.prototype.app_chat_feed_more_msg = function(){
 	this.records = [];
 	if(!this.collecting){
-		var data = Lincko.storage.list(null, null , {'created_at': ['<=', this.top_time], '_type': ['!=', 'chats']}, 'chats', this.id, true);
+		var data = Lincko.storage.list(null, null , {'created_at': ['<=', this.top_time], '_type': ['!=', 'chats']}, 'chats', this.id, false);
 		var suffix;
 		for(var i in data)
 		{

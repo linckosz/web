@@ -603,7 +603,7 @@ var app_models_projects_chart_tasks_data = function(Elem_id, id, chart_display_r
 	var deleted_at;
 	var in_charge = false;
 	var project = Lincko.storage.get("projects", id);
-	var tasks = Lincko.storage.list('tasks', -1, null, 'projects', id);
+	var tasks = Lincko.storage.list('tasks', -1, { _tasksup: null,}, 'projects', id);
 
 
 	if(tasks.length<=3){ //Start to display a graphic after 3 tasks created

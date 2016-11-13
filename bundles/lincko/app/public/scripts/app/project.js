@@ -33,13 +33,13 @@ var mainMenu = {
 	},
 
 	initProjectTab_timer: false,
-	initProjectTab: function(force){
+	initProjectTab: function(force){//console.log('initProjectTab');
 		if(!force && mainMenu.initProjectTab_timer){
 			return false;
 		}
 		clearTimeout(mainMenu.initProjectTab_timer);
 		mainMenu.initProjectTab_timer = setTimeout(function(force){
-			var projects_all = app_models_projects_list(false, 6); //6 = 1 personal + 5 others
+			var projects_all = app_models_projects_list(false, 5); //5 = 1 personal + 5 others
 			var projectList = $.merge(projects_all[1], projects_all[2]);
 			var projects_total = projects_all[3];
 			delete projects_all;
@@ -90,9 +90,9 @@ var mainMenu = {
 				}
 				if(force || pid!=parseInt(item.attr('pid'), 10) || timestamp!=parseInt(item.attr('timestamp'), 10)){
 					item.find("[find=app_project_projects_title]").html(wrapper_to_html(projectList[i]['+title']));
-					tasks = app_models_projects_adjust_format(Lincko.storage.list('tasks', null, {approved: false, _tasksup: null,}, 'projects', pid, true).length);
-					notes = app_models_projects_adjust_format(Lincko.storage.list('notes', null, null, 'projects', pid, true).length);
-					files = app_models_projects_adjust_format(Lincko.storage.list('files', null, null, 'projects', pid, true).length);
+					tasks = app_models_projects_adjust_format(Lincko.storage.cache.getStatistcis('projects', pid, 'tasks'));
+					notes = app_models_projects_adjust_format(Lincko.storage.cache.getStatistcis('projects', pid, 'notes'));
+					files = app_models_projects_adjust_format(Lincko.storage.cache.getStatistcis('projects', pid, 'files'));
 					item.find("[find=app_project_projects_tasks]").html(wrapper_to_html(tasks));
 					item.find("[find=app_project_projects_notes]").html(wrapper_to_html(notes));
 					item.find("[find=app_project_projects_files]").html(wrapper_to_html(files));
@@ -107,7 +107,7 @@ var mainMenu = {
 	},
 
 	initChatTab_timer: false,
-	initChatTab: function(force){
+	initChatTab: function(force){//console.log('initChatTab');
 		if(!force && mainMenu.initChatTab_timer){
 			return false;
 		}

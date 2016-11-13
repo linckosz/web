@@ -13,18 +13,18 @@ var app_models_history = {
 		delete app_models_history.hist_root[type+'_'+id];
 	},
 
-	tabList: function(limit, parent_type, parent_id){
+	tabList: function(limit, parent_type, parent_id){//console.log('tabList');
 		if(typeof limit != 'number' || limit<=0){ limit = false; }
 		if(typeof parent_type == 'undefined'){ parent_type = false; }
 		if(typeof parent_id == 'undefined'){ parent_id = false; }
-		
 		var exclude = false;
-		if(parent_type && parent_id){
-			//If parent is a project, .hist will reject all chats activity inside it
+		if(parent_type && parent_id && parent_type=="projects"){
+			//If parent is a project, .hist will reject automatically all chats activity inside it
+			// "Lincko.storage.cache.exclude_projects" is internally used in .hist()
 			var hist_all = Lincko.storage.hist(null, -1, null, parent_type, parent_id, true, true, false);
 		} else {
 			var hist_all = Lincko.storage.hist();
-			exclude = Lincko.storage.itemsNotInProjectActivity();
+			exclude = Lincko.storage.cache.exclude_chats;
 		}
 		
 		var histList = [];
@@ -67,10 +67,6 @@ var app_models_history = {
 			root_name = root_item["_type"]+"_"+root_item["_id"];
 			name = hist_all[i]["type"]+"_"+hist_all[i]["id"];
 			if(root_item && typeof hist_num[root_name] == "undefined"){
-				if(root_item["_type"]=="projects" && exclude && exclude[hist_all[i]["type"]] && exclude[hist_all[i]["id"]]){
-					//Exclude everything about chats inside project activity
-					continue;
-				}
 				if(root_item["_type"]=="projects" && !hist_all[i]["by"] && hist_all[i]["type"]=="comments"){
 					comment = Lincko.storage.get('comments', hist_all[i]["id"], 'comment');
 					if(comment=="" || comment=="100" || comment=="700"){
@@ -109,6 +105,10 @@ var app_models_history = {
 						continue;
 					}
 				}
+				if(exclude && exclude[hist_all[i]["type"]] && exclude[hist_all[i]["type"]][hist_all[i]["id"]]){
+					//We exclude what we need to exclude
+					continue;
+				}
 
 				if(app_models_history.hist_root[root_name] && app_models_history.hist_root[root_name].name == name && app_models_history.hist_root[root_name].timestamp == hist_all[i]["timestamp"]){
 					date.setTime(app_models_history.hist_root[root_name].timestamp);
@@ -118,7 +118,8 @@ var app_models_history = {
 						app_models_history.hist_root[root_name].date = date.display('time_short');
 					}
 					app_models_history.hist_root[root_name].notif = false;
-					if(Lincko.storage.hist(null, 1, {not: true}, root_item["_type"], root_item["_id"], true).length > 0){
+					//if(Lincko.storage.hist(null, 1, {not: true}, root_item["_type"], root_item["_id"], true).length > 0){
+					if(Lincko.storage.cache.notify[root_item["_type"]] && Lincko.storage.cache.notify[root_item["_type"]][root_item["_id"]]){
 						app_models_history.hist_root[root_name].notif = true;
 					}
 				} else {
@@ -131,7 +132,8 @@ var app_models_history = {
 					info[i].by = false;
 
 					info[i].notif = false;
-					if(Lincko.storage.hist(null, 1, {not: true}, root_item["_type"], root_item["_id"], true).length > 0){
+					//if(Lincko.storage.hist(null, 1, {not: true}, root_item["_type"], root_item["_id"], true).length > 0){
+					if(Lincko.storage.cache.notify[root_item["_type"]] && Lincko.storage.cache.notify[root_item["_type"]][root_item["_id"]]){
 						info[i].notif = true;
 					}
 

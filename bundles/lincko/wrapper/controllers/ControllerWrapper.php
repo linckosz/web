@@ -13,7 +13,7 @@ class ControllerWrapper extends Controller {
 	protected $action = NULL;
 	protected $resignin = false; //It should not, but avoid to loop
 	protected $form_id = false;
-	protected $show_error = true;
+	protected $show_error = false;
 
 	protected $json = array(
 		'api_key' => '', //Software authorization key

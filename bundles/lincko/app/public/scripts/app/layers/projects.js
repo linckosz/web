@@ -120,20 +120,14 @@ var app_layers_projects_feedPage = function(param, animation){
 		if(Lincko.storage.favorite('projects', item['_id'])){
 			Elem.find("[find=favorite]").css('visibility', 'visible');
 		}
-		tasks = Lincko.storage.list('tasks', -1, null, 'projects', item['_id']);
-		for(var j in tasks){
-			//Do not count canceled tasks
-			if(tasks[j]['status'] == 3){
-				delete tasks[j];
-			}
-		}
-		
+		tasks = Lincko.storage.list('tasks', -1, { _tasksup: null,}, 'projects', item['_id']);
+
 		progress = 0;
 		tasks_remain = 0;
 		tasks_total = tasks.length;
 		if(tasks_total > 0){
 			for(var j in tasks){
-				if(tasks[j]['status'] == 1){ //Done
+				if(tasks[j]['approved'] == true){ //Done
 					progress = progress + 100;
 				} else { //Pause || Ongoing
 					tasks_remain++;

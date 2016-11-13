@@ -517,6 +517,9 @@ ActivityFileContentCls.prototype.feed_action = function(elem,subm){
 
 var ActivityContentCls = function(record,type)
 {
+	if(typeof record['hist'] != 'undefined'){
+		this.hist = record['hist'];
+	}
 	this.id = record['id'];
 	this.category = record['type'];
 	this.target_id =  record['id'];
@@ -788,7 +791,7 @@ historyFeed.prototype.app_chat_feed_data_history = function()
 {
 	var data = this.type == 'history' ? 
 			Lincko.storage.hist(null, null , {att:['!=','recalled_by']}, 'projects',this.id, true)
-			: Lincko.storage.list(null, null, {_type:'messages'}, 'chats', this.id, true);
+			: Lincko.storage.list(null, null, {_type:'messages'}, 'chats', this.id, false);
 	return data;
 }
 
@@ -862,7 +865,7 @@ historyFeed.prototype.app_chat_feed_data_running = function()
 
 	var data = this.type == 'history'  ? 
 			Lincko.storage.hist(null, null , last_time == 0 ? {att:['!=','recalled_by']} : {att:['!=','recalled_by'],timestamp: [">=", last_time]}, 'projects', this.id, true)
-			: Lincko.storage.list(null, null , last_time == 0 ? null : {'created_at': [">=", last_time]}, 'chats', this.id, true);
+			: Lincko.storage.list(null, null , last_time == 0 ? null : {'created_at': [">=", last_time]}, 'chats', this.id, false);
 	if(data.length>0)
 	{
 		var key = this.type == 'history' ? 'timestamp' : 'created_at' ;

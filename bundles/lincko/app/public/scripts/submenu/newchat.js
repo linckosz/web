@@ -33,7 +33,7 @@ submenu_list['newchat'] = {
 		"class": "icon-largerGroup base_pointer submenu_chats_settings",
 		"action": function(Elem, subm) {
 			if(subm.param.type == 'chats' && !Lincko.storage.get('chats', subm.param.id, 'single')){
-				submenu_Build('edit_group', -1, true, {type: 'chats', id: subm.param.id, alwaysMe:true, }, subm.preview);
+				submenu_Build('edit_group', subm.layer+1, true, {type: 'chats', id: subm.param.id, alwaysMe:true, }, subm.preview);
 			}
 		}
 	},

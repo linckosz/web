@@ -10,6 +10,12 @@ submenu_list['projects_list'] = {
 		'hide': true,
 		"class": "base_pointer",
 	},
+	"pre_action": {
+		"style": "preAction",
+		"action": function(Elem, subm){
+			submenu_projects_build_list();
+		},
+	},
 };
 
 var submenu_projects_build_list = function(){
@@ -84,10 +90,9 @@ Submenu.prototype.Add_MenuProjects = function() {
 	var projects_id = attribute.action_param.projects_id;
 	Elem.prop("id", "submenu_projects_title_"+that.id+"_"+projects_id);
 
-	var tasks = app_models_projects_adjust_format(Lincko.storage.list('tasks', null, {approved: false, _tasksup: null,}, 'projects', projects_id, true).length);
-	var notes = app_models_projects_adjust_format(Lincko.storage.list('notes', null, null, 'projects', projects_id, true).length);
-	var files = app_models_projects_adjust_format(Lincko.storage.list('files', null, null, 'projects', projects_id, true).length);
-
+	var tasks = app_models_projects_adjust_format(Lincko.storage.cache.getStatistcis('projects', projects_id, 'tasks'));
+	var notes = app_models_projects_adjust_format(Lincko.storage.cache.getStatistcis('projects', projects_id, 'notes'));
+	var files = app_models_projects_adjust_format(Lincko.storage.cache.getStatistcis('projects', projects_id, 'files'));
 	Elem.find("[find=submenu_projects_statistics_tasks]").html(wrapper_to_html(tasks));
 	Elem.find("[find=submenu_projects_statistics_notes]").html(wrapper_to_html(notes));
 	Elem.find("[find=submenu_projects_statistics_files]").html(wrapper_to_html(files));
@@ -156,9 +161,9 @@ Submenu.prototype.Add_MenuProjects = function() {
 			var name = wrapper_to_html(project["+title"]);
 		}
 		Elem.find("[find=submenu_projects_title]").html(name);
-		var tasks = app_models_projects_adjust_format(Lincko.storage.list('tasks', null, {approved: false, _tasksup: null,}, 'projects', projects_id, true).length);
-		var notes = app_models_projects_adjust_format(Lincko.storage.list('notes', null, null, 'projects', projects_id, true).length);
-		var files = app_models_projects_adjust_format(Lincko.storage.list('files', null, null, 'projects', projects_id, true).length);
+		var tasks = app_models_projects_adjust_format(Lincko.storage.cache.getStatistcis('projects', projects_id, 'tasks'));
+		var notes = app_models_projects_adjust_format(Lincko.storage.cache.getStatistcis('projects', projects_id, 'notes'));
+		var files = app_models_projects_adjust_format(Lincko.storage.cache.getStatistcis('projects', projects_id, 'files'));
 		Elem.find("[find=submenu_projects_statistics_tasks]").html(wrapper_to_html(tasks));
 		Elem.find("[find=submenu_projects_statistics_notes]").html(wrapper_to_html(notes));
 		Elem.find("[find=submenu_projects_statistics_files]").html(wrapper_to_html(files));
@@ -166,11 +171,6 @@ Submenu.prototype.Add_MenuProjects = function() {
 
 	return true;
 };
-
-JSfiles.finish(function(){
-	submenu_projects_build_list();
-	app_application_lincko.add(submenu_projects_build_list, ['projects', 'first_launch']);
-});
 
 var submenu_projects_charts_options = {
 	showTooltips: false,
