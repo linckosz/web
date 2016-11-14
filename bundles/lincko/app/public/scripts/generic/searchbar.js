@@ -95,8 +95,11 @@ var searchbar = {
 					burgerOnly = '++';
 				}
 
+				//users search
 				userid_array = searchbar.searchByUsername(word, Object.keys(item._perm));
-				if(!word.length || (Lincko.storage.searchArray('word', word, [item]).length > 0 && !burgerOnly) ){
+
+				//+title (tasks) and +name (files) search
+				if(!word.length || (Lincko.storage.searchArray('word', word, [item], ['+title', '+name'], true).length > 0 && !burgerOnly) ){
 					push = true;
 					break;
 				}

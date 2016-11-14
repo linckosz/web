@@ -920,8 +920,10 @@ Lincko.storage.search = function(type, param, category){
 /*
 	array - array of items to conduct search
 	results - will return array not object
+	attr - optional: (str or array) specific attribute to search
+	pinyin - optional: default is false. whether to apply pinyin match
 */
-Lincko.storage.searchArray = function(type, param, array, pinyin){
+Lincko.storage.searchArray = function(type, param, array, attr, pinyin){
 	var results = [];
 	var find = [];
 	var save_result = false;
@@ -934,6 +936,13 @@ Lincko.storage.searchArray = function(type, param, array, pinyin){
 		var save_result = false;
 		//Scan each property of an item (don't forget to include "+")
 		for(var prop in item) {
+
+			//if specific attr is wanted, but doesnt match the prop, continue
+			if(attr){
+				if(typeof attr == 'string' && prop != attr){ continue; }
+				if($.type(attr) == 'array' && $.inArray(prop, attr) == -1){ continue; }
+			}
+
 			if((prop.indexOf('-')===0 || prop.indexOf('+')===0) && typeof item[prop]==='string'){
 				if(item[prop].toLowerCase().indexOf(param)!==-1){
 					save_result = true;
