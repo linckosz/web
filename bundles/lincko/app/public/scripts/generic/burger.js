@@ -2065,7 +2065,6 @@ var burger_spanUser = function(userid, text){
 	if(!text){
 		var text = Lincko.storage.get("users", userid ,"username");
 	}
-
 	if(!text){
 		text = Lincko.Translation.get('app', 3608, 'html'); //'Not Assigned'
 	}

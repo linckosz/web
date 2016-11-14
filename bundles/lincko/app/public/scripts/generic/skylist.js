@@ -1023,9 +1023,11 @@ skylist.prototype.paperview_partialUpdate = function(updated_tasks){
 	}
 /*	should retrun true for the following updates: (which means use paperview_taskCard_update() ) */
 	var partialUpdateList = {
+		'+title': true,
 		_files : true,
 		_children : true, //(i.e. comments)
-		//_users : true, toto - handle this in the next release
+		_users : true,
+		duration: true,
 		updated_at : true,
 		viewed_by : true,
 		_tasksdown: true,
@@ -1046,6 +1048,17 @@ skylist.prototype.paperview_partialUpdate = function(updated_tasks){
 skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
 	var that = this;
 	var elem_card_rightbox = elem.find('[find=card_rightbox]');
+
+	//if '+title', '_users', 'duration' is updated
+	if((typeof updated == 'boolean' && updated) || updated['+title'] || updated._users || updated.duration){
+		var elem_title = elem.find('[find=title]');
+		var span_date = burger_spanDate(skylist_calcDuedate(item));
+		var span_user = burger_spanUser(tasks_get_inCharge_id(item['_id'])[0]);
+		burger_attach_clickHandler.in_charge(span_user, item._type, item._id, null, true, null);
+		elem_title.text(item['+title']);
+		elem_title.append(span_user).append(span_date);
+	}
+
 	
 	//if links were updated
 	if((typeof updated == 'boolean' && updated) || updated._files || updated._notes){

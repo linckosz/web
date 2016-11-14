@@ -71,3 +71,22 @@ submenu_list['app_task_new'] = {
 		"class": "",
 	},
 };
+
+var tasks_get_inCharge_id = function(task_id, resultType){
+	var result = [];
+	var item = Lincko.storage.get('tasks', task_id);
+	if(item['_users']){
+		for (var i in item['_users']){
+			if( i && item['_users'][i]['in_charge']==true ){
+				if(resultType == 'username'){
+					var username = Lincko.storage.get("users", i ,"username");
+					if(username){ result.push(username); }
+				}
+				else{
+					result.push(i);
+				}
+			}
+		}
+	}
+	return result;
+}
