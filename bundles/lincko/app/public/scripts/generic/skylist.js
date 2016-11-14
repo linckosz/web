@@ -586,17 +586,15 @@ skylist.prototype.filter_by_search = function(items, filter){
 	if( filter == null || filter == "" ){
 		return items;
 	}
-	else{
-		filter = $.trim(filter);
-		var filter_array = filter.split(/\s+/);
+	else if(typeof filter == 'string'){
+		filter = $.trim(filter).split(/\s+/);
 	}
 
 	if( that.search_chat ){
-		items_filtered = that.search_chat(items, filter_array);
+		items_filtered = that.search_chat(items, filter);
 	}
 	else{
-
-		$.each(searchbar.filterLinckoItems(items, filter_array), function(i, item){
+		$.each(searchbar.filterLinckoItems(items, filter), function(i, item){
 			items_filtered.push(item);
 		});
 	}
@@ -2905,7 +2903,7 @@ skylist.prototype.menu_construct = function(){
 	//build searchbar
 	var searchbarInst = null;
 	var searchbar_keyup = function(words){
-		that.tasklist_update('search',words);
+		that.tasklist_update('search', words);
 	}
 	searchbarInst = searchbar.construct(searchbar_keyup);
 	that.elem_navbar.append(searchbarInst.elem.addClass('skylist_menu_navbar_search'));
