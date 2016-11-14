@@ -95,7 +95,7 @@ var searchbar = {
 					burgerOnly = '++';
 				}
 
-				userid_array = searchbar.searchByUsername(word); //this takes a long time
+				userid_array = searchbar.searchByUsername(word, Object.keys(item._perm));
 				if(!word.length || (Lincko.storage.searchArray('word', word, [item]).length > 0 && !burgerOnly) ){
 					push = true;
 					break;
@@ -137,8 +137,24 @@ var searchbar = {
 		return items_filtered;
 	},
 
-	searchByUsername: function(username){
+	searchByUsername: function(username, arr_ids){
 		var userid_array = [];
+		if(typeof arr_ids == 'object' && arr_ids.length){ //search only within the given ids in arr_ids
+			var user_list = [];
+			$.each(arr_ids, function(i, id){ //get user object for each id
+				var user = Lincko.storage.get('users', id);
+				if(user){ user_list.push(user); }
+			});
+			user_list = Lincko.storage.searchArray('word', username, user_list, true); //search the object to match the username
+			if(user_list.length){
+				$.each(user_list, function(i, item){
+					userid_array.push(item._id);
+				});
+			}
+			return userid_array;
+		}
+
+
 		var result = Lincko.storage.search('word', username, 'users');
 		if($.isEmptyObject(result)){
 			return false;

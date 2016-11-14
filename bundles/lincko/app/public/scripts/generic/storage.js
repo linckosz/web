@@ -921,12 +921,13 @@ Lincko.storage.search = function(type, param, category){
 	array - array of items to conduct search
 	results - will return array not object
 */
-Lincko.storage.searchArray = function(type, param, array){
+Lincko.storage.searchArray = function(type, param, array, pinyin){
 	var results = [];
 	var find = [];
 	var save_result = false;
 	type = type.toLowerCase();
 	if(typeof param === 'string'){ param = param.toLowerCase(); }
+	if(typeof pinyin != 'boolean'){ var pinyin = false; }
 
 	//List all items in a category that contain a word
 	find['word'] = function(item){
@@ -935,6 +936,9 @@ Lincko.storage.searchArray = function(type, param, array){
 		for(var prop in item) {
 			if((prop.indexOf('-')===0 || prop.indexOf('+')===0) && typeof item[prop]==='string'){
 				if(item[prop].toLowerCase().indexOf(param)!==-1){
+					save_result = true;
+				}
+				else if(pinyin && (Pinyin.GetQP(item[prop])).indexOf(Pinyin.GetQP(param)) !== -1){ //convert hanzi into pinyin and match
 					save_result = true;
 				}
 			}
@@ -957,7 +961,7 @@ Lincko.storage.searchArray = function(type, param, array){
 								|| ((typeof save_result['personal_private']==='string' || typeof save_result['personal_private']==='number') && (save_result['personal_private']==null || save_result['personal_private']==0))
 							){
 								if(typeof results === 'undefined'){ results = []; }
-								results[item] = save_result;
+								results.push(save_result);
 							}
 						}
 					}
