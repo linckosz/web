@@ -1424,42 +1424,7 @@ skylist.prototype.addTask = function(item){
 
 	if(that.Lincko_itemsList_filter.view == 'paper'){
 		var elem_title_spanUser = burger_spanUser(in_chargeID, in_charge);
-
-
-		var burger_cb_select = function(data){
-			var param = {
-				id: item['_id'],
-				'users>in_charge': {},
-			};
-			if(data.preSelect){
-				param['users>in_charge'][data.val] = false;
-			}
-			else{
-				param['users>in_charge'][data.val] = true;
-			}
-
-			//unassign anyone that have been previously assigned
-			$.each(item._users, function(userid, obj){
-				if(data.val == userid){return;}
-				if(obj.in_charge){
-					param['users>in_charge'][userid] = false;
-				}
-			});
-
-			skylist.sendAction.tasks(
-				param, 
-				item, 'task/update',
-				function(msg, data_error, data_status, data_msg){ 
-					if(data_error){
-						app_application_lincko.prepare(item['_type']+'_'+item['_id']);
-					}
-				},
-				function(){ app_application_lincko.prepare(item['_type']+'_'+item['_id']); }
-			);
-
-		}
-
-		burger_attach_clickHandler.in_charge(elem_title_spanUser, item['_type'], item['_id'], null, burger_cb_select);
+		burger_attach_clickHandler.in_charge(elem_title_spanUser, item['_type'], item['_id'], null, true);
 		elem_title.append(elem_title_spanUser);
 	}
 

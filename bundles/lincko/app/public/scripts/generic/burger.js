@@ -11,10 +11,50 @@ var burger_attach_clickHandler = {
 
 	in_charge: function(elem, lincko_type, lincko_id, cb_create, cb_select, cb_destroy){
 		if(!elem instanceof $){ elem = $(elem); }
-		if(typeof cb_create != 'function'){ cb_create = null; }
-		if(typeof cb_select != 'function'){ cb_select = null; }
-		if(typeof cb_destroy != 'function'){ cb_destroy = null; }
+		if(typeof cb_create != 'function'){ var cb_create = null; }
+		if(typeof cb_select != 'function' && typeof cb_select != 'boolean' && !cb_select){ var cb_select = null; }
+		if(typeof cb_destroy != 'function'){ var cb_destroy = null; }
+		
 
+		//default cb_select for in_charge
+		if(cb_select && typeof cb_select == 'boolean'){
+			var cb_select = function(data){
+				var param = {
+					id: lincko_id,
+					'users>in_charge': {},
+				};
+				if(data.preSelect){
+					param['users>in_charge'][data.val] = false;
+				}
+				else{
+					param['users>in_charge'][data.val] = true;
+				}
+
+				var lincko_item = Lincko.storage.get(lincko_type, lincko_id);
+				if(!lincko_item){ return false; }
+
+				if(lincko_item._users){
+					//unassign anyone that have been previously assigned
+					$.each(lincko_item._users, function(userid, obj){
+						if(data.val == userid){return;}
+						if(obj.in_charge){
+							param['users>in_charge'][userid] = false;
+						}
+					});
+				}
+
+				skylist.sendAction.tasks(
+					param, 
+					lincko_item, 'task/update',
+					function(msg, data_error, data_status, data_msg){ 
+						if(data_error){
+							app_application_lincko.prepare(lincko_type+'_'+lincko_id);
+						}
+					},
+					function(){ app_application_lincko.prepare(lincko_type+'_'+lincko_id); }
+				);
+			}
+		}//END OF default cb_select
 		
 		var list = burger_list.in_charge(lincko_type, lincko_id);
 		var dropdownInst = null;
@@ -42,7 +82,6 @@ var burger_attach_clickHandler = {
 
 		return dropdownInst;
 	},
-
 }
 
 
