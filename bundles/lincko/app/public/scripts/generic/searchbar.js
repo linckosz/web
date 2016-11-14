@@ -96,7 +96,7 @@ var searchbar = {
 				}
 
 				userid_array = searchbar.searchByUsername(word, Object.keys(item._perm));
-				if(!word.length || (Lincko.storage.searchArray('word', word, [item]).length > 0 && !burgerOnly) ){
+				if(!word.length || (Lincko.storage.searchArray('word', word, [item], true).length > 0 && !burgerOnly) ){
 					push = true;
 					break;
 				}
@@ -151,18 +151,6 @@ var searchbar = {
 					userid_array.push(item._id);
 				});
 			}
-			return userid_array;
-		}
-
-
-		var result = Lincko.storage.search('word', username, 'users');
-		if($.isEmptyObject(result)){
-			return false;
-		}
-		else{
-			$.each( result.users, function( key, value ) {
-				userid_array.push(key);
-			});
 			return userid_array;
 		}
 	},
