@@ -311,7 +311,10 @@ burger_dropdown.prototype.build_elem = function(){
     			that.i_current++;
     		}
 
-    		if(that.i_current < 0 || that.i_current >= that.count_total){
+    		if(that.i_current < 0){
+    			that.i_current = that.count_total -1;
+    		}
+    		else if(that.i_current >= that.count_total){
     			that.i_current = 0;
     		}
 
