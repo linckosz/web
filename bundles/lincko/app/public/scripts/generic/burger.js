@@ -9,11 +9,12 @@
 
 var burger_attach_clickHandler = {
 
-	in_charge: function(elem, lincko_type, lincko_id, cb_create, cb_select, cb_destroy){
+	in_charge: function(elem, lincko_type, lincko_id, cb_create, cb_select, cb_destroy, responsiveRange){
 		if(!elem instanceof $){ elem = $(elem); }
 		if(typeof cb_create != 'function'){ var cb_create = null; }
 		if(typeof cb_select != 'function' && typeof cb_select != 'boolean' && !cb_select){ var cb_select = null; }
 		if(typeof cb_destroy != 'function'){ var cb_destroy = null; }
+		if(responsiveRange && typeof resonsiveRange != 'string'){ var responsiveRange = 'maxMobileL'; } //default maxMobileL
 		
 
 		//default cb_select for in_charge
@@ -59,7 +60,7 @@ var burger_attach_clickHandler = {
 		var list = burger_list.in_charge(lincko_type, lincko_id);
 		var dropdownInst = null;
 		elem.click(function(){
-			if( (!dropdownInst || dropdownInst.destroyed) && Lincko.storage.canI('edit', lincko_type, lincko_id)){
+			if( (!dropdownInst || dropdownInst.destroyed) && (!responsiveRange || responsive.test(responsiveRange)) && Lincko.storage.canI('edit', lincko_type, lincko_id)){
 				dropdownInst = new burger_dropdown('toto', list, elem, null, null, cb_select, null, false); 
 			}
 		});
