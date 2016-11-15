@@ -35,6 +35,7 @@ var app_application_lincko = {
 			exists_param: null,					//optional parameters
 			deletion: function(){},				//If HTML element or related objects are missing, we take a deletion action
 			deletion_param: null,				//optional parameters
+			timer: false,						//Avoid to run 2 actions at the same time
 		};
 
 		if(typeof action_param !== 'undefined'){ item.action_param = action_param; }
@@ -132,7 +133,6 @@ var app_application_lincko = {
 			for(var field in temp_fields){
 				if(!this._fields[field]){
 					this._fields[field] = temp_fields[field];
-					//this._fields[field] = true;
 				}
 			}
 
@@ -158,7 +158,10 @@ var app_application_lincko = {
 										}
 									}
 									this._elements[Elem_id].updated = updated;
-									this._elements[Elem_id].action();
+									clearTimeout(this._elements[Elem_id].timer);
+									this._elements[Elem_id].timer = setTimeout(function(element){
+											element.action();
+									}, 0, this._elements[Elem_id]);
 								} catch(e) {
 									var instance = "Other";
 									if (e instanceof TypeError) {
@@ -463,7 +466,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 		app_generic_state.change({
 			mainmenu: false,
 		}, null, -1);
-		time = 200;
+		time = 150;
 		if(true || responsive.test("maxTablet")){
 			time = Math.floor(2.5*time);
 		}
@@ -523,6 +526,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				mobileHA: hasGood3Dsupport,
 				duration: time,
 				delay: delay,
+				easing: "linear",
 				progress: function(){
 					if(responsive.test("minTablet")){
 						app_content_dynamic_position();
@@ -537,7 +541,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 						Block.removeClass('app_application_block_visible');
 						Elem.removeClass('app_application_visible');
 						app_application_move_mainmenu_block = false;
-					},50);
+					}, 50);
 				},
 			}
 		);
@@ -547,7 +551,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 		app_generic_state.change({
 			mainmenu: true,
 		}, null, 1);
-		time = 300;
+		time = 200;
 		if(true || responsive.test("maxTablet")){
 			time = Math.floor(2*time);
 		}
@@ -615,6 +619,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				mobileHA: hasGood3Dsupport,
 				duration: time,
 				delay: delay,
+				easing: "linear",
 				progress: function(){
 					if(responsive.test("minTablet")){
 						app_content_dynamic_position();
@@ -632,7 +637,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 							$(this).addClass('app_application_width');
 						});
 						app_application_move_mainmenu_block = false;
-					},50);
+					}, 50);
 				},
 			}
 		);

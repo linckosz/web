@@ -49,13 +49,15 @@ jQuery.prototype.recursiveEmpty = function(delay){
 	if(delay>0){
 		var Children = this.contents();
 		setTimeout(function(Children){
-			Children
-				.contents().each(function () {
-					$(this)
-						.recursiveEmpty(0)
-						.removeData()
-						.remove();
-				});
+			if(Children){
+				Children
+					.contents().each(function () {
+						$(this)
+							.recursiveEmpty(0)
+							.removeData()
+							.remove();
+					});
+			}
 		}, delay, Children);
 	} else {
 		this

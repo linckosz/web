@@ -3,30 +3,78 @@ var app_models_cache_history = {};
 var app_models_history = {
 
 	hist_root: {},
+	hist_root_recent: [],
 
 	reset: function(){
 		app_models_history.hist_root = {};
+		app_models_history.hist_root_recent = [];
 	},
 
 	refresh: function(type, id){
-		app_models_history.hist_root[type+'_'+id] = null;
-		delete app_models_history.hist_root[type+'_'+id];
+		if(app_models_history.hist_root[type+'_'+id]){
+			app_models_history.hist_root[type+'_'+id] = null;
+			delete app_models_history.hist_root[type+'_'+id];
+			app_models_history.hist_root_recent = [];
+		}	
 	},
 
-	tabList: function(limit, parent_type, parent_id){//console.log('tabList');
+	getList: function(limit, parent_type, parent_id){
 		if(typeof limit != 'number' || limit<=0){ limit = false; }
 		if(typeof parent_type == 'undefined'){ parent_type = false; }
 		if(typeof parent_id == 'undefined'){ parent_id = false; }
-		var exclude = false;
-		if(parent_type && parent_id && parent_type=="projects"){
-			//If parent is a project, .hist will reject automatically all chats activity inside it
-			// "Lincko.storage.cache.exclude_projects" is internally used in .hist()
-			var hist_all = Lincko.storage.hist(null, -1, null, parent_type, parent_id, true, true, false);
-		} else {
-			var hist_all = Lincko.storage.hist();
-			exclude = Lincko.storage.cache.exclude_chats;
+
+		var histList = [];
+		var item;
+
+		if(app_models_history.hist_root_recent.length==0){
+			app_models_history.tabList();
 		}
-		
+
+		if(limit){
+			for(var i in app_models_history.hist_root_recent){
+				if(parent_type && parent_id && parent_type=="projects"){
+					if(app_models_history.hist_root_recent[i]['root_type']==parent_type && app_models_history.hist_root_recent[i]['root_id']==parent_id){
+						histList.push(app_models_history.hist_root_recent[i]);
+					} else {
+						//Check if the chat belongs to the project
+						item = Lincko.storage.get(app_models_history.hist_root_recent[i]['root_type'], app_models_history.hist_root_recent[i]['root_id']);
+						if(item && item['_parent'][0]==parent_type && item['_parent'][1]==parent_id){
+							histList.push(app_models_history.hist_root_recent[i]);
+						}
+					}
+				} else {
+					histList.push(app_models_history.hist_root_recent[i]);
+				}
+				if(histList.length>=limit){
+					break;
+				}
+			}
+		} else {
+			if(parent_type && parent_id && parent_type=="projects"){
+				for(var i in app_models_history.hist_root_recent){
+					if(app_models_history.hist_root_recent[i]['root_type']==parent_type && app_models_history.hist_root_recent[i]['root_id']==parent_id){
+						histList.push(app_models_history.hist_root_recent[i]);
+					} else {
+						//Check if the chat belongs to the project
+						item = Lincko.storage.get(app_models_history.hist_root_recent[i]['root_type'], app_models_history.hist_root_recent[i]['root_id']);
+						if(item && item['_parent'][0]==parent_type && item['_parent'][1]==parent_id){
+							histList.push(app_models_history.hist_root_recent[i]);
+						}
+					}
+				}
+			} else {
+				histList = app_models_history.hist_root_recent;
+			}
+		}
+
+		return histList;
+	},
+
+	tabList: function(limit, parent_type, parent_id){
+		if(typeof limit != 'number' || limit<=0){ limit = false; }
+		if(typeof parent_type == 'undefined'){ parent_type = false; }
+		if(typeof parent_id == 'undefined'){ parent_id = false; }
+
 		var histList = [];
 		var hist_num = {};
 		var item;
@@ -42,8 +90,18 @@ var app_models_history = {
 		var user_icon = false;
 		var date = new wrapper_date();
 		var startOfDay = date.getDayStartTimestamp(); //timestamp of beginning of the day taking in account the timezone
-
+		var reset_order = false; //At true we sort the list for faster operation to grab information
 		var info = {};
+
+		var exclude = false;
+		if(parent_type && parent_id && parent_type=="projects"){
+			//If parent is a project, .hist will reject automatically all chats activity inside it
+			// "Lincko.storage.cache.getExcludeProjects" is internally used in .hist()
+			var hist_all = Lincko.storage.hist(null, -1, null, parent_type, parent_id, true, true, false);
+		} else {
+			var hist_all = Lincko.storage.hist();
+			exclude = Lincko.storage.cache.getExcludeChats();
+		}
 
 		//This return projects or chats item
 		var getRoot = function(type, id){
@@ -66,7 +124,7 @@ var app_models_history = {
 			root_item = getRoot(hist_all[i]["type"], hist_all[i]["id"]); //Accept only Chats and Projects
 			root_name = root_item["_type"]+"_"+root_item["_id"];
 			name = hist_all[i]["type"]+"_"+hist_all[i]["id"];
-			if(root_item && typeof hist_num[root_name] == "undefined"){
+			if(root_item && typeof hist_num[root_name] == "undefined" && root_item['deleted_at']==null){
 				if(root_item["_type"]=="projects" && !hist_all[i]["by"] && hist_all[i]["type"]=="comments"){
 					comment = Lincko.storage.get('comments', hist_all[i]["id"], 'comment');
 					if(comment=="" || comment=="100" || comment=="700"){
@@ -105,6 +163,7 @@ var app_models_history = {
 						continue;
 					}
 				}
+				
 				if(exclude && exclude[hist_all[i]["type"]] && exclude[hist_all[i]["type"]][hist_all[i]["id"]]){
 					//We exclude what we need to exclude
 					continue;
@@ -118,11 +177,11 @@ var app_models_history = {
 						app_models_history.hist_root[root_name].date = date.display('time_short');
 					}
 					app_models_history.hist_root[root_name].notif = false;
-					//if(Lincko.storage.hist(null, 1, {not: true}, root_item["_type"], root_item["_id"], true).length > 0){
-					if(Lincko.storage.cache.notify[root_item["_type"]] && Lincko.storage.cache.notify[root_item["_type"]][root_item["_id"]]){
+					if(Lincko.storage.cache.getNotify(root_item["_type"], root_item["_id"])){
 						app_models_history.hist_root[root_name].notif = true;
 					}
 				} else {
+					reset_order = true;
 					info[i] = {};
 					info[i].name = name;
 					info[i].type = hist_all[i]["type"];
@@ -132,8 +191,7 @@ var app_models_history = {
 					info[i].by = false;
 
 					info[i].notif = false;
-					//if(Lincko.storage.hist(null, 1, {not: true}, root_item["_type"], root_item["_id"], true).length > 0){
-					if(Lincko.storage.cache.notify[root_item["_type"]] && Lincko.storage.cache.notify[root_item["_type"]][root_item["_id"]]){
+					if(Lincko.storage.cache.getNotify(root_item["_type"], root_item["_id"])){
 						info[i].notif = true;
 					}
 
@@ -271,6 +329,11 @@ var app_models_history = {
 					}
 				}
 			}
+		}
+
+		if(reset_order){
+			//This is stored as an array
+			app_models_history.hist_root_recent = Lincko.storage.sort_items(app_models_history.hist_root, 'timestamp',0 , -1, false);
 		}
 
 		return histList;

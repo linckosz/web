@@ -437,12 +437,12 @@ skylist.prototype.generate_Lincko_itemsList = function(){
 	var that = this;
 	that.Lincko_itemsList = [];
 	if (that.list_type == "chats") {
-		that.Lincko_itemsList = app_models_history.tabList(false, 'projects', app_content_menu.projects_id);
+		that.Lincko_itemsList = app_models_history.getList(false, 'projects', app_content_menu.projects_id);
 	}
 	else if (that.list_type == "global_chats") {
-		that.Lincko_itemsList = app_models_history.tabList();
+		that.Lincko_itemsList = app_models_history.getList();
 	}
-	else{
+	else {
 		that.Lincko_itemsList = Lincko.storage.list(that.list_type, null, null, 'projects', app_content_menu.projects_id, true);
 		if( that.list_type == "tasks" ){
 			var item;
@@ -450,7 +450,7 @@ skylist.prototype.generate_Lincko_itemsList = function(){
 				if(that.Lincko_itemsList[i]._tasksup){ //dont show subtasks (i.e. tasks with _tasksup)
 					delete that.Lincko_itemsList[i];
 				}
-				else{
+				else {
 					that.Lincko_itemsList[i]['duedate'] = that.Lincko_itemsList[i]['start'] + that.Lincko_itemsList[i]['duration'];
 				}
 			}
@@ -846,7 +846,7 @@ skylist.prototype.addCard = function(item){
 			[item['root_type']+'_'+item['root_id'], item['name']],
 			function(){
 				var elem = $('#'+this.id);
-				var item_new = app_models_history.tabList(1, item['root_type'], item['root_id'])[0];
+				var item_new = app_models_history.getList(1, item['root_type'], item['root_id'])[0];
 				that.addChat(item_new);
 			}
 		);

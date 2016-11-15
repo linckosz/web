@@ -151,8 +151,10 @@ Lincko.storage.getLastVisit = function(){
 	//We parse the value to insure it will be an integer
 	if(typeof Lincko.storage.last_visit != 'undefined' && Lincko.storage.last_visit !== null){
 		return Lincko.storage.last_visit;
-	} else if(wrapper_localstorage.decrypt('lastvisit')){
-		return Lincko.storage.last_visit = parseInt(wrapper_localstorage.decrypt('lastvisit'), 10);
+	}
+	var decrypt_lastvisit = wrapper_localstorage.decrypt('lastvisit');
+	if(decrypt_lastvisit){
+		return Lincko.storage.last_visit = parseInt(decrypt_lastvisit, 10);
 	} else {
 		return Lincko.storage.last_visit = 0;
 	}
@@ -198,17 +200,16 @@ Lincko.storage.getLatest = function(force){
 		'show_error': false,
 	};
 	//This helps to avoid too many backend runs
+	//http://www.ajax-tutor.com/130/handle-response/
 	if(storage_ajax_latest[lastvisit] && storage_ajax_latest[lastvisit]['readyState']!=4){
 		return true; //Don't launch anymore latest if one is already running
 	} else {
 		for(var i in storage_ajax_latest){
-			if(i != lastvisit){
-				if('abort' in storage_ajax_latest[i]){
-					storage_ajax_latest[i].abort();
-				}
-				storage_ajax_latest[i] = null;
-				delete storage_ajax_latest[i];
+			if('abort' in storage_ajax_latest[i]){
+				storage_ajax_latest[i].abort();
 			}
+			storage_ajax_latest[i] = null;
+			delete storage_ajax_latest[i];
 		}
 		wrapper_sendAction(arr, 'post', 'data/latest', function(){
 			var lastvisit = arr.lastvisit;
@@ -1084,12 +1085,45 @@ Lincko.storage.isProjectActivity = function(type, id) {
 
 //It helps to access some value faster to avoid many calls
 Lincko.storage.cache = {
+	
+	first_init: false,
+	
 	exclude_chats: {},
+	getExcludeChats: function(){
+		if(!this.first_init){
+			this.init();
+			this.first_init = true;
+		}
+		return $.extend(true, {}, this.exclude_chats);
+	},
+	
 	exclude_projects: {},
+	getExcludeProjects: function(){
+		if(!this.first_init){
+			this.init();
+			this.first_init = true;
+		}
+		return $.extend(true, {}, this.exclude_projects);
+	},
+	
 	notify: {},
+	getNotify: function(type, id){
+		if(!this.first_init){
+			this.init();
+			this.first_init = true;
+		}
+		if(this.notify[type] && this.notify[type][id]){
+			return this.notify[type][id];
+		}
+		return false;
+	},
 
 	statistics: {},
-	getStatistcis: function(type, id, cat){
+	getStatistics: function(type, id, cat){
+		if(!this.first_init){
+			this.init();
+			this.first_init = true;
+		}
 		if(this.statistics[type] && this.statistics[type][id] && this.statistics[type][id][cat]){
 			return this.statistics[type][id][cat];
 		}
@@ -1166,7 +1200,6 @@ Lincko.storage.cache = {
 						}
 					}
 				}
-
 			}
 		}
 	},
@@ -1381,9 +1414,10 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 	if(type=='notifications'){
 		//For single Projects activity only, exclude chats activity
 		if(exclude && only_items && parent_type=="projects"){
-			for(var cat in Lincko.storage.cache.exclude_projects){
+			var exclude_projects = Lincko.storage.cache.getExcludeProjects();
+			for(var cat in exclude_projects){
 				if(typeof only_items[cat]!="undefined"){
-					for(var id in Lincko.storage.cache.exclude_projects[cat]){
+					for(var id in exclude_projects[cat]){
 						delete only_items[cat][id];
 					}
 				}

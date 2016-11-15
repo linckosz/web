@@ -360,6 +360,4 @@ var id_onboarding_garbage_launch = app_application_garbage.add('onboarding_garba
 app_application_lincko.add(id_onboarding_garbage_launch, 'launch_onboarding', function(){
 	var launched = onboarding.launch();
 	app_application_garbage.remove(id_onboarding_garbage_launch);
-
 });
-

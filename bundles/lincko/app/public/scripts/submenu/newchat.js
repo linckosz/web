@@ -102,10 +102,12 @@ var app_submenu_scrollto = function(iScroll, last, scroll_time){
 	if(typeof scroll_time == 'undefined'){
 		scroll_time = 0;
 	}
-	setTimeout(function(){
+	setTimeout(function(last){
 		submenu_resize_content();
-		iScroll.scrollToElement(last, scroll_time);
-	}, 50);
+		if(last){
+			iScroll.scrollToElement(last, scroll_time);
+		}
+	}, 50, last);
 }
 
 Submenu.prototype.Add_ChatContents = function() {

@@ -119,7 +119,7 @@ Submenu.prototype.Add_ChatMenu = function() {
 	var Elem = $('#-submenu_app_chat_chatmenu').clone();
 	var that = this;
 	Elem.prop("id", this.id+"_submenu_app_chat_chatmenu");
-	submenu_wrapper.find("[find=submenu_wrapper_bottom]").addClass('submenu_bottom');
+	submenu_wrapper.find("[find=submenu_wrapper_bottom]").addClass('submenu_bottom base_optionTab');
 	submenu_wrapper.find("[find=submenu_wrapper_content]").css('bottom', submenu_wrapper.find("[find=submenu_wrapper_bottom]").height());
 	submenu_wrapper.find("[find=submenu_wrapper_content]").prop("id", '');
 	Elem.find("[find=select_chats]").click(that, function(event){

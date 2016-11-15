@@ -14,12 +14,6 @@ var wrapper_signing_out = false;
 // const fingerprint = wrapper_fp;
 var fingerprint = wrapper_fp;
 
-//toto => this is a dirty fix to solve the Input offset on Huawei P9
-setInterval(function(){
-	if(typeof app_application_submenu_position == 'function'){ app_application_submenu_position(); }
-	if(typeof home_resize_elements == 'function'){ home_resize_elements(); }
-}, 500);
-
 var wrapper_signout_cb_begin = function(){
 	$(document.body).css('cursor', 'progress');
 }
@@ -174,13 +168,22 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 				console.log(msg);
 			}
 			cb_error(xhr_err, ajaxOptions, thrownError);
+
+			//Just keep calling getLatest if timeout
+			if(ajaxOptions=="timeout"){
+				if(typeof Lincko.storage == 'object' && typeof Lincko.storage.getLatest == 'function'){
+					setTimeout(function(){
+						Lincko.storage.getLatest();
+					}, 5000);
+				}
+			}
 			/*
-			if(ajaxOptions!='abort'){
+			//To retry a timeout is dangerous, it will keep adding calls like getSchema (heavy CPU backend) and be called tons at once once interent is back, can slow down the server.
+			else if(ajaxOptions=='error'){
 				//Keep retry every 5s
 				setTimeout(function(ajax_call){
-					//To retry a timeout is dangerous, it is repeating exponentially the calls. PHP process is working but take longer than ajax timeout
-					//$.ajax(ajax_call);
-				}, 5000, this);
+					$.ajax(ajax_call);
+				}, 20000, this);
 			}
 			*/
 			this.show_error = false;
@@ -420,6 +423,12 @@ wrapper_localstorage.cleanLocalUser = function(){
 		}
 	});
 };
+
+//Check if WebWorker is available
+var webworker = true;
+if (typeof Worker === 'undefined') {
+	webworker = false;
+}
 
 //Default is Mobile
 var wrapper_IScroll_options = {

@@ -302,7 +302,7 @@ var app_models_resume_format_answer = function(text) {
 
 
 var app_models_evan_fn = function(current, span_arr, subm){
-	setTimeout(function(current,span_arr){
+	setTimeout(function(current, span_arr){
 		var dom = $('[onboarding_id='+current+']');
 		var answer = $('#models_history_answer_options_'+current);
 		if(dom.length > 0 )
@@ -326,12 +326,14 @@ var app_models_evan_fn = function(current, span_arr, subm){
 				var submenu = dom.submenu_getWrapper()[0];
 				var overthrow_id = "overthrow_"+submenu.id;
 				var iScroll = myIScrollList[overthrow_id];
-				var last = $('#'+submenu.id+'_help_iscroll').get(0);
 				submenu_resize_content();
-				iScroll.scrollToElement(last, 0);
+				var last = $('#'+submenu.id+'_help_iscroll').get(0);
+				if(last){
+					iScroll.scrollToElement(last, 0);
+				}
 			}
 		}
-	},5,current,span_arr);
+	}, 5, current, span_arr);
 };
 
 $("body").on("click", '.app_models_resume_onboarding_answer',function(){

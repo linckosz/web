@@ -90,9 +90,9 @@ Submenu.prototype.Add_MenuProjects = function() {
 	var projects_id = attribute.action_param.projects_id;
 	Elem.prop("id", "submenu_projects_title_"+that.id+"_"+projects_id);
 
-	var tasks = app_models_projects_adjust_format(Lincko.storage.cache.getStatistcis('projects', projects_id, 'tasks'));
-	var notes = app_models_projects_adjust_format(Lincko.storage.cache.getStatistcis('projects', projects_id, 'notes'));
-	var files = app_models_projects_adjust_format(Lincko.storage.cache.getStatistcis('projects', projects_id, 'files'));
+	var tasks = app_models_projects_adjust_format(Lincko.storage.cache.getStatistics('projects', projects_id, 'tasks'));
+	var notes = app_models_projects_adjust_format(Lincko.storage.cache.getStatistics('projects', projects_id, 'notes'));
+	var files = app_models_projects_adjust_format(Lincko.storage.cache.getStatistics('projects', projects_id, 'files'));
 	Elem.find("[find=submenu_projects_statistics_tasks]").html(wrapper_to_html(tasks));
 	Elem.find("[find=submenu_projects_statistics_notes]").html(wrapper_to_html(notes));
 	Elem.find("[find=submenu_projects_statistics_files]").html(wrapper_to_html(files));
@@ -161,9 +161,9 @@ Submenu.prototype.Add_MenuProjects = function() {
 			var name = wrapper_to_html(project["+title"]);
 		}
 		Elem.find("[find=submenu_projects_title]").html(name);
-		var tasks = app_models_projects_adjust_format(Lincko.storage.cache.getStatistcis('projects', projects_id, 'tasks'));
-		var notes = app_models_projects_adjust_format(Lincko.storage.cache.getStatistcis('projects', projects_id, 'notes'));
-		var files = app_models_projects_adjust_format(Lincko.storage.cache.getStatistcis('projects', projects_id, 'files'));
+		var tasks = app_models_projects_adjust_format(Lincko.storage.cache.getStatistics('projects', projects_id, 'tasks'));
+		var notes = app_models_projects_adjust_format(Lincko.storage.cache.getStatistics('projects', projects_id, 'notes'));
+		var files = app_models_projects_adjust_format(Lincko.storage.cache.getStatistics('projects', projects_id, 'files'));
 		Elem.find("[find=submenu_projects_statistics_tasks]").html(wrapper_to_html(tasks));
 		Elem.find("[find=submenu_projects_statistics_notes]").html(wrapper_to_html(notes));
 		Elem.find("[find=submenu_projects_statistics_files]").html(wrapper_to_html(files));

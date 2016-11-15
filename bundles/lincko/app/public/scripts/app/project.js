@@ -33,7 +33,7 @@ var mainMenu = {
 	},
 
 	initProjectTab_timer: false,
-	initProjectTab: function(force){//console.log('initProjectTab');
+	initProjectTab: function(force){
 		if(!force && mainMenu.initProjectTab_timer){
 			return false;
 		}
@@ -90,9 +90,9 @@ var mainMenu = {
 				}
 				if(force || pid!=parseInt(item.attr('pid'), 10) || timestamp!=parseInt(item.attr('timestamp'), 10)){
 					item.find("[find=app_project_projects_title]").html(wrapper_to_html(projectList[i]['+title']));
-					tasks = app_models_projects_adjust_format(Lincko.storage.cache.getStatistcis('projects', pid, 'tasks'));
-					notes = app_models_projects_adjust_format(Lincko.storage.cache.getStatistcis('projects', pid, 'notes'));
-					files = app_models_projects_adjust_format(Lincko.storage.cache.getStatistcis('projects', pid, 'files'));
+					tasks = app_models_projects_adjust_format(Lincko.storage.cache.getStatistics('projects', pid, 'tasks'));
+					notes = app_models_projects_adjust_format(Lincko.storage.cache.getStatistics('projects', pid, 'notes'));
+					files = app_models_projects_adjust_format(Lincko.storage.cache.getStatistics('projects', pid, 'files'));
 					item.find("[find=app_project_projects_tasks]").html(wrapper_to_html(tasks));
 					item.find("[find=app_project_projects_notes]").html(wrapper_to_html(notes));
 					item.find("[find=app_project_projects_files]").html(wrapper_to_html(files));
@@ -107,7 +107,7 @@ var mainMenu = {
 	},
 
 	initChatTab_timer: false,
-	initChatTab: function(force){//console.log('initChatTab');
+	initChatTab: function(force){
 		if(!force && mainMenu.initChatTab_timer){
 			return false;
 		}
@@ -115,18 +115,16 @@ var mainMenu = {
 		mainMenu.initChatTab_timer = setTimeout(function(force){
 			if(typeof force == 'undefined'){ force=false; }
 			var not_all = false;
-			var temp = app_models_history.tabList();
-			for(var i in temp){
-				if(temp[i].notif){
+			var content;
+			var histList = app_models_history.getList(5);
+			
+			for(var i in histList){
+				if(histList[i].notif){
 					not_all = true;
 					break;
 				}
 			}
-			if(temp.length > 5){
-				temp.length = 5;
-			}
-			var histList = temp;
-			var content;
+			
 			if(histList.length>0){
 				$("#app_project_chats_all").removeClass('app_project_tab_force_radius');
 			} else {
@@ -137,7 +135,8 @@ var mainMenu = {
 			} else {
 				$("#app_project_chats_all").find("[find=app_project_chats_notif]").addClass('display_none');
 			}
-			for (i = 0; i < 5; i++) {
+			for (i = 0; i < 5; i++) { //5 have to be a fix integer to make sure we hide other tabs
+
 				var item = $("#app_project_item_chats_"+i);
 				if(item.length<=0){
 					continue;
@@ -269,24 +268,21 @@ function app_project_quick_access_title(){
 	delete Elem;
 }
 
-app_application_lincko.add(function(){
-	mainMenu.initProjectTab();
-	mainMenu.initChatTab();
-}, "first_launch");
-
 app_application_lincko.add("app_project_projects_tab", ["first_launch", "projects", "settings"], function() {
 	mainMenu.projectSelect();
-	if(app_project_update_block){
-		app_project_update_launch_projects = true;
-	} else {
-		mainMenu.initProjectTab();
+	if(this.updated.first_launch || this.updated.projects){
+		if(app_project_update_block){
+			app_project_update_launch_projects = true;
+		} else if(!storage_first_launch){
+			mainMenu.initProjectTab();
+		}
 	}
 });
 //toto => the range of this function need to be adjusted over the time according to new items if any more
 app_application_lincko.add("app_project_chats_tab", ["first_launch", "projects", "chats", "tasks", "files", "notes", "comments"], function() {
 	if(app_project_update_block){
 		app_project_update_launch_chats = true;
-	} else {
+	} else if(!storage_first_launch){
 		mainMenu.initChatTab();
 	}
 });
@@ -305,12 +301,9 @@ app_application_lincko.add("app_project_quick_access_chat", "users", function() 
 	}
 });
 
-
-
 app_application_lincko.add("app_project_chats_all", ["submenu_hide", "submenu_show"], function() {
 	mainMenu.chatsSelect();
 });
-
 
 //This help to wait the update while the mouse is over, it avoids click on wrong tab while a list update
 var app_project_update_block = false;

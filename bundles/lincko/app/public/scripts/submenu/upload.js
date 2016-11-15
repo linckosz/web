@@ -39,7 +39,7 @@ Submenu.prototype.Add_MenuAppUploadAllForm = function() {
 
 		Elem.prop("id", this.id+'_submenu_app_upload_function');
 
-		submenu_wrapper.find("[find=submenu_wrapper_bottom]").addClass('submenu_bottom');
+		submenu_wrapper.find("[find=submenu_wrapper_bottom]").addClass('submenu_bottom base_optionTab');
 		submenu_wrapper.find("[find=submenu_wrapper_content]").css('bottom', submenu_wrapper.find("[find=submenu_wrapper_bottom]").height());
 
 		Elem_bt = $('#-submenu_app_upload_function_button').clone();
@@ -344,7 +344,7 @@ Submenu.prototype.Add_MenuAppUploadSubFile = function() {
 			submenu_wrapper.find("[find=submenu_title]").html(
 				app_upload_files.lincko_files[lincko_files_index].lincko_name
 			);
-			submenu_wrapper.find("[find=submenu_wrapper_bottom]").addClass('submenu_bottom');
+			submenu_wrapper.find("[find=submenu_wrapper_bottom]").addClass('submenu_bottom base_optionTab');
 			submenu_wrapper.find("[find=submenu_wrapper_content]").css('bottom', submenu_wrapper.find("[find=submenu_wrapper_bottom]").height());
 
 			Elem_bt = $('#-submenu_app_upload_function_button').clone();

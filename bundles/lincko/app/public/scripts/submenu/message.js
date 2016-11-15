@@ -95,10 +95,12 @@ var chatFeed = function(id,type,position,submenu)
 								if(IScroll.y >= 0){
 									that.loading = true;
 									that.position.find(".models_history_loading").remove();
-									var first_li = that.position.find('li').eq(0);
 									that.app_chat_feed_layer_display();
 									IScroll.refresh();
-									IScroll.scrollToElement(first_li.get(0), 0, 0, -30);
+									var first_li = that.position.find('li').eq(0);
+									if(first_li){
+										IScroll.scrollToElement(first_li.get(0), 0, 0, -30);
+									}
 								}
 							}, 2000);
 						}
@@ -107,10 +109,12 @@ var chatFeed = function(id,type,position,submenu)
 							if(IScroll.y >= 0){
 								that.loading = true;
 								that.position.find(".models_history_loading").remove();
-								var first_li = that.position.find('li').eq(0);
 								that.app_chat_feed_layer_display();
 								IScroll.refresh();
-								IScroll.scrollToElement(first_li.get(0), 0, 0, -30);
+								var first_li = that.position.find('li').eq(0);
+								if(first_li){
+									IScroll.scrollToElement(first_li.get(0), 0, 0, -30);
+								}
 							}
 						}
 						clearTimeout(loading_timer);
