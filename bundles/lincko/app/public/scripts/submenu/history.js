@@ -372,7 +372,7 @@ ReportContentCls.prototype.feed_content = function(elem, subm)
 	{
 		var obj = JSON.parse(this.content);
 		var onboarding = Lincko.storage.getOnboarding();
-		if(typeof onboarding.comments != 'undefined')
+		if(typeof onboarding.comments != 'undefined')//evan.question
 		{
 			if(typeof  onboarding.comments[1] != 'undefined')
 			{
@@ -393,18 +393,13 @@ ReportContentCls.prototype.feed_content = function(elem, subm)
 	}
 
 	
-	try{
-		var regExp = new RegExp("^<img[^>]+src\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>$", "gi");
-		if(content.html().match(regExp))
-		{
-			elem.addClass("remove_bg");
-		}
-	}
-	catch(e)
-	{
-		console.log(e);
-	}
 	
+	var regExp = new RegExp("^<img[^>]+src\\s*=\\s*['\"]([^'\"]+)['\"][^>]*>$", "gi");
+	if(content.html().match(regExp))
+	{
+		elem.addClass("remove_bg");
+	}
+
 	elem.find("[find=content]").append(content);
 }
 

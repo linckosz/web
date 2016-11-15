@@ -8,10 +8,9 @@ function setMobileAlias(){
 	{
 		android.setAlias('android', uid);
 	}
-	if(typeof ios != 'undefined' )
+	if(typeof iOS != 'undefined' )
 	{
-		var phoneID = '';
-		ios.setAlias(phoneID, uid);
+		iOS.setAlias(uid);
 	}
 }
 setMobileAlias();

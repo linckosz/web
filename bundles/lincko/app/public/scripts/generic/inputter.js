@@ -546,6 +546,14 @@ inputter.prototype.buildLayer = function()
 		}
 	}
 
+	if(this.layer.hasOwnProperty('auto_upload'))
+	{
+		if(this.layer['auto_upload'])
+		{
+			container.find('[find=uploading_wrapper]').hide();
+		}
+	}
+
 	var mobile_show_count = 0 ;
 	mobile_show_count = mobile_right_col_count;
 
@@ -690,6 +698,10 @@ inputter.prototype.buildLayer = function()
 	}
 
 	container.appendTo(this.position);
+
+	container.on('resize',function(){
+		//dom.resize(); it will trigger the window.resize();
+	});
 
 
 }
