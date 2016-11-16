@@ -188,40 +188,42 @@ BaseItemCls.prototype.item_display = function(position,subm,mode)
 		subm.param.earliest_msg = 0;
 	}
 
-	try{
-		switch (mode)
-		{
-			case 'history' :
-				elem.prependTo(position.find(".chat_contents_wrapper"));
-				if(this.lazy)
-				{
-					var loading_elem =  $("#-models_history_loading").clone();
-					loading_elem.removeAttr('id');
-					loading_elem.addClass('models_history_loading_hide');
-					elem.before(loading_elem);
+
+	switch (mode)
+	{
+		case 'history' :
+			elem.prependTo(position.find(".chat_contents_wrapper"));
+			if(this.lazy)
+			{
+				var loading_elem =  $("#-models_history_loading").clone();
+				loading_elem.removeAttr('id');
+				loading_elem.addClass('models_history_loading_hide');
+				elem.before(loading_elem);
+			}
+			if(typeof subm.param.prev_timeline == 'undefined'){
+				subm.param.prev_timeline = timeline;
+			} else if(timeline < subm.param.prev_timeline){
+				//Create the line first
+				var line = $("#-models_history_line").clone();
+				line.prop('id','');
+				var w_date = new wrapper_date(subm.param.prev_timeline);
+				if (w_date.happensToday()) {
+					line.find(".history_time").html(Lincko.Translation.get('app', 3302, 'html').toUpperCase()); //Today
+				} else if (w_date.happensSomeday(-1)) {
+					line.find(".history_time").html(Lincko.Translation.get('app', 3304, 'html').toUpperCase()); //Yesterday
+				} else {
+					line.find(".history_time").html(new wrapper_date(subm.param.prev_timeline).display('date_very_short')); // Oct 28
 				}
-				if(typeof subm.param.prev_timeline == 'undefined'){
-					subm.param.prev_timeline = timeline;
-				} else if(timeline < subm.param.prev_timeline){
-					//Create the line first
-					var line = $("#-models_history_line").clone();
-					line.prop('id','');
-					var w_date = new wrapper_date(subm.param.prev_timeline);
-					if (w_date.happensToday()) {
-						line.find(".history_time").html(Lincko.Translation.get('app', 3302, 'html').toUpperCase()); //Today
-					} else if (w_date.happensSomeday(-1)) {
-						line.find(".history_time").html(Lincko.Translation.get('app', 3304, 'html').toUpperCase()); //Yesterday
-					} else {
-						line.find(".history_time").html(new wrapper_date(subm.param.prev_timeline).display('date_very_short')); // Oct 28
-					}
-					subm.param.prev_timeline = timeline;
-					elem.after(line);
-				}
-				if(timeline > subm.param.earliest_timeline){
-					subm.param.earliest_timeline = timeline;
-				}
-				break;
-			case 'insert' :
+				subm.param.prev_timeline = timeline;
+				elem.after(line);
+			}
+			if(timeline > subm.param.earliest_timeline){
+				subm.param.earliest_timeline = timeline;
+			}
+			break;
+		case 'insert' :
+			if($('#'+elem_id).length==0)
+			{
 				var help = $('#' + subm.id + '_help_iscroll');
 				help.before(elem);
 				if(timeline > subm.param.earliest_timeline){
@@ -238,42 +240,39 @@ BaseItemCls.prototype.item_display = function(position,subm,mode)
 					elem.before(line);
 					subm.param.earliest_timeline = timeline;
 				}
-				break;
-			case 'change' :
-					var temp_elem_id = subm.id + '_' + this.data.category + '_models_thistory_' + this.data.temp_id 
-					+ (typeof this.data.hist !== 'undefined' && this.data.hist != 0 ?  '_'+ this.data.hist : '');
-					if(this.data.category == 'comments' || this.data.category == 'messages' )
-					{
-						$('#'+temp_elem_id).attr(this.data.category + '_id',this.data.id);
-
-						$('#'+temp_elem_id).removeAttr('temp_id');
-					}
-					$('#'+temp_elem_id).prop('id',elem_id);
-				break;
-			case 'replace' :
-				if(this.data.category == 'files')
+			}
+			break;
+		case 'change' :
+				var temp_elem_id = subm.id + '_' + this.data.category + '_models_thistory_' + this.data.temp_id 
+				+ (typeof this.data.hist !== 'undefined' && this.data.hist != 0 ?  '_'+ this.data.hist : '');
+				if(this.data.category == 'comments' || this.data.category == 'messages' )
 				{
-					var temp_elem_id = subm.id + '_uploading_file_models_thistory_' + this.data.temp_id 
-					+ (typeof this.data.hist !== 'undefined' && this.data.hist != 0 ?  '_'+ this.data.hist : '');
-					if($('#'+temp_elem_id).length > 0)
-					{
-						$('#'+temp_elem_id).replaceWith(elem);
-					}
+					$('#'+temp_elem_id).attr(this.data.category + '_id',this.data.id);
+
+					$('#'+temp_elem_id).removeAttr('temp_id');
 				}
-				break;
-			case 'refresh' :
-				elem = $('#'+elem_id);
-				this.feed_content(elem, subm);
-				break;
-			default :
-				break;
-		}
+				$('#'+temp_elem_id).prop('id',elem_id);
+			break;
+		case 'replace' :
+			if(this.data.category == 'files')
+			{
+				var temp_elem_id = subm.id + '_uploading_file_models_thistory_' + this.data.temp_id 
+				+ (typeof this.data.hist !== 'undefined' && this.data.hist != 0 ?  '_'+ this.data.hist : '');
+				if($('#'+temp_elem_id).length > 0)
+				{
+					$('#'+temp_elem_id).replaceWith(elem);
+				}
+			}
+			break;
+		case 'refresh' :
+			elem = $('#'+elem_id);
+			this.feed_content(elem, subm);
+			break;
+		default :
+			break;
+	}
 		
-	}
-	catch(e){
-
-	}
-
+	
 	if(timeline > subm.param.earliest_timeline){
 		subm.param.earliest_timeline = timeline;
 	}

@@ -176,7 +176,7 @@ function app_models_chats_bubble_actionMenu(){
 
 	$('.models_history_content [contenteditable]').prop('contenteditable','false').prop('tabindex','1');
 	if(supportsTouch){
-		$('.models_history_content .selectable').removeClass('selectable').addClass('unselectable');
+		$('.models_history_wrapper .selectable').removeClass('selectable').addClass('unselectable');
 		//$('.models_history_content').prop('tabindex','1');
 
 

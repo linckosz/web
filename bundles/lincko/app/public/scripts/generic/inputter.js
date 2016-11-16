@@ -101,9 +101,6 @@ inputter.prototype.getContent = function()
 		files_index:files_index,
 		checked:this.task_completed,
 	}
-
-
-
 	return data;
 } 
 
@@ -587,8 +584,11 @@ inputter.prototype.buildLayer = function()
 	input.find('[find=chat_textarea]').on('paste',function(e,data){
 		var target = this;
 		setTimeout(function(){
-			target.innerHTML = target.innerHTML.replace(/<(br).*?>/g,"<br/>").replace(/<(?!br).*?>/g,"");
-		},5);
+			target.innerHTML = target.innerHTML
+				.replace(/<(br).*?>/g,"<br/>")
+				.replace(/<(?!br).*?>/g,"")
+				.replace(/[\r\n]/g, "");
+		},0);
 	});
 
 
