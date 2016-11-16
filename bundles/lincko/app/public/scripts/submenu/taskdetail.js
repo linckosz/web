@@ -2128,7 +2128,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	var elem_description_text = submenu_wrapper.find('[find=description_text]').prop('contenteditable','true').prop('id','submenu_taskdetail_description_text_'+that.md5id);
 
 	//div for the toolbar
-	var elem_editorToolbar = $('<div>').prop('id','submenu_taskdetail_description_toolbar_'+that.md5id).addClass('taskdetail_editorToolbar needsclick').css('visibility', 'hidden');
+	var elem_editorToolbar = $('<div>').prop('id','submenu_taskdetail_description_toolbar_'+that.md5id).addClass('taskdetail_editorToolbar needsclick');
 	elem_description_text.before(elem_editorToolbar);
 
 
@@ -2141,7 +2141,17 @@ Submenu.prototype.Add_taskdetail = function() {
 
 		var onLoad_description = new base_runOnElemLoad('submenu_taskdetail_description_text_'+that.md5id, 
 			function(){
-				 editorInst = linckoEditor('submenu_taskdetail_description_text_'+that.md5id, 'submenu_taskdetail_description_toolbar_'+that.md5id, editor_param);
+				editorInst = linckoEditor('submenu_taskdetail_description_text_'+that.md5id, 'submenu_taskdetail_description_toolbar_'+that.md5id, editor_param);
+
+				var elem_editorToolbar_overlay = $('<div>').css({
+					position: 'absolute',
+					left: 0,
+					right: 0,
+					top: 0,
+					bottom: 0,
+				}).click(function(){
+					//elem_description_text
+				});
 
 				 if(taskid == 'new'){
 					if(that.param.type == 'tasks'){
@@ -2159,11 +2169,14 @@ Submenu.prototype.Add_taskdetail = function() {
 	
 
 
-	/*elem_editorToolbar.click(function(){ return;
-		if(!editorInst){
-			elem_description_text.focus();
-		}
-	});*/
+	console.log(elem_editorToolbar);
+	elem_editorToolbar.mousedown(function(){
+		//debugger;
+	});
+	elem_editorToolbar.click(function(){
+		//debugger;
+		elem_description_text.focus();
+	});
 	elem_description_text.focus(function(){ 
 		elem_editorToolbar.removeAttr('style');
 		$(this).off('focus');
