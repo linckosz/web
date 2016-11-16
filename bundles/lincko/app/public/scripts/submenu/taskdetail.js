@@ -2132,7 +2132,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	elem_description_text.before(elem_editorToolbar);
 
 
-
+	elem_editorToolbar_overlay = null;
 	var editorInst = null;
 	var editor_param = {};
 	editor_param.itemID = item['_id'];
@@ -2143,15 +2143,10 @@ Submenu.prototype.Add_taskdetail = function() {
 			function(){
 				editorInst = linckoEditor('submenu_taskdetail_description_text_'+that.md5id, 'submenu_taskdetail_description_toolbar_'+that.md5id, editor_param);
 
-				var elem_editorToolbar_overlay = $('<div>').css({
-					position: 'absolute',
-					left: 0,
-					right: 0,
-					top: 0,
-					bottom: 0,
-				}).click(function(){
-					//elem_description_text
+				elem_editorToolbar_overlay = $('<div>').addClass('taskdetail_editorToolbar_overlay').click(function(){
+					elem_description_text.focus();
 				});
+				elem_editorToolbar.append(elem_editorToolbar_overlay);
 
 				 if(taskid == 'new'){
 					if(that.param.type == 'tasks'){
@@ -2167,18 +2162,9 @@ Submenu.prototype.Add_taskdetail = function() {
 
 	}
 	
-
-
-	console.log(elem_editorToolbar);
-	elem_editorToolbar.mousedown(function(){
-		//debugger;
-	});
-	elem_editorToolbar.click(function(){
-		//debugger;
-		elem_description_text.focus();
-	});
 	elem_description_text.focus(function(){ 
-		elem_editorToolbar.removeAttr('style');
+		elem_editorToolbar_overlay.recursiveRemove();
+		elem_editorToolbar_overlay = null;
 		$(this).off('focus');
 		return;
 		if(!editorInst){

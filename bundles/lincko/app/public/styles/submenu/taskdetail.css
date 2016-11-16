@@ -130,7 +130,17 @@ td.submenu_taskdetail_share .fa{
 	max-width: 100%;
 }
 .taskdetail_editorToolbar{
+	position: relative;
 	height: 40px;
+}
+.taskdetail_editorToolbar_overlay{
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: -2px;
+    background-color: #FFFFFF;
+    z-index: 5;
 }
 
 
