@@ -17,6 +17,9 @@
 	<div id="-burger_tag" class="burger_tag"></div>
 
 
+	<div id="-burger_calendar_clickHandler" class="burger_calendar_clickHandler">
+	</div>
+
 	<div id="-burger_calendar_prepend" class="burger_calendar_prepend">
 		<div find='today_info'></div>
 		<div find='row1'>
@@ -28,23 +31,6 @@
 			<span find='oneWeek_btn' class="skylist_clickable">{{ _trans('app', 12, 2, 'html') }}</span>{#1 week later#}
 		</div>
 	</div>
-
-	{#
-	<table id="-burger_calendar_prepend" class="burger_calednar_prepend">
-		<tr>
-			<td find='today_info' col="2">Today is March 1, 2016</td>
-		</tr>
-		<tr>
-			<td find='today_btn'>Today</td>
-			<td find='tomorrow_btn'>Tomorrow</td>
-		</tr>
-		<tr>
-			<td find='2days_btn'>2 days later</td>
-			<td find='1week_btn'>1 week later</td>
-		</tr>
-	</table>
-	#}
-
 
 	<div id="-burger_typeTask" class="burger_typeTask">
 		<table find="toggleOpacity" class="burger_typeTask_opacity">

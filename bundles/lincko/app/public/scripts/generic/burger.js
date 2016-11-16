@@ -92,105 +92,83 @@ var burger_attach_clickHandler = {
 		if(responsiveRange && typeof resonsiveRange != 'string'){ var responsiveRange = 'maxMobileL'; } //default maxMobileL
 
 
+		var elem_datepicker = $('#-burger_calendar_clickHandler').clone().prop('id', '');
+		elem_datepicker.datepicker(
+		{
+			//altFormat: "M d",
+			//altField: elem_alt,
+			dayNamesMin: burgerN.daysVeryShortArray,
+			monthNames: burgerN.monthsArray,
+			showOtherMonths: true,
+			dateFormat: '@',
+			gotoCurrent: true,
+			minDate: 0,
+			showAnim: "slideDown",
+			beforeShow: function(input, inst){
+				$('#ui-datepicker-div').addClass('burger_calendar');
+				//elem_input = input;
+				//burger_calendar_linckofy(inst);
+			},
+			onChangeMonthYear: function(year, month, inst){
+				burger_calendar_linckofy(inst);
+			},
+		});
 
-		if(!responsive.test("maxMobileL")){ //attach datepicker directly to the input for landscape tablet and up
-			elem.datepicker(
-			{
-				//altFormat: "M d",
-				//altField: elem_alt,
-				dayNamesMin: burgerN.daysVeryShortArray,
-				monthNames: burgerN.monthsArray,
-				showOtherMonths: true,
-				dateFormat: '@',
-				gotoCurrent: true,
-				minDate: 0,
-				showAnim: "slideDown",
-				beforeShow: function(input, inst){
-					$('#ui-datepicker-div').addClass('burger_calendar');
-					//elem_input = input;
-					//burger_calendar_linckofy(inst);
-				},
-				onChangeMonthYear: function(year, month, inst){
-					burger_calendar_linckofy(inst);
-				},
-			});
-
-
-
-			var elem_calendarPrepend = $('#-burger_calendar_prepend').clone().prop('id','burger_calendar_prepend');
-			elem_calendarPrepend.find('[find=today_info]').html(Lincko.Translation.get('app', 3604, 'html', {date: new wrapper_date().display('date_medium_simple'),}));
+		var elem_calendarPrepend = $('#-burger_calendar_prepend').clone().prop('id','burger_calendar_prepend');
+		elem_calendarPrepend.find('[find=today_info]').html(Lincko.Translation.get('app', 3604, 'html', {date: new wrapper_date().display('date_medium_simple'),}));
 
 
-			elem.prepend(elem_calendarPrepend);
-			elem.find('.ui-datepicker-next').empty().addClass('icon-Forward'); //DONT USE .recursiveEmpty() HERE
-			elem.find('.ui-datepicker-prev').empty().addClass('icon-Forward fa-flip-horizontal'); //DONT USE .recursiveEmpty() HERE
-			var elem_prepend_today = elem.find('[find=today_btn]');
-			var elem_prepend_tomorrow =  elem.find('[find=tomorrow_btn]');
-			var elem_prepend_twoDays = elem.find('[find=twoDays_btn]');
-			var elem_prepend_oneWeek = elem.find('[find=oneWeek_btn]');
+		elem_datepicker.prepend(elem_calendarPrepend);
+		elem_datepicker.find('.ui-datepicker-next').empty().addClass('icon-Forward'); //DONT USE .recursiveEmpty() HERE
+		elem_datepicker.find('.ui-datepicker-prev').empty().addClass('icon-Forward fa-flip-horizontal'); //DONT USE .recursiveEmpty() HERE
+		var elem_prepend_today = elem_calendarPrepend.find('[find=today_btn]');
+		var elem_prepend_tomorrow =  elem_calendarPrepend.find('[find=tomorrow_btn]');
+		var elem_prepend_twoDays = elem_calendarPrepend.find('[find=twoDays_btn]');
+		var elem_prepend_oneWeek = elem_calendarPrepend.find('[find=oneWeek_btn]');
 
-			var prepend_select = function(){
-				elem.find('.burger_calendar_prepend_active').removeClass('burger_calendar_prepend_active');
-				$(this).addClass('burger_calendar_prepend_active');
-				elem.find('.ui-state-active').click();
-			}
-
-			elem_prepend_today.click(function(){
-				elem.datepicker('setDate',0);
-				prepend_select();
-			});
-			elem_prepend_tomorrow.click(function(){
-				elem.datepicker('setDate',1);
-				prepend_select();
-			});
-			elem_prepend_twoDays.click(function(){
-				elem.datepicker('setDate',2);
-				prepend_select();
-			});
-			 elem_prepend_oneWeek.click(function(){
-				elem.datepicker('setDate',7);
-				prepend_select();
-			});
-
-			//console.log(elem.datepicker('getDate'));
-			var date = new wrapper_date(elem.datepicker('getDate').getTime()/1000);
-			//console.log(date);
-			if( date.happensSomeday(0) ){
-				elem_prepend_today.addClass('burger_calendar_prepend_active');
-			}
-			else if( date.happensSomeday(1) ){
-				elem_prepend_tomorrow.addClass('burger_calendar_prepend_active');
-			}
-			else if( date.happensSomeday(2) ){
-				elem_prepend_twoDays.addClass('burger_calendar_prepend_active');
-			}
-			else if( date.happensSomeday(7) ){
-				elem_prepend_oneWeek.addClass('burger_calendar_prepend_active');
-			}
-
-
-
-
+		var prepend_select = function(){
+			elem_datepicker.find('.burger_calendar_prepend_active').removeClass('burger_calendar_prepend_active');
+			$(this).addClass('burger_calendar_prepend_active');
+			elem_datepicker.find('.ui-state-active').click();
 		}
 
-		/*elem_display.click(function(){
-			elem_timestamp.click();
+		elem_prepend_today.click(function(){
+			elem_datepicker.datepicker('setDate',0);
+			prepend_select();
 		});
-		elem_timestamp.click(function(){
-			if( responsive.test("maxMobileL")){
-				var param = {elem_inputOrig:elem_timestamp };
-				submenu_Build('calendar', true, false, param);
-				return false;
-			}
+		elem_prepend_tomorrow.click(function(){
+			elem_datepicker.datepicker('setDate',1);
+			prepend_select();
+		});
+		elem_prepend_twoDays.click(function(){
+			elem_datepicker.datepicker('setDate',2);
+			prepend_select();
+		});
+		 elem_prepend_oneWeek.click(function(){
+			elem_datepicker.datepicker('setDate',7);
+			prepend_select();
+		});
+
+		var date = new wrapper_date(elem_datepicker.datepicker('getDate').getTime()/1000);
+		if( date.happensSomeday(0) ){
+			elem_prepend_today.addClass('burger_calendar_prepend_active');
+		}
+		else if( date.happensSomeday(1) ){
+			elem_prepend_tomorrow.addClass('burger_calendar_prepend_active');
+		}
+		else if( date.happensSomeday(2) ){
+			elem_prepend_twoDays.addClass('burger_calendar_prepend_active');
+		}
+		else if( date.happensSomeday(7) ){
+			elem_prepend_oneWeek.addClass('burger_calendar_prepend_active');
+		}
 
 
-			if( $('#ui-datepicker-div').length > 0 && $('#ui-datepicker-div').css('display') == 'block' ){
-				elem_timestamp.blur();
-			}
-			else{
-				elem_timestamp.focus();
-			}
-		});*/
+		var coord = position.offset();
+		var left = coord.left;
+		var top = coord.top + position.outerHeight();
+		
+
 
 	},
 }

@@ -72,7 +72,7 @@
 
 
 /*----------burger_calendar----------------------*/
-
+.burger_calendar_clickHandler,
 .burger_calendar {
 	z-index: 5000 !important;
 	height: 352px;
