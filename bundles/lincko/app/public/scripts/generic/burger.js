@@ -199,7 +199,6 @@ var burger_attach_clickHandler = {
 				elem_prepend_oneWeek.addClass('burger_calendar_prepend_active');
 			}
 
-
 			var coord = elem.offset();
 			var left = coord.left;
 			var top = coord.top + elem.outerHeight();
@@ -222,6 +221,15 @@ var burger_attach_clickHandler = {
 
 			elem_datepicker.appendTo('#app_application_main');
 
+			//if calendar needs to be drawn slideUp
+			var window_outerHeight = $(window).outerHeight();
+			if( window_outerHeight <= top + elem_datepicker.outerHeight() ){
+				elem_datepicker.css({
+					top: '',
+					bottom: window_outerHeight-coord.top,
+				});
+			}
+
 			elem_datepicker.velocity('slideDown', {
 				duration: dropdownDuration,
 				mobileHA: hasGood3Dsupport,
@@ -229,6 +237,8 @@ var burger_attach_clickHandler = {
 					elem_datepicker.focus();
 				}
 			});
+
+
 		}
 
 
@@ -351,6 +361,7 @@ var burger_dropdown = function(id, data, position, vOffset, cb_create, cb_select
 	that.submenu = submenu;
 	that.hidden = false;
 	that.destroyed = false;
+	that.position = position;
 
 	//left and top css values for the dropdown
 	that.coord = {
@@ -446,13 +457,12 @@ burger_dropdown.prototype.build_elem = function(){
 
 
     	if(which == 13){ //enter
-			elem_selected = elem_dropdown.find('.burger_option_selected').eq();
+			elem_selected = elem_dropdown.find('.burger_option_selected').eq(0);
 			if(!elem_selected.length){
 				elem_selected = elem_dropdown.find('.burger_option').eq(0);
 			}
 
 			elem_selected.click();
-			that.hide();
     		return;
     	}
 
@@ -483,6 +493,15 @@ burger_dropdown.prototype.build_elem = function(){
     });
 
 	elem_dropdown.appendTo('#app_application_main');
+
+	//if dropdown needs to be at the top
+	var window_outerHeight = $(window).outerHeight();
+	if( window_outerHeight <= that.coord.top + elem_dropdown.outerHeight() ){
+		elem_dropdown.css({
+			top: '',
+			bottom: window_outerHeight - that.coord.top + that.position.outerHeight(),
+		});
+	}
 
 
 	that.elem = elem_dropdown;
@@ -551,21 +570,8 @@ burger_dropdown.prototype.build_elem_projects = function(){
 }
 
 burger_dropdown.prototype.show = function(){
-	//elem_dropdown css bottom must be defined for the 'reverse' slideDown to work
 	var that = this;
 	var elem_dropdown = that.elem;
-	var top = parseInt(elem_dropdown.css('top'),10);
-	//if( top+that.optionHeight*elem_dropdown.find('.burger_option_users').length > $(window).height() ){
-	
-	elem_dropdown.css('bottom','');
-
-	/*if( top+that.optionHeight*that.dropdownCount > $(window).height() ){
-		elem_dropdown.css('top','');
-	}
-	else{
-		elem_dropdown.css('bottom','');
-	}*/
-
 	
 	elem_dropdown.velocity("slideDown",{
 		mobileHA: hasGood3Dsupport,
