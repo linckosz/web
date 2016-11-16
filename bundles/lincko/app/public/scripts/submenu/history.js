@@ -703,9 +703,9 @@ var historyFeed = function(id,type,position,submenu)
 					loading_timer = setTimeout(function(IScroll){
 						if(IScroll.y >= 0){
 							that.position.find(".models_history_loading").remove();
+							var first_li = that.position.find('li').eq(0); //Grab old first li element
 							that.app_chat_feed_layer_display();
 							IScroll.refresh();
-							var first_li = that.position.find('li').eq(0);
 							if(first_li){
 								IScroll.scrollToElement(first_li.get(0), 0, 0, -30);
 							}
@@ -726,9 +726,9 @@ var historyFeed = function(id,type,position,submenu)
 					loading_timer = setTimeout(function(IScroll){
 						if(IScroll.y >= 0){
 							that.position.find(".models_history_loading").remove();
+							var first_li = that.position.find('li').eq(0); //Grab old first li element
 							that.app_chat_feed_layer_display();
 							IScroll.refresh();
-							var first_li = that.position.find('li').eq(0);
 							if(first_li){
 								IScroll.scrollToElement(first_li.get(0), 0, 0, -30);
 							}
