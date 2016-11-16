@@ -279,9 +279,9 @@ onboarding.scripts[2] = function(fn_continue){
 	app_content_menu.selection(onboarding.project_id, 'tasks');
 	//app_content_menu.change('tasks');
 	
+	var tasks_initial = Lincko.storage.list('tasks', null, null, 'projects', app_content_menu.projects_id, false);
 
 	//action 1 - mark task_target complete
-	var tasks_initial = Lincko.storage.list('tasks', null, null, 'projects', app_content_menu.projects_id, false);
 	var task_target = null;
 	$.each(tasks_initial, function(i, task){
 		if(!task.approved){
@@ -329,7 +329,7 @@ onboarding.scripts[2] = function(fn_continue){
 	var onboarding_garbage_action4 = app_application_garbage.add('onboarding_garbage_script_2_4');
 	app_application_lincko.add(onboarding_garbage_action4, 'tasks', function(){
 		var allApproved = true;
-		$.each(Lincko.storage.list('tasks', null, null, 'projects', app_content_menu.projects_id, false), function(i, task){
+		$.each(tasks_initial, function(i, task){
 			if(!task.approved){
 				allApproved = false;
 				return false;
