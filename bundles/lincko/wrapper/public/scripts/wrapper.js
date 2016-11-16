@@ -433,7 +433,7 @@ if (typeof Worker === 'undefined') {
 //Default is Mobile
 var wrapper_IScroll_options = {
 	click: false, //At true, on mobile it works but but the element doesn't flash
-	keyBindings: false, //toto
+	keyBindings: false, //by default disable iscroll reacting to keyboard keys (arrows, pageup/pagedown etc)
 	mouseWheel: true,
 	scrollbars: true,
 	scrollX: false,
