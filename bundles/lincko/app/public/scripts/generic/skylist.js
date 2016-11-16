@@ -824,13 +824,15 @@ skylist.prototype.addCard = function(item){
 							duration: 200,
 							complete: function(){
 								var elem_toReplace = that.addCard(Lincko.storage.get(that.list_type , item['_id']));
-								if(elem.hasClass('skylist_card_hover')){
-									elem_toReplace.addClass('skylist_card_hover');
+								if(elem_toReplace){
+									if(elem.hasClass('skylist_card_hover')){
+										elem_toReplace.addClass('skylist_card_hover');
+									}
+									elem.find('input').blur();
+									$(elem.find('[find=card_time_calendar_timestamp]')).datepicker('hide');
+									elem.replaceWith(elem_toReplace);
+									that.DOM_updated();
 								}
-								elem.find('input').blur();
-								$(elem.find('[find=card_time_calendar_timestamp]')).datepicker('hide');
-								elem.replaceWith(elem_toReplace);
-								that.DOM_updated();
 							}
 						});
 					}
