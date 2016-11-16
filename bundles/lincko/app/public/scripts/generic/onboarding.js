@@ -250,7 +250,7 @@ onboarding.scripts[2] = function(fn_continue){
 	(action1) Mark this task complete @Username ++Today
 	(action2) Open this task or the task above by clicking or tapping on it. Each task can be assigned an owner, a due date, have subtasks, comments from the team, and link to files or notes. 
 	(action3) Create a new task and assign it to the Monkey King by typing a task below. Use @ to assign to the Monkey King. Use ++ to assign today as the due date.
-	(continue condition) Once all the above has been completed - the LinckoBot will reapear and take you the rest of the way :)
+	(action4) Once all the above has been completed - the LinckoBot will reapear and take you the rest of the way :)
 	*/
 
 	//must complete all conditions to move on
@@ -258,6 +258,7 @@ onboarding.scripts[2] = function(fn_continue){
 		1: false,
 		2: false,
 		3: false,
+		4: false,
 	}
 	var condition_complete = function(num){
 		conditions[num] = true;
@@ -285,6 +286,7 @@ onboarding.scripts[2] = function(fn_continue){
 	$.each(tasks_initial, function(i, task){
 		if(!task.approved){
 			task_target = task;
+			console.log(task_target);
 			return false;
 		}
 	});
@@ -321,6 +323,23 @@ onboarding.scripts[2] = function(fn_continue){
 				return false;
 			}
 		});
+	});
+
+	//action 4 - all tasks are marked complete
+	var onboarding_garbage_action4 = app_application_garbage.add('onboarding_garbage_script_2_4');
+	app_application_lincko.add(onboarding_garbage_action4, 'tasks', function(){
+		var allApproved = true;
+		$.each(Lincko.storage.list('tasks', null, null, 'projects', app_content_menu.projects_id, false), function(i, task){
+			if(!task.approved){
+				allApproved = false;
+				return false;
+			}
+		});
+
+		if(allApproved){
+			app_application_garbage.remove(onboarding_garbage_action4);
+			condition_complete(4);
+		}
 	});
 
 }
