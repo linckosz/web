@@ -102,7 +102,8 @@ var app_application_lincko = {
 	/*
 		It updates all elements and functions that are linked to any _fields
 	*/
-	update: function(){
+	update: function(procedural){
+		if(typeof procedural != 'boolean'){ procedural = false; }
 		var temp_fields = {'*': true};
 		var temp;
 		var Elem;
@@ -159,9 +160,13 @@ var app_application_lincko = {
 									}
 									this._elements[Elem_id].updated = updated;
 									clearTimeout(this._elements[Elem_id].timer);
-									this._elements[Elem_id].timer = setTimeout(function(element){
-											element.action();
-									}, 0, this._elements[Elem_id]);
+									if(procedural){ //Run immediatly (but can see screen little freeze)
+										this._elements[Elem_id].action();
+									} else { //It will wait until the parent scope script is finished (less screen freeze)
+										this._elements[Elem_id].timer = setTimeout(function(element){
+												element.action();
+										}, 0, this._elements[Elem_id]);
+									}
 								} catch(e) {
 									var instance = "Other";
 									if (e instanceof TypeError) {
@@ -305,9 +310,11 @@ var app_application_lincko = {
 
 		NOTE: Because JS is not ready yet (obverse() is too new) to observe any object change, we have to add it manually.
 	*/
-	prepare: function(fields, update, updatedAttributes){
+	prepare: function(fields, update, updatedAttributes, procedural){
 		if(typeof fields == 'undefined'){ fields = false; }
 		if(typeof update != 'boolean'){ update = false; }
+		if(typeof updatedAttributes != 'object'){ updatedAttributes = false; }
+		if(typeof procedural != 'boolean'){ procedural = false; }
 		var field;
 		if(typeof fields == 'string' || typeof fields == 'number'){
 			if(typeof this._fields[fields] != 'object'){
@@ -338,7 +345,7 @@ var app_application_lincko = {
 		}
 
 		//change the field value for those given in updatedAttributes
-		if(typeof updatedAttributes == 'object'){
+		if(updatedAttributes){
 			var that = this;
 			$.each(updatedAttributes, function(key, val){
 				if(typeof that._fields[key] != 'object'){
@@ -354,7 +361,7 @@ var app_application_lincko = {
 
 		//Force to update if update at true
 		if(update){
-			this.update();
+			this.update(procedural);
 		}
 	},
 
@@ -802,3 +809,11 @@ JSfiles.finish(function(){
 	//}, 4000); //4s Demo
 	}, 15000); //15s Production
 });
+
+/*
+var worker = new Worker("/scripts/libs/hammer.min.js", { type: "module" });
+worker.onmessage
+function receiveFromWorker(e) {
+	console.log(e);
+}
+*/
