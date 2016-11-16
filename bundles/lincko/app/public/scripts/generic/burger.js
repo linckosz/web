@@ -9,12 +9,12 @@
 
 var burger_attach_clickHandler = {
 
-	in_charge: function(elem, lincko_type, lincko_id, cb_create, cb_select, cb_destroy, responsiveRange){ return; //toto - not ready yet
+	in_charge: function(elem, lincko_type, lincko_id, cb_create, cb_select, cb_destroy, responsiveRange){
 		if(!elem instanceof $){ elem = $(elem); }
 		if(typeof cb_create != 'function'){ var cb_create = null; }
 		if(typeof cb_select != 'function' && typeof cb_select != 'boolean' && !cb_select){ var cb_select = null; }
 		if(typeof cb_destroy != 'function'){ var cb_destroy = null; }
-		if(responsiveRange && typeof resonsiveRange != 'string'){ var responsiveRange = 'maxMobileL'; } //default maxMobileL
+		if(typeof responsiveRange != 'boolean' && typeof resonsiveRange != 'string'){ var responsiveRange = 'minTablet'; } //responsiveRange true is minTablet
 		
 
 		//default cb_select for in_charge
@@ -60,7 +60,7 @@ var burger_attach_clickHandler = {
 		var list = burger_list.in_charge(lincko_type, lincko_id);
 		var dropdownInst = null;
 		elem.click(function(){
-			if( (!dropdownInst || dropdownInst.destroyed) && (!responsiveRange || responsive.test(responsiveRange)) && Lincko.storage.canI('edit', lincko_type, lincko_id)){
+			if( (!dropdownInst || dropdownInst.destroyed) && (responsiveRange == true || responsive.test(responsiveRange)) && Lincko.storage.canI('edit', lincko_type, lincko_id)){
 				dropdownInst = new burger_dropdown('toto', list, elem, null, null, cb_select, null, false); 
 			}
 		});
@@ -89,10 +89,41 @@ var burger_attach_clickHandler = {
 		if(typeof cb_create != 'function'){ var cb_create = null; }
 		if(typeof cb_select != 'function' && typeof cb_select != 'boolean' && !cb_select){ var cb_select = null; }
 		if(typeof cb_destroy != 'function'){ var cb_destroy = null; }
-		if(responsiveRange && typeof resonsiveRange != 'string'){ var responsiveRange = 'maxMobileL'; } //default maxMobileL
+		if(typeof responsiveRange != 'boolean' && typeof resonsiveRange != 'string'){ var responsiveRange = 'minTablet'; } //responsiveRange true is minTablet
 
 		var elem_datepicker = null;
+		var dropdownDuration = 400;
+
+		//default cb_select for in_charge
+		if(cb_select && typeof cb_select == 'boolean' && lincko_type == 'tasks'){
+			var cb_select = function(timestamp){
+				var lincko_item = Lincko.storage.get(lincko_type, lincko_id);
+				if(!lincko_item){ return false; }
+
+				var duration = timestamp - lincko_item.start;
+
+				var param = {
+					id: lincko_id,
+					duration: duration,
+				};
+
+				skylist.sendAction.tasks(
+					param, 
+					lincko_item, 'task/update',
+					function(msg, data_error, data_status, data_msg){ 
+						if(data_error){
+							app_application_lincko.prepare(lincko_type+'_'+lincko_id);
+						}
+					},
+					function(){ app_application_lincko.prepare(lincko_type+'_'+lincko_id); }
+				);
+
+				elem_datepicker.blur();
+			}
+		}//END OF default cb_select
+
 		var launch = function(){
+			if(elem_datepicker){ return; }
 			if($('#burger_calendar_clickHandler').length){ $('#burger_calendar_clickHandler').recursiveRemove(); }
 			elem_datepicker = $('#-burger_calendar_clickHandler').clone().prop('id', 'burger_calendar_clickHandler');
 			elem_datepicker.datepicker(
@@ -107,11 +138,14 @@ var burger_attach_clickHandler = {
 				minDate: 0,
 				onChangeMonthYear: function(year, month, inst){ //this is called before the calendar is redrawn, use timeout
 					setTimeout(function(){
-					elem_datepicker.find('.ui-datepicker-next').empty().addClass('icon-Forward'); //DONT USE .recursiveEmpty() HERE
-					elem_datepicker.find('.ui-datepicker-prev').empty().addClass('icon-Forward fa-flip-horizontal'); //DONT USE .recursiveEmpty() HERE
-					console.log(elem_datepicker.find('.ui-datepicker-prev'));
-				}, 10);
-
+						elem_datepicker.find('.ui-datepicker-next').empty().addClass('icon-Forward'); //DONT USE .recursiveEmpty() HERE
+						elem_datepicker.find('.ui-datepicker-prev').empty().addClass('icon-Forward fa-flip-horizontal'); //DONT USE .recursiveEmpty() HERE
+						console.log(elem_datepicker.find('.ui-datepicker-prev'));
+					}, 10);
+				},
+				onSelect: function(dateText, inst){
+					var timestamp = parseInt(dateText, 10)/1000 + 86399; //add 86399 to make it end of the day
+					if(typeof cb_select == 'function'){ cb_select(timestamp); }
 				},
 			});
 			elem_datepicker.find('.ui-datepicker-inline').addClass('burger_calendar');
@@ -177,6 +211,8 @@ var burger_attach_clickHandler = {
 
 			elem_datepicker.blur(function(){
 				elem_datepicker.velocity('slideUp', {
+					duration: dropdownDuration,
+					mobileHA: hasGood3Dsupport,
 					complete: function(){
 						elem_datepicker.recursiveRemove();
 						elem_datepicker = null;
@@ -187,7 +223,8 @@ var burger_attach_clickHandler = {
 			elem_datepicker.appendTo('#app_application_main');
 
 			elem_datepicker.velocity('slideDown', {
-				duration: 400,
+				duration: dropdownDuration,
+				mobileHA: hasGood3Dsupport,
 				complete: function(){
 					elem_datepicker.focus();
 				}
@@ -195,10 +232,8 @@ var burger_attach_clickHandler = {
 		}
 
 
-		
-
 		elem.click(function(){
-			if( !elem_datepicker && (!responsiveRange || responsive.test(responsiveRange)) /*&& Lincko.storage.canI('edit', lincko_type, lincko_id)*/){
+			if( !elem_datepicker && (responsiveRange == true || responsive.test(responsiveRange)) && Lincko.storage.canI('edit', lincko_type, lincko_id)){
 				launch();
 			}
 		});

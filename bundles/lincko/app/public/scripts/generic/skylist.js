@@ -1053,11 +1053,22 @@ skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
 		var span_date = burger_spanDate(skylist_calcDuedate(item));
 		var span_user = burger_spanUser(tasks_get_inCharge_id(item['_id'])[0]);
 		burger_attach_clickHandler.in_charge(span_user, item._type, item._id, null, true, null);
+		burger_attach_clickHandler.calendar(span_date, item._type, item._id, null, true, null);
 		elem_title.text(item['+title']);
 		elem_title.append(span_user).append(span_date);
 	}
 
-	
+	//if task duedate changed, adjust overdue class
+	if((typeof updated == 'boolean' && updated) || updated.duration){
+		var isOverdue = tasks_isOverdue(item._id);
+		if(isOverdue){
+			elem.addClass('skylist_card_overdue');
+		}
+		else{
+			elem.removeClass('skylist_card_overdue');
+		}
+	}
+
 	//if links were updated
 	if((typeof updated == 'boolean' && updated) || updated._files || updated._notes){
 		var elem_expandable_links = elem.children('[find=expandable_links]');
@@ -1704,7 +1715,9 @@ skylist.prototype.addTask = function(item){
 	}
 
 	if(that.Lincko_itemsList_filter.view == 'paper'){
-		elem_title.append(burger_spanDate(item['start']+item['duration'], duedate));
+		var elem_title_spanDate = burger_spanDate(item['start']+item['duration'], duedate);
+		burger_attach_clickHandler.calendar(elem_title_spanDate, item['_type'], item['_id'], null, true);
+		elem_title.append(elem_title_spanDate);
 		elem_title.append(' ');
 	}
 	

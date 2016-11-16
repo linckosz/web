@@ -90,3 +90,22 @@ var tasks_get_inCharge_id = function(task_id, resultType){
 	}
 	return result;
 }
+
+var tasks_calcDuedate = function(id){
+	var task = Lincko.storage.get('tasks', id);
+	if(!task){ return false; }
+
+	var duedate = new wrapper_date(parseInt(task.start,10) + parseInt(task.duration,10));
+	return duedate;
+}
+
+var tasks_isOverdue = function(id){
+	var duedate = tasks_calcDuedate(id);
+	var now = new wrapper_date();
+	if( now.time > duedate.time ){
+		return true;
+	}
+	else{
+		return false;
+	}
+}
