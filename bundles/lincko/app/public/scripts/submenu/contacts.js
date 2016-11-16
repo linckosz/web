@@ -190,17 +190,25 @@ var submenu_contacts_update = {
 	chats_title_timer: null,
 	chats_title: function(subm, input){
 		clearTimeout(submenu_contacts_update.chats_title_timer);
-		submenu_contacts_update.chats_title_timer = setTimeout(function(id, value){
-			wrapper_sendAction(
-			{
-				"id": id,
-				"title": value,
-			},
-				'post',
-				'chat/update'
-			);
-			submenu_contacts_update.chats_title_timer = null;
-		}, 400, subm.param.id, $(input).val());
+		var value = $(input).val();
+		if(Lincko.storage.get("chats", subm.param.id, "title") != value){
+			submenu_contacts_update.chats_title_timer = setTimeout(function(id, value){
+				wrapper_sendAction(
+				{
+					"id": id,
+					"title": value,
+				},
+					'post',
+					'chat/update'
+				);
+				submenu_contacts_update.chats_title_timer = null;
+			}, 400, subm.param.id, value);
+			//Fake the change for faster display
+			if(Lincko.storage.data["chats"][subm.param.id]){
+				Lincko.storage.data["chats"][subm.param.id]["+title"] = value;
+				app_application_lincko.prepare("chats_"+subm.param.id, true);
+			}
+		}
 	},
 
 	chats_contacts_list_ori: {}, //Keep trak of lastest status recorded on server
@@ -238,7 +246,22 @@ var submenu_contacts_update = {
 				submenu_contacts_update.chats_contacts_list = {};
 			}
 			submenu_contacts_update.chats_contacts_timer = null;
-		}, 20, subm.param.id);
+		}, 2000, subm.param.id);
+		if(!$.isEmptyObject(submenu_contacts_update.chats_contacts_list)){
+			//Fake the change for faster display
+			if(Lincko.storage.data["chats"][subm.param.id]){
+				var perm = Lincko.storage.get("chats", subm.param.id, "_perm");
+				for(var i in submenu_contacts_update.chats_contacts_list){
+					if(submenu_contacts_update.chats_contacts_list[i]){
+						perm[i] = [0, 0]; //Give only viewer/read permission
+					} else {
+						delete perm[i];
+					}
+				}
+				Lincko.storage.data["chats"][subm.param.id]["_perm"] = perm;
+				app_application_lincko.prepare("chats_"+subm.param.id, true);
+			}
+		}
 	},
 
 }

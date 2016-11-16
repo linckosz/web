@@ -12,7 +12,13 @@ var onboarding = {
 
 		//if ob_settings don't exist when onboarding was not triggered from backend
 		var ob_settings = Lincko.storage.getOnboarding();
-		if(!ob_settings){
+		if(
+			   !ob_settings
+			|| !ob_settings.projects
+			|| !ob_settings.projects[1]
+			|| !ob_settings.sequence
+			|| !ob_settings.sequence[1]
+		){
 			return false; //onboarding launch fail
 		}
 		var id_pj_welcome = ob_settings.projects[1]; //script 1
