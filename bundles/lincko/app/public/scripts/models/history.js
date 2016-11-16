@@ -11,11 +11,16 @@ var app_models_history = {
 	},
 
 	refresh: function(type, id){
-		if(app_models_history.hist_root[type+'_'+id]){
-			app_models_history.hist_root[type+'_'+id] = null;
-			delete app_models_history.hist_root[type+'_'+id];
-			app_models_history.hist_root_recent = [];
-		}	
+		var parent = this.getRoot(type, id);
+		if(parent){
+			type = parent['_type'];
+			id = parent['_id'];
+			if(app_models_history.hist_root[type+'_'+id]){
+				app_models_history.hist_root[type+'_'+id] = null;
+				delete app_models_history.hist_root[type+'_'+id];
+				app_models_history.hist_root_recent = [];
+			}
+		}
 	},
 
 	getList: function(limit, parent_type, parent_id){
@@ -70,6 +75,23 @@ var app_models_history = {
 		return histList;
 	},
 
+	//This return projects or chats item
+	getRoot: function(type, id){
+		if(type=="projects" || type=="chats"){
+			return Lincko.storage.get(type, id);
+		}
+		var parent = Lincko.storage.getParent(type, id);
+		while(parent){
+			type = parent["_type"];
+			id = parent["_id"];
+			if(type=="projects" || type=="chats"){
+				return parent;
+			}
+			parent = Lincko.storage.getParent(type, id);
+		}
+		return false;
+	},
+
 	tabList: function(limit, parent_type, parent_id){
 		if(typeof limit != 'number' || limit<=0){ limit = false; }
 		if(typeof parent_type == 'undefined'){ parent_type = false; }
@@ -103,25 +125,8 @@ var app_models_history = {
 			exclude = Lincko.storage.cache.getExcludeChats();
 		}
 
-		//This return projects or chats item
-		var getRoot = function(type, id){
-			if(type=="projects" || type=="chats"){
-				return Lincko.storage.get(type, id);
-			}
-			var parent = Lincko.storage.getParent(type, id);
-			while(parent){
-				type = parent["_type"];
-				id = parent["_id"];
-				if(type=="projects" || type=="chats"){
-					return parent;
-				}
-				parent = Lincko.storage.getParent(type, id);
-			}
-			return false;
-		};
-
 		for(var i in hist_all){
-			root_item = getRoot(hist_all[i]["type"], hist_all[i]["id"]); //Accept only Chats and Projects
+			root_item = this.getRoot(hist_all[i]["type"], hist_all[i]["id"]); //Accept only Chats and Projects
 			root_name = root_item["_type"]+"_"+root_item["_id"];
 			name = hist_all[i]["type"]+"_"+hist_all[i]["id"];
 			if(root_item && typeof hist_num[root_name] == "undefined" && root_item['deleted_at']==null){

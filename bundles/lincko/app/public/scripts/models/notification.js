@@ -19,12 +19,12 @@ var app_models_notifier = {
 	},	
 
 	getNotification: function(type, id) {
-		return Lincko.storage.hist(null, null, {not: true}, type, id, true).length;
+		return Lincko.storage.hist(null, null, {not: true}, type, id, true, true, true).length;
 	},
 
 	clearNotification: function(type, id) {
 		var tmp = {};
-		var items = Lincko.storage.hist(null, null, {not: true}, type, id, true);
+		var items = Lincko.storage.hist(null, null, {not: true}, type, id, true, true, true);
 		if(items.length>0){
 			for (var i in items){
 				tmp[items[i]["type"]+"_"+items[i]["id"]] = true;

@@ -215,6 +215,7 @@ var submenu_contacts_update = {
 				return false; //Cannot disallow the owner
 			}
 			submenu_contacts_update.chats_contacts_list[uid] = checked;
+			submenu_contacts_update.chats_contacts_list_ori[uid] = checked;
 		} else {
 			delete submenu_contacts_update.chats_contacts_list[uid];
 		}
@@ -237,7 +238,7 @@ var submenu_contacts_update = {
 				submenu_contacts_update.chats_contacts_list = {};
 			}
 			submenu_contacts_update.chats_contacts_timer = null;
-		}, 2000, subm.param.id);
+		}, 20, subm.param.id);
 	},
 
 }

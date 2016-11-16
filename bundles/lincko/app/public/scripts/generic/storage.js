@@ -82,12 +82,14 @@ var storage_local_storage = {
 };
 
 Lincko.storage.getParent = function(type, id, attr) {
-	var elem = Lincko.storage.get(type, id);
 	var parent = false;
-	var parent_type = elem._parent[0];
-	var parent_id = elem._parent[1];
-	if (elem && parent_type && parent_id) {
-		parent = Lincko.storage.get(parent_type, parent_id, attr);
+	var elem = Lincko.storage.get(type, id);
+	if(elem){
+		var parent_type = elem._parent[0];
+		var parent_id = elem._parent[1];
+		if (elem && parent_type && parent_id) {
+			parent = Lincko.storage.get(parent_type, parent_id, attr);
+		}
 	}
 	return parent;
 };
@@ -1135,67 +1137,75 @@ Lincko.storage.cache = {
 		this.exclude_projects = {};
 		this.notify = {};
 		this.statistics = {};
+		var item_cat;
 		var children;
-		for(var item_cat in Lincko.storage.data){
-			if(item_cat.indexOf('_')!==0){ //Scan only models
-				for(var item_id in Lincko.storage.data[item_cat]){
-					if(item_cat=="chats"){
-						children = Lincko.storage.tree("chats", item_id, "children", true, true);
-						if(children){
-							for(var cat in children){
-								for(var id in children[cat]){
-									//For projects, exclude everything (also deleted_at) which is about chats
-									if(typeof this.exclude_projects[cat] == "undefined"){ this.exclude_projects[cat] = {}; }
-									this.exclude_projects[cat][id] = true;
-									//For chats exlude chats itself and everything else (also deleted_at) which is not level 1 children
-									if(cat=="chats" || (typeof Lincko.storage.data[cat][id]["_parent"] != "undefined" && Lincko.storage.data[cat][id]["_parent"][0]!="chats")){
-										if(typeof this.exclude_chats[cat] == "undefined"){ this.exclude_chats[cat] = {}; }
-										this.exclude_chats[cat][id] = true;
-									}
-									//Record notifications
-									if(!Lincko.storage.data[cat][id]['deleted_at'] && Lincko.storage.data[cat][id]['_not']){
-										if(typeof this.notify[item_cat] == "undefined"){ this.notify[item_cat] = {}; }
-										if(typeof this.notify[item_cat][item_id] == "undefined"){
-											this.notify[item_cat][item_id] = 1;
-										} else {
-											this.notify[item_cat][item_id]++;
-										}
-									}
-								}
+
+		item_cat = "chats";
+		for(var item_id in Lincko.storage.data[item_cat]){
+			children = Lincko.storage.tree(item_cat, item_id, "children", true, true);
+			if(children){
+				for(var cat in children){
+					for(var id in children[cat]){
+						//For projects, exclude everything (also deleted_at) which is about chats
+						if(typeof this.exclude_projects[cat] == "undefined"){ this.exclude_projects[cat] = {}; }
+						this.exclude_projects[cat][id] = true;
+						//For chats exlude chats itself and everything else (also deleted_at) which is not level 1 children
+						if(cat=="chats" || (typeof Lincko.storage.data[cat][id]["_parent"] != "undefined" && Lincko.storage.data[cat][id]["_parent"][0]!="chats")){
+							if(typeof this.exclude_chats[cat] == "undefined"){ this.exclude_chats[cat] = {}; }
+							this.exclude_chats[cat][id] = true;
+						}
+						//Skip excluded
+						if(this.exclude_chats[cat] && this.exclude_chats[cat][id]){
+							continue;
+						}
+						//Record notifications
+						if(!Lincko.storage.data[cat][id]['deleted_at'] && Lincko.storage.data[cat][id]['_not']){
+							if(typeof this.notify[item_cat] == "undefined"){ this.notify[item_cat] = {}; }
+							if(typeof this.notify[item_cat][item_id] == "undefined"){
+								this.notify[item_cat][item_id] = 1;
+							} else {
+								this.notify[item_cat][item_id]++;
 							}
 						}
-					} else if(item_cat=="projects"){
-						children = Lincko.storage.tree("projects", item_id, "children", true, true);
-						if(children){
-							for(var cat in children){
-								for(var id in children[cat]){
-									//Record notifications
-									if(!Lincko.storage.data[cat][id]['deleted_at'] && Lincko.storage.data[cat][id]['_not']){
-										if(typeof this.notify[item_cat] == "undefined"){ this.notify[item_cat] = {}; }
-										if(typeof this.notify[item_cat][item_id] == "undefined"){
-											this.notify[item_cat][item_id] = 1;
-										} else {
-											this.notify[item_cat][item_id]++;
-										}
-									}
-									//Record statistics tasks/notes/files
-									if(
-										!Lincko.storage.data[cat][id]['deleted_at']
-										&& (
-											   (cat=="tasks" && !Lincko.storage.data[cat][id]['approved'] && !Lincko.storage.data[cat][id]['_tasksup'])
-											||  cat=="notes"
-											||  cat=="files"
-										)
-									){
-										if(typeof this.statistics[item_cat] == "undefined"){ this.statistics[item_cat] = {}; }
-										if(typeof this.statistics[item_cat][item_id] == "undefined"){ this.statistics[item_cat][item_id] = {}; }
-										if(typeof this.statistics[item_cat][item_id][cat] == "undefined"){
-											this.statistics[item_cat][item_id][cat] = 1;
-										} else {
-											this.statistics[item_cat][item_id][cat]++;
-										}
-									}
-								}
+					}
+				}
+			}
+		}
+
+		item_cat = "projects";
+		for(var item_id in Lincko.storage.data[item_cat]){
+			children = Lincko.storage.tree(item_cat, item_id, "children", true, true);
+			if(children){
+				for(var cat in children){
+					for(var id in children[cat]){
+						//Skip excluded
+						if(this.exclude_projects[cat] && this.exclude_projects[cat][id]){
+							continue;
+						}
+						//Record notifications
+						if(!Lincko.storage.data[cat][id]['deleted_at'] && Lincko.storage.data[cat][id]['_not']){
+							if(typeof this.notify[item_cat] == "undefined"){ this.notify[item_cat] = {}; }
+							if(typeof this.notify[item_cat][item_id] == "undefined"){
+								this.notify[item_cat][item_id] = 1;
+							} else {
+								this.notify[item_cat][item_id]++;
+							}
+						}
+						//Record statistics tasks/notes/files
+						if(
+							!Lincko.storage.data[cat][id]['deleted_at']
+							&& (
+								   (cat=="tasks" && !Lincko.storage.data[cat][id]['approved'] && !Lincko.storage.data[cat][id]['_tasksup'])
+								||  cat=="notes"
+								||  cat=="files"
+							)
+						){
+							if(typeof this.statistics[item_cat] == "undefined"){ this.statistics[item_cat] = {}; }
+							if(typeof this.statistics[item_cat][item_id] == "undefined"){ this.statistics[item_cat][item_id] = {}; }
+							if(typeof this.statistics[item_cat][item_id][cat] == "undefined"){
+								this.statistics[item_cat][item_id][cat] = 1;
+							} else {
+								this.statistics[item_cat][item_id][cat]++;
 							}
 						}
 					}
