@@ -10,7 +10,11 @@ var onboarding = {
 			return false; //onboarding launch fail
 		}
 
+		//if ob_settings don't exist when onboarding was not triggered from backend
 		var ob_settings = Lincko.storage.getOnboarding();
+		if(!ob_settings){
+			return false; //onboarding launch fail
+		}
 		var id_pj_welcome = ob_settings.projects[1]; //script 1
 		var status_ob_welcome = ob_settings.sequence[1];
 
@@ -18,50 +22,50 @@ var onboarding = {
 		if(!Lincko.storage.get('projects', id_pj_welcome) || !status_ob_welcome){
 			return false; //onboarding launch fail
 		}
-		else{ //start onboarding
-			onboarding.on = true;
-			app_content_menu.selection(id_pj_welcome);
-			app_application.project();
-			onboarding.overlays.show.content_sub();
 
-			var onboardingDelay = 0;
-			if(responsive.test('maxMobileL')){
-				onboardingDelay = 2000; //2s to show main menu is open
+////////start onboarding
+		onboarding.on = true;
+		app_content_menu.selection(id_pj_welcome);
+		app_application.project();
+		onboarding.overlays.show.content_sub();
+
+		var onboardingDelay = 0;
+		if(responsive.test('maxMobileL')){
+			onboardingDelay = 2000; //2s to show main menu is open
+		}
+
+		var submenu_timer = setInterval(function(){
+			if(!app_content_menu_first_launch){
+				clearInterval(submenu_timer);
+				setTimeout(function(){
+					onboarding.toBot(id_pj_welcome);
+				}, onboardingDelay);
 			}
+		}, 500);
 
-			var submenu_timer = setInterval(function(){
-				if(!app_content_menu_first_launch){
-					clearInterval(submenu_timer);
-					setTimeout(function(){
-						onboarding.toBot(id_pj_welcome);
-					}, onboardingDelay);
-				}
-			}, 500);
+		//ESC during onboarding to clear
+		$(document).on('keyup.onboarding', function(event){
+			if (event.which == 27) { //ESC
+		       $(document).off('keyup.onboarding');
+		       onboarding.clear();
+		    }
+		});
 
-			//ESC during onboarding to clear
-			$(document).on('keyup.onboarding', function(event){
-				if (event.which == 27) { //ESC
-			       $(document).off('keyup.onboarding');
-			       onboarding.clear();
-			    }
-			});
+		//watch for end of onboarding in the 'settings' sync function
+		var id_onboarding_garbage_settings = app_application_garbage.add('onboarding_garbage_settings');
+		app_application_lincko.add(id_onboarding_garbage_settings, 'settings', function(){ 
+			var ob_settings = Lincko.storage.getOnboarding();
+			var status_ob_welcome = ob_settings.sequence[1];
 
-			//watch for end of onboarding in the 'settings' sync function
-			var id_onboarding_garbage_settings = app_application_garbage.add('onboarding_garbage_settings');
-			app_application_lincko.add(id_onboarding_garbage_settings, 'settings', function(){ 
-				var ob_settings = Lincko.storage.getOnboarding();
-				var status_ob_welcome = ob_settings.sequence[1];
-
-				//if onboarding is complete, unlock all Lincko
-				if(!status_ob_welcome){
-					onboarding.clear();
-					onboarding.toBot();
-					app_application_garbage.remove(id_onboarding_garbage_settings);
-				}
-			});
-			return true; //onboarding launch successful
-		}//END OF start onboarding
-	},
+			//if onboarding is complete, unlock all Lincko
+			if(!status_ob_welcome){
+				onboarding.clear();
+				onboarding.toBot();
+				app_application_garbage.remove(id_onboarding_garbage_settings);
+			}
+		});
+		return true; //onboarding launch successful
+	}, //END OF launch
 
 	clear_fn_list: [], //any function that needs to be run on onboarding.clear can be put here
 	clear: function(submenuHide){
