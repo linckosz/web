@@ -1,8 +1,8 @@
 var onboarding = {
 	forceOff: false,
 	on: false, //will be set to true for the duration of onboarding
-	project_id: null,
-	overlays: {},
+	project_id: null, //onboarding project id
+	overlays: {}, //functions and other controls for main menu and content overlays
 
 	launch: function(){ //return true if launched, return false if conditions are not fit for launch
 
@@ -10,7 +10,7 @@ var onboarding = {
 			return false; //onboarding launch fail
 		}
 
-		//if ob_settings don't exist when onboarding was not triggered from backend
+		//ob_settings don't exist if onboarding was not triggered from backend
 		var ob_settings = Lincko.storage.getOnboarding();
 		if(
 			   !ob_settings
@@ -136,6 +136,7 @@ var onboarding = {
 	},
 
 }
+
 onboarding.overlays = {
 	ini: function(){
 		this.show.that = this;

@@ -692,15 +692,14 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 		}
 	}
 
-	
-
 	iscroll_elem.children().not('.burger_typeTask').velocity("fadeIn",{
 		mobileHA: hasGood3Dsupport,
 		complete: 200,
 		complete: function(){
+			if(!that){ return false; }
 			that.store_all_elem();
 			//paperview - showLink filter
-			if(that.Lincko_itemsList_filter.view == 'paper'){
+			if(that.Lincko_itemsList_filter && that.Lincko_itemsList_filter.view == 'paper'){
 				that.paperview_filter_showLinks();
 			}
 			that.window_resize();
@@ -794,10 +793,11 @@ skylist.prototype.addCard = function(item){
 						mobileHA: hasGood3Dsupport,
 						complete: function(){
 							$(this).recursiveRemove();
-							if( that.list_subwrapper.find('[find=card]').length < 1 ){
+							if(!that){ return false; }
+							if( that.list_subwrapper && that.list_subwrapper.find('[find=card]').length < 1 ){
 								that.tasklist_update();
 							}
-							else{
+							else if(that.DOM_updated){
 								that.DOM_updated();
 							}
 						}
