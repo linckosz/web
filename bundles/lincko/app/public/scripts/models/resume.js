@@ -336,22 +336,25 @@ var app_models_evan_fn = function(current, span_arr, subm){
 	}, 5, current, span_arr);
 };
 
-$("body").on("click", '.app_models_resume_onboarding_answer',function(){
+$("body").on("click", '.app_models_resume_onboarding_answer',function(event){
+	var dom = $(this);
+	var submenu = dom.submenu_getWrapper()[0];
 	var options = $(this).closest('.models_history_answer_options');
 	options.velocity("bruno.slideRightOut", { 
 		duration: 500,
 		complete:function(){
-			options.recursiveRemove();
-			var dom = $('[onboarding_id='+current+']');
 			if(dom.length > 0 )
 			{
-				var submenu = dom.submenu_getWrapper()[0];
-				var overthrow_id = "overthrow_"+submenu.id;
-				var iScroll = myIScrollList[overthrow_id];
-				var last = $('#'+submenu.id+'_help_iscroll').get(0);
-				submenu_resize_content();
-				iScroll.scrollToElement(last, 0);
+				if(typeof submenu != "undefined")
+				{
+					var overthrow_id = "overthrow_"+submenu.id;
+					var iScroll = myIScrollList[overthrow_id];
+					var last = $('#'+submenu.id+'_help_iscroll').get(0);
+					submenu_resize_content();
+					iScroll.scrollToElement(last, 0);
+				}
 			}
+			options.recursiveRemove();
 		} 
 	});	
 });

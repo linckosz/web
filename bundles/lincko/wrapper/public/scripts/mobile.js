@@ -1,16 +1,16 @@
 function setMobileAlias(){
-	var uid = wrapper_localstorage.uid;
-	if(typeof uid == 'undefined' || isNaN(uid))
+	var sha = wrapper_localstorage.sha;
+	if(typeof sha == 'undefined')
 	{
-		uid = '';
+		sha = '';
 	}
 	if(typeof android != 'undefined' )
 	{
-		android.setAlias('android', uid);
+		android.setAlias('android', sha);
 	}
 	if(typeof iOS != 'undefined' )
 	{
-		iOS.setAlias(uid);
+		iOS.setAlias(sha);
 	}
 }
 setMobileAlias();

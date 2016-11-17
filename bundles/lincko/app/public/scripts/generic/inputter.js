@@ -554,6 +554,7 @@ inputter.prototype.buildLayer = function()
 	var mobile_show_count = 0 ;
 	mobile_show_count = mobile_right_col_count;
 
+
 	input.find('[find=chat_textarea]').on('keyup',function(e){
 		if(!flag && e.keyCode == 13 && that.hasTask){
 			e.which = null;
@@ -581,13 +582,44 @@ inputter.prototype.buildLayer = function()
 		content.addClass('mobile-margin-right-' + mobile_show_count);
 	});
 
+
+function cleanOfficeTag(source){
+	source = source.replace(/<\!\-\-(.*)\-\->/gi,"");
+	return source;
+}
+
+function cleanAndPaste( html ) {
+ // // Remove all SPAN tags
+ html = html.replace(/<(?!img|br|p|\/p).*?>/g,"");
+ // // Remove Class attributes
+ // html = html.replace(/<(w[^]*) class=([^ |]*)([^]*)/gi, "<$1$3") ;
+ // // Remove Style attributes
+ // html = html.replace(/<(w[^]*) style="([^"]*)"([^]*)/gi, "<$1$3") ;
+ // // Remove Lang attributes
+ // html = html.replace(/<(w[^]*) lang=([^ |]*)([^]*)/gi, "<$1$3") ;
+ // // Remove XML elements and declarations
+ // html = html.replace(/<??xml[^]*/gi, "") ;
+ // // Remove Tags with XML namespace declarations: <o:p</o:p
+ // html = html.replace(/<\/?w+:[^]*/gi, "") ;
+ // // Replace the &nbsp;
+ // html = html.replace(/&nbsp;/, " " );
+ // // Transform <P to <DIV
+ // var re = new RegExp("(<P)([^]*.*?)(</P)","gi") ; // Different because of a IE 5.0 error
+ // html = html.replace( re, "<div$2</div" ) ;
+ 
+ return html;
+}
+
 	input.find('[find=chat_textarea]').on('paste',function(e,data){
+		// console.log(e.originalEvent.clipboardData.getData());
 		var target = this;
 		setTimeout(function(){
-			target.innerHTML = target.innerHTML
+			//debugger;
+			//target.innerHTML = cleanOfficeTag(target.innerHTML);
+			target.innerHTML = cleanAndPaste(target.innerHTML
 				.replace(/<(br).*?>/g,"<br/>")
 				.replace(/<(?!br).*?>/g,"")
-				.replace(/[\r\n]/g, "");
+				.replace(/[\r\n]/g, ""));
 		},0);
 	});
 
