@@ -96,6 +96,12 @@ var burger_attach_clickHandler = {
 		var elem_datepicker = null;
 		var dropdownDuration = 400;
 
+		var currentDate = 0;
+		var lincko_item = Lincko.storage.get(lincko_type, lincko_id);
+		if(lincko_item){
+			currentDate = (lincko_item.start + lincko_item.duration)*1000;
+		}
+
 		//default cb_select for in_charge
 		if(cb_select && typeof cb_select == 'boolean' && lincko_type == 'tasks'){
 			var cb_select = function(timestamp){
@@ -139,11 +145,11 @@ var burger_attach_clickHandler = {
 				dateFormat: '@',
 				gotoCurrent: true,
 				minDate: 0,
+				defaultDate: currentDate.toString(),
 				onChangeMonthYear: function(year, month, inst){ //this is called before the calendar is redrawn, use timeout
 					setTimeout(function(){
 						elem_datepicker.find('.ui-datepicker-next').empty().addClass('icon-Forward'); //DONT USE .recursiveEmpty() HERE
 						elem_datepicker.find('.ui-datepicker-prev').empty().addClass('icon-Forward fa-flip-horizontal'); //DONT USE .recursiveEmpty() HERE
-						console.log(elem_datepicker.find('.ui-datepicker-prev'));
 					}, 10);
 				},
 				onSelect: function(dateText, inst){
@@ -338,10 +344,10 @@ var burger_global_dropdown = {
 
 	hide_all: function(){
 		$.each(burger_global_dropdown.list, function(id, inst){
-			if('hide' in inst){
+			if(typeof inst.hide == 'function'){
 				inst.hide();
 			}
-			else if('destroy' in inst){
+			else if(typeof inst.destroy == 'function'){
 				inst.destroy();
 			}
 			
@@ -351,7 +357,9 @@ var burger_global_dropdown = {
 
 	destroy_all: function(){
 		$.each(burger_global_dropdown.list, function(id, inst){
-			inst.destroy();
+			if(typeof inst.destroy == 'function'){
+				inst.destroy();
+			}
 		});
 		burger_global_dropdown.list = {};
 	},
