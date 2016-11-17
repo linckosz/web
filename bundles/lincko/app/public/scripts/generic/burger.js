@@ -16,6 +16,8 @@ var burger_attach_clickHandler = {
 		if(typeof cb_destroy != 'function'){ var cb_destroy = null; }
 		if(typeof responsiveRange != 'boolean' && typeof resonsiveRange != 'string'){ var responsiveRange = 'minTablet'; } //responsiveRange true is minTablet
 		
+		//disable clickHandler for personal space
+		if(Lincko.storage.get('projects', app_content_menu.projects_id)['personal_private']){ return false; }
 
 		//default cb_select for in_charge
 		if(cb_select && typeof cb_select == 'boolean'){
@@ -897,6 +899,7 @@ burgerN.typeTask = function(projectID, skylistInst, dropdownOffset){
 
 	param.enter_fn = function(parsedData){
 		var title = parsedData.text;
+		if(!title.length){ return false; }
 
 		var tempID = null;
 		var param = {
