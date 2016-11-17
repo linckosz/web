@@ -24,11 +24,14 @@ var JSerror = new function() {
 		message = JSON.stringify(message, null, 4);
 
 		var log = "COMP: "+this.yourplatform+" / "+this.youroscpu+" / "+this.colourbits+" / "+this.yourscreen+" / Javascript "+this.jsversion+" / "+this.javasupport+"\nBROW: "+this.yourappalt+"\nLINE: "+linenumber;
-		if(typeof colnumber!=='undefined' && colnumber!==null){
+		if(typeof colnumber!='undefined' && colnumber!==null){
 			log = log+"\nCOL : "+colnumber;
 		}
+		if(typeof wrapper_localstorage!="undefined" && typeof wrapper_localstorage.uid!="undefined"){
+			log = log+"\nUID : "+wrapper_localstorage.uid;
+		}
 		log = log+"\nURL : "+url+"\nMSG : "+message;
-		if(typeof error!=='undefined' && error!==null && typeof error.stack==='string'){
+		if(typeof error!='undefined' && error!==null && typeof error.stack==='string'){
 			log = log+"\nERR : "+error.stack;
 		}
 
