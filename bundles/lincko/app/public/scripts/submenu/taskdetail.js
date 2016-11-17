@@ -999,10 +999,13 @@ Submenu.prototype.Add_taskdetail = function() {
 				elem_subtaskCount.text(parseInt(elem_subtaskCount.text(),10) +1 );
 				$(this).html('');
 
-				myIScrollList[submenu_content.prop('id')].refresh();
-				if( responsive.test("maxMobileL") ){
-					myIScrollList[submenu_content.prop('id')].scrollBy(0, -elem_subtasks_wrapper.children('div').eq(0).outerHeight());
+				if(myIScrollList[submenu_content.prop('id')]){
+					myIScrollList[submenu_content.prop('id')].refresh();
+					if( responsive.test("maxMobileL") ){
+						myIScrollList[submenu_content.prop('id')].scrollBy(0, -elem_subtasks_wrapper.children('div').eq(0).outerHeight());
+					}
 				}
+				
 			}
 		});
 
@@ -1437,7 +1440,9 @@ Submenu.prototype.Add_taskdetail = function() {
 					$(this).html(commentCount+1).attr('style','');
 				}
 			});
-			myIScrollList[submenu_content.prop('id')].refresh();
+			if(myIScrollList[submenu_content.prop('id')]){
+				myIScrollList[submenu_content.prop('id')].refresh();
+			}
 		}
 		if(parent_id == 'new'){ 
 			cb_begin(null, null, 'new');
@@ -1934,7 +1939,9 @@ Submenu.prototype.Add_taskdetail = function() {
 			elem_toAdd.velocity('slideDown', {
 				mobileHA: hasGood3Dsupport,
 				complete: function(){
-					myIScrollList[submenu_content.prop('id')].refresh();
+					if(submenu_content.prop('id') in myIScrollList){
+						myIScrollList[submenu_content.prop('id')].refresh();
+					}
 				}
 			});
 		}
@@ -2105,7 +2112,9 @@ Submenu.prototype.Add_taskdetail = function() {
 					else { i_bubble++;	}
 				}
 				$('#'+this.id).find('[find=commentCount]').html(comments_array.length);
-				myIScrollList[submenu_content.prop('id')].refresh();
+				if(submenu_content.prop('id') in myIScrollList){
+					myIScrollList[submenu_content.prop('id')].refresh();
+				}
 			}
 		);
 	}
@@ -2141,6 +2150,7 @@ Submenu.prototype.Add_taskdetail = function() {
 
 		var onLoad_description = new base_runOnElemLoad('submenu_taskdetail_description_text_'+that.md5id, 
 			function(){
+				if(editorInst){return false; }
 				editorInst = linckoEditor('submenu_taskdetail_description_text_'+that.md5id, 'submenu_taskdetail_description_toolbar_'+that.md5id, editor_param);
 
 				elem_editorToolbar_overlay = $('<div>').addClass('taskdetail_editorToolbar_overlay').click(function(){
@@ -2167,12 +2177,6 @@ Submenu.prototype.Add_taskdetail = function() {
 		elem_editorToolbar_overlay = null;
 		$(this).off('focus');
 		return;
-		if(!editorInst){
-			var param = {};
-			param.itemID = item['_id'];
-			param.submenuInst = that;
-
-			editorInst = linckoEditor('submenu_taskdetail_description_text_'+that.md5id, 'submenu_taskdetail_description_toolbar_'+that.md5id, param/*, elem_links.find('[find=new_btn]')*/);
 		}
 	});
 
