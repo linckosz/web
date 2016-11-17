@@ -127,7 +127,8 @@ var burger_attach_clickHandler = {
 		var launch = function(){
 			if(elem_datepicker){ return; }
 			if($('#burger_calendar_clickHandler').length){ $('#burger_calendar_clickHandler').recursiveRemove(); }
-			elem_datepicker = $('#-burger_calendar_clickHandler').clone().prop('id', 'burger_calendar_clickHandler');
+			var md5id = md5(Math.random());
+			elem_datepicker = $('#-burger_calendar_clickHandler').clone().prop('id', 'burger_calendar_clickHandler_'+md5id);
 			elem_datepicker.datepicker(
 			{
 				//altFormat: "M d",
@@ -215,6 +216,8 @@ var burger_attach_clickHandler = {
 					duration: dropdownDuration,
 					mobileHA: hasGood3Dsupport,
 					complete: function(){
+						delete burger_global_dropdown.list[elem_datepicker.prop('id')];
+						elem_datepicker.datepicker( "destroy" );
 						elem_datepicker.recursiveRemove();
 						elem_datepicker = null;
 					},
@@ -232,6 +235,15 @@ var burger_attach_clickHandler = {
 				});
 			}
 
+			//add to global dropdown list
+			burger_global_dropdown.list[elem_datepicker.prop('id')] = {
+				destroy: function(){
+					elem_datepicker.datepicker( "destroy" );
+					elem_datepicker.recursiveRemove();
+					elem_datepicker = null;
+				},
+			}
+
 			elem_datepicker.velocity('slideDown', {
 				duration: dropdownDuration,
 				mobileHA: hasGood3Dsupport,
@@ -239,7 +251,6 @@ var burger_attach_clickHandler = {
 					elem_datepicker.focus();
 				}
 			});
-
 
 		}
 
