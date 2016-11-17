@@ -256,10 +256,11 @@ onboarding.scripts[2] = function(fn_continue){
 
 	//must complete all conditions to move on
 	var conditions = {
-		1: false,
-		2: false,
-		3: false,
-		4: false,
+		1: false, //target task mark complete
+		2: false, //open a task
+		3: false, //assign a task to monkey king
+		4: false, //mark all initial tasks complete
+		5: false, //create a task for today
 	}
 	var condition_complete = function(num){
 		conditions[num] = true;
@@ -287,7 +288,6 @@ onboarding.scripts[2] = function(fn_continue){
 	$.each(tasks_initial, function(i, task){
 		if(!task.approved){
 			task_target = task;
-			console.log(task_target);
 			return false;
 		}
 	});
@@ -331,7 +331,7 @@ onboarding.scripts[2] = function(fn_continue){
 	app_application_lincko.add(onboarding_garbage_action4, 'tasks', function(){
 		var allApproved = true;
 		$.each(tasks_initial, function(i, task){
-			if(!task.approved){
+			if(!Lincko.storage.get('tasks', task['_id']).approved){
 				allApproved = false;
 				return false;
 			}
@@ -341,6 +341,22 @@ onboarding.scripts[2] = function(fn_continue){
 			app_application_garbage.remove(onboarding_garbage_action4);
 			condition_complete(4);
 		}
+	});
+
+	//condition 5 - user create a task for today
+	var onboarding_garbage_action5 = app_application_garbage.add('onboarding_garbage_script_2_5');
+	app_application_lincko.add(onboarding_garbage_action5, 'projects_'+app_content_menu.projects_id, function(){
+		var tasks = Lincko.storage.list('tasks', null, {created_by: wrapper_localstorage.uid}, 'projects', app_content_menu.projects_id, false);
+		$.each(tasks, function(i, task){
+			if(task['duration'] && task['start']){
+				var due_date = new wrapper_date(task.start + task.duration);
+				if(due_date.happensSomeday(0)){
+					app_application_garbage.remove(onboarding_garbage_action5);
+					condition_complete(5);
+					return false;
+				}
+			}
+		});
 	});
 
 }
