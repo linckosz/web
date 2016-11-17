@@ -701,12 +701,12 @@ var historyFeed = function(id,type,position,submenu)
 						that.position.find(".models_history_loading").addClass('models_history_loading_hide');
 					}
 					loading_timer = setTimeout(function(IScroll){
-						if(IScroll.y >= 0){
+						if(IScroll && IScroll.y >= 0){
 							that.position.find(".models_history_loading").remove();
 							var first_li = that.position.find('li').eq(0); //Grab old first li element
 							that.app_chat_feed_layer_display();
 							IScroll.refresh();
-							if(first_li){
+							if(first_li.length>0){
 								IScroll.scrollToElement(first_li.get(0), 0, 0, -30);
 							}
 						}
@@ -724,12 +724,12 @@ var historyFeed = function(id,type,position,submenu)
 						that.position.find(".models_history_loading").addClass('models_history_loading_hide');
 					}
 					loading_timer = setTimeout(function(IScroll){
-						if(IScroll.y >= 0){
+						if(IScroll && IScroll.y >= 0){
 							that.position.find(".models_history_loading").remove();
 							var first_li = that.position.find('li').eq(0); //Grab old first li element
 							that.app_chat_feed_layer_display();
 							IScroll.refresh();
-							if(first_li){
+							if(first_li.length>0){
 								IScroll.scrollToElement(first_li.get(0), 0, 0, -30);
 							}
 						}
