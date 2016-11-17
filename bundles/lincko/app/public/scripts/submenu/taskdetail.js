@@ -1136,7 +1136,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		}
 		else{
 			//cannot remove links from file detail page
-			elem_linkcard.find('[find=action_div]').recursiveRemove();
+			elem_linkcard.find('[find=action_div]').recursiveRemove(0);
 		}
 
 		return elem_linkcard;
@@ -1375,7 +1375,7 @@ Submenu.prototype.Add_taskdetail = function() {
 					}
 				});
 				elem_addNewComment_text.focusout(function(){
-					elem_replyBubble.recursiveRemove();
+					elem_replyBubble.recursiveRemove(0);
 				});
 
 				elem_replyTo.after(elem_replyBubble);
@@ -2024,8 +2024,7 @@ Submenu.prototype.Add_taskdetail = function() {
 									taskdetail_uploadManager(that.param.uniqueID, temp_id, null, null, true);
 									elem_linkcard.velocity('slideUp',{
 										complete: function(){
-											elem_linkcard.recursiveEmpty().remove();
-											//elem_linkcard.recursiveRemove(); toto
+											elem_linkcard.recursiveRemove();
 										},
 									});
 
@@ -2173,7 +2172,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	}
 	
 	elem_description_text.focus(function(){ 
-		elem_editorToolbar_overlay.recursiveRemove();
+		elem_editorToolbar_overlay.recursiveRemove(0);
 		elem_editorToolbar_overlay = null;
 		$(this).off('focus');
 		return;
@@ -2298,7 +2297,7 @@ var taskdetail_generateNewCommentBubble = function(parent_type, parent_id, sendA
 	if(blurRemove){
 		elem_addNewComment_text.focusout(function(){
 			if(!$.trim(elem_addNewComment_text.val()).length){
-				elem_newCommentBubble.recursiveRemove();
+				elem_newCommentBubble.recursiveRemove(0);
 			}
 		});
 	}

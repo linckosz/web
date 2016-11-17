@@ -170,7 +170,7 @@ var skylist_enquire = {};
 
 skylist.prototype.construct = function(){
 	var that = this;
-	that.list_wrapper = that.list_wrapper.recursiveEmpty().addClass('skylist_wrapper');
+	that.list_wrapper = that.list_wrapper.recursiveEmpty(0).addClass('skylist_wrapper');
 	that.list_subwrapper = $('#-skylist_subwrapper').clone().prop('id','');
 
 	that.filter_updateSettings(false); //must be before menu_construct to know which filter to be on when loaded
@@ -414,7 +414,7 @@ skylist.prototype.destroy = function(){
 		that.inputterInst.destroy();
 	}
 
-	that.list_wrapper.recursiveEmpty();
+	that.list_wrapper.recursiveEmpty(0);
 	$(window).off("resize.skylist_"+that.md5id);
 	$('body').off("mouseleave.skylist_"+that.md5id);
 	$(document).off("submenuHide.skylist_"+that.md5id);
@@ -681,7 +681,7 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 	}
 	cards_elem = iscroll_elem.children().not('.burger_typeTask');
 
-	cards_elem.recursiveRemove();
+	cards_elem.recursiveRemove(0);
 	if( items_filtered.length < 1 ){
 		iscroll_elem.append(that.noResult_str);
 	}
@@ -792,7 +792,7 @@ skylist.prototype.addCard = function(item){
 					elem.velocity('slideUp',{
 						mobileHA: hasGood3Dsupport,
 						complete: function(){
-							$(this).recursiveRemove();
+							$(this).recursiveRemove(0);
 							if(!that){ return false; }
 							if( that.list_subwrapper && that.list_subwrapper.find('[find=card]').length < 1 ){
 								that.tasklist_update();
@@ -1118,13 +1118,13 @@ skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
 		var elem_fileboxExist = elem_expandable_links.children('[_files]');
 		if(elem_fileboxExist.length){
 			if(!item._files){
-				elem_fileboxExist.recursiveRemove();
+				elem_fileboxExist.recursiveRemove(0);
 			}
 			else{
 				$.each(elem_fileboxExist, function(i, elem){
 					var elem = $(elem);
 					if(!item._files[elem.attr('_files')]){
-						elem.recursiveRemove();
+						elem.recursiveRemove(0);
 					}
 				});
 			}
@@ -1183,7 +1183,7 @@ skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
 		$.each(elem_expandable_comments.children('[rootcomment_id]'), function(i, elem){
 			var commentID = $(elem).attr('rootcomment_id');
 			if(!Lincko.storage.get('comments', commentID)){
-				$(elem).recursiveRemove();
+				$(elem).recursiveRemove(0);
 			}
 		});
 
@@ -1278,7 +1278,7 @@ skylist.prototype.addTask = function(item){
 
 	var Elem_checkbox = $('#-skylist_checkbox').clone().prop('id','');
 	Elem.find('[find=card_leftbox]').html(Elem_checkbox);
-	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').recursiveEmpty();
+	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').recursiveEmpty(0);
 	var created_by;
 	var in_charge = '';
 	var in_chargeID = null;
@@ -1800,7 +1800,7 @@ skylist.prototype.addTask = function(item){
 
 skylist.draw_noteCard = function(item){
 	var Elem = $('#-skylist_card').clone().removeAttr('id');
-	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').recursiveEmpty();
+	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').recursiveEmpty(0);
 	var updated_by;
 	var updated_at;
 
@@ -1926,7 +1926,7 @@ skylist.prototype.addNote = function(item){
 */
 
 	var Elem = $('#-skylist_card').clone();
-	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').recursiveEmpty();
+	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').recursiveEmpty(0);
 	var updated_by;
 	var updated_at;
 
@@ -2045,7 +2045,7 @@ skylist.prototype.addNote = function(item){
 skylist.draw_fileCard = function(item){
 	if(!item['_perm'] || typeof item['_perm'] !== 'object'){ return false; }
 	var Elem = $('#-skylist_card').clone().removeAttr('id');
-	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').recursiveEmpty();
+	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').recursiveEmpty(0);
 	var updated_by;
 	var updated_at;
 
