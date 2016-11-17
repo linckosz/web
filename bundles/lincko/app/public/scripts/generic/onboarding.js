@@ -345,7 +345,7 @@ onboarding.scripts[2] = function(fn_continue){
 
 	//condition 5 - user create a task for today
 	var onboarding_garbage_action5 = app_application_garbage.add('onboarding_garbage_script_2_5');
-	app_application_lincko.add(onboarding_garbage_action5, 'projects_'+app_content_menu.projects_id, function(){
+	app_application_lincko.add(onboarding_garbage_action5, ['tasks', 'projects_'+app_content_menu.projects_id], function(){
 		var tasks = Lincko.storage.list('tasks', null, {created_by: wrapper_localstorage.uid}, 'projects', app_content_menu.projects_id, false);
 		$.each(tasks, function(i, task){
 			if(task['duration'] && task['start']){
