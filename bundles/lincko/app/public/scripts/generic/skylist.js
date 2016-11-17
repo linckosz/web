@@ -1327,7 +1327,7 @@ skylist.prototype.addTask = function(item){
 	}
 	if(contenteditable){
 		//for paper, direct edit, for others, settimeout
-		if(that.Lincko_itemsList_filter.view == 'paper' && !supportsTouch){
+		if(that.Lincko_itemsList_filter.view == 'paper' && !supportsTouch && false){ //toto - paperiew same as card view
 			elem_title.attr('contenteditable',contenteditable);
 		}
 		else{
@@ -1353,7 +1353,7 @@ skylist.prototype.addTask = function(item){
 			}
 		});
 		elem_title.blur(function(){
-			if(that.Lincko_itemsList_filter.view != 'paper'){
+			if(that.Lincko_itemsList_filter.view != 'paper' && false){ //toto - paper behave same as card
 				that.editing_target.attr('contenteditable',false);
 			}
 

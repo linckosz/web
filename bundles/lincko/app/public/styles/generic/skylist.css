@@ -709,7 +709,9 @@
 .skylist_wrapper[view=paper] .skylist_card [find=title]{
 	text-decoration: inherit;
 	display: inline-block;
-	cursor: text;
+	/*cursor: text;*/
+	cursor: pointer;
+	cursor: hand;
 	max-height: none;
 	font-size: 14px;
 	padding-right: 0px;
