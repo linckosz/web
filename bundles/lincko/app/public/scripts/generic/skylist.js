@@ -223,7 +223,7 @@ skylist.prototype.construct = function(){
 		var IScroll = myIScrollList['skylist_'+that.md5id];
 
 		IScroll.on('scrollStart', function(){
-			
+			burger_global_dropdown.hide_all();
 		});//scrollStart
 
 		IScroll.on('onScroll', function(){

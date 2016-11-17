@@ -242,6 +242,9 @@ var burger_attach_clickHandler = {
 					elem_datepicker.recursiveRemove();
 					elem_datepicker = null;
 				},
+				hide: function(){
+					elem_datepicker.blur();
+				},
 			}
 
 			elem_datepicker.velocity('slideDown', {
@@ -331,6 +334,19 @@ var burger_global_dropdown = {
 		/*	id_dropdown: instance,
 			...
 		*/
+	},
+
+	hide_all: function(){
+		$.each(burger_global_dropdown.list, function(id, inst){
+			if('hide' in inst){
+				inst.hide();
+			}
+			else if('destroy' in inst){
+				inst.destroy();
+			}
+			
+		});
+		burger_global_dropdown.list = {};
 	},
 
 	destroy_all: function(){
