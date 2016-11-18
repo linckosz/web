@@ -2178,8 +2178,10 @@ Submenu.prototype.Add_taskdetail = function() {
 	}
 	
 	elem_description_text.focus(function(){ 
-		elem_editorToolbar_overlay.recursiveRemove(0);
-		elem_editorToolbar_overlay = null;
+		if(elem_editorToolbar_overlay){
+			elem_editorToolbar_overlay.recursiveRemove(0);
+			elem_editorToolbar_overlay = null;
+		}
 		$(this).off('focus');
 		return;
 	});
@@ -2640,7 +2642,9 @@ var taskdetail_subtaskQueue = {
 					app_application_lincko.prepare('tasks_'+tasksupID, true, prepare_param);
 				}
 				var cb_complete = function(){
-					delete taskdetail_subtaskQueue.queue[submenu_uniqueID][fake_subtaskID];
+					if(taskdetail_subtaskQueue.queue[submenu_uniqueID] && taskdetail_subtaskQueue.queue[submenu_uniqueID][fake_subtaskID]){
+						delete taskdetail_subtaskQueue.queue[submenu_uniqueID][fake_subtaskID];
+					}
 				}
 
 				wrapper_sendAction(param, 'post', 'task/create', cb_success, null/*cb_error*/, cb_begin, cb_complete);
