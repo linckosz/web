@@ -192,7 +192,7 @@ Submenu.prototype.Add_itemSelector = function() {
 	var setListWrapperHeight = function(){
 		var searchbar_height = 0;
 		if(elem_searchbar_wrapper.height() > 0){
-			elem_searchbar_wrapper.outerHeight();
+			searchbar_height = elem_searchbar_wrapper.outerHeight();
 		}
 		elem_list_wrapper.height(submenu_content.height() - elem_menubar.outerHeight() - searchbar_height);
 	}
