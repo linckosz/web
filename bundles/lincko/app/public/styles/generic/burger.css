@@ -32,7 +32,7 @@
 
 .burger_option {
 	padding: 5px 10px;
-	width: 200px;
+	width: 180px;
 	overflow: hidden;
 }
 .burger_option:hover, .burger_option_selected, .burger_option_preSelect {
