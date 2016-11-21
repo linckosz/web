@@ -583,44 +583,31 @@ inputter.prototype.buildLayer = function()
 	});
 
 
-function cleanOfficeTag(source){
-	source = source.replace(/<\!\-\-(.*)\-\->/gi,"");
+function cleanHtmlTag(source){
+	if(typeof removeBr == 'undefined') {
+		removeBr = true;
+	}
+
+	source = source.replace(/<\!\-\-([\s\S]*?)\-\->/gi,"");
+	//source = source.replace(/<(?!img|br|p|\/p).*?>/gi,"");
+	source = source.replace(/<(?!br|p|\/p).*?>/gi,"");
+	source = source.replace(/<p([\s\S]*?)>([\s\S]*?)<\/p>/gi,"$2<br/>");
+	source = source.replace(/[\r\n]/g, "");
 	return source;
 }
 
-function cleanAndPaste( html ) {
- // // Remove all SPAN tags
- html = html.replace(/<(?!img|br|p|\/p).*?>/g,"");
- // // Remove Class attributes
- // html = html.replace(/<(w[^]*) class=([^ |]*)([^]*)/gi, "<$1$3") ;
- // // Remove Style attributes
- // html = html.replace(/<(w[^]*) style="([^"]*)"([^]*)/gi, "<$1$3") ;
- // // Remove Lang attributes
- // html = html.replace(/<(w[^]*) lang=([^ |]*)([^]*)/gi, "<$1$3") ;
- // // Remove XML elements and declarations
- // html = html.replace(/<??xml[^]*/gi, "") ;
- // // Remove Tags with XML namespace declarations: <o:p</o:p
- // html = html.replace(/<\/?w+:[^]*/gi, "") ;
- // // Replace the &nbsp;
- // html = html.replace(/&nbsp;/, " " );
- // // Transform <P to <DIV
- // var re = new RegExp("(<P)([^]*.*?)(</P)","gi") ; // Different because of a IE 5.0 error
- // html = html.replace( re, "<div$2</div" ) ;
- 
- return html;
-}
+
 
 	input.find('[find=chat_textarea]').on('paste',function(e,data){
-		// console.log(e.originalEvent.clipboardData.getData());
 		var target = this;
 		setTimeout(function(){
 			//debugger;
-			//target.innerHTML = cleanOfficeTag(target.innerHTML);
-			target.innerHTML = cleanAndPaste(target.innerHTML
-				.replace(/<(br).*?>/g,"<br/>")
-				.replace(/<(?!br).*?>/g,"")
-				.replace(/[\r\n]/g, ""));
-		}, 0);
+			target.innerHTML = cleanHtmlTag(target.innerHTML);
+			// target.innerHTML = cleanAndPaste(target.innerHTML
+			// 	.replace(/<(br).*?>/g,"<br/>")
+			// 	.replace(/<(?!br).*?>/g,"")
+			// 	.replace(/[\r\n]/g, ""));
+		},0);
 	});
 
 
