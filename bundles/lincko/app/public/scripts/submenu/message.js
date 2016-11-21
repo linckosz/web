@@ -184,7 +184,7 @@ chatFeed.prototype.app_chat_feed_data_format = function(data)
 	{
 		this.current = data[i];
 		var item = new BaseItemCls(data[i],this.type);
-		if(item.style == '' || item.data.category == ''){
+		if(item.style != '' && item.data.category != ''){
 			records.push(item);
 		}
 	}

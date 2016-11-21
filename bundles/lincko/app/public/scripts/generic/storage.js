@@ -1447,7 +1447,7 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 			if((category==null || cat==category) && cat.indexOf('_')!==0){
 				items = Lincko.storage.data[cat];
 				for(var id in items) {
-					if(only_items && typeof only_items[cat]=='undefined' && typeof only_items[cat][id]=='undefined'){
+					if(only_items && (typeof only_items[cat]=='undefined' || typeof only_items[cat][id]=='undefined')){
 						continue;
 					}
 					if(!deleted){ //If at false we exclude deleted items

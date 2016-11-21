@@ -348,14 +348,6 @@ function wrapper_get_shangzai(field){
 	return result;
 }
 
-//Check if WebWorker is available
-var webworker = true;
-if (typeof Worker === 'undefined') {
-	webworker = false;
-}
-
-wrapper_localstorage.compress_stop = false;
-//console.log('wrapper_localstorage.compress_stop');
 wrapper_localstorage.encrypt_timer = [];
 wrapper_localstorage.encrypt = function (link, data, tryit){
 	if(typeof tryit === 'undefined'){ tryit = true; }
@@ -365,31 +357,42 @@ wrapper_localstorage.encrypt = function (link, data, tryit){
 	if(typeof this.quota[link] !== 'undefined' && !this.quota[link]){
 		return true;
 	} else {
-		clearTimeout(wrapper_localstorage.encrypt_timer[link]);
-		wrapper_localstorage.encrypt_timer[link] = setTimeout(function(link, data, tryit){
-			try {
-				if(wrapper_localstorage.compress_stop){ return true; }
-				//var store_data = wrapper_localstorage.sha+btoa(utf8_encode(data)); //Don't use btoa, it's too heavy
-				//var store_data = LZString.compressToUTF16(JSON.stringify(data)); //Good
-				var store_data = LZipper.compress(link+wrapper_localstorage.sha+utf8_encode(JSON.stringify(data))); //Best
-				var time = 1000*3600*24*31; //Keep the value for 1 month
-				result = amplify.store(wrapper_localstorage.prefix+link, store_data, { expires: time });
-			} catch(e) {
-				if(tryit){
-					if(wrapper_localstorage.cleanLocalWorkspace()){ //Delete other workspace data, and try one more time to store
-						result = wrapper_localstorage.encrypt(link, data, false);
-					} else {
-						tryit = false;
+		if(webworker){
+			var webworker_data = {
+				action: 'compress',
+				data: {
+					link: link,
+					data: data,
+					tryit: tryit,
+					sha: wrapper_localstorage.sha,
+					prefix: wrapper_localstorage.prefix,
+				},
+			};
+			webworker.postMessage(JSON.stringify(webworker_data));
+		} else {
+			clearTimeout(wrapper_localstorage.encrypt_timer[link]);
+			wrapper_localstorage.encrypt_timer[link] = setTimeout(function(link, data, tryit){
+				try {
+					var store_data = LZipper.compress(link+wrapper_localstorage.sha+utf8_encode(JSON.stringify(data))); //Best
+					var time = 1000*3600*24*31; //Keep the value for 1 month
+					result = amplify.store(wrapper_localstorage.prefix+link, store_data, { expires: time });
+				} catch(e) {
+					if(tryit){
+						if(wrapper_localstorage.cleanLocalWorkspace()){ //Delete other workspace data, and try one more time to store
+							result = wrapper_localstorage.encrypt(link, data, false);
+						} else {
+							tryit = false;
+						}
+					}
+					if(!tryit){ //If cannot, just delete the data
+						wrapper_localstorage.quota[link] = false;
+						amplify.store(wrapper_localstorage.prefix+link, null);
+						console.log(e);
 					}
 				}
-				if(!tryit){ //If cannot, just delete the data
-					wrapper_localstorage.quota[link] = false;
-					amplify.store(wrapper_localstorage.prefix+link, null);
-					console.log(e);
-				}
-			}
-		}, 0, link, data, tryit); //In another thread to not block the code running
-		return true;
+			}, 0, link, data, tryit); //In another thread to not block the code running
+			return true;
+		}
 	}
 	return result;
 };

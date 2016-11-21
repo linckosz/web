@@ -1,6 +1,8 @@
 /* Category 31 */
 var BaseItemCls = function(record,type)
 {
+	console.log('BaseItemCls => [toto] called too many times')
+
 	this.style = '';
 
 	//according to type
@@ -70,7 +72,6 @@ var BaseItemCls = function(record,type)
 			this.style = record['style'];
 			break;
 	}
-	//console.log('BaseItemCls => [toto] called too many times')
 
 	//style:{report,comment,ativity{comments,notes,files,tasks},file,uploading}
 	switch(this.style)

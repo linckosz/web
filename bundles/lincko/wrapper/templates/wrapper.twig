@@ -51,7 +51,9 @@
 {# #}
 
 {# experimental #}
-	{#<script src="{{ _filelatest('/scripts/libs/jquery-3.1.1.min.js') }}" type="text/javascript"></script>#}
+	{#
+	<script src="{{ _filelatest('/scripts/libs/jquery-3.1.1.min.js') }}" type="text/javascript"></script>
+	#}
 {# #}
 
 <script src="{{ _filelatest('/scripts/libs/jquery-ui-1.12.1/jquery-ui.min.js') }}" type="text/javascript"></script>
@@ -334,7 +336,80 @@ if(CKEDITOR){
   	CKEDITOR.config.linkShowTargetTab = false
 }
 
-//Preload worker for 
+//Check if WebWorker is available
+var webworker = false;
+if (typeof Worker != 'undefined') {
+	webworker = new Worker("{{ _filelatest('/lincko/app/scripts/workers/worker.js') }}");
+}
+
+if(webworker){
+	//Preload worker libraries needed
+	webworker.postMessage(JSON.stringify({action: 'importscript', data: "{{ _filelatest('/scripts/libs/LZipperLite.js') }}",}));
+	webworker.postMessage(JSON.stringify({action: 'importscript', data: "{{ _filelatest('/scripts/libs/php.js') }}",}));
+
+	//Return message
+	webworker.addEventListener("message", function(e){
+		var object = false;
+		try {
+			object = JSON.parse(e.data);
+			if(typeof object != "object"){
+				object = false;
+			}
+		} catch(e){
+			object = false;
+		}
+		if(object && object.action){
+			var data = null;
+			if(typeof object.data != "undefined"){
+				data = object.data;
+			}
+			webworker_operation[object.action](data);
+		}
+	});
+
+	var webworker_operation = {
+
+		//webworker.postMessage(JSON.stringify({action: 'test', data: 123,}));
+		test: function(obj_data){
+			console.log(obj_data);
+		},
+
+		LocalStorageIn: function(obj_data){
+			var link = obj_data.link;
+			var store_data = obj_data.data;
+			var tryit = obj_data.tryit;
+			var sha = obj_data.sha;
+			var prefix = obj_data.prefix;
+			try {
+				var time = 1000*3600*24*31; //Keep the value for 1 month
+				result = amplify.store(prefix+link, store_data, { expires: time });
+			} catch(e) {
+				console.log(e);
+				this.LocalStorageInFailed(obj_data);
+			}
+		},
+
+		LocalStorageInFailed: function(data){
+			var link = data.link;
+			var data = data.data;
+			var tryit = data.tryit;
+			var sha = data.sha;
+			var prefix = data.prefix;
+			if(tryit){
+				if(wrapper_localstorage.cleanLocalWorkspace()){ //Delete other workspace data, and try one more time to store
+					result = wrapper_localstorage.encrypt(link, data, false);
+				} else {
+					tryit = false;
+				}
+			}
+			if(!tryit){ //If cannot, just delete the data
+				wrapper_localstorage.quota[link] = false;
+				amplify.store(wrapper_localstorage.prefix+link, null);
+			}
+		},
+	};
+
+}
 
 </script>
 
