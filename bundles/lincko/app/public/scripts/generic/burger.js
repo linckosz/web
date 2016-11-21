@@ -62,8 +62,23 @@ var burger_attach_clickHandler = {
 		var list = burger_list.in_charge(lincko_type, lincko_id);
 		var dropdownInst = null;
 		elem.click(function(){
-			if( (!dropdownInst || dropdownInst.destroyed) && (responsiveRange == true || responsive.test(responsiveRange)) && Lincko.storage.canI('edit', lincko_type, lincko_id)){
-				dropdownInst = new burger_dropdown('toto', list, elem, null, null, cb_select, null, false); 
+			if( (!dropdownInst || dropdownInst.destroyed) && Lincko.storage.canI('edit', lincko_type, lincko_id)){
+
+				if(responsiveRange == true || responsive.test(responsiveRange)){
+					dropdownInst = new burger_dropdown('toto', list, elem, null, null, cb_select, null, false); 
+				}
+				else {
+					var param = {};
+					param.selectOne = true;
+					param.contactsID = burgerN.generate_contacts(Lincko.storage.get(lincko_type, lincko_id));
+					param.alwaysMe = false;
+					param.cb_create = cb_create;
+					param.cb_select = cb_select;
+					param.cb_destroy = cb_destroy;
+					param.lincko_type = lincko_type;
+					param.lincko_id = lincko_id;
+					submenu_Build('burger_clickHandler_inCharge', true, null, param);
+				}				
 			}
 		});
 
@@ -265,8 +280,13 @@ var burger_attach_clickHandler = {
 
 
 		elem.click(function(){
-			if( !elem_datepicker && (responsiveRange == true || responsive.test(responsiveRange)) && Lincko.storage.canI('edit', lincko_type, lincko_id)){
-				launch();
+			if( !elem_datepicker && Lincko.storage.canI('edit', lincko_type, lincko_id)){
+				if(responsiveRange == true || responsive.test(responsiveRange)){
+					launch();
+				}
+				else{
+					
+				}
 			}
 		});
 
