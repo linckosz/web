@@ -120,7 +120,7 @@ function app_models_chats_bubble_actionMenu(){
 
 		/*------------create task action----------------*/
 		var elem_taskBtn = elem_actionMenu.find('[find=task_btn]');
-		elem_taskBtn.on("mousedown touchstart", function(){
+		elem_taskBtn.on("mousedown touchend", function(){
 			var preview = false;
 			if($('#app_content_submenu_preview').has(that).length){
 				preview = true;
