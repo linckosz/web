@@ -351,11 +351,15 @@ $(function () {
 			if(data.result && data.result.error){
 				app_upload_files.lincko_files[data.lincko_files_index].lincko_status = 'error';
 				app_upload_files.lincko_files[data.lincko_files_index].lincko_error = Lincko.Translation.get('app', 18, 'html'); //Server error
-				if(typeof data.result.msg === 'string'){
+				if(typeof data.result.msg == 'string'){
 					app_upload_files.lincko_files[data.lincko_files_index].lincko_error = data.result.msg;
 				}
-				if(app_upload_files.lincko_files[data.lincko_files_index].lincko_try>0 && data.result.flash && data.result.flash.resignin){
-					app_upload_files.lincko_files[data.lincko_files_index].lincko_try--;
+				if(app_upload_files.lincko_files[data.lincko_files_index].lincko_try>0){ //For any kind of error, we try at least once
+					if(data.result.flash && data.result.flash.resignin){ //Only try once if it's pure file error, more if it's about resigning
+						app_upload_files.lincko_files[data.lincko_files_index].lincko_try--;
+					} else {
+						app_upload_files.lincko_files[data.lincko_files_index].lincko_try = 0;
+					}
 					app_upload_files.lincko_files[data.lincko_files_index].lincko_status = 'restart';
 					app_upload_files.lincko_files[data.lincko_files_index].lincko_error = Lincko.Translation.get('app', 59, 'html'); //Your file upload is restarting
 					var data_bis = data;
@@ -471,6 +475,7 @@ $(function () {
 			app_upload_files.lincko_files[data.lincko_files_index].abort();
 			app_upload_files.lincko_files[data.lincko_files_index].lincko_status = 'deleted';
 			app_upload_files.lincko_files[data.lincko_files_index].lincko_progress = 0;
+			app_application_lincko.prepare('upload', true, false, true); //procedural launch
 			$('#app_upload_fileupload').fileupload('option').progressall(e, this);
 			delete app_upload_files.lincko_files[data.lincko_files_index];
 			that.reindex(e, this);

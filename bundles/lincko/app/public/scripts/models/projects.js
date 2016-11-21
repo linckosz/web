@@ -15,7 +15,15 @@ submenu_list['app_project_new'] = {
 		"title": Lincko.Translation.get('app', 41, 'html'), //Create
 		"class": "base_pointer",
 		"action": function(Elem, subm) {
+			base_showProgress(Elem);
+			Elem.recursiveOff();
 			$('#' + subm.id + '_submenu_form').submit();
+		},
+		"now": function(Elem, subm){
+			//Add loading bar
+			var loading_bar = $("#-submit_progress_bar").clone();
+			loading_bar.prop('id', '');
+			Elem.append(loading_bar);
 		},
 	},
 	"_pre_action": {
@@ -35,7 +43,7 @@ submenu_list['app_project_new'] = {
 		"style": "form",
 		"title": Lincko.Translation.get('app', 41, 'html'), //Create
 		"action": "project/create",
-		"submit": function(that){
+		"submit": function(subm){
 			var param = {
 				"parent_id": Lincko.storage.getWORKID(),
 				"users>access": {},
@@ -47,14 +55,13 @@ submenu_list['app_project_new'] = {
 			}
 			var tmpID = null;
 			return wrapper_sendForm(
-				$('#'+that.id+'_submenu_form'),
+				$('#'+subm.id+'_submenu_form'),
 				app_models_projects_create_cb_success,
 				submenu_form_cb_error,
 				app_models_projects_create_cb_begin,
 				submenu_form_cb_complete,
 				param
 			);
-			
 		},
 	},
 	

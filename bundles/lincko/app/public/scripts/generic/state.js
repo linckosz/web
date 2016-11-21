@@ -1,5 +1,5 @@
 
-$(window).bind('popstate', function(){
+$(window).on('popstate', function(){
 	if(app_generic_state.manual){ //Only trigger manual user action (button)
 		var action = false;
 		var change = false;
@@ -62,10 +62,12 @@ $(window).bind('popstate', function(){
 	app_generic_state.manual = true;
 });
 
-// $(window).on('hashchange', function() {
-// 	app_generic_state.openItem();
-// });
-
+/*
+//This state change seems not necessary, need to observe
+$(window).on('hashchange', function() {
+	app_generic_state.openItem();
+});
+*/
 
 var app_generic_state = {
 	

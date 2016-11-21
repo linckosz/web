@@ -112,11 +112,17 @@ submenu_list['taskdetail_new'] = {
 	"right_button": {
 		"style": "title_right_button",
 		"title": Lincko.Translation.get('app', 41, 'html'), //Create
-		//"title": Lincko.Translation.get('app', 58, 'html'), //Save
 		'hide': true,
 		"class": "base_pointer",
 		"action": function(Elem, subm) {
-			
+			base_showProgress(Elem);
+			Elem.recursiveOff();
+		},
+		"now": function(Elem, subm){
+			//Add loading bar
+			var loading_bar = $("#-submit_progress_bar").clone();
+			loading_bar.prop('id', '');
+			Elem.append(loading_bar);
 		},
 	},
 	"taskdetail": {

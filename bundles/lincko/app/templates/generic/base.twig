@@ -1,6 +1,6 @@
 {% extends '/bundles/lincko/wrapper/templates/wrapper.twig' %}
 {% block base %}
-	<body id="body_lincko" class="base_PrimaryMainMenu base_color_text_white unselectable">
+	<body id="body_lincko" class="base_color_bg_main_gradient base_color_text_white unselectable">
 		<div id="begin_base" class="visibility_hidden">
 			<script>
 				var base_input_field = {};
@@ -32,6 +32,8 @@
 		<div id="base_error"></div>
 		{% block app_application %}
 		{% endblock %}
-		<div id="end_base" class="visibility_hidden"></div>
+		<div id="end_base" class="visibility_hidden">
+			<img id="-submit_progress_bar" class="submit_progress_bar" find="submit_progress_bar" src="{{ _filelatest('/lincko/app/images/generic/base/generic/loading_bar.gif') }}"/>
+		</div>
 	</body>
 {% endblock %}

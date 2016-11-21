@@ -882,71 +882,98 @@ skylist.prototype.addChat = function(item){
 		Elem.attr('timestamp', item['timestamp']);
 
 		if(item['root_type']=="chats"){
-			Elem.click(item, function(event){
+			Elem.click([item, that], function(event){
 				var preview = true; //By default it's listed inside working area
 				var layer = false;
+				var that = event.data[1];
+				var Elem = $(this);
+				var Elem_id = Elem.prop('id');
 				//Get the subemnu if it's inside it
-				var submenu = submenu_getById(that.md5id);
+				//var submenu = submenu_getById(that.md5id);
+				var submenu = Elem.submenu_getWrapper();
+
+				//Avoid submenu_hide to be called afeter the creation
+				$.each(Elem.parent().find(".skylist_chat_card_hover"), function() {
+					app_application_lincko.clean($(this).prop('id'));
+				});
+
 				if(submenu){
 					preview = submenu.preview;
 					layer = submenu.layer+1;
 					submenu.Wrapper().find(".skylist_chat_card_hover").removeClass("skylist_chat_card_hover");
-					$(this).find('[find=card_center]').addClass("skylist_chat_card_hover");
+					Elem.find('[find=card_center]').addClass("skylist_chat_card_hover");
 				} else if($("#skylist_layer_chats").length>0){
 					$("#skylist_layer_chats").find(".skylist_chat_card_hover").removeClass("skylist_chat_card_hover");
-					$(this).find('[find=card_center]').addClass("skylist_chat_card_hover");
+					Elem.find('[find=card_center]').addClass("skylist_chat_card_hover");
 				}
-				var id = event.data["root_id"];
-				var title = event.data["title"];
+				var id = event.data[0]["root_id"];
+				var title = event.data[0]["title"];
+
 				subm = submenu_Build("newchat", layer, false, {
 					type: 'chats',
 					id: id,
 					title: title,
 				}, preview);
 
+				Elem.find('[find=card_center]').prop('id', Elem_id+'_card_center');
 				app_application_lincko.add(
-					Elem.prop('id'),
+					Elem_id+'_card_center',
 					'submenu_hide_'+subm.preview+'_'+subm.id,
 					function(){
-						if($('#'+this.id).length>0){
-							$('#'+this.id).find('[find=card_center]').removeClass("skylist_chat_card_hover");
+						app_application_lincko.clean(this.id);
+						var Elem = $('#'+this.id);
+						if(Elem.length>0){
+							Elem.removeClass("skylist_chat_card_hover");
 						}
 					}
 				);
-
 			});
 		} else if(item['root_type']=="projects"){
-			Elem.click(item, function(event){
+			Elem.click([item, that], function(event){
 				var preview = true; //By default it's listed inside working area
 				var layer = false;
+				var that = event.data[1];
+				var Elem = $(this);
+				var Elem_id = Elem.prop('id');
 				//Get the subemnu if it's inside it
-				var submenu = submenu_getById(that.md5id);
+				//var submenu = submenu_getById(that.md5id);
+				var submenu = Elem.submenu_getWrapper();
+
+				//Avoid submenu_hide to be called afeter the creation				
+				$.each(Elem.parent().find(".skylist_chat_card_hover"), function() {
+					app_application_lincko.clean($(this).prop('id'));
+				});
+
 				if(submenu){
 					preview = submenu.preview;
 					layer = submenu.layer+1;
 					submenu.Wrapper().find(".skylist_chat_card_hover").removeClass("skylist_chat_card_hover");
-					$(this).find('[find=card_center]').addClass("skylist_chat_card_hover");
+					Elem.find('[find=card_center]').addClass("skylist_chat_card_hover");
 				} else if($("#skylist_layer_chats").length>0){
 					$("#skylist_layer_chats").find(".skylist_chat_card_hover").removeClass("skylist_chat_card_hover");
-					$(this).find('[find=card_center]').addClass("skylist_chat_card_hover");
+					Elem.find('[find=card_center]').addClass("skylist_chat_card_hover");
 				}
-				var id = event.data["root_id"];
-				var title = event.data["title"];
+				var id = event.data[0]["root_id"];
+				var title = event.data[0]["title"];
 				if(id == Lincko.storage.getMyPlaceholder()['_id']){
 					title = Lincko.Translation.get('app', 2502, 'html'); //Personal Space
 				}
+
 				subm = submenu_Build("newchat", layer, false, {
 					type: 'history',
 					id: id,
 					title: title,
 				}, preview);
 
+				Elem.find('[find=card_center]').prop('id', Elem_id+'_card_center');
 				app_application_lincko.add(
-					Elem.prop('id'),
+					Elem_id+'_card_center',
 					'submenu_hide_'+subm.preview+'_'+subm.id,
 					function(){
-						if($('#'+this.id).length>0){
-							$('#'+this.id).find('[find=card_center]').removeClass("skylist_chat_card_hover");
+						app_application_lincko.clean(this.id);
+						var Elem = $('#'+this.id);
+						if(Elem.length>0){
+							Elem.removeClass("skylist_chat_card_hover");
 						}
 					}
 				);
@@ -1154,7 +1181,7 @@ skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
 		//refresh iscroll
 		if(myIScrollList[elem_expandable_links_id]){
 			myIScrollList[elem_expandable_links_id].refresh();
-			elem_expandable_links.find('img').load(function(){
+			elem_expandable_links.find('img').on('load', function(){
 				myIScrollList[elem_expandable_links_id].refresh();
 			});
 		}

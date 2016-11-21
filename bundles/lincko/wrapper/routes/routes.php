@@ -52,5 +52,4 @@ $app->group('/debug', function () use ($app) {
 		\libs\Watch::js();
 	});
 
-	
 });

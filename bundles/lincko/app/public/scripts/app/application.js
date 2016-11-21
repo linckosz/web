@@ -14,6 +14,12 @@ var app_application_lincko = {
 
 		IMPORTANT => Be aware that the same element can cumulate multiple declaration, it can only overwrite
 	*/
+
+	clean: function(id){
+		this._elements[id] = null;
+		delete this._elements[id];
+	},
+
 	add: function(id, range, action, action_param, exists, exists_param, deletion, deletion_param){
 		var object = false;
 		//Assign id
@@ -664,14 +670,14 @@ function handle_select() {
 		var scroll = myIScrollList[$(this).parents(".overthrow").prop("id")];//find iScroll
 		scroll.disable();//disables the iScroll
 	}); */
-		$("body").delegate(".selectable", "mousedown", function() {
+		$("body").on("mousedown", ".selectable", function() {
 			$("#app_application_lincko_action").hide();
 			var scroll = myIScrollList[$(this).parents(".overthrow").prop("id")];//find iScroll
 			scroll.disable();//disables the iScroll
 		});
 	}
 	else {
-		$("body").delegate(".selectable", "mousedown", function() {
+		$("body").on("mousedown", ".selectable", function() {
 			$("#app_application_lincko_action").hide();
 			var scroll = myIScrollList[$(this).parents(".overthrow").prop("id")];//find iScroll
 			scroll.disable();//disables the iScroll
@@ -686,7 +692,7 @@ $(".selectable").on('touchend', function() {
 	scroll.disable();//disables the iScroll
 });
 */
-$("body").delegate(".selectable", "mouseup", function(e){
+$("body").on("mouseup", ".selectable", function(e){
 	var scroll = myIScrollList[$(this).parents(".overthrow").prop("id")];//find iScroll
 	if(scroll){
 		scroll.enable();//disables the iScroll

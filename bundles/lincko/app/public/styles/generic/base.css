@@ -190,6 +190,10 @@ html, .font_sans_serif {
 	display: none;
 }
 
+.cursor_progress {
+	cursor: progress !important;
+}
+
 .base_input_text_error {
 	background: #FFFFFF;
 	background-color: #FFFFFF;

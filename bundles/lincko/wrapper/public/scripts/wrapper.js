@@ -140,7 +140,7 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 			//If the language changed, we force to refresh the page
 			if(typeof data.language != 'undefined'){
 				setTimeout(function(language){
-					if(typeof app_language_short != 'undefined' && app_language_short != language){
+					if(typeof app_language_short != 'undefined' && typeof language != 'undefined' && app_language_short != language){
 						window.location.href = wrapper_link['root'];
 					}
 				}, 500, data.language);
@@ -348,6 +348,14 @@ function wrapper_get_shangzai(field){
 	return result;
 }
 
+//Check if WebWorker is available
+var webworker = true;
+if (typeof Worker === 'undefined') {
+	webworker = false;
+}
+
+wrapper_localstorage.compress_stop = false;
+//console.log('wrapper_localstorage.compress_stop');
 wrapper_localstorage.encrypt_timer = [];
 wrapper_localstorage.encrypt = function (link, data, tryit){
 	if(typeof tryit === 'undefined'){ tryit = true; }
@@ -360,6 +368,7 @@ wrapper_localstorage.encrypt = function (link, data, tryit){
 		clearTimeout(wrapper_localstorage.encrypt_timer[link]);
 		wrapper_localstorage.encrypt_timer[link] = setTimeout(function(link, data, tryit){
 			try {
+				if(wrapper_localstorage.compress_stop){ return true; }
 				//var store_data = wrapper_localstorage.sha+btoa(utf8_encode(data)); //Don't use btoa, it's too heavy
 				//var store_data = LZString.compressToUTF16(JSON.stringify(data)); //Good
 				var store_data = LZipper.compress(link+wrapper_localstorage.sha+utf8_encode(JSON.stringify(data))); //Best
@@ -423,12 +432,6 @@ wrapper_localstorage.cleanLocalUser = function(){
 		}
 	});
 };
-
-//Check if WebWorker is available
-var webworker = true;
-if (typeof Worker === 'undefined') {
-	webworker = false;
-}
 
 //Default is Mobile
 var wrapper_IScroll_options = {

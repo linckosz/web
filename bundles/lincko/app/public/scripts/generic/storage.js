@@ -1139,18 +1139,25 @@ Lincko.storage.cache = {
 		this.statistics = {};
 		var item_cat;
 		var children;
+		var single;
 
 		item_cat = "chats";
 		for(var item_id in Lincko.storage.data[item_cat]){
-			children = Lincko.storage.tree(item_cat, item_id, "children", true, true);
+			children = Lincko.storage.tree(item_cat, item_id, "children", false, true);
+			if(typeof this.exclude_projects[item_cat] == "undefined"){ this.exclude_projects[item_cat] = {}; }
+			this.exclude_projects[item_cat][item_id] = true; //For all projects exclude all chats items
+			if(Lincko.storage.get(item_cat, item_id, "single")){
+				if(typeof this.exclude_chats[item_cat] == "undefined"){ this.exclude_chats[item_cat] = {}; }
+				this.exclude_chats[item_cat][item_id] = true; //no need to display chats creation for single ones
+			}
 			if(children){
 				for(var cat in children){
 					for(var id in children[cat]){
 						//For projects, exclude everything (also deleted_at) which is about chats
 						if(typeof this.exclude_projects[cat] == "undefined"){ this.exclude_projects[cat] = {}; }
 						this.exclude_projects[cat][id] = true;
-						//For chats exlude chats itself and everything else (also deleted_at) which is not level 1 children
-						if(cat=="chats" || (typeof Lincko.storage.data[cat][id]["_parent"] != "undefined" && Lincko.storage.data[cat][id]["_parent"][0]!="chats")){
+						//For chats exlude everything else (also deleted_at) which is not level 1 children
+						if(typeof Lincko.storage.data[cat][id]["_parent"] != "undefined" && Lincko.storage.data[cat][id]["_parent"][0]!="chats"){
 							if(typeof this.exclude_chats[cat] == "undefined"){ this.exclude_chats[cat] = {}; }
 							this.exclude_chats[cat][id] = true;
 						}
@@ -1422,7 +1429,7 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 
 	//notifications
 	if(type=='notifications'){
-		//For single Projects activity only, exclude chats activity
+		//For single Projects activity only, exclude chats activity and onboarding history before completion
 		if(exclude && only_items && parent_type=="projects"){
 			var exclude_projects = Lincko.storage.cache.getExcludeProjects();
 			for(var cat in exclude_projects){
@@ -1440,14 +1447,11 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 			if((category==null || cat==category) && cat.indexOf('_')!==0){
 				items = Lincko.storage.data[cat];
 				for(var id in items) {
-					save = true;
-					if(only_items && typeof only_items[cat][id]=='undefined'){
-						save = false;
+					if(only_items && typeof only_items[cat]=='undefined' && typeof only_items[cat][id]=='undefined'){
 						continue;
 					}
 					if(!deleted){ //If at false we exclude deleted items
 						if(typeof items[id]['deleted_at'] != 'undefined' && $.isNumeric(items[id]['deleted_at'])){
-							save = false;
 							continue;
 						}
 					}
@@ -1456,6 +1460,18 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 				}
 			}
 		}
+
+		//Exclude onborading temporarly
+		var onboarding = Lincko.storage.getOnboarding();
+		var exclude_onboarding = {};
+		if(onboarding && onboarding.projects){
+			for(var i in onboarding.projects){
+				if(onboarding.sequence && onboarding.sequence[i]){ //Skip some histories for onrunning projects
+					exclude_onboarding = Lincko.storage.tree('projects', onboarding.projects[i], "children", true, true);
+				}
+			}
+		}
+
 		for(var cat in history_items){
 			for(var id in history_items[cat]){
 				parent = [null, 0];
@@ -1475,16 +1491,18 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 							item.par_id = parent[1];
 							item.id = parseInt(id, 10);
 							item.timestamp = parseInt(timestamp, 10);
-							if(item['by']==0 && item['type']=='comments'){
+							if(item['by']<=1 && item['type']=='comments'){
 								save = true; //For auto resume (Roboto user)
 							} else if(
-								   item['by']<0
+								   item['by']<=1 //Exclude LinckoBot and MonkeyKing
 								|| typeof Lincko.storage.data['users']=='undefined'
 								|| (item['by']>1 && typeof Lincko.storage.data['users'][item['by']]=='undefined')
 								|| timestamp<=0
 								|| typeof Lincko.storage.data['_history_title']=='undefined'
 								|| typeof Lincko.storage.data['_history_title'][cat]=='undefined'
 								|| typeof Lincko.storage.data['_history_title'][cat][item['cod']]=='undefined'
+								|| ((item.cod!=201 || item.par_type!="projects") && exclude_onboarding && exclude_onboarding[cat] && exclude_onboarding[cat][id])
+								|| (cat=="chats" && item.cod!=101) //Keep creation of chats (shared and single)
 							){
 								save = false;
 								break;

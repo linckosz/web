@@ -184,8 +184,7 @@ chatFeed.prototype.app_chat_feed_data_format = function(data)
 	{
 		this.current = data[i];
 		var item = new BaseItemCls(data[i],this.type);
-		if(item.style != '' && item.data.category !='')
-		{
+		if(item.style == '' || item.data.category == ''){
 			records.push(item);
 		}
 	}
@@ -204,7 +203,7 @@ chatFeed.prototype.app_chat_feed_data_running = function()
 
 chatFeed.prototype.app_chat_feed_data_init = function()
 {
-
+	var item;
 	var data = Lincko.storage.list(null, null , {'_type': ['!=', 'chats'],}, 'chats', this.id, false);
 	this.running_last_time = data.length > 0 ? data[0]['created_at'] : 0 ;
 
@@ -214,7 +213,11 @@ chatFeed.prototype.app_chat_feed_data_init = function()
 		if(i < this.page_count)//first page
 		{
 			suffix = '_' + data[i]['_type'] + '_models_thistory_' + data[i]['_id'];
-			this.records.push(new BaseItemCls(data[i],this.type));
+			item = new BaseItemCls(data[i], this.type);
+			if(item.style == '' || item.data.category == ''){
+				continue;
+			}
+			this.records.push(item);
 			if(data[i]['_type']=='messages')
 			{
 				this.msg_hide_count = this.msg_hide_count -1 ;
@@ -250,6 +253,7 @@ chatFeed.prototype.app_chat_feed_more_msg = function(){
 	if(!this.collecting){
 		var data = Lincko.storage.list(null, null , {'created_at': ['<=', this.top_time], '_type': ['!=', 'chats']}, 'chats', this.id, false);
 		var suffix;
+		var item;
 		for(var i in data)
 		{
 			if(i < this.page_count)//first page
@@ -260,7 +264,11 @@ chatFeed.prototype.app_chat_feed_more_msg = function(){
 
 				if($('#'+elem_id).length <= 0)
 				{
-					this.records.push(new BaseItemCls(data[i],this.type));
+					item = new BaseItemCls(data[i],this.type);
+					if(item.style == '' || item.data.category == ''){
+						continue;
+					}
+					this.records.push(item);
 					if(data[i]['_type'] == 'messages' && $('#'+elem_id).length == 0)
 					{
 						this.msg_hide_count = this.msg_hide_count -1 ;
@@ -293,7 +301,10 @@ chatFeed.prototype.app_chat_feed_more_msg = function(){
 				'post',
 				 'message/collect',
 				function(msg, data_error, data_status, data_msg) {//result
-					var length = Object.keys(data_msg.partial[wrapper_localstorage.uid]['messages']).length;
+					var length = 0;
+					if(data_msg.partial){
+						length = Object.keys(data_msg.partial[wrapper_localstorage.uid]['messages']).length;
+					}
 					that.msg_hide_count = that.msg_hide_count + length;
 					if(length < that.page_count * 20)
 					{
@@ -320,7 +331,7 @@ chatFeed.prototype.app_chat_feed_layer_display = function()
 	if(!this.page_top){
 		for(var i in this.records)
 		{
-			if(typeof this.records[i]['data'] == 'undefined' || this.records[i]['data']['category'] == null){
+			if(typeof this.records[i]['data'] == 'undefined' || this.records[i]['data'] == null || this.records[i]['data']['category'] == null){
 				continue;
 			}
 			var elem_id = this.submenu.id + '_' + this.records[i]['data']['category'] + '_models_thistory_' + this.records[i]['data']['id'];
@@ -477,6 +488,9 @@ chatFeed.prototype.app_chat_feed_uploading_file = function()
 		this.has_today = true;
 
 		var item = new BaseItemCls(record);
+		if(item.style == '' || item.data.category == ''){
+			continue;
+		}
 		var temp_elem_id = this.submenu.id + '_uploading_file_models_thistory_' + record['temp_id'];
 
 		var mode = $('#'+temp_elem_id).length > 0 || (files[i].lincko_progress >= 100 && files[i].lincko_status == 'done') ? 'refresh' : 'insert' ;

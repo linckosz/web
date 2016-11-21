@@ -25,6 +25,7 @@ submenu_list['new_group'] = {
 		"class": "base_pointer",
 		"action": function(Elem, subm) {
 			var that = subm;
+			var that_Elem = Elem;
 			var userList = {};
 			var nameList = $.trim( $("#"+subm.id).find("[name=title]").val() );
 
@@ -44,12 +45,13 @@ submenu_list['new_group'] = {
 				}
 			}
 			var comment_id;
+			that_Elem.recursiveOff();
 			if (id) {
 				wrapper_sendAction({
-					'parent_type':'projects',
-					"parent_id": id,
-					"title": nameList,
-					"users>access": userList,
+						'parent_type':'projects',
+						"parent_id": id,
+						"title": nameList,
+						"users>access": userList,
 					},
 					'post',
 					'chat/create',
@@ -68,36 +70,51 @@ submenu_list['new_group'] = {
 					},
 					null,
 					function(jqXHR, settings, temp_id) {
+						base_showProgress(that_Elem);
 						comment_id = temp_id;
-					});
+					},
+					function(){
+						base_hideProgress(that_Elem);
+					}
+				);
 			}
 			else {
 				wrapper_sendAction({
-					'parent_type': null,
-					"parent_id": -1,
-					"title": nameList,
-					"users>access": userList,
-				},
-				'post',
-				'chat/create',
-				function() {
-					var chat = Lincko.storage.list('chats', 1, {'temp_id': comment_id})[0];
-					if(chat){
-						submenu_Build("newchat", that.layer, true, {
-							type: 'chats',
-							id: chat['_id'],
-							title: chat['+title'],
-						}, that.preview);
-					} else {
-						base_show_error(Lincko.Translation.get('app', 3702, 'js'), true); //Discussion group creation failed.
+						'parent_type': null,
+						"parent_id": -1,
+						"title": nameList,
+						"users>access": userList,
+					},
+					'post',
+					'chat/create',
+					function() {
+						var chat = Lincko.storage.list('chats', 1, {'temp_id': comment_id})[0];
+						if(chat){
+							submenu_Build("newchat", that.layer, true, {
+								type: 'chats',
+								id: chat['_id'],
+								title: chat['+title'],
+							}, that.preview);
+						} else {
+							base_show_error(Lincko.Translation.get('app', 3702, 'js'), true); //Discussion group creation failed.
+						}
+					},
+					null,
+					function(jqXHR, settings, temp_id) {
+						base_showProgress(that_Elem);
+						comment_id = temp_id;
+					},
+					function(){
+						base_hideProgress(that_Elem);
 					}
-				},
-				null,
-				function(jqXHR, settings, temp_id) {
-					comment_id = temp_id;
-				}
 				);
 			}
+		},
+		"now": function(Elem, subm){
+			//Add loading bar
+			var loading_bar = $("#-submit_progress_bar").clone();
+			loading_bar.prop('id', '');
+			Elem.append(loading_bar);
 		},
 	},
 

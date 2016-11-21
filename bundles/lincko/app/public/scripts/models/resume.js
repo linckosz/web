@@ -248,12 +248,14 @@ var app_models_resume_format_sentence = function(comments_id, type, subm) {
 							}
 							if(param.length>0){
 								//This function must call "app_models_resume_onboarding_continue(current, next)" once the action is completed
-								onboarding.action_launch(current, next, text_id, param, subm);
+								setTimeout(function(current, next, text_id, param, subm){
+									onboarding.action_launch(current, next, text_id, param, subm);
+								}, 800, current, next, text_id, param, subm);
 							} else {
 								app_models_resume_onboarding_continue(current, next, text_id, subm);
 							}
 						}
-					}, 2000, [comments_id, answer, i, subm]); //Delay 2s to launch the action
+					}, 1000, [comments_id, answer, i, subm]); //Delay 1s to launch the action
 				} else {
 					span_arr[j].click([comments_id, answer, i, subm], function(event){
 						var current = event.data[0];

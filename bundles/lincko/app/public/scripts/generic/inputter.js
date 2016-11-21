@@ -620,7 +620,7 @@ function cleanAndPaste( html ) {
 				.replace(/<(br).*?>/g,"<br/>")
 				.replace(/<(?!br).*?>/g,"")
 				.replace(/[\r\n]/g, ""));
-		},0);
+		}, 0);
 	});
 
 

@@ -202,3 +202,22 @@ function base_isElement(o){
 	    o && typeof o === "object" && o !== null && o.nodeType === 1 && typeof o.nodeName==="string"
 	);
 }
+
+base_showProgress = function(Elem){
+	Elem.addClass('cursor_progress');
+	var submit_progress_bar = Elem.find("[find=submit_progress_bar]");
+	if(submit_progress_bar.length>0){
+		base_format_form_single(submit_progress_bar);
+		submit_progress_bar.css("display", "block");
+		submit_progress_bar.removeClass('display_none');
+	}
+};
+
+base_hideProgress = function(Elem){
+	Elem.removeClass('cursor_progress');
+	var submit_progress_bar = Elem.find("[find=submit_progress_bar]");
+	if(submit_progress_bar.length>0){
+		base_format_form_single(submit_progress_bar);
+		submit_progress_bar.addClass('display_none');
+	}
+}

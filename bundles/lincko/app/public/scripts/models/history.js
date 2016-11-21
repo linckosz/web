@@ -159,8 +159,10 @@ var app_models_history = {
 				//Skip deleted items for chats
 				if(root_item["_type"]=="chats"){
 					if(hist_all[i]["type"]=='chats'){
-						//We don't display in chats the chats itself
-						continue;
+						if(hist_all[i]["cod"]!=101 || Lincko.storage.get("chats", hist_all[i]["id"], "single")){
+							//We don't display in chats the chats itself (expect creation for shared group)
+							continue;
+						}
 					}
 					deleted_at = Lincko.storage.get(hist_all[i]["type"], hist_all[i]["id"], 'deleted_at');
 					if(deleted_at){

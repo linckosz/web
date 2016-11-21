@@ -70,7 +70,7 @@ jQuery.prototype.recursiveEmpty = function(delay){
 	}
 
 	this
-		.unbind()
+		.off()
 		.removeAttr()
 		.empty();
 
@@ -87,9 +87,32 @@ jQuery.prototype.recursiveRemove = function(delay){
 	return this;
 }
 
-var wrapper_RecursiveUnbind = function(Elem, delay) {
+//Help to bloc all Nodes event
+jQuery.prototype.recursiveOff = function(delay){
 	if(typeof delay == 'undefined'){ delay = 0; }
-	Elem.recursiveEmpty(delay);
+	if(delay>0){
+		var Children = this.contents();
+		setTimeout(function(Children){
+			if(Children){
+				Children
+					.contents().each(function () {
+						$(this)
+							.recursiveOff(0)
+					});
+			}
+		}, delay, Children);
+	} else {
+		this
+			.contents().each(function () {
+				$(this)
+					.recursiveOff(0)
+			});
+	}
+
+	this
+		.off();
+
+	return this;
 }
 
 

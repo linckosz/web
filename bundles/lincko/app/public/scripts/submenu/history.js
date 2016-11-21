@@ -70,6 +70,7 @@ var BaseItemCls = function(record,type)
 			this.style = record['style'];
 			break;
 	}
+	//console.log('BaseItemCls => [toto] called too many times')
 
 	//style:{report,comment,ativity{comments,notes,files,tasks},file,uploading}
 	switch(this.style)
@@ -464,9 +465,10 @@ var ActivityFileContentCls = function(record,type)
 	var history = Lincko.storage.getHistoryInfo(record);
 	var clone_hist = $.extend(true, {}, history.root.history);
 	var text = history.root.title;
-	if(clone_hist.par.un){
-		clone_hist.par.un = '';
+	if(typeof clone_hist.par == 'undefined'){
+		clone_hist.par = {};
 	}
+	clone_hist.par.un = '';
 	this.action = php_nl2br(Lincko.storage.formatHistoryInfo(text, clone_hist)) + ':&nbsp;';
 }
 
@@ -521,9 +523,10 @@ var ActivityContentCls = function(record,type)
 	var history = Lincko.storage.getHistoryInfo(record);
 	var clone_hist = $.extend(true, {}, history.root.history);
 	var text = history.root.title;
-	if(clone_hist.par.un){
-		clone_hist.par.un = '';
+	if(typeof clone_hist.par == 'undefined'){
+		clone_hist.par = {};
 	}
+	clone_hist.par.un = '';
 	this.action = php_nl2br(Lincko.storage.formatHistoryInfo(text, clone_hist)) + ':&nbsp;';
 }
 
@@ -571,9 +574,10 @@ var ActivityCommentContentCls = function(record,type)
 	var history = Lincko.storage.getHistoryInfo(record);
 	var clone_hist = $.extend(true, {}, history.root.history);
 	var text = history.root.title;
-	if(clone_hist.par.un){
-		clone_hist.par.un = '';
+	if(typeof clone_hist.par == 'undefined'){
+		clone_hist.par = {};
 	}
+	clone_hist.par.un = '';
 	this.action = php_nl2br(Lincko.storage.formatHistoryInfo(text, clone_hist)) + ':&nbsp;';
 }
 

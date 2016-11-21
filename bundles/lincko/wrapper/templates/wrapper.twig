@@ -3,7 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=9,chrome=1" />
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
 <title>{{ _trans('wrapper', 1, 1, 'html') }}{# Lincko - The way of projects #}</title>
 <link rel="shortcut icon" href="{{ _filelatest('/favicon.ico') }}" type="image/x-icon" />
@@ -19,6 +18,8 @@
 <!-- End SEO -->
 
 <link rel="stylesheet" href="{{ _filelatest('/styles/libs/jquery-ui.min.css') }}" type="text/css" />
+<link rel="stylesheet" href="{{ _filelatest('/scripts/libs/trip/trip.min.css') }}" type="text/css" />
+
 <style type="text/css">
 	{% set language = _language() %}
 	{% if language == 'ko' %}
@@ -43,13 +44,13 @@
 <![endif]-->
 
 {# Load all libraries #}
-<script src="{{ _filelatest('/scripts/libs/jquery-1.12.0.js') }}" type="text/javascript"></script>
-<script src="{{ _filelatest('/scripts/libs/jquery-ui.min.js') }}" type="text/javascript"></script>
-<script src="{{ _filelatest('/scripts/libs/jquery.cookie.js') }}" type="text/javascript"></script>
+
+<script src="{{ _filelatest('/scripts/libs/jquery-3.1.1.min.js') }}" type="text/javascript"></script>
+<script src="{{ _filelatest('/scripts/libs/jquery-ui-1.12.1/jquery-ui.min.js') }}" type="text/javascript"></script>
+<script src="{{ _filelatest('/scripts/libs/js.cookie.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/json3.min.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/blueimp.md5.min.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/amplify.store.min.js') }}" type="text/javascript"></script>
-<script src="{{ _filelatest('/scripts/libs/jquery.requestAnimationFrame.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/fastclick.min.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/hammer.min.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/jquery.hammer.js') }}" type="text/javascript"></script>
@@ -69,7 +70,6 @@
 <script src="{{ _filelatest('/scripts/libs/ckeditor/ckeditor.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/LZipperLite.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/trip/trip.min.js') }}" type="text/javascript"></script>
-<link rel="stylesheet" href="{{ _filelatest('/scripts/libs/trip/trip.min.css') }}" type="text/css" />
 
 <script>
 window.name = 'brunomartin';
@@ -244,7 +244,7 @@ JSfiles.loadLibraries = function(){
 		length = files.length;
 		for(var key in files){
 			url = files[key];
-			$.cachedScript(url).complete(function() {
+			$.cachedScript(url).always(function() {
 				length--;
 				if(length<=0){
 					wrapper_load_progress.JSfiles_load();
