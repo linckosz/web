@@ -269,11 +269,15 @@ skylist.prototype.subConstruct_default = function(){
 	}
 	else{
 		that.elem_newcardCircle.click(function(){
-			submenu_Build('taskdetail_new', false, false, 
+			var submenu_taskdetail = submenu_Build('taskdetail_new', false, false, 
 				{
 					"type":that.list_type,
 					"id": 'new', 
 				}, true);
+
+			if(submenu_taskdetail.param.elem_autoFocus){
+				submenu_taskdetail.param.elem_autoFocus.focus();
+			}
 		});
 	}
 	that.elem_newcardCircle.appendTo(that.list_wrapper);

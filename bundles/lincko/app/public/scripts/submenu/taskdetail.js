@@ -2158,18 +2158,22 @@ Submenu.prototype.Add_taskdetail = function() {
 				if(editorInst){ return false; }
 				editorInst = linckoEditor('submenu_taskdetail_description_text_'+that.md5id, 'submenu_taskdetail_description_toolbar_'+that.md5id, editor_param);
 
-				elem_editorToolbar_overlay = $('<div>').addClass('taskdetail_editorToolbar_overlay').click(function(){
-					elem_description_text.focus();
-				});
-				elem_editorToolbar.append(elem_editorToolbar_overlay);
+				//there might be auto focus in the case of notes. if the case, dont add overlay
+				if(!elem_description_text.is(":focus")){
 
-				 if(taskid == 'new'){
-					if(that.param.type == 'tasks'){
-						elem_title_text.focus();
-					}
-					else if(that.param.type == 'notes'){
+					elem_description_text.focus(function(){ 
+						if(elem_editorToolbar_overlay){
+							elem_editorToolbar_overlay.recursiveRemove(0);
+							elem_editorToolbar_overlay = null;
+							$(this).off('focus');
+						}
+						return;
+					});
+
+					elem_editorToolbar_overlay = $('<div>').addClass('taskdetail_editorToolbar_overlay').click(function(){
 						elem_description_text.focus();
-					}
+					});
+					elem_editorToolbar.append(elem_editorToolbar_overlay);
 				}
 			}
 		);
@@ -2181,12 +2185,20 @@ Submenu.prototype.Add_taskdetail = function() {
 		if(elem_editorToolbar_overlay){
 			elem_editorToolbar_overlay.recursiveRemove(0);
 			elem_editorToolbar_overlay = null;
+			$(this).off('focus');
 		}
-		$(this).off('focus');
 		return;
 	});
 
-
+	//auto focus after submenu opens
+	if(taskid == 'new'){
+		if(that.param.type == 'tasks'){
+			that.param.elem_autoFocus = elem_title_text;
+		}
+		else if(that.param.type == 'notes'){
+			that.param.elem_autoFocus = elem_description_text;
+		}
+	}
 
 
 
