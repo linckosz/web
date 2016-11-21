@@ -284,6 +284,7 @@ skylist.prototype.subConstruct_default = function(){
 			elem_sort.addClass('display_none');
 			that.tasklist_update();
 		});
+		that.elem_btn_sort = elem_sort;
 		that.list_subwrapper.append(elem_sort);
 	}
 
@@ -690,6 +691,11 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 			item = items_filtered[i];
 			iscroll_elem.append(that.addCard(item));
 		}
+	}
+
+	//hide sort button
+	if(that.elem_btn_sort && !that.elem_btn_sort.hasClass('display_none')){
+		that.elem_btn_sort.addClass('display_none');
 	}
 
 	iscroll_elem.children().not('.burger_typeTask').velocity("fadeIn",{
@@ -2666,7 +2672,7 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 		//if project is personal, default to self
 			in_charge_id = wrapper_localstorage.uid;
 		}
-		else if(that && that.Lincko_itemsList_filter && that.Lincko_itemsList_filter.people){
+		else if(!in_charge_id && that && that.Lincko_itemsList_filter && that.Lincko_itemsList_filter.people){
 		//default to current filtered person, if any
 			in_charge_id = that.Lincko_itemsList_filter.people;
 		}
