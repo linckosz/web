@@ -24,7 +24,7 @@ submenu_list['burger_clickHandler_inCharge'] = {
 			};
 
 			var IDList = submenu_contacts_get(Elem);
-			if(IDList.length == 1){
+			if(IDList.length == 1){ //single select
 				var uid = IDList[0];
 				data_select.val = uid;
 			}
@@ -32,7 +32,9 @@ submenu_list['burger_clickHandler_inCharge'] = {
 
 			}
 
-			subm.param.cb_select(data_select);
+			if(subm.param && typeof subm.param.cb_select == 'function'){
+				subm.param.cb_select(data_select);
+			}
 		},
 		hide: true,
 	},
