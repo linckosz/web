@@ -889,7 +889,6 @@ skylist.prototype.addChat = function(item){
 				var Elem = $(this);
 				var Elem_id = Elem.prop('id');
 				//Get the subemnu if it's inside it
-				//var submenu = submenu_getById(that.md5id);
 				var submenu = Elem.submenu_getWrapper();
 
 				//Avoid submenu_hide to be called afeter the creation
@@ -898,9 +897,9 @@ skylist.prototype.addChat = function(item){
 				});
 
 				if(submenu){
-					preview = submenu.preview;
-					layer = submenu.layer+1;
-					submenu.Wrapper().find(".skylist_chat_card_hover").removeClass("skylist_chat_card_hover");
+					preview = submenu[0].preview;
+					layer = submenu[0].layer+1;
+					submenu[1].find(".skylist_chat_card_hover").removeClass("skylist_chat_card_hover");
 					Elem.find('[find=card_center]').addClass("skylist_chat_card_hover");
 				} else if($("#skylist_layer_chats").length>0){
 					$("#skylist_layer_chats").find(".skylist_chat_card_hover").removeClass("skylist_chat_card_hover");
@@ -936,7 +935,6 @@ skylist.prototype.addChat = function(item){
 				var Elem = $(this);
 				var Elem_id = Elem.prop('id');
 				//Get the subemnu if it's inside it
-				//var submenu = submenu_getById(that.md5id);
 				var submenu = Elem.submenu_getWrapper();
 
 				//Avoid submenu_hide to be called afeter the creation				
@@ -945,9 +943,9 @@ skylist.prototype.addChat = function(item){
 				});
 
 				if(submenu){
-					preview = submenu.preview;
-					layer = submenu.layer+1;
-					submenu.Wrapper().find(".skylist_chat_card_hover").removeClass("skylist_chat_card_hover");
+					preview = submenu[0].preview;
+					layer = submenu[0].layer+1;
+					submenu[1].find(".skylist_chat_card_hover").removeClass("skylist_chat_card_hover");
 					Elem.find('[find=card_center]').addClass("skylist_chat_card_hover");
 				} else if($("#skylist_layer_chats").length>0){
 					$("#skylist_layer_chats").find(".skylist_chat_card_hover").removeClass("skylist_chat_card_hover");

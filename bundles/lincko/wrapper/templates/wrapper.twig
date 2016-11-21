@@ -45,7 +45,15 @@
 
 {# Load all libraries #}
 
-<script src="{{ _filelatest('/scripts/libs/jquery-3.1.1.min.js') }}" type="text/javascript"></script>
+{# stable jQuery #}
+	<script src="{{ _filelatest('/scripts/libs/jquery-1.12.0.min.js') }}" type="text/javascript"></script>
+	<script src="{{ _filelatest('/scripts/libs/jquery.requestanimationframe.min.js') }}" type="text/javascript"></script>
+{# #}
+
+{# experimental #}
+	{#<script src="{{ _filelatest('/scripts/libs/jquery-3.1.1.min.js') }}" type="text/javascript"></script>#}
+{# #}
+
 <script src="{{ _filelatest('/scripts/libs/jquery-ui-1.12.1/jquery-ui.min.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/js.cookie.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/json3.min.js') }}" type="text/javascript"></script>
@@ -325,6 +333,8 @@ if(CKEDITOR){
 	//CKEDITOR.config.linkShowAdvancedTab = false
   	CKEDITOR.config.linkShowTargetTab = false
 }
+
+//Preload worker for 
 
 </script>
 

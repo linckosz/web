@@ -23,6 +23,12 @@
 	setInterval(sendHeight, 2000);
 	*/
 
+var w = new Worker("{{ _filelatest('/lincko/app/scripts/workers/worker.js') }}");
+w.addEventListener("message", function(e){
+	alert(e.data);
+})
+w.postMessage(true);
+
 </script>
 
 <style type="text/css">
