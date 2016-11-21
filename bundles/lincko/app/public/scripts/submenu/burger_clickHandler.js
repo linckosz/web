@@ -23,7 +23,6 @@ submenu_list['burger_clickHandler_inCharge'] = {
 				//val:
 			};
 
-			//var lincko_item = Lincko.storage.get(subm.param.lincko_type, subm.param.lincko_id);
 			var IDList = submenu_contacts_get(Elem);
 			if(IDList.length == 1){
 				var uid = IDList[0];
@@ -42,4 +41,38 @@ submenu_list['burger_clickHandler_inCharge'] = {
 		"style": "contacts",
 		"title": "contacts",
 	}
+};
+
+submenu_list['burger_clickHandler_calendar'] = {
+	//Set the title of the top
+	"_title": {
+		"style": "customized_title",
+		"title": Lincko.Translation.get('app', 2202, 'html'), //Due Date
+		"class": function(that){
+			var className = 'submenu_wrapper_taskdetail_'+'tasks';
+			return className;
+		},
+	},
+	"calendar":{
+		"style": "calendar",
+		"title": "calendar",
+	},
+	"left_button": {
+		"style": "title_left_button",
+		"title": Lincko.Translation.get('app', 7, 'html'), //'Cancel',
+		'hide': true,
+		"class": "base_pointer",
+	},
+	"right_button": {
+		"style": "title_right_button",
+		"title": Lincko.Translation.get('app', 52, 'html'), //Select
+		'hide': true,
+		"class": "base_pointer",
+		'action': function(Elem, subm){
+			var timestamp = subm.param.elem_inputTarget.val()/1000;
+			if(subm.param && typeof subm.param.cb_select == 'function'){
+				subm.param.cb_select(timestamp);
+			}
+		},
+	},
 };

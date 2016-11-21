@@ -75,8 +75,6 @@ var burger_attach_clickHandler = {
 					param.cb_create = cb_create;
 					param.cb_select = cb_select;
 					param.cb_destroy = cb_destroy;
-					param.lincko_type = lincko_type;
-					param.lincko_id = lincko_id;
 					submenu_Build('burger_clickHandler_inCharge', true, null, param);
 				}				
 			}
@@ -141,7 +139,9 @@ var burger_attach_clickHandler = {
 					function(){ app_application_lincko.prepare(lincko_type+'_'+lincko_id); }
 				);
 
-				elem_datepicker.blur();
+				if(elem_datepicker){
+					elem_datepicker.blur();
+				}
 			}
 		}//END OF default cb_select
 
@@ -285,7 +285,11 @@ var burger_attach_clickHandler = {
 					launch();
 				}
 				else{
-					
+					var param = {};
+					param.cb_create = cb_create;
+					param.cb_select = cb_select;
+					param.cb_destroy = cb_destroy;
+					submenu_Build('burger_clickHandler_calendar', true, null, param);
 				}
 			}
 		});
