@@ -1,7 +1,7 @@
 /*-----linckoEditor------------------------------------*/
-function linckoEditor(elem, toolbarID, param, uploadFileButton){
+function linckoEditor(elem, toolbarID, param){
 	//editorInst = CKEDITOR.replace(elem);
-	editorInst = CKEDITOR.inline( elem, {
+	var editorInst = CKEDITOR.inline( elem, {
 			// To enable source code editing in a dialog window, inline editors require the "sourcedialog" plugin.
 			extraPlugins: 'sharedspace,imageuploader,indentblock,autolink',//,timestamp',
 			removePlugins: 'floatingspace,maximize,resize,about',
@@ -57,9 +57,21 @@ function linckoEditor(elem, toolbarID, param, uploadFileButton){
 	}
 
 
-
 	editorInst.addCommand("insertImg", { // create named command
 	    exec: function(editor) {
+
+	    	//use setTimeout and click hidden input to work with iOS
+	    	setTimeout(function(){	
+    			$('#-linckoEditor_doNothing').click();
+    			if(editor.Lincko_param.submenuInst.param.id == 'new' && editor.Lincko_param.submenuInst.param.uniqueID){
+    				app_upload_open_files('projects', editor.Lincko_param.submenuInst.param.projID, false, true, {link_queue: true});
+    			}
+    			else{
+    				app_upload_open_files(editor.Lincko_param.submenuInst.param.type, editor.Lincko_param.submenuInst.param.id, false, true);
+    			}
+    		}, 0);
+
+
 	        /*var picID  = Lincko.storage.get("users", wrapper_localstorage.uid, 'profile_pic');
             var thumb_url = app_application_icon_single_user.src;
             if(picID){
@@ -168,7 +180,10 @@ function linckoEditor(elem, toolbarID, param, uploadFileButton){
 		            		var file_url = Lincko.storage.getLink(file['_id']);
 		            		elem_replace = $('<img>')
 		            				.prop('src',file_url)
-		            				.addClass('submenu_taskdetail_description_img');								
+		            				.addClass('submenu_taskdetail_description_img')
+		            				.load(function(){
+		            					$(window).resize();
+		            				});
 		            	}
 
 		            	$elem_img_id.replaceWith(elem_replace);
@@ -184,24 +199,8 @@ function linckoEditor(elem, toolbarID, param, uploadFileButton){
 
 	            	
             	});
-            	
-            	
-            	
-            } /*access value here by this.action_param*/);
-            if(editor.Lincko_param.submenuInst.param.id == 'new' && editor.Lincko_param.submenuInst.param.uniqueID){
-            	//app_upload_open_files(editor.Lincko_param.submenuInst.param.projID, editor.Lincko_param.submenuInst.param.uniqueID);//, false, true);
-            	app_upload_open_files('projects', editor.Lincko_param.submenuInst.param.projID, false, true, {link_queue: true});
-            }
-            else{
-            	if(uploadFileButton){
-            		editor.element.$.blur();
-            		uploadFileButton.click();
-            	}
-            	else{
-            		app_upload_open_files(editor.Lincko_param.submenuInst.param.type, editor.Lincko_param.submenuInst.param.id, false, true);
-        		}
-        	}
 
+            } /*access value here by this.action_param*/);
 	    }
 	});
 
