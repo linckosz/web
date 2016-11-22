@@ -1139,6 +1139,22 @@
 	color: rgba(71, 85, 119, 0.70);
 }
 
+.skylist_chat_card_project_title {
+	font-size: 10px;
+	line-height: 12px;
+	color: #979797;
+	float: right;
+}
+.skylist_chat_card_project_title_icon {
+	font-size: 12px;
+	padding-right: 4px;
+	vertical-align: middle;
+}
+.skylist_chat_card_project_title_text {
+	padding-right: 10px;
+	vertical-align: middle;
+}
+
 /*
  * ---------- END OF skylist_chat --------------------
  */

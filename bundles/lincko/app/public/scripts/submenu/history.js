@@ -1,7 +1,6 @@
 /* Category 31 */
 var BaseItemCls = function(record,type)
 {
-	console.log('BaseItemCls => [toto] called too many times')
 
 	this.style = '';
 

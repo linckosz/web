@@ -861,7 +861,8 @@ skylist.prototype.addCard = function(item){
 
 skylist.prototype.addChat = function(item){
 	var that = this;
-	var Elem = $('#skylist_card_'+that.md5id+'_'+item['root_type']+'_'+item['root_id']);
+	var Elem_id = 'skylist_card_'+that.md5id+'_'+item['root_type']+'_'+item['root_id'];
+	var Elem = $('#'+Elem_id);
 	var new_elem = false;
 	var subm;
 	if(Elem.length <= 0){
@@ -1000,6 +1001,42 @@ skylist.prototype.addChat = function(item){
 	if(item['by']>0){
 		var username = $('<span>').addClass('skylist_chat_card_username').html(Lincko.storage.get('users', item["by"], "username")+": ");
 		Elem.find('[find=description]').prepend(username);
+	}
+
+	if(new_elem){
+		var wrapper = $('<span>');
+		var title = '&nbsp;';
+		wrapper.addClass('skylist_chat_card_project_title');
+		if(item['root_type']=="chats"){
+			//Insert project name
+			var span = $('<span>');
+			span.prop('id', Elem_id+'_project_title');
+			var parent = Lincko.storage.getParent('chats', item['root_id']);
+			title = parent['+title'];
+			if(parent && parent['_type']=="projects"){
+				title = wrapper_to_html(wrapper_flat_text(title));
+				//Insert Icon
+				var icon = $('<span>');
+				icon.addClass('icon-projectBlack skylist_chat_card_project_title_icon');
+				wrapper.append(icon);
+				app_application_lincko.add(
+					Elem_id+'_project_title',
+					'projects_'+parent['_id'],
+					function(){
+						var title = Lincko.storage.getParent('chats', item['root_id'], 'title');
+						if(title){
+							title = wrapper_to_html(wrapper_flat_text(title));
+							$('#'+this.id).html(title);
+						}
+					}
+				);
+			}
+			span.html(title).addClass('skylist_chat_card_project_title_text');
+			wrapper.append(span);
+		} else {
+			wrapper.html(title);
+		}
+		Elem.find('[find=description]').after(wrapper);
 	}
 
 	//toto => need to add deletion slide feature
