@@ -213,7 +213,7 @@ var app_models_resume_format_sentence = function(comments_id, type, subm) {
 				if(answer[0]=='action'){
 					span_arr[j].click([comments_id, answer, i, subm], function(event){
 						$(this).off();
-						event.stopPropagation();
+						//event.stopPropagation();
 						var current = event.data[0];
 						var answer = event.data[1];
 						var next = answer[1];
@@ -261,7 +261,7 @@ var app_models_resume_format_sentence = function(comments_id, type, subm) {
 				} else {
 					span_arr[j].click([comments_id, answer, i, subm], function(event){
 						$(this).off();
-						event.stopPropagation();
+						//event.stopPropagation();
 						var current = event.data[0];
 						var answer = event.data[1];
 						var next = answer[1];
@@ -307,6 +307,7 @@ var app_models_resume_format_answer = function(text) {
 }
 
 
+var app_models_onboarding_msg_queue = [];//for onboarding
 var app_models_evan_fn = function(current, span_arr, subm){
 	setTimeout(function(current, span_arr){
 		var dom = $('[onboarding_id='+current+']');
@@ -315,28 +316,44 @@ var app_models_evan_fn = function(current, span_arr, subm){
 		{
 			if(answer.length == 0)
 			{
-				var options = $('#-models_history_answer_options').clone();
-				options.prop('id','models_history_answer_options_'+current)
-				options.addClass('models_history_self');
-				for(var i in span_arr)
+				var flag = false;
+				for(var i in app_models_onboarding_msg_queue)
 				{
-					options.find('[find=answers_wrapper]').append(span_arr[i]);
+					if(app_models_onboarding_msg_queue[i] == current)
+					{
+						flag = true;
+					}
 				}
+				if(!flag)
+				{
 
-				dom.after(options);
+					app_models_onboarding_msg_queue.push(current);
+					var options = $('#-models_history_answer_options').clone();
+					options.prop('id','models_history_answer_options_'+current)
+					options.addClass('models_history_self');
+					for(var i in span_arr)
+					{
+						span_arr[i].attr("index",i);
+						options.find('[find=answers_wrapper]').append(span_arr[i]);
+					}
+
+					dom.after(options);
+					
+					options.velocity("bruno.slideRightIn", { 
+						duration: 1000,
+					});
+
+					var submenu = dom.submenu_getWrapper()[0];
+					var overthrow_id = "overthrow_"+submenu.id;
+					var iScroll = myIScrollList[overthrow_id];
+					submenu_resize_content();
+					var last = $('#'+submenu.id+'_help_iscroll').get(0);
+					if(last){
+						iScroll.scrollToElement(last, 0);
+					}
+				}
 				
-				options.velocity("bruno.slideRightIn", { 
-					duration: 1000,
-				});
-
-				var submenu = dom.submenu_getWrapper()[0];
-				var overthrow_id = "overthrow_"+submenu.id;
-				var iScroll = myIScrollList[overthrow_id];
-				submenu_resize_content();
-				var last = $('#'+submenu.id+'_help_iscroll').get(0);
-				if(last){
-					iScroll.scrollToElement(last, 0);
-				}
+				
 			}
 		}
 	}, 5, current, span_arr);
@@ -346,20 +363,10 @@ $("body").on("click", '.app_models_resume_onboarding_answer',function(event){
 	var dom = $(this);
 	var submenu = dom.submenu_getWrapper()[0];
 	var options = $(this).closest('.models_history_answer_options');
+
 	options.velocity("bruno.slideRightOut", { 
-		duration: 500,
+		duration: 1000,
 		complete:function(){
-			if(dom.length > 0 )
-			{
-				if(typeof submenu != "undefined")
-				{
-					var overthrow_id = "overthrow_"+submenu.id;
-					var iScroll = myIScrollList[overthrow_id];
-					var last = $('#'+submenu.id+'_help_iscroll').get(0);
-					submenu_resize_content();
-					iScroll.scrollToElement(last, 0);
-				}
-			}
 			options.recursiveRemove();
 		} 
 	});	

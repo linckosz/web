@@ -56,6 +56,17 @@ $.Velocity.RegisterEffect.packagedEffects["bruno.fadeOut"] = {
 	]
 };
 
+$.Velocity.RegisterEffect.packagedEffects["cloud.bombIn"] = {
+	defaultDuration: 500,
+	calls: [
+		[ 
+			{
+				
+			} 
+		]
+	]
+};
+
 
 
 for (var effectName in $.Velocity.RegisterEffect.packagedEffects) {
