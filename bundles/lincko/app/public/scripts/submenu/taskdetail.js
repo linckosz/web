@@ -1058,6 +1058,11 @@ Submenu.prototype.Add_taskdetail = function() {
 				}, that.preview);
 		});
 
+		//add temp_id
+		if(item_link.temp_id){
+			elem_linkcard.attr('temp_id', item_link.temp_id);
+		}
+
 		//dont use hover mechanism for touch devices
 		if(supportsTouch){
 			elem_linkcard.addClass('submenu_taskdetail_links_card_noHover');
@@ -1935,7 +1940,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		var temp_id = Lincko.storage.get(type, id, 'temp_id');
 		var elem_temp = [];
 		if(temp_id){
-			elem_temp = elem_linksWrapper.find('[temp_id='+temp_id+']');
+			elem_temp = elem_linksWrapper.find('.submenu_taskdetail_links_card_uploading[temp_id='+temp_id+']');
 		}
 		if(elem_temp.length){
 			elem_temp.replaceWith(elem_toAdd);
@@ -2004,7 +2009,7 @@ Submenu.prototype.Add_taskdetail = function() {
 							var progress = lincko_file.lincko_progress;
 							var status = lincko_file.lincko_status;
 							var elem_temp_id = elem.find('[temp_id='+temp_id+']');
-							if(status == 'done' && elem_temp_id.length){
+							if(status == 'done'){
 									//elem_temp_id.remove();
 									//elem_temp_id = null;
 							}
