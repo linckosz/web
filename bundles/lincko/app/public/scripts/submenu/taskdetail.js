@@ -1737,10 +1737,14 @@ Submenu.prototype.Add_taskdetail = function() {
 			submenu_taskdetail.find('[find=title_text]');
 			param['comment'] = submenu_taskdetail.find('[find=description_text]').html();
 
-			//conditions for no comment: no text and no <img>
-			if( !submenu_taskdetail.find('[find=description_text]').find('img').length && $('<div>').html(param['comment']).text() == '' ){
+			//if same as previous comment then delete
+			if(taskid != 'new' && item['-comment'] && item['-comment'] == param['comment']){
 				delete param.comment;
 			}
+			//conditions for no comment: no text and no <img>
+			/*if( !submenu_taskdetail.find('[find=description_text]').find('img').length && $('<div>').html(param['comment']).text() == '' ){
+				delete param.comment;
+			}*/
 
 
 			var new_projectID = elem_meta.find('[find=projects_id]').val();
@@ -1799,9 +1803,9 @@ Submenu.prototype.Add_taskdetail = function() {
 				}
 			}
 			if( taskid == 'new' || route_delete 
-				|| ('+title' in item && param['title'] != item['+title'])
-				|| ('+name' in item && param['name'] != item['+name'])
-				|| param['comment'] != item['-comment'] ){
+				|| ('+title' in item && param['title'] && param['title'] != item['+title'])
+				|| ('+name' in item && param['name'] && param['title'] != item['+name'])
+				|| (param['comment'] && param['comment'] != item['-comment'] )){
 				contactServer = true;
 			}
 
@@ -2166,7 +2170,7 @@ Submenu.prototype.Add_taskdetail = function() {
 				if(CKEDITOR && CKEDITOR.instances && CKEDITOR.instances['submenu_taskdetail_description_text_'+that.md5id]){
 					CKEDITOR.instances['submenu_taskdetail_description_text_'+that.md5id].destroy();
 				}
-				
+
 				editorInst = linckoEditor('submenu_taskdetail_description_text_'+that.md5id, 'submenu_taskdetail_description_toolbar_'+that.md5id, editor_param);
 
 				//there might be auto focus in the case of notes. if the case, dont add overlay
