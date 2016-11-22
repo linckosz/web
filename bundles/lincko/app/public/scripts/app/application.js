@@ -666,8 +666,10 @@ $('#app_application_project_block').click(function(){
 
 //BEGIN - highlight for quick create task feature
 var app_application_global_selection = "";
-var app_application_global_selection_handler = function(timeout){
+var app_application_global_selection_handler = function(timeout, offsetLeft, offsetTop){
 	if(typeof timeout == 'undefined' || (timeout && typeof timeout != 'number')){ var timeout = 3000; }
+	if(!offsetLeft){ var offsetLeft = 0; }
+	if(!offsetTop){ var offsetTop = 0; }
 	var globalWordSelect_now = $.selection();
 	//if popup is already up and selection is same as before, exit
 	if($("#app_application_lincko_action").is(':visible') && globalWordSelect_now == app_application_global_selection){
@@ -681,7 +683,7 @@ var app_application_global_selection_handler = function(timeout){
 	}
 	else{
 		var coords = getSelectionCoords();
-		$("#app_application_lincko_action").css({"left":coords.x2, "top":coords.y+coords.height}).show(); //bottom right corder of selected text
+		$("#app_application_lincko_action").css({"left":coords.x2+offsetLeft, "top":coords.y+coords.height+offsetTop}).show(); //bottom right corder of selected text
 		if(typeof timeout == 'number'){
 			setTimeout(function(){
 				$("#app_application_lincko_action").hide();
@@ -708,9 +710,10 @@ $("body").on("mouseup", ".selectable", function(e){
 if(supportsTouch){
 	$(document).on('selectionchange touchstart', function(event){
 		if(event.type == 'selectionchange'){
-			app_application_global_selection_handler(false);
+			app_application_global_selection_handler(false, 20);
 		}
-		else if(event.type == 'touchstart' && $("#app_application_lincko_action").is(':visible')){
+		else if(event.type == 'touchstart' && $("#app_application_lincko_action").is(':visible') 
+			&& $(event.target).prop('id') != 'app_application_lincko_action'){
 			$("#app_application_lincko_action").hide();
 		}
 	});
