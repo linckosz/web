@@ -62,7 +62,7 @@ function linckoEditor(elem, toolbarID, param){
 
 	    	//use setTimeout and click hidden input to work with iOS
 	    	setTimeout(function(){	
-    			$('#-linckoEditor_doNothing').click();
+    			$('#-linckoEditor_focusControl').click();
     			if(editor.Lincko_param.submenuInst.param.id == 'new' && editor.Lincko_param.submenuInst.param.uniqueID){
     				app_upload_open_files('projects', editor.Lincko_param.submenuInst.param.projID, false, true, {link_queue: true});
     			}
