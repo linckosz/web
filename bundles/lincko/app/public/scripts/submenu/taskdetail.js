@@ -2161,6 +2161,12 @@ Submenu.prototype.Add_taskdetail = function() {
 		var onLoad_description = new base_runOnElemLoad('submenu_taskdetail_description_text_'+that.md5id, 
 			function(){
 				if(editorInst){ return false; }
+
+				//delete previous instance, if exists
+				if(CKEDITOR && CKEDITOR.instances && CKEDITOR.instances['submenu_taskdetail_description_text_'+that.md5id]){
+					CKEDITOR.instances['submenu_taskdetail_description_text_'+that.md5id].destroy();
+				}
+				
 				editorInst = linckoEditor('submenu_taskdetail_description_text_'+that.md5id, 'submenu_taskdetail_description_toolbar_'+that.md5id, editor_param);
 
 				//there might be auto focus in the case of notes. if the case, dont add overlay
