@@ -662,63 +662,69 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 $('#app_application_project_block').click(function(){
 	app_application.move('project');
 });
-var globalWordSelect;
-function handle_select() {
-	if (supportsTouch) {
-	/*
-	$(".selectable").hammer().on("press", function() {
-		var scroll = myIScrollList[$(this).parents(".overthrow").prop("id")];//find iScroll
-		scroll.disable();//disables the iScroll
-	}); */
-		$("body").on("mousedown", ".selectable", function() {
-			$("#app_application_lincko_action").hide();
-			var scroll = myIScrollList[$(this).parents(".overthrow").prop("id")];//find iScroll
-			scroll.disable();//disables the iScroll
-		});
-	}
-	else {
-		$("body").on("mousedown", ".selectable", function() {
-			$("#app_application_lincko_action").hide();
-			var scroll = myIScrollList[$(this).parents(".overthrow").prop("id")];//find iScroll
-			scroll.disable();//disables the iScroll
-		});
-	}
-}
-handle_select();
 
-/*
-$(".selectable").on('touchend', function() {
-	var scroll = myIScrollList($(this).parents(".overthrow").prop("id")) ;//find iScroll
-	scroll.disable();//disables the iScroll
-});
-*/
-$("body").on("mouseup", ".selectable", function(e){
-	var scroll = myIScrollList[$(this).parents(".overthrow").prop("id")];//find iScroll
-	if(scroll){
-		scroll.enable();//disables the iScroll
+
+//BEGIN - highlight for quick create task feature
+var app_application_global_selection = "";
+var app_application_global_selection_handler = function(timeout){
+	if(typeof timeout == 'undefined' || (timeout && typeof timeout != 'number')){ var timeout = 3000; }
+	var globalWordSelect_now = $.selection();
+	//if popup is already up and selection is same as before, exit
+	if($("#app_application_lincko_action").is(':visible') && globalWordSelect_now == app_application_global_selection){
+		return;
 	}
-	
-	globalWordSelect = $.selection();
-	if(globalWordSelect=="") {
+	app_application_global_selection = globalWordSelect_now;
+
+
+	if(app_application_global_selection == "") {
 		$("#app_application_lincko_action").hide();
 	}
 	else{
 		var coords = getSelectionCoords();
 		$("#app_application_lincko_action").css({"left":coords.x2, "top":coords.y+coords.height}).show(); //bottom right corder of selected text
-		//$("#app_application_lincko_action").css({"left":e.pageX, "top":e.pageY}).show();
+		if(typeof timeout == 'number'){
+			setTimeout(function(){
+				$("#app_application_lincko_action").hide();
+			}, timeout);
+		}
 	}
-	
-	setTimeout(function(){
-		$("#app_application_lincko_action").hide();
-	}, 3000);
-	return true;
+}
+
+$("body").on("mousedown", ".selectable", function() {
+	$("#app_application_lincko_action").hide();
+	var scroll = myIScrollList[$(this).parents(".overthrow").prop("id")];//find iScroll
+	scroll.disable();//disables the iScroll
 });
+
+$("body").on("mouseup", ".selectable", function(e){
+	var scroll = myIScrollList[$(this).parents(".overthrow").prop("id")];//find iScroll
+	if(scroll){
+		scroll.enable();//disables the iScroll
+	}
+
+	app_application_global_selection_handler();
+});
+
+if(supportsTouch){
+	$(document).on('selectionchange touchstart', function(event){
+		if(event.type == 'selectionchange'){
+			app_application_global_selection_handler(false);
+		}
+		else if(event.type == 'touchstart' && $("#app_application_lincko_action").is(':visible')){
+			$("#app_application_lincko_action").hide();
+		}
+	});
+}
 
 $("#app_application_lincko_action").click(function() {
 	$(this).hide();
 	var preview = true; //This is no way to know if we are in preview or submenu
-	submenu_Build("taskdetail_new", submenu_Getnext(preview), false, {'id':'new', 'title': globalWordSelect, 'type':'tasks'}, preview); 
+	submenu_Build("taskdetail_new", submenu_Getnext(preview), false, {'id':'new', 'title': app_application_global_selection, 'type':'tasks'}, preview); 
 });
+
+//END - highlight for quick create task feature
+
+
 
 $('#app_application_menu_icon').click(function(){
 	if(typeof app_application !== 'undefined'){
