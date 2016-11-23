@@ -462,7 +462,7 @@ else
 
 
 
-var app_models_resume_onboarding_continue_temp_id = null;
+var app_models_resume_onboarding_continue_temp_id = '';
 var app_models_resume_onboarding_continue = function(current, next, text_id, subm){
 
 	var answer = false;
@@ -479,7 +479,7 @@ var app_models_resume_onboarding_continue = function(current, next, text_id, sub
 	if(typeof app_models_resume_format_sentence_answers[next] == 'undefined'){
 		wrapper_sendAction(data, 'post', 'onboarding/next');
 	}
-	app_models_resume_onboarding_continue_temp_id = null;
+	app_models_resume_onboarding_continue_temp_id = '';
 	app_models_resume_format_sentence_answers[next] = true; //Don't reply twice
 };
 
