@@ -348,35 +348,94 @@ var app_models_evan_fn = function(current, span_arr, subm){
 	}, 5, current, span_arr);
 };
 
+
 $("body").on("click", '.app_models_resume_onboarding_answer',function(event){
 	var dom = $(this);
 	var submenu = dom.submenu_getWrapper()[0];
+	var submenu_dom = dom.submenu_getWrapper()[1];
+	var position = submenu_dom.find('[find=submenu_wrapper_content]');
 	var options = $(this).closest('.models_history_answer_options');
-	var time=0;
+	var content = dom.html();
+	var time = 0;
 
 	var question = dom.closest('.models_history_answer_options').attr('question');
 	app_models_onboarding_msg_queue.push(dom.closest('.models_history_answer_options').attr('question'));
 	dom.attr('selected',true);
-	
+	// options.find(".app_models_resume_onboarding_answer:not([selected=selected])").velocity( 
+	// 	{ 
+	// 		duration: 1000,
+	// 		opacity: 0,
+	// 		complete:function(){
+	// 			var temp = $('<div class="bomb_wrapper"><div class="bomb"></div></div>');
+	// 			//options.find(".app_models_resume_onboarding_answer:not([selected=selected])").append(temp);
+	// 			$(this).append(temp);
+	// 			$(".bomb_wrapper").each(function(){
+	// 				$(this).width($(this).parent("span").eq(0).width());
+	// 			});
+	// 			temp.find(".bomb").velocity(
+	// 			{
+	// 				backgroundPosition: "-200px"
+	// 			}, { 
+	// 				easing: [ 4 ],
+	// 				duration: 500,
+	// 				complete:function(){
+	// 					// options.find(".app_models_resume_onboarding_answer:not([selected=selected])").remove();
+	// 					if(time==0)
+	// 					{
+	// 						var span_helper = $('<span class="answer_help"></span>');
+	// 						dom.before(span_helper);
+	// 						span_helper.width(dom.width());
+	// 						span_helper.height(dom.height());
+	// 						dom.css("position","bsolute");
+	// 						dom.velocity( 
+	// 							{position:"-20px"}
+	// 						)
+							
+	// 					}
+	// 					time++;
+	// 				}
+	// 			//loop:true
+	// 		    });
+
+
+
+	// 		}
+	// 	}
+	// );
 	
 	options.velocity("bruno.slideRightOut", { 
 		duration: 500,
 		complete:function(){
-			if(dom.length > 0 )
-			{
-				if(typeof submenu != "undefined")
-				{
-					var overthrow_id = "overthrow_"+submenu.id;
-					var iScroll = myIScrollList[overthrow_id];
-					var last = $('#'+submenu.id+'_help_iscroll').get(0);
-					submenu_resize_content();
-					iScroll.scrollToElement(last, 0);
-				}
-			}
 			options.recursiveRemove();
+			app_models_resume_onboarding_continue_temp_id = md5(Math.random());
+			var profile = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users",wrapper_localstorage.uid,'profile_pic'));
+			if(!profile){
+					profile = app_application_icon_single_user.src;
+			}
+			var msg = 
+			{
+				'user_id' : wrapper_localstorage.uid,
+				'user_name' : Lincko.storage.get('users',  wrapper_localstorage.uid,'username'),
+				'profile' : profile,
+				'timestamp' : Math.floor((new Date()).getTime() / 1000),
+				'timeline' : null ,
+				'style' : 'comment',
+				'id' : temp_id,
+				'temp_id' :  temp_id,
+				'category' :submenu.param.type == 'chats' ? "messages":'comments',
+				'content' : content,
+				'is_recalled' : false,
+			};
+
+			var item = new BaseItemCls(msg);
+			item.item_display(position,submenu,'insert');
 		} 
 	});	
 });
+
+
+
+
 
 $("body").on("click",".onboarding img",function(){
 	previewer['pic']($(this).attr("src"));
