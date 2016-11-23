@@ -672,6 +672,7 @@ skylist.prototype.list_filter = function(filter_type){
 
 skylist.prototype.tasklist_update = function(type, filter_by){
 	var that = this;
+	if(!that || $.isEmptyObject(that)){return false;}
 
 	if( type ){
 		that.Lincko_itemsList_filter[type] = filter_by;
