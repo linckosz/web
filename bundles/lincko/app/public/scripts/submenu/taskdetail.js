@@ -1699,8 +1699,9 @@ Submenu.prototype.Add_taskdetail = function() {
 				tmpID = temp_id;
 			}
 			var cb_success = function(msg, data_error, data_status, data_msg){
+				var item_real = null;
 				if(tmpID){
-					var item_real = Lincko.storage.list(that.param.type,1,{temp_id: tmpID});
+					item_real = Lincko.storage.list(that.param.type,1,{temp_id: tmpID});
 					if(item_real.length){
 						item_real = item_real[0];
 						$.each(param_newItemComments, function(i,param){
@@ -1718,6 +1719,16 @@ Submenu.prototype.Add_taskdetail = function() {
 					}
 				}
 				tmpID = null;
+
+				if(!item_real){
+					item_real = Lincko.storage.get(item['_type'], item['_id']);
+				}
+
+				//if deleted, remove all links
+				if(item_real && item_real.deleted_at){
+					taskdetail_tools.removeAllLinks(item_real['_type'], item_real['_id']);
+				}
+
 			}
 			var cb_error = function(){
 				if(taskid == 'new'){
@@ -2847,9 +2858,21 @@ var taskdetail_linkQueue = {
 
 taskdetail_tools = {
 
+	//remove all links to the item at cb_success of deletion
+	item_properDelete: function(type, id){
+		var item = Lincko.storage.get(type, id);
+		if(!item){ return false; }
+
+		var route = type;
+		route = route.slice(0, -1) + '/delete';
+		wrapper_sendAction({id: id}, 'post', route, taskdetail_tools.removeAllLinks(type, id));
+	},
+
 	removeAllLinks: function(type, id){
 		var item = Lincko.storage.get(type, id);
 		if(!item){ return false; }
+
+		var do_sendAction = false;
 
 		var param_sendAction = {
 			id: id,
@@ -2864,19 +2887,28 @@ taskdetail_tools = {
 
 		if(item._files){
 			fn_each('files', item._files);
+			do_sendAction = true;
 		}
 		if(item._notes){
 			fn_each('notes', item._notes);
+			do_sendAction = true;
 		}
 		if(item._tasks){
 			fn_each('tasks', item._tasks);
+			do_sendAction = true;
 		}
-
 		
-		var route = type;
-		route = route.slice(0, -1) + '/update';
-
-		wrapper_sendAction(param_sendAction, 'post', route);
+		if(do_sendAction){
+			var route = type;
+			route = route.slice(0, -1) + '/update';
+			wrapper_sendAction(param_sendAction, 'post', route);
+			console.log('remove links sendAction sent');
+			return true;
+		}
+		else{
+			return false;
+		}
+		
 	},
 
 	unassignTask: function(item){
