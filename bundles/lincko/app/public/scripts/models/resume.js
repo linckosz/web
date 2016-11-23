@@ -4,7 +4,7 @@
 	app_models_resume_format_sentence(9984, 1);
 */
 var app_models_resume_format_sentence_answers = {};
-var app_models_resume_format_sentence = function(comments_id, type, subm) {console.log(comments_id);
+var app_models_resume_format_sentence = function(comments_id, type, subm) {
 	if(typeof type == 'undefined'){ type = 1; }
 	if(typeof subm == 'undefined'){ subm = false; }
 
@@ -205,9 +205,6 @@ var app_models_resume_format_sentence = function(comments_id, type, subm) {conso
 		var span_arr = [];
 		var j = 0;
 		var next = false;
-		if(list.length>0){
-			onboarding.toBot();
-		}
 		if($.type(list) == 'object'){
 			for(var i in list){
 				var answer = list[i];
@@ -217,6 +214,7 @@ var app_models_resume_format_sentence = function(comments_id, type, subm) {conso
 				if(answer[0]=='action'){
 					span_arr[j].click([comments_id, answer, i, subm], function(event){
 						$(this).off(); //Avoid double answer sending
+						app_models_resume_onboarding_continue_temp_id = md5(Math.random());
 						var current = event.data[0];
 						var answer = event.data[1];
 						var next = answer[1];
@@ -232,12 +230,17 @@ var app_models_resume_format_sentence = function(comments_id, type, subm) {conso
 							//This function must call "app_models_resume_onboarding_continue(current, next)" once the action is completed
 							setTimeout(function(current, next, text_id, param, subm){
 									onboarding.action_launch(current, next, text_id, param, subm);
-							}, 0, current, next, text_id, param, subm);
+							}, 800, current, next, text_id, param, subm);
 						} else {
-							app_models_resume_onboarding_continue(current, next, text_id, subm);
+							//app_models_resume_onboarding_continue(current, next, text_id, subm);
+							//This function must call "app_models_resume_onboarding_continue(current, next)" once the action is completed
+							setTimeout(function(current, next, text_id, param, subm){
+									onboarding.action_launch(current, next, text_id, param, subm);
+							}, 800, current, next, text_id, param, subm);
 						}
 					});
 				} else if(answer[0]=='now'){
+					app_models_resume_onboarding_continue_temp_id = md5(Math.random());
 					span_arr[j] = null;
 					delete span_arr[j];
 					setTimeout(function(data){
@@ -253,7 +256,6 @@ var app_models_resume_format_sentence = function(comments_id, type, subm) {conso
 									param.push(answer[k]);
 								}
 							}
-							console.log(current+' , '+next+' , '+text_id+' , '+subm);
 							if(param.length>0){
 								//This function must call "app_models_resume_onboarding_continue(current, next)" once the action is completed
 								setTimeout(function(current, next, text_id, param, subm){
@@ -266,6 +268,7 @@ var app_models_resume_format_sentence = function(comments_id, type, subm) {conso
 					}, 1000, [comments_id, answer, i, subm]); //Delay 1s to launch the action
 				} else {
 					span_arr[j].click([comments_id, answer, i, subm], function(event){
+						app_models_resume_onboarding_continue_temp_id = md5(Math.random());
 						$(this).off(); //Avoid double answer sending
 						var current = event.data[0];
 						var answer = event.data[1];
@@ -280,7 +283,7 @@ var app_models_resume_format_sentence = function(comments_id, type, subm) {conso
 		}
 		if(span_arr.length>0){
 			//This function should be internally launched once the DOM of the chat is finished to be drawn, otherwise we may not be able to find the position where to insert the answers
-			app_models_evan_fn(comments_id, span_arr); //toto
+			app_models_evan_fn(comments_id, span_arr, subm);
 		}
 		return span;
 	} else if(format == 'quote'){
@@ -314,7 +317,7 @@ var app_models_resume_format_answer = function(text) {
 
 var app_models_onboarding_msg_queue = [];//for onboarding
 var app_models_evan_fn = function(current, span_arr, subm){
-	setTimeout(function(current, span_arr){
+	setTimeout(function(current, span_arr, subm){
 		var dom = $('[onboarding_id='+current+']');
 		var answer = $('#models_history_answer_options_'+current);
 		answer.attr("question",current);
@@ -341,15 +344,24 @@ var app_models_evan_fn = function(current, span_arr, subm){
 						options.find('[find=answers_wrapper]').append(span_arr[i]);
 					}
 
+					var subm_bis = subm;
 					dom.after(options);
-					
-					options.velocity("bruno.slideRightIn", { 
+					options.velocity("bruno.slideRightBigIn", { 
 						duration: 1000,
+						begin: function(){
+							var overthrow_id = "overthrow_"+subm_bis.id;
+							var iScroll = myIScrollList[overthrow_id];
+							submenu_resize_content();
+							var last = $('#'+subm_bis.id+'_help_iscroll').get(0);
+							if(last){
+								iScroll.scrollToElement(last, 300);
+							}
+						}
 					});
 				}
 			}
 		}
-	}, 5, current, span_arr);
+	}, 800, current, span_arr, subm);
 };
 
 
@@ -407,11 +419,11 @@ $("body").on("click", '.app_models_resume_onboarding_answer',function(event){
 	// 	}
 	// );
 	
-	options.velocity("bruno.slideRightOut", { 
+	options.velocity("bruno.slideRightBigOut", {
+		delay: 300,
 		duration: 500,
 		complete:function(){
 			options.recursiveRemove();
-			app_models_resume_onboarding_continue_temp_id = md5(Math.random());
 			var profile = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users",wrapper_localstorage.uid,'profile_pic'));
 			if(!profile){
 					profile = app_application_icon_single_user.src;
@@ -434,13 +446,12 @@ $("body").on("click", '.app_models_resume_onboarding_answer',function(event){
 			var item = new BaseItemCls(msg);
 			item.item_display(position,submenu,'insert');
 
-
 			var overthrow_id = "overthrow_"+submenu.id;
 			var iScroll = myIScrollList[overthrow_id];
 			submenu_resize_content();
 			var last = $('#'+submenu.id+'_help_iscroll').get(0);
 			if(last){
-				iScroll.scrollToElement(last, 0);
+				iScroll.scrollToElement(last, 300);
 			}
 		} 
 	});	
@@ -479,7 +490,6 @@ var app_models_resume_onboarding_continue = function(current, next, text_id, sub
 	if(typeof app_models_resume_format_sentence_answers[next] == 'undefined'){
 		wrapper_sendAction(data, 'post', 'onboarding/next');
 	}
-	app_models_resume_onboarding_continue_temp_id = '';
 	app_models_resume_format_sentence_answers[next] = true; //Don't reply twice
 };
 
