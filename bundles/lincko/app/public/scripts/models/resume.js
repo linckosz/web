@@ -441,6 +441,7 @@ $("body").on("click",".onboarding img",function(){
 	previewer['pic']($(this).attr("src"));
 });
 
+var app_models_resume_onboarding_continue_temp_id = null;
 var app_models_resume_onboarding_continue = function(current, next, text_id, subm){
 	var answer = false;
 	if(typeof text_id != 'undefined' && text_id>0){
@@ -451,8 +452,10 @@ var app_models_resume_onboarding_continue = function(current, next, text_id, sub
 		current: current,
 		next: next,
 		answer: answer,
+		temp_id: app_models_resume_onboarding_continue_temp_id,
 	};
 	wrapper_sendAction(data, 'post', 'onboarding/next');
+	app_models_resume_onboarding_continue_temp_id = null,
 };
 
 var app_models_resume_listup = function(Elem, list, color, link, comments_id){
