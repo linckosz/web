@@ -385,7 +385,7 @@ $("body").on("click", '.app_models_resume_onboarding_answer',function(event){
 	// 						dom.before(span_helper);
 	// 						span_helper.width(dom.width());
 	// 						span_helper.height(dom.height());
-	// 						dom.css("position","bsolute");
+	// 						dom.css("position","absolute");
 	// 						dom.velocity( 
 	// 							{position:"-20px"}
 	// 						)
@@ -434,11 +434,19 @@ $("body").on("click", '.app_models_resume_onboarding_answer',function(event){
 
 
 
+if(supportsTouch){
+	$("body").on("touchend",".onboarding img",function(e){
+		previewer['pic']($(this).attr("src"));
+	});
+}
+else
+{
+	$("body").on("click",".onboarding img",function(e){
+		previewer['pic']($(this).attr("src"));
+	});
+}
 
 
-$("body").on("click",".onboarding img",function(){
-	previewer['pic']($(this).attr("src"));
-});
 
 var app_models_resume_onboarding_continue_temp_id = null;
 var app_models_resume_onboarding_continue = function(current, next, text_id, subm){
