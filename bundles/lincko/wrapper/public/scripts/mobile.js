@@ -12,5 +12,13 @@ function setMobileAlias(){
 	{
 		iOS.setAlias(sha);
 	}
+	if(typeof winPhone != 'undefined' )
+	{
+		winPhone.setAlias(sha);
+	}
 }
 setMobileAlias();
+
+function isMobileApp(){
+	return (android || iOS || winPhone);
+}
