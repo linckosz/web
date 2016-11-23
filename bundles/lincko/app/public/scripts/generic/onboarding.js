@@ -117,10 +117,10 @@ var onboarding = {
 		if(this.scripts.completed[param[1]]){ return false; } //check if the script has already been ran
 		var that = this;
 		//console.log('onboarding.action_launch: '+current+' => '+next+' => '+text_id);
-		var fn_continue = function(){ 
+		var fn_continue = function(){
 			that.scripts.completed[param[1]] = true;
 			app_models_resume_onboarding_continue(current, next, text_id, subm);
-			if(this.on){
+			if(that.on){
 				that.overlays.show.content_sub();
 				that.toBot();
 			}

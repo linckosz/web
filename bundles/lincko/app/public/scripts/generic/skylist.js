@@ -646,6 +646,7 @@ skylist.prototype.isDueThisTime = function(item, time){
 
 skylist.prototype.list_filter = function(filter_type){
 	var that = this;
+	if(!that || !that.list_wrapper){ return false; }
 	that.list_wrapper.attr('view', that.Lincko_itemsList_filter.view);
 	that.generate_Lincko_itemsList();
 	var items_filtered = that.Lincko_itemsList;
