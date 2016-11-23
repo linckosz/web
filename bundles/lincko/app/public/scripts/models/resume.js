@@ -213,7 +213,6 @@ var app_models_resume_format_sentence = function(comments_id, type, subm) {
 				if(answer[0]=='action'){
 					span_arr[j].click([comments_id, answer, i, subm], function(event){
 						$(this).off(); //Avoid double answer sending
-						//event.stopPropagation(
 						var current = event.data[0];
 						var answer = event.data[1];
 						var next = answer[1];
@@ -420,8 +419,8 @@ $("body").on("click", '.app_models_resume_onboarding_answer',function(event){
 				'timestamp' : Math.floor((new Date()).getTime() / 1000),
 				'timeline' : null ,
 				'style' : 'comment',
-				'id' : temp_id,
-				'temp_id' :  temp_id,
+				'id' : app_models_resume_onboarding_continue_temp_id,
+				'temp_id' :  app_models_resume_onboarding_continue_temp_id,
 				'category' :submenu.param.type == 'chats' ? "messages":'comments',
 				'content' : content,
 				'is_recalled' : false,
@@ -455,7 +454,7 @@ var app_models_resume_onboarding_continue = function(current, next, text_id, sub
 		temp_id: app_models_resume_onboarding_continue_temp_id,
 	};
 	wrapper_sendAction(data, 'post', 'onboarding/next');
-	app_models_resume_onboarding_continue_temp_id = null,
+	app_models_resume_onboarding_continue_temp_id = null;
 };
 
 var app_models_resume_listup = function(Elem, list, color, link, comments_id){
