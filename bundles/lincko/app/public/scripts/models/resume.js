@@ -212,8 +212,7 @@ var app_models_resume_format_sentence = function(comments_id, type, subm) {
 				span_arr[j] = $('<span>').html(text).addClass('app_models_resume_onboarding_answer');
 				if(answer[0]=='action'){
 					span_arr[j].click([comments_id, answer, i, subm], function(event){
-						$(this).off();
-						//event.stopPropagation();
+						$(this).off(); //Avoid double answer sending
 						var current = event.data[0];
 						var answer = event.data[1];
 						var next = answer[1];
@@ -260,8 +259,7 @@ var app_models_resume_format_sentence = function(comments_id, type, subm) {
 					}, 1000, [comments_id, answer, i, subm]); //Delay 1s to launch the action
 				} else {
 					span_arr[j].click([comments_id, answer, i, subm], function(event){
-						$(this).off();
-						//event.stopPropagation();
+						$(this).off(); //Avoid double answer sending
 						var current = event.data[0];
 						var answer = event.data[1];
 						var next = answer[1];
