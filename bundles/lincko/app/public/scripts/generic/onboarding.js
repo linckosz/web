@@ -403,7 +403,9 @@ onboarding.scripts[5] = function(fn_continue){
 
 
 var id_onboarding_garbage_launch = app_application_garbage.add('onboarding_garbage_launch');
-app_application_lincko.add(id_onboarding_garbage_launch, 'launch_onboarding', function(){
+app_application_lincko.add(id_onboarding_garbage_launch, ['launch_onboarding', 'settings'], function(){
 	var launched = onboarding.launch();
-	app_application_garbage.remove(id_onboarding_garbage_launch);
+	if(!launched){
+		app_application_garbage.remove(id_onboarding_garbage_launch);
+	}
 });
