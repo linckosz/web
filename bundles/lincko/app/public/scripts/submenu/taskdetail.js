@@ -2846,6 +2846,39 @@ var taskdetail_linkQueue = {
 };
 
 taskdetail_tools = {
+
+	removeAllLinks: function(type, id){
+		var item = Lincko.storage.get(type, id);
+		if(!item){ return false; }
+
+		var param_sendAction = {
+			id: id,
+		};
+
+		var fn_each = function(link_type, obj){
+			param_sendAction[link_type+'>access'] = {};
+			$.each(obj, function(link_id, link_obj){
+				param_sendAction[link_type+'>access'][link_id] = false;
+			});
+		}
+
+		if(item._files){
+			fn_each('files', item._files);
+		}
+		if(item._notes){
+			fn_each('notes', item._notes);
+		}
+		if(item._tasks){
+			fn_each('tasks', item._tasks);
+		}
+
+		
+		var route = type;
+		route = route.slice(0, -1) + '/update';
+
+		wrapper_sendAction(param_sendAction, 'post', route);
+	},
+
 	unassignTask: function(item){
 		if(item._type == 'tasks' && item._users){
 			for(var userid in item._users){
