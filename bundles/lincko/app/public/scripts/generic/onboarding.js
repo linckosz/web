@@ -120,8 +120,10 @@ var onboarding = {
 		var fn_continue = function(){ 
 			that.scripts.completed[param[1]] = true;
 			app_models_resume_onboarding_continue(current, next, text_id, subm);
-			that.overlays.show.content_sub();
-			that.toBot();
+			if(this.on){
+				that.overlays.show.content_sub();
+				that.toBot();
+			}
 		}
 		this.scripts[param[1]](fn_continue);
 	},
