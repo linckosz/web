@@ -113,7 +113,7 @@ var onboarding = {
 	
 	//used in resume.js
 	action_launch: function(current, next, text_id, param, subm){
-		if(!this.on){ return false; } //ignore action_launch calls if onboarding is not on
+		//if(!this.on){ return false; } //ignore action_launch calls if onboarding is not on
 		if(this.scripts.completed[param[1]]){ return false; } //check if the script has already been ran
 		var that = this;
 		//console.log('onboarding.action_launch: '+current+' => '+next+' => '+text_id);
