@@ -405,7 +405,9 @@ onboarding.scripts[5] = function(fn_continue){
 var id_onboarding_garbage_launch = app_application_garbage.add('onboarding_garbage_launch');
 app_application_lincko.add(id_onboarding_garbage_launch, ['launch_onboarding', 'settings'], function(){
 	var launched = onboarding.launch();
-	if(!launched){
+
+	//stop looking for onboarding launch if it is already launched OR onboarding settings object exists but wasn't launched (user already finished)
+	if(launched || Lincko.storage.getOnboarding()){
 		app_application_garbage.remove(id_onboarding_garbage_launch);
 	}
 });
