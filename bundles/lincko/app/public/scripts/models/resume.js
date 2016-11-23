@@ -428,6 +428,15 @@ $("body").on("click", '.app_models_resume_onboarding_answer',function(event){
 
 			var item = new BaseItemCls(msg);
 			item.item_display(position,submenu,'insert');
+
+
+			var overthrow_id = "overthrow_"+submenu.id;
+			var iScroll = myIScrollList[overthrow_id];
+			submenu_resize_content();
+			var last = $('#'+submenu.id+'_help_iscroll').get(0);
+			if(last){
+				iScroll.scrollToElement(last, 0);
+			}
 		} 
 	});	
 });
