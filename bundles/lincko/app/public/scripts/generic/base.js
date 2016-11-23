@@ -165,8 +165,14 @@ function base_getRandomInt(min, max){
 */
 function base_lincko_img_to_html(source)
 {
-	var reg = new RegExp("\\[image\\]([\\s\\S]*)\\[\\/image\\]","gi");
-	source = source.replace(reg, '<img src="$1"/>');
+	var reg = new RegExp("\\[image(.*?)\\](.*?)\\[\\/image\\]","gi");
+	var match = source.match(reg);
+	if(match && match.length>0){
+		var extract = match[0];
+		extract = html_to_wrapper(extract);
+		extract = extract.replace(reg, '<img $1 src="$2"/>');
+		source = source.replace(reg, extract);
+	}
 	return source;
 }
 

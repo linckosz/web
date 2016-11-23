@@ -65,3 +65,8 @@
 .app_models_resume_onboarding_answer {
 	cursor: pointer;
 }
+
+.app_models_resume_icon_main_menu {
+	height: 20px;
+	vertical-align: middle;
+}

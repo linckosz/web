@@ -27,6 +27,15 @@ var wrapper_to_html = function(text){
 	return text;
 };
 
+var html_to_wrapper = function(text){
+	if(typeof text == 'undefined'){
+		text = '';
+	}
+	text = php_br2nl(text);
+	text = restoreHTML(text);
+	return text;
+};
+
 var wrapper_flat_text = function(text){
 	if(typeof text == 'undefined'){
 		text = '';
@@ -133,6 +142,17 @@ var parseHTML = function(text) {
 		.replaceAll('"', '&quot;')
 		.replaceAll("'", '&#39;')
 		.replaceAll('  ', '&nbsp;&nbsp;')
+	;
+};
+
+var restoreHTML = function(text) {
+	text = ''+text;
+	return text
+		.replaceAll('&lt;', '<')
+		.replaceAll('&gt;', '>')
+		.replaceAll('&quot;', '"')
+		.replaceAll('&#39;', "'")
+		.replaceAll('&nbsp;&nbsp;', '  ')
 	;
 };
 

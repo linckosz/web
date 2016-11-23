@@ -340,15 +340,6 @@ var app_models_evan_fn = function(current, span_arr, subm){
 					options.velocity("bruno.slideRightIn", { 
 						duration: 1000,
 					});
-
-					var submenu = dom.submenu_getWrapper()[0];
-					var overthrow_id = "overthrow_"+submenu.id;
-					var iScroll = myIScrollList[overthrow_id];
-					submenu_resize_content();
-					var last = $('#'+submenu.id+'_help_iscroll').get(0);
-					if(last){
-						iScroll.scrollToElement(last, 0);
-					}
 				}
 				
 				
