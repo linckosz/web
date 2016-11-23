@@ -3,7 +3,8 @@
 	app_models_resume_format_sentence(9984);
 	app_models_resume_format_sentence(9984, 1);
 */
-var app_models_resume_format_sentence = function(comments_id, type, subm) {
+var app_models_resume_format_sentence_answers = {};
+var app_models_resume_format_sentence = function(comments_id, type, subm) {console.log(comments_id);
 	if(typeof type == 'undefined'){ type = 1; }
 	if(typeof subm == 'undefined'){ subm = false; }
 
@@ -204,6 +205,9 @@ var app_models_resume_format_sentence = function(comments_id, type, subm) {
 		var span_arr = [];
 		var j = 0;
 		var next = false;
+		if(list.length>0){
+			onboarding.toBot();
+		}
 		if($.type(list) == 'object'){
 			for(var i in list){
 				var answer = list[i];
@@ -249,6 +253,7 @@ var app_models_resume_format_sentence = function(comments_id, type, subm) {
 									param.push(answer[k]);
 								}
 							}
+							console.log(current+' , '+next+' , '+text_id+' , '+subm);
 							if(param.length>0){
 								//This function must call "app_models_resume_onboarding_continue(current, next)" once the action is completed
 								setTimeout(function(current, next, text_id, param, subm){
@@ -459,6 +464,7 @@ else
 
 var app_models_resume_onboarding_continue_temp_id = null;
 var app_models_resume_onboarding_continue = function(current, next, text_id, subm){
+
 	var answer = false;
 	if(typeof text_id != 'undefined' && text_id>0){
 		//answer = Lincko.Translation.get('app', text_id, 'pure');
@@ -470,8 +476,11 @@ var app_models_resume_onboarding_continue = function(current, next, text_id, sub
 		answer: answer,
 		temp_id: app_models_resume_onboarding_continue_temp_id,
 	};
-	wrapper_sendAction(data, 'post', 'onboarding/next');
+	if(typeof app_models_resume_format_sentence_answers[next] == 'undefined'){
+		wrapper_sendAction(data, 'post', 'onboarding/next');
+	}
 	app_models_resume_onboarding_continue_temp_id = null;
+	app_models_resume_format_sentence_answers[next] = true; //Don't reply twice
 };
 
 var app_models_resume_listup = function(Elem, list, color, link, comments_id){

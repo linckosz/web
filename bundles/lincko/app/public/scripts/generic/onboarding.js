@@ -122,7 +122,7 @@ var onboarding = {
 			app_models_resume_onboarding_continue(current, next, text_id, subm);
 			if(that.on){
 				that.overlays.show.content_sub();
-				that.toBot();
+				//that.toBot();
 			}
 		}
 		this.scripts[param[1]](fn_continue);
