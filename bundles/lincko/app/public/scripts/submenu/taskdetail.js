@@ -1726,7 +1726,7 @@ Submenu.prototype.Add_taskdetail = function() {
 
 				//if deleted, remove all links
 				if(item_real && item_real.deleted_at){
-					taskdetail_tools.removeAllLinks(item_real['_type'], item_real['_id']);
+					// toto - taskdetail_tools.removeAllLinks(item_real['_type'], item_real['_id']);
 				}
 
 			}
