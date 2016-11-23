@@ -63,6 +63,13 @@ $.Velocity.RegisterEffect.packagedEffects["cloud.bombIn"] = {
     ]
 };
 
+$.Velocity.RegisterEffect.packagedEffects["evan.slideLeftIn"] = {
+	defaultDuration: 750,
+	calls: [
+		[ { translateX: [ 0,'100%' ] }, 1, { easing: "easeInCirc" } ]
+	]
+};
+
 
 
 for (var effectName in $.Velocity.RegisterEffect.packagedEffects) {

@@ -76,6 +76,10 @@ textarea:focus, input:focus{
 	font-size: 28px !important;
 }
 
+.answer_help{
+	display: inline-block;
+}
+
 .submenu_chats_settings_number {
 	position: absolute;
 	top: 6px;

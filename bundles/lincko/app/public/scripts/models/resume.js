@@ -213,6 +213,7 @@ var app_models_resume_format_sentence = function(comments_id, type, subm) {
 				if(answer[0]=='action'){
 					span_arr[j].click([comments_id, answer, i, subm], function(event){
 						$(this).off(); //Avoid double answer sending
+						//event.stopPropagation(
 						var current = event.data[0];
 						var answer = event.data[1];
 						var next = answer[1];
@@ -226,7 +227,9 @@ var app_models_resume_format_sentence = function(comments_id, type, subm) {
 						}
 						if(param.length>0){
 							//This function must call "app_models_resume_onboarding_continue(current, next)" once the action is completed
-							onboarding.action_launch(current, next, text_id, param, subm);
+							setTimeout(function(current, next, text_id, param, subm){
+									onboarding.action_launch(current, next, text_id, param, subm);
+							}, 0, current, next, text_id, param, subm);
 						} else {
 							app_models_resume_onboarding_continue(current, next, text_id, subm);
 						}
@@ -310,6 +313,7 @@ var app_models_evan_fn = function(current, span_arr, subm){
 	setTimeout(function(current, span_arr){
 		var dom = $('[onboarding_id='+current+']');
 		var answer = $('#models_history_answer_options_'+current);
+		answer.attr("question",current);
 		if(dom.length > 0 )
 		{
 			if(answer.length == 0)
@@ -324,8 +328,6 @@ var app_models_evan_fn = function(current, span_arr, subm){
 				}
 				if(!flag)
 				{
-
-					app_models_onboarding_msg_queue.push(current);
 					var options = $('#-models_history_answer_options').clone();
 					options.prop('id','models_history_answer_options_'+current)
 					options.addClass('models_history_self');
@@ -341,8 +343,6 @@ var app_models_evan_fn = function(current, span_arr, subm){
 						duration: 1000,
 					});
 				}
-				
-				
 			}
 		}
 	}, 5, current, span_arr);
@@ -352,9 +352,27 @@ $("body").on("click", '.app_models_resume_onboarding_answer',function(event){
 	var dom = $(this);
 	var submenu = dom.submenu_getWrapper()[0];
 	var options = $(this).closest('.models_history_answer_options');
+	var time=0;
+
+	var question = dom.closest('.models_history_answer_options').attr('question');
+	app_models_onboarding_msg_queue.push(dom.closest('.models_history_answer_options').attr('question'));
+	dom.attr('selected',true);
+	
+	
 	options.velocity("bruno.slideRightOut", { 
 		duration: 500,
 		complete:function(){
+			if(dom.length > 0 )
+			{
+				if(typeof submenu != "undefined")
+				{
+					var overthrow_id = "overthrow_"+submenu.id;
+					var iScroll = myIScrollList[overthrow_id];
+					var last = $('#'+submenu.id+'_help_iscroll').get(0);
+					submenu_resize_content();
+					iScroll.scrollToElement(last, 0);
+				}
+			}
 			options.recursiveRemove();
 		} 
 	});	

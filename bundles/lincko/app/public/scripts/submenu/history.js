@@ -682,8 +682,6 @@ var historyFeed = function(id,type,position,submenu)
 		timestamp: null,
 	};
 
-	app_models_onboarding_msg_queue = [];//for onboarding
-
 	var data = this.app_chat_feed_data_init();
 	data = this.app_chat_feed_timeline(data);
 
