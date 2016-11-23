@@ -473,34 +473,21 @@
 	}
 }
 
-.bomb {
-	background-image: url('/lincko/app/images/submenu/cloud_animation.png');
-	background-position-x:0;
-	width:250px;
-	height:250px;
+.bomb_wrapper {
+	position:absolute;
 }
 
-.bomb:nth-of-type(2)  {
+.bomb {
+	width:50px;
+	height:40px;
 	background-image: url('/lincko/app/images/submenu/cloud_animation.png');
-	background-position-x:250px;
-	width:250px;
-	height:250px;
+	background-position-x:0;
+	background-repeat: no-repeat;
+	background-size:cover;
+	position:relative;
+	top:-35px;
+	margin:0 auto;
 }
-.bomb:nth-of-type(3)  {
-	background-image: url('/lincko/app/images/submenu/cloud_animation.png');
-	background-position-x:500px;
-	width:250px;
-	height:250px;
-}
-.bomb:nth-of-type(4) {
-	background-image: url('/lincko/app/images/submenu/cloud_animation.png');
-	background-position-x:750px;
-	width:250px;
-	height:250px;
-}
-.bomb:nth-of-type(5) {
-	background-image: url('/lincko/app/images/submenu/cloud_animation.png');
-	background-position-x:1000px;
-	width:250px;
-	height:250px;
-}
+
+
+

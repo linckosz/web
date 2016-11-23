@@ -363,9 +363,8 @@ $("body").on("click", '.app_models_resume_onboarding_answer',function(event){
 	var dom = $(this);
 	var submenu = dom.submenu_getWrapper()[0];
 	var options = $(this).closest('.models_history_answer_options');
-
 	options.velocity("bruno.slideRightOut", { 
-		duration: 1000,
+		duration: 500,
 		complete:function(){
 			options.recursiveRemove();
 		} 
