@@ -256,7 +256,7 @@ onboarding.scripts[2] = function(fn_continue){
 
 	//must complete all conditions to move on
 	var conditions = {
-		1: false, //target task mark complete
+		1: true, //target task mark complete (set to true because this condition is already included in condition 4)
 		2: false, //open a task
 		3: false, //assign a task to monkey king
 		4: false, //mark all initial tasks complete
@@ -284,7 +284,7 @@ onboarding.scripts[2] = function(fn_continue){
 	var tasks_initial = Lincko.storage.list('tasks', null, null, 'projects', app_content_menu.projects_id, false);
 
 	//action 1 - mark task_target complete
-	var task_target = null;
+	/*var task_target = null;
 	$.each(tasks_initial, function(i, task){
 		if(!task.approved){
 			task_target = task;
@@ -297,29 +297,26 @@ onboarding.scripts[2] = function(fn_continue){
 			app_application_garbage.remove(onboarding_garbage_action1);
 			condition_complete(1);
 		}
-	});
+	});*/
 
 
 	//action 2 - open a task
-	$(document).on("submenuHide.onboarding", function(){
-		if(!submenu_get('taskdetail', true)){ //check submenu
-			$(document).off("submenuHide.onboarding");
-			condition_complete(2);
-		}
-		else if(!submenu_get('taskdetail', false)){ //check preview
-			$(document).off("submenuHide.onboarding");
+	var onboarding_garbage_action2 = app_application_garbage.add('onboarding_garbage_script_2_2');
+	app_application_lincko.add(onboarding_garbage_action2, 'submenu_show', function(){
+		if(submenu_get('taskdetail', true) || submenu_get('taskdetail', false)){ //check submenu
+			app_application_garbage.remove(onboarding_garbage_action2);
 			condition_complete(2);
 		}
 	});
 
 
 	//action 3 - create a task assigned to monkeyKing (user 1)
-	var onboarding_garbage_action2 = app_application_garbage.add('onboarding_garbage_script_2_2');
-	app_application_lincko.add(onboarding_garbage_action2, 'projects_'+app_content_menu.projects_id, function(){
+	var onboarding_garbage_action3 = app_application_garbage.add('onboarding_garbage_script_2_3');
+	app_application_lincko.add(onboarding_garbage_action3, 'projects_'+app_content_menu.projects_id, function(){
 		var tasks = Lincko.storage.list('tasks', null, {created_by: wrapper_localstorage.uid}, 'projects', app_content_menu.projects_id, false);
 		$.each(tasks, function(i, task){
 			if(task['_users'] && task['_users'][1/*monkeyKing*/] && task['_users'][1/*monkeyKing*/]['in_charge']){
-				app_application_garbage.remove(onboarding_garbage_action2);
+				app_application_garbage.remove(onboarding_garbage_action3);
 				condition_complete(3);
 				return false;
 			}
