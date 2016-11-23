@@ -124,6 +124,14 @@ submenu_list['new_group'] = {
 		"name": "title",
 		"value": "",
 		"class": "submenu_input_text",
+		"now": function(Elem, subm){
+			Elem.on("keypress", subm, function(e) {
+				e.stopPropagation(); 
+				if((e.which || e.keyCode) == 13){
+					$('#'+e.data.id+"_submenu_top_button_right").click();
+				}
+			});
+		},
 	},
 
 	'contacts': {
@@ -150,9 +158,29 @@ submenu_list['edit_group'] = {
 
 	"left_button": {
 		"style": "title_left_button",
-		"title": Lincko.Translation.get('app', 25, 'html'), //Close
+		"title": Lincko.Translation.get('app', 7, 'html'), //Cancel
 		'hide': true,
 		"class": "base_pointer",
+		"action": function(Elem, subm) {
+			subm.cancel = true;
+		},
+	},
+
+	"right_button": {
+		"style": "title_right_button",
+		"title": Lincko.Translation.get('app', 58, 'html'), //Save
+		'hide': true,
+		"class": "base_pointer",
+		"action": function(Elem, subm) {
+			base_showProgress(Elem);
+			Elem.recursiveOff();
+		},
+		"now": function(Elem, subm){
+			//Add loading bar
+			var loading_bar = $("#-submit_progress_bar").clone();
+			loading_bar.prop('id', '');
+			Elem.append(loading_bar);
+		},
 	},
 
 	"pre_action": {
@@ -185,27 +213,44 @@ submenu_list['edit_group'] = {
 				Elem.find("[find=submenu_input]").after("<div find='submenu_title_div'>").remove();
 				var div = Elem.find("[find=submenu_title_div]");
 				div.html(value).addClass('submenu_contact_title');
-			} else if(subm.param.type=='chats') {
-				input.on({
-					change: function(event){ submenu_contacts_update.chats_title(event.data, this); },
-					past: function(event){ submenu_contacts_update.chats_title(event.data, this); },
-					cut: function(event){ submenu_contacts_update.chats_title(event.data, this); },
-					keyup: function(event) { submenu_contacts_update.chats_title(event.data, this); },
-				}, subm);
 			}
-		}
+			Elem.on("keypress", subm, function(e) {
+				e.stopPropagation(); 
+				if((e.which || e.keyCode) == 13){
+					$('#'+e.data.id+"_submenu_top_button_right").click();
+				}
+			});
+		},
 	},
 
 	'contacts_live': {
 		"style": "contacts_live", //sendAction when click
 		"title": "contacts_live",
 	},
+
+	"post_action": {
+		"style": "postAction",
+		"action": function(Elem, subm){
+			subm.cancel = false;
+			app_application_lincko.add(
+				subm.id,
+				'submenu_hide_'+subm.preview+'_'+subm.id,
+				function(){
+					var subm = this.action_param;
+					if(!subm.cancel){
+						submenu_contacts_update.chats_title(subm);
+					}
+				},
+				subm
+			);
+		},
+	},
 	
 };
 
 var submenu_contacts_update = {
 	chats_title_timer: null,
-	chats_title: function(subm, input){
+	_old_chats_title: function(subm, input){
 		clearTimeout(submenu_contacts_update.chats_title_timer);
 		var value = $(input).val();
 		if(Lincko.storage.get("chats", subm.param.id, "title") != value){
@@ -220,6 +265,25 @@ var submenu_contacts_update = {
 				);
 				submenu_contacts_update.chats_title_timer = null;
 			}, 400, subm.param.id, value);
+			//Fake the change for faster display
+			if(Lincko.storage.data["chats"][subm.param.id]){
+				Lincko.storage.data["chats"][subm.param.id]["+title"] = value;
+				app_application_lincko.prepare("chats_"+subm.param.id, true);
+			}
+		}
+	},
+	chats_title: function(subm){
+		var value = subm.Wrapper().find("[name=title]").val();
+		if(Lincko.storage.get("chats", subm.param.id, "title") != value){
+			wrapper_sendAction(
+			{
+				"id": subm.param.id,
+				"title": value,
+			},
+				'post',
+				'chat/update'
+			);
+			submenu_contacts_update.chats_title_timer = null;
 			//Fake the change for faster display
 			if(Lincko.storage.data["chats"][subm.param.id]){
 				Lincko.storage.data["chats"][subm.param.id]["+title"] = value;
@@ -369,12 +433,21 @@ Submenu.prototype.Add_ContactContents = function(live) {
 	var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
 	position.addClass('overthrow');
 
+	var lock_list = false; //At true it locks the whole list
+	var parent = Lincko.storage.getParent(this.param.type, this.param.id);
+	if(
+		   (parent && parent["_type"]=="projects")
+		|| (typeof this.param.proid != 'undefined' && this.param.proid>0)
+	){
+		lock_list = true;
+	}
+
 	if(this.param.type=='chats' && this.param.id > 0){
 		var perm_chats = Lincko.storage.get(this.param.type, this.param.id, "_perm");
-		var perm_parent = Lincko.storage.getParent(this.param.type, this.param.id, "_perm");
-		
-		if(!perm_parent){ //For root get the whole visible list and chats list together
-			perm_parent = {};
+		perm_parent = {};
+		if(parent){
+			perm_parent = parent["_perm"];
+		} else { //For root get the whole visible list and chats list together
 			perm_parent[wrapper_localstorage.uid] = true;
 			var others = Lincko.storage.list('users', null, { _id: ['!=', wrapper_localstorage.uid], _visible: true, });
 			for(var i in others){
@@ -389,7 +462,7 @@ Submenu.prototype.Add_ContactContents = function(live) {
 			this.param.contactsID = {};
 			for(var uid in perm_parent){
 				this.param.contactsID[uid] = { checked: false };
-				if(uid == wrapper_localstorage.uid || perm_chats[uid]){
+				if(lock_list || uid == wrapper_localstorage.uid || perm_chats[uid]){
 					this.param.contactsID[uid] = { checked: true };
 				}
 			}
@@ -398,8 +471,10 @@ Submenu.prototype.Add_ContactContents = function(live) {
 	var contacts = submenu_contacts_gen_chatcontacts(this.param.proid, this.param.alwaysMe, this.param.contactsID);
 	
 	var Elem;
+	var allow_click = true;
 
 	for(var uid in contacts) {
+		allow_click = true;
 		Elem = $('#-submenu_app_contacts').clone();
 		Elem.prop('id', this.id+'_contact_'+uid);
 		Elem.find('.username').html(wrapper_to_html(contacts[uid].username));
@@ -416,40 +491,45 @@ Submenu.prototype.Add_ContactContents = function(live) {
 		}
 		Elem.find('.id').val(uid);
 		submenu_contacts_update.chats_contacts_list_ori[uid] = false;
-		if (contacts[uid].checked == true || (that.param && that.param.alwaysMe && uid == wrapper_localstorage.uid) || uid == that.param.created_by ) {
+		if (lock_list || contacts[uid].checked == true || (that.param && that.param.alwaysMe && uid == wrapper_localstorage.uid) || uid == that.param.created_by ) {
 			Elem.find('.check').addClass('checked');
 			submenu_contacts_update.chats_contacts_list_ori[uid] = true;
-			if(uid == that.param.created_by || uid == wrapper_localstorage.uid){
-				Elem.find('.check').addClass('admin').off('click');
+			if(lock_list || this.param.type=='chats'){
+				if(lock_list || uid == that.param.created_by || uid == wrapper_localstorage.uid){
+					Elem.find('.check').addClass('admin').off('click');
+					allow_click = false;
+				}
 			}
 		}
-		Elem.click(position, function(event) {
-			var position = event.data;
-			if($(this).find('.checked').length == 0 || (that.param && that.param.alwaysMe && $(this).find('.id').val() == wrapper_localstorage.uid) || $(this).find('.id').val() == that.param.created_by ) {
-				$(this).find('.check').addClass('checked');
-				if(live){
-					var uid = parseInt($(this).find('.id').val(), 10);
-					submenu_contacts_update.chats_contacts_list_update(that, uid, true);
+		if(allow_click){
+			Elem.click(position, function(event) {
+				var position = event.data;
+				if($(this).find('.checked').length == 0 || (that.param && that.param.alwaysMe && $(this).find('.id').val() == wrapper_localstorage.uid) || $(this).find('.id').val() == that.param.created_by ) {
+					$(this).find('.check').addClass('checked');
+					if(live){
+						var uid = parseInt($(this).find('.id').val(), 10);
+						submenu_contacts_update.chats_contacts_list_update(that, uid, true);
+					}
+				} else {
+					$(this).find('.checked').removeClass('checked');
+					if(live){
+						var uid = parseInt($(this).find('.id').val(), 10);
+						submenu_contacts_update.chats_contacts_list_update(that, uid, false);
+					}
 				}
-			} else {
-				$(this).find('.checked').removeClass('checked');
-				if(live){
-					var uid = parseInt($(this).find('.id').val(), 10);
-					submenu_contacts_update.chats_contacts_list_update(that, uid, false);
+				
+				if (that.param.selectOne) {
+					$(this).siblings().find(".check").removeClass("checked");
 				}
-			}
-			
-			if (that.param.selectOne) {
-				$(this).siblings().find(".check").removeClass("checked");
-			}
-			
+				
 
-			if(position.find(".checked").length > 0) {
-				position.find(".submenu_top_side_right").show();
-			} else {
-				position.find(".submenu_top_side_right").hide();
-			}
-		});
+				if(position.find(".checked").length > 0) {
+					position.find(".submenu_top_side_right").show();
+				} else {
+					position.find(".submenu_top_side_right").hide();
+				}
+			});
+		}
 		
 		if(position.find(".checked").length > 0) {
 			position.find(".submenu_top_side_right").show();

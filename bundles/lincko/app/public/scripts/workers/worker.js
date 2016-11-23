@@ -43,7 +43,8 @@ var webworker_operation = {
 		try {
 			//var compressed_data = sha+btoa(utf8_encode(data)); //Don't use btoa, it's too heavy
 			//var compressed_data = LZString.compressToUTF16(JSON.stringify(data)); //Good
-			var compressed_data = LZipper.compress(link+sha+utf8_encode(JSON.stringify(obj_data.data))); //Best
+			//var compressed_data = LZipper.compress(link+sha+utf8_encode(JSON.stringify(obj_data.data))); //Best
+			var compressed_data = LZipper.compress(link+sha+JSON.stringify(obj_data.data)); //Best
 			obj_data.data = compressed_data;
 			self.postMessage(JSON.stringify({action: 'LocalStorageIn', data: obj_data,}));
 		} catch(e) {

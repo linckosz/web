@@ -752,27 +752,28 @@ Submenu.prototype.Add_ChatContent = function() {
 			
 			var Elems = layer.find('[find=card]');
 
-			var list_dom = {};
+			//For existing items
 			Elems.each(function(){
 				var Elem = $(this);
-				list_dom[ Elem.prop('id') ] = Elem.attr('timestamp');
-				if(typeof list[Elem.prop('id')] == "undefined"){ //remove
+				var list_bis = list;
+				if(typeof list_bis[Elem.prop('id')] == "undefined"){ //remove
 					Elem.velocity('slideUp', {
 						mobileHA: hasGood3Dsupport,
 						complete: function(){
 							$(this).recursiveRemove();
 						}
 					});
-				} else if(list[Elem.prop('id')] != Elem.attr('timestamp')){ //update (move place)
+				} else if(list_bis[Elem.prop('id')] != Elem.attr('timestamp')){ //update (move place)
 					var parent = Elem.parent();
 					Elem.detach(); //cut
-					var timestamp = list[Elem.prop('id')];
+					var timestamp = list_bis[Elem.prop('id')];
 					var Elems_bis = layer.find('[find=card]');
 					var attached = false;
 					Elems_bis.each(function(){
 						var Elem_bis = $(this);
 						if(!attached && timestamp >= Elem_bis.attr('timestamp')){
 							attached = true;
+							Elem.attr('timestamp', timestamp);
 							Elem_bis.before(Elem);
 							return false;
 						}
@@ -780,9 +781,11 @@ Submenu.prototype.Add_ChatContent = function() {
 					if(!attached){
 						parent.append(Elem);
 					}
+					list_bis[ Elem.prop('id') ] = Elem.attr('timestamp');
 				}
 			});
 
+			//For new items
 			for(var i in items){
 				var Elem = $('#'+ prefix + items[i]['root_type']+"_"+items[i]['root_id']);
 				if(Elem.length <= 0){
@@ -796,6 +799,7 @@ Submenu.prototype.Add_ChatContent = function() {
 						var Elem_bis = $(this);
 						if(!attached && timestamp >= Elem_bis.attr('timestamp')){
 							attached = true;
+							Elem.attr('timestamp', timestamp);
 							Elem_bis.before(Elem);
 							return false;
 						}

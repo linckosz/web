@@ -373,7 +373,8 @@ wrapper_localstorage.encrypt = function (link, data, tryit){
 			clearTimeout(wrapper_localstorage.encrypt_timer[link]);
 			wrapper_localstorage.encrypt_timer[link] = setTimeout(function(link, data, tryit){
 				try {
-					var store_data = LZipper.compress(link+wrapper_localstorage.sha+utf8_encode(JSON.stringify(data))); //Best
+					//var store_data = LZipper.compress(link+wrapper_localstorage.sha+utf8_encode(JSON.stringify(data))); //Best
+					var store_data = LZipper.compress(link+wrapper_localstorage.sha+JSON.stringify(data)); //Best
 					var time = 1000*3600*24*31; //Keep the value for 1 month
 					result = amplify.store(wrapper_localstorage.prefix+link, store_data, { expires: time });
 				} catch(e) {
@@ -405,7 +406,8 @@ wrapper_localstorage.decrypt = function (link){
 		temp = LZipper.decompress(amplify.store(this.prefix+link));
 		if(temp.indexOf(link+this.sha)===0){
 			data = temp.substr(link.length+this.sha.length);
-			return JSON.parse(utf8_decode(data)); //Best
+			//return JSON.parse(utf8_decode(data)); //Best
+			return JSON.parse(data); //Best
 		}
 	} catch(e) {
 		amplify.store(this.prefix+link, null);

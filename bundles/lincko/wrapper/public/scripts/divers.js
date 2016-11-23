@@ -115,6 +115,13 @@ jQuery.prototype.recursiveOff = function(delay){
 	return this;
 }
 
+function encode_utf8(s) {
+	return unescape(encodeURIComponent(s));
+}
+
+function decode_utf8(s) {
+	return decodeURIComponent(escape(s));
+}
 
 var supportsTouch = 'ontouchstart' in window || navigator.msMaxTouchPoints;
 
@@ -418,6 +425,7 @@ function wrapper_test(type, RCUD){
 					//"parent_id": 4, //OPTIONAL
 					//"title": "It's a note title"+Math.floor(Math.random() * 20), //OPTIONAL
 					"comment": "It's a note content"+Math.floor(Math.random() * 20), //OPTIONAL
+					//"locked_by": null, //OPTION (Only null value will be meanful)
 				},
 				'post',
 				'note/update',
@@ -441,6 +449,36 @@ function wrapper_test(type, RCUD){
 				},
 				'post',
 				'note/restore',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==5){
+			wrapper_sendAction(
+				{
+					"id": 176,
+				},
+				'post',
+				'note/lock/start',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==6){
+			wrapper_sendAction(
+				{
+					"id": 176,
+				},
+				'post',
+				'note/lock/unlock',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==7){
+			wrapper_sendAction(
+				{
+					"id": 176,
+				},
+				'post',
+				'note/lock/check',
 				wrapper_test_display
 			);
 		}
@@ -760,6 +798,7 @@ function wrapper_test(type, RCUD){
 					"approved": !Lincko.storage.data.tasks[32]['approved'], //OPTIONAL
 					//"status": 0, //OPTIONAL
 					//"progress":  Math.floor(Math.random() * 10), //OPTIONAL
+					//"locked_by": null, //OPTION (Only null value will be meanful)
 					"users>approver": {
 						6: [true,false][Math.round(Math.random())],
 						12: [true,false][Math.round(Math.random())],
@@ -794,6 +833,36 @@ function wrapper_test(type, RCUD){
 				},
 				'post',
 				'task/restore',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==5){
+			wrapper_sendAction(
+				{
+					"id": 10,
+				},
+				'post',
+				'task/lock/start',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==6){
+			wrapper_sendAction(
+				{
+					"id": 10,
+				},
+				'post',
+				'task/lock/unlock',
+				wrapper_test_display
+			);
+		}
+		else if(RCUD==7){
+			wrapper_sendAction(
+				{
+					"id": 10,
+				},
+				'post',
+				'task/lock/check',
 				wrapper_test_display
 			);
 		}
