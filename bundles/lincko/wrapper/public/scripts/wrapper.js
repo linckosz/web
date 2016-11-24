@@ -141,7 +141,7 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 			if(typeof data.language != 'undefined'){
 				setTimeout(function(language){
 					if(typeof app_language_short != 'undefined' && typeof language != 'undefined' && app_language_short != language){
-						window.location.href = wrapper_link['root'];
+						//window.location.href = wrapper_link['root']; //toto => disable for debugging purpose
 					}
 				}, 500, data.language);
 			}

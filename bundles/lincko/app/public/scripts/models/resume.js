@@ -319,6 +319,8 @@ var app_models_onboarding_msg_queue = [];//for onboarding
 var app_models_evan_fn = function(current, span_arr, subm){
 	setTimeout(function(current, span_arr, subm){
 		var dom = $('[onboarding_id='+current+']');
+		var subm_elem = dom.submenu_getWrapper()[0];
+		var subm_dom = dom.submenu_getWrapper()[1];
 		var answer = $('#models_history_answer_options_'+current);
 		answer.attr("question",current);
 		if(dom.length > 0 )
@@ -344,10 +346,19 @@ var app_models_evan_fn = function(current, span_arr, subm){
 						options.find('[find=answers_wrapper]').append(span_arr[i]);
 					}
 
-					var subm_bis = subm;
 					dom.after(options);
-					options.velocity("bruno.slideRightBigIn", { 
+					var overthrow_id = "overthrow_"+subm_elem.id;
+					var iScroll = myIScrollList[overthrow_id];
+					submenu_resize_content();
+					var last = $('#'+subm_elem.id+'_help_iscroll').get(0);
+					if(last){
+						iScroll.scrollToElement(last, 300);
+					}
+					
+					options.velocity("bruno.slideRightBigIn", {
+					//options.velocity("bruno.slideRightIn", {
 						duration: 1000,
+						/*
 						begin: function(){
 							var overthrow_id = "overthrow_"+subm_bis.id;
 							var iScroll = myIScrollList[overthrow_id];
@@ -356,8 +367,10 @@ var app_models_evan_fn = function(current, span_arr, subm){
 							if(last){
 								iScroll.scrollToElement(last, 300);
 							}
-						}
+						},
+						*/
 					});
+					
 				}
 			}
 		}

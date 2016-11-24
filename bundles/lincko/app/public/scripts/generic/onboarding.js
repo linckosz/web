@@ -122,6 +122,7 @@ var onboarding = {
 			app_models_resume_onboarding_continue(current, next, text_id, subm);
 			if(that.on){
 				that.overlays.show.content_sub();
+				onboarding.toBot();
 				setTimeout(function(){
 					onboarding.toBot();
 				}, 2000);
