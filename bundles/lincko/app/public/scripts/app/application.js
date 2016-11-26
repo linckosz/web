@@ -169,9 +169,14 @@ var app_application_lincko = {
 									if(procedural){ //Run immediatly (but can see screen little freeze)
 										this._elements[Elem_id].action();
 									} else { //It will wait until the parent scope script is finished (less screen freeze)
-										this._elements[Elem_id].timer = setTimeout(function(element){
-												element.action();
-										}, 0, this._elements[Elem_id]);
+										this._elements[Elem_id].timer = setTimeout(function(Elem_id){
+											if(app_application_lincko._elements[Elem_id]){
+												app_application_lincko._elements[Elem_id].action();
+											} else {
+												console.log("application => "+Elem_id);
+												JSerror.sendError(Elem_id, 'app_application_lincko._elements[Elem_id] does not exists', 0);
+											}
+										}, 0, Elem_id);
 									}
 								} catch(e) {
 									var instance = "Other";

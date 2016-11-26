@@ -65,9 +65,9 @@ base_input_field.email = {
 }
 
 base_input_field.password = {
-	format: Lincko.Translation.get('web', 2, 'js'), //Password format: - Between 6 and 60 characters - Alphanumeric
+	format: Lincko.Translation.get('web', 2, 'js'), //Password format: - Between 6 and 60 characters
 	tags: {
-		pattern: "^[\\w\\d]{6,60}$",
+		pattern: "^[\\S]{6,60}$",
 		required: "required",
 		maxlength: 60,
 	},
