@@ -33,7 +33,7 @@
 /*
 	Trip.js
 */
-.trip-overlay{
+#app_application_content>.trip-overlay{
 	opacity: 0.7 !important;
 }
 .trip-block.onboarding_trip_welcome{
@@ -47,4 +47,8 @@
 }
 .trip-exposed#app_project_projects_new {
 	background: none;
+}
+.trip-exposed#app_project_chats_tab{
+	background: none;
+	background-color: #FBA026;
 }

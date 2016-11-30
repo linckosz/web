@@ -553,7 +553,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 					}
 				},
 				complete: function(){
-					app_application_lincko.prepare('mainMenu_close_complete', true);
+					app_application_lincko.prepare('mainmenu_close_complete', true);
 					setTimeout(function(){
 						$(window).trigger('resize');
 						app_application_submenu_position();
@@ -648,7 +648,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 					}
 				},
 				complete: function(){
-					app_application_lincko.prepare('mainMenu_open_complete', true);
+					app_application_lincko.prepare('mainmenu_open_complete', true);
 					setTimeout(function(){
 						app_application_move_mainmenu_block = false;
 						$(window).trigger('resize');

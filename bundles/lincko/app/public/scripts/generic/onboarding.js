@@ -612,6 +612,7 @@ onboarding.scripts[5] = function(fn_continue){
 	});
 }
 
+
 //welcome onboaring
 onboarding.scripts['welcome'] = function(){
 	var array_openMainMenu = [
@@ -623,12 +624,31 @@ onboarding.scripts['welcome'] = function(){
 			delay: -1,
 			onTripStart : function(i, tripData){
 				onboarding.welcome_bubble_reposition(null, 700);
-				$('.trip-overlay').css('opacity', '');
 				var tripObj = this;
-				tripData.sel.off('click.trip').on('click.trip', function(){
-					tripObj.stop();
-					trip_exploreMainMenu.start();
+				tripData.sel.off('click.trip').on('click.trip', function(event){
+					event.stopPropagation();
+					onboarding.overlays.project().css('opacity', 0);
 					$(this).off('click.trip');
+					var id_onboarding_garbage_mainMenuOpen = app_application_garbage.add('onboarding_garbage_mainMenuOpen');
+					app_application_lincko.add(id_onboarding_garbage_mainMenuOpen, 'mainmenu_open_complete', 
+						function(){
+							app_application_garbage.remove(id_onboarding_garbage_mainMenuOpen);
+							tripObj.stop();
+							setTimeout(function(){
+								trip_exploreMainMenu.start();
+							}, 500); //there is a window resize event soon after menu is opened, and this will also trigger trip.start. use setTimeout for trip to start after the resize
+							
+						}
+					);
+				});
+
+				var fn_next = function(){
+					$('#app_application_menu_icon').click();
+				}
+
+				$('#'+onboarding.id_welcome_bubble).click(function(){
+					$(this).off('click');
+					fn_next();
 				});
 			},
 		},
@@ -636,6 +656,11 @@ onboarding.scripts['welcome'] = function(){
 	var trip_openMainMenu = new Trip(array_openMainMenu, {
 		overlayHolder: '#app_application_content',
 		tripClass: 'onboarding_trip_welcome',
+		onEnd: function(){
+			$('#app_application_menu_icon').off('click.trip');
+			onboarding.overlays.content().css('opacity', 0);
+			//delete trip_openMainMenu;
+		}
 	});
 
 	var array_exploreMainMenu = [
@@ -646,63 +671,69 @@ onboarding.scripts['welcome'] = function(){
 			expose: true,
 			delay: -1,
 			onTripStart : function(i, tripData){
-				//$('.trip-overlay').css('display', 'none');
 				var tripObj = this;
-				onboarding.overlays.content();
-				var elem_overlay_project = onboarding.overlays.project().css('opacity', 0).off('click.trip').on('click.trip', function(){
-					var elem_overlay = $(this);
-					elem_overlay.velocity({opacity: 0}, {
-						begin: function(){
-							$('#app_project_chats_tab').attr('style', '');
-							elem_overlay.css({
-								'background-color': '#FFFFFF',
-								opacity: 1,
-								border: '4px solid #FFFFFF',
-							});
-						},
-						complete: function(){
-							if(tripObj.tripIndex == 1){
-								$('#app_application_menu_icon').velocity('fadeOut', {
-									begin: function(){
-										$('#app_application_menu_icon').css({
-											outline: '4px solid #FFFFFF',
-										});
-									},
-								}).velocity('fadeIn', {
-									complete: function(){
-										$('#app_application_menu_icon').attr('style', '');
-										app_application.move('project', true);
-										tripObj.stop();
-										trip_exploreContent.start();
-									}
-								});
-								
-								$(this).off('click.trip');
-							}
-							else{
-								tripObj.next();
-							}
-						}
-					});
+				onboarding.overlays.content().attr('style', '');
+				onboarding.welcome_bubble_reposition();
+				
+				
+				$('#app_application_menu_icon').removeClass('trip-exposed');
+				$('#app_project_projects_new').css({
+					//'outline': '4px solid #FFFFFF',
+					'position': 'absolute',
+					'opacity': 1,
 				});
-				var timeout = setTimeout(function(){
-					clearTimeout(timeout);
-					console.log('timeout');
-					onboarding.welcome_bubble_reposition();
-					elem_overlay_project.velocity({opacity: 0},{
-						begin: function(){
-							elem_overlay_project.css({
-								'background-color': '#FFFFFF',
-								opacity: 1,
-							});
-						}
-					});
 
-					$('#app_project_projects_new').css({
-						//'outline': '4px solid #FFFFFF',
-						'opacity': 1,
-					});
-				}, 700); //hard to know how long it takes the open the menu
+				setTimeout(function(){
+					$('.trip-overlay').velocity({opacity: 0});
+				}, 1500);
+				
+				
+				var elem_overlay_project = onboarding.overlays.project().off('click.trip').on('click.trip', function(event){
+					var elem_overlay = $(this);
+					if(tripObj.tripIndex == 1){
+						$(this).off('click.trip');
+					}
+					
+					//if the main menu overlay was clicked, flash
+					if($(event.target).hasClass('onboarding_overlay')){
+						elem_overlay.velocity({opacity: 0}, {
+							begin: function(){
+								$('#app_project_chats_tab').attr('style', '');
+								elem_overlay.css({
+									'background-color': '#FFFFFF',
+									opacity: 1,
+									border: '4px solid #FFFFFF',
+								});
+							},
+						});
+					}
+
+					if(tripObj.tripIndex == 1){
+						$(this).off('click.trip');
+						$('#app_application_menu_icon').velocity('fadeOut', {
+							begin: function(){
+								$('#'+onboarding.id_welcome_bubble).velocity({left: 50, top: 58});
+								$('#app_application_menu_icon').css({
+									outline: '4px solid #FFFFFF',
+								});
+							},
+						}).velocity('fadeIn', {
+							complete: function(){
+								$('#app_application_menu_icon').attr('style', '');
+								app_application.move('project', true);
+								tripObj.stop();
+								trip_exploreContent.start();
+							}
+						});								
+					}
+					else{
+						tripObj.next();
+					}
+				});
+
+				var fn_next = function(){
+					elem_overlay_project.trigger('click.trip');
+				}
 			},
 			onTripEnd : function(i, tripData){
 				//$('#app_project_projects_new').attr('style', '');
@@ -712,20 +743,34 @@ onboarding.scripts['welcome'] = function(){
 			sel: $('#app_project_chats_tab'),
 			content: 'Click this button!!!!',
 			position : "e",
-			expose: false,
+			expose: true,
 			delay: -1,
 			onTripStart : function(i, tripData){
-				tripData.sel.css('border', '4px solid #FFFFFF');
 				onboarding.welcome_bubble_reposition();
+				$('#app_project_projects_new').attr('style', '');
+				tripData.sel.css('border', '4px solid #FFFFFF');
+				$('.trip-overlay').css('opacity', '');
+				setTimeout(function(){
+					$('.trip-overlay').velocity({opacity: 0});
+				}, 900);
+
+				var fn_next = function(){
+					onboarding.overlays.project().trigger('click.trip');
+				}
 			},
 			onTripEnd: function(i, tripData){
-				tripData.sel.attr('style', '');
+				//tripData.sel.attr('style', '');
 			}
 		},
 	];
 	var trip_exploreMainMenu = new Trip(array_exploreMainMenu, {
 		overlayHolder: '#app_project_content .iscroll_sub_div',
 		tripClass: 'onboarding_trip_welcome onboarding_trip_exploreMainMenu',
+		onStart: function(){
+			delete trip_exploreMainMenu;
+			onboarding.overlays.content();
+			$('#app_project_projects_new').off('click.trip');
+		}
 	});
 
 	var array_exploreContent = [
@@ -745,23 +790,32 @@ onboarding.scripts['welcome'] = function(){
 				onboarding.overlays.content(false);
 				onboarding.overlays.content_dynamic_sub();
 				onboarding.overlays.content_menu();
-				onboarding.overlays.content_top().css('opacity', 0).off('click.trip').on('click.trip', function(){
+				onboarding.overlays.content_top().css('opacity', 0).off('click.trip').on('click.trip', function(event){
 					var elem_overlay = $(this);
-					elem_overlay.velocity({opacity: 0}, {
-							begin: function(){
-								elem_overlay.css({
-									'background-color': '#FFFFFF',
-									opacity: 1,
-									border: '4px solid #FFFFFF',
-								});
-							},
-							complete: function(){
-								tripObj.next();
-								onboarding.overlays.content_top().attr('style', '');
-							}
-						});
+
+					//if next is triggered by clicking on overlay, flash
+					if($(event.target).hasClass('onboarding_overlay')){
+						elem_overlay.velocity({opacity: 0}, {
+								begin: function(){
+									elem_overlay.css({
+										'background-color': '#FFFFFF',
+										opacity: 1,
+										border: '4px solid #FFFFFF',
+									});
+								},
+								complete: function(){
+									onboarding.overlays.content_top().attr('style', '');
+									tripObj.next();
+								}
+							});
+					}
 					$(this).off('click.trip');
 				});
+
+				var fn_next = function(){
+					onboarding.overlays.content_top().off('click.trip');
+					tripObj.next();
+				}
 			},
 		},
 		{
@@ -774,10 +828,13 @@ onboarding.scripts['welcome'] = function(){
 				onboarding.welcome_bubble_reposition();
 				//$('.trip-overlay').css('display', 'none');
 				var tripObj = this;
+				var trip_index_counter = 0; //cyle through tasks, notes, chats, files
 				var elem_overlay = onboarding.overlays.content_menu();
 				elem_overlay.css('opacity', 0);
 				elem_overlay.off('click.trip');
 				elem_overlay.on('click.trip', function(){
+					if(trip_index_counter > 3){return;} //take care of spam click
+					trip_index_counter++;
 					elem_overlay.velocity({opacity: 0}, {
 						begin: function(){
 							elem_overlay.css({
@@ -790,9 +847,6 @@ onboarding.scripts['welcome'] = function(){
 							tripObj.next();
 						}
 					});
-					if(tripObj.tripIndex == 0){
-						$(this).off('click.trip');
-					}
 				});
 			},
 		},
@@ -832,8 +886,10 @@ onboarding.scripts['welcome'] = function(){
 		overlayHolder: '#app_application_content',
 		tripClass: 'onboarding_trip_welcome onboarding_trip_exploreContent',
 		onEnd: function(tripIndex, tripObject){
+			onboarding.overlays.content_menu().off('click.trip');
+			delete trip_exploreContent;
 			onboarding.overlays.content_dynamic_sub(false);
-			onboarding.overlays.content_menu().attr('style', '');
+			onboarding.overlays.content_menu().off('click.trip').attr('style', '');
 			var array_inputter = [
 				{
 					sel: $('#skylist_tasks_layer_tasks_inputter_container'),
@@ -866,14 +922,13 @@ onboarding.scripts['welcome'] = function(){
 
 	var elem_overlay = onboarding.overlays.body();
 	var elem_linckoBot_bubble = $('<div>').prop('id', onboarding.id_welcome_bubble).addClass(onboarding.id_welcome_bubble).text('LinckoBot: welcome!').click(function(){
-		elem_overlay.remove();
-		trip_openMainMenu.start();
 		$(this).off('click');
+		trip_openMainMenu.start();
+		elem_overlay.remove();
+		
 	});
 	elem_overlay.after(elem_linckoBot_bubble);
 	return;
-
-	
 }
 
 
