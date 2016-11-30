@@ -722,5 +722,4 @@ function cleanHtmlTag(source){
 		//dom.resize(); it will trigger the window.resize();
 	});
 
-
 }
