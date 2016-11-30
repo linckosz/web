@@ -1,14 +1,50 @@
-.onboarding_overlay_master{
+.onboarding_noBorder {
+	border: none !important;
+}
+.onboarding_overlay{
 	position: absolute;
-	z-index: 999999;
+	z-index: 9999;
 	top: 0px;
 	bottom: 0px;
 	left: 0px;
 	right: 0px;
-	background-color: #FFFFFF;
-	opacity: 0.3;
+	background-color: black;
+	opacity: 0.7;
 }
 .onboarding_overlay_content_top{
 	bottom: initial;
 	height: 48px;
+}
+
+.onboarding_welcome_bubble{
+	z-index: 10000;
+	position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #FFFFFF;
+    color: black;
+    padding: 10px;
+    font-size: 50px;
+}
+
+
+
+/*
+	Trip.js
+*/
+.trip-overlay{
+	opacity: 0.7 !important;
+}
+.trip-block.onboarding_trip_welcome{
+	visibility: hidden;
+}
+.trip-exposed#app_application_menu_icon {
+	background-color: #FBA026;
+}
+.trip-exposed#app_content_top {
+	background-color: #FBA026;
+}
+.trip-exposed#app_project_projects_new {
+	background: none;
 }
