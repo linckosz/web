@@ -17,15 +17,17 @@
 }
 
 .onboarding_welcome_bubble{
+	background-color: rgba(255, 255, 255, 0.96);
+	border: solid 2px #407606;
 	z-index: 10000;
 	position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #FFFFFF;
+    /*background-color: #FFFFFF;
     color: black;
     padding: 10px;
-    font-size: 50px;
+    font-size: 50px;*/
 }
 @media only screen and (max-width: 900px) {
 	.onboarding_welcome_bubble{
@@ -43,7 +45,7 @@
 	opacity: 0.7 !important;
 }
 .trip-block.onboarding_trip_welcome{
-	/*visibility: hidden;*/
+	visibility: hidden;
 	min-width: initial;
 	padding: 0px;
 }

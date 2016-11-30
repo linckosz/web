@@ -32,6 +32,16 @@ var onboarding = {
 				translateY: 0,
 			},{
 				duration: duration,
+				begin: function(){
+					if(!elem_bubble.attr('style')){
+						var coord_bubble = elem_bubble.offset();
+						elem_bubble.css({
+							left: coord_bubble.left,
+							top: coord_bubble.top,
+							transform: 'none',
+						});
+					}
+				}
 			});
 		}
 
@@ -40,8 +50,7 @@ var onboarding = {
 	launch: function(){ //return true if launched, return false if conditions are not fit for launch
 
 
-		onboarding.scripts.welcome();
-		return;
+		return onboarding.scripts.welcome();
 
 
 
@@ -742,7 +751,7 @@ onboarding.scripts['welcome'] = function(){
 			expose: true,
 			delay: -1,
 			onTripStart : function(i, tripData){
-				onboarding.welcome_bubble_reposition();
+				onboarding.welcome_bubble_reposition(tripData);
 				$('#app_project_projects_new').attr('style', '');
 				tripData.sel.css('border', '4px solid #FFFFFF');
 				$('.trip-overlay').css('opacity', '');
@@ -763,9 +772,17 @@ onboarding.scripts['welcome'] = function(){
 		overlayHolder: '#app_project_content .iscroll_sub_div',
 		tripClass: 'onboarding_trip_welcome onboarding_trip_exploreMainMenu',
 		onStart: function(){
-			delete trip_exploreMainMenu;
+			
+			if(responsive.test("maxMobileL")){
+				this.tripData[0].position = 's';
+				this.tripData[1].position = 'n';
+			}
+
 			onboarding.overlays.content();
 			$('#app_project_projects_new').off('click.trip');
+		},
+		onEnd: function(){
+			delete trip_exploreMainMenu;
 		}
 	});
 
@@ -821,7 +838,7 @@ onboarding.scripts['welcome'] = function(){
 			expose: false,
 			delay: -1,
 			onTripStart : function(i, tripData){
-				onboarding.welcome_bubble_reposition();
+				onboarding.welcome_bubble_reposition(tripData);
 				//$('.trip-overlay').css('display', 'none');
 				var tripObj = this;
 				var trip_index_counter = 0; //cyle through tasks, notes, chats, files
@@ -853,7 +870,7 @@ onboarding.scripts['welcome'] = function(){
 			expose: false,
 			delay: -1,
 			onTripStart : function(i, tripData){
-				onboarding.welcome_bubble_reposition();
+				onboarding.welcome_bubble_reposition(tripData);
 			},
 		},
 		{
@@ -863,7 +880,7 @@ onboarding.scripts['welcome'] = function(){
 			expose: false,
 			delay: -1,
 			onTripStart : function(i, tripData){
-				onboarding.welcome_bubble_reposition();
+				onboarding.welcome_bubble_reposition(tripData);
 			},
 		},
 		{
@@ -873,7 +890,7 @@ onboarding.scripts['welcome'] = function(){
 			expose: false,
 			delay: -1,
 			onTripStart : function(i, tripData){
-				onboarding.welcome_bubble_reposition();
+				onboarding.welcome_bubble_reposition(tripData);
 			},
 		}
 	];
@@ -881,6 +898,14 @@ onboarding.scripts['welcome'] = function(){
 	var trip_exploreContent = new Trip(array_exploreContent, {
 		overlayHolder: '#app_application_content',
 		tripClass: 'onboarding_trip_welcome onboarding_trip_exploreContent',
+		onStart: function(){
+			if(responsive.test("maxMobileL")){
+				this.tripData[1].position = 'n';
+				this.tripData[2].position = 'n';
+				this.tripData[3].position = 'n';
+				this.tripData[4].position = 'n';
+			}
+		},
 		onEnd: function(tripIndex, tripObject){
 			onboarding.overlays.content_menu().off('click.trip');
 			delete trip_exploreContent;
@@ -917,14 +942,41 @@ onboarding.scripts['welcome'] = function(){
 
 
 	var elem_overlay = onboarding.overlays.body();
-	var elem_linckoBot_bubble = $('<div>').prop('id', onboarding.id_welcome_bubble).addClass(onboarding.id_welcome_bubble).text('LinckoBot: welcome!').click(function(){
-		$(this).off('click');
-		trip_openMainMenu.start();
-		elem_overlay.remove();
-		
-	});
+	var elem_linckoBot_bubble = $('<div>').prop('id', onboarding.id_welcome_bubble).addClass(onboarding.id_welcome_bubble);
 	elem_overlay.after(elem_linckoBot_bubble);
-	return;
+
+	if($('#'+onboarding.id_welcome_bubble).is(':visible')){
+		var fn_next = function(){
+			trip_openMainMenu.start();
+			elem_overlay.remove();
+		}
+		elem_linckoBot_bubble.append(intro.showPanel()).click(function(){
+			fn_next();
+		});
+
+		
+		intro.startStep(null, fn_next);
+
+
+
+	/*		.text('LinckoBot: welcome!').click(function(){
+
+			intro.showPanel()
+
+			$(this).off('click');
+			trip_openMainMenu.start();
+			elem_overlay.remove();
+			
+		});*/
+
+
+
+		
+		return true;
+	}
+	else{
+		return false;
+	}
 }
 
 
@@ -935,9 +987,8 @@ onboarding.scripts['welcome'] = function(){
 var id_onboarding_garbage_launch = app_application_garbage.add('onboarding_garbage_launch');
 app_application_lincko.add(id_onboarding_garbage_launch, ['launch_onboarding', 'settings'], function(){
 	var launched = onboarding.launch();
-
 	//stop looking for onboarding launch if it is already launched OR onboarding settings object exists but wasn't launched (user already finished)
-	if(launched || Lincko.storage.getOnboarding()){
+	if(launched /*|| Lincko.storage.getOnboarding()*/){
 		app_application_garbage.remove(id_onboarding_garbage_launch);
 	}
 });
