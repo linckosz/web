@@ -10,7 +10,6 @@ var onboarding = {
 		var elem_trip_block = $('.trip-block.onboarding_trip_welcome');
 		if(!elem_trip_block.length){ return false; }
 
-
 		var elem_bubble = $('#'+this.id_welcome_bubble);
 
 		var coord = elem_trip_block.offset();
@@ -33,9 +32,6 @@ var onboarding = {
 				translateY: 0,
 			},{
 				duration: duration,
-				begin: function(){
-					//elem_bubble.css('transform', 'none');
-				}
 			});
 		}
 
@@ -618,8 +614,8 @@ onboarding.scripts['welcome'] = function(){
 	var array_openMainMenu = [
 		{
 			sel: $('#app_application_menu_icon'),
-			content: 'Click this button!!!!',
-			position : "e",
+			content: 'LINCKO',
+			position : "s",
 			expose : true,
 			delay: -1,
 			onTripStart : function(i, tripData){
@@ -667,7 +663,7 @@ onboarding.scripts['welcome'] = function(){
 		{
 			sel: $('#app_project_projects_new'),
 			content: 'Click this button!!!!',
-			position : "e",
+			position : 'e',
 			expose: true,
 			delay: -1,
 			onTripStart : function(i, tripData){

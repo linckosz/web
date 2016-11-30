@@ -27,7 +27,13 @@
     padding: 10px;
     font-size: 50px;
 }
-
+@media only screen and (max-width: 900px) {
+	.onboarding_welcome_bubble{
+		left: 5px !important;
+		right: 5px !important;
+		transform: translate(0, -50%);
+	}
+}
 
 
 /*
@@ -37,7 +43,9 @@
 	opacity: 0.7 !important;
 }
 .trip-block.onboarding_trip_welcome{
-	visibility: hidden;
+	/*visibility: hidden;*/
+	min-width: initial;
+	padding: 0px;
 }
 .trip-exposed#app_application_menu_icon {
 	background-color: #FBA026;
