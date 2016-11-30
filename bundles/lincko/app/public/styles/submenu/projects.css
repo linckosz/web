@@ -58,6 +58,14 @@
 	line-height: 48px;
 }
 
+.submenu_projects_description {
+	margin-top: 12px;
+}
+
+.submenu_projects_archives_restore {
+	color: #BABDC0;
+}
+
 @media only screen and (max-width: 479px){
 	.submenu_projects_chart {
 		padding-right: 6px;

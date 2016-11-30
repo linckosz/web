@@ -18,6 +18,25 @@ submenu_list['projects_list'] = {
 	},
 };
 
+submenu_list['projects_archives'] = {
+	"_title": {
+		"style": "customized_title",
+		"title": Lincko.Translation.get('app', 2504, 'html'), //Archives list
+	},
+	"left_button": {
+		"style": "title_left_button",
+		"title": Lincko.Translation.get('app', 25, 'html'), //Close
+		'hide': true,
+		"class": "base_pointer",
+	},
+	"pre_action": {
+		"style": "preAction",
+		"action": function(Elem, subm){
+			submenu_projects_build_archives();
+		},
+	},
+};
+
 var submenu_projects_build_list = function(){
 	
 	var projects = {};
@@ -60,7 +79,7 @@ var submenu_projects_build_list = function(){
 	};
 
 	for(var i in projectList){
-		title = projectList[i]['+title'].ucfirst();
+		title = projectList[i]['+title'];
 		projects_id = projectList[i]['_id'];
 		if(typeof submenu_list['projects_list'][projects_id] == 'undefined'){
 			submenu_list['projects_list']['projects_'+i+'_'+projects_id] = {
@@ -74,7 +93,65 @@ var submenu_projects_build_list = function(){
 			};
 		}
 	}
+
+	var archives = app_models_projects_list_archived();
+	if(archives.length>0){
+		submenu_list['projects_list']['archives'] = {
+			"style": "next",
+			"title": Lincko.Translation.get('app', 2504, 'html'), //Archives list
+			"value": archives.length,
+			"next": "projects_archives",
+			"class": "",
+		};
+	}
 	
+};
+
+var submenu_projects_build_archives = function(){
+
+	var projectList = app_models_projects_list_archived();
+
+	//Clear the list to rebuild it then
+	for(var i in submenu_list['projects_archives']){
+		if(
+			   submenu_list['projects_archives'][i]["style"] != "title"
+			&& submenu_list['projects_archives'][i]["style"] != "customized_title"
+			&& submenu_list['projects_archives'][i]["style"] != "title_left_button"
+			&& submenu_list['projects_archives'][i]["style"] != "title_right_button"
+			&& submenu_list['projects_archives'][i]["style"] != "preAction"
+			&& submenu_list['projects_archives'][i]["style"] != "postAction"
+		){
+			delete submenu_list['projects_archives'][i];
+		}
+	}
+
+	for(var i in projectList){
+		title = projectList[i]['+title'];
+		projects_id = projectList[i]['_id'];
+		if(typeof submenu_list['projects_list'][projects_id] == 'undefined'){
+			submenu_list['projects_archives']['projects_'+i+'_'+projects_id] = {
+				"style": "button",
+				"title": title,
+				"hide": true,
+				"value": 'click to restore', //toto
+				"action_param": projects_id,
+				"action": function(Elem, subm, projects_id){
+					submenu_Hideall(subm.preview);
+					wrapper_sendAction(
+						{
+							"id": projects_id
+						},
+						'post',
+						'project/restore'
+					);
+				},
+				"now": function(Elem, subm){
+					Elem.find("[find=submenu_button_value]").addClass("submenu_projects_archives_restore")
+				},
+			};
+		}
+	}
+
 };
 
 Submenu_select.projects = function(Elem){
@@ -90,17 +167,21 @@ Submenu.prototype.Add_MenuProjects = function() {
 	var projects_id = attribute.action_param.projects_id;
 	Elem.prop("id", "submenu_projects_title_"+that.id+"_"+projects_id);
 
-	var tasks = app_models_projects_adjust_format(Lincko.storage.cache.getStatistics('projects', projects_id, 'tasks'));
-	var notes = app_models_projects_adjust_format(Lincko.storage.cache.getStatistics('projects', projects_id, 'notes'));
-	var files = app_models_projects_adjust_format(Lincko.storage.cache.getStatistics('projects', projects_id, 'files'));
-	Elem.find("[find=submenu_projects_statistics_tasks]").html(wrapper_to_html(tasks));
-	Elem.find("[find=submenu_projects_statistics_notes]").html(wrapper_to_html(notes));
-	Elem.find("[find=submenu_projects_statistics_files]").html(wrapper_to_html(files));
-
 	var project = Lincko.storage.get("projects", projects_id);
 	var MyPlaceholderID = Lincko.storage.getMyPlaceholder()['_id'];
 
 	if(projects_id != MyPlaceholderID && project){
+
+		var statistics_id = this.id+"_tasks_statistics_container_"+projects_id;
+		Elem.find("[find=tasks_statistics_container]").prop("id", statistics_id);
+
+		var tasks = app_models_projects_adjust_format(Lincko.storage.cache.getStatistics('projects', projects_id, 'tasks'));
+		var notes = app_models_projects_adjust_format(Lincko.storage.cache.getStatistics('projects', projects_id, 'notes'));
+		var files = app_models_projects_adjust_format(Lincko.storage.cache.getStatistics('projects', projects_id, 'files'));
+		Elem.find("[find=submenu_projects_statistics_tasks]").html(wrapper_to_html(tasks));
+		Elem.find("[find=submenu_projects_statistics_notes]").html(wrapper_to_html(notes));
+		Elem.find("[find=submenu_projects_statistics_files]").html(wrapper_to_html(files));
+
 		Elem.find("[find=submenu_projects_settings]").click([projects_id, that], function(event){
 			event.stopPropagation();
 			var projects_id = event.data[0];
@@ -115,9 +196,37 @@ Submenu.prototype.Add_MenuProjects = function() {
 			}
 		});
 		Elem.find("[find=submenu_projects_title]").html(wrapper_to_html(project["+title"]));
+
+		app_application_lincko.add(statistics_id, ['projects_'+projects_id, 'submenu_show_'+that.preview+'_'+that.id], function() {
+			app_models_projects_chart_tasks_data(this.id, this.action_param, null, submenu_projects_charts_options);
+		}, projects_id);
+
+		app_application_lincko.add("submenu_projects_title_"+that.id+"_"+projects_id, 'projects_'+projects_id, function() {
+			var Elem = $("#"+this.id);
+			var projects_id = this.action_param;
+			var project = Lincko.storage.get("projects", projects_id);
+			if(project && project["deleted_at"]!=null){
+				Elem.recursiveRemove();
+				return true;
+			}
+			if(projects_id == Lincko.storage.getMyPlaceholder()['_id']){
+				var name = Lincko.Translation.get('app', 2502, 'html'); //Personal Space
+			} else {
+				var name = wrapper_to_html(project["+title"]);
+			}
+			Elem.find("[find=submenu_projects_title]").html(name);
+			var tasks = app_models_projects_adjust_format(Lincko.storage.cache.getStatistics('projects', projects_id, 'tasks'));
+			var notes = app_models_projects_adjust_format(Lincko.storage.cache.getStatistics('projects', projects_id, 'notes'));
+			var files = app_models_projects_adjust_format(Lincko.storage.cache.getStatistics('projects', projects_id, 'files'));
+			Elem.find("[find=submenu_projects_statistics_tasks]").html(wrapper_to_html(tasks));
+			Elem.find("[find=submenu_projects_statistics_notes]").html(wrapper_to_html(notes));
+			Elem.find("[find=submenu_projects_statistics_files]").html(wrapper_to_html(files));
+		}, projects_id);
+
 	} else {
 		Elem.find("[find=submenu_projects_settings]").css("visibility", "hidden");
 		Elem.find("[find=submenu_projects_title]").html(attribute.title);
+		Elem.find("[find=submenu_projects_statistics]").addClass('display_none')
 	}
 
 	if ("action" in attribute) {
@@ -139,35 +248,6 @@ Submenu.prototype.Add_MenuProjects = function() {
 		Elem.addClass(attribute['class']);
 	}
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
-
-	var statistics_id = this.id+"_tasks_statistics_container_"+projects_id;
-	Elem.find("[find=tasks_statistics_container]").prop("id", statistics_id);
-
-	app_application_lincko.add(statistics_id, ['projects_'+projects_id, 'submenu_show_'+that.preview+'_'+that.id], function() {
-		app_models_projects_chart_tasks_data(this.id, this.action_param, null, submenu_projects_charts_options);
-	}, projects_id);
-
-	app_application_lincko.add("submenu_projects_title_"+that.id+"_"+projects_id, 'projects_'+projects_id, function() {
-		var Elem = $("#"+this.id);
-		var projects_id = this.action_param;
-		var project = Lincko.storage.get("projects", projects_id);
-		if(project && project["deleted_at"]!=null){
-			Elem.recursiveRemove();
-			return true;
-		}
-		if(projects_id == Lincko.storage.getMyPlaceholder()['_id']){
-			var name = Lincko.Translation.get('app', 2502, 'html'); //Personal Space
-		} else {
-			var name = wrapper_to_html(project["+title"]);
-		}
-		Elem.find("[find=submenu_projects_title]").html(name);
-		var tasks = app_models_projects_adjust_format(Lincko.storage.cache.getStatistics('projects', projects_id, 'tasks'));
-		var notes = app_models_projects_adjust_format(Lincko.storage.cache.getStatistics('projects', projects_id, 'notes'));
-		var files = app_models_projects_adjust_format(Lincko.storage.cache.getStatistics('projects', projects_id, 'files'));
-		Elem.find("[find=submenu_projects_statistics_tasks]").html(wrapper_to_html(tasks));
-		Elem.find("[find=submenu_projects_statistics_notes]").html(wrapper_to_html(notes));
-		Elem.find("[find=submenu_projects_statistics_files]").html(wrapper_to_html(files));
-	}, projects_id);
 
 	return true;
 };

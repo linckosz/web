@@ -313,6 +313,21 @@ $("#account_joinus_submit, #account_signin_submit").keypress(function (e) {
 	}
 });
 
+$("#account_joinus_submit, #account_signin_submit, #account_forgot_submit, #account_reset_submit").click(function(){
+	account_reset_autocompletion();
+	$(this.form).submit();
+});
+
+//This help to clear the email field if there was an autocompletion issue (sometime chrome does keep empty after autocompletion, the yellow backgroubd effect)
+var account_reset_autocompletion = function(){
+	var joinus = $('#account_joinus_email').val();
+	var signin = $('#account_signin_email').val();
+	$('#account_joinus_email').val(joinus+'1');
+	$('#account_signin_email').val(signin+'1');
+	$('#account_joinus_email').val(joinus);
+	$('#account_signin_email').val(signin);
+}
+
 $("#account_joinus_submit").keydown(function(e){
 	if (e.which == 13) {
 		$('#account_joinus_submit').addClass('account_joinus_submit_active');
@@ -330,6 +345,44 @@ $("#account_signin_submit").keydown(function(e){
 $("#account_signin_submit").keyup(function(){
 	$('#account_signin_submit').removeClass('account_signin_submit_active');
 });
+
+
+//This help to clear the email field if there was an autocompletion issue (sometime chrome does keep empty after autocompletion, the yellow backgroubd effect)
+$('#account_joinus_email').on('blur', function(){
+	account_reset_autocompletion();
+});
+$('#account_signin_email').on('blur', function(){
+	account_reset_autocompletion();
+});
+
+$("#account_joinus_password_show").click(function(){
+	$("#account_joinus_password").attr('type', 'text');
+	$("#account_joinus_password_show").addClass('display_none');
+});
+
+$("#account_joinus_password").addClass('base_input_text_error').on({
+	blur: function(){
+		$("#account_joinus_password").attr('type', 'password');
+		$("#account_joinus_password_show").removeClass('display_none');
+		$("#account_joinus_password_tooltip").removeClass('account_input_focus');
+	},
+	focus: function(){
+		account_joinus_password_tooltip();
+	},
+	change: function(){ account_joinus_password_tooltip(); },
+	copy: function(){ account_joinus_password_tooltip(); },
+	past: function(){ account_joinus_password_tooltip(); },
+	cut: function(){ account_joinus_password_tooltip(); },
+	keyup: function() { account_joinus_password_tooltip(); },
+});
+
+var account_joinus_password_tooltip = function(){
+	if(base_input_field.password.valid($("#account_joinus_password").val())){
+		$("#account_joinus_password_tooltip").removeClass('account_input_focus');
+	} else {
+		$("#account_joinus_password_tooltip").addClass('account_input_focus');
+	}
+}
 
 JSfiles.finish(function(){
 	account_display_label($('#account_signin_email'), false);

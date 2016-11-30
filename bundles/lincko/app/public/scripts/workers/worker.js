@@ -13,7 +13,9 @@ self.addEventListener("message", function(e){
 		if(typeof object.data != "undefined"){
 			data = object.data;
 		}
-		webworker_operation[object.action](data);
+		if(typeof webworker_operation[object.action] == 'function'){
+			webworker_operation[object.action](data);
+		}
 	}
 });
 

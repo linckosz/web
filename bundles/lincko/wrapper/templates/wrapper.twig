@@ -19,6 +19,7 @@
 
 <link rel="stylesheet" href="{{ _filelatest('/styles/libs/jquery-ui.min.css') }}" type="text/css" />
 <link rel="stylesheet" href="{{ _filelatest('/scripts/libs/trip/trip.min.css') }}" type="text/css" />
+<link rel="stylesheet" href="{{ _filelatest('/styles/libs/font-awesome.min.css') }}" type="text/css" />
 
 <style type="text/css">
 	{% set language = _language() %}
@@ -363,7 +364,9 @@ if(webworker){
 			if(typeof object.data != "undefined"){
 				data = object.data;
 			}
-			webworker_operation[object.action](data);
+			if(typeof webworker_operation[object.action] == 'function'){
+				webworker_operation[object.action](data);
+			}
 		}
 	});
 
@@ -389,15 +392,15 @@ if(webworker){
 			}
 		},
 
-		LocalStorageInFailed: function(data){
-			var link = data.link;
-			var data = data.data;
-			var tryit = data.tryit;
-			var sha = data.sha;
-			var prefix = data.prefix;
+		LocalStorageInFailed: function(obj_data){
+			var link = obj_data.link;
+			var data = obj_data.data;
+			var tryit = obj_data.tryit;
+			var sha = obj_data.sha;
+			var prefix = obj_data.prefix;
 			if(tryit){
 				if(wrapper_localstorage.cleanLocalWorkspace()){ //Delete other workspace data, and try one more time to store
-					result = wrapper_localstorage.encrypt(link, data, false);
+					result = wrapper_localstorage.encrypt(link, obj_data, false);
 				} else {
 					tryit = false;
 				}

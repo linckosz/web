@@ -739,7 +739,7 @@ Submenu.prototype.Add_ChatContent = function() {
 
 	//toto => synchronization still need to work for repositioning and adding new chat group or projects
 	app_application_lincko.add(
-		submenu_wrapper.id,
+		that.id,
 		["projects", "chats"],
 		function(){
 			var layer = $('#'+this.id);

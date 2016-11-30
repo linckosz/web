@@ -12,6 +12,7 @@
 	display: none;
 	overflow: hidden;
 	z-index: 0;
+	cursor: default;
 }
 
 .account_wrapper > div {
@@ -167,6 +168,7 @@
 
 .account_label_inside {
 	display: block;
+	position: relative;
 	font-size: 16px;
 	color: #3A3D41;
 	cursor: text;
@@ -204,6 +206,7 @@
 	border-style: none;
 	font-weight: bold;
 	cursor: pointer; cursor: hand;
+	margin: 16px 0 6px 0;
 }
 
 #account_joinus_submit:hover {
@@ -225,6 +228,7 @@
 	border-style: none;
 	font-weight: bold;
 	cursor: pointer; cursor: hand;
+	margin: 16px 0 6px 0;
 }
 
 #account_signin_submit:hover {
@@ -368,6 +372,68 @@
 	width: 80px;
 }
 
+
+/* ToolTip classses */ 
+#account_joinus_password_tooltip {
+	color: #4478A4 !important;
+	margin: 1px;
+	padding: 1px 6px !important;
+	cursor: default;
+	font-size: 10px;
+	visibility: hidden;
+	background-color: #FFFFFF;
+	border-radius: 4px;
+	border: 1px solid #88AECE;
+	position: absolute;
+	z-index: 1;
+	filter:alpha(opacity=0);
+	opacity:0;
+	-moz-opacity:0;
+	-khtml-opacity:0;
+	transition: opacity 1s;
+}
+
+.account_input_focus {
+	visibility: visible !important;
+	filter:alpha(opacity=100) !important;
+	opacity: 1 !important;
+	-moz-opacity: 1 !important;
+	-khtml-opacity: 1 !important;
+}
+
+#account_joinus_password_show {
+	position: absolute;
+	cursor: pointer;
+	font-size: 20px;
+	color: #000000;
+	top: 50%;
+	right: 0;
+	padding: 4px 8px;
+	cursor: pointer; cursor: hand;
+	transform: translateY(-50%);
+	-webkit-transform: translateY(-50%);
+	-moz-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	-o-transform: translateY(-50%);
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+	ofilter:alpha(opacity=10);
+	opacity:0.1;
+	-moz-opacity:0.1;
+	-khtml-opacity:0.1;
+}
+#account_joinus_password_show:hover {
+	ofilter:alpha(opacity=30);
+	opacity:0.3;
+	-moz-opacity:0.3;
+	-khtml-opacity:0.3;
+}
+#account_joinus_password_show:active {
+	ofilter:alpha(opacity=40);
+	opacity:0.4;
+	-moz-opacity:0.4;
+	-khtml-opacity:0.4;
+}
 
 
 @media only screen and (max-height: 350px){

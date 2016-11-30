@@ -23,14 +23,16 @@
 		<div id="account_joinus_box" class="display_none">
 			<form class="account_form" id="account_joinus_form" action="user/create" method="post" onsubmit="return wrapper_sendForm(this, account_joinus_cb_success, account_joinus_cb_error, account_joinus_cb_begin, account_joinus_cb_complete);">
 				<div class="{#{% if invitation_code %}#}account_joinus_box_div{#{% endif %}#}">
-					<label class="account_label_inside" for="account_joinus_email">
+					<label class="account_label_inside selectable" for="account_joinus_email">
 						<span>{{ _trans('web', 5, 2, 'html') }}{# Email #}</span>
 						<input type="email" id="account_joinus_email" name="email" value="" class="selectable" />
 					</label>
 					<input type="password" name="foilautofill" value="" autocomplete="off" style="display:none;" />{# It avoids a behavior in Firefox which does not know Autocomplete tag, FF fulfill by default the first field #}
 					<label class="account_label_inside" for="account_joinus_password">
+						<span id="account_joinus_password_show" class="fa fa-eye" title="{{ _trans('web', 5, 23, 'html') }}{# Show password #}"></span>
 						<span>{{ _trans('web', 5, 3, 'html') }}{# Password #}</span>
 						<input type="password" id="account_joinus_password" name="password" value="" autocomplete="off" class="selectable" />
+						<span id="account_joinus_password_tooltip">{{ _trans('web', 5, 22, 'html') }}{# between 6 and 60 characters #}</span>
 					</label>
 					<input type="hidden" id="account_joinus_timeoffset" name="timeoffset" value="0" autocomplete="off" />
 					{% if wrapper_user_created %}
@@ -41,7 +43,7 @@
 							<input type="hidden" name="captcha_name" value="account_joinus_form" autocomplete="off" />
 						</label>
 					{% endif %}
-					<input id="account_joinus_submit" type='button' value="{{ _trans('web', 5, 1, 'input') }}{# Join Us #}" onclick="$(this.form).submit();" />
+					<input id="account_joinus_submit" type='button' value="{{ _trans('web', 5, 1, 'input') }}{# Join Us #}" />
 					<img class="submit_progress_bar" id="account_joinus_submit_progress" src="{{ _filelatest('/lincko/launch/images/generic/base/generic/loading_bar.gif') }}"/>
 				</div>
 				<div id="account_joinus_tos_div" onclick="window.open('{{ terms }}', '_blank');">
@@ -61,7 +63,7 @@
 						<span>{{ _trans('web', 5, 3, 'html') }}{# Password #}</span>
 						<input type="password" id="account_signin_password" name="password" value="" autocomplete="off" class="selectable" />
 					</label>
-					<input id="account_signin_submit" type='button' value="{{ _trans('web', 5, 4, 'input') }}{# Sign In #}" onclick="$(this.form).submit();" />
+					<input id="account_signin_submit" type='button' value="{{ _trans('web', 5, 4, 'input') }}{# Sign In #}"  />
 					<img class="submit_progress_bar" id="account_signin_submit_progress" src="{{ _filelatest('/lincko/launch/images/generic/base/generic/loading_bar.gif') }}"/>
 				</div>
 				<div class="account_signin_appendix">
@@ -86,7 +88,7 @@
 						<span>{{ _trans('web', 5, 2, 'html') }}{# Email #}</span>
 						<input type="email" id="account_forgot_email" name="email" value="{{ youjian|lower }}" class="selectable" />
 					</label>
-					<input id="account_forgot_submit" type='button' value="{{ _trans('web', 5, 18, 'input') }}{# Next #}" onclick="$(this.form).submit();" />
+					<input id="account_forgot_submit" type='button' value="{{ _trans('web', 5, 18, 'input') }}{# Next #}" />
 					<img class="submit_progress_bar" id="account_forgot_submit_progress" src="{{ _filelatest('/lincko/launch/images/generic/base/generic/loading_bar.gif') }}"/>
 				</div>
 				<div id="account_forgot_info">
@@ -114,7 +116,7 @@
 						<span>{{ _trans('web', 5, 19, 'html') }}{# Your new Password #}</span>
 						<input type="password" id="account_reset_password" name="password" value="" autocomplete="off" class="selectable" />
 					</label>
-					<input id="account_reset_submit" type='button' value="{{ _trans('web', 5, 16, 'input') }}{# Confirm #}" onclick="$(this.form).submit();" />
+					<input id="account_reset_submit" type='button' value="{{ _trans('web', 5, 16, 'input') }}{# Confirm #}" />
 					<img class="submit_progress_bar" id="account_reset_submit_progress" src="{{ _filelatest('/lincko/launch/images/generic/base/generic/loading_bar.gif') }}"/>
 				</div>
 			</form>

@@ -256,6 +256,7 @@ Lincko.storage.update = function(partial, info){
 	var item_new;
 	var update = false;
 	var update_real = false;
+	var new_item = false;
 	var updatedAttributes = {};
 	var currentRange = '';
 	var children_list = {};
@@ -274,6 +275,7 @@ Lincko.storage.update = function(partial, info){
 		if(typeof Lincko.storage.data[i] == 'undefined'){ Lincko.storage.data[i] = {}; }
 		for(var j in partial[i]) {
 			update_real = false;
+			new_item = false;
 			currentRange = i+'_'+j;
 			updatedAttributes = {};
 			updatedAttributes[currentRange] = {};
@@ -301,6 +303,7 @@ Lincko.storage.update = function(partial, info){
 				}
 			} else {
 				update_real = true;
+				new_item = true;
 			}
 
 			if(Lincko.storage.data && Lincko.storage.data[i] && Lincko.storage.data[i][j] && Lincko.storage.data[i][j]['_children']){ //to keep _children. partial doesnt include _children. later, childrenList() will rebuild this anyways
@@ -342,6 +345,9 @@ Lincko.storage.update = function(partial, info){
 				//console.log("update ==> "+i+'_'+j);
 				app_models_history.refresh(i, j); //It helps to force updating any history info tab in the application
 				app_application_lincko.prepare(i+'_'+j, false, updatedAttributes);
+			}
+			if(new_item && (i=='projects' || i=='chats')){
+				app_models_history.reset();
 			}
 			update = true;
 		}
@@ -1093,8 +1099,7 @@ Lincko.storage.cache = {
 	exclude_chats: {},
 	getExcludeChats: function(){
 		if(!this.first_init){
-			this.init();
-			this.first_init = true;
+			this.first_init = this.init();
 		}
 		return $.extend(true, {}, this.exclude_chats);
 	},
@@ -1102,8 +1107,7 @@ Lincko.storage.cache = {
 	exclude_projects: {},
 	getExcludeProjects: function(){
 		if(!this.first_init){
-			this.init();
-			this.first_init = true;
+			this.first_init = this.init();
 		}
 		return $.extend(true, {}, this.exclude_projects);
 	},
@@ -1111,8 +1115,7 @@ Lincko.storage.cache = {
 	notify: {},
 	getNotify: function(type, id){
 		if(!this.first_init){
-			this.init();
-			this.first_init = true;
+			this.first_init = this.init();
 		}
 		if(this.notify[type] && this.notify[type][id]){
 			return this.notify[type][id];
@@ -1123,8 +1126,7 @@ Lincko.storage.cache = {
 	statistics: {},
 	getStatistics: function(type, id, cat){
 		if(!this.first_init){
-			this.init();
-			this.first_init = true;
+			this.first_init = this.init();
 		}
 		if(this.statistics[type] && this.statistics[type][id] && this.statistics[type][id][cat]){
 			return this.statistics[type][id][cat];
@@ -1140,6 +1142,10 @@ Lincko.storage.cache = {
 		var item_cat;
 		var children;
 		var single;
+
+		if(storage_first_launch){
+			return false;
+		}
 
 		item_cat = "chats";
 		for(var item_id in Lincko.storage.data[item_cat]){
@@ -1219,8 +1225,16 @@ Lincko.storage.cache = {
 				}
 			}
 		}
+		return true;
 	},
 };
+
+var app_generic_cache_garbage = app_application_garbage.add();
+app_application_lincko.add(app_generic_cache_garbage, 'first_launch', function() {
+	if(Lincko.storage.cache.init()){
+		app_application_garbage.remove(app_generic_cache_garbage);
+	}
+});
 
 // "include" [default: true] at true it includes the object itself
 /*

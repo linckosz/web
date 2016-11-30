@@ -757,12 +757,7 @@ skylist.prototype.addCard_all = function(){
 			item['duedate'];
 			Elem_tp.append(that.addCard(item));
 		}
-		that.list.append(Elem_tp.children()); //toto => try to not draw here, but inside a timeout to use multi-thread
-		//This help to use multi-thread and draw the DOM faster
-		//toto => but it generate a bug in task list by making disappearing some tasks
-		setTimeout(function(){
-			//that.list.append(Elem_tp.children());
-		}, 0);
+		that.list.append(Elem_tp.children());
 	}
 	that.store_all_elem();
 	

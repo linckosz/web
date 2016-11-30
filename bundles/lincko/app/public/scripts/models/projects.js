@@ -77,7 +77,7 @@ submenu_list['app_project_new'] = {
 		"title": Lincko.Translation.get('app', 31, 'html'), //Team
 		"name": "project_team_select_multiple",
 		"value": "",
-		"class": "submenu_input_select_multiple",
+		"class": "submenu_input_select_multiple submenu_deco_borders",
 		"next": "app_projects_users_contacts",
 	},
 	"description": {
@@ -85,7 +85,7 @@ submenu_list['app_project_new'] = {
 		"title": Lincko.Translation.get('app', 30, 'html'), //Short description
 		"name": "description",
 		"value": "",
-		"class": "submenu_input_textarea",
+		"class": "submenu_input_textarea submenu_projects_description",
 	},
 };
 
@@ -120,7 +120,7 @@ submenu_list['app_project_edit'] = {
 		"title": Lincko.Translation.get('app', 31, 'html'), //Team
 		"name": "project_team_select_multiple",
 		"value": "",
-		"class": "submenu_input_select_multiple",
+		"class": "submenu_input_select_multiple submenu_deco_borders",
 		"next": "app_projects_users_contacts",
 	},
 	"description": {
@@ -128,25 +128,23 @@ submenu_list['app_project_edit'] = {
 		"title": Lincko.Translation.get('app', 30, 'html'), //Short description
 		"name": "description",
 		"value": "",
-		"class": "submenu_input_textarea",
+		"class": "submenu_input_textarea submenu_projects_description",
 	},
 	"deletion": {
 		"style": "project_deletion",
-		"title": Lincko.Translation.get('app', 22, 'html'), //Delete
+		"title": Lincko.Translation.get('app', 2503, 'html'), //Archive the project
 		"name": "deletion",
-		"class": "models_projects_deletion display_none", //toto => delete display_none to use it
+		"class": "models_projects_deletion",
 		"action": function(Elem, subm){
 			var projects_id = subm.param;
-			if(confirm("Do you really want to delete this project?")){
-				submenu_Hideall(subm.preview);
-				wrapper_sendAction(
-					{
-						"id": projects_id
-					},
-					'post',
-					'project/delete'
-				);
-			}
+			submenu_Hideall(subm.preview);
+			wrapper_sendAction(
+				{
+					"id": projects_id
+				},
+				'post',
+				'project/delete'
+			);
 		},
 	},
 	/*
@@ -496,14 +494,17 @@ Submenu.prototype.Add_ProjectTeamEdit = function() {
 	this.attribute.param = this.param; //Pass project id to next submenu
 	var Elem = this.Add_SelectMultiple();
 	var that = this;
-	var wrapper_content_id = this.id+"_project_team";
 	var project = Lincko.storage.get("projects", this.param);
 	var projects_id = project["_id"];
 	var Elem = $("#"+this.id);
 	var users_access = Lincko.storage.whoHasAccess("projects", projects_id);
-	Elem.find("[find=submenu_select_value]")
-		.prop("id", wrapper_content_id)
-		.html(users_access.length);
+	var Elem_sub = Elem.find("[find=submenu_select_value]");
+	var wrapper_content_id = Elem_sub.prop("id");
+	if(!wrapper_content_id){
+		wrapper_content_id = this.id+"_project_team";
+		Elem_sub.prop("id", wrapper_content_id)
+	}
+	Elem.find("[find=submenu_select_value]").html(users_access.length);
 	app_application_lincko.add(wrapper_content_id, "projects_"+project["_id"], function(){
 		var projects_id = this.action_param;
 		var Elem = $("#"+this.id);
@@ -767,6 +768,13 @@ var app_models_projects_list = function(limit, recents){
 	result.push(projects_alphabet);
 	result.push(total);
 
+	return result;
+}
+
+var app_models_projects_list_archived = function(limit){
+	if(typeof limit != "number"){ limit = null; }
+	var result = Lincko.storage.list('projects', null, {'deleted_at': ['!=', null]}, null, null, false, true);
+	result = Lincko.storage.sort_items(result, 'title'); //Alphabetic order for remaining projects
 	return result;
 }
 

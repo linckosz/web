@@ -180,12 +180,12 @@ $app->lincko->wrapper = array(
 );
 
 ////////////////////////////////////
-// BUNDLE lincko/web
+// BUNDLE lincko/launch
 ////////////////////////////////////
 
 $app->lincko->data = array_merge(
 	$app->lincko->data,
 	array(
-		'terms' => \bundles\lincko\web\models\Terms::getTerm(),
+		'terms' => \bundles\lincko\launch\models\Terms::getTerm(),
 	)
 );

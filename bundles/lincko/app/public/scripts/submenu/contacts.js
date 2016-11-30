@@ -187,12 +187,16 @@ submenu_list['edit_group'] = {
 		"style": "preAction",
 		"action": function(Elem, subm){
 			subm.param.lock = false;
+			subm.param.allowLeave = false;
 			var item = Lincko.storage.get(subm.param.type, subm.param.id);
 			subm.param.created_by = item['created_by'];
 			if(subm.param.type=='chats') {
 				var parent_type = Lincko.storage.getParent(subm.param.type, subm.param.id, '_type');
 				if(item['single'] || (subm.param.created_by != wrapper_localstorage.uid && parent_type!='projects' )){
 					subm.param.lock = true;
+				}
+				if(!item['single'] && parent_type!='projects'){
+					subm.param.allowLeave = true;
 				}
 			}
 		},
@@ -245,7 +249,62 @@ submenu_list['edit_group'] = {
 			);
 		},
 	},
+
+	"leave": {
+		"style": "chat_leave",
+		"title": Lincko.Translation.get('app', 3704, 'html'), //Leave the discussion group
+		"name": "deletion",
+		"class": "submenu_contact_deletion",
+		"action": function(Elem, subm){
+			if(subm.param.allowLeave) {
+				var me = {};
+				me[wrapper_localstorage.uid] = false; //Remove the user from the chat
+				submenu_Hideall(subm.preview);
+				wrapper_sendAction(
+					{
+						"id": subm.param.id,
+						"users>access": me,
+					},
+					'post',
+					'chat/update'
+				);
+			}
+		},
+	},
 	
+};
+
+Submenu_select.chat_leave = function(subm){
+	subm.Add_ChatLeave(subm);
+};
+
+Submenu.prototype.Add_ChatLeave = function(subm) {
+	if(subm.param.allowLeave){
+		var that = this;
+		var submenu_wrapper = this.Wrapper();
+		var attribute = this.attribute;
+		var Elem = $('#-submenu_button').clone();
+		var preview = this.preview;
+		Elem.prop("id", '');
+		Elem.find("[find=submenu_button_title]").addClass("submenu_contact_deletion_button").html(attribute.title);
+		Elem.find("[find=submenu_button_value]").recursiveRemove();
+		if ("action" in attribute) {
+			if (!("action_param" in attribute)) {
+				attribute.action_param = null;
+			}
+			Elem.find("[find=submenu_button_title]").click(attribute.action_param, function(event){
+				attribute.action(Elem, that, event.data);
+			});
+		}
+		if ("class" in attribute) {
+			Elem.addClass(attribute['class']);
+		}
+		submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
+		//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
+		delete submenu_wrapper;
+		return Elem;
+	}
+	return false;
 };
 
 var submenu_contacts_update = {
@@ -301,7 +360,7 @@ var submenu_contacts_update = {
 				return false; //Cannot disallow yourself
 			}
 			if(!checked && subm.param.created_by && uid == subm.param.created_by){
-				return false; //Cannot disallow the owner
+				//return false; //Cannot disallow the owner
 			}
 			submenu_contacts_update.chats_contacts_list[uid] = checked;
 			submenu_contacts_update.chats_contacts_list_ori[uid] = checked;
@@ -491,11 +550,13 @@ Submenu.prototype.Add_ContactContents = function(live) {
 		}
 		Elem.find('.id').val(uid);
 		submenu_contacts_update.chats_contacts_list_ori[uid] = false;
-		if (lock_list || contacts[uid].checked == true || (that.param && that.param.alwaysMe && uid == wrapper_localstorage.uid) || uid == that.param.created_by ) {
+		//if (lock_list || contacts[uid].checked == true || (that.param && that.param.alwaysMe && uid == wrapper_localstorage.uid) || uid == that.param.created_by ) { //This line blocks any change for the creator
+		if (lock_list || contacts[uid].checked == true || (that.param && that.param.alwaysMe && uid == wrapper_localstorage.uid)) {
 			Elem.find('.check').addClass('checked');
 			submenu_contacts_update.chats_contacts_list_ori[uid] = true;
 			if(lock_list || this.param.type=='chats'){
-				if(lock_list || uid == that.param.created_by || uid == wrapper_localstorage.uid){
+				//if(lock_list || uid == that.param.created_by || uid == wrapper_localstorage.uid){ //This line blocks any change for the creator
+				if(lock_list || uid == wrapper_localstorage.uid){
 					Elem.find('.check').addClass('admin').off('click');
 					allow_click = false;
 				}
@@ -504,7 +565,8 @@ Submenu.prototype.Add_ContactContents = function(live) {
 		if(allow_click){
 			Elem.click(position, function(event) {
 				var position = event.data;
-				if($(this).find('.checked').length == 0 || (that.param && that.param.alwaysMe && $(this).find('.id').val() == wrapper_localstorage.uid) || $(this).find('.id').val() == that.param.created_by ) {
+				//if($(this).find('.checked').length == 0 || (that.param && that.param.alwaysMe && $(this).find('.id').val() == wrapper_localstorage.uid) || $(this).find('.id').val() == that.param.created_by ) { //This line blocks any change for the creator
+				if($(this).find('.checked').length == 0 || (that.param && that.param.alwaysMe && $(this).find('.id').val() == wrapper_localstorage.uid)) {
 					$(this).find('.check').addClass('checked');
 					if(live){
 						var uid = parseInt($(this).find('.id').val(), 10);

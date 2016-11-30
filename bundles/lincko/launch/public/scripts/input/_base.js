@@ -72,7 +72,7 @@ base_input_field.password = {
 		maxlength: 60,
 	},
 	valid: function(text){
-		var regex_1 = /^[\w\d]{6,60}$/g;
+		var regex_1 = /^[\S]{6,60}$/g;
 		return regex_1.test(text);
 	},
 	error_msg: function(){

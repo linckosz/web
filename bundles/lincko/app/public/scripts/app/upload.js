@@ -74,7 +74,7 @@ submenu_list['app_upload_destination'] = {
 	},
 	"destination_1": {
 		"style": "radio",
-		"title": "Autocut NOVA",
+		"title": "toto_01",
 		"selected": false,
 		"action": function(){
 			alert('Do something');
@@ -84,7 +84,7 @@ submenu_list['app_upload_destination'] = {
 	},
 	"destination_2": {
 		"style": "radio",
-		"title": "Air freshener mk2",
+		"title": "toto_02",
 		"selected": false,
 		"action": function(){
 			alert('Do something');
@@ -101,6 +101,7 @@ function app_upload_prepare_log(parent_type, parent_id, temp_id){
 		parent_id = Lincko.storage.getMyPlaceholder()['_id'];
 	}
 	$('#app_upload_shangzai_puk').val(wrapper_get_shangzai('puk'));
+	$('#app_upload_lastvisit').val(Lincko.storage.getLastVisit());
 	$('#app_upload_parent_type').val(parent_type);
 	$('#app_upload_parent_id').val(parseInt(parent_id, 10));
 	$('#app_upload_fingerprint').val(fingerprint);

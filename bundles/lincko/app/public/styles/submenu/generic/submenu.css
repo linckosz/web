@@ -345,13 +345,18 @@
 	cursor: text;
 }
 
+.submenu_deco_borders {
+	border-top: solid 1px #EBEFF3;
+	border-bottom: solid 1px #EBEFF3;
+}
+
 .submenu_select {
 	display: table;
 	white-space: nowrap;
 	cursor: pointer; cursor: hand;
 	overflow: hidden;
 	text-align: left;
-	color: #BABDC0;
+	color: #6F7377;
 	font-size: 16px;
 }
 
