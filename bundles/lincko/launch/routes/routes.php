@@ -31,7 +31,6 @@ $app->get('/page(/:page_redirect)', function ($page_redirect='') use($app) {
 ->name('page');
 
 $app->get('/invitation/:invitation_code', function ($invitation_code) use ($app) {
-	$app = \Slim\Slim::getInstance();
 	$app->lincko->data['invitation_code'] = $_SESSION['invitation_code'] = $invitation_code;
 	$app->router->getNamedRoute('home')->dispatch();
 })
@@ -39,6 +38,25 @@ $app->get('/invitation/:invitation_code', function ($invitation_code) use ($app)
 	'invitation_code' => '[a-z0-9]{8}',
 ))
 ->name('invitation');
+
+$app->get('/uid/:user_code', function ($user_code) use ($app) {
+	$app->lincko->data['user_code'] = $_SESSION['user_code'] = $user_code;
+	$app->router->getNamedRoute('home')->dispatch();
+})
+->conditions(array(
+	'user_code' => '\S+',
+))
+->name('uid');
+
+$app->get('/user/:user_action', function ($user_action='') use ($app) {
+	web_wrapper_user_created();
+	$app->lincko->data['user_action'] = $user_action;
+	$app->render('/bundles/lincko/launch/templates/launch/home.twig');
+})
+->conditions(array(
+	'user_action' => '\S+',
+))
+->name('user');
 
 $app->get(
 	'/mailchimp',

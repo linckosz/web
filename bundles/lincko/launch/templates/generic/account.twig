@@ -5,6 +5,14 @@
 		var account_link = [];
 		account_link['root'] = "{{ urlFor('root') }}";
 		account_link['home'] = "{{ urlFor('home') }}";
+		var account_account_force = false;
+		{% if invitation_code or user_code %}
+			account_account_force = true;
+		{% endif %}
+		var account_user_action = false;
+		{% if user_action %}
+			account_user_action = "{{ user_action }}";
+		{% endif %}
 	</script>
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/launch/styles/generic/account.css') }}" type="text/css" />
 </div>

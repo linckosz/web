@@ -155,6 +155,7 @@ function account_show(select) {
 }
 
 function account_hide() {
+	global_select = false;
 	if(!isMobileApp()){
 		$('#account_wrapper').css('z-index',-1).hide();
 		$('#base_wrapper').removeClass('blur');
@@ -412,4 +413,9 @@ JSfiles.finish(function(){
 		timeoffset = 0;
 	}
 	$('#account_joinus_timeoffset').val(timeoffset);
+	if(account_account_force){
+		account_show(true);
+	} else if(account_user_action){
+		account_show(account_user_action);
+	}
 });
