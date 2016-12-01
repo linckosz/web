@@ -455,7 +455,7 @@ enquire.register(responsive.isMobileL, function() {
 });
 
 var app_application_move_mainmenu_block = false;
-function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
+function app_application_move_menu(Elem, Blur, Block, Button, force_blur) { 
 	if(typeof Blur==="undefined"){ Blur = $(null); }
 	if(typeof Block==="undefined"){ Block = $(null); }
 	if(typeof Button==="undefined"){ Button = $(null); }

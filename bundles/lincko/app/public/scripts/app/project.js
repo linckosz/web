@@ -59,7 +59,7 @@ var mainMenu = {
 			//For new user, open the mainmenu by default
 			if(!storage_first_launch && !this.check_open){
 				this.check_open = true; //Only check once
-				if(projects_total<=2){
+				if(projects_total<=2 && !onboarding.on){
 					app_application.forceOpen();
 				}
 			}

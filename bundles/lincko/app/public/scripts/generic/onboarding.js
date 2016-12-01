@@ -49,7 +49,6 @@ var onboarding = {
 
 	launch: function(){ //return true if launched, return false if conditions are not fit for launch
 
-
 		return onboarding.scripts.welcome();
 
 
@@ -197,22 +196,41 @@ var onboarding = {
 
 onboarding.overlays = {
 	body: function(on){
-		var id = 'onboarding_overlay_body';
+		var id = this.id.body;
 		var elem_overlay = $('#'+id);
-		if(typeof on == 'boolean' && !on){
-			elem_overlay.remove(); //no need for recursive. just an empty div
-			return true;
+		var exists = false;
+		if(elem_overlay.length){
+			exists = true;
 		}
 
-		if(!elem_overlay.length){
-			elem_overlay = $('<div>').prop('id', id).addClass('onboarding_overlay');
-			$('#body_lincko').append(elem_overlay);
+		if(typeof on == 'boolean'){
+			if(on && exists){
+				return elem_overlay;
+			}
+			else if(on && !exist){
+				elem_overlay = this.build_elem(id);
+				$('#body_lincko').append(elem_overlay);
+			}
+			else if(!on){
+				elem_overlay.recursiveRemove(0);
+			}
+		}
+		else {
+			if(exists){
+				return elem_overlay;
+			}
+			else{
+				elem_overlay = this.build_elem(id);
+				$('#body_lincko').append(elem_overlay);
+			}
+		}
+
+		if(elem_overlay.length){
 			return elem_overlay;
 		}
 		else{
 			return false;
-		}
-		
+		}	
 	},
 	ini: function(){
 		this.show.that = this;
@@ -224,6 +242,7 @@ onboarding.overlays = {
 	},
 	id: {
 		master: 'onboarding_overlay_master',
+		body: 'onboarding_overlay_body',
 		project: 'onboarding_overlay_project',
 		content: 'onboarding_overlay_content',
 		content_menu: 'onboarding_overlay_content_menu',
@@ -620,6 +639,21 @@ onboarding.scripts[5] = function(fn_continue){
 
 //welcome onboaring
 onboarding.scripts['welcome'] = function(){
+
+	var projectOpenSuccess = app_content_menu.selection(Lincko.storage.getMyPlaceholder()['_id']); //toto - this should be the sample project
+	if(!projectOpenSuccess){ return false; }
+
+	if(!$('#'+onboarding.id_welcome_bubble).length){
+		$('body').append($('<div>').prop('id', onboarding.id_welcome_bubble).addClass(onboarding.id_welcome_bubble));
+	}
+
+	if(!$('#'+onboarding.id_welcome_bubble).is(':visible')){ return false; }
+	
+
+	//passed the check, begin initialization
+	onboarding.on = true;
+	onboarding.overlays.body();
+
 	var array_openMainMenu = [
 		{
 			sel: $('#app_application_menu_icon'),
@@ -941,42 +975,18 @@ onboarding.scripts['welcome'] = function(){
 	});
 
 
-	var elem_overlay = onboarding.overlays.body();
-	var elem_linckoBot_bubble = $('<div>').prop('id', onboarding.id_welcome_bubble).addClass(onboarding.id_welcome_bubble);
-	elem_overlay.after(elem_linckoBot_bubble);
-
-	if($('#'+onboarding.id_welcome_bubble).is(':visible')){
-		var fn_next = function(){
-			trip_openMainMenu.start();
-			elem_overlay.remove();
-		}
-		elem_linckoBot_bubble.append(intro.showPanel()).click(function(){
-			fn_next();
-		});
-
-		
-		intro.startStep(null, fn_next);
-
-
-
-	/*		.text('LinckoBot: welcome!').click(function(){
-
-			intro.showPanel()
-
-			$(this).off('click');
-			trip_openMainMenu.start();
-			elem_overlay.remove();
-			
-		});*/
-
-
-
-		
-		return true;
+	var fn_next = function(){
+		trip_openMainMenu.start();
+		onboarding.overlays.body(false);
 	}
-	else{
-		return false;
-	}
+	$('#'+onboarding.id_welcome_bubble).append(intro.showPanel()).click(function(){
+		fn_next();
+		$(this).off('click');
+	});
+	
+	intro.startStep(null, fn_next);
+		
+	return true;
 }
 
 
