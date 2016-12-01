@@ -78,12 +78,23 @@
 	var dropmenu_selected_img = new Image();
 	dropmenu_selected_img.src = "{{ _filelatest('/lincko/launch/images/generic/wphead/selected.png') }}";
 
+	var wphead_page_redirect = "{{ page_redirect }}";
+
 	JSfiles.finish(function(){
-		$('#base_iframe_message')
-			.prop('src', wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix'])
-			.prop('data', wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix']);
-		wphead_active_menu('overview');
-		$(window).resize();
+		if(!isMobileApp()){
+			if(!wphead_page_redirect){
+				$('#base_iframe_message')
+					.prop('src', wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix'])
+					.prop('data', wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix']);
+				wphead_active_menu('overview');
+			} else {
+				$('#base_iframe_message')
+					.prop('src', wphead_link['blog_prefix']+'/'+wphead_page_redirect)
+					.prop('data', wphead_link['blog_prefix']+'/'+wphead_page_redirect);
+				wphead_active_menu('wphead_page_redirect');
+			}
+			$(window).resize();
+		}
 	});
 
 </script>
@@ -92,6 +103,7 @@
 <nav class="base_menu wphead_nav">
 	
 	<div class="DIVcenter wphead_ul">
+
 		<img id="wphead_menu" class="base_pointer maxTablet" src="{{ _filelatest('/lincko/launch/images/generic/wphead/menu.png') }}" alt="{{ _trans('web', 2, 10, 'html') }}{# Menu #}" title="{{ _trans('web', 2, 10, 'html') }}{# Menu #}" />
 		<div class="wphead_div floatleft wphead_lincko_div"><span class="table_cell_center" id="wphead_lincko"><span>Lincko</span></span></div>
 		<div class="wphead_div floatleft minMobileL"><span class="table_cell_center" id="wphead_beta"><span>{{ _trans('web', 1, 11, 'html') }}{# Beta #}</span></span></div>

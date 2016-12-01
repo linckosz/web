@@ -96,3 +96,19 @@ webworker_operation.launch_base_iframe = function(child_body_height){
 		}
 	}
 }
+
+var base_standalone = function(){
+	if(isMobileApp()){
+		$('#account_close').recursiveRemove();
+		$('#base_wrapper').addClass('display_none');
+		$('#account_language').removeClass('display_none');
+		account_show(true);
+	} else {
+		$('#base_wrapper').removeClass('display_none');
+		$('#account_language').addClass('display_none');
+	}
+}
+
+JSfiles.finish(function(){
+	base_standalone();
+});

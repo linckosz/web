@@ -89,6 +89,7 @@
 #account_tab_lincko {
 	padding: 0;
 	padding-bottom: 3px;
+	position: relative;
 }
 
 #account_tab_lincko > div {
@@ -96,6 +97,26 @@
 	background-color: rgba(251, 160, 38, 0.5) !important;
 	font-size: 30px;
 	font-weight: 200;
+	width: 100%;
+}
+
+#account_tab_lincko_back {
+	font-size: 28px;
+	position: absolute;
+	left: 4px;
+	padding: 4px 12px;
+	cursor: pointer;
+	top: 50%;
+	transform: translateY(-50%);
+	-webkit-transform: translateY(-50%);
+	-moz-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	-o-transform: translateY(-50%);
+	-webkit-backface-visibility: hidden;
+}
+
+#account_tab_lincko_back:active {
+	background-color: rgba(249, 249, 249, 0.1);
 }
 
 #account_tab_joinus {
@@ -435,6 +456,38 @@
 	-khtml-opacity:0.4;
 }
 
+#account_language {
+	position: absolute;
+	bottom: 4px;
+	right: 4px;
+}
+
+.account_language_select {
+	padding: 4px 8px 4px 8px;
+	height: 32px;
+	min-height: 32px;
+	background-color: transparent;
+	color: #FFFFFF;
+	border-color: #FFFFFF;
+	border-width: 1px;
+	border-style: none;
+	background: transparent;
+	max-width: 160px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	font-size: 12px;
+}
+
+.account_language_select option {
+	color: #696F79;
+}
+
+.account_language_select:hover {
+	color: #D4D4D4;
+	border-color: #D4D4D4;
+}
+
 
 @media only screen and (max-height: 350px){
 	.account_wrapper > div {
@@ -452,3 +505,8 @@
 	}
 }
 
+@media only screen and (max-height: 460px){
+	#account_language {
+		display: none;
+	}
+}

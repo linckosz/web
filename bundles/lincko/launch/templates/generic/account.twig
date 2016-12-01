@@ -10,9 +10,22 @@
 </div>
 <div id="account_wrapper" class="account_wrapper">
 	<img class="account_close" id="account_close" src="{{ _filelatest('/lincko/launch/images/generic/account/close.png') }}" alt="{{ _trans('web', 5, 10, 'html') }}{# Close #}" title="{{ _trans('web', 5, 10, 'html') }}{# Close #}" />
+
+	<span id="account_language" class="display_none">
+		<form id="account_translation" action="{{ _language_uri() }}" method="post">
+			<select id="account_language_select" name="translation_language" class="account_language_select" onchange="$('#account_translation').submit();" >
+				{% set language = _language() %}
+				{% set languages = _languages_short('web') %}
+				{% for key, value in languages %}
+					<option value="{{ key }}" title="{{ value }}" {% if key == language %}selected="selected"{% endif %} >{{ value }}</option>
+				{% endfor %}
+			</select>
+		</form>
+	</span>
+
 	<div>
 		<div class="account_tab" id="account_tab_lincko">
-			<div>Lincko</div>
+			<div><div id="account_tab_lincko_back" class="display_none fa fa-angle-left"></div>Lincko</div>
 		</div>
 		{#{% if invitation_code %}#}
 			<div class="account_tab">

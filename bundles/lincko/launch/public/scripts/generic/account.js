@@ -143,6 +143,11 @@ function account_show(select) {
 			select = 'joinus';
 		}
 	}
+	if(select=='signin' || select=='joinus'){
+		$('#account_tab_lincko_back').addClass('display_none');
+	} else {
+		$('#account_tab_lincko_back').removeClass('display_none');
+	}
 	if(typeof select=="undefined"){ select = 'joinus'; }
 	$('#account_wrapper').css('z-index',1500).css("display", "table");
 	$('#base_wrapper').addClass('blur');
@@ -150,8 +155,10 @@ function account_show(select) {
 }
 
 function account_hide() {
-	$('#account_wrapper').css('z-index',-1).hide();
-	$('#base_wrapper').removeClass('blur');
+	if(!isMobileApp()){
+		$('#account_wrapper').css('z-index',-1).hide();
+		$('#base_wrapper').removeClass('blur');
+	}
 }
 
 function account_select(select) {
@@ -322,8 +329,8 @@ $("#account_joinus_submit, #account_signin_submit, #account_forgot_submit, #acco
 var account_reset_autocompletion = function(){
 	var joinus = $('#account_joinus_email').val();
 	var signin = $('#account_signin_email').val();
-	$('#account_joinus_email').val(joinus+'1');
-	$('#account_signin_email').val(signin+'1');
+	$('#account_joinus_email').val(joinus+'contact@lincko.com');
+	$('#account_signin_email').val(signin+'contact@lincko.com');
 	$('#account_joinus_email').val(joinus);
 	$('#account_signin_email').val(signin);
 }
@@ -376,12 +383,20 @@ $("#account_joinus_password").addClass('base_input_text_error').on({
 	keyup: function() { account_joinus_password_tooltip(); },
 });
 
+$('#account_tab_lincko_back').click(function(){
+	account_show(true);
+})
+
 var account_joinus_password_tooltip = function(){
 	if(base_input_field.password.valid($("#account_joinus_password").val())){
 		$("#account_joinus_password_tooltip").removeClass('account_input_focus');
 	} else {
 		$("#account_joinus_password_tooltip").addClass('account_input_focus');
 	}
+}
+
+webworker_operation.account_show = function(select){
+	account_show(select);
 }
 
 JSfiles.finish(function(){

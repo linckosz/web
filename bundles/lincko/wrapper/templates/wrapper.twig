@@ -350,27 +350,36 @@ if(webworker){
 
 	//Return message
 	webworker.addEventListener("message", function(e){
-		var object = false;
-		try {
-			object = JSON.parse(e.data);
-			if(typeof object != "object"){
-				object = false;
-			}
-		} catch(e){
-			object = false;
-		}
-		if(object && object.action){
-			var data = null;
-			if(typeof object.data != "undefined"){
-				data = object.data;
-			}
-			if(typeof webworker_operation[object.action] == 'function'){
-				webworker_operation[object.action](data);
-			}
-		}
+		webworker_operation.launch_operation(e);
+	});
+
+
+	window.addEventListener("message", function(e){
+		webworker_operation.launch_operation(e);
 	});
 
 	var webworker_operation = {
+
+		launch_operation: function(e){
+			var object = false;
+			try {
+				object = JSON.parse(e.data);
+				if(typeof object != "object"){
+					object = false;
+				}
+			} catch(e){
+				object = false;
+			}
+			if(object && object.action){
+				var data = null;
+				if(typeof object.data != "undefined"){
+					data = object.data;
+				}
+				if(typeof webworker_operation[object.action] == 'function'){
+					webworker_operation[object.action](data);
+				}
+			}
+		},
 
 		//webworker.postMessage(JSON.stringify({action: 'test', data: 123,}));
 		test: function(obj_data){

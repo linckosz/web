@@ -15,9 +15,20 @@ function web_wrapper_user_created(){
 
 $app->get('/home', function () use($app) {
 	web_wrapper_user_created();
+	$app->lincko->data['page_redirect'] = '';
 	$app->render('/bundles/lincko/launch/templates/launch/home.twig');
 })
 ->name('home');
+
+$app->get('/page(/:page_redirect)', function ($page_redirect='') use($app) {
+	web_wrapper_user_created();
+	$app->lincko->data['page_redirect'] = $page_redirect;
+	$app->render('/bundles/lincko/launch/templates/launch/home.twig');
+})
+->conditions(array(
+	'page_redirect' => '.*',
+))
+->name('page');
 
 $app->get('/invitation/:invitation_code', function ($invitation_code) use ($app) {
 	$app = \Slim\Slim::getInstance();

@@ -20,5 +20,9 @@ function setMobileAlias(){
 setMobileAlias();
 
 function isMobileApp(){
-	return (android || iOS || winPhone);
+	return (
+		   typeof android != 'undefined'
+		|| typeof iOS != 'undefined'
+		|| typeof winPhone != 'undefined'
+	);
 }
