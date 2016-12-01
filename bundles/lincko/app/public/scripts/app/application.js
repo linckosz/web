@@ -648,7 +648,6 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 					}
 				},
 				complete: function(){
-					app_application_lincko.prepare('mainmenu_open_complete', true);
 					setTimeout(function(){
 						app_application_move_mainmenu_block = false;
 						$(window).trigger('resize');
@@ -659,6 +658,7 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 							$(this).addClass('app_application_width');
 						});
 						app_application_move_mainmenu_block = false;
+						app_application_lincko.prepare('mainmenu_open_complete', true);
 					}, 50);
 				},
 			}
