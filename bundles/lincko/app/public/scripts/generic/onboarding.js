@@ -669,7 +669,7 @@ onboarding.scripts['welcome'] = function(){
 
 	//tracker to make sure trip only runs once
 	var tripTracker = {
-		check: function(tripObj){
+		check: function(tripObj, i){
 			if(this[tripObj.id_trip][i]){ return true; }
 			else{
 				tripTracker[tripObj.id_trip][i] = true;
@@ -686,7 +686,7 @@ onboarding.scripts['welcome'] = function(){
 			expose : true,
 			delay: -1,
 			onTripStart : function(i, tripData){
-				if(tripTracker.check(this)){return false;}
+				if(tripTracker.check(this, i)){return false;}
 
 				onboarding.welcome_bubble_reposition(null, 700);
 				var tripObj = this;
@@ -719,10 +719,8 @@ onboarding.scripts['welcome'] = function(){
 		onStart: function(){
 			this.id_trip = 'openMainMenu';
 			tripTracker[this.id_trip] = {};
-			console.log(this.id_trip);
 		},
 		onEnd: function(){
-			console.log('trip end mainmenu');
 			$('#app_application_menu_icon').off('click.trip');
 			onboarding.overlays.content().css('opacity', 0);
 			delete trip_openMainMenu;
@@ -737,15 +735,13 @@ onboarding.scripts['welcome'] = function(){
 			expose: true,
 			delay: -1,
 			onTripStart : function(i, tripData){
-				console.log(i);
 				//$('#app_application_menu_icon').removeClass('trip-exposed');
 				/*$('#app_project_projects_new').css({
 					//'outline': '4px solid #FFFFFF',
 					'position': 'absolute',
 					'opacity': 1,
 				});*/
-				if(tripTracker.check(this)){return false;}
-				console.log('onTripStart projects_new');
+				//if(tripTracker.check(this, i)){return false;}
 				var tripObj = this;
 				onboarding.overlays.content().attr('style', '');
 				var cb_complete = function(){
@@ -754,10 +750,7 @@ onboarding.scripts['welcome'] = function(){
 					}, 500);
 				}
 				onboarding.welcome_bubble_reposition(null, null, cb_complete);
-				
-				
-				
-				
+					
 				
 				
 				var elem_overlay_project = onboarding.overlays.project().off('click.trip').on('click.trip', function(event){
@@ -797,7 +790,7 @@ onboarding.scripts['welcome'] = function(){
 								$('#app_application_menu_icon').attr('style', '');
 								app_application.move('project', true);
 								tripObj.stop();
-								trip_exploreContent.start();
+								//trip_exploreContent.start();
 							}
 						});								
 					}
@@ -811,7 +804,7 @@ onboarding.scripts['welcome'] = function(){
 				}
 			},
 			onTripEnd : function(i, tripData){
-				//$('#app_project_projects_new').attr('style', '');
+				$('#app_project_projects_new').attr('style', '');
 			}
 		},
 		{
@@ -821,9 +814,9 @@ onboarding.scripts['welcome'] = function(){
 			expose: true,
 			delay: -1,
 			onTripStart : function(i, tripData){
-				if(tripTracker.check(this)){return false;}
-				onboarding.welcome_bubble_reposition(tripData);
 				$('#app_project_projects_new').attr('style', '');
+				if(tripTracker.check(this, i)){return false;}
+				onboarding.welcome_bubble_reposition(tripData);
 				tripData.sel.css('border', '4px solid #FFFFFF');
 				$('.trip-overlay').css('opacity', '');
 				setTimeout(function(){
@@ -845,7 +838,6 @@ onboarding.scripts['welcome'] = function(){
 		onStart: function(){
 			this.id_trip = 'exploreMainMenu';
 			tripTracker[this.id_trip] = {};
-			console.log(this.id_trip);
 
 			if(responsive.test("maxMobileL")){
 				this.tripData[0].position = 's';
@@ -853,12 +845,215 @@ onboarding.scripts['welcome'] = function(){
 			}
 
 			onboarding.overlays.content();
-			$('#app_project_projects_new').off('click.trip');
+			$('#app_project_projects_new').off('click.trip').addClass('onboarding_forceAbsolute');
 		},
 		onEnd: function(){
+			var id_onboarding_garbage_mainMenuClose = app_application_garbage.add('onboarding_garbage_mainMenuClose');
+			app_application_lincko.add(id_onboarding_garbage_mainMenuClose, 'mainmenu_close_complete', 
+				function(){
+					app_application_garbage.remove(id_onboarding_garbage_mainMenuClose);
+					trip_exploreContentTop.start();
+					onboarding.overlays.project().attr('style', '');
+				}
+			);
+			
 			delete trip_exploreMainMenu;
 		}
 	});
+
+
+	var array_exploreContentTop = [
+		{
+			sel: $('#app_content_top_title_menu'),
+			content: '<div style="width: 120px;">project_settings</div>',
+			position : "s",
+			expose: true,
+			delay: -1,
+			onTripStart : function(i, tripData){
+				onboarding.welcome_bubble_reposition();
+				var tripObj = this;
+				onboarding.overlays.content(false);
+				onboarding.overlays.content_dynamic_sub();
+				onboarding.overlays.content_menu();
+				onboarding.overlays.content_top().css('opacity', 0).off('click.trip').on('click.trip', function(event){
+					var elem_overlay = $(this);
+
+					//if next is triggered by clicking on overlay, flash
+					if($(event.target).hasClass('onboarding_overlay')){
+						elem_overlay.velocity({opacity: 0}, {
+							mobileHA: hasGood3Dsupport,
+							begin: function(){
+								elem_overlay.css({
+									'background-color': '#FFFFFF',
+									opacity: 1,
+									border: '4px solid #FFFFFF',
+								});
+							},
+							complete: function(){
+								onboarding.overlays.content_top().attr('style', '');
+								tripObj.stop();
+							}
+						});
+					}
+					$(this).off('click.trip');
+				});
+
+				var fn_next = function(){
+					onboarding.overlays.content_top().off('click.trip');
+					tripObj.stop();
+				}
+			},
+		}
+	];
+
+	var trip_exploreContentTop = new Trip(array_exploreContentTop, {
+		overlayHolder: '#app_content_top_title',
+		tripClass: 'onboarding_trip_welcome onboarding_trip_exploreContentTop',
+		onStart: function(){
+			this.id_trip = 'exploreContentTop';
+			tripTracker[this.id_trip] = {};
+		},
+		onEnd: function(tripIndex, tripObject){
+			trip_exploreContentMenu.start();
+		},
+	});
+
+
+	var array_exploreContentMenu = [
+		{
+			sel: $('#app_content_menu_tasks'),
+			content: 'contentMenu',
+			position : "e",
+			expose: false,
+			delay: -1,
+			onTripStart : function(i, tripData){
+				onboarding.welcome_bubble_reposition(tripData);
+				var tripObj = this;
+				var trip_index_counter = 0; //cyle through tasks, notes, chats, files
+				var elem_overlay = onboarding.overlays.content_menu();
+				elem_overlay.css('opacity', 0);
+				elem_overlay.off('click.trip');
+				elem_overlay.on('click.trip', function(){
+					if(trip_index_counter > 4){return;} //take care of spam click
+					trip_index_counter++;
+					elem_overlay.velocity({opacity: 0}, {
+						mobileHA: hasGood3Dsupport,
+						begin: function(){
+							elem_overlay.css({
+								'background-color': '#FFFFFF',
+								opacity: 1,
+								border: '4px solid #FBA026',
+							});
+						},
+						complete: function(){
+							tripObj.next();
+						}
+					});
+				});
+			},
+		},
+		{
+			sel: $('#app_content_menu_tasks'),
+			content: 'tasks',
+			position : "e",
+			expose: true,
+			delay: -1,
+			onTripStart : function(i, tripData){
+				onboarding.welcome_bubble_reposition(tripData);
+			},
+		},
+		{
+			sel: $('#app_content_menu_notes'),
+			content: 'notes',
+			position : "e",
+			expose: true,
+			delay: -1,
+			onTripStart : function(i, tripData){
+				onboarding.welcome_bubble_reposition(tripData);
+			},
+		},
+		{
+			sel: $('#app_content_menu_chats'),
+			content: 'Click this button!!!!',
+			position : "e",
+			expose: true,
+			delay: -1,
+			onTripStart : function(i, tripData){
+				onboarding.welcome_bubble_reposition(tripData);
+			},
+		},
+		{
+			sel: $('#app_content_menu_files'),
+			content: 'Click this button!!!!',
+			position : "e",
+			expose: true,
+			delay: -1,
+			onTripStart : function(i, tripData){
+				onboarding.welcome_bubble_reposition(tripData);
+			},
+		}
+	];
+
+
+	var trip_exploreContentMenu = new Trip(array_exploreContentMenu, {
+		overlayHolder: '#app_content_menu_table',
+		tripClass: 'onboarding_trip_welcome onboarding_trip_exploreContentMenu',
+		onStart: function(){
+			this.id_trip = 'exploreContentMenu';
+			tripTracker[this.id_trip] = {};
+
+			if(responsive.test("maxMobileL")){
+				$.each(this.tripData, function(i, obj){
+					obj.position = 'n';
+				});
+			}
+		},
+		onEnd: function(tripIndex, tripObject){
+			onboarding.overlays.content_dynamic_sub(false);
+			onboarding.overlays.content_menu().off('click.trip').attr('style', '');
+			var array_inputter = [
+				{
+					sel: $('#skylist_tasks_layer_tasks_inputter_container'),
+					content: 'inputter',
+					position : "n",
+					expose: true,
+					delay: -1,
+					onTripStart : function(i, tripData){
+						if(tripTracker.check(this, i)){return false;}
+						onboarding.welcome_bubble_reposition(tripData);
+						var tripObj = this;
+						tripData.sel.on('click.trip', function(){
+							tripObj.next();
+							$(this).off('click.trip');
+						});
+					},
+				},
+			];
+			var trip_inputter = new Trip(array_inputter, {
+				overlayHolder: '#app_content_dynamic_layers',
+				tripClass: 'onboarding_trip_welcome onboarding_trip_inputter',
+				onStart: function(){
+					this.id_trip = 'inputter';
+					tripTracker[this.id_trip] = {};
+				},
+				onEnd: function(tripIndex, tripObject){
+					$('.trip-overlay').css('display', 'none');
+					onboarding.clear();
+				},
+			});
+			trip_inputter.start();
+		},
+	});
+
+	
+
+
+
+
+
+
+
+
 
 	var array_exploreContent = [
 		{
@@ -868,11 +1063,11 @@ onboarding.scripts['welcome'] = function(){
 			expose: false,
 			delay: -1,
 			onTripStart : function(i, tripData){
-				if(tripTracker.check(this)){return false;}
-				$('.onboarding_trip_exploreContent.trip-block').css('left', 50);
+				//if(tripTracker.check(this, i)){return false;}
+				//$('.onboarding_trip_exploreContent.trip-block').css('left', 50);
 				var timeout = setTimeout(function(){
 					clearTimeout(timeout);
-					onboarding.welcome_bubble_reposition();
+					//onboarding.welcome_bubble_reposition();
 				}, 700);
 				var tripObj = this;
 				onboarding.overlays.content(false);
@@ -914,7 +1109,7 @@ onboarding.scripts['welcome'] = function(){
 			expose: false,
 			delay: -1,
 			onTripStart : function(i, tripData){
-				if(tripTracker.check(this)){return false;}
+				if(tripTracker.check(this, i)){return false;}
 				onboarding.welcome_bubble_reposition(tripData);
 				//$('.trip-overlay').css('display', 'none');
 				var tripObj = this;
@@ -948,7 +1143,7 @@ onboarding.scripts['welcome'] = function(){
 			expose: false,
 			delay: -1,
 			onTripStart : function(i, tripData){
-				if(tripTracker.check(this)){return false;}
+				if(tripTracker.check(this, i)){return false;}
 				onboarding.welcome_bubble_reposition(tripData);
 			},
 		},
@@ -959,7 +1154,7 @@ onboarding.scripts['welcome'] = function(){
 			expose: false,
 			delay: -1,
 			onTripStart : function(i, tripData){
-				if(tripTracker.check(this)){return false;}
+				if(tripTracker.check(this, i)){return false;}
 				onboarding.welcome_bubble_reposition(tripData);
 			},
 		},
@@ -970,7 +1165,7 @@ onboarding.scripts['welcome'] = function(){
 			expose: false,
 			delay: -1,
 			onTripStart : function(i, tripData){
-				if(tripTracker.check(this)){return false;}
+				if(tripTracker.check(this, i)){return false;}
 				onboarding.welcome_bubble_reposition(tripData);
 			},
 		}
@@ -982,7 +1177,6 @@ onboarding.scripts['welcome'] = function(){
 		onStart: function(){
 			this.id_trip = 'exploreContent';
 			tripTracker[this.id_trip] = {};
-			console.log(this.id_trip);
 
 			if(responsive.test("maxMobileL")){
 				this.tripData[1].position = 'n';
@@ -1004,7 +1198,7 @@ onboarding.scripts['welcome'] = function(){
 					expose: true,
 					delay: -1,
 					onTripStart : function(i, tripData){
-						if(tripTracker.check(this)){return false;}
+						if(tripTracker.check(this, i)){return false;}
 						onboarding.welcome_bubble_reposition(tripData);
 						var tripObj = this;
 						tripData.sel.on('click.trip', function(){
@@ -1020,7 +1214,6 @@ onboarding.scripts['welcome'] = function(){
 				onStart: function(){
 					this.id_trip = 'inputter';
 					tripTracker[this.id_trip] = {};
-					console.log(this.id_trip);
 				},
 				onEnd: function(tripIndex, tripObject){
 					$('.trip-overlay').css('display', 'none');
