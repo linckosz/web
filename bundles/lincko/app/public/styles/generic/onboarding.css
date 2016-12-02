@@ -53,7 +53,7 @@
 	opacity: 0.7 !important;
 }
 .trip-block.onboarding_trip_welcome{
-	visibility: hidden;
+	/*visibility: hidden;*/
 	min-width: initial;
 	padding: 0px;
 }
@@ -65,6 +65,8 @@
 }
 .trip-exposed#app_project_projects_new {
 	background: none;
+	position: absolute !important;
+	opacity: 1;
 }
 .trip-exposed#app_project_chats_tab{
 	background: none;

@@ -667,6 +667,17 @@ onboarding.scripts['welcome'] = function(){
 	onboarding.on = true;
 	onboarding.overlays.body();
 
+	//tracker to make sure trip only runs once
+	var tripTracker = {
+		check: function(tripObj){
+			if(this[tripObj.id_trip][i]){ return true; }
+			else{
+				tripTracker[tripObj.id_trip][i] = true;
+				return false;
+			}
+		},
+	}
+
 	var array_openMainMenu = [
 		{
 			sel: $('#app_application_menu_icon'),
@@ -675,12 +686,15 @@ onboarding.scripts['welcome'] = function(){
 			expose : true,
 			delay: -1,
 			onTripStart : function(i, tripData){
+				if(tripTracker.check(this)){return false;}
+
 				onboarding.welcome_bubble_reposition(null, 700);
 				var tripObj = this;
+
 				tripData.sel.off('click.trip').on('click.trip', function(event){
+					$(this).off('click.trip');
 					event.stopPropagation();
 					onboarding.overlays.project().css('opacity', 0);
-					$(this).off('click.trip');
 					var id_onboarding_garbage_mainMenuOpen = app_application_garbage.add('onboarding_garbage_mainMenuOpen');
 					app_application_lincko.add(id_onboarding_garbage_mainMenuOpen, 'mainmenu_open_complete', 
 						function(){
@@ -696,18 +710,19 @@ onboarding.scripts['welcome'] = function(){
 				var fn_next = function(){
 					$('#app_application_menu_icon').click();
 				}
-
-				$('#'+onboarding.id_welcome_bubble).click(function(){
-					$(this).off('click');
-					fn_next();
-				});
 			},
 		},
 	];
 	var trip_openMainMenu = new Trip(array_openMainMenu, {
 		overlayHolder: '#app_application_content',
 		tripClass: 'onboarding_trip_welcome',
+		onStart: function(){
+			this.id_trip = 'openMainMenu';
+			tripTracker[this.id_trip] = {};
+			console.log(this.id_trip);
+		},
 		onEnd: function(){
+			console.log('trip end mainmenu');
 			$('#app_application_menu_icon').off('click.trip');
 			onboarding.overlays.content().css('opacity', 0);
 			delete trip_openMainMenu;
@@ -722,7 +737,15 @@ onboarding.scripts['welcome'] = function(){
 			expose: true,
 			delay: -1,
 			onTripStart : function(i, tripData){
-				console.log('trip start');
+				console.log(i);
+				//$('#app_application_menu_icon').removeClass('trip-exposed');
+				/*$('#app_project_projects_new').css({
+					//'outline': '4px solid #FFFFFF',
+					'position': 'absolute',
+					'opacity': 1,
+				});*/
+				if(tripTracker.check(this)){return false;}
+				console.log('onTripStart projects_new');
 				var tripObj = this;
 				onboarding.overlays.content().attr('style', '');
 				var cb_complete = function(){
@@ -733,12 +756,8 @@ onboarding.scripts['welcome'] = function(){
 				onboarding.welcome_bubble_reposition(null, null, cb_complete);
 				
 				
-				$('#app_application_menu_icon').removeClass('trip-exposed');
-				$('#app_project_projects_new').css({
-					//'outline': '4px solid #FFFFFF',
-					'position': 'absolute',
-					'opacity': 1,
-				});
+				
+				
 				
 				
 				var elem_overlay_project = onboarding.overlays.project().off('click.trip').on('click.trip', function(event){
@@ -802,6 +821,7 @@ onboarding.scripts['welcome'] = function(){
 			expose: true,
 			delay: -1,
 			onTripStart : function(i, tripData){
+				if(tripTracker.check(this)){return false;}
 				onboarding.welcome_bubble_reposition(tripData);
 				$('#app_project_projects_new').attr('style', '');
 				tripData.sel.css('border', '4px solid #FFFFFF');
@@ -823,7 +843,10 @@ onboarding.scripts['welcome'] = function(){
 		overlayHolder: '#app_project_content .iscroll_sub_div',
 		tripClass: 'onboarding_trip_welcome onboarding_trip_exploreMainMenu',
 		onStart: function(){
-			
+			this.id_trip = 'exploreMainMenu';
+			tripTracker[this.id_trip] = {};
+			console.log(this.id_trip);
+
 			if(responsive.test("maxMobileL")){
 				this.tripData[0].position = 's';
 				this.tripData[1].position = 'n';
@@ -845,6 +868,7 @@ onboarding.scripts['welcome'] = function(){
 			expose: false,
 			delay: -1,
 			onTripStart : function(i, tripData){
+				if(tripTracker.check(this)){return false;}
 				$('.onboarding_trip_exploreContent.trip-block').css('left', 50);
 				var timeout = setTimeout(function(){
 					clearTimeout(timeout);
@@ -890,6 +914,7 @@ onboarding.scripts['welcome'] = function(){
 			expose: false,
 			delay: -1,
 			onTripStart : function(i, tripData){
+				if(tripTracker.check(this)){return false;}
 				onboarding.welcome_bubble_reposition(tripData);
 				//$('.trip-overlay').css('display', 'none');
 				var tripObj = this;
@@ -923,6 +948,7 @@ onboarding.scripts['welcome'] = function(){
 			expose: false,
 			delay: -1,
 			onTripStart : function(i, tripData){
+				if(tripTracker.check(this)){return false;}
 				onboarding.welcome_bubble_reposition(tripData);
 			},
 		},
@@ -933,6 +959,7 @@ onboarding.scripts['welcome'] = function(){
 			expose: false,
 			delay: -1,
 			onTripStart : function(i, tripData){
+				if(tripTracker.check(this)){return false;}
 				onboarding.welcome_bubble_reposition(tripData);
 			},
 		},
@@ -943,6 +970,7 @@ onboarding.scripts['welcome'] = function(){
 			expose: false,
 			delay: -1,
 			onTripStart : function(i, tripData){
+				if(tripTracker.check(this)){return false;}
 				onboarding.welcome_bubble_reposition(tripData);
 			},
 		}
@@ -952,6 +980,10 @@ onboarding.scripts['welcome'] = function(){
 		overlayHolder: '#app_application_content',
 		tripClass: 'onboarding_trip_welcome onboarding_trip_exploreContent',
 		onStart: function(){
+			this.id_trip = 'exploreContent';
+			tripTracker[this.id_trip] = {};
+			console.log(this.id_trip);
+
 			if(responsive.test("maxMobileL")){
 				this.tripData[1].position = 'n';
 				this.tripData[2].position = 'n';
@@ -972,6 +1004,7 @@ onboarding.scripts['welcome'] = function(){
 					expose: true,
 					delay: -1,
 					onTripStart : function(i, tripData){
+						if(tripTracker.check(this)){return false;}
 						onboarding.welcome_bubble_reposition(tripData);
 						var tripObj = this;
 						tripData.sel.on('click.trip', function(){
@@ -984,6 +1017,11 @@ onboarding.scripts['welcome'] = function(){
 			var trip_inputter = new Trip(array_inputter, {
 				overlayHolder: '#app_content_dynamic_layers',
 				tripClass: 'onboarding_trip_welcome',
+				onStart: function(){
+					this.id_trip = 'inputter';
+					tripTracker[this.id_trip] = {};
+					console.log(this.id_trip);
+				},
 				onEnd: function(tripIndex, tripObject){
 					$('.trip-overlay').css('display', 'none');
 					onboarding.clear();
@@ -995,10 +1033,12 @@ onboarding.scripts['welcome'] = function(){
 
 
 	var fn_next = function(){
+		console.log('welcome bubble fn_next');
 		trip_openMainMenu.start();
 		onboarding.overlays.body(false);
 	}
 	$('#'+onboarding.id_welcome_bubble).append(intro.showPanel()).click(function(){
+		console.log('welcome bubble click');
 		$(this).off('click');
 		fn_next();
 	});
