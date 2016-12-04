@@ -536,7 +536,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			route_delete = true;
 			Lincko.storage.data[that.param.type][taskid].deleted_at = new wrapper_date().timestamp;
 			app_application_lincko.prepare(that.param.type+'_'+taskid, true);
-			submenu_Clean(null,null,that.preview);
+			submenu_Clean(null, null, that.preview);
 		} else {
 			base_show_error(Lincko.Translation.get('app', 51, 'html'), true); //Operation not allowed
 		}

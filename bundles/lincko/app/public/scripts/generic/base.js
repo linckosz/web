@@ -30,9 +30,11 @@ function base_format_form(prefix){
 	base_format_form_single($('.submit_progress_bar'));
 }
 
+var base_notification = null;
 
 JSfiles.finish(function(){
 	base_format_form();
+	Notification.requestPermission();
 });
 
 //Copy canvas

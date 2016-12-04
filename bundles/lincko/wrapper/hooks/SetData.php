@@ -5,6 +5,7 @@ namespace bundles\lincko\wrapper\hooks;
 use \bundles\lincko\wrapper\models\Creation;
 use \bundles\lincko\wrapper\models\TranslationListJS;
 use \libs\OneSeventySeven;
+use \libs\Datassl;
 
 function getFingerprint(){
 	$http = \Slim\Environment::getInstance();
@@ -40,6 +41,7 @@ function SetData(){
 	$jizhu = OneSeventySeven::get('jizhu');
 	$uid = OneSeventySeven::get('uid');
 	$sha = OneSeventySeven::get('sha');
+	$ucode = Datassl::encrypt($uid, 'invitation');
 
 	//This will force the checkbox 'remember me' to be checked as default
 	if(is_null($jizhu)){
@@ -58,6 +60,7 @@ function SetData(){
 			'jizhu' => $jizhu,
 			'uid' => $uid,
 			'sha' => $sha,
+			'ucode' => $ucode,
 			'logged' => $logged,
 			'fingerprint' => getFingerprint(), //fingerprint of the browser
 		)

@@ -544,7 +544,8 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				mobileHA: hasGood3Dsupport,
 				duration: time,
 				delay: delay,
-				easing: "linear",
+				//easing: "linear",
+				easing: [ 20 ],
 				progress: function(){
 					if(responsive.test("minTablet")){
 						app_content_dynamic_position();
@@ -637,7 +638,8 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				mobileHA: hasGood3Dsupport,
 				duration: time,
 				delay: delay,
-				easing: "linear",
+				//easing: "linear",
+				easing: [ 24 ],
 				progress: function(){
 					if(responsive.test("minTablet")){
 						app_content_dynamic_position();

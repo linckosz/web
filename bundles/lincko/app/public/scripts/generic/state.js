@@ -1,5 +1,10 @@
 
-$(window).on('popstate', function(){
+$(window).on('popstate', function(event){
+	//If it's triggered by hash only
+	if(document.location.hash){
+		app_generic_state.openItem();
+		return true;
+	}
 	if(app_generic_state.manual){ //Only trigger manual user action (button)
 		var action = false;
 		var change = false;
@@ -61,13 +66,6 @@ $(window).on('popstate', function(){
 	}
 	app_generic_state.manual = true;
 });
-
-/*
-//This state change seems not necessary, need to observe
-$(window).on('hashchange', function() {
-	app_generic_state.openItem();
-});
-*/
 
 var app_generic_state = {
 	
@@ -293,6 +291,12 @@ var app_generic_state = {
 			var type = hash[0];
 			var id = parseInt(hash[1], 10);
 			this.quick_item = Lincko.storage.get(type, id);
+			if(!this.quick_item){
+				this.quick_item = {
+					_type: hash[0],
+					_id: hash[1],
+				}
+			}
 		}
 		return this.quick_item;
 	},
@@ -355,53 +359,108 @@ var app_generic_state = {
 					}
 				}, 1000, item._id);
 			}
-			
 		},
 		files: function(item){
-			var pid = 0 ; 
-			if(item._type != 'chats')
-			{
-				pid = Lincko.storage.get('chats',item._parent[1],'parent')[1];
+			var parent = Lincko.storage.getParent(item["_type"], item["_id"]);
+			var pid = Lincko.storage.isProjectActivity(item["_type"], item["_id"]);
+			var type = false;
+			if(pid){ //Is inside a project
+				type = "projects";
+			} else if(parent["_type"]=="chats"){
+				type = "chats";
 			}
-			else
-			{
-				pid = item._parent[1];
+
+			if(pid){
+				app_content_menu.selection(pid, 'files');
 			}
-			app_content_menu.selection(pid, 'files');
 
 			if(app_content_menu_first_launch)
 			{
-				submenu_Build('taskdetail', true, null, {'type':'files', 'id':item._id,}, true);
+				if(type=="projects"){
+					submenu_Build('taskdetail', true, null, {'type':'files', 'id':item._id,}, true);
+				} else if(type=="chats"){
+					submenu_Build("newchat", true, false, {'type': 'chats','id': parent._id,'title': parent['+title']}, false);
+					submenu_Build('taskdetail', true, null, {'type':'files', 'id':item._id,}, false);
+				} else {
+					submenu_Build('taskdetail', true, null, {'type':'files', 'id':item._id,}, false);
+				}
 			}
 			else
 			{
 				var model_timer = setInterval(function(id){
 					if(!app_content_menu_first_launch){
-						submenu_Build('taskdetail', true, null, {'type':'files', 'id':id,}, true);
+						if(type=="projects"){
+							submenu_Build('taskdetail', true, null, {'type':'files', 'id':item._id,}, true);
+						} else if(type=="chats"){
+							submenu_Build("newchat", true, false, {'type': 'chats','id': parent._id,'title': parent['+title']}, false);
+							submenu_Build('taskdetail', true, null, {'type':'files', 'id':item._id,}, false);
+						} else {
+							submenu_Build('taskdetail', true, null, {'type':'files', 'id':item._id,}, false);
+						}
 						clearInterval(model_timer);
 					}
 				}, 1000, item._id);
 			}
-			
 		},
 		chats: function(item){
-			app_content_menu.selection(item._parent[1], 'chats');
 			if(app_content_menu_first_launch)
 			{
-				submenu_Build("newchat", true, false, {'type': 'chats','id': item._id,'title': item['+title']}, true);
+				submenu_Build("newchat", true, false, {'type': 'chats','id': item._id,'title': item['+title']}, false);
 			}
 			else
 			{
-				var model_timer = setInterval(function(id,title){
+				var model_timer = setInterval(function(id, title){
 					if(!app_content_menu_first_launch){
-						submenu_Build("newchat", true, false, {'type': 'chats','id': id,'title': title}, true);
+						submenu_Build("newchat", true, false, {'type': 'chats','id': id,'title': title}, false);
 						clearInterval(model_timer);
 					}
-				}, 1000, item._id,item['+title']);
+				}, 1000, item._id, item['+title']);
 			}
-			
 		},
-			
+		comments: function(item){
+			var parent = Lincko.storage.getParent(item["_type"], item["_id"]);
+			if(app_content_menu_first_launch)
+			{
+				submenu_Build("newchat", true, false, {'type': parent._type,'id': parent._id,'title': parent['+title']}, false);
+			}
+			else
+			{
+				var model_timer = setInterval(function(parent){
+					if(!app_content_menu_first_launch){
+						submenu_Build("newchat", true, false, {'type': parent._type,'id': parent._id,'title': parent['+title']}, false);
+						clearInterval(model_timer);
+					}
+				}, 1000, parent);
+			}
+		},
+		messages: function(item){
+			var parent = Lincko.storage.getParent(item["_type"], item["_id"]);
+			if(app_content_menu_first_launch)
+			{
+				submenu_Build("newchat", true, false, {'type': parent._type,'id': parent._id,'title': parent['+title']}, false);
+			}
+			else
+			{
+				var model_timer = setInterval(function(parent){
+					if(!app_content_menu_first_launch){
+						submenu_Build("newchat", true, false, {'type': parent._type,'id': parent._id,'title': parent['+title']}, false);
+						clearInterval(model_timer);
+					}
+				}, 1000, parent);
+			}
+		},
+		submenu: function(item){
+			if(app_content_menu_first_launch){
+				submenu_Build(item._id);
+			} else {
+				var model_timer = setInterval(function(item){
+					if(!app_content_menu_first_launch){
+						submenu_Build(item._id);
+						clearInterval(model_timer);
+					}
+				}, 1000, item);
+			}
+		}
 	},
 
 };

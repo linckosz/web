@@ -251,7 +251,7 @@ $('#app_content_top_title_menu, #app_content_statistics_settings').click(functio
 	}
 });
 
-app_application_lincko.add("app_content_submenu_preview_statistics", "projects", function() {
+app_application_lincko.add("app_content_submenu_preview_statistics", ["hide_progress_wall", "projects"], function() {
 	var Elem = $("#"+this.id);
 	var projects_id = app_content_menu.projects_id;
 	if(projects_id){
@@ -259,7 +259,9 @@ app_application_lincko.add("app_content_submenu_preview_statistics", "projects",
 		if(project){
 			var chart_options = {
 				animation: false,
+				animationSteps: 0,
 			}
+
 			Elem.find("[find=tasks_statistics]").css("visibility", "visible");
 			if(!app_models_projects_chart_tasks_data("app_content_submenu_preview_statistics", projects_id, false, chart_options)){
 				Elem.find("[find=tasks_statistics]").css("visibility", "hidden");

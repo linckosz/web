@@ -609,9 +609,34 @@ function wrapper_mobile_hover(){
 	}
 }
 
+//Set indice performance to run some javascript (mainly animation) on powerfull devices
+var wrapper_performance = {
+	indice: false,
+	powerfull: false,
+	delay: 250, //Additional delay for slow mobile (max 250ms)
+	init: function(){
+		webworker.postMessage(JSON.stringify({action: 'checkPerformance'}));
+	},
+	setDelay: function(){
+		//Based on a 30 loop test
+		if(wrapper_performance.indice){
+			wrapper_performance.delay = Math.max(0, Math.min(250, 2 * (wrapper_performance.indice - 150)));
+		}
+	},
+};
+//By default we consider as powerfull if the width screen is the one of a Tablet Landscape
+if(responsive.test("minTablet")){
+	wrapper_performance.powerfull = true;
+	wrapper_performance.delay = 50;
+}
+
 JSfiles.finish(function(){
 	wrapper_IScroll();
 	wrapper_localstorage.cleanLocalUser();
 	FastClick.attach(document.body);
 	setTimeout(wrapper_mobile_hover, 100); //Load it in another thread to not slow down the page loading
+	setTimeout(function(){
+		//We don't use it yet because the indice seems not relevant enough
+		wrapper_performance.init();
+	}, 1000);
 });

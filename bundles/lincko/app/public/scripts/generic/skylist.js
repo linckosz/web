@@ -269,7 +269,7 @@ skylist.prototype.subConstruct_default = function(){
 	}
 	else{
 		that.elem_newcardCircle.click(function(){
-			var submenu_taskdetail = submenu_Build('taskdetail_new', false, false, 
+			var submenu_taskdetail = submenu_Build_return('taskdetail_new', false, false, 
 				{
 					"type":that.list_type,
 					"id": 'new', 
@@ -916,7 +916,7 @@ skylist.prototype.addChat = function(item){
 				var id = event.data[0]["root_id"];
 				var title = event.data[0]["title"];
 
-				subm = submenu_Build("newchat", layer, false, {
+				subm = submenu_Build_return("newchat", layer, false, {
 					type: 'chats',
 					id: id,
 					title: title,
@@ -965,7 +965,7 @@ skylist.prototype.addChat = function(item){
 					title = Lincko.Translation.get('app', 2502, 'html'); //Personal Space
 				}
 
-				subm = submenu_Build("newchat", layer, false, {
+				subm = submenu_Build_return("newchat", layer, false, {
 					type: 'history',
 					id: id,
 					title: title,
@@ -2900,7 +2900,7 @@ skylist.prototype.openDetail = function(/*open,*/ task_elem){
 	}
 
 	//that.list.removeClass('skylist_noPreviewLayer');
-	var openSuccess = submenu_Build(
+	var openSuccess = submenu_Build_return(
 	'taskdetail', null, null, {
 		"type":that.list_type, 
 		"id":item_id,

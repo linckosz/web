@@ -5,9 +5,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
 <title>{{ _trans('wrapper', 1, 1, 'html') }}{# Lincko - The way of projects #}</title>
-<link rel="shortcut icon" href="{{ _filelatest('/favicon.ico') }}" type="image/x-icon" />
-<link rel="icon" href="{{ _filelatest('/favicon.ico') }}" type="image/x-icon" />
-<link rel="apple-touch-icon" href="{{ _filelatest('/favicon.ico') }}" type="image/x-icon" />
+<link rel="shortcut icon" href="{{ _filelatest('/favicon.ico') }}" />
+<link rel="icon" href="{{ _filelatest('/favicon.png') }}" type="image/png" />
+<link rel="apple-touch-icon" href="{{ _filelatest('/favicon.png') }}" type="image/png" />
 {# remove address bar for some mobile browsers #}
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -175,6 +175,7 @@ var wrapper_load_progress = {
 					duration: 100,
 					complete: function(){
 						$(this).hide().recursiveRemove();
+						app_application_lincko.prepare("hide_progress_wall", true);
 					},
 				}
 			);
@@ -296,6 +297,7 @@ var wrapper_fp = '{{ fingerprint }}';
 var wrapper_localstorage = {
 	sha: '{{ sha }}',
 	uid: '{{ uid }}',
+	ucode: '{{ ucode }}',
 	workspace: '{{ workspace|lower }}',
 	prefixuid: '_{{ uid }}_',
 	prefix: '_{{ uid }}_{{ workspace|lower }}_',
@@ -341,15 +343,20 @@ if(CKEDITOR){
 var webworker = false;
 if (typeof Worker != 'undefined') {
 	webworker = new Worker("{{ _filelatest('/lincko/app/scripts/workers/worker.js') }}");
+	webperf   = new Worker("{{ _filelatest('/lincko/app/scripts/workers/worker.js') }}");
 }
 
 if(webworker){
 	//Preload worker libraries needed
 	webworker.postMessage(JSON.stringify({action: 'importscript', data: "{{ _filelatest('/scripts/libs/LZipperLite.js') }}",}));
-	webworker.postMessage(JSON.stringify({action: 'importscript', data: "{{ _filelatest('/scripts/libs/php.js') }}",}));
 
 	//Return message
 	webworker.addEventListener("message", function(e){
+		webworker_operation.launch_operation(e);
+	});
+
+	//Return message
+	webperf.addEventListener("message", function(e){
 		webworker_operation.launch_operation(e);
 	});
 
@@ -418,6 +425,16 @@ if(webworker){
 				wrapper_localstorage.quota[link] = false;
 				amplify.store(wrapper_localstorage.prefix+link, null);
 			}
+		},
+
+		indicePerformance: function(indice){
+			wrapper_performance.indice = indice;
+			if(indice < 300){ //Loop 30 => 300 ms max
+				wrapper_performance.powerfull = true;
+			} else {
+				wrapper_performance.powerfull = false;
+			}
+			wrapper_performance.setDelay();
 		},
 	};
 

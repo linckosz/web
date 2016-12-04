@@ -4,6 +4,10 @@ var app_models_history = {
 
 	hist_root: {},
 	hist_root_recent: [],
+	notified: {},
+
+	//Ready the worker for browsers that does not support native Notification
+	serviceWorker: false,
 
 	reset: function(){
 		app_models_history.hist_root = {};
@@ -20,6 +24,270 @@ var app_models_history = {
 				delete app_models_history.hist_root[type+'_'+id];
 				app_models_history.hist_root_recent = [];
 			}
+		}
+	},
+
+	notify: function(message, title, link, timeout, icon){
+		if(typeof title == "undefined"){ title = "Lincko"; }
+		if(typeof link == "undefined"){ link = false; }
+		if(typeof timeout == "undefined"){ timeout = 8; }
+		if(typeof icon == "undefined"){ icon = "favicon.png"; }
+		var options = {
+			body: title,
+			icon: icon,
+			lang: app_language_short,
+			vibrate: [200, 100, 200], //Work only on android webview
+			timeout: timeout,
+			notifyClick: function(event){
+				event.preventDefault();
+				if(link){
+					window.location.href = top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/#"+link;
+				}
+				this.close();
+			},
+		};
+		var notif = new Notify(
+			message,
+			options
+		);
+		try {
+			notif.show();
+		} catch(e) {
+			if (app_models_history.serviceWorker) {
+				app_models_history.serviceWorker.then(function (registration) {
+					registration.showNotification(message, options);
+				});
+			} else {
+				base_show_error(title+"\n"+message, false);
+			}
+		}
+	},
+
+	notification: function(items, lastvisit){
+		if(typeof items == 'undefined'){ items = {}; }
+		if(typeof lastvisit == 'undefined'){ lastvisit = Lincko.storage.getLastVisit(); }
+		var hist;
+		var item = false;
+		var users;
+		var parent;
+		var title;
+		var username;
+		var msg;
+		var sentence;
+		if(lastvisit>0){
+
+			//Grab Task notifications
+			if(typeof items['tasks'] != 'undefined'){
+				hist = Lincko.storage.hist('tasks', null, {not: true, by: ['!=', wrapper_localstorage.uid], timestamp: ['>', lastvisit]});
+				//hist = Lincko.storage.hist('tasks', null, {timestamp: ['>', lastvisit]});  //For debugging only
+				if(hist.length>0){
+					for(var i in hist){
+						//Avoid to double the same notification
+						if(app_models_history.notified["tasks_"+hist[i]['id']+"_"+hist[i]['hist']]){
+							continue;
+						}
+						app_models_history.notified["tasks_"+hist[i]['id']+"_"+hist[i]['hist']] = true;
+						//Do not display if the project is silence
+						users = Lincko.storage.get('projects', hist["par_id"], "_users");
+						if(users && users[wrapper_localstorage.uid] && users[wrapper_localstorage.uid]["silence"]){
+							continue;
+						} else if(!users){
+							continue;
+						}
+						item = Lincko.storage.get("tasks", hist[i]['id']);
+						if(!item){
+							continue;
+						}
+						users = item['_users'];
+						if(users && users[wrapper_localstorage.uid] && (users[wrapper_localstorage.uid]["in_charge"] || users[wrapper_localstorage.uid]["approver"])){
+							app_models_history.notify(
+								wrapper_to_html(item["+title"]),
+								Lincko.storage.getHistoryInfo(hist[i]).title,
+								"tasks-"+hist[i]['id']
+							);
+						}
+					}
+				}
+			}
+
+			//Grab Messages notifications
+			if(typeof items['messages'] != 'undefined'){
+				hist = Lincko.storage.hist('messages', null, {att: 'created_at', by: ['!=', wrapper_localstorage.uid], timestamp: ['>', lastvisit]});
+				//hist = Lincko.storage.hist('messages', null, {att: 'created_at', timestamp: ['>', lastvisit]}); //For debugging only
+				if(hist.length>0){
+					for(var i in hist){
+						//Avoid to double the same notification
+						if(app_models_history.notified["messages_"+hist[i]['id']+"_"+hist[i]['hist']]){
+							continue;
+						}
+						app_models_history.notified["messages_"+hist[i]['id']+"_"+hist[i]['hist']] = true;
+						//Do not display if the parent is silence
+						users = false;
+						parent = Lincko.storage.get(hist[i]["par_type"], hist[i]["par_id"]);
+						if(parent){
+							users = parent["_users"];
+							if(users && users[wrapper_localstorage.uid] && users[wrapper_localstorage.uid]["silence"]){
+								continue;
+							} else if(!users){
+								continue;
+							}
+						} else {
+							continue;
+						}
+						item = Lincko.storage.get("messages", hist[i]['id']);
+						if(!item){
+							continue;
+						}
+						if(users && users[wrapper_localstorage.uid]){
+							if(hist[i]['by']){
+								username = Lincko.storage.get("users", hist[i]['by'], "username");
+							} else {
+								username = Lincko.Translation.get('app', 0, 'html'); //LinckoBot
+							}
+							if(parent["single"]){
+								title = username;
+								msg = wrapper_to_html(item["+comment"]);
+							} else {
+								title = wrapper_to_html(parent["+title"]);
+								msg = username+": "+wrapper_to_html(item["+comment"]);
+							}
+							app_models_history.notify(
+								title,
+								msg,
+								"messages-"+hist[i]['id']
+							);
+						}
+					}
+				}
+			}
+
+			//Grab Comments notifications
+			if(typeof items['comments'] != 'undefined'){
+				hist = Lincko.storage.hist('comments', null, {att: 'created_at', par_type: 'projects', by: ['!=', wrapper_localstorage.uid], timestamp: ['>', lastvisit]});
+				//hist = Lincko.storage.hist('comments', null, {att: 'created_at', par_type: 'projects', timestamp: ['>', lastvisit]}); //For debugging only
+				if(hist.length>0){
+					for(var i in hist){
+						//Avoid to double the same notification
+						if(app_models_history.notified["comments_"+hist[i]['id']+"_"+hist[i]['hist']]){
+							continue;
+						}
+						app_models_history.notified["comments_"+hist[i]['id']+"_"+hist[i]['hist']] = true;
+						//Do not display if the parent is silence
+						users = false;
+						parent = Lincko.storage.get(hist[i]["par_type"], hist[i]["par_id"]);
+						if(parent){
+							users = parent["_users"];
+							if(users && users[wrapper_localstorage.uid] && users[wrapper_localstorage.uid]["silence"]){
+								continue;
+							} else if(!users){
+								continue;
+							}
+						} else {
+							continue;
+						}
+						item = Lincko.storage.get("comments", hist[i]['id']);
+						if(!item){
+							continue;
+						}
+						if(users && users[wrapper_localstorage.uid]){
+							sentence = $(app_models_resume_format_sentence(hist[i]['id'])).text();
+							if(hist[i]['by']){
+								username = Lincko.storage.get("users", hist[i]['by'], "username");
+								msg = wrapper_to_html(username)+": "+sentence;
+							} else {
+								username = Lincko.Translation.get('app', 0, 'html'); //LinckoBot
+								msg = sentence;
+							}
+							app_models_history.notify(
+								wrapper_to_html(parent["+title"]),
+								msg,
+								"comments-"+hist[i]['id']
+							);
+						}
+					}
+				}
+			}
+
+			//Grab Files notifications
+			if(typeof items['files'] != 'undefined'){
+				hist = Lincko.storage.hist('files', null,
+					[
+						{att: 'created_at', par_type: 'chats', by: ['!=', wrapper_localstorage.uid], timestamp: ['>', lastvisit]},
+						{att: 'created_at', par_type: 'projects', by: ['!=', wrapper_localstorage.uid], timestamp: ['>', lastvisit]},
+					]
+				);
+				/*
+				//For debugging only
+				hist = Lincko.storage.hist('files', null,
+					[
+						{att: 'created_at', par_type: 'chats', by: ['==', wrapper_localstorage.uid], timestamp: ['>', lastvisit]},
+						{att: 'created_at', par_type: 'projects', by: ['==', wrapper_localstorage.uid], timestamp: ['>', lastvisit]},
+					]
+				);
+				*/
+				if(hist.length>0){
+					for(var i in hist){
+						//Avoid to double the same notification
+						if(app_models_history.notified["files_"+hist[i]['id']+"_"+hist[i]['hist']]){
+							continue;
+						}
+						app_models_history.notified["files_"+hist[i]['id']+"_"+hist[i]['hist']] = true;
+						//Do not display if the parent is silence
+						users = false;
+						parent = Lincko.storage.get(hist[i]["par_type"], hist[i]["par_id"]);
+						if(parent){
+							users = parent["_users"];
+							if(users && users[wrapper_localstorage.uid] && users[wrapper_localstorage.uid]["silence"]){
+								continue;
+							} else if(!users){
+								continue;
+							}
+						} else {
+							continue;
+						}
+						item = Lincko.storage.get("files", hist[i]['id']);
+						if(!item){
+							continue;
+						}
+						if(users && users[wrapper_localstorage.uid]){
+							app_models_history.notify(
+								wrapper_to_html(parent["+title"]),
+								Lincko.storage.getHistoryInfo(hist[i]).title
+								+":\n  "+wrapper_to_html(item["+name"]),
+								"files-"+hist[i]['id']
+							);
+						}
+					}
+				}
+			}
+
+			//Grab Users notifications
+			var profile_pic;
+			if(typeof items['users'] != 'undefined'){
+				list = Lincko.storage.list('users', null, {_invitation: true, _id: ['!=', wrapper_localstorage.uid]});
+				//list = Lincko.storage.list('users', null, {_invitation: false, _id: ['!=', wrapper_localstorage.uid]}); //For debugging only
+				if(list.length>0){
+					for(var i in list){
+						//Avoid to double the same notification
+						if(app_models_history.notified["users_"+list[i]['_id']+"_invitation"]){
+							continue;
+						}
+						app_models_history.notified["users_"+list[i]['_id']+"_invitation"] = true;
+						var profile_pic = Lincko.storage.getLinkThumbnail(list[i]['profile_pic']);
+						if(!profile_pic){
+							profile_pic = "favicon.png";
+						}
+						app_models_history.notify(
+							Lincko.Translation.get('app', 72, 'html'), //You have an invitation request
+							wrapper_to_html(list[i]["-username"]),
+							"submenu-chat_list",
+							20,
+							profile_pic
+						);
+					}
+				}
+			}
+
 		}
 	},
 
@@ -340,10 +608,13 @@ var app_models_history = {
 
 		if(app_models_history.hist_root_recent.length==0 || reset_order){
 			//This is stored as an array
-			app_models_history.hist_root_recent = Lincko.storage.sort_items(app_models_history.hist_root, 'timestamp',0 , -1, false);
+			app_models_history.hist_root_recent = Lincko.storage.sort_items(app_models_history.hist_root, 'timestamp', 0 , -1, false);
 		}
 
 		return histList;
 	},
 };
 
+if('serviceWorker' in navigator) {
+	app_models_history.serviceWorker = navigator.serviceWorker.register('/scripts/libs/sw.js');
+}

@@ -117,10 +117,15 @@
                     dirty = false;
                 }
 
-                requestAnimationFrame(dirtyChecking);
+                //requestAnimationFrame(dirtyChecking);
             };
 
-            requestAnimationFrame(dirtyChecking);
+            //requestAnimationFrame(dirtyChecking);
+
+            setInterval(function(){
+                dirtyChecking();
+            }, 1000)
+
             var lastWidth, lastHeight;
             var cachedWidth, cachedHeight; //useful to not query offsetWidth twice
 

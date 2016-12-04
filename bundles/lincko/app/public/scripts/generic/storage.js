@@ -2,6 +2,7 @@ var storage_first_request = true; //Help to launch getSchema within getLatest on
 var storage_first_launch = true;
 var storage_first_onboarding = true;
 var storage_keep_messages = false; //At false in .schema we delete messages, but at true we keep them because we may return only a part of
+var storage_items_updated = {};
 /* PRIVATE METHOD */
 /*
 	NOTE: Do not add this callback to wrapper_sendAction, because wrapper_ajax already launches it internally
@@ -9,6 +10,8 @@ var storage_keep_messages = false; //At false in .schema we delete messages, but
 var storage_cb_success = function(msg, err, status, data){
 	var schema = true;
 	var info = false;
+	var lastvisit_prev = Lincko.storage.getLastVisit();
+	storage_items_updated = {};
 	var allow_set_lastvisit = true;
 	if($.type(data) === 'object' && $.type(data.info) === 'string'){
 		info = data.info;
@@ -27,6 +30,11 @@ var storage_cb_success = function(msg, err, status, data){
 			allow_set_lastvisit = false;
 		}
 	}
+
+	//Notify the user on desktop
+	app_models_history.notification(storage_items_updated, lastvisit_prev);
+	storage_items_updated = {};
+
 	if(schema && $.type(data) === 'object' && $.type(data.schema) === 'object' && $.type(data.schema[wrapper_localstorage.uid]) === 'object' && !$.isEmptyObject(data.schema[wrapper_localstorage.uid])){
 		Lincko.storage.schema(data.schema[wrapper_localstorage.uid]);
 	}
@@ -343,6 +351,7 @@ Lincko.storage.update = function(partial, info){
 			
 			if(update_real){
 				//console.log("update ==> "+i+'_'+j);
+				storage_items_updated[i] = true;
 				app_models_history.refresh(i, j); //It helps to force updating any history info tab in the application
 				app_application_lincko.prepare(i+'_'+j, false, updatedAttributes);
 			}
@@ -1724,6 +1733,28 @@ Lincko.storage.list_links = function(type, id/*, projectID*/){
 	if($.isEmptyObject(links)){ links = false; }
 	return links;
 }
+
+Lincko.storage.generateMyQRcode = function(){
+	var user = Lincko.storage.get('users', wrapper_localstorage.uid);
+	if(user){
+		var workid = Lincko.storage.getWORKID();
+		var uid = wrapper_localstorage.uid;
+		var puk = wrapper_get_shangzai('puk');
+		var type = "qrcode";
+		var name = btoa(wrapper_localstorage.sha);
+		name = name.replace(/[^\d\w]/g, "");
+		if(name==''){ name = 'user'; }
+		var created_at = Lincko.storage.get('users', wrapper_localstorage.uid, 'created_at');
+		var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':'+document.linckoBackPort+'/file';
+		return url+"/"+workid+"/"+uid+"/"+type+"/"+uid+"/"+name+".png?"+created_at;
+	}
+	return false;
+}
+
+Lincko.storage.generateMyURL = function(){
+	return top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/uid/"+wrapper_localstorage.ucode;
+}
+
 
 Lincko.storage.getLink = function(id){
 	var file = Lincko.storage.get('files', id);

@@ -41,6 +41,10 @@ var Submenu_select = {
 		subm.Add_MenuTitle();
 	},
 
+	space: function(subm) {
+		subm.Add_Space();
+	},
+
 	title_left_button: function(subm) {
 		subm.Add_TitleLeftButton();
 	},
@@ -121,10 +125,14 @@ Submenu.prototype.changeState = function() {
 }
 
 function submenu_exchangeAnimation(Elem) {
-	var tmp = Elem.outAnimation;
-	var stack = Elem.preview ? submenu_obj['preview'] : submenu_obj['submenu'];
-	Elem.outAnimation = stack[Elem.layer].outAnimation;
-	stack[Elem.layer].outAnimation = tmp;
+	if(Elem){
+		var tmp = Elem.outAnimation;
+		var stack = Elem.preview ? submenu_obj['preview'] : submenu_obj['submenu'];
+		if(stack[Elem.layer]){
+			Elem.outAnimation = stack[Elem.layer].outAnimation;
+			stack[Elem.layer].outAnimation = tmp;
+		}
+	}
 }
 
 
@@ -371,7 +379,7 @@ Submenu.prototype.Add_TitleLeftButton = function() {
 	if ("hide" in attribute) {
 		if (attribute.hide) {
 			Elem.click(function() {
-				submenu_Clean(that.layer, false, that.preview);
+				submenu_Clean(that.layer, true, that.preview);
 			});
 		}
 	}
@@ -405,7 +413,7 @@ Submenu.prototype.Add_TitleRightButton = function() {
 	if ("hide" in attribute) {
 		if (attribute.hide) {
 			Elem.click(function() {
-				submenu_Clean(that.layer, false, that.preview);
+				submenu_Clean(that.layer, true, that.preview);
 			});
 		}
 	}
@@ -443,7 +451,7 @@ Submenu.prototype.Add_MenuButton = function(position) {
 		if (attribute.hide) {
 			Elem.click(function() {
 				//submenu_Hideall(preview); //We should not close all tabs
-				submenu_Clean(this.layer, false, that.preview);
+				submenu_Clean(this.layer, true, that.preview);
 			});
 		}
 	}
@@ -481,7 +489,7 @@ Submenu.prototype.Add_MenuSmallButton = function(position) {
 		if (attribute.hide) {
 			Elem.click(function() {
 				//submenu_Hideall(preview); //We should not close all tabs
-				submenu_Clean(this.layer, false, that.preview);
+				submenu_Clean(this.layer, true, that.preview);
 			});
 		}
 	}
@@ -497,6 +505,28 @@ Submenu.prototype.Add_MenuSmallButton = function(position) {
 	else {
 		position.append(Elem);
 	}
+	return Elem;
+};
+
+Submenu.prototype.Add_Space = function() {
+	var that = this;
+	var attribute = this.attribute;
+	var submenu_wrapper = this.Wrapper();
+	var Elem = $('#-submenu_space').clone();
+	Elem.prop("id", '');
+	if ("class" in attribute) {
+		Elem.addClass(attribute['class']);
+	}
+	if ("now" in attribute && typeof attribute.now === "function") {
+		attribute.now(Elem, that);
+	}
+	if ("value" in attribute) {
+		Elem.css('height', attribute.value);
+	}
+	submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
+	//Free memory
+	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
+	delete submenu_wrapper;
 	return Elem;
 };
 
@@ -582,7 +612,7 @@ Submenu.prototype.Add_MenuRadio = function() {
 	if ("hide" in attribute) {
 		if (attribute.hide) {
 			Elem.click(function() {
-				submenu_Clean(this.layer, false, that.preview);
+				submenu_Clean(this.layer, true, that.preview);
 			});
 		}
 	}
@@ -768,7 +798,7 @@ Submenu.prototype.Add_SubmitForm = function() {
 		if (attribute.hide) {
 			Elem.find("[find=submenu_bottom_button]").click(function() {
 				//submenu_Hideall(this.preview);
-				submenu_Clean(this.layer, false, that.preview);
+				submenu_Clean(this.layer, true, that.preview);
 			});
 		}
 	}
@@ -819,7 +849,7 @@ Submenu.prototype.Add_MenuBottomButton = function() {
 	if ("hide" in attribute) {
 		if (attribute.hide) {
 			Elem.find("[find=submenu_bottom_button]").click(function() {
-				submenu_Clean(this.layer, false, that.preview);
+				submenu_Clean(this.layer, true, that.preview);
 			});
 		}
 	}
@@ -871,14 +901,19 @@ Submenu.prototype.showSubmenu = function(time, delay, animate) {
 	if(typeof time == 'undefined'){ time = 160; }
 	if(typeof delay == 'undefined'){ delay = 60; }
 	if(typeof animate == 'undefined'){ animate = false; }
+	//In case of animation, give enough time for the picture to be draw into the memory
+	if(animate){
+		delay = delay + wrapper_performance.delay;
+	}
 	var submenu_wrapper = this.Wrapper();
 	var that = this;
 	$('#' + that.id).css('width', '33.33%');
+	$('#' + that.id).css('visibility', 'hidden').hide().show(0);
 	if(!animate){
-		$('#' + that.id).hide().show(0);
+		$('#' + that.id).css('visibility', 'visible');
 		submenu_wrapper.find("[find=submenu_wrapper_content]").focus();
 		//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas
-		submenu_wrapper.hide().show(0);
+		//submenu_wrapper.hide().show(0);
 		app_application_submenu_position();
 		submenu_resize_content();
 		submenu_content_unblur();
@@ -896,8 +931,7 @@ Submenu.prototype.showSubmenu = function(time, delay, animate) {
 				delay: delay,
 				easing: [.38, .1, .13, .9],
 				begin: function() {
-					$('#' + that.id).hide().show(0);
-					submenu_resize_content();
+					$('#' + that.id).css('visibility', 'visible');
 					if (responsive.test("minDesktop")) {
 						//The blur is hard to calculate, it creates some flickering
 						if (hasGood3Dsupport && wrapper_browser('webkit')) {
@@ -913,7 +947,7 @@ Submenu.prototype.showSubmenu = function(time, delay, animate) {
 				complete: function() {
 					submenu_wrapper.find("[find=submenu_wrapper_content]").focus();
 					//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas
-					submenu_wrapper.hide().show(0);
+					//submenu_wrapper.hide().show(0);
 					submenu_wrapper.css('z-index', that.zIndex);
 					app_application_submenu_position();
 					submenu_resize_content();
@@ -927,35 +961,33 @@ Submenu.prototype.showSubmenu = function(time, delay, animate) {
 			}
 		);
 	} else {
-		var animation = "bruno.expandIn";
-		if (submenu_Getnext() >= 2) {
-			animation = "bruno.slideRightBigIn";
-		}
-		submenu_wrapper.velocity(
-			animation, {
-				mobileHA: hasGood3Dsupport,
-				duration: Math.floor(1.5 * time),
-				delay: delay,
-				easing: [.38, .1, .13, .9],
-				begin: function() {
-					$('#' + that.id).hide().show(0);
-					submenu_resize_content();
-				},
-				complete: function() {
-					submenu_wrapper.find("[find=submenu_wrapper_content]").focus();
-					//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas
-					submenu_wrapper.hide().show(0);
-					app_application_submenu_position();
-					submenu_resize_content();
-					submenu_content_unblur();
-					submenu_wrapper_width();
-					that.FocusForm();
-					$(window).resize();
-					var sub_that = that;
-					setTimeout(function(){ app_application_lincko.prepare(["submenu_show", "submenu_show_"+sub_that.preview+"_"+sub_that.id], true); }, 1);
+		var animation = "bruno.slideRightBigIn";
+		setTimeout(function(){
+			submenu_wrapper.velocity(
+				animation, {
+					mobileHA: hasGood3Dsupport,
+					duration: Math.floor(1.5 * time),
+					delay: delay,
+					easing: [.38, .1, .13, .9],
+					begin: function() {
+						$('#' + that.id).css('visibility', 'visible');
+					},
+					complete: function() {
+						submenu_wrapper.find("[find=submenu_wrapper_content]").focus();
+						//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas
+						//submenu_wrapper.hide().show(0);
+						app_application_submenu_position();
+						submenu_resize_content();
+						submenu_content_unblur();
+						submenu_wrapper_width();
+						that.FocusForm();
+						$(window).resize();
+						var sub_that = that;
+						setTimeout(function(){ app_application_lincko.prepare(["submenu_show", "submenu_show_"+sub_that.preview+"_"+sub_that.id], true); }, 1);
+					}
 				}
-			}
-		);
+			);
+		}, 10);
 	}
 	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
 	delete submenu_wrapper;
@@ -965,14 +997,17 @@ Submenu.prototype.showPreview = function(time, delay, animate) {
 	if(typeof time == 'undefined'){ time = 200; }
 	if(typeof delay == 'undefined'){ delay = 60; }
 	if(typeof animate == 'undefined'){ animate = false; }
+	if(animate){
+		delay = delay + wrapper_performance.delay;
+	}
 	var submenu_wrapper = this.Wrapper();
 	var that = this;
 	var animation;
+	$('#' + that.id).css('visibility', 'hidden').hide().show(0);
 	if(!animate){
-		$('#' + that.id).hide().show(0);
 		submenu_wrapper.find("[find=submenu_wrapper_content]").focus();
 		//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas
-		submenu_wrapper.hide().show(0);
+		//submenu_wrapper.hide().show(0);
 		submenu_wrapper.css('z-index', that.zIndex);
 		app_application_submenu_position();
 		submenu_resize_content();
@@ -989,13 +1024,12 @@ Submenu.prototype.showPreview = function(time, delay, animate) {
 				delay: delay,
 				easing: [.38, .1, .13, .9],
 				begin: function() {
-					$('#' + that.id).hide().show(0);
-					submenu_resize_content();
+					$('#' + that.id).css('visibility', 'visible');
 				},
 				complete: function() {
 					submenu_wrapper.find("[find=submenu_wrapper_content]").focus();
 					//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas
-					submenu_wrapper.hide().show(0);
+					//submenu_wrapper.hide().show(0);
 					submenu_wrapper.css('z-index', that.zIndex);
 					app_application_submenu_position();
 					submenu_resize_content();
@@ -1015,13 +1049,12 @@ Submenu.prototype.showPreview = function(time, delay, animate) {
 				delay: delay,
 				easing: [.38, .1, .13, .9],
 				begin: function() {
-					$('#' + that.id).hide().show(0);
-					submenu_resize_content();
+					$('#' + that.id).css('visibility', 'visible');
 				},
 				complete: function() {
 					submenu_wrapper.find("[find=submenu_wrapper_content]").focus();
 					//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas
-					submenu_wrapper.hide().show(0);
+					//submenu_wrapper.hide().show(0);
 					app_application_submenu_position();
 					submenu_resize_content();
 					that.FocusForm();
@@ -1038,7 +1071,7 @@ Submenu.prototype.showPreview = function(time, delay, animate) {
 
 Submenu.prototype.Show = function(animate) {
 	if(typeof animate == 'undefined'){ animate = false; }
-	if(responsive.test("maxTablet")){ animate = false; } //toto => the animation seems slow on mobile, disallow velocity
+	if(!wrapper_performance.powerfull && responsive.test("maxTablet")){ animate = false; } //toto => the animation seems slow on mobile, disallow velocity
 	var that = this;
 	var time = 200;
 	var delay = 60;
@@ -1098,10 +1131,7 @@ Submenu.prototype.hideSubmenu = function(time, delay, animate) {
 			}
 		);
 	} else {
-		var animation = "bruno.expandOut";
-		if (submenu_Getnext() > 2) {
-			animation = "bruno.slideRightBigOut";
-		}
+		var animation = "bruno.slideRightBigOut";
 		submenu_wrapper.velocity(
 			animation, {
 				mobileHA: hasGood3Dsupport,
@@ -1171,7 +1201,7 @@ Submenu.prototype.hidePreview = function(time, delay, animate) {
 
 Submenu.prototype.Hide = function(animate) {
 	if(typeof animate == 'undefined'){ animate = false; }
-	if(responsive.test("maxTablet")){ animate = false; } //toto => the animation seems slow on mobile, disallow velocity
+	if(!wrapper_performance.powerfull && responsive.test("maxTablet")){ animate = false; } //toto => the animation seems slow on mobile, disallow velocity
 	var that = this;
 	var time = 160;
 	var delay = 60;
@@ -1198,7 +1228,6 @@ Submenu.prototype.Hide = function(animate) {
 		);
 		this.hidePreview(time, delay, animate);
 	} else {
-		this.hideSubmenu(time, delay, animate);
 		app_generic_state.change(
 			{
 				submenu: state_layer,
@@ -1208,6 +1237,7 @@ Submenu.prototype.Hide = function(animate) {
 			},
 			-1
 		);
+		this.hideSubmenu(time, delay, animate);
 	}
 	$(document).trigger("submenuHide");
 };
@@ -1276,7 +1306,7 @@ function submenu_Hideall(preview) {
 	if(typeof preview == 'undefined'){ preview = false; }
 	var stack = preview ? submenu_obj['preview'] : submenu_obj['submenu'];
 	for (var index in stack) {
-		submenu_Clean(true, false, preview);
+		submenu_Clean(true, true, preview);
 	}
 }
 
@@ -1338,6 +1368,12 @@ function submenu_Clean(layer, animate, preview) {
 }
 
 function submenu_Build(menu, next, hide, param, preview) {
+	setTimeout(function(menu, next, hide, param, preview){
+		submenu_Build_return(menu, next, hide, param, preview);
+	}, 20, menu, next, hide, param, preview);
+}
+
+function submenu_Build_return(menu, next, hide, param, preview) {
 	if (typeof next === 'undefined') { next = 1; }
 	if (typeof hide === 'undefined') { hide = true; }
 	if (typeof param === 'undefined') { param = null; }

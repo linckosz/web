@@ -786,7 +786,7 @@
 .skylist_wrapper[view=paper]>.inputter_container{
 	margin-bottom: 0px;
 	border-top: solid 1px #fba026;
-	display:initial;
+	display: block;
 	position: absolute;
 	bottom: 0px;
 	left: 10px;

@@ -294,6 +294,13 @@
 	padding-left: 6px;
 }
 
+.submenu_space {
+	background-color: #FFFFFF;
+	border-style: none;
+	cursor: default;
+	height: 100px;
+}
+
 .submenu_title_small_top {
 	border-top: 1px solid #EFEFEF;
 }

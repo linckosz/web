@@ -598,6 +598,11 @@ var app_models_projects_chart_tasks_data = function(Elem_id, id, chart_display_r
 		chart_options = $.extend(true, {}, chart_options, chart_options_replace);
 	}
 
+	if(!wrapper_performance.powerfull){ //If not powerfull enough, we don't animate the charts
+		chart_options.animation = false;
+		chart_options.animationSteps = 0;
+	}
+
 	var chart_data = {
 		labels: [],
 		data_total: [],

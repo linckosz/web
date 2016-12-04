@@ -190,6 +190,11 @@ var app_layers_projects_feedPage = function(param, animation){
 	app_layers_projects_icon_add_visibility();
 
 	app_layers_projects_options.animation = animation;
+
+	if(!wrapper_performance.powerfull){ //If not powerfull enough, we don't animate the charts
+		app_layers_projects_options.animation = false;
+		app_layers_projects_options.animationSteps = 0;
+	}
 	
 	setTimeout(function(){
 		var ctx;

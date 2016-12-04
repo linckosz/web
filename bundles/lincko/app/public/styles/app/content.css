@@ -239,6 +239,11 @@
 	color: #FEFF9A;
 }
 
+.app_content_statistics_chart > canvas {
+	width: 200px;
+	height: 80px;
+}
+
 #app_content_top_title_settings {
 	position: absolute;
 	top: 0;

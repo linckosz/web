@@ -129,6 +129,58 @@ submenu_list['personal_settings'] = {
 			return wrapper_to_html(val);
 		},
 	},
+	"message": {
+		"style": "button",
+		"title": Lincko.Translation.get('app', 54, 'html'), //Send a message
+		"class": "submenu_deco",
+		"action": function(Elem, subm){
+			submenu_chat_open_single(subm, subm.param);
+		},
+	},
+	"myurl": {
+		"style": "button",
+		"title": Lincko.Translation.get('app', 69, 'html'), //Copy My URL to the clipboard
+		"class": "submenu_deco display_none",
+		"now": function(Elem, subm){
+			Elem.removeClass('display_none');
+			Elem.attr('data-clipboard-text', Lincko.storage.generateMyURL());
+			var myurl = new Clipboard(Elem[0]);
+			myurl.on('success', function(e) {
+				base_show_error(Lincko.Translation.get('app', 70, 'html'), false); //URL copied to the clipboard
+				e.clearSelection();
+			});
+			myurl.on('error', function(e) {
+				base_show_error(Lincko.Translation.get('app', 71, 'html'), true); //Your system does not allow to copy to the clipboard
+				e.clearSelection();
+			});
+			app_application_lincko.add(
+				subm.id,
+				'submenu_hide_'+subm.preview+'_'+subm.id,
+				function(){
+					var myurl = this.action_param;
+					if(myurl){
+						myurl.destroy();
+					}
+				},
+				myurl
+			);
+		}
+	},
+	"qrcode": {
+		"style": "profile_info",
+		"title": Lincko.Translation.get('app', 68, 'html'), //My QR code
+		"value": function(){
+			var qrcode = $('<img>');
+			qrcode.attr('src', Lincko.storage.generateMyQRcode());
+			qrcode.addClass('submenu_personal_profile_picture');
+			return qrcode;
+		},
+	},
+	"space": {
+		"style": "space",
+		"title": "space",
+		"value": 80,
+	},
 };
 
 submenu_list['personal_info'] = {
@@ -172,15 +224,66 @@ submenu_list['personal_info'] = {
 		},
 	},
 	"message": {
-		"style": "profile_info",
+		"style": "button",
 		"title": Lincko.Translation.get('app', 54, 'html'), //Send a message
 		"class": "submenu_deco",
 		"action": function(Elem, subm){
 			submenu_chat_open_single(subm, subm.param);
 		},
-		"postAction": function(Elem){
-			Elem.removeClass("submenu_deco_read");
+	},
+	"myurl": {
+		"style": "button",
+		"title": Lincko.Translation.get('app', 69, 'html'), //Copy My URL to the clipboard
+		"class": "submenu_deco display_none",
+		"now": function(Elem, subm){
+			if(subm.param == wrapper_localstorage.uid){
+				Elem.removeClass('display_none');
+				Elem.attr('data-clipboard-text', Lincko.storage.generateMyURL());
+				var myurl = new Clipboard(Elem[0]);
+				myurl.on('success', function(e) {
+					base_show_error(Lincko.Translation.get('app', 70, 'html'), false); //URL copied to the clipboard
+					e.clearSelection();
+				});
+				myurl.on('error', function(e) {
+					base_show_error(Lincko.Translation.get('app', 71, 'html'), true); //Your system does not allow to copy to the clipboard
+					e.clearSelection();
+				});
+				app_application_lincko.add(
+					subm.id,
+					'submenu_hide_'+subm.preview+'_'+subm.id,
+					function(){
+						var myurl = this.action_param;
+						if(myurl){
+							myurl.destroy();
+						}
+					},
+					myurl
+				);
+			}
 		}
+	},
+	"qrcode": {
+		"style": "profile_info",
+		"title": Lincko.Translation.get('app', 68, 'html'), //My QR code
+		"class": "display_none",
+		"value": function(Elem, subm){
+			if(subm.param == wrapper_localstorage.uid){
+				var qrcode = $('<img>');
+				qrcode.attr('src', Lincko.storage.generateMyQRcode());
+				qrcode.addClass('submenu_personal_profile_picture');
+				return qrcode;
+			}
+		},
+		"now": function(Elem, subm){
+			if(subm.param == wrapper_localstorage.uid){
+				Elem.removeClass('display_none');
+			}
+		},
+	},
+	"space": {
+		"style": "space",
+		"title": "space",
+		"value": 80,
 	},
 };
 
@@ -361,6 +464,9 @@ Submenu.prototype.Add_ProfilePhoto = function() {
 			Elem.find("[find=submenu_profile_user]").html(attribute.value);
 		}
 	}
+	if ("now" in attribute && typeof attribute.now === "function") {
+		attribute.now(Elem, that);
+	}
 	var Elem_pic = Elem.find("[find=submenu_profile_upload_picture]");
 	Elem_pic
 		.attr("preview", "0")
@@ -454,6 +560,9 @@ Submenu.prototype.Add_ProfileInfo = function() {
 		Elem.click(attribute.action_param, function(event){
 			attribute.action(Elem, that, event.data);
 		});
+	}
+	if ("now" in attribute && typeof attribute.now === "function") {
+		attribute.now(Elem, that);
 	}
 	Elem.find("[find=submenu_title]").html(attribute.title);
 	if ("value" in attribute) {
