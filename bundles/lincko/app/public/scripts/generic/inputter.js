@@ -603,6 +603,7 @@ function cleanHtmlTag(source){
 
 
 	input.find('[find=chat_textarea]').on('paste',function(e,data){
+
 		var target = this;
 		setTimeout(function(){
 			//debugger;
@@ -611,11 +612,28 @@ function cleanHtmlTag(source){
 			// 	.replace(/<(br).*?>/g,"<br/>")
 			// 	.replace(/<(?!br).*?>/g,"")
 			// 	.replace(/[\r\n]/g, ""));
-			//$('.empty_show').removeClass('mobile_hide');
-			//$('.empty_hide').addClass('mobile_hide');
-			alert(121212);
+			$('.empty_show').addClass('mobile_hide');
+			$('.empty_hide').removeClass('mobile_hide');
 		},0);
 	});
+
+	input.find('[find=chat_textarea]').on('cut',function(e,data){
+
+		var target = this;
+		setTimeout(function(){
+			if(target.innerText > 0)
+			{
+				$('.empty_show').addClass('mobile_hide');
+				$('.empty_hide').removeClass('mobile_hide');
+			}
+			else
+			{
+				$('.empty_show').removeClass('mobile_hide');
+				$('.empty_hide').addClass('mobile_hide');
+			}
+		},0);
+	});
+
 
 
 	var flag = true;
