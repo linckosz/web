@@ -174,7 +174,7 @@ var app_application_lincko = {
 												app_application_lincko._elements[Elem_id].action();
 											} else {
 												console.log("application => "+Elem_id);
-												JSerror.sendError(Elem_id, 'app_application_lincko._elements[Elem_id] does not exists', 0);
+												//JSerror.sendError(Elem_id, 'app_application_lincko._elements[Elem_id] does not exists', 0);
 											}
 										}, 0, Elem_id);
 									}
@@ -761,14 +761,14 @@ function app_application_dev_link(){
 
 function app_application_change_workspace(workspace){
 	if(typeof workspace !== 'undefined'){
-		top.location.replace(top.location.protocol+'//'+app_application_dev_link()+workspace+'.'+document.domain); //Company workspace
+		top.location.replace(top.location.protocol+'//'+app_application_dev_link()+workspace+'.'+document.domainRoot); //Company workspace
 	} else {
 		base_show_error(Lincko.Translation.get('app', 45, 'js')); //We could not define which workspace you want to consult.
 	}
 }
 
 function app_application_change_private(){
-	top.location.replace(top.location.protocol+'//'+app_application_dev_link()+document.domain); //Personal workspace
+	top.location.replace(top.location.protocol+'//'+app_application_dev_link()+document.domainRoot); //Personal workspace
 }
 
 app_application_submenu_block_mousedown = false;

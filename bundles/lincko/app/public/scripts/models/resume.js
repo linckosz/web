@@ -8,7 +8,9 @@ var app_models_resume_format_sentence = function(comments_id, type, subm) {
 	if(typeof type == 'undefined'){ type = 1; }
 	if(typeof subm == 'undefined'){ subm = false; }
 
-	var comment = Lincko.storage.get('comments', comments_id, 'comment');
+	var item = Lincko.storage.get('comments', comments_id);
+	var comment = item['+comment'];
+	var created_by = item['created_by'];
 	var sentence = '';
 	var format = false; //Display it as a text by default
 	var base = 0;
@@ -18,7 +20,9 @@ var app_models_resume_format_sentence = function(comments_id, type, subm) {
 		try {
 			var temp = JSON.parse(comment);
 			if($.type(temp) != 'object'){
-				format = 'quote';
+				if(created_by==0){
+					format = 'quote';
+				}
 			} else if(temp[0]){ //By default we force to display team in priority
 				uid = 0;
 				list = temp[uid];

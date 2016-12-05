@@ -859,7 +859,7 @@ function wrapper_test(type, RCUD){
 		else if(RCUD==5){
 			wrapper_sendAction(
 				{
-					"id": 10,
+					"id": 14597,
 				},
 				'post',
 				'task/lock/start',
@@ -869,7 +869,7 @@ function wrapper_test(type, RCUD){
 		else if(RCUD==6){
 			wrapper_sendAction(
 				{
-					"id": 10,
+					"id": 14597,
 				},
 				'post',
 				'task/lock/unlock',
@@ -879,7 +879,7 @@ function wrapper_test(type, RCUD){
 		else if(RCUD==7){
 			wrapper_sendAction(
 				{
-					"id": 10,
+					"id": 14597,
 				},
 				'post',
 				'task/lock/check',

@@ -507,22 +507,35 @@ var app_generic_state = {
 			}
 		},
 		submenu: function(item){
-			var target_id = item._id;
+			var arr = item._id.split("%");
+
+			var menu = arr[0];
+			var next = 1;
+			if(typeof arr[1] != "undefined"){ next=arr[1]; }
+			var hide = true;
+			if(typeof arr[2] != "undefined"){ hide=arr[2]; }
+			var param = null;
+			if(typeof arr[3] != "undefined"){ param=arr[3]; }
+			var preview = false;
+			if(typeof arr[4] != "undefined"){ preview=arr[4]; }
+			var animate = true;
+			if(typeof arr[5] != "undefined"){ animate=arr[5]; }
+
 			if(!storage_first_launch){
-				var subm = submenu_get(target_id, false);
+				var subm = submenu_get(menu, next, hide, param, preview, animate);
 				if(!subm){
-					submenu_Build(target_id);
+					submenu_Build(menu, next, hide, param, preview, animate);
 				}
 			} else {
-				var model_timer = setInterval(function(target_id){
+				var model_timer = setInterval(function(menu, next, hide, param, preview, animate){
 					if(!storage_first_launch){
 						clearInterval(model_timer);
-						var subm = submenu_get(target_id, false);
+						var subm = submenu_get(menu, next, hide, param, preview, animate);
 						if(!subm){
-							submenu_Build(target_id);
+							submenu_Build(menu, next, hide, param, preview, animate);
 						}
 					}
-				}, 1000, target_id);
+				}, 1000, menu, next, hide, param, preview, animate);
 			}
 		}
 	},

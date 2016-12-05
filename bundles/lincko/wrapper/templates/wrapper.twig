@@ -84,9 +84,15 @@
 
 <script>
 window.name = 'brunomartin';
-document.domain = '{{ domain }}';
+document.domainRoot = '{{ domain }}';
+{% if workspace %}
+	document.domain = '{{ workspace }}.{{ domain }}';
+{% else %}
+	document.domain = '{{ domain }}';
+{% endif %}
 document.linckoBack = '{{ lincko_back }}';
 document.linckoFront = '{{ lincko_front }}';
+document.linckoWorkspace = '{{ workspace }}';
 var wrapper_show_error = {{ lincko_show_dev }};
 var wrapper_title = "{{ _trans('wrapper', 1, 1, 'html') }}";
 document.linckoBackPort = 8443;
