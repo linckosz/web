@@ -13,7 +13,6 @@ var intro = {
 		project_item_file:9,
 		create_task:10,
 		feel_free:11,
-		
 	},
 	script :[
 		[//intro.step.welcome:0
@@ -204,11 +203,22 @@ var intro = {
 		}
 		return target;
 	},	
-	startStep:function(){
+	startStep:function(fn){
 		intro.showPanel();
-		intro.gotoStep(0);
+		intro.gotoStep(0,fn);
 	},
-	gotoStep:function(step_index){
+	gotoStep:function(step_index,fn){
+		if(typeof fn != "undefined" || fn == null)
+		{
+			var index = intro.script[step_index].length-1;
+			if(intro.script[step_index][index].hasOwnProperty("options"))
+			{
+				for(var i in intro.script[step_index][index]["options"])
+				{
+					intro.script[intro.current_step][index]["options"][i]["callback"] = fn;
+				}	
+			}
+		}
 		intro.current_step = step_index;
 		intro.startScript();
 	},
@@ -291,15 +301,28 @@ var intro = {
 			item.html(options[i]["line"]);
 			target.find("[find=options_content]").append(item);
 
-			item.click(options[i],function(event){
+			var fn = null;
+			if(options[i].hasOwnProperty("callback"))
+			{
+				fn = options[i].callback;
+			}
+
+			item.click({pointTo:options[i].pointTo,pointType:options[i].pointType,fn:fn},function(event){
+				item.off("click");
 				var pointTo = event.data.pointTo;
 				var pointType = event.data.pointType;
+				var fn = event.data.fn;
 				if(pointType == "script")
 				{
 					intro.gotoScript(pointTo);
 				}
 				else if(pointType == "step")
 				{
+					if(fn != null)
+					{
+						fn();
+					}
+					
 					intro.gotoStep(pointTo);
 				}
 				
