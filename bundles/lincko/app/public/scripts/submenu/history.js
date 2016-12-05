@@ -134,13 +134,15 @@ BaseItemCls.prototype.template_render = function()
 } 
 
 
-BaseItemCls.prototype.item_display = function(position,subm,mode)
+BaseItemCls.prototype.item_display = function(position, subm, mode, scroll_time)
 {
+	if(typeof scroll_time == "undefined"){ scroll_time = 300; }
 	var template = this.template_render();
 	var elem_id = subm.id + '_' + this.data.category + '_models_thistory_' + this.data.id 
 				+ (typeof this.data.hist !== 'undefined' && this.data.hist != 0 ?  '_'+ this.data.hist : '');
 	var elem = $('#' + template).clone();
 	elem.prop('id',elem_id);
+	elem.attr('item', this.data.category+'_'+this.data.id);
 
 	if(typeof this.data.is_recalled !==  'undefined' && this.data.is_recalled)
 	{
@@ -241,6 +243,16 @@ BaseItemCls.prototype.item_display = function(position,subm,mode)
 					elem.before(line);
 					subm.param.earliest_timeline = timeline;
 				}
+			}
+			var overthrow_id = "overthrow_"+subm.id;
+			var help_iscroll_elem =  $('#'+subm.id+'_help_iscroll').get(0);
+
+			if(myIScrollList[overthrow_id] && help_iscroll_elem){
+				if(myIScrollList[overthrow_id].maxScrollY - myIScrollList[overthrow_id].y > -100){
+					if(!supportsTouch || responsive.test("minDesktop")){ scroll_time = 300; }
+					app_submenu_scrollto(myIScrollList[overthrow_id], help_iscroll_elem, scroll_time);
+				}
+				myIScrollList[overthrow_id].refresh();
 			}
 			break;
 		case 'change' :
@@ -1066,7 +1078,7 @@ historyFeed.prototype.app_chat_feed_uploading_file = function()
 		var temp_elem_id = this.submenu.id + '_uploading_file_models_thistory_' + record['temp_id'];
 
 		var mode = $('#'+temp_elem_id).length > 0 || (files[i].lincko_progress >= 100 && files[i].lincko_status == 'done') ? 'refresh' : 'insert' ;
-		item.item_display(this.position,this.submenu,mode);
+		item.item_display(this.position, this.submenu, mode, 0);
 	}
 }
 

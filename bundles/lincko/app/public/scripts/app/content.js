@@ -52,12 +52,13 @@ var app_content_menu = {
 		}
 	},
 
-	selection: function(projects_id, menu, param){
+	selection: function(projects_id, menu, param, hide_preview){
 		
 		//We do not allow to display anything until the personal project is available
 		if(typeof projects_id === 'undefined'){ return false; }
 		if(typeof menu === 'undefined'){ menu = 'tasks'; }
 		if(typeof param === 'undefined'){ param = null; }
+		if(typeof hide_preview === 'undefined'){ hide_preview = true; }
 
 		//Clean all submenu before opening a new project (even if the same as current one)
 		submenu_Hideall();
@@ -113,6 +114,8 @@ var app_content_menu = {
 		if(app_content_menu.projects_id == projects_id && app_content_menu.menu == menu){
 			if(responsive.test("maxMobileL")){ app_application.forceClose(); }
 			return true;
+		} else {
+			submenu_Hideall(true);
 		}
 
 		app_generic_state.change(
@@ -190,12 +193,12 @@ var app_content_menu = {
 		
 
 		if(responsive.test("maxMobileL")){
-			app_layers_changePage(menu, param, new_project);
+			app_layers_changePage(menu, param, new_project, hide_preview);
 			setTimeout(function(){
 				app_application.forceClose();
 			}, 0);
 		} else {
-			app_layers_changePage(menu, param);
+			app_layers_changePage(menu, param, false, hide_preview);
 		}
 
 		//Keep a record offline for future page opening

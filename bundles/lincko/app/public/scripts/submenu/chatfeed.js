@@ -525,6 +525,7 @@ BaseHistoryCls.prototype.renderChatTemplate = function(index, replace) {
 		Elem.attr('_file_id',this.item.id);
 	} else {
 		var Elem_id = that.chatFeed.subm.id+"_"+this.item._type+'_models_thistory_' + this.item._id;
+		Elem.attr('item', 'files_'+this.item.id);
 	}
 
 	//Do not duplicate chat messages (unless it is trying to replace the existing element e.g. during updateRecall)
@@ -649,6 +650,11 @@ BaseHistoryCls.prototype.renderHistoryTemplate = function(index) {
 	}
 	var Elem = $("#" + this.templateType).clone();
 	var Elem_id = that.chatFeed.subm.id+"_"+this.item.type+'_models_thistory_' + this.item.id + (this.item.type != 'comments' ? '_hist_'+this.item.hist : '');
+	if(this.item.type = "comments"){
+		Elem.attr('item', 'files_'+this.item.id);
+	} else {
+		Elem.attr('item', 'hist_'+this.item.hist);
+	}
 
 	//Do not duplicate chat messages
 	if($("#"+Elem_id).length>0){

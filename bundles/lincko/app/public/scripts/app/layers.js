@@ -1,8 +1,9 @@
 var app_layers = true;
 
-var app_layers_changePage = function(menu, param, now){
+var app_layers_changePage = function(menu, param, now, hide_preview){
 	if(typeof param === 'undefined'){ param = null; }
 	if(typeof now === 'undefined'){ now = false; }
+	if(typeof hide_preview === 'undefined'){ hide_preview = true; }
 	if(now){
 		app_layers_launchMenu(menu, param);
 		wrapper_IScroll();
@@ -22,7 +23,9 @@ var app_layers_changePage = function(menu, param, now){
 				begin: function(){
 					app_layers_launchMenu(menu, param);
 					wrapper_IScroll();
-					submenu_Hideall(true);
+					if(hide_preview){
+						submenu_Hideall(true);
+					}
 				},
 			} },
 		];

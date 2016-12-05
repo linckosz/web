@@ -133,23 +133,9 @@ Submenu.prototype.Add_ChatContents = function() {
 			latest_history = hist[0]["timestamp"];
 		}
 		app_application_lincko.add(this.id+"_chat_contents_wrapper", "projects_" + id, function() {
-
-			var chat_item = that.param.chatFeed;
+			var chat_item = this.action_param[2];
 			chat_item.app_chat_feed_load_recent();
-			
-			var overthrow_id = "overthrow_"+this.action_param[0];
-			var help_iscroll_elem = $('#'+that.id+'_help_iscroll').get(0);
-
-			if(myIScrollList[overthrow_id] && help_iscroll_elem){
-				if(myIScrollList[overthrow_id].maxScrollY - myIScrollList[overthrow_id].y > -100){
-					myIScrollList[overthrow_id].refresh();
-					var scroll_time = 300;
-					if(!supportsTouch || responsive.test("minDesktop")){ scroll_time = 300; }
-					app_submenu_scrollto(myIScrollList[overthrow_id], help_iscroll_elem, scroll_time);
-				}
-			}
-			app_models_notifier.clearNotification('projects', id);
-			
+			app_models_notifier.clearNotification('projects', this.action_param[1]);
 		}, [that.id, id, that.param.chatFeed, position]);
 	}
 	else {
@@ -158,41 +144,16 @@ Submenu.prototype.Add_ChatContents = function() {
 		app_models_notifier.clearNotification('chats', id);
 		
 		app_application_lincko.add(this.id+"_chat_contents_wrapper", "chats_" + id, function() {
-			//toto => there is an undefined somewhere
-			var chat_item = that.param.chatFeed;
+			var chat_item = this.action_param[2];
 			chat_item.app_chat_feed_load_recent();
-
-			var overthrow_id = "overthrow_"+this.action_param[0];
-			var help_iscroll_elem =  $('#'+that.id+'_help_iscroll').get(0);
-
-			if(myIScrollList[overthrow_id] && help_iscroll_elem){
-				if(myIScrollList[overthrow_id].maxScrollY - myIScrollList[overthrow_id].y > -100){
-					myIScrollList[overthrow_id].refresh();
-					var scroll_time = 300;
-					if(!supportsTouch || responsive.test("minDesktop")){ scroll_time = 300; }
-					app_submenu_scrollto(myIScrollList[overthrow_id], help_iscroll_elem, scroll_time);
-				}
-			}
 			app_models_notifier.clearNotification('chats', this.action_param[1]);
 			
 		}, [that.id, id, that.param.chatFeed, position]);
 	}
 
 	app_application_lincko.add(submenu_wrapper_id, 'upload', function(){ //We cannot simplify because Elem is not the HTML object, it's a JS Submenu object
-		that.param.chatFeed.app_chat_feed_uploading_file();
-
-		var overthrow_id = "overthrow_"+this.action_param[0];
-		var help_iscroll_elem =  $('#'+that.id+'_help_iscroll').get(0);
-
-
-		if(myIScrollList[overthrow_id] && help_iscroll_elem){
-			if(myIScrollList[overthrow_id].maxScrollY - myIScrollList[overthrow_id].y > -100){
-				myIScrollList[overthrow_id].refresh();
-				var scroll_time = 0;
-				if(!supportsTouch || responsive.test("minDesktop")){ scroll_time = 300; }
-				app_submenu_scrollto(myIScrollList[overthrow_id], help_iscroll_elem, scroll_time);
-			}
-		}
+		var chat_item = this.action_param[2];
+		chat_item.app_chat_feed_uploading_file();
 	}, [that.id, id, that.param.chatFeed, position]);
 
 	var type_clear = type == 'history' ? 'projects' : type;
@@ -202,6 +163,12 @@ Submenu.prototype.Add_ChatContents = function() {
 		var overthrow_id = "overthrow_"+submenu_id;
 
 		var help_iscroll_elem =  $('#'+that.id+'_help_iscroll').get(0);
+		if(that.param.find_item){
+			var find_item = submenu_wrapper.find("[item="+that.param.find_item+"]");
+			if(find_item.length > 0){
+				help_iscroll_elem = find_item.get(0);
+			}
+		}
 
 		if(myIScrollList[overthrow_id] && help_iscroll_elem){
 			myIScrollList[overthrow_id].refresh();

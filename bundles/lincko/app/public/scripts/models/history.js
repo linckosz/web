@@ -34,7 +34,7 @@ var app_models_history = {
 		if(typeof timeout == "undefined"){ timeout = 8; }
 		if(typeof icon == "undefined"){ icon = "favicon.png"; }
 		var options = {
-			body: title,
+			body: message,
 			icon: icon,
 			lang: app_language_short,
 			vibrate: [200, 100, 200], //Work only on android webview
@@ -48,7 +48,7 @@ var app_models_history = {
 			},
 		};
 		var notif = new Notify(
-			message,
+			title,
 			options
 		);
 		try {
@@ -56,7 +56,7 @@ var app_models_history = {
 		} catch(e) {
 			if (app_models_history.serviceWorker) {
 				app_models_history.serviceWorker.then(function (registration) {
-					registration.showNotification(message, options);
+					registration.showNotification(title, options);
 				});
 			} else {
 				base_show_error(title+"\n"+message, false);
@@ -102,8 +102,8 @@ var app_models_history = {
 						users = item['_users'];
 						if(users && users[wrapper_localstorage.uid] && (users[wrapper_localstorage.uid]["in_charge"] || users[wrapper_localstorage.uid]["approver"])){
 							app_models_history.notify(
-								wrapper_to_html(item["+title"]),
 								Lincko.storage.getHistoryInfo(hist[i]).title,
+								wrapper_to_html(item["+title"]),
 								"tasks-"+hist[i]['id']
 							);
 						}
@@ -153,8 +153,8 @@ var app_models_history = {
 								msg = username+": "+wrapper_to_html(item["+comment"]);
 							}
 							app_models_history.notify(
-								title,
 								msg,
+								title,
 								"messages-"+hist[i]['id']
 							);
 						}
@@ -200,8 +200,8 @@ var app_models_history = {
 								msg = sentence;
 							}
 							app_models_history.notify(
-								wrapper_to_html(parent["+title"]),
 								msg,
+								wrapper_to_html(parent["+title"]),
 								"comments-"+hist[i]['id']
 							);
 						}
@@ -252,9 +252,8 @@ var app_models_history = {
 						}
 						if(users && users[wrapper_localstorage.uid]){
 							app_models_history.notify(
+								Lincko.storage.getHistoryInfo(hist[i]).title + ":\n  "+wrapper_to_html(item["+name"]),
 								wrapper_to_html(parent["+title"]),
-								Lincko.storage.getHistoryInfo(hist[i]).title
-								+":\n  "+wrapper_to_html(item["+name"]),
 								"files-"+hist[i]['id']
 							);
 						}
@@ -280,8 +279,8 @@ var app_models_history = {
 							profile_pic = "favicon.png";
 						}
 						app_models_history.notify(
-							Lincko.Translation.get('app', 72, 'html'), //You have an invitation request
 							wrapper_to_html(list[i]["-username"]),
+							Lincko.Translation.get('app', 72, 'html'), //You have an invitation request
 							"submenu-chat_list",
 							20,
 							profile_pic

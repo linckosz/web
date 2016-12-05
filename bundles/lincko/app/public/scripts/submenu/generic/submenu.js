@@ -136,7 +136,7 @@ function submenu_exchangeAnimation(Elem) {
 }
 
 
-function Submenu(menu, next, param, preview) {
+function Submenu(menu, next, param, preview, animate) {
 	this.obj = submenu_list[menu];
 	this.menu = menu;
 	this.layer = 1;
@@ -156,6 +156,9 @@ function Submenu(menu, next, param, preview) {
 		this.param = param;
 	}
 
+	if (typeof preview === 'undefined') { preview = false; }
+	if (typeof animate === 'undefined') { animate = true; }
+
 	//The creation of new submenu with MD5 seems to lead to a Memory leak
 	//this.id = this.layer+"_submenu_wrapper_"+md5(Math.random());
 
@@ -167,28 +170,28 @@ function Submenu(menu, next, param, preview) {
 	this.prefix = false;
 	this.attribute = null;
 
-	function Constructor(Elem) {
-		Elem.changeState();
+	function Constructor(subm) {
+		subm.changeState();
 		//First we have to empty the element if it exists
 
-		submenu_Clean(Elem.layer, false, Elem.preview);
+		submenu_Clean(subm.layer, false, subm.preview);
 
 		var submenu_wrapper = $('#-submenu_wrapper').clone();
-		if($('#'+Elem.id).length>0){
-			$('#'+Elem.id).recursiveRemove();
+		if($('#'+subm.id).length>0){
+			$('#'+subm.id).recursiveRemove();
 		}
-		submenu_wrapper.prop("id", Elem.id);
-		if(Elem.preview){
+		submenu_wrapper.prop("id", subm.id);
+		if(subm.preview){
 			submenu_wrapper.addClass('submenu_wrapper_preview');
 		}
 
-		submenu_wrapper.css('z-index', Elem.zIndex);
+		submenu_wrapper.css('z-index', subm.zIndex);
 		//Do not not add "overthrow" in twig template, if not the scrollbar will not work
-		submenu_wrapper.find("[find=submenu_wrapper_content]").addClass('overthrow').prop("id", "overthrow_"+Elem.id);
+		submenu_wrapper.find("[find=submenu_wrapper_content]").addClass('overthrow').prop("id", "overthrow_"+subm.id);
 		//This is because we can only place 3 menus on Desktop mode, so after 3 layers we switch to full width mode
-		if (Elem.layer > 3) { submenu_wrapper.addClass('submenu_wrapper_important'); }
+		if (subm.layer > 3) { submenu_wrapper.addClass('submenu_wrapper_important'); }
 
-		if (Elem.preview) {
+		if (subm.preview) {
 			submenu_wrapper.appendTo('#app_content_submenu_preview');
 			submenu_wrapper.mouseenter(function(){
 				submenu_mouseenter['preview'] = true;
@@ -207,40 +210,40 @@ function Submenu(menu, next, param, preview) {
 		}
 
 		//Launch Pre action
-		for (var att in Elem.obj) {
-			Elem.attribute = Elem.obj[att];
-			if ("style" in Elem.attribute && Elem.attribute.style == "preAction" && "action" in Elem.attribute) {
-				if (typeof Elem.attribute.action === "function") {
-					Elem.attribute.action(submenu_wrapper, Elem);
+		for (var att in subm.obj) {
+			subm.attribute = subm.obj[att];
+			if ("style" in subm.attribute && subm.attribute.style == "preAction" && "action" in subm.attribute) {
+				if (typeof subm.attribute.action === "function") {
+					subm.attribute.action(submenu_wrapper, subm);
 				}
 			}
 		}
 		//Build the page
-		for (var att in Elem.obj) {
-			Elem.attribute = Elem.obj[att];
-			if ("style" in Elem.attribute && "title" in Elem.attribute) {
-				if (typeof Submenu_select[Elem.attribute.style] === "function") {
-					Submenu_select[Elem.attribute.style](Elem);
+		for (var att in subm.obj) {
+			subm.attribute = subm.obj[att];
+			if ("style" in subm.attribute && "title" in subm.attribute) {
+				if (typeof Submenu_select[subm.attribute.style] === "function") {
+					Submenu_select[subm.attribute.style](subm);
 				}
 			}
 		}
 		//Launch Post action
-		for (var att in Elem.obj) {
-			Elem.attribute = Elem.obj[att];
-			if ("style" in Elem.attribute && Elem.attribute.style == "postAction" && "action" in Elem.attribute) {
-				if (typeof Elem.attribute.action === "function") {
-					Elem.attribute.action(submenu_wrapper, Elem);
+		for (var att in subm.obj) {
+			subm.attribute = subm.obj[att];
+			if ("style" in subm.attribute && subm.attribute.style == "postAction" && "action" in subm.attribute) {
+				if (typeof subm.attribute.action === "function") {
+					subm.attribute.action(submenu_wrapper, subm);
 				}
 			}
 		}
 
-		if (Elem.display) {
-			Elem.Show(true);
+		if (subm.display) {
+			subm.Show(animate); //animate at false (default is true) force to open the submenu without animation to be able to access to DOM directly
 		} else {
-			Elem.Hide();
+			subm.Hide();
 		}
-		if (Elem.prefix) {
-			base_format_form(Elem.prefix);
+		if (subm.prefix) {
+			base_format_form(subm.prefix);
 		}
 		wrapper_IScroll_refresh();
 		wrapper_IScroll();
@@ -248,7 +251,7 @@ function Submenu(menu, next, param, preview) {
 		//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
 		delete submenu_wrapper;
 
-		return Elem;
+		return subm;
 	}
 	Constructor(this);
 }
@@ -1187,7 +1190,7 @@ Submenu.prototype.hidePreview = function(time, delay, animate) {
 				delay: delay,
 				easing: [.38, .1, .13, .9],
 				complete: function() {
-					app_application_lincko.prepare(["submenu_hide", "submenu_hide_"+that.preview+"_"+that.id], true);
+					app_application_lincko.prepare(["submenu_hide", "submenu_hide_"+that.preview+"_"+that.id], true, false, true);
 					that.Remove();
 					app_application_lincko.prepare(["submenu_hide", "submenu_hide_"+that.preview+"_"+that.id], true);
 				}
@@ -1306,12 +1309,13 @@ function submenu_Hideall(preview) {
 	if(typeof preview == 'undefined'){ preview = false; }
 	var stack = preview ? submenu_obj['preview'] : submenu_obj['submenu'];
 	for (var index in stack) {
-		submenu_Clean(true, true, preview);
+		submenu_Clean(true, !preview, preview);
 	}
 }
 
 //Return the next layer to display full screen
 function submenu_Getfull(preview) {
+	if(typeof preview == 'undefined'){ preview = false; }
 	var next = submenu_Getnext(preview);
 	if (next < 4) {
 		next = 4;
@@ -1333,6 +1337,7 @@ function submenu_Getnext(preview) {
 }
 
 function submenu_get(menu, preview) {
+	if(typeof preview == 'undefined'){ preview = false; }
 	var stack = preview ? submenu_obj['preview'] : submenu_obj['submenu'];
 	var submenu = false;
 	for (var index in stack) {
@@ -1344,6 +1349,7 @@ function submenu_get(menu, preview) {
 }
 
 function submenu_Getposition(menu, preview) {
+	if(typeof preview == 'undefined'){ preview = false; }
 	var stack = preview ? submenu_obj['preview'] : submenu_obj['submenu'];
 	submenu_position = submenu_Getnext(preview);
 	for (var index in stack) {
@@ -1355,6 +1361,7 @@ function submenu_Getposition(menu, preview) {
 }
 
 function submenu_Clean(layer, animate, preview) {
+	if(typeof preview == 'undefined'){ preview = false; }
 	var stack = preview ? submenu_obj['preview'] : submenu_obj['submenu'];
 	if (typeof layer !== 'number' || layer < 1) {
 		layer = 1;
@@ -1367,17 +1374,18 @@ function submenu_Clean(layer, animate, preview) {
 	}
 }
 
-function submenu_Build(menu, next, hide, param, preview) {
-	setTimeout(function(menu, next, hide, param, preview){
-		submenu_Build_return(menu, next, hide, param, preview);
-	}, 20, menu, next, hide, param, preview);
+function submenu_Build(menu, next, hide, param, preview, animate) {
+	setTimeout(function(menu, next, hide, param, preview, animate){
+		submenu_Build_return(menu, next, hide, param, preview, animate);
+	}, 20, menu, next, hide, param, preview, animate);
 }
 
-function submenu_Build_return(menu, next, hide, param, preview) {
+function submenu_Build_return(menu, next, hide, param, preview, animate) {
 	if (typeof next === 'undefined') { next = 1; }
 	if (typeof hide === 'undefined') { hide = true; }
 	if (typeof param === 'undefined') { param = null; }
 	if (typeof preview != 'boolean') { preview = false; }
+	if (typeof animate != 'boolean') { animate = true; }
 	if(responsive.test("maxMobileL")){ //By default open as a submenu if the screen is too small
 		preview = false;
 	}
@@ -1405,11 +1413,11 @@ function submenu_Build_return(menu, next, hide, param, preview) {
 
 	if (menu in submenu_list) {
 		if (preview) {
-			var temp = new Submenu(menu, next, param, preview);
+			var temp = new Submenu(menu, next, param, preview, animate);
 			$('#app_content_submenu_preview').parent().addClass("with_preview");
 			$('#app_content_submenu_preview').show();
 		} else {
-			var temp = new Submenu(menu, next, param);
+			var temp = new Submenu(menu, next, param, false, animate);
 			$('#app_application_submenu_block').show();
 			$('#app_content_dynamic').addClass('app_application_submenu_blur');
 		}
