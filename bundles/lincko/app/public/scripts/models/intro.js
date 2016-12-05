@@ -284,6 +284,7 @@ var intro = {
 					{
 						fn();
 					}
+
 					//intro.gotoStep(pointTo);
 				}
 				
