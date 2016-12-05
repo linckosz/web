@@ -305,8 +305,6 @@ inputter.prototype.buildLayer = function()
 								if(this.layer['right_menu'][i][j].hasOwnProperty('click'))
 								{
 									item.click(this.layer['right_menu'][i][j]['click'],function(event){
-
-
 									var files = app_upload_files.lincko_files;
 									var files_count = 0;
 									for(var i in files)
@@ -343,9 +341,6 @@ inputter.prototype.buildLayer = function()
 
 											mobile_show_count = right_menu.find("li:not(.mobile_hide)").length;
 											content.addClass('mobile-margin-right-' + mobile_show_count);
-
-
-											
 										}
 										else
 										{
@@ -367,6 +362,7 @@ inputter.prototype.buildLayer = function()
 									var panel_id = event.data.panel_id ;
 									app_upload_open_files(type, pid,false,auto_upload,panel_id);
 								});
+								item.find('.inputter_preview').addClass('display_none');
 								if(!this.layer['right_menu'][i].hasOwnProperty('click') && !auto_upload)
 								{
 									
@@ -382,6 +378,7 @@ inputter.prototype.buildLayer = function()
 											&& files[z].lincko_parent_id == this.action_param[1]
 											&& files[z].lincko_param == this.action_param[2])
 											{
+												$('#'+this.action_param[2]+'_attachment .inputter_preview').removeClass('display_none');
 												if($('#inputter_element_uploading_item_'+files[z].lincko_temp_id).length == 0)
 												{
 													var item = $('#-inputter_element_uploading_item').clone();
@@ -389,6 +386,7 @@ inputter.prototype.buildLayer = function()
 													item.appendTo(files_queue);
 												}
 												else{
+
 													var target = $('#inputter_element_uploading_item_'+files[z].lincko_temp_id);
 													var preview = null;
 													try{
@@ -396,10 +394,10 @@ inputter.prototype.buildLayer = function()
 													}
 													catch(e)
 													{
-														
 													}
 													if(preview == null || preview == '')
 													{
+														$
 														if(count == 0)
 														{
 															$('#'+this.action_param[2]+'_attachment .inputter_ico').addClass('mobile_hide');
@@ -410,13 +408,15 @@ inputter.prototype.buildLayer = function()
 
 															$('#'+this.action_param[2]+'_attachment .inputter_preview')
 																.find(".shortcut_ico")
-																.removeClass('display_none')
+																.addClass('display_none')
 																.find("i")
 																.addClass(app_models_fileType.getClass(app_models_fileType.getExt(files[z].lincko_name)));
 														}
+														else
+														{
+															$('#'+this.action_param[2]+'_attachment .inputter_preview').removeClass('display_none');
+														}
 
-
-														
 														target.attr('title',files[z].lincko_name);
 														target.find(".shortcut_pic").addClass('display_none');
 														target.find(".shortcut_ico").removeClass('display_none').find("i").addClass(app_models_fileType.getClass(app_models_fileType.getExt(files[z].lincko_name)));
@@ -446,6 +446,10 @@ inputter.prototype.buildLayer = function()
 																.css('padding-top',padding_top_style)
 																.css('padding-left',padding_left_style);
 
+														}
+														else
+														{
+															$('#'+this.action_param[2]+'_attachment .inputter_preview').removeClass('display_none');
 														}
 														target.attr('title',files[z].lincko_name);
 														target.find(".shortcut_ico").addClass('display_none');
@@ -607,6 +611,9 @@ function cleanHtmlTag(source){
 			// 	.replace(/<(br).*?>/g,"<br/>")
 			// 	.replace(/<(?!br).*?>/g,"")
 			// 	.replace(/[\r\n]/g, ""));
+			//$('.empty_show').removeClass('mobile_hide');
+			//$('.empty_hide').addClass('mobile_hide');
+			alert(121212);
 		},0);
 	});
 

@@ -7,12 +7,8 @@ var intro = {
 		linckobot_chat:3,
 		sample_project:4,
 		project_items:5,
-		project_item_task:6,
-		project_item_note:7,
-		project_item_chat:8,
-		project_item_file:9,
-		create_task:10,
-		feel_free:11,
+		create_task:6,
+		feel_free:7,
 	},
 	script :[
 		[//intro.step.welcome:0
@@ -97,52 +93,17 @@ var intro = {
 		[//intro.step.project_items:5
 			{
 				line:"Each project has areas for Tasks, Notes, Chats, and Files.",
-				options:[ 
-					{
-						line:"next",
-						pointType:"step",
-						pointTo:6,
-					}
-				],
 			},
-		],
-		[//intro.step.project_item_task:6
 			{
 				line:"Use tasks to set the goals and tasks of the project team.",
-				options:[ 
-					{
-						line:"next",
-						pointType:"step",
-						pointTo:7,
-					}
-				],
 			},
-		],
-		[//intro.step.project_item_note:7
 			{
 				line:"Use notes to store important information for the team - like meeting notes, processes, or designs. ",
-				options:[ 
-					{
-						line:"next",
-						pointType:"step",
-						pointTo:8,
-					}
-				],
 			},
-		],
-		[//project_item_chat:8
 			{
 				line:"Use Chats for quick communication and to track project activity. ",
-				options:[ 
-					{
-						line:"next",
-						pointType:"step",
-						pointTo:9,
-					}
-				],
+				
 			},
-		],
-		[//project_item_file:9
 			{
 				line:"Use Files for all your important documents and images - any file uploaded to a project chat is also stored here. ",
 				options:[ 
@@ -154,7 +115,8 @@ var intro = {
 				],
 			},
 		],
-		[//create_task:10
+	
+		[//create_task:6
 			{
 				line:"Let's add your first task.",
 				options:[ 
@@ -176,7 +138,7 @@ var intro = {
 				],
 			},
 		],	
-		[//feel_free:11
+		[//feel_free:7
 			{
 				line:"Feel free to explore the sample project.",
 			},
@@ -215,7 +177,7 @@ var intro = {
 			{
 				for(var i in intro.script[step_index][index]["options"])
 				{
-					intro.script[intro.current_step][index]["options"][i]["callback"] = fn;
+					intro.script[step_index][index]["options"][i]["callback"] = fn;
 				}	
 			}
 		}
@@ -322,8 +284,7 @@ var intro = {
 					{
 						fn();
 					}
-					
-					intro.gotoStep(pointTo);
+					//intro.gotoStep(pointTo);
 				}
 				
 			});

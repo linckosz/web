@@ -122,6 +122,8 @@
 	width:30px;
 	height:30px;
 	overflow: hidden;
+	position:relative;
+
 }
 
 .inputter_preview_icon
@@ -147,13 +149,16 @@
 .inputter_left_menu_wrapper ul{
 	width : auto;
 	height : auto;
-	overflow : hidden;
+	height: auto;
+	overflow: hidden;
 }
 
 .inputter_left_menu_wrapper ul li{
 	float : left;
 	margin-right:10px;
 	margin-bottom: 10px;
+	height: auto;
+	overflow: hidden;
 }
 
 .inputter_right_menu_wrapper{
@@ -175,6 +180,21 @@
 	float : right;
 	margin-right:10px;
 	margin-bottom: 10px;
+}
+
+.inputter_right_menu_wrapper ul:active{
+	background-color: whith;
+}
+
+.inputter_right_menu_wrapper ul:hover{
+	background-color: whith;
+}
+
+.inputter_right_menu_wrapper ul li:active{
+	background-color: whith;
+}
+.inputter_right_menu_wrapper ul li:hover{
+	background-color: whith;
 }
 
 .padding-left-1{
