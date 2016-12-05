@@ -1748,9 +1748,15 @@ Submenu.prototype.Add_taskdetail = function() {
 			submenu_taskdetail.find('[find=title_text]');
 			param['comment'] = submenu_taskdetail.find('[find=description_text]').html();
 
+			//unlock if item locker matches the user or locked_by is null
+
 			//if same as previous comment then delete
-			if(taskid != 'new' && item['-comment'] && item['-comment'] == param['comment']){
+			if((item.locked_by && item.locked_by != wrapper_localstorage.uid) || //delete comment if this has been locked by someone else
+				taskid != 'new' && item['-comment'] && item['-comment'] == param['comment']){
 				delete param.comment;
+			}
+			else{
+				taskdetail_lockIntervalToggle(item['_id'], item['_type'], false);
 			}
 			//conditions for no comment: no text and no <img>
 			/*if( !submenu_taskdetail.find('[find=description_text]').find('img').length && $('<div>').html(param['comment']).text() == '' ){
@@ -2159,10 +2165,10 @@ Submenu.prototype.Add_taskdetail = function() {
 
 	/*----------CKEDITOR SETUP--------------------------------------------------*/
 
-	var elem_description_text = submenu_wrapper.find('[find=description_text]').prop('contenteditable','true').prop('id','submenu_taskdetail_description_text_'+that.md5id);
+	var elem_description_text = submenu_wrapper.find('[find=description_text]').prop('id','submenu_taskdetail_description_text_'+that.md5id);
 
 	//div for the toolbar
-	var elem_editorToolbar = $('<div>').prop('id','submenu_taskdetail_description_toolbar_'+that.md5id).addClass('taskdetail_editorToolbar needsclick');
+	var elem_editorToolbar = $('#-submenu_taskdetail_description_toolbar').clone().prop('id', 'submenu_taskdetail_description_toolbar_'+that.md5id);
 	elem_description_text.before(elem_editorToolbar);
 
 
@@ -2171,61 +2177,89 @@ Submenu.prototype.Add_taskdetail = function() {
 	var editor_param = {};
 	editor_param.itemID = item['_id'];
 	editor_param.submenuInst = that;
+
 	if(that.param.type != 'files'){
+
+		var fn_load_linckoEditor = function(){
+			if(editorInst){ return false; }
+			//delete previous instance, if exists
+			if(CKEDITOR && CKEDITOR.instances && CKEDITOR.instances['submenu_taskdetail_description_text_'+that.md5id]){
+				CKEDITOR.instances['submenu_taskdetail_description_text_'+that.md5id].destroy();
+			}
+			elem_editorToolbar.empty(); //clear a simple div, no need for recursive
+			elem_description_text.prop('contenteditable', true);
+			editorInst = linckoEditor('submenu_taskdetail_description_text_'+that.md5id, 'submenu_taskdetail_description_toolbar_'+that.md5id, editor_param);
+
+			//there might be auto focus in the case of notes. if the case, dont add overlay
+			if(!elem_description_text.is(":focus")){
+				elem_description_text.focus(function(){ 
+					if(elem_editorToolbar_overlay){
+						elem_editorToolbar_overlay.recursiveRemove(0);
+						elem_editorToolbar_overlay = null;
+						$(this).off('focus');
+					}
+					return;
+				});
+
+				elem_editorToolbar_overlay = $('<div>').addClass('taskdetail_editorToolbar_overlay').click(function(){
+						elem_description_text.focus();
+					});
+				elem_editorToolbar.append(elem_editorToolbar_overlay);
+			}
+
+			if(taskid != 'new'){
+				taskdetail_lockIntervalToggle(item['_id'], item['_type']);
+			}
+			
+		}
 
 		var onLoad_description = new base_runOnElemLoad('submenu_taskdetail_description_text_'+that.md5id, 
 			function(){
 				if(editorInst){ return false; }
 
-				//delete previous instance, if exists
-				if(CKEDITOR && CKEDITOR.instances && CKEDITOR.instances['submenu_taskdetail_description_text_'+that.md5id]){
-					CKEDITOR.instances['submenu_taskdetail_description_text_'+that.md5id].destroy();
+				if(taskid == 'new' || !item['locked_by'] || item['locked_by'] == wrapper_localstorage.uid){ //load ckeditor normally
+					fn_load_linckoEditor();
 				}
-
-				editorInst = linckoEditor('submenu_taskdetail_description_text_'+that.md5id, 'submenu_taskdetail_description_toolbar_'+that.md5id, editor_param);
-
-				//there might be auto focus in the case of notes. if the case, dont add overlay
-				if(!elem_description_text.is(":focus")){
-
-					elem_description_text.focus(function(){ 
-						if(elem_editorToolbar_overlay){
-							elem_editorToolbar_overlay.recursiveRemove(0);
-							elem_editorToolbar_overlay = null;
-							$(this).off('focus');
+				else{
+					var id_elem_locked = elem_editorToolbar.prop('id')+'_locked';
+					elem_editorToolbar.find('[find=locked_msg]').prop('id', id_elem_locked).text('locked by '+Lincko.storage.get("users", item['locked_by'],"username"));//toto
+					app_application_lincko.add(
+						id_elem_locked,
+						that.param.type+'_'+item['_id'],
+						function(){
+							var locked_by = Lincko.storage.get(that.param.type, item['_id'], 'locked_by');
+							if(!locked_by || locked_by == wrapper_localstorage.uid){
+								fn_load_linckoEditor();
+							}
 						}
-						return;
-					});
-
-					elem_editorToolbar_overlay = $('<div>').addClass('taskdetail_editorToolbar_overlay').click(function(){
-						elem_description_text.focus();
-					});
-					elem_editorToolbar.append(elem_editorToolbar_overlay);
+					);
+					
 				}
 			}
 		);
 		onLoad_description.run();
 
-	}
+		elem_description_text.focus(function(){ 
+			if(elem_editorToolbar_overlay){
+				elem_editorToolbar_overlay.recursiveRemove(0);
+				elem_editorToolbar_overlay = null;
+				$(this).off('focus');
+			}
+			return;
+		});
+
+		//auto focus after submenu opens
+		if(taskid == 'new'){
+			if(that.param.type == 'tasks'){
+				that.param.elem_autoFocus = elem_title_text;
+			}
+			else if(that.param.type == 'notes'){
+				that.param.elem_autoFocus = elem_description_text;
+			}
+		}
+	}//end of !files
 	
-	elem_description_text.focus(function(){ 
-		if(elem_editorToolbar_overlay){
-			elem_editorToolbar_overlay.recursiveRemove(0);
-			elem_editorToolbar_overlay = null;
-			$(this).off('focus');
-		}
-		return;
-	});
-
-	//auto focus after submenu opens
-	if(taskid == 'new'){
-		if(that.param.type == 'tasks'){
-			that.param.elem_autoFocus = elem_title_text;
-		}
-		else if(that.param.type == 'notes'){
-			that.param.elem_autoFocus = elem_description_text;
-		}
-	}
-
+	
 
 
 
@@ -2263,6 +2297,38 @@ Submenu.prototype.Add_taskdetail = function() {
 	delete submenu_wrapper;
 	return true;
 };
+
+var taskdetail_lockInterval = null;
+var taskdetail_lockIntervalToggle = function(id, type, start){
+	clearInterval(taskdetail_lockInterval);
+	if(typeof start != 'boolean'){ var start = true; }
+
+	var route = '';
+	if(type == 'tasks'){
+		route = 'task/lock/';
+	}
+	else if(type == 'notes'){
+		route = 'note/lock/';
+	}
+	else{
+		return false;
+	}
+
+	if(start){ 
+		route += 'start';
+		wrapper_sendAction({id: id}, 'post', route);
+		taskdetail_lockInterval = setInterval(function(id, route){
+			wrapper_sendAction({id: id}, 'post', route);
+		}, 40000, id, route);
+	}
+	else{ 
+		route += 'unlock';
+		wrapper_sendAction({id: id}, 'post', route);
+		console.log('unlocked');
+	}
+
+	return true;
+}
 
 
 //check description for any broken images, and updated them of image is available
