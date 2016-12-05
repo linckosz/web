@@ -1682,6 +1682,9 @@ Submenu.prototype.Add_taskdetail = function() {
 		that.id,
 		'submenu_hide_'+that.preview+'_'+that.id,
 		function(){
+
+			taskdetail_lockIntervalToggle(item['_id'], item['_type'], false);
+
 			if( (taskid == 'new' && route_delete) || this.action_param.cancel || (item.deleted_at && !route_delete)){
 				//clear any links in the queue that came from this submenu
 				taskdetail_linkQueue.clearQueue_uniqueID(that.param.uniqueID);
@@ -1755,14 +1758,6 @@ Submenu.prototype.Add_taskdetail = function() {
 				taskid != 'new' && item['-comment'] && item['-comment'] == param['comment']){
 				delete param.comment;
 			}
-			else{
-				taskdetail_lockIntervalToggle(item['_id'], item['_type'], false);
-			}
-			//conditions for no comment: no text and no <img>
-			/*if( !submenu_taskdetail.find('[find=description_text]').find('img').length && $('<div>').html(param['comment']).text() == '' ){
-				delete param.comment;
-			}*/
-
 
 			var new_projectID = elem_meta.find('[find=projects_id]').val();
 			if(new_projectID){
@@ -2222,7 +2217,7 @@ Submenu.prototype.Add_taskdetail = function() {
 				}
 				else{
 					var id_elem_locked = elem_editorToolbar.prop('id')+'_locked';
-					elem_editorToolbar.find('[find=locked_msg]').prop('id', id_elem_locked).text('locked by '+Lincko.storage.get("users", item['locked_by'],"username"));//toto
+					elem_editorToolbar.find('[find=locked_msg]').prop('id', id_elem_locked).text(Lincko.Translation.get('app', 3614, 'html', {username: Lincko.storage.get('users', wrapper_localstorage.uid ,'username')}));
 					app_application_lincko.add(
 						id_elem_locked,
 						that.param.type+'_'+item['_id'],
@@ -2320,6 +2315,7 @@ var taskdetail_lockIntervalToggle = function(id, type, start){
 		taskdetail_lockInterval = setInterval(function(id, route){
 			wrapper_sendAction({id: id}, 'post', route);
 		}, 40000, id, route);
+		console.log('locked');
 	}
 	else{ 
 		route += 'unlock';

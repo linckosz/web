@@ -274,7 +274,6 @@ skylist.prototype.subConstruct_default = function(){
 					"type":that.list_type,
 					"id": 'new', 
 				}, true);
-
 			if(submenu_taskdetail.param.elem_autoFocus){
 				submenu_taskdetail.param.elem_autoFocus.focus();
 			}
@@ -1100,6 +1099,7 @@ skylist.prototype.paperview_partialUpdate = function(updated_tasks){
 		updated_at : true,
 		viewed_by : true,
 		_tasksdown: true,
+		locked_by: true, //no need for update DOM
 	}
 
 	var partialUpdate = true;
