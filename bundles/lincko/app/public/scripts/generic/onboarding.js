@@ -667,6 +667,9 @@ onboarding.scripts['welcome'] = function(){
 	onboarding.on = true;
 	onboarding.overlays.body();
 
+	//fn_next used in intro.js, key should match the step index used in intro.js for convenience
+	var fn_intro = {};
+
 	//tracker to make sure trip only runs once
 	var tripTracker = {
 		check: function(tripObj, i){
@@ -707,8 +710,10 @@ onboarding.scripts['welcome'] = function(){
 					);
 				});
 
-				var fn_next = function(){
+				fn_intro[1] = function(){
+					console.log('fn_intro[1]');
 					$('#app_application_menu_icon').click();
+					if(fn_intro[2]){ fn_intro[2](); }
 				}
 			},
 		},
@@ -1229,14 +1234,17 @@ onboarding.scripts['welcome'] = function(){
 		console.log('welcome bubble fn_next');
 		trip_openMainMenu.start();
 		onboarding.overlays.body(false);
+		intro.gotoStep(1, fn_intro[1]);
 	}
-	$('#'+onboarding.id_welcome_bubble).append(intro.showPanel()).click(function(){
+	$('#'+onboarding.id_welcome_bubble).append(intro.showPanel());
+
+	/*.click(function(){
 		console.log('welcome bubble click');
 		$(this).off('click');
 		fn_next();
-	});
+	});*/
 	
-	intro.startStep(null, fn_next);
+	intro.startStep(fn_next);
 		
 	return true;
 }
