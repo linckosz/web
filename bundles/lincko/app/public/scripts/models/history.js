@@ -5,6 +5,7 @@ var app_models_history = {
 	hist_root: {},
 	hist_root_recent: [],
 	notified: {},
+	first_check_invitation: true,
 
 	//Ready the worker for browsers that does not support native Notification
 	serviceWorker: false,
@@ -263,7 +264,8 @@ var app_models_history = {
 
 			//Grab Users notifications
 			var profile_pic;
-			if(typeof items['users'] != 'undefined'){
+			if(app_models_history.first_check_invitation || typeof items['users'] != 'undefined'){
+				app_models_history.first_check_invitation = false;
 				list = Lincko.storage.list('users', null, {_invitation: true, _id: ['!=', wrapper_localstorage.uid]});
 				//list = Lincko.storage.list('users', null, {_invitation: false, _id: ['!=', wrapper_localstorage.uid]}); //For debugging only
 				if(list.length>0){
@@ -618,3 +620,9 @@ var app_models_history = {
 if('serviceWorker' in navigator) {
 	app_models_history.serviceWorker = navigator.serviceWorker.register('/scripts/libs/sw.js');
 }
+
+var app_models_history_garbage = app_application_garbage.add();
+app_application_lincko.add(app_models_history_garbage, 'first_launch', function() {
+	app_models_history.notification()
+	app_application_garbage.remove(app_models_history_garbage);
+});
