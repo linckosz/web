@@ -658,7 +658,7 @@ onboarding.scripts[5] = function(fn_continue){
 }
 
 
-//welcome onboaring
+//welcome onboarding
 onboarding.scripts['welcome'] = function(){
 
 	var projectOpenSuccess = app_content_menu.selection(Lincko.storage.getMyPlaceholder()['_id']); //toto - this should be the sample project
@@ -739,7 +739,7 @@ onboarding.scripts['welcome'] = function(){
 	var array_exploreMainMenu = [
 		{
 			sel: $('#app_project_projects_new'),
-			content: 'Click this button!!!!',
+			content: 'new project',
 			position : 'e',
 			expose: true,
 			delay: -1,
@@ -816,7 +816,7 @@ onboarding.scripts['welcome'] = function(){
 		},
 		{
 			sel: $('#app_project_chats_tab'),
-			content: 'Click this button!!!!',
+			content: 'chats tab',
 			position : "e",
 			expose: true,
 			delay: -1,
@@ -974,7 +974,7 @@ onboarding.scripts['welcome'] = function(){
 		},
 		{
 			sel: $('#app_content_menu_chats'),
-			content: 'Click this button!!!!',
+			content: 'chats',
 			position : "e",
 			expose: true,
 			delay: 2000,
@@ -984,7 +984,7 @@ onboarding.scripts['welcome'] = function(){
 		},
 		{
 			sel: $('#app_content_menu_files'),
-			content: 'Click this button!!!!',
+			content: 'files',
 			position : "e",
 			expose: true,
 			delay: -1,
