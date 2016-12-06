@@ -88,6 +88,10 @@ ul.models_intro_script_list li
     color: black;
 }
 
+.models_intro_content .burger_tag{
+	cursor:inherit;
+}
+
 .models_intro_options
 {
 	color: black;
@@ -107,3 +111,21 @@ ul.models_intro_script_list li
 	text-align: left;
 	cursor: pointer;
 }
+
+
+.models_intro_bomb_wrapper {
+	position:absolute;
+}
+
+.models_intro_bomb {
+	width:50px;
+	height:40px;
+	background-position-x:0;
+	background-repeat: no-repeat;
+	background-size:cover;
+	position:relative;
+	top:-35px;
+	margin:0 auto;
+}
+
+

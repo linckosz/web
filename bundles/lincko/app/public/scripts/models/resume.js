@@ -399,13 +399,13 @@ $("body").on("click", '.app_models_resume_onboarding_answer',function(event){
 	// 		duration: 1000,
 	// 		opacity: 0,
 	// 		complete:function(){
-	// 			var temp = $('<div class="bomb_wrapper"><div class="bomb"></div></div>');
+	// 			var temp = $('<div class="models_intro_bomb_wrapper"><div class="models_intro_bomb"></div></div>');
 	// 			//options.find(".app_models_resume_onboarding_answer:not([selected=selected])").append(temp);
 	// 			$(this).append(temp);
-	// 			$(".bomb_wrapper").each(function(){
+	// 			$(".models_intro_bomb_wrapper").each(function(){
 	// 				$(this).width($(this).parent("span").eq(0).width());
 	// 			});
-	// 			temp.find(".bomb").velocity(
+	// 			temp.find(".models_intro_bomb").velocity(
 	// 			{
 	// 				backgroundPosition: "-200px"
 	// 			}, { 

@@ -23,14 +23,8 @@ var intro = {
 				],
 			},//0
 			{
-				line:"[image]/lincko/app/images/generic/onboarding/LinckoMeditate.gif[/image]",
-			},//1
-			{
 				line:"I'm your guide in the way of projects and collaboration. I'll give you updates on how your projects are going.",
-			},//2
-			{
-				line:"But for now, I'll introduce you to the basics.",
-			},//3
+			},//1
 			{
 				line:"Let me show you quickly how to get around.",
 				options:[ 
@@ -40,7 +34,7 @@ var intro = {
 						pointTo:1,
 					}
 				],
-			},//4
+			},//2
 		],
 		[//intro.step.new_project:1
 			{
@@ -127,18 +121,16 @@ var intro = {
 					}
 				],
 			},
+			
+		],	
+
+		[//feel_free:7
 			{
 				line:"Type a task name. You can type @ to assign an owner, and + to assign a date.",
-				options:[ 
-					{
-						line:"next",
-						pointType:"step",
-						pointTo:11,
-					}
-				],
 			},
-		],	
-		[//feel_free:7
+			{
+				line:'My New Task <span find="name" class="burger_tag">MonkeyKing</span><span find="dateWrapper" class="burger_tag">today</span>',
+			},
 			{
 				line:"Feel free to explore the sample project.",
 			},
