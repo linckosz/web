@@ -16,7 +16,6 @@
 .inputter_container{
 	background-color: #ffffff;
 	height:auto;
-	overflow : hidden;
 	padding:8px;
 }
 
@@ -42,7 +41,6 @@
 .inputter_container ul,.inputter_container ul li
 {
 	height:auto;
-	overflow : hidden;
 	margin: 0;
 	padding: 0;
 	list-style: none;
@@ -272,8 +270,8 @@
 	height: 30px;
     text-align: center;
     display: inline-block;
+    width:auto;
     max-width: 50px;
-    overflow: hidden;
     margin: 5px 5px;
     vertical-align: text-top;
 }
@@ -293,13 +291,26 @@
 .desktop_hide{
 	display : none;
 }
-/*
+
+.inputter_element_uploading_item .shortcut_wrapper{
+	max-width: 50px;
+	overflow: hidden;
+}
+
+.inputter_element_uploading_item .shortcut_remove_wrapper{
+	position: relative;
+	background-color: black;
+}
+
 .inputter_element_uploading_item .shortcut_remove{
 	position: absolute;
-	top:0;
-	right: 0;
+	font-size: 14px;
+	top:-44px;
+	right:-7px;
+	color: #53ADD2;
+	 z-index:9999;
 }
-*/
+
     
 
 @media only screen and (max-width: 1279px){

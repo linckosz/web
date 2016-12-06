@@ -5,14 +5,14 @@
 	background-color: white;
 }
 
-ul,li
+.models_intro_wrapper ul,.models_intro_wrapper li
 {
 	height: auto;
 	overflow:hidden;
 	list-style-type: none;
 }
 
-ul.models_intro_script_list li
+.models_intro_wrapper ul.models_intro_script_list li
 {
 	margin: 5px 0;
 }
@@ -90,6 +90,7 @@ ul.models_intro_script_list li
 
 .models_intro_content .burger_tag{
 	cursor:inherit;
+	white-space:inherit;
 }
 
 .models_intro_options
@@ -112,6 +113,10 @@ ul.models_intro_script_list li
 	cursor: pointer;
 }
 
+.shortcut_warpper{
+	height:auto;
+	overflow: hidden;
+}
 
 .models_intro_bomb_wrapper {
 	position:absolute;

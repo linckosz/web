@@ -397,7 +397,6 @@ inputter.prototype.buildLayer = function()
 													}
 													if(preview == null || preview == '')
 													{
-														$
 														if(count == 0)
 														{
 															$('#'+this.action_param[2]+'_attachment .inputter_ico').addClass('mobile_hide');
@@ -408,7 +407,6 @@ inputter.prototype.buildLayer = function()
 
 															$('#'+this.action_param[2]+'_attachment .inputter_preview')
 																.find(".shortcut_ico")
-																.addClass('display_none')
 																.find("i")
 																.addClass(app_models_fileType.getClass(app_models_fileType.getExt(files[z].lincko_name)));
 														}

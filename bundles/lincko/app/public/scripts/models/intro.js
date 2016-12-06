@@ -7,8 +7,7 @@ var intro = {
 		linckobot_chat:3,
 		sample_project:4,
 		project_items:5,
-		create_task:6,
-		feel_free:7,
+		feel_free:6,
 	},
 	script :[
 		[//intro.step.welcome:0
@@ -100,31 +99,22 @@ var intro = {
 			},
 			{
 				line:"Use Files for all your important documents and images - any file uploaded to a project chat is also stored here. ",
-				options:[ 
-					{
-						line:"next",
-						pointType:"step",
-						pointTo:10,
-					}
-				],
 			},
-		],
-	
-		[//create_task:6
 			{
 				line:"Let's add your first task.",
 				options:[ 
 					{
 						line:"Let's do this!",
-						pointType:"script",
-						pointTo:1,
+						pointType:"step",
+						pointTo:7,
 					}
 				],
 			},
 			
-		],	
+		],
+	
 
-		[//feel_free:7
+		[//feel_free:6
 			{
 				line:"Type a task name. You can type @ to assign an owner, and + to assign a date.",
 			},
@@ -203,16 +193,20 @@ var intro = {
 		var lazy = intro.lazyLoading(timer);
 		content.append(lazy);
 
+		var step = intro.current_step;
 		//line
 		setTimeout(function(){
-			content.html(intro.script[intro.current_step][script_index]["line"]);
-			if(intro.script[intro.current_step][script_index].hasOwnProperty("options"))
+			if(step == intro.current_step)
 			{
-				intro.collectOptions(intro.script[intro.current_step][script_index]["options"]);
-			}
-			else if(script_index + 1 < intro.script[intro.current_step].length)
-			{
-				intro.gotoScript(script_index + 1);
+				content.html(intro.script[intro.current_step][script_index]["line"]);
+				if(intro.script[intro.current_step][script_index].hasOwnProperty("options"))
+				{
+					intro.collectOptions(intro.script[intro.current_step][script_index]["options"]);
+				}
+				else if(script_index + 1 < intro.script[intro.current_step].length)
+				{
+					intro.gotoScript(script_index + 1);
+				}
 			}
 			// else{
 			// 	intro.startStep(position);
