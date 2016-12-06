@@ -15,8 +15,21 @@
 	bottom: initial;
 	height: 48px;
 }
+.onboarding_overlay_btnSkip{
+	top: 12px;
+    right: 12px;
+    left: auto;
+    bottom: auto;
+    background: none;
+    font-size: 14px;
+    cursor: pointer;
+}
+.onboarding_overlay_btnSkip:hover{
+	text-decoration: underline;
+}
 
 .onboarding_welcome_bubble{
+	width: 450px;
 	background-color: rgba(255, 255, 255, 0.96);
 	border: solid 2px #407606;
 	z-index: 10000;
@@ -36,6 +49,7 @@
 /*maxMobileL*/
 @media only screen and (max-width: 900px) {
 	.onboarding_welcome_bubble{
+		width: auto;
 		left: 5px !important;
 		right: 5px !important;
 		-webkit-transform:	translate(0, -50%);
