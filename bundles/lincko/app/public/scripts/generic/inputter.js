@@ -636,7 +636,6 @@ function cleanHtmlTag(source){
 
 	var flag = true;
 	input.find('[find=chat_textarea]').keypress(function(e){
-		debugger;
 		e.stopPropagation();
 		if(e.keyCode==13)
 		{
