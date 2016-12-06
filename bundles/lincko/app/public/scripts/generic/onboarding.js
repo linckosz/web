@@ -1120,8 +1120,8 @@ onboarding.scripts['welcome'] = function(){
 							tripData.sel.find('[contenteditable]').focus();
 							setTimeout(function(){
 								fn_next();
-							}, 2000);
-						}, 3000);
+							}, (intro.script[6].length+2)*1000);
+						}, 4000);
 					},
 				},
 			];
