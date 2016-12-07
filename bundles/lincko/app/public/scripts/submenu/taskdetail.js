@@ -1726,12 +1726,6 @@ Submenu.prototype.Add_taskdetail = function() {
 				if(!item_real){
 					item_real = Lincko.storage.get(item['_type'], item['_id']);
 				}
-
-				//if deleted, remove all links
-				if(item_real && item_real.deleted_at){
-					// toto - taskdetail_tools.removeAllLinks(item_real['_type'], item_real['_id']);
-				}
-
 			}
 			var cb_error = function(){
 				if(taskid == 'new'){
@@ -2174,15 +2168,15 @@ Submenu.prototype.Add_taskdetail = function() {
 	editor_param.submenuInst = that;
 
 	if(that.param.type != 'files'){
-
 		var fn_load_linckoEditor = function(){
+
 			if(editorInst){ return false; }
 			//delete previous instance, if exists
-			if(CKEDITOR && CKEDITOR.instances && CKEDITOR.instances['submenu_taskdetail_description_text_'+that.md5id]){
-				CKEDITOR.instances['submenu_taskdetail_description_text_'+that.md5id].destroy();
+			if(CKEDITOR && CKEDITOR.instances && CKEDITOR.instances[elem_description_text.prop('id')]){
+				CKEDITOR.instances[elem_description_text.prop('id')].destroy();
 			}
 			elem_editorToolbar.empty(); //clear a simple div, no need for recursive
-			elem_description_text.prop('contenteditable', true);
+			elem_description_text.prop('contenteditable', true).html(Lincko.storage.get(that.param.type, item['_id'], '-comment'));
 			editorInst = linckoEditor('submenu_taskdetail_description_text_'+that.md5id, 'submenu_taskdetail_description_toolbar_'+that.md5id, editor_param);
 
 			//there might be auto focus in the case of notes. if the case, dont add overlay
@@ -2204,9 +2198,39 @@ Submenu.prototype.Add_taskdetail = function() {
 
 			if(taskid != 'new'){
 				taskdetail_lockIntervalToggle(item['_id'], item['_type']);
+				app_application_lincko.add(
+					elem_editorToolbar.prop('id'),
+					that.param.type+'_'+item['_id'],
+					function(){
+						var locked_by = Lincko.storage.get(that.param.type, item['_id'], 'locked_by');
+						if(locked_by && locked_by != wrapper_localstorage.uid
+							&& CKEDITOR && CKEDITOR.instances && CKEDITOR.instances[elem_description_text.prop('id')]){
+							editorInst = null;
+							CKEDITOR.instances[elem_description_text.prop('id')].destroy();
+							fn_lockDescription();
+						}
+					}
+				);
 			}
-			
-		}
+		} //end of fn_load_linckoEditor
+
+		var fn_lockDescription = function(){
+			elem_description_text.prop('contenteditable', false).html(Lincko.storage.get(that.param.type, item['_id'], '-comment'));
+			var id_elem_locked = elem_editorToolbar.prop('id')+'_locked';
+			elem_editorToolbar.empty().append($('#-submenu_taskdetail_description_toolbar_locked').clone().prop('id', id_elem_locked));
+
+			$('#'+id_elem_locked).text(Lincko.Translation.get('app', 3614, 'html', {username: Lincko.storage.get('users', item.locked_by,'username')}));
+			app_application_lincko.add(
+				id_elem_locked,
+				that.param.type+'_'+item['_id'],
+				function(){
+					var locked_by = Lincko.storage.get(that.param.type, item['_id'], 'locked_by');
+					if(!locked_by || locked_by == wrapper_localstorage.uid){
+						fn_load_linckoEditor();
+					}
+				}
+			);
+		} //end of fn_lockDescription
 
 		var onLoad_description = new base_runOnElemLoad('submenu_taskdetail_description_text_'+that.md5id, 
 			function(){
@@ -2216,19 +2240,7 @@ Submenu.prototype.Add_taskdetail = function() {
 					fn_load_linckoEditor();
 				}
 				else{
-					var id_elem_locked = elem_editorToolbar.prop('id')+'_locked';
-					elem_editorToolbar.find('[find=locked_msg]').prop('id', id_elem_locked).text(Lincko.Translation.get('app', 3614, 'html', {username: Lincko.storage.get('users', wrapper_localstorage.uid ,'username')}));
-					app_application_lincko.add(
-						id_elem_locked,
-						that.param.type+'_'+item['_id'],
-						function(){
-							var locked_by = Lincko.storage.get(that.param.type, item['_id'], 'locked_by');
-							if(!locked_by || locked_by == wrapper_localstorage.uid){
-								fn_load_linckoEditor();
-							}
-						}
-					);
-					
+					fn_lockDescription();					
 				}
 			}
 		);
@@ -2243,13 +2255,16 @@ Submenu.prototype.Add_taskdetail = function() {
 			return;
 		});
 
-		//auto focus after submenu opens
+
+		//auto focus after submenu opens, and send check request for locking
 		if(taskid == 'new'){
 			if(that.param.type == 'tasks'){
 				that.param.elem_autoFocus = elem_title_text;
+				wrapper_sendAction({id: item._id}, 'post', 'task/lock/check');
 			}
 			else if(that.param.type == 'notes'){
 				that.param.elem_autoFocus = elem_description_text;
+				wrapper_sendAction({id: item._id}, 'post', 'note/lock/check');
 			}
 		}
 	}//end of !files
@@ -2298,6 +2313,9 @@ var taskdetail_lockIntervalToggle = function(id, type, start){
 	clearInterval(taskdetail_lockInterval);
 	if(typeof start != 'boolean'){ var start = true; }
 
+	var id_me = wrapper_localstorage.uid;
+	var locked_by = Lincko.storage.get(type, id, 'locked_by');
+
 	var route = '';
 	if(type == 'tasks'){
 		route = 'task/lock/';
@@ -2310,17 +2328,20 @@ var taskdetail_lockIntervalToggle = function(id, type, start){
 	}
 
 	if(start){ 
+		Lincko.storage.data[type][id].locked_by = id_me; //modify locally immediately
+
 		route += 'start';
 		wrapper_sendAction({id: id}, 'post', route);
 		taskdetail_lockInterval = setInterval(function(id, route){
 			wrapper_sendAction({id: id}, 'post', route);
 		}, 40000, id, route);
-		console.log('locked');
 	}
 	else{ 
+		if(id_me != locked_by){ return false; } //dont send unlock if it is not locked by me
+		Lincko.storage.data[type][id].locked_by = null; //modify locally immediately
+
 		route += 'unlock';
 		wrapper_sendAction({id: id}, 'post', route);
-		console.log('unlocked');
 	}
 
 	return true;
@@ -2921,7 +2942,7 @@ var taskdetail_linkQueue = {
 taskdetail_tools = {
 
 	//remove all links to the item at cb_success of deletion
-	item_properDelete: function(type, id){
+	item_properDelete: function(type, id){ //DONT USE THIS - cant remove links of a deleted object
 		var item = Lincko.storage.get(type, id);
 		if(!item){ return false; }
 

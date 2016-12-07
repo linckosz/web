@@ -273,7 +273,7 @@ skylist.prototype.subConstruct_default = function(){
 				{
 					"type":that.list_type,
 					"id": 'new', 
-				}, true);
+				}, true, false);
 			if(submenu_taskdetail.param.elem_autoFocus){
 				submenu_taskdetail.param.elem_autoFocus.focus();
 			}
