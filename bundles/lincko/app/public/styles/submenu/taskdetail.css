@@ -133,6 +133,18 @@ td.submenu_taskdetail_share .fa{
 	position: relative;
 	height: 40px;
 }
+.taskdetail_editorToolbar_locked{
+	font-family: inherit;
+    font-size: 10px;
+    font-weight: 300;
+    color: #9b9b9b;
+}
+.taskdetail_editorToolbar_locked:before{
+    padding-right: 5px;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: 12px;
+    color: #cacaca;
+}
 .taskdetail_editorToolbar_overlay{
     position: absolute;
     left: 0px;
