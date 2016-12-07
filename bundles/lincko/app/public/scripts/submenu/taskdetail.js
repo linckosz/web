@@ -1183,6 +1183,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	if(typeof item_linked == 'object'){
 		for(var category in item_linked){
 			$.each(item_linked[category], function(id,item){
+				if(item.deleted_at){ return; } //ignore deleted items
 				elem_links_wrapper.append(generate_linkCard(item));
 				link_count++;
 			});
