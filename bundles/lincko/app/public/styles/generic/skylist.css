@@ -373,6 +373,15 @@
 	width: 50px;
 	z-index: 0;
 }
+.skylist_card_time.fa-lock:before{
+	display: none;
+    font: normal normal normal 14px/1 FontAwesome;
+    padding-right: 3px;
+    color: #cacaca;
+}
+.skylist_card[locked] .skylist_card_time.fa-lock:before{
+	display: inline;
+}
 
 .skylist_card_bottom {
 	height: 20px;

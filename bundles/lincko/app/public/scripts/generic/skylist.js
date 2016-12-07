@@ -1383,6 +1383,11 @@ skylist.prototype.addTask = function(item){
 		Elem.addClass('skylist_card_checked');
 	}
 
+	//locked_by
+	if(item['locked_by'] && item['locked_by'] != wrapper_localstorage.uid){
+		Elem.attr('locked', item['locked_by']);
+	}
+
 
 	/*
 	title
