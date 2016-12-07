@@ -550,11 +550,19 @@ Submenu.prototype.Add_taskdetail = function() {
 		var elem_projects = elem.find('[find=projects_text]');
 		var elem_projects_input = elem.find('[find=projects_id]').addClass('skylist_clickable');
 		if(taskid != 'new'){
-			that.param.projID = item['_parent'][1];
+			if(item['_parent'][0] == 'projects'){
+				that.param.projID = item['_parent'][1];
+			}
+			else{
+				that.param.projID = false;
+			}
 		}
 		var project = Lincko.storage.get('projects',that.param.projID);
 		if(project.personal_private){
 			elem_projects.html(Lincko.Translation.get('app', 2502, 'html')); //Personal Space
+		}
+		else if(!project){
+			elem.find('td[find="projects"]').addClass('display_none');
 		}
 		else{
 			elem_projects.html(project['+title']);
