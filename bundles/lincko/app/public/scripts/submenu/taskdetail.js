@@ -27,7 +27,7 @@ submenu_list['taskdetail'] = {
 		'hide': true,
 		"class": "base_pointer",
 		"action": function(Elem, subm) {
-			//subm.cancel = true;
+			//subm.close = true;
 		},
 	},
 	"taskdetail": {
@@ -394,29 +394,33 @@ Submenu.prototype.Add_taskdetail = function() {
 	if(taskid != 'new'){
 		//title autosave for tasks, notes, files
 		elem_title_text.blur(function(){
-			var old_title = item['+title'] || item['+name'];
-			var new_title = $(this).html();
+			setTimeout(function(){
+				if(that.submenu_hide){ return; } //no need to update comment if this is after submenu_hide 
 
-			if(old_title != new_title){
-				var param = {id: taskid};
-				if(item['+title']){ 
-					item['+title'] = new_title; 
-					param.title = new_title;
-				}
-				else{
-					item['+name'] = new_title;
-					param.name = new_title;
-				}
+				var old_title = item['+title'] || item['+name'];
+				var new_title = $(this).html();
 
-				if(that.param.type == 'tasks'){
-					skylist.sendAction.tasks(param, item, routeObj.update);
+				if(old_title != new_title){
+					var param = {id: taskid};
+					if(item['+title']){ 
+						item['+title'] = new_title; 
+						param.title = new_title;
+					}
+					else{
+						item['+name'] = new_title;
+						param.name = new_title;
+					}
+
+					if(that.param.type == 'tasks'){
+						skylist.sendAction.tasks(param, item, routeObj.update);
+					}
+					else{
+						wrapper_sendAction(param, 'post', routeObj.update);
+					}
+					Lincko.storage.data[item._type][item._id] = item;
+					app_application_lincko.prepare(item._type+'_'+item._id, true);
 				}
-				else{
-					wrapper_sendAction(param, 'post', routeObj.update);
-				}
-				Lincko.storage.data[item._type][item._id] = item;
-				app_application_lincko.prepare(item._type+'_'+item._id, true);
-			}
+			}, 1000);
 		});//end of blur event
 	}
 
@@ -777,29 +781,34 @@ Submenu.prototype.Add_taskdetail = function() {
 
 	if(taskid != 'new' && that.param.type != 'files'){
 		//description autosave for tasks, notes, files
-		elem_description_text.blur(function(){
-			var old_comment = item['-comment'];
-			var new_comment = $(this).html();
-			if( $('<div>').html(new_comment).text() == '' ){
-				new_comment = '';
-			}
-
-			if(old_comment != new_comment){
-				var param = {id: taskid};
-				if(item['-comment']){ 
-					item['-comment'] = new_comment; 
-					param.comment = new_comment;
+		elem_description_text.blur(function(event){ 
+			setTimeout(function(){
+				if(that.submenu_hide){ return; } //no need to update comment if this is after submenu_hide 
+				
+				var old_comment = item['-comment'];
+				var new_comment = $(this).html();
+				if( $('<div>').html(new_comment).text() == '' ){
+					new_comment = '';
 				}
 
-				if(that.param.type == 'tasks'){
-					skylist.sendAction.tasks(param, item, routeObj.update);
+				if(old_comment != new_comment){
+					var param = {id: taskid};
+					if(item['-comment']){ 
+						item['-comment'] = new_comment; 
+						param.comment = new_comment;
+					}
+
+					if(that.param.type == 'tasks'){
+						skylist.sendAction.tasks(param, item, routeObj.update);
+					}
+					else{
+						wrapper_sendAction(param, 'post', routeObj.update);
+					}
+					Lincko.storage.data[item._type][item._id] = item;
+					app_application_lincko.prepare(item._type+'_'+item._id, true);
 				}
-				else{
-					wrapper_sendAction(param, 'post', routeObj.update);
-				}
-				Lincko.storage.data[item._type][item._id] = item;
-				app_application_lincko.prepare(item._type+'_'+item._id, true);
-			}
+			}, 1000); //inside setTimeout to be able to occur after a possible submenu_hide
+				
 		});//end of blur event
 	}
 
@@ -1691,7 +1700,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		that.id,
 		'submenu_hide_'+that.preview+'_'+that.id,
 		function(){
-
+			that.submenu_hide = true;
 			taskdetail_lockIntervalToggle(item['_id'], item['_type'], false);
 
 			if( (taskid == 'new' && route_delete) || this.action_param.cancel || (item.deleted_at && !route_delete)){
@@ -1704,11 +1713,13 @@ Submenu.prototype.Add_taskdetail = function() {
 				return false;
 			}
 			var contactServer = false;
+			var route = '';
 			var param = {};
 			var tmpID = null;
 
 			var cb_begin = function(jqXHR, settings, temp_id){
 				tmpID = temp_id;
+				taskdetail_itemManualUpdate(param, route);
 			}
 			var cb_success = function(msg, data_error, data_status, data_msg){
 				var item_real = null;
@@ -1817,6 +1828,7 @@ Submenu.prototype.Add_taskdetail = function() {
 					
 				}
 			}
+
 			if( taskid == 'new' || route_delete 
 				|| ('+title' in item && param['title'] && param['title'] != item['+title'])
 				|| ('+name' in item && param['name'] && param['title'] != item['+name'])
@@ -1825,7 +1837,6 @@ Submenu.prototype.Add_taskdetail = function() {
 			}
 
 			if( contactServer ){
-				var route = '';
 				if( that.param.type == "tasks" ){
 					route += 'task';
 				}
@@ -1845,12 +1856,14 @@ Submenu.prototype.Add_taskdetail = function() {
 				else{
 					route += '/update';
 				}
+
 				if(taskid != 'new' && route == 'task/update'){
 					skylist.sendAction.tasks(param, item, route, cb_success, cb_error, cb_begin, cb_complete);
 				}
 				else{
 					wrapper_sendAction( param,'post',route, cb_success, cb_error, cb_begin, cb_complete);
 				}
+
 			}
 		}, this
 	);
@@ -2316,6 +2329,32 @@ Submenu.prototype.Add_taskdetail = function() {
 	delete submenu_wrapper;
 	return true;
 };
+
+//use just before sendAction to manually update the local data
+var taskdetail_itemManualUpdate = function(param_sendAction, route){
+	if(!param_sendAction){ return false; }
+	var id = param_sendAction['id'] || param_sendAction['_id'];
+	
+	if(!id || id == 'new'){ return false; }
+
+	var type = null;
+	if(route == 'task/update'){
+		type = 'tasks';
+	}
+	else if(route == 'note/update'){
+		type = 'notes';
+	}
+	else{
+		return false;
+	}
+
+	if(id && type){
+		if(param_sendAction['comment'] || param_sendAction['-comment']){
+			Lincko.storage.data[type][id]['-comment'] = param_sendAction['comment'] || param_sendAction['-comment'];
+		}
+	}
+
+}
 
 var taskdetail_lockInterval = null;
 var taskdetail_lockIntervalToggle = function(id, type, start){
@@ -2994,7 +3033,6 @@ taskdetail_tools = {
 			var route = type;
 			route = route.slice(0, -1) + '/update';
 			wrapper_sendAction(param_sendAction, 'post', route);
-			console.log('remove links sendAction sent');
 			return true;
 		}
 		else{

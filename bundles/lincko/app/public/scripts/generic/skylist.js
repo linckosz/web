@@ -1100,6 +1100,11 @@ skylist.prototype.paperview_partialUpdate = function(updated_tasks){
 		viewed_by : true,
 		_tasksdown: true,
 		locked_by: true, //no need for update DOM
+
+		approved: true,
+		approved_at: true,
+		approved_by: true,
+
 	}
 
 	var partialUpdate = true;
@@ -1137,6 +1142,13 @@ skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
 		}
 		else{
 			elem.removeClass('skylist_card_overdue');
+		}
+	}
+
+	//approved, approved_by, approved_at
+	if((typeof updated == 'boolean' && updated) || updated.approved || updated.approved_at || updated.approved_by){
+		if(item.approved != elem.hasClass('skylist_card_checked')){
+			elem.toggleClass('skylist_card_checked');
 		}
 	}
 
@@ -1812,7 +1824,7 @@ skylist.prototype.addTask = function(item){
 	elem_calendar_timestamp.change(function(){
 		var duration_timestamp = $(this).val()/1000 - item['start'];
 		if( duration_timestamp < 0 ){
-			console.log(item['start']+' duedate cant be before start date.');
+			console.log(item['start']+' duedate cant be before start date.'); //toto
 		}
 		else{
 			var route = '';
@@ -2573,8 +2585,10 @@ skylist.prototype.checkboxClick = function(event,elem_checkbox){
 	skylist.sendAction.tasks(param, task, 'task/update');
 	//wrapper_sendAction( param, 'post', 'task/update');
 	Lincko.storage.data.tasks[task._id].approved = approved;
-	app_application_lincko.prepare('tasks_'+task._id, true);
 
+	var updated = {};
+	updated['tasks_'+task._id] = { approved: true };
+	app_application_lincko.prepare('tasks_'+task._id, true, updated);
 }
 
 skylist.prototype.taskClick = function(event,task_elem){
