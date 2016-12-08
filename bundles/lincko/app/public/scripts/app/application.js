@@ -173,7 +173,7 @@ var app_application_lincko = {
 											if(app_application_lincko._elements[Elem_id]){
 												app_application_lincko._elements[Elem_id].action();
 											} else {
-												console.log("application => "+Elem_id);
+												//console.log("application => "+Elem_id);
 												//JSerror.sendError(Elem_id, 'app_application_lincko._elements[Elem_id] does not exists', 0);
 											}
 										}, 0, Elem_id);

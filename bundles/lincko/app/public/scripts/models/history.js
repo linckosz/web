@@ -65,6 +65,10 @@ var app_models_history = {
 	},
 
 	notification: function(items, lastvisit){
+		//Skip notification if inside an app because we do mobile push
+		if(useMobileNotification()==false){
+			return true;
+		}
 		if(typeof items == 'undefined'){ items = {}; }
 		if(typeof lastvisit == 'undefined'){ lastvisit = Lincko.storage.getLastVisit(); }
 		var hist;
@@ -76,7 +80,6 @@ var app_models_history = {
 		var msg;
 		var sentence;
 		if(lastvisit>0){
-
 			//Grab Task notifications
 			if(typeof items['tasks'] != 'undefined'){
 				hist = Lincko.storage.hist('tasks', null, {not: true, by: ['!=', wrapper_localstorage.uid], timestamp: ['>', lastvisit]});

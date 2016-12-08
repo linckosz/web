@@ -1008,6 +1008,7 @@ Submenu.prototype.showPreview = function(time, delay, animate) {
 	var animation;
 	$('#' + that.id).css('visibility', 'hidden').hide().show(0);
 	if(!animate){
+		$('#' + that.id).css('visibility', 'visible');
 		submenu_wrapper.find("[find=submenu_wrapper_content]").focus();
 		//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas
 		//submenu_wrapper.hide().show(0);

@@ -26,3 +26,11 @@ function isMobileApp(){
 		|| typeof winPhone != 'undefined'
 	);
 }
+
+function useMobileNotification(){
+	var notif = false;
+	if(isMobileApp()){
+		notif = true;
+	}
+	return notif;
+}
