@@ -1092,6 +1092,7 @@ skylist.prototype.paperview_partialUpdate = function(updated_tasks){
 /*	should retrun true for the following updates: (which means use paperview_taskCard_update() ) */
 	var partialUpdateList = {
 		'+title': true,
+		'-comment': true,
 		_files : true,
 		_children : true, //(i.e. comments)
 		_users : true,
@@ -2923,7 +2924,7 @@ skylist.prototype.openDetail = function(/*open,*/ task_elem){
 	'taskdetail', null, null, {
 		"type":that.list_type, 
 		"id":item_id,
-	}, true);
+	}, true, false);
 	if( openSuccess ){
 		that.elem_card_all.removeClass('skylist_card_hover');
 		task_elem.addClass('skylist_card_hover');

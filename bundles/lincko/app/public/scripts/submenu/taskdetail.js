@@ -2349,8 +2349,12 @@ var taskdetail_itemManualUpdate = function(param_sendAction, route){
 	}
 
 	if(id && type){
-		if(param_sendAction['comment'] || param_sendAction['-comment']){
-			Lincko.storage.data[type][id]['-comment'] = param_sendAction['comment'] || param_sendAction['-comment'];
+		var comment = param_sendAction['comment'] || param_sendAction['-comment'];
+		if(comment){
+			Lincko.storage.data[type][id]['-comment'] = comment;
+			var param_prepare = {};
+			param_prepare[type+'_'+id] = { '-comment': true };
+			app_application_lincko.prepare(type+'_'+id, true, param_prepare);
 		}
 	}
 
