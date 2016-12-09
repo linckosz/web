@@ -294,21 +294,37 @@
 
 .inputter_element_uploading_item .shortcut_wrapper{
 	max-width: 50px;
+	height: 30px;
 	overflow: hidden;
+}
+
+.inputter_element_uploading_item .shortcut_wrapper .shortcut_ico{
+	height: 30px !important;
+	display:inline-block;
 }
 
 .inputter_element_uploading_item .shortcut_remove_wrapper{
 	position: relative;
-	background-color: black;
+	height: 30px;
 }
 
 .inputter_element_uploading_item .shortcut_remove{
 	position: absolute;
 	font-size: 14px;
-	top:-44px;
+	line-height: 14px;
+	top:-37px;
 	right:-7px;
 	color: #53ADD2;
-	 z-index:9999;
+	z-index:9999;
+	display: none;
+}
+
+.inputter_element_uploading_item:hover .shortcut_remove{
+	display:inline-block;
+}
+
+.inputter_element_uploading_item .shortcut_remove:hover{
+	cursor: pointer;
 }
 
     

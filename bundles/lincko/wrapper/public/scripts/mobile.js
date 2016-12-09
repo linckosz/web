@@ -10,6 +10,7 @@ function setMobileAlias(){
 	}
 	if(typeof iOS != 'undefined' )
 	{
+		//window.webkit.messageHandlers.iOS.postMessage(sha)
 		iOS.setAlias(sha);
 	}
 	if(typeof winPhone != 'undefined' )

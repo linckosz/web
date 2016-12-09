@@ -86,7 +86,6 @@ submenu_list['newchat'] = {
 					Elem.find('.submenu_top_side_left').removeClass('display_none');
 				});
 			}
-
 		},
 	},
 };
@@ -281,12 +280,6 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 		enter : fnSendMsg,
 		auto_upload : true,
 
-		// left_menu :
-		// [
-		// 	[{
-		// 		element :'chkTask',
-		// 	}],
-		// ],
 		right_menu :
 		[	
 			[
@@ -309,14 +302,6 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 			],
 		],
 	};
-
-	// var burgerParm = 
-	// {
-	// 	shiftEnter : true,
-	// 	dropdownOffset : 20,
-	// 	enter_fn_param : 'inputter',
-	// 	enter_fn : that.layer['enter'],
-	// }
 
 	var type = that.param.type == 'history' ? "projects":'chats';
 	var chat_inputter = new inputter(this.id,position,type,that.param.id,layer,null);

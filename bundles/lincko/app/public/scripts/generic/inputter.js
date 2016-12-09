@@ -356,12 +356,34 @@ inputter.prototype.buildLayer = function()
 								break;
 							case 'attachment' :
 								var auto_upload = this.layer.hasOwnProperty('auto_upload') ? this.layer['auto_upload'] : true;
-								item.click({'type':this.upload_ptype,'pid':this.upload_pid,'panel_id':this.panel_id},function(event){
+								item.click({'type':this.upload_ptype,'pid':this.upload_pid,'panel_id':this.panel_id,'position':this.position},function(event){
+								
 									var type = event.data.type ;
 									var pid = event.data.pid ;
 									var panel_id = event.data.panel_id ;
-									app_upload_open_files(type, pid,false,auto_upload,panel_id);
+									var position = event.data.position ;
+									if(supportsTouch)
+									{
+										var files_queue = container.find('[find=files_queue]');
+										if(files_queue.find('li').length == 0)
+										{
+											app_upload_open_files(type, pid,false,auto_upload,panel_id);
+										}
+										else{
+											var parm_upload = {
+												upload_type:type,
+												upload_pid:pid,
+												upload_param:panel_id
+											};
+											submenu_Build('filemanager', true, null, parm_upload, true);
+										}
+									}
+									else
+									{
+										app_upload_open_files(type, pid,false,auto_upload,panel_id);
+									}
 								});
+
 								item.find('.inputter_preview').addClass('display_none');
 								if(!this.layer['right_menu'][i].hasOwnProperty('click') && !auto_upload)
 								{
@@ -384,6 +406,17 @@ inputter.prototype.buildLayer = function()
 													var item = $('#-inputter_element_uploading_item').clone();
 													item.prop('id','inputter_element_uploading_item_'+files[z].lincko_temp_id);
 													item.appendTo(files_queue);
+
+													//remove button
+													var target_id = 'inputter_element_uploading_item_'+files[z].lincko_temp_id;
+													item.find('[find=shortcut_remove]').click({target_id:target_id,index:z},function(event){
+															event.stopPropagation();
+															var id = event.data.target_id;
+															var index = event.data.index;
+															app_upload_files.lincko_files[index].lincko_status = 'deleted';
+															$('#app_upload_fileupload').fileupload('option').destroy(event, app_upload_files.lincko_files[index]);
+															$('#'+id).recursiveRemove(0);
+													});
 												}
 												else{
 
@@ -425,7 +458,7 @@ inputter.prototype.buildLayer = function()
 															$('#'+this.action_param[2]+'_attachment .inputter_ico').addClass('mobile_hide');
 															
 															$('#'+this.action_param[2]+'_attachment .inputter_preview')
-															    .find(".shortcut_ico")
+																.find(".shortcut_ico")
 																.addClass('display_none');
 
 															var width =  files[z].files[0].preview.width;
@@ -436,7 +469,7 @@ inputter.prototype.buildLayer = function()
 															var padding_left_style  = width > height ? 0 : (30 - (30*width/height))/2;
 
 															$('#'+this.action_param[2]+'_attachment .inputter_preview')
-															    .find(".shortcut_pic")
+																.find(".shortcut_pic")
 																.removeClass('display_none')
 																.attr('src',preview)
 																.css('height',height_style)
@@ -457,6 +490,7 @@ inputter.prototype.buildLayer = function()
 													}
 												}
 												count ++;
+
 											}
 											
 										}
@@ -601,7 +635,6 @@ function cleanHtmlTag(source){
 
 
 	input.find('[find=chat_textarea]').on('paste',function(e,data){
-
 		var target = this;
 		setTimeout(function(){
 			//debugger;
