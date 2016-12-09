@@ -119,6 +119,15 @@
 	border-color: rgba(255, 255, 255, 0.3) !important;
 }
 
+.models_projects_tab {
+	font-size: 16px;
+	border-top: solid 1px #EBEFF3;
+}
+.models_projects_tab > span{
+	padding-left: 7%;
+}
+
+
 /* Mobile phone in Portrait */
 @media only screen and (max-width: 479px){
 	.models_projects_standard {

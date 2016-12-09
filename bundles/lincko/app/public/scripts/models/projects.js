@@ -120,8 +120,47 @@ submenu_list['app_project_edit'] = {
 		"title": Lincko.Translation.get('app', 31, 'html'), //Team
 		"name": "project_team_select_multiple",
 		"value": "",
-		"class": "submenu_input_select_multiple submenu_deco_borders",
+		"class": "submenu_input_select_multiple models_projects_tab",
 		"next": "app_projects_users_contacts",
+	},
+	"mute": {
+		"style": "button",
+		"title": Lincko.Translation.get('app', 74, 'html'), //Mute notifications
+		"value": Lincko.Translation.get('app', 76, 'html'), //Off
+		"now": function(Elem, subm){
+			var projects_id = subm.param;
+			var users = Lincko.storage.get('projects', projects_id, '_users');
+			var on_off = Lincko.Translation.get('app', 76, 'html'); //Off
+			if(users[wrapper_localstorage.uid] && users[wrapper_localstorage.uid]['silence']){
+				on_off = Lincko.Translation.get('app', 75, 'html'); //On
+			}
+			Elem.find("[find=submenu_button_value]").html(on_off);
+			Elem.removeClass('submenu_deco').addClass('submenu_select');
+		},
+		"class": "models_projects_tab submenu_select submenu_deco_borders",
+		"action": function(Elem, subm){
+			var projects_id = subm.param;
+			var users = Lincko.storage.get('projects', projects_id, '_users');
+			var on_off_invert = true;
+			if(users[wrapper_localstorage.uid] && users[wrapper_localstorage.uid]['silence']){
+				on_off_invert = false;
+			}
+			var on_off = Lincko.Translation.get('app', 76, 'html'); //Off
+			if(on_off_invert){
+				on_off = Lincko.Translation.get('app', 75, 'html'); //On
+			}
+			var param = {
+				id: projects_id,
+				"users>silence": {},
+			}
+			param["users>silence"][wrapper_localstorage.uid] = on_off_invert;
+			wrapper_sendAction(
+				param,
+				'post',
+				'project/update'
+			);
+			Elem.find("[find=submenu_button_value]").html(on_off);
+		},
 	},
 	"description": {
 		"style": "project_description_edit",

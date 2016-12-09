@@ -102,3 +102,11 @@
 .submenu_contact_deletion_button:hover {
 	border-color: rgba(255, 255, 255, 0.3) !important;
 }
+
+.submenu_contact_tab {
+	font-size: 16px;
+	border-top: solid 1px #EBEFF3;
+}
+.submenu_contact_tab > span{
+	padding-left: 7%;
+}

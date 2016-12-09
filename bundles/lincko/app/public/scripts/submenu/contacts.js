@@ -227,6 +227,46 @@ submenu_list['edit_group'] = {
 		},
 	},
 
+	"mute": {
+		"style": "button",
+		"title": Lincko.Translation.get('app', 74, 'html'), //Mute notifications
+		"value": Lincko.Translation.get('app', 76, 'html'), //Off
+		"now": function(Elem, subm){
+			var chats_id = subm.param.id;
+			var users = Lincko.storage.get('chats', chats_id, '_users');
+			var on_off = Lincko.Translation.get('app', 76, 'html'); //Off
+			if(users[wrapper_localstorage.uid] && users[wrapper_localstorage.uid]['silence']){
+				on_off = Lincko.Translation.get('app', 75, 'html'); //On
+			}
+			Elem.find("[find=submenu_button_value]").html(on_off);
+			Elem.removeClass('submenu_deco').addClass('submenu_select');
+		},
+		"class": "submenu_contact_tab submenu_select submenu_deco_borders",
+		"action": function(Elem, subm){
+			var chats_id = subm.param.id;
+			var users = Lincko.storage.get('chats', chats_id, '_users');
+			var on_off_invert = true;
+			if(users[wrapper_localstorage.uid] && users[wrapper_localstorage.uid]['silence']){
+				on_off_invert = false;
+			}
+			var on_off = Lincko.Translation.get('app', 76, 'html'); //Off
+			if(on_off_invert){
+				on_off = Lincko.Translation.get('app', 75, 'html'); //On
+			}
+			var param = {
+				id: chats_id,
+				"users>silence": {},
+			}
+			param["users>silence"][wrapper_localstorage.uid] = on_off_invert;
+			wrapper_sendAction(
+				param,
+				'post',
+				'chat/update'
+			);
+			Elem.find("[find=submenu_button_value]").html(on_off);
+		},
+	},
+
 	'contacts_live': {
 		"style": "contacts_live", //sendAction when click
 		"title": "contacts_live",
