@@ -1,0 +1,24 @@
+<div id="begin_file_manager" class="visibility_hidden">
+	<script>
+		JSfiles.later("{{ _filelatest('/lincko/app/scripts/submenu/filemanager.js') }}");
+	</script>
+	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/submenu/filemanager.css') }}" type="text/css" />
+</div>
+<div id="end_file_manager" class="visibility_hidden"></div>
+<div class="display_none">
+	<div id="-file_manager_container" class="file_manager_container display_none">
+		<ul find="file_list" class="file_manager_file_list">
+		</ul>
+	</div>
+	<div id="-file_manager_menu" class="file_manager_menu">
+		<div find="menu_cancel" class="file_manager_menu_cancel"><span>Cancel</span></div>
+		<div find="menu_attch" class="file_manager_menu_attch"><span>Attach</span></div>
+	</div>
+	<li id="-file_manager_file_item"  class="file_manager_file_item">
+		<img find="file_content" />
+	</li>
+	<li id="-file_manager_file_add" find="file_add" class="file_manager_file_item">
+		<span class="icon-Big-Add icon_file_manager_file_add needsclick">
+		</span>
+	</li>
+</div>

@@ -1,0 +1,55 @@
+.file_manager_container{
+	width: 100%;
+	z-index: 9999;
+	height: auto;
+	overflow: hidden;;
+}
+
+ul.file_manager_file_list,ul.file_manager_file_list li
+{
+	margin: 0;
+	padding: 0;
+
+}
+ul.file_manager_file_list
+{
+	height: auto;
+	overflow:hidden;
+}
+ul.file_manager_file_list li{
+	width:33%;
+	height:auto;
+	text-align: center;
+	overflow: hidden;
+	float: left;
+	white-space:nowrap;
+}
+
+.icon_file_manager_file_add{
+	
+}
+
+
+.file_manager_menu{
+	height: auto;
+	overflow: hidden;
+}
+.file_manager_menu_cancel{
+	width:50%;
+	float: left;
+	height: 50px;
+	line-height: 50px;
+	text-align: left;
+}
+
+.file_manager_menu_attch{
+	width:50%;
+	float: right;
+	height: 50px;
+	line-height: 50px;
+	text-align: right;
+}
+
+.file_manager_menu_cancel span,.file_manager_menu_attch span{
+	padding :0 10px;
+}
