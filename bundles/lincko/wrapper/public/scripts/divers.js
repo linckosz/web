@@ -808,17 +808,18 @@ function wrapper_test(type, RCUD){
 		else if(RCUD==2){
 			wrapper_sendAction(
 				{
-					"id": 264,
+					"id": 10455,
 					//"parent_id": 4,
-					"title": "Title "+Math.floor(Math.random() * 20), //OPTIONAL
+					//"title": "Title "+Math.floor(Math.random() * 20), //OPTIONAL
 					//"comment": "Content "+Math.floor(Math.random() * 20), //OPTIONAL
 					//"start": 1462110422, //OPTIONAL
 					//"duration": 86400, //OPTIONAL
 					//"fixed": 1, //OPTIONAL
-					"approved": !Lincko.storage.data.tasks[32]['approved'], //OPTIONAL
+					//"approved": !Lincko.storage.data.tasks[32]['approved'], //OPTIONAL
 					//"status": 0, //OPTIONAL
 					//"progress":  Math.floor(Math.random() * 10), //OPTIONAL
-					//"locked_by": null, //OPTION (Only null value will be meanful)
+					"locked": true, //OPTIONAL
+					/*
 					"users>approver": {
 						6: [true,false][Math.round(Math.random())],
 						12: [true,false][Math.round(Math.random())],
@@ -830,6 +831,7 @@ function wrapper_test(type, RCUD){
 					"tasks>delay": {
 						85: Math.floor(Math.random() * 20000),
 					},
+					*/
 				},
 				'post',
 				'task/update',

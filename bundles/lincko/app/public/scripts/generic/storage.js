@@ -1738,15 +1738,16 @@ Lincko.storage.generateMyQRcode = function(){
 	var user = Lincko.storage.get('users', wrapper_localstorage.uid);
 	if(user){
 		var workid = Lincko.storage.getWORKID();
-		var uid = wrapper_localstorage.uid;
+		var sha = wrapper_localstorage.sha;
 		var puk = wrapper_get_shangzai('puk');
 		var type = "qrcode";
+		var uid = wrapper_localstorage.uid;
 		var name = btoa(wrapper_localstorage.sha);
 		name = name.replace(/[^\d\w]/g, "");
 		if(name==''){ name = 'user'; }
 		var created_at = Lincko.storage.get('users', wrapper_localstorage.uid, 'created_at');
 		var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':'+document.linckoBackPort+'/file';
-		return url+"/"+workid+"/"+uid+"/"+type+"/"+uid+"/"+name+".png?"+created_at;
+		return url+"/"+workid+"/"+sha+"/"+type+"/"+uid+"/"+name+".png?"+created_at;
 	}
 	return false;
 }
@@ -1760,13 +1761,13 @@ Lincko.storage.getLink = function(id){
 	var file = Lincko.storage.get('files', id);
 	if(file){
 		var workid = Lincko.storage.getWORKID();
-		var uid = wrapper_localstorage.uid;
+		var sha = Lincko.storage.get('files', id, 'sha');
 		var puk = wrapper_get_shangzai('puk');
 		var type = "link";
 		var name = wrapper_to_url(Lincko.storage.get('files', id, 'name'));
 		var updated_at = Lincko.storage.get('files', id, 'updated_at');
 		var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':'+document.linckoBackPort+'/file';
-		return url+"/"+workid+"/"+uid+"/"+type+"/"+id+"/"+name+"?"+updated_at;
+		return url+"/"+workid+"/"+sha+"/"+type+"/"+id+"/"+name+"?"+updated_at;
 	}
 	return false;
 }
@@ -1776,13 +1777,13 @@ Lincko.storage.getDownload = function(id){
 	var file = Lincko.storage.get('files', id);
 	if(file){
 		var workid = Lincko.storage.getWORKID();
-		var uid = wrapper_localstorage.uid;
+		var sha = Lincko.storage.get('files', id, 'sha');
 		var puk = wrapper_get_shangzai('puk');
 		var type = "download";
 		var name = wrapper_to_url(Lincko.storage.get('files', id, 'name'));
 		var updated_at = Lincko.storage.get('files', id, 'updated_at');
 		var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':'+document.linckoBackPort+'/file';
-		return url+"/"+workid+"/"+uid+"/"+type+"/"+id+"/"+name+"?"+updated_at;
+		return url+"/"+workid+"/"+sha+"/"+type+"/"+id+"/"+name+"?"+updated_at;
 	}
 	return false;
 }
@@ -1795,13 +1796,13 @@ Lincko.storage.getLinkThumbnail = function(id){
 		thumbnail = Lincko.storage.thumbnail[file['category']];
 		if((file['category']=='image' || file['category']=='video') && file['thu_type']!=null){
 			var workid = Lincko.storage.getWORKID();
-			var uid = wrapper_localstorage.uid;
+			var sha = Lincko.storage.get('files', id, 'sha');
 			var puk = wrapper_get_shangzai('puk');
 			var type = "thumbnail";
 			var name = wrapper_to_url(Lincko.storage.get('files', id, 'name'));
 			var updated_at = Lincko.storage.get('files', id, 'updated_at');
 			var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':'+document.linckoBackPort+'/file';
-			thumbnail = url+"/"+workid+"/"+uid+"/"+type+"/"+id+"/"+name+"?"+updated_at;
+			thumbnail = url+"/"+workid+"/"+sha+"/"+type+"/"+id+"/"+name+"?"+updated_at;
 		}
 
 	}

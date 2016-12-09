@@ -145,13 +145,13 @@ html, .font_sans_serif {
 }
 
 .selectable {
-	-webkit-touch-callout: initial;
-	-webkit-user-select: initial;
-	-khtml-user-select: initial;
-	-moz-user-select: initial;
-	-ms-user-select: initial;
-	user-select: initial;
-	cursor: initial;
+	-webkit-touch-callout: text;
+	-webkit-user-select: text;
+	-khtml-user-select: text;
+	-moz-user-select: text;
+	-ms-user-select: text;
+	user-select: text;
+	cursor: text;
 }
 .selectable:focus {
 	outline: 0;
