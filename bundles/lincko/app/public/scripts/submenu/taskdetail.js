@@ -531,7 +531,8 @@ Submenu.prototype.Add_taskdetail = function() {
 	submenu_taskdetail.append(elem);
 
 	/*meta (general)*/
-	var elem_meta = $('#-submenu_taskdetail_meta').clone().prop('id','submenu_taskdetail_meta_'+that.md5id);
+	//var elem_meta = $('#-submenu_taskdetail_meta').clone().prop('id','submenu_taskdetail_meta_'+that.md5id); toto - old method
+	var elem_meta = $('#-submenu_taskdetail_burgerBar').clone().prop('id','submenu_taskdetail_burgerBar_'+that.md5id);
 
 	// deleteAccess variable is controlled by update_meta.on('deleteAccessFalse' and 'deleteAccessTrue')
 	var deleteAccess = true;
@@ -761,9 +762,213 @@ Submenu.prototype.Add_taskdetail = function() {
 		}
 
 		return elem;
-	}// end of update_meta function
+	}// end of update_meta function toto - old method
 	
-	submenu_taskdetail.append(update_meta(elem_meta));
+	//submenu_taskdetail.append(update_meta(elem_meta)); toto - old method
+
+	var update_burgerBar = function(elem){		
+		//clear all inputs
+		$.each(elem.find('[find=values] input'), function(i, elem_input){
+			$(elem_input).val('');
+		});
+
+		var burgerInst = {};
+
+
+		/*---projects-----*/
+		var elem_box_projects = elem.find('[find="projects"]');
+		var elem_text_projects = elem_box_projects.find('[find=text]');
+		var elem_input_projects = elem.find('[find=values] input[find=projects_id]');
+		if(taskid != 'new'){
+			if(item['_parent'][0] == 'projects'){
+				that.param.projID = item['_parent'][1];
+			}
+			else{
+				that.param.projID = false;
+			}
+		}
+		elem_input_projects = that.param.projID;
+		var item_project = Lincko.storage.get('projects',that.param.projID);
+		if(item_project.personal_private){
+			elem_text_projects.text(Lincko.Translation.get('app', 2502, 'html')); //Personal Space
+		}
+		else if(!item_project){
+			elem_box_projects.addClass('display_none');
+		}
+		else{
+			elem_text_projects.html(item_project['+title']);
+		}
+
+		var cb_select_projects = function(){
+			console.log('cb_select_projects');
+			console.log($(this).attr('projects_id'));
+			return;
+
+			elem_projects_input.change(function(){
+				var project = Lincko.storage.get('projects',$(this).val());
+				if(project.personal_private){
+					elem_projects.html(Lincko.Translation.get('app', 2502, 'html')); //Personal Space
+				}
+				else{
+					elem_projects.html(project['+title']);
+				}
+				item['_parent'][1] = project._id;
+				that.param.projID = project._id;
+
+				if(item._type == 'tasks'){
+					//if changing task, make task assigned to nobody
+					taskdetail_tools.taskUserCheck();
+				}
+
+				if(taskid == 'new'){
+					var elem_replaceWith = update_meta(elem_meta_new.clone());
+					elem.find('input').blur();
+					elem.find('[find=duedate_timestamp]').datepicker('hide');
+					elem.replaceWith(elem_replaceWith);
+				}
+				else{
+					Lincko.storage.data[item._type][item._id] = item;
+					Lincko.storage.childrenList(false, false, 'projects', app_content_menu.projects_id);
+					//app_application_lincko.prepare('projects_'+app_content_menu.projects_id, true);
+					app_application_lincko.prepare(item._type+'_'+item._id, true);
+				}
+			});
+		}
+
+		burgerInst.projects = burger_attach_clickHandler.projects(elem_box_projects, item['_type'], item['_id'], null, true);
+		/*---END OF projects-----*/
+
+
+		/*---calendar-----*/
+		var elem_box_calendar = elem.find('[find="calendar"]');
+		var elem_text_calendar = elem.find('[find=calendar] [find=text]');
+		elem_input_calendar = null;
+		if(that.param.type == 'tasks'){
+			elem_input_calendar = elem.find('[find=values] input[find=duedate_timestamp]');
+			elem_input_calendar.val((item['start'] + duration_timestamp)*1000);
+			var duedate = tasks_calcDuedate(item['_id']);
+			if( skylist_textDate(duedate) ){
+				elem_text_calendar.text(skylist_textDate(duedate));
+			}
+			else{
+				elem_text_calendar.text(duedate.display('date_very_short'));
+			}
+
+			burgerInst.calendar = burger_attach_clickHandler.calendar(elem_box_calendar, item['_type'], item['_id'], null, true, null);
+
+		}
+		else{
+			var date = new wrapper_date(item['updated_at']);
+			elem_text_calendar.html(date.display('date_very_short'));
+		}
+		/*---END OF calendar-----*/
+
+
+		/*---user-----*/
+		var elem_box_user = elem.find('[find="user"]');
+		var elem_text_user = elem.find('[find=user] [find=text]');
+		elem_input_user = null;
+		if(that.param.type == 'tasks'){
+			elem_input_user = elem.find('[find=values] input[find=user_id]');
+			in_charge = '';
+			for (var i in item['_users']){
+				if( item['_users'][i]['in_charge']==true ){
+					in_charge += ' ';
+					in_charge += Lincko.storage.get("users", i ,"username");
+				}
+			}
+			if( !in_charge ){
+				in_charge = Lincko.Translation.get('app', 3608, 'html'); //Not Assigned
+			}
+			elem_text_user.text(in_charge);
+
+			if( !Lincko.storage.get("projects", that.param.projID, 'personal_private') ){
+				var cb_select_in_charge = function(result){
+					console.log('cb_select_in_charge');
+					console.log(result);
+					elem_in_charge_hidden.change(function(){
+						in_charge_id = $(this).val();
+						in_charge_id = parseInt(in_charge_id,10);
+						$.each(item['_users'], function(key,val){
+							item['_users'][key]['in_charge'] = false;
+						});
+						if(in_charge_id){
+							var username = Lincko.storage.get("users", in_charge_id, "username");
+							elem_in_charge.html(username);
+							if(!item['_users']){
+								item['_users'] = {};
+							}
+							item['_users'][in_charge_id] = {};
+							item['_users'][in_charge_id]['in_charge'] = true;
+						}
+						else{ //nobody in charnge
+							elem_in_charge.html(Lincko.Translation.get('app', 3608, 'html'));//Not Assigned
+						}
+
+						if(taskid != 'new'){
+							app_application_lincko.prepare(item._type+'_'+item._id, true);
+						}
+					});
+				}
+				burgerInst.user = burger_attach_clickHandler.in_charge(elem_box_user, item['_type'], item['_id'], null, true);
+				elem_box_user.addClass('skylist_clickable');
+			}
+			else{
+				elem_box_user.removeClass('skylist_clickable');
+			}
+		}
+		else{
+			elem_text_user.html(Lincko.storage.get("users", item['updated_by'],"username"));
+		}
+		/*---END OF user-----*/
+
+		/*---action_menu---*/
+		var elem_action_menu = elem.find('[find=action_menu]');
+		elem.find('.submenu_taskdetail_burgerBar_actions').click(function(){
+			if(action_menu_opened){
+				elem_action_menu.velocity({width:0},{
+					mobileHA: hasGood3Dsupport,
+					begin: function(){
+						elem_action_menu.css('display','initial');
+					},
+					complete: function(){
+						action_menu_opened = false;
+						elem_action_menu.attr('style','');
+					},
+				});
+			}
+			else{
+				elem_action_menu.velocity({width:25},{
+					mobileHA: hasGood3Dsupport,
+					begin: function(){
+						elem_action_menu.css('display','initial');
+					},
+					complete: function(){
+						action_menu_opened = true;
+					}
+				});
+			}
+		});
+		elem_action_menu.find('[find=delete]').click(deleteActionClickFn);
+
+		elem_meta.on('deleteAccessFalse', function(){
+			deleteAccess = false;
+			$(this).find('[find=delete]').addClass('submenu_taskdetail_disabled').off('click');
+		}).on('deleteAccessTrue', function(){
+			deleteAccess = true;
+			$(this).find('[find=delete]').removeClass('submenu_taskdetail_disabled').click(deleteActionClickFn);
+		});
+		if(!Lincko.storage.canI('delete', that.param.type, taskid) || !deleteAccess){
+			elem_action_menu.find('[find=delete]').addClass("display_none");
+		}
+
+
+		return elem;
+	}// end of update_burgerBar function
+	submenu_taskdetail.append(update_burgerBar(elem_meta));
+
+
+
 	/*---END OF all meta---*/
 
 	/*---description---*/
@@ -1783,7 +1988,7 @@ Submenu.prototype.Add_taskdetail = function() {
 
 			//for calendar and assignment (only for tasks)
 			if(that.param.type == 'tasks'){
-				var new_duedate = elem_meta.find('[find=duedate_stamp]').val();
+				var new_duedate = elem_meta.find('[find=duedate_timestamp]').val();
 				if(duration_timestamp != item['duration']){
 					param['duration'] = duration_timestamp;
 					param['start'] = item['start'];
@@ -1887,41 +2092,39 @@ Submenu.prototype.Add_taskdetail = function() {
 	}
 	if(!item.fake && taskid != 'new'){ registerSync_checkbox(); }
 
+
 	var registerSync_meta = function(){
 		app_application_lincko.add(
-			'submenu_taskdetail_meta_'+that.md5id,
+			//'submenu_taskdetail_meta_'+that.md5id,
+			'submenu_taskdetail_burgerBar_'+that.md5id,
 			that.param.type+'_'+item['_id'],
 			function(){
-				var item_old = item;
-				item = Lincko.storage.get(that.param.type, item['_id']);
-				if(!taskdetail_tools.itemDiff(item_old, item, ['_parent','duration','_users'])){
-					return;
+				var doUpdate = false;
+				if(!this.updated || typeof this.updated == 'boolean'){
+					doUpdate = true;
 				}
-
-				item = Lincko.storage.get(that.param.type, item['_id']);
-				if( that.list_type == "tasks" ){
-					duration_timestamp = item['duration'];
-				}
-
-				//if only the duration is updated, just update the item, but no flash animation
-				if(taskdetail_tools.itemDiff(item_old, item, ['duration'])){
-					return;
-				}
-
-				var elem = $('#'+this.id);
-				var elem_new = $('#-submenu_taskdetail_meta').clone().prop('id','submenu_taskdetail_meta_'+that.md5id);
-				elem.velocity('fadeIn',{
-					mobileHA: hasGood3Dsupport,
-					duration: 200,
-					before: function(){
-					},
-					complete: function(){
-						//update_meta(elem);
-						elem.find('input').blur();
-						elem.find('[find=duedate_timestamp]').datepicker('hide');
-						elem.replaceWith(update_meta(elem_new));
+				else if(this.updated[that.param.type+'_'+item['_id']]){
+					if(this.updated[that.param.type+'_'+item['_id']]._parent ||
+						this.updated[that.param.type+'_'+item['_id']].duration ||
+						this.updated[that.param.type+'_'+item['_id']]._users){
+						doUpdate = true;
 					}
-				});
+				}
+
+				if(doUpdate){
+					item = Lincko.storage.get(that.param.type, item['_id']);
+					var elem = $('#'+this.id);
+					var elem_new = $('#-submenu_taskdetail_burgerBar').clone().prop('id','submenu_taskdetail_burgerBar_'+that.md5id);
+					elem.velocity('fadeIn',{
+						mobileHA: hasGood3Dsupport,
+						duration: 200,
+						before: function(){
+						},
+						complete: function(){
+							elem.replaceWith(update_burgerBar(elem_new));
+						}
+					});
+				}
 			}
 		);
 	}

@@ -62,6 +62,38 @@
 	</span>
 </div>
 
+<div id="-submenu_taskdetail_burgerBar" class="submenu_taskdetail_burgerBar submenu_taskdetail_paddingLeft">
+	<input type="text" find="noAction" class="visibility_hidden" readonly="readonly" />
+	<div find="values" class="display_none">
+		<input type="text" find="projects_id" class="" readonly="readonly"/>
+		<input type="text" find="duedate_timestamp" class="" readonly="readonly"/>
+		<input type="text" find="user_id" class="" readonly="readonly"/>
+		<input type="text" find="spaces_id" class="" readonly="readonly"/>
+	</div>
+	<span find="projects" class="submenu_taskdetail_burgerBar_block ellipsis">
+		<span find="icon" class="icon-projectBlack"></span>
+		<span find="text"></span>
+	</span>
+	<span find="calendar" class="submenu_taskdetail_burgerBar_block ellipsis">
+		<span find="icon" class="icon-Calendar"></span>
+		<span find="text"></span>
+	</span>
+	<span find="user" class="submenu_taskdetail_burgerBar_block ellipsis">
+		<span find="icon" class="icon-SmallPersonaiconBlack"></span>
+		<span find="text" class=""></span>
+	</span>
+	<span find="spaces" class="submenu_taskdetail_burgerBar_block ellipsis display_none">
+		<span find="icon" class="icon-Hash"></span>
+		<span find="text"></span>
+	</span>
+
+	<span class="icon-Actions submenu_taskdetail_burgerBar_actions minTablet">
+		<span find='action_menu'>
+			<div find="delete" class="icon-Trash"></div>
+		</span>
+	</span>
+</div>
+
 <div id="-submenu_taskdetail_progressBar_wrapper" class="submenu_taskdetail_progressBar_wrapper">
 	<div find="container">
 		<span find="zero_text">0%</span>

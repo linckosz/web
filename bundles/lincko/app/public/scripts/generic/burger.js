@@ -49,12 +49,17 @@ var burger_attach_clickHandler = {
 				skylist.sendAction.tasks(
 					param, 
 					lincko_item, 'task/update',
-					function(msg, data_error, data_status, data_msg){ 
-						if(data_error){
-							app_application_lincko.prepare(lincko_type+'_'+lincko_id);
+					null, null,
+					function(){ 
+						if(!Lincko.storage.data[lincko_type][lincko_id]['_users']){
+							Lincko.storage.data[lincko_type][lincko_id]['_users'][data.val] = {};
 						}
-					},
-					function(){ app_application_lincko.prepare(lincko_type+'_'+lincko_id); }
+						Lincko.storage.data[lincko_type][lincko_id]['_users'][data.val].in_charge = !data.preSelect;
+						
+						var param_prepare = {};
+						param_prepare[lincko_type+'_'+lincko_id] = { '_users': true };
+						app_application_lincko.prepare(lincko_type+'_'+lincko_id, true, param_prepare); 
+					}
 				);
 			}
 		}//END OF default cb_select
@@ -83,16 +88,60 @@ var burger_attach_clickHandler = {
 		return dropdownInst;
 	},
 
-	projects: function(elem, lincko_type, lincko_id, cb_create, cb_select, cb_destroy){
+	projects: function(elem, lincko_type, lincko_id, cb_create, cb_select, cb_destroy, responsiveRange){
 		if(!elem instanceof $){ elem = $(elem); }
 		if(typeof cb_create != 'function'){ cb_create = null; }
-		if(typeof cb_select != 'function'){ cb_select = null; }
+		if(typeof cb_select != 'function' && typeof cb_select != 'boolean' && !cb_select){ var cb_select = null; }
 		if(typeof cb_destroy != 'function'){ cb_destroy = null; }
+		if(typeof responsiveRange != 'boolean' && typeof resonsiveRange != 'string'){ var responsiveRange = 'minTablet'; } //responsiveRange true is minTablet
 
+		//default cb_select
+		if(cb_select && typeof cb_select == 'boolean'){
+			var cb_select = function(data){
+				if(data.preSelect){ return; }
+
+				var route = lincko_type.slice(0, -1)+'/update';
+
+				var param = {
+					id: lincko_id,
+					parent_id: data.val,
+				};
+
+				var cb_begin = function(){
+					if(Lincko.storage.data[lincko_type][lincko_id]['_parent']){
+						Lincko.storage.data[lincko_type][lincko_id]['_parent'][1] = data.val;
+					}
+					
+					var param_prepare = {};
+					param_prepare[lincko_type+'_'+lincko_id] = { '_parent': true };
+					app_application_lincko.prepare(lincko_type+'_'+lincko_id, true, param_prepare); 
+				}
+				
+				if(lincko_type == 'tasks'){
+					skylist.sendAction.tasks(param, Lincko.storage.get(lincko_type, lincko_id), route, null, null, cb_begin);
+				}
+				else{
+					wrapper_sendAction(param, 'post', route, null, null, cb_begin);
+				}
+			}
+		}//END OF default cb_select
+
+		var list = burger_list.projects(lincko_type, lincko_id);
 		var dropdownInst = null;
 		elem.click(function(){
 			if( (!dropdownInst || dropdownInst.destroyed) && Lincko.storage.canI('edit', lincko_type, lincko_id)){
-				dropdownInst = new burger_dropdown('toto', 'projects', elem, null, null, cb_select, null, false); 
+				 
+				if(responsiveRange == true || responsive.test(responsiveRange)){
+					dropdownInst = new burger_dropdown('toto', list, elem, null, null, cb_select, null, false);
+				}
+				else {
+					var param = {};
+					param.cb_create = cb_create;
+					param.cb_select = cb_select;
+					param.cb_destroy = cb_destroy;
+					param.list = list;
+					submenu_Build('burger_clickHandler_projects', true, null, param);
+				}
 			}
 		});
 
@@ -128,15 +177,21 @@ var burger_attach_clickHandler = {
 					duration: duration,
 				};
 
+				var cb_begin = function(){
+					if(Lincko.storage.data[lincko_type][lincko_id]['duration']){
+						Lincko.storage.data[lincko_type][lincko_id]['duration'] = duration;
+					}
+					
+					var param_prepare = {};
+					param_prepare[lincko_type+'_'+lincko_id] = { 'duration': true };
+					app_application_lincko.prepare(lincko_type+'_'+lincko_id, true, param_prepare); 
+				}
+
 				skylist.sendAction.tasks(
 					param, 
 					lincko_item, 'task/update',
-					function(msg, data_error, data_status, data_msg){ 
-						if(data_error){
-							app_application_lincko.prepare(lincko_type+'_'+lincko_id);
-						}
-					},
-					function(){ app_application_lincko.prepare(lincko_type+'_'+lincko_id); }
+					null, null,
+					cb_begin
 				);
 
 				if(elem_datepicker){
@@ -347,12 +402,70 @@ burger_list.in_charge = function(lincko_type, lincko_id){
 
 		userList.push(user);
 	}
-
-
 	return userList;
 }
-burger_list.projects = function(){
 
+burger_list.projects = function(lincko_type, lincko_id){
+	var parent_item = Lincko.storage.get(lincko_type, lincko_id, 'parent');
+	if(parent_item[0] != 'projects'){ return false; }
+	else{
+		var id_preSelect = parent_item[1];
+	}
+
+	var latest_projects = [];
+	if(Lincko.storage.getSettings().latestvisitProjects){
+		$.each(Lincko.storage.getSettings().latestvisitProjects, function(i, id){
+			var project = Lincko.storage.get('projects',id);
+			if(!project || project.personal_private){ return; }
+			else{
+				latest_projects.push(
+					{
+						text: project['+title'],
+						val: project['_id'],
+						preSelect: id_preSelect == project['_id'],
+						latestProjects: true,
+					}
+				);
+			}
+		});
+	}
+
+	//add border to last one in latest projects
+	if(latest_projects.length){
+		latest_projects[latest_projects.length-1].addClass = 'burger_latestvisitProjects_border';
+	}
+
+	//add perosnal space at the top
+	var project_personal = Lincko.storage.getMyPlaceholder();
+	latest_projects.unshift(
+		{
+			text: Lincko.Translation.get('app', 2502, 'html'), //Personal Space
+			val: project_personal['_id'],
+			preSelect: id_preSelect == project_personal['_id'],
+			latestProjects: false,
+		}
+	);
+
+	//complete projects list
+	var projects_list = Lincko.storage.list('projects', null, {personal_private: ['==',null]}, null, null, false);
+    projects_list = Lincko.storage.sort_items(projects_list,'+title');
+
+	$.each(projects_list, function(i, project){
+		//return if it is one of the latest
+		if($.inArray(project['_id'], Lincko.storage.getSettings().latestvisitProjects) > -1 ){ return; }
+		else{
+			latest_projects.push(
+				{
+					text: project['+title'],
+					val: project['_id'],
+					preSelect: id_preSelect == project['_id'],
+					latestProjects: false,
+				}
+			);
+		}	
+	});
+
+	return latest_projects;
 }
 burger_list.spaces = function(){
 
@@ -600,6 +713,15 @@ burger_dropdown.prototype.build_elem_data = function(){
 			elem_option_clone.find('[find=image]')
 				.removeClass('icon-SmallPersonaiconBlack')
 				.css('background-image','url("'+obj.imgURL+'")');
+		}
+		else if(typeof obj.imgURL =='undefined'){
+			elem_option_clone.find('[find=image]').addClass('display_none');
+		}
+		if(obj.latestProjects){
+			elem_option_clone.attr('latestProjects', true);
+		}
+		if(obj.addClass){
+			elem_option_clone.addClass(obj.addClass);
 		}
 		if(typeof that.cb_select == 'function'){
 			elem_option_clone.click(function(){

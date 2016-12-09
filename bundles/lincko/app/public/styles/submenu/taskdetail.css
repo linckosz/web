@@ -258,6 +258,50 @@ td.submenu_taskdetail_share .fa{
 
 }
 
+.submenu_taskdetail_burgerBar {
+	height: 30px;
+	background: #F7FAFC;
+	position: relative;
+	box-shadow: 0px 1px 0px 0px #B5B5B5;
+	color: #53ADD2;
+}
+.submenu_taskdetail_burgerBar_block{
+	line-height: 30px;
+	padding-right: 10px;
+	max-width: 100px;
+    display: inline-block;
+}
+.submenu_taskdetail_burgerBar_block [find=icon]{
+	font-size: 21px;
+	vertical-align: text-bottom;
+}
+.submenu_taskdetail_burgerBar_actions {
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+	padding: 6px;
+	font-size: 18px;
+	color: #53ADD2;
+	cursor: pointer; cursor: hand;
+}
+.submenu_taskdetail_burgerBar_actions [find=action_menu] {
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	padding: 6px 0px;
+	right: 25px;
+	/*background-color: #BE2C1F;
+	color: #FBA026;
+	*/
+	font-size: 18px;
+	width: 0px;
+	display:none;
+	overflow: hidden;
+	text-align: center;
+}
+
+
 .submenu_taskdetail_meta {
 	height: 30px;
 	background: #F7FAFC;
