@@ -217,6 +217,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		that.param.projID = app_content_menu.projects_id;
 	}
 	var contactServer = false;
+	var isLocked = false;
 	var action_menu_opened = false;
 	var param_sendAction = {};
 	var taskid = this.param.id;
@@ -398,7 +399,7 @@ Submenu.prototype.Add_taskdetail = function() {
 				if(that.submenu_hide){ return; } //no need to update comment if this is after submenu_hide 
 
 				var old_title = item['+title'] || item['+name'];
-				var new_title = $(this).html();
+				var new_title = text.blur.html();
 
 				if(old_title != new_title){
 					var param = {id: taskid};
@@ -784,9 +785,8 @@ Submenu.prototype.Add_taskdetail = function() {
 		elem_description_text.blur(function(event){ 
 			setTimeout(function(){
 				if(that.submenu_hide){ return; } //no need to update comment if this is after submenu_hide 
-				
 				var old_comment = item['-comment'];
-				var new_comment = $(this).html();
+				var new_comment = elem_description_text.html();
 				if( $('<div>').html(new_comment).text() == '' ){
 					new_comment = '';
 				}
@@ -1701,7 +1701,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		'submenu_hide_'+that.preview+'_'+that.id,
 		function(){
 			that.submenu_hide = true;
-			taskdetail_lockIntervalToggle(item['_id'], item['_type'], false);
+			taskdetail_lockIntervalToggle(false);
 
 			if( (taskid == 'new' && route_delete) || this.action_param.cancel || (item.deleted_at && !route_delete)){
 				//clear any links in the queue that came from this submenu
@@ -1714,7 +1714,9 @@ Submenu.prototype.Add_taskdetail = function() {
 			}
 			var contactServer = false;
 			var route = '';
-			var param = {};
+			var param = {
+				locked: false, //unlock
+			};
 			var tmpID = null;
 
 			var cb_begin = function(jqXHR, settings, temp_id){
@@ -1829,7 +1831,7 @@ Submenu.prototype.Add_taskdetail = function() {
 				}
 			}
 
-			if( taskid == 'new' || route_delete 
+			if( taskid == 'new' || route_delete || isLocked
 				|| ('+title' in item && param['title'] && param['title'] != item['+title'])
 				|| ('+name' in item && param['name'] && param['title'] != item['+name'])
 				|| (param['comment'] && param['comment'] != item['-comment'] )){
@@ -2219,7 +2221,12 @@ Submenu.prototype.Add_taskdetail = function() {
 			}
 
 			if(taskid != 'new'){
-				taskdetail_lockIntervalToggle(item['_id'], item['_type']);
+				elem_description_text.on('focus.lock', function(){
+					$(this).off('focus.lock');
+					taskdetail_lockIntervalToggle(item['_id'], item['_type']);
+					isLocked = true;
+				});
+				
 				app_application_lincko.add(
 					elem_editorToolbar.prop('id'),
 					that.param.type+'_'+item['_id'],
@@ -2282,11 +2289,9 @@ Submenu.prototype.Add_taskdetail = function() {
 		if(taskid == 'new'){
 			if(that.param.type == 'tasks'){
 				that.param.elem_autoFocus = elem_title_text;
-				wrapper_sendAction({id: item._id}, 'post', 'task/lock/check');
 			}
 			else if(that.param.type == 'notes'){
 				that.param.elem_autoFocus = elem_description_text;
-				wrapper_sendAction({id: item._id}, 'post', 'note/lock/check');
 			}
 		}
 	}//end of !files
@@ -2363,6 +2368,7 @@ var taskdetail_itemManualUpdate = function(param_sendAction, route){
 var taskdetail_lockInterval = null;
 var taskdetail_lockIntervalToggle = function(id, type, start){
 	clearInterval(taskdetail_lockInterval);
+	if(!id && typeof id == 'boolean'){ return true; }
 	if(typeof start != 'boolean'){ var start = true; }
 
 	var id_me = wrapper_localstorage.uid;
@@ -2379,21 +2385,22 @@ var taskdetail_lockIntervalToggle = function(id, type, start){
 		return false;
 	}
 
-	if(start){ 
-		Lincko.storage.data[type][id].locked_by = id_me; //modify locally immediately
-
-		route += 'start';
-		wrapper_sendAction({id: id}, 'post', route);
-		taskdetail_lockInterval = setInterval(function(id, route){
-			wrapper_sendAction({id: id}, 'post', route);
-		}, 40000, id, route);
+	if(start){
+		var cb_success_lockCheck = function(){
+			locked_by = Lincko.storage.get(type, id, 'locked_by');
+			if(!locked_by || locked_by == id_me){
+				wrapper_sendAction({id: id}, 'post', route+'start');
+				taskdetail_lockInterval = setInterval(function(id, route){
+					wrapper_sendAction({id: id}, 'post', route+'start');
+				}, 4*60000, id, route); //update re-lock every 4 min
+			}
+		}
+		wrapper_sendAction( { "id": id, }, 'post', route+'check', cb_success_lockCheck);
 	}
-	else{ 
+	else{
 		if(id_me != locked_by){ return false; } //dont send unlock if it is not locked by me
 		Lincko.storage.data[type][id].locked_by = null; //modify locally immediately
-
-		route += 'unlock';
-		wrapper_sendAction({id: id}, 'post', route);
+		//wrapper_sendAction({id: id}, 'post', route);
 	}
 
 	return true;
