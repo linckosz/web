@@ -305,7 +305,7 @@ $('#account_integration_wechat').click(function(){
 			return false;
 		}
 		account_integration_wechat_qrcode();
-	}, 3000); //(toto) Refrezh the QR code every 30s
+	}, 300000); //(toto) Refrezh the QR code every 30s
 });
 
 var account_integration_wechat_qrcode = function(){
@@ -316,7 +316,7 @@ var account_integration_wechat_qrcode = function(){
 		redirect_uri: encodeURIComponent(top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/debug"),
 		state: Math.ceil(Math.random()*1000),
 		style: "black",
-		href: "",
+		href: account_integration.wechat.href,
 	});
 };
 
