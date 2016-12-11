@@ -130,7 +130,7 @@ var account_reset_cb_complete = function(){
 };
 
 
-var global_select = false; //'joinus', 'signin', 'forgot', 'reset'
+var global_select = false; //'joinus', 'signin', 'forgot', 'reset', 'wechat'
 
 function account_show(select) {
 	if(select == global_select){
@@ -167,6 +167,7 @@ function account_select(select) {
 	$('#account_signin_box, #account_joinus_box, #account_forgot_box, #account_reset_box').addClass('display_none');
 	$('#account_tab_joinus, #account_tab_signin').removeClass('account_trans').addClass('display_none');
 	$('#account_tab_joinus > div, #account_tab_signin > div').removeClass('account_tab_joinus').removeClass('account_tab_signin');
+	$('#account_wrapper').find('.account_integration_icon').removeClass('account_integration_icon_active account_integration_icon_blur');
 	account_hide_error();
 	if(select == 'forgot'){
 		$('#account_forgot_box').removeClass('display_none');
@@ -177,6 +178,10 @@ function account_select(select) {
 		$('#account_reset_password').val("");
 		$('#account_reset_password').focus(); //Helps to reset the text behind
 		$('#account_reset_code').focus();
+	} else if(select == 'wechat'){
+		$('#account_wechat_box').removeClass('display_none');
+		$('#account_wrapper').find('.account_integration_icon').addClass('account_integration_icon_blur');
+		$('#account_integration_wechat').addClass('account_integration_icon_active').removeClass('account_integration_icon_blur');
 	} else if(select == 'signin'){
 		$('#account_signin_box').removeClass('display_none');
 		$('#account_tab_joinus, #account_tab_signin').removeClass('display_none');
@@ -288,6 +293,32 @@ $('#account_tab_signin').click(function(){
 $('#account_signin_forgot').click(function(){
 	account_show('forgot');
 });
+
+var account_integration_wechat_timer;
+$('#account_integration_wechat').click(function(){
+	account_show('wechat');
+	account_integration_wechat_qrcode();
+	clearInterval(account_integration_wechat_timer);
+	account_integration_wechat_timer = setInterval(function(){
+		if($('#account_wechat_box').hasClass('display_none')){
+			clearInterval(account_integration_wechat_timer);
+			return false;
+		}
+		account_integration_wechat_qrcode();
+	}, 3000); //(toto) Refrezh the QR code every 30s
+});
+
+var account_integration_wechat_qrcode = function(){
+	var obj = new WxLogin({
+		id: "account_wechat_qrcode",
+		appid: account_integration.wechat.appid,
+		scope: "snsapi_login",
+		redirect_uri: encodeURIComponent(top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/debug"),
+		state: Math.ceil(Math.random()*1000),
+		style: "black",
+		href: "",
+	});
+};
 
 $('#account_error').click(function(){
 	account_hide_error();

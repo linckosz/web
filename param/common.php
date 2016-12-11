@@ -154,7 +154,16 @@ $app->lincko->data = array(
 	'lincko_front' => '', //Only used for development purpose "[master-]bruno.lincko.cafe"
 	'lincko_show_dev' => 'false', //Display some error for developpers on JS (NOTE: it has to be a string because of Twig conversion to JS)
 	'api_upload' => 'lknscklb798w98eh9cwde8bc897q09wj',
+	'integration_wechat_appid' => '',
 );
+
+if($app->lincko->domain=='lincko.cafe'){
+	$app->lincko->data['integration_wechat_appid'] = 'wxafd8adb6683d8914';
+} else if($app->lincko->domain=='lincko.co'){
+	$app->lincko->data['integration_wechat_appid'] = 'wxafd8adb6683d8914';
+} else if($app->lincko->domain=='lincko.com'){
+	$app->lincko->data['integration_wechat_appid'] = 'wx8f20e5f247408c94';
+}
 
 if(isset($_SERVER["LINCKO_FRONT"])){
 	$app->lincko->data['lincko_front'] = $_SERVER["LINCKO_FRONT"].'-';

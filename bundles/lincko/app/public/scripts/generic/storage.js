@@ -323,6 +323,7 @@ Lincko.storage.update = function(partial, info){
 				Lincko.storage.data[i][j] = partial[i][j];
 			}
 
+			/*
 			//build "new" for item
 			Lincko.storage.data[i][j]['new'] = false; //If the table need to be shown as viewed, if it doesn't exist we consider it's already viewed
 			if(typeof Lincko.storage.data[i][j]['viewed_by'] != 'undefined'){
@@ -331,7 +332,8 @@ Lincko.storage.update = function(partial, info){
 				}
 				delete Lincko.storage.data[i][j]['viewed_by'];
 			}
-
+			*/
+			/*
 			//build "not" for history
 			Lincko.storage.data[i][j]['_not'] = false;
 			if(typeof Lincko.storage.data[i][j]['history'] != 'undefined'){
@@ -348,7 +350,7 @@ Lincko.storage.update = function(partial, info){
 					}
 				}
 			}
-			
+			*/
 			if(update_real){
 				//console.log("update ==> "+i+'_'+j);
 				storage_items_updated[i] = true;

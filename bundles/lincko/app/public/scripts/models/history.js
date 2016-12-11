@@ -194,13 +194,17 @@ var app_models_history = {
 							continue;
 						}
 						if(users && users[wrapper_localstorage.uid]){
-							sentence = $(app_models_resume_format_sentence(hist[i]['id'])).text();
+							msg = '';
 							if(hist[i]['by']){
 								username = Lincko.storage.get("users", hist[i]['by'], "username");
+								sentence = $(app_models_resume_format_sentence(hist[i]['id'])).text();
 								msg = wrapper_to_html(username)+": "+sentence;
 							} else {
+								if(item['comment'].indexOf('{"0":{')!==0 && item['comment'].indexOf('"'+wrapper_localstorage.uid+'":{')){
+									continue;
+								}
 								username = Lincko.Translation.get('app', 0, 'html'); //LinckoBot
-								msg = sentence;
+								msg = $(app_models_resume_format_sentence(hist[i]['id'])).text();
 							}
 							app_models_history.notify(
 								msg,
