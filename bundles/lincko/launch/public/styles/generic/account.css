@@ -526,6 +526,11 @@
 	-khtml-opacity:0.5;
 }
 
+#account_wechat_qrcode > iframe {
+	width: 222px;
+	height: 222px;
+}
+
 @media only screen and (max-height: 350px){
 	.account_wrapper > div {
 		top: 3px;

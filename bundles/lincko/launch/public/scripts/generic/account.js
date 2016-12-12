@@ -305,7 +305,7 @@ $('#account_integration_wechat').click(function(){
 			return false;
 		}
 		account_integration_wechat_qrcode();
-	}, 300000); //(toto) Refrezh the QR code every 30s
+	}, 3000); //(toto) Refrezh the QR code every 30s
 });
 
 var account_integration_wechat_qrcode = function(){
