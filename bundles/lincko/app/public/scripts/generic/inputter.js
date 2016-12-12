@@ -632,8 +632,14 @@ function cleanHtmlTag(source){
 	return source;
 }
 
-
-
+	input.find('[find=chat_textarea]').on('blur',function(){
+		var focus_help = $("<input/>");
+		focus_help.appendTo($("body"));
+		focus_help.focus();
+		focus_help.recursiveRemove(0);
+	});
+	
+	
 	input.find('[find=chat_textarea]').on('paste',function(e,data){
 		var target = this;
 		setTimeout(function(){
@@ -759,7 +765,9 @@ function cleanHtmlTag(source){
 			if($(this).html() == ''){
 				$(this).html(defaultPhrase);
 			}
+
 		});
+
 	}
 	
 

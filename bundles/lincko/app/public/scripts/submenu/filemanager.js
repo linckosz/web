@@ -170,9 +170,6 @@ Submenu.prototype.AddFilemanagerContent = function() {
 }
 
 
-
-
-
 var filemanager = function(position,upload_type, upload_pid, upload_param){
 	this.target;
 	this.position = position;
@@ -187,7 +184,6 @@ var filemanager = function(position,upload_type, upload_pid, upload_param){
 filemanager.prototype.show = function(){
 	this.target.removeClass("display_none");
 }
-
 
 
 filemanager.prototype.layout = function(){

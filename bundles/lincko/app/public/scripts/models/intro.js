@@ -12,23 +12,23 @@ var intro = {
 	script :[
 		[//intro.step.welcome:0
 			{
-				line:"I’m here to start you on your journey using Lincko.",
+				line:12001,//"I’m here to start you on your journey using Lincko.",
 				options:[ 
 					{
-						line:"Who are you, LinckoBot?",
+						line:13001,//"Who are you, LinckoBot?",
 						pointType:"script",
 						pointTo:1,
 					}
 				],
 			},//0
 			{
-				line:"I'm your guide in the way of projects and collaboration. I'll give you updates on how your projects are going.",
+				line:12002,//"I'm your guide in the way of projects and collaboration. I'll give you updates on how your projects are going.",
 			},//1
 			{
-				line:"Let me show you quickly how to get around.",
+				line:12003,//"Let me show you quickly how to get around.",
 				options:[ 
 					{
-						line:"next",
+						line:13002,//"next",
 						pointType:"step",
 						pointTo:1,
 					}
@@ -37,10 +37,10 @@ var intro = {
 		],
 		[//intro.step.new_project:1
 			{
-				line:"Access the main menu by clicking here.",
+				line:12004,//"Access the main menu by clicking here.",
 				options:[ 
 					{
-						line:"next",
+						line:13002,//"next",
 						pointType:"step",
 						pointTo:2,
 					}
@@ -49,10 +49,10 @@ var intro = {
 		],
 		[//intro.step.main_menu:2
 			{
-				line:"You can create new projects here.",
+				line:12005,//"You can create new projects here.",
 				options:[ 
 					{
-						line:"next",
+						line:13002,//"next",
 						pointType:"step",
 						pointTo:3,
 					}
@@ -61,10 +61,10 @@ var intro = {
 		],
 		[//intro.step.linckobot_chat:3
 			{
-				line:"I'm also located here - find me in the Chats section.",
+				line:12006,//"I'm also located here - find me in the Chats section.",
 				options:[ 
 					{
-						line:"next",
+						line:13002,//"next",
 						pointType:"step",
 						pointTo:4,
 					}
@@ -73,10 +73,10 @@ var intro = {
 		],
 		[//intro.step.sample_project:4
 			{
-				line:"Here's a sample project. You can invite teammates and change project settings here.",
+				line:12007,//"Here's a sample project. You can invite teammates and change project settings here.",
 				options:[ 
 					{
-						line:"next",
+						line:13002,//"next",
 						pointType:"step",
 						pointTo:5,
 					}
@@ -85,26 +85,26 @@ var intro = {
 		],
 		[//intro.step.project_items:5
 			{
-				line:"Each project has areas for Tasks, Notes, Chats, and Files.",
+				line:12008,//"Each project has areas for Tasks, Notes, Chats, and Files.",
 			},
 			{
-				line:"Use tasks to set the goals and tasks of the project team.",
+				line:12009,//"Use tasks to set the goals and tasks of the project team.",
 			},
 			{
-				line:"Use notes to store important information for the team - like meeting notes, processes, or designs. ",
+				line:12010,//"Use notes to store important information for the team - like meeting notes, processes, or designs. ",
 			},
 			{
-				line:"Use Chats for quick communication and to track project activity. ",
+				line:12011,//"Use Chats for quick communication and to track project activity. ",
 				
 			},
 			{
-				line:"Use Files for all your important documents and images - any file uploaded to a project chat is also stored here. ",
+				line:12012,//"Use Files for all your important documents and images - any file uploaded to a project chat is also stored here. ",
 			},
 			{
-				line:"Let's add your first task.",
+				line:12013,//"Let's add your first task.",
 				options:[ 
 					{
-						line:"Let's do this!",
+						line:13003,//"Let's do this!",
 						pointType:"step",
 						pointTo:7,
 					}
@@ -116,13 +116,13 @@ var intro = {
 
 		[//feel_free:6
 			{
-				line:"Type a task name. You can type @ to assign an owner, and + to assign a date.",
+				line:12014,//"Type a task name. You can type @ to assign an owner, and + to assign a date.",
 			},
 			{
-				line:'My New Task <span find="name" class="burger_tag">MonkeyKing</span><span find="dateWrapper" class="burger_tag">today</span>',
+				line:12016,//'My New Task <span find="name" class="burger_tag">MonkeyKing</span><span find="dateWrapper" class="burger_tag">today</span>',
 			},
 			{
-				line:"Feel free to explore the sample project.",
+				line:12015,//"Feel free to explore the sample project.",
 			},
 		],	
 
@@ -198,7 +198,9 @@ var intro = {
 		setTimeout(function(){
 			if(step == intro.current_step)
 			{
-				content.html(intro.script[intro.current_step][script_index]["line"]);
+				var line = intro.script[intro.current_step][script_index]["line"];
+				line = Lincko.Translation.get('app', line, 'js');
+				content.html(line);
 				if(intro.script[intro.current_step][script_index].hasOwnProperty("options"))
 				{
 					intro.collectOptions(intro.script[intro.current_step][script_index]["options"]);
@@ -246,7 +248,10 @@ var intro = {
 		{
 			var item = $("#-models_intro_options_item").clone();
 			item.prop("id","models_intro_options_item_" + i);
-			item.html(options[i]["line"]);
+
+			var line = options[i]["line"];
+			line = Lincko.Translation.get('app', line, 'js');
+			item.html(line);
 			target.find("[find=options_content]").append(item);
 
 			var fn = null;
