@@ -237,7 +237,7 @@ inputter.prototype.buildLayer = function()
 										$(this).addClass('inputter_container_checked');
 										that.task_completed = true;
 									}
-
+									input.find('[find=chat_textarea]').trigger('focus', {cancelBlur: true});
 
 								});
 								break;
@@ -737,6 +737,8 @@ function cleanHtmlTag(source){
 		input.find('[find=chat_textarea]').get(0).focus();
 		},200);
 	}
+
+	
 
 	if(this.hasTask)
 	{
