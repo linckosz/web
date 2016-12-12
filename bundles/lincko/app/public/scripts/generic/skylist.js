@@ -1127,11 +1127,14 @@ skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
 	//if '+title', '_users', 'duration' is updated
 	if((typeof updated == 'boolean' && updated) || updated['+title'] || updated._users || updated.duration){
 		var elem_title = elem.find('[find=title]');
+		elem_title.text(item['+title']);
 		var span_date = burger_spanDate(skylist_calcDuedate(item));
 		var span_user = burger_spanUser(tasks_get_inCharge_id(item['_id'])[0]);
-		burger_attach_clickHandler.in_charge(span_user, item._type, item._id, null, true, null);
+		
 		burger_attach_clickHandler.calendar(span_date, item._type, item._id, null, true, null);
-		elem_title.text(item['+title']);
+		if(!Lincko.storage.get('projects', item._parent[1])['personal_private']){ 
+			burger_attach_clickHandler.in_charge(span_user, item._type, item._id, null, true, null);
+		}
 		elem_title.append(span_user).append(span_date);
 	}
 
@@ -1535,7 +1538,9 @@ skylist.prototype.addTask = function(item){
 
 	if(that.Lincko_itemsList_filter.view == 'paper'){
 		var elem_title_spanUser = burger_spanUser(in_chargeID, in_charge);
-		burger_attach_clickHandler.in_charge(elem_title_spanUser, item['_type'], item['_id'], null, true);
+		if(!Lincko.storage.get('projects', item._parent[1])['personal_private']){ 
+			burger_attach_clickHandler.in_charge(elem_title_spanUser, item['_type'], item['_id'], null, true);
+		}
 		elem_title.append(elem_title_spanUser);
 	}
 

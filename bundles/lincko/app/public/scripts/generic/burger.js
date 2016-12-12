@@ -9,15 +9,13 @@
 
 var burger_attach_clickHandler = {
 
-	in_charge: function(elem, lincko_type, lincko_id, cb_create, cb_select, cb_destroy, responsiveRange){
+	in_charge: function(elem, lincko_type, lincko_id, cb_create, cb_select, cb_destroy, list, responsiveRange){
 		if(!elem instanceof $){ elem = $(elem); }
 		if(typeof cb_create != 'function'){ var cb_create = null; }
 		if(typeof cb_select != 'function' && typeof cb_select != 'boolean' && !cb_select){ var cb_select = null; }
 		if(typeof cb_destroy != 'function'){ var cb_destroy = null; }
+		if(!list){ var list = burger_list.in_charge(lincko_type, lincko_id); }
 		if(typeof responsiveRange != 'boolean' && typeof resonsiveRange != 'string'){ var responsiveRange = 'minTablet'; } //responsiveRange true is minTablet
-		
-		//disable clickHandler for personal space
-		if(Lincko.storage.get('projects', app_content_menu.projects_id)['personal_private']){ return false; }
 
 		//default cb_select for in_charge
 		if(cb_select && typeof cb_select == 'boolean'){
@@ -64,9 +62,8 @@ var burger_attach_clickHandler = {
 			}
 		}//END OF default cb_select
 		
-		var list = burger_list.in_charge(lincko_type, lincko_id);
 		var dropdownInst = null;
-		elem.click(function(){
+		elem.off('click.burger').on('click.burger', function(){
 			if( (!dropdownInst || dropdownInst.destroyed) && 
 				(lincko_id == 'new' || !lincko_id || Lincko.storage.canI('edit', lincko_type, lincko_id))){
 
@@ -85,15 +82,15 @@ var burger_attach_clickHandler = {
 				}				
 			}
 		});
-
 		return dropdownInst;
 	},
 
-	projects: function(elem, lincko_type, lincko_id, cb_create, cb_select, cb_destroy, responsiveRange){
+	projects: function(elem, lincko_type, lincko_id, cb_create, cb_select, cb_destroy, list, responsiveRange){
 		if(!elem instanceof $){ elem = $(elem); }
 		if(typeof cb_create != 'function'){ cb_create = null; }
 		if(typeof cb_select != 'function' && typeof cb_select != 'boolean' && !cb_select){ var cb_select = null; }
 		if(typeof cb_destroy != 'function'){ cb_destroy = null; }
+		if(!list){ var list = burger_list.projects(lincko_type, lincko_id); }
 		if(typeof responsiveRange != 'boolean' && typeof resonsiveRange != 'string'){ var responsiveRange = 'minTablet'; } //responsiveRange true is minTablet
 
 		//default cb_select
@@ -127,9 +124,9 @@ var burger_attach_clickHandler = {
 			}
 		}//END OF default cb_select
 
-		var list = burger_list.projects(lincko_type, lincko_id);
 		var dropdownInst = null;
-		elem.click(function(){
+
+		elem.off('click.burger').on('click.burger', function(){
 			if( (!dropdownInst || dropdownInst.destroyed) && 
 				(lincko_id == 'new' || !lincko_id || Lincko.storage.canI('edit', lincko_type, lincko_id))){
 				 
@@ -150,7 +147,7 @@ var burger_attach_clickHandler = {
 		return dropdownInst;
 	},
 
-	calendar: function(elem, lincko_type, lincko_id, cb_create, cb_select, cb_destroy, responsiveRange){
+	calendar: function(elem, lincko_type, lincko_id, cb_create, cb_select, cb_destroy, currentDate, responsiveRange){
 		if(!elem instanceof $){ elem = $(elem); }
 		if(typeof cb_create != 'function'){ var cb_create = null; }
 		if(typeof cb_select != 'function' && typeof cb_select != 'boolean' && !cb_select){ var cb_select = null; }
@@ -160,10 +157,12 @@ var burger_attach_clickHandler = {
 		var elem_datepicker = null;
 		var dropdownDuration = 400;
 
-		var currentDate = 0;
-		var lincko_item = Lincko.storage.get(lincko_type, lincko_id);
-		if(lincko_item){
-			currentDate = (lincko_item.start + lincko_item.duration)*1000;
+		if(!currentDate){
+			var currentDate = 0;
+			var lincko_item = Lincko.storage.get(lincko_type, lincko_id);
+			if(lincko_item){
+				currentDate = (lincko_item.start + lincko_item.duration)*1000;
+			}
 		}
 
 		//default cb_select for in_charge
@@ -226,7 +225,7 @@ var burger_attach_clickHandler = {
 				},
 				onSelect: function(dateText, inst){
 					var timestamp = parseInt(dateText, 10)/1000 + 86399; //add 86399 to make it end of the day
-					if(typeof cb_select == 'function'){ cb_select(timestamp); }
+					if(typeof cb_select == 'function'){ cb_select(timestamp, elem_datepicker); }
 				},
 			});
 			elem_datepicker.find('.ui-datepicker-inline').addClass('burger_calendar');
@@ -336,8 +335,9 @@ var burger_attach_clickHandler = {
 		}
 
 
-		elem.click(function(){
-			if( !elem_datepicker && Lincko.storage.canI('edit', lincko_type, lincko_id)){
+		elem.off('click.burger').on('click.burger', function(){
+			if( !elem_datepicker && 
+				(lincko_id == 'new' || !lincko_id || Lincko.storage.canI('edit', lincko_type, lincko_id))){
 				if(responsiveRange == true || responsive.test(responsiveRange)){
 					launch();
 				}
@@ -351,7 +351,7 @@ var burger_attach_clickHandler = {
 			}
 		});
 
-
+		return elem_datepicker;
 	},
 }
 
@@ -449,6 +449,7 @@ burger_list.projects = function(lincko_type, lincko_id){
 			val: project_personal['_id'],
 			preSelect: id_preSelect == project_personal['_id'],
 			latestProjects: false,
+			personal: true,
 		}
 	);
 

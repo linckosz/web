@@ -799,19 +799,26 @@ Submenu.prototype.Add_taskdetail = function() {
 			elem_text_projects.html(item_project['+title']);
 		}
 
-		var cb_select_projects = function(data){
-			elem_text_projects.text(data.text);
-			item['_parent'][1] = data.val;
-			that.param.projID = data.val;
-			//if changing task, make task assigned to nobody
-			taskdetail_tools.taskUserCheck();
-			update_burgerBar();
-		}
-		if(item['_id'] != 'new'){
-			cb_select_projects = true;
-		}
+		
+		if(item['_id'] == 'new'){
+			var cb_select_projects = function(data){
+				elem_text_projects.text(data.text);
+				item['_parent'][1] = data.val;
+				that.param.projID = data.val;
+				//if changing task, make task assigned to nobody
+				taskdetail_tools.taskUserCheck();
+				update_burgerBar();
+			}
+			var burger_list_projects = burger_list.projects();
+			$.each(burger_list_projects, function(i, obj){
+				if(obj.val == that.param.projID){ obj.preSelect = true; }
+			});
 
-		burgerInst.projects = burger_attach_clickHandler.projects(elem_box_projects, item['_type'], item['_id'], null, cb_select_projects);
+			burgerInst.projects = burger_attach_clickHandler.projects(elem_box_projects, item['_type'], item['_id'], null, cb_select_projects, null, burger_list_projects);
+		}
+		else{
+			burgerInst.projects = burger_attach_clickHandler.projects(elem_box_projects, item['_type'], item['_id'], null, true);
+		}
 		/*---END OF projects-----*/
 
 
@@ -820,11 +827,12 @@ Submenu.prototype.Add_taskdetail = function() {
 		var elem_text_calendar = elem.find('[find=calendar] [find=text]');
 		elem_input_calendar = null;
 		if(that.param.type == 'tasks'){
+			elem_box_calendar.addClass('skylist_clickable');
 			elem_input_calendar = elem.find('[find=values] input[find=duedate_timestamp]');
 			elem_input_calendar.val((item['start'] + duration_timestamp)*1000);
 
 			var duedate = tasks_calcDuedate(item['_id']);
-			if(!duedate){ duedate = tasks_calcDuedate(item); }
+			if(!duedate){ duedate = new wrapper_date(item['start'] + duration_timestamp); }
 
 			if( skylist_textDate(duedate) ){
 				elem_text_calendar.text(skylist_textDate(duedate));
@@ -833,7 +841,24 @@ Submenu.prototype.Add_taskdetail = function() {
 				elem_text_calendar.text(duedate.display('date_very_short'));
 			}
 
-			burgerInst.calendar = burger_attach_clickHandler.calendar(elem_box_calendar, item['_type'], item['_id'], null, true, null);
+
+			if(item['_id'] == 'new'){
+				var cb_select_calendar = function(timestamp, elem_datepicker){
+					duration_timestamp = timestamp - item['start'];
+					if(elem_datepicker && elem_datepicker.blur){ 
+						burgerInst.calendar = elem_datepicker; 
+						elem_datepicker.blur(); 
+					}
+					update_burgerBar();
+				}
+
+				var currentDate = (item['start'] + duration_timestamp)*1000;
+
+				burgerInst.calendar = burger_attach_clickHandler.calendar(elem_box_calendar, item['_type'], item['_id'], null, cb_select_calendar, null, currentDate);
+			}
+			else{
+				burgerInst.calendar = burger_attach_clickHandler.calendar(elem_box_calendar, item['_type'], item['_id'], null, true, null);
+			}
 
 		}
 		else{
@@ -850,6 +875,28 @@ Submenu.prototype.Add_taskdetail = function() {
 		if(that.param.type == 'tasks'){
 			elem_input_user = elem.find('[find=values] input[find=user_id]');
 			in_charge = '';
+			if(item['_id'] == 'new'){
+				//force user as in_charge
+				if(Lincko.storage.get("projects", that.param.projID, 'personal_private')){
+					in_charge_id = wrapper_localstorage.uid;
+				}
+
+				//re construct _users obj
+				item['_users'] = {};
+				$.each(Lincko.storage.whoHasAccess('projects', that.param.projID), function(i,val){
+					item['_users'][val] = {};
+					item['_users'][val]['in_charge'] = false;
+				});
+
+				//if the preious in_charge_id exists in _users (i.e. in this project), give him in_charge
+				if(item['_users'][in_charge_id]){
+					item['_users'][in_charge_id]['in_charge'] = true;
+				}
+				else{ //if not in this project, then false (not assigned)
+					in_charge_id = false;
+				}
+			}
+
 			for (var i in item['_users']){
 				if( item['_users'][i]['in_charge']==true ){
 					in_charge += ' ';
@@ -862,28 +909,42 @@ Submenu.prototype.Add_taskdetail = function() {
 			elem_text_user.text(in_charge);
 
 			if( !Lincko.storage.get("projects", that.param.projID, 'personal_private') ){
-				var cb_select_in_charge = function(data){
-					console.log('cb_select_in_charge');
-					console.log(data);
-					if(data.preSelect){
-						in_charge_id = false;
-					}
-					else{
-						in_charge_id = data.val;
-					}
-					update_burgerBar();
-				}
-
+				elem_box_user.addClass('skylist_clickable');
 				if(item['_id'] == 'new'){
-					burgerInst.user = burger_attach_clickHandler.in_charge(elem_box_user, 'projects', that.param.projID, null, cb_select_in_charge);
+					var cb_select_in_charge = function(data){
+						$.each(item['_users'], function(id, obj){
+							obj['in_charge'] = false;
+						});
+
+						if(!item['_users'][data.val]){
+							item['_users'][data.val] = {};
+						}
+
+						if(data.preSelect){
+							item['_users'][data.val].in_charge = false;
+							in_charge_id = false;
+						}
+						else{
+							item['_users'][data.val].in_charge = true;
+							data.preSelect = true;
+							in_charge_id = data.val;
+						}
+						update_burgerBar();
+					}
+					var burger_list_inCharge = burger_list.in_charge('projects', that.param.projID);
+					$.each(burger_list_inCharge, function(i, obj){
+						if(obj.val == in_charge_id){ obj.preSelect = true; }
+					});
+
+					burgerInst.user = burger_attach_clickHandler.in_charge(elem_box_user, 'projects', that.param.projID, null, cb_select_in_charge, null, burger_list_inCharge);
 				}
 				else{
-					cb_select_in_charge = true;
-					burgerInst.user = burger_attach_clickHandler.in_charge(elem_box_user, item['_type'], item['_id'], null, cb_select_in_charge);
+					burgerInst.user = burger_attach_clickHandler.in_charge(elem_box_user, item['_type'], item['_id'], null, true);
 				}
 				elem_box_user.addClass('skylist_clickable');
 			}
 			else{
+				elem_box_user.off('click.burger');
 				elem_box_user.removeClass('skylist_clickable');
 			}
 		}
@@ -931,7 +992,6 @@ Submenu.prototype.Add_taskdetail = function() {
 		if(!Lincko.storage.canI('delete', that.param.type, taskid) || !deleteAccess){
 			elem_action_menu.find('[find=delete]').addClass("display_none");
 		}
-
 
 		return elem;
 	}// end of update_burgerBar function
