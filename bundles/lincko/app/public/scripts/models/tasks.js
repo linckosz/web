@@ -92,6 +92,10 @@ var tasks_get_inCharge_id = function(task_id, resultType){
 }
 
 var tasks_calcDuedate = function(id){
+	if(typeof id == 'object'){
+		return new wrapper_date(parseInt(id.start,10) + parseInt(id.duration,10));
+	}
+
 	var task = Lincko.storage.get('tasks', id);
 	if(!task){ return false; }
 

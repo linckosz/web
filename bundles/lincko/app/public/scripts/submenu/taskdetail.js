@@ -766,14 +766,14 @@ Submenu.prototype.Add_taskdetail = function() {
 	
 	//submenu_taskdetail.append(update_meta(elem_meta)); toto - old method
 
-	var update_burgerBar = function(elem){		
+	var update_burgerBar = function(elem){
+		if(!elem){ var elem = elem_meta; }
 		//clear all inputs
 		$.each(elem.find('[find=values] input'), function(i, elem_input){
 			$(elem_input).val('');
 		});
 
 		var burgerInst = {};
-
 
 		/*---projects-----*/
 		var elem_box_projects = elem.find('[find="projects"]');
@@ -799,43 +799,19 @@ Submenu.prototype.Add_taskdetail = function() {
 			elem_text_projects.html(item_project['+title']);
 		}
 
-		var cb_select_projects = function(){
-			console.log('cb_select_projects');
-			console.log($(this).attr('projects_id'));
-			return;
-
-			elem_projects_input.change(function(){
-				var project = Lincko.storage.get('projects',$(this).val());
-				if(project.personal_private){
-					elem_projects.html(Lincko.Translation.get('app', 2502, 'html')); //Personal Space
-				}
-				else{
-					elem_projects.html(project['+title']);
-				}
-				item['_parent'][1] = project._id;
-				that.param.projID = project._id;
-
-				if(item._type == 'tasks'){
-					//if changing task, make task assigned to nobody
-					taskdetail_tools.taskUserCheck();
-				}
-
-				if(taskid == 'new'){
-					var elem_replaceWith = update_meta(elem_meta_new.clone());
-					elem.find('input').blur();
-					elem.find('[find=duedate_timestamp]').datepicker('hide');
-					elem.replaceWith(elem_replaceWith);
-				}
-				else{
-					Lincko.storage.data[item._type][item._id] = item;
-					Lincko.storage.childrenList(false, false, 'projects', app_content_menu.projects_id);
-					//app_application_lincko.prepare('projects_'+app_content_menu.projects_id, true);
-					app_application_lincko.prepare(item._type+'_'+item._id, true);
-				}
-			});
+		var cb_select_projects = function(data){
+			elem_text_projects.text(data.text);
+			item['_parent'][1] = data.val;
+			that.param.projID = data.val;
+			//if changing task, make task assigned to nobody
+			taskdetail_tools.taskUserCheck();
+			update_burgerBar();
+		}
+		if(item['_id'] != 'new'){
+			cb_select_projects = true;
 		}
 
-		burgerInst.projects = burger_attach_clickHandler.projects(elem_box_projects, item['_type'], item['_id'], null, true);
+		burgerInst.projects = burger_attach_clickHandler.projects(elem_box_projects, item['_type'], item['_id'], null, cb_select_projects);
 		/*---END OF projects-----*/
 
 
@@ -846,7 +822,10 @@ Submenu.prototype.Add_taskdetail = function() {
 		if(that.param.type == 'tasks'){
 			elem_input_calendar = elem.find('[find=values] input[find=duedate_timestamp]');
 			elem_input_calendar.val((item['start'] + duration_timestamp)*1000);
+
 			var duedate = tasks_calcDuedate(item['_id']);
+			if(!duedate){ duedate = tasks_calcDuedate(item); }
+
 			if( skylist_textDate(duedate) ){
 				elem_text_calendar.text(skylist_textDate(duedate));
 			}
@@ -883,34 +862,25 @@ Submenu.prototype.Add_taskdetail = function() {
 			elem_text_user.text(in_charge);
 
 			if( !Lincko.storage.get("projects", that.param.projID, 'personal_private') ){
-				var cb_select_in_charge = function(result){
+				var cb_select_in_charge = function(data){
 					console.log('cb_select_in_charge');
-					console.log(result);
-					elem_in_charge_hidden.change(function(){
-						in_charge_id = $(this).val();
-						in_charge_id = parseInt(in_charge_id,10);
-						$.each(item['_users'], function(key,val){
-							item['_users'][key]['in_charge'] = false;
-						});
-						if(in_charge_id){
-							var username = Lincko.storage.get("users", in_charge_id, "username");
-							elem_in_charge.html(username);
-							if(!item['_users']){
-								item['_users'] = {};
-							}
-							item['_users'][in_charge_id] = {};
-							item['_users'][in_charge_id]['in_charge'] = true;
-						}
-						else{ //nobody in charnge
-							elem_in_charge.html(Lincko.Translation.get('app', 3608, 'html'));//Not Assigned
-						}
-
-						if(taskid != 'new'){
-							app_application_lincko.prepare(item._type+'_'+item._id, true);
-						}
-					});
+					console.log(data);
+					if(data.preSelect){
+						in_charge_id = false;
+					}
+					else{
+						in_charge_id = data.val;
+					}
+					update_burgerBar();
 				}
-				burgerInst.user = burger_attach_clickHandler.in_charge(elem_box_user, item['_type'], item['_id'], null, true);
+
+				if(item['_id'] == 'new'){
+					burgerInst.user = burger_attach_clickHandler.in_charge(elem_box_user, 'projects', that.param.projID, null, cb_select_in_charge);
+				}
+				else{
+					cb_select_in_charge = true;
+					burgerInst.user = burger_attach_clickHandler.in_charge(elem_box_user, item['_type'], item['_id'], null, cb_select_in_charge);
+				}
 				elem_box_user.addClass('skylist_clickable');
 			}
 			else{

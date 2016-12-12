@@ -67,7 +67,8 @@ var burger_attach_clickHandler = {
 		var list = burger_list.in_charge(lincko_type, lincko_id);
 		var dropdownInst = null;
 		elem.click(function(){
-			if( (!dropdownInst || dropdownInst.destroyed) && Lincko.storage.canI('edit', lincko_type, lincko_id)){
+			if( (!dropdownInst || dropdownInst.destroyed) && 
+				(lincko_id == 'new' || !lincko_id || Lincko.storage.canI('edit', lincko_type, lincko_id))){
 
 				if(responsiveRange == true || responsive.test(responsiveRange)){
 					dropdownInst = new burger_dropdown('toto', list, elem, null, null, cb_select, null, false); 
@@ -129,7 +130,8 @@ var burger_attach_clickHandler = {
 		var list = burger_list.projects(lincko_type, lincko_id);
 		var dropdownInst = null;
 		elem.click(function(){
-			if( (!dropdownInst || dropdownInst.destroyed) && Lincko.storage.canI('edit', lincko_type, lincko_id)){
+			if( (!dropdownInst || dropdownInst.destroyed) && 
+				(lincko_id == 'new' || !lincko_id || Lincko.storage.canI('edit', lincko_type, lincko_id))){
 				 
 				if(responsiveRange == true || responsive.test(responsiveRange)){
 					dropdownInst = new burger_dropdown('toto', list, elem, null, null, cb_select, null, false);
@@ -393,7 +395,7 @@ burger_list.in_charge = function(lincko_type, lincko_id){
 			imgURL: Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", userid, 'profile_pic')),
 		};
 
-		if( typeof item == 'object' && item['_users']  && userid in item['_users'] && item['_users'][userid]['in_charge'] ){
+		if( $.type(item) == 'object' && item['_users']  && userid in item['_users'] && item['_users'][userid]['in_charge'] ){
 			user.preSelect = true;
 		}
 		else{
@@ -406,13 +408,17 @@ burger_list.in_charge = function(lincko_type, lincko_id){
 }
 
 burger_list.projects = function(lincko_type, lincko_id){
-	var parent_item = Lincko.storage.get(lincko_type, lincko_id, 'parent');
-	if(parent_item[0] != 'projects'){ return false; }
-	else{
-		var id_preSelect = parent_item[1];
+	var latest_projects = [];
+	var id_preSelect = null;
+
+	if(lincko_id && lincko_id != 'new'){
+		var parent_item = Lincko.storage.get(lincko_type, lincko_id, 'parent');
+		if(parent_item[0] != 'projects'){ return false; }
+		else{
+			var id_preSelect = parent_item[1];
+		}
 	}
 
-	var latest_projects = [];
 	if(Lincko.storage.getSettings().latestvisitProjects){
 		$.each(Lincko.storage.getSettings().latestvisitProjects, function(i, id){
 			var project = Lincko.storage.get('projects',id);
