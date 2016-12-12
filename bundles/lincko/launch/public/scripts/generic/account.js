@@ -305,7 +305,7 @@ $('#account_integration_wechat').click(function(){
 			return false;
 		}
 		account_integration_wechat_qrcode();
-	}, 3000); //(toto) Refrezh the QR code every 30s
+	}, 600000); //Refresh the QR code every 10min
 });
 
 var account_integration_wechat_qrcode = function(){
@@ -313,8 +313,7 @@ var account_integration_wechat_qrcode = function(){
 		id: "account_wechat_qrcode",
 		appid: account_integration.wechat.appid,
 		scope: "snsapi_login",
-		redirect_uri: encodeURIComponent(top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/debug"),
-		state: Math.ceil(Math.random()*1000),
+		redirect_uri: encodeURIComponent(top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/integration/wechat/token"),
 		style: "black",
 		href: account_integration.wechat.href,
 	});

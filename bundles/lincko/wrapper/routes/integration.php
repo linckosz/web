@@ -9,13 +9,13 @@ $app->group('/integration', function () use ($app) {
 	$app->group('/wechat', function () use ($app) {
 
 		$app->get(
-			'/connect:var',
-			'\bundles\lincko\wrapper\controllers\integration\ControllerWechat:connect_get'
+			'/token:var',
+			'\bundles\lincko\wrapper\controllers\integration\ControllerWechat:token_get'
 		)
 		->conditions(array(
 			'var' => '\S*',
 		))
-		->name('integration_wechat_connect_get');
+		->name('integration_wechat_token_get');
 
 	});
 

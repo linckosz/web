@@ -155,15 +155,28 @@ $app->lincko->data = array(
 	'lincko_show_dev' => 'false', //Display some error for developpers on JS (NOTE: it has to be a string because of Twig conversion to JS)
 	'api_upload' => 'lknscklb798w98eh9cwde8bc897q09wj',
 	'integration_wechat_appid' => '',
+	'link_reset' => false,
 );
 
+
+//Integration data
+$app->lincko->integration = new \stdClass;
+$app->lincko->integration->wechat = array(
+	'appid' => '',
+	'secretapp' => '',
+);
 if($app->lincko->domain=='lincko.cafe'){
-	$app->lincko->data['integration_wechat_appid'] = 'wxafd8adb6683d8914';
+	$app->lincko->integration->wechat['appid'] = 'wxafd8adb6683d8914';
+	$app->lincko->integration->wechat['secretapp'] = '1fd24f7296c069dccb3aedc9914e2b9e';
 } else if($app->lincko->domain=='lincko.co'){
-	$app->lincko->data['integration_wechat_appid'] = 'wxafd8adb6683d8914';
+	$app->lincko->integration->wechat['appid'] = 'wxafd8adb6683d8914';
+	$app->lincko->integration->wechat['secretapp'] = '1fd24f7296c069dccb3aedc9914e2b9e';
 } else if($app->lincko->domain=='lincko.com'){
-	$app->lincko->data['integration_wechat_appid'] = 'wx8f20e5f247408c94';
+	$app->lincko->integration->wechat['appid'] = 'wx8f20e5f247408c94';
+	$app->lincko->integration->wechat['secretapp'] = 'c088e2b2e3c690c6570f875ce0505d19';
 }
+$app->lincko->data['integration_wechat_appid'] = $app->lincko->integration->wechat['appid'];
+
 
 if(isset($_SERVER["LINCKO_FRONT"])){
 	$app->lincko->data['lincko_front'] = $_SERVER["LINCKO_FRONT"].'-';

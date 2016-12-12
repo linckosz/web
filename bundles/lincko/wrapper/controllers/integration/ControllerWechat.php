@@ -15,13 +15,43 @@ class ControllerWechat extends Controller {
 		return true;
 	}
 
-	public function connect_get($var=false){
-		ob_clean();
-		header("Content-type: text/html; charset=UTF-8");
-		http_response_code(200);
-		echo 'Wechat connection';
-		echo '<br />'.$var;
-		return exit(0);
+	public function token_get($var=false){
+		$app = $this->app;
+		$data = $app->request->get();
+		\libs\Watch::php($data, '$data', __FILE__, false, false, true);
+		if(isset($data['code'])){
+			$url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid='.$app->lincko->integration->wechat['appid'].'&secret='.$app->lincko->integration->wechat['secretapp'].'&code='.$data['code'].'&grant_type=authorization_code';
+			$timeout = 8;
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $url); //Port used is 10443 only
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+			curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
+			curl_setopt($ch, CURLOPT_FORBID_REUSE, true);
+			curl_setopt($ch, CURLOPT_ENCODING, 'gzip');
+
+			$verbose = fopen('php://temp', 'w+');
+			curl_setopt($ch, CURLOPT_VERBOSE, true);
+			curl_setopt($ch, CURLOPT_STDERR, $verbose);
+
+			if($result = curl_exec($ch)){
+				\libs\Watch::php($result, '$result', __FILE__, false, false, true);
+			} else {
+				//echo "cURL error!\n";
+				\libs\Watch::php(curl_getinfo($ch), '$ch', __FILE__, false, false, true);
+				$error = '['.curl_errno($ch)."] => ".htmlspecialchars(curl_error($ch));
+				\libs\Watch::php($error, '$error', __FILE__, false, false, true);
+				rewind($verbose);
+				\libs\Watch::php(stream_get_contents($verbose), '$verbose', __FILE__, false, false, true);
+				fclose($verbose);
+			}
+
+			@curl_close($ch);
+			$app->lincko->data['link_reset'] = true;
+			$app->router->getNamedRoute('home')->dispatch();
+		}
 	}
 
 }

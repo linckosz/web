@@ -90,11 +90,16 @@
 {#
 	QR scanner
 	https://github.com/edi9999/jsqrcode
-#}
+
 <script src="{{ _filelatest('/scripts/libs/qrcode/index.js') }}" type="text/javascript"></script>
-{# #}
+#}
 
 <script>
+{% if link_reset %}
+	//Clean the URL
+	window.history.replaceState(null, null, "/");
+{% endif %}
+
 window.name = 'brunomartin';
 document.domainRoot = '{{ domain }}';
 {% if workspace %}
