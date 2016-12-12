@@ -615,7 +615,7 @@ burger_dropdown.prototype.build_elem = function(){
 		//bottom: 200,
 		//display: 'block',
 	});
-    elem_dropdown.attr('tabindex',0).prop('id', that.id_dropdown);
+    elem_dropdown.attr('tabindex', 0).prop('id', that.id_dropdown);
     elem_dropdown.children('.overthrow').prop('id', that.id_iscroll);
 
 
@@ -634,6 +634,7 @@ burger_dropdown.prototype.build_elem = function(){
     elem_dropdown.keydown(function(event){
     	var which = event.which;
     	if(which != 38 && which != 40 && which != 13){ return;	} //return if it is not 'arrow up' or 'arrow down' or 'enter'
+    	event.preventDefault();
     	var elem_selected = null;
 
 
