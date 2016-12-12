@@ -717,6 +717,7 @@ function cleanHtmlTag(source){
 		input.find('[find=chat_textarea]').blur(function(event){
 			if(cancelBlur){
 				event.preventDefault();
+				$(this).focus();
 				cancelBlur = false;
 				return;
 			}
