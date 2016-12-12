@@ -517,18 +517,29 @@
 	opacity:1.0 !important;
 	-moz-opacity:1.0 !important;
 	-khtml-opacity:1.0 !important;
+	cursor: default;
 }
 
 .account_integration_icon_blur {
 	ofilter:alpha(opacity=50);
-	opacity:0.5;
-	-moz-opacity:0.5;
-	-khtml-opacity:0.5;
+	opacity:0.3;
+	-moz-opacity:0.3;
+	-khtml-opacity:0.3;
+}
+
+#account_wechat_qrcode {
+	font-size: 0;
+	padding-top: 16px;
+	padding-bottom: 4px;
 }
 
 #account_wechat_qrcode > iframe {
 	width: 222px;
 	height: 222px;
+}
+
+#account_wechat_box > div {
+	padding-bottom: 0;
 }
 
 @media only screen and (max-height: 350px){

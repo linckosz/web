@@ -164,7 +164,7 @@ function account_hide() {
 
 function account_select(select) {
 	global_select = select;
-	$('#account_signin_box, #account_joinus_box, #account_forgot_box, #account_reset_box').addClass('display_none');
+	$('#account_signin_box, #account_joinus_box, #account_forgot_box, #account_reset_box, #account_wechat_box').addClass('display_none');
 	$('#account_tab_joinus, #account_tab_signin').removeClass('account_trans').addClass('display_none');
 	$('#account_tab_joinus > div, #account_tab_signin > div').removeClass('account_tab_joinus').removeClass('account_tab_signin');
 	$('#account_wrapper').find('.account_integration_icon').removeClass('account_integration_icon_active account_integration_icon_blur');
