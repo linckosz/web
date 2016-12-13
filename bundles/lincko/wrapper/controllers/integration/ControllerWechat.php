@@ -57,9 +57,9 @@ class ControllerWechat extends Controller {
 			$response = false;
 		}
 
-		if($response && $access_token && $openid){
+		if($response && $access_token && $openid && $result = json_decode($response)){
 			$param = array();
-			$data = $response;
+			$data = $result;
 			$response = $this->curl_post('login', $param, $data);
 		} else {
 			$response = false;
@@ -109,11 +109,14 @@ class ControllerWechat extends Controller {
 		return $result;
 	}
 
-	public function curl_post($grant_type=false, $param=array(), $data=array()){
+	public function curl_post($grant_type=false, $param=array(), $data=false){
 		$app = $this->app;
+		if(!is_object($data)){
+			$data = new \stdClass;
+		}
 		if($grant_type=='login'){
 			$url = $app->lincko->wrapper['url'].'integration/wechat/connect';
-			$data['method'] = 'POST';
+			$data->method = 'POST';
 		} else if($grant_type=='send_message'){
 			$url = 'https://api.wechat.com/cgi-bin/message/custom/send?access_token='.$param['access_token'];
 		} else {
