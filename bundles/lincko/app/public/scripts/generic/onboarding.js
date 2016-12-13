@@ -73,14 +73,12 @@ var onboarding = {
 
 	},
 
-	launch: function(ob_settings){ //return true if launched, return false if conditions are not fit for launch
+	launch: function(){ //return true if launched, return false if conditions are not fit for launch
 
 		//onboarding launch fail
 		if(onboarding.forceOff){ return false; }
 
-		if(!ob_settings){
-			var ob_settings = Lincko.storage.getOnboarding();
-		}
+		var ob_settings = Lincko.storage.getOnboarding();
 
 		if(!ob_settings.projects[1] || !ob_settings.sequence[1]){ return false; }
 
@@ -752,7 +750,6 @@ onboarding.scripts[5] = function(fn_continue){
 
 //welcome onboarding
 onboarding.scripts['welcome'] = function(project_id){
-
 	var projectOpenSuccess = app_content_menu.selection(project_id);
 	if(!projectOpenSuccess){ return false; }
 
@@ -1232,9 +1229,8 @@ onboarding.scripts['welcome'] = function(project_id){
 var id_onboarding_garbage_launch = app_application_garbage.add('onboarding_garbage_launch');
 app_application_lincko.add(id_onboarding_garbage_launch, ['launch_onboarding', 'settings'], function(){
 
-	var ob_settings = Lincko.storage.getOnboarding();
-	if(ob_settings){
-		var launched = onboarding.launch(ob_settings);
+	var launched = onboarding.launch();
+	if(launched){
 		app_application_garbage.remove(id_onboarding_garbage_launch);
 	}
 
