@@ -1664,9 +1664,6 @@ Submenu.prototype.Add_taskdetail = function() {
 				var elem = taskdetail_generateCommentBubble(comment, item['_id'], sendAction_newComment);
 				var elem_toReplace = submenu_taskdetail.find('[comment_id='+tmpID+']').closest('.submenu_taskdetail_commentbubble');
 				elem_toReplace.replaceWith(elem);
-				var param = {};
-				param['comments_'+comment['_id']] = true;
-				wrapper_sendAction(param, 'post', 'data/viewed');
 			}
 			tmpID = null;
 		}
@@ -1744,8 +1741,11 @@ Submenu.prototype.Add_taskdetail = function() {
 				}
 				else{
 					elem_comments_main.prepend(elem_newComment_bubble);
-				}				
-				param_viewed['comments_'+comment['_id']] = true;
+				}
+
+				if(!comment['new']){
+					param_viewed['comments_'+comment['_id']] = true;
+				}		
 			}
 			else{
 				comments_hidden.push(comment);
@@ -1764,8 +1764,9 @@ Submenu.prototype.Add_taskdetail = function() {
 				}
 			});
 		}
-		wrapper_sendAction(param_viewed, 'post', 'data/viewed');
-		
+		if(!$.isEmptyObject(param_viewed)){
+			wrapper_sendAction(param_viewed, 'post', 'data/viewed');
+		}		
 
 		if(comments_hidden.length > 0){
 			elem_seePrev.removeClass('display_none');
