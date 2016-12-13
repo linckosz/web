@@ -244,6 +244,19 @@ var intro = {
 		target.addClass("models_intro_self");
 		
 		wrapper.find("[find=script_list]").append(target);
+
+		//finger()
+		var finger = $("#-models_intro_options_finger").clone();
+		finger.prop("id","");
+
+		target.find("[find=options_content]").append(finger);
+
+		var hand = finger.find("[find=hand]");
+
+		hand.velocity("fadeIn", {duration: 1000,})
+			.velocity({ left: "10px" }, {duration: 800,loop: true,});
+	
+		//options
 		for(var i in options)
 		{
 			var item = $("#-models_intro_options_item").clone();
@@ -275,10 +288,7 @@ var intro = {
 					{
 						fn();
 					}
-
-					//intro.gotoStep(pointTo);
 				}
-				
 			});
 		}
 	}

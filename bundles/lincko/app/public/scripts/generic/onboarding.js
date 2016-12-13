@@ -135,9 +135,9 @@ var onboarding = {
 		//ESC during onboarding to clear
 		$(document).on('keyup.onboarding', function(event){
 			if (event.which == 27) { //ESC
-		       $(document).off('keyup.onboarding');
-		       onboarding.clear();
-		    }
+				$(document).off('keyup.onboarding');
+				onboarding.clear();
+			}
 		});
 
 		//watch for end of onboarding in the 'settings' sync function

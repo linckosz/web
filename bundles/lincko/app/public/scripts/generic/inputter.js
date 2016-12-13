@@ -179,12 +179,12 @@ inputter.prototype.buildLayer = function()
 	var mobile_left_col_count  = 0;
 	var mobile_right_col_count  = 0;
 
-	var left_padding_col_count = 0;
+	var left_margin_col_count = 0;
 	
 	if(this.layer.hasOwnProperty('left_menu'))
 	{
 		mobile_left_col_count = 0;
-		left_padding_col_count = 0;
+		left_margin_col_count = 0;
 		for(var i in this.layer['left_menu'])
 		{
 			col_count = 0;
@@ -213,7 +213,7 @@ inputter.prototype.buildLayer = function()
 						}
 						else if (elem == 'chkTask')
 						{
-							left_padding_col_count++;
+							left_margin_col_count++;
 						}
 
 						if(this.layer['left_menu'][i][j].hasOwnProperty('empty'))
@@ -466,7 +466,7 @@ inputter.prototype.buildLayer = function()
 															var width_style  = width > height ? 30 : 'auto';
 															var height_style = width > height ? 'auto': 30;
 															var padding_top_style  = width > height ? (30 - (30 * height /width))/2  : 0;
-															var padding_left_style  = width > height ? 0 : (30 - (30*width/height))/2;
+															var margin_left_style  = width > height ? 0 : (30 - (30*width/height))/2;
 
 															$('#'+this.action_param[2]+'_attachment .inputter_preview')
 																.find(".shortcut_pic")
@@ -475,7 +475,7 @@ inputter.prototype.buildLayer = function()
 																.css('height',height_style)
 																.css('width',width_style)
 																.css('padding-top',padding_top_style)
-																.css('padding-left',padding_left_style);
+																.css('margin-left',margin_left_style);
 
 														}
 														else
@@ -538,16 +538,17 @@ inputter.prototype.buildLayer = function()
 	content.addClass('margin-left-' + max_left_col_count);
 	content.addClass('mobile-margin-left-' + mobile_left_col_count);
 
+	content.addClass('margin-left-' + left_margin_col_count);
 	content.addClass('margin-right-' + max_right_col_count);
 	content.addClass('mobile-margin-right-' + mobile_right_col_count);
+
+	
 
 	var input = $('#-inputter_element_content').clone();
 	input.prop('id','');
 	input.appendTo(content);
 
-	input.find('[find=chat_textarea]').addClass('padding-left-' + left_padding_col_count);
 
-	
 
 	if(this.layer.hasOwnProperty('row'))
 	{
@@ -632,12 +633,7 @@ function cleanHtmlTag(source){
 	return source;
 }
 
-	input.find('[find=chat_textarea]').on('blur',function(){
-		var focus_help = $("<input/>");
-		focus_help.appendTo($("body"));
-		focus_help.focus();
-		focus_help.recursiveRemove(0);
-	});
+	
 	
 	
 	input.find('[find=chat_textarea]').on('paste',function(e,data){
@@ -655,7 +651,6 @@ function cleanHtmlTag(source){
 	});
 
 	input.find('[find=chat_textarea]').on('cut',function(e,data){
-
 		var target = this;
 		setTimeout(function(){
 			if(target.innerText > 0)
@@ -762,11 +757,20 @@ function cleanHtmlTag(source){
 				cancelBlur = false;
 				return;
 			}
+			else
+			{
+				var focus_help = $("<input/>");
+				focus_help.appendTo($("body"));
+				focus_help.focus();
+				focus_help.recursiveRemove(0);
+			}
 			
 			//$(this).closest('[find=toggleOpacity]').addClass('burger_typeTask_opacity');
 			if($(this).html() == ''){
 				$(this).html(defaultPhrase);
 			}
+
+		
 
 		});
 
