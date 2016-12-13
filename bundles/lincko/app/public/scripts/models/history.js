@@ -66,7 +66,7 @@ var app_models_history = {
 
 	notification: function(items, lastvisit){
 		//Skip notification if inside an app because we do mobile push
-		if(useMobileNotification()==false){
+		if(useMobileNotification()==true){
 			return true;
 		}
 		if(typeof items == 'undefined'){ items = {}; }
@@ -92,7 +92,7 @@ var app_models_history = {
 						}
 						app_models_history.notified["tasks_"+hist[i]['id']+"_"+hist[i]['hist']] = true;
 						//Do not display if the project is silence
-						users = Lincko.storage.get('projects', hist["par_id"], "_users");
+						users = Lincko.storage.get('projects', hist[i]["par_id"], "_users");
 						if(users && users[wrapper_localstorage.uid] && users[wrapper_localstorage.uid]["silence"]){
 							continue;
 						} else if(!users){
