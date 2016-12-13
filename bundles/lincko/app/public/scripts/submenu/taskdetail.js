@@ -1743,7 +1743,7 @@ Submenu.prototype.Add_taskdetail = function() {
 					elem_comments_main.prepend(elem_newComment_bubble);
 				}
 
-				if(!comment['new']){
+				if(comment['new']){
 					param_viewed['comments_'+comment['_id']] = true;
 				}		
 			}
