@@ -1,6 +1,9 @@
 .onboarding_noBorder {
 	border: none !important;
 }
+.onboarding_noBorder .app_content_menu_icon{
+	opacity: 1;
+}
 .onboarding_overlay{
 	position: absolute;
 	z-index: 9999;

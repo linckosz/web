@@ -1,10 +1,11 @@
 var onboarding = {
-	forceOff: true,
+	forceOff: false,
 	on: false, //will be set to true for the duration of onboarding
 	project_id: null, //onboarding project id
 	overlays: {}, //functions and other controls for main menu and content overlays
 
 	fn_next: null,
+	currentTrip: null,
 
 	id_welcome_bubble: 'onboarding_welcome_bubble',
 	welcome_bubble_reposition: function(tripData, duration, cb_complete){
@@ -72,13 +73,18 @@ var onboarding = {
 
 	},
 
-	launch: function(){ //return true if launched, return false if conditions are not fit for launch
+	launch: function(ob_settings){ //return true if launched, return false if conditions are not fit for launch
 
-		if(onboarding.forceOff){ 
-			return false; //onboarding launch fail
+		//onboarding launch fail
+		if(onboarding.forceOff){ return false; }
+
+		if(!ob_settings){
+			var ob_settings = Lincko.storage.getOnboarding();
 		}
 
-		return onboarding.scripts.welcome();
+		if(!ob_settings.projects[1] || !ob_settings.sequence[1]){ return false; }
+
+		return onboarding.scripts.welcome(ob_settings.projects[1]);
 
 
 
@@ -158,6 +164,7 @@ var onboarding = {
 		this.scripts.completed = {};
 		this.overlays.off();
 		$('#'+this.id_welcome_bubble).recursiveRemove(0);
+		$(document).off('click.onboarding');
 		return;
 
 		//below is onboarding 1.0
@@ -344,28 +351,54 @@ onboarding.overlays = {
 		var elem = $('<div>').prop('id',id).addClass('onboarding_overlay '+id);
 		if(id == 'onboarding_overlay_btnSkip'){ 
 			elem.click(function(){
-				if(typeof onboarding.fn_next == 'function'){
+				onboarding.forceOff = true;
+				if(onboarding.currentTrip){
+					onboarding.currentTrip.stop();
+				}
+				onboarding.clear();
+				/*if(typeof onboarding.fn_next == 'function'){
 					onboarding.fn_next();	
-				}	
-			}).text('Skip'); //toto - translation
+				}*/
+			}).text(Lincko.Translation.get('app', 73, 'html')); //Skip
 		} 
 		return elem;
 	},
 
 	project: function(on){
 		var id = this.id.project;
-		if(typeof on == 'boolean' && !on && $('#'+id).length){
-			$('#'+id).recursiveRemove(0);
-			return;
+		var elem_overlay = $('#'+id);
+		var exists = false;
+		if(elem_overlay.length){
+			exists = true;
 		}
 
-		if($('#'+id).length){
-			return $('#'+id);
+		if(typeof on == 'boolean'){
+			if(on && exists){
+				return elem_overlay;
+			}
+			else if(on && !exist){
+				elem_overlay = this.build_elem(id);
+				$('#app_application_project').append(elem_overlay);
+			}
+			else if(!on){
+				elem_overlay.recursiveRemove(0);
+			}
+		}
+		else {
+			if(exists){
+				return elem_overlay;
+			}
+			else{
+				elem_overlay = this.build_elem(id);
+				$('#app_application_project').append(elem_overlay);
+			}
+		}
+
+		if(elem_overlay.length){
+			return elem_overlay;
 		}
 		else{
-			var elem_overlay = this.build_elem(id);
-			$('#app_application_project').append(elem_overlay);
-			return elem_overlay;
+			return false;
 		}
 	},
 	content: function(on){
@@ -718,9 +751,9 @@ onboarding.scripts[5] = function(fn_continue){
 
 
 //welcome onboarding
-onboarding.scripts['welcome'] = function(){
+onboarding.scripts['welcome'] = function(project_id){
 
-	var projectOpenSuccess = app_content_menu.selection(Lincko.storage.getMyPlaceholder()['_id']); //toto - this should be the sample project
+	var projectOpenSuccess = app_content_menu.selection(project_id);
 	if(!projectOpenSuccess){ return false; }
 
 	if(!$('#'+onboarding.id_welcome_bubble).length){
@@ -734,6 +767,14 @@ onboarding.scripts['welcome'] = function(){
 	onboarding.on = true;
 	onboarding.overlays.body();
 	onboarding.overlays.btnSkip();
+	$(document).on('click.onboarding', function(event){
+		var elem_target = $(event.target);
+		if(elem_target.hasClass('onboarding_overlay_body') || elem_target.hasClass('onboarding_overlay_content') ||  elem_target.hasClass('onboarding_overlay_content_dynamic_sub') || elem_target.hasClass('trip-overlay')){
+			if(typeof onboarding.fn_next == 'function'){
+				onboarding.fn_next();
+			}
+		}
+	});
 
 
 	//tracker to make sure trip only runs once
@@ -784,11 +825,13 @@ onboarding.scripts['welcome'] = function(){
 		overlayHolder: '#app_application_content',
 		tripClass: 'onboarding_trip_welcome',
 		onStart: function(){
+			onboarding.currentTrip = this;
 			this.id_trip = 'openMainMenu';
 			tripTracker[this.id_trip] = {};
 		},
-		onEnd: function(){
+		onEnd: function(var1, var2){
 			$('#app_application_menu_icon').off('click.trip');
+			if(onboarding.forceOff){ return false; }
 			onboarding.overlays.content().css('opacity', 0);
 			delete trip_openMainMenu;
 			trip_exploreMainMenu.start();
@@ -803,6 +846,7 @@ onboarding.scripts['welcome'] = function(){
 			expose: true,
 			delay: -1,
 			onTripStart : function(i, tripData){
+				$('#app_application_menu_icon').removeClass('.trip-exposed');
 				onboarding.welcome_bubble_reposition();
 				if(tripTracker.check(this, i)){return false;}
 				//$('#app_application_menu_icon').removeClass('trip-exposed');
@@ -838,6 +882,13 @@ onboarding.scripts['welcome'] = function(){
 
 					if(tripObj.tripIndex == 1){
 						$(this).off('click.trip');
+
+						//if main menu is closed, no close animation
+						if(!$('#app_application_project').hasClass('app_application_visible')){
+							tripObj.stop();
+							return;
+						}
+
 						$('#app_application_menu_icon').velocity('fadeOut', {
 							mobileHA: hasGood3Dsupport,
 							begin: function(){
@@ -873,7 +924,7 @@ onboarding.scripts['welcome'] = function(){
 				var cb_complete = function(){
 					setTimeout(function(){
 						$('.trip-overlay').velocity({opacity: 0},{mobileHA: hasGood3Dsupport,});
-					}, 500);
+					}, 2000);
 				}
 				onboarding.welcome_bubble_reposition(null, null, cb_complete);
 			},
@@ -895,8 +946,8 @@ onboarding.scripts['welcome'] = function(){
 				tripData.sel.css('border', '4px solid #FFFFFF');
 				$('.trip-overlay').css('opacity', '');
 				setTimeout(function(){
-					//$('.trip-overlay').velocity({opacity: 0},{mobileHA: hasGood3Dsupport,});
-				}, 900);
+					$('.trip-overlay').velocity({opacity: 0},{mobileHA: hasGood3Dsupport,});
+				}, 2000);
 
 				var fn_next = function(){
 					onboarding.overlays.project().trigger('click.trip');
@@ -914,6 +965,7 @@ onboarding.scripts['welcome'] = function(){
 		overlayHolder: '#app_project_content .iscroll_sub_div',
 		tripClass: 'onboarding_trip_welcome onboarding_trip_exploreMainMenu',
 		onStart: function(){
+			onboarding.currentTrip = this;
 			this.id_trip = 'exploreMainMenu';
 			tripTracker[this.id_trip] = {};
 
@@ -932,14 +984,25 @@ onboarding.scripts['welcome'] = function(){
 			
 		},
 		onEnd: function(){
-			var id_onboarding_garbage_mainMenuClose = app_application_garbage.add('onboarding_garbage_mainMenuClose');
-			app_application_lincko.add(id_onboarding_garbage_mainMenuClose, 'mainmenu_close_complete', 
-				function(){
-					app_application_garbage.remove(id_onboarding_garbage_mainMenuClose);
-					trip_exploreContentTop.start();
-					onboarding.overlays.project().attr('style', '');
-				}
-			);
+			if(onboarding.forceOff){ return false; }
+			//if main menu is opened
+			if($('#app_application_project').hasClass('app_application_visible')){
+				var id_onboarding_garbage_mainMenuClose = app_application_garbage.add('onboarding_garbage_mainMenuClose');
+				app_application_lincko.add(id_onboarding_garbage_mainMenuClose, 'mainmenu_close_complete', 
+					function(){
+						app_application_garbage.remove(id_onboarding_garbage_mainMenuClose);
+						onboarding.overlays.project().attr('style', '');
+						setTimeout(function(){
+							trip_exploreContentTop.start();
+						}, 1000);
+					}
+				);
+			}
+			else{
+				onboarding.overlays.project().attr('style', '');
+				trip_exploreContentTop.start();
+			}
+			
 			
 			delete trip_exploreMainMenu;
 		}
@@ -999,11 +1062,13 @@ onboarding.scripts['welcome'] = function(){
 		overlayHolder: '#app_content_top_title',
 		tripClass: 'onboarding_trip_welcome onboarding_trip_exploreContentTop',
 		onStart: function(){
+			onboarding.currentTrip = this;
 			this.id_trip = 'exploreContentTop';
 			tripTracker[this.id_trip] = {};
 			
 		},
 		onEnd: function(tripIndex, tripObject){
+			if(onboarding.forceOff){ return false; }
 			trip_exploreContentMenu.start();
 		},
 	});
@@ -1081,6 +1146,7 @@ onboarding.scripts['welcome'] = function(){
 		overlayHolder: '#app_content_menu_table',
 		tripClass: 'onboarding_trip_welcome onboarding_trip_exploreContentMenu',
 		onStart: function(){
+			onboarding.currentTrip = this;
 			this.id_trip = 'exploreContentMenu';
 			tripTracker[this.id_trip] = {};
 
@@ -1093,6 +1159,7 @@ onboarding.scripts['welcome'] = function(){
 			
 		},
 		onEnd: function(tripIndex, tripObject){
+			if(onboarding.forceOff){ return false; }
 			onboarding.overlays.content_dynamic_sub(false);
 			onboarding.overlays.content_menu().off('click.trip').attr('style', '');
 			var array_inputter = [
@@ -1129,12 +1196,14 @@ onboarding.scripts['welcome'] = function(){
 				overlayHolder: '#app_content_dynamic_layers',
 				tripClass: 'onboarding_trip_welcome onboarding_trip_inputter',
 				onStart: function(){
+					onboarding.currentTrip = this;
 					this.id_trip = 'inputter';
 					tripTracker[this.id_trip] = {};
 					
 				},
 				onEnd: function(tripIndex, tripObject){
-					$('.trip-overlay').css('display', 'none');
+					if(onboarding.forceOff){ return false; }
+					//$('.trip-overlay').css('display', 'none');
 					onboarding.clear();
 				},
 			});
@@ -1148,12 +1217,6 @@ onboarding.scripts['welcome'] = function(){
 	}
 
 	$('#'+onboarding.id_welcome_bubble).append(intro.showPanel());
-
-	/*.click(function(){
-		console.log('welcome bubble click');
-		$(this).off('click');
-		fn_next();
-	});*/
 	
 	intro.startStep(fn_next);
 	onboarding.fn_next = fn_next;
@@ -1168,9 +1231,16 @@ onboarding.scripts['welcome'] = function(){
 
 var id_onboarding_garbage_launch = app_application_garbage.add('onboarding_garbage_launch');
 app_application_lincko.add(id_onboarding_garbage_launch, ['launch_onboarding', 'settings'], function(){
-	var launched = onboarding.launch();
-	//stop looking for onboarding launch if it is already launched OR onboarding settings object exists but wasn't launched (user already finished)
-	if(launched /*|| Lincko.storage.getOnboarding()*/){
+
+	var ob_settings = Lincko.storage.getOnboarding();
+	if(ob_settings){
+		var launched = onboarding.launch(ob_settings);
 		app_application_garbage.remove(id_onboarding_garbage_launch);
 	}
+
+	/*var launched = onboarding.launch();
+	//stop looking for onboarding launch if it is already launched OR onboarding settings object exists but wasn't launched (user already finished)
+	if(launched){
+		app_application_garbage.remove(id_onboarding_garbage_launch);
+	}*/
 });
