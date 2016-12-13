@@ -1,5 +1,6 @@
 var onboarding = {
 	forceOff: false,
+	clickAwaySkip: false,
 	on: false, //will be set to true for the duration of onboarding
 	project_id: null, //onboarding project id
 	overlays: {}, //functions and other controls for main menu and content overlays
@@ -764,15 +765,16 @@ onboarding.scripts['welcome'] = function(project_id){
 	onboarding.on = true;
 	onboarding.overlays.body();
 	onboarding.overlays.btnSkip();
-	$(document).on('click.onboarding', function(event){
-		var elem_target = $(event.target);
-		if(elem_target.hasClass('onboarding_overlay_body') || elem_target.hasClass('onboarding_overlay_content') ||  elem_target.hasClass('onboarding_overlay_content_dynamic_sub') || elem_target.hasClass('trip-overlay')){
-			if(typeof onboarding.fn_next == 'function'){
-				onboarding.fn_next();
+	if(onboarding.clickAwaySkip){
+		$(document).on('click.onboarding', function(event){
+			var elem_target = $(event.target);
+			if(elem_target.hasClass('onboarding_overlay_body') || elem_target.hasClass('onboarding_overlay_content') ||  elem_target.hasClass('onboarding_overlay_content_dynamic_sub') || elem_target.hasClass('trip-overlay')){
+				if(typeof onboarding.fn_next == 'function'){
+					onboarding.fn_next();
+				}
 			}
-		}
-	});
-
+		});
+	}
 
 	//tracker to make sure trip only runs once
 	var tripTracker = {
