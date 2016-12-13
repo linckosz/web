@@ -1138,8 +1138,9 @@ skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
 		elem_title.append(span_user).append(span_date);
 	}
 
-	//if task duedate changed, adjust overdue class
-	if((typeof updated == 'boolean' && updated) || updated.duration){
+	
+	if((typeof updated == 'boolean' && updated) || updated.approved || updated.approved_at || updated.approved_by){
+		//if task duedate changed, adjust overdue class
 		var isOverdue = tasks_isOverdue(item._id);
 		if(isOverdue){
 			elem.addClass('skylist_card_overdue');
@@ -1147,10 +1148,8 @@ skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
 		else{
 			elem.removeClass('skylist_card_overdue');
 		}
-	}
 
-	//approved, approved_by, approved_at
-	if((typeof updated == 'boolean' && updated) || updated.approved || updated.approved_at || updated.approved_by){
+		//approved, approved_by, approved_at
 		if(item.approved != elem.hasClass('skylist_card_checked')){
 			elem.toggleClass('skylist_card_checked');
 		}
