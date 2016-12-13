@@ -92,7 +92,7 @@ var account_reset_cb_success = function(msg, err, status, data){
 	} else {
 		$('#account_signin_email').val(account_credential.email).focus();
 		$('#account_signin_password').val(account_credential.password).focus();
-		$('#account_signin_submit').submit();
+		$('#account_signin_form').submit();
 	}
 };
 
@@ -346,15 +346,46 @@ $("#account_joinus_email, #account_joinus_password, #account_joinus_captcha, #ac
 	},
 });
 
-$("#account_joinus_submit, #account_signin_submit").keypress(function (e) {
+$("#account_joinus_submit").keypress(function (e) {
 	if (e.which == 13) {
-		$(this.form).submit();
+		account_reset_autocompletion();
+		$("#account_joinus_form").submit();
+	}
+});
+$("#account_signin_submit").keypress(function (e) {
+	if (e.which == 13) {
+		account_reset_autocompletion();
+		$("#account_signin_form").submit();
+	}
+});
+$("#account_forgot_submit").keypress(function (e) {
+	if (e.which == 13) {
+		account_reset_autocompletion();
+		$("#account_forgot_form").submit();
+	}
+});
+$("#account_reset_submit").keypress(function (e) {
+	if (e.which == 13) {
+		account_reset_autocompletion();
+		$("#account_reset_form").submit();
 	}
 });
 
-$("#account_joinus_submit, #account_signin_submit, #account_forgot_submit, #account_reset_submit").click(function(){
+$("#account_joinus_submit").click(function(){
 	account_reset_autocompletion();
-	$(this.form).submit();
+	$("#account_joinus_form").submit();
+});
+$("#account_signin_submit").click(function(){
+	account_reset_autocompletion();
+	$("#account_signin_form").submit();
+});
+$("#account_forgot_submit").click(function(){
+	account_reset_autocompletion();
+	$("#account_forgot_form").submit();
+});
+$("#account_reset_submit").click(function(){
+	account_reset_autocompletion();
+	$("#account_reset_form").submit();
 });
 
 //This help to clear the email field if there was an autocompletion issue (sometime chrome does keep empty after autocompletion, the yellow backgroubd effect)

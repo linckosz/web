@@ -71,8 +71,8 @@
 							<input type="hidden" name="captcha_name" value="account_joinus_form" autocomplete="off" />
 						</label>
 					{% endif %}
-					<input id="account_joinus_submit" type='button' value="{{ _trans('web', 5, 1, 'input') }}{# Join Us #}" />
-					<img class="submit_progress_bar" id="account_joinus_submit_progress" src="{{ _filelatest('/lincko/launch/images/generic/base/generic/loading_bar.gif') }}"/>
+					<div id="account_joinus_submit">{{ _trans('web', 5, 1, 'html') }}{# Join Us #}</div>
+					<img class="submit_progress_bar account_submit_progress" id="account_joinus_submit_progress" src="{{ _filelatest('/lincko/launch/images/generic/base/generic/loading_bar.gif') }}"/>
 				</div>
 				<div id="account_joinus_tos_div" onclick="window.open('{{ terms }}', '_blank');">
 					{{ _trans('web', 5, 6, 'html') }}{# By clicking "Join us", you agree to our Terms of use and Privacy policy. #}
@@ -91,8 +91,8 @@
 						<span>{{ _trans('web', 5, 3, 'html') }}{# Password #}</span>
 						<input type="password" id="account_signin_password" name="password" value="" autocomplete="off" class="selectable" />
 					</label>
-					<input id="account_signin_submit" type='button' value="{{ _trans('web', 5, 4, 'input') }}{# Sign In #}"  />
-					<img class="submit_progress_bar" id="account_signin_submit_progress" src="{{ _filelatest('/lincko/launch/images/generic/base/generic/loading_bar.gif') }}"/>
+					<div id="account_signin_submit">{{ _trans('web', 5, 4, 'html') }}{# Sign In #}</div>
+					<img class="submit_progress_bar account_submit_progress" id="account_signin_submit_progress" src="{{ _filelatest('/lincko/launch/images/generic/base/generic/loading_bar.gif') }}"/>
 				</div>
 				<div class="account_signin_appendix">
 					<label for="account_signin_remember" id="account_signin_remember_label">
@@ -116,8 +116,8 @@
 						<span>{{ _trans('web', 5, 2, 'html') }}{# Email #}</span>
 						<input type="email" id="account_forgot_email" name="email" value="{{ youjian|lower }}" class="selectable" />
 					</label>
-					<input id="account_forgot_submit" type='button' value="{{ _trans('web', 5, 18, 'input') }}{# Next #}" />
-					<img class="submit_progress_bar" id="account_forgot_submit_progress" src="{{ _filelatest('/lincko/launch/images/generic/base/generic/loading_bar.gif') }}"/>
+					<div id="account_forgot_submit">{{ _trans('web', 5, 18, 'html') }}{# Next #}</div>
+					<img class="submit_progress_bar account_submit_progress" id="account_forgot_submit_progress" src="{{ _filelatest('/lincko/launch/images/generic/base/generic/loading_bar.gif') }}"/>
 				</div>
 				<div id="account_forgot_info">
 					{{ _trans('web', 5, 15, 'html') }}{# Enter the email address you use to sign in to Lincko. #}
@@ -144,8 +144,8 @@
 						<span>{{ _trans('web', 5, 19, 'html') }}{# Your new Password #}</span>
 						<input type="password" id="account_reset_password" name="password" value="" autocomplete="off" class="selectable" />
 					</label>
-					<input id="account_reset_submit" type='button' value="{{ _trans('web', 5, 16, 'input') }}{# Confirm #}" />
-					<img class="submit_progress_bar" id="account_reset_submit_progress" src="{{ _filelatest('/lincko/launch/images/generic/base/generic/loading_bar.gif') }}"/>
+					<div id="account_reset_submit">{{ _trans('web', 5, 16, 'html') }}{# Confirm #}</div>
+					<img class="submit_progress_bar account_submit_progress" id="account_reset_submit_progress" src="{{ _filelatest('/lincko/launch/images/generic/base/generic/loading_bar.gif') }}"/>
 				</div>
 			</form>
 		</div>

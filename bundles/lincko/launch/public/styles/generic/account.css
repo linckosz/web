@@ -216,14 +216,20 @@
 	width: 200px
 }
 
+.account_submit_progress {
+	margin-top: -10px;
+}
+
 #account_joinus_submit {
 	display: block;
+	width: 100%;
+	text-align: center;
+	box-sizing: border-box;
 	padding: 8px 10px 8px 10px;
 	border-radius: 4px;
 	font-size: 16px;
 	color: #F8F8F8;
 	background-color: #FFA700;
-	width: 222px;
 	border-style: none;
 	font-weight: bold;
 	cursor: pointer; cursor: hand;
@@ -240,12 +246,14 @@
 
 #account_signin_submit {
 	display: block;
+	width: 100%;
+	text-align: center;
+	box-sizing: border-box;
 	padding: 8px 10px 8px 10px;
 	border-radius: 4px;
 	font-size: 16px;
 	color: #F8F8F8;
 	background-color: #2895F2;
-	width: 222px;
 	border-style: none;
 	font-weight: bold;
 	cursor: pointer; cursor: hand;
@@ -292,12 +300,14 @@
 
 #account_forgot_submit {
 	display: block;
+	width: 100%;
+	text-align: center;
+	box-sizing: border-box;
 	padding: 8px 10px 8px 10px;
 	border-radius: 4px;
 	font-size: 16px;
 	color: #F8F8F8;
 	background-color: #2895F2;
-	width: 222px;
 	border-style: none;
 	font-weight: bold;
 	cursor: pointer; cursor: hand;
@@ -322,12 +332,14 @@
 
 #account_reset_submit {
 	display: block;
+	width: 100%;
+	text-align: center;
+	box-sizing: border-box;
 	padding: 8px 10px 8px 10px;
 	border-radius: 4px;
 	font-size: 16px;
 	color: #F8F8F8;
 	background-color: #2895F2;
-	width: 222px;
 	border-style: none;
 	font-weight: bold;
 	cursor: pointer; cursor: hand;

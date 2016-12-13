@@ -113,6 +113,7 @@ class ControllerWechat extends Controller {
 		$app = $this->app;
 		if($grant_type=='login'){
 			$url = $app->lincko->wrapper['url'].'integration/wechat/connect';
+			$data['method'] = 'POST';
 		} else if($grant_type=='send_message'){
 			$url = 'https://api.wechat.com/cgi-bin/message/custom/send?access_token='.$param['access_token'];
 		} else {
