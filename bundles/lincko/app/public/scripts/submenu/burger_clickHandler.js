@@ -17,13 +17,24 @@ submenu_list['burger_clickHandler_inCharge'] = {
 		"title": Lincko.Translation.get('app', 52, 'html'), //"Select", 
 		"class": "base_pointer",
 		"action": function(Elem, subm) {
+
 			var data_select = {
 				//preSelect: --> not necessary, taken care of in cb_select
 				//val:
 			};
 
 			var IDList = submenu_contacts_get(Elem);
-			if(IDList.length == 1){ //single select
+			if(!IDList.length){ //nothing is selected
+				//look for any DESELECT
+				$.each(subm.param.contactsID, function(userid, obj){
+					if(obj.checked){// if previously checked, this was deselected
+						data_select.val = userid;
+						data_select.preSelect = true;
+						return false;
+					}
+				});
+			}
+			else if(IDList.length == 1){ //single select
 				var uid = IDList[0];
 				data_select.val = uid;
 			}
