@@ -2,6 +2,7 @@
 
 namespace bundles\lincko\wrapper\controllers\integration;
 
+use \bundles\lincko\wrapper\controllers\ControllerWrapper;
 use \libs\Controller;
 
 class ControllerWechat extends Controller {
@@ -48,19 +49,22 @@ class ControllerWechat extends Controller {
 				);
 				$response = $this->curl_get('snsapi_userinfo', $param);
 				if($response && $result = json_decode($response)){
-				if(isset($result->errcode)){
-					$response = false;
+					if(isset($result->errcode)){
+						$response = false;
+					}
 				}
-			}
 			}
 		} else {
 			$response = false;
 		}
 
 		if($response && $access_token && $openid && $result = json_decode($response)){
-			$param = array();
-			$data = $result;
-			$response = $this->curl_post('login', $param, $data);
+			$data = new \stdClass;
+			$data->party = 'wechat';
+			$data->data = $result;
+			$controller = new ControllerWrapper($data, 'post', false);
+			$response = $controller->wrap_multi('user/integration');
+			\libs\Watch::php($response, '$ControllerWrapper', __FILE__.'('.__LINE__.')', false, false, true);
 		} else {
 			$response = false;
 		}
@@ -114,10 +118,7 @@ class ControllerWechat extends Controller {
 		if(!is_object($data)){
 			$data = new \stdClass;
 		}
-		if($grant_type=='login'){
-			$url = $app->lincko->wrapper['url'].'integration/wechat/connect';
-			$data->method = 'POST';
-		} else if($grant_type=='send_message'){
+		if($grant_type=='send_message'){
 			$url = 'https://api.wechat.com/cgi-bin/message/custom/send?access_token='.$param['access_token'];
 		} else {
 			return false;

@@ -11,14 +11,16 @@ $app->group('/wrapper', function () use ($app) {
 		'\bundles\lincko\wrapper\controllers\ControllerWrapper:wrap_multi'
 	)
 	->conditions(array('action' => '[\w\d\/]*'))
-	->via('GET', 'POST', 'PUT', 'DELETE');
+	->via('GET', 'POST', 'PUT', 'DELETE')
+	->name('wrapper_action_all');
 
 	$app->map(
 		'(/):action',
 		'\bundles\lincko\wrapper\controllers\ControllerWrapper:wrap_ok'
 	)
 	->conditions(array('action' => '[\w\d\/]*'))
-	->via('OPTIONS');
+	->via('OPTIONS')
+	->name('wrapper_action_options');
 
 });
 

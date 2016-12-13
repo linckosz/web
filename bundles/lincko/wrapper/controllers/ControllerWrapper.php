@@ -14,6 +14,7 @@ class ControllerWrapper extends Controller {
 	protected $resignin = false; //It should not, but avoid to loop
 	protected $form_id = false;
 	protected $show_error = false;
+	protected $print = true;
 
 	protected $json = array(
 		'api_key' => '', //Software authorization key
@@ -26,14 +27,24 @@ class ControllerWrapper extends Controller {
 		'workspace' => '', //the url (=ID unique string) of the workspace, by default use "Shared workspace"
 	);
 
-	public function __construct(){
+	public function __construct($data_bis=false, $force_method=false, $print=true){
 		$app = $this->app = \Slim\Slim::getInstance();
-		$datatp = (array)json_decode($app->request->getBody());
-		foreach ($datatp as $value) {
+		$this->print = $print;
+		$data = (array)json_decode($app->request->getBody());
+		foreach ($data as $value) {
 			$this->json['data'][$value->name] = $value->value;
 		}
+		if(is_object($data_bis)){
+			foreach ($data as $key => $value) {
+				$this->json['data'][$key] = $value;
+			}
+		}
 		$this->json['api_key'] = $app->lincko->wrapper['api_key'];
-		$this->json['method'] = mb_strtoupper($app->request->getMethod());
+		if($force_method && in_array(mb_strtoupper($force_method), array('GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'))){
+			$this->json['method'] = mb_strtoupper($force_method);
+		} else {
+			$this->json['method'] = mb_strtoupper($app->request->getMethod());
+		}
 		$this->json['language'] = $app->trans->getClientLanguage();
 		$this->json['fingerprint'] = $app->lincko->data['fingerprint'];
 		$this->json['workspace'] = $app->lincko->data['workspace'];
@@ -146,18 +157,26 @@ class ControllerWrapper extends Controller {
 			//We add current language to refresh the application if the settings changed
 			$json_result->language = $this->json['language'];
 			
-			print_r(json_encode($json_result)); //production output
-			//print_r($json_result->msg); //for test
-			//print_r($result); //for test
-			//print_r($json_result); //for test
-			return !$json_result->error;
+			if($this->print){
+				print_r(json_encode($json_result)); //production output
+				//print_r($json_result->msg); //for test
+				//print_r($result); //for test
+				//print_r($json_result); //for test
+				return !$json_result->error;
+			} else {
+				return $json_result;
+			}
 		} else if($this->show_error){
-			//echo '{"show":"Communication error","msg":"Wrapper error","error":true,"status":500}';
-			echo '{"show":"'.$app->trans->getJSON('wrapper', 1, 6).'","msg":"'.$app->trans->getJSON('wrapper', 1, 3).'","error":true,"status":500}';
+			if($this->print){
+				//echo '{"show":"Communication error","msg":"Wrapper error","error":true,"status":500}';
+				echo '{"show":"'.$app->trans->getJSON('wrapper', 1, 6).'","msg":"'.$app->trans->getJSON('wrapper', 1, 3).'","error":true,"status":500}';
+			}
 			return false;
 		} else {
-			//echo '{"show":false,"msg":"Wrapper error","error":true,"status":500}';
-			echo '{"show":false,"msg":"'.$app->trans->getJSON('wrapper', 1, 3).'","error":true,"status":500}';
+			if($this->print){
+				//echo '{"show":false,"msg":"Wrapper error","error":true,"status":500}';
+				echo '{"show":false,"msg":"'.$app->trans->getJSON('wrapper', 1, 3).'","error":true,"status":500}';
+			}
 			return false;
 		}
 		
@@ -247,7 +266,27 @@ class ControllerWrapper extends Controller {
 
 		$reset_shangzai = false;
 
-		if($action==='user/signin' && $type==='POST' && isset($this->json['data']['email']) && isset($this->json['data']['password'])){
+		if($action==='user/integration' && $type==='POST' && isset($this->json['data']['party']) && isset($this->json['data']['data'])){
+
+			$log_action = true;
+
+			$this->signOut(true);
+			
+			$this->json['data']['password'] = Datassl::encrypt($this->json['data']['password'], $this->json['data']['email']);
+
+			OneSeventySeven::set(array(
+				'youjian' => $this->json['data']['email'],
+				'lianke' => $this->json['data']['password'],
+			));
+
+			//Add Cookies if Remember
+			if(isset($this->json['data']['remember'])){
+				OneSeventySeven::set(array('jizhu' => true));
+			} else {
+				OneSeventySeven::set(array('jizhu' => false));
+			}
+		
+		} else if($action==='user/signin' && $type==='POST' && isset($this->json['data']['email']) && isset($this->json['data']['password'])){
 
 			$log_action = true;
 
