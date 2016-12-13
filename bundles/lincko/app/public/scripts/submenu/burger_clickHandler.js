@@ -17,7 +17,6 @@ submenu_list['burger_clickHandler_inCharge'] = {
 		"title": Lincko.Translation.get('app', 52, 'html'), //"Select", 
 		"class": "base_pointer",
 		"action": function(Elem, subm) {
-
 			var data_select = {
 				//preSelect: --> not necessary, taken care of in cb_select
 				//val:

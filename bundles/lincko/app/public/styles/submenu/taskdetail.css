@@ -268,7 +268,7 @@ td.submenu_taskdetail_share .fa{
 }
 .submenu_taskdetail_burgerBar_block{
 	line-height: 30px;
-	padding-right: 10px;
+	margin-right: 10px;
 	max-width: 30%;
     display: inline-block;
 }
