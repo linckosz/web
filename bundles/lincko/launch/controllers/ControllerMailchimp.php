@@ -23,8 +23,8 @@ class ControllerMailchimp extends Controller {
 	public function __construct(){
 		$app = $this->app = \Slim\Slim::getInstance();
 		$datatp = (array)json_decode($app->request->getBody());
-		\libs\Watch::php($datatp, '$datatp', __FILE__, false, false, true);
-		if(isset($datatp['email_address'])){\libs\Watch::php('yes', '$datatp', __FILE__, false, false, true);
+		\libs\Watch::php($datatp, '$datatp', __FILE__, __LINE__, false, false, true);
+		if(isset($datatp['email_address'])){\libs\Watch::php('yes', '$datatp', __FILE__, __LINE__, false, false, true);
 			$this->json['email_address'] = $datatp['email_address'];
 		}
 		return true;
@@ -65,11 +65,11 @@ class ControllerMailchimp extends Controller {
 			$json_result = json_decode($result);
 		} else {
 			//echo "cURL error!\n";
-			\libs\Watch::php(curl_getinfo($ch), '$ch', __FILE__, false, false, true);
+			\libs\Watch::php(curl_getinfo($ch), '$ch', __FILE__, __LINE__, false, false, true);
 			$error = '['.curl_errno($ch)."] => ".htmlspecialchars(curl_error($ch));
-			\libs\Watch::php($error, '$error', __FILE__, false, false, true);
+			\libs\Watch::php($error, '$error', __FILE__, __LINE__, false, false, true);
 			rewind($verbose);
-			\libs\Watch::php(stream_get_contents($verbose), '$verbose', __FILE__, false, false, true);
+			\libs\Watch::php(stream_get_contents($verbose), '$verbose', __FILE__, __LINE__, false, false, true);
 			fclose($verbose);
 		}
 

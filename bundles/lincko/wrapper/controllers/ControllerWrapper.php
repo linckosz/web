@@ -35,7 +35,7 @@ class ControllerWrapper extends Controller {
 			$this->json['data'][$value->name] = $value->value;
 		}
 		if(is_object($data_bis)){
-			foreach ($data as $key => $value) {
+			foreach ($data_bis as $key => $value) {
 				$this->json['data'][$key] = $value;
 			}
 		}
@@ -271,13 +271,6 @@ class ControllerWrapper extends Controller {
 			$log_action = true;
 
 			$this->signOut(true);
-			
-			$this->json['data']['password'] = Datassl::encrypt($this->json['data']['password'], $this->json['data']['email']);
-
-			OneSeventySeven::set(array(
-				'youjian' => $this->json['data']['email'],
-				'lianke' => $this->json['data']['password'],
-			));
 
 			//Add Cookies if Remember
 			if(isset($this->json['data']['remember'])){
