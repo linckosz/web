@@ -314,6 +314,7 @@ var account_integration_wechat_qrcode = function(){
 		appid: account_integration.wechat.appid,
 		scope: "snsapi_login",
 		redirect_uri: encodeURIComponent(top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/integration/wechat/token"),
+		state: "lincko",
 		style: "black",
 		href: account_integration.wechat.href,
 	});
