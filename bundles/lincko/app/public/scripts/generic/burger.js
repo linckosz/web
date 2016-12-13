@@ -50,6 +50,14 @@ var burger_attach_clickHandler = {
 					null, null,
 					function(){ 
 						if(!Lincko.storage.data[lincko_type][lincko_id]['_users']){
+							Lincko.storage.data[lincko_type][lincko_id]['_users'] = {};
+						}
+						
+						$.each(Lincko.storage.data[lincko_type][lincko_id]['_users'], function(userid, obj){
+							obj.in_charge = false;
+						});
+
+						if(!Lincko.storage.data[lincko_type][lincko_id]['_users'][data.val]){
 							Lincko.storage.data[lincko_type][lincko_id]['_users'][data.val] = {};
 						}
 						Lincko.storage.data[lincko_type][lincko_id]['_users'][data.val].in_charge = !data.preSelect;
