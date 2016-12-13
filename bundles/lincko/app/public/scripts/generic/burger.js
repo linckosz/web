@@ -52,7 +52,7 @@ var burger_attach_clickHandler = {
 						if(!Lincko.storage.data[lincko_type][lincko_id]['_users']){
 							Lincko.storage.data[lincko_type][lincko_id]['_users'] = {};
 						}
-						
+
 						$.each(Lincko.storage.data[lincko_type][lincko_id]['_users'], function(userid, obj){
 							obj.in_charge = false;
 						});
@@ -80,8 +80,22 @@ var burger_attach_clickHandler = {
 				}
 				else {
 					var param = {};
+
+					//param.contactsID = burgerN.generate_contacts(Lincko.storage.get(lincko_type, lincko_id));
+					//build contactsID from given list
+					param.contactsID = {};
+					$.each(list, function(i, obj){
+						var checked = false;
+						if(obj.preSelect){
+							checked = true;
+						}
+						param.contactsID[obj.val] = {
+							checked: checked,
+						};
+
+					});
+					
 					param.selectOne = true;
-					param.contactsID = burgerN.generate_contacts(Lincko.storage.get(lincko_type, lincko_id));
 					param.alwaysMe = false;
 					param.cb_create = cb_create;
 					param.cb_select = cb_select;
