@@ -1621,13 +1621,15 @@ skylist.prototype.addTask = function(item){
 	if(item._tasksdown){
 		var elem_progress = Elem.find('.skylist_card_progress');
 		elem_progress.removeClass('skylist_card_progress_hidden');
-		var subtasks_totalCount = (Object.keys(item._tasksdown)).length;
+		var subtasks_totalCount = 0;
 		var subtasks_approvedCount = 0;
 		$.each(item._tasksdown, function(subtask_id, obj){
 			var subtask = Lincko.storage.get('tasks', subtask_id);
-			if(subtask && subtask.approved){
-				subtasks_approvedCount++;
-			}
+			//dont show if task doesnt exist or it doesnt match the project of the parent task
+			if(!subtask || subtask.deleted_at || subtask._parent[1] != item._parent[1] ) return;
+
+			if(subtask.approved){ subtasks_approvedCount++; }
+			subtasks_totalCount++;
 		});
 		var progressPercent = Math.round( (subtasks_approvedCount / subtasks_totalCount)*100 );
 		elem_progress.find('[find=bar]').css('width', progressPercent+'%');
