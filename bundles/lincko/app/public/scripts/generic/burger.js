@@ -1589,7 +1589,7 @@ burgerN.regex = function(elem, item, param){
 			$('#app_content_dynamic_sub').append(elem_dropdown);
 			that.slideDown(elem_dropdown);
 		}
-		else if( latestChar_prev+latestChar == that.shortcut.date /* ++ */ || latestChar_prev+latestChar == that.shortcut.dateAlt){
+		else if(/* latestChar_prev+*/latestChar == that.shortcut.date /* ++ */ || /*latestChar_prev+*/latestChar == that.shortcut.dateAlt){
 
 			//for mobile
 			if(responsive.test("maxMobileL")){
