@@ -163,6 +163,7 @@ var onboarding = {
 		this.scripts.completed = {};
 		this.overlays.off();
 		$('#'+this.id_welcome_bubble).recursiveRemove(0);
+		$('.trip-overlay').recursiveRemove();
 		$(document).off('click.onboarding');
 		return;
 
@@ -983,6 +984,7 @@ onboarding.scripts['welcome'] = function(project_id){
 			
 		},
 		onEnd: function(){
+			$('#app_project_chats_tab').attr('style', '');
 			if(onboarding.forceOff){ return false; }
 			//if main menu is opened
 			if($('#app_application_project').hasClass('app_application_visible')){
