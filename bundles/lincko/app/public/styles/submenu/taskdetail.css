@@ -263,7 +263,6 @@ td.submenu_taskdetail_share .fa{
 	background: #F7FAFC;
 	position: relative;
 	box-shadow: 0px 1px 0px 0px #B5B5B5;
-	color: #53ADD2;
 	white-space: nowrap;
 }
 .submenu_taskdetail_burgerBar_block{
@@ -271,6 +270,10 @@ td.submenu_taskdetail_share .fa{
 	margin-right: 10px;
 	max-width: 30%;
     display: inline-block;
+    color: #979797;
+}
+.submenu_taskdetail_burgerBar_block.skylist_clickable{
+	color: #53ADD2;
 }
 .submenu_taskdetail_burgerBar_block [find=icon]{
 	font-size: 21px;
