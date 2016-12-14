@@ -1014,6 +1014,13 @@ Submenu.prototype.Add_taskdetail = function() {
 		//myIScrollList['taskdetail_'+that.md5id].enable();
 	});
 
+	var load_img_timeout = null;
+	elem_description_text.find('img').one('load', function(){
+		clearTimeout(load_img_timeout);
+		load_img_timeout = setTimeout(function(){
+			$(window).resize();
+		}, 500);
+	});
 
 	if(taskid != 'new' && that.param.type != 'files'){
 		//description autosave for tasks, notes, files
