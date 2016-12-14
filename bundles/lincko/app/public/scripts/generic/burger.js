@@ -735,13 +735,20 @@ burger_dropdown.prototype.build_elem_data = function(){
 		}
 		if(obj.val){
 			elem_option_clone.attr('val', obj.val);
+			if(obj.val == 0 && obj.imgURL == false){ //LinckoBot icon
+				obj.imgURL = app_application_icon_roboto.src;
+			}
+			else if(obj.val == 1 && obj.imgURL == false){ //Monkey King icon
+				obj.imgURL = app_application_icon_monkeyking.src;
+			}
 		}
 		if(obj.preSelect){
 			elem_option_clone.addClass('burger_option_preSelect');
 		}
 		if(obj.imgURL){
 			elem_option_clone.find('[find=image]')
-				.removeClass('icon-SmallPersonaiconBlack')
+				//.removeClass('icon-SmallPersonaiconBlack')
+				.removeClass('icon-largerIndividual')
 				.css('background-image','url("'+obj.imgURL+'")');
 		}
 		else if(typeof obj.imgURL =='undefined'){
@@ -2025,11 +2032,11 @@ burgerN.draw_contacts = function(contacts,option_fn){
 		picID  = Lincko.storage.get("users", userid, 'profile_pic');
 		if(picID){
 			var thumb_url = Lincko.storage.getLinkThumbnail(picID);
-			elem_option_clone.find('[find=image]').removeClass('icon-SmallPersonaiconBlack').css('background-image','url("'+thumb_url+'")');
+			elem_option_clone.find('[find=image]').removeClass('icon-SmallPersonaiconBlack icon-largerIndividual').css('background-image','url("'+thumb_url+'")');
 		} else if(userid==0){ //LinckoBot icon
-			elem_option_clone.find('[find=image]').removeClass('icon-SmallPersonaiconBlack').css('background-image','url("'+app_application_icon_roboto.src+'")');
+			elem_option_clone.find('[find=image]').removeClass('icon-SmallPersonaiconBlack icon-largerIndividual').css('background-image','url("'+app_application_icon_roboto.src+'")');
 		} else if(userid==1){ //Monkey King icon
-			elem_option_clone.find('[find=image]').removeClass('icon-SmallPersonaiconBlack').css('background-image','url("'+app_application_icon_monkeyking.src+'")');
+			elem_option_clone.find('[find=image]').removeClass('icon-SmallPersonaiconBlack icon-largerIndividual').css('background-image','url("'+app_application_icon_monkeyking.src+'")');
 		}
 		if( in_charge ){
 			elem_option_clone.addClass('burger_option_selected');
