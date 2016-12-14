@@ -18,11 +18,13 @@ var intro = {
 						line:13001,//"Who are you, LinckoBot?",
 						pointType:"script",
 						pointTo:1,
-					}
+					},
 				],
+				head:"show",
 			},//0
 			{
 				line:12002,//"I'm your guide in the way of projects and collaboration. I'll give you updates on how your projects are going.",
+				head:"hidden",
 			},//1
 			{
 				line:12003,//"Let me show you quickly how to get around.",
@@ -33,6 +35,7 @@ var intro = {
 						pointTo:1,
 					}
 				],
+				head:"hidden",
 			},//2
 		],
 		[//intro.step.new_project:1
@@ -45,6 +48,7 @@ var intro = {
 						pointTo:2,
 					}
 				],
+				head:"show",
 			},
 		],
 		[//intro.step.main_menu:2
@@ -57,6 +61,7 @@ var intro = {
 						pointTo:3,
 					}
 				],
+				head:"show",
 			},
 		],
 		[//intro.step.linckobot_chat:3
@@ -69,6 +74,7 @@ var intro = {
 						pointTo:4,
 					}
 				],
+				head:"show",
 			},
 		],
 		[//intro.step.sample_project:4
@@ -81,24 +87,30 @@ var intro = {
 						pointTo:5,
 					}
 				],
+				head:"show",
 			},
 		],
 		[//intro.step.project_items:5
 			{
 				line:12008,//"Each project has areas for Tasks, Notes, Chats, and Files.",
+				head:"show",
 			},
 			{
 				line:12009,//"Use tasks to set the goals and tasks of the project team.",
+				head:"hidden",
 			},
 			{
 				line:12010,//"Use notes to store important information for the team - like meeting notes, processes, or designs. ",
+				head:"hidden",
 			},
 			{
 				line:12011,//"Use Chats for quick communication and to track project activity. ",
+				head:"hidden",
 				
 			},
 			{
 				line:12012,//"Use Files for all your important documents and images - any file uploaded to a project chat is also stored here. ",
+				head:"hidden",
 			},
 			{
 				line:12013,//"Let's add your first task.",
@@ -109,6 +121,7 @@ var intro = {
 						pointTo:7,
 					}
 				],
+				head:"hidden",
 			},
 			
 		],
@@ -117,12 +130,15 @@ var intro = {
 		[//feel_free:6
 			{
 				line:12014,//"Type a task name. You can type @ to assign an owner, and + to assign a date.",
+				head:"show",
 			},
 			{
 				line:12016,//'My New Task <span find="name" class="burger_tag">MonkeyKing</span><span find="dateWrapper" class="burger_tag">today</span>',
+				head:"hidden",
 			},
 			{
 				line:12015,//"Feel free to explore the sample project.",
+				head:"hidden",
 			},
 		],	
 
@@ -152,6 +168,7 @@ var intro = {
 		intro.gotoStep(0,fn);
 	},
 	gotoStep:function(step_index,fn){
+		$("#"+onboarding.id_welcome_bubble).css("height","auto");
 		if(typeof fn != "undefined" || fn == null)
 		{
 			var index = intro.script[step_index].length-1;
@@ -179,19 +196,43 @@ var intro = {
 		wrapper.find("[find=script_list]").append(target);
 
 		//profile
-		var ico = target.find("[find=profile_ico]");
-		var name = target.find("[find=profile_name]");
-		ico.css("border-color", "transparent");
-		ico.css("background-image","url('" +  app_application_icon_roboto.src + "')");
-		name.html(Lincko.Translation.get("app", 0, "html"));  //LinckoBot
-
+		if(intro.script[intro.current_step][script_index]["head"]=="show")
+		{
+			var ico = target.find("[find=profile_ico]");
+			var name = target.find("[find=profile_name]");
+			ico.css("border-color", "transparent");
+			ico.css("background-image","url('" +  app_application_icon_roboto.src + "')");
+			name.html(Lincko.Translation.get("app", 0, "html"));  //LinckoBot
+		}
+		else{
+			target.find("[find=profile]").addClass("display_none");
+		}
+		
 		//profile animation
-
 		var timer = 2000;
 		//lazy
 		var content = target.find("[find=content]");
 		var lazy = intro.lazyLoading(timer);
 		content.append(lazy);
+
+		if(responsive.test('maxMobileL'))
+		{
+			var h = $("#body_models_intro_wrapper").outerHeight() + $("#app_content_menu").outerHeight();
+			var height = $(window).height();
+			if(h > height)
+			{	
+				$('#'+onboarding.id_welcome_bubble).css("height",$(window).height()-$("#app_content_menu").outerHeight() - 14);
+				$("#body_models_intro_wrapper").addClass("overthrow");
+				wrapper_IScroll();
+			}
+		}
+
+		if(typeof myIScrollList["body_models_intro_wrapper"] !== "undefined")
+		{
+			myIScrollList["body_models_intro_wrapper"].refresh();
+			var iscroll_help = wrapper.find("[find=iscroll_helper]").get(0);
+			myIScrollList["body_models_intro_wrapper"].scrollToElement(iscroll_help, 0);
+		}
 
 		var step = intro.current_step;
 		//line
@@ -201,6 +242,13 @@ var intro = {
 				var line = intro.script[intro.current_step][script_index]["line"];
 				line = Lincko.Translation.get('app', line, 'js');
 				content.html(line);
+
+				if(typeof myIScrollList["body_models_intro_wrapper"] !== "undefined")
+				{
+					myIScrollList["body_models_intro_wrapper"].refresh();
+					var iscroll_help = wrapper.find("[find=iscroll_helper]").get(0);
+					myIScrollList["body_models_intro_wrapper"].scrollToElement(iscroll_help, 0);
+				}
 				if(intro.script[intro.current_step][script_index].hasOwnProperty("options"))
 				{
 					intro.collectOptions(intro.script[intro.current_step][script_index]["options"]);
@@ -208,6 +256,12 @@ var intro = {
 				else if(script_index + 1 < intro.script[intro.current_step].length)
 				{
 					intro.gotoScript(script_index + 1);
+				}
+				if(typeof myIScrollList["body_models_intro_wrapper"] !== "undefined")
+				{
+					myIScrollList["body_models_intro_wrapper"].refresh();
+					var iscroll_help = wrapper.find("[find=iscroll_helper]").get(0);
+					myIScrollList["body_models_intro_wrapper"].scrollToElement(iscroll_help, 0);
 				}
 			}
 			// else{
@@ -245,51 +299,93 @@ var intro = {
 		
 		wrapper.find("[find=script_list]").append(target);
 
-		//finger()
-		var finger = $("#-models_intro_options_finger").clone();
-		finger.prop("id","");
-
-		target.find("[find=options_content]").append(finger);
-
-		var hand = finger.find("[find=hand]");
-
-		hand.velocity("fadeIn", {duration: 1000,})
-			.velocity({ left: "10px" }, {duration: 800,loop: true,});
-	
 		//options
 		for(var i in options)
 		{
 			var item = $("#-models_intro_options_item").clone();
 			item.prop("id","models_intro_options_item_" + i);
 
-			var line = options[i]["line"];
-			line = Lincko.Translation.get('app', line, 'js');
-			item.html(line);
+
+			var timer = 2000;
+			var content = target.find("[find=content]");
+			var lazy = intro.lazyLoading(timer);
+			item.append(lazy);
+
+			
 			target.find("[find=options_content]").append(item);
 
-			var fn = null;
-			if(options[i].hasOwnProperty("callback"))
-			{
-				fn = options[i].callback;
-			}
+			setTimeout(function(i,options,item,target){
+				var line = options[i]["line"];
+				line = Lincko.Translation.get('app', line, 'js');
+				item.html(line);
 
-			item.click({pointTo:options[i].pointTo,pointType:options[i].pointType,fn:fn},function(event){
-				item.off("click");
-				var pointTo = event.data.pointTo;
-				var pointType = event.data.pointType;
-				var fn = event.data.fn;
-				if(pointType == "script")
+				var fn = null;
+				if(options[i].hasOwnProperty("callback"))
 				{
-					intro.gotoScript(pointTo);
+					fn = options[i].callback;
 				}
-				else if(pointType == "step")
-				{
-					if(fn != null)
+				item.click({pointTo:options[i].pointTo,pointType:options[i].pointType,fn:fn,target:target},function(event){
+					item.off("click");
+					var pointTo = event.data.pointTo;
+					var pointType = event.data.pointType;
+					var fn = event.data.fn;
+					var target = event.data.target;
+					if(pointType == "script")
 					{
-						fn();
+						intro.gotoScript(pointTo);
+						//intro.replaceOption($(this).html(),target);
+						//target.remove();
 					}
-				}
-			});
+					else if(pointType == "step")
+					{
+						if(fn != null)
+						{
+							fn();
+						}
+					}
+				});
+
+			},timer,i,options,item,target);
+
+			//finger()
+			var finger = $("#-models_intro_options_finger").clone();
+			finger.prop("id","");
+			item.before(finger);
+			var hand = finger.find("[find=hand]");
+			hand.addClass("display_none");
+			setTimeout(function(){
+				hand.removeClass("display_none");
+				hand.velocity({ left: "10px" }, {duration: 800,loop: true,});
+			},3000);
+			
 		}
+	},
+	replaceOption:function(line,last){
+		var target = $("#-models_intro_item").clone();
+		target.prop("id","");
+		target.addClass("models_intro_self");
+
+		last.before(target);
+		//target.before(last);
+
+
+		var profile = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users",wrapper_localstorage.uid,'profile_pic'));
+
+		if(!profile){
+				profile = app_application_icon_single_user.src;
+		}
+
+		var ico = target.find("[find=profile_ico]");
+		var name = target.find("[find=profile_name]");
+		ico.css("background-image","url('" +  profile + "')");
+		var user_name = Lincko.storage.get('users', wrapper_localstorage.uid ,'username');
+		name.html(user_name);  //LinckoBot
+
+		var content = target.find("[find=content]");
+		content.html(line);
 	}
+
+	
 }
+
+
