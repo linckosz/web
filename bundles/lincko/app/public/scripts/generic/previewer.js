@@ -35,7 +35,9 @@ var previewer = (function() {
 		}
 		else
 		{
-			popout.find('.pic_preview_icon').attr("href", download);
+			popout.find('.pic_preview_icon').on("click", function(){
+				device_download(download);
+			});
 		}
 		$("body").append(popout);
 		popout.find('.close').click(Elem_id, function(event) {

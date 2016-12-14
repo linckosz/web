@@ -572,7 +572,7 @@ td.submenu_taskdetail_share .fa{
 	display: none;
 }
 .submenu_taskdetail_links_card [find=action_div] span,
-.submenu_taskdetail_links_card [find=action_div] a{
+.submenu_taskdetail_links_card [find=action_div] div {
 	font-size:30px;
 	line-height: 64px;
 	text-decoration: none;
@@ -802,6 +802,7 @@ styling for sub comments
 	font-size: 40px;
 	color: #4E2A84;
 	text-decoration: none;
+	cursor: pointer;
 }
 
 /*
@@ -839,6 +840,7 @@ styling for sub comments
 		font-size: 26px;
 	    margin: 0px;
 	    padding: 10px;
+	    cursor: pointer;
 	}
 }
 

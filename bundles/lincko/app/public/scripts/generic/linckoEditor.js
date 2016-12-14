@@ -13,7 +13,7 @@ function linckoEditor(elem, toolbarID, param){
 	//clicking on links will open in new tab/window
     $(editorInst.element.$).click(function(event) {
         if(typeof event.target.href != 'undefined') {
-        	window.open(event.target.href, '_blank');
+        	device_download(event.target.href, '_blank');
         }
     });
 

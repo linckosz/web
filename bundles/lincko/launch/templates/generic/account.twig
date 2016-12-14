@@ -74,7 +74,7 @@
 					<div id="account_joinus_submit">{{ _trans('web', 5, 1, 'html') }}{# Join Us #}</div>
 					<img class="submit_progress_bar account_submit_progress" id="account_joinus_submit_progress" src="{{ _filelatest('/lincko/launch/images/generic/base/generic/loading_bar.gif') }}"/>
 				</div>
-				<div id="account_joinus_tos_div" onclick="window.open('{{ terms }}', '_blank');">
+				<div id="account_joinus_tos_div" onclick="device_download('{{ terms }}', '_blank');">
 					{{ _trans('web', 5, 6, 'html') }}{# By clicking "Join us", you agree to our Terms of use and Privacy policy. #}
 				</div>
 			</form>

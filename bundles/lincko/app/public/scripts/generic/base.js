@@ -185,6 +185,9 @@ function base_lincko_link_to_html(source)
 {
 	// var reg = new RegExp("(http:\\/\\/)?([A-Za-z0-9]+\\.[A-Za-z0-9]+[\\/=\\?%\\-&_~`@[\\]\\':+!]*([^<>])*)","gi");
 	// source = source.replace(reg, '<a target="_blank" href="$1$2">$1$2</a>');
+
+	//NOTE: DO NOT USE <a> or window.open(), USE device_download() INSTEAD !
+
 	return source;
 }
 

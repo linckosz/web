@@ -371,7 +371,9 @@ Submenu.prototype.Add_taskdetail = function() {
 		elem_title_fileInfo.find('[find=category]').html(item['category']);
 		elem_title_fileInfo.find('[find=ori_ext]').html(item['ori_ext'].toUpperCase());
 		elem_title_text.after(elem_title_fileInfo);
-		elem_title_fileInfo.find('[find=downloadIcon]').prop('href',Lincko.storage.getDownload(item['_id']));
+		elem_title_fileInfo.find('[find=downloadIcon]').on('click', function(){
+			device_download(Lincko.storage.getDownload(item['_id']));
+		});
 	}
 	else{
 		elem_title_text.html(item['+title']);
@@ -1369,7 +1371,9 @@ Submenu.prototype.Add_taskdetail = function() {
 			//download file
 			var download_url = Lincko.storage.getDownload(item_link['_id']);
 			if(download_url){
-				elem_linkcard.find('[find=downloadIcon]').prop('href',download_url).removeClass('display_none');
+				elem_linkcard.find('[find=downloadIcon]').removeClass('display_none').on('click', function(){
+					device_download(download_url);
+				});
 			}
 
 			//remove linking
