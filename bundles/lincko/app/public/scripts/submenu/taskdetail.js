@@ -217,7 +217,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		that.param.projID = app_content_menu.projects_id;
 	}
 	var contactServer = false;
-	var isLocked = false;
+	var isLockedByMe = false;
 	var action_menu_opened = false;
 	var param_sendAction = {};
 	var taskid = this.param.id;
@@ -2074,7 +2074,7 @@ Submenu.prototype.Add_taskdetail = function() {
 				}
 			}
 
-			if( taskid == 'new' || route_delete || isLocked
+			if( taskid == 'new' || route_delete || isLockedByMe
 				|| ('+title' in item && param['title'] && param['title'] != item['+title'])
 				|| ('+name' in item && param['name'] && param['title'] != item['+name'])
 				|| (param['comment'] && param['comment'] != item['-comment'] )){
@@ -2444,8 +2444,8 @@ Submenu.prototype.Add_taskdetail = function() {
 			elem_description_text.prop('contenteditable', true).html(Lincko.storage.get(that.param.type, item['_id'], '-comment'));
 			editorInst = linckoEditor('submenu_taskdetail_description_text_'+that.md5id, 'submenu_taskdetail_description_toolbar_'+that.md5id, editor_param);
 
-			//there might be auto focus in the case of notes. if the case, dont add overlay
-			if(!elem_description_text.is(":focus")){
+			//if it is a new task, use the overlay. new note should not use overlay since it will automatically have focus
+			if(taskid == 'new' && !elem_description_text.is(":focus")){
 				elem_description_text.focus(function(){ 
 					if(elem_editorToolbar_overlay){
 						elem_editorToolbar_overlay.recursiveRemove(0);
@@ -2460,14 +2460,19 @@ Submenu.prototype.Add_taskdetail = function() {
 					});
 				elem_editorToolbar.append(elem_editorToolbar_overlay);
 			}
-
-			if(taskid != 'new'){
-				elem_description_text.on('focus.lock', function(){
-					$(this).off('focus.lock');
+			else if(taskid != 'new'){
+				if(elem_description_text.is(":focus")){
 					taskdetail_lockIntervalToggle(item['_id'], item['_type']);
-					isLocked = true;
-				});
-				
+					isLockedByMe = true;
+				}
+				else{
+					elem_description_text.on('focus.lock', function(){
+						$(this).off('focus.lock');
+						taskdetail_lockIntervalToggle(item['_id'], item['_type']);
+						isLockedByMe = true;
+					});
+				}
+
 				app_application_lincko.add(
 					elem_editorToolbar.prop('id'),
 					that.param.type+'_'+item['_id'],
@@ -2485,6 +2490,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		} //end of fn_load_linckoEditor
 
 		var fn_lockDescription = function(){
+			isLockedByMe = false;
 			elem_description_text.prop('contenteditable', false).html(Lincko.storage.get(that.param.type, item['_id'], '-comment'));
 			var id_elem_locked = elem_editorToolbar.prop('id')+'_locked';
 			elem_editorToolbar.empty().append($('#-submenu_taskdetail_description_toolbar_locked').clone().prop('id', id_elem_locked));
@@ -2636,7 +2642,16 @@ var taskdetail_lockIntervalToggle = function(id, type, start){
 				}, 4*60000, id, route); //update re-lock every 4 min
 			}
 		}
-		wrapper_sendAction( { "id": id, }, 'post', route+'check', cb_success_lockCheck);
+		var cb_success_lockStart = function(){
+			locked_by = Lincko.storage.get(type, id, 'locked_by');
+			console.log('cb_success locked_by: '+locked_by);
+			if(!locked_by || locked_by == id_me){
+				taskdetail_lockInterval = setInterval(function(id, route){
+					wrapper_sendAction({id: id}, 'post', route+'start');
+				}, 4*60000, id, route); //update re-lock every 4 min
+			}
+		}
+		wrapper_sendAction( { "id": id, }, 'post', route+'start', cb_success_lockStart);
 	}
 	else{
 		if(id_me != locked_by){ return false; } //dont send unlock if it is not locked by me
