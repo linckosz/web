@@ -36,7 +36,7 @@ var previewer = (function() {
 		else
 		{
 			popout.find('.pic_preview_icon').on("click", function(){
-				device_download(download);
+				device_download(download, '_blank', name);
 			});
 		}
 		$("body").append(popout);

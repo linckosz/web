@@ -372,7 +372,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		elem_title_fileInfo.find('[find=ori_ext]').html(item['ori_ext'].toUpperCase());
 		elem_title_text.after(elem_title_fileInfo);
 		elem_title_fileInfo.find('[find=downloadIcon]').on('click', function(){
-			device_download(Lincko.storage.getDownload(item['_id']));
+			device_download(Lincko.storage.getDownload(item['_id'], '_blank', item['+name']));
 		});
 	}
 	else{
@@ -1372,7 +1372,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			var download_url = Lincko.storage.getDownload(item_link['_id']);
 			if(download_url){
 				elem_linkcard.find('[find=downloadIcon]').removeClass('display_none').on('click', function(){
-					device_download(download_url);
+					device_download(download_url, '_blank', item_link['+name']);
 				});
 			}
 

@@ -31,24 +31,23 @@ function useMobileNotification(){
 	return notif;
 }
 
-function device_download(url, target){
-	window.open(url, target);
-	return true;
-	if(typeof android != 'undefined' ) {
+function device_download(url, target, name){
+	if(typeof target == 'undefined'){ target = '_blank'; }
+	if(typeof name == 'undefined'){ name = 'file'; }
+	if(typeof android != 'undefined' && typeof android.download == 'function') {
 		android.download(url);
-	} else if(typeof iOS != 'undefined' ) {
+	} else if(typeof iOS != 'undefined' && typeof iOS.download == 'function') {
 		iOS.download(url);
-	} else if(typeof winPhone != 'undefined' ) {
+	} else if(typeof winPhone != 'undefined' && typeof winPhone.download == 'function') {
 		winPhone.download(url);
 	} else {
-		window.open(url, target);
-		/*
-		Another method if some browser (safari?) do not work
+		//window.open(url, target);
+		//Another method if some browser (safari?) do not work
 		var anchor = document.createElement('a');
-		anchor.href = this.props.download_url;
-		anchor.target = '_blank';
-		anchor.download = this.props.file_name;
+		anchor.href = url;
+		anchor.target = target;
+		anchor.download = name;
 		anchor.click();
-		*/
+		
 	}
 }
