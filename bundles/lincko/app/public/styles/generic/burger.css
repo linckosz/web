@@ -27,7 +27,7 @@
 	content:'@';
 }
 .burger_tag[find=dateWrapper]:before{
-	content:'++';
+	content:'+';
 }
 
 .burger_option {

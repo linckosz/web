@@ -824,8 +824,8 @@ burger_dropdown.prototype.destroy = function(){
  var burgerN = {
  	shortcut:{
  		user: '@',
- 		date: '++',
- 		dateAlt: '＋＋',
+ 		date: '+',
+ 		dateAlt: '＋',
  	},
  	monthsArray: null,
 	elem_dropdown: $('#-burger_dropdown').clone().prop('id',''),
