@@ -314,7 +314,6 @@
 .app_project_new_img {
 	position: absolute;
 	height: 30px;
-	vertical-align: middle;
 	filter:alpha(opacity=40);
 	opacity:0.4;
 	-moz-opacity:0.4;
