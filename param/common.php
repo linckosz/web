@@ -178,15 +178,15 @@ if($app->lincko->domain=='lincko.cafe'){
 $app->lincko->data['integration_wechat_appid'] = $app->lincko->integration->wechat['appid'];
 
 
-if(isset($_SERVER["LINCKO_FRONT"])){
+if(isset($_SERVER["LINCKO_FRONT"]) && !empty($_SERVER["LINCKO_FRONT"])){
 	$app->lincko->data['lincko_front'] = $_SERVER["LINCKO_FRONT"].'-';
 }
 
-if(isset($_SERVER["LINCKO_BACK"])){
+if(isset($_SERVER["LINCKO_BACK"]) && !empty($_SERVER["LINCKO_BACK"])){
 	$app->lincko->data['lincko_back'] = $_SERVER["LINCKO_BACK"].'.';
 }
 
-if(isset($_SERVER["LINCKO_WORKSPACE"])){
+if(isset($_SERVER["LINCKO_WORKSPACE"]) && !empty($_SERVER["LINCKO_WORKSPACE"])){
 	$app->lincko->data['workspace'] = $_SERVER["LINCKO_WORKSPACE"];
 }
 

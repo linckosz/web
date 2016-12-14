@@ -103,10 +103,25 @@ class ControllerWrapper extends Controller {
 			)
 		);
 
+		$verbose_show = false;
+		if($verbose_show){
+			$verbose = fopen('php://temp', 'w+');
+			curl_setopt($ch, CURLOPT_VERBOSE, true);
+			curl_setopt($ch, CURLOPT_STDERR, $verbose);
+		}
+
 		$json_result = false;
 		if($result = curl_exec($ch)){
 			$json_result = json_decode($result);
 		}
+
+		if($verbose_show){
+			\libs\Watch::php(curl_getinfo($ch), '$ch', __FILE__, __LINE__, false, false, true);
+			rewind($verbose);
+			\libs\Watch::php(stream_get_contents($verbose), '$verbose', __FILE__, __LINE__, false, false, true);
+			fclose($verbose);
+		}
+
 		@curl_close($ch);
 
 		if($json_result && isset($json_result->msg) && isset($json_result->error)){
