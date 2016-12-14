@@ -2963,11 +2963,10 @@ var taskdetail_makeFakeComment = function(text, parentType, parentID, fakeID, te
 	Lincko.storage.data[parentType][parentID]._children.comments[fakeID] = true;
 
 
-
 	if(triggerSync){
 		var prepare_param = {};
 		prepare_param[parentType+'_'+parentID] = { _children: true };
-		app_application_lincko.prepare(parentType+'_'+parentID, true, prepare_param);
+		app_application_lincko.prepare(parentType+'_'+parentID, true, prepare_param, true);
 		delete Lincko.storage.data.comments[fakeComment._id];
 	}
 
