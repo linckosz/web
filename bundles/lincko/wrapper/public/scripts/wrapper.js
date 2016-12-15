@@ -586,7 +586,7 @@ function wrapper_clean_chart(){
 //This disable some unwanted behavior the double tapping within the 300ms
 //This function is slow to run, so use it in another thread
 function wrapper_mobile_hover(){
-	if (supportsTouch) { // remove all :hover stylesheets
+	if (supportsTouch && responsive.test("maxMobileL")) { // remove all :hover stylesheets
 		try { // prevent crash on browsers not supporting DOM styleSheets properly
 			//We first disbale Fastclick on some elements
 			$("[contenteditable], textarea, [type=checkbox], [type=password], [type=radio], [type=text]").addClass('needsclick');
