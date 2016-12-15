@@ -397,11 +397,11 @@ Submenu.prototype.Add_taskdetail = function() {
 	if(taskid != 'new'){
 		//title autosave for tasks, notes, files
 		elem_title_text.blur(function(){
-			setTimeout(function(){
+			setTimeout(function(text){
 				if(that.submenu_hide){ return; } //no need to update comment if this is after submenu_hide 
 
 				var old_title = item['+title'] || item['+name'];
-				var new_title = text.blur.html();
+				var new_title = text;
 
 				if(old_title != new_title){
 					var param = {id: taskid};
@@ -423,7 +423,7 @@ Submenu.prototype.Add_taskdetail = function() {
 					Lincko.storage.data[item._type][item._id] = item;
 					app_application_lincko.prepare(item._type+'_'+item._id, true);
 				}
-			}, 1000);
+			}, 1000, elem_title_text.text());
 		});//end of blur event
 	}
 
