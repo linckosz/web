@@ -1124,7 +1124,7 @@ skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
 	var that = this;
 	var elem_card_rightbox = elem.find('[find=card_rightbox]');
 
-	//if '+title', '_users', 'duration' is updated
+	//if update the text, title, '@', '+'
 	if((typeof updated == 'boolean' && updated) || updated['+title'] || updated._users || updated.duration){
 		var elem_title = elem.find('[find=title]');
 		elem_title.text(item['+title']);
@@ -1139,7 +1139,7 @@ skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
 	}
 
 	
-	if((typeof updated == 'boolean' && updated) || updated.approved || updated.approved_at || updated.approved_by){
+	if((typeof updated == 'boolean' && updated) || updated.duration || updated.approved || updated.approved_at || updated.approved_by){
 		//if task duedate changed, adjust overdue class
 		var isOverdue = tasks_isOverdue(item._id);
 		if(isOverdue){
