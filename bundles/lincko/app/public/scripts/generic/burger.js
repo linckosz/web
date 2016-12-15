@@ -623,12 +623,7 @@ burger_dropdown.prototype.construct = function(){
 burger_dropdown.prototype.build_elem = function(){
 	var that = this;
 	var elem_dropdown = null;
-	if(that.data == 'projects'){
-		elem_dropdown = that.build_elem_projects();
-	}
-	else{
-		elem_dropdown = that.build_elem_data();
-	}
+	elem_dropdown = that.build_elem_data();
 
 	elem_dropdown.css({
 		position: 'absolute',
@@ -778,15 +773,6 @@ burger_dropdown.prototype.build_elem_data = function(){
 	}
 
 	return elem_dropdown;
-}
-
-burger_dropdown.prototype.build_elem_projects = function(){
-	var that = this;
-	var projects_list = Lincko.storage.list('projects', null, {personal_private: ['==',null]}, null, null, false);
-    projects_list = Lincko.storage.sort_items(projects_list,'+title');
-    that.count_total = projects_list.length + 1; //add 1 for 'personal space'
-
-    return burgerN.draw_projects(projects_list, that.cb_select);
 }
 
 burger_dropdown.prototype.show = function(){
