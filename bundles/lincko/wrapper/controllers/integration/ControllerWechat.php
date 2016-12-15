@@ -91,7 +91,7 @@ class ControllerWechat extends Controller {
 		} else {
 			return false;
 		}
-		\libs\Watch::php($url, '$url', __FILE__, __LINE__, false, false, true);
+		//\libs\Watch::php($url, '$url', __FILE__, __LINE__, false, false, true);
 		$timeout = 8;
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url); //Port used is 10443 only
@@ -103,19 +103,26 @@ class ControllerWechat extends Controller {
 		curl_setopt($ch, CURLOPT_FORBID_REUSE, true);
 		curl_setopt($ch, CURLOPT_ENCODING, 'gzip');
 
-		$verbose = fopen('php://temp', 'w+');
-		curl_setopt($ch, CURLOPT_VERBOSE, true);
-		curl_setopt($ch, CURLOPT_STDERR, $verbose);
+		$verbose_show = false;
+		if($verbose_show){
+			$verbose = fopen('php://temp', 'w+');
+			curl_setopt($ch, CURLOPT_VERBOSE, true);
+			curl_setopt($ch, CURLOPT_STDERR, $verbose);
+		}
 
-		if($result = curl_exec($ch)){
-			\libs\Watch::php(json_decode($result), '$result', __FILE__, __LINE__, false, false, true);
-		} else {
-			\libs\Watch::php(curl_getinfo($ch), '$ch', __FILE__, __LINE__, false, false, true);
-			$error = '['.curl_errno($ch)."] => ".htmlspecialchars(curl_error($ch));
-			\libs\Watch::php($error, '$error', __FILE__, __LINE__, false, false, true);
-			rewind($verbose);
-			\libs\Watch::php(stream_get_contents($verbose), '$verbose', __FILE__, __LINE__, false, false, true);
-			fclose($verbose);
+		$result = curl_exec($ch);
+
+		if($verbose_show){
+			if($result){
+				\libs\Watch::php(json_decode($result), '$result', __FILE__, __LINE__, false, false, true);
+			} else {
+				\libs\Watch::php(curl_getinfo($ch), '$ch', __FILE__, __LINE__, false, false, true);
+				$error = '['.curl_errno($ch)."] => ".htmlspecialchars(curl_error($ch));
+				\libs\Watch::php($error, '$error', __FILE__, __LINE__, false, false, true);
+				rewind($verbose);
+				\libs\Watch::php(stream_get_contents($verbose), '$verbose', __FILE__, __LINE__, false, false, true);
+				fclose($verbose);
+			}
 		}
 
 		@curl_close($ch);
@@ -133,7 +140,7 @@ class ControllerWechat extends Controller {
 			return false;
 		}
 		$data = json_encode($data);
-		\libs\Watch::php($data, $url, __FILE__, __LINE__, false, false, true);
+		//\libs\Watch::php($data, $url, __FILE__, __LINE__, false, false, true);
 		$timeout = 8;
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url); //Port used is 10443 only
@@ -152,19 +159,25 @@ class ControllerWechat extends Controller {
 			)
 		);
 
-		$verbose = fopen('php://temp', 'w+');
-		curl_setopt($ch, CURLOPT_VERBOSE, true);
-		curl_setopt($ch, CURLOPT_STDERR, $verbose);
+		if($verbose_show){
+			$verbose = fopen('php://temp', 'w+');
+			curl_setopt($ch, CURLOPT_VERBOSE, true);
+			curl_setopt($ch, CURLOPT_STDERR, $verbose);
+		}
 
-		if($result = curl_exec($ch)){
-			\libs\Watch::php(json_decode($result), '$result', __FILE__, __LINE__, false, false, true);
-		} else {
-			\libs\Watch::php(curl_getinfo($ch), '$ch', __FILE__, __LINE__, false, false, true);
-			$error = '['.curl_errno($ch)."] => ".htmlspecialchars(curl_error($ch));
-			\libs\Watch::php($error, '$error', __FILE__, __LINE__, false, false, true);
-			rewind($verbose);
-			\libs\Watch::php(stream_get_contents($verbose), '$verbose', __FILE__, __LINE__, false, false, true);
-			fclose($verbose);
+		$result = curl_exec($ch);
+
+		if($verbose_show){
+			if($result){
+				\libs\Watch::php(json_decode($result), '$result', __FILE__, __LINE__, false, false, true);
+			} else {
+				\libs\Watch::php(curl_getinfo($ch), '$ch', __FILE__, __LINE__, false, false, true);
+				$error = '['.curl_errno($ch)."] => ".htmlspecialchars(curl_error($ch));
+				\libs\Watch::php($error, '$error', __FILE__, __LINE__, false, false, true);
+				rewind($verbose);
+				\libs\Watch::php(stream_get_contents($verbose), '$verbose', __FILE__, __LINE__, false, false, true);
+				fclose($verbose);
+			}
 		}
 
 		@curl_close($ch);
