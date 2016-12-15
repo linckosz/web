@@ -203,8 +203,8 @@ $(function () {
 		bitrateInterval: 1000, //Bruno update (display every second, which is more readable)
 		loadImageMaxFileSize: 100000000, //Bruno update (limit to 100Mb)
 		loadImageFileTypes: /^image\/.*$/, //Bruno update
-		previewMaxWidth: 360,
-		previewMaxHeight: 180,
+		previewMaxWidth: 512,
+		previewMaxHeight: 512,
 		//maxChunkSize: 10000, //100KB [toto] Chunk will help to manage the Pause function but need a modification on back side
 		messages: {
 			maxNumberOfFiles: Lincko.Translation.get('app', 13, 'html'), //Maximum number of files exceeded
