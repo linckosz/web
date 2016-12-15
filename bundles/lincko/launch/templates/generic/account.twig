@@ -20,6 +20,11 @@
 				href: top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"{{ _filelatest('/lincko/launch/styles/integration/wechat.css') }}",
 			},
 		};
+		{% if integration_connection_error %}
+			JSfiles.finish(function(){
+				base_show_error("{{ _trans('web', 5, 25, 'js') }}"); //You were not able to login using @@party~~.
+			});
+		{% endif %}
 	</script>
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/launch/styles/generic/account.css') }}" type="text/css" />
 </div>

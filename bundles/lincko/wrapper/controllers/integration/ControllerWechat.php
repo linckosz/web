@@ -64,12 +64,20 @@ class ControllerWechat extends Controller {
 			$data->party_id = $openid;
 			$data->data = $result;
 			$controller = new ControllerWrapper($data, 'post', false);
-			$response = $controller->wrap_multi('integration/connect');
+			if($response = $controller->wrap_multi('integration/connect')){
+				if(!isset($response->status) || $response->status != 200){
+					$response = false;
+				}
+			}
 			\libs\Watch::php($response, '$ControllerWrapper', __FILE__, __LINE__, false, false, true);
 		} else {
 			$response = false;
 		}
 
+		if(!$response){
+			$app->lincko->data['integration_connection_error'] = true;
+			$app->lincko->translation['party'] = 'Wechat';
+		}
 		$app->lincko->data['link_reset'] = true;
 		$app->router->getNamedRoute('home')->dispatch();
 	}
