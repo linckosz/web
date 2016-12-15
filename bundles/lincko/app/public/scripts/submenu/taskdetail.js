@@ -2448,8 +2448,8 @@ Submenu.prototype.Add_taskdetail = function() {
 			elem_description_text.prop('contenteditable', true).html(Lincko.storage.get(that.param.type, item['_id'], '-comment'));
 			editorInst = linckoEditor('submenu_taskdetail_description_text_'+that.md5id, 'submenu_taskdetail_description_toolbar_'+that.md5id, editor_param);
 
-			//if it is a new task, use the overlay. new note should not use overlay since it will automatically have focus
-			if(taskid == 'new' && !elem_description_text.is(":focus")){
+			//not already in focus, add overlay to cover toolbar
+			if(!elem_description_text.is(":focus")){
 				elem_description_text.focus(function(){ 
 					if(elem_editorToolbar_overlay){
 						elem_editorToolbar_overlay.recursiveRemove(0);
@@ -2464,7 +2464,9 @@ Submenu.prototype.Add_taskdetail = function() {
 					});
 				elem_editorToolbar.append(elem_editorToolbar_overlay);
 			}
-			else if(taskid != 'new'){
+
+			//if it is not a new task, add the locking mechanism
+			if(taskid != 'new'){
 				if(elem_description_text.is(":focus")){
 					taskdetail_lockIntervalToggle(item['_id'], item['_type']);
 					isLockedByMe = true;
@@ -2495,11 +2497,12 @@ Submenu.prototype.Add_taskdetail = function() {
 
 		var fn_lockDescription = function(){
 			isLockedByMe = false;
-			elem_description_text.prop('contenteditable', false).html(Lincko.storage.get(that.param.type, item['_id'], '-comment'));
+			var item_locked_by = Lincko.storage.get(that.param.type, item['_id']);
+			elem_description_text.prop('contenteditable', false).html(item_locked_by['-comment']);
 			var id_elem_locked = elem_editorToolbar.prop('id')+'_locked';
 			elem_editorToolbar.empty().append($('#-submenu_taskdetail_description_toolbar_locked').clone().prop('id', id_elem_locked));
 
-			$('#'+id_elem_locked).text(Lincko.Translation.get('app', 3614, 'html', {username: Lincko.storage.get('users', item.locked_by,'username')}));
+			$('#'+id_elem_locked).text(Lincko.Translation.get('app', 3614, 'html', {username: Lincko.storage.get('users', item_locked_by.locked_by,'username')}));
 			app_application_lincko.add(
 				id_elem_locked,
 				that.param.type+'_'+item['_id'],
@@ -2648,7 +2651,6 @@ var taskdetail_lockIntervalToggle = function(id, type, start){
 		}
 		var cb_success_lockStart = function(){
 			locked_by = Lincko.storage.get(type, id, 'locked_by');
-			console.log('cb_success locked_by: '+locked_by);
 			if(!locked_by || locked_by == id_me){
 				taskdetail_lockInterval = setInterval(function(id, route){
 					wrapper_sendAction({id: id}, 'post', route+'start');
