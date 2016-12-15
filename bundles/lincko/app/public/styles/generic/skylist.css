@@ -1025,6 +1025,9 @@
 	font-size: 10px;
 	height: 18px;
 }
+.skylist_maxMobileL .skylist_card_bottom [find=name]{
+	width: 60px;
+}
 
 .skylist_maxMobileL .skylist_card_noCard {
 	margin-right: 5px;
