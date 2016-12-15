@@ -153,7 +153,7 @@ class ControllerWrapper extends Controller {
 				//"username_sha1" is a password used to encrypt data
 				//"uid" is the main user ID
 				if(isset($json_result->flash->username_sha1) && isset($json_result->flash->uid)){
-					OneSeventySeven::set(array('sha' => $json_result->flash->username_sha1));
+					OneSeventySeven::set(array('sha' => substr($json_result->flash->username_sha1, 0, 20))); //Truncate to 20 character because phone alias notification limitation
 					OneSeventySeven::set(array('uid' => $json_result->flash->uid));
 				}
 				
@@ -372,12 +372,12 @@ class ControllerWrapper extends Controller {
 		if($log_action){
 			$echo = $this->sendCurl($reset_shangzai);
 			if(!$echo){
-				$echo = $this->signOut();
+				$this->signOut();
 			} else if($action==='user/create'){
 				Creation::record();
 			}
 		} else {
-			$echo = $send_curl = $this->sendCurl($reset_shangzai);
+			$echo = $this->sendCurl($reset_shangzai);
 		}
 
 		if($this->print){
@@ -385,7 +385,7 @@ class ControllerWrapper extends Controller {
 			//We keep using true because we want to handle PHP error action in Ajax success
 			return true;
 		} else if($echo){
-			return json_decode($echo);
+			return $echo;
 		}
 		return false;
 	}
