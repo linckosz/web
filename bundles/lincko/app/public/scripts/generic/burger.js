@@ -323,7 +323,7 @@ var burger_attach_clickHandler = {
 				});
 			});
 
-			elem_datepicker.appendTo('#app_application_main');
+			elem_datepicker.appendTo('body');
 
 			//if calendar needs to be drawn slideUp
 			var window_outerHeight = $(window).outerHeight();
@@ -696,7 +696,7 @@ burger_dropdown.prototype.build_elem = function(){
     	that.iscroll.scrollToElement(elem_selected.get(0));
     });
 
-	elem_dropdown.appendTo('#app_application_main');
+	elem_dropdown.appendTo('body');
 
 	//if dropdown needs to be at the top
 	var window_outerHeight = $(window).outerHeight();
