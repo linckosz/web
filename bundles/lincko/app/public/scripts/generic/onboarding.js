@@ -82,7 +82,7 @@ var onboarding = {
 		var ob_settings = Lincko.storage.getOnboarding();
 
 		//fail conditions
-		if(!ob_settings || !ob_settings.projects || !ob_settings.sequence || !ob_settings.projects[1] || !ob_settings.sequence[1]){ return false; }
+		if(!ob_settings || !ob_settings.projects || !ob_settings.sequence || !ob_settings.projects[1] || !Lincko.storage.get('projects', ob_settings.projects[1]) || !ob_settings.sequence[1]){ return false; }
 
 		return onboarding.scripts.welcome(ob_settings.projects[1]);
 
