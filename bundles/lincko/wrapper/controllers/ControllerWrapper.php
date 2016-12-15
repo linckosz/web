@@ -182,20 +182,21 @@ class ControllerWrapper extends Controller {
 				return $json_result;
 			}
 		} else if($this->show_error){
+			$echo = '{"show":"'.$app->trans->getJSON('wrapper', 1, 6).'","msg":"'.$app->trans->getJSON('wrapper', 1, 3).'","error":true,"status":500}';
 			if($this->print){
-				//echo '{"show":"Communication error","msg":"Wrapper error","error":true,"status":500}';
-				echo '{"show":"'.$app->trans->getJSON('wrapper', 1, 6).'","msg":"'.$app->trans->getJSON('wrapper', 1, 3).'","error":true,"status":500}';
+				echo $echo;
+				return false;
 			}
-			return false;
-		} else {
-			if($this->print){
-				//echo '{"show":false,"msg":"Wrapper error","error":true,"status":500}';
-				echo '{"show":false,"msg":"'.$app->trans->getJSON('wrapper', 1, 3).'","error":true,"status":500}';
-			}
+			return json_decode($echo);
+		}
+
+		$echo = '{"show":false,"msg":"'.$app->trans->getJSON('wrapper', 1, 3).'","error":true,"status":500}';
+		if($this->print){
+			echo $echo;
 			return false;
 		}
-		
-		return false;
+		return json_decode($echo);
+
 	}
 
 	protected function autoSign(){
@@ -222,9 +223,11 @@ class ControllerWrapper extends Controller {
 			$this->prepareJson();
 			return $this->sendCurl(true);
 		} else {
-			//echo '{"show":"Communication error","msg":"Wrapper error","error":true,"status":500}';
-			echo '{"show":"'.$app->trans->getJSON('wrapper', 1, 6).'","msg":"'.$app->trans->getJSON('wrapper', 1, 3).'","error":true,"status":500}';
-			return true;
+			$echo = '{"show":"'.$app->trans->getJSON('wrapper', 1, 6).'","msg":"'.$app->trans->getJSON('wrapper', 1, 3).'","error":true,"status":500}';
+			if($this->print){
+				return $echo;
+			}
+			return json_decode($echo);
 		}
 	}
 
@@ -319,13 +322,21 @@ class ControllerWrapper extends Controller {
 			if(Creation::exists()){
 				if(isset($this->json['data']['captcha']) && isset($_SESSION['wrapper_captcha'])){
 					if(intval($this->json['data']['captcha']) !== $_SESSION['wrapper_captcha']){
-						echo '{"msg":{ "msg": "'.$app->trans->getJSON('wrapper', 1, 4).'", "field": "captcha" }, "error":true, "status":400}'; //The Captcha code does not match.
-						return true;
+						$echo = '{"msg":{ "msg": "'.$app->trans->getJSON('wrapper', 1, 4).'", "field": "captcha" }, "error":true, "status":400}'; //The Captcha code does not match.
+						if($this->print){
+							echo $echo;
+							return true;
+						}
+						return json_decode($echo);
 					}
 				} else {
 					$app->lincko->translation['captcha_timing'] = Creation::remainTime();
-					echo '{"msg":{ "msg": "'.$app->trans->getJSON('wrapper', 1, 5).'", "field": "captcha" }, "error":true, "status":400}'; //You need to wait 5 minutes before to be able to create another account. Thank you for your patience.
-					return true;
+					$echo = '{"msg":{ "msg": "'.$app->trans->getJSON('wrapper', 1, 5).'", "field": "captcha" }, "error":true, "status":400}'; //You need to wait 5 minutes before to be able to create another account. Thank you for your patience.
+					if($this->print){
+						echo $echo;
+						return true;
+					}
+					return json_decode($echo);
 				}
 			}
 
@@ -357,19 +368,26 @@ class ControllerWrapper extends Controller {
 
 		}
 
+		$echo = false;
 		if($log_action){
-			if(!$this->sendCurl($reset_shangzai)){
-				$this->signOut();
+			$echo = $this->sendCurl($reset_shangzai);
+			if(!$echo){
+				$echo = $this->signOut();
 			} else if($action==='user/create'){
 				Creation::record();
 			}
 		} else {
-			$this->sendCurl($reset_shangzai);
+			$echo = $send_curl = $this->sendCurl($reset_shangzai);
 		}
 
-		//Do not return false, it forces wrapper.js to send error message
-		//We keep using true because we want to handle PHP error action in Ajax success
-		return true;
+		if($this->print){
+			//Do not return false, it forces wrapper.js to send error message
+			//We keep using true because we want to handle PHP error action in Ajax success
+			return true;
+		} else if($echo){
+			return json_decode($echo);
+		}
+		return false;
 	}
 
 }

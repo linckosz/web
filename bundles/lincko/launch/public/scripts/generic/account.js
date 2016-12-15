@@ -1,6 +1,6 @@
 
 var account_joinus_cb_begin = function(){
-	account_hide_error();
+	account_hide_error(true);
 	$(document.body).css('cursor', 'progress');
 	$('#account_joinus_submit_progress').css("display", "block");
 	$('#account_joinus_submit_progress').removeClass('display_none');
@@ -8,7 +8,7 @@ var account_joinus_cb_begin = function(){
 };
 
 var account_signin_cb_begin = function(){
-	account_hide_error();
+	account_hide_error(true);
 	$(document.body).css('cursor', 'progress');
 	$('#account_signin_submit_progress').css("display", "block");
 	$('#account_signin_submit_progress').removeClass('display_none');
@@ -16,7 +16,7 @@ var account_signin_cb_begin = function(){
 };
 
 var account_forgot_cb_begin = function(){
-	account_hide_error();
+	account_hide_error(true);
 	$(document.body).css('cursor', 'progress');
 	$('#account_forgot_submit_progress').css("display", "block");
 	$('#account_forgot_submit_progress').removeClass('display_none');
@@ -24,7 +24,7 @@ var account_forgot_cb_begin = function(){
 };
 
 var account_reset_cb_begin = function(jqXHR, settings){
-	account_hide_error();
+	account_hide_error(true);
 	$(document.body).css('cursor', 'progress');
 	$('#account_reset_submit_progress').css("display", "block");
 	$('#account_reset_submit_progress').removeClass('display_none');
@@ -57,6 +57,7 @@ var account_joinus_cb_success = account_signin_cb_success = function(msg, err, s
 		$('#account_error').html(wrapper_to_html(msg));
 		$("#account_error").velocity("transition.slideDownIn", { duration: 500, delay: 100, });
 		$("#account_joinus_form input[name="+field+"]").addClass('base_input_text_error').focus();
+		$("#account_captcha").prop("src", $("#account_captcha").prop("src"));
 	} else {
 		window.location.href = account_link['root'];
 	}
@@ -204,9 +205,14 @@ function account_select(select) {
 	}
 }
 
-function account_hide_error() {
-	if($('#account_error').is(':visible')){
-		$("#account_error").velocity("transition.fadeOut", { duration: 500, delay: 100, });
+function account_hide_error(now) {
+	if(typeof now == 'undefined'){ now = false; }
+	if(now){
+		$("#account_error").hide();
+	} else {
+		if($('#account_error').is(':visible')){
+			$("#account_error").velocity("transition.fadeOut", { duration: 500, delay: 100, });
+		}
 	}
 }
 
