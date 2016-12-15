@@ -34,13 +34,13 @@ function useMobileNotification(){
 function device_download(url, target, name){
 	if(typeof target == 'undefined'){ target = '_blank'; }
 	if(typeof name == 'undefined'){ name = 'file'; }
-	if(typeof android != 'undefined' && typeof android.download == 'function') {
+	if(typeof android != 'undefined' && typeof android.download == 'function') {alert('android');
 		android.download(url);
 	} else if(typeof iOS != 'undefined' && typeof iOS.download == 'function') {
 		iOS.download(url);
 	} else if(typeof winPhone != 'undefined' && typeof winPhone.download == 'function') {
 		winPhone.download(url);
-	} else {
+	} else {alert('browser');
 		//window.open(url, target);
 		//Another method if some browser (safari?) do not work
 		var anchor = document.createElement('a');
@@ -48,6 +48,5 @@ function device_download(url, target, name){
 		anchor.target = target;
 		anchor.download = name;
 		anchor.click();
-		
 	}
 }
