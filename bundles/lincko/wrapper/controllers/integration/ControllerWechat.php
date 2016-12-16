@@ -4,6 +4,7 @@ namespace bundles\lincko\wrapper\controllers\integration;
 
 use \bundles\lincko\wrapper\controllers\ControllerWrapper;
 use \libs\Controller;
+use \libs\OneSeventySeven;
 
 class ControllerWechat extends Controller {
 
@@ -67,9 +68,23 @@ class ControllerWechat extends Controller {
 			if($response = $controller->wrap_multi('integration/connect')){
 				if(!isset($response->status) || $response->status != 200){
 					$response = false;
+				} else {
+					if(isset($response->flash->username_sha1) && isset($response->flash->uid)){
+						OneSeventySeven::set(array('sha' => substr($response->flash->username_sha1, 0, 20))); //Truncate to 20 character because phone alias notification limitation
+						OneSeventySeven::set(array('uid' => $response->flash->uid));
+					}
+					if(isset($response->flash->username)){
+						OneSeventySeven::set(array('yonghu' => $response->flash->username));
+					}
+					if(isset($response->flash->youjian) && isset($response->flash->lianke)){
+						OneSeventySeven::set(array(
+							'youjian' => $response->flash->youjian,
+							'lianke' => $response->flash->lianke,
+						));
+					}
 				}
+				bundles\lincko\wrapper\hooks\SetData(); //used to help log in immediatly
 			}
-			\libs\Watch::php($response, '$ControllerWrapper', __FILE__, __LINE__, false, false, true);
 		} else {
 			$response = false;
 		}
@@ -79,7 +94,7 @@ class ControllerWechat extends Controller {
 			$app->lincko->translation['party'] = 'Wechat';
 		}
 		$app->lincko->data['link_reset'] = true;
-		$app->router->getNamedRoute('home')->dispatch();
+		$app->router->getNamedRoute('root')->dispatch();
 	}
 
 	public function curl_get($grant_type=false, $param=array()){
@@ -159,6 +174,7 @@ class ControllerWechat extends Controller {
 			)
 		);
 
+		$verbose_show = false;
 		if($verbose_show){
 			$verbose = fopen('php://temp', 'w+');
 			curl_setopt($ch, CURLOPT_VERBOSE, true);

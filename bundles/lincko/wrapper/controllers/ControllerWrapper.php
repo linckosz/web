@@ -150,20 +150,20 @@ class ControllerWrapper extends Controller {
 					$json_result->shangzai->puk = Datassl::encrypt($_SESSION['public_key'], $app->lincko->security['private_key']);
 				}
 
-				//"username_sha1" is a password used to encrypt data
-				//"uid" is the main user ID
-				if(isset($json_result->flash->username_sha1) && isset($json_result->flash->uid)){
-					OneSeventySeven::set(array('sha' => substr($json_result->flash->username_sha1, 0, 20))); //Truncate to 20 character because phone alias notification limitation
-					OneSeventySeven::set(array('uid' => $json_result->flash->uid));
+				if($this->print){
+					//"username_sha1" is a password used to encrypt data
+					//"uid" is the main user ID
+					if(isset($json_result->flash->username_sha1) && isset($json_result->flash->uid)){
+						OneSeventySeven::set(array('sha' => substr($json_result->flash->username_sha1, 0, 20))); //Truncate to 20 character because phone alias notification limitation
+						OneSeventySeven::set(array('uid' => $json_result->flash->uid));
+					}
+					//After signin, it return the username, it's only used once to display the user name faster than the local storage.
+					//It's almost useless
+					if(isset($json_result->flash->username)){
+						OneSeventySeven::set(array('yonghu' => $json_result->flash->username));
+					}
+					unset($json_result->flash);
 				}
-				
-				//After signin, it return the username, it's only used once to display the user name faster than the local storage.
-				//It's almost useless
-				if(isset($json_result->flash->username)){
-					OneSeventySeven::set(array('yonghu' => $json_result->flash->username));
-				}
-
-				unset($json_result->flash);
 			}
 			//If the request comes from a form, we add it's ID
 			if($this->form_id){
@@ -302,14 +302,14 @@ class ControllerWrapper extends Controller {
 			$log_action = true;
 
 			$this->signOut(true);
-			
+
 			$this->json['data']['password'] = Datassl::encrypt($this->json['data']['password'], $this->json['data']['email']);
 
 			OneSeventySeven::set(array(
 				'youjian' => $this->json['data']['email'],
 				'lianke' => $this->json['data']['password'],
 			));
-
+			
 			//Add Cookies if Remember
 			if(isset($this->json['data']['remember'])){
 				OneSeventySeven::set(array('jizhu' => true));
