@@ -21,7 +21,7 @@
 			</span>
 		</span>
 		<div class="skylist_menu_timesort"></div>
-		<span class="skylist_menu_navbar_filter_icon icon-viewIcon skylist_clickable"></span>
+		<span title="{{ _trans('app', 13, 21, 'html') }}{#Filter your tasks or change views#}" class="skylist_menu_navbar_filter_icon icon-viewIcon skylist_clickable"></span>
 		<div class="skylist_menu_navbar_filter_pane" tabindex="1">
 			<table>
 				<td find="filter_block1">
@@ -114,11 +114,11 @@
 						<div find='description'></div>
 					</td>
 					<td find='card_rightbox'>
-						<span find='links_wrapper'>
+						<span find='links_wrapper' title="{{ _trans('app', 13, 20, 'html') }}{#View/Add files#}">
 							<span find="links_icon" class="icon-links"></span>
 							<span find='links' class="skylist_icon_text">(<span find="linkCount"></span>)</span>
 						</span>
-						<span find='comments_wrapper'>
+						<span find='comments_wrapper' title="{{ _trans('app', 13, 19, 'html') }}{#View/Add comments#}">
 							<span find="comments_icon" class="icon-Pencil"></span>
 							<span find='comments' class="skylist_icon_text">(<span find="commentCount"></span>)</span>
 						</span>

@@ -776,6 +776,9 @@ Submenu.prototype.Add_taskdetail = function() {
 			elem_action_menu.find('[find=delete]').addClass("display_none");
 		}
 
+		//remove tooltips for disabled blocks
+		var elem_burgerBar_block_OFF = elem.find('.submenu_taskdetail_burgerBar_block:not(.skylist_clickable)').removeAttr('title');
+
 		return elem;
 	}// end of update_burgerBar function
 	submenu_taskdetail.append(update_burgerBar(elem_meta));

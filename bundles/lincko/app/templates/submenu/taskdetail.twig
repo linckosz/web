@@ -70,15 +70,15 @@
 		<input type="text" find="user_id" class="" readonly="readonly"/>
 		<input type="text" find="spaces_id" class="" readonly="readonly"/>
 	</div>
-	<span find="projects" class="submenu_taskdetail_burgerBar_block ellipsis skylist_clickable">
+	<span find="projects" class="submenu_taskdetail_burgerBar_block ellipsis skylist_clickable" title="{{ _trans('app', 13, 15, 'html') }} {#Change project#}">
 		<span find="icon" class="icon-projectBlack"></span>
 		<span find="text"></span>
 	</span>
-	<span find="calendar" class="submenu_taskdetail_burgerBar_block ellipsis">
+	<span find="calendar" class="submenu_taskdetail_burgerBar_block ellipsis" title="{{ _trans('app', 13, 16, 'html') }} {#Change due date#}">
 		<span find="icon" class="icon-Calendar"></span>
 		<span find="text"></span>
 	</span>
-	<span find="user" class="submenu_taskdetail_burgerBar_block ellipsis">
+	<span find="user" class="submenu_taskdetail_burgerBar_block ellipsis" title="{{ _trans('app', 13, 17, 'html') }} {#Change owner#}">
 		<span find="icon" class="icon-SmallPersonaiconBlack"></span>
 		<span find="text" class=""></span>
 	</span>
@@ -87,7 +87,7 @@
 		<span find="text"></span>
 	</span>
 
-	<span class="icon-Actions submenu_taskdetail_burgerBar_actions minTablet">
+	<span class="icon-Actions submenu_taskdetail_burgerBar_actions minTablet" title="{{ _trans('app', 13, 18, 'html') }} {#More actions (delete)#}">
 		<span find='action_menu'>
 			<div find="delete" class="icon-Trash"></div>
 		</span>

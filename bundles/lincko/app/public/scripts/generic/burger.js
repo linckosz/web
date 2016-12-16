@@ -86,13 +86,10 @@ var burger_attach_clickHandler = {
 					param.contactsID = {};
 					$.each(list, function(i, obj){
 						var checked = false;
-						if(obj.preSelect){
-							checked = true;
+						if(obj.preSelect){ checked = true; }
+						if(obj.val){
+							param.contactsID[obj.val] = { checked: checked };
 						}
-						param.contactsID[obj.val] = {
-							checked: checked,
-						};
-
 					});
 					
 					param.selectOne = true;
@@ -426,6 +423,19 @@ burger_list.in_charge = function(lincko_type, lincko_id){
 
 		userList.push(user);
 	}
+
+	var inviteNewUser = {
+		text: 'invite new user'/*toto*/,
+		onClick: function(){
+			submenu_Build("chat_add_user", true, false, true); 
+			//submenu_Build('chat_list', false, true, true); 
+		},
+		imgIcon: 'icon-AddPerson',
+		imgURL: false,
+		addClass: 'burger_option_inviteUser',
+	}
+	userList.push(inviteNewUser);
+
 	return userList;
 }
 
@@ -740,6 +750,12 @@ burger_dropdown.prototype.build_elem_data = function(){
 		if(obj.preSelect){
 			elem_option_clone.addClass('burger_option_preSelect');
 		}
+
+		if(obj.imgIcon){
+			elem_option_clone.find('[find=image]')
+			.removeClass('icon-largerIndividual').addClass(obj.imgIcon);
+		}
+
 		if(obj.imgURL){
 			elem_option_clone.find('[find=image]')
 				//.removeClass('icon-SmallPersonaiconBlack')
@@ -749,6 +765,8 @@ burger_dropdown.prototype.build_elem_data = function(){
 		else if(typeof obj.imgURL =='undefined'){
 			elem_option_clone.find('[find=image]').addClass('display_none');
 		}
+
+
 		if(obj.latestProjects){
 			elem_option_clone.attr('latestProjects', true);
 		}
@@ -756,8 +774,9 @@ burger_dropdown.prototype.build_elem_data = function(){
 			elem_option_clone.addClass(obj.addClass);
 		}
 		if(typeof that.cb_select == 'function'){
-			elem_option_clone.click(function(){
-				that.cb_select(obj);
+			elem_option_clone.click(obj, function(event){
+				if(typeof event.data.onClick == 'function'){ event.data.onClick(); }
+				else{ that.cb_select(event.data); }
 				that.hide();
 			});
 		}

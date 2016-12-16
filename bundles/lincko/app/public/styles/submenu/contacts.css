@@ -110,3 +110,21 @@
 .submenu_contact_tab > span{
 	padding-left: 7%;
 }
+
+.submenu_contacts_inviteUser{
+    position: absolute;
+    bottom: 0px;
+    border-top: 1px solid rgba(63,132,176,.5);
+    right: 0px;
+    left: 0px;
+    margin: 0px 20px;
+    padding: 5px 0px;
+    font-size: 18px;
+}
+.submenu_contacts_inviteUser [find=icon]{
+	margin-left: 30px;
+    margin-right: 18px;
+    font-size: 40px;
+    vertical-align: middle;
+    color: #3F84B0;
+}

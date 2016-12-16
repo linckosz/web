@@ -10,7 +10,7 @@
 	<div class="app_project_div_content app_application_width_child overthrow">
 		<div id="app_project_top">
 			<div id="app_project_header">
-				<div id="app_project_settings" class="icon-Settings app_project_settings"></div>
+				<div id="app_project_settings" title="{{ _trans('app', 2, 2, 'html') }}{# Settings #}" class="icon-Settings app_project_settings"></div>
 				<div id="app_project_logo">{{ title|ucfirst }}</div>
 			</div>
 			<div class="app_project_line_first minTablet display_none"><div></div></div>
@@ -31,14 +31,14 @@
 			</div>
 			<div class="app_project_space"></div>
 			<div id="app_project_projects_tab" class="app_project_tab">
-				<div id="app_project_projects_all">
+				<div id="app_project_projects_all" title="{{ _trans('app', 2, 15, 'html') }}{# See All Projects #}">
 					<div>
 						<span>
 							{{ _trans('app', 2, 7, 'html') }}{# Projects #}
 						</span>
 						<span>
 							<span find="app_project_projects_all_number"></span>
-							<img id="app_project_projects_new" class="app_project_new_img" src="{{ _filelatest('/lincko/app/images/app/project/new128.png') }}" />
+							<img id="app_project_projects_new" title="{{ _trans('app', 2, 16, 'html') }}{# Create New Project #}" class="app_project_new_img" src="{{ _filelatest('/lincko/app/images/app/project/new128.png') }}" />
 						</span>
 					</div>
 				</div>
@@ -60,7 +60,7 @@
 			</div>
 			<div class="app_project_space"></div>
 			<div id="app_project_chats_tab" class="app_project_tab">
-				<div id="app_project_chats_all">
+				<div id="app_project_chats_all" title="{{ _trans('app', 2, 17, 'html') }}{# See All Chats #}">
 					<div>
 						<span id="app_project_chats_top">
 							<div find="app_project_chats_notif" class="app_project_chats_notif app_project_chats_notif_top display_none"></div>
@@ -68,7 +68,7 @@
 						</span>
 						<span>
 							<span find="app_project_chats_all_number"></span>
-							<img id="app_project_chats_new" class="app_project_new_img" src="{{ _filelatest('/lincko/app/images/app/project/new128.png') }}" />
+							<img id="app_project_chats_new" title="{{ _trans('app', 2, 18, 'html') }}{# Create New Chat Group #}" class="app_project_new_img" src="{{ _filelatest('/lincko/app/images/app/project/new128.png') }}" />
 						</span>
 					</div>
 				</div>
@@ -92,8 +92,8 @@
 				<div find="app_project_upload" class="app_project_upload_text">{{ _trans('app', 2, 10, 'html') }}{# Uploads #}</div>
 			</div>
 			<div id="app_project_quick_access_plus" class="app_project_quick_access_icon icon-Plus-no-circle needsclick display_none"></div>
-			<div id="app_project_quick_access_upload" class="app_project_quick_access_icon icon-Cloud-Files needsclick"></div>
-			<div id="app_project_quick_access_chat" class="app_project_quick_access_icon icon-largerGroup needsclick">
+			<div id="app_project_quick_access_upload" title="{{ _trans('app', 2, 19, 'html') }}{# Quick Upload a file (to your personal space) #}" class="app_project_quick_access_icon icon-Cloud-Files needsclick"></div>
+			<div id="app_project_quick_access_chat" title="{{ _trans('app', 2, 20, 'html') }}{# Contacts - Invite New Contacts #}" class="app_project_quick_access_icon icon-largerGroup needsclick">
 				<div find="notif" class="app_project_quick_access_notif base_ChatMenuHeader display_none"></div>
 			</div>
 		</div>

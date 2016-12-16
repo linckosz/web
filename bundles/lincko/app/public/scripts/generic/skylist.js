@@ -262,6 +262,17 @@ skylist.prototype.construct = function(){
 
 skylist.prototype.subConstruct_default = function(){
 	var that = this;
+
+	//update tooltips
+	var tooltip_text = null;
+	if(that.list_type == 'tasks'){ tooltip_text = Lincko.Translation.get('app', 3620, 'js'); } //Add a new task
+	else if(that.list_type == 'notes'){ tooltip_text = Lincko.Translation.get('app', 3623, 'js'); } //Add a new note
+	else if(that.list_type == 'chats'){ tooltip_text = 'Add chat group' } //Add a new chat group - toto
+	else if(that.list_type == 'files'){ tooltip_text = Lincko.Translation.get('app', 3626, 'js'); } //Attach a new file
+
+	if(tooltip_text){ that.elem_newcardCircle.attr('title', tooltip_text); }
+	
+
 	if(that.list_type == 'files'){
 		that.elem_newcardCircle.click(function(){
 			app_upload_open_files('projects', app_content_menu.projects_id);
@@ -3021,125 +3032,140 @@ skylist.prototype.menu_construct = function(){
 	that.list_wrapper.append(that.elem_navbar);
 
 
-
 	/*
 	 * TIMESORT-----------------------------------------------------------------------------------------
 	 */
-	 if( !that.sort_arrayText ){
-	 	if( Lincko.storage.get("projects", app_content_menu.projects_id, 'personal_private') ){
-	 		that.elem_navbar.find('.skylist_menu_timesort').addClass('display_none');
-	 	}
-		return false;
-	 }
-	var sort;
-	that.elem_timesort = that.elem_navbar.find('.skylist_menu_timesort');
-	that.elem_sortdot = $('<span class="skylist_menu_sortdot maxMobileL"></span>');
-	that.elem_timesort.append(that.elem_sortdot);
-	var elem_timesort_text_wrapper = $('#-skylist_menu_timesort_text_wrapper').clone().prop('id','');
-	var elem_timesort_text_wrapper_tmp;
-	
-	for (var i = 0; i < that.sort_array.length; ++i){
-		sort = that.sort_array[i];
-		elem_timesort_text_wrapper_tmp = elem_timesort_text_wrapper.clone();
-		elem_timesort_text_wrapper_tmp.attr('sort',sort);
-		elem_timesort_text_wrapper_tmp.find('[find=text]').html(that.sort_arrayText[i]);
-		that.elem_sortdot.append('<span sort='+sort+' find="indicator" class="skylist_menu_timesort_dot">&#149;</span>');
-		that.elem_sorts_text[sort] =elem_timesort_text_wrapper_tmp;
-		that.elem_sortdot.before(elem_timesort_text_wrapper_tmp);
-		that.elem_sorts[sort] = that.elem_timesort.find('[sort='+sort+']');
-		that.sortcount = i;
+	if( !that.sort_arrayText ){
+		if( Lincko.storage.get("projects", app_content_menu.projects_id, 'personal_private') ){
+			that.elem_navbar.find('.skylist_menu_timesort').addClass('display_none');
+		}
 	}
-	that.elem_sortdot.before('<br />');
-	that.elem_Jsorts = that.elem_timesort.find('[sort]');
-
-	//that.menu_makeSelection(that.sort_array[0]);
-	that.menu_makeSelection(that.Lincko_itemsList_filter.duedate);
-
-
-	that.elem_Jsorts.click(function(){
-		var sort = $(this).attr('sort');
-		if (!responsive.test("maxMobileL")){
-			that.menu_makeSelection( sort );
-			that.sort_fn('duedate', sort);
-		}
-	});
-
-	/*hammer.js----------------------------------------------------*/
-	that.elem_timesort.hammer().on("panstart", function(event){
-		event.preventDefault();
-		if (responsive.test("maxMobileL")){
-			that.pan_direction = (event.gesture.deltaX);
-			if (that.pan_direction > 0){
-				that.pan_direction = "panright";
-			}
-			else if(that.pan_direction < 0){
-				that.pan_direction = "panleft";
-			}
-			that.menu_sortnum_fn();
-
-		}
-	});//end of panstart
-
-	that.elem_timesort.hammer().on("panmove", function(event){
-		event.preventDefault();
-		clearTimeout(that.editing_timeout);
-		if (responsive.test("maxMobileL") && that.sortnum_new != null ){
-			that.delX = event.gesture.deltaX;
-
-			if( that.delX < 0 && that.pan_direction=="panright" ){
-				that.pan_direction = "panleft";
-				that.menu_sortnum_fn();
-			}
-			else if( that.delX > 0 && that.pan_direction=="panleft" ){
-				that.pan_direction = "panright";
-				that.menu_sortnum_fn();
-			} 
-
-			var opacity_fade = Math.abs(1/(that.delX/50));
-			var opacity_show = 1 - opacity_fade;
-
-			if ( Math.abs(that.delX) < that.pan_range_max ){
-				that.elem_sorts_text[that.sort_array[that.sortnum]]
-					.css("left",that.delX)
-					.css("opacity",opacity_fade);
-				that.elem_sorts_text[that.sort_array[that.sortnum_new]]
-					.removeClass('display_none')
-					.css( "left",Math.sign(that.delX)*(Math.abs(that.delX)-that.pan_range_max) )
-					.css("opacity",opacity_show);
-			}
-		}
-	});//end of panmove
-
-	that.elem_timesort.hammer().on("panend", function(event){
-		event.preventDefault();
-		if (responsive.test("maxMobileL") && that.sortnum_new != null){
-
-			if (Math.abs(that.delX) < that.pan_range_min){ //threshold when timesort will scroll to next sort
-				//undo timesort change
-				that.menu_sortnum_fn_rev();
-			}
-			
-			that.elem_sorts_text[that.sort_array[that.sortnum_new]].velocity({left: 0},{
-				mobileHA: hasGood3Dsupport,
-				complete: function(){
-					if( that.Lincko_itemsList_filter.duedate == null){
-						that.Lincko_itemsList_filter.duedate = -1;
-					}
-					if(that.sort_array[that.sortnum_new] != that.Lincko_itemsList_filter.duedate){
-						that.sort_fn('duedate',that.sort_array[that.sortnum_new]);
-					}
-				}
-			});
-			that.menu_makeSelection(that.sort_array[that.sortnum_new]);
-			//that.elem_sorts_text[that.sort_array[that.sortnum]].velocity({opacity:0}, {mobileHA: hasGood3Dsupport, duration: 500,}); 
+	else{
+		var sort;
+		that.elem_timesort = that.elem_navbar.find('.skylist_menu_timesort');
+		that.elem_sortdot = $('<span class="skylist_menu_sortdot maxMobileL"></span>');
+		that.elem_timesort.append(that.elem_sortdot);
+		var elem_timesort_text_wrapper = $('#-skylist_menu_timesort_text_wrapper').clone().prop('id','');
+		var elem_timesort_text_wrapper_tmp;
 		
+		for (var i = 0; i < that.sort_array.length; ++i){
+			sort = that.sort_array[i];
+			elem_timesort_text_wrapper_tmp = elem_timesort_text_wrapper.clone();
+			elem_timesort_text_wrapper_tmp.attr('sort',sort);
+			elem_timesort_text_wrapper_tmp.find('[find=text]').html(that.sort_arrayText[i]);
+			that.elem_sortdot.append('<span sort='+sort+' find="indicator" class="skylist_menu_timesort_dot">&#149;</span>');
+			that.elem_sorts_text[sort] =elem_timesort_text_wrapper_tmp;
+			that.elem_sortdot.before(elem_timesort_text_wrapper_tmp);
+			that.elem_sorts[sort] = that.elem_timesort.find('[sort='+sort+']');
+			that.sortcount = i;
 		}
+		that.elem_sortdot.before('<br />');
+		that.elem_Jsorts = that.elem_timesort.find('[sort]');
 
-	});//end of panend
-	/*hammer.js END--------------------------------------*/
-	/*
-	 * end of TIMESORT-----------------------------------------------------------------------------------------
-	 */
+		//that.menu_makeSelection(that.sort_array[0]);
+		that.menu_makeSelection(that.Lincko_itemsList_filter.duedate);
+
+
+		that.elem_Jsorts.click(function(){
+			var sort = $(this).attr('sort');
+			if (!responsive.test("maxMobileL")){
+				that.menu_makeSelection( sort );
+				that.sort_fn('duedate', sort);
+			}
+		});
+
+		/*hammer.js----------------------------------------------------*/
+		that.elem_timesort.hammer().on("panstart", function(event){
+			event.preventDefault();
+			if (responsive.test("maxMobileL")){
+				that.pan_direction = (event.gesture.deltaX);
+				if (that.pan_direction > 0){
+					that.pan_direction = "panright";
+				}
+				else if(that.pan_direction < 0){
+					that.pan_direction = "panleft";
+				}
+				that.menu_sortnum_fn();
+
+			}
+		});//end of panstart
+
+		that.elem_timesort.hammer().on("panmove", function(event){
+			event.preventDefault();
+			clearTimeout(that.editing_timeout);
+			if (responsive.test("maxMobileL") && that.sortnum_new != null ){
+				that.delX = event.gesture.deltaX;
+
+				if( that.delX < 0 && that.pan_direction=="panright" ){
+					that.pan_direction = "panleft";
+					that.menu_sortnum_fn();
+				}
+				else if( that.delX > 0 && that.pan_direction=="panleft" ){
+					that.pan_direction = "panright";
+					that.menu_sortnum_fn();
+				} 
+
+				var opacity_fade = Math.abs(1/(that.delX/50));
+				var opacity_show = 1 - opacity_fade;
+
+				if ( Math.abs(that.delX) < that.pan_range_max ){
+					that.elem_sorts_text[that.sort_array[that.sortnum]]
+						.css("left",that.delX)
+						.css("opacity",opacity_fade);
+					that.elem_sorts_text[that.sort_array[that.sortnum_new]]
+						.removeClass('display_none')
+						.css( "left",Math.sign(that.delX)*(Math.abs(that.delX)-that.pan_range_max) )
+						.css("opacity",opacity_show);
+				}
+			}
+		});//end of panmove
+
+		that.elem_timesort.hammer().on("panend", function(event){
+			event.preventDefault();
+			if (responsive.test("maxMobileL") && that.sortnum_new != null){
+
+				if (Math.abs(that.delX) < that.pan_range_min){ //threshold when timesort will scroll to next sort
+					//undo timesort change
+					that.menu_sortnum_fn_rev();
+				}
+				
+				that.elem_sorts_text[that.sort_array[that.sortnum_new]].velocity({left: 0},{
+					mobileHA: hasGood3Dsupport,
+					complete: function(){
+						if( that.Lincko_itemsList_filter.duedate == null){
+							that.Lincko_itemsList_filter.duedate = -1;
+						}
+						if(that.sort_array[that.sortnum_new] != that.Lincko_itemsList_filter.duedate){
+							that.sort_fn('duedate',that.sort_array[that.sortnum_new]);
+						}
+					}
+				});
+				that.menu_makeSelection(that.sort_array[that.sortnum_new]);
+				//that.elem_sorts_text[that.sort_array[that.sortnum]].velocity({opacity:0}, {mobileHA: hasGood3Dsupport, duration: 500,}); 
+			
+			}
+
+		});//end of panend
+		/*hammer.js END--------------------------------------*/
+	}// end of TIMESORT
+	
+
+	//menubar tooltips
+	if(that.list_type == 'tasks'){
+		elem_people1.attr('title', Lincko.Translation.get('app', 3616, 'js')); //View your tasks
+		elem_people2.attr('title', Lincko.Translation.get('app', 3615, 'js')); //View the team's tasks
+		that.elem_Jsorts.eq(0).attr('title', Lincko.Translation.get('app', 3617, 'js')); //View tasks due any date
+		that.elem_Jsorts.eq(1).attr('title', Lincko.Translation.get('app', 3618, 'js')); //View tasks due today
+		that.elem_Jsorts.eq(2).attr('title', Lincko.Translation.get('app', 3619, 'js')); //View tasks due tomorrow
+	}
+	else if(that.list_type == 'notes'){
+		elem_people1.attr('title', Lincko.Translation.get('app', 3622, 'js')); //View notes you created
+		elem_people2.attr('title', Lincko.Translation.get('app', 3621, 'js')); //View team's notes
+	}
+	else if(that.list_type == 'files'){
+		elem_people1.attr('title', Lincko.Translation.get('app', 3625, 'js')); //View files you uploaded
+		elem_people2.attr('title', Lincko.Translation.get('app', 3624, 'js')); //View team's files
+	}
 
 } //construct END
 
