@@ -348,7 +348,7 @@
 	width:100%;
 	font-size: 20px;
 	color: #475577;
-	width: initial; /*check with royce*/
+	width: auto; /*check with royce*/
 }
 
 .skylist_card_time{
@@ -399,7 +399,7 @@
 	width: 100px;
 	text-align: left;
 	display: inline-block;
-	background-color: initial;
+	background-color: transparent;
 	border: none;
 	color: inherit;
 	/*
@@ -593,7 +593,7 @@
 }
 
 .skylist_card_checked [find=checkbox]:before {
-	display: initial;
+	display: inline;
 }
 .skylist_card_checked [find=card_time] {
 	color: #53ADD2;
@@ -625,7 +625,7 @@
     line-height: 30px;
 }
 .skylist_wrapper[view=paper]  .skylist_sortBtn{
-	display: initial;
+	display: block;
 }
 
 .skylist_wrapper[view=paper] [find=card_bottom],
@@ -654,7 +654,7 @@
  	margin:0px;
 }
 .skylist_wrapper[view=paper] .skylist_card_hover .skylist_card_center{
-	background-color: initial;
+	background-color: transparent;
 }
 .skylist_wrapper[view=paper] .skylist_card_hover [find=card_leftbox],
 .skylist_wrapper[view=paper] .skylist_card_hover [find=card_textwrapper]{
@@ -677,7 +677,7 @@
 	margin: 10px 40px;
 }
 .skylist_wrapper[view=paper] .skylist_card_center{
-	height:initial;
+	height:auto;
 }
 .skylist_wrapper[view=paper] .skylist_checkbox{
 	margin: 0px 10px;
@@ -974,7 +974,7 @@
  /*.skylist_maxMobileL_force .skylist,*/
 .skylist_maxMobileL .skylist {
 	margin-left: 5px;
-	width: initial;
+	width: auto;
 }
 /*.skylist_maxMobileL_force .skylist_menu_navbar,*/
 .skylist_maxMobileL .skylist_menu_navbar {
@@ -1008,7 +1008,7 @@
 /*.skylist_maxMobileL_force .skylist_menu_navbar_filter_pane,*/
 .skylist_maxMobileL .skylist_menu_navbar_filter_pane {
 	left: 0px;
-	width: initial;
+	width: auto;
 	margin: 0px;
 	border-radius: 0px;
 }
