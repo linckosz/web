@@ -5,7 +5,46 @@
  	/*MAKE A NEW BURGER CLASS WITH INSTANCES*/
  }
 
+var burger_shortcuts = {
+	at: '@',
+	plus: '+',
+	plusAlt: '＋',
+};
 
+//this should be compatible with inputter (tasks) as well as inputter (chats) and future usage cases
+/*
+shortcutList = {
+	at: [**list of burgerData**],
+	plus: [**list of burgerData**],
+}
+*/
+var burger_keyboard = function(elem, shortcutList    ){
+	var that = this;
+	that.elem = elem;
+
+	var allShortcuts = false;
+	if(shortcutList && typeof shortcutList == 'boolean'){ allShortcuts = true; }
+
+
+	that.dropdownInst = {
+		at: null,
+		plus: null,
+	};
+
+	if(allShortcuts /*'at' in array shortcutList*/){
+		that.dropdownInst.at = new burger_dropdown('toto', list, elem, null, null, cb_select, null, false); 
+	}
+
+
+
+
+}
+burger_keyboard.prototype.destroy = function(){
+	var that = this;
+	$.each(that.dropdownInst, function(type, inst){
+		if(typeof inst.destroy == 'function'){ inst.destroy(); }
+	});
+}
 
 var burger_attach_clickHandler = {
 
