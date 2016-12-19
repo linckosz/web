@@ -63,12 +63,15 @@
 }
 .burger_option_users [find=text] {
 	display: inline-block;
-	line-height: 40px;
+	/*line-height: 40px;*/
 	vertical-align: middle;
 	font-size: 20px;
 	color: #3F84B0;
-	width: 100px;
-	white-space: nowrap;
+	width: 135px;
+	/*white-space: nowrap;*/
+	white-space: normal;
+    line-height: 20px;
+    max-height: 36px;
 }
 
 .burger_option_inviteUser{
@@ -85,6 +88,9 @@
 }
 .burger_option_inviteUser [find=text]{
 	color: #475577;
+	font-size: 16px;
+	/*white-space: normal;
+    line-height: 20px;*/
 }
 
 /*----------burger_calendar----------------------*/

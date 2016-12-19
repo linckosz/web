@@ -463,16 +463,31 @@ burger_list.in_charge = function(lincko_type, lincko_id){
 		userList.push(user);
 	}
 
+	var project_id = null;
+	if(lincko_type == 'projects'){
+		project_id = lincko_id;
+	}
+	else{
+		project_id = item['_parent'][1];
+	}
+
 	var inviteNewUser = {
-		text: 'invite new user'/*toto*/,
+		text: Lincko.Translation.get('app', 3628, 'js'), //Invite new user
 		onClick: function(){
-			submenu_Build("chat_add_user", true, false, true); 
+			submenu_Build('app_projects_users_contacts', true, false, project_id);
+			//submenu_Build("chat_add_user", true, false, true); 
 			//submenu_Build('chat_list', false, true, true); 
 		},
 		imgIcon: 'icon-AddPerson',
 		imgURL: false,
 		addClass: 'burger_option_inviteUser',
 	}
+
+	
+
+
+
+
 	userList.push(inviteNewUser);
 
 	return userList;
@@ -688,7 +703,7 @@ burger_dropdown.prototype.build_elem = function(){
     elem_dropdown.focus(function(){
     })
     elem_dropdown.blur(function(){
-    	that.hide();
+    	//that.hide();
     });
 
     elem_dropdown.find('.burger_option').hover(function(){ //hoverin
