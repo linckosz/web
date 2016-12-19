@@ -1215,9 +1215,10 @@ Submenu.prototype.Add_taskdetail = function() {
 	}
 	elem_links.find('[find=existing_btn]').click(function(){
 		var param_itemSelector = {
-			item:item, 
+			item:item,
 			uniqueID: that.param.uniqueID,
 		}
+		if(taskid == 'new'){ param_itemSelector.item = Lincko.storage.get(item['_type'], item['_id']); }
 		if(item['_type'] == 'notes'){
 			param_itemSelector.hideType = { notes: true };
 		}
