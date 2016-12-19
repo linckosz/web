@@ -2133,6 +2133,26 @@ Submenu.prototype.Add_taskdetail = function() {
 						addTo_linksWrapper(elem, 'notes', id);
 					}
 				});
+
+
+				/*var linkCount = 0;
+				$.each(item._files, function(id, obj){
+					var file = Lincko.storage.get('files', id);
+					if(file && !file.deleted_at && !elem.find('[files_id='+id+']').length){
+						addTo_linksWrapper(elem, 'files', id);
+						linkCount++;
+					}
+				});
+				$.each(item._notes, function(id, obj){
+					var note = Lincko.storage.get('files', id);
+					if(note && !note.deleted_at && !elem.find('[notes_id='+id+']').length){
+						addTo_linksWrapper(elem, 'notes', id);
+						linkCount++;
+					}
+				});
+
+				elem.find('[find=linkCount]').text(linkCount);*/
+
 			}
 		);
 	}

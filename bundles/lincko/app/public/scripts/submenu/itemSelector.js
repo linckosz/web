@@ -66,7 +66,13 @@ submenu_list['itemSelector'] = {
 					item_current['_notes'][id] = { access: true };
 				});
 
-				app_application_lincko.prepare(subm.param.item['_type']+'_'+subm.param.item['_id'], true);
+				
+				var param_prepare_sub = {};
+				if(!$.isEmptyObject(selection.files)){ param_prepare_sub._files = true; }
+				if(!$.isEmptyObject(selection.notes)){ param_prepare_sub._notes = true; }
+				var param_prepare = {};
+				param_prepare[subm.param.item['_type']+'_'+subm.param.item['_id']] = param_prepare_sub;
+				app_application_lincko.prepare(subm.param.item['_type']+'_'+subm.param.item['_id'], true, param_prepare);
 
 				wrapper_sendAction({
 					id: subm.param.item['_id'],
