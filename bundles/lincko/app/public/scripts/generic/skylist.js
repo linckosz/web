@@ -1677,14 +1677,20 @@ skylist.prototype.addTask = function(item){
 	/*
 	links
 	*/
+	var fileCount = 0;
+	var noteCount = 0;
 	var linkCount = 0;
-	var item_linked = Lincko.storage.list_links(item._type, item._id);
-	if(item_linked){
-		$.each(item_linked, function(cat, obj){
-			linkCount += Object.keys(obj).length;
-		});
-	}
+	$.each(item._files, function(id, obj){
+		var file = Lincko.storage.get('files', id);
+		if(file && !file.deleted_at){ fileCount++; }
+	});
+	$.each(item._notes, function(id, obj){
+		var note = Lincko.storage.get('notes', id);
+		if(note && !note.deleted_at){ noteCount++; }
+	});
+	linkCount = fileCount + noteCount;
 	Elem.find('[find=linkCount]').text(linkCount);
+
 
 	if(that.Lincko_itemsList_filter.view == 'paper'){
 		var elem_expandable_links = Elem.find('[find=expandable_links]')
@@ -1705,18 +1711,14 @@ skylist.prototype.addTask = function(item){
 			fadeScrollbars: true,
 		};
 		var elem_btn_addNew = elem_expandable_links.find('[find=btn_addNew]');
-		if(item._files){
-			$.each(item._files, function(fileID, obj){
-				var elem_linkbox = that.make_fileLinkbox(fileID);
-				if(elem_linkbox){
-					elem_btn_addNew.before(elem_linkbox);
-				}
-				return;
+		if(fileCount){
+			$.each(item._files, function(id, obj){
+				var file = Lincko.storage.get('files', id);
+				if(file && !file.deleted_at){ elem_btn_addNew.before(that.make_fileLinkbox(id)); }
 			});
 		}
-		if(item._notes){
-			var notesCount = Object.keys(item._notes).length;
-			elem_btn_addNew.before(that.make_noteLinkbox(notesCount, function(){Elem.click();}));
+		if(noteCount){
+			elem_btn_addNew.before(that.make_noteLinkbox(noteCount));
 		}
 
 		if(linkCount > 0){
