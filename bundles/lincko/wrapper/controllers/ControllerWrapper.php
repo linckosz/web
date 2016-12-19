@@ -11,10 +11,11 @@ class ControllerWrapper extends Controller {
 
 	protected $app = NULL;
 	protected $action = NULL;
-	protected $resignin = false; //It should not, but avoid to loop
+	protected $resignin = 1; //Number of retries allowed in case of resign asked
 	protected $form_id = false;
 	protected $show_error = false;
 	protected $print = true;
+	protected $format = false;
 
 	protected $json = array(
 		'api_key' => '', //Software authorization key
@@ -27,9 +28,16 @@ class ControllerWrapper extends Controller {
 		'workspace' => '', //the url (=ID unique string) of the workspace, by default use "Shared workspace"
 	);
 
-	public function __construct($data_bis=false, $force_method=false, $print=true){
+	public function __construct($data_bis=false, $force_method=false, $print=true, $format=false){
 		$app = $this->app = \Slim\Slim::getInstance();
 		$this->print = $print;
+		if($print){
+			if($format=='js'){
+				$app->response->headers->set('Content-Type', 'application/javascript');
+				$app->response->headers->set('Cache-Control', 'no-cache, must-revalidate');
+				$app->response->headers->set('Expires', 'Fri, 12 Aug 2011 14:57:00 GMT');
+			}
+		}
 		$data = (array)json_decode($app->request->getBody());
 		foreach ($data as $value) {
 			$this->json['data'][$value->name] = $value->value;
@@ -116,10 +124,12 @@ class ControllerWrapper extends Controller {
 		}
 
 		if($verbose_show){
+			\libs\Watch::php(json_decode($data), $url, __FILE__, __LINE__, false, false, true);
 			\libs\Watch::php(curl_getinfo($ch), '$ch', __FILE__, __LINE__, false, false, true);
 			rewind($verbose);
 			\libs\Watch::php(stream_get_contents($verbose), '$verbose', __FILE__, __LINE__, false, false, true);
 			fclose($verbose);
+			\libs\Watch::php($json_result, '$json_result', __FILE__, __LINE__, false, false, true);
 		}
 
 		@curl_close($ch);
@@ -133,9 +143,16 @@ class ControllerWrapper extends Controller {
 
 			if(isset($json_result->flash)){
 
-				//In case we accept to try to relog
-				if(!$this->resignin && isset($json_result->flash) && isset($json_result->flash->resignin) && $json_result->flash->resignin===true){
-					return $this->reSignIn();
+				if(isset($json_result->flash) && isset($json_result->flash->resignin) && $json_result->flash->resignin===true){
+					//In case we accept to try to relog
+					if($this->resignin>0){
+						return $this->reSignIn();
+					}
+					//In case we finish to try
+					else {
+						$this->signOut(true);
+						$json_result->signout = true;
+					}
 				}
 				//In case of Access unauthorize, we force to sign out the user
 				else if(isset($json_result->flash->signout) && $json_result->flash->signout===true){
@@ -147,7 +164,7 @@ class ControllerWrapper extends Controller {
 					$_SESSION['public_key'] = $json_result->flash->public_key;
 					$_SESSION['private_key'] = $json_result->flash->private_key;
 					if(!isset($json_result->shangzai)){ $json_result->shangzai = new \stdClass; }
-					$json_result->shangzai->puk = Datassl::encrypt($_SESSION['public_key'], $app->lincko->security['private_key']);
+					$json_result->shangzai->puk = Datassl::encrypt($_SESSION['public_key'], $app->lincko->security['private_key']); //toto => may be can use pukpik (more stable)
 				}
 
 				if($this->print){
@@ -157,10 +174,17 @@ class ControllerWrapper extends Controller {
 						OneSeventySeven::set(array('sha' => substr($json_result->flash->username_sha1, 0, 20))); //Truncate to 20 character because phone alias notification limitation
 						OneSeventySeven::set(array('uid' => $json_result->flash->uid));
 					}
+					//Helps to not keep real creadential information on user computer, but only an encrypted code
+					if(isset($json_result->flash->log_id)){
+						OneSeventySeven::set(array('hahaha' => $json_result->flash->log_id));
+					}
 					//After signin, it return the username, it's only used once to display the user name faster than the local storage.
 					//It's almost useless
 					if(isset($json_result->flash->username)){
 						OneSeventySeven::set(array('yonghu' => $json_result->flash->username));
+					}
+					if(isset($json_result->flash->pukpic)){
+						OneSeventySeven::set(array('pukpic' => $json_result->flash->pukpic));
 					}
 					unset($json_result->flash);
 				}
@@ -173,7 +197,11 @@ class ControllerWrapper extends Controller {
 			$json_result->language = $this->json['language'];
 			
 			if($this->print){
-				print_r(json_encode($json_result)); //production output
+				if($this->format=='js'){ //javascript
+					echo 'wrapper_js_response = '.convertToJS($json_result);
+				} else { //default is json
+					print_r(json_encode($json_result)); //production output
+				}
 				//print_r($json_result->msg); //for test
 				//print_r($result); //for test
 				//print_r($json_result); //for test
@@ -184,6 +212,9 @@ class ControllerWrapper extends Controller {
 		} else if($this->show_error){
 			$echo = '{"show":"'.$app->trans->getJSON('wrapper', 1, 6).'","msg":"'.$app->trans->getJSON('wrapper', 1, 3).'","error":true,"status":500}';
 			if($this->print){
+				if($this->format=='js'){ //javascript
+					$echo = 'wrapper_js_response = '.$echo;
+				}
 				echo $echo;
 				return false;
 			}
@@ -192,6 +223,9 @@ class ControllerWrapper extends Controller {
 
 		$echo = '{"show":false,"msg":"'.$app->trans->getJSON('wrapper', 1, 3).'","error":true,"status":500}';
 		if($this->print){
+			if($this->format=='js'){ //javascript
+				$echo = 'wrapper_js_response = '.$echo;
+			}
 			echo $echo;
 			return false;
 		}
@@ -203,9 +237,8 @@ class ControllerWrapper extends Controller {
 		$app = $this->app;
 		$this->setupKeys();
 		if($_SESSION['public_key'] == $app->lincko->security['public_key'] && $_SESSION['private_key'] == $app->lincko->security['private_key']){
-			if(OneSeventySeven::get('youjian') && OneSeventySeven::get('lianke')){
-				$this->json['data']['email'] = OneSeventySeven::get('youjian');
-				$this->json['data']['password'] = OneSeventySeven::get('lianke');
+			if($log_id = OneSeventySeven::get('hahaha')){
+				$this->json['data']['log_id'] = $log_id;
 				return true;
 			}
 			$this->signOut();
@@ -217,14 +250,17 @@ class ControllerWrapper extends Controller {
 	protected function reSignIn(){
 		$app = $this->app;
 		$this->resetKeys();
-		if(!$this->resignin){ //Avoid a loop
-			$this->resignin = true;
+		if($this->resignin>0){ //Avoid a loop
+			$this->resignin--;
 			$this->autoSign();
 			$this->prepareJson();
 			return $this->sendCurl(true);
 		} else {
 			$echo = '{"show":"'.$app->trans->getJSON('wrapper', 1, 6).'","msg":"'.$app->trans->getJSON('wrapper', 1, 3).'","error":true,"status":500}';
 			if($this->print){
+				if($this->format=='js'){ //javascript
+					$echo = 'wrapper_js_response = '.$echo;
+				}
 				return $echo;
 			}
 			return json_decode($echo);
@@ -307,7 +343,6 @@ class ControllerWrapper extends Controller {
 
 			OneSeventySeven::set(array(
 				'youjian' => $this->json['data']['email'],
-				'lianke' => $this->json['data']['password'],
 			));
 			
 			//Add Cookies if Remember
@@ -324,6 +359,9 @@ class ControllerWrapper extends Controller {
 					if(intval($this->json['data']['captcha']) !== $_SESSION['wrapper_captcha']){
 						$echo = '{"msg":{ "msg": "'.$app->trans->getJSON('wrapper', 1, 4).'", "field": "captcha" }, "error":true, "status":400}'; //The Captcha code does not match.
 						if($this->print){
+							if($this->format=='js'){ //javascript
+								$echo = 'wrapper_js_response = '.$echo;
+							}
 							echo $echo;
 							return true;
 						}
@@ -333,6 +371,9 @@ class ControllerWrapper extends Controller {
 					$app->lincko->translation['captcha_timing'] = Creation::remainTime();
 					$echo = '{"msg":{ "msg": "'.$app->trans->getJSON('wrapper', 1, 5).'", "field": "captcha" }, "error":true, "status":400}'; //You need to wait 5 minutes before to be able to create another account. Thank you for your patience.
 					if($this->print){
+						if($this->format=='js'){ //javascript
+							$echo = 'wrapper_js_response = '.$echo;
+						}
 						echo $echo;
 						return true;
 					}
@@ -345,9 +386,9 @@ class ControllerWrapper extends Controller {
 			$this->json['data']['password'] = Datassl::encrypt($this->json['data']['password'], $this->json['data']['email']);
 
 			$this->signOut(true);
+
 			OneSeventySeven::set(array(
 				'youjian' => $this->json['data']['email'],
-				'lianke' => $this->json['data']['password'],
 				'jizhu' => true,
 			));
 

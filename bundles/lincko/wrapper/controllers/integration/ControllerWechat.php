@@ -83,7 +83,7 @@ class ControllerWechat extends Controller {
 						));
 					}
 				}
-				bundles\lincko\wrapper\hooks\SetData(); //used to help log in immediatly
+				\bundles\lincko\wrapper\hooks\SetData(); //used to help log in immediatly
 			}
 		} else {
 			$response = false;

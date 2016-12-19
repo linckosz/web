@@ -33,6 +33,16 @@ var app_models_history = {
 		if(typeof link == "undefined"){ link = false; }
 		if(typeof timeout == "undefined"){ timeout = 8; }
 		if(typeof icon == "undefined"){ icon = "favicon.png"; }
+		if(typeof message == 'string' || typeof message == 'number'){
+			message = $('<div>'+message+'</div>').text();
+		} else {
+			message = message.text();
+		}
+		if(typeof title == 'string' || typeof title == 'number'){
+			title = $('<div>'+title+'</div>').text();
+		} else {
+			title = title.text();
+		}
 		var options = {
 			body: message,
 			icon: icon,
@@ -75,10 +85,12 @@ var app_models_history = {
 		var item = false;
 		var users;
 		var parent;
+		var task;
 		var title;
 		var username;
 		var msg;
 		var sentence;
+		var keep;
 		if(lastvisit>0){
 			//Grab Task notifications
 			if(typeof items['tasks'] != 'undefined'){
@@ -167,7 +179,7 @@ var app_models_history = {
 
 			//Grab Comments notifications
 			if(typeof items['comments'] != 'undefined'){
-				hist = Lincko.storage.hist('comments', null, {att: 'created_at', par_type: 'projects', by: ['!=', wrapper_localstorage.uid], timestamp: ['>', lastvisit]});
+				hist = Lincko.storage.hist('comments', null, {att: 'created_at', par_type: ['in', ['projects', 'comments', 'tasks']], by: ['!=', wrapper_localstorage.uid], timestamp: ['>', lastvisit]});
 				//hist = Lincko.storage.hist('comments', null, {att: 'created_at', par_type: 'projects', timestamp: ['>', lastvisit]}); //For debugging only
 				if(hist.length>0){
 					for(var i in hist){
@@ -179,8 +191,13 @@ var app_models_history = {
 						//Do not display if the parent is silence
 						users = false;
 						parent = Lincko.storage.get(hist[i]["par_type"], hist[i]["par_id"]);
-						if(parent){
-							users = parent["_users"];
+						var project_id = Lincko.storage.isProjectActivity('comments', hist[i]['id']);
+						var project = false;
+						if(project_id){
+							var project = Lincko.storage.get('projects', project_id);
+						}
+						if(project){
+							users = project["_users"];
 							if(users && users[wrapper_localstorage.uid] && users[wrapper_localstorage.uid]["silence"]){
 								continue;
 							} else if(!users){
@@ -196,19 +213,84 @@ var app_models_history = {
 						if(users && users[wrapper_localstorage.uid]){
 							msg = '';
 							if(hist[i]['by']){
-								username = Lincko.storage.get("users", hist[i]['by'], "username");
-								sentence = $(app_models_resume_format_sentence(hist[i]['id'])).text();
-								msg = wrapper_to_html(username)+": "+sentence;
-							} else {
-								if(item['comment'].indexOf('{"0":{')!==0 && item['comment'].indexOf('"'+wrapper_localstorage.uid+'":{')){
+								username = wrapper_to_html(Lincko.storage.get("users", hist[i]['by'], "username"));
+								if($.inArray(hist[i]['cod'], [202, 203, 298, 299]) < 0){
+									msg = username+": "+item['+comment'];
+								} else {
+									sentence = app_models_resume_format_sentence(hist[i]['id']);
+									if(typeof sentence == 'string' || typeof sentence == 'number'){
+										sentence = $('<div>'+sentence+'</div>').text();
+									} else {
+										sentence = sentence.text();
+									}
+									msg = username+": "+sentence;
+								}
+								//Any comment on projects itself => no restriction
+								if(parent["_type"]=='projects'){
+									title = wrapper_to_html(parent["+title"]);
+								}
+								//Any comment on a task assigned or in_charge
+								else if(parent["_type"]=='tasks'){
+									title = wrapper_to_html(parent["+title"]);
+									task = Lincko.storage.get('tasks', parent["_id"]);
+									users = task['_users'];
+									if(users && users[wrapper_localstorage.uid] && (users[wrapper_localstorage.uid]["in_charge"] || users[wrapper_localstorage.uid]["approver"])){
+										//Do nothing to make sure we keep the comment
+									} else {
+										continue;
+									}
+								}
+								//Any reply on a comment
+								else if(parent["_type"]=='comments'){
+									sentence = Lincko.storage.getHistoryInfo(hist[i]).title; //It already includes username inside
+									if(typeof sentence == 'string' || typeof sentence == 'number'){
+										msg = $('<div>'+sentence+'</div>').text();
+									} else {
+										msg = sentence.text();
+									}
+									msg = item['+comment'];
+									keep = false;
+									var k = 1000;
+									while(k>0 && !keep && parent["_type"]=='comments'){
+										k--; //Make sur we don't go inside an infnte loop
+										if(parent["created_by"]==wrapper_localstorage.uid){
+											keep = true;
+										}
+										parent = Lincko.storage.getParent(parent["_type"], parent["_id"]);
+										if(parent["_type"]=='tasks'){
+											title = wrapper_to_html(parent["+title"]);
+											msg = username+": "+item['+comment'];
+											task = Lincko.storage.get('tasks', parent["_id"]);
+											users = task['_users'];
+											if(users && users[wrapper_localstorage.uid] && (users[wrapper_localstorage.uid]["in_charge"] || users[wrapper_localstorage.uid]["approver"])){
+												keep = true;
+											} else {
+												continue;
+											}
+										} else if(parent["_type"]=='projects'){
+											title = wrapper_to_html(parent["+title"]);
+											msg = username+": "+item['+comment'];
+										}
+									}
+									if(!keep){
+										continue;
+									}
+								}
+							} else { //LinckoBot
+								if(item['+comment'].indexOf('{"0":{')!==0 && item['+comment'].indexOf('"'+wrapper_localstorage.uid+'":{')){
 									continue;
 								}
-								username = Lincko.Translation.get('app', 0, 'html'); //LinckoBot
-								msg = $(app_models_resume_format_sentence(hist[i]['id'])).text();
+								username = wrapper_to_html(Lincko.Translation.get('app', 0, 'html')); //LinckoBot
+								msg = app_models_resume_format_sentence(hist[i]['id']);
+								if(typeof msg == 'string' || typeof msg == 'number'){
+									msg = $('<div>'+msg+'</div>').text();
+								} else {
+									msg = msg.text();
+								}
 							}
 							app_models_history.notify(
 								msg,
-								wrapper_to_html(parent["+title"]),
+								title,
 								"comments-"+hist[i]['id']
 							);
 						}
@@ -533,7 +615,11 @@ var app_models_history = {
 								//We don't display the message that the user is not concerned
 								continue;
 							}
-							info[i].content = sentence.text();
+							if(typeof sentence == 'string' || typeof sentence == 'number'){
+								info[i].content = $('<div>'+sentence+'</div>').text();
+							} else {
+								info[i].content = sentence.text();
+							}
 						} else if(root_item["single"]){ //Single user to Single User
 							comment = Lincko.storage.get("comments", hist_all[i]["id"]);
 							if(comment['recalled_by']){
