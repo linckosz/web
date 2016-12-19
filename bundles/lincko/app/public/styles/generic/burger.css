@@ -63,17 +63,19 @@
 }
 .burger_option_users [find=text] {
 	display: inline-block;
-	/*line-height: 40px;*/
+	line-height: 40px;
 	vertical-align: middle;
 	font-size: 20px;
 	color: #3F84B0;
+	width: 100px;
+	white-space: nowrap;
+}
+.burger_dropdown .burger_option_users [find=text]{
 	width: 135px;
-	/*white-space: nowrap;*/
 	white-space: normal;
     line-height: 20px;
     max-height: 36px;
 }
-
 .burger_option_inviteUser{
 	border-top: 1px solid rgba(63,132,176,.5);
     box-sizing: border-box;

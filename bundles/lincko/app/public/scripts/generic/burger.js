@@ -113,7 +113,7 @@ var burger_attach_clickHandler = {
 		elem.off('click.burger').on('click.burger', function(){
 			if( (!dropdownInst || dropdownInst.destroyed) && 
 				(lincko_id == 'new' || !lincko_id || Lincko.storage.canI('edit', lincko_type, lincko_id))){
-
+				
 				if(responsiveRange == true || responsive.test(responsiveRange)){
 					dropdownInst = new burger_dropdown('toto', list, elem, null, null, cb_select, null, false); 
 				}
@@ -136,6 +136,15 @@ var burger_attach_clickHandler = {
 					param.cb_create = cb_create;
 					param.cb_select = cb_select;
 					param.cb_destroy = cb_destroy;
+
+					var lincko_item = Lincko.storage.get(lincko_type, lincko_id);
+					var project_id = null;
+					if(lincko_type == 'projects'){ project_id = lincko_id; }
+					else if(lincko_item && lincko_item['_parent'] && lincko_item['_parent'][0] == 'projects'){
+						project_id = lincko_item['_parent'][1];
+					}
+					if(project_id){ param.project_id = project_id; }
+
 					submenu_Build('burger_clickHandler_inCharge', true, null, param);
 				}				
 			}
@@ -703,7 +712,7 @@ burger_dropdown.prototype.build_elem = function(){
     elem_dropdown.focus(function(){
     })
     elem_dropdown.blur(function(){
-    	//that.hide();
+    	that.hide();
     });
 
     elem_dropdown.find('.burger_option').hover(function(){ //hoverin

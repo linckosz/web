@@ -15,6 +15,14 @@ submenu_list['app_projects_users_contacts'] = {
 			app_projects_users_contacts_init(subm);
 		},
 	},
+	"right_button": {
+		"style": "title_right_button",
+		"title": "",
+		"class": "base_pointer icon-AddPerson submenu_app_chat_title_right_button",
+		"action": function(Elem, subm) {
+			submenu_Build('chat_add_user', subm.layer+1, true, null, subm.preview)
+		},
+	},
 };
 
 var app_projects_users_contacts_list = {}; //toto => this is a bad design to store multiple selection, we should send value to previous submenu in somehow

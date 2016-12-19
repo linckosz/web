@@ -643,7 +643,12 @@ Submenu.prototype.Add_ContactContents = function(live) {
 	}
 
 	var elem_inviteUser = $('<div class="submenu_contacts_inviteUser">Invite new user</div>'/*toto*/).click(function(){
-		submenu_Build("chat_add_user", true, false, true);
+		if(that.param.project_id){
+			submenu_Build('app_projects_users_contacts', true, false, that.param.project_id);
+		}
+		else{
+			submenu_Build("chat_add_user", true, false, true);
+		}		
 	});
 	elem_inviteUser.prepend('<span find="icon" class="icon-AddPerson"></span>');
 	position.append(elem_inviteUser);
