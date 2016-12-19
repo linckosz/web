@@ -460,6 +460,7 @@ burger_list.in_charge = function(lincko_type, lincko_id){
 			val: userid,
 			text: Lincko.storage.get("users", userid,"username"),
 			imgURL: Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", userid, 'profile_pic')),
+			addClass: 'burger_option_users',
 		};
 
 		if( $.type(item) == 'object' && item['_users']  && userid in item['_users'] && item['_users'][userid]['in_charge'] ){
@@ -489,13 +490,8 @@ burger_list.in_charge = function(lincko_type, lincko_id){
 		},
 		imgIcon: 'icon-AddPerson',
 		imgURL: false,
-		addClass: 'burger_option_inviteUser',
+		addClass: 'burger_option_users burger_option_inviteUser',
 	}
-
-	
-
-
-
 
 	userList.push(inviteNewUser);
 
@@ -525,6 +521,7 @@ burger_list.projects = function(lincko_type, lincko_id){
 						val: project['_id'],
 						preSelect: id_preSelect == project['_id'],
 						latestProjects: true,
+						addClass: 'burger_option_projects',
 					}
 				);
 			}
@@ -545,6 +542,7 @@ burger_list.projects = function(lincko_type, lincko_id){
 			preSelect: id_preSelect == project_personal['_id'],
 			latestProjects: false,
 			personal: true,
+			addClass: 'burger_option_projects',
 		}
 	);
 
@@ -562,6 +560,7 @@ burger_list.projects = function(lincko_type, lincko_id){
 					val: project['_id'],
 					preSelect: id_preSelect == project['_id'],
 					latestProjects: false,
+					addClass: 'burger_option_projects',
 				}
 			);
 		}	
@@ -712,7 +711,7 @@ burger_dropdown.prototype.build_elem = function(){
     elem_dropdown.focus(function(){
     })
     elem_dropdown.blur(function(){
-    	that.hide();
+    	//that.hide();
     });
 
     elem_dropdown.find('.burger_option').hover(function(){ //hoverin
@@ -785,7 +784,7 @@ burger_dropdown.prototype.build_elem_data = function(){
 	var data = that.data;
 
 	var elem_dropdown = $('#-burger_dropdown').clone().prop('id','');
-	var elem_option = $('#-burger_option').clone().prop('id','').addClass('burger_option_users');
+	var elem_option = $('#-burger_option').clone().prop('id','');//.addClass('burger_option_users');
 
 	//if there is no contacts to display
 	if(data.length < 1){
