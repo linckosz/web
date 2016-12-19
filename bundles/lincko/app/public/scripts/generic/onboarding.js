@@ -976,7 +976,7 @@ onboarding.scripts['welcome'] = function(project_id){
 
 			if(responsive.test("maxMobileL")){
 				this.tripData[0].position = 's';
-				this.tripData[1].position = 'n';
+				this.tripData[1].position = 's';
 			}
 			else{
 				this.tripData[0].content = '<div style="height: 100px;"></div>';
