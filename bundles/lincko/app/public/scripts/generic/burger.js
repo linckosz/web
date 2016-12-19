@@ -711,7 +711,7 @@ burger_dropdown.prototype.build_elem = function(){
     elem_dropdown.focus(function(){
     })
     elem_dropdown.blur(function(){
-    	//that.hide();
+    	that.hide();
     });
 
     elem_dropdown.find('.burger_option').hover(function(){ //hoverin
@@ -1569,7 +1569,7 @@ burgerN.regex = function(elem, item, param){
 			}
 			if((event.which || event.keyCode) == 13 || (event.which || event.keyCode) == 9){ //if enter or tab is pressed
 				event.preventDefault();
-				var elem_options = elem_dropdown.find('.burger_option_users');
+				var elem_options = elem_dropdown.find('.burger_option');
 				if(elem_options.length){
 					$(elem_options[0]).mousedown();
 					return;
@@ -1882,7 +1882,7 @@ burgerN.assignProject = function(elem, item){
 burgerN.draw_dates = function(substr, option_fn){
 	var that = this;
 	var elem_dropdown = burgerN.elem_dropdown.clone();
-	var elem_option = $('#-burger_option').clone().prop('id','').addClass('burger_option_users');
+	var elem_option = $('#-burger_option').clone().prop('id','');//.addClass('burger_option_users');
 	var elem_option_clone;
 
 	//for chinese, convert chinese character and pinyin to numbers
@@ -2049,7 +2049,7 @@ burgerN.draw_dates = function(substr, option_fn){
 
 	}//end of app_language_group == 2
 
-	var optionCount = elem_dropdown.find('.burger_option_users').length;
+	var optionCount = elem_dropdown.find('.burger_option').length;
 	if(!optionCount){
 		elem_option.find('[find=text]').html(Lincko.Translation.get('app', 2205, 'html'));/*no match*/
 		elem_option.find('[find=image]').addClass('display_none');
