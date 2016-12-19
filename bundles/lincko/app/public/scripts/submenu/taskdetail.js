@@ -2117,41 +2117,25 @@ Submenu.prototype.Add_taskdetail = function() {
 				}
 
 				var linkCount = 0;
-				if(item._files){ linkCount += Object.keys(item._files).length; }
-				if(item._notes){ linkCount += Object.keys(item._notes).length; }
-				elem.find('[find=linkCount]').text(linkCount);
-
-				$.each(item._files, function(id, obj){
-					var elem_linkCard = elem.find('[files_id='+id+']');
-					if(!elem_linkCard.length){
-						addTo_linksWrapper(elem, 'files', id);
-					}
-				});
-				$.each(item._notes, function(id, obj){
-					var elem_linkCard = elem.find('[notes_id='+id+']');
-					if(!elem_linkCard.length){
-						addTo_linksWrapper(elem, 'notes', id);
-					}
-				});
-
-
-				/*var linkCount = 0;
 				$.each(item._files, function(id, obj){
 					var file = Lincko.storage.get('files', id);
-					if(file && !file.deleted_at && !elem.find('[files_id='+id+']').length){
-						addTo_linksWrapper(elem, 'files', id);
-						linkCount++;
-					}
-				});
-				$.each(item._notes, function(id, obj){
-					var note = Lincko.storage.get('files', id);
-					if(note && !note.deleted_at && !elem.find('[notes_id='+id+']').length){
-						addTo_linksWrapper(elem, 'notes', id);
-						linkCount++;
+					if(file && !file.deleted_at){ linkCount++;
+						if(!elem.find('[files_id='+id+']').length){
+							addTo_linksWrapper(elem, 'files', id);
+						}
 					}
 				});
 
-				elem.find('[find=linkCount]').text(linkCount);*/
+				$.each(item._notes, function(id, obj){
+					var note = Lincko.storage.get('notes', id);
+					if(note && !note.deleted_at){ linkCount++;
+						if(!elem.find('[notes_id='+id+']').length){
+							addTo_linksWrapper(elem, 'notes', id);
+						}
+					}
+				});
+
+				elem.find('[find=linkCount]').text(linkCount);
 
 			}
 		);
