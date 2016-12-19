@@ -2112,9 +2112,7 @@ Submenu.prototype.Add_taskdetail = function() {
 				}
 
 
-				if(!item._files && !item._notes){
-					return;
-				}
+				if(!item._files && !item._notes){ return; }
 
 				var linkCount = 0;
 				$.each(item._files, function(id, obj){

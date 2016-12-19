@@ -18,7 +18,7 @@ var skylist_textDate = function(date){
 		return Lincko.Translation.get('app', 3304, 'html').toUpperCase()/*yesterday*/;
 	}
 	else{
-		false;
+		return false;
 	}
 }
 
@@ -1105,6 +1105,7 @@ skylist.prototype.paperview_partialUpdate = function(updated_tasks){
 		'+title': true,
 		'-comment': true,
 		_files : true,
+		_notes : true,
 		_children : true, //(i.e. comments)
 		_users : true,
 		duration: true,
@@ -1172,11 +1173,27 @@ skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
 		var elem_expandable_links_id = elem_expandable_links.prop('id');
 		var elem_expandable_links_addNew = elem_expandable_links.find('[find=btn_addNew]');
 
-		if(updated._files){		
-			if(elem_expandable_links.children('.iscroll_sub_div').length){
-				elem_expandable_links = elem_expandable_links.children('.iscroll_sub_div');
-			}
+		if(elem_expandable_links.children('.iscroll_sub_div').length){
+			elem_expandable_links = elem_expandable_links.children('.iscroll_sub_div');
+		}
 
+		//update count
+		var fileCount = 0;
+		var noteCount = 0;
+		var linkCount = 0;
+		$.each(item._files, function(id, obj){
+			var file = Lincko.storage.get('files', id);
+			if(file && !file.deleted_at){ fileCount++; }
+		});
+		$.each(item._notes, function(id, obj){
+			var note = Lincko.storage.get('notes', id);
+			if(note && !note.deleted_at){ noteCount++; }
+		});
+		linkCount = fileCount + noteCount;
+		elem.find('[find=linkCount]').text(linkCount);
+
+
+		if(typeof updated == 'boolean' || updated._files){		
 			$.each(item._files, function(fileID, obj){
 				var elem_linkboxExist = elem_expandable_links.children('[_files='+fileID+']');
 				if(elem_linkboxExist.length){ return; }
@@ -1195,38 +1212,45 @@ skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
 						elem_expandable_links_addNew.before(elem_linkboxNew);
 					}
 				}
-
 			});
-		}
 
-		//update count
-		var linkCount = 0;
-		if(item._files){
-			linkCount += Object.keys(item._files).length;
+			//check and remove no longer existing file links
+			var elem_fileboxExist = elem_expandable_links.children('[_files]');
+			if(elem_fileboxExist.length){
+				if(fileCount < 1){
+					elem_fileboxExist.recursiveRemove(0);
+				}
+				else{
+					$.each(elem_fileboxExist, function(i, elem){
+						var elem = $(elem);
+						if(!item._files[elem.attr('_files')]){
+							elem.recursiveRemove(0);
+						}
+					});
+				}
+			}
 		}
-		if(item._notes){
-			linkCount += Object.keys(item._notes).length;
-		}	
-		elem.find('[find=linkCount]').text(linkCount);
-
-		//check and remove no longer existing file links
-		var elem_fileboxExist = elem_expandable_links.children('[_files]');
-		if(elem_fileboxExist.length){
-			if(!item._files){
-				elem_fileboxExist.recursiveRemove(0);
+		
+		if(typeof updated == 'boolean' || updated._notes){
+			var elem_notebox = elem_expandable_links.children('[find=notes]');
+			if(noteCount < 1){
+				elem_notebox.recursiveRemove(0);
+			}
+			else if(elem_notebox.length){
+				elem_notebox.find('[find=count]').text(noteCount);
 			}
 			else{
-				$.each(elem_fileboxExist, function(i, elem){
-					var elem = $(elem);
-					if(!item._files[elem.attr('_files')]){
-						elem.recursiveRemove(0);
-					}
-				});
+				elem_expandable_links_addNew.before(that.make_noteLinkbox(noteCount));
+				
 			}
 		}
 
+
 		//if first file added, reset the buttons and open the expandable
-		if(linkCount == 1){
+		if(linkCount < 1){
+			that.paperView_toggleExpandable($('#'+elem_expandable_links_id), false);
+		}
+		else if(linkCount == 1){
 			elem_card_rightbox.find('[find=links_icon]').removeClass('skylist_greyColor');
 			elem_expandable_links_addNew.click(function(event){
 				event.stopPropagation();
@@ -1243,6 +1267,8 @@ skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
 				event.stopPropagation();
 				that.paperView_toggleExpandable($('#'+elem_expandable_links_id));
 			});
+
+			that.paperView_toggleExpandable($('#'+elem_expandable_links_id), true);
 		}
 
 
@@ -1621,7 +1647,7 @@ skylist.prototype.addTask = function(item){
 			that.paperView_toggleExpandable(elem_expandable_comments);
 		}
 		else{
-			that.paperView_toggleExpandable(elem_expandable_comments, cb_complete);
+			that.paperView_toggleExpandable(elem_expandable_comments, null, cb_complete);
 		}
 	});
 
@@ -2645,10 +2671,18 @@ skylist.prototype.taskClick = function(event,task_elem){
 	|	BEGIN paperview methods		|
 	---------------------------------
 */
-skylist.prototype.paperView_toggleExpandable = function(elem_expandable, cb_complete){
+skylist.prototype.paperView_toggleExpandable = function(elem_expandable, forceOpenClose, cb_complete){
 	var that = this;
+
+	var forceOpen = false;
+	var forceClose = false;
+	if(typeof forceOpenClose == 'boolean'){ 
+		if(forceOpenClose){ forceOpen = true; }
+		else{ forceClose = true; }
+	}
+
 	elem_expandable.removeClass('display_none');
-	if(elem_expandable.css('display') != 'block'){
+	if(!forceClose && elem_expandable.css('display') != 'block'){
 		elem_expandable.velocity("slideDown", {
 			mobileHA: hasGood3Dsupport,
 			complete: function(){
@@ -2661,7 +2695,7 @@ skylist.prototype.paperView_toggleExpandable = function(elem_expandable, cb_comp
 			}
 		});
 	}
-	else{
+	else if(!forceOpen){
 		elem_expandable.velocity("slideUp", {
 			mobileHA: hasGood3Dsupport,
 			complete: function(){
