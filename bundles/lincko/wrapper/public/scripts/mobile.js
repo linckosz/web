@@ -9,7 +9,11 @@ function setMobileAlias(){
 	} else if(typeof iOS != 'undefined' ) {
 		//window.webkit.messageHandlers.iOS.postMessage(sha)
 		iOS.setAlias(sha);
-	} else if(typeof winPhone != 'undefined' ) {
+		//iOS.setAlias(sha);
+		//iOS.postMessage(sha);
+	}
+	if(typeof winPhone != 'undefined' )
+	{
 		winPhone.setAlias(sha);
 	}
 }

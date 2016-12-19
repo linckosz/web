@@ -187,8 +187,6 @@ function base_lincko_link_to_html(source)
 	// source = source.replace(reg, '<a target="_blank" href="$1$2">$1$2</a>');
 
 	//NOTE: DO NOT USE <a> or window.open(), USE device_download() INSTEAD !
-
-	return source;
 }
 
 

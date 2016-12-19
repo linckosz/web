@@ -18,6 +18,7 @@ var intro = {
 						line:13001,//"Who are you, LinckoBot?",
 						pointType:"script",
 						pointTo:1,
+						finger:"show",
 					},
 				],
 				head:"show",
@@ -33,6 +34,7 @@ var intro = {
 						line:13002,//"next",
 						pointType:"step",
 						pointTo:1,
+						finger:"show",
 					}
 				],
 				head:"hidden",
@@ -46,8 +48,10 @@ var intro = {
 						line:13002,//"next",
 						pointType:"step",
 						pointTo:2,
+						finger:"hidden",
 					}
 				],
+				finger:"hidden",
 				head:"show",
 			},
 		],
@@ -59,8 +63,10 @@ var intro = {
 						line:13002,//"next",
 						pointType:"step",
 						pointTo:3,
+						finger:"hidden",
 					}
 				],
+				finger:"hidden",
 				head:"show",
 			},
 		],
@@ -72,8 +78,10 @@ var intro = {
 						line:13002,//"next",
 						pointType:"step",
 						pointTo:4,
+						finger:"hidden",
 					}
 				],
+				finger:"hidden",
 				head:"show",
 			},
 		],
@@ -85,8 +93,10 @@ var intro = {
 						line:13002,//"next",
 						pointType:"step",
 						pointTo:5,
+						finger:"hidden",
 					}
 				],
+				finger:"hidden",
 				head:"show",
 			},
 		],
@@ -119,6 +129,7 @@ var intro = {
 						line:13003,//"Let's do this!",
 						pointType:"step",
 						pointTo:7,
+						finger:"hidden",
 					}
 				],
 				head:"hidden",
@@ -291,7 +302,7 @@ var intro = {
 		},speed);
 		return target;
 	},
-	collectOptions:function(options){
+	collectOptions:function(options,flag){
 		var wrapper = $("#body_models_intro_wrapper");
 		var target = $("#-models_intro_options").clone();
 		target.prop("id","models_intro_options");
@@ -343,21 +354,25 @@ var intro = {
 							fn();
 						}
 					}
+
+					$(this).closest('[find=options_content]').find("[find=finger]").remove();
 				});
 
 			},timer,i,options,item,target);
 
 			//finger()
-			var finger = $("#-models_intro_options_finger").clone();
-			finger.prop("id","");
-			item.before(finger);
-			var hand = finger.find("[find=hand]");
-			hand.addClass("display_none");
-			setTimeout(function(){
-				hand.removeClass("display_none");
-				hand.velocity({ left: "10px" }, {duration: 800,loop: true,});
-			},3000);
-			
+			if(options[i]["finger"]=="show")
+			{
+				var finger = $("#-models_intro_options_finger").clone();
+				finger.prop("id","");
+				item.before(finger);
+				var hand = finger.find("[find=hand]");
+				hand.addClass("display_none");
+				setTimeout(function(){
+					hand.removeClass("display_none");
+					hand.velocity({ left: "10px" }, {duration: 800,loop: true,});
+				},3000);
+			}
 		}
 	},
 	replaceOption:function(line,last){

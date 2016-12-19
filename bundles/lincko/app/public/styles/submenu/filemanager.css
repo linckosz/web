@@ -25,8 +25,21 @@ ul.file_manager_file_list li{
 	white-space:nowrap;
 }
 
+ul.file_manager_file_list li img{
+	position: relative;
+}
+
 .icon_file_manager_file_add{
 	
+}
+
+.file_manager_file_content_wrapper{
+	overflow: hidden;
+}
+
+.file_manager_file_item_border{
+	border:2px solid orange;
+	position:relative;
 }
 
 

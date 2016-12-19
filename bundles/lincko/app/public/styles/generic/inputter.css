@@ -263,13 +263,17 @@
 .inputter_uploading_wrapper ul{
 	height: auto;
 	text-align: left;
+	width:auto;
+	white-space:nowrap;
+	overflow: hidden;
+	display: inline-block;
 }
 
 .inputter_uploading_wrapper ul li
 {
 	height: 30px;
     text-align: center;
-    display: inline-block;
+	display: inline-block;
     width:auto;
     max-width: 50px;
     margin: 5px 5px;
@@ -286,6 +290,11 @@
 {
 	font-size: 30px;
 	line-height: 30px;
+}
+
+.files_queue_wrapper{
+	height: 40px;
+	width:100%;
 }
 
 .desktop_hide{
@@ -312,11 +321,13 @@
 	position: absolute;
 	font-size: 14px;
 	line-height: 14px;
-	top:-37px;
+	top:-35px;
 	right:-7px;
 	color: #53ADD2;
 	z-index:9999;
 	display: none;
+	background-color: white;
+	border-radius: 50%;
 }
 
 .inputter_element_uploading_item:hover .shortcut_remove{

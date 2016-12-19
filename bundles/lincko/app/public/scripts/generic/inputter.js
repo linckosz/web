@@ -154,6 +154,7 @@ inputter.prototype.clearContent = function()
 inputter.prototype.buildLayer = function()
 {
 
+
 	var that = this ;
 	var container = $('#-inputter_container').clone();
 	container.prop('id',this.panel_id+'_inputter_container');
@@ -168,6 +169,8 @@ inputter.prototype.buildLayer = function()
 	var line = this.layer.hasOwnProperty('top_line') && this.layer['top_line'] ? 1 : 0;
 	var mobile_line = this.layer.hasOwnProperty('mobile_top_line') && this.layer['mobile_top_line'] ? 1 : 0;
 	container.addClass('inputter_line_' + line + mobile_line);
+
+	container.find("[find=files_queue_wrapper]").eq(0).prop("id",this.panel_id + "_files_queue_wrapper");
 
 	var left_menu = container.find('[find=left_menu_wrapper]');
 	var right_menu = container.find('[find=right_menu_wrapper]');
@@ -302,6 +305,15 @@ inputter.prototype.buildLayer = function()
 						switch(this.elements_lib[elem]['target'])
 						{
 							case 'send':
+								if(this.hasTask)
+								{
+									item.attr("title",Lincko.Translation.get('app', 4001, 'js'));//Create the task 
+								}
+								else
+								{
+									item.attr("title",Lincko.Translation.get('app', 4002, 'js'));//Send
+								}
+								
 								if(this.layer['right_menu'][i][j].hasOwnProperty('click'))
 								{
 									item.click(this.layer['right_menu'][i][j]['click'],function(event){
@@ -350,11 +362,13 @@ inputter.prototype.buildLayer = function()
 										if(that.hasTask)
 										{
 											content.find('[find=chat_textarea]').get(0).innerText = Lincko.Translation.get('app', 2204, 'html');//type here to add a task
+											myIScrollList[that.panel_id+"_files_queue_wrapper"].refresh();
 										}
 									});
 								}
 								break;
 							case 'attachment' :
+								item.attr("title",Lincko.Translation.get('app', 4003, 'js'));//Attach a new file 
 								var auto_upload = this.layer.hasOwnProperty('auto_upload') ? this.layer['auto_upload'] : true;
 								item.click({'type':this.upload_ptype,'pid':this.upload_pid,'panel_id':this.panel_id,'position':this.position},function(event){
 								
@@ -507,11 +521,16 @@ inputter.prototype.buildLayer = function()
 												.find('.shortcut_ico')
 												.addClass('display_none')
 												.find('i')
-												.removeClass()
 												.addClass('fa')
 												.addClass('inputter_preview_icon');
 										}
-										
+
+										setTimeout(function(panel_id){
+											if(typeof myIScrollList[panel_id+"_files_queue_wrapper"] != "undefined")
+											{
+												myIScrollList[panel_id+"_files_queue_wrapper"].refresh();
+											}
+										},0,this.action_param[2]);
 									},[this.upload_ptype,this.upload_pid,this.panel_id]);
 									
 									
@@ -620,22 +639,19 @@ inputter.prototype.buildLayer = function()
 	});
 
 
-function cleanHtmlTag(source){
-	if(typeof removeBr == 'undefined') {
-		removeBr = true;
+	function cleanHtmlTag(source){
+		if(typeof removeBr == 'undefined') {
+			removeBr = true;
+		}
+
+		source = source.replace(/<\!\-\-([\s\S]*?)\-\->/gi,"");
+		//source = source.replace(/<(?!img|br|p|\/p).*?>/gi,"");
+		source = source.replace(/<(?!br|p|\/p).*?>/gi,"");
+		source = source.replace(/<p([\s\S]*?)>([\s\S]*?)<\/p>/gi,"$2<br/>");
+		source = source.replace(/[\r\n]/g, "");
+		return source;
 	}
 
-	source = source.replace(/<\!\-\-([\s\S]*?)\-\->/gi,"");
-	//source = source.replace(/<(?!img|br|p|\/p).*?>/gi,"");
-	source = source.replace(/<(?!br|p|\/p).*?>/gi,"");
-	source = source.replace(/<p([\s\S]*?)>([\s\S]*?)<\/p>/gi,"$2<br/>");
-	source = source.replace(/[\r\n]/g, "");
-	return source;
-}
-
-	
-	
-	
 	input.find('[find=chat_textarea]').on('paste',function(e,data){
 		var target = this;
 		setTimeout(function(){
@@ -759,7 +775,7 @@ function cleanHtmlTag(source){
 			}
 			else
 			{
-				var focus_help = $("<input/>");
+				var focus_help = $("<input readonly='readonly'/>");
 				focus_help.appendTo($("body"));
 				focus_help.focus();
 				focus_help.recursiveRemove(0);
@@ -770,13 +786,11 @@ function cleanHtmlTag(source){
 				$(this).html(defaultPhrase);
 			}
 
-		
-
 		});
 
 	}
 	
-
+	
 
 	
 	if(this.burger != null){
@@ -788,6 +802,14 @@ function cleanHtmlTag(source){
 	}
 
 	container.appendTo(this.position);
+	$('#'+this.panel_id + "_files_queue_wrapper").addClass("overthrow");
+	wrapper_IScroll_options_new[this.panel_id + "_files_queue_wrapper"] = { 
+		scrollX: true, 
+		scrollY: false, 
+		mouseWheel: true, 
+		fadeScrollbars: true,
+	};
+
 
 	container.on('resize',function(){
 		//dom.resize(); it will trigger the window.resize();
