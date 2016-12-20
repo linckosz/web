@@ -82,6 +82,20 @@ class ControllerWechat extends Controller {
 							'lianke' => $response->flash->lianke,
 						));
 					}
+
+					//Helps to not keep real creadential information on user computer, but only an encrypted code
+					if(isset($response->flash->log_id)){
+						OneSeventySeven::set(array('hahaha' => $response->flash->log_id));
+					}
+					//After signin, it return the username, it's only used once to display the user name faster than the local storage.
+					//It's almost useless
+					if(isset($response->flash->username)){
+						OneSeventySeven::set(array('yonghu' => $response->flash->username));
+					}
+					//Used to display/download files in a secured way and keep browser cache enable (same url)
+					if(isset($response->flash->pukpic)){
+						setcookie('pukpic', $response->flash->pukpic, time()+intval($app->lincko->security['expired']), '/', $app->lincko->domain);
+					}
 				}
 				\bundles\lincko\wrapper\hooks\SetData(); //used to help log in immediatly
 			}

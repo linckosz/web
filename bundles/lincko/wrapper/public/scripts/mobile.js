@@ -7,10 +7,10 @@ function setMobileAlias(){
 	if(typeof android != 'undefined' ) {
 		android.setAlias('android', sha);
 	} else if(typeof iOS != 'undefined' ) {
-		//window.webkit.messageHandlers.iOS.postMessage(sha)
-		iOS.setAlias(sha);
-		//iOS.setAlias(sha);
-		//iOS.postMessage(sha);
+		var obj = {
+			sha: sha,
+		}
+		window.webkit.messageHandlers.iOS.postMessage(obj);
 	}
 	if(typeof winPhone != 'undefined' )
 	{
@@ -40,8 +40,12 @@ function device_download(url, target, name){
 	if(typeof name == 'undefined'){ name = 'file'; }
 	if(typeof android != 'undefined' && typeof android.download == 'function') {
 		android.download(url);
-	} else if(typeof iOS != 'undefined' && typeof iOS.download == 'function') {
-		iOS.download(url);
+	} else if(typeof window.webkit != 'undefined' && typeof window.webkit.messageHandlers != 'undefined' && typeof window.webkit.messageHandlers.iOS != 'undefined') {
+		var obj = {
+			url: url,
+			cookie: document.cookie,
+		};
+		window.webkit.messageHandlers.iOS.postMessage(obj);
 	} else if(typeof winPhone != 'undefined' && typeof winPhone.download == 'function') {
 		winPhone.download(url);
 	} else {

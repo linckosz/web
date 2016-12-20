@@ -6,6 +6,7 @@ use \bundles\lincko\wrapper\models\Creation;
 use \libs\OneSeventySeven;
 use \libs\Controller;
 use \libs\Datassl;
+use \libs\STR;
 
 class ControllerWrapper extends Controller {
 
@@ -199,7 +200,8 @@ class ControllerWrapper extends Controller {
 			
 			if($this->print){
 				if($this->format=='js'){ //javascript
-					echo 'wrapper_js_response = '.convertToJS($json_result);
+					$echo = 'wrapper_js_response';
+					echo STR::convertToJS($json_result, $echo);
 				} else { //default is json
 					print_r(json_encode($json_result)); //production output
 				}

@@ -21,7 +21,7 @@ var wrapper_signout_cb_complete = function(){
 	$(document.body).css('cursor', '');
 	window.location.href = wrapper_link['home'];
 }
-
+var wrapper_js_response;
 function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_complete, ajax_objForm){
 	if(typeof cb_success==="undefined" || cb_success===null){ cb_success = function(){}; }
 	if(typeof cb_error==="undefined" || cb_error===null){ cb_error = function(){}; }
@@ -86,12 +86,14 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 			}
 			cb_begin(jqXHR, settings, temp_id);
 		},
+		/*
 		success: function(data){
 			//Those 3 following lines are only for debug purpose
 			//var msg = JSON.stringify(data); //for test
 			//var msg = data; //for test
 			//var msg = JSON.parse(data.msg); //for test
-
+			data = wrapper_js_response;
+			
 			//Get back the form object if it was sent from a form
 			wrapper_objForm = ajax_objForm;
 
@@ -147,6 +149,70 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 			}
 
 		},
+		*/
+		
+		success: function(data){
+			//Those 3 following lines are only for debug purpose
+			//var msg = JSON.stringify(data); //for test
+			//var msg = data; //for test
+			//var msg = JSON.parse(data.msg); //for test
+			
+			//Get back the form object if it was sent from a form
+			wrapper_objForm = ajax_objForm;
+
+			//This is importat because sometime in msg we return an object with some information inside
+			var msg = data.msg;
+			if(typeof data.show === 'string'){
+				msg = data.show;
+			} else if($.type(msg) === 'object' && msg.msg){
+				msg = msg.msg;
+			} else if(typeof msg !== 'string'){
+				msg = '';
+			}
+			if(data.error){
+				JSerror.sendError(JSON.stringify(data, null, 4), '/wrapper.js/wrapper_ajax().success()', 0);
+				console.log(data);
+			}
+			if(data.shangzai && data.shangzai.puk){
+				wrapper_shangzai = data.shangzai;
+				wrapper_localstorage.encrypt('shangzai', data.shangzai);
+				wrapper_set_shangzai = false;
+			}
+
+			if(data.show && typeof base_show_error === 'function'){
+				base_show_error(msg, data.error);
+			}
+
+			//Exit if we are signout
+			if(data.signout && !wrapper_signing_out && wrapper_localstorage.logged){
+				wrapper_signing_out = true; //Avoid a loop
+				if(data.show && typeof base_show_error === 'function'){
+					base_show_error(Lincko.Translation.get('app', 33, 'js')); //You are not allowed to access this workspace. (keep it blue to avoid it looking like a bug message)
+				}
+				setTimeout(function(){
+					wrapper_sendAction('','post','user/signout', null, null, wrapper_signout_cb_begin, wrapper_signout_cb_complete);
+				}, 200);
+			}
+
+			//Force to update elements if the function is available
+			if(typeof storage_cb_success === 'function'){
+				storage_cb_success(msg, data.error, data.status, data.msg);
+			}
+
+			// Below is the production information with "dataType: 'json'"
+			cb_success(msg, data.error, data.status, data.msg);
+
+			//If the language changed, we force to refresh the page
+			if(typeof data.language != 'undefined'){
+				setTimeout(function(language){
+					if(typeof app_language_short != 'undefined' && typeof language != 'undefined' && app_language_short != language){
+						//window.location.href = wrapper_link['root']; //toto => disable for debugging purpose
+					}
+				}, 500, data.language);
+			}
+
+		},
+		
 		error: function(xhr_err, ajaxOptions, thrownError){
 			//Get back the form object if it was sent from a form
 			wrapper_objForm = ajax_objForm;
