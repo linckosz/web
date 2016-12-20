@@ -759,7 +759,7 @@ inputter.prototype.buildLayer = function()
 
 		var cancelBlur = false;
 		input.find('[find=chat_textarea]').focus(function(event, param){
-			if(typeof param == 'object' && param.cancelBlur){ cancelBlur = true; }
+			if(typeof param == 'object' && param.cancelBlur && !responsive.test('maxMobileL')){ cancelBlur = true; }
 
 			//$(this).closest('[find=toggleOpacity]').removeClass('burger_typeTask_opacity');
 			if($(this).html() == defaultPhrase){
