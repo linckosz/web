@@ -2523,6 +2523,7 @@ var taskdetail_generateNewCommentBubble = function(parent_type, parent_id, sendA
 	elem_newCommentBubble.find('[find=name]').html(Lincko.storage.get("users", wrapper_localstorage.uid,"username"));
 	elem_newCommentBubble.find('[find=comment_id]').attr('comment_id','new');
 	var thumb_url = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", wrapper_localstorage.uid, 'profile_pic'));
+	if(!thumb_url){ thumb_url = app_application_icon_single_user.src; }
 	elem_newCommentBubble.find('[find=profile_pic]').css('background-image','url("'+thumb_url+'")');
 	var elem_addNewComment_text = elem_newCommentBubble.find('[find=addNewComment_text]');
 	elem_addNewComment_text.keyup(function(event) {
