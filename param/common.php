@@ -58,13 +58,15 @@ if(isset($_SERVER["SERVER_HOST"])){
 
 $app->lincko->domain_restriction = "/^(?:.{1,3}|(?:api|cloud|cron|dc|file|info|lincko|mail|mx|ns|pop|smtp|tp|debug|www)\d*)$/ui";
 
+$app->lincko->cookies_lifetime = time()+(3600*24*90); //Valid 3 months
+
 //Do not enable debug when we are using json ajax respond
 $app->config(array(
 	'debug' => false,
 	'mode' => 'production',
 	'cookies.encrypt' => true, //Must use $app->getCookie('foo', false);
 	'cookies.secret_key' => 'au6G7dbSh87Ws',
-	'cookies.lifetime' => '90 days',
+	'cookies.lifetime' => $app->lincko->cookies_lifetime,
 	'cookies.secure' => true,
 	'cookies.path' => '/',
 	'cookies.httponly' => true,

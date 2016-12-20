@@ -101,7 +101,7 @@ class ControllerWrapper extends Controller {
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
-		curl_setopt($ch, CURLOPT_COOKIE, 'PHPSESSID=' . $_COOKIE['PHPSESSID']);
+		//curl_setopt($ch, CURLOPT_COOKIE, 'PHPSESSID=' . $_COOKIE['PHPSESSID']); //Not used
 		curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
 		curl_setopt($ch, CURLOPT_FORBID_REUSE, true);
 		curl_setopt($ch, CURLOPT_ENCODING, 'gzip');
@@ -183,8 +183,9 @@ class ControllerWrapper extends Controller {
 					if(isset($json_result->flash->username)){
 						OneSeventySeven::set(array('yonghu' => $json_result->flash->username));
 					}
+					//Used to display/download files in a secured way and keep browser cache enable (same url)
 					if(isset($json_result->flash->pukpic)){
-						OneSeventySeven::set(array('pukpic' => $json_result->flash->pukpic));
+						setcookie('pukpic', $json_result->flash->pukpic, time()+intval($app->lincko->security['expired']), '/', $app->lincko->domain);
 					}
 					unset($json_result->flash);
 				}
@@ -295,6 +296,7 @@ class ControllerWrapper extends Controller {
 		unset($_SESSION['public_key']);
 		unset($_SESSION['private_key']);
 		unset($_SESSION['workspace']);
+		setcookie('pukpic', '', time()-1, '/', $app->lincko->domain);
 		return true;
 	}
 
