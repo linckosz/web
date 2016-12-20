@@ -75,14 +75,22 @@ var onboarding = {
 	},
 
 	launch: function(){ //return true if launched, return false if conditions are not fit for launch
-
 		//onboarding launch fail
 		if(onboarding.forceOff){ return false; }
 
 		var ob_settings = Lincko.storage.getOnboarding();
 
 		//fail conditions
-		if(!ob_settings || !ob_settings.projects || !ob_settings.sequence || !ob_settings.projects[1] || !Lincko.storage.get('projects', ob_settings.projects[1]) || !ob_settings.sequence[1]){ return false; }
+		if(	   !ob_settings 
+			|| !ob_settings.projects 
+			|| !ob_settings.sequence 
+			|| !ob_settings.projects[1] 
+			|| !Lincko.storage.get('projects', ob_settings.projects[1])){ return false; }
+
+		//this onboarding has already been completed
+		if(	   	ob_settings 
+			&& 	ob_settings.sequence 
+			&& !ob_settings.sequence[1]){ return true; }
 
 		return onboarding.scripts.welcome(ob_settings.projects[1]);
 
@@ -158,6 +166,7 @@ var onboarding = {
 
 	clear_fn_list: [], //any function that needs to be run on onboarding.clear can be put here
 	clear: function(submenuHide){
+		app_models_resume_onboarding_continue(null, 10102); //end onboarding
 		var that = this;
 		onboarding.on = false;
 		onboarding.currentTripInst = null;
@@ -853,6 +862,10 @@ onboarding.scripts['welcome'] = function(project_id){
 			expose: true,
 			delay: -1,
 			onTripStart : function(i, tripData){
+				//force open main menu if closed
+				if(responsive.test("maxMobileL") && !$('#app_application_project').hasClass('app_application_visible')){
+					app_application.move('project', true);
+				}
 				onboarding.welcome_bubble_reposition();
 				if(tripTracker.check(this, i)){return false;}
 				/*$('#app_project_projects_new').css({
@@ -944,9 +957,14 @@ onboarding.scripts['welcome'] = function(project_id){
 			expose: true,
 			delay: -1,
 			onTripStart : function(i, tripData){
+				//force open main menu if closed
+				if(responsive.test("maxMobileL") && !$('#app_application_project').hasClass('app_application_visible')){
+					app_application.move('project', true);
+				}
 				onboarding.welcome_bubble_reposition(tripData);
 				$('#app_project_projects_new').attr('style', '');
 				if(tripTracker.check(this, i)){return false;}
+
 				
 				tripData.sel.css('border', '4px solid #FFFFFF');
 				$('.trip-overlay').css('opacity', '');
@@ -1023,6 +1041,10 @@ onboarding.scripts['welcome'] = function(project_id){
 			expose: true,
 			delay: -1,
 			onTripStart : function(i, tripData){
+				//force close main menu if open
+				if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
+					app_application.move('project', false);
+				}
 				onboarding.welcome_bubble_reposition();
 				if(tripTracker.check(this, i)){return false;}
 				var tripObj = this;
@@ -1176,6 +1198,10 @@ onboarding.scripts['welcome'] = function(project_id){
 					expose: true,
 					delay: -1,
 					onTripStart : function(i, tripData){
+						//force close main menu if open
+						if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
+							app_application.move('project', false);
+						}
 						if(tripTracker.check(this, i)){
 							onboarding.welcome_bubble_reposition(tripData);
 							return false;
