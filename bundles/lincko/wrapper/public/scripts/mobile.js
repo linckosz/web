@@ -22,7 +22,7 @@ setMobileAlias();
 function isMobileApp(){
 	return (
 		   typeof android != 'undefined'
-		|| typeof iOS != 'undefined'
+		|| (typeof window.webkit != 'undefined' && typeof window.webkit.messageHandlers != 'undefined' && typeof window.webkit.messageHandlers.iOS != 'undefined')
 		|| typeof winPhone != 'undefined'
 	);
 }

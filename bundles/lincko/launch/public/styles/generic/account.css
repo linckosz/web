@@ -15,6 +15,30 @@
 	cursor: default;
 }
 
+.account_wrapper.account_wrapper_mobile_app {
+	background: #FECE4D !important;
+	background-color: #FECE4D !important;
+	background: -webkit-linear-gradient(#FECE4D,#FBA026) !important; /* For Safari 5.1 to 6.0 */
+	background: -o-linear-gradient(#FECE4D,#FBA026) !important; /* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(#FECE4D,#FBA026) !important; /* For Firefox 3.6 to 15 */
+	background: linear-gradient(#FECE4D,#FBA026) !important; /* Standard syntax */
+}
+.account_trans.account_wrapper_mobile_app > div {
+	background-color: rgba(249, 249, 249, 0.6);
+}
+.account_tab.account_wrapper_mobile_app > div, .account_form.account_wrapper_mobile_app > div, .account_form.account_wrapper_mobile_app > label {
+	background-color: rgba(233, 233, 233, 0.55);
+}
+#account_tab_lincko.account_wrapper_mobile_app > div {
+	background-color: rgba(251, 160, 38, 0.9) !important;
+}
+.account_tab_joinus.account_wrapper_mobile_app {
+	background-color: rgba(255, 167, 0, 0.5) !important;
+}
+.account_tab_signin.account_wrapper_mobile_app {
+	background-color: rgba(40, 149, 242, 0.5) !important;
+}
+
 .account_wrapper > div {
 	position: absolute;
 	top: 100px;
@@ -43,8 +67,8 @@
 	width: 262px;
 	text-align: center;
 	color: #F8F8F8;
-	font-size: 12px;
-	font-weight: bold;
+	font-size: 16px;
+	/*font-weight: bold;*/
 }
 
 .account_forgot_top, .account_reset_top, .account_integration_top {

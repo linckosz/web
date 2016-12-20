@@ -495,4 +495,7 @@ JSfiles.finish(function(){
 	} else if(account_user_action){
 		account_show(account_user_action);
 	}
+	if(isMobileApp()){
+		$('#account_wrapper, .account_trans, .account_tab, #account_tab_lincko, .account_tab_joinus, .account_tab_signin, .account_form').addClass('account_wrapper_mobile_app');
+	}
 });

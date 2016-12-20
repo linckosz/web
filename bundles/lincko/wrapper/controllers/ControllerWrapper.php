@@ -186,7 +186,7 @@ class ControllerWrapper extends Controller {
 					}
 					//Used to display/download files in a secured way and keep browser cache enable (same url)
 					if(isset($json_result->flash->pukpic)){
-						setcookie('pukpic', $json_result->flash->pukpic, time()+intval($app->lincko->security['expired']), '/', $app->lincko->domain);
+						setcookie('pukpic', $json_result->flash->pukpic, time()+intval($app->lincko->cookies_lifetime), '/', $app->lincko->domain);
 					}
 					unset($json_result->flash);
 				}
