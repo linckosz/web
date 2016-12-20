@@ -92,6 +92,7 @@ var onboarding = {
 			&& 	ob_settings.sequence 
 			&& !ob_settings.sequence[1]){ return true; }
 
+		onboarding.on = true; //onboarding is on here to prevent forceOpen main menu
 		return onboarding.scripts.welcome(ob_settings.projects[1]);
 
 
@@ -773,7 +774,6 @@ onboarding.scripts['welcome'] = function(project_id){
 	
 
 	//passed the check, begin initialization
-	onboarding.on = true;
 	onboarding.overlays.body();
 	onboarding.overlays.btnSkip();
 	if(onboarding.clickAwaySkip){

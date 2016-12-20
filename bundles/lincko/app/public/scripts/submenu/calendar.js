@@ -24,7 +24,7 @@ submenu_list['calendar'] = {
 		'hide': true,
 		"class": "base_pointer",
 		'action': function(Elem, subm){
-			subm.param.elem_inputOrig.val(subm.param.elem_inputTarget.val()-86399000).change(); //subtract 23hrs59min59sec
+			//subm.param.elem_inputOrig.val(subm.param.elem_inputTarget.val()-86399000).change(); //subtract 23hrs59min59sec
 		},
 	},
 	"projects_id": {
