@@ -49,6 +49,7 @@ Submenu_select.filemanager_content = function(subm){
 
 Submenu.prototype.AddFilemanagerContent = function() {
 	var that = this;
+	var border_size = 2;
 	var attribute = this.attribute;
 
 	//container
@@ -84,8 +85,7 @@ Submenu.prototype.AddFilemanagerContent = function() {
 	});
 
 
-	
-	var file_refresh =  function(upload_type,upload_pid,upload_param,target,item_width,item_height)
+	var file_refresh =  function(upload_type,upload_pid,upload_param,upload_flag,target,item_width,item_height,border_size)
 	{
 		var files = app_upload_files.lincko_files;
 		for(var i in files)
@@ -114,13 +114,13 @@ Submenu.prototype.AddFilemanagerContent = function() {
 
 				}
 				if(preview == null || preview == ''){
+
 				}
 				else
 				{
 					item.find("[find=file_content]").attr("src",preview);
 					var org_img_width = preview.width;//item.find("[find=file_content]").eq(0).width();
 					var org_img_height = preview.height;//item.find("[find=file_content]").eq(0).height();
-
 					if(typeof item.attr("resize") == "undefined" && org_img_width != 0 && org_img_height != 0)
 					{
 						org_img_width = item.find("[find=file_content]").eq(0).width();
@@ -128,16 +128,17 @@ Submenu.prototype.AddFilemanagerContent = function() {
 
 						if(org_img_width  > org_img_height){
 							var img_height = item_height;
-							var img_width = img_height / org_img_height * org_img_width;
+							var img_width = img_height / org_img_height * org_img_width ;
 							item.find("[find=file_content]").eq(0).css("height",Math.floor(img_height)+"px");
 
 							item.find(".file_manager_file_content_wrapper").css("width",item_width+"px");
 							item.find(".file_manager_file_content_wrapper").css("height",item_height+"px");
 
-							item.find(".file_manager_file_item_border").css("width",(item_width-4)+"px");
-							item.find(".file_manager_file_item_border").css("height",(item_height-4)+"px");
-							item.find(".file_manager_file_item_border").css("border-width","2px");
+							item.find(".file_manager_file_item_border").css("width",(item_width - border_size * 2)+"px");
+							item.find(".file_manager_file_item_border").css("height",(item_height - border_size * 2)+"px");
 							item.find(".file_manager_file_item_border").css("top",-item_height);
+							item.find(".file_manager_file_item_border").css("border-width",border_size+"px");
+							item.find(".file_manager_file_item_border").attr("file-index",files[i]["lincko_files_index"]);
 
 							item.find("[find=file_content]").eq(0).css("margin-left",Math.floor((item_width - img_width)/2)+"px");
 						}
@@ -149,12 +150,17 @@ Submenu.prototype.AddFilemanagerContent = function() {
 							item.find(".file_manager_file_content_wrapper").css("width",item_width+"px");
 							item.find(".file_manager_file_content_wrapper").css("height",item_height+"px");
 
-							item.find(".file_manager_file_item_border").css("width",(item_width-4)+"px");
-							item.find(".file_manager_file_item_border").css("height",(item_height-4)+"px");
-							item.find(".file_manager_file_item_border").css("border-width","2px");
+							item.find(".file_manager_file_item_border").css("width",(item_width - border_size * 2)+"px");
+							item.find(".file_manager_file_item_border").css("height",(item_height - border_size * 2)+"px");
 							item.find(".file_manager_file_item_border").css("top",-item_height);
+							item.find(".file_manager_file_item_border").css("border-width",border_size+"px");
+							item.find(".file_manager_file_item_border").attr("file-index",files[i]["lincko_files_index"]);
 
 							item.find("[find=file_content]").css("margin-top",Math.floor((item_width - img_width)/2)+"px");
+						}
+						if(upload_flag[files[i]["lincko_files_index"]] == "undefined")
+						{
+							upload_flag[files[i]["lincko_files_index"] = true;
 						}
 						item.attr("resize",true);
 					}
@@ -164,8 +170,11 @@ Submenu.prototype.AddFilemanagerContent = function() {
 		}
 	}
 
+
+	that.param.upload_flag = {};
+
 	setTimeout(function(){
-		file_refresh(that.param.upload_type,that.param.upload_pid,that.param.upload_param,target,item_width,item_height);
+		file_refresh(that.param.upload_type,that.param.upload_pid,that.param.upload_param,that.param.upload_flag,target,item_width,item_height,border_size);
 	},200);
 	
 
@@ -175,16 +184,28 @@ Submenu.prototype.AddFilemanagerContent = function() {
 		var upload_type = this.action_param[0];
 		var upload_pid = this.action_param[1];
 		var upload_param = this.action_param[2];
-		var target = this.action_param[3];
-		var item_width = this.action_param[4];
-		var item_height = this.action_param[5];
+		var upload_flag = this.action_param[3];
+		var target = this.action_param[4];
+		var item_width = this.action_param[5];
+		var item_height = this.action_param[6];
 
-		file_refresh(upload_type,upload_pid,upload_param,target,item_width,item_height);
+		file_refresh(upload_type,upload_pid,upload_param,target,item_width,item_height,border_size);
 		wrapper_IScroll_refresh();
 		wrapper_IScroll();
 
-	},[that.param.upload_type,that.param.upload_pid,that.param.upload_param,target,item_width,item_height]);
+	},[that.param.upload_type,that.param.upload_pid,that.param.upload_param,that.param.upload_flag,target,item_width,item_height]);
 
+	
+	// $("body").on("touchend", '.file_manager_file_item_border', function(event) {
+	// 	if($(this).css("border-width")=="0px")
+	// 	{
+	// 		$(this).css("border-width",border_size+"px");
+	// 	}
+	// 	else
+	// 	{
+	// 		$(this).css("border-width","0px");
+	// 	}
+	// });
 
 	delete submenu_wrapper;
 	return true;

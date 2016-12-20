@@ -17,7 +17,7 @@ ul.file_manager_file_list
 	overflow:hidden;
 }
 ul.file_manager_file_list li{
-	width:33%;
+	width:33.33%;
 	height:auto;
 	text-align: center;
 	overflow: hidden;
@@ -27,6 +27,7 @@ ul.file_manager_file_list li{
 
 ul.file_manager_file_list li img{
 	position: relative;
+	display: inline-block;
 }
 
 .icon_file_manager_file_add{
@@ -38,8 +39,9 @@ ul.file_manager_file_list li img{
 }
 
 .file_manager_file_item_border{
-	border:2px solid orange;
+	border:0 solid orange;
 	position:relative;
+	z-index: 9999;
 }
 
 

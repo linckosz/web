@@ -387,7 +387,8 @@ inputter.prototype.buildLayer = function()
 											var parm_upload = {
 												upload_type:type,
 												upload_pid:pid,
-												upload_param:panel_id
+												upload_param:panel_id,
+												upload_flag:null,
 											};
 											submenu_Build('filemanager', true, null, parm_upload, true);
 										}
