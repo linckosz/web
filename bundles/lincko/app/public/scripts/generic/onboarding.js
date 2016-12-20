@@ -1252,6 +1252,11 @@ onboarding.scripts['welcome'] = function(project_id){
 	
 	intro.startStep(fn_next);
 	onboarding.fn_next = fn_next;
+
+	//if main menu is open, force close
+	if($('#app_application_project').hasClass('app_application_visible')){
+		app_application.move('project', false);
+	}
 		
 	return true;
 }
