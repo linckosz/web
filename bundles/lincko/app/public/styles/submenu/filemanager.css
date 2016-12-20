@@ -31,18 +31,22 @@ ul.file_manager_file_list li img{
 }
 
 .icon_file_manager_file_add{
-	
+	font-size:60px;
+	color:#FBA026;
 }
 
 .file_manager_file_content_wrapper{
 	overflow: hidden;
+	font-size: 50px;
+
 }
 
 .file_manager_file_item_border{
-	border:0 solid orange;
+	border:0 solid #FBA026;
 	position:relative;
 	z-index: 9999;
 }
+
 
 
 .file_manager_menu{
