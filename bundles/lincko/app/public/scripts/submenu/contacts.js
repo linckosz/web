@@ -523,6 +523,7 @@ function submenu_contacts_get(elem) {
 };
 
 Submenu.prototype.Add_ContactContents = function(live) {
+	$('#base_input_focusHelper').focus(); //lose any previous focus (to get rid of mobile keyboard)
 	if(typeof live != 'boolean'){ live=false; }
 	var attribute = this.attribute;
 	var submenu_wrapper = this.Wrapper();

@@ -44,6 +44,7 @@ Submenu_select.calendar = function(subm){
 };
 
 Submenu.prototype.Add_calendar = function() {
+	$('#base_input_focusHelper').focus(); //lose any previous focus (to get rid of mobile keyboard)
 	var that = this;
 	var submenu_wrapper = this.Wrapper();
 	var submenu_content = submenu_wrapper.find("[find=submenu_wrapper_content]").addClass('submenu_calendar').removeClass('overthrow');
