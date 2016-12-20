@@ -62,6 +62,7 @@ base_input_field.email = {
 	error_msg: function(){
 		return { msg: this.format, field: 'email' };
 	},
+	hide: true,
 }
 
 base_input_field.password = {
@@ -78,6 +79,7 @@ base_input_field.password = {
 	error_msg: function(){
 		return { msg: this.format, field: 'password' };
 	},
+	hide: true,
 }
 
 base_input_field.captcha = {
@@ -94,4 +96,5 @@ base_input_field.captcha = {
 	error_msg: function(){
 		return { msg: this.format, field: 'captcha' };
 	},
+	hide: true,
 }

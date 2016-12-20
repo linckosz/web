@@ -47,6 +47,7 @@
 		<div class="account_tab" id="account_tab_lincko">
 			<div><div id="account_tab_lincko_back" class="display_none fa fa-angle-left"></div>Lincko</div>
 		</div>
+		<div id="account_error_mobile" class="maxMobile"></div>
 		{#{% if invitation_code %}#}
 			<div class="account_tab">
 				<div class="account_trans" id="account_tab_joinus"><div class="account_tab_joinus">{{ _trans('web', 5, 1, 'html') }}{# Join Us #}</div></div>
@@ -171,8 +172,7 @@
 			<img id="account_integration_wechat" class="account_integration_icon" src="{{ _filelatest('/lincko/launch/images/generic/account/integration/wechat.png') }}"/>
 		</div>
 
-		<div id="account_error">
-		</div>
+		<div id="account_error" class="minMobileL"></div>
 	</div>
 </div>
 <div id="end_account" class="visibility_hidden"></div>

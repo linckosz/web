@@ -13,7 +13,7 @@ var sharepanel = function(category,target_id)
 				//debugger;
 				var url = top.location.protocol+'//'+app_application_dev_link()+document.domain + '/#' + that.category + '-' + that.target_id;
 				//console.log(event);
-				base_show_error('复制成功！');
+				base_show_error('复制成功！'); //toto
 				$("#app_public_sharepanel").hide();
 			}
 		},

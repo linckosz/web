@@ -365,8 +365,6 @@
 }
 
 
-
-
 #account_joinus_tos_div {
 	margin-top: 4px;
 	font-size: 12px;
@@ -380,7 +378,7 @@
 	color: #3A3D41;
 }
 
-#account_error {
+#account_error, #account_error_mobile {
 	display: none;
 	text-align: left;
 	background-color: rgba(255, 68, 68, 0.8);
@@ -390,6 +388,10 @@
 	color: #F8F8F8;
 	font-size: 13px;
 	cursor: default;
+}
+#account_error_mobile {
+	position: absolute;
+	z-index: 200;
 }
 
 #account_captcha {

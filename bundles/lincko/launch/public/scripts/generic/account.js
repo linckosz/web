@@ -49,15 +49,21 @@ var account_reset_cb_begin = function(jqXHR, settings){
 };
 
 
+var account_error_timing;
+var account_error_hide_timer = function(){
+	clearTimeout(account_error_timing);
+	account_error_timing = setTimeout(function(){ account_hide_error(); }, 2500);
+}
 
 var account_joinus_cb_success = account_signin_cb_success = function(msg, err, status, data){
 	var field = 'undefined';
 	if(typeof data.field !== 'undefined') { field = data.field; }
 	if(err){
-		$('#account_error').html(wrapper_to_html(msg));
-		$("#account_error").velocity("transition.slideDownIn", { duration: 500, delay: 100, });
+		$('#account_error, #account_error_mobile').html(wrapper_to_html(msg));
+		$("#account_error, #account_error_mobile").velocity("transition.slideDownIn", { duration: 500, delay: 100, });
 		$("#account_joinus_form input[name="+field+"]").addClass('base_input_text_error').focus();
 		$("#account_captcha").prop("src", $("#account_captcha").prop("src"));
+		account_error_hide_timer();
 	} else {
 		window.location.href = account_link['root'];
 	}
@@ -71,9 +77,10 @@ var account_forgot_cb_success = function(msg, err, status, data){
 	if(typeof data.email != 'undefined') { email = data.email; }
 	if(typeof data.reset != 'undefined') { reset = data.reset; }
 	if(err){
-		$('#account_error').html(wrapper_to_html(msg));
-		$("#account_error").velocity("transition.slideDownIn", { duration: 500, delay: 100, });
+		$('#account_error, #account_error_mobile').html(wrapper_to_html(msg));
+		$("#account_error, #account_error_mobile").velocity("transition.slideDownIn", { duration: 500, delay: 100, });
 		$("#account_signin_form input[name="+field+"]").addClass('base_input_text_error').focus();
+		account_error_hide_timer();
 		if(reset){
 			account_reset_time_left(0);
 		}
@@ -87,9 +94,10 @@ var account_reset_cb_success = function(msg, err, status, data){
 	var field = 'undefined';
 	if(typeof data.field !== 'undefined') { field = data.field; }
 	if(err){
-		$('#account_error').html(wrapper_to_html(msg));
-		$("#account_error").velocity("transition.slideDownIn", { duration: 500, delay: 100, });
+		$('#account_error, #account_error_mobile').html(wrapper_to_html(msg));
+		$("#account_error, #account_error_mobile").velocity("transition.slideDownIn", { duration: 500, delay: 100, });
 		$("#account_joinus_form input[name="+field+"]").addClass('base_input_text_error').focus();
+		account_error_hide_timer();
 	} else {
 		$('#account_signin_email').val(account_credential.email).focus();
 		$('#account_signin_password').val(account_credential.password).focus();
@@ -101,9 +109,10 @@ var account_reset_cb_success = function(msg, err, status, data){
 
 var account_joinus_cb_error = account_signin_cb_error = account_forgot_cb_error = account_reset_cb_error = function(xhr_err, ajaxOptions, thrownError){
 	var msgtp = Lincko.Translation.get('wrapper', 1, 'html'); //Communication error
-	$('#account_error').html(msgtp);
-	if($('#account_error').is(':hidden')){
-		$("#account_error").velocity("transition.slideDownIn", { duration: 500, delay: 100, });
+	$('#account_error, #account_error_mobile').html(msgtp);
+	if($('#account_error, #account_error_mobile').is(':hidden')){
+		$("#account_error, #account_error_mobile").velocity("transition.slideDownIn", { duration: 500, delay: 100, });
+		account_error_hide_timer();
 	}
 };
 
@@ -208,10 +217,10 @@ function account_select(select) {
 function account_hide_error(now) {
 	if(typeof now == 'undefined'){ now = false; }
 	if(now){
-		$("#account_error").hide();
+		$("#account_error, #account_error_mobile").hide();
 	} else {
-		if($('#account_error').is(':visible')){
-			$("#account_error").velocity("transition.fadeOut", { duration: 500, delay: 100, });
+		if($('#account_error, #account_error_mobile').is(':visible')){
+			$("#account_error, #account_error_mobile").velocity("transition.fadeOut", { duration: 500, delay: 100, });
 		}
 	}
 }
@@ -326,7 +335,7 @@ var account_integration_wechat_qrcode = function(){
 	});
 };
 
-$('#account_error').click(function(){
+$('#account_error, #account_error_mobile').click(function(){
 	account_hide_error();
 });
 
