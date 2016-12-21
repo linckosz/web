@@ -47,7 +47,7 @@ base_input_field.username = {
 }
 
 base_input_field.email = {
-	format: Lincko.Translation.get('web', 1, 'js'), //Email address format: - {name}@{domain}.{ext} - 191 characters maxi
+	format: Lincko.Translation.get('web', 13, 'js'), //Your user id or password is incorrect
 	tags: {
 		pattern: "^.{1,100}@.*\\..{2,4}$",
 		required: "required",
@@ -66,7 +66,7 @@ base_input_field.email = {
 }
 
 base_input_field.password = {
-	format: Lincko.Translation.get('web', 2, 'js'), //Password format: - Between 6 and 60 characters
+	format: Lincko.Translation.get('web', 13, 'js'), //Your user id or password is incorrect
 	tags: {
 		pattern: "^[\\S]{6,60}$",
 		required: "required",

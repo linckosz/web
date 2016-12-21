@@ -56,9 +56,13 @@ function base_show_error(msg, error) {
 	base_error_timing = setTimeout(function(){ base_hide_error(); }, 4000);
 }
 
-function base_hide_error() {
+function base_hide_error(now) {
+	if(typeof now == 'undefined'){ now = false; }
 	clearTimeout(base_error_timing);
-	if($('#base_error').is(':visible')){
+	$('#base_error').velocity("stop");
+	if(now){
+		$('#base_error').hide().recursiveEmpty();
+	} else if($('#base_error').is(':visible')){
 		$("#base_error").velocity("transition.slideRightBigOut", {
 			duration: 160,
 			delay: 80,

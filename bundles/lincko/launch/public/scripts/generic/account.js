@@ -59,6 +59,7 @@ var account_joinus_cb_success = account_signin_cb_success = function(msg, err, s
 	var field = 'undefined';
 	if(typeof data.field !== 'undefined') { field = data.field; }
 	if(err){
+		base_hide_error(true);
 		$('#account_error, #account_error_mobile').html(wrapper_to_html(msg));
 		$("#account_error, #account_error_mobile").velocity("transition.slideDownIn", { duration: 500, delay: 100, });
 		$("#account_joinus_form input[name="+field+"]").addClass('base_input_text_error').focus();
@@ -77,6 +78,7 @@ var account_forgot_cb_success = function(msg, err, status, data){
 	if(typeof data.email != 'undefined') { email = data.email; }
 	if(typeof data.reset != 'undefined') { reset = data.reset; }
 	if(err){
+		base_hide_error(true);
 		$('#account_error, #account_error_mobile').html(wrapper_to_html(msg));
 		$("#account_error, #account_error_mobile").velocity("transition.slideDownIn", { duration: 500, delay: 100, });
 		$("#account_signin_form input[name="+field+"]").addClass('base_input_text_error').focus();
@@ -94,6 +96,7 @@ var account_reset_cb_success = function(msg, err, status, data){
 	var field = 'undefined';
 	if(typeof data.field !== 'undefined') { field = data.field; }
 	if(err){
+		base_hide_error(true);
 		$('#account_error, #account_error_mobile').html(wrapper_to_html(msg));
 		$("#account_error, #account_error_mobile").velocity("transition.slideDownIn", { duration: 500, delay: 100, });
 		$("#account_joinus_form input[name="+field+"]").addClass('base_input_text_error').focus();
@@ -111,6 +114,7 @@ var account_joinus_cb_error = account_signin_cb_error = account_forgot_cb_error 
 	var msgtp = Lincko.Translation.get('wrapper', 1, 'html'); //Communication error
 	$('#account_error, #account_error_mobile').html(msgtp);
 	if($('#account_error, #account_error_mobile').is(':hidden')){
+		base_hide_error(true);
 		$("#account_error, #account_error_mobile").velocity("transition.slideDownIn", { duration: 500, delay: 100, });
 		account_error_hide_timer();
 	}
