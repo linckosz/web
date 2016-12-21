@@ -20,8 +20,16 @@ submenu_list['app_projects_users_contacts'] = {
 		"title": "",
 		"class": "base_pointer icon-AddPerson submenu_app_chat_title_right_button",
 		"action": function(Elem, subm) {
-			var param = { prevSub: subm };
-			submenu_Build('chat_add_user', subm.layer+1, true, param, subm.preview)
+			var param = {
+				prevSub: subm,
+				invite_access: {
+					projects: subm.param, //toto => need to be careful, this should always be a project id, but need to follow closely
+				}
+			};
+			if(subm.param.invite_access){
+				param.invite_access = subm.param.invite_access;
+			}
+			submenu_Build('chat_add_user', subm.layer+1, true, param, subm.preview);
 		},
 	},
 };

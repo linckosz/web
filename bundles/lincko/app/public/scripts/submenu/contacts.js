@@ -645,9 +645,16 @@ Submenu.prototype.Add_ContactContents = function(live) {
 
 	var elem_inviteUser = $('<div class="submenu_contacts_inviteUser">Invite new user</div>'/*toto*/).click(function(){
 		if(that.param.project_id){
-			submenu_Build('app_projects_users_contacts', true, false, that.param.project_id);
+			var param = {
+				pid1: that.param.project_id,
+				invite_access: {
+					projects: that.param.project_id,
+				},
+			}
+			submenu_Build('app_projects_users_contacts', true, false, param);
 		}
 		else{
+
 			submenu_Build("chat_add_user", true, false, true);
 		}		
 	});

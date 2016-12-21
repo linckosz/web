@@ -737,7 +737,6 @@ $("#app_application_lincko_action").click(function() {
 //END - highlight for quick create task feature
 
 
-
 $('#app_application_menu_icon').click(function(){
 	if(typeof app_application !== 'undefined'){
 		app_application.move('project');

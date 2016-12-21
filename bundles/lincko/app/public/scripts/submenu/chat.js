@@ -460,10 +460,15 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 		Elem_email.find("[find=invitation_email]").off("click");
 		Elem_email.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2307, 'js', {email: data,})); //[{email}] is not currently using Lincko. Would you like to send an invitation to sign up?
 		var param = data;
-		Elem_email.find("[find=invitation_email]").click(param, function(event){
+		var invite_access = null;
+		if(sub_that.param && typeof sub_that.param.invite_access != 'undefined'){
+			invite_access = sub_that.param.invite_access;
+		}
+		Elem_email.find("[find=invitation_email]").click([param, invite_access], function(event){
 			var param = {
 				exists: false,
-				email: event.data,
+				email: event.data[0],
+				invite_access: event.data[1],
 			}
 			wrapper_sendAction(
 				param,
@@ -493,10 +498,15 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 		}
 		Elem_user.find("[find=who]").html(wrapper_to_html(data['username']));
 		var param = data;
-		Elem_user.find("[find=invitation_invite]").click(param, function(event){
+		var invite_access = null;
+		if(sub_that.param && typeof sub_that.param.invite_access != 'undefined'){
+			invite_access = sub_that.param.invite_access;
+		}
+		Elem_user.find("[find=invitation_invite]").click([param, invite_access], function(event){
 			var param = {
 				exists: true,
-				users_id: event.data['id'],
+				users_id: event.data[0]['id'],
+				invite_access: event.data[1],
 			}
 			wrapper_sendAction(
 				param,

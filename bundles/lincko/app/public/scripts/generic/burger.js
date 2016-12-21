@@ -484,7 +484,14 @@ burger_list.in_charge = function(lincko_type, lincko_id){
 	var inviteNewUser = {
 		text: Lincko.Translation.get('app', 31, 'html'), //Add Teammates
 		onClick: function(){
-			submenu_Build('app_projects_users_contacts', true, false, project_id);
+			var param = {
+				pid2: project_id,
+				invite_access: {
+					projects: project_id,
+					//tasks: task_id, //toto (@sky) => Do you have a way to task ID? like that we can assign the user automatically
+				},
+			}
+			submenu_Build('app_projects_users_contacts', true, false, param);
 			//submenu_Build("chat_add_user", true, false, true); 
 			//submenu_Build('chat_list', false, true, true); 
 		},
