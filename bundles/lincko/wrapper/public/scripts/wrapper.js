@@ -519,6 +519,10 @@ var wrapper_IScroll_options = {
 	preventDefaultException: {tagName:/.*/},
 	HWCompositing: hasGood3Dsupport,
 
+	disablePointer: true, // important to disable the pointer events that causes the issues
+	disableTouch: false, // false if you want the slider to be usable with touch devices
+	disableMouse: false, // false if you want the slider to be usable with a mouse (desktop)
+
 	//[Mobile devices] The disavantage is that on desktop the click event will be launch after a mouse move (= scroll)
 	//click: false,
 	//[Desktop] The disavantage is that we don't see the mouse click by css (:active)
