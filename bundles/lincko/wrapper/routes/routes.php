@@ -35,6 +35,15 @@ $app->get(
 ))
 ->name('captcha');
 
+$app->group('/info', function () use ($app) {
+	
+	$app->get('/nonetwork', function () use($app) {
+		$app->render('/bundles/lincko/wrapper/templates/nonetwork.twig');
+	})
+	->name('info_nonetwork_get');
+
+});
+
 $app->group('/debug', function () use ($app) {
 	
 	if($app->getMode()==='development'){

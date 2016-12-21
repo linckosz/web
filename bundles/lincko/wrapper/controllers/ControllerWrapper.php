@@ -167,7 +167,7 @@ class ControllerWrapper extends Controller {
 					if(!isset($json_result->shangzai)){ $json_result->shangzai = new \stdClass; }
 					$json_result->shangzai->puk = Datassl::encrypt($_SESSION['public_key'], $app->lincko->security['private_key']); //toto => may be can use pukpik (more stable)
 				}
-
+//\libs\Watch::php($json_result->flash, '$json_result->flash', __FILE__, __LINE__, false, false, true);
 				if($this->print){
 					//"username_sha1" is a password used to encrypt data
 					//"uid" is the main user ID

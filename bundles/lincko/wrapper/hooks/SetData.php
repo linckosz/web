@@ -15,7 +15,13 @@ function getFingerprint(){
 function SetData(){
 	$app = \Slim\Slim::getInstance();
 	$logged = false;
-	
+	/*
+	//\libs\Watch::php(true, '$var', __FILE__, __LINE__, false, false, true);
+	\libs\Watch::php(OneSeventySeven::get('hahaha'), '$hahaha', __FILE__, __LINE__, false, false, true);
+	\libs\Watch::php(OneSeventySeven::get('jizhu'), '$jizhu', __FILE__, __LINE__, false, false, true);
+	\libs\Watch::php(OneSeventySeven::get('sha'), '$sha', __FILE__, __LINE__, false, false, true);
+	\libs\Watch::php(OneSeventySeven::get('uid'), '$uid', __FILE__, __LINE__, false, false, true);
+*/
 	if(
 		   //Minimum fields required to display offline
 		   OneSeventySeven::get('hahaha') //resign
@@ -23,11 +29,6 @@ function SetData(){
 		&& OneSeventySeven::get('sha') //data
 		&& OneSeventySeven::get('uid') //data
 	){
-		/*
-		//It help to keep a trace of those values
-		$jizhu = OneSeventySeven::get('jizhu');
-		$youjian = OneSeventySeven::get('youjian');
-		*/
 		$logged = true;
 	} else {
 		//If there is a record for 'remember me', we keep it to check the box or not as user defaut selection
@@ -35,7 +36,7 @@ function SetData(){
 		OneSeventySeven::unsetAll(array('jizhu', 'yuyan', 'youjian'));
 	}
 	
-
+//\libs\Watch::php($logged, '$logged', __FILE__, __LINE__, false, false, true);
 	//The below lines will give null if previously unsetAll
 	$yonghu = OneSeventySeven::get('yonghu');
 	$youjian = OneSeventySeven::get('youjian');
