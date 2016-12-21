@@ -123,26 +123,26 @@ var intro = {
 			},
 			{
 				line:12009,//"Use tasks to set the goals and tasks of the project team.",
-				lazy:2000,
+				lazy:1000,
 				head:"hidden",
 				autoNext:false,
 			},
 			{
 				line:12010,//"Use notes to store important information for the team - like meeting notes, processes, or designs. ",
-				lazy:2000,
+				lazy:1000,
 				head:"hidden",
 				autoNext:false,
 			},
 			{
 				line:12011,//"Use Chats for quick communication and to track project activity. ",
-				lazy:2000,
+				lazy:1000,
 				head:"hidden",
 				autoNext:false,
 				
 			},
 			{
 				line:12012,//"Use Files for all your important documents and images - any file uploaded to a project chat is also stored here. ",
-				lazy:2000,
+				lazy:1000,
 				head:"hidden",
 				autoNext:false,
 			},
@@ -172,17 +172,17 @@ var intro = {
 			},
 			{
 				line:12016,//'My New Task <span find="name" class="burger_tag">MonkeyKing</span><span find="dateWrapper" class="burger_tag">today</span>',
-				lazy:2000,
+				lazy:3000,
 				head:"hidden",
 			},
 			{
 				line:12015,//"Feel free to explore the sample project.",
-				lazy:2000,
+				lazy:1500,
 				head:"hidden",
 				options:[ 
 					{
 						line:13005,//"Start using Lincko!
-						delay:200,
+						delay:1000,
 						pointType:"step",
 						pointTo:-1,
 						finger:"show",
