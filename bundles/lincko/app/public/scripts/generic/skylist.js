@@ -1102,17 +1102,20 @@ skylist.prototype.paperview_partialUpdate = function(updated_tasks){
 	}
 /*	should retrun true for the following updates: (which means use paperview_taskCard_update() ) */
 	var partialUpdateList = {
-		'+title': true,
+		//do nothing
+		updated_at : true,
+		viewed_by : true,
+		'locked_fp': true,
 		'-comment': true,
+		locked_by: true,
+
+		'+title': true,
 		_files : true,
 		_notes : true,
 		_children : true, //(i.e. comments)
 		_users : true,
 		duration: true,
-		updated_at : true,
-		viewed_by : true,
 		_tasksdown: true,
-		locked_by: true, //no need for update DOM
 
 		approved: true,
 		approved_at: true,
