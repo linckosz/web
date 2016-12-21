@@ -13,9 +13,11 @@ var intro = {
 		[//intro.step.welcome:0
 			{
 				line:12001,//"I’m here to start you on your journey using Lincko.",
+				lazy:1500,
 				options:[ 
 					{
 						line:13001,//"Who are you, LinckoBot?",
+						delay:500,
 						pointType:"script",
 						pointTo:1,
 						finger:"show",
@@ -25,13 +27,16 @@ var intro = {
 			},//0
 			{
 				line:12002,//"I'm your guide in the way of projects and collaboration. I'll give you updates on how your projects are going.",
+				lazy:2000,
 				head:"hidden",
 			},//1
 			{
 				line:12003,//"Let me show you quickly how to get around.",
+				lazy:2000,
 				options:[ 
 					{
-						line:13002,//"next",
+						line:13002,//"next",7
+						delay:200,
 						pointType:"step",
 						pointTo:1,
 						finger:"show",
@@ -43,9 +48,11 @@ var intro = {
 		[//intro.step.new_project:1
 			{
 				line:12004,//"Access the main menu by clicking here.",
+				lazy:1500,
 				options:[ 
 					{
 						line:13002,//"next",
+						delay:200,
 						pointType:"step",
 						pointTo:2,
 						finger:"hidden",
@@ -58,9 +65,11 @@ var intro = {
 		[//intro.step.main_menu:2
 			{
 				line:12005,//"You can create new projects here.",
+				lazy:1500,
 				options:[ 
 					{
 						line:13002,//"next",
+						delay:200,
 						pointType:"step",
 						pointTo:3,
 						finger:"hidden",
@@ -73,9 +82,11 @@ var intro = {
 		[//intro.step.linckobot_chat:3
 			{
 				line:12006,//"I'm also located here - find me in the Chats section.",
+				lazy:1500,
 				options:[ 
 					{
 						line:13002,//"next",
+						delay:200,
 						pointType:"step",
 						pointTo:4,
 						finger:"hidden",
@@ -88,9 +99,11 @@ var intro = {
 		[//intro.step.sample_project:4
 			{
 				line:12007,//"Here's a sample project. You can invite teammates and change project settings here.",
+				lazy:1500,
 				options:[ 
 					{
 						line:13002,//"next",
+						delay:200,
 						pointType:"step",
 						pointTo:5,
 						finger:"hidden",
@@ -103,32 +116,45 @@ var intro = {
 		[//intro.step.project_items:5
 			{
 				line:12008,//"Each project has areas for Tasks, Notes, Chats, and Files.",
+				lazy:1500,
 				head:"show",
+				autoNext:false,
+
 			},
 			{
 				line:12009,//"Use tasks to set the goals and tasks of the project team.",
+				lazy:2000,
 				head:"hidden",
+				autoNext:false,
 			},
 			{
 				line:12010,//"Use notes to store important information for the team - like meeting notes, processes, or designs. ",
+				lazy:2000,
 				head:"hidden",
+				autoNext:false,
 			},
 			{
 				line:12011,//"Use Chats for quick communication and to track project activity. ",
+				lazy:2000,
 				head:"hidden",
+				autoNext:false,
 				
 			},
 			{
 				line:12012,//"Use Files for all your important documents and images - any file uploaded to a project chat is also stored here. ",
+				lazy:2000,
 				head:"hidden",
+				autoNext:false,
 			},
 			{
 				line:12013,//"Let's add your first task.",
+				lazy:2000,
 				options:[ 
 					{
 						line:13003,//"Let's do this!",
+						delay:200,
 						pointType:"step",
-						pointTo:7,
+						pointTo:6,
 						finger:"hidden",
 					}
 				],
@@ -141,15 +167,27 @@ var intro = {
 		[//feel_free:6
 			{
 				line:12014,//"Type a task name. You can type @ to assign an owner, and + to assign a date.",
+				lazy:1500,
 				head:"show",
 			},
 			{
 				line:12016,//'My New Task <span find="name" class="burger_tag">MonkeyKing</span><span find="dateWrapper" class="burger_tag">today</span>',
+				lazy:2000,
 				head:"hidden",
 			},
 			{
 				line:12015,//"Feel free to explore the sample project.",
+				lazy:2000,
 				head:"hidden",
+				options:[ 
+					{
+						line:13005,//"Start using Lincko!
+						delay:200,
+						pointType:"step",
+						pointTo:-1,
+						finger:"show",
+					}
+				],
 			},
 		],	
 
@@ -220,7 +258,10 @@ var intro = {
 		}
 		
 		//profile animation
-		var timer = 2000;
+		var timer = 0;
+		if(typeof intro.script[intro.current_step][script_index]["lazy"] != "undefined"){
+			timer = intro.script[intro.current_step][script_index]["lazy"];
+		}
 		//lazy
 		var content = target.find("[find=content]");
 		var lazy = intro.lazyLoading(timer);
@@ -264,7 +305,9 @@ var intro = {
 				{
 					intro.collectOptions(intro.script[intro.current_step][script_index]["options"]);
 				}
-				else if(script_index + 1 < intro.script[intro.current_step].length)
+				else if(script_index + 1 < intro.script[intro.current_step].length 
+					&& (typeof intro.script[intro.current_step][script_index]["autoNext"] == "undefined" 
+					|| intro.script[intro.current_step][script_index]["autoNext"]))
 				{
 					intro.gotoScript(script_index + 1);
 				}
@@ -313,66 +356,75 @@ var intro = {
 		//options
 		for(var i in options)
 		{
-			var item = $("#-models_intro_options_item").clone();
-			item.prop("id","models_intro_options_item_" + i);
-
-
-			var timer = 2000;
-			var content = target.find("[find=content]");
-			var lazy = intro.lazyLoading(timer);
-			item.append(lazy);
-
-			
-			target.find("[find=options_content]").append(item);
-
-			setTimeout(function(i,options,item,target){
-				var line = options[i]["line"];
-				line = Lincko.Translation.get('app', line, 'js');
-				item.html(line);
-
-				var fn = null;
-				if(options[i].hasOwnProperty("callback"))
-				{
-					fn = options[i].callback;
-				}
-				item.click({pointTo:options[i].pointTo,pointType:options[i].pointType,fn:fn,target:target},function(event){
-					item.off("click");
-					var pointTo = event.data.pointTo;
-					var pointType = event.data.pointType;
-					var fn = event.data.fn;
-					var target = event.data.target;
-					if(pointType == "script")
-					{
-						intro.gotoScript(pointTo);
-						//intro.replaceOption($(this).html(),target);
-						//target.remove();
-					}
-					else if(pointType == "step")
-					{
-						if(fn != null)
-						{
-							fn();
-						}
-					}
-
-					$(this).closest('[find=options_content]').find("[find=finger]").remove();
-				});
-
-			},timer,i,options,item,target);
-
-			//finger()
-			if(options[i]["finger"]=="show")
+			var delay = 0;
+			if(typeof options[i]["delay"] != "undefined")
 			{
-				var finger = $("#-models_intro_options_finger").clone();
-				finger.prop("id","");
-				item.before(finger);
-				var hand = finger.find("[find=hand]");
-				hand.addClass("display_none");
-				setTimeout(function(){
-					hand.removeClass("display_none");
-					hand.velocity({ left: "10px" }, {duration: 800,loop: true,});
-				},3000);
+				delay = options[i]["delay"];
 			}
+			setTimeout(function(){
+				var item = $("#-models_intro_options_item").clone();
+				item.prop("id","models_intro_options_item_" + i);
+				var timer = 0;
+				if(typeof options[i]["lazy"] != "undefined"){
+					timer = options[i]["lazy"];
+				}
+
+				var content = target.find("[find=content]");
+				var lazy = intro.lazyLoading(timer);
+				item.append(lazy);
+
+				
+				target.find("[find=options_content]").append(item);
+
+				setTimeout(function(i,options,item,target){
+					var line = options[i]["line"];
+					line = Lincko.Translation.get('app', line, 'js');
+					item.html(line);
+
+					var fn = null;
+					if(options[i].hasOwnProperty("callback"))
+					{
+						fn = options[i].callback;
+					}
+					item.click({pointTo:options[i].pointTo,pointType:options[i].pointType,fn:fn,target:target},function(event){
+						item.off("click");
+						var pointTo = event.data.pointTo;
+						var pointType = event.data.pointType;
+						var fn = event.data.fn;
+						var target = event.data.target;
+						if(pointType == "script")
+						{
+							intro.gotoScript(pointTo);
+							//intro.replaceOption($(this).html(),target);
+							//target.remove();
+						}
+						else if(pointType == "step")
+						{
+							if(fn != null)
+							{
+								fn();
+							}
+						}
+
+						$(this).closest('[find=options_content]').find("[find=finger]").remove();
+					});
+
+				},timer,i,options,item,target);
+
+				//finger()
+				if(options[i]["finger"]=="show")
+				{
+					var finger = $("#-models_intro_options_finger").clone();
+					finger.prop("id","");
+					item.before(finger);
+					var hand = finger.find("[find=hand]");
+					hand.addClass("display_none");
+					setTimeout(function(){
+						hand.removeClass("display_none");
+						hand.velocity({ left: "10px" }, {duration: 800,loop: true,});
+					},0);
+				}
+			},delay);
 		}
 	},
 	replaceOption:function(line,last){
@@ -382,7 +434,6 @@ var intro = {
 
 		last.before(target);
 		//target.before(last);
-
 
 		var profile = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users",wrapper_localstorage.uid,'profile_pic'));
 
