@@ -20,7 +20,8 @@ submenu_list['app_projects_users_contacts'] = {
 		"title": "",
 		"class": "base_pointer icon-AddPerson submenu_app_chat_title_right_button",
 		"action": function(Elem, subm) {
-			submenu_Build('chat_add_user', subm.layer+1, true, null, subm.preview)
+			var param = { prevSub: subm };
+			submenu_Build('chat_add_user', subm.layer+1, true, param, subm.preview)
 		},
 	},
 };

@@ -612,10 +612,10 @@ Submenu.prototype.Add_taskdetail = function() {
 		if(that.param.type == 'tasks'){
 			elem_box_calendar.addClass('skylist_clickable');
 			elem_input_calendar = elem.find('[find=values] input[find=duedate_timestamp]');
-			elem_input_calendar.val((item['start'] + duration_timestamp)*1000);
+			elem_input_calendar.val((item['start'] + item.duration)*1000);
 
 			var duedate = tasks_calcDuedate(item['_id']);
-			if(!duedate){ duedate = new wrapper_date(item['start'] + duration_timestamp); }
+			if(!duedate){ duedate = new wrapper_date(item['start'] + item.duration); }
 
 			if( skylist_textDate(duedate) ){
 				elem_text_calendar.text(skylist_textDate(duedate));
@@ -627,7 +627,7 @@ Submenu.prototype.Add_taskdetail = function() {
 
 			if(item['_id'] == 'new'){
 				var cb_select_calendar = function(timestamp, elem_datepicker){
-					duration_timestamp = timestamp - item['start'];
+					item.duration = duration_timestamp = timestamp - item['start'];
 					if(elem_datepicker && elem_datepicker.blur){ 
 						burgerInst.calendar = elem_datepicker; 
 						elem_datepicker.blur(); 
@@ -635,7 +635,7 @@ Submenu.prototype.Add_taskdetail = function() {
 					update_burgerBar();
 				}
 
-				var currentDate = (item['start'] + duration_timestamp)*1000;
+				var currentDate = (item['start'] + item.duration)*1000;
 
 				burgerInst.calendar = burger_attach_clickHandler.calendar(elem_box_calendar, item['_type'], item['_id'], null, cb_select_calendar, null, currentDate);
 			}
@@ -1813,16 +1813,6 @@ Submenu.prototype.Add_taskdetail = function() {
 				contactServer = true;
 			}
 
-			//for calendar and assignment (only for tasks)
-			if(that.param.type == 'tasks'){
-				var new_duedate = elem_meta.find('[find=duedate_timestamp]').val();
-				if(duration_timestamp != item['duration']){
-					param['duration'] = duration_timestamp;
-					param['start'] = item['start'];
-					contactServer = true;
-				}
-			}
-
 
 			//name or title
 			if(that.param.type == 'files'){
@@ -1852,6 +1842,9 @@ Submenu.prototype.Add_taskdetail = function() {
 				}
 
 				if(that.param.type == 'tasks'){
+					param['duration'] = item.duration;
+					param['start'] = item['start'];
+
 					if(in_charge_id){
 						param['users>in_charge'] = {};
 						param['users>in_charge'][in_charge_id] = true;

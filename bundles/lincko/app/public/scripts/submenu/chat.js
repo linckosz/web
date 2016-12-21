@@ -553,6 +553,9 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 	else if(chat_status == "invitationsuccess"){
 		Elem_info.removeClass("display_none");
 		Elem_info.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2309, 'js')); //Your invitation has been sent.
+		if(sub_that && sub_that.param && sub_that.param.prevSub && sub_that.param.prevSub.menu == 'app_projects_users_contacts'){
+			Elem_info.find("[find=submenu_title]").append('<br/>'+"Once your invitation is accepted, you'll be able to see the new contact on your teammates screen and add them to the project. Once added, you can assign tasks to them."); //toto
+		}
 	}
 	else { //noresult
 		Elem_info.removeClass("display_none");
