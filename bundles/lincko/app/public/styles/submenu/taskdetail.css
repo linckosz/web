@@ -329,7 +329,7 @@ td.submenu_taskdetail_share .fa{
 .submenu_taskdetail_meta_text[find=duedate_text] {
 	border: 0px;
 	width: 45px;
-	background-color: initial;
+	background-color: transparent;
 	color: inherit;
 }
 .submenu_taskdetail_meta_text[find=user_text] {
@@ -683,7 +683,7 @@ td.submenu_taskdetail_share .fa{
 	vertical-align: middle;
 	padding:0px 5px;
 }
-.submenu_taskdetail_commentbubble_text [type=textarea] {
+.submenu_taskdetail_commentbubble_text [type=text] {
 	display:none;
 }
 
@@ -710,8 +710,8 @@ td.submenu_taskdetail_share .fa{
 /*
 styling for addNew
 */
-.submenu_taskdetail_commentbubble_addNew .submenu_taskdetail_commentbubble_text [type=textarea] {
-	display: initial;
+.submenu_taskdetail_commentbubble_addNew .submenu_taskdetail_commentbubble_text [type=text] {
+	display: block;
 }
 .submenu_taskdetail_commentbubble_addNew .submenu_taskdetail_commentbubble_quickAction,
 .submenu_taskdetail_commentbubble_addNew .submenu_taskdetail_commentbubble_quickAction [find=text] {
@@ -768,7 +768,7 @@ styling for sub comments
 	height: 120px;
 }
 .submenu_content_taskdetail_files .skylist_card_textwrapper {
-	width: initial;
+	width: auto;
 }
 .submenu_content_taskdetail_files [find=title_text]{
 	opacity: 1;
