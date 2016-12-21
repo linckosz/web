@@ -11,7 +11,15 @@ submenu_list['filemanager'] = {
 		'hide': true,
 		"class": "base_pointer",
 		"action": function(Elem, subm) {
-			
+			$.each(subm.param.old_upload_flag, function(key,val){
+				if(!val)
+				{
+					var e;
+					app_upload_files.lincko_files[key].lincko_status = 'deleted';
+					$('#app_upload_fileupload').fileupload('option').destroy(e, app_upload_files.lincko_files[key]);
+				}
+			});
+
 		},
 	},
 	"right_button": {
@@ -92,8 +100,9 @@ Submenu.prototype.AddFilemanagerContent = function() {
 	});
 
 	that.param.upload_flag = {};
+	that.param.old_upload_flag = {};
 
-	var file_refresh =  function(upload_type,upload_pid,upload_param,upload_flag,target,item_width,item_height,border_size)
+	var file_refresh =  function(upload_type,upload_pid,upload_param,old_upload_flag,upload_flag,target,item_width,item_height,border_size,open_flag)
 	{
 		var files = app_upload_files.lincko_files;
 		for(var i in files)
@@ -122,11 +131,6 @@ Submenu.prototype.AddFilemanagerContent = function() {
 
 				}
 
-
-				if(typeof item.attr("has_border") === "undefined")
-				{
-					
-				}	
 
 				if(preview == null || preview == ''){
 					item.find("[find=file_content_ico]").removeClass("display_none");
@@ -159,6 +163,15 @@ Submenu.prototype.AddFilemanagerContent = function() {
 								$(this).css("border-width","0px");
 							}
 						});
+
+						var z = files[i]["lincko_files_index"];
+						if(open_flag)
+						{
+							old_upload_flag[z] = true;
+						}
+						else{
+							old_upload_flag[z] = false;
+						}
 
 						item.attr("has_border",true);
 					}	
@@ -214,21 +227,29 @@ Submenu.prototype.AddFilemanagerContent = function() {
 							}
 						});
 
+						var z = files[i]["lincko_files_index"];
+						if(open_flag)
+						{
+							old_upload_flag[z] = true;
+						}
+						else{
+							old_upload_flag[z] = false;
+						}
+
 						item.attr("has_border",true);
-					}
-
-					var index = files[i]["lincko_files_index"];
-
-					if(typeof upload_flag[index] === "undefined")
-					{
-						upload_flag[index] = true;
 					}
 				}
 
-					
-				
-				
+				var index = files[i]["lincko_files_index"];
+				if(typeof upload_flag[index] === "undefined")
+				{
+					upload_flag[index] = true;
+				}
+
+
 			}
+
+			
 		}
 	}
 
@@ -236,7 +257,7 @@ Submenu.prototype.AddFilemanagerContent = function() {
 	
 
 	setTimeout(function(){
-		file_refresh(that.param.upload_type,that.param.upload_pid,that.param.upload_param,that.param.upload_flag,target,item_width,item_height,border_size);
+		file_refresh(that.param.upload_type,that.param.upload_pid,that.param.upload_param,that.param.old_upload_flag,that.param.upload_flag,target,item_width,item_height,border_size,true);
 	},200);
 	
 
@@ -246,16 +267,17 @@ Submenu.prototype.AddFilemanagerContent = function() {
 		var upload_type = this.action_param[0];
 		var upload_pid = this.action_param[1];
 		var upload_param = this.action_param[2];
-		var upload_flag = this.action_param[3];
-		var target = this.action_param[4];
-		var item_width = this.action_param[5];
-		var item_height = this.action_param[6];
+		var old_upload_flag = this.action_param[3];
+		var upload_flag = this.action_param[4];
+		var target = this.action_param[5];
+		var item_width = this.action_param[6];
+		var item_height = this.action_param[7];
 
-		file_refresh(upload_type,upload_pid,upload_param,upload_param,target,item_width,item_height,border_size);
+		file_refresh(upload_type,upload_pid,upload_param,old_upload_flag,upload_flag,target,item_width,item_height,border_size,false);
 		wrapper_IScroll_refresh();
 		wrapper_IScroll();
 
-	},[that.param.upload_type,that.param.upload_pid,that.param.upload_param,that.param.upload_flag,target,item_width,item_height]);
+	},[that.param.upload_type,that.param.upload_pid,that.param.upload_param,that.param.old_upload_flag,that.param.upload_flag,target,item_width,item_height]);
 
 	delete submenu_wrapper;
 	return true;

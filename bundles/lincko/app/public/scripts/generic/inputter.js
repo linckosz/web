@@ -389,6 +389,7 @@ inputter.prototype.buildLayer = function()
 												upload_pid:pid,
 												upload_param:panel_id,
 												upload_flag:null,
+												old_upload_flag:null,
 											};
 											submenu_Build('filemanager', true, null, parm_upload, true);
 										}
