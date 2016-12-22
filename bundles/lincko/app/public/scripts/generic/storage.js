@@ -886,8 +886,13 @@ Lincko.storage.search = function(type, param, category){
 				if(item[prop].toLowerCase().indexOf(param)!==-1){
 					save_result = true;
 				}
-				else if((Pinyin.GetQP(item[prop])).indexOf(Pinyin.GetQP(param)) !== -1){ //convert hanzi into pinyin and match
-					save_result = true;
+				else{
+					try{
+						if((Pinyin.GetQP(item[prop])).indexOf(Pinyin.GetQP(param)) !== -1){ //convert hanzi into pinyin and match
+							save_result = true;
+						}
+					}
+					catch(e){/*pinyin error*/}
 				}
 			}
 		}
@@ -967,8 +972,13 @@ Lincko.storage.searchArray = function(type, param, array, attr, pinyin){
 				if(item[prop].toLowerCase().indexOf(param)!==-1){
 					save_result = true;
 				}
-				else if(pinyin && (Pinyin.GetQP(item[prop])).indexOf(Pinyin.GetQP(param)) !== -1){ //convert hanzi into pinyin and match
-					save_result = true;
+				else{
+					try{
+						if((Pinyin.GetQP(item[prop])).indexOf(Pinyin.GetQP(param)) !== -1){ //convert hanzi into pinyin and match
+							save_result = true;
+						}
+					}
+					catch(e){/*pinyin error*/}
 				}
 			}
 		}
