@@ -250,7 +250,7 @@ $('#app_content_top_home').click(function(){
 
 $('#app_content_top_title_menu, #app_content_statistics_settings').click(function(){
 	if(app_content_menu.projects_id != Lincko.storage.getMyPlaceholder()['_id']){
-		submenu_Build("app_project_edit", -1, false, app_content_menu.projects_id, false);
+		submenu_Build("app_project_edit", 1, false, app_content_menu.projects_id, false);
 	}
 });
 
