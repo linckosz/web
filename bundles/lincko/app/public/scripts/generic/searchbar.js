@@ -98,8 +98,8 @@ var searchbar = {
 				//users search
 				userid_array = searchbar.searchByUsername(word, Object.keys(item._perm));
 
-				//+title (tasks) and +name (files) search
-				if(!word.length || (Lincko.storage.searchArray('word', word, [item], ['+title', '+name'], true).length > 0 && !burgerOnly) ){
+				//+title (tasks) -comment and +name (files) search
+				if(!word.length || (Lincko.storage.searchArray('word', word, [item], ['+title', '+name', '-comment'], true).length > 0 && !burgerOnly) ){
 					push = true;
 					break;
 				}
