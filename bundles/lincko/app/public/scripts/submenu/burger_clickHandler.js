@@ -140,7 +140,7 @@ Submenu.prototype.Add_burger_clickHandler_projects = function() {
 	}
 
 	$.each(list, function(i, burgerData){
-		var elem_option = $('<div>').addClass('burger_option_projects').text(burgerData.text).click(burgerData, fn_click);
+		var elem_option = $('<div>').addClass('burger_option burger_option_projects').text(burgerData.text).click(burgerData, fn_click);
 		if(burgerData.preSelect){
 			elem_option.addClass('burger_option_preSelect');
 		}
