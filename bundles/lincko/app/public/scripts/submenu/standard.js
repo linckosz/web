@@ -126,7 +126,23 @@ submenu_list['settings'] = {
 		},
 		"class": "",
 	},
+
+	"signout": {
+		"style": "button",
+		"title": Lincko.Translation.get('app', 38, 'html'), //Sign out
+		"action": function(){
+			wrapper_sendAction('','post','user/signout', null, null, wrapper_signout_cb_begin, wrapper_signout_cb_complete);
+		},
+		"class": "",
+	},
 };
+
+if(wrapper_domain_debug){
+	submenu_list['settings']['domain_debug'] = {
+		"style": "title_small",
+		"title": wrapper_domain_debug,
+	}
+}
 
 submenu_list['workspace'] = {
 	"_title": {

@@ -125,6 +125,11 @@ var wrapper_force_open_website = false;
 	wrapper_force_open_website = true;
 {% endif %}
 
+var wrapper_domain_debug = false;
+{% if domain_debug %}
+	wrapper_domain_debug = "{{ domain_debug }}";
+{% endif %}
+
 //In IE console is undefined if the dev tool is closed
 if(!window.console){
 	console = {

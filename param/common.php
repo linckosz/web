@@ -48,12 +48,12 @@ $app->lincko->title = 'Lincko';
 $app->lincko->http_code_ok = false;
 
 //Domain name
-if(isset($_SERVER["SERVER_HOST"])){
-	$app->lincko->domain = $_SERVER["SERVER_HOST"];
-} else if(strpos($_SERVER["HTTP_HOST"], ':')){
-	$app->lincko->domain = strstr($_SERVER["HTTP_HOST"], ':', true);
+if(isset($_SERVER['SERVER_HOST'])){
+	$app->lincko->domain = $_SERVER['SERVER_HOST'];
+} else if(strpos($_SERVER['HTTP_HOST'], ':')){
+	$app->lincko->domain = strstr($_SERVER['HTTP_HOST'], ':', true);
 } else {
-	$app->lincko->domain = $_SERVER["HTTP_HOST"];
+	$app->lincko->domain = $_SERVER['HTTP_HOST'];
 }
 
 $app->lincko->domain_restriction = "/^(?:.{1,3}|(?:api|cloud|cron|dc|file|info|lincko|mail|mx|ns|pop|smtp|tp|debug|www)\d*)$/ui";
@@ -163,6 +163,9 @@ $app->lincko->data = array(
 	'force_open_website' => true,
 );
 
+//Messages to be sent along with rendering
+$app->lincko->flash = array();
+
 
 //Integration data
 $app->lincko->integration = new \stdClass;
@@ -183,16 +186,37 @@ if($app->lincko->domain=='lincko.cafe'){
 $app->lincko->data['integration_wechat_appid'] = $app->lincko->integration->wechat['appid'];
 
 
-if(isset($_SERVER["LINCKO_FRONT"]) && !empty($_SERVER["LINCKO_FRONT"])){
-	$app->lincko->data['lincko_front'] = $_SERVER["LINCKO_FRONT"].'-';
+if(isset($_SERVER['LINCKO_BACK']) && !empty($_SERVER['LINCKO_BACK'])){
+	$app->lincko->data['lincko_back'] = $_SERVER['LINCKO_BACK'].'.';
 }
 
-if(isset($_SERVER["LINCKO_BACK"]) && !empty($_SERVER["LINCKO_BACK"])){
-	$app->lincko->data['lincko_back'] = $_SERVER["LINCKO_BACK"].'.';
+if(isset($_SERVER['LINCKO_FRONT']) && !empty($_SERVER['LINCKO_FRONT'])){
+	$app->lincko->data['lincko_front'] = $_SERVER['LINCKO_FRONT'].'-';
+	if(empty($app->lincko->data['lincko_back'])){
+		$app->lincko->data['lincko_front'] .= '.'; // master-[]lincko.cafe => master-[].lincko.cafe
+	}
 }
 
-if(isset($_SERVER["LINCKO_WORKSPACE"]) && !empty($_SERVER["LINCKO_WORKSPACE"])){
-	$app->lincko->data['workspace'] = $_SERVER["LINCKO_WORKSPACE"];
+if(isset($_SERVER['LINCKO_WORKSPACE']) && !empty($_SERVER['LINCKO_WORKSPACE'])){
+	$app->lincko->data['workspace'] = $_SERVER['LINCKO_WORKSPACE'];
+}
+
+//Information for coders
+$app->lincko->data['domain_debug'] = false;
+$subdomain = '';
+if(empty($_SERVER['LINCKO_BACK'])){
+	$subdomain .= 'master';
+} else {
+	$subdomain .= $_SERVER['LINCKO_BACK'];
+}
+if(empty($_SERVER['LINCKO_FRONT'])){
+	$subdomain .= '-master';
+} else {
+	$subdomain .= '-'.$_SERVER['LINCKO_BACK'];
+}
+$app->lincko->data['domain_debug'] = $subdomain.'.'.$app->lincko->domain;
+if($app->lincko->domain=='lincko.com'){
+	$app->lincko->data['domain_debug'] = false;
 }
 
 ////////////////////////////////////

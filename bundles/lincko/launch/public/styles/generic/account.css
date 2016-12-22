@@ -59,6 +59,13 @@
 	cursor: pointer; cursor: hand;
 }
 
+.account_domain_debug {
+	font-size: 9px;
+	color: #FFFFFF;
+	position: absolute;
+	margin-left: 4px;
+}
+
 .account_tab {
 	display: table;
 	position: relative;

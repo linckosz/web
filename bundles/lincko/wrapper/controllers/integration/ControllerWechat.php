@@ -73,9 +73,6 @@ class ControllerWechat extends Controller {
 						OneSeventySeven::set(array('sha' => substr($response->flash->username_sha1, 0, 20))); //Truncate to 20 character because phone alias notification limitation
 						OneSeventySeven::set(array('uid' => $response->flash->uid));
 					}
-					if(isset($response->flash->username)){
-						OneSeventySeven::set(array('yonghu' => $response->flash->username));
-					}
 					//Helps to not keep real creadential information on user computer, but only an encrypted code
 					if(isset($response->flash->log_id)){
 						OneSeventySeven::set(array('hahaha' => $response->flash->log_id));

@@ -71,8 +71,7 @@ submenu_list['chat_add_user'] = {
 	},
 	"qrcode": {
 		"style": "button",
-		"title": Lincko.Translation.get('app', 77, 'html'), //Scan a QR code
-		"class": "display_none",
+		"title": Lincko.Translation.get('app', 77, 'html'), //Scan a user QR code
 		"action": function(Elem, subm){
 			console.log('invite by QR code scan');
 			var url_code = 'https://bruno-bruno.lincko.cafe/uid/neIsHAe2xDEqpZYBVSk/Dg==';
@@ -99,7 +98,7 @@ submenu_list['chat_add_user'] = {
 				submenu_chat_invite_cb_begin
 			);
 		},
-		"class": "",
+		"class": "display_none",
 	},
 	//It will create a form with a validation button
 	"chat_menu": {

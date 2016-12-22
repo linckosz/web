@@ -44,8 +44,11 @@
 	</span>
 
 	<div>
+		{% if domain_debug %}<div class="account_domain_debug">{{ domain_debug }}</div>{% endif %}
 		<div class="account_tab" id="account_tab_lincko">
-			<div><div id="account_tab_lincko_back" class="display_none fa fa-angle-left"></div>Lincko</div>
+			<div>
+				<div id="account_tab_lincko_back" class="display_none fa fa-angle-left"></div>Lincko
+			</div>
 		</div>
 		<div id="account_error_mobile" class="maxMobile"></div>
 		{#{% if invitation_code %}#}
