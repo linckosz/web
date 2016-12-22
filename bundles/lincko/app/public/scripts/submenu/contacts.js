@@ -651,10 +651,9 @@ Submenu.prototype.Add_ContactContents = function(live) {
 					projects: that.param.project_id,
 				},
 			}
-			submenu_Build('app_projects_users_contacts', true, false, param);
+			submenu_Build('app_projects_users_contacts',  that.layer, false, param);
 		}
 		else{
-
 			submenu_Build("chat_add_user", true, false, true);
 		}		
 	});
