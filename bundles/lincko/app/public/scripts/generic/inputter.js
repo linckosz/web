@@ -154,7 +154,6 @@ inputter.prototype.clearContent = function()
 inputter.prototype.buildLayer = function()
 {
 
-
 	var that = this ;
 	var container = $('#-inputter_container').clone();
 	container.prop('id',this.panel_id+'_inputter_container');
@@ -466,6 +465,8 @@ inputter.prototype.buildLayer = function()
 																.find(".shortcut_ico")
 																.find("i")
 																.addClass(app_models_fileType.getClass(app_models_fileType.getExt(files[z].lincko_name)));
+																$('#'+this.action_param[2]+'_attachment .inputter_preview')
+																.find(".shortcut_ico").removeClass("display_none");
 														}
 														else
 														{
@@ -490,7 +491,7 @@ inputter.prototype.buildLayer = function()
 															var width_style  = width > height ? 30 : 'auto';
 															var height_style = width > height ? 'auto': 30;
 															var padding_top_style  = width > height ? (30 - (30 * height /width))/2  : 0;
-															var margin_left_style  = width > height ? 0 : (30 - (30*width/height))/2;
+															var margin_left_style  = width > height ? 0 : (30 - (30 * width/height))/2;
 
 															$('#'+this.action_param[2]+'_attachment .inputter_preview')
 																.find(".shortcut_pic")

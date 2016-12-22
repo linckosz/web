@@ -19,7 +19,6 @@ submenu_list['filemanager'] = {
 					$('#app_upload_fileupload').fileupload('option').destroy(e, app_upload_files.lincko_files[key]);
 				}
 			});
-
 		},
 	},
 	"right_button": {
