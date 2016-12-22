@@ -13,6 +13,11 @@ submenu_list['app_projects_users_contacts'] = {
 		"style": "preAction",
 		"action": function(Elem, subm){
 			app_projects_users_contacts_init(subm);
+
+			//hide invite new user button if no invite_access (because can't auto add them to project after invite)
+			if(!subm.param || !subm.param.invite_access || subm.obj.right_button || subm.obj.right_button.class){
+				subm.obj.right_button.class += ' display_none';
+			}
 		},
 	},
 	"right_button": {
@@ -26,7 +31,7 @@ submenu_list['app_projects_users_contacts'] = {
 					projects: subm.param, //toto => need to be careful, this should always be a project id, but need to follow closely
 				}
 			};
-			if(subm.param.invite_access){
+			if(subm.param && subm.param.invite_access){
 				param.invite_access = subm.param.invite_access;
 			}
 			submenu_Build('chat_add_user', subm.layer+1, true, param, subm.preview);
