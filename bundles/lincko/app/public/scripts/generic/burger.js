@@ -474,12 +474,11 @@ burger_list.in_charge = function(lincko_type, lincko_id){
 	}
 
 	var project_id = null;
-	if(lincko_type == 'projects'){
-		project_id = lincko_id;
-	}
-	else{
-		project_id = item['_parent'][1];
-	}
+	if(lincko_type == 'projects'){ project_id = lincko_id; }
+	else{ project_id = item['_parent'][1]; }
+
+	var task_id = null;
+	if(lincko_type == 'tasks'){ task_id = lincko_id; }
 
 	var inviteNewUser = {
 		text: Lincko.Translation.get('app', 31, 'html'), //Add Teammates
@@ -488,7 +487,7 @@ burger_list.in_charge = function(lincko_type, lincko_id){
 				pid2: project_id,
 				invite_access: {
 					projects: project_id,
-					//tasks: task_id, //toto (@sky) => Do you have a way to task ID? like that we can assign the user automatically
+					tasks: task_id, //null if not available (i.e. brand new task)
 				},
 			}
 			submenu_Build('app_projects_users_contacts', true, false, param);
