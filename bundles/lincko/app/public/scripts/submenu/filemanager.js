@@ -2,13 +2,13 @@ submenu_list['filemanager'] = {
 	//Set the title of the top
 	"_title": {
 		"style": "customized_title",
-		"title": "选择文件",//toto
+		"title": Lincko.Translation.get('app', 78, 'html'), //Attach file
 		"class": "submenu_top_itemSelector",
 	},
 	"left_button": {
 		"style": "title_left_button",
 		"title": Lincko.Translation.get('app', 7, 'html'), //Cancel
-		'hide': true,
+		"hide": true,
 		"class": "base_pointer",
 		"action": function(Elem, subm) {
 			$.each(subm.param.old_upload_flag, function(key,val){
@@ -25,7 +25,7 @@ submenu_list['filemanager'] = {
 	"right_button": {
 		"style": "title_right_button",
 		"title": Lincko.Translation.get('app', 52, 'html'), //Select
-		'hide': true,
+		"hide": true,
 		"class": "base_pointer",
 		"action": function(Elem, subm) {
 			$.each(subm.param.upload_flag, function(key,val){

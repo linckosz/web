@@ -371,7 +371,7 @@ inputter.prototype.buildLayer = function()
 								item.attr("title",Lincko.Translation.get('app', 4003, 'js'));//Attach a new file 
 								var auto_upload = this.layer.hasOwnProperty('auto_upload') ? this.layer['auto_upload'] : true;
 								item.click({'type':this.upload_ptype,'pid':this.upload_pid,'panel_id':this.panel_id,'position':this.position},function(event){
-								
+									
 									var type = event.data.type ;
 									var pid = event.data.pid ;
 									var panel_id = event.data.panel_id ;
@@ -410,17 +410,25 @@ inputter.prototype.buildLayer = function()
 										var files = app_upload_files.lincko_files;
 
 										var count = 0;
+
+										var upload_flag = {};
 										for(var z in files)
 										{
+
 											if(files[z].lincko_parent_type == this.action_param[0]
 											&& files[z].lincko_parent_id == this.action_param[1]
 											&& files[z].lincko_param == this.action_param[2])
 											{
+
+												var file_index = files[z]["lincko_files_index"];
+												upload_flag[file_index]=true;
+
 												$('#'+this.action_param[2]+'_attachment .inputter_preview').removeClass('display_none');
 												if($('#inputter_element_uploading_item_'+files[z].lincko_temp_id).length == 0)
 												{
 													var item = $('#-inputter_element_uploading_item').clone();
 													item.prop('id','inputter_element_uploading_item_'+files[z].lincko_temp_id);
+													item.attr("file-index",file_index);
 													item.appendTo(files_queue);
 
 													//remove button
@@ -510,9 +518,24 @@ inputter.prototype.buildLayer = function()
 											}
 											
 										}
+
+										//setTimeout(function(){
+											$.each($(files_queue).find('li'),function(){
+												var item_index = $(this).attr("file-index");
+												if(typeof upload_flag[item_index] === "undefined")
+												{
+													$(this).recursiveRemove(0);
+												}
+											});
+										//},0,upload_flag)
+											
+									
 										if(count == 0)
 										{
 											$('#'+this.action_param[2]+'_attachment .inputter_ico').removeClass('mobile_hide');
+
+											$('#'+this.action_param[2]+'_attachment .inputter_preview')
+												.addClass('display_none');
 
 											$('#'+this.action_param[2]+'_attachment .inputter_preview')
 																.find(".shortcut_pic")
@@ -527,6 +550,7 @@ inputter.prototype.buildLayer = function()
 												.addClass('inputter_preview_icon');
 										}
 
+
 										setTimeout(function(panel_id){
 											if(typeof myIScrollList[panel_id+"_files_queue_wrapper"] != "undefined")
 											{
@@ -534,8 +558,6 @@ inputter.prototype.buildLayer = function()
 											}
 										},0,this.action_param[2]);
 									},[this.upload_ptype,this.upload_pid,this.panel_id]);
-									
-									
 								}
 								break;
 						}
