@@ -830,9 +830,7 @@ skylist.prototype.addCard = function(item){
 					}
 					else if(that.Lincko_itemsList_filter.view == 'paper' 
 						&& typeof this.updated == 'object' && typeof this.updated[that.list_type+'_'+item['_id']] == 'object'
-						&& that.paperview_partialUpdate(this.updated[that.list_type+'_'+item['_id']])
-						/*&& Object.keys(this.updated[that.list_type+'_'+item['_id']]).length < 4
-						&& (this.updated[that.list_type+'_'+item['_id']]._files || this.updated[that.list_type+'_'+item['_id']]._children)*/){ //for now, only for _files and _children (i.e. comments) changes
+						&& that.paperview_partialUpdate(this.updated[that.list_type+'_'+item['_id']])){ 
 						that.paperview_taskCard_update(elem, item_new, this.updated[that.list_type+'_'+item['_id']]);
 					}
 					else{
@@ -1108,6 +1106,7 @@ skylist.prototype.paperview_partialUpdate = function(updated_tasks){
 		'locked_fp': true,
 		'-comment': true,
 		locked_by: true,
+		new: true,
 
 		'+title': true,
 		_files : true,
