@@ -1856,7 +1856,8 @@ Submenu.prototype.Add_taskdetail = function() {
 				}
 			}
 
-			if( taskid == 'new' || route_delete || isLockedByMe
+			if( taskid == 'new' || route_delete 
+				|| isLockedByMe || wrapper_localstorage.uid == Lincko.storage.get(that.param.type, item['_id'], 'locked_by')
 				|| ('+title' in item && param['title'] && param['title'] != item['+title'])
 				|| ('+name' in item && param['name'] && param['title'] != item['+name'])
 				|| (param['comment'] && param['comment'] != item['-comment'] )){
