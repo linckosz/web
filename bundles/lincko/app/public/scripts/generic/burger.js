@@ -31,8 +31,20 @@ var burger_keyboard = function(elem, shortcutList    ){
 		plus: null,
 	};
 
+	var cb_create = function(){
+
+	}
+	var cb_select = function(){
+
+	}
+	var cb_destroy = function(){
+
+	}
+
+
 	if(allShortcuts /*'at' in array shortcutList*/){
-		that.dropdownInst.at = new burger_dropdown('toto', list, elem, null, null, cb_select, null, false); 
+		//new burger_dropdown(id, data, position, vOffset, cb_create, cb_select, cb_destroy, submenu, flipped)
+		that.dropdownInst.at = new burger_dropdown('toto', list, elem, null, cb_create, cb_select, cb_destroy, false); 
 	}
 
 
