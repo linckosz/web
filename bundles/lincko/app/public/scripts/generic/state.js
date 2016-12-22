@@ -469,10 +469,31 @@ var app_generic_state = {
 		comments: function(item){
 			var target_id = item._id;
 			var parent = Lincko.storage.getParent(item["_type"], item["_id"]);
+			while(parent['_type']=='comments'){
+				parent = Lincko.storage.getParent(parent["_type"], parent["_id"]);
+			}
+			target_id = parent['_id'];
 			if(!storage_first_launch) {
 				var subm = submenu_get('newchat', false);
 				if(!subm || !subm.param.type || !subm.param.id || subm.param.type != 'history' || subm.param.id != parent._id){
-					submenu_Build("newchat", true, false, {'type': 'history','id': parent._id,'title': parent['+title'], find_item: "comments_"+target_id}, false);
+					if(parent['_type']=='tasks' || parent['_type']=='files' || parent['_type']=='notes'){
+						var pid = Lincko.storage.isProjectActivity(parent['_type'], target_id);
+						var type = false;
+						if(pid){ //Is inside a project
+							type = "projects";
+							app_content_menu.selection(pid, parent['_type'], null, false);
+						} else if(parent["_type"]=="chats"){
+							type = "chats";
+						}
+						if(type=="projects"){
+							var subm = submenu_get('taskdetail', true);
+							if(!subm || !subm.param.type || !subm.param.id || subm.param.type != parent['_type'] || subm.param.id != target_id){
+								submenu_Build('taskdetail', true, null, {'type':parent['_type'], 'id':target_id,}, true);
+							}
+						}
+					} else if(parent['_type']=='projects'){
+						submenu_Build("newchat", true, false, {'type': 'history','id': parent._id,'title': parent['+title'], find_item: "comments_"+target_id}, false);
+					}
 				}
 			} else {
 				var model_timer = setInterval(function(target_id, parent){
@@ -480,7 +501,24 @@ var app_generic_state = {
 						clearInterval(model_timer);
 						var subm = submenu_get('newchat', false);
 						if(!subm || !subm.param.type || !subm.param.id || subm.param.type != 'history' || subm.param.id != parent._id){
-							submenu_Build("newchat", true, false, {'type': 'history','id': parent._id,'title': parent['+title'], find_item: "comments_"+target_id}, false);
+							if(parent['_type']=='tasks' || parent['_type']=='files' || parent['_type']=='notes'){
+								var pid = Lincko.storage.isProjectActivity(parent['_type'], target_id);
+								var type = false;
+								if(pid){ //Is inside a project
+									type = "projects";
+									app_content_menu.selection(pid, parent['_type'], null, false);
+								} else if(parent["_type"]=="chats"){
+									type = "chats";
+								}
+								if(type=="projects"){
+									var subm = submenu_get('taskdetail', true);
+									if(!subm || !subm.param.type || !subm.param.id || subm.param.type != parent['_type'] || subm.param.id != target_id){
+										submenu_Build('taskdetail', true, null, {'type':parent['_type'], 'id':target_id,}, true);
+									}
+								}
+							} else if(parent['_type']=='projects'){
+								submenu_Build("newchat", true, false, {'type': 'history','id': parent._id,'title': parent['+title'], find_item: "comments_"+target_id}, false);
+							}
 						}
 					}
 				}, 1000, target_id, parent);

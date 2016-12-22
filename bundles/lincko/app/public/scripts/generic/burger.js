@@ -484,7 +484,7 @@ burger_list.in_charge = function(lincko_type, lincko_id){
 		text: Lincko.Translation.get('app', 31, 'html'), //Add Teammates
 		onClick: function(){
 			var param = {
-				pid2: project_id,
+				pid: project_id,
 				invite_access: {
 					projects: project_id,
 					tasks: task_id, //null if not available (i.e. brand new task)

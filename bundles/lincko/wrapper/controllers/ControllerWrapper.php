@@ -64,7 +64,7 @@ class ControllerWrapper extends Controller {
 			$this->json['data']['invitation_code'] = $_SESSION['invitation_code'];
 		}
 		if(isset($_SESSION['user_code'])){
-			$this->json['data']['user_code'] = $_SESSION['user_code'];
+			$this->json['user_code'] = $_SESSION['user_code'];
 		}
 		if(!OneSeventySeven::get('yuyan')) {
 			OneSeventySeven::set(array('yuyan' => $this->json['language']));
@@ -167,6 +167,11 @@ class ControllerWrapper extends Controller {
 					if(!isset($json_result->shangzai)){ $json_result->shangzai = new \stdClass; }
 					$json_result->shangzai->puk = Datassl::encrypt($_SESSION['public_key'], $app->lincko->security['private_key']); //toto => may be can use pukpik (more stable)
 				}
+				//Clean user_code because it has been used by the back end
+				if(isset($json_result->flash->unset_user_code)){
+					unset($_SESSION['user_code']);
+				}
+				
 //\libs\Watch::php($json_result->flash, '$json_result->flash', __FILE__, __LINE__, false, false, true);
 				if($this->print){
 					//"username_sha1" is a password used to encrypt data

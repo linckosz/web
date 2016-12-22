@@ -646,7 +646,7 @@ Submenu.prototype.Add_ContactContents = function(live) {
 	var elem_inviteUser = $('<div class="submenu_contacts_inviteUser">Invite new user</div>'/*toto*/).click(function(){
 		if(that.param.project_id){
 			var param = {
-				pid1: that.param.project_id,
+				pid: that.param.project_id,
 				invite_access: {
 					projects: that.param.project_id,
 				},

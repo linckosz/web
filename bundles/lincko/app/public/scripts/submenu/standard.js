@@ -112,6 +112,11 @@ submenu_list['settings'] = {
 			window.location.href = wrapper_link['home'];
 		},
 		"class": "",
+		"now": function(Elem, subm){
+			if(isMobileApp()){
+				Elem.addClass('display_none');
+			}
+		}
 	},
 	"signout": {
 		"style": "button",

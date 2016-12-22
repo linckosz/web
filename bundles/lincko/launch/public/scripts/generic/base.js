@@ -102,7 +102,7 @@ webworker_operation.launch_base_iframe = function(child_body_height){
 }
 
 var base_standalone = function(){
-	if(isMobileApp()){
+	if(isMobileApp(true)){
 		$('#account_close').recursiveRemove();
 		$('#base_wrapper').addClass('display_none');
 		$('#account_language').removeClass('display_none');

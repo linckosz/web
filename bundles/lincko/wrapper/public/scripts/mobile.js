@@ -19,7 +19,10 @@ function setMobileAlias(){
 }
 setMobileAlias();
 
-function isMobileApp(){
+function isMobileApp(check_website){
+	if(check_website && wrapper_force_open_website){
+		return false; //Act as a browser (help to open the website inside an app)
+	}
 	return (
 		   typeof android != 'undefined'
 		|| (typeof window.webkit != 'undefined' && typeof window.webkit.messageHandlers != 'undefined' && typeof window.webkit.messageHandlers.iOS != 'undefined')

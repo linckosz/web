@@ -16,6 +16,7 @@ $app->get('/', function () use ($app) {
 		}
 		$app->render('/bundles/lincko/app/templates/app/application.twig');
 	} else {
+		$app->lincko->data['force_open_website'] = false;
 		$app->router->getNamedRoute('home')->dispatch();
 	}
 })

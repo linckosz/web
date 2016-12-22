@@ -120,6 +120,11 @@ document.linckoBackPort = 8443;
 	}
 {% endif %}
 
+var wrapper_force_open_website = false;
+{% if force_open_website %}
+	wrapper_force_open_website = true;
+{% endif %}
+
 //In IE console is undefined if the dev tool is closed
 if(!window.console){
 	console = {

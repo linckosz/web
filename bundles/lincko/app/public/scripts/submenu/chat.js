@@ -12,7 +12,7 @@ submenu_list['app_chat_new'] = {
 	},
 	"user_invitation": {
 		"style": "button",
-		"title": Lincko.Translation.get('app', 2305, 'html').ucfirst(), //Invite New Contact
+		"title": Lincko.Translation.get('app', 2305, 'html'), //Invite New Contact
 		"action": function(Elem, subm){
 			submenu_Build("chat_add_user", subm.layer, false, null, subm.preview); 
 		},
@@ -68,6 +68,38 @@ submenu_list['chat_add_user'] = {
 		"title": Lincko.Translation.get('app', 25, 'html'), //Close
 		'hide': true,
 		"class": "base_pointer",
+	},
+	"qrcode": {
+		"style": "button",
+		"title": Lincko.Translation.get('app', 77, 'html'), //Scan a QR code
+		"class": "display_none",
+		"action": function(Elem, subm){
+			console.log('invite by QR code scan');
+			var url_code = 'https://bruno-bruno.lincko.cafe/uid/neIsHAe2xDEqpZYBVSk/Dg==';
+			var user_code = 'neIsHAe2xDEqpZYBVSk/Dg=='; // regex from $url_code
+			var invite_access = null;
+			if(subm.param && typeof subm.param.invite_access != 'undefined'){
+				invite_access = subm.param.invite_access;
+			}
+			var param = {
+				user_code: user_code,
+				invite_access: invite_access,
+			}
+			submenu_chat_search.data = {
+				sub_that: subm,
+				email: '',
+				users_id: null,
+			};
+			wrapper_sendAction(
+				param,
+				'post',
+				'user/inviteqrcode',
+				submenu_chat_inviteqrcode_cb_success,
+				submenu_chat_invite_cb_error,
+				submenu_chat_invite_cb_begin
+			);
+		},
+		"class": "",
 	},
 	//It will create a form with a validation button
 	"chat_menu": {
@@ -567,6 +599,16 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 			Elem_info.find("[find=submenu_title]").append('<br/>'+"Once your invitation is accepted, you'll be able to see the new contact on your teammates screen and add them to the project. Once added, you can assign tasks to them."); //toto
 		}
 	}
+	else if(chat_status == "operationfailed"){
+		Elem_info.removeClass("display_none");
+		//Elem_info.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2312, 'js')); //Operaion failed. [toto]
+		Elem_info.find("[find=submenu_title]").html("Operaion failed.");
+	}
+	else if(chat_status == "operationsuccess"){
+		Elem_info.removeClass("display_none");
+		//Elem_info.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2309, 'js')); //Operation successed. [toto]
+		Elem_info.find("[find=submenu_title]").html("Operaion successed.");
+	}
 	else { //noresult
 		Elem_info.removeClass("display_none");
 		Elem_info.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2308, 'js')); //Please enter an Email address.
@@ -712,6 +754,20 @@ var submenu_chat_invite_cb_success = function(msg, error, status, data){
 		submenu_chat_new_user_result(submenu_chat_search.data.sub_that, null, "invitationsuccess");
 	} else {
 		submenu_chat_new_user_result(submenu_chat_search.data.sub_that, null, "invitationfailed");
+	}
+};
+
+var submenu_chat_inviteqrcode_cb_success = function(msg, error, status, data){
+	Lincko.storage.getLatest();
+	if(data.data){
+		data = data.data;
+	} else {
+		data = false;
+	}
+	if(data){
+		submenu_chat_new_user_result(submenu_chat_search.data.sub_that, null, "operationsuccess");
+	} else {
+		submenu_chat_new_user_result(submenu_chat_search.data.sub_that, null, "operationfailed");
 	}
 };
 

@@ -81,7 +81,7 @@
 	var wphead_page_redirect = "{{ page_redirect }}";
 
 	JSfiles.finish(function(){
-		if(!isMobileApp()){
+		if(!isMobileApp(true)){
 			if(!wphead_page_redirect){
 				$('#base_iframe_message')
 					.prop('src', wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix'])

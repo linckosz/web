@@ -35,7 +35,7 @@ $('#wphead_bar_blog').click(function(){
 });
 
 $('#wphead_bar_features').click(function(){
-	if(!isMobileApp()){
+	if(!isMobileApp(true)){
 		$('#base_iframe_message')
 			.prop('src', wphead_link['blog_prefix']+'/features'+wphead_link['blog_suffix'])
 			.prop('data', wphead_link['blog_prefix']+'/features'+wphead_link['blog_suffix']);
@@ -44,7 +44,7 @@ $('#wphead_bar_features').click(function(){
 });
 
 $('#wphead_bar_overview').click(function(){
-	if(!isMobileApp()){
+	if(!isMobileApp(true)){
 		$('#base_iframe_message')
 			.prop('src', wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix'])
 			.prop('data', wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix']);
@@ -55,7 +55,7 @@ $('#wphead_bar_overview').click(function(){
 var wphead_active_current_menu = 'overview';
 
 var wphead_active_menu = function(menu){
-	if(!isMobileApp()){
+	if(!isMobileApp(true)){
 		if(typeof menu == 'undefined'){
 			menu = wphead_active_current_menu;
 		} else {
@@ -100,7 +100,7 @@ dropmenu_list['settings'] = $.extend(
 			"style": "button",
 			"title": Lincko.Translation.get('web', 2001, 'html'), //Overview
 			"action": function(url){
-				if(!isMobileApp() && url != $('#base_iframe_message').prop('data')){
+				if(!isMobileApp(true) && url != $('#base_iframe_message').prop('data')){
 					$('#base_iframe_message')
 						.prop('src', url)
 						.prop('data', url);
@@ -115,7 +115,7 @@ dropmenu_list['settings'] = $.extend(
 			"style": "button",
 			"title": Lincko.Translation.get('web', 2002, 'html'), //Features
 			"action": function(url){
-				if(!isMobileApp() && url != $('#base_iframe_message').prop('data')){
+				if(!isMobileApp(true) && url != $('#base_iframe_message').prop('data')){
 					$('#base_iframe_message')
 						.prop('src', url)
 						.prop('data', url);
@@ -130,7 +130,7 @@ dropmenu_list['settings'] = $.extend(
 			"style": "button",
 			"title": Lincko.Translation.get('web', 2003, 'html'), //Blog
 			"action": function(url){
-				if(!isMobileApp() && url != $('#base_iframe_message').prop('data')){
+				if(!isMobileApp(true) && url != $('#base_iframe_message').prop('data')){
 					$('#base_iframe_message')
 						.prop('src', url)
 						.prop('data', url);

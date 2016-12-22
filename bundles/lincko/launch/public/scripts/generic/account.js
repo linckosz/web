@@ -170,7 +170,7 @@ function account_show(select) {
 
 function account_hide() {
 	global_select = false;
-	if(!isMobileApp()){
+	if(!isMobileApp(true)){
 		$('#account_wrapper').css('z-index',-1).hide();
 		$('#base_wrapper').removeClass('blur');
 	}
@@ -499,7 +499,7 @@ JSfiles.finish(function(){
 	} else if(account_user_action){
 		account_show(account_user_action);
 	}
-	if(isMobileApp()){
+	if(isMobileApp(true)){
 		$('#account_wrapper, .account_trans, .account_tab, #account_tab_lincko, .account_tab_joinus, .account_tab_signin, .account_form').addClass('account_wrapper_mobile_app');
 	}
 });

@@ -160,6 +160,7 @@ $app->lincko->data = array(
 	'link_reset' => false,
 	'integration_wechat_appid' => '',
 	'integration_connection_error' => false,
+	'force_open_website' => true,
 );
 
 

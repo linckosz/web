@@ -59,7 +59,11 @@ var app_projects_users_contacts_init = function(subm){
 		"class": "submenu_deco_info submenu_deco_fix",
 	};
 
-	var project = Lincko.storage.get("projects", subm.param);
+	var pid = subm.param;
+	if(subm.param && subm.param.pid){
+		pid = subm.param.pid;
+	}
+	var project = Lincko.storage.get("projects", pid);
 	var projects_id = project["_id"];
 	if(project){ //Editing
 
