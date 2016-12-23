@@ -217,6 +217,8 @@ if(empty($_SERVER['LINCKO_FRONT'])){
 $app->lincko->data['domain_debug'] = $subdomain.'.'.$app->lincko->domain;
 if($app->lincko->domain=='lincko.com'){
 	$app->lincko->data['domain_debug'] = false;
+} else if($app->lincko->domain=='lincko.co'){
+	$app->lincko->data['domain_debug'] = $app->lincko->domain;
 }
 
 ////////////////////////////////////

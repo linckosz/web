@@ -151,7 +151,7 @@ function account_show(select) {
 		return false;
 	}
 	if(typeof select=="boolean"){
-		if(select){
+		if(select && account_youjian){
 			select = 'signin';
 		} else {
 			select = 'joinus';
@@ -185,6 +185,7 @@ function account_select(select) {
 	account_hide_error();
 	if(select == 'forgot'){
 		$('#account_forgot_box').removeClass('display_none');
+		$('#account_forgot_email').val($('#account_signin_email').val());
 		$('#account_forgot_email').focus();
 	} else if(select == 'reset'){
 		$('#account_reset_box').removeClass('display_none');
@@ -201,6 +202,7 @@ function account_select(select) {
 		$('#account_tab_joinus, #account_tab_signin').removeClass('display_none');
 		$('#account_tab_joinus').addClass('account_trans');
 		$('#account_tab_joinus > div').addClass('account_tab_joinus');
+		$('#account_signin_email').val($('#account_joinus_email').val());
 		if($('#account_signin_email').val() != ''){
 			account_display_label($('#account_signin_email'), false);
 			$('#account_signin_password').focus();
@@ -214,6 +216,7 @@ function account_select(select) {
 		$('#account_tab_signin > div').addClass('account_tab_signin');
 		//This helps to refresh the captcha image to avoid it appear unlinked
 		$("#account_captcha").prop("src", $("#account_captcha").prop("src"));
+		$('#account_joinus_email').val($('#account_signin_email').val());
 		$('#account_joinus_email').focus();
 	}
 }
@@ -466,7 +469,7 @@ $("#account_joinus_password").addClass('base_input_text_error').on({
 });
 
 $('#account_tab_lincko_back').click(function(){
-	account_show(true);
+	account_show('signin');
 })
 
 var account_joinus_password_tooltip = function(){

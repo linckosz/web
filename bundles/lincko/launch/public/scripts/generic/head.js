@@ -12,11 +12,11 @@ $('#head_signout').click(function(){
 });
 
 $('#head_signin').click(function(){
-	if(typeof account_show != 'undefined') { account_show(true); }
+	if(typeof account_show != 'undefined') { account_show('signin'); }
 });
 
 $('#head_joinus').click(function(){
-	if(typeof account_show != 'undefined') { account_show(); }
+	if(typeof account_show != 'undefined') { account_show('joinus'); }
 });
 
 $('#head_account').click(function(){

@@ -1751,21 +1751,40 @@ Lincko.storage.generateMyQRcode = function(){
 	if(user){
 		var workid = Lincko.storage.getWORKID();
 		var sha = wrapper_localstorage.sha;
-		var puk = wrapper_get_shangzai('puk');
 		var type = "qrcode";
 		var uid = wrapper_localstorage.uid;
 		var name = btoa(wrapper_localstorage.sha);
 		name = name.replace(/[^\d\w]/g, "");
 		if(name==''){ name = 'user'; }
 		var created_at = Lincko.storage.get('users', wrapper_localstorage.uid, 'created_at');
-		var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':'+document.linckoBackPort+'/file';
+		var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domainRoot+':'+document.linckoBackPort+'/file';
 		return url+"/"+workid+"/"+sha+"/"+type+"/"+uid+"/"+name+".png?"+created_at;
 	}
 	return false;
 }
 
 Lincko.storage.generateMyURL = function(){
-	return top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/uid/"+wrapper_localstorage.ucode;
+	return top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domainRoot+"/uid/"+wrapper_localstorage.ucode;
+}
+
+Lincko.storage.getProfile = function(uid){
+	var profile = app_application_icon_single_user.src;
+	if(uid==0){ //LinckoBot
+		profile = app_application_icon_roboto.src;
+	} else if(uid==1){ //Monkey King
+		profile = app_application_icon_monkeyking.src;
+	} else {
+		var id = Lincko.storage.get('users', uid, 'profile_pic');
+		if(id){
+			var file = Lincko.storage.get('files', id);
+			if(file){
+				if((file['category']=='image' || file['category']=='video') && file['thu_type']!=null){
+					profile = top.location.protocol+'//'+document.linckoBack+'file.'+document.domainRoot+':'+document.linckoBackPort+'/file/profile/'+uid;
+				}
+			}
+		}
+	}
+	return profile;
 }
 
 
@@ -1774,11 +1793,10 @@ Lincko.storage.getLink = function(id){
 	if(file){
 		var workid = Lincko.storage.getWORKID();
 		var sha = Lincko.storage.get('files', id, 'sha');
-		var puk = wrapper_get_shangzai('puk');
 		var type = "link";
 		var name = wrapper_to_url(Lincko.storage.get('files', id, 'name'));
 		var updated_at = Lincko.storage.get('files', id, 'updated_at');
-		var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':'+document.linckoBackPort+'/file';
+		var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domainRoot+':'+document.linckoBackPort+'/file';
 		return url+"/"+workid+"/"+sha+"/"+type+"/"+id+"/"+name+"?"+updated_at;
 	}
 	return false;
@@ -1790,17 +1808,16 @@ Lincko.storage.getDownload = function(id){
 	if(file){
 		var workid = Lincko.storage.getWORKID();
 		var sha = Lincko.storage.get('files', id, 'sha');
-		var puk = wrapper_get_shangzai('puk');
 		var type = "download";
 		var name = wrapper_to_url(Lincko.storage.get('files', id, 'name'));
 		var updated_at = Lincko.storage.get('files', id, 'updated_at');
-		var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':'+document.linckoBackPort+'/file';
+		var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domainRoot+':'+document.linckoBackPort+'/file';
 		return url+"/"+workid+"/"+sha+"/"+type+"/"+id+"/"+name+"?"+updated_at;
 	}
 	return false;
 }
 
-//A thumbnail is always 
+//A thumbnail is always a picture
 Lincko.storage.getLinkThumbnail = function(id){
 	var file = Lincko.storage.get('files', id);
 	var thumbnail = false;
@@ -1809,14 +1826,12 @@ Lincko.storage.getLinkThumbnail = function(id){
 		if((file['category']=='image' || file['category']=='video') && file['thu_type']!=null){
 			var workid = Lincko.storage.getWORKID();
 			var sha = Lincko.storage.get('files', id, 'sha');
-			var puk = wrapper_get_shangzai('puk');
 			var type = "thumbnail";
 			var name = wrapper_to_url(Lincko.storage.get('files', id, 'name'));
 			var updated_at = Lincko.storage.get('files', id, 'updated_at');
-			var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':'+document.linckoBackPort+'/file';
+			var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domainRoot+':'+document.linckoBackPort+'/file';
 			thumbnail = url+"/"+workid+"/"+sha+"/"+type+"/"+id+"/"+name+"?"+updated_at;
 		}
-
 	}
 	return thumbnail;
 }

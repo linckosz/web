@@ -60,7 +60,7 @@
 				"style": "button",
 				"title": "{{ _trans('web', 1, 8, 'js') }}", //Join us
 				"action": function(){
-					if(typeof account_show != 'undefined') { account_show(); }
+					if(typeof account_show != 'undefined') { account_show('joinus'); }
 				},
 				"class": "wphead_dropmenu_first",
 			},
@@ -68,7 +68,7 @@
 				"style": "button",
 				"title": "{{ _trans('web', 1, 9, 'js') }}", //Sign in
 				"action": function(){
-					if(typeof account_show != 'undefined') { account_show(true); }
+					if(typeof account_show != 'undefined') { account_show('signin'); }
 				},
 				"class": "wphead_dropmenu_first",
 			},

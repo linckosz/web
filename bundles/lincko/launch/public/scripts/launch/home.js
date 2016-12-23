@@ -48,7 +48,7 @@ function home_valid_email(email){
 }
 
 $("#home_signin_link").click(function(){
-	if(typeof account_show !== 'undefined') { account_show(true); }
+	if(typeof account_show !== 'undefined') { account_show('signin'); }
 });
 
 $("#home_news_email").on({

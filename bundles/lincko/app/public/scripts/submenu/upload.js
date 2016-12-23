@@ -46,6 +46,7 @@ Submenu.prototype.Add_MenuAppUploadAllForm = function() {
 		Elem_bt.prop("id", this.id+'_submenu_app_upload_function_button'+'_start');
 		Elem_bt.html(Lincko.Translation.get('app', 5, 'html')); //Start
 		Elem_bt.click(function(){
+			$('#app_upload_fileupload').fileupload('option')._cancelHandler(); //Force to reinitialize before any start
 			$('#app_upload_fileupload').fileupload('option')._startHandler();
 		});
 		Elem.append(Elem_bt);
@@ -64,6 +65,7 @@ Submenu.prototype.Add_MenuAppUploadAllForm = function() {
 		Elem_bt.html(Lincko.Translation.get('app', 22, 'html')); //Delete
 		Elem_bt.click(function(){
 			if(app_upload_files.lincko_numberOfFiles>0){
+				$('#app_upload_fileupload').fileupload('option')._cancelHandler(); //Force to reinitialize before any start
 				$('#app_upload_fileupload').fileupload('option')._deleteHandler();
 			} else {
 				$('#'+that.id).find("[find=submenu_wrapper_back]").click();
@@ -352,6 +354,8 @@ Submenu.prototype.Add_MenuAppUploadSubFile = function() {
 			Elem_bt.html(Lincko.Translation.get('app', 5, 'html')); //Start
 			Elem_bt.click(function(){
 				if(app_upload_files.lincko_files[lincko_files_index]){
+					app_upload_files.lincko_files[lincko_files_index].lincko_status = 'abort';
+					app_upload_files.lincko_files[lincko_files_index].abort(); //Force to reinitialize before any start
 					app_upload_files.lincko_files[lincko_files_index].submit();
 				}
 			});
@@ -375,6 +379,8 @@ Submenu.prototype.Add_MenuAppUploadSubFile = function() {
 			Elem_bt.html(Lincko.Translation.get('app', 22, 'html')); //Delete
 			Elem_bt.click(function(){
 				if(app_upload_files.lincko_files[lincko_files_index]){
+					app_upload_files.lincko_files[lincko_files_index].lincko_status = 'abort';
+					app_upload_files.lincko_files[lincko_files_index].abort();//Force to reinitialize before any start
 					var e; //undefined
 					$('#app_upload_fileupload').fileupload('option').destroy(e, app_upload_files.lincko_files[lincko_files_index]);
 				} else {

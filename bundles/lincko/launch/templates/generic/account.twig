@@ -14,6 +14,10 @@
 		{% if user_action %}
 			account_user_action = "{{ user_action }}";
 		{% endif %}
+		var account_youjian = false;
+		{% if youjian %}
+			account_youjian = "{{ youjian }}";
+		{% endif %}
 		var account_integration = {
 			wechat: {
 				appid: "{{ integration_wechat_appid }}",

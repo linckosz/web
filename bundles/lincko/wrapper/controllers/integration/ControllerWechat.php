@@ -85,6 +85,7 @@ class ControllerWechat extends Controller {
 					//Used to display/download files in a secured way and keep browser cache enable (same url)
 					if(isset($response->flash->pukpic)){
 						setcookie('pukpic', $response->flash->pukpic, time()+intval($app->lincko->cookies_lifetime), '/', $app->lincko->domain);
+						OneSeventySeven::set(array('pukpic' => $response->flash->pukpic));
 					}
 				}
 				\bundles\lincko\wrapper\hooks\SetData(); //used to help log in immediatly

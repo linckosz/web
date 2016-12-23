@@ -2,9 +2,6 @@ var wrapper_xhr;
 var wrapper_run = {}; //Keep a track of all form running
 var wrapper_totalxhr = 0;
 var wrapper_objForm = null;
-var wrapper_shangzai = {
-		puk: null,
-};
 var wrapper_set_shangzai = true;
 var wrapper_xhr_error = true; //At false, we make communication error message appearing once, at true never
 var wrapper_signing_out = false;
@@ -86,77 +83,13 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 			}
 			cb_begin(jqXHR, settings, temp_id);
 		},
-		/*
-		success: function(data){
-			//Those 3 following lines are only for debug purpose
-			//var msg = JSON.stringify(data); //for test
-			//var msg = data; //for test
-			//var msg = JSON.parse(data.msg); //for test
-			data = wrapper_js_response;
-			
-			//Get back the form object if it was sent from a form
-			wrapper_objForm = ajax_objForm;
-
-			//This is importat because sometime in msg we return an object with some information inside
-			var msg = data.msg;
-			if(typeof data.show === 'string'){
-				msg = data.show;
-			} else if($.type(msg) === 'object' && msg.msg){
-				msg = msg.msg;
-			} else if(typeof msg !== 'string'){
-				msg = '';
-			}
-			if(data.error){
-				JSerror.sendError(JSON.stringify(data, null, 4), '/wrapper.js/wrapper_ajax().success()', 0);
-				console.log(data);
-			}
-			if(data.shangzai && data.shangzai.puk){
-				wrapper_shangzai = data.shangzai;
-				wrapper_localstorage.encrypt('shangzai', data.shangzai);
-				wrapper_set_shangzai = false;
-			}
-
-			if(data.show && typeof base_show_error === 'function'){
-				base_show_error(msg, data.error);
-			}
-
-			//Exit if we are signout
-			if(data.signout && !wrapper_signing_out && wrapper_localstorage.logged){
-				wrapper_signing_out = true; //Avoid a loop
-				if(data.show && typeof base_show_error === 'function'){
-					base_show_error(Lincko.Translation.get('app', 33, 'js')); //You are not allowed to access this workspace. (keep it blue to avoid it looking like a bug message)
-				}
-				setTimeout(function(){
-					wrapper_sendAction('','post','user/signout', null, null, wrapper_signout_cb_begin, wrapper_signout_cb_complete);
-				}, 200);
-			}
-
-			//Force to update elements if the function is available
-			if(typeof storage_cb_success === 'function'){
-				storage_cb_success(msg, data.error, data.status, data.msg);
-			}
-
-			// Below is the production information with "dataType: 'json'"
-			cb_success(msg, data.error, data.status, data.msg);
-
-			//If the language changed, we force to refresh the page
-			if(typeof data.language != 'undefined'){
-				setTimeout(function(language){
-					if(typeof app_language_short != 'undefined' && typeof language != 'undefined' && app_language_short != language){
-						//window.location.href = wrapper_link['root']; //toto => disable for debugging purpose
-					}
-				}, 500, data.language);
-			}
-
-		},
-		*/
 		
 		success: function(data){
 			//Those 3 following lines are only for debug purpose
 			//var msg = JSON.stringify(data); //for test
 			//var msg = data; //for test
 			//var msg = JSON.parse(data.msg); //for test
-			
+			//console.log(data);
 			//Get back the form object if it was sent from a form
 			wrapper_objForm = ajax_objForm;
 
@@ -173,7 +106,8 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 				JSerror.sendError(JSON.stringify(data, null, 4), '/wrapper.js/wrapper_ajax().success()', 0);
 				console.log(data);
 			}
-			if(data.shangzai && data.shangzai.puk){
+
+			if(data.shangzai){
 				wrapper_shangzai = data.shangzai;
 				wrapper_localstorage.encrypt('shangzai', data.shangzai);
 				wrapper_set_shangzai = false;
@@ -388,30 +322,13 @@ function wrapper_force_resign(cb_success, cb_error, cb_begin, cb_complete){
 	return true;
 }
 
-/*
-//Do not allow it, it migth create bugs
-function wrapper_disable_submit(){
-	//Disable submit action of all forms
-	//Enable only submit of uploading files forms (multipart/form-data) because files cannot be sent by Ajax
-	$("form[enctype!='multipart/form-data']").on('submit', function(e) {
-		e.preventDefault(); //Disable submit action by click
-	});
-}
-*/
-
-function wrapper_get_shangzai(field){
-	var result = false;
-	var shangzai = false;
-	if(typeof field !== 'string'){
-		result = false;
-	} else if(wrapper_shangzai[field]){
-		result = wrapper_shangzai[field];
+function wrapper_get_shangzai(){
+	if(wrapper_shangzai){
+		return wrapper_shangzai;
 	} else if(shangzai = wrapper_localstorage.decrypt('shangzai')){
-		if(shangzai[field]){
-			result = wrapper_shangzai[field] = shangzai[field];
-		}
+		wrapper_shangzai = shangzai;
 	}
-	return result;
+	return false;
 }
 
 wrapper_localstorage.encrypt_timer = [];

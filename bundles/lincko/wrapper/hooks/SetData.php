@@ -15,13 +15,7 @@ function getFingerprint(){
 function SetData(){
 	$app = \Slim\Slim::getInstance();
 	$logged = false;
-	/*
-	//\libs\Watch::php(true, '$var', __FILE__, __LINE__, false, false, true);
-	\libs\Watch::php(OneSeventySeven::get('hahaha'), '$hahaha', __FILE__, __LINE__, false, false, true);
-	\libs\Watch::php(OneSeventySeven::get('jizhu'), '$jizhu', __FILE__, __LINE__, false, false, true);
-	\libs\Watch::php(OneSeventySeven::get('sha'), '$sha', __FILE__, __LINE__, false, false, true);
-	\libs\Watch::php(OneSeventySeven::get('uid'), '$uid', __FILE__, __LINE__, false, false, true);
-*/
+
 	if(
 		   //Minimum fields required to display offline
 		   OneSeventySeven::get('hahaha') //resign
@@ -45,6 +39,11 @@ function SetData(){
 	$sha = OneSeventySeven::get('sha');
 	$ucode = Datassl::encrypt($uid, 'invitation');
 
+	$shangzai = false;
+	if($pukpic = OneSeventySeven::get('pukpic')){
+		$shangzai = Datassl::encrypt($pukpic);
+	}
+	
 	//Place in cookies for upload and download files
 	$fingerprint = getFingerprint(); //fingerprint of the device
 	OneSeventySeven::set(array('fingerprint' => $fingerprint));
@@ -69,6 +68,7 @@ function SetData(){
 			'ucode' => $ucode,
 			'logged' => $logged,
 			'fingerprint' => $fingerprint,
+			'shangzai' => $shangzai,
 		)
 	);
 	return true;

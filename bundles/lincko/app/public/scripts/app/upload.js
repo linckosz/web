@@ -100,11 +100,10 @@ function app_upload_prepare_log(parent_type, parent_id, temp_id){
 		parent_type = 'projects';
 		parent_id = Lincko.storage.getMyPlaceholder()['_id'];
 	}
-	$('#app_upload_shangzai_puk').val(wrapper_get_shangzai('puk'));
+	$('#app_upload_shangzai_puk').val(wrapper_get_shangzai());
 	$('#app_upload_lastvisit').val(Lincko.storage.getLastVisit());
 	$('#app_upload_parent_type').val(parent_type);
 	$('#app_upload_parent_id').val(parseInt(parent_id, 10));
-	$('#app_upload_fingerprint').val(fingerprint);
 	$('#app_upload_workspace').val(wrapper_localstorage.workspace);
 	$('#app_upload_temp_id').val(temp_id);
 }
@@ -181,8 +180,8 @@ $(function () {
 
 	$('#app_upload_fileupload').fileupload({
 		dataType: 'json',
-		url: top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':'+document.linckoBackPort+'/file/create', //Bruno update
-		url_result: top.location.protocol+'//'+document.linckoBack+'file.'+document.domain+':'+document.linckoBackPort+'/file/result?%s',
+		url: top.location.protocol+'//'+document.linckoBack+'file.'+document.domainRoot+':'+document.linckoBackPort+'/file/create', //Bruno update
+		url_result: top.location.protocol+'//'+document.linckoBack+'file.'+document.domainRoot+':'+document.linckoBackPort+'/file/result?%s',
 		// Enable image resizing, except for Android and Opera,
 		// which actually support image resizing, but fail to
 		// send Blob objects via XHR requests:
@@ -246,7 +245,7 @@ $(function () {
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_parent_id = app_upload_auto_launcher.parent_id;
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_parent_type = app_upload_auto_launcher.parent_type;
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_start = app_upload_auto_launcher.start;
-			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_try = 3;
+			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_try = 2;
 
 			if(app_upload_auto_launcher.temp_id){
 				app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_temp_id = app_upload_auto_launcher.temp_id;
@@ -371,6 +370,7 @@ $(function () {
 						}, 600, that, data_bis);
 					});
 				} else if(app_upload_files.lincko_files[data.lincko_files_index].lincko_try<=0){
+					app_upload_files.lincko_files[data.lincko_files_index].lincko_try = 2;
 					wrapper_set_shangzai = true;
 					if(typeof Lincko.storage != 'undefined'){
 						Lincko.storage.getLastVisit();

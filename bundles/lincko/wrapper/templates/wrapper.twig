@@ -130,6 +130,12 @@ var wrapper_domain_debug = false;
 	wrapper_domain_debug = "{{ domain_debug }}";
 {% endif %}
 
+var wrapper_shangzai = false;
+{% if domain_debug %}
+	wrapper_shangzai = "{{ shangzai }}";
+{% endif %}
+
+
 //In IE console is undefined if the dev tool is closed
 if(!window.console){
 	console = {
@@ -145,6 +151,7 @@ var app_language_month = "{{ _trans('app', 0, 1) }}"; //month
 var app_language_day = "{{ _trans('app', 0, 2) }}"; //day
 
 var wrapper_link = [];
+//In those links we keep the workspace in purpose for businesses to make easier the relogin to their area
 wrapper_link['root'] = top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"{{ urlFor('root') }}";
 wrapper_link['home'] = top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"{{ urlFor('home') }}";
 
@@ -198,6 +205,7 @@ var wrapper_load_progress = {
 	},
 
 	hide_progress_wall: function(){
+		$('body').addClass('base_color_bg_main_gradient');
 		if($('#'+this.progress_wall).length>0){
 			$('#'+this.progress_wall).velocity(
 				{

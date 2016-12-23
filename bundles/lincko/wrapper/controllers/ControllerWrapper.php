@@ -83,7 +83,7 @@ class ControllerWrapper extends Controller {
 		return true;
 	}
 
-	protected function sendCurl($reset_shangzai=false){
+	protected function sendCurl(){
 		$app = $this->app;
 
 		$data = json_encode($this->json);
@@ -136,11 +136,6 @@ class ControllerWrapper extends Controller {
 		@curl_close($ch);
 
 		if($json_result && isset($json_result->msg) && isset($json_result->error)){
-			
-			if($reset_shangzai){
-				if(!isset($json_result->shangzai)){ $json_result->shangzai = new \stdClass; }
-				$json_result->shangzai->puk = NULL;
-			}
 
 			if(isset($json_result->flash)){
 
@@ -164,15 +159,12 @@ class ControllerWrapper extends Controller {
 				else if(isset($json_result->flash->public_key) && isset($json_result->flash->private_key)){
 					$_SESSION['public_key'] = $json_result->flash->public_key;
 					$_SESSION['private_key'] = $json_result->flash->private_key;
-					if(!isset($json_result->shangzai)){ $json_result->shangzai = new \stdClass; }
-					$json_result->shangzai->puk = Datassl::encrypt($_SESSION['public_key'], $app->lincko->security['private_key']); //toto => may be can use pukpik (more stable)
 				}
 				//Clean user_code because it has been used by the back end
 				if(isset($json_result->flash->unset_user_code)){
 					unset($_SESSION['user_code']);
 				}
 				
-//\libs\Watch::php($json_result->flash, '$json_result->flash', __FILE__, __LINE__, false, false, true);
 				if($this->print){
 					//"username_sha1" is a password used to encrypt data
 					//"uid" is the main user ID
@@ -192,10 +184,17 @@ class ControllerWrapper extends Controller {
 					//Used to display/download files in a secured way and keep browser cache enable (same url)
 					if(isset($json_result->flash->pukpic)){
 						setcookie('pukpic', $json_result->flash->pukpic, time()+intval($app->lincko->cookies_lifetime), '/', $app->lincko->domain);
+						OneSeventySeven::set(array('pukpic' => $json_result->flash->pukpic));
+						$json_result->shangzai = Datassl::encrypt($json_result->flash->pukpic); //For file uploading
+
+						$toto = Datassl::decrypt(Datassl::decrypt($json_result->shangzai), 'ayTgh49pW09w');
+						\libs\Watch::php($toto, $json_result->shangzai, __FILE__, __LINE__, false, false, true);
+
 					}
 					unset($json_result->flash);
 				}
 			}
+
 			//If the request comes from a form, we add it's ID
 			if($this->form_id){
 				$json_result->form_id = $this->form_id;
@@ -327,8 +326,6 @@ class ControllerWrapper extends Controller {
 
 		$log_action = false;
 
-		$reset_shangzai = false;
-
 		if($action==='user/integration' && $type==='POST' && isset($this->json['data']['party']) && isset($this->json['data']['data'])){
 
 			$log_action = true;
@@ -414,20 +411,19 @@ class ControllerWrapper extends Controller {
 		if($action==='user/signout' && $type==='POST'){
 
 			$this->signOut(true);
-			$reset_shangzai = true;
 
 		}
 
 		$echo = false;
 		if($log_action){
-			$echo = $this->sendCurl($reset_shangzai);
+			$echo = $this->sendCurl();
 			if(!$echo){
 				$this->signOut();
 			} else if($action==='user/create'){
 				Creation::record();
 			}
 		} else {
-			$echo = $this->sendCurl($reset_shangzai);
+			$echo = $this->sendCurl();
 		}
 
 		if($this->print){

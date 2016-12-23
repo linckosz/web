@@ -12,11 +12,11 @@ $('#wphead_signout').click(function(){
 });
 
 $('#wphead_signin').click(function(){
-	if(typeof account_show != 'undefined') { account_show(true); }
+	if(typeof account_show != 'undefined') { account_show('signin'); }
 });
 
 $('#wphead_joinus').click(function(){
-	if(typeof account_show != 'undefined') { account_show(); }
+	if(typeof account_show != 'undefined') { account_show('joinus'); }
 });
 
 $('#wphead_account').click(function(){
