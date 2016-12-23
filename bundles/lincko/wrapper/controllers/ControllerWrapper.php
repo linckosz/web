@@ -186,10 +186,6 @@ class ControllerWrapper extends Controller {
 						setcookie('pukpic', $json_result->flash->pukpic, time()+intval($app->lincko->cookies_lifetime), '/', $app->lincko->domain);
 						OneSeventySeven::set(array('pukpic' => $json_result->flash->pukpic));
 						$json_result->shangzai = Datassl::encrypt($json_result->flash->pukpic); //For file uploading
-
-						$toto = Datassl::decrypt(Datassl::decrypt($json_result->shangzai), 'ayTgh49pW09w');
-						\libs\Watch::php($toto, $json_result->shangzai, __FILE__, __LINE__, false, false, true);
-
 					}
 					unset($json_result->flash);
 				}
