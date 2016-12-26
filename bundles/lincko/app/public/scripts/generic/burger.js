@@ -19,43 +19,165 @@ shortcutList = {
 }
 */
 var burger_keyboard = function(elem, shortcutList    ){
-	var that = this;
+	var that = this; console.log(that);
 	that.elem = elem;
 
-	var allShortcuts = false;
+	var allShortcuts = true;
 	if(shortcutList && typeof shortcutList == 'boolean'){ allShortcuts = true; }
 
 
-	that.dropdownInst = {
-		at: null,
-		plus: null,
-	};
+	that.list = burger_list.in_charge('projects', app_content_menu.projects_id);
+
+
+
+
+	//variables to clear on burger destroy
+	that.i_caretBegin = 0;
+	that.i_caretCurrent = 0;
+
+	that.dropdownInst = null;
+	that.burgerOn = false;
 
 	var cb_create = function(){
 
 	}
-	var cb_select = function(){
-
+	var cb_select = function(data){
+		console.log('burger_keyboard cb_select');
+		console.log(data);
 	}
 	var cb_destroy = function(){
+		console.log('burger_keyboard cb_destroy');
+		that.dropdownInst = null;
+		that.i_caretBegin = 0;
+		that.i_caretCurrent = 0;
+		that.burgerOn = false;
 
 	}
 
+	//adding linebreak happens on keypress, not on keyup
+	elem.on('keypress.burger_keyboard', function(event){
+		if((event.which || event.keyCode) == 13){ //if enter is pressed
+			if(param.shiftEnter && event.shiftKey){
+				event.returnValue=false;
+				return;
+			}	
+			else{
+				event.preventDefault();
+				//cb_select();
+			}
+		}
+	});
 
-	if(allShortcuts /*'at' in array shortcutList*/){
-		//new burger_dropdown(id, data, position, vOffset, cb_create, cb_select, cb_destroy, submenu, flipped)
-		that.dropdownInst.at = new burger_dropdown('toto', list, elem, null, cb_create, cb_select, cb_destroy, false); 
-	}
+
+	elem.on('keyup.burger_keyboard', function(event){
+		var which = event.which;
+
+		/*dont take action for shift keys*/
+		if(which == 16){ return; }
+
+		var coord = burger_regex_getCaretOffset(elem, true);
+	    var caretIndex = that.i_caretCurrent = coord.caretOffset;
+	    /* possible alternative to hardcode offset
+	    //http://stackoverflow.com/questions/1185151/how-to-determine-a-line-height-using-javascript-jquery
+	    //1.5 of font-size is typical for lineheight
+	    var fontSize = $(el).css('font-size');
+		var lineHeight = Math.floor(parseInt(fontSize.replace('px','')) * 1.5);
+		*/
+
+		var selection = getSelection();
+	    var focus_node = selection.focusNode;
+	    focus_node.normalize();
+	    var latestChar = null;
+
+	    //sometimes, for some input methods, focus_node.nodeValue reflects the latest typed characters
+	    if(focus_node.nodeValue){ latestChar = (focus_node.nodeValue).slice(-1); }
+	    else{ //fallback for browsers that doesnt support nodeValue < IE10
+		  	var currentText = elem.text();
+		  	latestChar = currentText[caretIndex - 1];
+	    }
+
+	    //for mobile, just open submenu on the shortcuts
+	    if(responsive.test("maxMobileL")){
+		    if(latestChar == burger_shortcuts.at){ /*open in_charge submenu*/}
+		    else if(latestChar == burger_shrotcuts.plus || latestChar == burger_shortcuts.plusAlt){ /*open calendar submenu*/ }
+	    	return;
+	    }
+
+	    if(that.dropdownInst){
+		    /*For Chinese only, when inputting pinyin:
+		      if waiting for combined character (229) but latestChar is not Chinese, return and act on next keyup*/
+		    if(latestChar && which == 229 && !latestChar.match(/[\u4E00-\u9FA5]/)){ 
+		    	return; 
+		    }
+
+		    //if 'space' or caret is moved behind the burger_startIndex
+		    if( (which == 32 /*space*/ && !latestChar.replace(/\s/g, '').length /*space*/) || caretIndex < that.i_caretBegin ){
+				that.dropdownInst.hide();
+				return;
+			}
+
+			//if enter or tab is pressed
+			if(which == 13 || which == 9){
+				event.preventDefault();
+				var elem_option_select = that.dropdownInst.elem.find('.burger_option_selected');
+				if(!elem_option_select.length){
+					elem_option_select = that.dropdownInst.elem.find('.burger_option').eq(0);
+				}
+
+				elem_option_select.click();
+				return;
+			}
 
 
+			var word = elem.text().substring(that.i_caretBegin, caretIndex);
+			console.log(word);
+			if(that.burgerOn == burger_shortcuts.at){
+				var list_search = burger_search.users(that.list, word);
+				that.dropdownInst.build_elem_data(list_search);
+			}
 
 
+		}
+		else if(!that.dropdownInst 
+			&& (latestChar == burger_shortcuts.at 
+			 || latestChar == burger_shortcuts.plus 
+			 || latestChar == burger_shortcuts.Alt)){
+			that.burgerOn = latestChar;
+			that.i_caretBegin = caretIndex;
+
+			if(latestChar == burger_shortcuts.at){
+				var lineHeight = 30;
+				that.dropdownInst = new burger_dropdown('toto', that.list, [coord.x, coord.y], lineHeight, cb_create, cb_select, cb_destroy, that.elem); 
+			}
+			else if(latestChar == burger_shortcuts.plus || latestChar == burger_shortcuts.plusAlt){ 
+
+			}
+		}
+
+
+	});
 }
 burger_keyboard.prototype.destroy = function(){
 	var that = this;
 	$.each(that.dropdownInst, function(type, inst){
 		if(typeof inst.destroy == 'function'){ inst.destroy(); }
 	});
+}
+
+var burger_search = {
+	users: function(listToSearch, word){
+		var listToReturn = [];
+
+		$.each(listToSearch, function(i, obj){
+			var user = Lincko.storage.get('users', obj.val);
+			if(user){
+				var user_search_result = Lincko.storage.searchArray('word', word, [user], ['-firstname', '-lastname', '-username'], true);
+				if(user_search_result.length){ listToReturn.push(obj); }
+			}
+		});
+
+		return listToReturn;
+	},
 }
 
 var burger_attach_clickHandler = {
@@ -643,11 +765,22 @@ var burger_global_dropdown = {
 	position: jquery elem or [left, top]
 	submenu: bool
 */
-var burger_dropdown = function(id, data, position, vOffset, cb_create, cb_select, cb_destroy, submenu, flipped){
+var burger_dropdown = function(id, data, position, lineHeight, cb_create, cb_select, cb_destroy, focus_elem, flipped){
 	if(!data || typeof cb_select != 'function'){ return false; }
 	if(typeof submenu != 'boolean'){ var submenu = false; }
 	if(!position){ var position = [0,0]; }
 	else if(base_isElement(position) && !position instanceof $){ var position = $(position); }
+
+	if(typeof lineHeight != 'number'){ var lineHeight = 0; }
+
+	if(typeof cb_create != 'function'){ var cb_create = null; }
+	if(typeof cb_select != 'function'){ var cb_select = null; }
+	if(typeof cb_destroy != 'function'){ var cb_select = null; }
+
+	if(focus_elem instanceof $){/*do nothing*/}
+	else if(base_isElement(focus_elem)){ focus_elem = $(focus_elem); }
+	else if(typeof focus_elem != 'boolean' && focus_elem && position instanceof $){ focus_elem = position; }
+	else{ var focus_elem = null; } //default - focus goes to dropdown
 
 
 
@@ -667,11 +800,18 @@ var burger_dropdown = function(id, data, position, vOffset, cb_create, cb_select
 	that.optionH = 50;
 	that.i_current = false;
 	that.i_pre = false;
+
+	that.lineHeight = lineHeight;
+
+	that.cb_create = cb_create;
 	that.cb_select = cb_select;
+	that.cb_destroy = cb_destroy;
+
 	that.submenu = submenu;
 	that.hidden = false;
 	that.destroyed = false;
 	that.position = position;
+	that.focus_elem = focus_elem;
 
 	//left and top css values for the dropdown
 	that.coord = {
@@ -681,41 +821,13 @@ var burger_dropdown = function(id, data, position, vOffset, cb_create, cb_select
 	};
 	if(position instanceof $){
 		var coord = position.offset();
-
-/*		var coord = $(this).offset();
-		var coordP = $(this).position();
-		var left = coord.left;
-		if(left == 0){ 
-			left = coord.left;
-			if( responsive.test("minTablet")){
-				left -= $('#app_content_menu').outerWidth();
-				if( $('#app_application_project').outerWidth() > 0){
-					left -= $('#app_application_project').outerWidth();
-				}
-			}
-		};
-		var table_height = $(this).closest('table').outerHeight();
-		var top = coord.top + table_height; //- $('#app_content_top').outerHeight();
-		var bottom = $(window).height() - top + table_height +3; //some padding
-		
-		elem_dropdown.css({
-			position: 'absolute',
-			left: left,
-			top: top,
-			bottom: bottom,
-		});
-		that.slideDown(elem_dropdown);
-*/
-
-		//position.position();
 		that.coord.left = coord.left;
 		that.coord.top = coord.top + position.outerHeight();
 	}
 	else if(position.length == 2){
 		that.coord.left = position[0];
-		that.coord.left = position[1];
+		that.coord.top = position[1];
 	}
-
 
 	that.construct();
 }
@@ -731,11 +843,12 @@ burger_dropdown.prototype.build_elem = function(){
 	var that = this;
 	var elem_dropdown = null;
 	elem_dropdown = that.build_elem_data();
+	if(!that.focus_elem){ that.focus_elem = elem_dropdown; }
 
 	elem_dropdown.css({
 		position: 'absolute',
 		left: that.coord.left,
-		top: that.coord.top,
+		top: that.coord.top + that.lineHeight,
 		//bottom: 200,
 		//display: 'block',
 	});
@@ -747,9 +860,8 @@ burger_dropdown.prototype.build_elem = function(){
     	event.preventDefault();
 	});
 
-    elem_dropdown.focus(function(){
-    });
-    elem_dropdown.blur(function(event){
+
+    that.focus_elem.on('blur.burger_dropdown', function(){
     	that.hide();
     });
 
@@ -759,7 +871,7 @@ burger_dropdown.prototype.build_elem = function(){
 
     });
 
-    elem_dropdown.keydown(function(event){
+    that.focus_elem.on('keydown.burger_dropdown', function(event){
     	var which = event.which;
     	if(which != 38 && which != 40 && which != 13){ return;	} //return if it is not 'arrow up' or 'arrow down' or 'enter'
     	event.preventDefault();
@@ -807,9 +919,13 @@ burger_dropdown.prototype.build_elem = function(){
 	//if dropdown needs to be at the top
 	var window_outerHeight = $(window).outerHeight();
 	if( window_outerHeight <= that.coord.top + elem_dropdown.outerHeight() ){
+		var bottom = window_outerHeight - that.coord.top;
+		if(that.position instanceof $){
+			bottom += that.position.outerHeight();
+		}
 		elem_dropdown.css({
 			top: '',
-			bottom: window_outerHeight - that.coord.top + that.position.outerHeight(),
+			bottom: bottom,
 		});
 	}
 
@@ -818,12 +934,16 @@ burger_dropdown.prototype.build_elem = function(){
 	return elem_dropdown;
 }
 
-burger_dropdown.prototype.build_elem_data = function(){
+burger_dropdown.prototype.build_elem_data = function(data){
 	var that = this;
-	var data = that.data;
+	if(!data){ var data = that.data; }
+
+	if(that.elem){ var elem_dropdown = that.elem; elem_dropdown.find('.burger_option').recursiveRemove(0); }
+	else{ var elem_dropdown = $('#-burger_dropdown').clone().prop('id',''); }
+	
 
 	var elem_dropdown = $('#-burger_dropdown').clone().prop('id','');
-	var elem_option = $('#-burger_option').clone().prop('id','')//.addClass('burger_option_users');
+	var elem_option = $('#-burger_option').clone().prop('id','');//.addClass('burger_option_users');
 
 	//if there is no contacts to display
 	if(data.length < 1){
@@ -907,7 +1027,7 @@ burger_dropdown.prototype.show = function(){
 				wrapper_IScroll();
 				that.iscroll = myIScrollList[that.id_iscroll];
 			}
-			elem_dropdown.focus();
+			that.focus_elem.focus();
 		}
 	});
 }
@@ -929,6 +1049,12 @@ burger_dropdown.prototype.hide = function(){
 burger_dropdown.prototype.destroy = function(){
 	var that = this;
 	that.destroyed = true;
+
+	if(typeof that.cb_destroy == 'function'){ that.cb_destroy(); }
+
+	//remove all attached event handlers with namespace .burger
+	that.focus_elem.off('.burger_dropdown');
+
 	that.elem.recursiveRemove();
 	delete burger_global_dropdown.list[that.id_dropdown];
 	delete this;
