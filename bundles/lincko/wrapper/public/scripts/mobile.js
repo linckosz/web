@@ -41,17 +41,21 @@ function useMobileNotification(){
 function device_download(url, target, name){
 	if(typeof target == 'undefined'){ target = '_blank'; }
 	if(typeof name == 'undefined'){ name = 'file'; }
+
 	if(typeof android != 'undefined' && typeof android.download == 'function') {
-		android.download(url);
-	} else if(typeof window.webkit != 'undefined' && typeof window.webkit.messageHandlers != 'undefined' && typeof window.webkit.messageHandlers.iOS != 'undefined') {
-		var obj = {
+		android.download(url,document.cookie);
+	} 
+	else if(typeof window.webkit != 'undefined' && typeof window.webkit.messageHandlers != 'undefined' && typeof window.webkit.messageHandlers.iOS != 'undefined') {
+		var download_obj = {
 			url: url,
 			cookie: document.cookie,
 		};
-		window.webkit.messageHandlers.iOS.postMessage(obj);
-	} else if(typeof winPhone != 'undefined' && typeof winPhone.download == 'function') {
+		window.webkit.messageHandlers.iOS.postMessage(download_obj);
+	}
+	else if(typeof winPhone != 'undefined' && typeof winPhone.download == 'function') {
 		winPhone.download(url);
-	} else {
+	} 
+	else {
 		//window.open(url, target);
 		//Another method if some browser (safari?) do not work
 		var anchor = document.createElement('a');

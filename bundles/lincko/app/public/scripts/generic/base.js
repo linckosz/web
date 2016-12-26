@@ -186,10 +186,10 @@ function base_lincko_link_to_html(source)
 	// var reg = new RegExp("([^=]http:\\/\\/)?([A-Za-z0-9]+\\.[A-Za-z0-9]+[\\/=\\?%\\-&_~`@[\\]\\':+!]*([^<>])*)","gi");
 	// var reg = new RegExp("((http|ftp|https)://)(([a-zA-Z0-9\._-]+\.[a-zA-Z]{2,6})|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,4})*(/[a-zA-Z0-9\&%_\./-~-]*)?","gi");
 	var reg = new RegExp("((http|ftp|https)://)([a-zA-Z0-9\._-]+)(:[0-9]{1,4})*([/a-zA-Z0-9\?\&%_\./-~-]*)?","gi");
-	//source = source.replace(reg, '$1 + $2');
+
 	source = source.replace(reg, '<a target="_blank" href="$1$3$4$5">$1$3$4$5</a>');
 
-	//recover the 
+	//recover the piture
 	reg = new RegExp("(\"<a(.*)>)(.*)(</a>)\"","gi");
 	source = source.replace(reg, '$3');
 
