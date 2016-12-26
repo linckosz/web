@@ -42,7 +42,12 @@ var storage_cb_success = function(msg, err, status, data){
 	if(allow_set_lastvisit && $.type(data) === 'object' && typeof data.lastvisit === 'number'){
 		storage_local_storage.launch_lastvist(data.lastvisit);
 	}
-	Lincko.storage.firstLatest();
+
+	if(storage_first_request){
+		Lincko.storage.firstLatest();
+	} else if(data && data.partial && data.partial.uncomplete){
+		Lincko.storage.getSchema();
+	}
 };
 
 //Launch the onboadring sync the first time it receive the database
@@ -63,6 +68,27 @@ var storage_local_storage = {
 	lastvisit: false,
 	timeout: null,
 
+	//toto => tmp to avoid browser crash
+	browser_cleaner: function(data){
+		var result = {};
+		if(!wrapper_limit_json){
+			for(var cat in Lincko.storage.data){
+				if(cat=='chats' || cat=='messages'){ //Exclude everything about chats, it can be very heavy messages are downloaded in live
+					continue;
+				}
+				result[cat] = data[cat];
+			}
+		} else {
+			for(var cat in Lincko.storage.data){
+				//Just keep the minimum to consult offline the most important
+				if(typeof cat == 'string' && (cat.indexOf('_')===0 || cat=='workspaces' || cat=='projects' || cat=='tasks' || cat=='files')){
+					result[cat] = data[cat];
+				}
+			}
+		}
+		return result;
+	},
+
 	launch_data: function(){
 		storage_local_storage.data = true;
 		storage_local_storage.timer();
@@ -77,7 +103,8 @@ var storage_local_storage = {
 		clearTimeout(storage_local_storage.timeout);
 		storage_local_storage.timeout = setTimeout(function(){
 			if(storage_local_storage.data!==false){
-				wrapper_localstorage.encrypt('data', Lincko.storage.data);
+				var data = storage_local_storage.browser_cleaner(Lincko.storage.data);
+				wrapper_localstorage.encrypt('data', data);
 			}
 			if(storage_local_storage.lastvisit!==false){
 				Lincko.storage.setLastVisit(storage_local_storage.lastvisit);
@@ -242,7 +269,6 @@ Lincko.storage.getLatest = function(force){
 //Function that check for latest updates
 /* PRIVATE METHOD */
 Lincko.storage.getSchema = function(){
-	storage_first_request = false; //No need to launch firstLatest()
 	var arr = {
 		'show_error': false,
 	};

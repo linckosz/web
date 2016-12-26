@@ -47,6 +47,11 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 		param[param.length] = {name:'set_shangzai', value:true};
 	}
 
+	//Limit download to avoid crash (iOS)
+	if(wrapper_limit_json){
+		param[param.length] = {name:'limit_json', value:wrapper_limit_json};
+	}
+
 	//Create a unique instance of the form for each ajax call
 	if(ajax_objForm){
 		param[param.length] = {name:'form_id', value:ajax_objForm.prop('id')};
