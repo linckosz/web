@@ -139,7 +139,6 @@ var burger_keyboard = function(elem, shortcutList    ){
 				that.dropdownInst.build_elem_data(list_search);
 			}
 
-
 		}
 		else if(!that.dropdownInst 
 			&& (latestChar == burger_shortcuts.at 
@@ -161,9 +160,12 @@ var burger_keyboard = function(elem, shortcutList    ){
 }
 burger_keyboard.prototype.destroy = function(){
 	var that = this;
-	$.each(that.dropdownInst, function(type, inst){
-		if(typeof inst.destroy == 'function'){ inst.destroy(); }
-	});
+	if(that.dropdownInst && typeof that.dropdownInst.destroy == 'function'){ that.dropdownInst.destroy(); }
+	else{
+		$.each(that.dropdownInst, function(type, inst){
+			if(typeof inst.destroy == 'function'){ inst.destroy(); }
+		});
+	}
 }
 
 var burger_search = {
