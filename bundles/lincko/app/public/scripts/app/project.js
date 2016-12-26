@@ -116,7 +116,7 @@ var mainMenu = {
 			if(typeof force == 'undefined'){ force=false; }
 			var not_all = false;
 			var content;
-			var histList = app_models_history.getList(5);
+			var histList = app_models_history.getList();
 			
 			for(var i in histList){
 				if(histList[i].notif){
@@ -170,6 +170,8 @@ var mainMenu = {
 						});
 					});
 				}
+				//var last_notif_root = Lincko.storage.getLastNotif(histList[i]['root_type'], histList[i]['root_id']);
+				//if(histList[i]['timestamp'] > last_notif_root){
 				if(histList[i]['notif']){
 					item.find("[find=app_project_chats_notif]").removeClass('display_none');
 				} else {

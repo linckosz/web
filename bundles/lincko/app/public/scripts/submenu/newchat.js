@@ -117,37 +117,59 @@ Submenu.prototype.Add_ChatContents = function() {
 	var overthrow_id = "overthrow_"+that.id;
 	var submenu_wrapper = this.Wrapper();
 	var position = submenu_wrapper.find("[find='submenu_wrapper_content']");
+	var type_clear = type == 'history' ? 'projects' : type;
 	position.addClass('overthrow').addClass("submenu_chat_contents");
 
 	var submenu_wrapper_id = submenu_wrapper.prop("id");
+	app_application_lincko.add(that.id, [type_clear+"_" + id, "submenu_show_"+that.preview+"_"+that.id], function() {
+		var type = this.action_param[0];
+		var id = this.action_param[1];
+		var subm = this.action_param[2];
+		var route = false;
+		if(type=='chats'){
+			route = 'chat/update';
+		} else if(type=='projects'){
+			route = 'project/update';
+		}
+		if(route){
+			var param = {
+				id: id,
+				"users>noticed": {},
+			}
+			var hist = app_models_history.getList(1, type, id);
+			var last_notif_root = Lincko.storage.getLastNotif(type, id);
+			var latest_history = 0;
+			if(hist.length > 0){
+				latest_history = hist[0]["timestamp"];
+			}
+			if(subm.param.latest_history && subm.param.latest_history >= latest_history){
+				return true; //Do nothing to not launch twice the call
+			}
+			if(latest_history > last_notif_root){
+				param["users>noticed"][wrapper_localstorage.uid] = latest_history;
+				//Temp modification for immediate display
+				if(Lincko.storage.data[type][id]["_users"] && Lincko.storage.data[type][id]["_users"][wrapper_localstorage.uid]){
+					Lincko.storage.data[type][id]["_users"][wrapper_localstorage.uid]["noticed"] = latest_history;
+				}
+				subm.param.latest_history = latest_history;
+				Lincko.storage.cache.init(type, id);
+				app_models_history.refresh(type, id);
+				app_application_lincko.prepare([type, type+"_"+id], true, false, true);
+				wrapper_sendAction(
+					param,
+					'post',
+					route
+				);
+			}
+		}
+	}, [type_clear, id, that]);
 
 
 	if (type == 'history') {
 		that.param.chatFeed = new historyFeed(id,type,position,that);
-
-		app_models_notifier.clearNotification('projects', id);
-		var hist = Lincko.storage.hist(null, -1, false, 'projects', id, false);
-		if(hist.length > 0)
-		{
-			latest_history = hist[0]["timestamp"];
-		}
-		app_application_lincko.add(this.id+"_chat_contents_wrapper", "projects_" + id, function() {
-			var chat_item = this.action_param[2];
-			chat_item.app_chat_feed_load_recent();
-			app_models_notifier.clearNotification('projects', this.action_param[1]);
-		}, [that.id, id, that.param.chatFeed, position]);
 	}
 	else {
 		that.param.chatFeed = new chatFeed(id,type,position,that);
-
-		app_models_notifier.clearNotification('chats', id);
-		
-		app_application_lincko.add(this.id+"_chat_contents_wrapper", "chats_" + id, function() {
-			var chat_item = this.action_param[2];
-			chat_item.app_chat_feed_load_recent();
-			app_models_notifier.clearNotification('chats', this.action_param[1]);
-			
-		}, [that.id, id, that.param.chatFeed, position]);
 	}
 
 	app_application_lincko.add(submenu_wrapper_id, 'upload', function(){ //We cannot simplify because Elem is not the HTML object, it's a JS Submenu object
@@ -155,12 +177,11 @@ Submenu.prototype.Add_ChatContents = function() {
 		chat_item.app_chat_feed_uploading_file();
 	}, [that.id, id, that.param.chatFeed, position]);
 
-	var type_clear = type == 'history' ? 'projects' : type;
-	app_application_lincko.add("overthrow_"+that.id, "submenu_show_"+that.preview+"_"+that.id, function() {
+	
+	app_application_lincko.add(that.id, "submenu_show_"+that.preview+"_"+that.id, function() {
 		var submenu_id = this.action_param[0];
 		var scroll_time = this.action_param[1];
 		var overthrow_id = "overthrow_"+submenu_id;
-
 		var help_iscroll_elem =  $('#'+that.id+'_help_iscroll').get(0);
 		if(that.param.find_item){
 			var find_item = submenu_wrapper.find("[item="+that.param.find_item+"]");
@@ -168,14 +189,11 @@ Submenu.prototype.Add_ChatContents = function() {
 				help_iscroll_elem = find_item.get(0);
 			}
 		}
-
 		if(myIScrollList[overthrow_id] && help_iscroll_elem){
 			myIScrollList[overthrow_id].refresh();
 			app_submenu_scrollto(myIScrollList[overthrow_id], help_iscroll_elem, scroll_time);
 		}
-		this.action_param[1] = 1000;
-		app_models_notifier.clearNotification(this.action_param[2], this.action_param[3]);
-	}, [that.id, 0, type_clear, id]);
+	}, [that.id, 0]);
 
 
 }

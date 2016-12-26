@@ -18,11 +18,11 @@ var app_models_notifier = {
 		}
 	},	
 
-	getNotification: function(type, id) {
+	getNotificationBy: function(type, id) {
 		return Lincko.storage.hist(null, null, {not: true}, type, id, true, true, true).length;
 	},
 
-	clearNotification: function(type, id) {
+	clearNotificationBy: function(type, id) {
 		var tmp = {};
 		var items = Lincko.storage.hist(null, null, {not: true}, type, id, true, true, true);
 		if(items.length>0){

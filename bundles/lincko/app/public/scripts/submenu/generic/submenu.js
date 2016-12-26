@@ -739,7 +739,7 @@ Submenu.prototype.Add_SelectMultiple = function() {
 				}
 				var next_id = $('#'+this.id);
 				next_id.html(Num);
-			}, submenu_list[attribute.next])
+			}, submenu_list[attribute.next]);
 			Elem.click(function() {
 				$.each(that.Wrapper().find('.submenu_deco_next'), function() {
 					$(this).removeClass('submenu_deco_next');

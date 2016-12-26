@@ -102,6 +102,14 @@ Lincko.storage.getParent = function(type, id, attr) {
 	return parent;
 };
 
+Lincko.storage.getLastNotif = function(type, id) {
+	var elem = Lincko.storage.get(type, id);
+	if(elem && elem["_users"] && elem["_users"][wrapper_localstorage.uid] && elem["_users"][wrapper_localstorage.uid]["noticed"]){
+		return parseInt(elem["_users"][wrapper_localstorage.uid]["noticed"], 10);
+	}
+	return 0;
+};
+
 /* PRIVATE METHOD */
 Lincko.storage.getWORKID = function(){
 	if(Lincko.storage.WORKID !== null){
@@ -1155,50 +1163,75 @@ Lincko.storage.cache = {
 		return 0;
 	},
 
-	init: function(){
-		this.exclude_chats = {};
-		this.exclude_projects = {};
-		this.notify = {};
-		this.statistics = {};
+	init: function(type_reset, id_reset){
 		var item_cat;
 		var children;
 		var single;
+		var last_notif;
+
+		if(typeof type_reset == 'undefined' && typeof id_reset == 'undefined'){
+			this.exclude_chats = {};
+			this.exclude_projects = {};
+			this.notify = {};
+			this.statistics = {};
+		}
 
 		if(storage_first_launch){
 			return false;
 		}
 
 		item_cat = "chats";
-		for(var item_id in Lincko.storage.data[item_cat]){
-			children = Lincko.storage.tree(item_cat, item_id, "children", false, true);
-			if(typeof this.exclude_projects[item_cat] == "undefined"){ this.exclude_projects[item_cat] = {}; }
-			this.exclude_projects[item_cat][item_id] = true; //For all projects exclude all chats items
-			if(Lincko.storage.get(item_cat, item_id, "single")){
-				if(typeof this.exclude_chats[item_cat] == "undefined"){ this.exclude_chats[item_cat] = {}; }
-				this.exclude_chats[item_cat][item_id] = true; //no need to display chats creation for single ones
-			}
-			if(children){
-				for(var cat in children){
-					for(var id in children[cat]){
-						//For projects, exclude everything (also deleted_at) which is about chats
-						if(typeof this.exclude_projects[cat] == "undefined"){ this.exclude_projects[cat] = {}; }
-						this.exclude_projects[cat][id] = true;
-						//For chats exlude everything else (also deleted_at) which is not level 1 children
-						if(typeof Lincko.storage.data[cat][id]["_parent"] != "undefined" && Lincko.storage.data[cat][id]["_parent"][0]!="chats"){
-							if(typeof this.exclude_chats[cat] == "undefined"){ this.exclude_chats[cat] = {}; }
-							this.exclude_chats[cat][id] = true;
-						}
-						//Skip excluded
-						if(this.exclude_chats[cat] && this.exclude_chats[cat][id]){
-							continue;
-						}
-						//Record notifications
-						if(!Lincko.storage.data[cat][id]['deleted_at'] && Lincko.storage.data[cat][id]['_not']){
-							if(typeof this.notify[item_cat] == "undefined"){ this.notify[item_cat] = {}; }
-							if(typeof this.notify[item_cat][item_id] == "undefined"){
-								this.notify[item_cat][item_id] = 1;
-							} else {
-								this.notify[item_cat][item_id]++;
+		if(typeof type_reset == 'undefined' || type_reset==item_cat){
+			for(var item_id in Lincko.storage.data[item_cat]){
+				if(typeof type_reset != 'undefined' && typeof id_reset != 'undefined' && id_reset!=item_id){
+					continue;
+				}
+				last_notif = Lincko.storage.getLastNotif(item_cat, item_id);
+				children = Lincko.storage.tree(item_cat, item_id, "children", false, true);
+				if(typeof this.exclude_projects[item_cat] == "undefined"){ this.exclude_projects[item_cat] = {}; }
+				this.exclude_projects[item_cat][item_id] = true; //For all projects exclude all chats items
+				if(Lincko.storage.get(item_cat, item_id, "single")){
+					if(typeof this.exclude_chats[item_cat] == "undefined"){ this.exclude_chats[item_cat] = {}; }
+					this.exclude_chats[item_cat][item_id] = true; //no need to display chats creation for single ones
+				}
+				if(children){
+					for(var cat in children){
+						for(var id in children[cat]){
+							//For projects, exclude everything (also deleted_at) which is about chats
+							if(typeof this.exclude_projects[cat] == "undefined"){ this.exclude_projects[cat] = {}; }
+							this.exclude_projects[cat][id] = true;
+							//For chats exlude everything else (also deleted_at) which is not level 1 children
+							if(typeof Lincko.storage.data[cat][id]["_parent"] != "undefined" && Lincko.storage.data[cat][id]["_parent"][0]!="chats"){
+								if(typeof this.exclude_chats[cat] == "undefined"){ this.exclude_chats[cat] = {}; }
+								this.exclude_chats[cat][id] = true;
+							}
+							//Skip excluded
+							if(this.exclude_chats[cat] && this.exclude_chats[cat][id]){
+								continue;
+							}
+							//Record notifications
+							if(!Lincko.storage.data[cat][id]['deleted_at'] && Lincko.storage.data[cat][id]['history']){
+								for(var hist_timestamp in Lincko.storage.data[cat][id]['history']){
+									if(hist_timestamp > last_notif){
+										for(var hist_id in Lincko.storage.data[cat][id]['history'][hist_timestamp]){
+											if(
+												   Lincko.storage.data[cat][id]['history'][hist_timestamp][hist_id]['by'] != wrapper_localstorage.uid
+												&& app_models_history.validHist(
+														Lincko.storage.data[item_cat][item_id],
+														Lincko.storage.data[cat][id],
+														Lincko.storage.data[cat][id]['history'][hist_timestamp][hist_id]
+													)
+												){
+												if(typeof this.notify[item_cat] == "undefined"){ this.notify[item_cat] = {}; }
+												if(typeof this.notify[item_cat][item_id] == "undefined"){
+													this.notify[item_cat][item_id] = 1;
+												} else {
+													this.notify[item_cat][item_id]++;
+												}
+											}
+										}
+									}
+								}
 							}
 						}
 					}
@@ -1207,45 +1240,67 @@ Lincko.storage.cache = {
 		}
 
 		item_cat = "projects";
-		for(var item_id in Lincko.storage.data[item_cat]){
-			children = Lincko.storage.tree(item_cat, item_id, "children", true, true);
-			if(children){
-				for(var cat in children){
-					for(var id in children[cat]){
-						//Skip excluded
-						if(this.exclude_projects[cat] && this.exclude_projects[cat][id]){
-							continue;
-						}
-						//Record notifications
-						if(!Lincko.storage.data[cat][id]['deleted_at'] && Lincko.storage.data[cat][id]['_not']){
-							if(typeof this.notify[item_cat] == "undefined"){ this.notify[item_cat] = {}; }
-							if(typeof this.notify[item_cat][item_id] == "undefined"){
-								this.notify[item_cat][item_id] = 1;
-							} else {
-								this.notify[item_cat][item_id]++;
+		if(typeof type_reset == 'undefined' || type_reset==item_cat){
+			for(var item_id in Lincko.storage.data[item_cat]){
+				if(typeof type_reset != 'undefined' && typeof id_reset != 'undefined' && id_reset!=item_id){
+					continue;
+				}
+				last_notif = Lincko.storage.getLastNotif(item_cat, item_id);
+				children = Lincko.storage.tree(item_cat, item_id, "children", true, true);
+				if(children){
+					for(var cat in children){
+						for(var id in children[cat]){
+							//Skip excluded
+							if(this.exclude_projects[cat] && this.exclude_projects[cat][id]){
+								continue;
 							}
-						}
-						//Record statistics tasks/notes/files
-						if(
-							!Lincko.storage.data[cat][id]['deleted_at']
-							&& (
-								   (cat=="tasks" && !Lincko.storage.data[cat][id]['approved'] && !Lincko.storage.data[cat][id]['_tasksup'])
-								||  cat=="notes"
-								||  cat=="files"
-							)
-						){
-							if(typeof this.statistics[item_cat] == "undefined"){ this.statistics[item_cat] = {}; }
-							if(typeof this.statistics[item_cat][item_id] == "undefined"){ this.statistics[item_cat][item_id] = {}; }
-							if(typeof this.statistics[item_cat][item_id][cat] == "undefined"){
-								this.statistics[item_cat][item_id][cat] = 1;
-							} else {
-								this.statistics[item_cat][item_id][cat]++;
+							//Record notifications
+							if(!Lincko.storage.data[cat][id]['deleted_at'] && Lincko.storage.data[cat][id]['history']){
+								for(var hist_timestamp in Lincko.storage.data[cat][id]['history']){
+									if(hist_timestamp > last_notif){
+										for(var hist_id in Lincko.storage.data[cat][id]['history'][hist_timestamp]){
+											if(
+												   Lincko.storage.data[cat][id]['history'][hist_timestamp][hist_id]['by'] != wrapper_localstorage.uid
+												&& app_models_history.validHist(
+														Lincko.storage.data[item_cat][item_id],
+														Lincko.storage.data[cat][id],
+														Lincko.storage.data[cat][id]['history'][hist_timestamp][hist_id]
+													)
+												){
+												if(typeof this.notify[item_cat] == "undefined"){ this.notify[item_cat] = {}; }
+												if(typeof this.notify[item_cat][item_id] == "undefined"){
+													this.notify[item_cat][item_id] = 1;
+												} else {
+													this.notify[item_cat][item_id]++;
+												}
+											}
+										}
+									}
+								}
+							}
+							//Record statistics tasks/notes/files
+							if(
+								!Lincko.storage.data[cat][id]['deleted_at']
+								&& (
+									   (cat=="tasks" && !Lincko.storage.data[cat][id]['approved'] && !Lincko.storage.data[cat][id]['_tasksup'])
+									||  cat=="notes"
+									||  cat=="files"
+								)
+							){
+								if(typeof this.statistics[item_cat] == "undefined"){ this.statistics[item_cat] = {}; }
+								if(typeof this.statistics[item_cat][item_id] == "undefined"){ this.statistics[item_cat][item_id] = {}; }
+								if(typeof this.statistics[item_cat][item_id][cat] == "undefined"){
+									this.statistics[item_cat][item_id][cat] = 1;
+								} else {
+									this.statistics[item_cat][item_id][cat]++;
+								}
 							}
 						}
 					}
 				}
 			}
 		}
+
 		return true;
 	},
 };

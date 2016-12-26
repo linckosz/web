@@ -83,7 +83,11 @@ var app_application_lincko = {
 			}
 			
 			if(object === 'element'){
-				this._elements[''+id] = item;
+				var range_key = md5(range); //It helps to instance multiple listener with different range on a same HTML element
+				if(typeof this._elements[''+id] == 'undefined'){
+					this._elements[''+id] = {};
+				}
+				this._elements[''+id][range_key] = item;
 			} else if(object === 'function'){
 				//Has to register the function as anonyme, if not the value of "this" inside the function (especially for objects) can be different,
 				//using "that = id" helps to keep the orginal value of this as it should be
@@ -147,66 +151,68 @@ var app_application_lincko = {
 			//First we scan all HTML elements
 			for(var Elem_id in this._elements){
 				Elem = $('#'+Elem_id);
-				if(Elem.length <= 0 || !this._elements[Elem_id].exists()){ //delete the element if it doesn't exist on DOM
-					this._elements[Elem_id].deletion();
-					delete this._elements[Elem_id];
-				} else {
-					if(typeof this._elements[Elem_id].range == 'object'){
-						for(var field in this._fields){
-							if(
-								   typeof this._elements[Elem_id].range[field] != 'undefined'
-								|| typeof this._elements[Elem_id].range[field.replace(/_\d+$/, '')] != 'undefined'
-							){
-								try {
-									var updated = {};
-									for(var range in this._elements[Elem_id].range){
-										if(this._fields[range]){
-											updated[range] = this._fields[range];
-										}
-									}
-									this._elements[Elem_id].updated = updated;
-									clearTimeout(this._elements[Elem_id].timer);
-									if(procedural){ //Run immediatly (but can see screen little freeze)
-										this._elements[Elem_id].action();
-									} else { //It will wait until the parent scope script is finished (less screen freeze)
-										this._elements[Elem_id].timer = setTimeout(function(Elem_id){
-											if(app_application_lincko._elements[Elem_id]){
-												app_application_lincko._elements[Elem_id].action();
-											} else {
-												//console.log("application => "+Elem_id);
-												//JSerror.sendError(Elem_id, 'app_application_lincko._elements[Elem_id] does not exists', 0);
+				for(var range_key in this._elements[Elem_id]){
+					if(Elem.length <= 0 || !this._elements[Elem_id][range_key].exists()){ //delete the element if it doesn't exist on DOM
+						this._elements[Elem_id][range_key].deletion();
+						delete this._elements[Elem_id][range_key];
+					} else {
+						if(typeof this._elements[Elem_id][range_key].range == 'object'){
+							for(var field in this._fields){
+								if(
+									   typeof this._elements[Elem_id][range_key].range[field] != 'undefined'
+									|| typeof this._elements[Elem_id][range_key].range[field.replace(/_\d+$/, '')] != 'undefined'
+								){
+									try {
+										var updated = {};
+										for(var range in this._elements[Elem_id][range_key].range){
+											if(this._fields[range]){
+												updated[range] = this._fields[range];
 											}
-										}, 0, Elem_id);
+										}
+										this._elements[Elem_id][range_key].updated = updated;
+										clearTimeout(this._elements[Elem_id][range_key].timer);
+										if(procedural){ //Run immediatly (but can see screen little freeze)
+											this._elements[Elem_id][range_key].action();
+										} else { //It will wait until the parent scope script is finished (less screen freeze)
+											this._elements[Elem_id][range_key].timer = setTimeout(function(Elem_id, range_key){
+												if(app_application_lincko._elements[Elem_id][range_key]){
+													app_application_lincko._elements[Elem_id][range_key].action();
+												} else {
+													//console.log("application => "+Elem_id);
+													//JSerror.sendError(Elem_id, 'app_application_lincko._elements[Elem_id][range_key] does not exists', 0);
+												}
+											}, 0, Elem_id, range_key);
+										}
+									} catch(e) {
+										var instance = "Other";
+										if (e instanceof TypeError) {
+											instance = "TypeError";
+										} else if (e instanceof RangeError) {
+											instance = "RangeError";
+										} else if (e instanceof EvalError) {
+											instance = "EvalError";
+										} else if (e instanceof ReferenceError) {
+											instance = "ReferenceError";
+										}
+										var message = "";
+										if(e.message){ message = e.message; }
+										var name = "";
+										if(e.name){ name = e.name; }
+										var fileName = "";
+										if(e.fileName){ fileName = e.fileName; }
+										var lineNumber = 0;
+										if(e.lineNumber){ lineNumber = e.lineNumber; }
+										var columnNumber = 0;
+										if(e.columnNumber){ columnNumber = e.columnNumber; }
+										var stack = "";
+										if(e.stack){
+											stack = e.stack;
+										}
+										JSerror.sendError(this._elements[Elem_id][range_key].action, 'app_application_lincko.update => this._elements["'+Elem_id+'"]["'+range_key+'"].action() => '+field, 0);
+										JSerror.sendError(stack, fileName+" "+message, lineNumber, columnNumber, instance+" "+name);
 									}
-								} catch(e) {
-									var instance = "Other";
-									if (e instanceof TypeError) {
-										instance = "TypeError";
-									} else if (e instanceof RangeError) {
-										instance = "RangeError";
-									} else if (e instanceof EvalError) {
-										instance = "EvalError";
-									} else if (e instanceof ReferenceError) {
-										instance = "ReferenceError";
-									}
-									var message = "";
-									if(e.message){ message = e.message; }
-									var name = "";
-									if(e.name){ name = e.name; }
-									var fileName = "";
-									if(e.fileName){ fileName = e.fileName; }
-									var lineNumber = 0;
-									if(e.lineNumber){ lineNumber = e.lineNumber; }
-									var columnNumber = 0;
-									if(e.columnNumber){ columnNumber = e.columnNumber; }
-									var stack = "";
-									if(e.stack){
-										stack = e.stack;
-									}
-									JSerror.sendError(this._elements[Elem_id].action, 'app_application_lincko.update => this._elements["'+Elem_id+'"].action() => '+field, 0);
-									JSerror.sendError(stack, fileName+" "+message, lineNumber, columnNumber, instance+" "+name);
+									break; //Do not launch more than one time if ever launched
 								}
-								break; //Do not launch more than one time if ever launched
 							}
 						}
 					}
@@ -342,9 +348,11 @@ var app_application_lincko = {
 		} else if(fields === true){
 			//Prepare all to be updated
 			for(var id in this._elements){
-				for(var field in this._elements[id].range){
-					if(typeof this._fields[fields] != 'object'){
-						this._fields[field] = true;
+				for(var range_key in this._elements[id]){
+					for(var field in this._elements[id][range_key].range){
+						if(typeof this._fields[fields] != 'object'){
+							this._fields[field] = true;
+						}
 					}
 				}
 			}

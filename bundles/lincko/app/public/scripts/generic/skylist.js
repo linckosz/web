@@ -998,6 +998,8 @@ skylist.prototype.addChat = function(item){
 		var notif = Elem.find('[find=chats_notif]');
 	}
 
+	//var last_notif_root = Lincko.storage.getLastNotif(item['root_type'], item['root_id']);
+	//if(item['timestamp'] > last_notif_root){
 	if(item['notif']){
 		notif.removeClass('display_none');
 	} else {

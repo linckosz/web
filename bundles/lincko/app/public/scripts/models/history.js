@@ -450,6 +450,58 @@ var app_models_history = {
 		return false;
 	},
 
+	validHist: function(root_item, item, hist){
+		if(root_item["_type"]=="projects" && !hist["by"] && item["_type"]=="comments"){
+			comment = item['+comment'];
+			if(comment=="" || comment=="100" || comment=="700"){
+				//Exclude everything about chats inside project activity
+				return false;
+			}
+		}
+		//Skip recalled for projects
+		if(root_item["_type"]=="projects" && item["_type"]=="comments"){
+			if(item['recalled_by']){
+				//We don't display recalled messages in activity short description
+				return false;
+			}
+		}
+
+		//Skip recalled for chats
+		if(root_item["_type"]=="chats" && item["_type"]=="messages"){
+			if(item['recalled_by']){
+				//We don't display recalled messages in activity short description
+				return false;
+			}
+		}
+
+		//Skip deleted items for chats
+		if(root_item["_type"]=="chats"){
+			if(item["_type"]=='chats'){
+				if(hist["cod"]!=101 || item['single']){
+					//We don't display in chats the chats itself (expect creation for shared group)
+					return false;
+				}
+			}
+			if(item['deleted_at']){
+				//We don't display deleted items in activity short description
+				return false;
+			}
+		}
+
+		//Skip useless resume
+		if(item["_type"]=="comments"){
+			if(hist["by"]==0 || hist["by"]==1){ //Projects
+				var sentence = app_models_resume_format_sentence(hist["id"]);
+				if(sentence===false){
+					//We don't display the message that the user is not concerned
+					return false;
+				}
+			}
+		}
+
+		return true;
+	},
+
 	tabList: function(limit, parent_type, parent_id){
 		if(typeof limit != 'number' || limit<=0){ limit = false; }
 		if(typeof parent_type == 'undefined'){ parent_type = false; }
@@ -488,45 +540,10 @@ var app_models_history = {
 			root_name = root_item["_type"]+"_"+root_item["_id"];
 			name = hist_all[i]["type"]+"_"+hist_all[i]["id"];
 			if(root_item && typeof hist_num[root_name] == "undefined" && root_item['deleted_at']==null){
-				if(root_item["_type"]=="projects" && !hist_all[i]["by"] && hist_all[i]["type"]=="comments"){
-					comment = Lincko.storage.get('comments', hist_all[i]["id"], 'comment');
-					if(comment=="" || comment=="100" || comment=="700"){
-						//Exclude everything about chats inside project activity
-						continue;
-					}
-				}
-
-				//Skip recalled for projects
-				if(root_item["_type"]=="projects" && hist_all[i]["type"]=="comments"){
-					comment = Lincko.storage.get("comments", hist_all[i]["id"]);
-					if(comment['recalled_by']){
-						//We don't display recalled messages in activity short description
-						continue;
-					}
-				}
-
-				//Skip recalled for chats
-				if(root_item["_type"]=="chats" && hist_all[i]["type"]=="messages"){
-					message = Lincko.storage.get("messages", hist_all[i]["id"]);
-					if(message['recalled_by']){
-						//We don't display recalled messages in activity short description
-						continue;
-					}
-				}
-
-				//Skip deleted items for chats
-				if(root_item["_type"]=="chats"){
-					if(hist_all[i]["type"]=='chats'){
-						if(hist_all[i]["cod"]!=101 || Lincko.storage.get("chats", hist_all[i]["id"], "single")){
-							//We don't display in chats the chats itself (expect creation for shared group)
-							continue;
-						}
-					}
-					deleted_at = Lincko.storage.get(hist_all[i]["type"], hist_all[i]["id"], 'deleted_at');
-					if(deleted_at){
-						//We don't display deleted items in activity short description
-						continue;
-					}
+				item = Lincko.storage.get(hist_all[i]["type"], hist_all[i]["id"]);
+				if(!this.validHist(root_item, item, hist_all[i])){
+					//We skip some
+					continue;
 				}
 				
 				if(exclude && exclude[hist_all[i]["type"]] && exclude[hist_all[i]["type"]][hist_all[i]["id"]]){
@@ -612,8 +629,7 @@ var app_models_history = {
 						if(hist_all[i]["by"]==0 || hist_all[i]["by"]==1){ //Projects
 							var sentence = app_models_resume_format_sentence(hist_all[i]["id"]);
 							if(sentence===false){
-								//We don't display the message that the user is not concerned
-								continue;
+								info[i].content = ''; //thanks to validHist, we should never reach it
 							}
 							if(typeof sentence == 'string' || typeof sentence == 'number'){
 								info[i].content = $('<div>'+sentence+'</div>').text();
@@ -640,8 +656,7 @@ var app_models_history = {
 								} else {
 									var hist_info = Lincko.storage.getHistoryInfo(hist_all[i]);
 									if(hist_info.content===false){
-										//We don't display the message that the user is not concerned
-										continue;
+										info[i].content = ''; //This should not happen
 									}
 									if(root_item["_type"]=="projects"){
 										info[i].content = hist_info.title;
@@ -671,8 +686,7 @@ var app_models_history = {
 							} else {
 								var hist_info = Lincko.storage.getHistoryInfo(hist_all[i]);
 								if(hist_info.content===false){
-									//We don't display the message that the user is not concerned
-									continue;
+									info[i].content = ''; //This should not happen
 								}
 								info[i].by = hist_all[i]["by"];
 								info[i].content = hist_info.content;
@@ -681,8 +695,7 @@ var app_models_history = {
 					} else {
 						var hist_info = Lincko.storage.getHistoryInfo(hist_all[i]);
 						if(hist_info.content===false){
-							//We don't display the message that the user is not concerned
-							continue;
+							info[i].content = ''; //This should not happen
 						}
 						info[i].content = hist_info.title;
 					}
