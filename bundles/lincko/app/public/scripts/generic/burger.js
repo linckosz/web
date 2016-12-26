@@ -28,6 +28,13 @@ var burger_keyboard = function(elem, shortcutList    ){
 
 	that.list = burger_list.in_charge('projects', app_content_menu.projects_id);
 
+	that.lineHeight = 30;
+	 /* possible alternative to hardcode offset
+    //http://stackoverflow.com/questions/1185151/how-to-determine-a-line-height-using-javascript-jquery
+    //1.5 of font-size is typical for lineheight
+    var fontSize = $(el).css('font-size');
+	var lineHeight = Math.floor(parseInt(fontSize.replace('px','')) * 1.5);
+	*/
 
 
 
@@ -72,17 +79,14 @@ var burger_keyboard = function(elem, shortcutList    ){
 	elem.on('keyup.burger_keyboard', function(event){
 		var which = event.which;
 
-		/*dont take action for shift keys*/
-		if(which == 16){ return; }
+		/*DO NOT TAKE ACTION*/
+		if(	which == 16 //shift
+			|| which == 38 // up arrow
+			|| which == 40 // down arrow
+			){ return; }
 
 		var coord = burger_regex_getCaretOffset(elem, true);
 	    var caretIndex = that.i_caretCurrent = coord.caretOffset;
-	    /* possible alternative to hardcode offset
-	    //http://stackoverflow.com/questions/1185151/how-to-determine-a-line-height-using-javascript-jquery
-	    //1.5 of font-size is typical for lineheight
-	    var fontSize = $(el).css('font-size');
-		var lineHeight = Math.floor(parseInt(fontSize.replace('px','')) * 1.5);
-		*/
 
 		var selection = getSelection();
 	    var focus_node = selection.focusNode;
@@ -118,19 +122,18 @@ var burger_keyboard = function(elem, shortcutList    ){
 
 			//if enter or tab is pressed
 			if(which == 13 || which == 9){
-				event.preventDefault();
+				/*event.preventDefault();
 				var elem_option_select = that.dropdownInst.elem.find('.burger_option_selected');
 				if(!elem_option_select.length){
 					elem_option_select = that.dropdownInst.elem.find('.burger_option').eq(0);
 				}
 
-				elem_option_select.click();
+				elem_option_select.click();*/
 				return;
 			}
 
 
 			var word = elem.text().substring(that.i_caretBegin, caretIndex);
-			console.log(word);
 			if(that.burgerOn == burger_shortcuts.at){
 				var list_search = burger_search.users(that.list, word);
 				that.dropdownInst.build_elem_data(list_search);
@@ -146,8 +149,7 @@ var burger_keyboard = function(elem, shortcutList    ){
 			that.i_caretBegin = caretIndex;
 
 			if(latestChar == burger_shortcuts.at){
-				var lineHeight = 30;
-				that.dropdownInst = new burger_dropdown('toto', that.list, [coord.x, coord.y], lineHeight, cb_create, cb_select, cb_destroy, that.elem); 
+				that.dropdownInst = new burger_dropdown('toto', that.list, [coord.x, coord.y], that.lineHeight, cb_create, cb_select, cb_destroy, that.elem); 
 			}
 			else if(latestChar == burger_shortcuts.plus || latestChar == burger_shortcuts.plusAlt){ 
 
@@ -625,17 +627,18 @@ burger_list.in_charge = function(lincko_type, lincko_id){
 	}
 
 	var project_id = null;
-	if(lincko_type == 'projects'){ project_id = lincko_id; }
-	else{ project_id = item['_parent'][1]; }
-
-	var task_id = null;
-	if(lincko_type == 'tasks'){ task_id = lincko_id; }
+	if(lincko_type == 'projects'){
+		project_id = lincko_id;
+	}
+	else{
+		project_id = item['_parent'][1];
+	}
 
 	var inviteNewUser = {
 		text: Lincko.Translation.get('app', 31, 'html'), //Add Teammates
 		onClick: function(){
 			var param = {
-				pid: project_id,
+				pid2: project_id,
 				invite_access: {
 					projects: project_id,
 					//tasks: task_id, //null if not available (i.e. brand new task) toto - not ready yet
@@ -775,7 +778,7 @@ var burger_dropdown = function(id, data, position, lineHeight, cb_create, cb_sel
 
 	if(typeof cb_create != 'function'){ var cb_create = null; }
 	if(typeof cb_select != 'function'){ var cb_select = null; }
-	if(typeof cb_destroy != 'function'){ var cb_select = null; }
+	if(typeof cb_destroy != 'function'){ var cb_destroy = null; }
 
 	if(focus_elem instanceof $){/*do nothing*/}
 	else if(base_isElement(focus_elem)){ focus_elem = $(focus_elem); }
