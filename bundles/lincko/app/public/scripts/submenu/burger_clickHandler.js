@@ -134,7 +134,7 @@ Submenu.prototype.Add_burger_clickHandler_projects = function() {
 
 	var fn_click = function(event){
 		var burgerData = event.data;
-		submenu_content.find('.burger_option').removeClass('burger_option_selected');
+		submenu_content.find('.burger_option').removeClass('burger_option_selected').removeClass('burger_option_preSelect');
 		$(this).addClass('burger_option_selected');
 		that.param.burgerData = burgerData;
 	}
