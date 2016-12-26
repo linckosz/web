@@ -396,7 +396,16 @@ var app_generic_state = {
 				} else if(type=="chats"){
 					var subm = submenu_get('newchat', false);
 					if(!subm || !subm.param.type || !subm.param.id || subm.param.type != "chats" || subm.param.id != parent._id){
-						submenu_Build_return("newchat", true, false, {'type': 'chats','id': parent._id,'title': parent['+title'], find_item: "files_"+target_id}, false);
+						var title = parent['+title'];
+						if(parent['single'] && parent['_perm']){
+							for(var uid in parent['_perm']){
+								if(uid != wrapper_localstorage.uid){
+									title = Lincko.storage.get('users', uid, 'username');
+									break;
+								}
+							}
+						}
+						submenu_Build_return("newchat", true, false, {'type': 'chats','id': parent._id,'title': title, find_item: "files_"+target_id}, false);
 					}
 					var subm = submenu_get('taskdetail', false);
 					if(!subm || !subm.param.type || !subm.param.id || subm.param.type != "files" || subm.param.id != target_id){
@@ -429,7 +438,16 @@ var app_generic_state = {
 						} else if(type=="chats"){
 							var subm = submenu_get('newchat', false);
 							if(!subm || !subm.param.type || !subm.param.id || subm.param.type != "chats" || subm.param.id != parent._id){
-								submenu_Build_return("newchat", true, false, {'type': 'chats','id': parent._id,'title': parent['+title'], find_item: "files_"+target_id}, false);
+								var title = parent['+title'];
+								if(parent['single'] && parent['_perm']){
+									for(var uid in parent['_perm']){
+										if(uid != wrapper_localstorage.uid){
+											title = Lincko.storage.get('users', uid, 'username');
+											break;
+										}
+									}
+								}
+								submenu_Build_return("newchat", true, false, {'type': 'chats','id': parent._id,'title': title, find_item: "files_"+target_id}, false);
 							}
 							var subm = submenu_get('taskdetail', false);
 							if(!subm || !subm.param.type || !subm.param.id || subm.param.type != "files" || subm.param.id != target_id){
@@ -451,6 +469,14 @@ var app_generic_state = {
 				var subm = submenu_get('newchat', false);
 				if(!subm || !subm.param.type || !subm.param.id || subm.param.type != "chats" || subm.param.id != target_id){
 					var title = Lincko.storage.get("chats", target_id, "title");
+					if(parent['single'] && parent['_perm']){
+						for(var uid in parent['_perm']){
+							if(uid != wrapper_localstorage.uid){
+								title = Lincko.storage.get('users', uid, 'username');
+								break;
+							}
+						}
+					}
 					submenu_Build("newchat", true, false, {'type': 'chats','id': target_id,'title': title}, false);
 				}
 			} else {
@@ -460,6 +486,14 @@ var app_generic_state = {
 						var subm = submenu_get('newchat', false);
 						if(!subm || !subm.param.type || !subm.param.id || subm.param.type != "chats" || subm.param.id != target_id){
 							var title = Lincko.storage.get("chats", target_id, "title");
+							if(parent['single'] && parent['_perm']){
+								for(var uid in parent['_perm']){
+									if(uid != wrapper_localstorage.uid){
+										title = Lincko.storage.get('users', uid, 'username');
+										break;
+									}
+								}
+							}
 							submenu_Build("newchat", true, false, {'type': 'chats','id': target_id,'title': title}, false);
 						}
 					}
@@ -530,7 +564,16 @@ var app_generic_state = {
 			if(!storage_first_launch) {
 				var subm = submenu_get('newchat', false);
 				if(!subm || !subm.param.type || !subm.param.id || subm.param.type != parent._type || subm.param.id != parent._id){
-					submenu_Build("newchat", true, false, {'type': parent._type,'id': parent._id,'title': parent['+title'], find_item: "messages_"+target_id}, false);
+					var chat_title = parent['+title'];
+					if(parent['single'] && parent['_perm']){
+						for(var uid in parent['_perm']){
+							if(uid != wrapper_localstorage.uid){
+								title = Lincko.storage.get('users', uid, 'username');
+								break;
+							}
+						}
+					}
+					submenu_Build("newchat", true, false, {'type': parent._type,'id': parent._id,'title': title, find_item: "messages_"+target_id}, false);
 				}
 			} else {
 				var model_timer = setInterval(function(target_id, parent){
@@ -538,7 +581,16 @@ var app_generic_state = {
 						clearInterval(model_timer);
 						var subm = submenu_get('newchat', false);
 						if(!subm || !subm.param.type || !subm.param.id || subm.param.type != parent._type || subm.param.id != parent._id){
-							submenu_Build("newchat", true, false, {'type': parent._type,'id': parent._id,'title': parent['+title'], find_item: "messages_"+target_id}, false);
+							var title = parent['+title'];
+							if(parent['single'] && parent['_perm']){
+								for(var uid in parent['_perm']){
+									if(uid != wrapper_localstorage.uid){
+										title = Lincko.storage.get('users', uid, 'username');
+										break;
+									}
+								}
+							}
+							submenu_Build("newchat", true, false, {'type': parent._type,'id': parent._id,'title': title, find_item: "messages_"+target_id}, false);
 						}
 					}
 				}, 1000, target_id, parent);
