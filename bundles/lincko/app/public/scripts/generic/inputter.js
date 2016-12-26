@@ -721,6 +721,7 @@ inputter.prototype.buildLayer = function()
 			}	
 			else
 			{
+				debugger;
 				e.preventDefault();
 				var files = app_upload_files.lincko_files;
 				var files_count = 0;
@@ -734,18 +735,19 @@ inputter.prototype.buildLayer = function()
 						files_count++;
 					}
 				}
-
 				if(
 					(this.innerText.length > 0 && that.layer.hasOwnProperty('enter') && !that.hasTask)
-					|| ((this.innerText.length > 0 || files_count > 0) && that.layer.hasOwnProperty('enter') && that.hasTask)
+					|| (((this.innerHTML!="<br>" && this.innerText.length > 0) || files_count > 0) && that.layer.hasOwnProperty('enter') && that.hasTask)
 				  )
 				{
 					flag = true;
 					content.removeClass('mobile-margin-right-' + mobile_show_count);
 					if(that.burger == null)
 					{
-						var fn = that.layer['enter'];
-						fn(that);
+						setTimeout(function(){
+							var fn = that.layer['enter'];
+							fn(that);
+						},0);
 					}
 
 					$('.empty_show').removeClass('mobile_hide');
@@ -770,7 +772,7 @@ inputter.prototype.buildLayer = function()
 
 	if(!supportsTouch && !this.hasTask){
 		setTimeout(function(){
-		input.find('[find=chat_textarea]').get(0).focus();
+			input.find('[find=chat_textarea]').get(0).focus();
 		},200);
 	}
 
@@ -827,6 +829,7 @@ inputter.prototype.buildLayer = function()
 	}
 
 	container.appendTo(this.position);
+
 	$('#'+this.panel_id + "_files_queue_wrapper").addClass("overthrow");
 	wrapper_IScroll_options_new[this.panel_id + "_files_queue_wrapper"] = { 
 		scrollX: true, 
