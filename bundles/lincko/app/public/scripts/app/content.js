@@ -288,19 +288,6 @@ app_application_lincko.add("app_content_menu_notif", "projects", function() {
 		}
 	}
 	$("#app_content_menu_notif").addClass('display_none');
-	/*
-	var hist = Lincko.storage.hist(null, null, {by: ['!=', wrapper_localstorage.uid]}, 'projects', app_content_menu.projects_id, true, true, true);
-	var last_notif_root = Lincko.storage.getLastNotif('projects', app_content_menu.projects_id);
-	var latest_history = 0;
-	if(hist.length > 0){
-		latest_history = hist[0]["timestamp"];
-	}
-	if(latest_history > last_notif_root){
-		$("#app_content_menu_notif").removeClass('display_none');
-	} else {
-		$("#app_content_menu_notif").addClass('display_none');
-	}
-	*/
 });
 
 var app_content_menu_first_launch = true;

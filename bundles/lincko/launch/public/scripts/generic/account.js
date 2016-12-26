@@ -1,34 +1,43 @@
 
+var account_submit_running = false;
 var account_joinus_cb_begin = function(){
+	account_submit_running = true;
 	account_hide_error(true);
 	$(document.body).css('cursor', 'progress');
 	$('#account_joinus_submit_progress').css("display", "block");
 	$('#account_joinus_submit_progress').removeClass('display_none');
 	base_format_form_single($('#account_joinus_submit_progress'));
+	$('#account_joinus_submit').addClass('account_joinus_submit_running');
 };
 
 var account_signin_cb_begin = function(){
+	account_submit_running = true;
 	account_hide_error(true);
 	$(document.body).css('cursor', 'progress');
 	$('#account_signin_submit_progress').css("display", "block");
 	$('#account_signin_submit_progress').removeClass('display_none');
 	base_format_form_single($('#account_signin_submit_progress'));
+	$('#account_signin_submit').addClass('account_signin_submit_running');
 };
 
 var account_forgot_cb_begin = function(){
+	account_submit_running = true;
 	account_hide_error(true);
 	$(document.body).css('cursor', 'progress');
 	$('#account_forgot_submit_progress').css("display", "block");
 	$('#account_forgot_submit_progress').removeClass('display_none');
 	base_format_form_single($('#account_forgot_submit_progress'));
+	$('#account_forgot_submit').addClass('account_forgot_submit_running');
 };
 
 var account_reset_cb_begin = function(jqXHR, settings){
+	account_submit_running = true;
 	account_hide_error(true);
 	$(document.body).css('cursor', 'progress');
 	$('#account_reset_submit_progress').css("display", "block");
 	$('#account_reset_submit_progress').removeClass('display_none');
 	base_format_form_single($('#account_reset_submit_progress'));
+	$('#account_reset_submit').addClass('account_reset_submit_running');
 	//Initialize credential
 	account_credential = {};
 	if(settings.data){
@@ -123,23 +132,31 @@ var account_joinus_cb_error = account_signin_cb_error = account_forgot_cb_error 
 var account_credential = {};
 
 var account_joinus_cb_complete = function(){
+	account_submit_running = false;
 	$(document.body).css('cursor', '');
 	$('#account_joinus_submit_progress').addClass('display_none');
+	$('#account_joinus_submit').removeClass('account_joinus_submit_running');
 };
 
 var account_signin_cb_complete = function(){
+	account_submit_running = false;
 	$(document.body).css('cursor', '');
 	$('#account_signin_submit_progress').addClass('display_none');
+	$('#account_signin_submit').removeClass('account_signin_submit_running');
 };
 
 var account_forgot_cb_complete = function(){
+	account_submit_running = false;
 	$(document.body).css('cursor', '');
 	$('#account_forgot_submit_progress').addClass('display_none');
+	$('#account_forgot_submit').removeClass('account_forgot_submit_running');
 };
 
 var account_reset_cb_complete = function(){
+	account_submit_running = false;
 	$(document.body).css('cursor', '');
 	$('#account_reset_submit_progress').addClass('display_none');
+	$('#account_reset_submit').removeClass('account_reset_submit_running');
 	account_credential = {};
 };
 

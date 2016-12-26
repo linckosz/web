@@ -275,6 +275,11 @@
 	background-color: #E89700 !important;
 }
 
+#account_joinus_submit.account_joinus_submit_running, #account_joinus_submit:active.account_joinus_submit_running {
+	cursor: progress !important;
+	background-color: #FFC251 !important;
+}
+
 #account_signin_submit {
 	display: block;
 	width: 100%;
@@ -297,6 +302,11 @@
 
 .account_signin_submit_active, #account_signin_submit:active {
 	background-color: #2586D8 !important;
+}
+
+#account_signin_submit.account_signin_submit_running, #account_signin_submit:active.account_signin_submit_running {
+	cursor: progress !important;
+	background-color: #4FA8F4 !important;
 }
 
 #account_signin_remember {
@@ -352,6 +362,11 @@
 	background-color: #2586D8 !important;
 }
 
+#account_forgot_submit.account_forgot_submit_running, #account_forgot_submit:active.account_forgot_submit_running {
+	cursor: progress !important;
+	background-color: #2586D8 !important;
+}
+
 #account_forgot_info {
 	margin-top: 4px;
 	font-size: 12px;
@@ -381,6 +396,11 @@
 }
 
 .account_reset_submit_active, #account_reset_submit:active {
+	background-color: #2586D8 !important;
+}
+
+#account_reset_submit.account_reset_submit_running, #account_reset_submit:active.account_reset_submit_running {
+	cursor: progress !important;
 	background-color: #2586D8 !important;
 }
 

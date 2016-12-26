@@ -62,7 +62,7 @@
 			</div>
 		{#{% endif %}#}
 		<div id="account_joinus_box" class="display_none">
-			<form class="account_form" id="account_joinus_form" action="user/create" method="post" onsubmit="return wrapper_sendForm(this, account_joinus_cb_success, account_joinus_cb_error, account_joinus_cb_begin, account_joinus_cb_complete);">
+			<form class="account_form" id="account_joinus_form" action="user/create" method="post" onsubmit="if(account_submit_running){return false;} return wrapper_sendForm(this, account_joinus_cb_success, account_joinus_cb_error, account_joinus_cb_begin, account_joinus_cb_complete);">
 				<div class="{#{% if invitation_code %}#}account_joinus_box_div{#{% endif %}#}">
 					<label class="account_label_inside selectable" for="account_joinus_email">
 						<span>{{ _trans('web', 5, 2, 'html') }}{# Email #}</span>
@@ -93,7 +93,7 @@
 			</form>
 		</div>
 		<div id="account_signin_box" class="display_none">
-			<form class="account_form" id="account_signin_form" action="user/signin" method="post" onsubmit="return wrapper_sendForm(this, account_signin_cb_success, account_signin_cb_error, account_signin_cb_begin, account_signin_cb_complete);">
+			<form class="account_form" id="account_signin_form" action="user/signin" method="post" onsubmit="if(account_submit_running){return false;} return wrapper_sendForm(this, account_signin_cb_success, account_signin_cb_error, account_signin_cb_begin, account_signin_cb_complete);">
 				<div class="{#{% if invitation_code %}#}account_signin_box_div{#{% endif %}#}">
 					<label class="account_label_inside" for="account_signin_email">
 						<span>{{ _trans('web', 5, 2, 'html') }}{# Email #}</span>
@@ -120,7 +120,7 @@
 		</div>
 
 		<div id="account_forgot_box" class="display_none">
-			<form class="account_form" id="account_forgot_form" action="user/forgot" method="post" onsubmit="return wrapper_sendForm(this, account_forgot_cb_success, account_forgot_cb_error, account_forgot_cb_begin, account_forgot_cb_complete);">
+			<form class="account_form" id="account_forgot_form" action="user/forgot" method="post" onsubmit="if(account_submit_running){return false;} return wrapper_sendForm(this, account_forgot_cb_success, account_forgot_cb_error, account_forgot_cb_begin, account_forgot_cb_complete);">
 				<div>
 					<div class="account_forgot_top">
 						{{ _trans('web', 5, 7, 'html') }}{# Forgot your password? #}
@@ -139,7 +139,7 @@
 		</div>
 
 		<div id="account_reset_box" class="display_none">
-			<form class="account_form" id="account_reset_form" action="user/reset" method="post" onsubmit="if(account_reset_time_left_is_expired){ return false; } else { return wrapper_sendForm(this, account_reset_cb_success, account_reset_cb_error, account_reset_cb_begin, account_reset_cb_complete); }">
+			<form class="account_form" id="account_reset_form" action="user/reset" method="post" onsubmit="if(account_submit_running){return false;} if(account_reset_time_left_is_expired){ return false; } else { return wrapper_sendForm(this, account_reset_cb_success, account_reset_cb_error, account_reset_cb_begin, account_reset_cb_complete); }">
 				<div>
 					<div class="account_reset_top">
 						{{ _trans('web', 5, 13, 'html') }}{# Reset your password #}
