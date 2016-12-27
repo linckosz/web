@@ -192,13 +192,13 @@ if(navigator.userAgent.match(/iPhone|iPad|iPod/i) && navigator.userAgent.match(/
 	isSafariIOS = true;
 }
 
-var wrapper_limit_json = 2000;
+var wrapper_limit_json = false;
 if(
 	   navigator.userAgent.match(/iPhone|iPad|iPod/i) && navigator.userAgent.match(/Safari/i)
 	|| navigator.userAgent.match(/MSIE/i)
 	|| navigator.userAgent.match(/EDGE/i)
 ){
-	wrapper_limit_json = 500;
+	//wrapper_limit_json = 500; //toto => allow chunking for for ios crash
 }
 
 var wrapper_test_result = null;
