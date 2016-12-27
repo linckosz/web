@@ -1484,9 +1484,7 @@ skylist.prototype.addTask = function(item){
 			}
 		});
 		elem_title.blur(function(){
-			if(that.Lincko_itemsList_filter.view != 'paper' && false){ //toto - paper behave same as card
-				that.editing_target.attr('contenteditable',false);
-			}
+			$(this).attr('contenteditable',false);
 
 			//@ burger
 			var inChargeID_new = null;
