@@ -167,14 +167,28 @@ Submenu.prototype.Add_ChatContents = function() {
 
 	if (type == 'history') {
 		that.param.chatFeed = new historyFeed(id,type,position,that);
+		app_application_lincko.add(this.id+"_chat_contents_wrapper", "projects_" + id, function() {
+			var chat_item = this.action_param[2];
+			chat_item.app_chat_feed_load_recent();
+		}, [that.id, id, that.param.chatFeed, position]);
 	}
 	else {
 		that.param.chatFeed = new chatFeed(id,type,position,that);
+		app_application_lincko.add(this.id+"_chat_contents_wrapper", "chats_" + id, function() {
+			var chat_item = this.action_param[2];
+			chat_item.app_chat_feed_load_recent();
+		}, [that.id, id, that.param.chatFeed, position]);
 	}
 
 	app_application_lincko.add(submenu_wrapper_id, 'upload', function(){ //We cannot simplify because Elem is not the HTML object, it's a JS Submenu object
 		var chat_item = this.action_param[2];
 		chat_item.app_chat_feed_uploading_file();
+	}, [that.id, id, that.param.chatFeed, position]);
+
+
+	app_application_lincko.add(submenu_wrapper_id, 'projects', function(){ 
+		var chat_item = this.action_param[2];
+		chat_item.app_chat_feed_load_recent();
 	}, [that.id, id, that.param.chatFeed, position]);
 
 	

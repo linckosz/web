@@ -174,10 +174,7 @@ BaseItemCls.prototype.item_display = function(position, subm, mode, scroll_time)
 		elem.find(".date", "[find=timestamp]").html(date.display('date_short'));
 		this.feed_profile_action(elem,this.user_id,subm);
 		this.feed_content(elem, subm);
-		if(this.style == 'activity' || this.style == 'file') 
-			{
-				this.feed_action(elem,subm);
-			}
+		if(this.style == 'activity' || this.style == 'file') this.feed_action(elem,subm);
 	}
 
 	var timestamp = parseInt(this.timestamp, 10);
@@ -625,22 +622,15 @@ var UploadingContentCls = function(record,type)
 	this.file_size = record['file_size'];
 	this.preview = record['preview'];
 	this.ext = record['ext'];
-	this.has_click = false;
 }
 
-UploadingContentCls.prototype.feed_content = function(elem,subm)
+UploadingContentCls.prototype.feed_content = function(elem)
 {
 
 	if(this.progress >=100 && this.uploading_status === 'done'){
-		debugger;
-		elem.find('.progress_bar_wrapper').recursiveRemove(true);
-		elem.find('[find=progress_text]').recursiveRemove(true);
-		elem.find('.uploading_action').recursiveRemove(true);
-		if(!this.has_click )
-		{
-			this.feed_action(elem,subm);
-			this.has_click = true;
-		}
+		elem.find('.progress_bar_wrapper').recursiveRemove();
+		elem.find('[find=progress_text]').recursiveRemove();
+		elem.find('.uploading_action').recursiveRemove();
 	} 
 	else
 	{
@@ -673,28 +663,7 @@ UploadingContentCls.prototype.feed_content = function(elem,subm)
 
 UploadingContentCls.prototype.feed_action = function(elem,subm)
 {
-	var that = this;
-	elem.find("[find=shortcut]").click({'subm':subm,'type':that.category,'target_id':that.id,'file_category':that.file_category},function(event){
-		var subm = event.data.subm;
-		var target_id =  event.data.target_id;
-		var type =  event.data.type;
-		var file_category = event.data.file_category;
-		if(file_category =='image') {
-			previewer['pic'](target_id);
-		}else if( file_category =='video'){
-			previewer['video'](target_id);
-		}
-		else {
-			submenu_Build('taskdetail', -1, null, {'type':type, 'id':target_id}, subm.preview);
-		}
-	});
-	elem.find("[find=target]").click({'subm':subm,'type':this.category,'target_id':this.id},function(event){
-		var subm = event.data.subm;
-		var type = event.data.type;
-		var target_id = event.data.target_id;
-		submenu_Build('taskdetail', -1, null, {'type':type, 'id': target_id}, subm.preview);
-	});
-	this.has_click = true ;
+	
 }
 
 
