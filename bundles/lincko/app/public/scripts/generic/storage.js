@@ -429,6 +429,10 @@ Lincko.storage.schema = function(schema){
 
 	//Step 1: Delete all unlinked items (only check 2 levels deep)
 	for(var i in Lincko.storage.data) {
+		if(i=='_history'){
+			//don't delete history records
+			continue;
+		}
 		if(!schema[i]){
 			delete Lincko.storage.data[i];
 			update = true;

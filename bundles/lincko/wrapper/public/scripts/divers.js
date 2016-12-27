@@ -192,12 +192,11 @@ if(navigator.userAgent.match(/iPhone|iPad|iPod/i) && navigator.userAgent.match(/
 	isSafariIOS = true;
 }
 
-var wrapper_limit_json = false;
+var wrapper_limit_json = 2000;
 if(
 	   navigator.userAgent.match(/iPhone|iPad|iPod/i) && navigator.userAgent.match(/Safari/i)
 	|| navigator.userAgent.match(/MSIE/i)
 	|| navigator.userAgent.match(/EDGE/i)
-	|| true //toto
 ){
 	wrapper_limit_json = 500;
 }
