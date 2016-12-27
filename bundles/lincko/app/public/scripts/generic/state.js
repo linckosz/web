@@ -612,7 +612,7 @@ var app_generic_state = {
 			if(typeof arr[5] != "undefined"){ animate=arr[5]; }
 
 			if(!storage_first_launch){
-				var subm = submenu_get(menu, next, hide, param, preview, animate);
+				var subm = submenu_get(menu, preview);
 				if(!subm){
 					submenu_Build(menu, next, hide, param, preview, animate);
 				}
@@ -620,7 +620,7 @@ var app_generic_state = {
 				var model_timer = setInterval(function(menu, next, hide, param, preview, animate){
 					if(!storage_first_launch){
 						clearInterval(model_timer);
-						var subm = submenu_get(menu, next, hide, param, preview, animate);
+						var subm = submenu_get(menu, preview);
 						if(!subm){
 							submenu_Build(menu, next, hide, param, preview, animate);
 						}

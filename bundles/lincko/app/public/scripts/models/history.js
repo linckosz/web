@@ -370,7 +370,7 @@ var app_models_history = {
 						app_models_history.notify(
 							wrapper_to_html(list[i]["-username"]),
 							Lincko.Translation.get('app', 72, 'html'), //You have an invitation request
-							"submenu-chat_list%false%true%true",
+							"submenu-chat_list%false%false%true",
 							20,
 							profile_pic
 						);
