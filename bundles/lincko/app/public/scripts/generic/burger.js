@@ -2633,8 +2633,8 @@ function burger_regex_getCaretOffset(elem, noElemHeight) {
 					span.appendChild( doc.createTextNode("\u200b") );
 					range.insertNode(span);
 					rect = span.getClientRects()[0];
-					x = rect.left;
-					y = rect.top;
+					if(rect && rect.left){ x = rect.left; }
+					if(rect && rect.top){ y = rect.top; }
 					var spanParent = span.parentNode;
 					spanParent.removeChild(span);
 
