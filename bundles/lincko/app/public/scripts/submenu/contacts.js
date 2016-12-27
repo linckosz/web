@@ -643,8 +643,9 @@ Submenu.prototype.Add_ContactContents = function(live) {
 		position.append(Elem);
 	}
 
-	var elem_inviteUser = $('<div class="submenu_contacts_inviteUser">Invite new user</div>'/*toto*/).click(function(){
-		if(that.param.project_id){
+
+	if(that.param.project_id){
+		var elem_inviteUser = $('<div class="submenu_contacts_inviteUser"></div>').text(Lincko.Translation.get('app', 31, 'html')/*Add Teammates*/).click(function(){
 			var param = {
 				pid: that.param.project_id,
 				invite_access: {
@@ -652,12 +653,8 @@ Submenu.prototype.Add_ContactContents = function(live) {
 				},
 			}
 			submenu_Build('app_projects_users_contacts',  that.layer, false, param);
-		}
-		else{
-			submenu_Build("chat_add_user", true, false, true);
-		}		
-	});
-	elem_inviteUser.prepend('<span find="icon" class="icon-AddPerson"></span>');
-	position.append(elem_inviteUser);
+		}).prepend('<span find="icon" class="icon-AddPerson"></span>');
+		position.append(elem_inviteUser);
+	}	
 
 }
