@@ -1108,6 +1108,7 @@ skylist.prototype.paperview_partialUpdate = function(updated_tasks){
 		'locked_fp': true,
 		'-comment': true,
 		locked_by: true,
+		_perm: true,
 		new: true,
 
 		'+title': true,
