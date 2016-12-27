@@ -1995,7 +1995,7 @@ skylist.prototype.addNote = function(item){
 	*/
 	var contenteditable = false;
 	var elem_title = Elem.find('[find=title]');
-	if( wrapper_localstorage.uid in item['_perm'] && item['_perm'][wrapper_localstorage.uid][0] > 1 ){ //RCU and beyond
+	if( typeof item['_perm'] == 'object' && wrapper_localstorage.uid in item['_perm'] && item['_perm'][wrapper_localstorage.uid][0] > 1 ){ //RCU and beyond
 		contenteditable = true; 
 	}
 	if(contenteditable){
