@@ -53,7 +53,6 @@ var burger_attach_clickHandler = {
 		if(typeof cb_create != 'function'){ var cb_create = null; }
 		if(typeof cb_select != 'function' && typeof cb_select != 'boolean' && !cb_select){ var cb_select = null; }
 		if(typeof cb_destroy != 'function'){ var cb_destroy = null; }
-		if(!list){ var list = burger_list.in_charge(lincko_type, lincko_id); }
 		if(typeof responsiveRange != 'boolean' && typeof resonsiveRange != 'string'){ var responsiveRange = 'minTablet'; } //responsiveRange true is minTablet
 
 		//default cb_select for in_charge
@@ -114,8 +113,15 @@ var burger_attach_clickHandler = {
 			if( (!dropdownInst || dropdownInst.destroyed) && 
 				(lincko_id == 'new' || !lincko_id || Lincko.storage.canI('edit', lincko_type, lincko_id))){
 				
+				//build list on click
+				var list_genOnClick = null;
+				if(list){ list_genOnClick = list; }
+				else{
+					list_genOnClick = burger_list.in_charge(lincko_type, lincko_id);
+				}
+
 				if(responsiveRange == true || responsive.test(responsiveRange)){
-					dropdownInst = new burger_dropdown('toto', list, elem, null, null, cb_select, null, false); 
+					dropdownInst = new burger_dropdown('toto', list_genOnClick, elem, null, null, cb_select, null, false); 
 				}
 				else {
 					var param = {};
@@ -123,7 +129,7 @@ var burger_attach_clickHandler = {
 					//param.contactsID = burgerN.generate_contacts(Lincko.storage.get(lincko_type, lincko_id));
 					//build contactsID from given list
 					param.contactsID = {};
-					$.each(list, function(i, obj){
+					$.each(list_genOnClick, function(i, obj){
 						var checked = false;
 						if(obj.preSelect){ checked = true; }
 						if(obj.val){
@@ -157,7 +163,6 @@ var burger_attach_clickHandler = {
 		if(typeof cb_create != 'function'){ cb_create = null; }
 		if(typeof cb_select != 'function' && typeof cb_select != 'boolean' && !cb_select){ var cb_select = null; }
 		if(typeof cb_destroy != 'function'){ cb_destroy = null; }
-		if(!list){ var list = burger_list.projects(lincko_type, lincko_id); }
 		if(typeof responsiveRange != 'boolean' && typeof resonsiveRange != 'string'){ var responsiveRange = 'minTablet'; } //responsiveRange true is minTablet
 
 		//default cb_select
@@ -196,16 +201,23 @@ var burger_attach_clickHandler = {
 		elem.off('click.burger').on('click.burger', function(){
 			if( (!dropdownInst || dropdownInst.destroyed) && 
 				(lincko_id == 'new' || !lincko_id || Lincko.storage.canI('edit', lincko_type, lincko_id))){
+
+				//build list on click
+				var list_genOnClick = null;
+				if(list){ list_genOnClick = list; }
+				else{
+					list_genOnClick = burger_list.projects(lincko_type, lincko_id);
+				}
 				 
 				if(responsiveRange == true || responsive.test(responsiveRange)){
-					dropdownInst = new burger_dropdown('toto', list, elem, null, null, cb_select, null, false);
+					dropdownInst = new burger_dropdown('toto', list_genOnClick, elem, null, null, cb_select, null, false);
 				}
 				else {
 					var param = {};
 					param.cb_create = cb_create;
 					param.cb_select = cb_select;
 					param.cb_destroy = cb_destroy;
-					param.list = list;
+					param.list = list_genOnClick;
 					submenu_Build('burger_clickHandler_projects', true, null, param);
 				}
 			}
