@@ -267,7 +267,7 @@ skylist.prototype.subConstruct_default = function(){
 	var tooltip_text = null;
 	if(that.list_type == 'tasks'){ tooltip_text = Lincko.Translation.get('app', 3620, 'js'); } //Add a new task
 	else if(that.list_type == 'notes'){ tooltip_text = Lincko.Translation.get('app', 3623, 'js'); } //Add a new note
-	else if(that.list_type == 'chats'){ tooltip_text = 'Add chat group' } //Add a new chat group - toto
+	else if(that.list_type == 'chats'){ tooltip_text = Lincko.Translation.get('app', 3627, 'js'); } //Add a new chat group
 	else if(that.list_type == 'files'){ tooltip_text = Lincko.Translation.get('app', 3626, 'js'); } //Attach a new file
 
 	if(tooltip_text){ that.elem_newcardCircle.attr('title', tooltip_text); }
