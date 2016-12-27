@@ -645,7 +645,7 @@ Submenu.prototype.Add_ContactContents = function(live) {
 
 
 	if(that.param.project_id){
-		var elem_inviteUser = $('<div class="submenu_contacts_inviteUser"></div>').text(Lincko.Translation.get('app', 31, 'html')/*Add Teammates*/).click(function(){
+		var elem_addTeammates = $('<div class="submenu_contacts_addTeammates"></div>').text(Lincko.Translation.get('app', 31, 'html')/*Add Teammates*/).click(function(){
 			var param = {
 				pid: that.param.project_id,
 				invite_access: {
@@ -654,7 +654,7 @@ Submenu.prototype.Add_ContactContents = function(live) {
 			}
 			submenu_Build('app_projects_users_contacts',  that.layer, false, param);
 		}).prepend('<span find="icon" class="icon-AddPerson"></span>');
-		position.append(elem_inviteUser);
+		submenu_wrapper.addClass('submenu_contacts_hasAddTeammates').children('[find=submenu_wrapper_bottom]').append(elem_addTeammates);
 	}	
 
 }

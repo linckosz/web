@@ -111,17 +111,28 @@
 	padding-left: 7%;
 }
 
-.submenu_contacts_inviteUser{
+.submenu_contacts_hasAddTeammates .submenu_content>.iscroll_sub_div{
+	padding-bottom: 50px;
+}
+
+.submenu_contacts_hasAddTeammates .submenu_content>.iScrollVerticalScrollbar .iScrollIndicator{
+	border: 0px;
+    border-bottom: 50px solid #FFFFFF;
+}
+
+.submenu_contacts_addTeammates{
     position: absolute;
     bottom: 0px;
     border-top: 1px solid rgba(63,132,176,.5);
     right: 0px;
     left: 0px;
-    margin: 0px 20px;
+    margin-left: 20px;
+    margin-right: 10px;
     padding: 5px 0px;
     font-size: 18px;
+    background-color: #FFFFFF;
 }
-.submenu_contacts_inviteUser [find=icon]{
+.submenu_contacts_addTeammates [find=icon]{
 	margin-left: 30px;
     margin-right: 18px;
     font-size: 40px;
