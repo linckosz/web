@@ -111,13 +111,12 @@
 	padding-left: 7%;
 }
 
-.submenu_contacts_hasAddTeammates .submenu_content>.iscroll_sub_div{
-	padding-bottom: 50px;
-}
-
-.submenu_contacts_hasAddTeammates .submenu_content>.iScrollVerticalScrollbar .iScrollIndicator{
-	border: 0px;
-    border-bottom: 50px solid #FFFFFF;
+.submenu_wrapper_bottom_contacts_hasAddTeammates{
+	position: absolute;
+    bottom: 0px;
+    height: 48px;
+    left: 0px;
+    right: 0px;
 }
 
 .submenu_contacts_addTeammates{
@@ -139,3 +138,4 @@
     vertical-align: middle;
     color: #3F84B0;
 }
+    

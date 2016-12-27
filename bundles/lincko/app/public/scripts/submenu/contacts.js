@@ -654,7 +654,7 @@ Submenu.prototype.Add_ContactContents = function(live) {
 			}
 			submenu_Build('app_projects_users_contacts',  that.layer, false, param);
 		}).prepend('<span find="icon" class="icon-AddPerson"></span>');
-		submenu_wrapper.addClass('submenu_contacts_hasAddTeammates').children('[find=submenu_wrapper_bottom]').append(elem_addTeammates);
+		submenu_wrapper.children('[find=submenu_wrapper_bottom]').addClass('submenu_wrapper_bottom_contacts_hasAddTeammates').append(elem_addTeammates);
 	}	
 
 }
