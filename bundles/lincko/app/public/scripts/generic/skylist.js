@@ -3437,20 +3437,19 @@ skylist.prototype.filter_updateSettings = function(sendAction){
 	if(typeof sendAction === 'undefined'){ sendAction = true; }
 	
 	var settings_new = Lincko.storage.getSettings();
-
 	//offline settings
 	//var settings_old = Lincko.storage.settings;
 
-	if(typeof settings_new !== 'object' && typeof settings_new.length === 'undefined'){
+	if($.type(settings_new) != 'object'){
 		settings_new = {};
 	}
-	if(!settings_new.skylist){
+	if($.type(settings_new.skylist) != 'object'){
 		settings_new.skylist = {};
 	}
-	if(!settings_new.skylist.filter){
+	if($.type(settings_new.skylist.filter) != 'object'){
 		settings_new.skylist.filter = {};
 	}
-	if(!settings_new.skylist.filter[app_content_menu.projects_id]){
+	if($.type(settings_new.skylist.filter[app_content_menu.projects_id]) != 'object'){
 		settings_new.skylist.filter[app_content_menu.projects_id]  = {};
 	}
 
