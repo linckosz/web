@@ -3431,7 +3431,7 @@ skylist.prototype.updateFakeCards = function(){
 
 //get lincko settings object, and update the skylist filter settings
 //sendAction == false will grab the filter settings from lincko settings object and set it as the instance's filter
-skylist.prototype.filter_updateSettings = function(sendAction){ return;
+skylist.prototype.filter_updateSettings = function(sendAction){
 	var that = this;
 	if(that.list_type != 'tasks' && that.list_type != 'notes' && that.list_type != 'files'){ return; }
 	if(typeof sendAction === 'undefined'){ sendAction = true; }
