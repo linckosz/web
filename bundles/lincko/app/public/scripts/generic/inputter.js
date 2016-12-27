@@ -42,6 +42,8 @@
 ***********************************************************************
 */
 
+
+
 var inputter = function(panel_id,position,upload_ptype,upload_pid,layer,burger)
 {
 	this.elements_lib = 
@@ -73,6 +75,8 @@ var inputter = function(panel_id,position,upload_ptype,upload_pid,layer,burger)
 	this.burger = burger;
 	this.hasTask = false;
 	this.task_completed = false;
+	this.focus_flag = false;
+	this.touch_now = false;
 	this.buildLayer();
 }
 
@@ -239,8 +243,28 @@ inputter.prototype.buildLayer = function()
 										$(this).addClass('inputter_container_checked');
 										that.task_completed = true;
 									}
-									input.find('[find=chat_textarea]').trigger('focus', {cancelBlur: true});
 
+									if(supportsTouch)
+									{
+										if(that.focus_flag){
+											input.find('[find=chat_textarea]').trigger('focus', {cancelBlur: true});
+										}
+									}
+									else
+									{
+										
+										if(that.focus_flag){
+											input.find('[find=chat_textarea]').trigger('focus', {cancelBlur: true});
+										}
+										else{
+											oTextRange = input.find('[find=chat_textarea]').get(0).createTextRange();
+										}
+										
+									}
+									that.touch_now = false;
+								});
+								item.on("touchstart mousedown",function(){
+									that.touch_now = true;
 								});
 								break;
 							default :
@@ -721,7 +745,6 @@ inputter.prototype.buildLayer = function()
 			}	
 			else
 			{
-				debugger;
 				e.preventDefault();
 				var files = app_upload_files.lincko_files;
 				var files_count = 0;
@@ -792,6 +815,7 @@ inputter.prototype.buildLayer = function()
 				$(this).text('');
 				burgerN.placeCaretAtEnd($(this));
 			}
+			that.focus_flag = true;
 		});
 		input.find('[find=chat_textarea]').blur(function(event){
 			if(cancelBlur){
@@ -800,7 +824,7 @@ inputter.prototype.buildLayer = function()
 				cancelBlur = false;
 				return;
 			}
-			else
+			else if(!supportsTouch)
 			{
 				var focus_help = $("<input readonly='readonly'/>");
 				focus_help.appendTo($("body"));
@@ -813,6 +837,14 @@ inputter.prototype.buildLayer = function()
 				$(this).html(defaultPhrase);
 			}
 
+			if(that.touch_now)
+			{
+				that.focus_flag = true;
+			}
+			else
+			{
+				that.focus_flag = false;
+			}
 		});
 
 	}
