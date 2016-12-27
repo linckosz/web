@@ -15,7 +15,8 @@ submenu_list['app_projects_users_contacts'] = {
 			app_projects_users_contacts_init(subm);
 
 			//hide invite new user button if no invite_access (because can't auto add them to project after invite)
-			if(!subm.param || !subm.param.invite_access || subm.obj.right_button || subm.obj.right_button.class){
+			if((!subm.param || (typeof subm.param == 'object' && !subm.param.invite_access) )
+				&& subm.obj.right_button && subm.obj.right_button.class){
 				subm.obj.right_button.class += ' display_none';
 			}
 		},
