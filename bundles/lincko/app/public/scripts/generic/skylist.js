@@ -3389,6 +3389,8 @@ skylist.prototype.isMobile = function(){
 
 skylist.prototype.updateFakeCards = function(){
 	var that = this;
+	if(!that.list){ return; }
+
 	var updated = false;
 	elem_fakes = that.list.find('[fake]');
 
