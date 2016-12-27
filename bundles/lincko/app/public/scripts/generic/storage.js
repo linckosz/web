@@ -1864,12 +1864,19 @@ Lincko.storage.getProfile = function(uid){
 			var file = Lincko.storage.get('files', id);
 			if(file){
 				if((file['category']=='image' || file['category']=='video') && file['thu_type']!=null){
-					profile = top.location.protocol+'//'+document.linckoBack+'file.'+document.domainRoot+':'+document.linckoBackPort+'/file/profile/'+uid;
+					profile = Lincko.storage.getProfileRaw(uid, file['updated_at']);
 				}
 			}
 		}
 	}
 	return profile;
+}
+Lincko.storage.getProfileRaw = function(uid, timestamp){
+	if(typeof timestamp == 'undefined'){
+		timestamp = new wrapper_date().timestamp; //Always refresh
+	}
+	var workid = Lincko.storage.getWORKID();
+	return top.location.protocol+'//'+document.linckoBack+'file.'+document.domainRoot+':'+document.linckoBackPort+'/file/profile/'+workid+'/'+uid+'?'+timestamp;
 }
 
 

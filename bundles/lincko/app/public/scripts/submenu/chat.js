@@ -517,13 +517,13 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 	else if(chat_status == "found" && data && data['id'] && typeof data['profile_pic']!="undefined" && typeof data['username']!="undefined"){
 		Elem_user.removeClass("display_none");
 		Elem_user.find("[find=invitation_invite]").removeClass("display_none").off("click");
-		var thumbnail = Lincko.storage.getLinkThumbnail(data['profile_pic']);
-		if(thumbnail){
-			Elem_user.find("[find=picture_src]").css('background-image','url("'+thumbnail+'")');
-		} else if(data['id']==0){ //LinckoBot
+		var thumbnail = Lincko.storage.getProfileRaw(data['id'], data['updated_at']);
+		if(data['id']==0){ //LinckoBot
 			Elem_user.find("[find=picture_src]").css('background-image','url("'+app_application_icon_roboto.src+'")');
 		} else if(data['id']==1){ //Monkey King
 			Elem_user.find("[find=picture_src]").css('background-image','url("'+app_application_icon_monkeyking.src+'")');
+		} else if(thumbnail){
+			Elem_user.find("[find=picture_src]").css('background-image','url("'+thumbnail+'")');
 		} else {
 			Elem_user.find("[find=picture_src]").css('background-image','url("'+app_application_icon_single_user.src+'")');
 		}
@@ -555,13 +555,13 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 		if(data && data['id'] && typeof data['profile_pic']!="undefined" && typeof data['username']!="undefined"){
 			Elem_user.removeClass("display_none");
 			Elem_user.find("[find=invitation_invite]").off("click").addClass("display_none");
-			var thumbnail = Lincko.storage.getLinkThumbnail(data['profile_pic']);
-			if(thumbnail){
-				Elem_user.find("[find=picture_src]").css('background-image','url("'+thumbnail+'")');
-			} else if(data['id']==0){ //LinckoBot
+			var thumbnail = Lincko.storage.getProfileRaw(data['id'], data['updated_at']);
+			if(data['id']==0){ //LinckoBot
 				Elem_user.find("[find=picture_src]").css('background-image','url("'+app_application_icon_roboto.src+'")');
 			} else if(data['id']==1){ //Monkey King
 				Elem_user.find("[find=picture_src]").css('background-image','url("'+app_application_icon_monkeyking.src+'")');
+			} else if(thumbnail){
+				Elem_user.find("[find=picture_src]").css('background-image','url("'+thumbnail+'")');
 			} else {
 				Elem_user.find("[find=picture_src]").css('background-image','url("'+app_application_icon_single_user.src+'")');
 			}
