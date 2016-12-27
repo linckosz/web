@@ -248,18 +248,28 @@ inputter.prototype.buildLayer = function()
 									{
 										if(that.focus_flag){
 											input.find('[find=chat_textarea]').trigger('focus', {cancelBlur: true});
+
+											var range = document.createRange();
+											range.selectNodeContents(input.find('[find=chat_textarea]').get(0));
+											range.collapse(false);
+											var sel = window.getSelection();
+											sel.removeAllRanges();
+											sel.addRange(range);
+
+											// input.find('[find=chat_textarea]').get(0).selectionStart = input.find('[find=chat_textarea]').get(0).value.length;   //选中区域左边界
+											// input.find('[find=chat_textarea]').get(0).selectionEnd = input.find('[find=chat_textarea]').get(0).value.length; //选中区域右边界
 										}
 									}
 									else
 									{
-										
-										if(that.focus_flag){
-											input.find('[find=chat_textarea]').trigger('focus', {cancelBlur: true});
-										}
-										else{
-											oTextRange = input.find('[find=chat_textarea]').get(0).createTextRange();
-										}
-										
+										input.find('[find=chat_textarea]').trigger('focus', {cancelBlur: true});
+
+										var range = document.createRange();
+										range.selectNodeContents(input.find('[find=chat_textarea]').get(0));
+										range.collapse(false);
+										var sel = window.getSelection();
+										sel.removeAllRanges();
+										sel.addRange(range);	
 									}
 									that.touch_now = false;
 								});

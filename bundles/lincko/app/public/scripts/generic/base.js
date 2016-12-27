@@ -187,6 +187,7 @@ function base_lincko_link_to_html(source)
 	// var reg = new RegExp("((http|ftp|https)://)(([a-zA-Z0-9\._-]+\.[a-zA-Z]{2,6})|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,4})*(/[a-zA-Z0-9\&%_\./-~-]*)?","gi");
 	var reg = new RegExp("((http|ftp|https)://)([a-zA-Z0-9\._-]+)(:[0-9]{1,4})*([/a-zA-Z0-9\?\&%_\./-~-]*)?","gi");
 
+	
 	source = source.replace(reg, '<a target="_blank" href="$1$3$4$5">$1$3$4$5</a>');
 
 	//recover the piture
@@ -196,6 +197,7 @@ function base_lincko_link_to_html(source)
 	//NOTE: DO NOT USE <a> or window.open(), USE device_download() INSTEAD !
 	return source;
 }
+
 
 
 function base_lincko_tag_to_html(source)
