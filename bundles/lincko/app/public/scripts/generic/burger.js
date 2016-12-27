@@ -950,16 +950,17 @@ burger_dropdown.prototype.destroy = function(){
 		});
 		
 		if(!caretPlaced){
-			burgerN.placeCaretAtEnd(elem);
+			burgerN.placeCaretAtEnd(elem, false);
 		}
 		elem.trigger('focus',{cancelBlur: true});
 		//elem.focus();
 		
 	},
 	createCaretPlacer: function(atStart) {
-	    return function(el) {
+	    return function(el, triggerFocus) {
 	    	if(el instanceof $){ el = el.get(0); }
-	        el.focus();
+	    	if(typeof triggerFocus == 'boolean' && triggerFocus){ el.focus(); }
+	        
 	        if (typeof window.getSelection != "undefined"
 	                && typeof document.createRange != "undefined") {
 	            var range = document.createRange();

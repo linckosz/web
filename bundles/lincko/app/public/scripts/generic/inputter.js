@@ -813,7 +813,7 @@ inputter.prototype.buildLayer = function()
 			//$(this).closest('[find=toggleOpacity]').removeClass('burger_typeTask_opacity');
 			if($(this).html() == defaultPhrase){
 				$(this).text('');
-				burgerN.placeCaretAtEnd($(this));
+				burgerN.placeCaretAtEnd($(this), false);
 			}
 			that.focus_flag = true;
 		});
