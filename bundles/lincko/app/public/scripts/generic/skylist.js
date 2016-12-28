@@ -1935,7 +1935,7 @@ skylist.prototype.addTask = function(item){
 }
 
 skylist.draw_noteCard = function(item){
-	var Elem = $('#-skylist_card').clone().removeAttr('id');
+	var Elem = $('#-skylist_card').clone().prop('id', '');
 	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').recursiveEmpty(0);
 	var updated_by;
 	var updated_at;
@@ -1956,6 +1956,21 @@ skylist.draw_noteCard = function(item){
 	 note preview image
 	*/
 	var elem_leftbox = $('<span></span>').addClass('skylist_card_leftbox_abc');
+	if(item._files){
+		$.each(item._files, function(file_id, obj){
+			var file = Lincko.storage.get('files', file_id);
+			if(file && !file.deleted_at){
+				var thumb_url = Lincko.storage.getLinkThumbnail(file['_id']);
+				if(thumb_url){
+					elem_leftbox = $('<img />').prop('src',thumb_url);
+					return false;
+				}
+			}
+		});
+	}
+
+
+
 	Elem.find('[find=card_leftbox]').append(elem_leftbox);
 
 	/*updated_by*/
@@ -2031,12 +2046,12 @@ skylist.prototype.addNote = function(item){
 	/*
 	rightOptions - updated_by
 	*/
-	Elem_rightOptions.append(that.add_rightOptionsBox(updated_by,'fa-user'));
+	Elem_rightOptions.append(that.add_rightOptionsBox(item['updated_by'],'fa-user'));
 
 	/*
 	rightOptions - duedate
 	*/
-	Elem_rightOptions.append(that.add_rightOptionsBox(updated_at,'fa-calendar'));
+	Elem_rightOptions.append(that.add_rightOptionsBox(item['updated_at'],'fa-calendar'));
 
 	Elem.data('item_id',item['_id']);
 	Elem.data('options',false);
@@ -2049,132 +2064,6 @@ skylist.prototype.addNote = function(item){
 	});
 
 	that.add_cardEvents(Elem);
-
-	return Elem;
-
-
-
-
-
-
-/*
-	if there is no issue, delete code below
-*/
-
-	var Elem = $('#-skylist_card').clone();
-	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').recursiveEmpty(0);
-	var updated_by;
-	var updated_at;
-
-	if(item == null){
-		item = {};
-		item['_id'] = 'new';
-		item['+title'] = 'blankNote';
-		item['-comment'] = 'blankNote';
-		item['_perm'][0] = 3; //RCUD
-		item['updated_by'] = wrapper_localstorage.uid;
-		item['updated_at'] = $.now()/1000;
-	}
-	Elem.prop('id','skylist_card_'+that.md5id+'_'+item['_id']);
-
-	/*
-	title
-	*/
-	var contenteditable = false;
-	var elem_title = Elem.find('[find=title]');
-	if( wrapper_localstorage.uid in item['_perm'] && item['_perm'][wrapper_localstorage.uid][0] > 1 ){ //RCU and beyond
-		contenteditable = true; 
-	}
-	elem_title.html(item['+title']);
-	if(contenteditable){
-		elem_title.on('mousedown touchstart', function(event){ 
-			if( responsive.test("maxMobileL") ){ return true; }
-			that.editing_target = $(this);
-			clearTimeout(that.editing_timeout);
-			that.editing_timeout = setTimeout(function(){
-				that.editing_target.attr('contenteditable',contenteditable);
-				that.editing_target.focus();
-			},1000);
-		});
-		elem_title.on('mouseup touchend', function(event){
-			clearTimeout(that.editing_timeout);
-		});
-		elem_title.blur(function(){
-			that.editing_target.attr('contenteditable',false);
-			var new_text = $(this).html();
-			if(new_text != item['+title']){
-				wrapper_sendAction({
-				id: item['_id'],
-				title: new_text,
-				}, 'post', 'note/update', 
-				function(msg, data_error, data_status, data_msg){ 
-					if(data_error){
-						app_application_lincko.prepare(item['_type']+'_'+item['_id']);
-					}
-				}, function(){ app_application_lincko.prepare(item['_type']+'_'+item['_id']); });
-			}
-		});
-	}
-
-
-	/*
-	 note description
-	 */
-	Elem.find('[find=description]').html($('<div>'+item['-comment']+'</div>').text());
-
-
-	/*
-	 note preview image
-	*/
-	var elem_leftbox = $('<span></span>').addClass('skylist_card_leftbox_abc');
-	Elem.find('[find=card_leftbox]').append(elem_leftbox);
-
-
-
-	/*updated_by*/
-	updated_by = item['updated_by'];
-	updated_by = Lincko.storage.get("users", updated_by,"username");
-	Elem.find('[find=name]').html(updated_by);
-	
-	/*
-	rightOptions - updated_by
-	*/
-	Elem_rightOptions.append(that.add_rightOptionsBox(updated_by,'fa-user'));
-
-	/*
-	comments
-	*/
-	var commentCount = 0;
-	var comments = Lincko.storage.list('comments', null, null, that.list_type, item['_id'], true);
-	commentCount = comments.length;
-	Elem.find('[find=commentCount]').html(commentCount);
-
-	updated_at = new wrapper_date(item['updated_at']);
-	if(skylist_textDate(updated_at)){
-		updated_at = skylist_textDate(updated_at);
-	}
-	else{
-		updated_at = updated_at.display('date_very_short');
-	}
-	Elem.find('[find=card_time]').html(updated_at);
-
-	/*
-	rightOptions - duedate
-	*/
-	Elem_rightOptions.append(that.add_rightOptionsBox(updated_at,'fa-calendar'));
-
-	Elem.data('item_id',item['_id']);
-	Elem.data('options',false);
-
-	
-	Elem.on('click', function(event){
-		if( that.panyes == false ){
-			that.taskClick(event,this);
-		}
-	});
-
-	that.add_cardEvents(Elem);
-
 	return Elem;
 }
 

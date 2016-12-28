@@ -11,6 +11,18 @@
 	height: 85px;
 }
 
+.app_layers_notes_noteslist .skylist_card_center_leftbox{
+	height: 82px;
+    width: 82px;
+    text-align: center;
+    padding: 0px;
+    box-sizing: border-box;
+}
+.app_layers_notes_noteslist .skylist_card_center_leftbox img{
+    max-height: 100%;
+    max-width: 100%;
+}
+
 .app_layers_notes_noteslist .skylist_card_leftbox_abc {
 	background-image: url('/lincko/app/images/app/abc.png');
 	background-size: 45px;
