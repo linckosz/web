@@ -185,12 +185,6 @@ Submenu.prototype.Add_ChatContents = function() {
 		chat_item.app_chat_feed_uploading_file();
 	}, [that.id, id, that.param.chatFeed, position]);
 
-
-	app_application_lincko.add(submenu_wrapper_id, 'projects', function(){ 
-		var chat_item = this.action_param[2];
-		chat_item.app_chat_feed_load_recent();
-	}, [that.id, id, that.param.chatFeed, position]);
-
 	
 	app_application_lincko.add(that.id, "submenu_show_"+that.preview+"_"+that.id, function() {
 		var submenu_id = this.action_param[0];
