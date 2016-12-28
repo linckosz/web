@@ -677,15 +677,18 @@ inputter.prototype.buildLayer = function()
 			e.preventDefault();
 		}
 
-		if($.trim(this.innerText).length > 0)
+		if(e.keyCode != 13 && !that.hasTask)
 		{
-			$('.empty_show').addClass('mobile_hide');
-			$('.empty_hide').removeClass('mobile_hide');
-		}
-		else
-		{
-			$('.empty_show').removeClass('mobile_hide');
-			$('.empty_hide').addClass('mobile_hide');
+			if($.trim(this.innerText).length > 0)
+			{
+				$('.empty_show').addClass('mobile_hide');
+				$('.empty_hide').removeClass('mobile_hide');
+			}
+			else
+			{
+				$('.empty_show').removeClass('mobile_hide');
+				$('.empty_hide').addClass('mobile_hide');
+			}
 		}
 
 		content.removeClass('mobile-margin-right-' + mobile_show_count);
