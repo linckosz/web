@@ -212,7 +212,7 @@ var app_models_history = {
 						}
 						if(users && users[wrapper_localstorage.uid]){
 							msg = '';
-							if(hist[i]['by']){debugger;
+							if(hist[i]['by']){
 								username = wrapper_to_html(Lincko.storage.get("users", hist[i]['by'], "username"));
 								if($.inArray(hist[i]['cod'], [202, 203, 298, 299]) < 0){
 									msg = username+": "+item['+comment'];
