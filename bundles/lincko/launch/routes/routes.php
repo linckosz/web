@@ -38,7 +38,11 @@ $app->get('/page(/:page_redirect)', function ($page_redirect='') use($app) {
 $app->get('/invitation/:invitation_code', function ($invitation_code) use ($app) {
 	$app->lincko->data['invitation_code'] = $_SESSION['invitation_code'] = $invitation_code;
 	$app->lincko->data['link_reset'] = true;
-	$app->router->getNamedRoute('home')->dispatch();
+	if($app->lincko->data['logged']){
+		$app->router->getNamedRoute('root')->dispatch();
+	} else {
+		$app->router->getNamedRoute('home')->dispatch();
+	}
 })
 ->conditions(array(
 	'invitation_code' => '[a-z0-9]{8}',
@@ -49,7 +53,11 @@ $app->get('/invitation/:invitation_code', function ($invitation_code) use ($app)
 $app->get('/uid/:user_code', function ($user_code) use ($app) {
 	$app->lincko->data['user_code'] = $_SESSION['user_code'] = $user_code;
 	$app->lincko->data['link_reset'] = true;
-	$app->router->getNamedRoute('home')->dispatch();
+	if($app->lincko->data['logged']){
+		$app->router->getNamedRoute('root')->dispatch();
+	} else {
+		$app->router->getNamedRoute('home')->dispatch();
+	}
 })
 ->conditions(array(
 	'user_code' => '\S+',

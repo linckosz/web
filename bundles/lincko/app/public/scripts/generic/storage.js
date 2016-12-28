@@ -72,17 +72,11 @@ var storage_local_storage = {
 	browser_cleaner: function(data){
 		var result = {};
 		if(!wrapper_limit_json){
-			for(var cat in Lincko.storage.data){
-				if(cat=='chats' || cat=='messages'){ //Exclude everything about chats, it can be very heavy messages are downloaded in live
-					continue;
-				}
-				result[cat] = data[cat];
-			}
+			return data;
 		} else {
 			for(var cat in Lincko.storage.data){
-				//Just keep the minimum to consult offline the most important
-				if(typeof cat == 'string' && (cat.indexOf('_')===0 || cat=='workspaces' || cat=='projects' || cat=='tasks' || cat=='files')){
-					result[cat] = data[cat];
+				if(cat=='chats' || cat=='messages' || cat=='comments' || cat=='notes'){
+					continue;
 				}
 			}
 		}

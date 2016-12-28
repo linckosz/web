@@ -44,6 +44,18 @@
 			<link rel="stylesheet" href="{{ _filelatest('/styles/libs/easyeditor.css') }}" type="text/css" />
 			<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/font-icon/style.css') }}" type="text/css" />
 			<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/generic/base.css') }}" type="text/css" />
+
+			{# QR code scanner - http://dwa012.github.io/html5-qrcode/ #}
+			{#<script src="{{ _filelatest('/scripts/libs/jsqrcode-combined.bruno.min.js') }}" type="text/javascript"></script>#}
+			
+			{#
+				https://www.the-qrcode-generator.com/scan
+				https://github.com/Schibum/barcode.js
+			#}
+			<script src="{{ _filelatest('/scripts/libs/barcode/w69b.qrcode.min.js') }}" type="text/javascript"></script>
+			<script>
+				var w69b_qrcode_decodeworker = "{{ _filelatest('/scripts/libs/barcode/w69b.qrcode.decodeworker.min.js') }}";
+			</script>
 		</div>
 		<div id="base_error"></div>
 		<input id="base_input_focusHelper" type="text" readonly="readonly" class="visibility_hidden" />{# this is an empty input used as focus control #}

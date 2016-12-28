@@ -62,9 +62,11 @@ class ControllerWrapper extends Controller {
 		}
 		if(isset($_SESSION['invitation_code'])){
 			$this->json['data']['invitation_code'] = $_SESSION['invitation_code'];
+			unset($_SESSION['invitation_code']);
 		}
 		if(isset($_SESSION['user_code'])){
 			$this->json['user_code'] = $_SESSION['user_code'];
+			unset($_SESSION['user_code']);
 		}
 		if(!OneSeventySeven::get('yuyan')) {
 			OneSeventySeven::set(array('yuyan' => $this->json['language']));

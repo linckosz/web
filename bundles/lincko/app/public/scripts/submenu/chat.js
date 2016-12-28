@@ -73,32 +73,9 @@ submenu_list['chat_add_user'] = {
 		"style": "button",
 		"title": Lincko.Translation.get('app', 77, 'html'), //Scan a user QR code
 		"action": function(Elem, subm){
-			console.log('invite by QR code scan');
-			var url_code = 'https://bruno-bruno.lincko.cafe/uid/neIsHAe2xDEqpZYBVSk/Dg==';
-			var user_code = 'neIsHAe2xDEqpZYBVSk/Dg=='; // regex from $url_code
-			var invite_access = null;
-			if(subm.param && typeof subm.param.invite_access != 'undefined'){
-				invite_access = subm.param.invite_access;
-			}
-			var param = {
-				user_code: user_code,
-				invite_access: invite_access,
-			}
-			submenu_chat_search.data = {
-				sub_that: subm,
-				email: '',
-				users_id: null,
-			};
-			wrapper_sendAction(
-				param,
-				'post',
-				'user/inviteqrcode',
-				submenu_chat_inviteqrcode_cb_success,
-				submenu_chat_invite_cb_error,
-				submenu_chat_invite_cb_begin
-			);
+			submenu_chat_new_user_result(subm, null, "scanner");
 		},
-		"class": "display_none",
+		"class": "",
 	},
 	//It will create a form with a validation button
 	"chat_menu": {
@@ -366,32 +343,32 @@ var submenu_chat_open_single = function(subm, users_id){
 	} else {
 		
 		wrapper_sendAction(
-		{
-			'parent_type': null,
-			"parent_id": -1,
-			"title": "",
-			"single": users_id
-		},
-		'post',
-		'chat/create',
-		function() {
-			var chat = Lincko.storage.list('chats', 1, {'temp_id': chat_temp_id})[0];
-			if(chat){
-				var title = Lincko.storage.get('users', users_id, 'username');
-				submenu_Build("newchat", subm.layer+1, false, {
-					type: "chats",
-					id: chat["_id"],
-					title: title,
-				});
+			{
+				'parent_type': null,
+				"parent_id": -1,
+				"title": "",
+				"single": users_id
+			},
+			'post',
+			'chat/create',
+			function() {
+				var chat = Lincko.storage.list('chats', 1, {'temp_id': chat_temp_id})[0];
+				if(chat){
+					var title = Lincko.storage.get('users', users_id, 'username');
+					submenu_Build("newchat", subm.layer+1, false, {
+						type: "chats",
+						id: chat["_id"],
+						title: title,
+					});
+				}
+			},
+			null,
+			function(jqXHR, settings, temp_id) {
+				chat_temp_id = temp_id;
+			},
+			function(){
+				submenu_chat_open_single_running = false;
 			}
-		},
-		null,
-		function(jqXHR, settings, temp_id) {
-			chat_temp_id = temp_id;
-		},
-		function(){
-			submenu_chat_open_single_running = false;
-		}
 		);
 		
 	}
@@ -403,6 +380,8 @@ Submenu.prototype.Add_ChatAddUser = function() {
 	var submenu_wrapper = this.Wrapper();
 	var attribute = this.attribute;
 	this.chat_status = "noresult";
+
+	submenu_chat_search.data.sub_that = that;
 
 	//Search bar
 	var Elem = $('#-submenu_app_chat_add_user').clone();
@@ -460,8 +439,27 @@ Submenu.prototype.Add_ChatAddUser = function() {
 	Elem.prop("id", this.id+"_searching");
 	Elem.addClass('display_none');
 	submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
+
+	//QR code scanner
+	var Elem = $('#-submenu_app_chat_user_scanner').clone();
+	Elem.prop("id", this.id+"_scanner");
+	Elem.find("[find=radar]").prop("id", this.id+"_radar");
+	Elem.addClass('display_none');
+	submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
 	
 	submenu_chat_new_user_result(that);
+
+	app_application_lincko.add(
+		that.id,
+		'submenu_hide_'+that.preview+'_'+that.id,
+		function(){
+			var subm = this.action_param;
+			if($("#"+subm.id+"_radar").data('stream')){
+				$("#"+subm.id+"_radar").html5_qrcode_stop();
+			}
+		},
+		that
+	);
 
 	$(window).resize();
 	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
@@ -480,11 +478,14 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 	Elem_info = $("#"+sub_that.id+"_info");
 	Elem_email = $("#"+sub_that.id+"_email");
 	Elem_searching = $("#"+sub_that.id+"_searching");
+	Elem_scanner = $("#"+sub_that.id+"_scanner");
+	Elem_radar = $("#"+sub_that.id+"_radar");
 
 	Elem_user.addClass("display_none");
 	Elem_info.addClass("display_none");
 	Elem_email.addClass("display_none");
 	Elem_searching.addClass("display_none");
+	Elem_scanner.addClass("display_none");
 
 	if(chat_status == "invitation"){
 		Elem_email.removeClass("display_none");
@@ -600,19 +601,44 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 	}
 	else if(chat_status == "operationfailed"){
 		Elem_info.removeClass("display_none");
-		//Elem_info.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2312, 'js')); //Operaion failed. [toto]
-		Elem_info.find("[find=submenu_title]").html("Operaion failed.");
+		Elem_info.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2314, 'js')); //Operation failed.
 	}
 	else if(chat_status == "operationsuccess"){
 		Elem_info.removeClass("display_none");
-		//Elem_info.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2309, 'js')); //Operation successed. [toto]
-		Elem_info.find("[find=submenu_title]").html("Operaion successed.");
+		Elem_info.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2315, 'js')); //Operation successed.
+	}
+	else if(chat_status == "scanner"){
+		Elem_scanner.removeClass("display_none");
+		Elem_radar.removeClass("display_none");
+		if(base_scanner && 'dispose' in base_scanner){
+			base_scanner.dispose();
+			Elem_radar.recursiveEmpty();
+		}
+		base_scanner = new w69b.qr.ui.ContinuousScanner();
+		base_scanner.setDecodedCallback(function(url_code) {
+			var data = url_code.match(/\/uid\/(.+)$/);
+			if(data[1]){
+				base_scanner.dispose();
+				submenu_chat_search.find_qrcode(submenu_chat_search.data.sub_that, data[1]);
+			}
+		});
+		base_scanner.render(Elem_radar.get(0));
 	}
 	else { //noresult
 		Elem_info.removeClass("display_none");
 		Elem_info.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2308, 'js')); //Please enter an Email address.
 	}
-	$(window).resize();
+
+	if(chat_status != "scanner"){
+		if(base_scanner && 'dispose' in base_scanner){
+			base_scanner.dispose();
+			Elem_radar.addClass("display_none");
+		}
+	}
+
+	if(myIScrollList["overthrow_"+sub_that.id]){
+		myIScrollList["overthrow_"+sub_that.id].refresh();
+	}
 	
 }
 
@@ -665,10 +691,36 @@ var submenu_chat_search = {
 
 	value: null,
 
+	value_qrcode: null,
+
 	data: {
 		sub_that: null,
 		email: null,
 		users_id: null,
+	},
+
+	find_qrcode: function(sub_that, user_code){
+		clearTimeout(submenu_chat_search.timing);
+		if(user_code.length>=2 && submenu_chat_search.value_qrcode !== user_code){
+			submenu_chat_new_user_result(sub_that, null, "searching");
+			submenu_chat_search.data = {
+				sub_that: sub_that,
+				email: null,
+				users_id: null,
+			};
+			debugger;
+			wrapper_sendAction(
+				user_code,
+				'post',
+				'user/find_qrcode',
+				submenu_chat_search_cb_success,
+				submenu_chat_search_cb_error,
+				submenu_chat_search_cb_begin
+			);
+		} else {
+			submenu_chat_new_user_result(sub_that, null, "noresult");
+		}
+		submenu_chat_search.value_qrcode = user_code;
 	},
 
 	find: function(sub_that, timer, force){

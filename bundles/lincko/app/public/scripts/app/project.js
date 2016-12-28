@@ -290,7 +290,7 @@ app_application_lincko.add("app_project_chats_tab", ["first_launch", "projects",
 });
 
 app_application_lincko.add("app_project_quick_access_chat", "users", function() {
-	if(Lincko.storage.list('users', 1, {_invitation: true}).length > 0){
+	if(Lincko.storage.list('users', 1, {_invitation: true, _id: ['!=', wrapper_localstorage.uid]}).length > 0){
 		$('#app_project_quick_access_chat').find("[find=notif]").removeClass('display_none');
 	} else {
 		$('#app_project_quick_access_chat').find("[find=notif]").addClass('display_none');

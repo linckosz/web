@@ -159,7 +159,7 @@ base_runOnElemLoad.prototype.run = function(checkTime){
 }
 
 function base_getRandomInt(min, max){
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 /*
@@ -217,8 +217,8 @@ function base_lincko_tag_to_html(source)
 //Returns true if it is a DOM element    
 function base_isElement(o){
 	  return (
-	    typeof HTMLElement === "object" ? o instanceof HTMLElement : //DOM2
-	    o && typeof o === "object" && o !== null && o.nodeType === 1 && typeof o.nodeName==="string"
+		typeof HTMLElement === "object" ? o instanceof HTMLElement : //DOM2
+		o && typeof o === "object" && o !== null && o.nodeType === 1 && typeof o.nodeName==="string"
 	);
 }
 
@@ -240,3 +240,8 @@ base_hideProgress = function(Elem){
 		submit_progress_bar.addClass('display_none');
 	}
 }
+
+var base_scanner = false;
+JSfiles.finish(function(){
+	w69b.qr.decoding.setWorkerUrl(w69b_qrcode_decodeworker);
+});

@@ -25,3 +25,18 @@ if (!Math.sign) {
 		return x > 0 ? 1 : -1;
 	};
 }
+
+/*
+//Depreciation of window.MediaStreamTrack.getSources
+if(typeof window.MediaStreamTrack == 'undefined'){
+	window.MediaStreamTrack = {};
+}
+if(typeof window.MediaStreamTrack.getSources == 'function'){
+	window.MediaStreamTrack.getSources = function(fn1){
+		console.log(e)
+		navigator.mediaDevices.enumerateDevices().then(
+			fn1
+		)
+	};
+}
+*/

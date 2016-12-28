@@ -162,11 +162,10 @@ var app_content_menu = {
 
 		$('#app_content_top_title_settings').velocity('fadeIn', 100);
 		
-
 		$('#app_content_top_title_project').html(wrapper_to_html(title));
 		app_application_lincko.add('app_content_top_title_project', 'projects_'+projects_id, function() {
-			var project = Lincko.storage.get("projects", this.action_param);
-			var projects_id = this.action_param;
+			var project = Lincko.storage.get("projects", app_content_menu.projects_id);
+			var projects_id = app_content_menu.projects_id;
 			
 			if(project && project["deleted_at"]==null){
 				var title = project["+title"];
@@ -188,7 +187,7 @@ var app_content_menu = {
 					app_content_menu.selection(proid);
 				}, 100);
 			}
-		}, projects_id);
+		});
 
 		
 

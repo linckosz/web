@@ -94,7 +94,7 @@ var app_models_history = {
 		if(lastvisit>0){
 			//Grab Task notifications
 			if(typeof items['tasks'] != 'undefined'){
-				hist = Lincko.storage.hist('tasks', null, {not: true, by: ['!=', wrapper_localstorage.uid], timestamp: ['>', lastvisit]});
+				hist = Lincko.storage.hist('tasks', null, {by: ['!=', wrapper_localstorage.uid], timestamp: ['>', lastvisit]});
 				//hist = Lincko.storage.hist('tasks', null, {timestamp: ['>', lastvisit]});  //For debugging only
 				if(hist.length>0){
 					for(var i in hist){
@@ -212,7 +212,7 @@ var app_models_history = {
 						}
 						if(users && users[wrapper_localstorage.uid]){
 							msg = '';
-							if(hist[i]['by']){
+							if(hist[i]['by']){debugger;
 								username = wrapper_to_html(Lincko.storage.get("users", hist[i]['by'], "username"));
 								if($.inArray(hist[i]['cod'], [202, 203, 298, 299]) < 0){
 									msg = username+": "+item['+comment'];
@@ -242,13 +242,6 @@ var app_models_history = {
 								}
 								//Any reply on a comment
 								else if(parent["_type"]=='comments'){
-									sentence = Lincko.storage.getHistoryInfo(hist[i]).title; //It already includes username inside
-									if(typeof sentence == 'string' || typeof sentence == 'number'){
-										msg = $('<div>'+sentence+'</div>').text();
-									} else {
-										msg = sentence.text();
-									}
-									msg = item['+comment'];
 									keep = false;
 									var k = 1000;
 									while(k>0 && !keep && parent["_type"]=='comments'){
