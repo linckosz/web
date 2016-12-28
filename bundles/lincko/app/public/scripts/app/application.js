@@ -683,6 +683,7 @@ $('#app_application_project_block').click(function(){
 
 //BEGIN - highlight for quick create task feature
 var app_application_global_selection = "";
+var app_application_selection_setTimeout = null;
 var app_application_global_selection_handler = function(timeout, offsetLeft, offsetTop){
 	if(typeof timeout == 'undefined' || (timeout && typeof timeout != 'number')){ var timeout = 3000; }
 	if(!offsetLeft){ var offsetLeft = 0; }
@@ -702,26 +703,34 @@ var app_application_global_selection_handler = function(timeout, offsetLeft, off
 		var coords = getSelectionCoords();
 		$("#app_application_lincko_action").css({"left":coords.x2+offsetLeft, "top":coords.y+coords.height+offsetTop}).show(); //bottom right corder of selected text
 		if(typeof timeout == 'number'){
-			setTimeout(function(){
+			clearTimeout(app_application_selection_setTimeout);
+			app_application_selection_setTimeout = setTimeout(function(){
 				$("#app_application_lincko_action").hide();
 			}, timeout);
 		}
 	}
 }
 
-$("body").on("mousedown", ".selectable", function() {
+var app_application_iscroll_disabled = null;
+$("body").on("mousedown.app_application_selectable", ".selectable", function() {
 	$("#app_application_lincko_action").hide();
-	var scroll = myIScrollList[$(this).parents(".overthrow").prop("id")];//find iScroll
-	scroll.disable();//disables the iScroll
-});
-
-$("body").on("mouseup", ".selectable", function(e){
+	if(app_application_iscroll_disabled && app_application_iscroll_disabled.enable){
+		app_application_iscroll_disabled.enable();
+		app_application_iscroll_disabled = null;
+	}
 	var scroll = myIScrollList[$(this).parents(".overthrow").prop("id")];//find iScroll
 	if(scroll){
-		scroll.enable();//disables the iScroll
+		scroll.disable();//disables the iScroll
+		app_application_iscroll_disabled = scroll;
 	}
+});
 
-	app_application_global_selection_handler();
+$("body").on("mouseup.app_application_selectable", function(e){
+	if(app_application_iscroll_disabled && app_application_iscroll_disabled.enable){
+		app_application_iscroll_disabled.enable();
+		app_application_iscroll_disabled = null;
+		app_application_global_selection_handler();
+	}
 });
 
 if(supportsTouch){
