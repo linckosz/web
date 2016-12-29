@@ -75,7 +75,7 @@ submenu_list['chat_add_user'] = {
 		"action": function(Elem, subm){
 			submenu_chat_new_user_result(subm, null, "scanner");
 		},
-		"class": "",
+		"class": "display_none",
 	},
 	//It will create a form with a validation button
 	"chat_menu": {
