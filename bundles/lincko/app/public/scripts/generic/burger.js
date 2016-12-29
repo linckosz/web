@@ -367,6 +367,11 @@ var burger_attach_clickHandler = {
 				top: top,
 			});
 
+			//for IE: prevent dropdown blur when clicked inside dropdown
+		    elem_datepicker.mousedown(function(event){ 
+		    	event.preventDefault();
+			});
+
 			elem_datepicker.blur(function(){
 				elem_datepicker.velocity('slideUp', {
 					duration: dropdownDuration,
@@ -725,10 +730,14 @@ burger_dropdown.prototype.build_elem = function(){
     elem_dropdown.attr('tabindex', 0).prop('id', that.id_dropdown);
     elem_dropdown.children('.overthrow').prop('id', that.id_iscroll);
 
+    //for IE: prevent dropdown blur when clicked inside dropdown
+    elem_dropdown.mousedown(function(event){
+    	event.preventDefault();
+	});
 
     elem_dropdown.focus(function(){
-    })
-    elem_dropdown.blur(function(){
+    });
+    elem_dropdown.blur(function(event){
     	that.hide();
     });
 
@@ -802,7 +811,7 @@ burger_dropdown.prototype.build_elem_data = function(){
 	var data = that.data;
 
 	var elem_dropdown = $('#-burger_dropdown').clone().prop('id','');
-	var elem_option = $('#-burger_option').clone().prop('id','');//.addClass('burger_option_users');
+	var elem_option = $('#-burger_option').clone().prop('id','')//.addClass('burger_option_users');
 
 	//if there is no contacts to display
 	if(data.length < 1){
@@ -861,7 +870,7 @@ burger_dropdown.prototype.build_elem_data = function(){
 			});
 		}
 
-		elem_dropdown.find('[find=wrapper]').append(elem_option_clone);
+		elem_dropdown.children('[find=wrapper]').append(elem_option_clone);
 	});
 
 	that.count_total = data.length;
