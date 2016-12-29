@@ -346,6 +346,7 @@ var app_models_history = {
 			//Grab Users notifications
 			var profile_pic;
 			if(app_models_history.first_check_invitation || typeof items['users'] != 'undefined'){
+				//Invitation request
 				app_models_history.first_check_invitation = false;
 				list = Lincko.storage.list('users', null, {_invitation: true, _id: ['!=', wrapper_localstorage.uid]});
 				//list = Lincko.storage.list('users', null, {_invitation: false, _id: ['!=', wrapper_localstorage.uid]}); //For debugging only
@@ -363,6 +364,33 @@ var app_models_history = {
 						app_models_history.notify(
 							wrapper_to_html(list[i]["-username"]),
 							Lincko.Translation.get('app', 72, 'html'), //You have an invitation request
+							"submenu-chat_list%false%false%true",
+							20,
+							profile_pic
+						);
+					}
+				}
+				//Invitation accepted
+				hist = Lincko.storage.hist('users', null, {cod: 697, by: ['!=', wrapper_localstorage.uid], timestamp: ['>', lastvisit]});
+				//hist = Lincko.storage.hist('users', null, {cod: 697, by: ['!=', wrapper_localstorage.uid]}); //For debugging only
+				if(hist.length>0){
+					for(var i in hist){
+						//Avoid to double the same notification
+						if(app_models_history.notified["users_"+hist[i]['id']+"_"+hist[i]['hist']]){
+							continue;
+						}
+						app_models_history.notified["users_"+hist[i]['id']+"_"+hist[i]['hist']] = true;
+						item = Lincko.storage.get("users", hist[i]['id']);
+						if(!item){
+							continue;
+						}
+						var profile_pic = Lincko.storage.getLinkThumbnail(item['profile_pic']);
+						if(!profile_pic){
+							profile_pic = "favicon.png";
+						}
+						app_models_history.notify(
+							wrapper_to_html(item["-username"]),
+							Lincko.Translation.get('app', 79, 'html'), //Invitation accepted
 							"submenu-chat_list%false%false%true",
 							20,
 							profile_pic

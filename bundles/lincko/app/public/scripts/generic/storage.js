@@ -1608,7 +1608,7 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 							if(item['by']<=1 && item['type']=='comments'){
 								save = true; //For auto resume (Roboto user)
 							} else if(
-								   item['by']<=1 //Exclude LinckoBot and MonkeyKing
+								   item['by']<1 //Exclude LinckoBot
 								|| typeof Lincko.storage.data['users']=='undefined'
 								|| (item['by']>1 && typeof Lincko.storage.data['users'][item['by']]=='undefined')
 								|| timestamp<=0
