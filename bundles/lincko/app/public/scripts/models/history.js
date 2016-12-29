@@ -115,11 +115,60 @@ var app_models_history = {
 							continue;
 						}
 						users = item['_users'];
-						if(users && users[wrapper_localstorage.uid] && (users[wrapper_localstorage.uid]["in_charge"] || users[wrapper_localstorage.uid]["approver"])){
+						if(
+							   users
+							&& users[wrapper_localstorage.uid]
+							&& (
+								   users[wrapper_localstorage.uid]["in_charge"]
+								|| users[wrapper_localstorage.uid]["approver"]
+								//|| item['created_by'] == wrapper_localstorage.uid
+								|| (
+									hist[i]['par'] && hist[i]['par']['pvid'] && hist[i]['par']['pvid'] == wrapper_localstorage.uid && (hist[i]['cod'] == 551 || hist[i]['cod'] == 552)
+								)
+							)
+						){
 							app_models_history.notify(
 								Lincko.storage.getHistoryInfo(hist[i]).title,
 								wrapper_to_html(item["+title"]),
 								"tasks-"+hist[i]['id']
+							);
+						}
+					}
+				}
+			}
+
+			//Grab Task notifications
+			if(typeof items['projects'] != 'undefined'){
+				hist = Lincko.storage.hist('projects', null, {by: ['!=', wrapper_localstorage.uid], timestamp: ['>', lastvisit]});
+				//hist = Lincko.storage.hist('tasks', null, {timestamp: ['>', lastvisit]});  //For debugging only
+				if(hist.length>0){
+					for(var i in hist){
+						//Avoid to double the same notification
+						if(app_models_history.notified["projects_"+hist[i]['id']+"_"+hist[i]['hist']]){
+							continue;
+						}
+						app_models_history.notified["projects_"+hist[i]['id']+"_"+hist[i]['hist']] = true;
+						//Only display about moving tasks
+						if(hist[i]['cod']!=405 && hist[i]['cod']!=406){
+							continue;
+						}
+						//Do not display if the project is silence
+						users = Lincko.storage.get('projects', hist[i]["id"], "_users");
+						if(users && users[wrapper_localstorage.uid] && users[wrapper_localstorage.uid]["silence"]){
+							continue;
+						} else if(!users){
+							continue;
+						}
+						item = Lincko.storage.get("projects", hist[i]['id']);
+						if(!item){
+							continue;
+						}
+						users = item['_users'];
+						if(users && users[wrapper_localstorage.uid]){
+							app_models_history.notify(
+								Lincko.storage.getHistoryInfo(hist[i]).title,
+								wrapper_to_html(item["+title"]),
+								"projects-"+hist[i]['id']
 							);
 						}
 					}
@@ -296,7 +345,7 @@ var app_models_history = {
 				hist = Lincko.storage.hist('files', null,
 					[
 						{att: 'created_at', par_type: 'chats', by: ['!=', wrapper_localstorage.uid], timestamp: ['>', lastvisit]},
-						//{att: 'created_at', par_type: 'projects', by: ['!=', wrapper_localstorage.uid], timestamp: ['>', lastvisit]},
+						{att: 'created_at', par_type: 'projects', by: ['!=', wrapper_localstorage.uid], timestamp: ['>', lastvisit]},
 					]
 				);
 				/*
