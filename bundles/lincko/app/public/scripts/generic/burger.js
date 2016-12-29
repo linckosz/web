@@ -504,7 +504,7 @@ burger_list.in_charge = function(lincko_type, lincko_id){
 				pid: project_id,
 				invite_access: {
 					projects: project_id,
-					tasks: task_id, //null if not available (i.e. brand new task)
+					//tasks: task_id, //null if not available (i.e. brand new task) toto - not ready yet
 				},
 			}
 			submenu_Build('app_projects_users_contacts', true, false, param);
