@@ -31,8 +31,8 @@ var app_models_history = {
 	notify: function(message, title, link, timeout, icon){
 		if(typeof title == "undefined"){ title = "Lincko"; }
 		if(typeof link == "undefined"){ link = false; }
-		if(typeof timeout == "undefined"){ timeout = 8; }
-		if(typeof icon == "undefined"){ icon = "favicon.png"; }
+		if(typeof timeout == "undefined" || !timeout){ timeout = 12; }
+		if(typeof icon == "undefined" || !icon){ icon = "favicon.png"; }
 		if(typeof message == 'string' || typeof message == 'number'){
 			message = $('<div>'+message+'</div>').text();
 		} else {
@@ -140,7 +140,7 @@ var app_models_history = {
 						//Do not display if the parent is silence
 						users = false;
 						parent = Lincko.storage.get(hist[i]["par_type"], hist[i]["par_id"]);
-						if(parent){
+						if(parent && parent["_type"]=="chats"){
 							users = parent["_users"];
 							if(users && users[wrapper_localstorage.uid] && users[wrapper_localstorage.uid]["silence"]){
 								continue;
@@ -333,10 +333,29 @@ var app_models_history = {
 							continue;
 						}
 						if(users && users[wrapper_localstorage.uid]){
+							title = wrapper_to_html(parent["+title"]);
+							profile_pic = null;
+							if(parent["single"]){
+								for(var j in parent["_perm"]){
+									if(j!=wrapper_localstorage.uid){
+										perso = Lincko.storage.get('users', j);
+										title = wrapper_to_html(perso["-username"]);
+										profile_pic = Lincko.storage.getLinkThumbnail(perso['profile_pic']);
+										if(j==0){
+											profile_pic = app_application_icon_roboto.src;
+										} else if(j==1){
+											profile_pic = app_application_icon_monkeyking.src;
+										}
+										break;
+									}
+								}
+							}
 							app_models_history.notify(
 								Lincko.storage.getHistoryInfo(hist[i]).title + ":\n  "+wrapper_to_html(item["+name"]),
-								wrapper_to_html(parent["+title"]),
-								"files-"+hist[i]['id']
+								title,
+								"files-"+hist[i]['id'],
+								false,
+								profile_pic
 							);
 						}
 					}
@@ -365,7 +384,7 @@ var app_models_history = {
 							wrapper_to_html(list[i]["-username"]),
 							Lincko.Translation.get('app', 72, 'html'), //You have an invitation request
 							"submenu-chat_list%false%false%true",
-							20,
+							24,
 							profile_pic
 						);
 					}
@@ -392,7 +411,7 @@ var app_models_history = {
 							wrapper_to_html(item["-username"]),
 							Lincko.Translation.get('app', 79, 'html'), //Invitation accepted
 							"submenu-chat_list%false%false%true",
-							20,
+							24,
 							profile_pic
 						);
 					}
