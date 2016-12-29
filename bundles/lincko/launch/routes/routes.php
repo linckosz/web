@@ -51,6 +51,10 @@ $app->get('/invitation/:invitation_code', function ($invitation_code) use ($app)
 
 //Link of user URL for direct connection (like scanning a QR code)
 $app->get('/uid/:user_code', function ($user_code) use ($app) {
+	//Need to grab the uri ourself because slim has a bug and convert "+" into a space
+	if(preg_match("/^\/uid\/(\S+)$/ui", $app->request->getResourceUri(), $matches)){
+		$user_code = $matches[1];
+	}
 	$app->lincko->data['user_code'] = $_SESSION['user_code'] = $user_code;
 	$app->lincko->data['link_reset'] = true;
 	if($app->lincko->data['logged']){
