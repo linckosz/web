@@ -1720,7 +1720,7 @@ burgerN.regex = function(elem, item, param){
 					'left':coord.x, 
 					'bottom':$(window).height()-coord.y + dropdownOffset,
 				});
-				
+
 			$('body').append(elem_dropdown);
 			//$('#app_content_dynamic_sub').append(elem_dropdown);
 			that.slideDown(elem_dropdown);

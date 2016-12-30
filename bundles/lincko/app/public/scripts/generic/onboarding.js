@@ -1110,6 +1110,10 @@ onboarding.scripts['welcome'] = function(project_id){
 			expose: false,
 			delay: 3000,
 			onTripStart : function(i, tripData){
+				//force close main menu if open
+				if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
+					app_application.move('project', false);
+				}
 				onboarding.welcome_bubble_reposition(tripData);
 				if(tripTracker.check(this, i)){return false;}
 				var tripObj = this;
@@ -1134,8 +1138,13 @@ onboarding.scripts['welcome'] = function(project_id){
 			expose: true,
 			delay: 3000,
 			onTripStart : function(i, tripData){
-				intro.gotoScript(1);
+				//force close main menu if open
+				if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
+					app_application.move('project', false);
+				}
 				onboarding.welcome_bubble_reposition(tripData);
+				if(tripTracker.check(this, i)){return false;}
+				intro.gotoScript(1);
 			},
 		},
 		{
@@ -1145,8 +1154,13 @@ onboarding.scripts['welcome'] = function(project_id){
 			expose: true,
 			delay: 3000,
 			onTripStart : function(i, tripData){ 
-				intro.gotoScript(2);
+				//force close main menu if open
+				if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
+					app_application.move('project', false);
+				}
 				onboarding.welcome_bubble_reposition(tripData);
+				if(tripTracker.check(this, i)){return false;}
+				intro.gotoScript(2);
 			},
 		},
 		{
@@ -1156,8 +1170,13 @@ onboarding.scripts['welcome'] = function(project_id){
 			expose: true,
 			delay: 3000,
 			onTripStart : function(i, tripData){
-				intro.gotoScript(3);
+				//force close main menu if open
+				if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
+					app_application.move('project', false);
+				}
 				onboarding.welcome_bubble_reposition(tripData);
+				if(tripTracker.check(this, i)){return false;}
+				intro.gotoScript(3);
 			},
 		},
 		{
@@ -1167,8 +1186,13 @@ onboarding.scripts['welcome'] = function(project_id){
 			expose: true,
 			delay: 3000,
 			onTripStart : function(i, tripData){
-				intro.gotoScript(4);
+				//force close main menu if open
+				if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
+					app_application.move('project', false);
+				}
 				onboarding.welcome_bubble_reposition(tripData);
+				if(tripTracker.check(this, i)){return false;}
+				intro.gotoScript(4);
 			},
 		},
 		{
@@ -1178,8 +1202,13 @@ onboarding.scripts['welcome'] = function(project_id){
 			expose: true,
 			delay: -1,
 			onTripStart : function(i, tripData){
-				intro.gotoScript(5);
+				//force close main menu if open
+				if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
+					app_application.move('project', false);
+				}
 				onboarding.welcome_bubble_reposition(tripData);
+				if(tripTracker.check(this, i)){return false;}
+				intro.gotoScript(5);
 			},
 		}
 
@@ -1205,6 +1234,7 @@ onboarding.scripts['welcome'] = function(project_id){
 		onEnd: function(tripIndex, tripObject){
 			if(onboarding.forceOff){ return false; }
 			onboarding.overlays.content_dynamic_sub(false);
+			onboarding.overlays.content_top(false);
 			onboarding.overlays.content_menu().off('click.trip').attr('style', '');
 			var array_inputter = [
 				{
