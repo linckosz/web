@@ -1688,7 +1688,8 @@ burgerN.regex = function(elem, item, param){
 					'bottom':$(window).height()-coord.y + dropdownOffset,
 				});
 
-			$('#app_content_dynamic_sub').append(elem_dropdown);
+			$('body').append(elem_dropdown);
+			//$('#app_content_dynamic_sub').append(elem_dropdown);
 			that.slideDown(elem_dropdown);
 		}
 		else if(/* latestChar_prev+*/latestChar == that.shortcut.date /* ++ */ || /*latestChar_prev+*/latestChar == that.shortcut.dateAlt){
@@ -1719,8 +1720,9 @@ burgerN.regex = function(elem, item, param){
 					'left':coord.x, 
 					'bottom':$(window).height()-coord.y + dropdownOffset,
 				});
-
-			$('#app_content_dynamic_sub').append(elem_dropdown);
+				
+			$('body').append(elem_dropdown);
+			//$('#app_content_dynamic_sub').append(elem_dropdown);
 			that.slideDown(elem_dropdown);
 		}
 		else if((event.which || event.keyCode) == 13 ){ //if enter is pressed
