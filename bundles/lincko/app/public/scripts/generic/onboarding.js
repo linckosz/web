@@ -838,6 +838,7 @@ onboarding.scripts['welcome'] = function(project_id){
 		},
 	];
 	var trip_openMainMenu = new Trip(array_openMainMenu, {
+		enableKeyBinding: false,
 		overlayHolder: '#app_application_content',
 		tripClass: 'onboarding_trip_welcome',
 		onStart: function(){
@@ -985,6 +986,7 @@ onboarding.scripts['welcome'] = function(project_id){
 		},
 	];
 	var trip_exploreMainMenu = new Trip(array_exploreMainMenu, {
+		enableKeyBinding: false,
 		overlayHolder: '#app_project_content .iscroll_sub_div',
 		tripClass: 'onboarding_trip_welcome onboarding_trip_exploreMainMenu',
 		onStart: function(){
@@ -1087,6 +1089,7 @@ onboarding.scripts['welcome'] = function(project_id){
 	];
 
 	var trip_exploreContentTop = new Trip(array_exploreContentTop, {
+		enableKeyBinding: false,
 		overlayHolder: '#app_content_top_title',
 		tripClass: 'onboarding_trip_welcome onboarding_trip_exploreContentTop',
 		onStart: function(){
@@ -1216,6 +1219,7 @@ onboarding.scripts['welcome'] = function(project_id){
 
 
 	var trip_exploreContentMenu = new Trip(array_exploreContentMenu, {
+		enableKeyBinding: false,
 		overlayHolder: '#app_content_menu_table',
 		tripClass: 'onboarding_trip_welcome onboarding_trip_exploreContentMenu',
 		onStart: function(){
@@ -1271,6 +1275,7 @@ onboarding.scripts['welcome'] = function(project_id){
 				},
 			];
 			var trip_inputter = new Trip(array_inputter, {
+				enableKeyBinding: false,
 				overlayHolder: '#app_content_dynamic_layers',
 				tripClass: 'onboarding_trip_welcome onboarding_trip_inputter',
 				onStart: function(){
