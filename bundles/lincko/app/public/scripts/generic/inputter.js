@@ -677,19 +677,21 @@ inputter.prototype.buildLayer = function()
 			e.preventDefault();
 		}
 
-		if(e.keyCode != 13 && !that.hasTask)
+
+		if(!(e.keyCode == 13 && that.hasTask))
 		{
 			if($.trim(this.innerText).length > 0)
-			{
-				$('.empty_show').addClass('mobile_hide');
-				$('.empty_hide').removeClass('mobile_hide');
-			}
-			else
-			{
-				$('.empty_show').removeClass('mobile_hide');
-				$('.empty_hide').addClass('mobile_hide');
-			}
+ 			{
+ 				$('.empty_show').addClass('mobile_hide');
+ 				$('.empty_hide').removeClass('mobile_hide');
+ 			}
+ 			else
+ 			{
+ 				$('.empty_show').removeClass('mobile_hide');
+ 				$('.empty_hide').addClass('mobile_hide');
+ 			}
 		}
+
 
 		content.removeClass('mobile-margin-right-' + mobile_show_count);
 		//content.addClass('mobile-margin-right-' + mobile_right_col_count);
