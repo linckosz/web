@@ -339,7 +339,9 @@ var app_generic_state = {
 				app_content_menu.selection(parent["_id"], 'tasks', null, false);
 				var subm = submenu_get('taskdetail', true);
 				if(!subm || !subm.param.type || !subm.param.id || subm.param.type != "tasks" || subm.param.id != target_id){
-					submenu_Build('taskdetail', true, null, {'type':'tasks', 'id':target_id,}, true);
+					if(Lincko.storage.get("tasks", target_id)){
+						submenu_Build('taskdetail', true, null, {'type':'tasks', 'id':target_id,}, true);
+					}
 				}
 			} else {
 				var model_timer = setInterval(function(target_id){
@@ -349,7 +351,9 @@ var app_generic_state = {
 						app_content_menu.selection(parent["_id"], 'tasks', null, false);
 						var subm = submenu_get('taskdetail', true);
 						if(!subm || !subm.param.type || !subm.param.id || subm.param.type != "tasks" || subm.param.id != target_id){
-							submenu_Build('taskdetail', true, null, {'type':'tasks', 'id':target_id,}, true);
+							if(Lincko.storage.get("tasks", target_id)){
+								submenu_Build('taskdetail', true, null, {'type':'tasks', 'id':target_id,}, true);
+							}
 						}
 					}
 				}, 1000, target_id);
@@ -362,7 +366,9 @@ var app_generic_state = {
 				app_content_menu.selection(parent["_id"], 'notes', null, false);
 				var subm = submenu_get('taskdetail', true);
 				if(!subm || !subm.param.type || !subm.param.id || subm.param.type != "notes" || subm.param.id != target_id){
-					submenu_Build('taskdetail', true, null, {'type':'notes', 'id':target_id,}, true);
+					if(Lincko.storage.get("notes", target_id)){
+						submenu_Build('taskdetail', true, null, {'type':'notes', 'id':target_id,}, true);
+					}
 				}
 			} else {
 				var model_timer = setInterval(function(target_id){
@@ -370,7 +376,9 @@ var app_generic_state = {
 						clearInterval(model_timer);
 						var subm = submenu_get('taskdetail', true);
 						if(!subm || !subm.param.type || !subm.param.id || subm.param.type != "notes" || subm.param.id != target_id){
-							submenu_Build('taskdetail', true, null, {'type':'notes', 'id':target_id,}, true);
+							if(Lincko.storage.get("notes", target_id)){
+								submenu_Build('taskdetail', true, null, {'type':'notes', 'id':target_id,}, true);
+							}
 						}
 					}
 				}, 1000, target_id);
@@ -391,7 +399,9 @@ var app_generic_state = {
 				if(type=="projects"){
 					var subm = submenu_get('taskdetail', true);
 					if(!subm || !subm.param.type || !subm.param.id || subm.param.type != "files" || subm.param.id != target_id){
-						submenu_Build('taskdetail', true, null, {'type':'files', 'id':target_id,}, true);
+						if(Lincko.storage.get("files", target_id)){
+							submenu_Build('taskdetail', true, null, {'type':'files', 'id':target_id,}, true);
+						}
 					}
 				} else if(type=="chats"){
 					var subm = submenu_get('newchat', false);
@@ -409,12 +419,16 @@ var app_generic_state = {
 					}
 					var subm = submenu_get('taskdetail', false);
 					if(!subm || !subm.param.type || !subm.param.id || subm.param.type != "files" || subm.param.id != target_id){
-						submenu_Build('taskdetail', true, null, {'type':'files', 'id':target_id,}, false);
+						if(Lincko.storage.get("files", target_id)){
+							submenu_Build('taskdetail', true, null, {'type':'files', 'id':target_id,}, false);
+						}
 					}
 				} else {
 					var subm = submenu_get('taskdetail', false);
 					if(!subm || !subm.param.type || !subm.param.id || subm.param.type != "files" || subm.param.id != target_id){
-						submenu_Build('taskdetail', true, null, {'type':'files', 'id':target_id,}, false);
+						if(Lincko.storage.get("files", target_id)){
+							submenu_Build('taskdetail', true, null, {'type':'files', 'id':target_id,}, false);
+						}
 					}
 				}
 			} else {
@@ -433,7 +447,9 @@ var app_generic_state = {
 						if(type=="projects"){
 							var subm = submenu_get('taskdetail', true);
 							if(!subm || !subm.param.type || !subm.param.id || subm.param.type != "files" || subm.param.id != target_id){
-								submenu_Build('taskdetail', true, null, {'type':'files', 'id':target_id,}, true);
+								if(Lincko.storage.get("files", target_id)){
+									submenu_Build('taskdetail', true, null, {'type':'files', 'id':target_id,}, true);
+								}
 							}
 						} else if(type=="chats"){
 							var subm = submenu_get('newchat', false);
@@ -451,12 +467,16 @@ var app_generic_state = {
 							}
 							var subm = submenu_get('taskdetail', false);
 							if(!subm || !subm.param.type || !subm.param.id || subm.param.type != "files" || subm.param.id != target_id){
-								submenu_Build('taskdetail', true, null, {'type':'files', 'id':target_id,}, false);
+								if(Lincko.storage.get("files", target_id)){
+									submenu_Build('taskdetail', true, null, {'type':'files', 'id':target_id,}, false);
+								}
 							}
 						} else {
 							var subm = submenu_get('taskdetail', false);
 							if(!subm || !subm.param.type || !subm.param.id || subm.param.type != "files" || subm.param.id != target_id){
-								submenu_Build('taskdetail', true, null, {'type':'files', 'id':target_id,}, false);
+								if(Lincko.storage.get("files", target_id)){
+									submenu_Build('taskdetail', true, null, {'type':'files', 'id':target_id,}, false);
+								}
 							}
 						}
 					}
@@ -522,7 +542,9 @@ var app_generic_state = {
 						if(type=="projects"){
 							var subm = submenu_get('taskdetail', true);
 							if(!subm || !subm.param.type || !subm.param.id || subm.param.type != parent['_type'] || subm.param.id != target_id){
-								submenu_Build('taskdetail', true, null, {'type':parent['_type'], 'id':target_id,}, true);
+								if(Lincko.storage.get(parent['_type'], target_id)){
+									submenu_Build('taskdetail', true, null, {'type':parent['_type'], 'id':target_id,}, true);
+								}
 							}
 						}
 					} else if(parent['_type']=='projects'){
@@ -547,7 +569,9 @@ var app_generic_state = {
 								if(type=="projects"){
 									var subm = submenu_get('taskdetail', true);
 									if(!subm || !subm.param.type || !subm.param.id || subm.param.type != parent['_type'] || subm.param.id != target_id){
-										submenu_Build('taskdetail', true, null, {'type':parent['_type'], 'id':target_id,}, true);
+										if(Lincko.storage.get(parent['_type'], target_id)){
+											submenu_Build('taskdetail', true, null, {'type':parent['_type'], 'id':target_id,}, true);
+										}
 									}
 								}
 							} else if(parent['_type']=='projects'){

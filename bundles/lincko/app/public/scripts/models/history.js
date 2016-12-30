@@ -1,3 +1,4 @@
+//Category 41
 var app_models_cache_history = {};
 
 var app_models_history = {
@@ -164,11 +165,15 @@ var app_models_history = {
 							continue;
 						}
 						users = item['_users'];
+						target = "projects-"+hist[i]['id'];
+						if(hist[i]["par"] && hist[i]["par"]["tid"] && Lincko.storage.get("tasks", hist[i]["par"]["tid"])){
+							target = "tasks-"+hist[i]["par"]["tid"];
+						}
 						if(users && users[wrapper_localstorage.uid]){
 							app_models_history.notify(
 								Lincko.storage.getHistoryInfo(hist[i]).title,
 								wrapper_to_html(item["+title"]),
-								"projects-"+hist[i]['id']
+								target
 							);
 						}
 					}
@@ -227,9 +232,18 @@ var app_models_history = {
 			}
 
 			//Grab Comments notifications
+			var resume = false; //Avoid too many LinckoBot resumes to be displayed at a time
 			if(typeof items['comments'] != 'undefined'){
 				hist = Lincko.storage.hist('comments', null, {att: 'created_at', par_type: ['in', ['projects', 'comments', 'tasks']], by: ['!=', wrapper_localstorage.uid], timestamp: ['>', lastvisit]});
 				//hist = Lincko.storage.hist('comments', null, {att: 'created_at', par_type: 'projects', timestamp: ['>', lastvisit]}); //For debugging only
+				/*
+				hist = Lincko.storage.hist('comments', null, 
+					[
+						{att: 'created_at', par_type: ['in', ['projects', 'comments', 'tasks']], by: ['!=', wrapper_localstorage.uid], timestamp: ['>', lastvisit]},
+						{att: 'created_at', par_type: ['in', ['projects', 'comments', 'tasks']], by: 0}
+					]
+				);
+				*/
 				if(hist.length>0){
 					for(var i in hist){
 						//Avoid to double the same notification
@@ -319,9 +333,36 @@ var app_models_history = {
 									}
 								}
 							} else { //LinckoBot
+								if(resume){
+									continue; //We already send it once
+								}
 								if(item['+comment'].indexOf('{"0":{')!==0 && item['+comment'].indexOf('"'+wrapper_localstorage.uid+'":{')){
 									continue;
 								}
+
+								msg = false;
+								if(item['+comment'].indexOf('{"'+wrapper_localstorage.uid+'":{"700":')===0){ //weekly individual
+									//What a week! Check out what you did last week and what next week has in store. But don't forget to enjoy the weekend!
+									msg = wrapper_to_html(Lincko.Translation.get('app', 4104, 'html'));
+								} else if(item['+comment'].indexOf('{"'+wrapper_localstorage.uid+'":{"100":')===0){ //daily individual
+									//Want to see what you did today and what's coming tomorrow. Your daily update from the LinckoBot has arrived.
+									msg = wrapper_to_html(Lincko.Translation.get('app', 4103, 'html'));
+								} else if(item['+comment'].indexOf('{"0":{"700":')===0){ //weekly team
+									//Your weekly progress update is here! See how the team did last week and what's coming this week.
+									msg = wrapper_to_html(Lincko.Translation.get('app', 4102, 'html'));
+								} else if(item['+comment'].indexOf('{"0":{"100":')===0){ //daily team
+									//Check out the daily team progress! Your Project Activity summaries have arrived. Go team!
+									msg = wrapper_to_html(Lincko.Translation.get('app', 4101, 'html'));
+								}
+
+								if(msg){
+									resume = true;
+								} else {
+									continue; //Skip because not concerned
+								}
+
+								/*
+								//This give the resume text, but it's not valuable
 								username = wrapper_to_html(Lincko.Translation.get('app', 0, 'html')); //LinckoBot
 								msg = app_models_resume_format_sentence(hist[i]['id']);
 								if(typeof msg == 'string' || typeof msg == 'number'){
@@ -329,6 +370,7 @@ var app_models_history = {
 								} else {
 									msg = msg.text();
 								}
+								*/
 							}
 							app_models_history.notify(
 								msg,
