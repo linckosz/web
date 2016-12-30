@@ -1482,6 +1482,8 @@ Submenu.prototype.Add_taskdetail = function() {
 			commentObj['created_at'] = $.now()/1000;
 			commentObj['_parent'] = [];
 			commentObj['_parent'][0] = parent_type;
+			commentObj.temp_id = tmpID;
+			commentObj.fake = true;
 			if( commentObj['_parent'][0] == that.param.type ){
 				submenu_taskdetail.find('.submenu_taskdetail_comments_main').append(taskdetail_generateCommentBubble(commentObj, item['_id'], sendAction_newComment));
 			}
@@ -1520,28 +1522,40 @@ Submenu.prototype.Add_taskdetail = function() {
 		var comments_hidden = [];
 		var param_viewed = {};
 		var commentCount = 0;
+
+
+		var elem_rootcomment = $('<div rootcomment_id = true></div>');
+
 		var showToParent = false;
 		for ( var i = 0; i < comments.length; i++ ){
 			commentCount++;
 			comment = comments[i];
 			if( commentCount <= toShow || showToParent ){
-				if(comment['_parent'][0] == 'comments'){
-					showToParent = true;
-				}
-				else{
-					showToParent = false;
-				}
+				
 				var elem_newComment_bubble = taskdetail_generateCommentBubble(comment, item['_id'], sendAction_newComment);
-				if(animation){
-					elem_toShow_wrapper.prepend(elem_newComment_bubble);
-				}
-				else{
-					elem_comments_main.prepend(elem_newComment_bubble);
-				}
+				elem_rootcomment.prepend(elem_newComment_bubble);
 
 				if(comment['new']){
 					param_viewed['comments_'+comment['_id']] = true;
-				}		
+				}
+
+				if(comment['_parent'][0] == 'comments'){
+					showToParent = true;
+				}
+				else{//is a root comment
+					showToParent = false;
+					elem_rootcomment.attr('rootcomment_id', comment['_id']);
+					if(animation){
+					elem_toShow_wrapper.prepend(elem_rootcomment);
+					}
+					else{
+						elem_comments_main.prepend(elem_rootcomment);
+					}
+					elem_rootcomment = $('<div rootcomment_id = true></div>');
+
+				}
+
+
 			}
 			else{
 				comments_hidden.push(comment);
@@ -2169,6 +2183,44 @@ Submenu.prototype.Add_taskdetail = function() {
 			'submenu_taskdetail_comments_'+that.md5id,
 			that.param.type+'_'+item['_id'],
 			function(){
+				console.log(this.updated);
+				//ignore condition
+				if(typeof this.updated == 'object' && !this.updated[that.param.type+'_'+item['_id']]._children){ return; }
+				var elem_comments_main = $('#'+this.id).find('.submenu_taskdetail_comments_main');
+				//update commentCount
+				$('#'+this.id).find('[find=commentCount]').html(generateCommentsArray().length);
+				
+
+				var created_at_latest = null;
+
+				var elem_primaryComment_existing_latest = elem_comments_main.find('[rootcomment_id]').last();
+				if(elem_primaryComment_existing_latest.length){
+					created_at_latest = Lincko.storage.get('comments', elem_primaryComment_existing_latest.attr('rootcomment_id'), 'created_at');
+				}
+				var primaryComments = Lincko.storage.sort_items(Lincko.storage.list('comments',null, null, that.param.type, item['_id'], false), 'created_at', 0, -1, false);
+
+				$.each(primaryComments, function(i, comment){
+					if(created_at_latest && comment.created_at > created_at_latest){
+						elem_primaryComment_existing_latest.after(taskdetail_generateCommentThread(comment));
+					}
+					else{
+						elem_comments_main.append(taskdetail_generateCommentThread(comment));
+					}
+				});
+
+
+
+
+				if(submenu_content.prop('id') in myIScrollList){
+					myIScrollList[submenu_content.prop('id')].refresh();
+				}
+
+				return;
+
+
+
+
+
 				var param = {};
 				param.created_by = ['!=', wrapper_localstorage.uid];
 				param.new = true;
@@ -2654,7 +2706,15 @@ var taskdetail_generateCommentBubble = function(comment, root_id, sendAction_rep
 			}
 			else{
 				var elem_replyBubble = taskdetail_generateNewCommentBubble('comments', parentID, sendAction_reply);
-				elem_replyTo.after(elem_replyBubble);
+				
+				var elem_rootComment = elem_replyTo.parent('[rootcomment_id]');
+				if(elem_rootComment.length){
+					elem_rootComment.append(elem_replyBubble);
+				}
+				else{
+					elem_replyTo.after(elem_replyBubble);
+				}
+
 				elem_replyBubble.find('[find=addNewComment_text]').focus();
 			}			
 		});
