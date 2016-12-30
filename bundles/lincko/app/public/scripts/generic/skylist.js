@@ -704,7 +704,7 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 	}
 	else{
 		for (var i in items_filtered){
-			item = items_filtered[i];
+			var item = items_filtered[i];
 			iscroll_elem.append(that.addCard(item));
 		}
 	}
