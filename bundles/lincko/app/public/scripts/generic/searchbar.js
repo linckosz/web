@@ -174,7 +174,7 @@ var searchbar = {
 		var dueMonthIndex = new Date((item.start + item.duration)*1000).getMonth();
 
 		$.each(months_obj, function(key,val){
-			if(val[dueMonthIndex].toLowerCase().includes(time.toLowerCase())){
+			if(val[dueMonthIndex].toLowerCase().indexOf(time.toLowerCase()) > -1){
 				isDueThisTime = true;
 				return false;
 			}
