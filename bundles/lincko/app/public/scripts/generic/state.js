@@ -588,7 +588,7 @@ var app_generic_state = {
 			if(!storage_first_launch) {
 				var subm = submenu_get('newchat', false);
 				if(!subm || !subm.param.type || !subm.param.id || subm.param.type != parent._type || subm.param.id != parent._id){
-					var chat_title = parent['+title'];
+					var title = parent['+title'];
 					if(parent['single'] && parent['_perm']){
 						for(var uid in parent['_perm']){
 							if(uid != wrapper_localstorage.uid){
