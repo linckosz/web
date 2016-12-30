@@ -2076,13 +2076,19 @@ Submenu.prototype.Add_taskdetail = function() {
 								elem_temp_id.find('[find=bar]').css('width', progress+'%');
 
 								//once local image preview is available, add the img
-								if(!elem_temp_id.find('[find=card_leftbox] img').length && lincko_file.files[0] && lincko_file.files[0].preview){
-									var local_url = lincko_file.files[0].preview.toDataURL();
-					            	var img = new Image();
-	            					img.src = local_url;
-	            					elem_temp_id.find('[find=card_leftbox]').append(img);
-								}
+								if(!elem_temp_id.find('[find=card_leftbox] img').length && lincko_file.files[0] && lincko_file.files[0].preview && typeof lincko_file.files[0].preview.toDataURL == 'function'){
+									var local_url = null;
+									try{
+										local_url = lincko_file.files[0].preview.toDataURL();
+									}
+									catch(e){/*local_url not available*/}
 
+									if(local_url){
+										var img = new Image();
+		            					img.src = local_url;
+		            					elem_temp_id.find('[find=card_leftbox]').append(img);
+									}
+								}
 							}
 							else{
 								var elem_linkcard = $('#-submenu_taskdetail_links_card').clone().prop('id','').attr('temp_id', temp_id).addClass('submenu_taskdetail_links_card_uploading');
