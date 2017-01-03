@@ -1959,7 +1959,7 @@ skylist.draw_noteCard = function(item){
 	if(item._files){
 		$.each(item._files, function(file_id, obj){
 			var file = Lincko.storage.get('files', file_id);
-			if(file && !file.deleted_at){
+			if(file && file.category == 'image' && !file.deleted_at){
 				var thumb_url = Lincko.storage.getLinkThumbnail(file['_id']);
 				if(thumb_url){
 					elem_leftbox = $('<img />').prop('src',thumb_url);
