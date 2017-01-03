@@ -1446,6 +1446,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	}
 
 	var sendAction_newComment = function(parent_type, parent_id, comment){
+		var id_fake = null;
 		var tmpID = null;
 		var param = {
 			"parent_type": parent_type,
@@ -1454,6 +1455,16 @@ Submenu.prototype.Add_taskdetail = function() {
 		}
 		var cb_success = function(msg, data_error, data_status, data_msg){
 			if(!document.getElementById('taskdetail_'+that.md5id)){ return; }
+
+			var comment = Lincko.storage.data.comments[id_fake];
+			if(comment){
+				delete Lincko.storage.data.comments[id_fake];
+			}
+			tmpID = null;
+			id_fake = null;
+			return;
+
+
 			var comment = Lincko.storage.list('comments',1,{temp_id: tmpID});
 			if(comment.length){
 				comment = comment[0];
@@ -1475,7 +1486,9 @@ Submenu.prototype.Add_taskdetail = function() {
 		var cb_begin = function(jqXHR, settings, temp_id){
 			if(!document.getElementById('taskdetail_'+that.md5id)){ return; }
 			tmpID = temp_id;
-			var commentObj = {};
+			var commentObj = taskdetail_makeFakeComment(comment, parent_type, parent_id, null, temp_id, false);
+			id_fake = commentObj._id;
+			/*var commentObj = {};
 			commentObj['_id'] = tmpID;
 			commentObj['+comment'] = comment;
 			commentObj['created_by'] = wrapper_localstorage.uid;
@@ -1483,13 +1496,15 @@ Submenu.prototype.Add_taskdetail = function() {
 			commentObj['_parent'] = [];
 			commentObj['_parent'][0] = parent_type;
 			commentObj.temp_id = tmpID;
-			commentObj.fake = true;
+			commentObj.fake = true;*/
 			if( commentObj['_parent'][0] == that.param.type ){
-				submenu_taskdetail.find('.submenu_taskdetail_comments_main').append(taskdetail_generateCommentBubble(commentObj, item['_id'], sendAction_newComment));
+				submenu_taskdetail.find('.submenu_taskdetail_comments_main').append(taskdetail_generateCommentThread(commentObj, true));
+				//submenu_taskdetail.find('.submenu_taskdetail_comments_main').append(taskdetail_generateCommentBubble(commentObj, item['_id'], sendAction_newComment));
 			}
 			else{
 				submenu_taskdetail.find('[comment_id=new]').closest('.submenu_taskdetail_commentbubble[parent_id='+parent_id+']').replaceWith(taskdetail_generateCommentBubble(commentObj, item['_id'], sendAction_newComment));
 			}
+
 			var elem_commentCount = elem_submenu_taskdetail_comments.find('[find=commentCount]');
 			var commentCount = parseInt(elem_commentCount.html(),10);
 			elem_commentCount.velocity('fadeOut',{
@@ -1532,8 +1547,8 @@ Submenu.prototype.Add_taskdetail = function() {
 			comment = comments[i];
 			if( commentCount <= toShow || showToParent ){
 				
-				var elem_newComment_bubble = taskdetail_generateCommentBubble(comment, item['_id'], sendAction_newComment);
-				elem_rootcomment.prepend(elem_newComment_bubble);
+				// var elem_newComment_bubble = taskdetail_generateCommentBubble(comment, item['_id'], sendAction_newComment);
+				// elem_rootcomment.prepend(elem_newComment_bubble);
 
 				if(comment['new']){
 					param_viewed['comments_'+comment['_id']] = true;
@@ -1544,14 +1559,18 @@ Submenu.prototype.Add_taskdetail = function() {
 				}
 				else{//is a root comment
 					showToParent = false;
-					elem_rootcomment.attr('rootcomment_id', comment['_id']);
+
+					
+					//elem_rootcomment.attr('rootcomment_id', comment['_id']);
 					if(animation){
-					elem_toShow_wrapper.prepend(elem_rootcomment);
+					elem_toShow_wrapper.prepend(taskdetail_generateCommentThread(comment, true, true));
+					//elem_toShow_wrapper.prepend(elem_rootcomment);
 					}
 					else{
-						elem_comments_main.prepend(elem_rootcomment);
+						elem_comments_main.prepend(taskdetail_generateCommentThread(comment, true, true));
+						//elem_comments_main.prepend(elem_rootcomment);
 					}
-					elem_rootcomment = $('<div rootcomment_id = true></div>');
+					//elem_rootcomment = $('<div rootcomment_id = true></div>');
 
 				}
 
@@ -2183,13 +2202,21 @@ Submenu.prototype.Add_taskdetail = function() {
 			'submenu_taskdetail_comments_'+that.md5id,
 			that.param.type+'_'+item['_id'],
 			function(){
-				console.log(this.updated);
 				//ignore condition
 				if(typeof this.updated == 'object' && !this.updated[that.param.type+'_'+item['_id']]._children){ return; }
 				var elem_comments_main = $('#'+this.id).find('.submenu_taskdetail_comments_main');
 				//update commentCount
 				$('#'+this.id).find('[find=commentCount]').html(generateCommentsArray().length);
-				
+
+
+
+				//clean any fake root comments
+				$.each(elem_comments_main.find('[rootcomment_id]'), function(i, elem){
+					var commentID = $(elem).attr('rootcomment_id');
+					if(!Lincko.storage.get('comments', commentID)){
+						$(elem).recursiveRemove();
+					}
+				});
 
 				var created_at_latest = null;
 
@@ -2197,17 +2224,18 @@ Submenu.prototype.Add_taskdetail = function() {
 				if(elem_primaryComment_existing_latest.length){
 					created_at_latest = Lincko.storage.get('comments', elem_primaryComment_existing_latest.attr('rootcomment_id'), 'created_at');
 				}
+
 				var primaryComments = Lincko.storage.sort_items(Lincko.storage.list('comments',null, null, that.param.type, item['_id'], false), 'created_at', 0, -1, false);
 
 				$.each(primaryComments, function(i, comment){
-					if(created_at_latest && comment.created_at > created_at_latest){
-						elem_primaryComment_existing_latest.after(taskdetail_generateCommentThread(comment));
+					if(created_at_latest && comment.created_at < created_at_latest){return;}
+					else if(created_at_latest && comment.created_at > created_at_latest){
+						elem_primaryComment_existing_latest.after(taskdetail_generateCommentThread(comment, true, true));
 					}
-					else{
-						elem_comments_main.append(taskdetail_generateCommentThread(comment));
+					else if(!created_at_latest){
+						elem_comments_main.append(taskdetail_generateCommentThread(comment, true, true));
 					}
 				});
-
 
 
 
@@ -2722,7 +2750,7 @@ var taskdetail_generateCommentBubble = function(comment, root_id, sendAction_rep
 	return elem;
 }
 
-var taskdetail_generateCommentThread = function(rootComment, includeContainer){
+var taskdetail_generateCommentThread = function(rootComment, includeContainer, fn_sync){
 	if(!rootComment || typeof rootComment != 'object') return;
 	if(typeof includeContainer != 'boolean'){ var includeContainer = false; }
 
@@ -2738,12 +2766,33 @@ var taskdetail_generateCommentThread = function(rootComment, includeContainer){
 		elem_container.append(taskdetail_generateCommentBubble(comment, rootComment['_parent'][1]));
 	});
 
+	if(includeContainer && fn_sync){
+		if(typeof fn_sync != 'function'){
+			var fn_sync = function(){
+				if((this.updated && typeof this.updated[this.action_param.range] == 'boolean')
+					|| this.updated[this.action_param.range] && this.updated[this.action_param.range]._children){
+					$('#'+this.id).replaceWith(taskdetail_generateCommentThread(rootComment, includeContainer, true));
+				}
+			}
+		}
+		elem_container.prop('id', 'taskdetail_rootComment_sync_'+rootComment['_id']+'_'+md5(Math.random()));
+		app_application_lincko.add(
+			elem_container.prop('id'),
+			'comments_'+rootComment['_id'],
+			fn_sync, {range: 'comments_'+rootComment['_id']});
+	}
+
+
+
+
 	if(includeContainer){
 		return elem_container;
 	}
 	else{
 		return elem_container.unwrap();
 	}
+
+
 
 }
 
