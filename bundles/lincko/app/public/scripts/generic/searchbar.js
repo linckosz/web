@@ -1,5 +1,5 @@
 var searchbar = {
-	keyup_delay: 400,
+	keyup_delay: 1000,
 
 	construct: function(keyup_fn, keyup_fn_delay){
 		var that = this;
