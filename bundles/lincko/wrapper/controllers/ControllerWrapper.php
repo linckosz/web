@@ -208,7 +208,7 @@ class ControllerWrapper extends Controller {
 					$echo = 'wrapper_js_response';
 					echo STR::convertToJS($json_result, $echo);
 				} else { //default is json
-					print_r(json_encode($json_result)); //production output
+					print_r(json_encode($json_result, JSON_UNESCAPED_UNICODE)); //production output
 				}
 				//print_r($json_result->msg); //for test
 				//print_r($result); //for test

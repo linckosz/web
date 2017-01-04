@@ -76,7 +76,7 @@ class ControllerMailchimp extends Controller {
 		@curl_close($ch);
 
 		if($json_result){
-			print_r(json_encode($json_result));
+			print_r(json_encode($json_result, JSON_UNESCAPED_UNICODE));
 			return true;
 		}
 

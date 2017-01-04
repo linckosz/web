@@ -217,6 +217,12 @@ var app_models_history = {
 							if(parent["single"]){
 								title = username;
 								msg = wrapper_to_html(item["+comment"]);
+								var profile_pic = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", hist[i]['by'], "profile_pic"));
+								if(hist[i]['id']==0){
+									profile_pic = app_application_icon_roboto.src;
+								} else if(hist[i]['id']==1){
+									profile_pic = app_application_icon_monkeyking.src;
+								}
 							} else {
 								title = wrapper_to_html(parent["+title"]);
 								msg = username+": "+wrapper_to_html(item["+comment"]);
@@ -273,10 +279,22 @@ var app_models_history = {
 						if(!item){
 							continue;
 						}
+						var profile_pic = null;
 						if(users && users[wrapper_localstorage.uid]){
 							msg = '';
 							if(hist[i]['by']){
 								username = wrapper_to_html(Lincko.storage.get("users", hist[i]['by'], "username"));
+								/*
+								//We don't need to show picture for comments
+								if(hist[i]['by']==1){
+									profile_pic = app_application_icon_monkeyking.src;
+								} else {
+									var temp_pic = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", hist[i]['by'], "profile_pic"));
+									if(temp_pic){
+										profile_pic = temp_pic;
+									}
+								} 
+								*/
 								if($.inArray(hist[i]['cod'], [202, 203, 298, 299]) < 0){
 									msg = username+": "+item['+comment'];
 								} else {
@@ -340,6 +358,8 @@ var app_models_history = {
 									continue;
 								}
 
+								profile_pic = app_application_icon_roboto.src;
+
 								msg = false;
 								if(item['+comment'].indexOf('{"'+wrapper_localstorage.uid+'":{"700":')===0){ //weekly individual
 									//What a week! Check out what you did last week and what next week has in store. But don't forget to enjoy the weekend!
@@ -375,7 +395,9 @@ var app_models_history = {
 							app_models_history.notify(
 								msg,
 								title,
-								"comments-"+hist[i]['id']
+								"comments-"+hist[i]['id'],
+								false,
+								profile_pic
 							);
 						}
 					}
@@ -497,6 +519,11 @@ var app_models_history = {
 						var profile_pic = Lincko.storage.getLinkThumbnail(item['profile_pic']);
 						if(!profile_pic){
 							profile_pic = "favicon.png";
+						}
+						if(hist[i]['id']==0){
+							profile_pic = app_application_icon_roboto.src;
+						} else if(hist[i]['id']==1){
+							profile_pic = app_application_icon_monkeyking.src;
 						}
 						app_models_history.notify(
 							wrapper_to_html(item["-username"]),
