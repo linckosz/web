@@ -1478,13 +1478,13 @@ skylist.prototype.addTask = function(item){
 			});
 		}
 
-		elem_title.keydown(function(event){
-			if(event.keyCode == 13){
-				event.preventDefault();
-				$(this).focusout();
-				$(this).blur();
-			}
-		});
+		// elem_title.keydown(function(event){
+		// 	if(event.keyCode == 13){
+		// 		event.preventDefault();
+		// 		$(this).focusout();
+		// 		$(this).blur();
+		// 	}
+		// });
 		elem_title.blur(function(){
 			$(this).attr('contenteditable',false);
 			//@ burger
@@ -1547,10 +1547,12 @@ skylist.prototype.addTask = function(item){
 						if(data_error){
 							app_application_lincko.prepare(item['_type']+'_'+item['_id']);
 						}
+						else{
+							item = Lincko.storage.get(item._type, item._id);
+						}
 					},
 					function(){ app_application_lincko.prepare(item['_type']+'_'+item['_id']); }
 				);
-
 			}
 			else{ //if no need to update
 				$(this).html(new_text);
@@ -1560,8 +1562,15 @@ skylist.prototype.addTask = function(item){
 			}
 		});
 
-		//var burger_keyboard_titleInst = new burger_keyboard(Elem.find('[find=title]'));
-		burgerN.regex(Elem.find('[find=title]'), item);
+		var shortcuts = { at: true, plus: true }
+		if(Lincko.storage.get('projects', app_content_menu.projects_id, 'personal_private')){
+			delete shortcuts.at;
+		}
+		var fn_enter_burger_keyboard = function(event, burgerInst){
+			burgerInst.elem.blur();
+		}
+		var burger_keyboard_titleInst = new burger_keyboard(Elem.find('[find=title]'), null, shortcuts, null, fn_enter_burger_keyboard);
+		//burgerN.regex(Elem.find('[find=title]'), item);
 	}
 
 

@@ -28,7 +28,7 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter
 	var lineHeight = Math.floor(parseInt(fontSize.replace('px','')) * 1.5);
 	*/
 
-	if(typeof shortcuts == 'object'){ that.shortcuts = shortcuts; }
+	if($.type(shortcuts) == 'object'){ that.shortcuts = shortcuts; }
 	else{
 		that.shortcuts = {
 			at: true,
@@ -61,12 +61,12 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter
 		if(that.burgerMode == burger_shortcuts.at){
 			str_elem_burgerSpan = burger_spanUser(data.val, data.text).clone().wrap('<div/>').parent().html();
 			//remove other @user spans
-			that.elem.find('span[userid]').recursiveRemove();
+			that.elem.find('[find=name].burger_tag').recursiveRemove();
 		}
 		else if(that.burgerMode == burger_shortcuts.plus){
 			str_elem_burgerSpan = burger_spanDate(data.val, null).clone().wrap('<div/>').parent().html();
 			//remove other +user spans
-			that.elem.find('span[find=dateWrapper]').recursiveRemove();
+			that.elem.find('[find=dateWrapper].burger_tag').recursiveRemove();
 		}
 		
 		var textLength = that.elem.text().length;
@@ -122,7 +122,9 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter
 	// 	}
 	// });
 
-
+	var latestChar = null;
+    var latestChar_node = null;
+    var latestChar_prev = null;
 	elem.on('keyup.burger_keyboard', function(event){
 		var which = event.which;
 
@@ -138,13 +140,34 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter
 		var selection = getSelection();
 	    var focus_node = selection.focusNode;
 	    focus_node.normalize();
-	    var latestChar = null;
-
-	    //sometimes, for some input methods, focus_node.nodeValue reflects the latest typed characters
 	    if(focus_node.nodeValue){ latestChar = (focus_node.nodeValue).slice(-1); }
-	    else{ //fallback for browsers that doesnt support nodeValue < IE10
-		  	var currentText = elem.text();
-		  	latestChar = currentText[caretIndex - 1];
+	    
+
+	    var currentText = elem.text();
+		latestChar = currentText[caretIndex - 1];
+	  	if(caretIndex > 0){
+	  		latestChar_prev = currentText[caretIndex - 2];
+	  	}
+	  	else{
+	  		latestChar_prev = null;
+	  	}
+
+	  	//sometimes, for some input methods, focus_node.nodeValue reflects the latest typed characters
+	  	if(latestChar == latestChar_prev  && latestChar_node != latestChar_prev ){ 
+	  		latestChar = latestChar_node; 
+	  		if((focus_node.nodeValue).length > 1){
+	  			latestChar_prev = ((focus_node.nodeValue).slice(-2))[0];
+	  		}
+	  		else{
+	  			latestChar_prev = null;
+	  		}
+	  	}
+
+	  	/*For Chinese only, when inputting pinyin:
+	      if waiting for combined character (229) but latestChar is not Chinese, return and act on next keyup*/
+	    if(latestChar && event.which == 229 && !latestChar.match(/[\u4E00-\u9FA5]/)){ 
+	    	latestChar_prev = latestChar;
+	    	return; 
 	    }
 
 	    //trigger burger
