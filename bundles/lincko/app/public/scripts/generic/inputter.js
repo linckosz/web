@@ -780,13 +780,17 @@ inputter.prototype.buildLayer = function()
 				{
 					flag = true;
 					content.removeClass('mobile-margin-right-' + mobile_show_count);
-					if(that.burger == null)
-					{
-						setTimeout(function(){
-							var fn = that.layer['enter'];
-							fn(that);
-						},0);
-					}
+					setTimeout(function(){
+						var fn = that.layer['enter'];
+						fn(that);
+					},0);
+					// if(that.burger == null)
+					// {
+					// 	setTimeout(function(){
+					// 		var fn = that.layer['enter'];
+					// 		fn(that);
+					// 	},0);
+					// }
 
 					$('.empty_show').removeClass('mobile_hide');
 					$('.empty_hide').addClass('mobile_hide');
@@ -868,11 +872,17 @@ inputter.prototype.buildLayer = function()
 
 	
 	if(this.burger != null){
-		if(that.burger.enter_fn_param == 'inputter')
-		{
-			that.burger.enter_fn_param = this;
-		}	
-		burgerN.regex(input.find('[find=chat_textarea]').eq(0), null, that.burger);	
+		// if(that.burger.enter_fn_param == 'inputter')
+		// {
+		// 	that.burger.enter_fn_param = this;
+		// }	
+		var shortcuts = {at: true, plus: true };
+		//disable @ shortcut for personal space
+		if(Lincko.storage.get('projects', app_content_menu.projects_id, 'personal_private')){
+			delete shortcuts.at;
+		}
+		var burgerInst = new burger_keyboard(input.find('[find=chat_textarea]').eq(0), null/*lineHeight*/, shortcuts);
+		//burgerN.regex(input.find('[find=chat_textarea]').eq(0), null, that.burger);	
 	}
 
 	container.appendTo(this.position);

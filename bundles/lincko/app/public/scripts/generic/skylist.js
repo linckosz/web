@@ -2847,7 +2847,8 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 		burgerParam.disable_shortcutUser = true;
 	}
 
-	that.inputterInst = new inputter('skylist_'+that.list_type+'_'+that.md5id, elem_appendTo, upload_parent_type, upload_parent_id, inputter_setting, burgerParam);
+	//that.inputterInst = new inputter('skylist_'+that.list_type+'_'+that.md5id, elem_appendTo, upload_parent_type, upload_parent_id, inputter_setting, burgerParam);
+	that.inputterInst = new inputter('skylist_'+that.list_type+'_'+that.md5id, elem_appendTo, upload_parent_type, upload_parent_id, inputter_setting, true);
 
 	return true;
 }

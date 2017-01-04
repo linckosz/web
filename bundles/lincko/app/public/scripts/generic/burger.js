@@ -93,7 +93,7 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData){
 		that.i_caretBegin = 0;
 		that.i_caretCurrent = 0;
 		that.burgerMode = false;
-		that.burgerWord = null;
+		that.burgerWord = '';
 		that.iscroll = null;
 	}
 
@@ -138,9 +138,10 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData){
 
 	    //trigger burger
 	   	if(!that.dropdownInst 
-			&& (latestChar == burger_shortcuts.at 
-			|| latestChar == burger_shortcuts.plus 
-			|| latestChar == burger_shortcuts.Alt)){
+			&& (	
+				(latestChar == burger_shortcuts.at && that.shortcuts.at)
+			|| 	(latestChar == burger_shortcuts.plus && that.shortcuts.plus)
+			|| 	(latestChar == burger_shortcuts.Alt && that.shortcuts.plus)		)){
 			
 			that.i_caretBegin = caretIndex;
 
@@ -219,7 +220,6 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData){
 				that.dropdownInst.build_elem_data(list_search);
 			}
 			else if(that.burgerMode == burger_shortcuts.plus){
-				console.log(burger_list.dates(that.burgerWord));
 				that.dropdownInst.build_elem_data(burger_list.dates(that.burgerWord));
 			}
 
