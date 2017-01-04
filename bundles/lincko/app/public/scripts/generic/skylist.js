@@ -1485,7 +1485,6 @@ skylist.prototype.addTask = function(item){
 		});
 		elem_title.blur(function(){
 			$(this).attr('contenteditable',false);
-
 			//@ burger
 			var inChargeID_new = null;
 			var elem_users = $(this).find('[userid]');
@@ -1558,6 +1557,8 @@ skylist.prototype.addTask = function(item){
 				}
 			}
 		});
+
+		//var burger_keyboard_titleInst = new burger_keyboard(Elem.find('[find=title]'));
 		burgerN.regex(Elem.find('[find=title]'), item);
 	}
 

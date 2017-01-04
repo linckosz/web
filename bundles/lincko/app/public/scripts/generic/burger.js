@@ -1122,7 +1122,7 @@ burger_dropdown.prototype.build_elem = function(){
 
 
     that.focus_elem.on('blur.burger_dropdown', function(){
-    	//that.hide();
+    	that.hide();
     });
 
     elem_dropdown.find('.burger_option').hover(function(){ //hoverin
@@ -1931,18 +1931,6 @@ burgerN.regex = function(elem, item, param){
 		destroy();
 	}//end of dateClick_fn
 
-	/*elem.on('keydown', function(event){ return;
-		console.log('<<----keydown---->>');
-		var selection = getSelection();
-	    var focus_node = selection.focusNode;
-	    focus_node.normalize();
-	    console.log("event type:", event.type);
-	    console.log("which:", event.which);
-	    console.log("keyCode:", event.keyCode);
-	    console.log("charCode:", event.charCode);
-	    console.log("node value:", focus_node.nodeValue);
-	    console.log('<<----keydown END---->>');
-	});*/
 
 	//tab to go to next focusable element happens at keydown
 	elem.on('keydown', function(event){
