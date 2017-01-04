@@ -396,6 +396,7 @@ inputter.prototype.buildLayer = function()
 										{
 											content.find('[find=chat_textarea]').get(0).innerText = Lincko.Translation.get('app', 2204, 'html');//type here to add a task
 											myIScrollList[that.panel_id+"_files_queue_wrapper"].refresh();
+											content.find('[find=chat_textarea]').focus();
 										}
 									});
 								}
@@ -797,6 +798,8 @@ inputter.prototype.buildLayer = function()
 
 					mobile_show_count = right_menu.find("li:not(.mobile_hide)").length;
 					content.addClass('mobile-margin-right-' + mobile_show_count);
+
+					$(this).focus();
 					return;
 				}
 				else
