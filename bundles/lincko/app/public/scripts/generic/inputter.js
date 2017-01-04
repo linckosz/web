@@ -868,9 +868,6 @@ inputter.prototype.buildLayer = function()
 
 	}
 	
-	
-
-	
 	if(this.burger != null){
 		// if(that.burger.enter_fn_param == 'inputter')
 		// {

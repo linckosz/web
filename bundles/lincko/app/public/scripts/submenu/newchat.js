@@ -242,13 +242,13 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 				app_application_lincko.prepare("submenu_show");
 				var overthrow_id = "overthrow_"+sub_that.id;
 				var last = $("#"+overthrow_id).find(".models_history_wrapper:last-of-type");
-				if(myIScrollList[overthrow_id] && last && last[0]){
-					myIScrollList[overthrow_id].refresh();
-					var scroll_time = 0;
-					if(!supportsTouch || responsive.test("minDesktop")){ scroll_time = 200; }
-					//myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
-					app_submenu_scrollto(myIScrollList[overthrow_id], last[0], scroll_time);
-				}
+				// if(myIScrollList[overthrow_id] && last && last[0]){
+				// 	myIScrollList[overthrow_id].refresh();
+				// 	var scroll_time = 0;
+				// 	if(!supportsTouch || responsive.test("minDesktop")){ scroll_time = 200; }
+				// 	//myIScrollList[overthrow_id].scrollToElement(last[0], scroll_time);
+				// 	app_submenu_scrollto(myIScrollList[overthrow_id], last[0], scroll_time);
+				// }
 
 				var key = type == 'projects' ? 'comments' : 'messages';
 				var list = data_msg.partial[wrapper_localstorage.uid][key];
