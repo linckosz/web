@@ -13,7 +13,7 @@ var burger_shortcuts = {
 
 
 //this should be compatible with inputter (tasks) as well as inputter (chats) and future usage cases
-var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData){
+var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter){
 	var that = this;
 	that.elem = elem;
 
@@ -97,19 +97,30 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData){
 		that.iscroll = null;
 	}
 
-	//adding linebreak happens on keypress, not on keyup
-	elem.on('keypress.burger_keyboard', function(event){
-		if((event.which || event.keyCode) == 13){ //if enter is pressed
-			if(param.shiftEnter && event.shiftKey){ //toto - param not defined
-				event.returnValue=false;
-				return;
-			}	
-			else{
-				event.preventDefault();
-				//cb_select();
+	if(typeof fn_enter != 'function'){  that.fn_enter = false; }
+	else{ 
+		that.fn_enter = fn_enter;
+		elem.on('keypress.burger_keyboard', that, function(event){
+			var that = event.data;
+			if(!that.burgerMode && event.which == 13){ //if enter is pressed
+				fn_enter(event, that);
 			}
-		}
-	});
+		});
+	}
+
+	// //adding linebreak happens on keypress, not on keyup
+	// elem.on('keypress.burger_keyboard', function(event){
+	// 	if((event.which || event.keyCode) == 13){ //if enter is pressed
+	// 		if(param.shiftEnter && event.shiftKey){ //toto - param not defined
+	// 			event.returnValue=false;
+	// 			return;
+	// 		}	
+	// 		else{
+	// 			event.preventDefault();
+	// 			//cb_select();
+	// 		}
+	// 	}
+	// });
 
 
 	elem.on('keyup.burger_keyboard', function(event){
@@ -225,6 +236,10 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData){
 
 		}
 	});//end of keyup
+}
+burger_keyboard.prototype.getBurgerData = function(){
+	var that = this;
+	return burger_parseHTML(that.elem);
 }
 burger_keyboard.prototype.destroy = function(){
 	var that = this;
@@ -1607,7 +1622,9 @@ burgerN.typeTask = function(projectID, skylistInst, dropdownOffset){
 	//disable '@' for burgerN.regex if its personal space
 	param.disable_shortcutUser = Lincko.storage.get('projects', projectID, 'personal_private');
 
-	param.enter_fn = function(parsedData){
+	param.enter_fn = function(event, burger_keyboard){
+		event.preventDefault();
+		var parsedData = burger_keyboard.getBurgerData();
 		var title = parsedData.text;
 		if(!title.length){ return false; }
 
@@ -1731,7 +1748,16 @@ burgerN.typeTask = function(projectID, skylistInst, dropdownOffset){
 		elem_typingArea.html('');
 		elem_typingArea.focus();
 	}
-	burgerN.regex(elem_typingArea, null, param);
+
+
+
+	var shortcuts = {at: true, plus: true };
+	//disable @ shortcut for personal space
+	if(Lincko.storage.get('projects', app_content_menu.projects_id, 'personal_private')){
+		delete shortcuts.at;
+	}
+	var burgerInst = new burger_keyboard(elem_typingArea, null/*lineHeight*/, shortcuts, null, param.enter_fn);
+	//burgerN.regex(elem_typingArea, null, param);
 
 	return elem_typeTask;
 }
