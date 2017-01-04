@@ -798,62 +798,64 @@ skylist.prototype.addCard = function(item){
 	//this sync function is only to handle deletion and update. for creation, check the project sync function
 	if( that.list_type == 'tasks' || that.list_type == 'notes' || that.list_type == 'files' ){
 		//elem_card.find('[find=card_spacestick]').removeClass('display_none');
-		app_application_lincko.add(
-			elem_card.prop('id'),
-			that.list_type+'_'+item['_id'],
-			function(){
-				var elem = $('#'+this.id);
-				var item_new = Lincko.storage.get(that.list_type , item['_id']);
+		setTimeout(function(){ //must run after the DOM exists. otherwise, can be deleted
+			app_application_lincko.add(
+				elem_card.prop('id'),
+				that.list_type+'_'+item['_id'],
+				function(){
+					var elem = $('#'+this.id);
+					var item_new = Lincko.storage.get(that.list_type , item['_id']);
 
-				if( /*!item_new ||*/ (typeof item_new == 'object' && 'deleted_at' in item_new && item_new['deleted_at']) || (typeof item_new == 'object' && item_new._parent[1] != app_content_menu.projects_id) ){ //for delete
-					elem.velocity('slideUp',{
-						mobileHA: hasGood3Dsupport,
-						complete: function(){
-							$(this).recursiveRemove(0);
-							if(!that){ return false; }
-							if( that.list_subwrapper && that.list_subwrapper.find('[find=card]').length < 1 ){
-								that.tasklist_update();
-							}
-							else if(that.DOM_updated){
-								that.DOM_updated();
-							}
-						}
-					});
-				}
-				else if(item_new){ //for update
-					//do nothing ifs (dont do anything if only a single attribute is updated and the updated attribute is 'viewed_by' or 'new')
-					if(	typeof this.updated == 'object' && typeof this.updated[that.list_type+'_'+item['_id']] == 'object'
-						&& Object.keys(this.updated[that.list_type+'_'+item['_id']]).length == 1 
-						&& (	this.updated[that.list_type+'_'+item['_id']].viewed_by
-								|| this.updated[that.list_type+'_'+item['_id']].new ) ){
-						//do nothing
-					}
-					else if(that.Lincko_itemsList_filter.view == 'paper' 
-						&& typeof this.updated == 'object' && typeof this.updated[that.list_type+'_'+item['_id']] == 'object'
-						&& that.paperview_partialUpdate(this.updated[that.list_type+'_'+item['_id']])){ 
-						that.paperview_taskCard_update(elem, item_new, this.updated[that.list_type+'_'+item['_id']]);
-					}
-					else{
-						elem.velocity('fadeOut',{
+					if( /*!item_new ||*/ (typeof item_new == 'object' && 'deleted_at' in item_new && item_new['deleted_at']) || (typeof item_new == 'object' && item_new._parent[1] != app_content_menu.projects_id) ){ //for delete
+						elem.velocity('slideUp',{
 							mobileHA: hasGood3Dsupport,
-							duration: 200,
 							complete: function(){
-								var elem_toReplace = that.addCard(Lincko.storage.get(that.list_type , item['_id']));
-								if(elem_toReplace){
-									if(elem.hasClass('skylist_card_hover')){
-										elem_toReplace.addClass('skylist_card_hover');
-									}
-									elem.find('input').blur();
-									$(elem.find('[find=card_time_calendar_timestamp]')).datepicker('hide');
-									elem.replaceWith(elem_toReplace);
+								$(this).recursiveRemove(0);
+								if(!that){ return false; }
+								if( that.list_subwrapper && that.list_subwrapper.find('[find=card]').length < 1 ){
+									that.tasklist_update();
+								}
+								else if(that.DOM_updated){
 									that.DOM_updated();
 								}
 							}
 						});
 					}
+					else if(item_new){ //for update
+						//do nothing ifs (dont do anything if only a single attribute is updated and the updated attribute is 'viewed_by' or 'new')
+						if(	typeof this.updated == 'object' && typeof this.updated[that.list_type+'_'+item['_id']] == 'object'
+							&& Object.keys(this.updated[that.list_type+'_'+item['_id']]).length == 1 
+							&& (	this.updated[that.list_type+'_'+item['_id']].viewed_by
+									|| this.updated[that.list_type+'_'+item['_id']].new ) ){
+							//do nothing
+						}
+						else if(that.Lincko_itemsList_filter.view == 'paper' 
+							&& typeof this.updated == 'object' && typeof this.updated[that.list_type+'_'+item['_id']] == 'object'
+							&& that.paperview_partialUpdate(this.updated[that.list_type+'_'+item['_id']])){ 
+							that.paperview_taskCard_update(elem, item_new, this.updated[that.list_type+'_'+item['_id']]);
+						}
+						else{
+							elem.velocity('fadeOut',{
+								mobileHA: hasGood3Dsupport,
+								duration: 200,
+								complete: function(){
+									var elem_toReplace = that.addCard(Lincko.storage.get(that.list_type , item['_id']));
+									if(elem_toReplace){
+										if(elem.hasClass('skylist_card_hover')){
+											elem_toReplace.addClass('skylist_card_hover');
+										}
+										elem.find('input').blur();
+										$(elem.find('[find=card_time_calendar_timestamp]')).datepicker('hide');
+										elem.replaceWith(elem_toReplace);
+										that.DOM_updated();
+									}
+								}
+							});
+						}
+					}
 				}
-			}
-		);
+			);
+		},0); //end of setTimeout
 	} //END OF 'tasks' || 'notes' || 'files'
 	else if (that.list_type == 'chats' || that.list_type == 'global_chats') {
 		//toto => rebuild the chat list here
@@ -1754,68 +1756,69 @@ skylist.prototype.addTask = function(item){
 				}
 			});
 		}
+		setTimeout(function(){
+			app_application_lincko.add(elem_expandable_links.prop('id'), 'upload', function(){
+				var elem_id = this.id;
+				var parent_type = this.action_param.parent_type;
+				var parent_id = this.action_param.parent_id;
 
-		app_application_lincko.add(elem_expandable_links.prop('id'), 'upload', function(){
-			var elem_id = this.id;
-			var parent_type = this.action_param.parent_type;
-			var parent_id = this.action_param.parent_id;
+				var elem_temp_id = $('#'+elem_id).find('[temp_id]');
+				$.each(elem_temp_id, function(i, elem){
+					var temp_id = $(elem).attr('temp_id');
+					var item_file = Lincko.storage.list('files',1,{temp_id: temp_id})[0];
+					if(item_file){
+						if(!Lincko.storage.data[parent_type][parent_id]._files){
+							Lincko.storage.data[parent_type][parent_id]._files = {};
+						}
+						if(Lincko.storage.data[parent_type][parent_id]._files[item_file._id]){return;}
 
-			var elem_temp_id = $('#'+elem_id).find('[temp_id]');
-			$.each(elem_temp_id, function(i, elem){
-				var temp_id = $(elem).attr('temp_id');
-				var item_file = Lincko.storage.list('files',1,{temp_id: temp_id})[0];
-				if(item_file){
-					if(!Lincko.storage.data[parent_type][parent_id]._files){
-						Lincko.storage.data[parent_type][parent_id]._files = {};
+						Lincko.storage.data[parent_type][parent_id]._files[item_file._id] = true;
+						var prepare_param = {};
+						prepare_param[parent_type+'_'+parent_id] = {_files: true};
+						app_application_lincko.prepare(parent_type+'_'+parent_id, true, prepare_param);
 					}
-					if(Lincko.storage.data[parent_type][parent_id]._files[item_file._id]){return;}
+				});
 
-					Lincko.storage.data[parent_type][parent_id]._files[item_file._id] = true;
-					var prepare_param = {};
-					prepare_param[parent_type+'_'+parent_id] = {_files: true};
-					app_application_lincko.prepare(parent_type+'_'+parent_id, true, prepare_param);
-				}
-			});
+				
+				$.each(app_upload_files.lincko_files, function(i, lincko_file){
+					//if parent matches
+					if(lincko_file.lincko_parent_type == parent_type && lincko_file.lincko_parent_id == parent_id){
+						var temp_id = lincko_file.lincko_temp_id;
+						var progress = lincko_file.lincko_progress;
+						var status = lincko_file.lincko_status;
 
-			
-			$.each(app_upload_files.lincko_files, function(i, lincko_file){
-				//if parent matches
-				if(lincko_file.lincko_parent_type == parent_type && lincko_file.lincko_parent_id == parent_id){
-					var temp_id = lincko_file.lincko_temp_id;
-					var progress = lincko_file.lincko_progress;
-					var status = lincko_file.lincko_status;
+						//if there is already real file loaded, then return
+						var file_real = Lincko.storage.list('files',1,{temp_id: temp_id})[0];
+						if(file_real && !file_real.fake){
+							var elem_file_real = $('#'+elem_id).find('[_files='+file_real._id+']');
+							if(elem_file_real.length){
+								return;
+							}
+						}
 
-					//if there is already real file loaded, then return
-					var file_real = Lincko.storage.list('files',1,{temp_id: temp_id})[0];
-					if(file_real && !file_real.fake){
-						var elem_file_real = $('#'+elem_id).find('[_files='+file_real._id+']');
-						if(elem_file_real.length){
-							return;
+
+						var elem_temp_id = $('#'+elem_id).find('[temp_id='+temp_id+']');
+						if(status == 'done' && elem_temp_id.length){
+								//elem_temp_id.recursiveRemove();
+								//elem_temp_id = null;
+						}
+						else if(elem_temp_id.length){
+							//update progress bar or number
+							elem_temp_id.find('[find=bar]').css('width', progress+'%');
+						}
+						else{
+							$('#'+elem_id).find('[find=btn_addNew]').before(that.paperView_uploadingBox(lincko_file.lincko_name, temp_id));
+
+							//force expand if not expanded
+							if($('#'+elem_id).css('display') != 'block'){
+								that.paperView_toggleExpandable($('#'+elem_id));
+							}
 						}
 					}
+				});
 
-
-					var elem_temp_id = $('#'+elem_id).find('[temp_id='+temp_id+']');
-					if(status == 'done' && elem_temp_id.length){
-							//elem_temp_id.recursiveRemove();
-							//elem_temp_id = null;
-					}
-					else if(elem_temp_id.length){
-						//update progress bar or number
-						elem_temp_id.find('[find=bar]').css('width', progress+'%');
-					}
-					else{
-						$('#'+elem_id).find('[find=btn_addNew]').before(that.paperView_uploadingBox(lincko_file.lincko_name, temp_id));
-
-						//force expand if not expanded
-						if($('#'+elem_id).css('display') != 'block'){
-							that.paperView_toggleExpandable($('#'+elem_id));
-						}
-					}
-				}
-			});
-
-		}, {parent_type: item._type, parent_id: item._id});
+			}, {parent_type: item._type, parent_id: item._id});
+		},0);
 	}//end of setup for paperview only
 	
 
