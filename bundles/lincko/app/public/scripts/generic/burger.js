@@ -11,24 +11,16 @@ var burger_shortcuts = {
 	plusAlt: '＋',
 };
 
+
 //this should be compatible with inputter (tasks) as well as inputter (chats) and future usage cases
-/*
-shortcutList = {
-	at: [**list of burgerData**],
-	plus: [**list of burgerData**],
-}
-*/
-var burger_keyboard = function(elem, shortcutList    ){
-	var that = this; console.log(that);
+var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData){
+	var that = this;
 	that.elem = elem;
 
-	var allShortcuts = true;
-	if(shortcutList && typeof shortcutList == 'boolean'){ allShortcuts = true; }
-
-
-	that.list = burger_list.in_charge('projects', app_content_menu.projects_id);
-
-	that.lineHeight = 30;
+	if(lineHeight){ that.lineHeight = lineHeight; }
+	else{
+		that.lineHeight = 30;
+	}
 	 /* possible alternative to hardcode offset
     //http://stackoverflow.com/questions/1185151/how-to-determine-a-line-height-using-javascript-jquery
     //1.5 of font-size is typical for lineheight
@@ -36,35 +28,79 @@ var burger_keyboard = function(elem, shortcutList    ){
 	var lineHeight = Math.floor(parseInt(fontSize.replace('px','')) * 1.5);
 	*/
 
+	if(typeof shortcuts == 'object'){ that.shortcuts = shortcuts; }
+	else{
+		that.shortcuts = {
+			at: true,
+			plus: true,
+		}
+	}
+
+	that.burgerData = {};
+	if(burgerData && typeof burgerData.at == 'object'){ that.burgerData.at = burgerData.at; }
+	else{
+		that.burgerData.at = burger_list.in_charge('projects', app_content_menu.projects_id);
+	}
 
 
 	//variables to clear on burger destroy
 	that.i_caretBegin = 0;
 	that.i_caretCurrent = 0;
-
 	that.dropdownInst = null;
-	that.burgerOn = false;
+	that.burgerMode = false;
+	that.burgerWord = '';
+	that.iscroll = null;
 
-	var cb_create = function(){
+	that.dropdown_cb = {};
+	that.dropdown_cb.cb_create = function(){
 
 	}
-	var cb_select = function(data){
-		console.log('burger_keyboard cb_select');
-		console.log(data);
+	that.dropdown_cb.cb_select = function(data){
+		if(typeof data != 'object'){ var data = {val: data}; }
+		var str_elem_burgerSpan = null;
+		if(that.burgerMode == burger_shortcuts.at){
+			str_elem_burgerSpan = burger_spanUser(data.val, data.text).clone().wrap('<div/>').parent().html();
+			//remove other @user spans
+			that.elem.find('span[userid]').recursiveRemove();
+		}
+		else if(that.burgerMode == burger_shortcuts.plus){
+			str_elem_burgerSpan = burger_spanDate(data.val, null).clone().wrap('<div/>').parent().html();
+			//remove other +user spans
+			that.elem.find('span[find=dateWrapper]').recursiveRemove();
+		}
+		
+		var textLength = that.elem.text().length;
+		
+		//adjust for deleted spans
+		that.i_caretCurrent -= textLength - elem.text().length;
+
+		//dont touch any text inside child DOM (e.g. <span>)
+		var outerTextNode = that.elem.contents().filter(function(){ return this.nodeType == 3; });
+		//if there are spans in the middle, outerTextNode is divied up, so must loop
+		$.each(outerTextNode, function(key,str2){
+			var str = that.burgerMode + that.burgerWord;
+			if((str2.data).indexOf(str) != -1){
+			    $(outerTextNode[key]).replaceWith($(outerTextNode[key]).text().replace(str, str_elem_burgerSpan));
+			    return false;
+			}
+		});
+
+		burgerN.placeCaretAt(that.i_caretCurrent-(that.burgerMode+that.burgerWord).length, that.elem);
+
 	}
-	var cb_destroy = function(){
-		console.log('burger_keyboard cb_destroy');
+	that.dropdown_cb.cb_destroy = function(){
 		that.dropdownInst = null;
 		that.i_caretBegin = 0;
 		that.i_caretCurrent = 0;
-		that.burgerOn = false;
-
+		that.burgerMode = false;
+		that.burgerWord = null;
+		that.iscroll = null;
 	}
 
 	//adding linebreak happens on keypress, not on keyup
 	elem.on('keypress.burger_keyboard', function(event){
 		if((event.which || event.keyCode) == 13){ //if enter is pressed
-			if(param.shiftEnter && event.shiftKey){
+			if(param.shiftEnter && event.shiftKey){ //toto - param not defined
 				event.returnValue=false;
 				return;
 			}	
@@ -100,14 +136,58 @@ var burger_keyboard = function(elem, shortcutList    ){
 		  	latestChar = currentText[caretIndex - 1];
 	    }
 
-	    //for mobile, just open submenu on the shortcuts
-	    if(responsive.test("maxMobileL")){
-		    if(latestChar == burger_shortcuts.at){ /*open in_charge submenu*/}
-		    else if(latestChar == burger_shrotcuts.plus || latestChar == burger_shortcuts.plusAlt){ /*open calendar submenu*/ }
-	    	return;
-	    }
+	    //trigger burger
+	   	if(!that.dropdownInst 
+			&& (latestChar == burger_shortcuts.at 
+			|| latestChar == burger_shortcuts.plus 
+			|| latestChar == burger_shortcuts.Alt)){
+			
+			that.i_caretBegin = caretIndex;
 
-	    if(that.dropdownInst){
+			if(latestChar == burger_shortcuts.at){
+				that.burgerMode = burger_shortcuts.at;
+
+				//for mobile, just open submenu on the shortcuts
+	    		if(responsive.test("maxMobileL")){
+	    			var param = {};
+					//build contactsID from given list
+					param.contactsID = {};
+					$.each(that.burgerData.at, function(i, obj){
+						var checked = false;
+						if(obj.preSelect){ checked = true; }
+						if(obj.val){
+							param.contactsID[obj.val] = { checked: checked };
+						}
+					});
+					
+					param.selectOne = true;
+					param.alwaysMe = false;
+					param.cb_create = that.dropdown_cb.cb_create;
+					param.cb_select = that.dropdown_cb.cb_select;
+					param.cb_destroy = that.dropdown_cb.cb_destroy;
+					submenu_Build('burger_clickHandler_inCharge', true, null, param);
+	    		}
+	    		else{//for desktop
+	    			that.dropdownInst = new burger_dropdown('toto', that.burgerData.at, [coord.x, coord.y], that.lineHeight, that.dropdown_cb.cb_create, that.dropdown_cb.cb_select, that.dropdown_cb.cb_destroy, that.elem);
+	    		}			
+			}
+			else if(latestChar == burger_shortcuts.plus || latestChar == burger_shortcuts.plusAlt){ 
+				that.burgerMode = burger_shortcuts.plus;
+
+				//for mobile, just open submenu on the shortcuts
+	    		if(responsive.test("maxMobileL")){
+	    			var param = {};
+					param.cb_create = that.dropdown_cb.cb_create;
+					param.cb_select = that.dropdown_cb.cb_select;
+					param.cb_destroy = that.dropdown_cb.cb_destroy;
+					submenu_Build('burger_clickHandler_calendar', true, null, param);
+	    		}
+	    		else{//for desktop
+	    			that.dropdownInst = new burger_dropdown('toto', burger_list.dates(that.burgerWord), [coord.x, coord.y], that.lineHeight, that.dropdown_cb.cb_create, that.dropdown_cb.cb_select, that.dropdown_cb.cb_destroy, that.elem); 
+	    		}
+			}
+		}
+		else if(that.dropdownInst){
 		    /*For Chinese only, when inputting pinyin:
 		      if waiting for combined character (229) but latestChar is not Chinese, return and act on next keyup*/
 		    if(latestChar && which == 229 && !latestChar.match(/[\u4E00-\u9FA5]/)){ 
@@ -132,34 +212,23 @@ var burger_keyboard = function(elem, shortcutList    ){
 				return;
 			}
 
-
-			var word = elem.text().substring(that.i_caretBegin, caretIndex);
-			if(that.burgerOn == burger_shortcuts.at){
-				var list_search = burger_search.users(that.list, word);
+			//update existing burger dropdown
+			that.burgerWord = elem.text().substring(that.i_caretBegin, caretIndex);
+			if(that.burgerMode == burger_shortcuts.at){
+				var list_search = burger_search.users(that.burgerData.at, that.burgerWord);
 				that.dropdownInst.build_elem_data(list_search);
 			}
+			else if(that.burgerMode == burger_shortcuts.plus){
+				console.log(burger_list.dates(that.burgerWord));
+				that.dropdownInst.build_elem_data(burger_list.dates(that.burgerWord));
+			}
 
 		}
-		else if(!that.dropdownInst 
-			&& (latestChar == burger_shortcuts.at 
-			 || latestChar == burger_shortcuts.plus 
-			 || latestChar == burger_shortcuts.Alt)){
-			that.burgerOn = latestChar;
-			that.i_caretBegin = caretIndex;
-
-			if(latestChar == burger_shortcuts.at){
-				that.dropdownInst = new burger_dropdown('toto', that.list, [coord.x, coord.y], that.lineHeight, cb_create, cb_select, cb_destroy, that.elem); 
-			}
-			else if(latestChar == burger_shortcuts.plus || latestChar == burger_shortcuts.plusAlt){ 
-
-			}
-		}
-
-
-	});
+	});//end of keyup
 }
 burger_keyboard.prototype.destroy = function(){
 	var that = this;
+	that.elem.off('.burger_keyboard');
 	if(that.dropdownInst && typeof that.dropdownInst.destroy == 'function'){ that.dropdownInst.destroy(); }
 	else{
 		$.each(that.dropdownInst, function(type, inst){
@@ -730,6 +799,177 @@ burger_list.projects = function(lincko_type, lincko_id){
 
 	return latest_projects;
 }
+
+burger_list.dates = function(substr){
+	var that = this;
+	if(!substr){ var substr = ''; }
+	var dateList = [];
+
+	//for chinese, convert chinese character and pinyin to numbers
+	if(app_language_short == 'zh-chs'){
+		substr = burgerN.ChineseNumberConverter(substr);
+	}
+
+
+	var optionsMonths = burgerN.monthsArray;
+	var optionsTT = [burgerN.todayStr, burgerN.tomorrowStr];
+	
+	var substr_char = substr.replace(/\d/g,'').toLowerCase();
+	var substr_num = substr.replace(/\D/g,'');
+	
+	//group 1 languages or to display today,tomorrow
+	if(app_language_group == 1 || !substr_num){
+		var optionsFinal = [];
+
+		//if only letters, then TT + months
+		if(!substr_num){
+			optionsFinal = optionsTT.concat(optionsMonths);
+		}
+		else if(substr_num < 32){// && (!substr_char.length || !$.isNumeric(substr.slice(-1)))){
+		//if numbers are within range and either no char or last letter is char
+			optionsFinal = optionsMonths;
+		}
+
+		$.each(optionsFinal, function(i, fullStr){
+			var monthIndex = null;
+			var pinyin = '';
+			if(app_language_short == 'zh-chs'){
+				pinyin = Pinyin.GetQP(fullStr);
+				fullStr = burgerN.ChineseNumberConverter(fullStr);
+				monthIndex = parseInt(fullStr,10);
+				if($.isNumeric(monthIndex)){ monthIndex -= 1; }
+			}
+
+			if((fullStr.toLowerCase()).indexOf(substr_char) != -1 || pinyin.indexOf(substr_char) != -1){
+				//months only selections, and the number exceeds the corresponding month's max days
+				if(optionsFinal.length == 12 && substr_num){
+					if(substr_num > burgerN.monthsArrayObj[i].maxDays){
+						return;
+					}
+				}
+
+				var optionObj = {};
+				if(optionsTT.indexOf(fullStr) != -1){
+					if(i == 0){//today
+						optionObj.val = new wrapper_date().getEndofDay(); //end of day today
+					}
+					else if(i == 1){//tomorrow
+						optionObj.val = new wrapper_date().getEndofDay() + 86400; //end of day tomorrow
+					}
+				}
+				else{
+					if(!monthIndex){
+						monthIndex = optionsMonths.indexOf(fullStr);
+					}
+					if(monthIndex != -1 && monthIndex < 12){
+						optionObj.val = burgerN.monthsArrayObj[monthIndex].getDuedateTimestamp(substr_num);
+					}
+				}
+
+				if(substr_num.length){
+					optionObj.text = substr.replace(substr_char,fullStr);
+				}
+				else{
+					optionObj.text = fullStr;
+				}
+				
+				dateList.push(optionObj);
+			}
+		});
+	}//end of app_language_group == 1
+	else if(app_language_group == 2){
+		var	i_symMonth = -1;
+		var i_symDay = -1;
+		var num_Month = '';
+		var num_Day = '';
+		var num_array = '';
+	
+		//alternative for pinyin
+		if(app_language_short == 'zh-chs'){
+			i_symMonth = substr.indexOf('yue');
+			i_symDay = substr.indexOf('ri');
+			if(i_symDay==-1){
+				i_symDay = substr.indexOf('hao');
+			}
+			if(i_symDay==-1){
+				i_symDay = substr.indexOf('号');
+			}
+
+		}
+
+		if(i_symMonth==-1){
+			i_symMonth = substr.indexOf(app_language_month);
+		}
+		if(i_symDay==-1){
+			i_symDay = substr.indexOf(app_language_day);
+		}
+		
+		num_array = substr.match(/(\d+)/g);
+		$.each(num_array, function(i,val){
+			//if no month or day is given, return
+			if(i_symMonth == i_symDay){ return; }
+			if(i == 0){
+				if( (i_symMonth!=-1 && i_symDay==-1) || (i_symMonth!=-1 && i_symMonth < i_symDay) ){
+					num_Month = val;
+				}
+				else{
+					num_Day = val;
+				}
+			}
+			else if(i == 1){ 
+				if(!num_Month.length){
+					num_Month = val;
+				}
+				else{
+					num_Day = val;
+				}
+				return false; 
+			}
+		});
+
+		var currentMonth_i = new Date().getMonth();
+
+		$.each(optionsMonths, function(i,fullMonth){
+
+			//just number given, with no month or day specified
+			//2 results, matching month or matching day with current month
+			if(i_symMonth == i_symDay && num_array.length == 1){
+				if(currentMonth_i == i){ //if today's month matches the given number
+					num_Month = '';
+					num_Day = num_array[0];
+				}
+				else if(num_array[0]-1 == i){ //if given number matches the month
+					num_Month = (i+1).toString();
+					num_Day = '';//Day will be undefined, which means end of the month
+				}
+				else{
+					return;
+				}
+			}
+
+			//return if month is specified and not matched
+			if(num_Month.length && i != num_Month-1){ return; }
+			//if month is not specified, date is specified, only show the current month
+			if(!num_Month.length && currentMonth_i != i && num_Day.length ){ return; }
+			
+			var displayStr = '';
+			if(num_Month.length){displayStr += num_Month + app_language_month;}
+			if(num_Day.length){ displayStr += num_Day+app_language_day; }
+
+			var optionObj = {
+				text: displayStr,
+				val: burgerN.monthsArrayObj[i].getDuedateTimestamp(num_Day),
+			};
+
+			dateList.push(optionObj);
+		});
+
+	}//end of app_language_group == 2
+
+	return dateList;
+}
+
+
 burger_list.spaces = function(){
 
 }
@@ -867,7 +1107,7 @@ burger_dropdown.prototype.build_elem = function(){
 
 
     that.focus_elem.on('blur.burger_dropdown', function(){
-    	that.hide();
+    	//that.hide();
     });
 
     elem_dropdown.find('.burger_option').hover(function(){ //hoverin
@@ -923,7 +1163,7 @@ burger_dropdown.prototype.build_elem = function(){
 
 	//if dropdown needs to be at the top
 	var window_outerHeight = $(window).outerHeight();
-	if( window_outerHeight <= that.coord.top + elem_dropdown.outerHeight() ){
+	if( window_outerHeight <= that.coord.top + that.lineHeight + elem_dropdown.outerHeight() ){
 		var bottom = window_outerHeight - that.coord.top;
 		if(that.position instanceof $){
 			bottom += that.position.outerHeight();
@@ -945,16 +1185,19 @@ burger_dropdown.prototype.build_elem_data = function(data){
 
 	if(that.elem){ var elem_dropdown = that.elem; elem_dropdown.find('.burger_option').recursiveRemove(0); }
 	else{ var elem_dropdown = $('#-burger_dropdown').clone().prop('id',''); }
-	
 
-	var elem_dropdown = $('#-burger_dropdown').clone().prop('id','');
+	var elem_dropdown_inner = elem_dropdown.find('[find=wrapper]');
+	if(elem_dropdown_inner.children('.iscroll_sub_div').length){
+		elem_dropdown_inner = elem_dropdown_inner.children('.iscroll_sub_div');
+	}
+
 	var elem_option = $('#-burger_option').clone().prop('id','');//.addClass('burger_option_users');
 
 	//if there is no contacts to display
 	if(data.length < 1){
 		elem_option.find('[find=text]').html(Lincko.Translation.get('app', 2205, 'html'));/*no match*/
 		elem_option.find('[find=image]').addClass('display_none');
-		elem_dropdown.find('[find=wrapper]').append(elem_option);
+		elem_dropdown_inner.append(elem_option);
 		return elem_dropdown;
 	}
 
@@ -1007,13 +1250,24 @@ burger_dropdown.prototype.build_elem_data = function(data){
 			});
 		}
 
-		elem_dropdown.children('[find=wrapper]').append(elem_option_clone);
+		elem_dropdown_inner.append(elem_option_clone);
 	});
 
 	that.count_total = data.length;
 
+	elem_dropdown.css('width', that.width);
+
 	if(data.length > that.count_show){
-		elem_dropdown.css({'height': that.optionH*that.count_show, 'width': that.width});
+		elem_dropdown.css('height', that.optionH*that.count_show);
+	}
+	else{
+		elem_dropdown.css('height', 'auto');
+	}
+
+	if(that.iscroll){
+		that.iscroll.refresh();
+	}
+	else{
 		elem_dropdown.find('[find=wrapper]').addClass('overthrow');
 	}
 
