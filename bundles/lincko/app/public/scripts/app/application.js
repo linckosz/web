@@ -217,6 +217,9 @@ var app_application_lincko = {
 						}
 					}
 				}
+				if(Elem.length <= 0){
+					delete this._elements[Elem_id];
+				}
 			}
 
 			Elem = null;

@@ -21,7 +21,7 @@ class ControllerWechat extends Controller {
 		$app = $this->app;
 		$response = $this->get;
 		$access_token = false;
-		$openid = false;
+		$unionid = false;
 
 		if($response && isset($response['code'])){
 			$param = array(
@@ -40,9 +40,10 @@ class ControllerWechat extends Controller {
 		}
 
 		if($response && $result = json_decode($response)){
-			if(isset($result->access_token) && isset($result->openid)){
+			if(isset($result->access_token) && isset($result->openid) && isset($result->unionid)){
 				$access_token = $result->access_token;
 				$openid = $result->openid;
+				$unionid = $result->unionid;
 				$param = array(
 					'access_token' => $access_token,
 					'openid' => $openid,
@@ -59,10 +60,10 @@ class ControllerWechat extends Controller {
 			$response = false;
 		}
 
-		if($response && $access_token && $openid && $result = json_decode($response)){
+		if($response && $access_token && $unionid && $result = json_decode($response)){
 			$data = new \stdClass;
 			$data->party = 'wechat';
-			$data->party_id = $openid;
+			$data->party_id = $unionid;
 			$data->data = $result;
 			$controller = new ControllerWrapper($data, 'post', false);
 			if($response = $controller->wrap_multi('integration/connect')){

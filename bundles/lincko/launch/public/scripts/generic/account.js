@@ -522,4 +522,7 @@ JSfiles.finish(function(){
 	if(isMobileApp(true)){
 		$('#account_wrapper, .account_trans, .account_tab, #account_tab_lincko, .account_tab_joinus, .account_tab_signin, .account_form').addClass('account_wrapper_mobile_app');
 	}
+	if(navigator.userAgent.match(/MicroMessenger/i)){
+		$('#account_integration_wechat').addClass('display_none');
+	}
 });
