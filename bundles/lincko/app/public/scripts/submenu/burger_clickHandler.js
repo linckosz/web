@@ -7,8 +7,12 @@ submenu_list['burger_clickHandler_inCharge'] = {
 		},
 		"now": function(Elem, subm){
 			//remove keyboard for mobile
-			if(subm.param.elem_toBlur){
+			if(subm.param.elem_toBlur instanceof $){
 				subm.param.elem_toBlur.blur();
+			}
+
+			if(typeof subm.param.fn_onLaunch == 'function'){
+				subm.param.fn_onLaunch();
 			}
 		},
 	},
@@ -77,8 +81,12 @@ submenu_list['burger_clickHandler_calendar'] = {
 		},
 		"now": function(Elem, subm){
 			//remove keyboard for mobile
-			if(subm.param.elem_toBlur){
+			if(subm.param.elem_toBlur instanceof $){
 				subm.param.elem_toBlur.blur();
+			}
+
+			if(typeof subm.param.fn_onLaunch == 'function'){
+				subm.param.fn_onLaunch();
 			}
 		},
 	},

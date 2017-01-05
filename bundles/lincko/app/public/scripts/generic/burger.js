@@ -194,7 +194,16 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter
 							param.contactsID[obj.val] = { checked: checked };
 						}
 					});
-					param.elem_toBlur = that.elem;
+
+					//for mobile need blur to clear the keyboard, but maintain the contenteditable to continue typing after submenu close
+					//for skylist title edit, contenteditable is turned false on blur, so must revert
+					param.fn_onLaunch = function(){
+						var hasAttr_contenteditable = that.elem.attr('contenteditable');
+						that.elem.blur();
+						if(hasAttr_contenteditable){
+							that.elem.attr('contenteditable', hasAttr_contenteditable);
+						}						
+					}
 					param.elem_focusOnCancel = that.elem;
 					param.selectOne = true;
 					param.alwaysMe = false;
@@ -213,7 +222,15 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter
 				//for mobile, just open submenu on the shortcuts
 	    		if(responsive.test("maxMobileL") && !submenu_get('burger_clickHandler_calendar')){
 	    			var param = {};
-	    			param.elem_toBlur = that.elem;
+	    			//for mobile need blur to clear the keyboard, but maintain the contenteditable to continue typing after submenu close
+					//for skylist title edit, contenteditable is turned false on blur, so must revert
+					param.fn_onLaunch = function(){ 
+						var hasAttr_contenteditable = that.elem.attr('contenteditable');
+						that.elem.blur();
+						if(hasAttr_contenteditable){
+							that.elem.attr('contenteditable', hasAttr_contenteditable);
+						}						
+					}
 	    			param.elem_focusOnCancel = that.elem;
 					param.cb_create = that.dropdown_cb.cb_create;
 					param.cb_select = that.dropdown_cb.cb_select;
