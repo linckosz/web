@@ -13,14 +13,12 @@ var burger_shortcuts = {
 
 
 //this should be compatible with inputter (tasks) as well as inputter (chats) and future usage cases
-var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter){
+var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter, project_id){
 	var that = this;
 	that.elem = elem;
 
-	if(lineHeight){ that.lineHeight = lineHeight; }
-	else{
-		that.lineHeight = 30;
-	}
+	if(!lineHeight){ var lineHeight = 30; }
+	that.lineHeight = lineHeight;
 	 /* possible alternative to hardcode offset
     //http://stackoverflow.com/questions/1185151/how-to-determine-a-line-height-using-javascript-jquery
     //1.5 of font-size is typical for lineheight
@@ -28,19 +26,19 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter
 	var lineHeight = Math.floor(parseInt(fontSize.replace('px','')) * 1.5);
 	*/
 
-	if($.type(shortcuts) == 'object'){ that.shortcuts = shortcuts; }
-	else{
-		that.shortcuts = {
-			at: true,
-			plus: true,
-		}
+	if($.type(shortcuts) != 'object'){
+		var shortcuts = { at: true, plus: true, }
 	}
+	that.shortcuts = shortcuts;
 
 	that.burgerData = {};
-	if(burgerData && typeof burgerData.at == 'object'){ that.burgerData.at = burgerData.at; }
+	if(burgerData && typeof burgerData == 'object' && typeof burgerData.at == 'object'){ that.burgerData.at = burgerData.at; }
 	else{
 		that.burgerData.at = burger_list.in_charge('projects', app_content_menu.projects_id);
 	}
+
+	if(!project_id){ var project_id = null; }
+	that.project_id = project_id;
 
 
 	//variables to clear on burger destroy
@@ -194,6 +192,8 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter
 							param.contactsID[obj.val] = { checked: checked };
 						}
 					});
+
+					if(that.project_id){ param.project_id = that.project_id; }
 
 					//for mobile need blur to clear the keyboard, but maintain the contenteditable to continue typing after submenu close
 					//for skylist title edit, contenteditable is turned false on blur, so must revert
@@ -767,7 +767,7 @@ burger_list.in_charge = function(lincko_type, lincko_id){
 		text: Lincko.Translation.get('app', 31, 'html'), //Add Teammates
 		onClick: function(){
 			var param = {
-				pid2: project_id,
+				pid: project_id,
 				invite_access: {
 					projects: project_id,
 					//tasks: task_id, //null if not available (i.e. brand new task) toto - not ready yet

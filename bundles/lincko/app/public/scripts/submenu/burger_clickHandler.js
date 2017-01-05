@@ -25,6 +25,10 @@ submenu_list['burger_clickHandler_inCharge'] = {
 			if(subm.param && subm.param.elem_focusOnCancel){
 				burgerN.placeCaretAtEnd(subm.param.elem_focusOnCancel);
 			}
+
+			if(subm.param && typeof subm.param.cb_destroy == 'function'){
+				subm.param.cb_destroy();
+			}
 		},
 	},
 	"right_button": {
@@ -59,6 +63,10 @@ submenu_list['burger_clickHandler_inCharge'] = {
 
 			if(subm.param && typeof subm.param.cb_select == 'function'){
 				subm.param.cb_select(data_select);
+			}
+
+			if(subm.param && typeof subm.param.cb_destroy == 'function'){
+				subm.param.cb_destroy();
 			}
 		},
 		hide: true,
@@ -103,6 +111,9 @@ submenu_list['burger_clickHandler_calendar'] = {
 			if(subm.param && subm.param.elem_focusOnCancel){
 				burgerN.placeCaretAtEnd(subm.param.elem_focusOnCancel);
 			}
+			if(subm.param && typeof subm.param.cb_destroy == 'function'){
+				subm.param.cb_destroy();
+			}
 		},
 	},
 	"right_button": {
@@ -114,6 +125,9 @@ submenu_list['burger_clickHandler_calendar'] = {
 			var timestamp = subm.param.elem_inputTarget.val()/1000;
 			if(subm.param && typeof subm.param.cb_select == 'function'){
 				subm.param.cb_select(timestamp);
+			}
+			if(subm.param && typeof subm.param.cb_destroy == 'function'){
+				subm.param.cb_destroy();
 			}
 		},
 	},
