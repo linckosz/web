@@ -5,6 +5,12 @@ submenu_list['burger_clickHandler_inCharge'] = {
 		"class": function(Elem) {
 				return 'submenu_wrapper_taskdetail_tasks';
 		},
+		"now": function(Elem, subm){
+			//remove keyboard for mobile
+			if(subm.param.elem_toBlur){
+				subm.param.elem_toBlur.blur();
+			}
+		},
 	},
 	"left_button": {
 		"style": "title_left_button",

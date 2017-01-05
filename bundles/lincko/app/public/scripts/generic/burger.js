@@ -184,6 +184,27 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter
 
 				//for mobile, just open submenu on the shortcuts
 	    		if(responsive.test("maxMobileL")){
+
+	    // 			if(!submenu_get('burger_contacts_typeTask')){
+					// 	var param_submenu = {};
+					// 	param_submenu.elem_typeTask = that.elem;
+					// 	param_submenu.selectOne = true;
+					// 	//param_submenu.item_obj = item;
+					// 	param_submenu.alwaysMe = false;
+					// 	param_submenu.userClick_fn = that.dropdown_cb.cb_select;
+
+					// 	//build contactsID from given list
+					// 	param_submenu.contactsID = {};
+					// 	$.each(that.burgerData.at, function(i, obj){
+					// 		var checked = false;
+					// 		if(obj.preSelect){ checked = true; }
+					// 		if(obj.val){
+					// 			param_submenu.contactsID[obj.val] = { checked: checked };
+					// 		}
+					// 	});
+					// 	submenu_Build('burger_contacts_typeTask', true, null, param_submenu);
+					// }
+
 	    			var param = {};
 					//build contactsID from given list
 					param.contactsID = {};
@@ -194,7 +215,7 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter
 							param.contactsID[obj.val] = { checked: checked };
 						}
 					});
-					
+					param.elem_toBlur = that.elem;
 					param.selectOne = true;
 					param.alwaysMe = false;
 					param.cb_create = that.dropdown_cb.cb_create;
