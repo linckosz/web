@@ -16,14 +16,14 @@ class ControllerWechat extends Controller {
 	public function __construct(){
 		$app = $this->app = \Slim\Slim::getInstance();
 		$this->get = $app->request->get();
-		self::$appid = $app->lincko->integration->wechat['appid'];
-		self::$secret = $app->lincko->integration->wechat['secretapp'];
+		$this->appid = $app->lincko->integration->wechat['appid'];
+		$this->secret = $app->lincko->integration->wechat['secretapp'];
 		return true;
 	}
 
 	public function public_get(){
-		self::$appid = $app->lincko->integration->wechat['public_appid'];
-		self::$secret = $app->lincko->integration->wechat['public_secretapp'];
+		$this->appid = $app->lincko->integration->wechat['public_appid'];
+		$this->secret = $app->lincko->integration->wechat['public_secretapp'];
 		$this->token_get();
 	}
 
@@ -35,8 +35,8 @@ class ControllerWechat extends Controller {
 
 		if($response && isset($response['code'])){
 			$param = array(
-				'appid' => $app->lincko->integration->wechat['appid'],
-				'secret' => $app->lincko->integration->wechat['secretapp'],
+				'appid' => $this->appid ,
+				'secret' => $this->secret,
 				'code' => $response['code'],
 			);
 			$response = $this->curl_get('authorization_code', $param);
