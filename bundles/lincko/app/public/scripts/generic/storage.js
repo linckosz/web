@@ -978,7 +978,7 @@ Lincko.storage.search = function(type, param, category){
 	array - array of items to conduct search
 	results - will return array not object
 	attr - optional: (str or array) specific attribute to search
-	pinyin - optional: default is false. whether to apply pinyin match
+	pinyin - optional: true will do pinyin comparison for all, can also put array e.g. ['+title', '-comment']
 */
 Lincko.storage.searchArray = function(type, param, array, attr, pinyin){
 	var results = [];
@@ -986,7 +986,7 @@ Lincko.storage.searchArray = function(type, param, array, attr, pinyin){
 	var save_result = false;
 	type = type.toLowerCase();
 	if(typeof param === 'string'){ param = param.toLowerCase(); }
-	if(typeof pinyin != 'boolean'){ var pinyin = false; }
+	if(!pinyin){ var pinyin = false; }
 
 	//List all items in a category that contain a word
 	find['word'] = function(item){
@@ -1004,9 +1004,11 @@ Lincko.storage.searchArray = function(type, param, array, attr, pinyin){
 				if(item[prop].toLowerCase().indexOf(param)!==-1){
 					save_result = true;
 				}
-				else{
-					try{
-						if((Pinyin.GetQP(item[prop])).indexOf(Pinyin.GetQP(param)) !== -1){ //convert hanzi into pinyin and match
+				else if(pinyin && (typeof pinyin == 'boolean' || $.inArray(prop, pinyin) > -1)){
+					try{ 
+						var pinyin_prop = Pinyin.GetQP(item[prop]);
+						var pinyin_param = Pinyin.GetQP(param);
+						if(pinyin_prop.indexOf(pinyin_param) !== -1){ //convert hanzi into pinyin and match
 							save_result = true;
 						}
 					}

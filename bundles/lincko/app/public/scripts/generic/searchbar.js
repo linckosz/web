@@ -99,7 +99,7 @@ var searchbar = {
 				userid_array = searchbar.searchByUsername(word, Object.keys(item._perm));
 
 				//+title (tasks) -comment and +name (files) search
-				if(!word.length || (Lincko.storage.searchArray('word', word, [item], ['+title', '+name', '-comment'], true).length > 0 && !burgerOnly) ){
+				if(!word.length || (Lincko.storage.searchArray('word', word, [item], ['+title', '+name', '-comment'], ['+title', '+name']/*pinyin search*/).length > 0 && !burgerOnly) ){
 					push = true;
 					break;
 				}
@@ -148,7 +148,7 @@ var searchbar = {
 				var user = Lincko.storage.get('users', id);
 				if(user){ user_list.push(user); }
 			});
-			user_list = Lincko.storage.searchArray('word', username, user_list, true); //search the object to match the username
+			user_list = Lincko.storage.searchArray('word', username, user_list, true, true/*pinyin*/); //search the object to match the username
 			if(user_list.length){
 				$.each(user_list, function(i, item){
 					userid_array.push(item._id);
