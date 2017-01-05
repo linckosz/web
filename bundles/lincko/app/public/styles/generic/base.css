@@ -2,6 +2,10 @@
  * List of default Icons and Menu buttons
  */
 
+.inline-block{
+	display: inline-block;
+}
+
 .base_button {
 	height: 32px;
 	line-height: 32px;
