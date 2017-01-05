@@ -223,6 +223,7 @@ skylist.prototype.construct = function(){
 		var IScroll = myIScrollList['skylist_'+that.md5id];
 
 		IScroll.on('scrollStart', function(){
+			that.is_scrolling = true;
 			burger_global_dropdown.hide_all();
 		});//scrollStart
 
@@ -231,7 +232,7 @@ skylist.prototype.construct = function(){
 		});
 
 		IScroll.on('scrollEnd', function(){
-
+			that.is_scrolling = false;
 		});//scrollEnd
 	}
 
@@ -1469,6 +1470,7 @@ skylist.prototype.addTask = function(item){
 				that.editing_target = $(this);
 				clearTimeout(that.editing_timeout);
 				that.editing_timeout = setTimeout(function(){
+					if(that.is_scrolling){return;}
 					that.editing_target.attr('contenteditable',contenteditable);
 					that.editing_target.focus();
 				},1000);
