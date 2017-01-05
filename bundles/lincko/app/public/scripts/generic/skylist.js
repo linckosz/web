@@ -1954,6 +1954,7 @@ skylist.draw_noteCard = function(item){
 	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').recursiveEmpty(0);
 	var updated_by;
 	var updated_at;
+	var created_by;
 
 	/*
 	title
@@ -1988,10 +1989,20 @@ skylist.draw_noteCard = function(item){
 
 	Elem.find('[find=card_leftbox]').append(elem_leftbox);
 
-	/*updated_by*/
-	updated_by = item['updated_by'];
-	updated_by = Lincko.storage.get("users", updated_by,"username");
-	Elem.find('[find=name]').html(updated_by);
+
+
+	/*created_by*/
+	created_by = item['created_by'];
+	created_by = Lincko.storage.get("users", created_by,"username");
+	Elem.find('[find=name]').html(created_by);
+
+	/*
+	updated_by (quickInfo)
+	*/
+	Elem.find('[find=quickInfo1]').html(Lincko.Translation.get('app', 53, 'html')/*Updated*/+':&nbsp;');
+	var updated_by = Lincko.storage.get("users", item['updated_by'] ,"username");
+	Elem.find('[find=quickInfo2]').html(updated_by);
+
 
 	/*
 	comments
