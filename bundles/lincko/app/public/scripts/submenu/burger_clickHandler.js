@@ -17,6 +17,11 @@ submenu_list['burger_clickHandler_inCharge'] = {
 		"title": Lincko.Translation.get('app', 7, 'html'), //'Cancel',
 		'hide': true,
 		"class": "base_pointer",
+		"action": function(Elem, subm){
+			if(subm.param && subm.param.elem_focusOnCancel){
+				burgerN.placeCaretAtEnd(subm.param.elem_focusOnCancel);
+			}
+		},
 	},
 	"right_button": {
 		"style": "title_right_button",
@@ -70,6 +75,12 @@ submenu_list['burger_clickHandler_calendar'] = {
 			var className = 'submenu_wrapper_taskdetail_'+'tasks';
 			return className;
 		},
+		"now": function(Elem, subm){
+			//remove keyboard for mobile
+			if(subm.param.elem_toBlur){
+				subm.param.elem_toBlur.blur();
+			}
+		},
 	},
 	"calendar":{
 		"style": "calendar",
@@ -80,6 +91,11 @@ submenu_list['burger_clickHandler_calendar'] = {
 		"title": Lincko.Translation.get('app', 7, 'html'), //'Cancel',
 		'hide': true,
 		"class": "base_pointer",
+		"action": function(Elem, subm){
+			if(subm.param && subm.param.elem_focusOnCancel){
+				burgerN.placeCaretAtEnd(subm.param.elem_focusOnCancel);
+			}
+		},
 	},
 	"right_button": {
 		"style": "title_right_button",

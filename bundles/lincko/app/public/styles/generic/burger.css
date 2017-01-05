@@ -16,7 +16,7 @@
 	white-space: nowrap;
 }
 .burger_tag:after {
-	content:' ';
+	content: ' ';
 }
 .burger_tag[find=name]{
 	color: #3677a7;

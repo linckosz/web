@@ -59,12 +59,12 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter
 		if(typeof data != 'object'){ var data = {val: data}; }
 		var str_elem_burgerSpan = null;
 		if(that.burgerMode == burger_shortcuts.at){
-			str_elem_burgerSpan = burger_spanUser(data.val, data.text).clone().wrap('<div/>').parent().html();
+			str_elem_burgerSpan = burger_spanUser(data.val, data.text).clone().wrap('<div/>').parent().html()+'&nbsp;';
 			//remove other @user spans
 			that.elem.find('[find=name].burger_tag').recursiveRemove();
 		}
 		else if(that.burgerMode == burger_shortcuts.plus){
-			str_elem_burgerSpan = burger_spanDate(data.val, null).clone().wrap('<div/>').parent().html();
+			str_elem_burgerSpan = burger_spanDate(data.val, null).clone().wrap('<div/>').parent().html()+'&nbsp;';
 			//remove other +user spans
 			that.elem.find('[find=dateWrapper].burger_tag').recursiveRemove();
 		}
@@ -183,28 +183,7 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter
 				that.burgerMode = burger_shortcuts.at;
 
 				//for mobile, just open submenu on the shortcuts
-	    		if(responsive.test("maxMobileL")){
-
-	    // 			if(!submenu_get('burger_contacts_typeTask')){
-					// 	var param_submenu = {};
-					// 	param_submenu.elem_typeTask = that.elem;
-					// 	param_submenu.selectOne = true;
-					// 	//param_submenu.item_obj = item;
-					// 	param_submenu.alwaysMe = false;
-					// 	param_submenu.userClick_fn = that.dropdown_cb.cb_select;
-
-					// 	//build contactsID from given list
-					// 	param_submenu.contactsID = {};
-					// 	$.each(that.burgerData.at, function(i, obj){
-					// 		var checked = false;
-					// 		if(obj.preSelect){ checked = true; }
-					// 		if(obj.val){
-					// 			param_submenu.contactsID[obj.val] = { checked: checked };
-					// 		}
-					// 	});
-					// 	submenu_Build('burger_contacts_typeTask', true, null, param_submenu);
-					// }
-
+	    		if(responsive.test("maxMobileL") && !submenu_get('burger_clickHandler_inCharge')){
 	    			var param = {};
 					//build contactsID from given list
 					param.contactsID = {};
@@ -216,6 +195,7 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter
 						}
 					});
 					param.elem_toBlur = that.elem;
+					param.elem_focusOnCancel = that.elem;
 					param.selectOne = true;
 					param.alwaysMe = false;
 					param.cb_create = that.dropdown_cb.cb_create;
@@ -231,8 +211,10 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter
 				that.burgerMode = burger_shortcuts.plus;
 
 				//for mobile, just open submenu on the shortcuts
-	    		if(responsive.test("maxMobileL")){
+	    		if(responsive.test("maxMobileL") && !submenu_get('burger_clickHandler_calendar')){
 	    			var param = {};
+	    			param.elem_toBlur = that.elem;
+	    			param.elem_focusOnCancel = that.elem;
 					param.cb_create = that.dropdown_cb.cb_create;
 					param.cb_select = that.dropdown_cb.cb_select;
 					param.cb_destroy = that.dropdown_cb.cb_destroy;
