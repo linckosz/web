@@ -310,10 +310,11 @@ skylist.prototype.subConstruct_default = function(){
 		that.list.prop('id'),
 		'projects_'+app_content_menu.projects_id,
 		function(){
+			if(typeof this.updated['projects_'+app_content_menu.projects_id] == 'object' && !this.updated['projects_'+app_content_menu.projects_id]._children){ return; }
+
 			var scollToBottom = false;
 			var param = {};
 			param.new = true;
-			var newItems = Lincko.storage.list(that.list_type, null, param, 'projects', app_content_menu.projects_id, true);
 
 			var itemlist_new = that.list_filter();
 
@@ -672,7 +673,6 @@ skylist.prototype.list_filter = function(filter_type){
 		items_filtered = that.filter_by_sort_alt( items_filtered, that.Lincko_itemsList_filter.sort_alt );
 		items_filtered = that.filter_by_hide_completed( items_filtered, that.Lincko_itemsList_filter.hide_completed );
 	}
-
 
 	if(filter_type != 'search'){ //dont update settings object if it is just search
 		that.filter_updateSettings();
@@ -3343,6 +3343,18 @@ skylist.prototype.filter_updateSettings = function(sendAction){
 	var settings_new = Lincko.storage.getSettings();
 	//offline settings
 	//var settings_old = Lincko.storage.settings;
+
+
+	//compare with current settings object to determine whether to update server with new settings
+	try{
+		var currentSettings = that.Lincko_itemsList_filter;
+		if(typeof currentSettings == 'object'){ currentSettings.search = ''; }
+		if( JSON.stringify(settings_new.skylist.filter[app_content_menu.projects_id][that.list_type]) == JSON.stringify(currentSettings)){
+			return false; //settings are already the same, no need to continue
+		}
+	}
+	catch(e){}
+
 
 	if($.type(settings_new) != 'object'){
 		settings_new = {};
