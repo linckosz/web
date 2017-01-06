@@ -286,7 +286,7 @@ Lincko.storage.getMissing = function(missing){
 
 //Function that update the localweb database
 /* PRIVATE METHOD */
-Lincko.storage.update = function(partial, info){ console.log('update'); console.log(partial);
+Lincko.storage.update = function(partial, info){
 	var item;
 	var item_old;
 	var item_new;

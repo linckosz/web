@@ -805,7 +805,7 @@ skylist.prototype.addCard = function(item){
 				that.list_type+'_'+item['_id'],
 				function(){
 					//use this.updated to check if need to update card visually
-					var noUpdate = false;
+					var noUpdate = true;
 					var noUpdateList = {
 						general: {
 							viewed_by: true,
@@ -816,11 +816,13 @@ skylist.prototype.addCard = function(item){
 						tasks: {
 							'-comment': true,
 						},
+						notes: {},
+						files: {},
 					}
 					if(typeof this.updated == 'object' && typeof this.updated[that.list_type+'_'+item['_id']] == 'object'){
 						$.each(this.updated[that.list_type+'_'+item['_id']], function(attr, obj){
-							if(noUpdateList.general[attr] || noUpdateList[that.list_type][attr]){ 
-								noUpdate = true; 
+							if(!noUpdateList.general[attr] && !noUpdateList[that.list_type][attr]){
+								noUpdate = false;
 								return false; 
 							}
 						});
