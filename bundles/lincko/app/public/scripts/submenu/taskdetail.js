@@ -732,7 +732,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			}
 		}
 		else{
-			elem_text_user.html(Lincko.storage.get("users", item['updated_by'],"username"));
+			elem_text_user.html(Lincko.storage.get("users", item['created_by'],"username"));
 		}
 		/*---END OF user-----*/
 
