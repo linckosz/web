@@ -144,11 +144,15 @@
 				<span find="quickInfo1" class="floatleft"></span>
 				<span find="quickInfo2" class="floatleft"></span>
 				<span find="quickInfo3" class="floatleft"></span>
-				<span find="name_icon" class="icon-SmallPersonaiconBlack"></span>
-				<input type="text" find='name_hidden' class="skylist_icon_text" readonly="readonly"/>
-				<span find='name' class="skylist_icon_text ellipsis"></span>
-				<span find="comments_icon" class="icon-Pencil"></span>
-				<span find='comments' class="skylist_icon_text">(<span find="commentCount"></span>)</span>
+				<div find="nameWrapper">
+					<span find="name_icon" class="icon-SmallPersonaiconBlack"></span>
+					<span find='name' class="skylist_icon_text ellipsis"></span>
+				</div>
+				{# <input type="text" find='name_hidden' class="skylist_icon_text" readonly="readonly"/> #}
+				<div find="commentsWrapper">
+					<span find="comments_icon" class="icon-Pencil"></span>
+					<span find='comments' class="skylist_icon_text">(<span find="commentCount"></span>)</span>
+				</div>
 			</td>
 		</table>
 	</div>

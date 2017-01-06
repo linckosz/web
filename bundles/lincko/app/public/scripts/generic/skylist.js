@@ -1600,7 +1600,12 @@ skylist.prototype.addTask = function(item){
 	//Elem.find('[find=name_hidden]').toggleClass('display_none');
 	Elem.find('[find=name]').html(in_charge);
 	if( !Lincko.storage.get("projects", app_content_menu.projects_id, 'personal_private') && !responsive.test("maxMobileL") ){
-		burgerN.assignTask(Elem.find('input[find=name_hidden]'), item);
+		//burgerN.assignTask(Elem.find('input[find=name_hidden]'), item);
+		var elem_nameWrapper = Elem.find('[find=nameWrapper]').click(function(event){
+			event.stopPropagation();
+		});
+		burger_attach_clickHandler.in_charge(elem_nameWrapper, item['_type'], item['_id'], null, true);
+
 	}
 	
 	
