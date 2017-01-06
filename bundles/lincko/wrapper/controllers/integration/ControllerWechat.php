@@ -22,6 +22,7 @@ class ControllerWechat extends Controller {
 	}
 
 	public function public_get(){
+		$app = $this->app;
 		$this->appid = $app->lincko->integration->wechat['public_appid'];
 		$this->secret = $app->lincko->integration->wechat['public_secretapp'];
 		$this->token_get();
@@ -50,12 +51,12 @@ class ControllerWechat extends Controller {
 		}
 
 		if($response && $result = json_decode($response)){
-			if(isset($result->access_token) && isset($result->openid)){
+			if(isset($result->access_token) && isset($result->openid) && isset($result->unionid)){
 				$access_token = $result->access_token;
-				$openid = $result->openid;
+				$unionid = $result->unionid;
 				$param = array(
 					'access_token' => $access_token,
-					'openid' => $openid,
+					'openid' => $result->openid,
 					'lang' => $app->trans->getClientLanguage(),
 				);
 				$response = $this->curl_get('snsapi_userinfo', $param);
@@ -69,10 +70,10 @@ class ControllerWechat extends Controller {
 			$response = false;
 		}
 
-		if($response && $access_token && $openid && $result = json_decode($response)){
+		if($response && $access_token && $unionid && $result = json_decode($response)){
 			$data = new \stdClass;
 			$data->party = 'wechat';
-			$data->party_id = $result->unionid;
+			$data->party_id = $unionid;
 			$data->data = $result;
 			$controller = new ControllerWrapper($data, 'post', false);
 			if($response = $controller->wrap_multi('integration/connect')){
