@@ -513,7 +513,7 @@ skylist.prototype.filter_by_people = function(items,filter){
 			if( that.list_type == "tasks" && item['_users'] && item['_users'][filter] && item['_users'][filter]['in_charge']){
 				items_filtered.push(item);
 			}
-			else if( that.list_type != "tasks" && 'updated_by' in item && item['updated_by'] && item['updated_by'] == filter ){
+			else if( that.list_type != "tasks" && 'created_by' in item && item['created_by'] && item['created_by'] == filter ){
 				items_filtered.push(item);
 			}
 		}
@@ -1990,7 +1990,6 @@ skylist.draw_noteCard = function(item){
 	Elem.find('[find=card_leftbox]').append(elem_leftbox);
 
 
-
 	/*created_by*/
 	created_by = item['created_by'];
 	created_by = Lincko.storage.get("users", created_by,"username");
@@ -2099,6 +2098,7 @@ skylist.draw_fileCard = function(item){
 	var Elem_rightOptions = Elem.find('[find=card_rightOptions]').recursiveEmpty(0);
 	var updated_by;
 	var updated_at;
+	var created_by;
 
 	/*
 	title
@@ -2134,11 +2134,11 @@ skylist.draw_fileCard = function(item){
 	Elem.find('[find=description]').html(elem_fileType);
 	Elem.find('[find=card_leftbox]').append(elem_leftbox);
 
-	/*updated_by*/
-	updated_by = item['updated_by'];
-	updated_by = Lincko.storage.get("users", updated_by,"username");
-	Elem.find('[find=name]').html(updated_by);
-	
+
+	/*created_by*/
+	created_by = item['created_by'];
+	created_by = Lincko.storage.get("users", created_by,"username");
+	Elem.find('[find=name]').html(created_by);
 
 	/*
 	comments

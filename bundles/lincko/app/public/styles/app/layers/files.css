@@ -27,6 +27,10 @@
 	height: initial;
 }
 
+.app_layers_files_fileslist .skylist_card_time {
+    color: #979797;
+}
+
 .app_layers_files_fileslist [find=card_leftbox] img{
 	vertical-align: middle;
 	max-width: 100%;
