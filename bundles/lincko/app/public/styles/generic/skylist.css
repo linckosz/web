@@ -392,6 +392,9 @@
 	font-size: 12px;
 	color: #475577;
 }
+.skylist_card_bottom .floatleft{
+	text-align: left;
+}
 .skylist_card_bottom [find=name_icon],
 .skylist_card_bottom [find=comments_icon] {
 	color: #53ADD2;

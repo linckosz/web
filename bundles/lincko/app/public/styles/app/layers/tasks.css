@@ -8,9 +8,20 @@
 .app_layers_tasks_tasklist .skylist_card [find=description] {
 	display: none;
 }
+
+.app_layers_tasks_tasklist .skylist_card_bottom [find=quickInfo3]{
+	max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+
 .app_layers_tasks_tasklist .skylist_card_progress.skylist_card_progress_hidden{
 	display: block;
 }
+
+
 
 /*
 ----hover----

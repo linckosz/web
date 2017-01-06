@@ -44,6 +44,12 @@
 .app_layers_notes_noteslist .skylist_card_time{
 	color: #979797;
 }
+
+.app_layers_notes_noteslist .skylist_card_bottom [find=quickInfo2]{
+	max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 /*
 ----hover----
 */
