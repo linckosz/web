@@ -245,3 +245,8 @@ var base_scanner = false;
 JSfiles.finish(function(){
 	w69b.qr.decoding.setWorkerUrl(w69b_qrcode_decodeworker);
 });
+
+base_removeLineBreaks = function(str){
+	if(typeof str != 'string'){ return false; }
+	return str.replace(/(\r\n|\n|\r)/gm,"");
+}

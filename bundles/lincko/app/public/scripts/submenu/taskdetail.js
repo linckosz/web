@@ -355,7 +355,6 @@ Submenu.prototype.Add_taskdetail = function() {
 		}		
 	}
 
-
 	/*---tasktitle---*/
 	elem = $('#-submenu_taskdetail_tasktitle').clone().prop('id','');
 	elem.find("[find=taskid]").html(taskid);
@@ -815,9 +814,7 @@ Submenu.prototype.Add_taskdetail = function() {
 				if(that.submenu_hide){ return; } //no need to update comment if this is after submenu_hide 
 				var old_comment = item['-comment'];
 				var new_comment = elem_description_text.html();
-				if( $('<div>').html(new_comment).text() == '' ){
-					new_comment = '';
-				}
+				if(new_comment == '<p><br></p>'){ return false; } //dont update if it is ckedditor default empty elem
 
 				if(old_comment != new_comment){
 					var param = {id: taskid};
@@ -1842,7 +1839,6 @@ Submenu.prototype.Add_taskdetail = function() {
 			submenu_taskdetail.find('[find=title_text]');
 			param['comment'] = submenu_taskdetail.find('[find=description_text]').html();
 			//save empty string if comment equals ckeditor empty element <p><br></p>
-			param['comment'] = param['comment'].trim();
 			if(param['comment'] == '<p><br></p>'){
 				delete param['comment'];
 			}
@@ -1851,7 +1847,7 @@ Submenu.prototype.Add_taskdetail = function() {
 
 			//if same as previous comment then delete
 			if((item.locked_by && item.locked_by != wrapper_localstorage.uid) || //delete comment if this has been locked by someone else
-				taskid != 'new' && item['-comment'] && item['-comment'].trim() == param['comment']){
+				taskid != 'new' && item['-comment'] && item['-comment'] == param['comment']){
 				delete param.comment;
 			}
 
