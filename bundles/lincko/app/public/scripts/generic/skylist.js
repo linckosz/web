@@ -804,6 +804,30 @@ skylist.prototype.addCard = function(item){
 				elem_card.prop('id'),
 				that.list_type+'_'+item['_id'],
 				function(){
+					//use this.updated to check if need to update card visually
+					var noUpdate = false;
+					var noUpdateList = {
+						general: {
+							viewed_by: true,
+							locked_fp: true,
+							_perm: true,
+							new: true,
+						},
+						tasks: {
+							'-comment': true,
+						},
+					}
+					if(typeof this.updated == 'object' && typeof this.updated[that.list_type+'_'+item['_id']] == 'object'){
+						$.each(this.updated[that.list_type+'_'+item['_id']], function(attr, obj){
+							if(noUpdateList.general[attr] || noUpdateList[that.list_type][attr]){ 
+								noUpdate = true; 
+								return false; 
+							}
+						});
+						if(noUpdate){ return false; }
+					}
+
+
 					var elem = $('#'+this.id);
 					var item_new = Lincko.storage.get(that.list_type , item['_id']);
 

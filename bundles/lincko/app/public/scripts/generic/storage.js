@@ -286,7 +286,7 @@ Lincko.storage.getMissing = function(missing){
 
 //Function that update the localweb database
 /* PRIVATE METHOD */
-Lincko.storage.update = function(partial, info){
+Lincko.storage.update = function(partial, info){ console.log('update'); console.log(partial);
 	var item;
 	var item_old;
 	var item_new;
@@ -310,6 +310,15 @@ Lincko.storage.update = function(partial, info){
 		if(typeof Lincko.storage.data == 'undefined'){ Lincko.storage.data = {}; }
 		if(typeof Lincko.storage.data[i] == 'undefined'){ Lincko.storage.data[i] = {}; }
 		for(var j in partial[i]) {
+
+			//remove line breaks added by php for 'comment' attribute of comments, messages, notes, and tasks objects
+			var prefix = null;
+			if(i == 'comments' || i == 'messages'){ prefix = '+'; }
+			else if(i == 'notes' || i == 'tasks'){ prefix = '-'; }
+			if(prefix){ 
+				partial[i][j][prefix+'comment'] = base_removeLineBreaks(partial[i][j][prefix+'comment']); 
+			}
+
 			update_real = false;
 			new_item = false;
 			currentRange = i+'_'+j;
@@ -318,14 +327,6 @@ Lincko.storage.update = function(partial, info){
 			//If only update_at (parent->touch), we do not prepare for update
 			if(typeof Lincko.storage.data[i][j] != 'undefined'){
 				for(var k in partial[i][j]){
-
-					//remove line breaks added by php for 'comment' attribute of comments, messages, notes, and tasks objects
-					var prefix = null;
-					if(i == 'comments' || i == 'messages'){ prefix = '+'; }
-					else if(i == 'notes' || i == 'tasks'){ prefix = '-'; }
-					if(prefix){ partial[i][j][prefix+'comment'] = base_removeLineBreaks(partial[i][j][prefix+'comment']); }
-
-
 					//if(k!="_children" && k!="_id" && k!="type" && k!="history" && k!="created_at" && k!="created_by" && k!="updated_at" && k!="updated_by"){
 					if(k!="_children" && k!="_id" && k!="type" && k!="history" && k!="created_at" && k!="created_by" && k!="updated_by"){
 						if(typeof Lincko.storage.data[i][j][k] == 'undefined'){ //New field
