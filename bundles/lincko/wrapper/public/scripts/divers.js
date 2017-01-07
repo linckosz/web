@@ -50,7 +50,10 @@ var wrapper_to_url = function(text){
 	return text;
 }
 
-
+//http://www.opentechguides.com/how-to/article/javascript/98/detect-mobile-device.html
+var isMobileBrowser = function(){
+	return /webOS|iPhone|iPad|BlackBerry|Windows Phone|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent);
+}
 
 //Help to detach all Nodes
 jQuery.prototype.recursiveEmpty = function(delay){
