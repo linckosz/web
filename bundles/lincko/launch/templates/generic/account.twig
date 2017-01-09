@@ -19,11 +19,15 @@
 		{% endif %}
 		var account_integration = {
 			wechat: {
+				base: true,
 				dev_appid: "{{ integration_wechat_dev_appid }}",
 				public_appid: "{{ integration_wechat_public_appid }}",
 				href: top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"{{ _filelatest('/lincko/launch/styles/integration/wechat.css') }}",
 			},
 		};
+		{% if not integration_wechat_exits %}
+			account_integration.wechat.base = false;
+		{% endif %}
 		{% if integration_connection_error %}
 			JSfiles.finish(function(){
 				base_show_error("{{ _trans('web', 5, 25, 'js') }}", true); //You were not able to login using @@party~~.

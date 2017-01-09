@@ -13,7 +13,7 @@ class ControllerWechat extends Controller {
 	protected $appid = NULL;
 	protected $secret = NULL;
 
-	public function __construct(){\libs\Watch::php(true, '$response', __FILE__, __LINE__, false, false, true);
+	public function __construct(){
 		$app = $this->app = \Slim\Slim::getInstance();
 		$this->get = $app->request->get();
 		$this->appid = $app->lincko->integration->wechat['public_appid'];
@@ -34,31 +34,10 @@ class ControllerWechat extends Controller {
 		$access_token = false;
 		$unionid = false;
 		$openid = false;
-\libs\Watch::php($response, '$response', __FILE__, __LINE__, false, false, true);
-		if($response && isset($response['code'])){
-			$param = array(
-				'appid' => $this->appid ,
-				'secret' => $this->secret,
-				'code' => $response['code'],
-			);
-			$response = $this->curl_get('authorization_code', $param);\libs\Watch::php($response, '$response', __FILE__, __LINE__, false, false, true);
-			if($response && $result = json_decode($response)){\libs\Watch::php($result, '$result', __FILE__, __LINE__, false, false, true);
-				if(isset($result->errcode)){
-					$response = false;
-				}
-			}
-		} else {
-			$response = false;
-		}
+		$state = false;
 
-		\libs\Watch::php($response, '$response', __FILE__, __LINE__, false, false, true);
-
-		$app->lincko->data['link_reset'] = true;
-		$app->router->getNamedRoute('root')->dispatch();
-
-		return true;
-
-		if($response && isset($response['code'])){
+		if($response && isset($response['code']) && isset($response['state'])){
+			$state = $response['state'];
 			$param = array(
 				'appid' => $this->appid ,
 				'secret' => $this->secret,
@@ -74,66 +53,117 @@ class ControllerWechat extends Controller {
 			$response = false;
 		}
 
-		if($response && $result = json_decode($response)){
-			if(isset($result->unionid)){
-				$unionid = $result->unionid;
-			}
-			if(isset($result->access_token) && isset($result->openid)){
-				$access_token = $result->access_token;
-				$openid = $result->openid;
-				$param = array(
-					'access_token' => $access_token,
-					'openid' => $openid,
-					'lang' => $app->trans->getClientLanguage(),
-				);
-				$response = $this->curl_get('snsapi_userinfo', $param);
-				if($response && $result = json_decode($response)){
-					if(isset($result->errcode)){
-						$response = false;
+		if($state == 'snsapi_userinfo'){
+			if($response && $result = json_decode($response)){
+				if(isset($result->unionid)){
+					$unionid = $result->unionid;
+				}
+				if(isset($result->access_token) && isset($result->openid)){
+					$access_token = $result->access_token;
+					$openid = $result->openid;
+					$param = array(
+						'access_token' => $access_token,
+						'openid' => $openid,
+						'lang' => $app->trans->getClientLanguage(),
+					);
+					$response = $this->curl_get('snsapi_userinfo', $param);
+					if($response && $result = json_decode($response)){
+						if(isset($result->errcode)){
+							$response = false;
+						}
 					}
 				}
+			} else {
+				$response = false;
 			}
-		} else {
-			$response = false;
-		}
 
-		if($response && $access_token && $openid && $result = json_decode($response)){
-			$data = new \stdClass;
-			$data->party = 'wechat';
-			/*
-				Using OpenID is more restrictive because it's different from DEV and PUBLIC account (UnionID is same),
-				but the advantage is that it will work on .cafe and .co (sandbox bruno wechat), and we can skip a confirmation because snsapi_base is providing OpenID without notification instead of snsapi_userinfo
-			*/
-			$data->party_id = $openid;
-			$data->data = $result;
-			$controller = new ControllerWrapper($data, 'post', false);
-			if($response = $controller->wrap_multi('integration/connect')){
-				if(!isset($response->status) || $response->status != 200){
-					$response = false;
-				} else {
-					if(isset($response->flash->username_sha1) && isset($response->flash->uid)){
-						OneSeventySeven::set(array('sha' => substr($response->flash->username_sha1, 0, 20))); //Truncate to 20 character because phone alias notification limitation
-						OneSeventySeven::set(array('uid' => $response->flash->uid));
+			if($response && $access_token && $openid && $result = json_decode($response)){
+				$data = new \stdClass;
+				$data->party = 'wechat';
+				/*
+					Using OpenID is more restrictive because it's different from DEV and PUBLIC account (UnionID is same),
+					but the advantage is that it will work on .cafe and .co (sandbox bruno wechat), and we can skip a confirmation because snsapi_base is providing OpenID without notification instead of snsapi_userinfo
+				*/
+				$data->party_id = $openid;
+				$data->data = $result;
+				$controller = new ControllerWrapper($data, 'post', false);
+				if($response = $controller->wrap_multi('integration/connect')){
+					if(!isset($response->status) || $response->status != 200){
+						$response = false;
+					} else {
+						if(isset($response->flash->username_sha1) && isset($response->flash->uid)){
+							OneSeventySeven::set(array('sha' => substr($response->flash->username_sha1, 0, 20))); //Truncate to 20 character because phone alias notification limitation
+							OneSeventySeven::set(array('uid' => $response->flash->uid));
+						}
+						//Helps to not keep real creadential information on user computer, but only an encrypted code
+						if(isset($response->flash->log_id)){
+							OneSeventySeven::set(array('hahaha' => $response->flash->log_id));
+						}
+						//After signin, it return the username, it's only used once to display the user name faster than the local storage.
+						//It's almost useless
+						if(isset($response->flash->username)){
+							OneSeventySeven::set(array('yonghu' => $response->flash->username));
+						}
+						//Used to display/download files in a secured way and keep browser cache enable (same url)
+						if(isset($response->flash->pukpic)){
+							setcookie('pukpic', $response->flash->pukpic, time()+intval($app->lincko->cookies_lifetime), '/', $app->lincko->domain);
+							OneSeventySeven::set(array('pukpic' => $response->flash->pukpic));
+						}
 					}
-					//Helps to not keep real creadential information on user computer, but only an encrypted code
-					if(isset($response->flash->log_id)){
-						OneSeventySeven::set(array('hahaha' => $response->flash->log_id));
-					}
-					//After signin, it return the username, it's only used once to display the user name faster than the local storage.
-					//It's almost useless
-					if(isset($response->flash->username)){
-						OneSeventySeven::set(array('yonghu' => $response->flash->username));
-					}
-					//Used to display/download files in a secured way and keep browser cache enable (same url)
-					if(isset($response->flash->pukpic)){
-						setcookie('pukpic', $response->flash->pukpic, time()+intval($app->lincko->cookies_lifetime), '/', $app->lincko->domain);
-						OneSeventySeven::set(array('pukpic' => $response->flash->pukpic));
+					\bundles\lincko\wrapper\hooks\SetData(); //used to help log in immediatly
+				}
+			} else {
+				$response = false;
+			}
+
+		} else {
+			$app->lincko->data['integration_wechat_exits'] = false; //Check if OpenID exists, if not it redirect to create an account
+			if($response && $result = json_decode($response)){
+				if(isset($result->access_token) && isset($result->openid)){
+					$data = new \stdClass;
+					$data->party = 'wechat';
+					/*
+						Using OpenID is more restrictive because it's different from DEV and PUBLIC account (UnionID is same),
+						but the advantage is that it will work on .cafe and .co (sandbox bruno wechat), and we can skip a confirmation because snsapi_base is providing OpenID without notification instead of snsapi_userinfo
+					*/
+					$data->party_id = $openid;
+					$data->data = $result;
+					$controller = new ControllerWrapper($data, 'post', false);
+					if($response = $controller->wrap_multi('integration/connect')){
+						if(!isset($response->status) || $response->status != 200){
+							$response = false;
+						} else {
+							if(!isset($response->status) || $response->status != 200){
+								$response = false;
+							} else {
+								if(isset($response->flash->username_sha1) && isset($response->flash->uid)){
+									OneSeventySeven::set(array('sha' => substr($response->flash->username_sha1, 0, 20))); //Truncate to 20 character because phone alias notification limitation
+									OneSeventySeven::set(array('uid' => $response->flash->uid));
+								}
+								//Helps to not keep real creadential information on user computer, but only an encrypted code
+								if(isset($response->flash->log_id)){
+									OneSeventySeven::set(array('hahaha' => $response->flash->log_id));
+								}
+								//After signin, it return the username, it's only used once to display the user name faster than the local storage.
+								//It's almost useless
+								if(isset($response->flash->username)){
+									OneSeventySeven::set(array('yonghu' => $response->flash->username));
+								}
+								//Used to display/download files in a secured way and keep browser cache enable (same url)
+								if(isset($response->flash->pukpic)){
+									setcookie('pukpic', $response->flash->pukpic, time()+intval($app->lincko->cookies_lifetime), '/', $app->lincko->domain);
+									OneSeventySeven::set(array('pukpic' => $response->flash->pukpic));
+								}
+							}
+							\bundles\lincko\wrapper\hooks\SetData(); //used to help log in immediatly
+							$app->lincko->data['integration_wechat_exits'] = true;
+						}
 					}
 				}
-				\bundles\lincko\wrapper\hooks\SetData(); //used to help log in immediatly
+			} else {
+				$response = false;
 			}
-		} else {
-			$response = false;
+
 		}
 
 		if(!$response){
@@ -150,8 +180,6 @@ class ControllerWechat extends Controller {
 		$app = $this->app;
 		if($grant_type=='authorization_code'){
 			$url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid='.$param['appid'].'&secret='.$param['secret'].'&code='.$param['code'].'&grant_type=authorization_code';
-		} else if($grant_type=='snsapi_base'){
-			$url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid='.$param['appid'].'&secret='.$param['secret'].'&code='.$param['code'].'&grant_type=snsapi_base';
 		} else if($grant_type=='snsapi_userinfo'){
 			$url = 'https://api.weixin.qq.com/sns/userinfo?access_token='.$param['access_token'].'&openid='.$param['openid'].'&lang='.$param['lang'].'&grant_type=snsapi_userinfo'; //Need confirmation from user (used only the first time)
 		} else {
