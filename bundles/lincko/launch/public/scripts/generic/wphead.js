@@ -29,16 +29,16 @@ $('#wphead_menu').click(function(){
 
 $('#wphead_bar_blog').click(function(){
 	$('#base_iframe_message')
-		.prop('src', wphead_link['blog_prefix'])
-		.prop('data', wphead_link['blog_prefix']);
+		.prop('src', wphead_link['blog_prefix']+'/')
+		.prop('data', wphead_link['blog_prefix']+'/');
 	wphead_active_menu('blog');
 });
 
 $('#wphead_bar_features').click(function(){
 	if(!isMobileApp(true)){
 		$('#base_iframe_message')
-			.prop('src', wphead_link['blog_prefix']+'/features'+wphead_link['blog_suffix'])
-			.prop('data', wphead_link['blog_prefix']+'/features'+wphead_link['blog_suffix']);
+			.prop('src', wphead_link['blog_prefix']+'/features'+wphead_link['blog_suffix']+'/')
+			.prop('data', wphead_link['blog_prefix']+'/features'+wphead_link['blog_suffix']+'/');
 		wphead_active_menu('features');
 	}
 });
@@ -46,8 +46,8 @@ $('#wphead_bar_features').click(function(){
 $('#wphead_bar_overview').click(function(){
 	if(!isMobileApp(true)){
 		$('#base_iframe_message')
-			.prop('src', wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix'])
-			.prop('data', wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix']);
+			.prop('src', wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix']+'/')
+			.prop('data', wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix']+'/');
 		wphead_active_menu('overview');
 	}
 });
@@ -107,7 +107,7 @@ dropmenu_list['settings'] = $.extend(
 					wphead_active_menu('overview');
 				}
 			},
-			"action_param": wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix'],
+			"action_param": wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix']+'/',
 			"class": "wphead_dropmenu_first",
 		},
 
@@ -122,7 +122,7 @@ dropmenu_list['settings'] = $.extend(
 					wphead_active_menu('features');
 				}
 			},
-			"action_param": wphead_link['blog_prefix']+'/features'+wphead_link['blog_suffix'],
+			"action_param": wphead_link['blog_prefix']+'/features'+wphead_link['blog_suffix']+'/',
 			"class": "wphead_dropmenu_first",
 		},
 
@@ -137,7 +137,7 @@ dropmenu_list['settings'] = $.extend(
 					wphead_active_menu('blog');
 				}
 			},
-			"action_param": wphead_link['blog_prefix'],
+			"action_param": wphead_link['blog_prefix']+'/',
 			"class": "wphead_dropmenu_first",
 		},
 

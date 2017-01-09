@@ -84,8 +84,8 @@
 		if(!isMobileApp(true)){
 			if(!wphead_page_redirect){
 				$('#base_iframe_message')
-					.prop('src', wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix'])
-					.prop('data', wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix']);
+					.prop('src', wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix']+'/')
+					.prop('data', wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix']+'/');
 				wphead_active_menu('overview');
 			} else {
 				$('#base_iframe_message')

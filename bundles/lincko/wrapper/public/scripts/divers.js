@@ -1080,4 +1080,15 @@ function wrapper_test(type, RCUD){
 		}
 	}
 
+	if(type=='*' || type=='integration'){
+		if(RCUD==0){
+			wrapper_sendAction(
+				null,
+				'get',
+				'integration/code',
+				wrapper_test_display
+			);
+		}
+	}
+
 }

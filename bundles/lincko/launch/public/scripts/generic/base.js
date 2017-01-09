@@ -100,6 +100,7 @@ webworker_operation.launch_base_iframe = function(child_body_height){
 		}
 	}
 }
+webworker_operation.launch_base_iframe($(window).height());
 
 var base_standalone = function(){
 	if(isMobileApp(true)){
