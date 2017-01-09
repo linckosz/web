@@ -12,7 +12,7 @@ var app_models_notifier = {
 			for(var i in items) {
 				tmp[items[i]["_type"]+"_" + items[i]._id] = true;
 			}			
-			wrapper_sendAction(tmp,'post','data/viewed', function() {
+			wrapper_sendAction(tmp, 'post','data/viewed', function() {
 				app_application_lincko.prepare([type, type+"_"+id]);
 			});
 		}

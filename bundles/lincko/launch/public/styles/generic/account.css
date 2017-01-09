@@ -604,6 +604,12 @@
 	height: 222px;
 }
 
+#account_wechat_qrcode > img {
+	width: 220px;
+	height: 220px;
+	border: solid 1px #999999;
+}
+
 #account_wechat_box > div {
 	padding-bottom: 0;
 }

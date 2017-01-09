@@ -333,6 +333,22 @@ $('#account_signin_forgot').click(function(){
 	account_show('forgot');
 });
 
+var account_integration_account_timer;
+var account_integration_account = {
+	timer: null,
+	start: function(){
+		account_integration_account.stop();
+		account_integration_account.timer = setInterval(function(){
+			wrapper_sendAction(null, 'get', 'integration/code', function(data){
+				console.log(data);
+			});
+		}, 1000);
+	},
+	stop: function(){
+		clearInterval(account_integration_account.timer);
+	},
+};
+
 var account_integration_wechat_timer;
 $('#account_integration_wechat').click(function(){
 	account_show('wechat');
@@ -348,15 +364,28 @@ $('#account_integration_wechat').click(function(){
 });
 
 var account_integration_wechat_qrcode = function(){
+	/*
+	//This code use the QR code genrate from Wechat, but this only do the connection on browser, does not use callbacks, and do no work on mobile
 	var obj = new WxLogin({
 		id: "account_wechat_qrcode",
-		appid: account_integration.wechat.appid,
+		appid: account_integration.wechat.dev_appid, //This is using dev account, but openID is different from dev to public. Must use unionID to log in this scenario
 		scope: "snsapi_login",
-		redirect_uri: encodeURIComponent(top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/integration/wechat/token"),
+		redirect_uri: encodeURIComponent(top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/integration/wechat/dev"),
 		state: "lincko",
 		style: "black",
 		href: account_integration.wechat.href,
 	});
+	*/
+
+	//Use Lincko QR code for integration
+	var url_qrcode = top.location.protocol+'//'+document.linckoBack+'file.'+document.domainRoot+':'+document.linckoBackPort+'/integration/qrcode/wechat?'+(new wrapper_date().timestamp);	
+	if($('#account_wechat_qrcode').find('img').length == 1){
+		$('#account_wechat_qrcode').find('img').attr('src', url_qrcode);
+	} else {
+		$('#account_wechat_qrcode').recursiveEmpty();
+		var image = $('<img>').attr('src', url_qrcode);
+		$('#account_wechat_qrcode').append(image);
+	}
 };
 
 $('#account_error, #account_error_mobile').click(function(){

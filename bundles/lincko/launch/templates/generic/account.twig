@@ -19,7 +19,7 @@
 		{% endif %}
 		var account_integration = {
 			wechat: {
-				appid: "{{ integration_wechat_appid }}",
+				dev_appid: "{{ integration_wechat_dev_appid }}",
 				public_appid: "{{ integration_wechat_public_appid }}",
 				href: top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"{{ _filelatest('/lincko/launch/styles/integration/wechat.css') }}",
 			},
@@ -179,7 +179,7 @@
 		</div>
 
 		<div id="account_integration">
-			<img id="account_integration_wechat" class="account_integration_icon minTablet" src="{{ _filelatest('/lincko/launch/images/generic/account/integration/wechat.png') }}"/>
+			<img id="account_integration_wechat" class="account_integration_icon" src="{{ _filelatest('/lincko/launch/images/generic/account/integration/wechat.png') }}"/>
 		</div>
 
 		<div id="account_error" class="minMobileL"></div>

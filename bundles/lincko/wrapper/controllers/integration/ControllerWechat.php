@@ -13,26 +13,50 @@ class ControllerWechat extends Controller {
 	protected $appid = NULL;
 	protected $secret = NULL;
 
-	public function __construct(){
+	public function __construct(){\libs\Watch::php(true, '$response', __FILE__, __LINE__, false, false, true);
 		$app = $this->app = \Slim\Slim::getInstance();
 		$this->get = $app->request->get();
-		$this->appid = $app->lincko->integration->wechat['appid'];
-		$this->secret = $app->lincko->integration->wechat['secretapp'];
+		$this->appid = $app->lincko->integration->wechat['public_appid'];
+		$this->secret = $app->lincko->integration->wechat['public_secretapp'];
 		return true;
+	}
+
+	public function dev_get(){
+		$app = $this->app;
+		$this->appid = $app->lincko->integration->wechat['dev_appid'];
+		$this->secret = $app->lincko->integration->wechat['dev_secretapp'];
+		$this->public_get();
 	}
 
 	public function public_get(){
 		$app = $this->app;
-		$this->appid = $app->lincko->integration->wechat['public_appid'];
-		$this->secret = $app->lincko->integration->wechat['public_secretapp'];
-		$this->token_get();
-	}
-
-	public function token_get(){
-		$app = $this->app;
 		$response = $this->get;
 		$access_token = false;
 		$unionid = false;
+		$openid = false;
+\libs\Watch::php($response, '$response', __FILE__, __LINE__, false, false, true);
+		if($response && isset($response['code'])){
+			$param = array(
+				'appid' => $this->appid ,
+				'secret' => $this->secret,
+				'code' => $response['code'],
+			);
+			$response = $this->curl_get('authorization_code', $param);\libs\Watch::php($response, '$response', __FILE__, __LINE__, false, false, true);
+			if($response && $result = json_decode($response)){\libs\Watch::php($result, '$result', __FILE__, __LINE__, false, false, true);
+				if(isset($result->errcode)){
+					$response = false;
+				}
+			}
+		} else {
+			$response = false;
+		}
+
+		\libs\Watch::php($response, '$response', __FILE__, __LINE__, false, false, true);
+
+		$app->lincko->data['link_reset'] = true;
+		$app->router->getNamedRoute('root')->dispatch();
+
+		return true;
 
 		if($response && isset($response['code'])){
 			$param = array(
@@ -51,12 +75,15 @@ class ControllerWechat extends Controller {
 		}
 
 		if($response && $result = json_decode($response)){
-			if(isset($result->access_token) && isset($result->openid) && isset($result->unionid)){
-				$access_token = $result->access_token;
+			if(isset($result->unionid)){
 				$unionid = $result->unionid;
+			}
+			if(isset($result->access_token) && isset($result->openid)){
+				$access_token = $result->access_token;
+				$openid = $result->openid;
 				$param = array(
 					'access_token' => $access_token,
-					'openid' => $result->openid,
+					'openid' => $openid,
 					'lang' => $app->trans->getClientLanguage(),
 				);
 				$response = $this->curl_get('snsapi_userinfo', $param);
@@ -70,10 +97,14 @@ class ControllerWechat extends Controller {
 			$response = false;
 		}
 
-		if($response && $access_token && $unionid && $result = json_decode($response)){
+		if($response && $access_token && $openid && $result = json_decode($response)){
 			$data = new \stdClass;
 			$data->party = 'wechat';
-			$data->party_id = $unionid;
+			/*
+				Using OpenID is more restrictive because it's different from DEV and PUBLIC account (UnionID is same),
+				but the advantage is that it will work on .cafe and .co (sandbox bruno wechat), and we can skip a confirmation because snsapi_base is providing OpenID without notification instead of snsapi_userinfo
+			*/
+			$data->party_id = $openid;
 			$data->data = $result;
 			$controller = new ControllerWrapper($data, 'post', false);
 			if($response = $controller->wrap_multi('integration/connect')){
@@ -111,14 +142,18 @@ class ControllerWechat extends Controller {
 		}
 		$app->lincko->data['link_reset'] = true;
 		$app->router->getNamedRoute('root')->dispatch();
+
+		return true;
 	}
 
 	public function curl_get($grant_type=false, $param=array()){
 		$app = $this->app;
 		if($grant_type=='authorization_code'){
 			$url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid='.$param['appid'].'&secret='.$param['secret'].'&code='.$param['code'].'&grant_type=authorization_code';
+		} else if($grant_type=='snsapi_base'){
+			$url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid='.$param['appid'].'&secret='.$param['secret'].'&code='.$param['code'].'&grant_type=snsapi_base';
 		} else if($grant_type=='snsapi_userinfo'){
-			$url = 'https://api.weixin.qq.com/sns/userinfo?access_token='.$param['access_token'].'&openid='.$param['openid'].'&lang='.$param['lang'].'&grant_type=snsapi_userinfo';
+			$url = 'https://api.weixin.qq.com/sns/userinfo?access_token='.$param['access_token'].'&openid='.$param['openid'].'&lang='.$param['lang'].'&grant_type=snsapi_userinfo'; //Need confirmation from user (used only the first time)
 		} else {
 			return false;
 		}
