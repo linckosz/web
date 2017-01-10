@@ -340,11 +340,13 @@ inputter.prototype.buildLayer = function()
 							case 'send':
 								if(this.hasTask)
 								{
-									item.attr("title",Lincko.Translation.get('app', 4001, 'js'));//Create the task 
+									item.attr("title",Lincko.Translation.get('app', 4001, 'js'));//Create the task
+									item.find(".inputter_ico").addClass("icon-Big-Add inputter_icon_blue inputter_icon_big_size");
 								}
 								else
 								{
 									item.attr("title",Lincko.Translation.get('app', 4002, 'js'));//Send
+									item.find(".inputter_ico").addClass("fa fa-send-o");
 								}
 								
 								if(this.layer['right_menu'][i][j].hasOwnProperty('click'))
@@ -402,6 +404,17 @@ inputter.prototype.buildLayer = function()
 								}
 								break;
 							case 'attachment' :
+
+								if(this.hasTask)
+								{
+									item.find(".inputter_ico").addClass("icon-links");
+
+								}
+								else
+								{
+									item.find(".inputter_ico").addClass("icon-Add");
+								}
+
 								item.attr("title",Lincko.Translation.get('app', 4003, 'js'));//Attach a new file 
 								var auto_upload = this.layer.hasOwnProperty('auto_upload') ? this.layer['auto_upload'] : true;
 								item.click({'type':this.upload_ptype,'pid':this.upload_pid,'panel_id':this.panel_id,'position':this.position},function(event){

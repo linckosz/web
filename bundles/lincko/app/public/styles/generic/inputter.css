@@ -19,6 +19,16 @@
 	padding:8px;
 }
 
+.inputter_icon_blue{
+	color: #475577 !important;
+}
+
+.inputter_icon_big_size{
+	font-size: 32px !important;
+	height:32px !important;
+	width: 32px !important;
+}
+
 .inputter_checkbox
 {
 	cursor: pointer;
