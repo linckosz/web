@@ -28,4 +28,13 @@ $app->group('/integration', function () use ($app) {
 
 	});
 
+	$app->get(
+		'/code/:code',
+		'\bundles\lincko\wrapper\controllers\integration\ControllerIntegration:code_get'
+	)
+	->conditions(array(
+		'var' => '^\S{8}$',
+	))
+	->name('integration_code_get');
+
 });

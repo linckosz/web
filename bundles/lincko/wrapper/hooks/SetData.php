@@ -34,7 +34,6 @@ function SetData(){
 		OneSeventySeven::unsetAll(array('jizhu', 'yuyan', 'youjian'));
 	}
 	
-//\libs\Watch::php($logged, '$logged', __FILE__, __LINE__, false, false, true);
 	//The below lines will give null if previously unsetAll
 	$yonghu = OneSeventySeven::get('yonghu');
 	$youjian = OneSeventySeven::get('youjian');

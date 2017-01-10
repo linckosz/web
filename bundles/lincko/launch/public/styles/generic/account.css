@@ -626,8 +626,12 @@
 
 /* Mobile phone in Portrait */
 @media only screen and (max-width: 479px){
+	.account_wrapper > div {
+		top: 60px;
+	}
 	.account_close {
 		right: 1px;
+		top: 1px;
 	}
 }
 

@@ -80,6 +80,24 @@ class ControllerWrapper extends Controller {
 		if(isset($this->json['data']['foilautofill'])){
 			unset($this->json['data']['foilautofill']);
 		}
+		//Add the integration code to link the browser and the mobile
+		/*
+			Process:
+				1) [BRO] The browser ask for a QR code (the QR code contain an integration_code)
+				2) [BRO] The backend has a session integration_code, recored into SQL with null data
+				3) [BRO] The browser start a setInterval to check if any log_id is attached to the integration_code
+				4) [MOB] We scan the QR code, the integration_code is recorded as a session on Front
+				5) [MOB] In integration confirmation process (user/integration) we do send the integration_code to the backend
+				6) [MOB] When the user is logged (new or existing account), it attaches into SQL the log_id to the integration_code
+				7) [MOB] The application is opened on mobile
+				8) [BRO] The setIterval cache the log_id and launch a auto-signin
+				9) [BRO] The application is opened on browser with the same account as the mobile
+		*/
+		if(isset($_SESSION['integration_code'])){
+			if(strlen($_SESSION['integration_code'])==8){
+				$this->json['data']['integration_code'] = $_SESSION['integration_code'];
+			}
+		}
 		return true;
 	}
 
@@ -102,7 +120,7 @@ class ControllerWrapper extends Controller {
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
-		//curl_setopt($ch, CURLOPT_COOKIE, 'PHPSESSID=' . $_COOKIE['PHPSESSID']); //Not used
+		curl_setopt($ch, CURLOPT_COOKIE, 'PHPSESSID=' . $_COOKIE['PHPSESSID']); //Used for integration
 		curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
 		curl_setopt($ch, CURLOPT_FORBID_REUSE, true);
 		curl_setopt($ch, CURLOPT_ENCODING, 'gzip');
@@ -112,7 +130,7 @@ class ControllerWrapper extends Controller {
 			)
 		);
 
-		$verbose_show = false;
+		$verbose_show = true;
 		if($verbose_show){
 			$verbose = fopen('php://temp', 'w+');
 			curl_setopt($ch, CURLOPT_VERBOSE, true);
@@ -169,6 +187,11 @@ class ControllerWrapper extends Controller {
 				//Clean invitation_code because it has been used by the back end
 				if(isset($json_result->flash->unset_invitation_code)){
 					unset($_SESSION['invitation_code']);
+				}
+
+				//Clean integration_code because it has been used by the back end
+				if(isset($json_result->flash->unset_integration_code)){
+					unset($_SESSION['integration_code']);
 				}
 				
 				if($this->print){
@@ -329,20 +352,7 @@ class ControllerWrapper extends Controller {
 
 		$log_action = false;
 
-		if($action==='user/integration' && $type==='POST' && isset($this->json['data']['party']) && isset($this->json['data']['data'])){
-
-			$log_action = true;
-
-			$this->signOut(true);
-
-			//Add Cookies if Remember
-			if(isset($this->json['data']['remember'])){
-				OneSeventySeven::set(array('jizhu' => true));
-			} else {
-				OneSeventySeven::set(array('jizhu' => false));
-			}
-		
-		} else if($action==='user/signin' && $type==='POST' && isset($this->json['data']['email']) && isset($this->json['data']['password'])){
+		if($action==='user/signin' && $type==='POST' && isset($this->json['data']['email']) && isset($this->json['data']['password'])){
 
 			$log_action = true;
 
@@ -354,6 +364,19 @@ class ControllerWrapper extends Controller {
 				'youjian' => $this->json['data']['email'],
 			));
 			
+			//Add Cookies if Remember
+			if(isset($this->json['data']['remember'])){
+				OneSeventySeven::set(array('jizhu' => true));
+			} else {
+				OneSeventySeven::set(array('jizhu' => false));
+			}
+		
+		} else if($action==='integration/connect' && $type==='POST' && isset($this->json['data']['party']) && isset($this->json['data']['party_id'])){
+
+			$log_action = true;
+
+			$this->signOut(true);
+
 			//Add Cookies if Remember
 			if(isset($this->json['data']['remember'])){
 				OneSeventySeven::set(array('jizhu' => true));
