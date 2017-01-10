@@ -64,6 +64,7 @@
 	color: #FFFFFF;
 	position: absolute;
 	margin-left: 4px;
+	z-index: 101;
 }
 
 .account_tab {
