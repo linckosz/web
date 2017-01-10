@@ -109,7 +109,7 @@
 		<div class="wphead_div floatleft minMobileL"><span class="table_cell_center" id="wphead_beta"><span>{{ _trans('web', 1, 11, 'html') }}{# Beta #}</span></span></div>
 		{% if logged %}
 			<div class="wphead_div floatright"><span class="table_cell_center" id="wphead_account"><span>{{ _trans('web', 1, 7, 'html') }}{# My account #}</span></span></div>
-		{% elseif invitation_code %}
+		{% elseif invitation_code or not youjian %}
 			<div class="wphead_div floatright"><span class="table_cell_center" id="wphead_joinus"><span>{{ _trans('web', 1, 8, 'html') }}{# Join us #}</span></span></div>
 		{% else %}
 			<div class="wphead_div floatright"><span class="table_cell_center" id="wphead_signin"><span>{{ _trans('web', 1, 9, 'html') }}{# Sign in #}</span></span></div>

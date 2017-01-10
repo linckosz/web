@@ -16,6 +16,10 @@ function SetData(){
 	$app = \Slim\Slim::getInstance();
 	$logged = false;
 
+	if(isset($_SESSION['integration_check'])){
+		$app->lincko->data['integration_check'] = $_SESSION['integration_check'];
+	}
+
 	if(
 		   //Minimum fields required to display offline
 		   OneSeventySeven::get('hahaha') //resign

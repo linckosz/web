@@ -160,7 +160,6 @@ var account_reset_cb_complete = function(){
 	account_credential = {};
 };
 
-
 var global_select = false; //'joinus', 'signin', 'forgot', 'reset', 'wechat'
 
 function account_show(select) {

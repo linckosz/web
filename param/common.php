@@ -148,7 +148,7 @@ $app->lincko->translation = array(
 	'party' => '',
 );
 
-//Some generic data for translation word conversion
+//Some generic data for translation twig
 $app->lincko->data = array(
 	'domain' => $app->lincko->domain,
 	'title' => $app->lincko->title,
@@ -158,7 +158,9 @@ $app->lincko->data = array(
 	'lincko_show_dev' => 'false', //Display some error for developpers on JS (NOTE: it has to be a string because of Twig conversion to JS)
 	'api_upload' => 'lknscklb798w98eh9cwde8bc897q09wj',
 	'link_reset' => false,
+	'integration_check' => true,
 	'integration_wechat_appid' => '',
+	'integration_wechat_new' => false,
 	'integration_connection_error' => false,
 	'force_open_website' => true,
 );

@@ -88,16 +88,22 @@ class ControllerWechat extends Controller {
 				$data->data = $result;
 				$controller = new ControllerWrapper($data, 'post', false);
 				if($response = $controller->wrap_multi('integration/connect')){
+					$valid = false;
 					if(!isset($response->status) || $response->status != 200){
 						$response = false;
 					} else {
+						$valid = true;
 						if(isset($response->flash->username_sha1) && isset($response->flash->uid)){
 							OneSeventySeven::set(array('sha' => substr($response->flash->username_sha1, 0, 20))); //Truncate to 20 character because phone alias notification limitation
 							OneSeventySeven::set(array('uid' => $response->flash->uid));
+						} else {
+							$valid = false;
 						}
 						//Helps to not keep real creadential information on user computer, but only an encrypted code
 						if(isset($response->flash->log_id)){
 							OneSeventySeven::set(array('hahaha' => $response->flash->log_id));
+						} else {
+							$valid = false;
 						}
 						//After signin, it return the username, it's only used once to display the user name faster than the local storage.
 						//It's almost useless
@@ -108,7 +114,12 @@ class ControllerWechat extends Controller {
 						if(isset($response->flash->pukpic)){
 							setcookie('pukpic', $response->flash->pukpic, time()+intval($app->lincko->cookies_lifetime), '/', $app->lincko->domain);
 							OneSeventySeven::set(array('pukpic' => $response->flash->pukpic));
+						} else {
+							$valid = false;
 						}
+					}
+					if(!$valid){
+						$_SESSION['integration_check'] = false; //Stop checking integration
 					}
 					\bundles\lincko\wrapper\hooks\SetData(); //used to help log in immediatly
 				}
@@ -120,6 +131,12 @@ class ControllerWechat extends Controller {
 			$app->lincko->data['integration_wechat_new'] = true; //Check if OpenID exists, if not it redirect to create an account
 			if($response && $result = json_decode($response)){
 				if(isset($result->access_token) && isset($result->openid) && !empty($result->openid)){
+					if(isset($result->unionid)){
+						$unionid = $result->unionid;
+					}
+					$access_token = $result->access_token;
+					$openid = $result->openid;
+
 					$data = new \stdClass;
 					$data->party = 'wechat';
 					/*
@@ -133,16 +150,22 @@ class ControllerWechat extends Controller {
 						if(!isset($response->status) || $response->status != 200){
 							$response = false;
 						} else {
+							$valid = false;
 							if(!isset($response->status) || $response->status != 200){
 								$response = false;
 							} else {
+								$valid = true;
 								if(isset($response->flash->username_sha1) && isset($response->flash->uid)){
 									OneSeventySeven::set(array('sha' => substr($response->flash->username_sha1, 0, 20))); //Truncate to 20 character because phone alias notification limitation
 									OneSeventySeven::set(array('uid' => $response->flash->uid));
+								} else {
+									$valid = false;
 								}
 								//Helps to not keep real creadential information on user computer, but only an encrypted code
 								if(isset($response->flash->log_id)){
 									OneSeventySeven::set(array('hahaha' => $response->flash->log_id));
+								} else {
+									$valid = false;
 								}
 								//After signin, it return the username, it's only used once to display the user name faster than the local storage.
 								//It's almost useless
@@ -153,10 +176,16 @@ class ControllerWechat extends Controller {
 								if(isset($response->flash->pukpic)){
 									setcookie('pukpic', $response->flash->pukpic, time()+intval($app->lincko->cookies_lifetime), '/', $app->lincko->domain);
 									OneSeventySeven::set(array('pukpic' => $response->flash->pukpic));
+								} else {
+									$valid = false;
 								}
 							}
+							if(!$valid){
+								$_SESSION['integration_check'] = false; //Stop checking integration
+							} else {
+								$app->lincko->data['integration_wechat_new'] = false;
+							}
 							\bundles\lincko\wrapper\hooks\SetData(); //used to help log in immediatly
-							$app->lincko->data['integration_wechat_new'] = false;
 						}
 					}
 				}
