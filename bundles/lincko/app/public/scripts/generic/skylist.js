@@ -2016,6 +2016,10 @@ skylist.draw_noteCard = function(item){
 		});
 	}
 
+	//locked_by
+	if(item['locked_by'] && item['locked_by'] != wrapper_localstorage.uid){
+		Elem.attr('locked', item['locked_by']);
+	}
 
 
 	Elem.find('[find=card_leftbox]').append(elem_leftbox);
