@@ -178,8 +178,8 @@ function account_show(select) {
 	} else {
 		$('#account_tab_lincko_back').removeClass('display_none');
 	}
-	if(typeof select=="undefined"){ select = 'joinus'; }
-	$('#account_wrapper').css('z-index',1500).css("display", "table");
+	if(typeof select == "undefined"){ select = 'joinus'; }
+	$('#account_wrapper').css('z-index', 1500).css("display", "table");
 	$('#base_wrapper').addClass('blur');
 	account_select(select);
 }
@@ -187,7 +187,7 @@ function account_show(select) {
 function account_hide() {
 	global_select = false;
 	if(!isMobileApp(true)){
-		$('#account_wrapper').css('z-index',-1).hide();
+		$('#account_wrapper').css('z-index', -1).hide();
 		$('#base_wrapper').removeClass('blur');
 	}
 }
@@ -218,7 +218,9 @@ function account_select(select) {
 		$('#account_tab_joinus, #account_tab_signin').removeClass('display_none');
 		$('#account_tab_joinus').addClass('account_trans');
 		$('#account_tab_joinus > div').addClass('account_tab_joinus');
-		$('#account_signin_email').val($('#account_joinus_email').val());
+		if($('#account_joinus_email').val() != ''){
+			$('#account_signin_email').val($('#account_joinus_email').val());
+		}
 		if($('#account_signin_email').val() != ''){
 			account_display_label($('#account_signin_email'), false);
 			$('#account_signin_password').focus();
@@ -232,7 +234,9 @@ function account_select(select) {
 		$('#account_tab_signin > div').addClass('account_tab_signin');
 		//This helps to refresh the captcha image to avoid it appear unlinked
 		$("#account_captcha").prop("src", $("#account_captcha").prop("src"));
-		$('#account_joinus_email').val($('#account_signin_email').val());
+		if($('#account_signin_email').val() != account_youjian){
+			$('#account_joinus_email').val($('#account_signin_email').val());
+		}
 		$('#account_joinus_email').focus();
 	}
 }

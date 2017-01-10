@@ -297,7 +297,8 @@ class ControllerWrapper extends Controller {
 	protected function signOut($clear=false){
 		$app = $this->app;
 		if($clear){ //Do not keep user info
-			OneSeventySeven::unsetAll(array('jizhu', 'yuyan'));
+			//OneSeventySeven::unsetAll(array('jizhu', 'yuyan'));
+			OneSeventySeven::unsetAll(array('jizhu', 'yuyan', 'youjian')); //It feels better to keep track of last email login
 		} else {
 			OneSeventySeven::unsetAll(array('jizhu', 'yuyan', 'youjian'));
 		}

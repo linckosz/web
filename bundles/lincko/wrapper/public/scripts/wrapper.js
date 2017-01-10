@@ -16,7 +16,7 @@ var wrapper_signout_cb_begin = function(){
 }
 var wrapper_signout_cb_complete = function(){
 	$(document.body).css('cursor', '');
-	window.location.href = wrapper_link['home'];
+	window.location.href = wrapper_link['root'];
 }
 var wrapper_js_response;
 function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_complete, ajax_objForm){
