@@ -850,13 +850,13 @@ skylist.prototype.addCard = function(item){
 					}
 					else if(item_new){ //for update
 						//do nothing ifs (dont do anything if only a single attribute is updated and the updated attribute is 'viewed_by' or 'new')
-						if(	typeof this.updated == 'object' && typeof this.updated[that.list_type+'_'+item['_id']] == 'object'
-							&& Object.keys(this.updated[that.list_type+'_'+item['_id']]).length == 1 
-							&& (	this.updated[that.list_type+'_'+item['_id']].viewed_by
-									|| this.updated[that.list_type+'_'+item['_id']].new ) ){
-							//do nothing
-						}
-						else if(that.Lincko_itemsList_filter.view == 'paper' 
+						// if(	typeof this.updated == 'object' && typeof this.updated[that.list_type+'_'+item['_id']] == 'object'
+						// 	&& Object.keys(this.updated[that.list_type+'_'+item['_id']]).length == 1 
+						// 	&& (	this.updated[that.list_type+'_'+item['_id']].viewed_by
+						// 			|| this.updated[that.list_type+'_'+item['_id']].new ) ){
+						// 	//do nothing
+						// }
+						if(that.Lincko_itemsList_filter.view == 'paper' 
 							&& typeof this.updated == 'object' && typeof this.updated[that.list_type+'_'+item['_id']] == 'object'
 							&& that.paperview_partialUpdate(this.updated[that.list_type+'_'+item['_id']])){ 
 							that.paperview_taskCard_update(elem, item_new, this.updated[that.list_type+'_'+item['_id']]);
