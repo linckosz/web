@@ -58,7 +58,7 @@ class ControllerWechat extends Controller {
 				if(isset($result->unionid)){
 					$unionid = $result->unionid;
 				}
-				if(isset($result->access_token) && isset($result->openid)){
+				if(isset($result->access_token) && isset($result->openid) && !empty($result->openid)){
 					$access_token = $result->access_token;
 					$openid = $result->openid;
 					$param = array(
@@ -77,7 +77,7 @@ class ControllerWechat extends Controller {
 				$response = false;
 			}
 
-			if($response && $access_token && $openid && $result = json_decode($response)){
+			if($response && $access_token && $openid && !empty($openid) && $result = json_decode($response)){
 				$data = new \stdClass;
 				$data->party = 'wechat';
 				/*
@@ -117,9 +117,9 @@ class ControllerWechat extends Controller {
 			}
 
 		} else {
-			$app->lincko->data['integration_wechat_exits'] = false; //Check if OpenID exists, if not it redirect to create an account
+			$app->lincko->data['integration_wechat_new'] = true; //Check if OpenID exists, if not it redirect to create an account
 			if($response && $result = json_decode($response)){
-				if(isset($result->access_token) && isset($result->openid)){
+				if(isset($result->access_token) && isset($result->openid) && !empty($result->openid)){
 					$data = new \stdClass;
 					$data->party = 'wechat';
 					/*
@@ -156,7 +156,7 @@ class ControllerWechat extends Controller {
 								}
 							}
 							\bundles\lincko\wrapper\hooks\SetData(); //used to help log in immediatly
-							$app->lincko->data['integration_wechat_exits'] = true;
+							$app->lincko->data['integration_wechat_new'] = false;
 						}
 					}
 				}

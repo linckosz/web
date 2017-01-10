@@ -25,7 +25,7 @@
 				href: top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"{{ _filelatest('/lincko/launch/styles/integration/wechat.css') }}",
 			},
 		};
-		{% if not integration_wechat_exits %}
+		{% if integration_wechat_new %}
 			account_integration.wechat.base = false;
 		{% endif %}
 		{% if integration_connection_error %}
