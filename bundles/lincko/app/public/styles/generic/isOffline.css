@@ -28,9 +28,9 @@
     padding: 40px 0px;
 }
 #isOffline_popup [find=linckoBot]{
-	font-size: 100px;
+	font-size: 90px;
 	color: #fba026;
-	padding-bottom: 5px;
+	padding-bottom: 10px;
 }
 #isOffline_popup [find=text2]{
 	padding:0px 80px;
