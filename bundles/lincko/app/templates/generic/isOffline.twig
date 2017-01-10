@@ -1,0 +1,19 @@
+{# Category ??#}
+<div id="begin_isOffline" class="visibility_hidden">
+	<script>
+		JSfiles.later("{{ _filelatest('/lincko/app/scripts/generic/isOffline.js') }}");
+	</script>
+	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/generic/isOffline.css') }}" type="text/css" />
+</div>
+<div id="end_isOffline" class="visibility_hidden"></div>
+
+<div class="display_none">
+	<div id="-isOffline_popup">
+		<div find="box">
+			<div find="linckoBot" class="icon-SmallPersonaiconBlack"></div>
+			<div find="text1">You appear to be working offline.</div>
+			<div find="text2">Edits you make while offline will not be saved. toto</div>
+			<div find="btn_ok" class="base_pointer">OK</div>
+		</div>
+	</div>
+</div>

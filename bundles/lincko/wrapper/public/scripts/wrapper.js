@@ -90,6 +90,7 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 		},
 		
 		success: function(data){
+			isOffline_update(false);
 			//Those 3 following lines are only for debug purpose
 			//var msg = JSON.stringify(data); //for test
 			//var msg = data; //for test
@@ -153,6 +154,7 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 		},
 		
 		error: function(xhr_err, ajaxOptions, thrownError){
+			isOffline_update(true);
 			//Get back the form object if it was sent from a form
 			wrapper_objForm = ajax_objForm;
 			var msg = wrapper_totalxhr+') '+'xhr.status => '+xhr_err.status
