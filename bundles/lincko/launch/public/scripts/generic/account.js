@@ -364,6 +364,7 @@ $('#account_integration_wechat').click(function(){
 		}
 		account_integration_wechat_qrcode();
 	}, 600000); //Refresh the QR code every 10min
+	account_integration_account.start();
 });
 
 var account_integration_wechat_qrcode = function(){
