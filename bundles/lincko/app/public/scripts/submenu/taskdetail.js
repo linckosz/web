@@ -404,13 +404,16 @@ Submenu.prototype.Add_taskdetail = function() {
 
 				if(old_title != new_title){
 					var param = {id: taskid};
+					var param_prepare = {};
 					if(item['+title']){ 
 						item['+title'] = new_title; 
 						param.title = new_title;
+						param_prepare[item._type+'_'+item._id] = {'+title': true};
 					}
 					else{
 						item['+name'] = new_title;
 						param.name = new_title;
+						param_prepare[item._type+'_'+item._id] = {'+name': true};
 					}
 
 					if(that.param.type == 'tasks'){
@@ -420,7 +423,7 @@ Submenu.prototype.Add_taskdetail = function() {
 						wrapper_sendAction(param, 'post', routeObj.update);
 					}
 					Lincko.storage.data[item._type][item._id] = item;
-					app_application_lincko.prepare(item._type+'_'+item._id, true);
+					app_application_lincko.prepare(item._type+'_'+item._id, true, param_prepare);
 				}
 			}, 1000, elem_title_text.text());
 		});//end of blur event
@@ -792,12 +795,6 @@ Submenu.prototype.Add_taskdetail = function() {
 	elem_description_text.html(item['-comment']).focus(function(){
 
 	});
-	elem_description_text.focus(function(){
-		//myIScrollList['taskdetail_'+that.md5id].disable();
-	});
-	elem_description_text.blur(function(){
-		//myIScrollList['taskdetail_'+that.md5id].enable();
-	});
 
 	var load_img_timeout = null;
 	elem_description_text.find('img').one('load', function(){
@@ -830,7 +827,9 @@ Submenu.prototype.Add_taskdetail = function() {
 						wrapper_sendAction(param, 'post', routeObj.update);
 					}
 					Lincko.storage.data[item._type][item._id] = item;
-					app_application_lincko.prepare(item._type+'_'+item._id, true);
+					var param_prepare = {};
+					param_prepare[item._type+'_'+item._id] = {'-comment': true};
+					app_application_lincko.prepare(item._type+'_'+item._id, true, param_prepare);
 				}
 			}, 1000); //inside setTimeout to be able to occur after a possible submenu_hide
 				
