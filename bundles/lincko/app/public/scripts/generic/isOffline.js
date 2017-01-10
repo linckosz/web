@@ -6,8 +6,13 @@ var isOffline_update = function(DC){
 	if(typeof DC != 'boolean'){ var DC = true; }
 
 	if(!DC && (isOffline || isOffline_firstDC)){ //back online
-		isOffline_firstDC = null;
-		isOffline = false;
+		if(isOffline_firstDC){
+			isOffline_firstDC = null;
+		}
+		if(isOffline){
+			isOffline = false;
+			base_show_error('YOU ARE BACK ON LINE TOTO');
+		}
 	}
 	else if(DC && !isOffline){ //disconnected, but offline is still set to false
 		if(!isOffline_firstDC){
