@@ -1597,7 +1597,15 @@ skylist.prototype.addTask = function(item){
 		var fn_enter_burger_keyboard = function(event, burgerInst){
 			burgerInst.elem.blur();
 		}
-		var burger_keyboard_titleInst = new burger_keyboard(Elem.find('[find=title]'), null, shortcuts, null, fn_enter_burger_keyboard);
+		var burger_keyboard_titleInst = new burger_keyboard(Elem.find('[find=title]'), null, shortcuts, null, fn_enter_burger_keyboard, null, 
+			{
+				cb_select: function(){ 
+					if(that.Lincko_itemsList_filter.view == 'paper'){
+						Elem.removeClass('skylist_card_overdue'); 
+					}
+				}
+			}
+		);
 		//burgerN.regex(Elem.find('[find=title]'), item);
 	}
 

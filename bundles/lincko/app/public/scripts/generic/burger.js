@@ -13,7 +13,7 @@ var burger_shortcuts = {
 
 
 //this should be compatible with inputter (tasks) as well as inputter (chats) and future usage cases
-var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter, project_id){
+var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter, project_id, dropdown_cb_custom){
 	var that = this;
 	that.elem = elem;
 
@@ -49,9 +49,14 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter
 	that.burgerWord = '';
 	that.iscroll = null;
 
+	if($.type(dropdown_cb_custom) != 'object'){ var dropdown_cb_custom = {}; }
+	that.dropdown_cb_custom = dropdown_cb_custom;
+
 	that.dropdown_cb = {};
 	that.dropdown_cb.cb_create = function(){
-
+		if(typeof that.dropdown_cb_custom.cb_create == 'function'){
+			that.dropdown_cb_custom.cb_create();
+		}
 	}
 	that.dropdown_cb.cb_select = function(data){
 		if(typeof data != 'object'){ var data = {val: data}; }
@@ -85,6 +90,10 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter
 
 		burgerN.placeCaretAt(that.i_caretCurrent-(that.burgerMode+that.burgerWord).length, that.elem);
 
+		if(typeof that.dropdown_cb_custom.cb_select == 'function'){
+			that.dropdown_cb_custom.cb_select(data);
+		}
+
 	}
 	that.dropdown_cb.cb_destroy = function(){
 		that.dropdownInst = null;
@@ -93,6 +102,10 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter
 		that.burgerMode = false;
 		that.burgerWord = '';
 		that.iscroll = null;
+
+		if(typeof that.dropdown_cb_custom.cb_destroy == 'function'){
+			that.dropdown_cb_custom.cb_destroy(that);
+		}
 	}
 
 	if(typeof fn_enter != 'function'){  that.fn_enter = false; }
