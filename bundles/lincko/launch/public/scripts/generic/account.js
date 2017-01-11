@@ -344,6 +344,7 @@ var account_integration_account = {
 	timer: null,
 	time: 1500,
 	ready: true,
+	status: -1,
 	start: function(){
 		account_integration_account.stop();
 		account_integration_account.time = 1500;
@@ -359,13 +360,20 @@ var account_integration_account = {
 				account_integration_account.time = account_integration_account.time + 50;
 			}
 			wrapper_sendAction(null, 'get', 'integration/code', function(msg, err, status, data){
-				if(typeof data.status != 'undefined'){
-					console.log(data.status);
-					if(data.status==0 || data.status==2){ //failed or processing
+				if(typeof data.status != 'undefined' && data.status != account_integration_account.status){
+					account_integration_account.status = data.status;
+					if(data.status==0){ //failed
 						$('#account_integration_top_info').recursiveEmpty();
 						var div = $('<div>').html(wrapper_to_html(msg));
 						$('#account_integration_top_info').append(div);
 						account_integration_account.stop();
+						return true;
+					} else if(data.status==2){ //processing
+						$('#account_integration_top_info').recursiveEmpty();
+						var div = $('<div>').html(wrapper_to_html(msg));
+						var loading_bar = $("#-submit_progress_bar").clone();
+						loading_bar.prop('id', '').addClass('account_integration_top_progress');
+						$('#account_integration_top_info').append(div).append(loading_bar);
 						return true;
 					} else if(data.status==3){ //done
 						$('#account_integration_top_info').recursiveEmpty();
@@ -384,6 +392,7 @@ var account_integration_account = {
 	stop: function(){
 		clearTimeout(account_integration_account.timer);
 		account_integration_account.ready = true;
+		account_integration_account.status = -1;
 	},
 };
 
@@ -398,7 +407,7 @@ $('#account_integration_wechat').click(function(){
 			return false;
 		}
 		account_integration_wechat_qrcode();
-	}, 600000); //Refresh the QR code every 10min
+	}, 1200000); //Refresh the QR code every 20min
 	account_integration_account.start();
 });
 
@@ -422,7 +431,7 @@ var account_integration_wechat_qrcode = function(){
 		$('#account_integration_top_info').find('img').attr('src', url_qrcode);
 	} else {
 		$('#account_integration_top_info').recursiveEmpty();
-		var image = $('<img>').attr('src', url_qrcode);
+		var image = $('<img>').attr('src', url_qrcode).addClass('account_integration_top_info_qrcode');
 		$('#account_integration_top_info').append(image);
 	}
 };

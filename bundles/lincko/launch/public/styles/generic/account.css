@@ -79,11 +79,12 @@
 	/*font-weight: bold;*/
 }
 
-.account_forgot_top, .account_reset_top, .account_integration_top {
+.account_forgot_top, .account_reset_top, #account_integration_top {
 	color: #F8F8F8;
 	font-size: 14px;
 	padding-top: 2px;
 	padding-bottom: 16px;
+	position: relative;
 }
 
 .account_reset_top {
@@ -594,6 +595,13 @@
 	-khtml-opacity:0.3;
 }
 
+.account_integration_top_progress {
+	width: 100% !important;
+	margin: 0;
+	margin-top: 4px;
+	display: block;
+}
+
 #account_integration_top_info {
 	font-size: 0;
 	padding-top: 16px;
@@ -609,7 +617,7 @@
 	height: 222px;
 }
 
-#account_integration_top_info > img {
+.account_integration_top_info_qrcode {
 	width: 220px;
 	height: 220px;
 	border: solid 1px #999999;
