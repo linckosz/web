@@ -262,7 +262,7 @@ class ControllerWechat extends Controller {
 		} else {
 			return false;
 		}
-		$data = json_encode($data);
+		$data = json_encode($data, JSON_FORCE_OBJECT);
 		//\libs\Watch::php($data, $url, __FILE__, __LINE__, false, false, true);
 		$timeout = 8;
 		$ch = curl_init();

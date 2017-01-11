@@ -104,7 +104,7 @@ class ControllerWrapper extends Controller {
 	protected function sendCurl(){
 		$app = $this->app;
 
-		$data = json_encode($this->json);
+		$data = json_encode($this->json, JSON_FORCE_OBJECT);
 
 		$url = $app->lincko->wrapper['url'].$this->action;
 

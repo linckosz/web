@@ -339,13 +339,18 @@ $('#account_signin_forgot').click(function(){
 var account_integration_account_timer;
 var account_integration_account = {
 	timer: null,
+	time: 2000,
 	start: function(){
 		account_integration_account.stop();
+		account_integration_account.time = 2000;
 		account_integration_account.timer = setInterval(function(){
+			if(account_integration_account.time < 10000){ //Limit at 10s scanner
+				account_integration_account.time = account_integration_account.time + 100;
+			}
 			wrapper_sendAction(null, 'get', 'integration/code', function(data){
 				console.log(data);
 			});
-		}, 1000);
+		}, account_integration_account.time);
 	},
 	stop: function(){
 		clearInterval(account_integration_account.timer);
