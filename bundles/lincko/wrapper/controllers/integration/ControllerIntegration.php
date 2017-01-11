@@ -10,6 +10,8 @@ class ControllerIntegration extends Controller {
 		$app = \Slim\Slim::getInstance();
 		$_SESSION['integration_code'] = $code;
 		$app->lincko->data['link_reset'] = true;
+		$_SESSION['integration_check'] = true;
+		unset($_SESSION['integration_check']);
 		$app->router->getNamedRoute('root')->dispatch();
 	}
 

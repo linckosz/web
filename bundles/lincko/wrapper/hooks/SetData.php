@@ -17,7 +17,12 @@ function SetData(){
 	$logged = false;
 
 	if(isset($_SESSION['integration_check'])){
-		$app->lincko->data['integration_check'] = $_SESSION['integration_check'];
+		if(strtolower($app->request->getMethod())=='get' && preg_match("/\/integration\/code\/\S{8}$/ui", $app->request->getResourceUri())){
+			$_SESSION['integration_check'] = true;
+			unset($_SESSION['integration_check']);
+		} else {
+			$app->lincko->data['integration_check'] = $_SESSION['integration_check'];
+		}
 	}
 
 	if(
