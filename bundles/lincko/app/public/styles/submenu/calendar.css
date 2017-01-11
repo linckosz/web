@@ -36,6 +36,7 @@
 
 .submenu_calendar .burger_calendar .ui-widget-header{
 	margin-top: 20px;
+	margin-bottom: 10px;
 }
 
 .submenu_calendar .burger_calendar .ui-datepicker-calendar {
