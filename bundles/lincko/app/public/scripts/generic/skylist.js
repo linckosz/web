@@ -1925,7 +1925,7 @@ skylist.prototype.addTask = function(item){
 	// if(!responsive.test("maxMobileL")){
 	// 	burger_calendar(elem_calendar_timestamp, elem_calendar );
 	// }
-	if(!Lincko.storage.get('projects', item._parent[1])['personal_private']){
+	if(!responsive.test("maxMobileL") && !Lincko.storage.get('projects', item._parent[1])['personal_private']){
 		elem_calendar.click(function(event){
 			event.stopPropagation();
 		});
