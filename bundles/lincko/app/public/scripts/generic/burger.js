@@ -562,79 +562,8 @@ var burger_attach_clickHandler = {
 			if(elem_datepicker){ return; }
 			if($('#burger_calendar_clickHandler').length){ $('#burger_calendar_clickHandler').recursiveRemove(); }
 			var md5id = md5(Math.random());
-			elem_datepicker = $('#-burger_calendar_clickHandler').clone().prop('id', 'burger_calendar_clickHandler_'+md5id);
-			elem_datepicker.datepicker(
-			{
-				//altFormat: "M d",
-				//altField: elem_alt,
-				dayNamesMin: burgerN.daysVeryShortArray,
-				monthNames: burgerN.monthsArray,
-				showOtherMonths: true,
-				dateFormat: '@',
-				gotoCurrent: true,
-				minDate: 0,
-				defaultDate: currentDate.toString(),
-				onChangeMonthYear: function(year, month, inst){ //this is called before the calendar is redrawn, use timeout
-					setTimeout(function(){
-						elem_datepicker.find('.ui-datepicker-next').empty().addClass('icon-Forward'); //DONT USE .recursiveEmpty() HERE
-						elem_datepicker.find('.ui-datepicker-prev').empty().addClass('icon-Forward fa-flip-horizontal'); //DONT USE .recursiveEmpty() HERE
-					}, 10);
-				},
-				onSelect: function(dateText, inst){
-					var timestamp = parseInt(dateText, 10)/1000 + 86399; //add 86399 to make it end of the day
-					if(typeof cb_select == 'function'){ cb_select(timestamp, elem_datepicker); }
-				},
-			});
-			elem_datepicker.find('.ui-datepicker-inline').addClass('burger_calendar');
 
-			var elem_calendarPrepend = $('#-burger_calendar_prepend').clone().prop('id','burger_calendar_prepend');
-			elem_calendarPrepend.find('[find=today_info]').html(Lincko.Translation.get('app', 3604, 'html', {date: new wrapper_date().display('date_medium_simple'),}));
-
-
-			elem_datepicker.prepend(elem_calendarPrepend);
-			elem_datepicker.find('.ui-datepicker-next').empty().addClass('icon-Forward'); //DONT USE .recursiveEmpty() HERE
-			elem_datepicker.find('.ui-datepicker-prev').empty().addClass('icon-Forward fa-flip-horizontal'); //DONT USE .recursiveEmpty() HERE
-			var elem_prepend_today = elem_calendarPrepend.find('[find=today_btn]');
-			var elem_prepend_tomorrow =  elem_calendarPrepend.find('[find=tomorrow_btn]');
-			var elem_prepend_twoDays = elem_calendarPrepend.find('[find=twoDays_btn]');
-			var elem_prepend_oneWeek = elem_calendarPrepend.find('[find=oneWeek_btn]');
-
-			var prepend_select = function(elem_click){
-				elem_datepicker.find('.burger_calendar_prepend_active').removeClass('burger_calendar_prepend_active');
-				$(elem_click).addClass('burger_calendar_prepend_active');
-				elem_datepicker.find('.ui-state-active').click();
-			}
-
-			elem_prepend_today.click(function(){
-				elem_datepicker.datepicker('setDate',0);
-				prepend_select(this);
-			});
-			elem_prepend_tomorrow.click(function(){
-				elem_datepicker.datepicker('setDate',1);
-				prepend_select(this);
-			});
-			elem_prepend_twoDays.click(function(){
-				elem_datepicker.datepicker('setDate',2);
-				prepend_select(this);
-			});
-			 elem_prepend_oneWeek.click(function(){
-				elem_datepicker.datepicker('setDate',7);
-				prepend_select(this);
-			});
-
-			var date = new wrapper_date(elem_datepicker.datepicker('getDate').getTime()/1000);
-			if( date.happensSomeday(0) ){
-				elem_prepend_today.addClass('burger_calendar_prepend_active');
-			}
-			else if( date.happensSomeday(1) ){
-				elem_prepend_tomorrow.addClass('burger_calendar_prepend_active');
-			}
-			else if( date.happensSomeday(2) ){
-				elem_prepend_twoDays.addClass('burger_calendar_prepend_active');
-			}
-			else if( date.happensSomeday(7) ){
-				elem_prepend_oneWeek.addClass('burger_calendar_prepend_active');
-			}
+			elem_datepicker = burger_renderCalendar('burger_calendar_clickHandler_'+md5id, currentDate, cb_select).attr('tabindex', 0).addClass('burger_calendar_clickHandler');
 
 			var coord = elem.offset();
 			var left = coord.left;
@@ -708,6 +637,7 @@ var burger_attach_clickHandler = {
 					param.cb_create = cb_create;
 					param.cb_select = cb_select;
 					param.cb_destroy = cb_destroy;
+					param.defaultDate = currentDate;
 					submenu_Build('burger_clickHandler_calendar', true, null, param);
 				}
 			}
@@ -1389,6 +1319,92 @@ burger_dropdown.prototype.destroy = function(){
 	delete burger_global_dropdown.list[that.id_dropdown];
 	delete this;
 }
+
+
+var burger_renderCalendar = function(id, defaultDate, fn_onSelect){
+	var elem_datepicker = $('<div>');
+	if(typeof id == 'strong'){ elem_datepicker.prop('id', id); }
+	if(typeof defaultDate == 'number' && defaultDate < 1000000000){ defaultDate = defaultDate*1000; }
+	else if(typeof defaultDate != 'number'){ var defaultDate = new Date().getTime(); }	
+	
+	if(typeof fn_onSelect != 'function'){ var fn_onSelect = function(){}; }
+
+	elem_datepicker.datepicker(
+	{
+		//altFormat: "M d",
+		//altField: elem_alt,
+		dayNamesMin: burgerN.daysVeryShortArray,
+		monthNames: burgerN.monthsArray,
+		showOtherMonths: true,
+		dateFormat: '@',
+		gotoCurrent: true,
+		minDate: 0,
+		defaultDate: defaultDate.toString(),
+		onChangeMonthYear: function(year, month, inst){ //this is called before the calendar is redrawn, use timeout
+			setTimeout(function(){
+				elem_datepicker.find('.ui-datepicker-next').empty().addClass('icon-Forward'); //DONT USE .recursiveEmpty() HERE
+				elem_datepicker.find('.ui-datepicker-prev').empty().addClass('icon-Forward fa-flip-horizontal'); //DONT USE .recursiveEmpty() HERE
+			}, 10);
+		},
+		onSelect: function(dateText, inst){
+			var timestamp = parseInt(dateText, 10)/1000 + 86399; //add 86399 to make it end of the day
+			fn_onSelect(timestamp, elem_datepicker);
+		},
+	});
+	elem_datepicker.find('.ui-datepicker-inline').addClass('burger_calendar');
+
+	var elem_calendarPrepend = $('#-burger_calendar_prepend').clone().prop('id','burger_calendar_prepend');
+	elem_calendarPrepend.find('[find=today_info]').html(Lincko.Translation.get('app', 3604, 'html', {date: new wrapper_date().display('date_medium_simple'),}));
+
+
+	elem_datepicker.prepend(elem_calendarPrepend);
+	elem_datepicker.find('.ui-datepicker-next').empty().addClass('icon-Forward'); //DONT USE .recursiveEmpty() HERE
+	elem_datepicker.find('.ui-datepicker-prev').empty().addClass('icon-Forward fa-flip-horizontal'); //DONT USE .recursiveEmpty() HERE
+	var elem_prepend_today = elem_calendarPrepend.find('[find=today_btn]');
+	var elem_prepend_tomorrow =  elem_calendarPrepend.find('[find=tomorrow_btn]');
+	var elem_prepend_twoDays = elem_calendarPrepend.find('[find=twoDays_btn]');
+	var elem_prepend_oneWeek = elem_calendarPrepend.find('[find=oneWeek_btn]');
+
+	var prepend_select = function(elem_click){
+		elem_datepicker.find('.burger_calendar_prepend_active').removeClass('burger_calendar_prepend_active');
+		$(elem_click).addClass('burger_calendar_prepend_active');
+		elem_datepicker.find('.ui-state-active').click();
+	}
+
+	elem_prepend_today.click(function(){
+		elem_datepicker.datepicker('setDate',0);
+		prepend_select(this);
+	});
+	elem_prepend_tomorrow.click(function(){
+		elem_datepicker.datepicker('setDate',1);
+		prepend_select(this);
+	});
+	elem_prepend_twoDays.click(function(){
+		elem_datepicker.datepicker('setDate',2);
+		prepend_select(this);
+	});
+	 elem_prepend_oneWeek.click(function(){
+		elem_datepicker.datepicker('setDate',7);
+		prepend_select(this);
+	});
+
+	var date = new wrapper_date(elem_datepicker.datepicker('getDate').getTime()/1000);
+	if( date.happensSomeday(0) ){
+		elem_prepend_today.addClass('burger_calendar_prepend_active');
+	}
+	else if( date.happensSomeday(1) ){
+		elem_prepend_tomorrow.addClass('burger_calendar_prepend_active');
+	}
+	else if( date.happensSomeday(2) ){
+		elem_prepend_twoDays.addClass('burger_calendar_prepend_active');
+	}
+	else if( date.happensSomeday(7) ){
+		elem_prepend_oneWeek.addClass('burger_calendar_prepend_active');
+	}
+
+	return elem_datepicker;
+}
+
 
  var burgerN = {
  	shortcut:{
