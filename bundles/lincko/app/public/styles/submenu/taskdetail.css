@@ -17,6 +17,7 @@
 }
 .submenu_wrapper_taskdetail_tasks.submenu_top, .submenu_wrapper_taskdetail_tasks [find=submenu_button_title] {
 	background-color: #475577;
+	background-image: none;
 }
 .submenu_wrapper_taskdetail_notes.submenu_top, .submenu_wrapper_taskdetail_notes [find=submenu_button_title] {
 	background-color: #F0EB4E;

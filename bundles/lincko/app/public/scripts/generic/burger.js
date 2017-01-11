@@ -1347,6 +1347,10 @@ var burger_renderCalendar = function(id, defaultDate, fn_onSelect){
 			}, 10);
 		},
 		onSelect: function(dateText, inst){
+			setTimeout(function(){
+				elem_datepicker.find('.ui-datepicker-next').empty().addClass('icon-Forward'); //DONT USE .recursiveEmpty() HERE
+				elem_datepicker.find('.ui-datepicker-prev').empty().addClass('icon-Forward fa-flip-horizontal'); //DONT USE .recursiveEmpty() HERE
+			}, 10);
 			var timestamp = parseInt(dateText, 10)/1000 + 86399; //add 86399 to make it end of the day
 			fn_onSelect(timestamp, elem_datepicker);
 		},
