@@ -594,24 +594,28 @@
 	-khtml-opacity:0.3;
 }
 
-#account_wechat_qrcode {
+#account_integration_top_info {
 	font-size: 0;
 	padding-top: 16px;
 	padding-bottom: 4px;
 }
 
-#account_wechat_qrcode > iframe {
+#account_integration_top_info > div {
+	font-size: 14px;
+}
+
+#account_integration_top_info > iframe {
 	width: 222px;
 	height: 222px;
 }
 
-#account_wechat_qrcode > img {
+#account_integration_top_info > img {
 	width: 220px;
 	height: 220px;
 	border: solid 1px #999999;
 }
 
-#account_wechat_box > div {
+#account_integration_box > div {
 	padding-bottom: 0;
 }
 

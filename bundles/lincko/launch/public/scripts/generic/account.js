@@ -194,11 +194,12 @@ function account_hide() {
 
 function account_select(select) {
 	global_select = select;
-	$('#account_signin_box, #account_joinus_box, #account_forgot_box, #account_reset_box, #account_wechat_box').addClass('display_none');
+	$('#account_signin_box, #account_joinus_box, #account_forgot_box, #account_reset_box, #account_integration_box').addClass('display_none');
 	$('#account_tab_joinus, #account_tab_signin').removeClass('account_trans').addClass('display_none');
 	$('#account_tab_joinus > div, #account_tab_signin > div').removeClass('account_tab_joinus').removeClass('account_tab_signin');
 	$('#account_wrapper').find('.account_integration_icon').removeClass('account_integration_icon_active account_integration_icon_blur');
 	account_hide_error();
+	account_integration_account.stop();
 	if(select == 'forgot'){
 		$('#account_forgot_box').removeClass('display_none');
 		$('#account_forgot_email').val($('#account_signin_email').val());
@@ -210,7 +211,9 @@ function account_select(select) {
 		$('#account_reset_password').focus(); //Helps to reset the text behind
 		$('#account_reset_code').focus();
 	} else if(select == 'wechat'){
-		$('#account_wechat_box').removeClass('display_none');
+		$('#account_integration_top_info').recursiveEmpty();
+		$('#account_integration_box').removeClass('display_none');
+		$('#account_integration_top_text').html(wrapper_to_html(Lincko.Translation.get('web', 14, 'html'))); //Scan the QR code to sign in using your Wechat account
 		$('#account_wrapper').find('.account_integration_icon').addClass('account_integration_icon_blur');
 		$('#account_integration_wechat').addClass('account_integration_icon_active').removeClass('account_integration_icon_blur');
 	} else if(select == 'signin'){
@@ -339,21 +342,48 @@ $('#account_signin_forgot').click(function(){
 var account_integration_account_timer;
 var account_integration_account = {
 	timer: null,
-	time: 2000,
+	time: 1500,
+	ready: true,
 	start: function(){
 		account_integration_account.stop();
-		account_integration_account.time = 2000;
-		account_integration_account.timer = setInterval(function(){
-			if(account_integration_account.time < 10000){ //Limit at 10s scanner
-				account_integration_account.time = account_integration_account.time + 100;
+		account_integration_account.time = 1500;
+		account_integration_account.timeout();
+	},
+	timeout: function(){
+		account_integration_account.timer = setTimeout(function(){
+			if(!account_integration_account.ready){
+				return false;
 			}
-			wrapper_sendAction(null, 'get', 'integration/code', function(data){
-				console.log(data);
+			account_integration_account.ready = false;
+			if(account_integration_account.time < 10000){ //Limit at 10s scanner
+				account_integration_account.time = account_integration_account.time + 50;
+			}
+			wrapper_sendAction(null, 'get', 'integration/code', function(msg, err, status, data){
+				if(typeof data.status != 'undefined'){
+					console.log(data.status);
+					if(data.status==0 || data.status==2){ //failed or processing
+						$('#account_integration_top_info').recursiveEmpty();
+						var div = $('<div>').html(wrapper_to_html(msg));
+						$('#account_integration_top_info').append(div);
+						account_integration_account.stop();
+						return true;
+					} else if(data.status==3){ //done
+						$('#account_integration_top_info').recursiveEmpty();
+						var div = $('<div>').html(wrapper_to_html(msg));
+						$('#account_integration_top_info').append(div);
+						account_integration_account.stop();
+						window.location.href = account_link['root'];
+						return true;
+					}
+				}
 			});
+			account_integration_account.ready = true;
+			account_integration_account.timeout();
 		}, account_integration_account.time);
 	},
 	stop: function(){
-		clearInterval(account_integration_account.timer);
+		clearTimeout(account_integration_account.timer);
+		account_integration_account.ready = true;
 	},
 };
 
@@ -363,7 +393,7 @@ $('#account_integration_wechat').click(function(){
 	account_integration_wechat_qrcode();
 	clearInterval(account_integration_wechat_timer);
 	account_integration_wechat_timer = setInterval(function(){
-		if($('#account_wechat_box').hasClass('display_none')){
+		if($('#account_integration_box').hasClass('display_none')){
 			clearInterval(account_integration_wechat_timer);
 			return false;
 		}
@@ -376,7 +406,7 @@ var account_integration_wechat_qrcode = function(){
 	/*
 	//This code use the QR code genrate from Wechat, but this only do the connection on browser, does not use callbacks, and do no work on mobile
 	var obj = new WxLogin({
-		id: "account_wechat_qrcode",
+		id: "account_integration_top_info",
 		appid: account_integration.wechat.dev_appid, //This is using dev account, but openID is different from dev to public. Must use unionID to log in this scenario
 		scope: "snsapi_login",
 		redirect_uri: encodeURIComponent(top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/integration/wechat/dev"),
@@ -388,12 +418,12 @@ var account_integration_wechat_qrcode = function(){
 
 	//Use Lincko QR code for integration
 	var url_qrcode = top.location.protocol+'//'+document.linckoBack+'file.'+document.domainRoot+':'+document.linckoBackPort+'/integration/qrcode/wechat?'+(new wrapper_date().timestamp);	
-	if($('#account_wechat_qrcode').find('img').length == 1){
-		$('#account_wechat_qrcode').find('img').attr('src', url_qrcode);
+	if($('#account_integration_top_info').find('img').length == 1){
+		$('#account_integration_top_info').find('img').attr('src', url_qrcode);
 	} else {
-		$('#account_wechat_qrcode').recursiveEmpty();
+		$('#account_integration_top_info').recursiveEmpty();
 		var image = $('<img>').attr('src', url_qrcode);
-		$('#account_wechat_qrcode').append(image);
+		$('#account_integration_top_info').append(image);
 	}
 };
 
