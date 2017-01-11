@@ -1925,7 +1925,7 @@ skylist.prototype.addTask = function(item){
 	// if(!responsive.test("maxMobileL")){
 	// 	burger_calendar(elem_calendar_timestamp, elem_calendar );
 	// }
-	if(!responsive.test("maxMobileL") && !Lincko.storage.get('projects', item._parent[1])['personal_private']){
+	if(!responsive.test("maxMobileL")){
 		elem_calendar.click(function(event){
 			event.stopPropagation();
 		});
@@ -1959,9 +1959,7 @@ skylist.prototype.addTask = function(item){
 	rightOptions - duedate
 	*/
 	var elem_rightOptions_duedate = that.add_rightOptionsBox(duedate,'fa-calendar');
-	if(!Lincko.storage.get('projects', item._parent[1])['personal_private']){ 
-		burger_attach_clickHandler.calendar(elem_rightOptions_duedate, item['_type'], item['_id'], null, true);
-	}
+	burger_attach_clickHandler.calendar(elem_rightOptions_duedate, item['_type'], item['_id'], null, true);
 	// elem_rightOptions_duedate.click(function(){
 	// 	var param = {elem_inputOrig:elem_calendar_timestamp };
 	// 	submenu_Build('calendar', true, false, param);
