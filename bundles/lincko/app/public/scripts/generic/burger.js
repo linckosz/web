@@ -1333,8 +1333,8 @@ var burger_renderCalendar = function(id, defaultDate, fn_onSelect){
 		setTimeout(function(month){
 			var elem_next = elem_datepicker.find('.ui-datepicker-next');
 			var elem_prev = elem_datepicker.find('.ui-datepicker-prev');
-			elem_next.empty().addClass('icon-Forward'); //DONT USE .recursiveEmpty() HERE
-			elem_prev.empty().addClass('icon-Forward fa-flip-horizontal'); //DONT USE .recursiveEmpty() HERE
+			elem_next.empty().append('<span class="icon-Forward"></span>'); //DONT USE .recursiveEmpty() HERE
+			elem_prev.empty().append('<span class="icon-Forward fa-flip-horizontal"></span>'); //DONT USE .recursiveEmpty() HERE
 		
 			if(typeof month == 'number'){
 				var month_next = month+1;
@@ -1349,8 +1349,6 @@ var burger_renderCalendar = function(id, defaultDate, fn_onSelect){
 				elem_next.append('<span find="text" class="font_sans_serif">'+month_next+'</span>');
 				elem_prev.append('<span find="text" class="font_sans_serif">'+month_prev+'</span>');
 			}
-		
-
 		}, 10, month);
 	}
 
@@ -1369,7 +1367,7 @@ var burger_renderCalendar = function(id, defaultDate, fn_onSelect){
 			update_monthControl(month-1);//to be used as index in array
 		},
 		onSelect: function(dateText, inst){
-			update_monthControl();
+			update_monthControl(inst.selectedMonth-1);//to be used as index in array
 			var timestamp = parseInt(dateText, 10)/1000 + 86399; //add 86399 to make it end of the day
 			fn_onSelect(timestamp, elem_datepicker);
 		},

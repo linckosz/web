@@ -172,8 +172,16 @@
 .burger_calendar .ui-datepicker-prev [find=text],
 .burger_calendar .ui-datepicker-next [find=text]{
 	top: 6px;
-    left: -20px;
+	left: auto;
+	right: auto;
     opacity: 0.6;
+    white-space: nowrap;
+}
+.burger_calendar .ui-datepicker-prev [find=text]{
+	right: -20px;
+}
+.burger_calendar .ui-datepicker-next [find=text]{
+	left: -20px;
 }
 .burger_calendar .ui-datepicker-prev,
 .burger_calendar .ui-datepicker-prev:hover,

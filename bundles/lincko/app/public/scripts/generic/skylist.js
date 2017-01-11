@@ -1922,12 +1922,14 @@ skylist.prototype.addTask = function(item){
 	elem_calendar_timestamp.val((item['start']+item['duration'])*1000);
 	
 	//enable calendar burger for landscape tablet and up
-	if(!responsive.test("maxMobileL") && !Lincko.storage.get('projects', item._parent[1])['personal_private']){
+	// if(!responsive.test("maxMobileL")){
+	// 	burger_calendar(elem_calendar_timestamp, elem_calendar );
+	// }
+	if(!Lincko.storage.get('projects', item._parent[1])['personal_private']){
 		elem_calendar.click(function(event){
 			event.stopPropagation();
 		});
 		burger_attach_clickHandler.calendar(elem_calendar, item['_type'], item['_id'], null, true);
-		//burger_calendar(elem_calendar_timestamp, elem_calendar );
 	}
 	// elem_calendar_timestamp.change(function(){
 	// 	var duration_timestamp = $(this).val()/1000 - item['start'];
