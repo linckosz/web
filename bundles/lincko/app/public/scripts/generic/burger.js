@@ -1329,6 +1329,31 @@ var burger_renderCalendar = function(id, defaultDate, fn_onSelect){
 	
 	if(typeof fn_onSelect != 'function'){ var fn_onSelect = function(){}; }
 
+	var update_monthControl = function(month){
+		setTimeout(function(month){
+			var elem_next = elem_datepicker.find('.ui-datepicker-next');
+			var elem_prev = elem_datepicker.find('.ui-datepicker-prev');
+			elem_next.empty().addClass('icon-Forward'); //DONT USE .recursiveEmpty() HERE
+			elem_prev.empty().addClass('icon-Forward fa-flip-horizontal'); //DONT USE .recursiveEmpty() HERE
+		
+			if(typeof month == 'number'){
+				var month_next = month+1;
+				if(month_next > 11){ month_next = 0; } //13th month is january
+				var month_prev = month-1;
+				if(month_prev < 0){ month_prev = 11; } //0th month is december
+
+				var month_array_short = (new wrapper_date()).month_short;
+				month_next = month_array_short[month_next];
+				month_prev = month_array_short[month_prev];
+
+				elem_next.append('<span find="text" class="font_sans_serif">'+month_next+'</span>');
+				elem_prev.append('<span find="text" class="font_sans_serif">'+month_prev+'</span>');
+			}
+		
+
+		}, 10, month);
+	}
+
 	elem_datepicker.datepicker(
 	{
 		//altFormat: "M d",
@@ -1341,16 +1366,10 @@ var burger_renderCalendar = function(id, defaultDate, fn_onSelect){
 		minDate: 0,
 		defaultDate: defaultDate.toString(),
 		onChangeMonthYear: function(year, month, inst){ //this is called before the calendar is redrawn, use timeout
-			setTimeout(function(){
-				elem_datepicker.find('.ui-datepicker-next').empty().addClass('icon-Forward'); //DONT USE .recursiveEmpty() HERE
-				elem_datepicker.find('.ui-datepicker-prev').empty().addClass('icon-Forward fa-flip-horizontal'); //DONT USE .recursiveEmpty() HERE
-			}, 10);
+			update_monthControl(month-1);//to be used as index in array
 		},
 		onSelect: function(dateText, inst){
-			setTimeout(function(){
-				elem_datepicker.find('.ui-datepicker-next').empty().addClass('icon-Forward'); //DONT USE .recursiveEmpty() HERE
-				elem_datepicker.find('.ui-datepicker-prev').empty().addClass('icon-Forward fa-flip-horizontal'); //DONT USE .recursiveEmpty() HERE
-			}, 10);
+			update_monthControl();
 			var timestamp = parseInt(dateText, 10)/1000 + 86399; //add 86399 to make it end of the day
 			fn_onSelect(timestamp, elem_datepicker);
 		},
@@ -1362,8 +1381,8 @@ var burger_renderCalendar = function(id, defaultDate, fn_onSelect){
 
 
 	elem_datepicker.prepend(elem_calendarPrepend);
-	elem_datepicker.find('.ui-datepicker-next').empty().addClass('icon-Forward'); //DONT USE .recursiveEmpty() HERE
-	elem_datepicker.find('.ui-datepicker-prev').empty().addClass('icon-Forward fa-flip-horizontal'); //DONT USE .recursiveEmpty() HERE
+	update_monthControl(elem_datepicker.datepicker( "getDate" ).getMonth());
+
 	var elem_prepend_today = elem_calendarPrepend.find('[find=today_btn]');
 	var elem_prepend_tomorrow =  elem_calendarPrepend.find('[find=tomorrow_btn]');
 	var elem_prepend_twoDays = elem_calendarPrepend.find('[find=twoDays_btn]');

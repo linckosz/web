@@ -112,9 +112,6 @@
 .burger_calendar .ui-widget-header{
 	margin-top: 80px;
 }
-.burger_calendar .ui-datepicker-year{
-	display: none;
-}
 .burger_calendar .ui-datepicker-calendar{
 	height: 185px;
 	width: 267px;
@@ -170,8 +167,14 @@
 .burger_calendar .ui-datepicker-title{
 	font-size: 16px;
 	color: #3F84B0;
+	text-transform: uppercase;
 }
-
+.burger_calendar .ui-datepicker-prev [find=text],
+.burger_calendar .ui-datepicker-next [find=text]{
+	top: 6px;
+    left: -20px;
+    opacity: 0.6;
+}
 .burger_calendar .ui-datepicker-prev,
 .burger_calendar .ui-datepicker-prev:hover,
 .burger_calendar .ui-datepicker-next, 
@@ -184,10 +187,10 @@
 	border: none;
 }
 .burger_calendar .ui-datepicker-next, .burger_calendar .ui-datepicker-next:hover{
-	right: 30%;
+	right: 20%;
 }
 .burger_calendar .ui-datepicker-prev, .burger_calendar .ui-datepicker-prev:hover{
-	left: 30%;
+	left: 20%;
 }
 
 .burger_calendar .ui-datepicker-calendar th {
