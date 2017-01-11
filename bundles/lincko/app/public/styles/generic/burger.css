@@ -195,10 +195,10 @@
 	border: none;
 }
 .burger_calendar .ui-datepicker-next, .burger_calendar .ui-datepicker-next:hover{
-	right: 20%;
+	right: 10%;
 }
 .burger_calendar .ui-datepicker-prev, .burger_calendar .ui-datepicker-prev:hover{
-	left: 20%;
+	left: 10%;
 }
 
 .burger_calendar .ui-datepicker-calendar th {
