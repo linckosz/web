@@ -11,7 +11,7 @@ var isOffline_update = function(DC){
 		}
 		if(isOffline){
 			isOffline = false;
-			base_show_error('YOU ARE BACK ON LINE TOTO');
+			base_show_error( Lincko.Translation.get('app', 1801, 'html')); //You are back online.
 		}
 	}
 	else if(DC && !isOffline){ //disconnected, but offline is still set to false
