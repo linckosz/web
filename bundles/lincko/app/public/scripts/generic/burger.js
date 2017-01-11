@@ -603,6 +603,14 @@ var burger_attach_clickHandler = {
 				});
 			}
 
+			//watch for being cut off on the right edge of screen
+			if(elem_datepicker.offset().left + elem_datepicker.outerWidth() + 20/*padding*/ > $(window).width()){
+				elem_datepicker.css({
+					left: 'auto',
+					right: 20, //padding
+				});
+			}
+
 			//add to global dropdown list
 			burger_global_dropdown.list[elem_datepicker.prop('id')] = {
 				destroy: function(){
