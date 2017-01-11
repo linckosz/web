@@ -824,6 +824,7 @@ historyFeed.prototype.app_chat_feed_data_format = function(data)
 			&& this.current.id === this.pre.id
 			&& this.current.type === this.pre.type
 			&& this.current.timestamp > this.pre.timestamp - (4*3600) //Need 4H gap
+			&& JSON.stringify(this.current.par) == JSON.stringify(this.current.pre)
 		){
 			continue;
 		}
@@ -835,6 +836,7 @@ historyFeed.prototype.app_chat_feed_data_format = function(data)
 				id: this.current.id,
 				type: this.current.type,
 				timestamp: this.current.timestamp,
+				par: this.current.par,
 			};
 		}
 		var item = new BaseItemCls(data[i],this.type);

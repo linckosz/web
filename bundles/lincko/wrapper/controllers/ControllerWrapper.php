@@ -335,7 +335,7 @@ class ControllerWrapper extends Controller {
 	protected function prepareJson(){
 		$this->setupKeys();
 		$this->json['public_key'] = $_SESSION['public_key'];
-		$this->json['checksum'] = md5($_SESSION['private_key'].json_encode($this->json['data'], JSON_UNESCAPED_UNICODE));
+		$this->json['checksum'] = md5($_SESSION['private_key'].json_encode($this->json['data'], JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE));
 	}
 
 	public function wrap_ok($action = NULL){
