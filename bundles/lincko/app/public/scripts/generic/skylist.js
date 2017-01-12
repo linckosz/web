@@ -310,7 +310,7 @@ skylist.prototype.subConstruct_default = function(){
 		that.list.prop('id'),
 		'projects_'+app_content_menu.projects_id,
 		function(){
-			if(typeof this.updated['projects_'+app_content_menu.projects_id] == 'object' && !this.updated['projects_'+app_content_menu.projects_id]._children){ return; }
+			if(typeof this.updated == 'object' && typeof this.updated['projects_'+app_content_menu.projects_id] == 'object' && !this.updated['projects_'+app_content_menu.projects_id]._children){ return; }
 
 			var scollToBottom = false;
 			var param = {};
