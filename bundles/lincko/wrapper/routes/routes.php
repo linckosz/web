@@ -42,6 +42,11 @@ $app->group('/info', function () use ($app) {
 	})
 	->name('info_nonetwork_get');
 
+	$app->get('/integration', function () use($app) {
+		$app->render('/bundles/lincko/wrapper/templates/integration.twig');
+	})
+	->name('info_integration_get');
+
 });
 
 $app->group('/debug', function () use ($app) {

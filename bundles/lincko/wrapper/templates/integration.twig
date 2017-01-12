@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-barstyle" content="default">
+<meta name="format-detection" content="telephone=no">
+<meta name="format-detection" content="date=no">
+<meta name="format-detection" content="address=no">
+<style>
+	html, body {
+		color: #FFFFFF;
+		font-family: "Helvetica Neue", Roboto, "San Francisco", Helvetica, Tahoma, Verdana, "Nimbus Sans L", "URW Gothic L", "Lucida Grande", Geneva, "DejaVu Sans", "Microsoft Sans Serif", sans-serif;
+		font-size: 20px;
+		padding: 0;
+		margin: 0;
+		height: 100%;
+		width: 100%;
+		position: relative;
+		text-align: center;
+		vertical-align: middle;
+		background: #FECE4D !important;
+		background-color: #FECE4D !important;
+		background: -webkit-linear-gradient(#FECE4D,#FBA026) !important; /* For Safari 5.1 to 6.0 */
+		background: -o-linear-gradient(#FECE4D,#FBA026) !important; /* For Opera 11.1 to 12.0 */
+		background: -moz-linear-gradient(#FECE4D,#FBA026) !important; /* For Firefox 3.6 to 15 */
+		background: linear-gradient(#FECE4D,#FBA026) !important; /* Standard syntax */
+	}
+	#integration {
+		position: absolute;
+		width: 100%;
+		text-align: center;
+		top: 50%;
+		transform: translateY(-50%);
+		-webkit-transform: translateY(-50%);
+		-moz-transform: translateY(-50%);
+		-ms-transform: translateY(-50%);
+		-o-transform: translateY(-50%);
+	}
+	#linckobot {
+		height: 250px;
+	}
+	#domain {
+		bottom: 4px;
+		right: 4px;
+		position: absolute;
+		text-align: right;
+		font-size: 14px;
+	}
+	.button {
+		cursor: pointer;
+		padding: 10px 30px;
+		color:#FFFFFF;
+		border: 2px solid #FFFFFF;
+		background-color: transparent;
+		border-radius: 5px;
+	}
+	.button:hover {
+		background-color: rgba(255, 255, 255, 0.1)
+	}
+	.button:active {
+		color:#FECE4D;
+		background-color: rgba(255, 255, 255, 0.9)
+	}
+</style>
+
+<script src="{{ _filelatest('/scripts/libs/jquery-1.12.0.min.js') }}" type="text/javascript"></script>
+
+<script>
+	$(function() {
+		$('#button_open').on('click', function(){
+			window.location.href = "{{ urlFor('root') }}";
+		});
+		$('#button_close').on('click', function(){
+			window.close();
+		});
+	});
+</script>
+
+</head>
+<body>
+	<div id="integration">
+		<img id="linckobot" src="{{ _filelatest('/lincko/launch/images/generic/account/integration/linckobot.png') }}"/>
+		<br />
+		{{ _trans('web', 6, 1, 'html')|ucfirst }}
+		<br /><br />
+		<span id="button_open" class="button" style="display:none;">
+			Open my account
+		</span>
+		<br /><br />
+		<span id="button_close" class="button" style="display:none;">
+			Close window
+		</span>
+	</div>
+		
+	<div id="domain">
+		Lincko.com
+	</div>
+</div>
+</body>
+</html>

@@ -5,6 +5,8 @@
 		var account_link = [];
 		account_link['root'] = "{{ urlFor('root') }}";
 		account_link['home'] = "{{ urlFor('home') }}";
+		account_link['info_integration'] = "{{ urlFor('info_integration_get') }}";
+		
 		var account_account_force = false;
 		{% if invitation_code or user_code %}
 			account_account_force = true;
