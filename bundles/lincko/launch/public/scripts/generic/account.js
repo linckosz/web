@@ -396,7 +396,7 @@ var account_integration_account = {
 	},
 };
 
-var account_integration_wechat_timer;
+
 $('#account_integration_wechat').click(function(){
 	account_show('wechat');
 	account_integration_wechat_qrcode();
@@ -408,10 +408,11 @@ $('#account_integration_wechat').click(function(){
 		}
 		account_integration_wechat_qrcode();
 	}, 1200000); //Refresh the QR code every 20min
-	account_integration_account.start();
 });
 
+var account_integration_wechat_timer;
 var account_integration_wechat_qrcode = function(){
+	clearInterval(account_integration_wechat_timer);
 	if(isMobileBrowser()){
 		//Use Lincko QR code for integration
 		var url_qrcode = top.location.protocol+'//'+document.linckoBack+'file.'+document.domainRoot+':'+document.linckoBackPort+'/integration/qrcode/wechat?'+(new wrapper_date().timestamp);	
@@ -422,19 +423,25 @@ var account_integration_wechat_qrcode = function(){
 			var image = $('<img>').attr('src', url_qrcode).addClass('account_integration_top_info_qrcode');
 			$('#account_integration_top_info').append(image);
 		}
+		account_integration_account.start();
 	} else if(isMobileApp()){
 		//Call a native function
 	} else {
 		//This code use the QR code genrate from Wechat, but this only do the connection on browser, does not use callbacks, and do no work on mobile
-		var obj = new WxLogin({
-			id: "account_integration_top_info",
-			appid: account_integration.wechat.dev_appid, //This is using dev account, but openID is different from dev to public. Must use unionID to log in this scenario
-			scope: "snsapi_login",
-			redirect_uri: encodeURIComponent(top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/integration/wechat/dev"),
-			state: "lincko",
-			style: "black",
-			href: account_integration.wechat.href,
-		});
+		wrapper_sendAction(null, 'get', 'integration/setcode', function(msg, err, status, data){
+			if(data.code){
+				var obj = new WxLogin({
+					id: "account_integration_top_info",
+					appid: account_integration.wechat.dev_appid, //This is using dev account, but openID is different from dev to public. Must use unionID to log in this scenario
+					scope: "snsapi_login",
+					redirect_uri: encodeURIComponent(top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/integration/wechat/dev"),
+					state: data.code,
+					style: "black",
+					href: account_integration.wechat.href,
+				});
+				account_integration_account.start();
+			}
+		});	
 	}
 };
 

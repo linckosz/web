@@ -1553,7 +1553,7 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 	var array_items = [];
 
 	//notifications
-	if(type=='notifications'){debugger;
+	if(type=='notifications'){
 		//For single Projects activity only, exclude chats activity and onboarding history before completion
 		if(exclude && only_items && parent_type=="projects"){
 			var exclude_projects = Lincko.storage.cache.getExcludeProjects();
