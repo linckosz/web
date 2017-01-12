@@ -435,10 +435,11 @@ var account_integration_wechat_qrcode = function(){
 					appid: account_integration.wechat.dev_appid, //This is using dev account, but openID is different from dev to public. Must use unionID to log in this scenario
 					scope: "snsapi_login",
 					redirect_uri: encodeURIComponent(top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/integration/wechat/dev"),
-					state: data.code,
+					state: "snsapi_userinfo",
 					style: "black",
 					href: account_integration.wechat.href,
 				});
+				console.log(obj);
 				account_integration_account.start();
 			}
 		});	

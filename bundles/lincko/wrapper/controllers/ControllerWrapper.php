@@ -189,6 +189,11 @@ class ControllerWrapper extends Controller {
 					unset($_SESSION['invitation_code']);
 				}
 
+				//Set integration_code
+				if(isset($json_result->flash->integration_code)){
+					$_SESSION['integration_code'] = $json_result->flash->integration_code;
+				}
+
 				//Clean integration_code because it has been used by the back end
 				if(isset($json_result->flash->unset_integration_code)){
 					unset($_SESSION['integration_code']);
