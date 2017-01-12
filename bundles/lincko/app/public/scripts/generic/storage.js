@@ -1553,7 +1553,7 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 	var array_items = [];
 
 	//notifications
-	if(type=='notifications'){
+	if(type=='notifications'){debugger;
 		//For single Projects activity only, exclude chats activity and onboarding history before completion
 		if(exclude && only_items && parent_type=="projects"){
 			var exclude_projects = Lincko.storage.cache.getExcludeProjects();
@@ -1626,7 +1626,7 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 								|| typeof Lincko.storage.data['_history_title']=='undefined'
 								|| typeof Lincko.storage.data['_history_title'][cat]=='undefined'
 								|| typeof Lincko.storage.data['_history_title'][cat][item['cod']]=='undefined'
-								|| ((item.cod!=201 || item.par_type!="projects") && exclude_onboarding && exclude_onboarding[cat] && exclude_onboarding[cat][id])
+								//|| ((item.cod!=201 || item.par_type!="projects") && exclude_onboarding && exclude_onboarding[cat] && exclude_onboarding[cat][id])
 								|| (cat=="chats" && item.cod!=101) //Keep creation of chats (shared and single)
 							){
 								save = false;

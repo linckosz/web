@@ -12,6 +12,9 @@ class ControllerIntegration extends Controller {
 		$app->lincko->data['link_reset'] = true;
 		$_SESSION['integration_check'] = true;
 		unset($_SESSION['integration_check']);
+		if($app->lincko->data['logged']){
+			$app->lincko->data['integration_connected'] = true;
+		}
 		$app->router->getNamedRoute('root')->dispatch();
 	}
 

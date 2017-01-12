@@ -78,14 +78,16 @@ class ControllerWechat extends Controller {
 				$response = false;
 			}
 
-			if($response && $access_token && $openid && !empty($openid) && $result = json_decode($response)){
+			//if($response && $access_token && $openid && !empty($openid) && $result = json_decode($response)){
+			if($response && $access_token && $unionid && !empty($unionid) && $result = json_decode($response)){
 				$data = new \stdClass;
 				$data->party = 'wechat';
 				/*
 					Using OpenID is more restrictive because it's different from DEV and PUBLIC account (UnionID is same),
 					but the advantage is that it will work on .cafe and .co (sandbox bruno wechat), and we can skip a confirmation because snsapi_base is providing OpenID without notification instead of snsapi_userinfo
 				*/
-				$data->party_id = $openid;
+				//$data->party_id = $openid;
+				$data->party_id = $unionid;
 				$data->data = $result;
 				$controller = new ControllerWrapper($data, 'post', false);
 				if($response = $controller->wrap_multi('integration/connect')){
@@ -133,12 +135,10 @@ class ControllerWechat extends Controller {
 		} else {
 			$app->lincko->data['integration_wechat_new'] = true; //Check if OpenID exists, if not it redirect to create an account
 			if($response && $result = json_decode($response)){
-				if(isset($result->access_token) && isset($result->openid) && !empty($result->openid)){
-					if(isset($result->unionid)){
-						$unionid = $result->unionid;
-					}
+				if(isset($result->access_token) && isset($result->openid) && !empty($result->openid) && isset($result->unionid) && !empty($result->unionid)){
 					$access_token = $result->access_token;
 					$openid = $result->openid;
+					$unionid = $result->unionid;
 
 					$data = new \stdClass;
 					$data->party = 'wechat';
@@ -146,7 +146,7 @@ class ControllerWechat extends Controller {
 						Using OpenID is more restrictive because it's different from DEV and PUBLIC account (UnionID is same),
 						but the advantage is that it will work on .cafe and .co (sandbox bruno wechat), and we can skip a confirmation because snsapi_base is providing OpenID without notification instead of snsapi_userinfo
 					*/
-					$data->party_id = $openid;
+					$data->party_id = $unionid;
 					$data->data = $result;
 					$controller = new ControllerWrapper($data, 'post', false);
 					if($response = $controller->wrap_multi('integration/connect')){

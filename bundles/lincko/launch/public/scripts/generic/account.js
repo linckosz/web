@@ -412,27 +412,29 @@ $('#account_integration_wechat').click(function(){
 });
 
 var account_integration_wechat_qrcode = function(){
-	/*
-	//This code use the QR code genrate from Wechat, but this only do the connection on browser, does not use callbacks, and do no work on mobile
-	var obj = new WxLogin({
-		id: "account_integration_top_info",
-		appid: account_integration.wechat.dev_appid, //This is using dev account, but openID is different from dev to public. Must use unionID to log in this scenario
-		scope: "snsapi_login",
-		redirect_uri: encodeURIComponent(top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/integration/wechat/dev"),
-		state: "lincko",
-		style: "black",
-		href: account_integration.wechat.href,
-	});
-	*/
-
-	//Use Lincko QR code for integration
-	var url_qrcode = top.location.protocol+'//'+document.linckoBack+'file.'+document.domainRoot+':'+document.linckoBackPort+'/integration/qrcode/wechat?'+(new wrapper_date().timestamp);	
-	if($('#account_integration_top_info').find('img').length == 1){
-		$('#account_integration_top_info').find('img').attr('src', url_qrcode);
+	if(isMobileBrowser()){
+		//Use Lincko QR code for integration
+		var url_qrcode = top.location.protocol+'//'+document.linckoBack+'file.'+document.domainRoot+':'+document.linckoBackPort+'/integration/qrcode/wechat?'+(new wrapper_date().timestamp);	
+		if($('#account_integration_top_info').find('img').length == 1){
+			$('#account_integration_top_info').find('img').attr('src', url_qrcode);
+		} else {
+			$('#account_integration_top_info').recursiveEmpty();
+			var image = $('<img>').attr('src', url_qrcode).addClass('account_integration_top_info_qrcode');
+			$('#account_integration_top_info').append(image);
+		}
+	} else if(isMobileApp()){
+		//Call a native function
 	} else {
-		$('#account_integration_top_info').recursiveEmpty();
-		var image = $('<img>').attr('src', url_qrcode).addClass('account_integration_top_info_qrcode');
-		$('#account_integration_top_info').append(image);
+		//This code use the QR code genrate from Wechat, but this only do the connection on browser, does not use callbacks, and do no work on mobile
+		var obj = new WxLogin({
+			id: "account_integration_top_info",
+			appid: account_integration.wechat.dev_appid, //This is using dev account, but openID is different from dev to public. Must use unionID to log in this scenario
+			scope: "snsapi_login",
+			redirect_uri: encodeURIComponent(top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/integration/wechat/dev"),
+			state: "lincko",
+			style: "black",
+			href: account_integration.wechat.href,
+		});
 	}
 };
 
@@ -599,7 +601,7 @@ JSfiles.finish(function(){
 	if(isMobileApp(true)){
 		$('#account_wrapper, .account_trans, .account_tab, #account_tab_lincko, .account_tab_joinus, .account_tab_signin, .account_form').addClass('account_wrapper_mobile_app');
 	}
-	if(isMobileApp(true) || isMobileBrowser() || navigator.userAgent.match(/MicroMessenger/i)){
+	if(isMobileApp() || navigator.userAgent.match(/MicroMessenger/i)){
 		$('#account_integration_wechat').addClass('display_none');
 	}
 });
