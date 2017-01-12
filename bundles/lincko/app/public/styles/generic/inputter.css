@@ -24,9 +24,10 @@
 }
 
 .inputter_icon_big_size{
-	font-size: 32px !important;
-	height:32px !important;
-	width: 32px !important;
+	font-size: 34px !important;
+}
+
+.inputter_icon_add_fix{
 }
 
 .inputter_checkbox

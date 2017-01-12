@@ -341,7 +341,7 @@ inputter.prototype.buildLayer = function()
 								if(this.hasTask)
 								{
 									item.attr("title",Lincko.Translation.get('app', 4001, 'js'));//Create the task
-									item.find(".inputter_ico").addClass("icon-Big-Add inputter_icon_blue inputter_icon_big_size");
+									item.find(".inputter_ico").addClass("icon-Big-Add inputter_icon_blue inputter_icon_big_size inputter_icon_add_fix");
 								}
 								else
 								{
