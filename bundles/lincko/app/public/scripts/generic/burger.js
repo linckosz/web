@@ -3096,13 +3096,13 @@ var burger_timestampToText = function(timestamp){
 
 	//returns text for TODAY, TOMORROW, YESTERDAY, or the wrapper_date very_short form text
 	if( date.happensSomeday(0) ){
-		return Lincko.Translation.get('app', 3302, 'html').toUpperCase()/*today*/;
+		return Lincko.Translation.get('app', 3302, 'js').toUpperCase()/*today*/;
 	}
 	else if( date.happensSomeday(1) ){
-		return Lincko.Translation.get('app', 3303, 'html').toUpperCase()/*tomorrow*/;
+		return Lincko.Translation.get('app', 3303, 'js').toUpperCase()/*tomorrow*/;
 	}
 	else if( date.happensSomeday(-1) ){
-		return Lincko.Translation.get('app', 3304, 'html').toUpperCase()/*yesterday*/;
+		return Lincko.Translation.get('app', 3304, 'js').toUpperCase()/*yesterday*/;
 	}
 	else{
 		return date.display('date_very_short');

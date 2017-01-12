@@ -9,13 +9,13 @@ var skylist_textDate = function(date){
 	//returns text for TODAY, TOMORROW
 	//returns false if not
 	if( date.happensSomeday(0) ){
-		return Lincko.Translation.get('app', 3302, 'html').toUpperCase()/*today*/;
+		return Lincko.Translation.get('app', 3302, 'js').toUpperCase()/*today*/;
 	}
 	else if( date.happensSomeday(1) ){
-		return Lincko.Translation.get('app', 3303, 'html').toUpperCase()/*tomorrow*/;
+		return Lincko.Translation.get('app', 3303, 'js').toUpperCase()/*tomorrow*/;
 	}
 	else if( date.happensSomeday(-1) ){
-		return Lincko.Translation.get('app', 3304, 'html').toUpperCase()/*yesterday*/;
+		return Lincko.Translation.get('app', 3304, 'js').toUpperCase()/*yesterday*/;
 	}
 	else{
 		return false;
@@ -1898,7 +1898,7 @@ skylist.prototype.addTask = function(item){
 	}
 	if(skylist_textDate(duedate)){
 		duedate = skylist_textDate(duedate);
-		if(duedate == Lincko.Translation.get('app', 3302, 'html').toUpperCase() /*today*/){
+		if(duedate == Lincko.Translation.get('app', 3302, 'js').toUpperCase() /*today*/){
 			Elem.removeClass('skylist_card_overdue');
 		}
 	}
