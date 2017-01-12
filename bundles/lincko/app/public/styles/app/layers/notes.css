@@ -31,9 +31,10 @@
 	background-position: center;
 	padding: 30px 30px;
 }
-
 .app_layers_notes_noteslist .skylist_card_center [find=title]{
 	font-size: 18px;
+	max-height: 48px;
+	word-break: break-all;
 }
 
 .app_layers_notes_noteslist .skylist_card_center [find=description] {
