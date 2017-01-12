@@ -175,7 +175,7 @@ var app_application_lincko = {
 											this._elements[Elem_id][range_key].action();
 										} else { //It will wait until the parent scope script is finished (less screen freeze)
 											this._elements[Elem_id][range_key].timer = setTimeout(function(Elem_id, range_key){
-												if(app_application_lincko._elements[Elem_id][range_key]){
+												if(app_application_lincko._elements[Elem_id] && app_application_lincko._elements[Elem_id][range_key]){
 													app_application_lincko._elements[Elem_id][range_key].action();
 												} else {
 													//console.log("application => "+Elem_id);

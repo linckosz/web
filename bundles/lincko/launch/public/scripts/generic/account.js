@@ -260,7 +260,7 @@ function account_display_label(input, hide_error) {
 		account_hide_error();
 		$(input).removeClass('base_input_text_error');
 	}
-	if($(input).val().length<=0){
+	if(typeof input == 'undefined' || !$(input) || !$(input).val() || $(input).val().length<=0){
 		//$(input).prev().css('visibility', 'visible').css('z-index', 1);
 		if($(input).prev().is(':hidden')){
 			$(input).prev().velocity("transition.fadeIn", { duration: 300, delay: 100, });
