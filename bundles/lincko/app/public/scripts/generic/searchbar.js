@@ -116,7 +116,7 @@ var searchbar = {
 							}
 						}
 						else if( item['_type'] == 'notes' || item['_type'] == 'files' ){
-							if( item['updated_by'] == userid ){
+							if( item['created_by'] == userid ){
 								push = true;
 								break;
 							}
