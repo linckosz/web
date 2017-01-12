@@ -35,6 +35,7 @@ class ControllerWechat extends Controller {
 		$unionid = false;
 		$openid = false;
 		$state = false;
+		$valid = false;
 
 		if($response && isset($response['code']) && isset($response['state'])){
 			$state = $response['state'];
@@ -120,6 +121,8 @@ class ControllerWechat extends Controller {
 					}
 					if(!$valid){
 						$_SESSION['integration_check'] = false; //Stop checking integration
+					} else {
+						$app->lincko->data['integration_connected'] = true;
 					}
 					\bundles\lincko\wrapper\hooks\SetData(); //used to help log in immediatly
 				}
@@ -184,6 +187,7 @@ class ControllerWechat extends Controller {
 								$_SESSION['integration_check'] = false; //Stop checking integration
 							} else {
 								$app->lincko->data['integration_wechat_new'] = false;
+								$app->lincko->data['integration_connected'] = true;
 							}
 							\bundles\lincko\wrapper\hooks\SetData(); //used to help log in immediatly
 						}
@@ -200,11 +204,8 @@ class ControllerWechat extends Controller {
 			$app->lincko->data['integration_connection_error'] = true;
 			$app->lincko->translation['party'] = 'Wechat';
 		}
-		if($valid){
-			$app->router->getNamedRoute('info_integration_get')->dispatch();
-		} else {
-			$app->router->getNamedRoute('root')->dispatch();
-		}
+		$app->lincko->data['link_reset'] = true;
+		$app->router->getNamedRoute('root')->dispatch();
 
 		return true;
 	}

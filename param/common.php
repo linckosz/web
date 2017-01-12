@@ -159,6 +159,7 @@ $app->lincko->data = array(
 	'api_upload' => 'lknscklb798w98eh9cwde8bc897q09wj',
 	'link_reset' => false,
 	'integration_check' => true,
+	'integration_connected' => false,
 	'integration_wechat_appid' => '',
 	'integration_wechat_new' => false,
 	'integration_connection_error' => false,
@@ -183,8 +184,10 @@ if($app->lincko->domain=='lincko.cafe'){
 	$app->lincko->integration->wechat['dev_appid'] = 'aaaaaaaaaaaaaaaaaaaaa'; //Not available
 	$app->lincko->integration->wechat['dev_secretapp'] = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'; //Not available
 } else if($app->lincko->domain=='lincko.co'){
-	$app->lincko->integration->wechat['public_appid'] = 'wxb315b38a8267ad72'; //Sandbox (bruno)
-	$app->lincko->integration->wechat['public_secretapp'] = 'e0a658f9d2b907ddb4bd61c3827542da'; //Sandbox (bruno)
+	//$app->lincko->integration->wechat['public_appid'] = 'wxb315b38a8267ad72'; //Sandbox (bruno)
+	//$app->lincko->integration->wechat['public_secretapp'] = 'e0a658f9d2b907ddb4bd61c3827542da'; //Sandbox (bruno)
+	$app->lincko->integration->wechat['public_appid'] = 'wx268709cdc1a8e280'; //Official
+	$app->lincko->integration->wechat['public_secretapp'] = '03fab389a36166cd1f75a2c94f5257a0'; //Official
 	$app->lincko->integration->wechat['dev_appid'] = 'wxafd8adb6683d8914'; //Official
 	$app->lincko->integration->wechat['dev_secretapp'] = '1fd24f7296c069dccb3aedc9914e2b9e'; //Official
 } else if($app->lincko->domain=='lincko.com'){

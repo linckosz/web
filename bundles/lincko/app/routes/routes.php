@@ -7,7 +7,9 @@ use \libs\OneSeventySeven;
 $app = \Slim\Slim::getInstance();
 
 $app->get('/', function () use ($app) {
-	if($app->lincko->data['logged']){
+	if($app->lincko->data['integration_connected']){
+		$app->router->getNamedRoute('info_integration_get')->dispatch();
+	} else if($app->lincko->data['logged']){
 		$_SESSION['workspace'] = $app->lincko->data['workspace'];
 		$app->lincko->translation['workspace'] = $app->lincko->data['workspace'];
 		$app->lincko->data['reset_data'] = OneSeventySeven::get('reset_data');
