@@ -86,8 +86,8 @@ class ControllerWechat extends Controller {
 					Using OpenID is more restrictive because it's different from DEV and PUBLIC account (UnionID is same),
 					but the advantage is that it will work on .cafe and .co (sandbox bruno wechat), and we can skip a confirmation because snsapi_base is providing OpenID without notification instead of snsapi_userinfo
 				*/
-				//$data->party_id = $openid;
-				$data->party_id = $unionid;
+				//$data->party_id = 'oid.'.$openid;
+				$data->party_id = 'uid.'.$unionid;
 				$data->data = $result;
 				$controller = new ControllerWrapper($data, 'post', false);
 				if($response = $controller->wrap_multi('integration/connect')){
@@ -146,7 +146,8 @@ class ControllerWechat extends Controller {
 						Using OpenID is more restrictive because it's different from DEV and PUBLIC account (UnionID is same),
 						but the advantage is that it will work on .cafe and .co (sandbox bruno wechat), and we can skip a confirmation because snsapi_base is providing OpenID without notification instead of snsapi_userinfo
 					*/
-					$data->party_id = $unionid;
+					//$data->party_id = 'oid.'.$openid;
+					$data->party_id = 'uid.'.$unionid;
 					$data->data = $result;
 					$controller = new ControllerWrapper($data, 'post', false);
 					if($response = $controller->wrap_multi('integration/connect')){
