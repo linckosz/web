@@ -44,7 +44,7 @@ function device_download(url, target, name){
 
 	if(typeof android != 'undefined' && typeof android.download == 'function') {
 		android.download(url,document.cookie);
-	} 
+	}
 	else if(typeof window.webkit != 'undefined' && typeof window.webkit.messageHandlers != 'undefined' && typeof window.webkit.messageHandlers.iOS != 'undefined') {
 		var download_obj = {
 			url: url,
@@ -54,7 +54,7 @@ function device_download(url, target, name){
 	}
 	else if(typeof winPhone != 'undefined' && typeof winPhone.download == 'function') {
 		winPhone.download(url);
-	} 
+	}
 	else {
 		//window.open(url, target);
 		//Another method if some browser (safari?) do not work
@@ -64,4 +64,20 @@ function device_download(url, target, name){
 		anchor.download = name;
 		anchor.click();
 	}
+}
+
+function device_type(){
+	if(typeof android != 'undefined') {
+		return "android";
+	}
+	else if(typeof window.webkit != 'undefined' && typeof window.webkit.messageHandlers != 'undefined' && typeof window.webkit.messageHandlers.iOS) {
+		return "ios";
+	}
+	else if(typeof winPhone != 'undefined') {
+		return "winphone";
+	}
+	else if(/webOS|iPhone|iPad|BlackBerry|Windows Phone|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent)) {
+		return "mobilebrowser";
+	}
+	return "other";
 }
