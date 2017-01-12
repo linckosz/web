@@ -729,9 +729,7 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 		}
 	});
 
-
-	return;
-	
+	return;	
 }
 skylist.prototype.iscrollRefresh = function(){
 	var that = this;
@@ -1643,9 +1641,7 @@ skylist.prototype.addTask = function(item){
 	}
 	
 	
-	/*
-	rightOptions - in_charge
-	*/
+	/* rightOptions - in_charge */
 	if( !Lincko.storage.get("projects", app_content_menu.projects_id, 'personal_private') ){
 		var elem_rightOptions_inCharge = that.add_rightOptionsBox(in_charge,'fa-user');
 		elem_rightOptions_inCharge.click(function(){
@@ -1709,9 +1705,7 @@ skylist.prototype.addTask = function(item){
 	});
 
 
-	/*
-	progress bar
-	*/
+	/* progress bar */
 	if(item._tasksdown){
 		var elem_progress = Elem.find('.skylist_card_progress');
 		elem_progress.removeClass('skylist_card_progress_hidden');
@@ -1872,9 +1866,7 @@ skylist.prototype.addTask = function(item){
 	}//end of setup for paperview only
 	
 
-	/*
-	updated_at
-	*/
+	/* updated_at */
 	Elem.find('[find=quickInfo1]').html(Lincko.Translation.get('app', 53, 'html')+': ');
 	var updated_at = new wrapper_date(item['updated_at']);
 	if( skylist_textDate(updated_at) ){
@@ -1884,9 +1876,8 @@ skylist.prototype.addTask = function(item){
 		updated_at = updated_at.display('date_very_short');
 	}
 	Elem.find('[find=quickInfo2]').html(updated_at+',&nbsp;');
-	/*
-	updated_by
-	*/
+
+	/* updated_by */
 	var updated_by = Lincko.storage.get("users", item['updated_by'] ,"username");
 	Elem.find('[find=quickInfo3]').html(updated_by);
 
@@ -1955,9 +1946,7 @@ skylist.prototype.addTask = function(item){
 	// 	}
 	// });
 
-	/*
-	rightOptions - duedate
-	*/
+	/* rightOptions - duedate */
 	var elem_rightOptions_duedate = that.add_rightOptionsBox(duedate,'fa-calendar');
 	burger_attach_clickHandler.calendar(elem_rightOptions_duedate, item['_type'], item['_id'], null, true);
 	// elem_rightOptions_duedate.click(function(){
@@ -2002,21 +1991,15 @@ skylist.draw_noteCard = function(item){
 	var updated_at;
 	var created_by;
 
-	/*
-	title
-	*/
+	/* title */
 	var elem_title = Elem.find('[find=title]');
 	elem_title.html(item['+title']);
 
-	/*
-	 note description
-	 */
+	/* note description */
 	Elem.find('[find=description]').html($('<div>'+item['-comment']+'</div>').text());
 
 
-	/*
-	 note preview image
-	*/
+	/* note preview image */
 	var elem_leftbox = $('<span></span>').addClass('skylist_card_leftbox_abc');
 	if(item._files){
 		$.each(item._files, function(file_id, obj){
@@ -2062,17 +2045,13 @@ skylist.draw_noteCard = function(item){
 	created_by = Lincko.storage.get("users", created_by,"username");
 	Elem.find('[find=name]').html(created_by);
 
-	/*
-	updated_by (quickInfo)
-	*/
+	/* updated_by (quickInfo) */
 	Elem.find('[find=quickInfo1]').html(Lincko.Translation.get('app', 53, 'html')/*Updated*/+':&nbsp;');
 	var updated_by = Lincko.storage.get("users", item['updated_by'] ,"username");
 	Elem.find('[find=quickInfo2]').html(updated_by);
 
 
-	/*
-	comments
-	*/
+	/* comment */
 	var commentCount = 0;
 	var comments = Lincko.storage.list('comments', null, null, item['_type'], item['_id'], true);
 	commentCount = comments.length;
@@ -2097,9 +2076,7 @@ skylist.prototype.addNote = function(item){
 	Elem.prop('id','skylist_card_'+that.md5id+'_'+item['_id']);
 	var Elem_rightOptions = Elem.find('[find=card_rightOptions]');
 
-	/*
-	title
-	*/
+	/* title */
 	var contenteditable = false;
 	var elem_title = Elem.find('[find=title]');
 	if( typeof item['_perm'] == 'object' && wrapper_localstorage.uid in item['_perm'] && item['_perm'][wrapper_localstorage.uid][0] > 1 ){ //RCU and beyond
@@ -2135,14 +2112,10 @@ skylist.prototype.addNote = function(item){
 		});
 	}
 
-	/*
-	rightOptions - updated_by
-	*/
+	/* rightOptions - updated_by */
 	Elem_rightOptions.append(that.add_rightOptionsBox(item['updated_by'],'fa-user'));
 
-	/*
-	rightOptions - duedate
-	*/
+	/* rightOptions - duedate */
 	Elem_rightOptions.append(that.add_rightOptionsBox(item['updated_at'],'fa-calendar'));
 
 	Elem.data('item_id',item['_id']);
@@ -2167,15 +2140,11 @@ skylist.draw_fileCard = function(item){
 	var updated_at;
 	var created_by;
 
-	/*
-	title
-	*/
+	/* title */
 	var elem_title = Elem.find('[find=title]');
 	elem_title.html(item['+name']);
 
-	/*
-	 file description and preview image
-	 */
+	/* file description and preview image */
 	 var fileType_class = 'fa fa-file-o';
 	 var elem_leftbox = $('<span></span>').addClass('skylist_card_leftbox_fileIcon');
 	 var real_url = null;
@@ -2207,9 +2176,7 @@ skylist.draw_fileCard = function(item){
 	created_by = Lincko.storage.get("users", created_by,"username");
 	Elem.find('[find=name]').html(created_by);
 
-	/*
-	comments
-	*/
+	/* comments */
 	var commentCount = 0;
 	var comments = Lincko.storage.list('comments',null, null, item['_type'], item['_id'], true);
 	commentCount = comments.length;
@@ -2225,9 +2192,7 @@ skylist.draw_fileCard = function(item){
 	Elem.find('[find=card_time]').html(updated_at);
 
 
-	/*
-	updated_by (quickInfo)
-	*/
+	/* updated_by (quickInfo) */
 	var fileSize = app_layers_files_bitConvert(item['size']);
 	var sizeUnit = fileSize.unit;
 	var sizeNum = fileSize.val;
