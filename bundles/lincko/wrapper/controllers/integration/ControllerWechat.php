@@ -195,12 +195,16 @@ class ControllerWechat extends Controller {
 
 		}
 
+		$app->lincko->data['link_reset'] = true;
 		if(!$response){
 			$app->lincko->data['integration_connection_error'] = true;
 			$app->lincko->translation['party'] = 'Wechat';
 		}
-		$app->lincko->data['link_reset'] = true;
-		$app->router->getNamedRoute('root')->dispatch();
+		if($valid){
+			$app->router->getNamedRoute('info_integration_get')->dispatch();
+		} else {
+			$app->router->getNamedRoute('root')->dispatch();
+		}
 
 		return true;
 	}

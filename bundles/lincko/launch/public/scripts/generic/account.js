@@ -380,7 +380,7 @@ var account_integration_account = {
 						var div = $('<div>').html(wrapper_to_html(msg));
 						$('#account_integration_top_info').append(div);
 						account_integration_account.stop();
-						window.location.href = account_link['info_integration'];
+						window.location.href = account_link['root'];
 						return true;
 					}
 				}
