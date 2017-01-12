@@ -1052,7 +1052,7 @@ var burger_dropdown = function(id, data, position, lineHeight, cb_create, cb_sel
 	that.count_total = 1000;
 	that.width = 200;
 	that.optionH = 50;
-	that.i_current = false;
+	that.i_current = 0;
 	that.i_pre = false;
 
 	that.lineHeight = lineHeight;
