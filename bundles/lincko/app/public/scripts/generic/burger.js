@@ -1354,7 +1354,7 @@ var burger_renderCalendar = function(id, defaultDate, fn_onSelect){
 				month_next = month_array_short[month_next];
 				month_prev = month_array_short[month_prev];
 
-				elem_next.append('<span find="text" class="font_sans_serif">'+month_next+'</span>');
+				elem_next.prepend('<span find="text" class="font_sans_serif">'+month_next+'</span>');
 				elem_prev.append('<span find="text" class="font_sans_serif">'+month_prev+'</span>');
 			}
 		}, 10, month);

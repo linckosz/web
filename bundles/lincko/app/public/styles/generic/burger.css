@@ -171,35 +171,51 @@
 	color: #3F84B0;
 	text-transform: uppercase;
 }
+.burger_calendar .ui-datepicker-prev{
+    text-align: left;
+}
+.burger_calendar .ui-datepicker-next{
+    text-align: right;
+}
+.burger_calendar .ui-datepicker-prev,
+.burger_calendar .ui-datepicker-next{
+	font-weight: normal;
+	top: 2px;
+	line-height: 24px;
+	color: #3F84B0;
+	border: none;
+
+    width: 80px;
+}
 .burger_calendar .ui-datepicker-prev [find=text],
 .burger_calendar .ui-datepicker-next [find=text]{
 	top: 0px;
     bottom: 0px;
     margin-top: auto;
     margin-bottom: auto;
+    margin: 0px;
 	left: auto;
 	right: auto;
     opacity: 0.6;
     white-space: nowrap;
-}
-.burger_calendar .ui-datepicker-prev [find=text]{
-	right: -20px;
-    margin: 0px;
-    margin-right: -8px;
-}
-.burger_calendar .ui-datepicker-next [find=text]{
-	left: -20px;
-    margin: 0px;
-    margin-left: -8px;
+
+    position: relative;
+    display: inline-block;
+    line-height: 24px;
+    vertical-align: middle;
 }
 .burger_calendar .ui-datepicker-header .icon-Forward{
 	font-size: 26px;
     line-height: 26px;
     top: 0px;
     bottom: 0px;
-    right: 0px;
-    left: 0px;
     margin: 0px;
+
+    position: relative;
+    left: auto;
+    right: auto;
+    display: inline-block;
+    vertical-align: middle;
 }
 .burger_calendar .ui-datepicker-prev .icon-Forward{
 	left: 0px;
@@ -207,24 +223,18 @@
 .burger_calendar .ui-datepicker-next .icon-Forward{
 	right: 0px;
 }
-.burger_calendar .ui-datepicker-prev,
-.burger_calendar .ui-datepicker-prev:hover,
-.burger_calendar .ui-datepicker-next, 
-.burger_calendar .ui-datepicker-next:hover{
-	font-weight: normal;
-	top: 6px;
-	line-height: 24px;
-	color: #3F84B0;
-	border: none;
+
+.burger_calendar .ui-datepicker-header .ui-icon-circle-triangle-e{
+	display: none;
 }
 .burger_calendar .ui-datepicker-header .ui-state-hover{
 	background: none;
 }
 .burger_calendar .ui-datepicker-next, .burger_calendar .ui-datepicker-next:hover{
-	right: 10%;
+	right: 8%;
 }
 .burger_calendar .ui-datepicker-prev, .burger_calendar .ui-datepicker-prev:hover{
-	left: 10%;
+	left: 8%;
 }
 
 .burger_calendar .ui-datepicker-calendar th {
