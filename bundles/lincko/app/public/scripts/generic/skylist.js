@@ -2021,23 +2021,40 @@ skylist.draw_noteCard = function(item){
 	if(item._files){
 		$.each(item._files, function(file_id, obj){
 			var file = Lincko.storage.get('files', file_id);
-			if(file && file.category == 'image' && !file.deleted_at){
-				var thumb_url = Lincko.storage.getLinkThumbnail(file['_id']);
-				if(thumb_url){
-					elem_leftbox = $('<img />').prop('src',thumb_url);
-					return false;
+			if(file && !file.deleted_at){
+				if(file.category == 'image' || file.category == 'video'){
+					var thumb_url = Lincko.storage.getLinkThumbnail(file['_id']);
+					if(thumb_url){
+						elem_leftbox = $('<img />').prop('src',thumb_url);
+						if(file.category == 'image'){
+							elem_leftbox.click(file_id, function(event){
+								event.stopPropagation();
+								previewer.pic(event.data);
+							});
+						}
+						else if(file.category == 'video'){
+							elem_leftbox.click(file_id, function(event){
+								event.stopPropagation();
+								previewer.video(event.data);
+							});
+						}
+					}
 				}
+				else{
+					var fileType_class = app_models_fileType.getClass(file.ori_ext);
+					elem_leftbox.removeClass('skylist_card_leftbox_abc').addClass(fileType_class).attr('find','icon');
+				}
+				return false;
 			}
 		});
 	}
+	Elem.find('[find=card_leftbox]').append(elem_leftbox);
+
 
 	//locked_by
 	if(item['locked_by'] && item['locked_by'] != wrapper_localstorage.uid){
 		Elem.attr('locked', item['locked_by']);
 	}
-
-
-	Elem.find('[find=card_leftbox]').append(elem_leftbox);
 
 
 	/*created_by*/

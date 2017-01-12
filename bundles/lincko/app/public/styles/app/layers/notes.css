@@ -19,6 +19,9 @@
     padding-right: 4px;
     box-sizing: border-box;
 }
+.app_layers_notes_noteslist .skylist_card_center_leftbox [find=icon]{
+	font-size: 30px;
+}
 .app_layers_notes_noteslist .skylist_card_center_leftbox img{
     max-height: 100%;
     max-width: 100%;
