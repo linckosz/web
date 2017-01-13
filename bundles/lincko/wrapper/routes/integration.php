@@ -9,8 +9,8 @@ $app->group('/integration', function () use ($app) {
 	$app->group('/wechat', function () use ($app) {
 
 		$app->get(
-			'/public:var',
-			'\bundles\lincko\wrapper\controllers\integration\ControllerWechat:public_get'
+			'/lincko:var',
+			'\bundles\lincko\wrapper\controllers\integration\ControllerWechat:lincko_get'
 		)
 		->conditions(array(
 			'var' => '\S*',
@@ -18,8 +18,8 @@ $app->group('/integration', function () use ($app) {
 		->name('integration_wechat_public_get');
 
 		$app->get(
-			'/dev:var',
-			'\bundles\lincko\wrapper\controllers\integration\ControllerWechat:dev_get'
+			'/weixinjs:var',
+			'\bundles\lincko\wrapper\controllers\integration\ControllerWechat:weixinjs_get'
 		)
 		->conditions(array(
 			'var' => '\S*',

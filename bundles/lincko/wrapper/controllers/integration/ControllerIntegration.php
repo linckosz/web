@@ -6,6 +6,7 @@ use \libs\Controller;
 
 class ControllerIntegration extends Controller {
 
+	//Used by Lincko integration QR code
 	public function code_get($code){
 		$app = \Slim\Slim::getInstance();
 		$_SESSION['integration_code'] = $code;

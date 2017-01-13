@@ -16,19 +16,24 @@ class ControllerWechat extends Controller {
 	public function __construct(){
 		$app = $this->app = \Slim\Slim::getInstance();
 		$this->get = $app->request->get();
-		$this->appid = $app->lincko->integration->wechat['public_appid'];
-		$this->secret = $app->lincko->integration->wechat['public_secretapp'];
 		return true;
 	}
 
-	public function dev_get(){
+	public function weixinjs_get(){
 		$app = $this->app;
 		$this->appid = $app->lincko->integration->wechat['dev_appid'];
 		$this->secret = $app->lincko->integration->wechat['dev_secretapp'];
-		$this->public_get();
+		$this->process();
 	}
 
-	public function public_get(){
+	public function lincko_get(){
+		$app = $this->app;
+		$this->appid = $app->lincko->integration->wechat['public_appid'];
+		$this->secret = $app->lincko->integration->wechat['public_secretapp'];
+		$this->process();
+	}
+
+	public function process(){
 		$app = $this->app;
 		$response = $this->get;
 		$access_token = false;
@@ -124,7 +129,7 @@ class ControllerWechat extends Controller {
 					if(!$valid){
 						$_SESSION['integration_check'] = false; //Stop checking integration
 					} else {
-						$app->lincko->data['integration_connected'] = true;
+						//$app->lincko->data['integration_connected'] = true;
 					}
 					\bundles\lincko\wrapper\hooks\SetData(); //used to help log in immediatly
 				}
@@ -188,7 +193,7 @@ class ControllerWechat extends Controller {
 								$_SESSION['integration_check'] = false; //Stop checking integration
 							} else {
 								$app->lincko->data['integration_wechat_new'] = false;
-								$app->lincko->data['integration_connected'] = true;
+								//$app->lincko->data['integration_connected'] = true;
 							}
 							\bundles\lincko\wrapper\hooks\SetData(); //used to help log in immediatly
 						}
