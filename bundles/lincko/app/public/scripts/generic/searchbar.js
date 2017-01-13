@@ -86,13 +86,15 @@ var searchbar = {
 			for( var j=0; j < searchTerms.length; j++){ //for each word
 				word = searchTerms[j];
 				var burgerOnly = false;
-				if( word[0] == '@'){
+				if( word[0] == burger_shortcuts.at ){
 					word = word.slice(1);
-					burgerOnly = '@';
+					burgerOnly = 'at';
 				}
-				else if(word.substring(0,2) == '++'){
-					word = word.slice(2);
-					burgerOnly = '++';
+				//else if(word.substring(0,2) == '++'){
+				else if(word[0] == burger_shortcuts.plus || word[0] == burger_shortcuts.plusAlt){
+					//word = word.slice(2);
+					word = word.slice(1);
+					burgerOnly = 'plus';
 				}
 
 				//users search
@@ -103,7 +105,7 @@ var searchbar = {
 					push = true;
 					break;
 				}
-				else if( userid_array.length && (burgerOnly == false || burgerOnly == '@') ){ //userOnly both true/false
+				else if( userid_array.length && (burgerOnly == false || burgerOnly == 'at') ){ //userOnly both true/false
 					for( var k=0; k < userid_array.length; k++){
 						userid = userid_array[k];
 						if( item['_type'] == 'tasks' ){
@@ -126,7 +128,7 @@ var searchbar = {
 						break;
 					}
 				}
-				else if( searchbar.isDueThisTime(item, word) && (burgerOnly == false || burgerOnly == '++') ){
+				else if( searchbar.isDueThisTime(item, word) && (burgerOnly == false || burgerOnly == 'plus') ){
 					push = true;
 					break;
 				}
