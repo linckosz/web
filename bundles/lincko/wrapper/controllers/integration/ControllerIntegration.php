@@ -14,7 +14,8 @@ class ControllerIntegration extends Controller {
 		$_SESSION['integration_check'] = true;
 		unset($_SESSION['integration_check']);
 		if($app->lincko->data['logged']){
-			$app->lincko->data['integration_connected'] = true;
+			//$app->lincko->data['integration_connected'] = true;
+			//toto => need to review this code, in the cae the user is logged using another account on wechat, it will failed
 		}
 		$app->router->getNamedRoute('root')->dispatch();
 	}

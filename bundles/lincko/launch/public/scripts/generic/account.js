@@ -439,7 +439,6 @@ var account_integration_wechat_qrcode = function(){
 					style: "black",
 					href: account_integration.wechat.href,
 				});
-				console.log(obj);
 				account_integration_account.start();
 			}
 		});	
