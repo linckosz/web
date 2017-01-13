@@ -116,7 +116,7 @@ submenu_list['settings'] = {
 			if(isMobileApp()){
 				Elem.addClass('display_none');
 			}
-		}
+		},
 	},
 	"signout": {
 		"style": "button",
@@ -125,15 +125,11 @@ submenu_list['settings'] = {
 			wrapper_sendAction('','post','user/signout', null, null, wrapper_signout_cb_begin, wrapper_signout_cb_complete);
 		},
 		"class": "",
-	},
-
-	"signout": {
-		"style": "button",
-		"title": Lincko.Translation.get('app', 38, 'html'), //Sign out
-		"action": function(){
-			wrapper_sendAction('','post','user/signout', null, null, wrapper_signout_cb_begin, wrapper_signout_cb_complete);
+		"now": function(Elem, subm){
+			if(navigator.userAgent.match(/MicroMessenger/i)){
+				Elem.addClass('display_none');
+			}
 		},
-		"class": "",
 	},
 };
 
