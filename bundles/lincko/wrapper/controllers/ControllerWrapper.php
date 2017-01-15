@@ -172,7 +172,6 @@ class ControllerWrapper extends Controller {
 				else if(isset($json_result->flash->signout) && $json_result->flash->signout==true){
 					$this->signOut(true);
 					$json_result->signout = true;
-					$_SESSION['integration_check'] = false; //When the user click on signout explicitly, he cannot use auto log anymore, he has to close the browser and check again.
 				}
 				//In case of first Sign in (public key and private key must be a pair)
 				else if(isset($json_result->flash->public_key) && isset($json_result->flash->private_key)){

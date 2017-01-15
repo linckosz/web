@@ -28,6 +28,7 @@ class ControllerWechat extends Controller {
 
 	public function lincko_get(){
 		$app = $this->app;
+		$app->lincko->data['force_open_website'] = false;
 		$this->appid = $app->lincko->integration->wechat['public_appid'];
 		$this->secret = $app->lincko->integration->wechat['public_secretapp'];
 		$this->process();
@@ -126,11 +127,6 @@ class ControllerWechat extends Controller {
 							$valid = false;
 						}
 					}
-					if(!$valid){
-						$_SESSION['integration_check'] = false; //Stop checking integration
-					} else {
-						//$app->lincko->data['integration_connected'] = true;
-					}
 					\bundles\lincko\wrapper\hooks\SetData(); //used to help log in immediatly
 				}
 			} else {
@@ -189,11 +185,8 @@ class ControllerWechat extends Controller {
 									$valid = false;
 								}
 							}
-							if(!$valid){
-								$_SESSION['integration_check'] = false; //Stop checking integration
-							} else {
+							if($valid){
 								$app->lincko->data['integration_wechat_new'] = false;
-								//$app->lincko->data['integration_connected'] = true;
 							}
 							\bundles\lincko\wrapper\hooks\SetData(); //used to help log in immediatly
 						}

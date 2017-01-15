@@ -23,6 +23,7 @@ $app->configureMode('production', function () use ($app) {
 $app->configureMode('development', function () use ($app) {
 	$app->config(array(
 		'log.enable' => false,
+		'cookies.secure' => false, //Allow non-SSL record
 	));
 	ini_set('display_errors', '0');
 	ini_set('opcache.enable', '0');

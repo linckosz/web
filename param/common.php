@@ -56,7 +56,7 @@ if(isset($_SERVER['SERVER_HOST'])){
 	$app->lincko->domain = $_SERVER['HTTP_HOST'];
 }
 
-$app->lincko->domain_restriction = "/^(?:.{1,3}|(?:api|cloud|cron|dc|file|info|lincko|mail|mx|ns|pop|smtp|tp|debug|www)\d*)$/ui";
+$app->lincko->domain_restriction = "/^(?:.{1,3}|(?:api|cloud|cron|dc|file|files|info|lincko|mail|mx|ns|pop|smtp|tp|debug|www)\d*)$/ui";
 
 $app->lincko->cookies_lifetime = time()+(3600*24*90); //Valid 3 months
 
@@ -67,7 +67,7 @@ $app->config(array(
 	'cookies.encrypt' => true, //Must use $app->getCookie('foo', false);
 	'cookies.secret_key' => 'au6G7dbSh87Ws',
 	'cookies.lifetime' => $app->lincko->cookies_lifetime,
-	'cookies.secure' => true,
+	'cookies.secure' => true, //At true it keeps record only on SSL connection
 	'cookies.path' => '/',
 	'cookies.httponly' => true,
 	'templates.path' => '..',
@@ -158,7 +158,6 @@ $app->lincko->data = array(
 	'lincko_show_dev' => 'false', //Display some error for developpers on JS (NOTE: it has to be a string because of Twig conversion to JS)
 	'api_upload' => 'lknscklb798w98eh9cwde8bc897q09wj',
 	'link_reset' => false,
-	'integration_check' => true,
 	'integration_connected' => false,
 	'integration_wechat_appid' => '',
 	'integration_wechat_new' => false,

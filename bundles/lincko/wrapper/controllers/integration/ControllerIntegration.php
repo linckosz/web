@@ -11,12 +11,7 @@ class ControllerIntegration extends Controller {
 		$app = \Slim\Slim::getInstance();
 		$_SESSION['integration_code'] = $code;
 		$app->lincko->data['link_reset'] = true;
-		$_SESSION['integration_check'] = true;
-		unset($_SESSION['integration_check']);
-		if($app->lincko->data['logged']){
-			//$app->lincko->data['integration_connected'] = true;
-			//toto => need to review this code, in the cae the user is logged using another account on wechat, it will failed
-		}
+		$app->lincko->data['force_open_website'] = false;
 		$app->router->getNamedRoute('root')->dispatch();
 	}
 

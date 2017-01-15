@@ -16,15 +16,6 @@ function SetData(){
 	$app = \Slim\Slim::getInstance();
 	$logged = false;
 
-	if(isset($_SESSION['integration_check'])){
-		if(strtolower($app->request->getMethod())=='get' && preg_match("/\/integration\/code\/\S{8}$/ui", $app->request->getResourceUri())){
-			$_SESSION['integration_check'] = true;
-			unset($_SESSION['integration_check']);
-		} else {
-			$app->lincko->data['integration_check'] = $_SESSION['integration_check'];
-		}
-	}
-
 	if(
 		   //Minimum fields required to display offline
 		   OneSeventySeven::get('hahaha') //resign
@@ -62,6 +53,7 @@ function SetData(){
 	}
 	
 	if($logged){
+		$app->lincko->data['force_open_website'] = false;
 		$app->lincko->translation['username'] = $yonghu;
 	}
 

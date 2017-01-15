@@ -320,7 +320,7 @@ var account_reset_time_left_init = function(email){
 	$("#account_reset_code, #account_reset_password").prop('disabled', false);
 	$("#account_reset_code, #account_reset_password").parent().removeClass("account_no_cursor");
 	$("#account_reset_submit").removeClass("account_no_cursor account_reset_submit_disabled").prop('disabled', false);
-	account_reset_time_left(600); //Set timeout to 10 minutes
+	account_reset_time_left(1200); //Set timeout to 20 minutes
 }
 
 $('#account_close').click(function(){

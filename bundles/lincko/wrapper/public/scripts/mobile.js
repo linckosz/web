@@ -6,7 +6,7 @@ function setMobileAlias(){
 
 	if(typeof android != 'undefined' ) {
 		android.setAlias('android', sha);
-	} else if(typeof iOS != 'undefined' ) {
+	} else if(typeof window.webkit != 'undefined' && typeof window.webkit.messageHandlers != 'undefined' && typeof window.webkit.messageHandlers.iOS != 'undefined') {
 		var obj = {
 			sha: sha,
 		}

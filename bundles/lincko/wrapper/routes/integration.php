@@ -8,6 +8,7 @@ $app->group('/integration', function () use ($app) {
 
 	$app->group('/wechat', function () use ($app) {
 
+		//Opened on Mobile within Wechat browser (Wechat JS API)
 		$app->get(
 			'/lincko:var',
 			'\bundles\lincko\wrapper\controllers\integration\ControllerWechat:lincko_get'
@@ -15,8 +16,9 @@ $app->group('/integration', function () use ($app) {
 		->conditions(array(
 			'var' => '\S*',
 		))
-		->name('integration_wechat_public_get');
+		->name('integration_wechat_lincko_get');
 
+		//Opened by Desktop browser after Wechat confirmation on mobile (Wechat Native API)
 		$app->get(
 			'/weixinjs:var',
 			'\bundles\lincko\wrapper\controllers\integration\ControllerWechat:weixinjs_get'
@@ -28,6 +30,7 @@ $app->group('/integration', function () use ($app) {
 
 	});
 
+	//Opened on Mobile after scanning after scanning Lincko integration QR code
 	$app->get(
 		'/code/:code',
 		'\bundles\lincko\wrapper\controllers\integration\ControllerIntegration:code_get'
