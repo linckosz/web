@@ -42,7 +42,6 @@ function base_show_error(msg, error) {
 	clearTimeout(base_error_timing);
 	//This avoid a double call
 	msg = wrapper_to_html(msg); //Escape the whole string for HTML displaying
-	console.log(msg);
 	if(typeof msg == "string" && php_nl2br(php_br2nl(msg)) != php_nl2br(php_br2nl($('#base_error').html()))){
 		$('#base_error').html(msg);
 		if($('#base_error').is(':hidden')){
@@ -53,6 +52,8 @@ function base_show_error(msg, error) {
 		} else {
 			$("#base_error").fadeTo( 80 , 0.8).fadeTo( 150 , 1);
 		}
+	} else if(typeof msg != "string"){
+		JSerror.sendError(msg, 'base_show_error', 0);
 	}
 	base_error_timing = setTimeout(function(){ base_hide_error(); }, 4000);
 }
