@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?yzvpdc');
-  src:  url('fonts/icomoon.eot?yzvpdc#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?yzvpdc') format('truetype'),
-    url('fonts/icomoon.woff?yzvpdc') format('woff'),
-    url('fonts/icomoon.svg?yzvpdc#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?d2ivnh');
+  src:  url('fonts/icomoon.eot?d2ivnh#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?d2ivnh') format('truetype'),
+    url('fonts/icomoon.woff?d2ivnh') format('woff'),
+    url('fonts/icomoon.svg?d2ivnh#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-ghost:before {
+  content: "\e930";
+}
 .icon-LinckoBotMonk2Icon:before {
   content: "\e92f";
 }
