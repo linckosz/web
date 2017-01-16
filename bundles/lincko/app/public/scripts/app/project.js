@@ -276,9 +276,9 @@ app_application_lincko.add("app_project_projects_tab", ["first_launch", "project
 		if(app_project_update_block){
 			app_project_update_launch_projects = true;
 		} else if(!storage_first_launch){
-			setTimeout(function(){
-				mainMenu.initProjectTab();
-			}, 0);
+			mainMenu.initProjectTab();
+		} else {
+			mainMenu.initProjectTab(true);
 		}
 	}
 });
@@ -287,9 +287,9 @@ app_application_lincko.add("app_project_chats_tab", ["first_launch", "projects",
 	if(app_project_update_block){
 		app_project_update_launch_chats = true;
 	} else if(!storage_first_launch){
-		setTimeout(function(){
-			mainMenu.initChatTab();
-		}, 0);
+		mainMenu.initChatTab();
+	} else {
+		mainMenu.initChatTab(true);
 	}
 });
 

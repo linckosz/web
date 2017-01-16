@@ -71,6 +71,7 @@ function base_show_error(msg, error) {
 	clearTimeout(base_error_timing);
 	//This avoid a double call
 	msg = wrapper_to_html(msg); //Escape the whole string for HTML displaying
+	console.log(msg);
 	if(typeof msg == "string" && php_nl2br(php_br2nl(msg)) != php_nl2br(php_br2nl($('#base_error').html()))){
 		$('#base_error').html(msg);
 		if($('#base_error').is(':hidden')){
@@ -86,15 +87,20 @@ function base_show_error(msg, error) {
 	base_error_timing = setTimeout(function(){ base_hide_error(); }, 4000);
 }
 
-function base_hide_error() {
-	clearTimeout(base_error_timing);
-	if($('#base_error').is(':visible')){
+function base_hide_error(now) {
+	if(typeof now == 'undefined'){ now = false; }
+	$('#base_error').velocity("stop");
+	if(now){
+		clearTimeout(base_error_timing);
+		$('#base_error').hide().recursiveEmpty();
+	} else if($('#base_error').is(':visible')){
 		$("#base_error").velocity("transition.slideRightBigOut", {
 			mobileHA: hasGood3Dsupport,
 			duration: 160,
 			delay: 80,
 			complete: function(){
-				$('#base_error').recursiveEmpty();
+				clearTimeout(base_error_timing);
+				$('#base_error').hide().recursiveEmpty();
 			},
 		});
 	}

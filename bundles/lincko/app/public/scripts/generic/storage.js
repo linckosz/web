@@ -250,12 +250,29 @@ Lincko.storage.getLatest = function(force){
 			storage_ajax_latest[i] = null;
 			delete storage_ajax_latest[i];
 		}
-		wrapper_sendAction(arr, 'post', 'data/latest', function(){
-			var lastvisit = arr.lastvisit;
-			storage_ajax_latest[lastvisit] = null;
-			delete storage_ajax_latest[lastvisit];
-			storage_launch_onboarding();
-		});
+		wrapper_sendAction(
+			arr,
+			'post',
+			'data/latest',
+			 function(){
+				var lastvisit = arr.lastvisit;
+				storage_ajax_latest[lastvisit] = null;
+				delete storage_ajax_latest[lastvisit];
+				storage_launch_onboarding();
+			},
+			function(xhr_err, ajaxOptions, thrownError){
+				//Just keep calling getLatest if timeout
+				if(ajaxOptions=="timeout"){
+					setTimeout(function(){
+						Lincko.storage.getLatest();
+					}, 5000);
+				} else {
+					var lastvisit = arr.lastvisit;
+					storage_ajax_latest[lastvisit] = null;
+					delete storage_ajax_latest[lastvisit];
+					storage_launch_onboarding();
+				}
+			});
 		storage_ajax_latest[lastvisit] = wrapper_xhr;
 	}
 };

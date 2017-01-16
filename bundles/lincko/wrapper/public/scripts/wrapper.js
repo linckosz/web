@@ -56,7 +56,7 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 	if(ajax_objForm){
 		param[param.length] = {name:'form_id', value:ajax_objForm.prop('id')};
 		//If the form is sending an action, we quite the function to avoid double click
-		if(typeof wrapper_run[ajax_objForm.prop('id')] !== 'undefined'){
+		if(typeof wrapper_run[ajax_objForm.prop('id')] != 'undefined'){
 			return false;
 		}
 	}
@@ -103,11 +103,11 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 
 			//This is importat because sometime in msg we return an object with some information inside
 			var msg = data.msg;
-			if(typeof data.show === 'string'){
+			if(typeof data.show == 'string'){
 				msg = data.show;
-			} else if($.type(msg) === 'object' && msg.msg){
+			} else if($.type(msg) == 'object' && msg.msg){
 				msg = msg.msg;
-			} else if(typeof msg !== 'string'){
+			} else if(typeof msg != 'string'){
 				msg = '';
 			}
 			if(data.error){
@@ -121,14 +121,14 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 				wrapper_set_shangzai = false;
 			}
 
-			if(data.show && typeof base_show_error === 'function'){
+			if(data.show && typeof base_show_error == 'function'){
 				base_show_error(msg, data.error);
 			}
 
 			//Exit if we are signout
 			if(data.signout && !wrapper_signing_out && wrapper_localstorage.logged){
 				wrapper_signing_out = true; //Avoid a loop
-				if(data.show && typeof base_show_error === 'function'){
+				if(data.show && typeof base_show_error == 'function'){
 					base_show_error(Lincko.Translation.get('app', 33, 'js')); //You are not allowed to access this workspace. (keep it blue to avoid it looking like a bug message)
 				}
 				setTimeout(function(){
@@ -137,7 +137,7 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 			}
 
 			//Force to update elements if the function is available
-			if(typeof storage_cb_success === 'function'){
+			if(typeof storage_cb_success == 'function'){
 				storage_cb_success(msg, data.error, data.status, data.msg);
 			}
 
@@ -180,14 +180,6 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 			}
 			cb_error(xhr_err, ajaxOptions, thrownError);
 
-			//Just keep calling getLatest if timeout
-			if(ajaxOptions=="timeout"){
-				if(typeof Lincko.storage == 'object' && typeof Lincko.storage.getLatest == 'function'){
-					setTimeout(function(){
-						Lincko.storage.getLatest();
-					}, 5000);
-				}
-			}
 			/*
 			//To retry a timeout is dangerous, it will keep adding calls like getSchema (heavy CPU backend) and be called tons at once once interent is back, can slow down the server.
 			else if(ajaxOptions=='error'){
@@ -229,12 +221,12 @@ function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete, 
 	var ajax_objForm = wrapper_objForm = objForm;
 	var valid = true;
 	$.each(objForm.find('input'), function() {
-		if(typeof base_input_field === 'object'){
+		if(typeof base_input_field == 'object'){
 			if(this.name in base_input_field){
-				if(typeof base_input_field[this.name].valid === "function" && typeof base_input_field[this.name].error_msg === "function"){
+				if(typeof base_input_field[this.name].valid == "function" && typeof base_input_field[this.name].error_msg == "function"){
 					if(!base_input_field[this.name].valid($(this).val())){
 						var data = base_input_field[this.name].error_msg();
-						if(!base_input_field[this.name].hide && typeof base_show_error === 'function'){
+						if(!base_input_field[this.name].hide && typeof base_show_error == 'function'){
 							base_show_error(data.msg, true);
 						}
 						cb_success(data.msg, true, 400, data);
@@ -258,13 +250,13 @@ function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete, 
 		var arr = objForm.serializeArray();
 		var method = objForm.prop('method');
 		//We use post method by default
-		if(typeof objForm.attr('method') === 'undefined'){
+		if(typeof objForm.attr('method') == 'undefined'){
 			method = 'post';
 		}
 		var action = objForm.attr('action'); //Do not use prop here because (attr => user/logout | prop => https://lincko.net/user/logout (error))
-		if(typeof force_action === 'string'){
+		if(typeof force_action == 'string'){
 			action = force_action;
-		} else if(typeof action !== 'string'){
+		} else if(typeof action != 'string'){
 			action = '';
 		}
 
@@ -278,7 +270,7 @@ function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete, 
 		
 		//Convert the array to the same format as jQuery does with forms
 		for(var val in param){
-			if(typeof param[val] !== 'undefined'){
+			if(typeof param[val] != 'undefined'){
 				arr.push({name:val, value:param[val]});
 			}
 		}
@@ -315,7 +307,7 @@ function wrapper_sendAction(param, method, action, cb_success, cb_error, cb_begi
 	
 	//Convert the array to the same format as jQuery does with forms
 	for(var val in param){
-		if(typeof param[val] !== 'undefined'){
+		if(typeof param[val] != 'undefined'){
 			arr.push({name:val, value:param[val]});
 		}
 	}
@@ -344,11 +336,11 @@ function wrapper_get_shangzai(){
 
 wrapper_localstorage.encrypt_timer = [];
 wrapper_localstorage.encrypt = function (link, data, tryit){
-	if(typeof tryit === 'undefined'){ tryit = true; }
+	if(typeof tryit == 'undefined'){ tryit = true; }
 	var result = false;
 	//If we over quota once, we do not continue to avoid CPU usage, it slow down the first loading but it's an easy solution
 	//A more complex solution would be to progressively delete few elements, and only load them at start, but it's a CPU consumer method
-	if(typeof this.quota[link] !== 'undefined' && !this.quota[link]){
+	if(typeof this.quota[link] != 'undefined' && !this.quota[link]){
 		return true;
 	} else {
 		if(webworker){
@@ -506,7 +498,7 @@ function wrapper_IScroll(){
 					wrapper_IScroll_options_temp[key] = wrapper_IScroll_options[key];
 				}
 				//We add specific options to the element
-				if(typeof wrapper_IScroll_options_new[this.id] === 'object'){
+				if(typeof wrapper_IScroll_options_new[this.id] == 'object'){
 					for(key in wrapper_IScroll_options_new[this.id]){
 						wrapper_IScroll_options_temp[key] = wrapper_IScroll_options_new[this.id][key];
 					}
@@ -528,7 +520,7 @@ function wrapper_IScroll(){
 				
 				myIScrollList[this.id] = new IScroll(this, wrapper_IScroll_options_temp);
 				//We add specific options to the element
-				if(typeof wrapper_IScroll_cb_creation[this.id] === 'function'){
+				if(typeof wrapper_IScroll_cb_creation[this.id] == 'function'){
 					wrapper_IScroll_cb_creation[this.id]();
 				}
 			}
