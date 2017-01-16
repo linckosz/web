@@ -28,7 +28,8 @@
 }
 
 .inputter_icon_add_fix{
-	padding-right: 3px;
+	margin-right: 3px;
+	margin-top : -3px;
 }
 
 .inputter_checkbox
@@ -125,7 +126,7 @@
 	cursor: pointer; 
 	cursor: hand;
 	color : #FBA026;
-	display: block;
+	display:inline-block;
 }
 
 .inputter_preview
