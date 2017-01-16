@@ -1,3 +1,5 @@
+
+
 function setMobileAlias(){
 	var sha = wrapper_localstorage.sha;
 	if(typeof sha == 'undefined') {
@@ -6,7 +8,7 @@ function setMobileAlias(){
 
 	if(typeof android != 'undefined' ) {
 		android.setAlias('android', sha);
-	} else if(typeof window.webkit != 'undefined' && typeof window.webkit.messageHandlers != 'undefined' && typeof window.webkit.messageHandlers.iOS != 'undefined') {
+	} else if(typeof window !== 'undefined' &&  typeof window.webkit !== 'undefined' && typeof window.webkit.messageHandlers !== 'undefined' && typeof window.webkit.messageHandlers.iOS !== 'undefined') {
 		var obj = {
 			sha: sha,
 		}

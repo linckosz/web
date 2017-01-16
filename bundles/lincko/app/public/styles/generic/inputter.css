@@ -24,10 +24,11 @@
 }
 
 .inputter_icon_big_size{
-	font-size: 34px !important;
+	font-size: 37px !important;
 }
 
 .inputter_icon_add_fix{
+	padding-right: 3px;
 }
 
 .inputter_checkbox
@@ -118,12 +119,13 @@
 
 
 .inputter_ico{
-	width:auto;
+	width:30px;
 	height:30px;
 	font-size: 30px;
 	cursor: pointer; 
 	cursor: hand;
 	color : #FBA026;
+	display: block;
 }
 
 .inputter_preview

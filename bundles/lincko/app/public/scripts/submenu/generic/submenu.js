@@ -48,9 +48,15 @@ var Submenu_select = {
 	title_left_button: function(subm) {
 		subm.Add_TitleLeftButton();
 	},
-
+	title_left_button_list: function(subm) {
+		subm.Add_TitleLeftButtonList();
+	},
 	title_right_button: function(subm) {
 		subm.Add_TitleRightButton();
+	},
+
+	title_right_button_list: function(subm) {
+		subm.Add_TitleRightButtonList();
 	},
 
 	customized_title: function(subm) {
@@ -406,7 +412,75 @@ Submenu.prototype.Add_TitleLeftButton = function() {
 	return Elem;
 };
 
+Submenu.prototype.Add_TitleLeftButtonList = function() {
+	var that = this;
+	var attribute = this.attribute;
+	var Elem = $('#-submenu_top_button').clone();
+	var preview = this.preview;
+	Elem.prop("id", this.id+"_submenu_top_button_left");
+	Elem.html(wrapper_to_html(attribute.title));
+	if ("action" in attribute) {
+		if (!("action_param" in attribute)) {
+			attribute.action_param = null;
+		}
+		Elem.click(attribute.action_param, function(event){
+			attribute.action(Elem, that, event.data);
+		});
+	}
+	if ("hide" in attribute) {
+		if (attribute.hide) {
+			Elem.click(function() {
+				submenu_Clean(that.layer, true, that.preview);
+			});
+		}
+	}
+	Elem.addClass("submenu_top_side_left");
+	if ("class" in attribute) {
+		Elem.addClass(attribute['class']);
+	}
+	Elem.css('text-align', 'left');
+	if ("now" in attribute && typeof attribute.now == "function") {
+		attribute.now(Elem, that);
+	}
+	this.Wrapper().find("[find=submenu_wrapper_top]").prepend(Elem);
+	return Elem;
+};
+
 Submenu.prototype.Add_TitleRightButton = function() {
+	var that = this;
+	var attribute = this.attribute;
+	var Elem = $('#-submenu_top_button').clone();
+	var preview = this.preview;
+	Elem.prop("id", this.id+"_submenu_top_button_right");
+	Elem.html(attribute.title);
+	if ("action" in attribute) {
+		if (!("action_param" in attribute)) {
+			attribute.action_param = null;
+		}
+		Elem.click(attribute.action_param, function(event){
+			attribute.action(Elem, that, event.data);
+		});
+	}
+	if ("hide" in attribute) {
+		if (attribute.hide) {
+			Elem.click(function() {
+				submenu_Clean(that.layer, true, that.preview);
+			});
+		}
+	}
+	Elem.addClass("submenu_top_side_right");
+	if ("class" in attribute) {
+		Elem.addClass(attribute['class']);
+	}
+	Elem.css('text-align', 'right');
+	if ("now" in attribute && typeof attribute.now == "function") {
+		attribute.now(Elem, that);
+	}
+	this.Wrapper().find("[find=submenu_wrapper_top]").append(Elem);
+	return Elem;
+};
+
+Submenu.prototype.Add_TitleRightButtonList = function() {
 	var that = this;
 	var attribute = this.attribute;
 	var Elem = $('#-submenu_top_button').clone();
