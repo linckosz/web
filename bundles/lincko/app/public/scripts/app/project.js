@@ -33,7 +33,10 @@ var mainMenu = {
 	},
 
 	initProjectTab_timer: false,
-	initProjectTab: function(force){
+	initProjectTab: function(force, timing){
+		if(typeof timing == "undefined"){
+			timing = 1500;
+		}
 		if(!force && mainMenu.initProjectTab_timer){
 			return false;
 		}
@@ -103,11 +106,14 @@ var mainMenu = {
 			mainMenu.projectSelect();
 			clearTimeout(mainMenu.initProjectTab_timer);
 			mainMenu.initProjectTab_timer = false;
-		}, 1500, force);
+		}, timing, force);
 	},
 
 	initChatTab_timer: false,
-	initChatTab: function(force){
+	initChatTab: function(force, timing){
+		if(typeof timing == "undefined"){
+			timing = 2000;
+		}
 		if(!force && mainMenu.initChatTab_timer){
 			return false;
 		}
@@ -199,7 +205,7 @@ var mainMenu = {
 			mainMenu.chatsSelect();
 			clearTimeout(mainMenu.initChatTab_timer);
 			mainMenu.initChatTab_timer = false;
-		}, 2000, force);
+		}, timing, force);
 	},
 
 };
@@ -290,6 +296,14 @@ app_application_lincko.add("app_project_chats_tab", ["first_launch", "projects",
 		mainMenu.initChatTab();
 	} else {
 		mainMenu.initChatTab(true);
+	}
+});
+
+app_application_lincko.add("app_project_chats_tab", "notification", function() {
+	if(app_project_update_block){
+		app_project_update_launch_chats = true;
+	} else {
+		mainMenu.initChatTab(true, 0);
 	}
 });
 

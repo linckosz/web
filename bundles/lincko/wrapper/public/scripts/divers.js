@@ -1047,17 +1047,6 @@ function wrapper_test(type, RCUD){
 		else if(RCUD==1){
 			wrapper_sendAction(
 				{
-					"tasks_1141": true,
-					//"tasks_287": 1463564993,
-				},
-				'post',
-				'data/noticed',
-				wrapper_test_display
-			);
-		}
-		else if(RCUD==2){
-			wrapper_sendAction(
-				{
 					"settings": JSON.stringify({a: 1+Math.floor(Math.random() * 20)}),
 				},
 				'post',

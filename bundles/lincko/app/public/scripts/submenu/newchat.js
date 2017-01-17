@@ -135,7 +135,7 @@ Submenu.prototype.Add_ChatContents = function() {
 			var param = {
 				id: id,
 				"users>noticed": {},
-			}
+			};
 			var hist = app_models_history.getList(1, type, id);
 			var last_notif_root = Lincko.storage.getLastNotif(type, id);
 			var latest_history = 0;
@@ -154,12 +154,14 @@ Submenu.prototype.Add_ChatContents = function() {
 				subm.param.latest_history = latest_history;
 				Lincko.storage.cache.init(type, id);
 				app_models_history.refresh(type, id);
-				app_application_lincko.prepare([type, type+"_"+id], true, false, true);
+				app_application_lincko.prepare([type, type+"_"+id, 'notification'], true, false, true);
+				/*
 				wrapper_sendAction(
 					param,
 					'post',
 					route
 				);
+				*/
 			}
 		}
 	}, [type_clear, id, that]);

@@ -546,7 +546,7 @@ var app_models_history = {
 
 		var histList = [];
 		var item;
-
+		
 		if(app_models_history.hist_root_recent.length==0){
 			app_models_history.tabList();
 		}

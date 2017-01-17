@@ -244,6 +244,29 @@
 	margin-top: 0;
 }
 
+.app_project_arrow_to {
+	position: absolute;
+	margin-left: 6px;
+	height: 16px;
+	filter:alpha(opacity=65);
+	opacity:0.65;
+	-moz-opacity:0.65;
+	-khtml-opacity:0.65;
+	top: 50%;
+	vertical-align: middle;
+	transform: translateY(-50%);
+	-webkit-transform: translateY(-50%);
+	-moz-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	-o-transform: translateY(-50%);
+}
+#app_project_projects_all:hover .app_project_arrow_to, #app_project_chats_all:hover .app_project_arrow_to {
+	filter:alpha(opacity=90);
+	opacity:0.9;
+	-moz-opacity:0.9;
+	-khtml-opacity:0.9;
+}
+
 .app_project_projects_item {
 	padding: 8px 0 !important;
 }
@@ -422,7 +445,7 @@
 
 .app_project_chats_notif_top {
 	top: -2px !important;
-	right: -12px !important;
+	right: -9px !important;
 }
 
 #app_project_quick_access {

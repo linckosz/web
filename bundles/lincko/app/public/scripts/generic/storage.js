@@ -387,24 +387,7 @@ Lincko.storage.update = function(partial, info){
 				delete Lincko.storage.data[i][j]['viewed_by'];
 			}
 			*/
-			/*
-			//build "not" for history
-			Lincko.storage.data[i][j]['_not'] = false;
-			if(typeof Lincko.storage.data[i][j]['history'] != 'undefined'){
-				for(var timestamp in Lincko.storage.data[i][j]['history']){
-					for(var k in Lincko.storage.data[i][j]['history'][timestamp]){
-						Lincko.storage.data[i][j]['history'][timestamp][k]['not'] = false;
-						if(typeof Lincko.storage.data[i][j]['history'][timestamp][k]['notid'] != 'undefined'){
-							if(Lincko.storage.data[i][j]['history'][timestamp][k]['notid'].indexOf(';'+wrapper_localstorage.uid+';') == -1){
-								Lincko.storage.data[i][j]['history'][timestamp][k]['not'] = true;
-								Lincko.storage.data[i][j]['_not'] = true;
-							}
-						}
-						delete Lincko.storage.data[i][j]['history'][timestamp][k]['notid'];
-					}
-				}
-			}
-			*/
+
 			if(update_real){
 				//console.log("update ==> "+i+'_'+j);
 				storage_items_updated[i] = true;
@@ -1226,6 +1209,13 @@ Lincko.storage.cache = {
 			this.exclude_projects = {};
 			this.notify = {};
 			this.statistics = {};
+		} else if(Lincko.storage.get(type_reset, id_reset)){
+			if(this.notify[type_reset] && this.notify[type_reset][id_reset]){
+				delete this.notify[type_reset][id_reset];
+			}
+			if(this.notify[type_reset] && this.notify[type_reset][id_reset]){
+				delete this.notify[type_reset][id_reset];
+			}
 		}
 
 		if(storage_first_launch){
