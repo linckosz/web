@@ -1183,6 +1183,10 @@ Lincko.storage.cache = {
 		}
 		if(this.notify[type] && this.notify[type][id]){
 			return this.notify[type][id];
+		} else if((type=='projects' || type=='chats') && Lincko.storage.get(type, id) && Lincko.storage.cache.init(type, id)){ //Refresh
+			if(this.notify[type] && this.notify[type][id]){
+				return this.notify[type][id];
+			}
 		}
 		return false;
 	},
@@ -1194,6 +1198,10 @@ Lincko.storage.cache = {
 		}
 		if(this.statistics[type] && this.statistics[type][id] && this.statistics[type][id][cat]){
 			return this.statistics[type][id][cat];
+		} else if(type=='projects' && Lincko.storage.get(type, id) && Lincko.storage.cache.init(type, id)){ //Refresh
+			if(this.statistics[type] && this.statistics[type][id] && this.statistics[type][id][cat]){
+				return this.statistics[type][id][cat];
+			}
 		}
 		return 0;
 	},

@@ -708,7 +708,6 @@ var submenu_chat_search = {
 				email: null,
 				users_id: null,
 			};
-			debugger;
 			wrapper_sendAction(
 				user_code,
 				'post',

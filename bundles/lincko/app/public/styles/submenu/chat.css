@@ -73,7 +73,7 @@
 }
 
 .submenu_app_chat_top {
-	background-image: unset;
+	background-image: none;
 }
 
 .submenu_app_chat_top .submenu_title, .submenu_app_chat_top .submenu_top_side_left, .submenu_app_chat_top .submenu_top_side_left {
@@ -173,7 +173,6 @@
 .submenu_deco_read.submenu_app_chat_deco {
 	display: table;
 	white-space: nowrap;
-	color: unset;
 	border-width: 0;
 	overflow: hidden;
 	text-align: left;
@@ -185,7 +184,6 @@
 .submenu_deco.submenu_app_chat_deco {
 	display: table;
 	white-space: nowrap;
-	color: unset;
 	background-color: #FFFFFF;
 	border-width: 0;
 	cursor: pointer; cursor: hand;

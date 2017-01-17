@@ -155,13 +155,11 @@ Submenu.prototype.Add_ChatContents = function() {
 				Lincko.storage.cache.init(type, id);
 				app_models_history.refresh(type, id);
 				app_application_lincko.prepare([type, type+"_"+id, 'notification'], true, false, true);
-				/*
 				wrapper_sendAction(
 					param,
 					'post',
 					route
 				);
-				*/
 			}
 		}
 	}, [type_clear, id, that]);
