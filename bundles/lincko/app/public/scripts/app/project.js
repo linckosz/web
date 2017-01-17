@@ -215,7 +215,8 @@ $("#app_project_chats_all").click(function(event){
 });
 
 $("#app_project_projects_all").click(function(event){
-	submenu_Build("projects_list");
+	//submenu_Build("projects_list"); //- old method (by bruno)
+	submenu_Build("projectsDeck");
 });
 
 $('#app_project_settings').click(function(){

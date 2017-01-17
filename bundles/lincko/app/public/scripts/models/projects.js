@@ -836,3 +836,112 @@ var app_models_projects_adjust_format = function(num){
 	}
 	return str;
 }
+
+
+
+var app_models_projects_getPercentComplete = function(id, round){
+	if(typeof id != 'number' && typeof id != 'string'){ return false; }
+	if(typeof round != 'boolean'){ var round  = true; }
+
+	var num_complete = 0;
+	var num_total = 0;
+	var tasks_all = Lincko.storage.list('tasks', null, null, 'projects', id, false);
+	num_total = tasks_all.length;
+	if(num_total < 1){ return false; }
+
+	$.each(tasks_all, function(i, task){
+		if(task.approved){ num_complete++; }
+	});
+
+
+	var percent = (num_complete / num_total)*100;
+	if(round){ percent = Math.round(percent); }
+
+	return percent;
+}
+
+
+
+//projectsDeck class used in projectsDeck submenu
+var app_models_projects_projectsDeck = function(id){
+	if(typeof id != 'string'){ var id = md5(Math.random()); }
+
+
+
+	var that = this;
+	that.id = 'models_projects_projectsDeck_'+id;
+
+	//variables to be defined later
+	that.elem = null;
+	that.elem_deckWrapper = null;
+	that.elem_deckWrapper_content = null;
+	that.elem_card_all = null;
+	
+
+	that.construct();
+}
+app_models_projects_projectsDeck.prototype.construct = function(){
+	var that = this;
+
+	var elem = $('#-models_projects_projectsDeck').clone()
+		.prop('id', that.id);
+
+	var elem_searchbar = elem.find('[find=searchBar_wrapper]');
+
+	//build searchbar
+	var searchbarInst = null;
+	var searchbar_keyup = function(words){
+
+	}
+	searchbarInst = searchbar.construct(searchbar_keyup);
+	elem_searchbar.append(searchbarInst.elem);
+
+
+
+	var projects_all = app_models_projects_list();
+	var projects_personal = projects_all[0];
+	var projectList = $.merge(projects_all[1], projects_all[2]);
+	var projects_total = projects_all[3];
+	delete projects_all;
+	
+	var elem_deckWrapper = elem.children('[find=deckWrapper]');
+	var elem_deckWrapper_content = elem_deckWrapper.children('[find=deckWrapper_content]');
+
+	$.each(projectList, function(i, p){
+		var elem_p = $('#-models_projects_card').clone().prop('id','').attr('pid',p._id);
+		elem_p.find('[find=project_title]').text(p['+title']);
+
+		var percent = app_models_projects_getPercentComplete(p._id);
+		elem_p.find('[find=percent]').text(percent);
+		elem_p.find('[find=info_progress] [find=bar]').css('width', percent+'%');
+
+
+		elem_p.click(p._id, function(event){
+			app_content_menu.selection(event.data, 'tasks');
+		});
+		elem_p.find('[find=icon_settings]').click({pid: p._id, elem: elem_p, deckInst: that}, function(event){
+			event.stopPropagation();
+			var pid = event.data.pid;
+			var elem_p = event.data.elem;
+			var deckInst = event.data.deckInst;
+			deckInst.elem_card_all.removeAttr('selected');
+			var next = submenu_get("app_project_edit");
+			if(next && next.param == pid){
+				next.Hide(true);
+			} else {
+				submenu_Build("app_project_edit", -1, false, pid);
+				elem_p.attr('selected', true);
+			}
+		});
+		elem_deckWrapper_content.append(elem_p);
+	});
+
+	//elem_deckWrapper.css('height', elem_deckWrapper.outerHeight());
+	elem_deckWrapper_content.addClass('overthrow');
+
+
+	that.elem_card_all = elem_deckWrapper_content.find('[find=card]');
+	that.elem_deckWrapper_content = elem_deckWrapper_content;
+	that.elem_deckWrapper = elem_deckWrapper;
+	that.elem = elem;
+}

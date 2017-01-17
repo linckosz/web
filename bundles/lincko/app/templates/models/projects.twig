@@ -49,4 +49,53 @@
 
 	<canvas id="-models_projects_tasks_statistics" find="tasks_statistics" width="200" height="80" ></canvas>
 
+
+
+
+	<div id="-models_projects_projectsDeck" class="app_models_projects_projectsDeck">
+		<div find="menuWrapper">
+			<div find="view" class="base_pointer">
+				<div find="view_card" class="app_models_projects_projectsDeck_viewOptionBox">
+					<span find="icon" class="app_models_projects_projectsDeck_viewIcons icon-cardViewIcon"></span>
+					<span>Card</span>
+				</div>
+				<div find="view_board" class="app_models_projects_projectsDeck_viewOptionBox">
+					<span find="icon" class="icon-cardViewIcon"></span>
+					<span>Board</span>
+				</div>
+			</div>
+			<div find="searchBar_wrapper"></div>
+		</div>
+		<div find="deckWrapper">
+			<div find="deckWrapper_content"></div>
+		</div>
+	</div>
+
+	<div id="-models_projects_card" find="card" class="app_models_projects_projectsDeck_card base_pointer">
+
+		<div find="leftMenu_wrapper">
+			<div find="btn_archive" class="icon-Trash"></div>
+		</div>
+
+		<div find="cardCenter_wrapper">
+			<div find="preview">
+				<span find="icon" class="icon-projectBlack"></span>
+			</div>
+			<div find="info">
+				<div find="info_activity">last updated</div>
+				<div find="info_main">
+					<div find="project_title"></div>
+					<span find="icon_wrapper">
+						<span find="icon_dashboard" class="icon-Settings"></span>
+						<span find="icon_settings" class="icon-Settings"></span>
+					</span>
+				</div>
+				<div find="info_progress">
+					<div find="bar"><div find="percent"></div></div>
+				</div>
+			</div>
+		</div>{# end of cardCenter_wrapper #}
+
+	</div>{# end of models_projects_card #}
+
 </div>
