@@ -54,7 +54,7 @@
 
 	<div id="-models_projects_projectsDeck" class="app_models_projects_projectsDeck">
 		<div find="menuWrapper">
-			<div find="view" class="base_pointer">
+			<div find="view" class="base_pointer display_none">
 				<div find="view_card" class="app_models_projects_projectsDeck_viewOptionBox">
 					<span find="icon" class="app_models_projects_projectsDeck_viewIcons icon-cardViewIcon"></span>
 					<span>Card</span>
@@ -67,7 +67,16 @@
 			<div find="searchBar_wrapper"></div>
 		</div>
 		<div find="deckWrapper">
-			<div find="deckWrapper_content"></div>
+			<div find="deckWrapper_content">
+				<div find="header_recent">Recent Projects</div>
+				<div find="recentWrapper"></div>
+				<div find="divider"></div>
+				<div find="abcWrapper"></div>
+				<div find="btn_archived" class="base_pointer">
+					<span find="text">Archived Projects</span>&nbsp;(<span find="count"></span>)
+					<span find="icon" class="icon-Forward"></span>
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -82,11 +91,11 @@
 				<span find="icon" class="icon-projectBlack"></span>
 			</div>
 			<div find="info">
-				<div find="info_activity">last updated</div>
+				<div find="info_activity" class="ellipsis">Activity:&nbsp;</div>
 				<div find="info_main">
-					<div find="project_title"></div>
+					<div find="project_title" class="ellipsis"></div>
 					<span find="icon_wrapper">
-						<span find="icon_dashboard" class="icon-Settings"></span>
+						<span find="icon_dashboard" class="fa fa-dashboard display_none"></span>
 						<span find="icon_settings" class="icon-Settings"></span>
 					</span>
 				</div>

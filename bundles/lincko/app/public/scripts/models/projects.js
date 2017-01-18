@@ -863,19 +863,29 @@ var app_models_projects_getPercentComplete = function(id, round){
 
 
 //projectsDeck class used in projectsDeck submenu
-var app_models_projects_projectsDeck = function(id){
+var app_models_projects_projectsDeck = function(id, submenu){
 	if(typeof id != 'string'){ var id = md5(Math.random()); }
-
+	if(!submenu){ var submenu = false; }
 
 
 	var that = this;
 	that.id = 'models_projects_projectsDeck_'+id;
+	that.submenu = submenu;
+
+	var layer_next = -1;
+	if(that.submenu && that.submenu.layer){ layer_next = that.submenu.layer+1; }
+	that.layer_next = layer_next;
 
 	//variables to be defined later
 	that.elem = null;
 	that.elem_deckWrapper = null;
 	that.elem_deckWrapper_content = null;
 	that.elem_card_all = null;
+
+	that.linckoProjects_all = [];
+
+	that.searchbar = null; //searchbar instance
+	that.iscroll = null;
 	
 
 	that.construct();
@@ -883,65 +893,182 @@ var app_models_projects_projectsDeck = function(id){
 app_models_projects_projectsDeck.prototype.construct = function(){
 	var that = this;
 
-	var elem = $('#-models_projects_projectsDeck').clone()
-		.prop('id', that.id);
+	var elem = $('#-models_projects_projectsDeck').clone().prop('id', that.id);
+	that.elem = elem;
 
 	var elem_searchbar = elem.find('[find=searchBar_wrapper]');
 
 	//build searchbar
-	var searchbarInst = null;
 	var searchbar_keyup = function(words){
-
+		var filteredIDs = [];
+		if(!words.length){//searching for nothing, then show everything
+			that.elem_card_all.removeClass('display_none');
+		}
+		else{
+			$.each(searchbar.filterLinckoItems(that.linckoProjects_all, words), function(i, p){
+				filteredIDs.push(p._id);
+			});
+			$.each(that.elem_card_all, function(i, elem){
+				var elem = $(elem);
+				var id = parseInt(elem.attr('pid'),10);
+				
+				if(filteredIDs.indexOf(id) != -1){ //if exists
+					elem.removeClass('display_none');
+				}
+				else{
+					elem.addClass('display_none');
+				}
+			});
+		}
+		that.elem_deckWrapper_content.velocity('fadeIn', {
+			complete: function(){
+				that.iscroll_refresh();
+			}
+		}); //flash
 	}
-	searchbarInst = searchbar.construct(searchbar_keyup);
-	elem_searchbar.append(searchbarInst.elem);
+	that.searchbar = searchbar.construct(searchbar_keyup);
+	elem_searchbar.append(that.searchbar.elem);
 
 
-
+	//prepare projects list
 	var projects_all = app_models_projects_list();
 	var projects_personal = projects_all[0];
-	var projectList = $.merge(projects_all[1], projects_all[2]);
-	var projects_total = projects_all[3];
-	delete projects_all;
-	
+	var projects_recent = projects_all[1];
+	var projects_abc = projects_all[2];
+	var projects_count = projects_all[3];
+	that.linckoProjects_all = $.merge($.merge([], projects_recent), projects_abc); //use merge inside merge to not alter the first array
+
+
+	//prepare deck elements to be built
 	var elem_deckWrapper = elem.children('[find=deckWrapper]');
-	var elem_deckWrapper_content = elem_deckWrapper.children('[find=deckWrapper_content]');
-
-	$.each(projectList, function(i, p){
-		var elem_p = $('#-models_projects_card').clone().prop('id','').attr('pid',p._id);
-		elem_p.find('[find=project_title]').text(p['+title']);
-
-		var percent = app_models_projects_getPercentComplete(p._id);
-		elem_p.find('[find=percent]').text(percent);
-		elem_p.find('[find=info_progress] [find=bar]').css('width', percent+'%');
-
-
-		elem_p.click(p._id, function(event){
-			app_content_menu.selection(event.data, 'tasks');
-		});
-		elem_p.find('[find=icon_settings]').click({pid: p._id, elem: elem_p, deckInst: that}, function(event){
-			event.stopPropagation();
-			var pid = event.data.pid;
-			var elem_p = event.data.elem;
-			var deckInst = event.data.deckInst;
-			deckInst.elem_card_all.removeAttr('selected');
-			var next = submenu_get("app_project_edit");
-			if(next && next.param == pid){
-				next.Hide(true);
-			} else {
-				submenu_Build("app_project_edit", -1, false, pid);
-				elem_p.attr('selected', true);
-			}
-		});
-		elem_deckWrapper_content.append(elem_p);
-	});
-
-	//elem_deckWrapper.css('height', elem_deckWrapper.outerHeight());
-	elem_deckWrapper_content.addClass('overthrow');
-
-
-	that.elem_card_all = elem_deckWrapper_content.find('[find=card]');
+	var elem_deckWrapper_content = elem_deckWrapper.children('[find=deckWrapper_content]').prop('id', that.id+'_deckWrapper_content').addClass('overthrow');
 	that.elem_deckWrapper_content = elem_deckWrapper_content;
 	that.elem_deckWrapper = elem_deckWrapper;
-	that.elem = elem;
+	
+
+	var elem_recentWrapper = elem.find('[find=recentWrapper]');
+	var elem_abcWrapper = elem.find('[find=abcWrapper]');
+
+	$.each([projects_recent, projects_abc], function(i, p_list){
+		var elem_append = elem_recentWrapper;
+		if(i == 1){
+			elem_append = elem_abcWrapper;
+		}
+
+		$.each(p_list, function(j, p){
+			var elem_p = $('#-models_projects_card').clone().prop('id','').attr('pid',p._id);
+
+			//preview
+			if(p._children && p._children.files){
+				$.each(p._children.files, function(file_id, b){
+					var file = Lincko.storage.get('files', file_id);
+					if(file && !file.deleted_at && file.category == 'image'){
+						var thumb_url = Lincko.storage.getLinkThumbnail(file_id);
+						if(thumb_url){
+							var elem_img = $('<img>').attr('src', thumb_url);
+							elem_p.find('[find=preview] [find=icon]').replaceWith(elem_img);
+							return false;
+						}
+					}
+				});
+			}
+
+			//title
+			elem_p.find('[find=project_title]').text(p['+title']);
+
+			//activity
+			var p_activity = app_models_history.getList(1, 'projects', p._id)[0];
+			if(p_activity && p_activity.content){
+				elem_p.find('[find=info_activity]').append(p_activity.date+', '+p_activity.content);
+			}
+
+			//progress
+			var percent = app_models_projects_getPercentComplete(p._id);
+			elem_p.find('[find=percent]').text(percent);
+			elem_p.find('[find=info_progress] [find=bar]').css('width', percent+'%');
+
+
+			elem_p.click(p._id, function(event){
+				app_content_menu.selection(event.data);
+			});
+			elem_p.find('[find=icon_settings]').click({pid: p._id, elem: elem_p, deckInst: that}, function(event){
+				event.stopPropagation();
+				var pid = event.data.pid;
+				var elem_p = event.data.elem;
+				var deckInst = event.data.deckInst;
+				that.elem_card_all.removeAttr('selected');
+
+				var next = submenu_get("app_project_edit");
+				if(next && next.param == pid){
+					next.Hide(true);
+				} else {
+					next = submenu_Build_return("app_project_edit", that.layer_next, false, pid);
+					elem_p.attr('selected', true);
+				}
+				
+				// var subm_edit = submenu_Build_return("app_project_edit", that.layer_next, false, pid);
+				// that.elem_card_all.removeAttr('selected');
+				// if(subm_edit){
+				// 	elem_p.attr('selected', true); //toggle 'selected' attribute
+				// }
+				// else{
+				// 	elem_p.removeAttr('selected');
+				// }
+
+				// var next = submenu_get("app_project_edit");
+				// if(next && next.param == pid){
+				// 	next.Hide(true);
+				// } else {
+				// 	elem_p.attr('selected', true);
+				// 	submenu_Build("app_project_edit", that.layer_next, true, pid);
+				// }
+			});
+			elem_append.append(elem_p); //either elem_recentWrapper or elem_abcWrapper
+		});
+	});
+
+	that.elem_card_all = elem_deckWrapper_content.find('[find=card]');
+
+	//build archived projects button
+	elem_deckWrapper_content.find('[find=btn_archived]').click(function(){
+		$(this).attr('selected',!$(this).attr('selected')); //toggle 'selected' attribute
+		submenu_Build('projects_archives', that.layer_next, true, null);
+	}).find('[find=count]').append(app_models_projects_list_archived().length);
+
+
+	//submenu hide syncfunction
+	app_application_lincko.add(
+		that.elem.prop('id'),
+		'submenu_hide',
+		function(){
+			var subm_archives = submenu_get('projects_archives');
+			var subm_pSettings = submenu_get('app_project_edit');
+
+			if(subm_archives && subm_archives.layer == that.layer_next){ //if archive is open
+				that.elem_deckWrapper_content.find('[find=btn_archived]').attr('selected', true);
+			}
+			else{ //if archive is closed
+				elem_deckWrapper_content.find('[find=btn_archived]').removeAttr('selected');
+			}
+
+			//if project settings submenu is closed
+			if(!subm_pSettings || subm_pSettings.layer != that.layer_next){
+				that.elem_card_all.removeAttr('selected');
+			}
+		}
+	);
+		
+}
+app_models_projects_projectsDeck.prototype.iscroll_refresh = function(){
+	var that = this;
+	if(!that.iscroll && myIScrollList[that.elem_deckWrapper_content.prop('id')]){
+		that.iscroll = myIScrollList[that.elem_deckWrapper_content.prop('id')];
+	}
+
+	if(that.iscroll){
+		that.iscroll.refresh();
+	}
+	else{
+		$(window).resize();
+	}	
 }

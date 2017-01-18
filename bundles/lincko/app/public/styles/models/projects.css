@@ -215,19 +215,55 @@
 
 .app_models_projects_projectsDeck [find=deckWrapper]{
 	position: absolute;
-    top: 76px;
+    top: 36px;
     bottom: 0px;
 }
 .app_models_projects_projectsDeck [find=deckWrapper_content]{
 	position: relative;
 }
 
+.app_models_projects_projectsDeck [find=deckWrapper_content] [find=header_recent]{
+    font-size: 14px;
+    margin-top: 8px;
+    padding: 4px 6px;
+    color: #475577;
+}
+
+.app_models_projects_projectsDeck [find=deckWrapper_content] [find=divider]{
+    padding-top: 1px;
+    width: 110px;
+    background-color: black;
+    margin: 10px auto;
+}
+
+.app_models_projects_projectsDeck [find=deckWrapper_content] [find=btn_archived]{
+	height: 40px;
+    background-color: #FFFFFF;
+    line-height: 40px;
+    padding: 0px 8px;
+    font-size: 16px;
+    color: #475577;
+    margin: 5px 0px;
+}
+.app_models_projects_projectsDeck [find=deckWrapper_content] [find=btn_archived][selected],
+.app_models_projects_projectsDeck [find=deckWrapper_content] [find=btn_archived]:hover{
+	background-color: rgba(250, 204, 146, 0.64);
+}
+.app_models_projects_projectsDeck [find=deckWrapper_content] [find=btn_archived] [find=icon]{
+    line-height: 40px;
+    float: right;
+    color: #fba026;
+}
+.app_models_projects_projectsDeck_card [find="btn_archive"] [find=icon]{
+	
+}
 
 .app_models_projects_projectsDeck_card{
 	height: 70px;
 	background-color: #FFFFFF;
-	margin: 2px;
+	margin: 3px 0px;
 	position: relative;
+	border-bottom: 1px solid rgba(0,0,0,0.24);
 }
 .app_models_projects_projectsDeck_card[selected],
 .app_models_projects_projectsDeck_card:hover{
@@ -259,6 +295,7 @@
 .app_models_projects_projectsDeck_card [find=cardCenter_wrapper] [find=preview],
 .app_models_projects_projectsDeck_card [find=cardCenter_wrapper] [find=info]{
 	display: table-cell;
+	position: relative;
 }
 .app_models_projects_projectsDeck_card [find=cardCenter_wrapper] [find=preview]{
     display: table-cell;
@@ -266,7 +303,9 @@
     text-align: center;
     font-size: 30px;
     width: 60px;
-    height: 60px;
+    height: 70px;
+    padding: 5px;
+    box-sizing: border-box;
 }
 .app_models_projects_projectsDeck_card [find=cardCenter_wrapper] [find=preview] img{
 	max-height: 100%;
@@ -275,11 +314,24 @@
     margin: 0px auto;
 }
 
+.app_models_projects_projectsDeck_card [find=info_activity]{
+    font-size: 10px;
+    color: #979797;
+    position: absolute;
+    left: 2px;
+    right: 0px;
+    top: 4px;
+    padding-right: 10px;
+}
 
 .app_models_projects_projectsDeck_card [find=info_main]{
-	position: relative;
+	position: absolute;
     font-size: 16px;
     padding: 5px 2px;
+    left: 0px;
+    right: 0px;
+    top: 16px;
+    padding-right: 80px;
 }
 .app_models_projects_projectsDeck_card [find=icon_wrapper]{
 	position: absolute;
@@ -287,15 +339,29 @@
     top: 0px;
     bottom: 0px;
     font-size: 26px;
+    color: #fba026;
+}
+.app_models_projects_projectsDeck_card [find=icon_wrapper] [find=icon_dashboard],
+.app_models_projects_projectsDeck_card [find=icon_wrapper] [find=icon_settings]{
+	vertical-align: middle;
+	top: 0px;
+	bottom: 0px;
+}
+.app_models_projects_projectsDeck_card [find=icon_wrapper] [find=icon_dashboard]:hover,
+.app_models_projects_projectsDeck_card [find=icon_wrapper] [find=icon_settings]:hover{
+	color: #FFFFFF;
 }
 .app_models_projects_projectsDeck_card [find=info_progress]{
-	position: relative;
-     height: 15px;
- 	background-color: #d8d8d8;
+    position: absolute;
+    height: 14px;
+    background-color: #d8d8d8;
     color: #FFFFFF;
     padding-left: 5px;
     font-size: 9px;
-    line-height: 15px;
+    left: 0px;
+    right: 0px;
+    bottom: 4px;
+    overflow: hidden;
 }
 .app_models_projects_projectsDeck_card [find=info_progress]:after{
     content: '0%';
@@ -311,7 +377,7 @@
 }
 .app_models_projects_projectsDeck_card [find=info_progress] [find=percent] {
     float: right;
-    line-height: 15px;
+    line-height: 14px;
 }
 .app_models_projects_projectsDeck_card [find=info_progress] [find=percent]:after{
 	content: '%';

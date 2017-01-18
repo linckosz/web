@@ -1,3 +1,11 @@
+.submenu_top_projectsDeck{
+	background-color: #000000;
+    background-image: none;
+}
+.submenu_top_projectsDeck .submenu_title{
+	color: #FFFFFF;
+}
+
 .submenu_content_projectsDeck{
 	background-color: #efefef;
 }

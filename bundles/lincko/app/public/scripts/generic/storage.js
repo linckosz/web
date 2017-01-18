@@ -1038,13 +1038,8 @@ Lincko.storage.searchArray = function(type, param, array, attr, pinyin){
 					save_result = false;
 					if(save_result = find[type](array[item])){
 						if(!$.isEmptyObject(save_result)){
-							if(
-								typeof save_result['personal_private']==='undefined'
-								|| ((typeof save_result['personal_private']==='string' || typeof save_result['personal_private']==='number') && (save_result['personal_private']==null || save_result['personal_private']==0))
-							){
-								if(typeof results === 'undefined'){ results = []; }
-								results.push(save_result);
-							}
+							if(typeof results === 'undefined'){ results = []; }
+							results.push(save_result);
 						}
 					}
 				}

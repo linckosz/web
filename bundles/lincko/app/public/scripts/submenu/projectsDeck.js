@@ -2,6 +2,7 @@ submenu_list['projectsDeck'] = {
 	"_title": {
 		"style": "customized_title",
 		"title": Lincko.Translation.get('app', 2501, 'html'), //Projects list
+		"class": "submenu_top_projectsDeck",
 	},
 	"left_button": {
 		"style": "title_left_button",
@@ -25,10 +26,8 @@ Submenu.prototype.Add_projectsDeck = function() {
 	var submenu_content = submenu_wrapper.find("[find=submenu_wrapper_content]").removeClass('overthrow').addClass('submenu_content_projectsDeck');
 	submenu_content.append('<input class="visibility_hidden" readonly/>');
 
-	var deck = new app_models_projects_projectsDeck(this.id);
+	var deck = new app_models_projects_projectsDeck(this.id, this);
 	submenu_content.append(deck.elem);
-
-
 
 	//Free memory
 	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
