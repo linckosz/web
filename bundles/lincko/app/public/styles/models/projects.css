@@ -240,7 +240,7 @@
 	height: 40px;
     background-color: #FFFFFF;
     line-height: 40px;
-    padding: 0px 8px;
+    padding: 0px 10px;
     font-size: 16px;
     color: #475577;
     margin: 5px 0px;
@@ -254,21 +254,24 @@
     float: right;
     color: #fba026;
 }
-.app_models_projects_projectsDeck_card [find="btn_archive"] [find=icon]{
-	
-}
+
 
 .app_models_projects_projectsDeck_card{
 	height: 70px;
 	background-color: #FFFFFF;
 	margin: 3px 0px;
 	position: relative;
-	border-bottom: 1px solid rgba(0,0,0,0.24);
+	/*border-bottom: 1px solid rgba(0,0,0,0.24);*/
 }
 .app_models_projects_projectsDeck_card[selected],
 .app_models_projects_projectsDeck_card:hover{
 	background-color: rgba(250, 204, 146, 0.64);
 }
+.app_models_projects_projectsDeck_cardCenter_sidePaddingCell{
+    width: 10px;
+    display: table-cell;
+}
+
 
 .app_models_projects_projectsDeck_card [find=leftMenu_wrapper],
 .app_models_projects_projectsDeck_card [find=cardCenter_wrapper]{
@@ -287,6 +290,7 @@
     font-size: 40px;
 }
 
+
 .app_models_projects_projectsDeck_card [find=cardCenter_wrapper]{
 	width: 100%;
 	height: 100%;
@@ -302,16 +306,24 @@
     vertical-align: middle;
     text-align: center;
     font-size: 30px;
-    width: 60px;
+    width: 70px;
     height: 70px;
-    padding: 5px;
     box-sizing: border-box;
+    padding: 5px 5px 5px 0px;
 }
-.app_models_projects_projectsDeck_card [find=cardCenter_wrapper] [find=preview] img{
+.app_models_projects_projectsDeck_card [find=cardCenter_wrapper] [find=preview] img{ /* no longer used -- [find=image] is used instead */
 	max-height: 100%;
     max-width: 100%;
     display: block;
     margin: 0px auto;
+}
+.app_models_projects_projectsDeck_card [find=cardCenter_wrapper] [find=preview] [find=image]{
+    width: 100%;
+    height: 100%;
+    display: block;
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .app_models_projects_projectsDeck_card [find=info_activity]{
@@ -327,15 +339,19 @@
 .app_models_projects_projectsDeck_card [find=info_main]{
 	position: absolute;
     font-size: 16px;
-    padding: 5px 2px;
+    height: 32px;
     left: 0px;
     right: 0px;
-    top: 16px;
+    top: 20px;
     padding-right: 80px;
+}
+.app_models_projects_projectsDeck_card [find=info_main]>div,
+.app_models_projects_projectsDeck_card [find=info_main]>span{
+	line-height: 32px;
 }
 .app_models_projects_projectsDeck_card [find=icon_wrapper]{
 	position: absolute;
-    right: 5px;
+    right: 0px;
     top: 0px;
     bottom: 0px;
     font-size: 26px;
@@ -343,9 +359,7 @@
 }
 .app_models_projects_projectsDeck_card [find=icon_wrapper] [find=icon_dashboard],
 .app_models_projects_projectsDeck_card [find=icon_wrapper] [find=icon_settings]{
-	vertical-align: middle;
-	top: 0px;
-	bottom: 0px;
+	vertical-align: top;
 }
 .app_models_projects_projectsDeck_card [find=icon_wrapper] [find=icon_dashboard]:hover,
 .app_models_projects_projectsDeck_card [find=icon_wrapper] [find=icon_settings]:hover{
@@ -360,7 +374,7 @@
     font-size: 9px;
     left: 0px;
     right: 0px;
-    bottom: 4px;
+    bottom: 5px;
     overflow: hidden;
 }
 .app_models_projects_projectsDeck_card [find=info_progress]:after{

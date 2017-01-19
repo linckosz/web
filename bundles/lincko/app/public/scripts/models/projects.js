@@ -965,8 +965,12 @@ app_models_projects_projectsDeck.prototype.construct = function(){
 					if(file && !file.deleted_at && file.category == 'image'){
 						var thumb_url = Lincko.storage.getLinkThumbnail(file_id);
 						if(thumb_url){
-							var elem_img = $('<img>').attr('src', thumb_url);
-							elem_p.find('[find=preview] [find=icon]').replaceWith(elem_img);
+							var elem_preview = $('<span>').css('background-image', 'url('+thumb_url+')').attr('find', 'image');
+							elem_p.find('[find=preview] [find=icon]').replaceWith(elem_preview);
+
+
+							// var elem_img = $('<img>').attr('src', thumb_url);
+							// elem_p.find('[find=preview] [find=icon]').replaceWith(elem_img);
 							return false;
 						}
 					}
