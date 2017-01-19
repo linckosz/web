@@ -701,7 +701,7 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 
 	cards_elem.recursiveRemove(0);
 	if( items_filtered.length < 1 ){
-		iscroll_elem.append(that.noResult_str);
+		iscroll_elem.append(that.noResult_str.clone());
 	}
 	else{
 		for (var i in items_filtered){
@@ -756,7 +756,7 @@ skylist.prototype.addCard_all = function(){
 	var items;
 	items = that.list_filter();
 	if( items.length < 1 ){
-		that.list.append(that.noResult_str);
+		that.list.append(that.noResult_str.clone());
 	}
 	else{
 		var item;
@@ -3381,7 +3381,7 @@ skylist.prototype.updateFakeCards = function(){
 skylist.prototype.filter_updateSettings = function(sendAction){
 	var that = this;
 	if(that.list_type != 'tasks' && that.list_type != 'notes' && that.list_type != 'files'){ return; }
-	if(typeof sendAction === 'undefined'){ sendAction = true; }
+	if(typeof sendAction === 'undefined'){ var sendAction = true; }
 	
 	var settings_new = Lincko.storage.getSettings();
 	//offline settings
@@ -3390,7 +3390,7 @@ skylist.prototype.filter_updateSettings = function(sendAction){
 
 	//compare with current settings object to determine whether to update server with new settings
 	try{
-		var currentSettings = that.Lincko_itemsList_filter;
+		var currentSettings = JSON.parse(JSON.stringify(that.Lincko_itemsList_filter));
 		if(typeof currentSettings == 'object'){ currentSettings.search = ''; }
 		if( JSON.stringify(settings_new.skylist.filter[app_content_menu.projects_id][that.list_type]) == JSON.stringify(currentSettings)){
 			return false; //settings are already the same, no need to continue
