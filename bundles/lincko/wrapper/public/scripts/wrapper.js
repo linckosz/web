@@ -112,9 +112,7 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 
 			if(wrapper_localstorage.logged && data.sha && wrapper_localstorage.sha!=data.sha){
 				//This helps to refresh the page with the new account merged
-				setTimeout(function(){
-					window.location.href = wrapper_link['root'];
-				}, 1000); //Give a little time to let the user see the success message
+				window.location.href = wrapper_link['root'];
 			}
 
 			if(typeof isOffline_update == 'function'){
