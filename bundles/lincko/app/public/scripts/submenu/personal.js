@@ -185,7 +185,7 @@ submenu_list['personal_settings'] = {
 		},
 		"class": function(){
 			var integration = Lincko.storage.get('users', wrapper_localstorage.uid, 'integration');
-			if($.inArray('email', integration)>=0){
+			if($.inArray(null, integration)>=0){
 				return "display_none";
 			}
 			return "";
