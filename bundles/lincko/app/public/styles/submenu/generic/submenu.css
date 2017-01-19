@@ -161,7 +161,7 @@
 .submenu_deco_read {
 	position: relative;
 	display: table;
-	/*table-layout: fixed;*/
+	table-layout: fixed; /* toto: why it was commented out? */
 	white-space: nowrap;
 	color: #6F7377;
 	background-color: #FAFBFC;
@@ -174,7 +174,7 @@
 .submenu_deco {
 	position: relative;
 	display: table;
-	/*table-layout: fixed;*/
+	table-layout: fixed; /* toto: why it was commented out? */
 	white-space: nowrap;
 	color: #6F7377;
 	background-color: #FAFBFC;
@@ -191,6 +191,11 @@
 	cursor: default !important;
 }
 
+.submenu_deco_info_wrap {
+	cursor: default !important;
+	white-space: normal;
+}
+
 .submenu_deco_neutral {
 	color: #6F7377;
 	background-color: #FFFFFF !important;
@@ -203,6 +208,10 @@
 
 .submenu_deco_next {
 	background-color: #FFFFF0 !important;
+}
+
+.submenu_next_value {
+	white-space: nowrap;
 }
 
 .submenu_padding {

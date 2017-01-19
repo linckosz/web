@@ -1863,6 +1863,15 @@ Lincko.storage.generateMyQRcode = function(){
 	return false;
 }
 
+Lincko.storage.generateLinkQRcode = function(mini){
+	if(typeof mini == "undefined"){ mini = false; }
+	var workid = Lincko.storage.getWORKID();
+	var sha = wrapper_localstorage.sha;
+	var updated_at = Lincko.storage.get('users', wrapper_localstorage.uid, 'updated_at');
+	var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domainRoot+':'+document.linckoBackPort+'/file/link_from_qrcode';
+	return url+"/"+workid+"/"+sha+"/"+mini+"?"+updated_at;
+}
+
 Lincko.storage.generateMyURL = function(){
 	return top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domainRoot+"/uid/"+wrapper_localstorage.ucode;
 }

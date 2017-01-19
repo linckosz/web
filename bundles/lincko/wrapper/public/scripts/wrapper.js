@@ -90,16 +90,11 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 		},
 		
 		success: function(data){
-			if(typeof isOffline_update == 'function'){
-				isOffline_update(false);
-			}
 			//Those 3 following lines are only for debug purpose
 			//var msg = JSON.stringify(data); //for test
 			//var msg = data; //for test
 			//var msg = JSON.parse(data.msg); //for test
 			//console.log(data);
-			//Get back the form object if it was sent from a form
-			wrapper_objForm = ajax_objForm;
 
 			//This is importat because sometime in msg we return an object with some information inside
 			var msg = data.msg;
@@ -110,6 +105,22 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 			} else if(typeof msg != 'string'){
 				msg = '';
 			}
+			
+			if(data.show && typeof base_show_error == 'function'){
+				base_show_error(msg, data.error);
+			}
+
+			if(wrapper_localstorage.logged && data.sha && wrapper_localstorage.sha!=data.sha){
+				//This helps to refresh the page with the new account merged
+				setTimeout(function(){
+					window.location.href = wrapper_link['root'];
+				}, 1000); //Give a little time to let the user see the success message
+			}
+
+			if(typeof isOffline_update == 'function'){
+				isOffline_update(false);
+			}
+
 			if(data.error){
 				JSerror.sendError(JSON.stringify(data, null, 4), '/wrapper.js/wrapper_ajax().success()', 0);
 				console.log(data);
@@ -119,10 +130,6 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 				wrapper_shangzai = data.shangzai;
 				wrapper_localstorage.encrypt('shangzai', data.shangzai);
 				wrapper_set_shangzai = false;
-			}
-
-			if(data.show && typeof base_show_error == 'function'){
-				base_show_error(msg, data.error);
 			}
 
 			//Exit if we are signout
@@ -135,6 +142,9 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 					wrapper_sendAction('','post','user/signout', null, null, wrapper_signout_cb_begin, wrapper_signout_cb_complete);
 				}, 200);
 			}
+
+			//Get back the form object if it was sent from a form
+			wrapper_objForm = ajax_objForm;
 
 			//Force to update elements if the function is available
 			if(typeof storage_cb_success == 'function'){

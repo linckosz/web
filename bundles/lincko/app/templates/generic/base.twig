@@ -8,6 +8,11 @@
 				JSfiles.later("{{ _filelatest('/lincko/app/scripts/generic/base.js') }}", 30);
 				JSfiles.later("{{ _filelatest('/lincko/app/scripts/input/_base.js') }}", 40);
 				JSfiles.later("{{ _filelatest('/scripts/libs/player.js') }}", 40);
+				//Account logo
+				var app_application_logo_lincko = new Image();
+				app_application_logo_lincko.src = "{{ _filelatest('/lincko/app/images/generic/base/logo/lincko.png') }}";
+				var app_application_logo_wechat = new Image();
+				app_application_logo_wechat.src = "{{ _filelatest('/lincko/app/images/generic/base/logo/wechat.png') }}";
 			</script>
 
 			{# for video player #}

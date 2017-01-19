@@ -13,6 +13,45 @@ submenu_list['personal_settings'] = {
 		"style": "profile_photo",
 		"title": "",
 	},
+	"qrcode": {
+		"style": "profile_info",
+		"title": Lincko.Translation.get('app', 68, 'html'), //My QR code
+		"value": function(){
+			var qrcode = $('<img>');
+			qrcode.attr('src', Lincko.storage.generateMyQRcode());
+			qrcode.addClass('submenu_personal_profile_picture');
+			return qrcode;
+		},
+	},
+	"myurl": {
+		"style": "button",
+		"title": Lincko.Translation.get('app', 69, 'html'), //Copy My URL to the clipboard
+		"class": "submenu_deco display_none",
+		"now": function(Elem, subm){
+			Elem.removeClass('display_none');
+			Elem.attr('data-clipboard-text', Lincko.storage.generateMyURL());
+			var myurl = new Clipboard(Elem[0]);
+			myurl.on('success', function(e) {
+				base_show_error(Lincko.Translation.get('app', 70, 'html'), false); //URL copied to the clipboard
+				e.clearSelection();
+			});
+			myurl.on('error', function(e) {
+				base_show_error(Lincko.Translation.get('app', 71, 'html'), true); //Your system does not allow to copy to the clipboard
+				e.clearSelection();
+			});
+			app_application_lincko.add(
+				subm.id,
+				'submenu_hide_'+subm.preview+'_'+subm.id,
+				function(){
+					var myurl = this.action_param;
+					if(myurl){
+						myurl.destroy();
+					}
+				},
+				myurl
+			);
+		}
+	},
 	"nickname": {
 		"style": "profile_input",
 		"title": Lincko.Translation.get('app', 47, 'html'), //Nickname
@@ -128,6 +167,46 @@ submenu_list['personal_settings'] = {
 			if(!val){ return ""; }
 			return wrapper_to_html(val);
 		},
+		"class": function(){
+			if(!Lincko.storage.get('users', wrapper_localstorage.uid, 'email')){
+				return "display_none";
+			}
+			return "";
+		},
+	},
+	"personal_lincko": {
+		"style": "next",
+		"title": Lincko.Translation.get('app', 82, 'html'), //Create or Link a Lincko account
+		"next": "personal_lincko",
+		"value": function(){
+			var img = $('<img>');
+			img.addClass('submenu_personal_integration_icon').prop("src", app_application_logo_lincko.src);
+			return img;
+		},
+		"class": function(){
+			var integration = Lincko.storage.get('users', wrapper_localstorage.uid, 'integration');
+			if($.inArray('email', integration)>=0){
+				return "display_none";
+			}
+			return "";
+		},
+	},
+	"personal_integration_wechat": {
+		"style": "next",
+		"title": Lincko.Translation.get('app', 80, 'html'), //Attach my Wechat account 
+		"next": "personal_integration_wechat",
+		"value": function(){
+			var img = $('<img>');
+			img.addClass('submenu_personal_integration_icon').prop("src", app_application_logo_wechat.src);
+			return img;
+		},
+		"class": function(){
+			var integration = Lincko.storage.get('users', wrapper_localstorage.uid, 'integration');
+			if($.inArray('wechat', integration)>=0 || isMobileBrowser() || isMobileApp() || navigator.userAgent.match(/MicroMessenger/i)){
+				return "display_none";
+			}
+			return "";
+		},
 	},
 	"message": {
 		"style": "button",
@@ -135,45 +214,6 @@ submenu_list['personal_settings'] = {
 		"class": "submenu_deco",
 		"action": function(Elem, subm){
 			submenu_chat_open_single(subm, subm.param);
-		},
-	},
-	"myurl": {
-		"style": "button",
-		"title": Lincko.Translation.get('app', 69, 'html'), //Copy My URL to the clipboard
-		"class": "submenu_deco display_none",
-		"now": function(Elem, subm){
-			Elem.removeClass('display_none');
-			Elem.attr('data-clipboard-text', Lincko.storage.generateMyURL());
-			var myurl = new Clipboard(Elem[0]);
-			myurl.on('success', function(e) {
-				base_show_error(Lincko.Translation.get('app', 70, 'html'), false); //URL copied to the clipboard
-				e.clearSelection();
-			});
-			myurl.on('error', function(e) {
-				base_show_error(Lincko.Translation.get('app', 71, 'html'), true); //Your system does not allow to copy to the clipboard
-				e.clearSelection();
-			});
-			app_application_lincko.add(
-				subm.id,
-				'submenu_hide_'+subm.preview+'_'+subm.id,
-				function(){
-					var myurl = this.action_param;
-					if(myurl){
-						myurl.destroy();
-					}
-				},
-				myurl
-			);
-		}
-	},
-	"qrcode": {
-		"style": "profile_info",
-		"title": Lincko.Translation.get('app', 68, 'html'), //My QR code
-		"value": function(){
-			var qrcode = $('<img>');
-			qrcode.attr('src', Lincko.storage.generateMyQRcode());
-			qrcode.addClass('submenu_personal_profile_picture');
-			return qrcode;
 		},
 	},
 	"space": {
@@ -203,32 +243,22 @@ submenu_list['personal_info'] = {
 			return wrapper_to_html(val);
 		},
 	},
-	"given_name": {
+	"qrcode": {
 		"style": "profile_info",
-		"title": Lincko.Translation.get('app', 48, 'html'), //Given Name
-		"input": "firstname",
+		"title": Lincko.Translation.get('app', 68, 'html'), //My QR code
+		"class": "display_none",
 		"value": function(Elem, subm){
-			var val = Lincko.storage.get('users', subm.param, 'firstname');
-			if(!val){ return ""; }
-			return wrapper_to_html(val);
+			if(subm.param == wrapper_localstorage.uid){
+				var qrcode = $('<img>');
+				qrcode.attr('src', Lincko.storage.generateMyQRcode());
+				qrcode.addClass('submenu_personal_profile_picture');
+				return qrcode;
+			}
 		},
-	},
-	"family_name": {
-		"style": "profile_info",
-		"title": Lincko.Translation.get('app', 49, 'html'), //Family Name
-		"input": "lastname",
-		"value": function(Elem, subm){
-			var val = Lincko.storage.get('users', subm.param, 'lastname');
-			if(!val){ return ""; }
-			return wrapper_to_html(val);
-		},
-	},
-	"message": {
-		"style": "button",
-		"title": Lincko.Translation.get('app', 54, 'html'), //Send a message
-		"class": "submenu_deco",
-		"action": function(Elem, subm){
-			submenu_chat_open_single(subm, subm.param);
+		"now": function(Elem, subm){
+			if(subm.param == wrapper_localstorage.uid){
+				Elem.removeClass('display_none');
+			}
 		},
 	},
 	"myurl": {
@@ -262,23 +292,158 @@ submenu_list['personal_info'] = {
 			}
 		}
 	},
-	"qrcode": {
+	"given_name": {
 		"style": "profile_info",
-		"title": Lincko.Translation.get('app', 68, 'html'), //My QR code
-		"class": "display_none",
+		"title": Lincko.Translation.get('app', 48, 'html'), //Given Name
+		"input": "firstname",
 		"value": function(Elem, subm){
-			if(subm.param == wrapper_localstorage.uid){
-				var qrcode = $('<img>');
-				qrcode.attr('src', Lincko.storage.generateMyQRcode());
-				qrcode.addClass('submenu_personal_profile_picture');
-				return qrcode;
-			}
+			var val = Lincko.storage.get('users', subm.param, 'firstname');
+			if(!val){ return ""; }
+			return wrapper_to_html(val);
+		},
+	},
+	"family_name": {
+		"style": "profile_info",
+		"title": Lincko.Translation.get('app', 49, 'html'), //Family Name
+		"input": "lastname",
+		"value": function(Elem, subm){
+			var val = Lincko.storage.get('users', subm.param, 'lastname');
+			if(!val){ return ""; }
+			return wrapper_to_html(val);
+		},
+	},
+	"message": {
+		"style": "button",
+		"title": Lincko.Translation.get('app', 54, 'html'), //Send a message
+		"class": "submenu_deco",
+		"action": function(Elem, subm){
+			submenu_chat_open_single(subm, subm.param);
+		},
+	},
+	"space": {
+		"style": "space",
+		"title": "space",
+		"value": 80,
+	},
+};
+
+submenu_list['personal_lincko'] = {
+	"_title": {
+		"style": "customized_title",
+		"title": Lincko.Translation.get('app', 82, 'html'), //Create or Link a Lincko account
+	},
+	"left_button": {
+		"style": "title_left_button",
+		"title": Lincko.Translation.get('app', 7, 'html'), //Cancel
+		'hide': true,
+		"class": "base_pointer",
+	},
+	"right_button": {
+		"style": "title_right_button",
+		"title": Lincko.Translation.get('app', 84, 'html'), //Link
+		"class": "base_pointer",
+		"action": function(Elem, subm) {
+			var subm_Elem = subm.Wrapper();
+			var that_Elem = Elem;
+			wrapper_sendAction(
+				{
+					email: subm_Elem.find("[name=email]").val(),
+					password: subm_Elem.find("[name=password]").val(),
+				},
+				'post',
+				'user/link_to',
+				function(data) {
+					Lincko.storage.getLatest(true);
+				},
+				null,
+				function(jqXHR, settings, temp_id) {
+					base_showProgress(that_Elem);
+				},
+				function(){
+					base_hideProgress(that_Elem);
+				}
+			);
 		},
 		"now": function(Elem, subm){
-			if(subm.param == wrapper_localstorage.uid){
-				Elem.removeClass('display_none');
-			}
+			//Add loading bar
+			var loading_bar = $("#-submit_progress_bar").clone();
+			loading_bar.prop('id', '');
+			Elem.append(loading_bar);
 		},
+	},
+	"info": {
+		"style": "info",
+		"title": Lincko.Translation.get('app', 87, 'html'), //Enter the Email and Password of the Lincko account that you want to link.
+	},
+	"email": {
+		"style": "input_text",
+		"title": Lincko.Translation.get('app', 85, 'html'), //Email
+		"name": "email",
+		"value": "",
+		"class": "submenu_input_text",
+		"now": function(Elem, subm){
+			Elem.find("[find=submenu_input]").attr("autocomplete", "off").val('');
+			if(subm.param){
+				Elem.find("[find=submenu_input]").val(subm.param);
+			}
+			Elem.on("keypress", subm, function(e) {
+				e.stopPropagation(); 
+				if((e.which || e.keyCode) == 13){
+					$('#'+e.data.id+"_submenu_top_button_right").click();
+				}
+			});
+		},
+	},
+	"password": {
+		"style": "input_password",
+		"title": Lincko.Translation.get('app', 86, 'html'), //Password
+		"name": "password",
+		"value": "",
+		"class": "submenu_input_text",
+		"now": function(Elem, subm){
+			Elem.find("[find=submenu_input]").attr("autocomplete", "off").val('');
+			Elem.on("keypress", subm, function(e) {
+				e.stopPropagation(); 
+				if((e.which || e.keyCode) == 13){
+					$('#'+e.data.id+"_submenu_top_button_right").click();
+				}
+			});
+		},
+	},
+	"post_action": {
+		"style": "postAction",
+		"action": function(Elem, subm){
+			base_format_form();
+		},
+	},
+	"space": {
+		"style": "space",
+		"title": "space",
+		"value": 80,
+	},
+};
+
+submenu_list['personal_integration_wechat'] = {
+	"_title": {
+		"style": "customized_title",
+		"title": Lincko.Translation.get('app', 80, 'html'), //Attach my Wechat account 
+	},
+	"left_button": {
+		"style": "title_left_button",
+		"title": Lincko.Translation.get('app', 25, 'html'), //Close
+		'hide': true,
+		"class": "base_pointer",
+	},
+	"qrcode": {
+		"style": "profile_info",
+		"title": Lincko.Translation.get('app', 83, 'html'), //Scan the QR code with your Wechat account and enter your password.
+		"value": function(){
+			var qrcode = $('<img>');
+			qrcode.attr('src', Lincko.storage.generateLinkQRcode('wechat'));
+			qrcode.addClass('submenu_personal_profile_picture');
+			return qrcode;
+		},
+		"class": "personal_integration_wechat_qrcode",
 	},
 	"space": {
 		"style": "space",

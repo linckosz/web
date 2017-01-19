@@ -5,7 +5,7 @@
 	bottom: 0px;
 	right: 0px;
 	z-index: 3000;
-    background-color: rgba(0, 0, 0, 0.7);
+	background-color: rgba(0, 0, 0, 0.7);
 }
 #isOffline_popup [find=box]{
 	width: 480px;
@@ -14,18 +14,18 @@
 	box-shadow: 0 0 2px 1px #fba026;
 	z-index: 1900;
 	position: absolute;
-    top: 50%;
-    left: 50%;
-    -webkit-transform:	translate(-50%, -50%);
+	top: 50%;
+	left: 50%;
+	-webkit-transform:	translate(-50%, -50%);
 	-moz-transform:		translate(-50%, -50%);
 	-ms-transform:		translate(-50%, -50%);
 	-o-transform:		translate(-50%, -50%);
 	transform:			translate(-50%, -50%);
 
 	color: #3f84b0;
-    font-size: 20px;
-    text-align: center;
-    padding: 40px 0px;
+	font-size: 20px;
+	text-align: center;
+	padding: 40px 0px;
 }
 #isOffline_popup [find=linckoBot]{
 	font-size: 90px;
@@ -37,11 +37,11 @@
 }
 #isOffline_popup [find=btn_ok]{
 	border-radius: 3px;
-    border: solid 1px #3f84b0;
-    width: 200px;
-    margin: auto;
-    padding: 4px 0px;
-    margin-top: 22px;
+	border: solid 1px #3f84b0;
+	width: 200px;
+	margin: auto;
+	padding: 4px 0px;
+	margin-top: 22px;
 }
 #isOffline_popup [find=btn_ok]:hover{
 	background-color: #3f84b0;

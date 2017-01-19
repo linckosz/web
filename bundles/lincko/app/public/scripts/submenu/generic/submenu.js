@@ -61,6 +61,10 @@ var Submenu_select = {
 		subm.Add_MenuButton(position);
 	},
 
+	info: function(subm, position) {
+		subm.Add_MenuInfo(position);
+	},
+
 	small_button: function(subm, position) {
 		subm.Add_MenuSmallButton(position);
 	},
@@ -93,6 +97,10 @@ var Submenu_select = {
 
 	input_text: function(subm) {
 		subm.Add_InputText();
+	},
+
+	input_password: function(subm) {
+		subm.Add_InputPassword();
 	},
 
 	input_textarea: function(subm) {
@@ -473,6 +481,31 @@ Submenu.prototype.Add_MenuButton = function(position) {
 	return Elem;
 };
 
+Submenu.prototype.Add_MenuInfo = function(position) {
+	var that = this;
+	var attribute = this.attribute;
+	var Elem = $('#-submenu_info').clone();
+	var preview = this.preview;
+	Elem.prop("id", '');
+	Elem.find("[find=submenu_info_title]").html(attribute.title);
+	if ("value" in attribute) {
+		Elem.find("[find=submenu_info_title]").html(attribute.value);
+	}
+	if ("class" in attribute) {
+		Elem.addClass(attribute['class']);
+	}
+	if ("now" in attribute && typeof attribute.now === "function") {
+		attribute.now(Elem, that);
+	}
+	if (!position) {
+		this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
+	}
+	else {
+		position.append(Elem);
+	}
+	return Elem;
+};
+
 Submenu.prototype.Add_MenuSmallButton = function(position) {
 	var that = this;
 	var attribute = this.attribute;
@@ -658,6 +691,29 @@ Submenu.prototype.Add_InputText = function() {
 	var attribute = this.attribute;
 	var Elem = $('#-submenu_input').clone();
 	var Input = $('<input type="text" find="submenu_input" class="selectable" />');
+	Elem.prop("id", '');
+	Elem.find("[find=submenu_title]").html(attribute.title);
+	Elem.prop('for', attribute.name);
+	Input.prop('name', attribute.name);
+	Elem.append(Input);
+	if ("value" in attribute) {
+		Elem.find("[find=submenu_input]").prop('value', attribute.value);
+	}
+	if ("class" in attribute) {
+		Elem.addClass(attribute['class']);
+	}
+	if ("now" in attribute && typeof attribute.now === "function") {
+		attribute.now(Elem, that);
+	}
+	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
+	return Elem;
+};
+
+Submenu.prototype.Add_InputPassword = function() {
+	var that = this;
+	var attribute = this.attribute;
+	var Elem = $('#-submenu_input').clone();
+	var Input = $('<input type="password" find="submenu_input" class="selectable" />');
 	Elem.prop("id", '');
 	Elem.find("[find=submenu_title]").html(attribute.title);
 	Elem.prop('for', attribute.name);

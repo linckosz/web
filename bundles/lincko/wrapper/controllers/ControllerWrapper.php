@@ -222,6 +222,9 @@ class ControllerWrapper extends Controller {
 						OneSeventySeven::set(array('pukpic' => $json_result->flash->pukpic));
 						$json_result->shangzai = Datassl::encrypt($json_result->flash->pukpic); //For file uploading
 					}
+					if(isset($json_result->flash->username_sha1)){
+						$json_result->sha = $json_result->flash->username_sha1;
+					}
 					unset($json_result->flash);
 				}
 			}
@@ -358,13 +361,17 @@ class ControllerWrapper extends Controller {
 
 		$log_action = false;
 
-		if($action==='user/signin' && $type==='POST' && isset($this->json['data']['email']) && isset($this->json['data']['password'])){
+		if(isset($this->json['data']['email']) && isset($this->json['data']['password'])){
+			$this->json['data']['password'] = Datassl::encrypt($this->json['data']['password'], $this->json['data']['email']);
+		} else if(isset($this->json['data']['password'])){ //If it's missing the email, we reset the password
+			$this->json['data']['password'] = false;
+		}
+
+		if($action=='user/signin' && $type=='POST' && isset($this->json['data']['email']) && isset($this->json['data']['password'])){
 
 			$log_action = true;
 
 			$this->signOut(true);
-
-			$this->json['data']['password'] = Datassl::encrypt($this->json['data']['password'], $this->json['data']['email']);
 
 			OneSeventySeven::set(array(
 				'youjian' => $this->json['data']['email'],
@@ -377,7 +384,7 @@ class ControllerWrapper extends Controller {
 				OneSeventySeven::set(array('jizhu' => false));
 			}
 		
-		} else if($action==='integration/connect' && $type==='POST' && isset($this->json['data']['party']) && isset($this->json['data']['party_id'])){
+		} else if($action=='integration/connect' && $type=='POST' && isset($this->json['data']['party']) && isset($this->json['data']['party_id'])){
 
 			$log_action = true;
 
@@ -390,7 +397,7 @@ class ControllerWrapper extends Controller {
 				OneSeventySeven::set(array('jizhu' => false));
 			}
 		
-		} else if($action==='user/create' && $type==='POST' && isset($this->json['data']['email']) && isset($this->json['data']['password'])){
+		} else if($action=='user/create' && $type=='POST' && isset($this->json['data']['email']) && isset($this->json['data']['password'])){
 
 			if(Creation::exists()){
 				if(isset($this->json['data']['captcha']) && isset($_SESSION['wrapper_captcha'])){
@@ -421,8 +428,6 @@ class ControllerWrapper extends Controller {
 
 			$log_action = true;
 
-			$this->json['data']['password'] = Datassl::encrypt($this->json['data']['password'], $this->json['data']['email']);
-
 			$this->signOut(true);
 
 			OneSeventySeven::set(array(
@@ -430,8 +435,6 @@ class ControllerWrapper extends Controller {
 				'jizhu' => true,
 			));
 
-		} else if($action==='user/reset' && $type==='POST' && isset($this->json['data']['email']) && isset($this->json['data']['password'])){
-			$this->json['data']['password'] = Datassl::encrypt($this->json['data']['password'], $this->json['data']['email']);
 		} else {
 			//We autosign if available
 			$this->autoSign();
