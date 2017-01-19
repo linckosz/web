@@ -792,7 +792,7 @@ var app_models_projects_list = function(limit, recents){
 	projects_alphabet = Lincko.storage.list('projects', null, projectList_conditions); //Do not include personal space, it has to be show separatly fro projects list (separate on top of list)
 	projects_alphabet = Lincko.storage.sort_items(projects_alphabet, 'title'); //Alphabetic order for remaining projects
 
-	var total = 1 + projects_recents.length + projects_alphabet.length;
+	var total = projects_recents.length + projects_alphabet.length; //Exclude personal project in total number
 	var result = [];
 	result.push(projects_personal);
 	if(limit && limit>0){

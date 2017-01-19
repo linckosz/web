@@ -100,6 +100,10 @@
 	color: #ABABAB;
 }
 
+.submenu_info_title {
+	white-space: normal;
+}
+
 .submenu_personal_integration_icon {
 	height: 20px;
 	border-radius: 2px;
@@ -115,7 +119,8 @@
 }
 
 .personal_integration_wechat_qrcode .submenu_personal_input_span_right {
-	text-align: center;
+	text-align: left;
+	width: 200px;
 }
 
 .personal_integration_wechat_qrcode .submenu_personal_profile_picture {

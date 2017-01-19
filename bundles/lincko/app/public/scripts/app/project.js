@@ -52,7 +52,7 @@ var mainMenu = {
 			var files;
 
 			var projects_length = "";
-			if(projects_total>3){ //1 is because it includes personal space
+			if(projects_total>2){
 				$("#app_project_projects_all").removeClass('app_project_tab_force_radius');
 				projects_length = "("+projects_total+")";
 			} else {
