@@ -47,3 +47,28 @@ if (!String.prototype.trim) {
     return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
   };
 }
+
+//Polyfil of compareLocale
+//Note: This is not a true polyfil since we have only one parameter, but it's enough for the current application
+try {
+	var localeCompare_test = 'a'.localeCompare('b');
+	delete localeCompare_test;
+} catch(e){
+	String.prototype.localeCompare = function(other, locale) {
+		var charA = null, charB = null, index = 0;
+		while (charA === charB && index < 100) {
+			if(!this.toString()[index] || !other[index]){
+				break;
+			}
+			charA = this.toString()[index].toLowerCase();
+			charB = other[index].toLowerCase();
+			index++;
+		}
+		if(charA > charB){
+			return 1;
+		} else if(charB > charA){
+			return -1;
+		}
+		return 0;
+	}
+}
