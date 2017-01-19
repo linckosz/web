@@ -344,6 +344,7 @@
     right: 0px;
     top: 20px;
     padding-right: 80px;
+    color: #475577;
 }
 .app_models_projects_projectsDeck_card [find=info_main]>div,
 .app_models_projects_projectsDeck_card [find=info_main]>span{
