@@ -1837,10 +1837,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			param['id'] = taskid;
 			submenu_taskdetail.find('[find=title_text]');
 			param['comment'] = submenu_taskdetail.find('[find=description_text]').html();
-			//save empty string if comment equals ckeditor empty element <p><br></p>
-			if(param['comment'] == '<p><br></p>'){
-				delete param['comment'];
-			}
+
 
 			//unlock if item locker matches the user or locked_by is null
 
@@ -2360,12 +2357,20 @@ Submenu.prototype.Add_taskdetail = function() {
 					elem_editorToolbar.prop('id'),
 					that.param.type+'_'+item['_id'],
 					function(){
-						var locked_by = Lincko.storage.get(that.param.type, item['_id'], 'locked_by');
+						var locked_by = Lincko.storage.get(that.param.type, item['_id'], 'locked_by');						
 						if(locked_by && locked_by != wrapper_localstorage.uid
 							&& CKEDITOR && CKEDITOR.instances && CKEDITOR.instances[elem_description_text.prop('id')]){
 							editorInst = null;
 							CKEDITOR.instances[elem_description_text.prop('id')].destroy();
 							fn_lockDescription();
+						}
+						else if(this.updated 
+							 && this.updated[that.param.type+'_'+item['_id']] 
+							 && this.updated[that.param.type+'_'+item['_id']]['-comment']
+							 && Lincko.storage.get(that.param.type, item['_id'], 'updated_by') != wrapper_localstorage.uid){
+							//even when editing, if there is a comment change with updated_by != editor, then update text
+							//once starting to edit, should not be issue since it is locked and nobody else can update
+							elem_description_text.html(locked_by['-comment']);
 						}
 					}
 				);
