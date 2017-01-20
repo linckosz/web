@@ -232,7 +232,7 @@
 .app_models_projects_projectsDeck [find=deckWrapper_content] [find=divider]{
     padding-top: 1px;
     width: 110px;
-    background-color: black;
+    background-color: #475577;
     margin: 10px auto;
 }
 
@@ -283,7 +283,7 @@
 	left: -72px;
 }
 .app_models_projects_projectsDeck_card [find="btn_archive"]{
-	background-color: red;
+	background-color: #BE2C1F; /*red*/
     line-height: 70px;
     width: 70px;
     text-align: center;
@@ -356,7 +356,7 @@
     top: 0px;
     bottom: 0px;
     font-size: 26px;
-    color: #fba026;
+    color: rgba(251, 160, 38, 0.75);
 }
 .app_models_projects_projectsDeck_card [find=icon_wrapper] [find=icon_dashboard],
 .app_models_projects_projectsDeck_card [find=icon_wrapper] [find=icon_settings]{

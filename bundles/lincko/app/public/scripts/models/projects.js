@@ -837,24 +837,30 @@ var app_models_projects_adjust_format = function(num){
 	return str;
 }
 
-
-
+//id - project id
+//round - true/false for round to integer
 var app_models_projects_getPercentComplete = function(id, round){
 	if(typeof id != 'number' && typeof id != 'string'){ return false; }
 	if(typeof round != 'boolean'){ var round  = true; }
+	
+	var tasks_all = [];
+	$.each(Lincko.storage.list('tasks', null, null, 'projects', id, false/*children*/, false/*deleted*/), function(i, task){
+		if(!task._tasksup){ tasks_all.push(task); } //exclude any subtasks
+	});
 
+	var percent = 0;
 	var num_complete = 0;
 	var num_total = 0;
-	var tasks_all = Lincko.storage.list('tasks', null, null, 'projects', id, false);
-	num_total = tasks_all.length;
-	if(num_total < 1){ return false; }
 
+	num_total = tasks_all.length;
+	if(num_total < 1){ return 0; } //zero percent
+
+	//number of tasks complete
 	$.each(tasks_all, function(i, task){
 		if(task.approved){ num_complete++; }
 	});
 
-
-	var percent = (num_complete / num_total)*100;
+	percent = (num_complete / num_total)*100;
 	if(round){ percent = Math.round(percent); }
 
 	return percent;
