@@ -131,7 +131,7 @@
 	opacity: 0.6;
 }
 .submenu_itemSelector_cardSelected.skylist_card{
-	background-color: initial;
+	background-color: transparent;
 }
 .skylist_card [find=check]{
 	display: none;
@@ -144,5 +144,5 @@
     border-radius: 24px;
 }
 .submenu_itemSelector_cardSelected.skylist_card [find=check]{
-	display: initial;
+	display: block;
 }

@@ -48,10 +48,6 @@
 
 .submenu_calendar .burger_calendar .ui-datepicker-calendar td span, 
 .submenu_calendar .burger_calendar .ui-datepicker-calendar td a {
-	/*
-	display: initial;
-	padding: 5px;
-	*/
 	height: 27px;
 	width: 27px;
 	display: inline-block;

@@ -745,7 +745,7 @@ Submenu.prototype.Add_taskdetail = function() {
 				elem_action_menu.velocity({width:0},{
 					mobileHA: hasGood3Dsupport,
 					begin: function(){
-						elem_action_menu.css('display','initial');
+						elem_action_menu.css('display','block');
 					},
 					complete: function(){
 						action_menu_opened = false;
@@ -757,7 +757,7 @@ Submenu.prototype.Add_taskdetail = function() {
 				elem_action_menu.velocity({width:25},{
 					mobileHA: hasGood3Dsupport,
 					begin: function(){
-						elem_action_menu.css('display','initial');
+						elem_action_menu.css('display','block');
 					},
 					complete: function(){
 						action_menu_opened = true;

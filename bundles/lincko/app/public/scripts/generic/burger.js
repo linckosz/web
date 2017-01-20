@@ -2602,7 +2602,7 @@ burgerN.draw_dates = function(substr, option_fn){
 		elem_dropdown.find('[find=wrapper]').addClass('overthrow');
 	}
 	else{
-		elem_dropdown.css('height','initial');
+		elem_dropdown.css('height','auto');
 	}
 
 	return elem_dropdown;

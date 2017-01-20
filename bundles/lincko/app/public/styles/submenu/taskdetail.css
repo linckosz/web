@@ -212,7 +212,7 @@ td.submenu_taskdetail_share .fa{
 
 .submenu_taskdetail_description button.toolbar-insert-image{
 	opacity: 0.4;
-	cursor: initial;
+	cursor: auto;
 }
 .submenu_taskdetail_description button.toolbar-insert-image:hover{
 	box-shadow: none;
@@ -500,17 +500,17 @@ td.submenu_taskdetail_share .fa{
 	background: #e7e9ed;
 }
 .submenu_taskdetail_subtasks_card:hover [find=removeIcon]{
-	visibility: initial;
+	visibility: visible;
 }
 
 .submenu_taskdetail_subtasks_card_checked [find=checkbox]:before{
-	visibility: initial;
+	visibility: visible;
 }
 .submenu_taskdetail_subtasks_card_checked [find=title]{
 	text-decoration: line-through;
 }
 .submenu_taskdetail_subtasks_card_noHover [find=removeIcon]{
-	visibility: initial;
+	visibility: visible;
 }
 
 
@@ -586,11 +586,11 @@ td.submenu_taskdetail_share .fa{
 }
 
 .submenu_taskdetail_links_card:hover [find=action_div]{
-	display: initial;
+	display: block;
 }
 
 .submenu_taskdetail_links_card_noHover [find=action_div]{
-	display: initial;
+	display: block;
 }
 
 .submenu_taskdetail_links_card_uploading [find=bar_container]{
@@ -842,7 +842,7 @@ styling for sub comments
 		padding-right: 0px;
 	}
 	.submenu_content_taskdetail_files [find=downloadIcon] {
-		line-height: initial;
+		line-height: normal;
 		font-size: 26px;
 	    margin: 0px;
 	    padding: 10px;

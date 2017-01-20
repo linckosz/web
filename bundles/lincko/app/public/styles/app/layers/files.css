@@ -25,7 +25,7 @@
 }
 .app_layers_files_fileslist .skylist_card_center [find=description] {
 	font-size: 14px;
-	height: initial;
+	height: auto;
 }
 
 .app_layers_files_fileslist .skylist_card_time {

@@ -45,7 +45,7 @@
 	display: none;
 }
 .inputter_container_checked .inputter_checkbox:before{
-	display: initial !important;
+	display: inline !important;
 }
 
 .inputter_container ul,.inputter_container ul li

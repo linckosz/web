@@ -20,7 +20,7 @@
 	opacity: 0.7;
 }
 .onboarding_overlay_content_top{
-	bottom: initial;
+	bottom: auto;
 	height: 48px;
 }
 .onboarding_overlay_btnSkip{
@@ -81,7 +81,7 @@
 }
 .trip-block.onboarding_trip_welcome{
 	visibility: hidden;
-	min-width: initial;
+	min-width: 0;
 	padding: 0px;
 }
 .trip-exposed#app_application_menu_icon {

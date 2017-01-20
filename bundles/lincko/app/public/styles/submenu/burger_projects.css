@@ -21,6 +21,3 @@
 .submenu_burger_projects .burger_latestvisitProjects_border {
 	border-bottom: 2px solid #54add2;
 }
-.submenu_burger_projects .burger_option_projects [find=text] {
-	display: initial;
-}

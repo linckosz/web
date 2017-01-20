@@ -796,7 +796,7 @@
 	padding: 0px 1px;
 	margin-bottom: 0px;
 	border-top: solid 1px #fba026;
-	display:initial;
+	display:block;
 	position: absolute;
 	height: 120px;
 	bottom: 0px;
@@ -1201,81 +1201,3 @@
 /*
  * ---------- END OF skylist_chat --------------------
  */
-
-
-/*MobileL and smaller */
-/*
-@media only screen and (max-width: 900px) {
-	.skylist {
-		margin-left: 5px;
-	}
-
-	.skylist_menu_navbar {
-		display: table;
-		padding:0;
-	}
-	/*
-	.skylist_menu_people {
-		font-size: 26px;
-		vertical-align:middle;
-		display: table-cell;
-		width: 100px;
-		float:none;
-		padding-top: 5px !important;
-		padding-bottom: 5px !important;
-	}
-	*/
-	/*
-	.skylist_menu_active:before {
-		display:none;
-	}
-	.skylist_menu_timesort {
-		text-align: center;
-		overflow: hidden;
-		margin: 0px 67px 0px 67px;
-		line-height: 25px;
-		/*
-		text-align:center;
-		overflow: hidden;
-		margin: 0px 120px 0px 0px;
-		padding: 0;
-		*/
-	/*}
-	/*
-	.skylist_menu_timesort_text_wrapper {
-		left:0;
-		right:0;
-		margin:0 auto;
-		margin-top: 5px;
-		position:absolute !important;
-	}
-	.skylist_menu_timesort span{
-		position: relative; /*toto*/
-		/*text-align: center;
-	}
-	/*
-	.skylist_menu_navbar_search {
-		padding: 13px 14px !important;
-		font-size: 25px;
-	}
-	.skylist_menu_navbar_search [find='search_textbox'] {
-		font-size: 18px;
-	}
-	*/
-
-/*
-	.skylist {
-		width: initial;
-	}
-
-	.skylist_menu_navbar_filter_pane {
-		left: 0px;
-		width: initial;
-	}
-}
-
-
-/*mobile only*/
-@media only screen and (max-width: 479px) {
-
-}
