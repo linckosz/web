@@ -387,7 +387,7 @@ if (typeof Worker != 'undefined') {
 	webperf   = new Worker("{{ _filelatest('/lincko/app/scripts/workers/worker.js') }}");
 }
 
-if(webworker){
+if(webworker && webperf){
 	//Preload worker libraries needed
 	webworker.postMessage(JSON.stringify({action: 'importscript', data: "{{ _filelatest('/scripts/libs/LZipperLite.js') }}",}));
 
@@ -401,85 +401,83 @@ if(webworker){
 		webworker_operation.launch_operation(e);
 	});
 
-
 	window.addEventListener("message", function(e){
 		webworker_operation.launch_operation(e);
 	});
+}
 
-	var webworker_operation = {
+var webworker_operation = {
 
-		launch_operation: function(e){
-			var object = false;
-			try {
-				object = JSON.parse(e.data);
-				if(typeof object != "object"){
-					object = false;
-				}
-			} catch(e){
+	launch_operation: function(e){
+		var object = false;
+		try {
+			object = JSON.parse(e.data);
+			if(typeof object != "object"){
 				object = false;
 			}
-			if(object && object.action){
-				var data = null;
-				if(typeof object.data != "undefined"){
-					data = object.data;
-				}
-				if(typeof webworker_operation[object.action] == 'function'){
-					webworker_operation[object.action](data);
-				}
+		} catch(e){
+			object = false;
+		}
+		if(object && object.action){
+			var data = null;
+			if(typeof object.data != "undefined"){
+				data = object.data;
 			}
-		},
-
-		//webworker.postMessage(JSON.stringify({action: 'test', data: 123,}));
-		test: function(obj_data){
-			console.log(obj_data);
-		},
-
-		LocalStorageIn: function(obj_data){
-			var link = obj_data.link;
-			var store_data = obj_data.data;
-			var tryit = obj_data.tryit;
-			var sha = obj_data.sha;
-			var prefix = obj_data.prefix;
-			try {
-				var time = 1000*3600*24*31; //Keep the value for 1 month
-				result = amplify.store(prefix+link, store_data, { expires: time });
-			} catch(e) {
-				console.log(e);
-				this.LocalStorageInFailed(obj_data);
+			if(typeof webworker_operation[object.action] == 'function'){
+				webworker_operation[object.action](data);
 			}
-		},
+		}
+	},
 
-		LocalStorageInFailed: function(obj_data){
-			var link = obj_data.link;
-			var data = obj_data.data;
-			var tryit = obj_data.tryit;
-			var sha = obj_data.sha;
-			var prefix = obj_data.prefix;
-			if(tryit){
-				if(wrapper_localstorage.cleanLocalWorkspace()){ //Delete other workspace data, and try one more time to store
-					result = wrapper_localstorage.encrypt(link, obj_data, false);
-				} else {
-					tryit = false;
-				}
-			}
-			if(!tryit){ //If cannot, just delete the data
-				wrapper_localstorage.quota[link] = false;
-				amplify.store(wrapper_localstorage.prefix+link, null);
-			}
-		},
+	//webworker.postMessage(JSON.stringify({action: 'test', data: 123,}));
+	test: function(obj_data){
+		console.log(obj_data);
+	},
 
-		indicePerformance: function(indice){
-			wrapper_performance.indice = indice;
-			if(indice < 300){ //Loop 30 => 300 ms max
-				wrapper_performance.powerfull = true;
+	LocalStorageIn: function(obj_data){
+		var link = obj_data.link;
+		var store_data = obj_data.data;
+		var tryit = obj_data.tryit;
+		var sha = obj_data.sha;
+		var prefix = obj_data.prefix;
+		try {
+			var time = 1000*3600*24*31; //Keep the value for 1 month
+			result = amplify.store(prefix+link, store_data, { expires: time });
+		} catch(e) {
+			console.log(e);
+			this.LocalStorageInFailed(obj_data);
+		}
+	},
+
+	LocalStorageInFailed: function(obj_data){
+		var link = obj_data.link;
+		var data = obj_data.data;
+		var tryit = obj_data.tryit;
+		var sha = obj_data.sha;
+		var prefix = obj_data.prefix;
+		if(tryit){
+			if(wrapper_localstorage.cleanLocalWorkspace()){ //Delete other workspace data, and try one more time to store
+				result = wrapper_localstorage.encrypt(link, obj_data, false);
 			} else {
-				wrapper_performance.powerfull = false;
+				tryit = false;
 			}
-			wrapper_performance.setDelay();
-		},
-	};
+		}
+		if(!tryit){ //If cannot, just delete the data
+			wrapper_localstorage.quota[link] = false;
+			amplify.store(wrapper_localstorage.prefix+link, null);
+		}
+	},
 
-}
+	indicePerformance: function(indice){
+		wrapper_performance.indice = indice;
+		if(indice < 300){ //Loop 30 => 300 ms max
+			wrapper_performance.powerfull = true;
+		} else {
+			wrapper_performance.powerfull = false;
+		}
+		wrapper_performance.setDelay();
+	},
+};
 
 </script>
 
