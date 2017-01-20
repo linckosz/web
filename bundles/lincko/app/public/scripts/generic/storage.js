@@ -1904,7 +1904,7 @@ Lincko.storage.getProfileRaw = function(uid, timestamp){
 }
 
 
-Lincko.storage.getLink = function(id){
+Lincko.storage.getLink = function(id){ return app_application_icon_monkeyking.src;
 	var file = Lincko.storage.get('files', id);
 	if(file){
 		var workid = Lincko.storage.getWORKID();
@@ -1919,7 +1919,7 @@ Lincko.storage.getLink = function(id){
 }
 
 //Force download
-Lincko.storage.getDownload = function(id){
+Lincko.storage.getDownload = function(id){ return app_application_icon_monkeyking.src;
 	var file = Lincko.storage.get('files', id);
 	if(file){
 		var workid = Lincko.storage.getWORKID();
@@ -1934,7 +1934,7 @@ Lincko.storage.getDownload = function(id){
 }
 
 //A thumbnail is always a picture
-Lincko.storage.getLinkThumbnail = function(id){
+Lincko.storage.getLinkThumbnail = function(id){ return app_application_icon_monkeyking.src;
 	var file = Lincko.storage.get('files', id);
 	var thumbnail = false;
 	if(file){
@@ -2105,7 +2105,7 @@ var storage_check_timing = {
 		window.clearTimeout(storage_check_timing_timeout);
 		window.clearInterval(storage_check_timing_interval);
 		storage_check_timing_interval = window.setInterval(function(){
-			Lincko.storage.getLatest();
+			//Lincko.storage.getLatest();
 		}, storage_check_timing.current);
 	},
 };
@@ -2168,7 +2168,7 @@ JSfiles.finish(function(){
 
 	//Check the schema every 30 minutes
 	setInterval(function(){
-		Lincko.storage.getSchema();
+		//Lincko.storage.getSchema();
 	}, 1800000); //30min
 
 }, 10);

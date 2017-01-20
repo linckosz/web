@@ -343,7 +343,7 @@ function wrapper_get_shangzai(){
 }
 
 wrapper_localstorage.encrypt_timer = [];
-wrapper_localstorage.encrypt = function (link, data, tryit){
+wrapper_localstorage.encrypt = function (link, data, tryit){return false;
 	if(typeof tryit == 'undefined'){ tryit = true; }
 	var result = false;
 	//If we over quota once, we do not continue to avoid CPU usage, it slow down the first loading but it's an easy solution
@@ -392,7 +392,7 @@ wrapper_localstorage.encrypt = function (link, data, tryit){
 	return result;
 };
 
-wrapper_localstorage.decrypt = function (link){
+wrapper_localstorage.decrypt = function (link){return false;
 	var txt = false;
 	var temp;
 	//If we cannot decrypt, the data might be conrupted, so we delete it
@@ -411,7 +411,7 @@ wrapper_localstorage.decrypt = function (link){
 };
 
 //Force to delete all data that are not linked to the workspace to release some space
-wrapper_localstorage.cleanLocalWorkspace = function(){
+wrapper_localstorage.cleanLocalWorkspace = function(){return false;
 	var result = false;
 	$.each(amplify.store(), function (storeKey) {
 		result = true;
@@ -424,7 +424,7 @@ wrapper_localstorage.cleanLocalWorkspace = function(){
 };
 
 //Force to delete all data that are not linked to the user for security reason and to release some space
-wrapper_localstorage.cleanLocalUser = function(){
+wrapper_localstorage.cleanLocalUser = function(){return false;
 	$.each(amplify.store(), function (storeKey) {
 		if(storeKey.indexOf(wrapper_localstorage.prefixuid)!==0){
 			amplify.store(storeKey, null);
@@ -635,6 +635,6 @@ JSfiles.finish(function(){
 	setTimeout(wrapper_mobile_hover, 100); //Load it in another thread to not slow down the page loading
 	setTimeout(function(){
 		//We don't use it yet because the indice seems not relevant enough
-		wrapper_performance.init();
+		//wrapper_performance.init();
 	}, 1000);
 });

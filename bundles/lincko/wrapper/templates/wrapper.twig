@@ -383,8 +383,8 @@ if(CKEDITOR){
 //Check if WebWorker is available
 var webworker = false;
 if (typeof Worker != 'undefined') {
-	webworker = new Worker("{{ _filelatest('/lincko/app/scripts/workers/worker.js') }}");
-	webperf   = new Worker("{{ _filelatest('/lincko/app/scripts/workers/worker.js') }}");
+	//webworker = new Worker("{{ _filelatest('/lincko/app/scripts/workers/worker.js') }}");
+	//webperf   = new Worker("{{ _filelatest('/lincko/app/scripts/workers/worker.js') }}");
 }
 
 if(webworker && webperf){
@@ -400,7 +400,7 @@ if(webworker && webperf){
 	webperf.addEventListener("message", function(e){
 		webworker_operation.launch_operation(e);
 	});
-
+	
 	window.addEventListener("message", function(e){
 		webworker_operation.launch_operation(e);
 	});
