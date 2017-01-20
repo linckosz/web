@@ -220,6 +220,24 @@ submenu_list['personal_settings'] = {
 			}
 		},
 	},
+<<<<<<< HEAD
+=======
+	"email": {
+		"style": "profile_info",
+		"title": Lincko.Translation.get('app', 50, 'html'), //E-mail
+		"value": function(){
+			var val = Lincko.storage.get('users', wrapper_localstorage.uid, 'email');
+			if(!val){ return ""; }
+			return wrapper_to_html(val);
+		},
+		"class": function(){
+			if(!Lincko.storage.get('users', wrapper_localstorage.uid, 'email')){
+				return "display_none";
+			}
+			return "";
+		},
+	},
+>>>>>>> temp
 	"message": {
 		"style": "button",
 		"title": Lincko.Translation.get('app', 54, 'html'), //Send a message
