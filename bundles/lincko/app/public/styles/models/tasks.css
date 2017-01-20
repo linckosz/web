@@ -56,8 +56,8 @@
 		border-radius: 0;
 		border-bottom-color: rgba(129, 157, 180, 0.25) !important;
 		width: 100%;
-		max-width: initial;
-		min-width: initial;
+		max-width: none;
+		min-width: none;
 		margin: 0px;
 		padding: 10px;
 	}

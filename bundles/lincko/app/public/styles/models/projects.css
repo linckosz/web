@@ -137,8 +137,8 @@
 		border-bottom-width: 2px;
 		border-bottom-color: rgba(255, 255, 255, 0.25) !important;
 		width: 100%;
-		max-width: initial;
-		min-width: initial;
+		max-width: none;
+		min-width: none;
 		margin: 0px;
 		padding: 10px;
 	}
