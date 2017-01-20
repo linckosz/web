@@ -284,6 +284,7 @@ var app_models_history = {
 							msg = '';
 							if(hist[i]['by']){
 								username = wrapper_to_html(Lincko.storage.get("users", hist[i]['by'], "username"));
+								title = username;
 								/*
 								//We don't need to show picture for comments
 								if(hist[i]['by']==1){
@@ -381,9 +382,11 @@ var app_models_history = {
 									continue; //Skip because not concerned
 								}
 
+								username = wrapper_to_html(Lincko.Translation.get('app', 0, 'html')); //LinckoBot
+								title = username;
+
 								/*
 								//This give the resume text, but it's not valuable
-								username = wrapper_to_html(Lincko.Translation.get('app', 0, 'html')); //LinckoBot
 								msg = app_models_resume_format_sentence(hist[i]['id']);
 								if(typeof msg == 'string' || typeof msg == 'number'){
 									msg = $('<div>'+msg+'</div>').text();
