@@ -107,11 +107,14 @@
 .submenu_personal_integration_icon {
 	height: 20px;
 	border-radius: 2px;
+	margin-right: 12px;
+	cursor: pointer; cursor: hand;
 }
 
 .personal_integration_wechat_qrcode {
 	padding-top: 48px;
 	padding-bottom: 48px;
+	cursor: pointer; cursor: hand;
 }
 
 .personal_integration_wechat_qrcode .submenu_personal_input_span_left {
@@ -126,4 +129,32 @@
 .personal_integration_wechat_qrcode .submenu_personal_profile_picture {
 	height: 200px;
 	width: 200px;
+}
+
+.submenu_personal_link {
+	text-align: center !important;
+	cursor: default !important;
+	background-color: transparent !important;
+	border-style: none !important;
+}
+
+.submenu_personal_link_button {
+	display: inline-block !important;
+	padding: 6px 32px !important;
+	color: #FFFFFF !important;
+	background-color: #2895F2 !important;
+	border: solid 2px transparent;
+	border-radius: 4px;
+	cursor: pointer; cursor: hand;
+	box-sizing: border-box;
+}
+
+.submenu_personal_link_button:hover {
+	border-color: rgba(255, 255, 255, 0.3);
+}
+
+.submenu_personal_link_button:active, .submenu_personal_link_button_active {
+	background-color: #7AAAD4 !important;
+	cursor: progress !important;
+	border-color: transparent!important;
 }

@@ -191,8 +191,11 @@
 	cursor: default !important;
 }
 
+.submenu_deco_pointer {
+	cursor: pointer !important;
+}
+
 .submenu_deco_info_wrap {
-	cursor: default !important;
 	white-space: normal;
 }
 
