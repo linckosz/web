@@ -109,18 +109,27 @@ var searchbar = {
 					for( var k=0; k < userid_array.length; k++){
 						userid = userid_array[k];
 						if( item['_type'] == 'tasks' ){
-							if(!item['_users']){ //not assigned
-								break;
+							if(!item['_users']){ 
+								break; 
 							}
 							else if( userid in item['_users'] && item['_users'][userid]['in_charge'] ){
 								push = true;
 								break;
 							}
 						}
-						else if( item['_type'] == 'notes' || item['_type'] == 'files' ){
-							if( item['created_by'] == userid ){
-								push = true;
-								break;
+						else if( item['_type'] == 'notes' || item['_type'] == 'files' ){ 
+							if( item['created_by'] == userid ){ 
+								push = true; 
+								break; 
+							}
+						}
+						else if( item['_type'] == 'projects'){
+							if(!item['_users']){ 
+								break; 
+							}
+							else if(userid in item['_users']){ 
+								push = true; 
+								break; 
 							}
 						}
 					}//END OF for each userid_array
