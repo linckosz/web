@@ -21,15 +21,125 @@ submenu_list['taskdetail'] = {
 			return className;
 		},
 	},
+
 	"left_button": {
 		"style": "title_left_button",
-		"title": Lincko.Translation.get('app', 25, 'html'), //Close
+		"title": Lincko.Translation.get('app', 25, 'html'),//Close
 		'hide': true,
 		"class": "base_pointer",
 		"action": function(Elem, subm) {
 			//subm.close = true;
 		},
 	},
+
+
+
+	"right_menu": {
+		"feature":"delete",
+		"style": "title_right_button_list",
+		"items":[{
+			"icon":'icon-Trash',
+			"title": Lincko.Translation.get('app',22, 'html'), //delete
+			"action": function(Elem, subm) {
+				var linkToNotesCount = 0;
+				var linkToTasksCount = 0;
+
+				var linkToNotes = Lincko.storage.get(subm.param.type,subm.param.id,"_notes");
+				var linkToTasks = Lincko.storage.get(subm.param.type,subm.param.id,"_tasks");
+
+				var can = Lincko.storage.canI('delete', subm.param.type, subm.param.id); 
+				if(can)
+				{
+					if(subm.param.type == "files"){
+						if(typeof linkToTasks == 'object'){
+							$.each(linkToTasks, function(id,item){
+								var item = Lincko.storage.get("tasks",id);
+								if(item.deleted_at == null)
+								{
+									linkToTasksCount++;
+								}
+							});
+						}
+
+						if(typeof linkToNotes == 'object'){
+							$.each(linkToNotes, function(id,item){
+								var item = Lincko.storage.get("notes",id);
+								if(item.deleted_at == null)
+								{
+									linkToNotesCount++;
+								}
+							});
+						}
+
+						if(linkToNotesCount > 0 || linkToTasksCount > 0){
+							base_show_error(Lincko.Translation.get('app', 51, 'html'), true); //Operation not allowed
+						}
+
+
+					}
+					else if(subm.param.type == "notes"){
+						if(typeof linkToNotes == 'object'){
+							$.each(linkToNotes, function(id,item){
+								var item = Lincko.storage.get("notes",id);
+								if(item.deleted_at == null)
+								{
+									linkToNotesCount++;
+								}
+							});
+						}
+
+						if(linkToTasksCount > 0){
+							base_show_error(Lincko.Translation.get('app', 51, 'html'), true); //Operation not allowed
+						}
+					}
+				}
+				else
+				{
+					base_show_error(Lincko.Translation.get('app', 51, 'html'), true); //Operation not allowed
+				}
+
+				if(can && linkToNotesCount == 0 && linkToTasksCount == 0)
+				{
+					subm.param.setDeleteTrue = true;
+					Lincko.storage.data[subm.param.type][subm.param.id].deleted_at = new wrapper_date().timestamp;
+					app_application_lincko.prepare(subm.param.type + '_' + subm.param.id, true);
+					submenu_Clean(subm.layer, true, subm.preview);
+				}
+			},
+
+		},{
+			"feature":"copyLink",
+			"icon":'icon-CopyLink',
+			"title": Lincko.Translation.get('app', 81, 'html'), 
+			"action": function(Elem, subm) {
+				var workspace = wrapper_localstorage.workspace == "" ? "" : wrapper_localstorage.workspace + ".";
+				var url = top.location.protocol+'//'+app_application_dev_link() + workspace + document.domainRoot+'/#'+subm.param.type+'-'+subm.param.id;
+				Elem.attr('data-clipboard-text',url);
+				var myurl = new Clipboard(Elem[0]);
+
+				myurl.on('success', function(e) {
+					base_show_error(Lincko.Translation.get('app', 70, 'html'), false); //URL copied to the clipboard
+					e.clearSelection();
+				});
+
+				myurl.on('error', function(e) {
+					base_show_error(Lincko.Translation.get('app', 71, 'html'), true); //Your system does not allow to copy to the clipboard
+					e.clearSelection();
+				});
+
+				app_application_lincko.add(subm.id,'submenu_hide_' + subm.preview + '_' + subm.id,
+					function(){
+						var myurl = this.action_param;
+						if(myurl){
+							myurl.destroy();
+						}
+					},
+				myurl);
+			},
+			
+		}]
+	},
+
 	"taskdetail": {
 		"style": "taskdetail",
 		"title": "taskdetail",
@@ -1773,6 +1883,11 @@ Submenu.prototype.Add_taskdetail = function() {
 		function(){
 			that.submenu_hide = true;
 			taskdetail_lockIntervalToggle(false);
+
+			//delete button
+			if(that.param.setDeleteTrue){
+				route_delete = true;
+			}
 
 			if( (taskid == 'new' && route_delete) || this.action_param.cancel || (item.deleted_at && !route_delete)){
 				//clear any links in the queue that came from this submenu

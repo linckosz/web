@@ -48,9 +48,7 @@ var Submenu_select = {
 	title_left_button: function(subm) {
 		subm.Add_TitleLeftButton();
 	},
-	title_left_button_list: function(subm) {
-		subm.Add_TitleLeftButtonList();
-	},
+
 	title_right_button: function(subm) {
 		subm.Add_TitleRightButton();
 	},
@@ -187,7 +185,6 @@ function Submenu(menu, next, param, preview, animate) {
 	function Constructor(subm) {
 		subm.changeState();
 		//First we have to empty the element if it exists
-
 		submenu_Clean(subm.layer, false, subm.preview);
 
 		var submenu_wrapper = $('#-submenu_wrapper').clone();
@@ -241,6 +238,17 @@ function Submenu(menu, next, param, preview, animate) {
 				}
 			}
 		}
+
+		for (var att in subm.obj) {
+			subm.attribute = subm.obj[att];
+			if ("style" in subm.attribute && "items" in subm.attribute) {
+				if (typeof Submenu_select[subm.attribute.style] === "function") {
+					Submenu_select[subm.attribute.style](subm);
+				}
+			}
+		}
+
+
 		//Launch Post action
 		for (var att in subm.obj) {
 			subm.attribute = subm.obj[att];
@@ -412,39 +420,7 @@ Submenu.prototype.Add_TitleLeftButton = function() {
 	return Elem;
 };
 
-Submenu.prototype.Add_TitleLeftButtonList = function() {
-	var that = this;
-	var attribute = this.attribute;
-	var Elem = $('#-submenu_top_button').clone();
-	var preview = this.preview;
-	Elem.prop("id", this.id+"_submenu_top_button_left");
-	Elem.html(wrapper_to_html(attribute.title));
-	if ("action" in attribute) {
-		if (!("action_param" in attribute)) {
-			attribute.action_param = null;
-		}
-		Elem.click(attribute.action_param, function(event){
-			attribute.action(Elem, that, event.data);
-		});
-	}
-	if ("hide" in attribute) {
-		if (attribute.hide) {
-			Elem.click(function() {
-				submenu_Clean(that.layer, true, that.preview);
-			});
-		}
-	}
-	Elem.addClass("submenu_top_side_left");
-	if ("class" in attribute) {
-		Elem.addClass(attribute['class']);
-	}
-	Elem.css('text-align', 'left');
-	if ("now" in attribute && typeof attribute.now == "function") {
-		attribute.now(Elem, that);
-	}
-	this.Wrapper().find("[find=submenu_wrapper_top]").prepend(Elem);
-	return Elem;
-};
+
 
 Submenu.prototype.Add_TitleRightButton = function() {
 	var that = this;
@@ -483,36 +459,65 @@ Submenu.prototype.Add_TitleRightButton = function() {
 Submenu.prototype.Add_TitleRightButtonList = function() {
 	var that = this;
 	var attribute = this.attribute;
-	var Elem = $('#-submenu_top_button').clone();
+	var Elem = $('#-submenu_menu_list_main').clone();
 	var preview = this.preview;
-	Elem.prop("id", this.id+"_submenu_top_button_right");
+	Elem.prop("id", "");
 	Elem.html(attribute.title);
-	if ("action" in attribute) {
-		if (!("action_param" in attribute)) {
-			attribute.action_param = null;
-		}
-		Elem.click(attribute.action_param, function(event){
-			attribute.action(Elem, that, event.data);
-		});
-	}
-	if ("hide" in attribute) {
-		if (attribute.hide) {
-			Elem.click(function() {
-				submenu_Clean(that.layer, true, that.preview);
+	this.Wrapper().find("[find=submenu_wrapper_top]").append(Elem);
+
+	var elems ;
+	Elem.click(function(){
+		if($("#"+that.id + "_submenu_menu_list_container").length == 0)
+		{
+			elems = $('#-submenu_menu_list_container').clone();
+			//elems.addClass("display_none");
+			elems.prop("id", that.id + "_submenu_menu_list_container");
+			Elem.closest("[find=submenu_wrapper_top]").after(elems);
+
+			if ("items" in attribute) {
+				for(var i in attribute.items)
+				{
+					var elems_item = $('#-submenu_menu_list_item').clone();
+					elems_item.prop("id","");
+					elems_item.find("[find=icon]").addClass(attribute.items[i].icon);
+					elems_item.find("[find=title]").html(attribute.items[i].title);
+
+					if("action" in attribute.items[i]) {
+						elems_item.click(i,function(event){
+							attribute.items[event.data].action(elems_item,that);
+
+							elems.velocity('slideUp', {
+								mobileHA: hasGood3Dsupport,
+							});
+						});
+					}
+					elems.find("ul").eq(0).append(elems_item);
+				}
+			}
+
+			elems.find("ul").on("blur",function(){
+				elems.velocity('slideUp', {
+					mobileHA: hasGood3Dsupport,
+				});
 			});
 		}
-	}
-	Elem.addClass("submenu_top_side_right");
-	if ("class" in attribute) {
-		Elem.addClass(attribute['class']);
-	}
-	Elem.css('text-align', 'right');
-	if ("now" in attribute && typeof attribute.now == "function") {
-		attribute.now(Elem, that);
-	}
-	this.Wrapper().find("[find=submenu_wrapper_top]").append(Elem);
+		else{
+			elems = $("#"+that.id + "_submenu_menu_list_container");
+		}
+
+		elems.velocity('slideDown', {
+			mobileHA: hasGood3Dsupport,
+			complete: function(){
+				elems.find("ul").focus();
+			}
+		});
+		
+	});
+
+	
 	return Elem;
 };
+
 
 Submenu.prototype.Add_MenuButton = function(position) {
 	var that = this;
