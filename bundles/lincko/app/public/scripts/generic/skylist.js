@@ -3045,7 +3045,7 @@ skylist.prototype.menu_construct = function(){
 			elem_timesort_text_wrapper_tmp.attr('sort',sort);
 			elem_timesort_text_wrapper_tmp.find('[find=text]').html(that.sort_arrayText[i]);
 			that.elem_sortdot.append('<span sort='+sort+' find="indicator" class="skylist_menu_timesort_dot">&#149;</span>');
-			that.elem_sorts_text[sort] =elem_timesort_text_wrapper_tmp;
+			that.elem_sorts_text[sort] = elem_timesort_text_wrapper_tmp;
 			that.elem_sortdot.before(elem_timesort_text_wrapper_tmp);
 			that.elem_sorts[sort] = that.elem_timesort.find('[sort='+sort+']');
 			that.sortcount = i;
@@ -3099,14 +3099,9 @@ skylist.prototype.menu_construct = function(){
 				var opacity_fade = Math.abs(1/(that.delX/50));
 				var opacity_show = 1 - opacity_fade;
 
-				if ( Math.abs(that.delX) < that.pan_range_max ){
-					that.elem_sorts_text[that.sort_array[that.sortnum]]
-						.css("left",that.delX)
-						.css("opacity",opacity_fade);
-					that.elem_sorts_text[that.sort_array[that.sortnum_new]]
-						.removeClass('display_none')
-						.css( "left",Math.sign(that.delX)*(Math.abs(that.delX)-that.pan_range_max) )
-						.css("opacity",opacity_show);
+				if ( Math.abs(that.delX) < that.pan_range_max  && typeof that.elem_sorts_text == 'object' && typeof that.sort_array == 'object'){
+					that.elem_sorts_text[that.sort_array[that.sortnum]].css("left",that.delX).css("opacity",opacity_fade);
+					that.elem_sorts_text[that.sort_array[that.sortnum_new]].removeClass('display_none').css( "left",Math.sign(that.delX)*(Math.abs(that.delX)-that.pan_range_max) ).css("opacity",opacity_show);
 				}
 			}
 		});//end of panmove
