@@ -193,10 +193,14 @@ function base_lincko_link_to_html(source)
 	// var reg = new RegExp("([^=]http:\\/\\/)?([A-Za-z0-9]+\\.[A-Za-z0-9]+[\\/=\\?%\\-&_~`@[\\]\\':+!]*([^<>])*)","gi");
 	// var reg = new RegExp("((http|ftp|https)://)(([a-zA-Z0-9\._-]+\.[a-zA-Z]{2,6})|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,4})*(/[a-zA-Z0-9\&%_\./-~-]*)?","gi");
 	var reg = new RegExp("((http|ftp|https)://)([a-zA-Z0-9\._-]+)(:[0-9]{1,4})*([/a-zA-Z0-9\?\&%#_\./-~-]*)?","gi");
-	
-	source = source.replace(reg, '<a ontouchstart="window.open(\'$1$3$4$5\')" target="_blank" href="$1$3$4$5">$1$3$4$5</a>');
 
-	//recover the piture
+	var workspace = wrapper_localstorage.workspace == "" ? "" : wrapper_localstorage.workspace + ".";
+	var match_reg = new RegExp(top.location.protocol+'//'+app_application_dev_link() + workspace + document.domainRoot);
+
+	var str_target = match_reg.test(source) ? "target=\"_top\"" : "target=\"_blank\""; //if lincko links,open page on the same tag
+	// var str_target = false ? "target=\"_self\"" : "target=\"_blank\"";
+	source = source.replace(reg, '<a ontouchstart="window.open(\'$1$3$4$5\')"' + str_target + '  href="$1$3$4$5">$1$3$4$5</a>');
+	
 	reg = new RegExp("(\"<a(.*)>)(.*)(</a>)\"","gi");
 	source = source.replace(reg, '$3');
 

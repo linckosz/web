@@ -150,9 +150,31 @@ submenu_list['taskdetail'] = {
 
 				if(can && linkToNotesCount == 0 && linkToTasksCount == 0)
 				{
+					//toto:should ask sky to use the last way to sendaction
+					var type = "";
+					switch(subm.param.type)
+					{
+						case "notes" :
+							type = "note";
+							break;
+						case "files" :
+							type = "file";
+							break;
+						case "tasks" :
+							type = "task";
+							break;
+						default:
+							break;
+					}
+					if(type != "")
+					{
+						wrapper_sendAction({id: subm.param.id}, 'post', type + '/delete');
+					}
+
 					subm.param.setDeleteTrue = true;
 					Lincko.storage.data[subm.param.type][subm.param.id].deleted_at = new wrapper_date().timestamp;
 					app_application_lincko.prepare(subm.param.type + '_' + subm.param.id, true);
+
 					submenu_Clean(subm.layer, true, subm.preview);
 				}
 			},
