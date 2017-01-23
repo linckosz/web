@@ -223,6 +223,19 @@ var wrapper_load_progress = {
 		}
 	},
 
+	warning: function(warn){
+		if(typeof value != 'boolean'){
+			warn = true;
+		}
+		if(!this.done && $('#'+this.progress_bar).length>0){
+			if(warn){
+				$('#'+this.progress_bar).addClass('app_loading_progress_bar_warning');
+			} else {
+				$('#'+this.progress_bar).removeClass('app_loading_progress_bar_warning');
+			}
+		}
+	},
+
 	move: function(value){
 		var time = 2000;
 		var that = this;
@@ -326,11 +339,12 @@ JSfiles.loadLibraries = function(){
 		wrapper_load_progress.move(90);
 	}, 6000);
 	setTimeout(function(){
-		wrapper_load_progress.move(98);
-	}, 14000);
-	setTimeout(function(){
-		wrapper_load_progress.move(100);
+		wrapper_load_progress.move(95);
 	}, 20000);
+	setTimeout(function(){
+		wrapper_load_progress.move(99);
+		wrapper_load_progress.warning();
+	}, 30000);
 };
 
 var wrapper_fp = '{{ fingerprint }}';
@@ -383,13 +397,13 @@ if(CKEDITOR){
 //Check if WebWorker is available
 var webworker = false;
 if (typeof Worker != 'undefined') {
-	//webworker = new Worker("{{ _filelatest('/lincko/app/scripts/workers/worker.js') }}");
-	//webperf   = new Worker("{{ _filelatest('/lincko/app/scripts/workers/worker.js') }}");
+	webworker = new Worker("{{ _filelatest('/lincko/app/scripts/workers/worker.js') }}");
+	webperf   = new Worker("{{ _filelatest('/lincko/app/scripts/workers/worker.js') }}");
 }
 
 if(webworker && webperf){
 	//Preload worker libraries needed
-	webworker.postMessage(JSON.stringify({action: 'importscript', data: "{{ _filelatest('/scripts/libs/LZipperLite.js') }}",}));
+	webworker.postMessage({action: 'importscript', data: "{{ _filelatest('/scripts/libs/LZipperLite.js') }}",});
 
 	//Return message
 	webworker.addEventListener("message", function(e){
@@ -409,15 +423,7 @@ if(webworker && webperf){
 var webworker_operation = {
 
 	launch_operation: function(e){
-		var object = false;
-		try {
-			object = JSON.parse(e.data);
-			if(typeof object != "object"){
-				object = false;
-			}
-		} catch(e){
-			object = false;
-		}
+		var object = e.data;
 		if(object && object.action){
 			var data = null;
 			if(typeof object.data != "undefined"){
@@ -435,37 +441,33 @@ var webworker_operation = {
 	},
 
 	LocalStorageIn: function(obj_data){
+		if(typeof obj_data == 'undefined' || typeof obj_data.link == 'undefined'){
+			return false;
+		}
 		var link = obj_data.link;
 		var store_data = obj_data.data;
 		var tryit = obj_data.tryit;
 		var sha = obj_data.sha;
 		var prefix = obj_data.prefix;
 		try {
-			var time = 1000*3600*24*31; //Keep the value for 1 month
+			var time = 1000*3600*24*90; //Keep the value for 3 months
 			result = amplify.store(prefix+link, store_data, { expires: time });
 		} catch(e) {
 			console.log(e);
-			this.LocalStorageInFailed(obj_data);
+			this.LocalStorageInFailed();
 		}
 	},
 
 	LocalStorageInFailed: function(obj_data){
+		if(typeof obj_data == 'undefined' || typeof obj_data.link == 'undefined'){
+			return false;
+		}
 		var link = obj_data.link;
-		var data = obj_data.data;
 		var tryit = obj_data.tryit;
 		var sha = obj_data.sha;
 		var prefix = obj_data.prefix;
-		if(tryit){
-			if(wrapper_localstorage.cleanLocalWorkspace()){ //Delete other workspace data, and try one more time to store
-				result = wrapper_localstorage.encrypt(link, obj_data, false);
-			} else {
-				tryit = false;
-			}
-		}
-		if(!tryit){ //If cannot, just delete the data
-			wrapper_localstorage.quota[link] = false;
-			amplify.store(wrapper_localstorage.prefix+link, null);
-		}
+		wrapper_localstorage.quota[link] = false;
+		amplify.store(wrapper_localstorage.prefix+link, null);
 	},
 
 	indicePerformance: function(indice){

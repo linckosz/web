@@ -890,9 +890,12 @@ skylist.prototype.addCard = function(item){
 			[item['root_type']+'_'+item['root_id'], item['name']],
 			function(){
 				var elem = $('#'+this.id);
-				var item_new = app_models_history.getList(1, item['root_type'], item['root_id'])[0];
-				that.addChat(item_new);
-			}
+				var getList = app_models_history.getList(1, this.action_param[0], this.action_param[1]);
+				if(getList && getList[0]){
+					that.addChat(getList[0]);
+				}
+			},
+			[item['root_type'], item['root_id']]
 		);
 	}
 	if(that.elem_rightOptions_count < 1){
@@ -912,7 +915,6 @@ skylist.prototype.addChat = function(item){
 		Elem = $('#-skylist_card').clone();
 		Elem.prop('id', 'skylist_card_'+that.md5id+'_'+item['root_type']+'_'+item['root_id']);
 	}
-	
 	if(new_elem){
 		Elem.find('[find=card_center]').addClass('skylist_chat_card_center');
 		var notif = $('#-models_history_chats_notif').clone();
@@ -924,6 +926,7 @@ skylist.prototype.addChat = function(item){
 		Elem.find('[find=card_textwrapper]').addClass('skylist_chat_card_textwrapper');
 		Elem.attr('timestamp', item['timestamp']);
 
+		Elem.off('click');
 		if(item['root_type']=="chats"){
 			Elem.click([item, that], function(event){
 				var preview = true; //By default it's listed inside working area

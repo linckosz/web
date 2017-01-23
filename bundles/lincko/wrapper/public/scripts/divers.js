@@ -197,11 +197,11 @@ if(navigator.userAgent.match(/iPhone|iPad|iPod/i) && navigator.userAgent.match(/
 
 var wrapper_limit_json = false;
 if(
-	   navigator.userAgent.match(/iPhone|iPad|iPod/i) && navigator.userAgent.match(/Safari/i)
+	   isSafariIOS
 	|| navigator.userAgent.match(/MSIE/i)
 	|| navigator.userAgent.match(/EDGE/i)
 ){
-	//wrapper_limit_json = 500; //toto => allow chunking for for ios crash
+	//wrapper_limit_json = 500; //Allow chunking for for ios crash (it seems working after reqorking the database)
 }
 
 var wrapper_test_result = null;

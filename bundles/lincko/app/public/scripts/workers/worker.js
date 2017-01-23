@@ -2,6 +2,7 @@
 function perfnow(e){"performance"in e||(e.performance={});var o=e.performance;e.performance.now=o.now||o.mozNow||o.msNow||o.oNow||o.webkitNow||Date.now||function(){return(new Date).getTime()}}perfnow(self);
 
 self.addEventListener("message", function(e){
+	/*
 	var object = false;
 	try {
 		object = JSON.parse(e.data);
@@ -11,6 +12,8 @@ self.addEventListener("message", function(e){
 	} catch(e){
 		object = false;
 	}
+	*/
+	var object = e.data;
 	if(object && object.action){
 		var data = null;
 		if(typeof object.data != "undefined"){
@@ -41,6 +44,9 @@ var webworker_operation = {
 
 	//It need LZipperLite.js, php.js
 	compress: function(obj_data){
+		if(typeof obj_data == 'undefined' || typeof obj_data.link == 'undefined'){
+			return false;
+		}
 		var link = obj_data.link;
 		var data = obj_data.data;
 		var tryit = obj_data.tryit;
@@ -52,9 +58,10 @@ var webworker_operation = {
 			//var compressed_data = LZipper.compress(link+sha+utf8_encode(JSON.stringify(obj_data.data))); //Best
 			var compressed_data = LZipper.compress(link+sha+JSON.stringify(obj_data.data)); //Best
 			obj_data.data = compressed_data;
-			self.postMessage(JSON.stringify({action: 'LocalStorageIn', data: obj_data,}));
+			self.postMessage({action: 'LocalStorageIn', data: obj_data,});
 		} catch(e) {
-			self.postMessage(JSON.stringify({action: 'LocalStorageInFailed', data: obj_data,}));
+			delete obj_data.data;
+			self.postMessage({action: 'LocalStorageInFailed', data: obj_data,});
 		}
 	},
 

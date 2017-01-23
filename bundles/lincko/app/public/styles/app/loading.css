@@ -74,6 +74,10 @@
 	background-color: #CBCBCB;
 }
 
+.app_loading_progress_bar_warning {
+	background-color: #FFB2B2 !important;
+}
+
 /* Mobile phone in Portrait */
 @media only screen and (max-width: 479px){
 	#app_loading_cell_center{

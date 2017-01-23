@@ -124,7 +124,7 @@ var app_application_lincko = {
 			
 			//Add relations fields
 			for(var field in this._fields){
-				if(match = field.match(/^([a-z_]+)_(\d+)$/, '')){
+				if(match = field.match(/^([a-z_]+)_(\d+)$/)){
 					if(temp = Lincko.storage.tree(match[1], match[2], "parents")){
 						for(var type in temp){
 							temp_fields[type] = { _children: true };

@@ -73,7 +73,6 @@ submenu_list['newchat'] = {
 					}
 				});
 				Elem.find('.submenu_chats_settings').append(number);
-				app_application_lincko.prepare(subm.param.type+"_"+subm.param.id, true);
 			}
 			
 			//if during onboarding and activity feed is of onboarding project: disable close button
@@ -86,6 +85,7 @@ submenu_list['newchat'] = {
 					Elem.find('.submenu_top_side_left').removeClass('display_none');
 				});
 			}
+			app_application_lincko.prepare(subm.param.type+"_"+subm.param.id, true);
 		},
 	},
 };

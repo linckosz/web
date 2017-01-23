@@ -342,8 +342,10 @@ function wrapper_get_shangzai(){
 	return false;
 }
 
-wrapper_localstorage.encrypt_timer = [];
-wrapper_localstorage.encrypt = function (link, data, tryit){return false;
+wrapper_localstorage.encrypt = function (link, data, tryit){
+	if(!link){
+		return false;
+	}
 	if(typeof tryit == 'undefined'){ tryit = true; }
 	var result = false;
 	//If we over quota once, we do not continue to avoid CPU usage, it slow down the first loading but it's an easy solution
@@ -362,38 +364,28 @@ wrapper_localstorage.encrypt = function (link, data, tryit){return false;
 					prefix: wrapper_localstorage.prefix,
 				},
 			};
-			webworker.postMessage(JSON.stringify(webworker_data));
+			//webworker.postMessage(JSON.stringify(webworker_data));
+			if(!webworker.postMessage(webworker_data)){
+				result = false;
+			}
 		} else {
-			clearTimeout(wrapper_localstorage.encrypt_timer[link]);
-			wrapper_localstorage.encrypt_timer[link] = setTimeout(function(link, data, tryit){
-				try {
-					//var store_data = LZipper.compress(link+wrapper_localstorage.sha+utf8_encode(JSON.stringify(data))); //Best
-					var store_data = LZipper.compress(link+wrapper_localstorage.sha+JSON.stringify(data)); //Best
-					var time = 1000*3600*24*31; //Keep the value for 1 month
-					result = amplify.store(wrapper_localstorage.prefix+link, store_data, { expires: time });
-				} catch(e) {
-					if(tryit){
-						if(wrapper_localstorage.cleanLocalWorkspace()){ //Delete other workspace data, and try one more time to store
-							result = wrapper_localstorage.encrypt(link, data, false);
-						} else {
-							tryit = false;
-						}
-					}
-					if(!tryit){ //If cannot, just delete the data
-						wrapper_localstorage.quota[link] = false;
-						amplify.store(wrapper_localstorage.prefix+link, null);
-						console.log(e);
-					}
-				}
-			}, 0, link, data, tryit); //In another thread to not block the code running
-			return true;
+			try {
+				//var store_data = LZipper.compress(link+wrapper_localstorage.sha+utf8_encode(JSON.stringify(data))); //Best
+				var store_data = LZipper.compress(link+wrapper_localstorage.sha+JSON.stringify(data)); //Best
+				var time = 1000*3600*24*90; //Keep the value for 3 months
+				result = amplify.store(wrapper_localstorage.prefix+link, store_data, { expires: time });
+			} catch(e) {
+				wrapper_localstorage.quota[link] = false;
+				amplify.store(wrapper_localstorage.prefix+link, null);
+				console.log(e);
+			}
 		}
 	}
 	return result;
 };
 
-wrapper_localstorage.decrypt = function (link){return false;
-	var txt = false;
+wrapper_localstorage.decrypt = function (link){
+	var result = false;
 	var temp;
 	//If we cannot decrypt, the data might be conrupted, so we delete it
 	try {
@@ -405,13 +397,13 @@ wrapper_localstorage.decrypt = function (link){return false;
 		}
 	} catch(e) {
 		amplify.store(this.prefix+link, null);
-		txt = false;
+		result = false;
 	}
-	return txt;
+	return result;
 };
 
 //Force to delete all data that are not linked to the workspace to release some space
-wrapper_localstorage.cleanLocalWorkspace = function(){return false;
+wrapper_localstorage.cleanLocalWorkspace = function(){
 	var result = false;
 	$.each(amplify.store(), function (storeKey) {
 		result = true;
@@ -424,7 +416,7 @@ wrapper_localstorage.cleanLocalWorkspace = function(){return false;
 };
 
 //Force to delete all data that are not linked to the user for security reason and to release some space
-wrapper_localstorage.cleanLocalUser = function(){return false;
+wrapper_localstorage.cleanLocalUser = function(){
 	$.each(amplify.store(), function (storeKey) {
 		if(storeKey.indexOf(wrapper_localstorage.prefixuid)!==0){
 			amplify.store(storeKey, null);
@@ -613,7 +605,7 @@ var wrapper_performance = {
 	powerfull: false,
 	delay: 250, //Additional delay for slow mobile (max 250ms)
 	init: function(){
-		webworker.postMessage(JSON.stringify({action: 'checkPerformance'}));
+		webperf.postMessage(JSON.stringify({action: 'checkPerformance'}));
 	},
 	setDelay: function(){
 		//Based on a 30 loop test
@@ -635,6 +627,6 @@ JSfiles.finish(function(){
 	setTimeout(wrapper_mobile_hover, 100); //Load it in another thread to not slow down the page loading
 	setTimeout(function(){
 		//We don't use it yet because the indice seems not relevant enough
-		//wrapper_performance.init();
+		wrapper_performance.init();
 	}, 1000);
 });

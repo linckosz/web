@@ -83,6 +83,7 @@ var app_models_history = {
 		if(typeof items == 'undefined'){ items = {}; }
 		if(typeof lastvisit == 'undefined'){ lastvisit = Lincko.storage.getLastVisit(); }
 		var hist;
+		var list;
 		var item = false;
 		var users;
 		var parent;
@@ -180,7 +181,8 @@ var app_models_history = {
 				}
 			}
 
-			//Grab Messages notifications
+			/*
+			//Grab Messages notifications (by hist)
 			if(typeof items['messages'] != 'undefined'){
 				hist = Lincko.storage.hist('messages', null, {att: 'created_at', by: ['!=', wrapper_localstorage.uid], timestamp: ['>', lastvisit]});
 				//hist = Lincko.storage.hist('messages', null, {att: 'created_at', timestamp: ['>', lastvisit]}); //For debugging only
@@ -218,9 +220,9 @@ var app_models_history = {
 								title = username;
 								msg = wrapper_to_html(item["+comment"]);
 								var profile_pic = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", hist[i]['by'], "profile_pic"));
-								if(hist[i]['id']==0){
+								if(hist[i]['by']==0){
 									profile_pic = app_application_icon_roboto.src;
-								} else if(hist[i]['id']==1){
+								} else if(hist[i]['by']==1){
 									profile_pic = app_application_icon_monkeyking.src;
 								}
 							} else {
@@ -231,6 +233,64 @@ var app_models_history = {
 								msg,
 								title,
 								"messages-"+hist[i]['id']
+							);
+						}
+					}
+				}
+			}
+			*/
+
+			//Grab Messages notifications (by list)
+			if(typeof items['messages'] != 'undefined'){
+				list = Lincko.storage.list('messages', null, {created_by: ['!=', wrapper_localstorage.uid], created_at: ['>', lastvisit]});
+				//list = Lincko.storage.list('messages', null, {created_at: ['>', lastvisit]}); //For debugging only
+				if(list.length>0){
+					for(var i in list){
+						//Avoid to double the same notification
+						if(app_models_history.notified["messages_"+list[i]['_id']]){
+							continue;
+						}
+						app_models_history.notified["messages_"+list[i]['_id']] = true;
+						//Do not display if the parent is silence
+						users = false;
+						parent = Lincko.storage.getParent(list[i]["_type"], list[i]["_id"]);
+						if(parent && parent["_type"]=="chats"){
+							users = parent["_users"];
+							if(users && users[wrapper_localstorage.uid] && users[wrapper_localstorage.uid]["silence"]){
+								continue;
+							} else if(!users){
+								continue;
+							}
+						} else {
+							continue;
+						}
+						item = Lincko.storage.get(list[i]["_type"], list[i]["_id"]);
+						if(!item){
+							continue;
+						}
+						if(users && users[wrapper_localstorage.uid]){
+							if(item['created_by']){
+								username = Lincko.storage.get("users", item['created_by'], "username");
+							} else {
+								username = Lincko.Translation.get('app', 0, 'html'); //LinckoBot
+							}
+							if(parent["single"]){
+								title = username;
+								msg = wrapper_to_html(item["+comment"]);
+								var profile_pic = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", item['created_by'], "profile_pic"));
+								if(item['created_by']==0){
+									profile_pic = app_application_icon_roboto.src;
+								} else if(item['created_by']==1){
+									profile_pic = app_application_icon_monkeyking.src;
+								}
+							} else {
+								title = wrapper_to_html(parent["+title"]);
+								msg = username+": "+wrapper_to_html(item["+comment"]);
+							}
+							app_models_history.notify(
+								msg,
+								title,
+								"messages-"+list[i]['_id']
 							);
 						}
 					}
@@ -523,9 +583,9 @@ var app_models_history = {
 						if(!profile_pic){
 							profile_pic = "favicon.png";
 						}
-						if(hist[i]['id']==0){
+						if(hist[i]['by']==0){
 							profile_pic = app_application_icon_roboto.src;
-						} else if(hist[i]['id']==1){
+						} else if(hist[i]['by']==1){
 							profile_pic = app_application_icon_monkeyking.src;
 						}
 						app_models_history.notify(
@@ -556,7 +616,7 @@ var app_models_history = {
 
 		if(limit){
 			for(var i in app_models_history.hist_root_recent){
-				if(parent_type && parent_id && parent_type=="projects"){
+				if(parent_type && parent_id && (parent_type=="projects" || parent_type=="chats")){
 					if(app_models_history.hist_root_recent[i]['root_type']==parent_type && app_models_history.hist_root_recent[i]['root_id']==parent_id){
 						histList.push(app_models_history.hist_root_recent[i]);
 					} else {
@@ -574,7 +634,7 @@ var app_models_history = {
 				}
 			}
 		} else {
-			if(parent_type && parent_id && parent_type=="projects"){
+			if(parent_type && parent_id && (parent_type=="projects" || parent_type=="chats")){
 				for(var i in app_models_history.hist_root_recent){
 					if(app_models_history.hist_root_recent[i]['root_type']==parent_type && app_models_history.hist_root_recent[i]['root_id']==parent_id){
 						histList.push(app_models_history.hist_root_recent[i]);
