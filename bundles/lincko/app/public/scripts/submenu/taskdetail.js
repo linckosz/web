@@ -40,7 +40,57 @@ submenu_list['taskdetail'] = {
 		"items":[{
 			"icon":'icon-Trash',
 			"title": Lincko.Translation.get('app',22, 'html'), //delete
+			"enabled":function(subm){
+				var linkToNotesCount = 0;
+				var linkToTasksCount = 0;
+
+				var linkToNotes = Lincko.storage.get(subm.param.type,subm.param.id,"_notes");
+				var linkToTasks = Lincko.storage.get(subm.param.type,subm.param.id,"_tasks");
+
+				if(subm.param.type == "files"){
+					if(typeof linkToTasks == 'object'){
+						$.each(linkToTasks, function(id,item){
+							var item = Lincko.storage.get("tasks",id);
+							if(item.deleted_at == null)
+							{
+								linkToTasksCount++;
+							}
+						});
+					}
+
+					if(typeof linkToNotes == 'object'){
+						$.each(linkToNotes, function(id,item){
+							var item = Lincko.storage.get("notes",id);
+							if(item.deleted_at == null)
+							{
+								linkToNotesCount++;
+							}
+						});
+					}
+
+					if(linkToNotesCount > 0 || linkToTasksCount > 0){
+						 return false;
+					}
+				}
+				else if(subm.param.type == "notes"){
+					if(typeof linkToNotes == 'object'){
+						$.each(linkToNotes, function(id,item){
+							var item = Lincko.storage.get("notes",id);
+							if(item.deleted_at == null)
+							{
+								linkToNotesCount++;
+							}
+						});
+					}
+					if(linkToTasksCount > 0){
+						return false;
+					}
+				}
+				return true;
+
+			},
 			"action": function(Elem, subm) {
+				var a =  event;
 				var linkToNotesCount = 0;
 				var linkToTasksCount = 0;
 
@@ -110,8 +160,23 @@ submenu_list['taskdetail'] = {
 		},{
 			"feature":"copyLink",
 			"icon":'icon-CopyLink',
+			"display":function(subm){
+				var item = Lincko.storage.get(subm.param.type,subm.param.id);
+
+				if(item._parent[0] == "chats"){
+					item = Lincko.storage.get("chats",subm.param.type,item._parent[0]);
+				}
+				if(item && item._parent[0]=="projects"){
+					var project = Lincko.storage.get("projects",item._parent[1]);
+					return (project && project.personal_private == null);
+				}
+				else
+				{
+					return false;
+				}
+			},
 			"title": Lincko.Translation.get('app', 81, 'html'), 
-			"action": function(Elem, subm) {
+			"prepare":function(Elem, subm) {
 				var workspace = wrapper_localstorage.workspace == "" ? "" : wrapper_localstorage.workspace + ".";
 				var url = top.location.protocol+'//'+app_application_dev_link() + workspace + document.domainRoot+'/#'+subm.param.type+'-'+subm.param.id;
 				Elem.attr('data-clipboard-text',url);
@@ -135,6 +200,9 @@ submenu_list['taskdetail'] = {
 						}
 					},
 				myurl);
+			},
+			"action": function(Elem, subm) {
+				
 			},
 			
 		}]

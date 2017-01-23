@@ -477,21 +477,52 @@ Submenu.prototype.Add_TitleRightButtonList = function() {
 			if ("items" in attribute) {
 				for(var i in attribute.items)
 				{
-					var elems_item = $('#-submenu_menu_list_item').clone();
-					elems_item.prop("id","");
-					elems_item.find("[find=icon]").addClass(attribute.items[i].icon);
-					elems_item.find("[find=title]").html(attribute.items[i].title);
+					if(("display" in attribute.items[i] && attribute.items[i].display(that)) 
+						|| !("display" in attribute.items[i]))
+					{
 
-					if("action" in attribute.items[i]) {
-						elems_item.click(i,function(event){
-							attribute.items[event.data].action(elems_item,that);
+						var enabled = true;
+						if("enabled" in attribute.items[i])
+						{
+							enabled = attribute.items[i].enabled(that)
+						}
 
-							elems.velocity('slideUp', {
-								mobileHA: hasGood3Dsupport,
-							});
-						});
+						var elems_item = $('#-submenu_menu_list_item').clone();
+						elems_item.prop("id","");
+						elems_item.find("[find=icon]").addClass(attribute.items[i].icon);
+
+						if(enabled){
+							elems_item.find("[find=title]").html(attribute.items[i].title);
+						}
+						else
+						{
+							elems_item.find("[find=title]").html("(Link Exists)");
+						}
+						
+
+						if(enabled)
+						{
+							if("prepare" in attribute.items[i]) {
+								attribute.items[i].prepare(elems_item,that);
+							}
+
+							if("action" in attribute.items[i]) {
+								elems_item.click(i,function(event){
+									attribute.items[event.data].action(elems_item,that);
+									elems.velocity('slideUp', {
+										mobileHA: hasGood3Dsupport,
+									});
+								});
+							}
+						}
+						else
+						{
+							elems_item.addClass("submenu_taskdetail_disabled");
+						}
+
+						elems.find("ul").eq(0).append(elems_item);
 					}
-					elems.find("ul").eq(0).append(elems_item);
+					
 				}
 			}
 
