@@ -275,6 +275,17 @@ Lincko.storage.getLatest = function(force){
 
 //Function that check for latest updates
 /* PRIVATE METHOD */
+Lincko.storage.refreshHistory = function(){
+	var arr = {
+		'show_error': false,
+	};
+	wrapper_sendAction(arr, 'post', 'data/refresh_history', null, null, null, function(){
+		Lincko.storage.getSchema();
+	});
+};
+
+//Function that check for latest updates
+/* PRIVATE METHOD */
 Lincko.storage.getSchema = function(){
 	var arr = {
 		'show_error': false,
@@ -515,7 +526,7 @@ Lincko.storage.firstLatest = function(){
 	if(storage_first_request){
 		storage_first_request = false;
 		storage_keep_messages = false; //The first time we open the application, we clean the local database
-		Lincko.storage.getSchema();
+		Lincko.storage.refreshHistory();
 		if(!$.isEmptyObject(Lincko.storage.data)){
 			Lincko.storage.display(true, true); //I don't think we need to force, probability of mismatching is almost null
 		} else {
