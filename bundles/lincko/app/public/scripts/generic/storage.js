@@ -1628,6 +1628,7 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 			}
 		}
 
+		var all = false;
 		var hist_root_array = [];
 		if(parent_type && parent_id){
 			hist_root_array.push(parent_type+"-"+parent_id);
@@ -1642,93 +1643,209 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 			hist_root = hist_root_array[i];
 			if(Lincko.storage.data['_history'] && Lincko.storage.data['_history'][hist_root]){
 				for(var j in Lincko.storage.data['_history'][hist_root]){
-						var cat = Lincko.storage.data['_history'][hist_root][j]['type'];
-						var id = Lincko.storage.data['_history'][hist_root][j]['id'];
-						if(typeof history_items[cat] == 'undefined' || typeof history_items[cat][id] == 'undefined'){
-							continue;
+					var cat = Lincko.storage.data['_history'][hist_root][j]['type'];
+					var id = Lincko.storage.data['_history'][hist_root][j]['id'];
+					if(typeof history_items[cat] == 'undefined' || typeof history_items[cat][id] == 'undefined' || typeof only_items[cat] == 'undefined' || typeof only_items[cat][id] == 'undefined'){
+						continue;
+					}
+					parent = [null, 0];
+					if(typeof history_items[cat][id]['_parent'] != 'undefined'){
+						parent = history_items[cat][id]['_parent'];
+					}
+					//We do not keep copy of Old in Lincko.storage.data, we just need to keep it from origin 'data' item, because there is 2 cases scenario:
+					// 1) Get Old from item itself
+					// 2) Old is not available offline, so we download it before displaying (POST | 'data/history')
+					item = $.extend({}, Lincko.storage.data['_history'][hist_root][j]); //Clone
+					item.hist = parseInt(j, 10);
+					item.par_type = parent[0];
+					item.par_id = parent[1];
+					if(item['by']<=1 && item['type']=='comments'){
+						save = true; //For auto resume (Roboto user)
+					} else if(
+						   item['by']<1 //Exclude LinckoBot
+						|| typeof Lincko.storage.data['users']=='undefined'
+						|| (item['by']>1 && typeof Lincko.storage.data['users'][item['by']]=='undefined')
+						|| item.timestamp<=0
+						|| typeof Lincko.storage.data['_history_title']=='undefined'
+						|| typeof Lincko.storage.data['_history_title'][cat]=='undefined'
+						|| typeof Lincko.storage.data['_history_title'][cat][item['cod']]=='undefined'
+						//|| ((item.cod!=201 || item.par_type!="projects") && exclude_onboarding && exclude_onboarding[cat] && exclude_onboarding[cat][id])
+						|| (cat=="chats" && item.cod!=101) //Keep creation of chats (shared and single)
+					){
+						save = false;
+						continue;
+					}
+					save = true;
+					for(var i in conditions) {
+						save = true;
+						for(var att in conditions[i]) { //And condition
+							if(typeof item[att] == 'undefined'){
+								//condition_alert = true;
+								save = false;
+								break;
+							}
+							attribute = att;
+							if(save){
+								if($.type(conditions[i][att]) == 'array' && conditions[i][att].length==2){
+									save = false;
+									if(conditions[i][att][0] == "<" && item[attribute] < conditions[i][att][1]){
+										save = true;
+									} else if(conditions[i][att][0] == "<=" && item[attribute] <= conditions[i][att][1]){
+										save = true;
+									} else if(conditions[i][att][0] == "==" && item[attribute] == conditions[i][att][1]){
+										save = true;
+									} else if(conditions[i][att][0] == "!=" && item[attribute] != conditions[i][att][1]){
+										save = true;
+									} else if(conditions[i][att][0] == ">=" && item[attribute] >= conditions[i][att][1]){
+										save = true;
+									} else if(conditions[i][att][0] == ">" && item[attribute] > conditions[i][att][1]){
+										save = true;
+									} else if(conditions[i][att][0] == "in" && $.inArray(item[attribute], conditions[i][att][1]) >= 0){ //Conditions must be an array
+										save = true;
+									} else if(conditions[i][att][0] == "!in" && $.inArray(item[attribute], conditions[i][att][1]) < 0){ //Conditions must be an array
+										save = true;
+									}
+									if(!save){
+										break;
+									}
+								} else if(item[attribute]!=conditions[i][att]){
+									save = false;
+									break;
+								} 
+							}
 						}
-						parent = [null, 0];
-						if(typeof history_items[cat][id]['_parent'] != 'undefined'){
-							parent = history_items[cat][id]['_parent'];
+						if(save){ //Or condition
+							break;
 						}
-						//We do not keep copy of Old in Lincko.storage.data, we just need to keep it from origin 'data' item, because there is 2 cases scenario:
-						// 1) Get Old from item itself
-						// 2) Old is not available offline, so we download it before displaying (POST | 'data/history')
-						item = $.extend({}, Lincko.storage.data['_history'][hist_root][j]); //Clone
-						item.par_type = parent[0];
-						item.par_id = parent[1];
-						if(item['by']<=1 && item['type']=='comments'){
-							save = true; //For auto resume (Roboto user)
-						} else if(
-							   item['by']<1 //Exclude LinckoBot
-							|| typeof Lincko.storage.data['users']=='undefined'
-							|| (item['by']>1 && typeof Lincko.storage.data['users'][item['by']]=='undefined')
-							|| item.tt<=0
-							|| typeof Lincko.storage.data['_history_title']=='undefined'
-							|| typeof Lincko.storage.data['_history_title'][cat]=='undefined'
-							|| typeof Lincko.storage.data['_history_title'][cat][item['cod']]=='undefined'
-							//|| ((item.cod!=201 || item.par_type!="projects") && exclude_onboarding && exclude_onboarding[cat] && exclude_onboarding[cat][id])
-							|| (cat=="chats" && item.cod!=101) //Keep creation of chats (shared and single)
-						){
+					}
+					if(save){
+						if(typeof item.par=='undefined' || typeof item.par.un=='undefined'){
+							if(typeof item.par=='undefined'){
+								item.par = {};
+							}
+							if(typeof item.par.un=='undefined'){
+								if(username = Lincko.storage.get('users', item['by'], 'username')){
+									item.par.un = username;
+								}
+							}
+						}
+						array_items.push(item);
+					}
+				}
+			}
+		}
+
+		//We add creation here, it save data stored and calculation on backend
+		for(var cat in Lincko.storage.data){
+			if(only_items && typeof only_items[cat]=='undefined'){
+				continue;
+			}
+			if((category==null || cat==category) && cat.indexOf('_')!==0){
+				items = Lincko.storage.data[cat]
+				for(var id in items) {
+					save = true;
+					if(only_items && typeof only_items[cat][id]=='undefined'){
+						save = false;
+						continue;
+					}
+					if(!deleted){ //If at false we exclude deleted items
+						if(typeof items[id]['deleted_at'] != 'undefined' && $.isNumeric(items[id]['deleted_at'])){
 							save = false;
 							continue;
 						}
+					}
+					var model = Lincko.storage.get(cat, id);
+					if(
+						   !model
+						|| typeof history_items[cat] == 'undefined' || typeof history_items[cat][id] == 'undefined'
+						|| typeof Lincko.storage.data['_history_title'] == 'undefined' || typeof Lincko.storage.data['_history_title'][cat] == 'undefined' || typeof Lincko.storage.data['_history_title'][cat][1]=='undefined'
+					){
+						continue;
+					}
+					
+					parent = [null, 0];
+					if(typeof history_items[cat][id]['_parent'] != 'undefined'){
+						parent = history_items[cat][id]['_parent'];
+					}
+					item = {
+						att: "created_by",
+						par_type: parent[0],
+						par_id: parent[1],
+						by: model["created_by"],
+						timestamp: model["created_at"],
+						type: cat,
+						id: id,
+						hist: cat+"-"+id,
+						cod: Lincko.storage.data['_history_title'][cat][1], //Creation code
+					};
+					if(item['by']<=1 && item['type']=='comments'){
+						save = true; //For auto resume (Roboto user)
+					} else if(
+						   item['by']<1 //Exclude LinckoBot
+						|| typeof Lincko.storage.data['users']=='undefined'
+						|| (item['by']>1 && typeof Lincko.storage.data['users'][item['by']]=='undefined')
+						|| item.timestamp<=0
+						//|| ((item.cod!=201 || item.par_type!="projects") && exclude_onboarding && exclude_onboarding[cat] && exclude_onboarding[cat][id])
+						|| (cat=="chats" && item.cod!=101) //Keep creation of chats (shared and single)
+					){
+						save = false;
+						continue;
+					}
+					for(var i in conditions) {
 						save = true;
-						for(var i in conditions) {
-							save = true;
-							for(var att in conditions[i]) { //And condition
-								if(typeof item[att] == 'undefined'){
-									//condition_alert = true;
-									save = false;
-									break;
-								}
-								attribute = att;
-								if(save){
-									if($.type(conditions[i][att]) == 'array' && conditions[i][att].length==2){
-										save = false;
-										if(conditions[i][att][0] == "<" && item[attribute] < conditions[i][att][1]){
-											save = true;
-										} else if(conditions[i][att][0] == "<=" && item[attribute] <= conditions[i][att][1]){
-											save = true;
-										} else if(conditions[i][att][0] == "==" && item[attribute] == conditions[i][att][1]){
-											save = true;
-										} else if(conditions[i][att][0] == "!=" && item[attribute] != conditions[i][att][1]){
-											save = true;
-										} else if(conditions[i][att][0] == ">=" && item[attribute] >= conditions[i][att][1]){
-											save = true;
-										} else if(conditions[i][att][0] == ">" && item[attribute] > conditions[i][att][1]){
-											save = true;
-										} else if(conditions[i][att][0] == "in" && $.inArray(item[attribute], conditions[i][att][1]) >= 0){ //Conditions must be an array
-											save = true;
-										} else if(conditions[i][att][0] == "!in" && $.inArray(item[attribute], conditions[i][att][1]) < 0){ //Conditions must be an array
-											save = true;
-										}
-										if(!save){
-											break;
-										}
-									} else if(item[attribute]!=conditions[i][att]){
-										save = false;
-										break;
-									} 
-								}
-							}
-							if(save){ //Or condition
+						for(var att in conditions[i]) { //And condition
+							if(typeof item[att] == 'undefined'){
+								//condition_alert = true;
+								save = false;
 								break;
 							}
-						}
-						if(save){
-							if(typeof item.par=='undefined' || typeof item.par.un=='undefined'){
-								if(typeof item.par=='undefined'){
-									item.par = {};
-								}
-								if(typeof item.par.un=='undefined'){
-									if(username = Lincko.storage.get('users', item['by'], 'username')){
-										item.par.un = username;
+							attribute = att;
+							if(save){
+								if($.type(conditions[i][att]) == 'array' && conditions[i][att].length==2){
+									save = false;
+									if(conditions[i][att][0] == "<" && item[attribute] < conditions[i][att][1]){
+										save = true;
+									} else if(conditions[i][att][0] == "<=" && item[attribute] <= conditions[i][att][1]){
+										save = true;
+									} else if(conditions[i][att][0] == "==" && item[attribute] == conditions[i][att][1]){
+										save = true;
+									} else if(conditions[i][att][0] == "!=" && item[attribute] != conditions[i][att][1]){
+										save = true;
+									} else if(conditions[i][att][0] == ">=" && item[attribute] >= conditions[i][att][1]){
+										save = true;
+									} else if(conditions[i][att][0] == ">" && item[attribute] > conditions[i][att][1]){
+										save = true;
+									} else if(conditions[i][att][0] == "in" && $.inArray(item[attribute], conditions[i][att][1]) >= 0){ //Conditions must be an array
+										save = true;
+									} else if(conditions[i][att][0] == "!in" && $.inArray(item[attribute], conditions[i][att][1]) < 0){ //Conditions must be an array
+										save = true;
 									}
+									if(!save){
+										break;
+									}
+								} else if(item[attribute]!=conditions[i][att]){
+									save = false;
+									break;
+								} 
+							}
+						}
+						if(save){ //Or condition
+							break;
+						}
+					}
+					if(save){
+						if(typeof item.par=='undefined' || typeof item.par.un=='undefined'){
+							if(typeof item.par=='undefined'){
+								item.par = {};
+							}
+							if(typeof item.par.un=='undefined'){
+								if(username = Lincko.storage.get('users', item['by'], 'username')){
+									item.par.un = username;
 								}
 							}
-							array_items.push(item);
 						}
+						array_items.push(item);
+					}
 				}
 			}
 		}
