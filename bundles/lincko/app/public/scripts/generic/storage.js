@@ -1756,9 +1756,8 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 					}
 					var model = Lincko.storage.get(cat, id);
 					if(
-						   !model
+						   !model || !model['histcode']
 						|| typeof history_items[cat] == 'undefined' || typeof history_items[cat][id] == 'undefined'
-						|| typeof Lincko.storage.data['_history_title'] == 'undefined' || typeof Lincko.storage.data['_history_title'][cat] == 'undefined' || typeof Lincko.storage.data['_history_title'][cat][1]=='undefined'
 					){
 						continue;
 					}
@@ -1776,7 +1775,7 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 						type: cat,
 						id: id,
 						hist: cat+"-"+id,
-						cod: Lincko.storage.data['_history_title'][cat][1], //Creation code
+						cod: model['histcode'], //Creation code
 					};
 					if(item['by']<=1 && item['type']=='comments'){
 						save = true; //For auto resume (Roboto user)
