@@ -68,14 +68,26 @@ submenu_list['chat_add_user'] = {
 		"title": Lincko.Translation.get('app', 25, 'html'), //Close
 		'hide': true,
 		"class": "base_pointer",
+		"action": function(Elem, subm) {
+			if(base_scanner && 'dispose' in base_scanner){
+				base_scanner.dispose();
+				$("#"+subm.id+"_radar").recursiveEmpty();
+			}
+		},
 	},
 	"qrcode": {
 		"style": "button",
 		"title": Lincko.Translation.get('app', 77, 'html'), //Scan a user QR code
 		"action": function(Elem, subm){
-			submenu_chat_new_user_result(subm, null, "scanner");
+			if(base_has_webcam){
+				submenu_chat_new_user_result(subm, null, "scanner");
+			}
 		},
-		"class": "display_none",
+		"now": function(Elem, subm){
+			if(!base_has_webcam){
+				Elem.addClass('display_none');
+			}
+		},
 	},
 	//It will create a form with a validation button
 	"chat_menu": {
@@ -454,8 +466,9 @@ Submenu.prototype.Add_ChatAddUser = function() {
 		'submenu_hide_'+that.preview+'_'+that.id,
 		function(){
 			var subm = this.action_param;
-			if($("#"+subm.id+"_radar").data('stream')){
-				$("#"+subm.id+"_radar").html5_qrcode_stop();
+			if(base_scanner && 'dispose' in base_scanner){
+				base_scanner.dispose();
+				$("#"+subm.id+"_radar").recursiveEmpty();
 			}
 		},
 		that
@@ -623,6 +636,18 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 			}
 		});
 		base_scanner.render(Elem_radar.get(0));
+		if(base_has_webcam_sub){
+			//var span = $('<span>').html('toggle');
+			$(base_scanner.If)
+				.addClass('base_pointer')
+				.on('click', function(){
+					base_video_device_current++;
+					if(!base_video_device[base_video_device_current]){
+						base_video_device_current = 0;
+					}
+					submenu_chat_new_user_result(submenu_chat_search.data.sub_that, null, "scanner");
+				});
+		}
 	}
 	else { //noresult
 		Elem_info.removeClass("display_none");

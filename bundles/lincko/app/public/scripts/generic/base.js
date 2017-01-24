@@ -253,7 +253,52 @@ base_hideProgress = function(Elem){
 }
 
 var base_scanner = false;
+var base_video_device_current = 0;
+var base_video_device = [];
+var base_has_webcam = false;
+var base_has_webcam_sub = false;
 JSfiles.finish(function(){
+
+	//Depreciation of window.MediaStreamTrack.getSources
+	//Make sure the DOM is loaded first
+	//This fpolyfill is specific to use the library w69b
+	if(typeof window.MediaStreamTrack == 'undefined'){
+		window.MediaStreamTrack = {};
+	}
+	if(typeof window.MediaStreamTrack.getSources == 'function'){
+
+		if(navigator && navigator.mediaDevices && navigator.mediaDevices.enumerateDevices){
+			navigator.mediaDevices.enumerateDevices().then(function(media_device_info){
+				var i = 0;
+				for(var key in media_device_info){
+					if(media_device_info[key]['kind']=='videoinput'){
+						base_video_device[i] = {
+							id: media_device_info[key]['deviceId'],
+							facing: "",
+							kind: media_device_info[key]['kind'],
+							label: media_device_info[key]['label'],
+						};
+						base_has_webcam = true;
+						base_has_webcam_sub = true;
+						base_video_device[i]['kind'] = 'video';
+						base_video_device[i]['facing'] = 'environment';
+						base_video_device_current = i; //Because it seems that camera is the last video media by default
+						i++;
+					}
+				}
+			});
+			window.MediaStreamTrack.getSources = function(fn1){
+				if(base_has_webcam){
+					var device = [];
+					device[0] = base_video_device[base_video_device_current];
+					fn1(device);
+				}
+			}
+		}
+	} else {
+		base_has_webcam = true;
+	}
+
 	w69b.qr.decoding.setWorkerUrl(w69b_qrcode_decodeworker);
 });
 

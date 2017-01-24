@@ -26,25 +26,10 @@ if (!Math.sign) {
 	};
 }
 
-/*
-//Depreciation of window.MediaStreamTrack.getSources
-if(typeof window.MediaStreamTrack == 'undefined'){
-	window.MediaStreamTrack = {};
-}
-if(typeof window.MediaStreamTrack.getSources == 'function'){
-	window.MediaStreamTrack.getSources = function(fn1){
-		console.log(e)
-		navigator.mediaDevices.enumerateDevices().then(
-			fn1
-		)
-	};
-}
-*/
-
 //string.trim() is not supported below IE9
 if (!String.prototype.trim) {
   String.prototype.trim = function () {
-    return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+	return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
   };
 }
 

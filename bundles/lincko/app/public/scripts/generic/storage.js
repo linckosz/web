@@ -73,12 +73,17 @@ var storage_local_storage = {
 	},
 	stop: function(){
 		clearTimeout(storage_local_storage.timeout);
+		storage_local_storage.timeout = null;
 	},
 	timer: function(){
 		if(storage_local_storage.timeout){
 			return false;
 		}
 		storage_local_storage.timeout = setTimeout(function(){
+			if(!storage_first_launch){
+				storage_local_storage.stop();
+				storage_local_storage.timer();
+			}
 			if(Lincko.storage.data && Lincko.storage.data['_history']){
 				wrapper_localstorage.encrypt('data__history', Lincko.storage.data['_history']);
 			}
