@@ -111,9 +111,8 @@ var account_reset_cb_success = function(msg, err, status, data){
 		$("#account_joinus_form input[name="+field+"]").addClass('base_input_text_error').focus();
 		account_error_hide_timer();
 	} else {
-		$('#account_signin_email').val(account_credential.email).focus();
-		$('#account_signin_password').val(account_credential.password).focus();
-		$('#account_signin_form').submit();
+		//The server will setup credential session information
+		window.location.href = account_link['root'];
 	}
 };
 

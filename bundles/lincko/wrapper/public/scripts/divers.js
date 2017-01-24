@@ -185,7 +185,9 @@ var hasGood3Dsupport =
 	|| 'perspective' in document.body.style
 ;
 
+var isIOS = false;
 if(navigator.userAgent.match(/iPhone|iPad|iPod/i)){
+	isIOS = true;
 	hasGood3Dsupport = false;
 }
 
@@ -201,7 +203,7 @@ if(
 	|| navigator.userAgent.match(/MSIE/i)
 	|| navigator.userAgent.match(/EDGE/i)
 ){
-	//wrapper_limit_json = 500; //Allow chunking for for ios crash (it seems working after reqorking the database)
+	//wrapper_limit_json = 500; //Allow chunking for for ios crash (it seems working after reworking the database)
 }
 
 var wrapper_test_result = null;

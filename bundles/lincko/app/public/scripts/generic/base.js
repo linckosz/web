@@ -261,7 +261,7 @@ JSfiles.finish(function(){
 
 	//Depreciation of window.MediaStreamTrack.getSources
 	//Make sure the DOM is loaded first
-	//This fpolyfill is specific to use the library w69b
+	//This homemade polyfill is specific to use the library w69b
 	if(typeof window.MediaStreamTrack == 'undefined'){
 		window.MediaStreamTrack = {};
 	}
@@ -297,6 +297,12 @@ JSfiles.finish(function(){
 		}
 	} else {
 		base_has_webcam = true;
+	}
+
+	//Disbale for app because not linked yet
+	if(isMobileApp()){
+		base_has_webcam = false;
+		base_has_webcam_sub = false;
 	}
 
 	w69b.qr.decoding.setWorkerUrl(w69b_qrcode_decodeworker);

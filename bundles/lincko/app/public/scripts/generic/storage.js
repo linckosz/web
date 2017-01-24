@@ -66,6 +66,7 @@ var storage_launch_onboarding = function(){
 var storage_local_storage = {
 	data: {},
 	timeout: null,
+	timing: 30000,
 
 	prepare: function(field){
 		storage_local_storage.data[field] = true;
@@ -78,6 +79,9 @@ var storage_local_storage = {
 	timer: function(){
 		if(storage_local_storage.timeout){
 			return false;
+		}
+		if(!isIOS){
+			storage_local_storage.timing = 6000;
 		}
 		storage_local_storage.timeout = setTimeout(function(){
 			if(!storage_first_launch){
@@ -100,7 +104,8 @@ var storage_local_storage = {
 				wrapper_localstorage.encrypt('lastvisit', Lincko.storage.last_visit);
 			}
 			clearTimeout(storage_local_storage.timeout);
-		}, 30000);
+			storage_local_storage.timing = 6000;
+		}, storage_local_storage.timing);
 	},
 
 };
@@ -1645,7 +1650,10 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 				for(var j in Lincko.storage.data['_history'][hist_root]){
 					var cat = Lincko.storage.data['_history'][hist_root][j]['type'];
 					var id = Lincko.storage.data['_history'][hist_root][j]['id'];
-					if(typeof history_items[cat] == 'undefined' || typeof history_items[cat][id] == 'undefined' || typeof only_items[cat] == 'undefined' || typeof only_items[cat][id] == 'undefined'){
+					if(typeof history_items[cat] == 'undefined' || typeof history_items[cat][id] == 'undefined'){
+						continue;
+					}
+					if(only_items && (typeof only_items[cat] == 'undefined' || typeof only_items[cat][id] == 'undefined')){
 						continue;
 					}
 					parent = [null, 0];
@@ -1767,15 +1775,15 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 						parent = history_items[cat][id]['_parent'];
 					}
 					item = {
-						att: "created_by",
+						att: "created_at",
 						par_type: parent[0],
-						par_id: parent[1],
-						by: model["created_by"],
+						par_id: parseInt(parent[1], 10),
+						by: parseInt(model["created_by"], 10),
 						timestamp: model["created_at"],
 						type: cat,
-						id: id,
+						id: parseInt(id, 10),
 						hist: cat+"-"+id,
-						cod: model['histcode'], //Creation code
+						cod: parseInt(model['histcode'], 10), //Creation code
 					};
 					if(item['by']<=1 && item['type']=='comments'){
 						save = true; //For auto resume (Roboto user)

@@ -354,6 +354,7 @@
 	border-style: none;
 	font-weight: bold;
 	cursor: pointer; cursor: hand;
+	margin: 16px 0 6px 0;
 }
 
 #account_forgot_submit:hover {
@@ -391,6 +392,7 @@
 	border-style: none;
 	font-weight: bold;
 	cursor: pointer; cursor: hand;
+	margin: 16px 0 6px 0;
 }
 
 #account_reset_submit:hover {
