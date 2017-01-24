@@ -265,7 +265,7 @@ JSfiles.finish(function(){
 	if(typeof window.MediaStreamTrack == 'undefined'){
 		window.MediaStreamTrack = {};
 	}
-	if(typeof window.MediaStreamTrack.getSources == 'function'){
+	if(typeof window.MediaStreamTrack.getSources != 'function'){
 
 		if(navigator && navigator.mediaDevices && navigator.mediaDevices.enumerateDevices){
 			navigator.mediaDevices.enumerateDevices().then(function(media_device_info){
