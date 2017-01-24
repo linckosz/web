@@ -1262,9 +1262,12 @@ Lincko.storage.cache = {
 					this.exclude_chats[item_cat][item_id] = true; //no need to display chats creation for single ones
 				}
 
+				/*
+				We don't use _history for chats
 				if(typeof Lincko.storage.data['_history'] == 'undefined' || typeof Lincko.storage.data['_history'][item_cat+'-'+item_id] == 'undefined'){
 					continue;
 				}
+				*/
 
 				children = Lincko.storage.tree(item_cat, item_id, "children", false, true);
 				if(children){
@@ -1277,11 +1280,23 @@ Lincko.storage.cache = {
 							if(typeof Lincko.storage.data[cat][id]["_parent"] != "undefined" && Lincko.storage.data[cat][id]["_parent"][0]!="chats"){
 								if(typeof this.exclude_chats[cat] == "undefined"){ this.exclude_chats[cat] = {}; }
 								this.exclude_chats[cat][id] = true;
+							} else {
+								//Creation notification
+								var item = Lincko.storage.get(cat, id);
+								if(item && item['created_at'] > last_notif && item['created_by'] != wrapper_localstorage.uid){
+									if(typeof this.notify[item_cat] == "undefined"){ this.notify[item_cat] = {}; }
+									if(typeof this.notify[item_cat][item_id] == "undefined"){
+										this.notify[item_cat][item_id] = 1;
+									} else {
+										this.notify[item_cat][item_id]++;
+									}
+								}
 							}
 						}
 					}
 				}
 
+				/*
 				for(var hist_id in Lincko.storage.data['_history'][item_cat+'-'+item_id]){
 					var hist = Lincko.storage.data['_history'][item_cat+'-'+item_id][hist_id];
 					if(
@@ -1302,6 +1317,7 @@ Lincko.storage.cache = {
 						}
 					}
 				}
+				*/
 			}
 		}
 
@@ -1322,6 +1338,16 @@ Lincko.storage.cache = {
 							//Skip excluded
 							if(this.exclude_projects[cat] && this.exclude_projects[cat][id]){
 								continue;
+							}
+							//Creation notification
+							var item = Lincko.storage.get(cat, id);
+							if(item && item['created_at'] > last_notif && item['created_by'] != wrapper_localstorage.uid){
+								if(typeof this.notify[item_cat] == "undefined"){ this.notify[item_cat] = {}; }
+								if(typeof this.notify[item_cat][item_id] == "undefined"){
+									this.notify[item_cat][item_id] = 1;
+								} else {
+									this.notify[item_cat][item_id]++;
+								}
 							}
 							//Record statistics tasks/notes/files
 							if(
