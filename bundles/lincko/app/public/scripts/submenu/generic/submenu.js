@@ -496,7 +496,7 @@ Submenu.prototype.Add_TitleRightButtonList = function() {
 						}
 						else
 						{
-							elems_item.find("[find=title]").html( "(" + Lincko.Translation.get('app', 88, 'html') + ")");
+							elems_item.find("[find=title]").html( "(" + Lincko.Translation.get('app', 88, 'html') + ")");//Link exist
 						}
 						
 

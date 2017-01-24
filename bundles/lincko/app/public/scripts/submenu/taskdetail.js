@@ -197,7 +197,7 @@ submenu_list['taskdetail'] = {
 					return false;
 				}
 			},
-			"title": Lincko.Translation.get('app', 81, 'html'), 
+			"title": Lincko.Translation.get('app', 81, 'html'), //copy link
 			"prepare":function(Elem, subm) {
 				var workspace = wrapper_localstorage.workspace == "" ? "" : wrapper_localstorage.workspace + ".";
 				var url = top.location.protocol+'//'+app_application_dev_link() + workspace + document.domainRoot+'/#'+subm.param.type+'-'+subm.param.id;
