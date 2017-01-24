@@ -159,15 +159,24 @@ BaseItemCls.prototype.item_display = function(position, subm, mode, scroll_time)
 			elem.find("[find=icon]").css('border-color', 'transparent');
 			elem.find("[find=icon]").css('background-image','url("' +  app_application_icon_roboto.src + '")');
 			elem.find("[find=author]").html(Lincko.Translation.get('app', 0, 'html'));  //LinckoBot
+
+			elem.find("[find=icon]").attr("title",Lincko.Translation.get('app', 0, 'html'));
+			elem.find("[find=author]").attr("title",Lincko.Translation.get('app', 0, 'html'));
 		} else if(this.user_id == 1){ //MonkeyKing
 			elem.find("[find=icon]").css('border-color', 'transparent');
 			elem.find("[find=icon]").css('background-image','url("' +  app_application_icon_monkeyking.src + '")');
 			elem.find("[find=author]").html(Lincko.Translation.get('app', 67, 'html')); //Monkey King
+
+			elem.find("[find=icon]").attr("title",Lincko.Translation.get('app', 1, 'html'));
+			elem.find("[find=author]").attr("title",Lincko.Translation.get('app', 1, 'html'));
 		} else {
 			var profile =  Lincko.storage.getLinkThumbnail(Lincko.storage.get("users",this.user_id , 'profile_pic'));
 			elem.find("[find=icon]").css('background-image','url("' + this.profile + '")');
 			var user_name = Lincko.storage.get('users', this.user_id ,'username');
 			elem.find("[find=author]").text(user_name);
+
+			elem.find("[find=icon]").attr("title",user_name);
+			elem.find("[find=author]").attr("title",user_name);
 		}
 		var date = new wrapper_date(this.timestamp);
 		elem.find(".time", "[find=timestamp]").html(date.display('time_short'));

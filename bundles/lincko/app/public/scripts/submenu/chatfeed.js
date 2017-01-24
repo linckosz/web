@@ -580,6 +580,8 @@ BaseHistoryCls.prototype.renderChatTemplate = function(index, replace) {
 		Elem.find("[find=icon]").css('background-image','url("'+img+'")'); //toto => this slow down the paint of submenu 
 		var uname = Lincko.storage.get('users', this.item.created_by)['-username'];
 		Elem.find("[find=author]").text(wrapper_to_html(uname));
+		Elem.find("[find=icon]").attr("title",wrapper_to_html(uname));
+		Elem.find("[find=author]").attr("title",wrapper_to_html(uname));
 		Elem.find("[find=content]").html(wrapper_to_html(this.item['+comment']));
 		if(this.item["timestamp"]){
 			var timestamp = this.item["timestamp"];
@@ -716,6 +718,9 @@ BaseHistoryCls.prototype.renderHistoryTemplate = function(index) {
 		img = app_application_icon_roboto.src;
 		Elem.find("[find=icon]").css('border-color', 'transparent');
 		Elem.find("[find=author]").html(Lincko.Translation.get('app', 0, 'html')); //Roboto
+
+		Elem.find("[find=icon]").attr("title",Lincko.Translation.get('app', 0, 'html'));
+		Elem.find("[find=author]").attr("title",Lincko.Translation.get('app', 0, 'html'));
 	} else {
 		Elem.find("[find=author]").html(php_nl2br(this.item.par.un));
 	}
