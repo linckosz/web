@@ -845,6 +845,11 @@ $(window).resize(function(){
 });
 
 JSfiles.finish(function(){
+	//Diable onboadring temporarly if the hashtag is called
+	if(app_application_hashtag && typeof onboarding != 'undefined'){
+		onboarding.forceOff = true;
+		onboarding.clear(false, false); //Just hide the onboarding process
+	}
 	//Update every 15s automatically
 	app_application_lincko.prepare(true, true);
 	setInterval(function(){

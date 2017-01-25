@@ -166,8 +166,13 @@ var onboarding = {
 	}, //END OF launch
 
 	clear_fn_list: [], //any function that needs to be run on onboarding.clear can be put here
-	clear: function(submenuHide){
-		app_models_resume_onboarding_continue(null, 10102); //end onboarding
+	clear: function(submenuHide, close){
+		if(typeof close != 'boolean'){
+			close = true;
+		}
+		if(close){
+			app_models_resume_onboarding_continue(null, 10102); //end onboarding
+		}
 		var that = this;
 		onboarding.on = false;
 		onboarding.currentTripInst = null;

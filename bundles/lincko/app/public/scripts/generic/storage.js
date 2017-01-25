@@ -224,6 +224,8 @@ Lincko.storage.display = function(prepare, force){
 				wrapper_load_progress.move(100);
 			}, 100);
 			if(app_application_hashtag){
+				onboarding.forceOff = true;
+				onboarding.clear(false, false); //Just hide the onboarding process
 				document.location.hash = app_application_hashtag;
 			}
 		}
