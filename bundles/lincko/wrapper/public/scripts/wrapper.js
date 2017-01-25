@@ -364,7 +364,6 @@ wrapper_localstorage.encrypt = function (link, data, tryit){
 					prefix: wrapper_localstorage.prefix,
 				},
 			};
-			//webworker.postMessage(JSON.stringify(webworker_data));
 			if(!webworker.postMessage(webworker_data)){
 				result = false;
 			}
@@ -605,7 +604,7 @@ var wrapper_performance = {
 	powerfull: false,
 	delay: 250, //Additional delay for slow mobile (max 250ms)
 	init: function(){
-		webperf.postMessage(JSON.stringify({action: 'checkPerformance'}));
+		webperf.postMessage({action: 'checkPerformance'});
 	},
 	setDelay: function(){
 		//Based on a 30 loop test

@@ -31,7 +31,7 @@ var webworker_operation = {
 
 	//webworker.postMessage(JSON.stringify({action: 'test', data: 123,}));
 	test: function(obj_data){
-		self.postMessage(JSON.stringify({action: 'test', data: obj_data,}));
+		self.postMessage({action: 'test', data: obj_data,});
 	},
 
 	importscript: function(link){
@@ -84,7 +84,7 @@ var webworker_operation = {
 		}
 		var t1 = performance.now();
 		var indice = t1 - t0;
-		self.postMessage(JSON.stringify({action: 'indicePerformance', data: indice,}));
+		self.postMessage({action: 'indicePerformance', data: indice,});
 	},
 
 };

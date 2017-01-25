@@ -152,6 +152,7 @@ $app->lincko->translation = array(
 $app->lincko->data = array(
 	'domain' => $app->lincko->domain,
 	'title' => $app->lincko->title,
+	'hashtag' => false,
 	'workspace' => '',
 	'lincko_back' => '', //Only used for development purpose "master-[bruno.]lincko.cafe"
 	'lincko_front' => '', //Only used for development purpose "[master-]bruno.lincko.cafe"

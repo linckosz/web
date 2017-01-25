@@ -223,6 +223,9 @@ Lincko.storage.display = function(prepare, force){
 			setTimeout(function(){
 				wrapper_load_progress.move(100);
 			}, 100);
+			if(app_application_hashtag){
+				document.location.hash = app_application_hashtag;
+			}
 		}
 	}
 };

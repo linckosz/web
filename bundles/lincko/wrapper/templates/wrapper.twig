@@ -95,6 +95,8 @@
 #}
 
 <script>
+
+var wrapper_hash = document.location.hash;
 {% if link_reset %}
 	//Clean the URL
 	window.history.replaceState(null, null, "/");
@@ -435,7 +437,7 @@ var webworker_operation = {
 		}
 	},
 
-	//webworker.postMessage(JSON.stringify({action: 'test', data: 123,}));
+	//webworker.postMessage({action: 'test', data: 123,});
 	test: function(obj_data){
 		console.log(obj_data);
 	},

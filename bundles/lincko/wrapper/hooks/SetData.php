@@ -37,6 +37,10 @@ function SetData(){
 	$uid = OneSeventySeven::get('uid');
 	$sha = OneSeventySeven::get('sha');
 	$ucode = Datassl::encrypt($uid, 'invitation');
+	$hashtag = false;
+	if(isset($_COOKIE['hashtag'])){
+		$hashtag = $_COOKIE['hashtag'];
+	}
 
 	$shangzai = false;
 	if($pukpic = OneSeventySeven::get('pukpic')){
@@ -55,6 +59,11 @@ function SetData(){
 	if($logged){
 		$app->lincko->data['force_open_website'] = false;
 		$app->lincko->translation['username'] = $yonghu;
+		if(isset($_COOKIE['hashtag'])){
+			//Trigger hashtag only once in the application
+			unset($_COOKIE['hashtag']);
+			setcookie('hashtag', $hashtag, time()-3600, '/');
+		}
 	}
 
 	$app->lincko->data = array_merge(
@@ -66,6 +75,7 @@ function SetData(){
 			'uid' => $uid,
 			'sha' => $sha,
 			'ucode' => $ucode,
+			'hashtag' => $hashtag,
 			'logged' => $logged,
 			'fingerprint' => $fingerprint,
 			'shangzai' => $shangzai,

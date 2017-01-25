@@ -88,3 +88,15 @@ $app->get(
 )
 ->via('POST')
 ->name('mailchimp');
+
+//It helps to save the hashtag into PHP session because nginx is not able to see hashtag (so PHP does)
+$app->get('/hashtag/:hashtag', function ($hashtag='') use ($app) {
+	setcookie('hashtag', $hashtag, time()+3600, '/'); //Valid 1H
+	echo $hashtag;
+	return exit(0);
+})
+->conditions(array(
+	'hashtag' => '\S+',
+))
+->name('hashtag');
+
