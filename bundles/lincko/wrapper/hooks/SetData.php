@@ -38,9 +38,6 @@ function SetData(){
 	$sha = OneSeventySeven::get('sha');
 	$ucode = Datassl::encrypt($uid, 'invitation');
 	$hashtag = false;
-	if(isset($_COOKIE['hashtag'])){
-		$hashtag = $_COOKIE['hashtag'];
-	}
 
 	$shangzai = false;
 	if($pukpic = OneSeventySeven::get('pukpic')){
@@ -59,10 +56,14 @@ function SetData(){
 	if($logged){
 		$app->lincko->data['force_open_website'] = false;
 		$app->lincko->translation['username'] = $yonghu;
+		//Trigger hashtag only once in the application
 		if(isset($_COOKIE['hashtag'])){
-			//Trigger hashtag only once in the application
-			unset($_COOKIE['hashtag']);
-			setcookie('hashtag', $hashtag, time()-3600, '/');
+			$hashtag = $_COOKIE['hashtag'];
+			//Clean hastag once we are sure to be inside the application (= when the first latVisist call is done)
+			if($app->request->getResourceUri()=='/wrapper/data/latest'){
+				unset($_COOKIE['hashtag']);
+				setcookie('hashtag', $hashtag, time()-3600, '/');
+			}
 		}
 	}
 

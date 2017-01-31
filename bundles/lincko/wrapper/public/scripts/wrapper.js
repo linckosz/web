@@ -209,6 +209,10 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 				delete wrapper_run[ajax_objForm.prop('id')];
 			}
 			wrapper_objForm = null;
+			//Force to launch some database actions if the function is available
+			if(typeof storage_cb_complete == 'function'){
+				storage_cb_complete();
+			}
 		},
 	});
 }
@@ -604,7 +608,9 @@ var wrapper_performance = {
 	powerfull: false,
 	delay: 250, //Additional delay for slow mobile (max 250ms)
 	init: function(){
-		webperf.postMessage({action: 'checkPerformance'});
+		if(webperf){
+			webperf.postMessage({action: 'checkPerformance'});
+		}
 	},
 	setDelay: function(){
 		//Based on a 30 loop test

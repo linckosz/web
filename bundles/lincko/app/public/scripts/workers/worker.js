@@ -1,3 +1,8 @@
+/*
+	Another way to compress fatser may be to use PNG compression tool
+	https://github.com/ethankaminski/Canvas-Text-Compress-JS
+*/
+
 //performance.now() Polyfill
 function perfnow(e){"performance"in e||(e.performance={});var o=e.performance;e.performance.now=o.now||o.mozNow||o.msNow||o.oNow||o.webkitNow||Date.now||function(){return(new Date).getTime()}}perfnow(self);
 

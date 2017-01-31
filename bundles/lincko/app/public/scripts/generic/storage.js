@@ -50,6 +50,13 @@ var storage_cb_success = function(msg, err, status, data){
 	
 };
 
+var storage_cb_complete = function(){
+	//Force to open th page, if not we may stuck to the loading page in case the user does not have updates
+	setTimeout(function(){
+		wrapper_load_progress.move(100);
+	}, 200);
+};
+
 //Launch the onboadring sync the first time it receive the database
 var storage_launch_onboarding = function(){
 	if(storage_first_onboarding){
@@ -88,13 +95,23 @@ var storage_local_storage = {
 				storage_local_storage.stop();
 				storage_local_storage.timer();
 			}
-			if(Lincko.storage.data && Lincko.storage.data['_history']){
-				wrapper_localstorage.encrypt('data__history', Lincko.storage.data['_history']);
-			}
 			for(var field in storage_local_storage.data){
+				var category = field;
+				var item = false;
 				var link = 'data_'+field;
-				if(Lincko.storage.data && Lincko.storage.data[field]){
-					wrapper_localstorage.encrypt(link, Lincko.storage.data[field]);
+				if(field.indexOf('@')>0){ //@ equals to a subfolder, it helps to limit the caculation for local storage
+					var match = field.split("@");
+					if(match.length==2){
+						category = match[0];
+						item = match[1];
+					}
+				}
+				if(Lincko.storage.data && Lincko.storage.data[category]){
+					if(item && Lincko.storage.data[category][item]){
+						wrapper_localstorage.encrypt(link, Lincko.storage.data[category][item]);
+					} else {
+						wrapper_localstorage.encrypt(link, Lincko.storage.data[category]);
+					}
 				} else {
 					amplify.store(wrapper_localstorage.prefix+link, null); //Delete from Local storage
 				}
@@ -428,6 +445,7 @@ Lincko.storage.update = function(partial, info){
 					//We add, we don't overwrite
 					Lincko.storage.data[i][j][k] = partial[i][j][k];
 				}
+				storage_local_storage.prepare(i+"@"+j); //We split the hstory storage to limit CPU calculation
 			}
 		}
 	}
@@ -438,16 +456,15 @@ Lincko.storage.update = function(partial, info){
 			Lincko.storage.childrenList(); //We should not scan the whole database, it slows down the list but Sky had an issue of getting _children visible for notes when adding a comment
 			Lincko.storage.display();
 		}, 300);
-		if(storage_first_launch){
-			storage_first_launch = false; //Help to trigger some action once the database is downloaded
-			app_application_lincko.prepare('first_launch', true);
-			setTimeout(function(){
-				wrapper_load_progress.move(100);
-			}, 200);
-		}
-		return true;
 	}
-	return false;
+	if(storage_first_launch){
+		storage_first_launch = false; //Help to trigger some action once the database is downloaded
+		app_application_lincko.prepare('first_launch', true);
+		setTimeout(function(){
+			wrapper_load_progress.move(100);
+		}, 200);
+	}
+	return update;
 };
 
 //Function that check the javascript database schema
@@ -807,7 +824,7 @@ Lincko.storage.isHistoryReady = function(){
 	Return an object { title, content }
 	Lincko.storage.getHistoryInfo( Lincko.storage.hist(null, 1); ) => Return formatted information about the time object passed in parameter. For a list of time objects like “Lincko.storage.hist(null, 50);”, use a loop.
 */
-Lincko.storage.getHistoryInfo = function(history){
+Lincko.storage.getHistoryInfo = function(hist){
 	var result = {
 		title: '',
 		date: '',
@@ -821,37 +838,37 @@ Lincko.storage.getHistoryInfo = function(history){
 	if(
 		   $.type(Lincko.storage.data) === 'object'
 		&& $.type(Lincko.storage.data['_history_title']) === 'object'
-		&& $.type(Lincko.storage.data['_history_title'][history.type]) === 'object'
-		&& (typeof Lincko.storage.data['_history_title'][history.type][history.cod] !== 'undefined'
-		 || typeof Lincko.storage.data['_history_title'][history.type] !== 'undefined')
+		&& $.type(Lincko.storage.data['_history_title'][hist.type]) === 'object'
+		&& (typeof Lincko.storage.data['_history_title'][hist.type][hist.cod] !== 'undefined'
+		 || typeof Lincko.storage.data['_history_title'][hist.type] !== 'undefined')
 	){
-		if(typeof Lincko.storage.data['_history_title'][history.type][history.cod] !== 'undefined'){
-			result.title = Lincko.storage.data['_history_title'][history.type][history.cod];
-		} else if(typeof Lincko.storage.data['_history_title'][history.type] !== 'undefined'){
-			result.title = Lincko.storage.data['_history_title'][history.type];
+		if(typeof Lincko.storage.data['_history_title'][hist.type][hist.cod] !== 'undefined'){
+			result.title = Lincko.storage.data['_history_title'][hist.type][hist.cod];
+		} else if(typeof Lincko.storage.data['_history_title'][hist.type] !== 'undefined'){
+			result.title = Lincko.storage.data['_history_title'][hist.type];
 		}
 
 		result.root = {
 			title: result.title,
-			history: history,
+			history: hist,
 		};
 
-		if(history.par){
-			result.title = Translation_filter(result.title, history.par, true);
+		if(hist.par){
+			result.title = Translation_filter(result.title, hist.par, true);
 		}
 
-		var date = new wrapper_date(history.timestamp);
+		var date = new wrapper_date(hist.timestamp);
 		result.title = result.title.ucfirst();
 		result.date = date.display('date_very_short');
 
-		//console.log(history);
-		if(history.type=="comments" && (history.by==0 || history.by==1)){
-			result.content = app_models_resume_format_sentence(history.id);
+		//console.log(hist);
+		if(hist.type=="comments" && (hist.by==0 || hist.by==1)){
+			result.content = app_models_resume_format_sentence(hist.id);
 			return result;
 		}
 		result.content = app_models_resume_format_answer(result.content);
 		
-		var item = Lincko.storage.data[history.type][history.id];
+		var item = Lincko.storage.data[hist.type][hist.id];
 		//Add to the content the main title (such as "project name")
 		for(var prop in item) {
 			if(prop.indexOf('+')===0){
@@ -860,10 +877,10 @@ Lincko.storage.getHistoryInfo = function(history){
 			}
 		}
 		//Add to the content an optional detail if any (such as "project description")
-		if(history.att.indexOf('-')!=0){
-			attribute = "-"+history.att;
+		if(hist.att.indexOf('-')!=0){
+			attribute = "-"+hist.att;
 		} else {
-			attribute = history.att;
+			attribute = hist.att;
 		}
 		if(attribute.indexOf('-')===0 && item[attribute]){
 			if(result.content){
@@ -873,8 +890,8 @@ Lincko.storage.getHistoryInfo = function(history){
 			}
 		}
 		
-		if(history.par){
-			result.content = Translation_filter(result.content, history.par,false);
+		if(hist.par){
+			result.content = Translation_filter(result.content, hist.par,false);
 		}
 		
 	}
@@ -1197,6 +1214,14 @@ Lincko.storage.cache = {
 		}
 		return $.extend(true, {}, this.exclude_projects);
 	},
+
+	getExcludeAll: function(){
+		if(!this.first_init){
+			this.first_init = this.init();
+		}
+		var list = $.extend(true, {}, this.exclude_chats);
+		return $.extend(true, list, this.exclude_projects);
+	},
 	
 	notify: {},
 	getNotify: function(type, id){
@@ -1233,6 +1258,7 @@ Lincko.storage.cache = {
 		var children;
 		var single;
 		var last_notif;
+		var exclude_notify = {};
 
 		if(typeof type_reset == 'undefined' && typeof id_reset == 'undefined'){
 			this.exclude_chats = {};
@@ -1288,7 +1314,12 @@ Lincko.storage.cache = {
 							} else {
 								//Creation notification
 								var item = Lincko.storage.get(cat, id);
-								if(item && item['created_at'] > last_notif && item['created_by'] != wrapper_localstorage.uid){
+								if(
+									   item
+									&& item['created_at'] > last_notif
+									&& item['created_by'] != wrapper_localstorage.uid
+									&& (typeof exclude_notify[cat] == "undefined" || typeof exclude_notify[cat][id] == "undefined")
+								){
 									if(typeof this.notify[item_cat] == "undefined"){ this.notify[item_cat] = {}; }
 									if(typeof this.notify[item_cat][item_id] == "undefined"){
 										this.notify[item_cat][item_id] = 1;
@@ -1336,6 +1367,32 @@ Lincko.storage.cache = {
 					continue;
 				}
 				last_notif = Lincko.storage.getLastNotif(item_cat, item_id);
+
+				for(var hist_id in Lincko.storage.data['_history'][item_cat+'-'+item_id]){
+					var hist = Lincko.storage.data['_history'][item_cat+'-'+item_id][hist_id];
+					if(
+						   hist['timestamp'] > last_notif
+						&& hist['by'] != wrapper_localstorage.uid
+						&& app_models_history.validHist(
+								Lincko.storage.data[item_cat][item_id], //Root
+								Lincko.storage.get(hist['type'], hist['id']), //Item
+								hist //History
+							)
+						&& (!this.exclude_projects[hist['type']] || !this.exclude_projects[hist['type']][hist['id']])
+						&& (typeof exclude_notify[hist['type']] == "undefined" || typeof exclude_notify[hist['type']][hist['id']] == "undefined")
+					){
+						if(typeof this.notify[item_cat] == "undefined"){ this.notify[item_cat] = {}; }
+						if(typeof this.notify[item_cat][item_id] == "undefined"){
+							this.notify[item_cat][item_id] = 1;
+						} else {
+							this.notify[item_cat][item_id]++;
+						}
+					} else {
+						if(typeof exclude_notify[hist['type']] == "undefined"){ exclude_notify[hist['type']] = {}; }
+						exclude_notify[hist['type']][hist['id']] = true; //For all projects exclude all chats items
+					}
+				}
+
 				children = Lincko.storage.tree(item_cat, item_id, "children", true, true);
 				if(children){
 					for(var cat in children){
@@ -1346,7 +1403,17 @@ Lincko.storage.cache = {
 							}
 							//Creation notification
 							var item = Lincko.storage.get(cat, id);
-							if(item && item['created_at'] > last_notif && item['created_by'] != wrapper_localstorage.uid){
+							if(
+								   item
+								&& item['created_at'] > last_notif
+								&& item['created_by'] != wrapper_localstorage.uid
+								&& (typeof exclude_notify[cat] == "undefined" || typeof exclude_notify[cat][id] == "undefined")
+								&& app_models_history.validHist(
+									Lincko.storage.data[item_cat][item_id], //Root
+									Lincko.storage.get(cat, id), //Item
+									Lincko.storage.getCreationHistory(cat, id) //History
+								)
+							){
 								if(typeof this.notify[item_cat] == "undefined"){ this.notify[item_cat] = {}; }
 								if(typeof this.notify[item_cat][item_id] == "undefined"){
 									this.notify[item_cat][item_id] = 1;
@@ -1371,27 +1438,6 @@ Lincko.storage.cache = {
 									this.statistics[item_cat][item_id][cat]++;
 								}
 							}
-						}
-					}
-				}
-
-				for(var hist_id in Lincko.storage.data['_history'][item_cat+'-'+item_id]){
-					var hist = Lincko.storage.data['_history'][item_cat+'-'+item_id][hist_id];
-					if(
-						   hist['timestamp'] > last_notif
-						&& hist['by'] != wrapper_localstorage.uid
-						&& app_models_history.validHist(
-								Lincko.storage.data[item_cat][item_id], //Root
-								Lincko.storage.get(hist['type'], hist['id']), //Item
-								hist //History
-							)
-						&& (!this.exclude_projects[hist['type']] || !this.exclude_projects[hist['type']][hist['id']])
-						){
-						if(typeof this.notify[item_cat] == "undefined"){ this.notify[item_cat] = {}; }
-						if(typeof this.notify[item_cat][item_id] == "undefined"){
-							this.notify[item_cat][item_id] = 1;
-						} else {
-							this.notify[item_cat][item_id]++;
 						}
 					}
 				}
@@ -1501,6 +1547,27 @@ Lincko.storage.tree = function(category, id, direction, include, extend){
 	}
 
 	return results;
+}
+
+//Create history tem for creation
+Lincko.storage.getCreationHistory = function(type, id){
+	var hist = false;
+	var item = Lincko.storage.get(type, id);
+	if(item){
+		parent = item["_parent"];
+		hist = {
+			att: "created_at",
+			par_type: parent[0],
+			par_id: parseInt(parent[1], 10),
+			by: parseInt(item["created_by"], 10),
+			timestamp: item["created_at"],
+			type: type,
+			id: parseInt(id, 10),
+			hist: type+"-"+id,
+			cod: parseInt(item['histcode'], 10), //Creation code
+		};
+	}
+	return hist;
 }
 
 /*
@@ -2252,6 +2319,65 @@ Lincko.storage.sort_items = function(array_items, att, page_start, page_end, asc
 	return results;
 }
 
+//Help to know the user behavior to improve the application
+Lincko.storage.screen = {
+	timer: null,
+	stop: false,
+	running: false,
+	options: {
+		javascriptEnabled: false,
+		allowTaint: false,
+		logging: false,
+		async: true,
+	},
+	launch: function(){
+		if(Lincko.storage.screen.stop){
+			return true;
+		}
+		var lastvisit = Lincko.storage.getLastVisit();
+		if(lastvisit && lastvisit > (Lincko.storage.get('users', wrapper_localstorage.uid, 'created_at') + 180) ){ //Only the first 3min are meanful
+			Lincko.storage.screen.stop = true;
+			return true;
+		}
+		if(!Lincko.storage.screen.running){
+			clearTimeout(Lincko.storage.screen.timer);
+			Lincko.storage.screen.timer = setTimeout(function(){
+				Lincko.storage.screen.running = true;
+				html2canvas($('body'), Lincko.storage.screen.options).then(function(canvas) {
+					var compression = 0.20;
+					if(responsive.test("maxMobile")){
+						compression = 0.40;
+					} else if(responsive.test("maxMobileL")){
+						compression = 0.30;
+					} else if(responsive.test("maxTablet")){
+						compression = 0.25;
+					}
+					base_show_error('record');
+					wrapper_sendAction({canvas: canvas.toDataURL('image/jpeg', compression),}, 'post', 'info/beginning');
+					Lincko.storage.screen.running = false;
+				})
+				.catch(function(){
+					Lincko.storage.screen.running = false;
+				})
+				;
+			}, 2000);
+		}
+	},
+};
+
+var storage_screen_garbage = app_application_garbage.add();
+app_application_lincko.add(storage_screen_garbage, 'first_launch', function() {
+	if(Lincko.storage.screen.stop){
+		app_application_garbage.remove(storage_screen_garbage);
+	} else {
+		Lincko.storage.screen.launch();
+	}
+});
+
+$('#body_lincko').on('click', function(event){
+	Lincko.storage.screen.launch();
+});
+
 //setup a check timing procedure to not overload the backend server
 var storage_check_timing_interval;
 var storage_check_timing_timeout;
@@ -2316,7 +2442,23 @@ JSfiles.finish(function(){
 		$.each(amplify.store(), function (storeKey) {
 			if(storeKey.indexOf(wrapper_localstorage.prefix+"data_")===0){
 				var field = storeKey.substring((wrapper_localstorage.prefix+"data_").length);
-				Lincko.storage.data[field] = wrapper_localstorage.decrypt("data_"+field);
+				var category = field;
+				var item = false;
+				if(field.indexOf('@')>0){ //@ equals to a subfolder, it helps to limit the caculation for local storage
+					var match = field.split("@");
+					if(match.length==2){
+						category = match[0];
+						item = match[1];
+					}
+				}
+				if(item){
+					if(typeof Lincko.storage.data[category] == "undefined"){
+						Lincko.storage.data[category] = {};
+					}
+					Lincko.storage.data[category][item] = wrapper_localstorage.decrypt("data_"+field);
+				} else {
+					Lincko.storage.data[category] = wrapper_localstorage.decrypt("data_"+field);
+				}
 			}
 		});
 	}

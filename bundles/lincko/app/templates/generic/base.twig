@@ -61,6 +61,12 @@
 			<script>
 				var w69b_qrcode_decodeworker = "{{ _filelatest('/scripts/libs/barcode/w69b.qrcode.decodeworker.min.js') }}";
 			</script>
+
+			{# for Screenshot #}
+			<script src="{{ _filelatest('/scripts/libs/html2canvas/html2canvas.min.js') }}" type="text/javascript"></script>
+
+			<script src="{{ _filelatest('/scripts/libs/dom-to-image.min.js') }}" type="text/javascript"></script>
+
 		</div>
 		<div id="base_error"></div>
 		<input id="base_input_focusHelper" type="text" readonly="readonly" class="visibility_hidden" />{# this is an empty input used as focus control #}

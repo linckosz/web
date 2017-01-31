@@ -71,7 +71,7 @@ function base_show_error(msg, error) {
 	clearTimeout(base_error_timing);
 	//This avoid a double call
 	msg = wrapper_to_html(msg); //Escape the whole string for HTML displaying
-	if(typeof msg == "string" && php_nl2br(php_br2nl(msg)) != php_nl2br(php_br2nl($('#base_error').html()))){
+	if(typeof msg == "string" && $('#base_error').length > 0 && php_nl2br(php_br2nl(msg)) != php_nl2br(php_br2nl($('#base_error').html()))){
 		$('#base_error').html(msg);
 		if($('#base_error').is(':hidden')){
 			$("#base_error").velocity("transition.slideRightBigIn", {

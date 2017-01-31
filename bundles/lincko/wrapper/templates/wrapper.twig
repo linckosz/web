@@ -86,13 +86,7 @@
 <script src="{{ _filelatest('/scripts/libs/ckeditor/ckeditor.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/LZipperLite.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/trip/trip.min.js') }}" type="text/javascript"></script>
-
-{#
-	QR scanner
-	https://github.com/edi9999/jsqrcode
-
-<script src="{{ _filelatest('/scripts/libs/qrcode/index.js') }}" type="text/javascript"></script>
-#}
+<script src="{{ _filelatest('/scripts/libs/es6-promise.min.js') }}" type="text/javascript"></script>
 
 <script>
 
@@ -239,6 +233,10 @@ var wrapper_load_progress = {
 	},
 
 	move: function(value){
+		if(this.done){
+			//Do nothing since the page is open already
+			return true;
+		}
 		var time = 2000;
 		var that = this;
 		if(typeof value === 'number'){
@@ -259,15 +257,15 @@ var wrapper_load_progress = {
 						duration: time,
 						complete: function(){
 							if(value>=100){
-								that.done = true;
 								that.hide_progress_wall();
+								that.done = true;
 							}
 						},
 					}
 				);
 			} else {
-				that.done = true;
 				that.hide_progress_wall();
+				that.done = true;
 			}
 		}
 	},
@@ -347,6 +345,9 @@ JSfiles.loadLibraries = function(){
 		wrapper_load_progress.move(99);
 		//wrapper_load_progress.warning();
 	}, 30000);
+	setTimeout(function(){//In all cases open the page after 45s
+		wrapper_load_progress.move(100);
+	}, 45000);
 };
 
 var wrapper_fp = '{{ fingerprint }}';
@@ -398,6 +399,7 @@ if(CKEDITOR){
 
 //Check if WebWorker is available
 var webworker = false;
+var webperf = false;
 if (typeof Worker != 'undefined') {
 	webworker = new Worker("{{ _filelatest('/lincko/app/scripts/workers/worker.js') }}");
 	webperf   = new Worker("{{ _filelatest('/lincko/app/scripts/workers/worker.js') }}");
