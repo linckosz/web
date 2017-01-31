@@ -50,13 +50,6 @@ var storage_cb_success = function(msg, err, status, data){
 	
 };
 
-var storage_cb_complete = function(){
-	//Force to open th page, if not we may stuck to the loading page in case the user does not have updates
-	setTimeout(function(){
-		wrapper_load_progress.move(100);
-	}, 200);
-};
-
 //Launch the onboadring sync the first time it receive the database
 var storage_launch_onboarding = function(){
 	if(storage_first_onboarding){

@@ -209,10 +209,10 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 				delete wrapper_run[ajax_objForm.prop('id')];
 			}
 			wrapper_objForm = null;
-			//Force to launch some database actions if the function is available
-			if(typeof storage_cb_complete == 'function'){
-				storage_cb_complete();
-			}
+			//Force to open the page, if not we may stuck to the loading page in case the user does not have updates
+			setTimeout(function(){
+				wrapper_load_progress.move(100);
+			}, 200);
 		},
 	});
 }
