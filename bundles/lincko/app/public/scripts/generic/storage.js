@@ -2331,7 +2331,7 @@ Lincko.storage.screen = {
 		if(lastvisit && lastvisit > (Lincko.storage.get('users', wrapper_localstorage.uid, 'created_at') + 180) ){ //Only the first 3min are meanful
 			Lincko.storage.screen.stop = true;
 			return true;
-		} else (!lastvisit){
+		} else if(!lastvisit){
 			return true;
 		}
 		if(!Lincko.storage.screen.running){
