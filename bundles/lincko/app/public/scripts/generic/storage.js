@@ -2331,6 +2331,8 @@ Lincko.storage.screen = {
 		if(lastvisit && lastvisit > (Lincko.storage.get('users', wrapper_localstorage.uid, 'created_at') + 180) ){ //Only the first 3min are meanful
 			Lincko.storage.screen.stop = true;
 			return true;
+		} else (!lastvisit){
+			return true;
 		}
 		if(!Lincko.storage.screen.running){
 			clearTimeout(Lincko.storage.screen.timer);
@@ -2345,7 +2347,6 @@ Lincko.storage.screen = {
 					} else if(responsive.test("maxTablet")){
 						compression = 0.25;
 					}
-					base_show_error('record');
 					wrapper_sendAction({canvas: canvas.toDataURL('image/jpeg', compression),}, 'post', 'info/beginning');
 					Lincko.storage.screen.running = false;
 				})
