@@ -610,9 +610,4 @@ JSfiles.finish(function(){
 	if(isMobileApp() || navigator.userAgent.match(/MicroMessenger/i)){
 		$('#account_integration_wechat').addClass('display_none');
 	}
-
-	if(wrapper_hash){
-		//It helps to save the hashtag into PHP session because nginx is not able to see hashtag (so PHP does)
-		$('<iframe />', { name: 'wrapper_set_hash', id: 'wrapper_set_hash', src: wrapper_link['root']+"/hashtag/"+encodeURIComponent(wrapper_hash) }).addClass('display_none').appendTo($('#end_account'));
-	}
 });

@@ -59,7 +59,7 @@ function SetData(){
 		//Trigger hashtag only once in the application
 		if(isset($_COOKIE['hashtag'])){
 			$hashtag = $_COOKIE['hashtag'];
-			//Clean hastag once we are sure to be inside the application (= when the first latVisist call is done)
+			//Clean hashtag once we are sure to be inside the application (= when the first latVisist call is done)
 			if($app->request->getResourceUri()=='/wrapper/data/latest'){
 				unset($_COOKIE['hashtag']);
 				setcookie('hashtag', $hashtag, time()-3600, '/');
