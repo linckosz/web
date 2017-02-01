@@ -1,5 +1,7 @@
 <?php
 //你好 Léo & Luka
+namespace libs;
+
 //https://github.com/tonnycao/wechat-2
 /*
 使用方法：

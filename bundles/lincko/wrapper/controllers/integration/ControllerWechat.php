@@ -5,6 +5,7 @@ namespace bundles\lincko\wrapper\controllers\integration;
 use \bundles\lincko\wrapper\controllers\ControllerWrapper;
 use \libs\Controller;
 use \libs\OneSeventySeven;
+use \libs\Wechat;
 
 class ControllerWechat extends Controller {
 
@@ -55,6 +56,7 @@ class ControllerWechat extends Controller {
 				if(isset($result->errcode)){
 					$response = false;
 				}
+				/*
 				if(isset($result->access_token) && isset($result->openid) && !empty($result->openid)){
 					$param = array(
 						'access_token' => $result->access_token,
@@ -66,6 +68,7 @@ class ControllerWechat extends Controller {
 					$data->text->content = 'Hello!';
 					$this->curl_post('send_message', $param, $data);
 				}
+				*/
 			}
 		} else {
 			$response = false;
@@ -271,7 +274,7 @@ class ControllerWechat extends Controller {
 		}
 		if($grant_type=='send_message'){
 			//http://admin.wechat.com/wiki/index.php?title=Customer_Service_Messages
-			$url = 'https://api.wechat.com/cgi-bin/message/custom/send?access_token='.$param['access_token'];
+			$url = 'https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token='.$param['access_token'];
 		} else {
 			return false;
 		}
