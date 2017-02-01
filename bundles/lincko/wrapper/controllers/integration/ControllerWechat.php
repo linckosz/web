@@ -46,7 +46,7 @@ class ControllerWechat extends Controller {
 		if($response && isset($response['code']) && isset($response['state'])){
 			$state = $response['state'];
 			$param = array(
-				'appid' => $this->appid ,
+				'appid' => $this->appid,
 				'secret' => $this->secret,
 				'code' => $response['code'],
 			);
@@ -54,6 +54,17 @@ class ControllerWechat extends Controller {
 			if($response && $result = json_decode($response)){
 				if(isset($result->errcode)){
 					$response = false;
+				}
+				if(isset($result->access_token) && isset($result->openid) && !empty($result->openid)){
+					$param = array(
+						'access_token' => $result->access_token,
+					);
+					$data = new \stdClass;
+					$data->touser = $result->openid;
+					$data->msgtype = 'text';
+					$data->text = new \stdClass;
+					$data->text->content = 'Hello!';
+					$this->curl_post('send_message', $param, $data);
 				}
 			}
 		} else {
@@ -259,6 +270,7 @@ class ControllerWechat extends Controller {
 			$data = new \stdClass;
 		}
 		if($grant_type=='send_message'){
+			//http://admin.wechat.com/wiki/index.php?title=Customer_Service_Messages
 			$url = 'https://api.wechat.com/cgi-bin/message/custom/send?access_token='.$param['access_token'];
 		} else {
 			return false;
@@ -283,7 +295,7 @@ class ControllerWechat extends Controller {
 			)
 		);
 
-		$verbose_show = false;
+		$verbose_show = true;
 		if($verbose_show){
 			$verbose = fopen('php://temp', 'w+');
 			curl_setopt($ch, CURLOPT_VERBOSE, true);

@@ -16,4 +16,11 @@ $app = \Slim\Slim::getInstance();
 //print_r($data);
 //phpinfo();
 
-\libs\Watch::php($_GET, '$_GET', __FILE__, __LINE__, false, false, true);
+$arr = array(
+	'account' => '',
+	'password' => ''
+);
+$w = new Weixin($arr);
+var_dump($w->getAllUserInfo());//获取所有用户信息
+$a = $w->sendMessage('test');
+var_dump($a);

@@ -360,7 +360,7 @@ submenu_list['personal_lincko'] = {
 	"info": {
 		"style": "info",
 		"title": Lincko.Translation.get('app', 87, 'html'), //Enter the Email and Password of the Lincko account that you want to link.
-		"class": "submenu_deco_info ",
+		"class": "submenu_deco_info submenu_deco_info_wrap",
 		"now": function(Elem, subm){
 			Elem.find("[find=submenu_info_title]").addClass("submenu_deco_info_wrap");
 		},
