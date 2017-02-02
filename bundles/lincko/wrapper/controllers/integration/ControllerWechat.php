@@ -24,7 +24,7 @@ class ControllerWechat extends Controller {
 		$app = $this->app;
 		$this->appid = $app->lincko->integration->wechat['dev_appid'];
 		$this->secret = $app->lincko->integration->wechat['dev_secretapp'];
-		$this->process();
+		$this->process('dev');
 	}
 
 	public function lincko_get(){
@@ -32,10 +32,10 @@ class ControllerWechat extends Controller {
 		$app->lincko->data['force_open_website'] = false;
 		$this->appid = $app->lincko->integration->wechat['public_appid'];
 		$this->secret = $app->lincko->integration->wechat['public_secretapp'];
-		$this->process();
+		$this->process('pub');
 	}
 
-	public function process(){
+	protected function process($account){
 		$app = $this->app;
 		$response = $this->get;
 		$access_token = false;
@@ -56,19 +56,6 @@ class ControllerWechat extends Controller {
 				if(isset($result->errcode)){
 					$response = false;
 				}
-				/*
-				if(isset($result->access_token) && isset($result->openid) && !empty($result->openid)){
-					$param = array(
-						'access_token' => $result->access_token,
-					);
-					$data = new \stdClass;
-					$data->touser = $result->openid;
-					$data->msgtype = 'text';
-					$data->text = new \stdClass;
-					$data->text->content = 'Hello!';
-					$this->curl_post('send_message', $param, $data);
-				}
-				*/
 			}
 		} else {
 			$response = false;
@@ -98,16 +85,18 @@ class ControllerWechat extends Controller {
 				$response = false;
 			}
 
-			//if($response && $access_token && $openid && !empty($openid) && $result = json_decode($response)){
 			if($response && $access_token && $unionid && !empty($unionid) && $result = json_decode($response)){
 				$data = new \stdClass;
-				$data->party = 'wechat';
+				
 				/*
 					Using OpenID is more restrictive because it's different from DEV and PUBLIC account (UnionID is same),
 					but the advantage is that it will work on .cafe and .co (sandbox bruno wechat), and we can skip a confirmation because snsapi_base is providing OpenID without notification instead of snsapi_userinfo
+				$data->party = 'wechat_'.$account;
+				$data->party_id = 'oid.'.$account.'.'.$openid;
 				*/
-				//$data->party_id = 'oid.'.$openid;
+				$data->party = 'wechat';
 				$data->party_id = 'uid.'.$unionid;
+				$result->account = $account;
 				$data->data = $result;
 				$controller = new ControllerWrapper($data, 'post', false);
 				if($response = $controller->wrap_multi('integration/connect')){
@@ -156,13 +145,15 @@ class ControllerWechat extends Controller {
 					$unionid = $result->unionid;
 
 					$data = new \stdClass;
-					$data->party = 'wechat';
 					/*
 						Using OpenID is more restrictive because it's different from DEV and PUBLIC account (UnionID is same),
 						but the advantage is that it will work on .cafe and .co (sandbox bruno wechat), and we can skip a confirmation because snsapi_base is providing OpenID without notification instead of snsapi_userinfo
+					$data->party = 'wechat_'.$account;
+					$data->party_id = 'oid.'.$account.'.'.$openid;
 					*/
-					//$data->party_id = 'oid.'.$openid;
+					$data->party = 'wechat';
 					$data->party_id = 'uid.'.$unionid;
+					$result->account = $account;
 					$data->data = $result;
 					$controller = new ControllerWrapper($data, 'post', false);
 					if($response = $controller->wrap_multi('integration/connect')){

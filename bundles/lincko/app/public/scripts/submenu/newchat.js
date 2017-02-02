@@ -12,12 +12,19 @@ submenu_list['newchat'] = {
 		"class": "submenu_newchat_header",
 		"now": function(Elem, subm){
 			Elem.find("[find=submenu_title]").prop('id', subm.id+'_customized_title');
-			var single = Lincko.storage.get(subm.param.type, subm.param.id, 'single');
-			if(!single){
-				app_application_lincko.add(subm.id+'_customized_title', subm.param.type+"_"+subm.param.id, function() {
-					var title = Lincko.storage.getPlus(subm.param.type, subm.param.id);
+			if(subm.param.type == "history"){
+				app_application_lincko.add(subm.id+'_customized_title', "projects_"+subm.param.id, function() {
+					var title = '<span class="icon-projectActivity submenu_title_center_icon minMobileL">&nbsp;</span>'+Lincko.storage.getPlus("projects", subm.param.id);
 					Elem.find("[find=submenu_title]").html(title);
 				});
+			} else {
+				var single = Lincko.storage.get(subm.param.type, subm.param.id, 'single');
+				if(!single){
+					app_application_lincko.add(subm.id+'_customized_title', subm.param.type+"_"+subm.param.id, function() {
+						var title = Lincko.storage.getPlus(subm.param.type, subm.param.id);
+						Elem.find("[find=submenu_title]").html(title);
+					});
+				}
 			}
 		},
 	},

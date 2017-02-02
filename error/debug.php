@@ -1,5 +1,7 @@
 <?php
 use \libs\STR;
+use \libs\Weixin;
+use \libs\Wechat;
 /*
 	Write here anything you need as debugging information to be display on main page
 	For twig display use: {{ _debug() }} or {{ _debug(data) }}
@@ -16,6 +18,7 @@ $app = \Slim\Slim::getInstance();
 //print_r($data);
 //phpinfo();
 
+/*
 $arr = array(
 	'account' => '',
 	'password' => ''
@@ -24,3 +27,4 @@ $w = new Weixin($arr);
 var_dump($w->getAllUserInfo());//获取所有用户信息
 $a = $w->sendMessage('test');
 var_dump($a);
+*/

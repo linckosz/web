@@ -824,7 +824,7 @@ historyFeed.prototype.app_chat_feed_data_format = function(data)
 			&& this.current.id === this.pre.id
 			&& this.current.type === this.pre.type
 			&& this.current.timestamp > this.pre.timestamp - (4*3600) //Need 4H gap
-			&& JSON.stringify(this.current.par) == JSON.stringify(this.current.pre)
+			&& JSON.stringify(this.current.par) == JSON.stringify(this.pre.par)
 		){
 			continue;
 		}

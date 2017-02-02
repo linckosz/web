@@ -352,7 +352,7 @@ app_submenu_chatFeed.prototype.format_items = function(type, items, position, ne
 				&& current.id === pre.id
 				&& current.type === pre.type
 				&& current.timestamp > pre.timestamp - (4*3600) //Need 4H gap
-				&& JSON.stringify(this.current.par) == JSON.stringify(this.current.pre)
+				&& JSON.stringify(this.current.par) == JSON.stringify(this.pre.par)
 			){
 				continue;
 			}

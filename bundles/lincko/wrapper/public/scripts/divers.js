@@ -662,13 +662,14 @@ function wrapper_test(type, RCUD){
 		else if(RCUD==2){
 			wrapper_sendAction(
 				{
-					"id": 61,
+					"id": 64,
 					//"parent_id": 0, //OPTIONAL
 					//"title": "项目 "+Math.floor(Math.random() * 20), //OPTIONAL
 					//"description": "It's a project content"+Math.floor(Math.random() * 20), //OPTIONAL
 					"users>access": {
-						15:  true,//[true,false][Math.round(Math.random())],
+						197: [true,false][Math.round(Math.random())],
 					},
+					/*
 					"diy": JSON.stringify([ //Must be a array of multiple arrays [key, value], and stringified
 						['field 1', 123],
 						['field 2', 'abc def'],
@@ -676,6 +677,7 @@ function wrapper_test(type, RCUD){
 						['field 4', ['a', 'b', 'c']], //Every value as array will be converted as an object {0:'a', 1:'b', 2:'c'}
 						['field 5', {a:1, b:2, c:3}],
 					]),
+					*/
 				},
 				'post',
 				'project/update',
@@ -822,7 +824,7 @@ function wrapper_test(type, RCUD){
 		else if(RCUD==2){
 			wrapper_sendAction(
 				{
-					"id": 10455,
+					"id": 124,
 					//"parent_id": 4,
 					//"title": "Title "+Math.floor(Math.random() * 20), //OPTIONAL
 					//"comment": "Content "+Math.floor(Math.random() * 20), //OPTIONAL
@@ -832,16 +834,18 @@ function wrapper_test(type, RCUD){
 					//"approved": !Lincko.storage.data.tasks[32]['approved'], //OPTIONAL
 					//"status": 0, //OPTIONAL
 					//"progress":  Math.floor(Math.random() * 10), //OPTIONAL
-					"locked": true, //OPTIONAL
+					//"locked": true, //OPTIONAL
 					/*
 					"users>approver": {
 						6: [true,false][Math.round(Math.random())],
 						12: [true,false][Math.round(Math.random())],
 					},
+					*/
 					"users>in_charge": {
-						3: [true,false][Math.round(Math.random())],
-						12: [true,false][Math.round(Math.random())],
+						1057: [true,false][Math.round(Math.random())],
+						//12: [true,false][Math.round(Math.random())],
 					},
+					/*
 					"tasks>delay": {
 						85: Math.floor(Math.random() * 20000),
 					},

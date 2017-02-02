@@ -1,6 +1,8 @@
 <?php
 //你好 Léo & Luka
 namespace libs;
+//Modified by Bruno on Feb 1st, 2017
+//Work only with PUBLIC account
 
 //https://gist.github.com/guweigang/a1f6eddcb96c5486ffd0
 /**
@@ -11,7 +13,8 @@ namespace libs;
  * https://coding.net/u/cjango/p/wechat_sdk/git
  * 7月10日，完善红包功能，
  */
-namespace Tools;
+
+//namespace Tools; //bruno
 
 class Wechat {
 	/* 获取ACCESS_TOKEN URL */
@@ -723,7 +726,9 @@ class Wechat {
 			) = $value;
 			if($key >= 9) { break; } //最多只允许10条图文信息
 		}
-		$this->send['articles'] = $articles;
+		$this->send['news'] = array(
+			'articles' => $articles, //bruno
+		);
 	}
 	
 	/**
@@ -849,7 +854,7 @@ class Wechat {
 	 */
 	private function json_encode($array = array()) {
 		$array = str_replace("\\/", "/", json_encode($array));
-		$search = '#\\\u([0-9a-f]+)#ie';
+		$search = '#\\\u([0-9a-f]+)#i'; //bruno
 		if (strpos(strtoupper(PHP_OS), 'WIN') === false) {
 			$replace = "iconv('UCS-2BE', 'UTF-8', pack('H4', '\\1'))";//LINUX
 		} else {
@@ -1053,7 +1058,7 @@ class Wechat {
 		}
 		/* nodejs 控制台输出日志 */
 		$CSdata = ($method == 'POST' ? json_decode($params, true) : '');
-		K($opts[CURLOPT_URL], $CSdata);
+		//K($opts[CURLOPT_URL], $CSdata); //bruno
 		/* 初始化并执行curl请求 */
 		$ch     = curl_init();
 		curl_setopt_array($ch, $opts);
