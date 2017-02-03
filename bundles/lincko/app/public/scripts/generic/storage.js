@@ -245,10 +245,13 @@ Lincko.storage.display = function(prepare, force){
 //Function that check for latest updates
 /* PRIVATE METHOD */
 var storage_ajax_latest = {};
-Lincko.storage.getLatest = function(force){
+Lincko.storage.getLatest = function(force, callback){
 	var lastvisit = Lincko.storage.getLastVisit();
 	if(typeof force == 'boolean' && force == true){
 		lastvisit = 0; //Force to get the whole database
+	}
+	if(typeof callback != 'function'){
+		callback = null;
 	}
 	var arr = {
 		'lastvisit': lastvisit,
@@ -288,7 +291,10 @@ Lincko.storage.getLatest = function(force){
 					delete storage_ajax_latest[lastvisit];
 					storage_launch_onboarding();
 				}
-			});
+			},
+			null,
+			callback
+		);
 		storage_ajax_latest[lastvisit] = wrapper_xhr;
 	}
 };
