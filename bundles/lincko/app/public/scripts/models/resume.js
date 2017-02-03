@@ -15,6 +15,7 @@ var app_models_resume_format_sentence = function(comments_id, type, subm) {
 	var format = false; //Display it as a text by default
 	var base = 0;
 	var uid = 0;
+	var show = false;
 	var list = {};
 	if(comment){
 		try {
@@ -77,10 +78,12 @@ var app_models_resume_format_sentence = function(comments_id, type, subm) {
 			base = 100; //Daily
 		} else if(list[700]){
 			base = 700; //Weekly
+		} else if(list[800]){
+			base = 800; //Weekly
 		}
 
 		var data = {};
-		for (var i = base; i < base+100; i++) {
+		for (var i = base; i < base+100; i++) { //0->99
 			data[i] = '0';
 			if(list[i]){
 				if(typeof list[i] == 'object'){
@@ -93,20 +96,28 @@ var app_models_resume_format_sentence = function(comments_id, type, subm) {
 			}
 		}
 		
+		show = false;
 		if(uid==0){
 			if(base==100){
 				if(type==1){
-					sentence = Lincko.Translation.get('app', 3801, 'pure', data);
+					sentence = Lincko.Translation.get('app', 3801, 'pure', data); //The team completed <span find="101">[{101}] task(s)</span> yesterday. This represents [{106}]% of the total tasks remaining in the project. The team also added <span find="111">[{111}] note(s)</span> and <span find="121">[{121}] file(s)</span> yesterday. Currently, <span find="105">[{105}] task(s)</span> are overdue.
 					if(typeof data[108] != 'undefined' && data[108]!=0){
-						sentence = sentence + ' ' + Lincko.Translation.get('app', 3802, 'pure', data);
+						sentence = sentence + ' ' + Lincko.Translation.get('app', 3802, 'pure', data); //[{108}] completed the most tasks yesterday!
 					}
+					show = true;
 				}
 			} else if(base==700){
 				if(type==1){
-					sentence = Lincko.Translation.get('app', 3803, 'pure', data);
+					sentence = Lincko.Translation.get('app', 3803, 'pure', data); //The team completed <span find="701">[{701}] task(s)</span> last week. The project is currently [{709}]% complete. Currently, <span find="705">[{705}] task(s)</span> are overdue.
 					if(typeof data[708] != 'undefined' && data[708]!=0){
-						sentence = sentence + ' ' + Lincko.Translation.get('app', 3804, 'pure', data);
+						sentence = sentence + ' ' + Lincko.Translation.get('app', 3804, 'pure', data); //[{708}] completed the most tasks last week!
 					}
+					show = true;
+				}
+			} else if(base==800){
+				if(type==1){
+					sentence = Lincko.Translation.get('app', 3819, 'pure', data); //There was no activity last week. <span find="805">[{805}] task(s)</span> are overdue.
+					show = true;
 				}
 			}
 		} else {
@@ -118,6 +129,7 @@ var app_models_resume_format_sentence = function(comments_id, type, subm) {
 						data['motivation'] = Lincko.Translation.get('app', 3808, 'pure'); //That's more than yesterday. Great work!
 					}
 					sentence = Lincko.Translation.get('app', 3807, 'pure', data); //Hi [{username}]: You completed <span find="101">[{101}] task(s)</span> today![{motivation}]You have <span find="130">[{130}] task(s)</span> due tomorrow. You currently have <span find="105">[{105}] overdue task(s)</span>.
+					show = true;
 				}
 			} else if(base==700){
 				if(type==1){
@@ -130,6 +142,7 @@ var app_models_resume_format_sentence = function(comments_id, type, subm) {
 						data['motivation'] = Lincko.Translation.get('app', 3810, 'pure'); //That's more than last week! You're really making progress.
 					}
 					sentence = Lincko.Translation.get('app', 3809, 'pure', data); //Hi [{username}]: [{whatweek}]You completed <span find="701">[{701}] task(s)</span> this week.[{motivation}]You have <span find="730">[{730}] task(s)</span> due next week... but it's the weekend so make sure to take a break. You currently have <span find="705">[{705}] overdue task
+					show = true;
 				}
 			}
 		}
@@ -170,6 +183,7 @@ var app_models_resume_format_sentence = function(comments_id, type, subm) {
 			
 			105: ['tasks', 'app_models_resume_tasks_overdue', ],
 			705: ['tasks', 'app_models_resume_tasks_overdue', ],
+			805: ['tasks', 'app_models_resume_tasks_overdue', ],
 
 			111: ['notes', 'app_models_resume_notes', ],
 			711: ['notes', 'app_models_resume_notes', ],

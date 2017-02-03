@@ -674,8 +674,8 @@ var app_models_history = {
 	validHist: function(root_item, item, hist){
 		if(root_item["_type"]=="projects" && !hist["by"] && item["_type"]=="comments"){
 			comment = item['+comment'];
-			if(comment=="" || comment=="100" || comment=="700"){
-				//Exclude everything about chats inside project activity
+			if(comment==""){
+				//Exclude every empty comments
 				return false;
 			}
 		}
