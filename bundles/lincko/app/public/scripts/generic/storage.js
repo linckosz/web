@@ -1367,33 +1367,31 @@ Lincko.storage.cache = {
 				if(typeof type_reset != 'undefined' && typeof id_reset != 'undefined' && id_reset!=item_id){
 					continue;
 				}
-				if(typeof Lincko.storage.data['_history'] == 'undefined' || typeof Lincko.storage.data['_history'][item_cat+'-'+item_id] == 'undefined'){
-					continue;
-				}
 				last_notif = Lincko.storage.getLastNotif(item_cat, item_id);
-
-				for(var hist_id in Lincko.storage.data['_history'][item_cat+'-'+item_id]){
-					var hist = Lincko.storage.data['_history'][item_cat+'-'+item_id][hist_id];
-					if(
-						   hist['timestamp'] > last_notif
-						&& hist['by'] != wrapper_localstorage.uid
-						&& app_models_history.validHist(
-								Lincko.storage.data[item_cat][item_id], //Root
-								Lincko.storage.get(hist['type'], hist['id']), //Item
-								hist //History
-							)
-						&& (!this.exclude_projects[hist['type']] || !this.exclude_projects[hist['type']][hist['id']])
-						&& (typeof exclude_notify[hist['type']] == "undefined" || typeof exclude_notify[hist['type']][hist['id']] == "undefined")
-					){
-						if(typeof this.notify[item_cat] == "undefined"){ this.notify[item_cat] = {}; }
-						if(typeof this.notify[item_cat][item_id] == "undefined"){
-							this.notify[item_cat][item_id] = 1;
+				if(typeof Lincko.storage.data['_history'] != 'undefined' && typeof Lincko.storage.data['_history'][item_cat+'-'+item_id] != 'undefined'){
+					for(var hist_id in Lincko.storage.data['_history'][item_cat+'-'+item_id]){
+						var hist = Lincko.storage.data['_history'][item_cat+'-'+item_id][hist_id];
+						if(
+							   hist['timestamp'] > last_notif
+							&& hist['by'] != wrapper_localstorage.uid
+							&& app_models_history.validHist(
+									Lincko.storage.data[item_cat][item_id], //Root
+									Lincko.storage.get(hist['type'], hist['id']), //Item
+									hist //History
+								)
+							&& (!this.exclude_projects[hist['type']] || !this.exclude_projects[hist['type']][hist['id']])
+							&& (typeof exclude_notify[hist['type']] == "undefined" || typeof exclude_notify[hist['type']][hist['id']] == "undefined")
+						){
+							if(typeof this.notify[item_cat] == "undefined"){ this.notify[item_cat] = {}; }
+							if(typeof this.notify[item_cat][item_id] == "undefined"){
+								this.notify[item_cat][item_id] = 1;
+							} else {
+								this.notify[item_cat][item_id]++;
+							}
 						} else {
-							this.notify[item_cat][item_id]++;
+							if(typeof exclude_notify[hist['type']] == "undefined"){ exclude_notify[hist['type']] = {}; }
+							exclude_notify[hist['type']][hist['id']] = true; //For all projects exclude all chats items
 						}
-					} else {
-						if(typeof exclude_notify[hist['type']] == "undefined"){ exclude_notify[hist['type']] = {}; }
-						exclude_notify[hist['type']][hist['id']] = true; //For all projects exclude all chats items
 					}
 				}
 
