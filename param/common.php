@@ -153,6 +153,7 @@ $app->lincko->data = array(
 	'domain' => $app->lincko->domain,
 	'title' => $app->lincko->title,
 	'hashtag' => false,
+	'onboarding_screen' => false, //(use it only for test purpose, not on production mode. Production is later forced to false by safety)
 	'workspace' => '',
 	'lincko_back' => '', //Only used for development purpose "master-[bruno.]lincko.cafe"
 	'lincko_front' => '', //Only used for development purpose "[master-]bruno.lincko.cafe"

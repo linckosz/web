@@ -1,11 +1,14 @@
 var previewer = (function() {
-	function pic_preview(id) {
+	function pic_preview(id, full) {
 		var isNum = !isNaN(id);
 		var name ="";
 		var orientation = false;
 		var url = id;
 		var thumbnail = "";
 		var download = "";
+		if(typeof full != 'boolean'){
+			full = true;
+		}
 		if(isNum)
 		{
 			name = Lincko.storage.get("files", id, "name");
@@ -52,11 +55,13 @@ var previewer = (function() {
 			}
 		});
 
-		var img = new Image();
-		img.onload = function(){
-			target.css('background-image','url("'+this.src+'")');
-		};
-		img.src = url;
+		if(full){
+			var img = new Image();
+			img.onload = function(){
+				target.css('background-image','url("'+this.src+'")');
+			};
+			img.src = url;
+		}
 
 		return popout;
 	}
@@ -68,6 +73,10 @@ var previewer = (function() {
 		var url = id;
 		var thumbnail = "";
 		var download = "";
+		//if(Lincko.storage.get("files", id, "name")<100){
+		if(true){ //toto => Need to verify that the player is working for all devices first
+			return pic_preview(id, false);
+		}
 		if(isNum)
 		{
 			name = Lincko.storage.get("files", id, "name");

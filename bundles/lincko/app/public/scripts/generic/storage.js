@@ -1265,11 +1265,11 @@ Lincko.storage.cache = {
 			this.notify = {};
 			this.statistics = {};
 		} else if(Lincko.storage.get(type_reset, id_reset)){
-			if(this.notify[type_reset] && this.notify[type_reset][id_reset]){
+			if(typeof this.notify[type_reset]!='undefined' && typeof this.notify[type_reset][id_reset]!='undefined'){
 				delete this.notify[type_reset][id_reset];
 			}
-			if(this.notify[type_reset] && this.notify[type_reset][id_reset]){
-				delete this.notify[type_reset][id_reset];
+			if(typeof this.statistics[type_reset]!='undefined' && typeof this.statistics[type_reset][id_reset]!='undefined'){
+				delete this.statistics[type_reset][id_reset];
 			}
 		}
 
@@ -1353,6 +1353,11 @@ Lincko.storage.cache = {
 					}
 				}
 				*/
+			}
+			if(typeof type_reset != 'undefined' && typeof id_reset != 'undefined' && type_reset == 'chats'){
+				app_application_lincko.prepare('chats_'+id_reset);
+			} else {
+				app_application_lincko.prepare('chats');
 			}
 		}
 
@@ -1441,6 +1446,11 @@ Lincko.storage.cache = {
 					}
 				}
 
+			}
+			if(typeof type_reset != 'undefined' && typeof id_reset != 'undefined' && type_reset == 'projects'){
+				app_application_lincko.prepare('projects_'+id_reset);
+			} else {
+				app_application_lincko.prepare('projects');
 			}
 		}
 
@@ -2318,65 +2328,7 @@ Lincko.storage.sort_items = function(array_items, att, page_start, page_end, asc
 	return results;
 }
 
-//Help to know the user behavior to improve the application
-Lincko.storage.screen = {
-	timer: null,
-	stop: false,
-	running: false,
-	options: {
-		javascriptEnabled: false,
-		allowTaint: false,
-		logging: false,
-		async: true,
-	},
-	launch: function(){
-		if(Lincko.storage.screen.stop){
-			return true;
-		}
-		var lastvisit = Lincko.storage.getLastVisit();
-		if(lastvisit && lastvisit > (Lincko.storage.get('users', wrapper_localstorage.uid, 'created_at') + 180) ){ //Only the first 3min are meanful
-			Lincko.storage.screen.stop = true;
-			return true;
-		} else if(!lastvisit){
-			return true;
-		}
-		if(!Lincko.storage.screen.running){
-			clearTimeout(Lincko.storage.screen.timer);
-			Lincko.storage.screen.timer = setTimeout(function(){
-				Lincko.storage.screen.running = true;
-				html2canvas($('body'), Lincko.storage.screen.options).then(function(canvas) {
-					var compression = 0.20;
-					if(responsive.test("maxMobile")){
-						compression = 0.40;
-					} else if(responsive.test("maxMobileL")){
-						compression = 0.30;
-					} else if(responsive.test("maxTablet")){
-						compression = 0.25;
-					}
-					wrapper_sendAction({canvas: canvas.toDataURL('image/jpeg', compression),}, 'post', 'info/beginning');
-					Lincko.storage.screen.running = false;
-				})
-				.catch(function(){
-					Lincko.storage.screen.running = false;
-				})
-				;
-			}, 2000);
-		}
-	},
-};
 
-var storage_screen_garbage = app_application_garbage.add();
-app_application_lincko.add(storage_screen_garbage, 'first_launch', function() {
-	if(Lincko.storage.screen.stop){
-		app_application_garbage.remove(storage_screen_garbage);
-	} else {
-		Lincko.storage.screen.launch();
-	}
-});
-
-$('#body_lincko').on('click', function(event){
-	Lincko.storage.screen.launch();
-});
 
 //setup a check timing procedure to not overload the backend server
 var storage_check_timing_interval;
