@@ -322,7 +322,7 @@ var app_generic_state = {
 				var pid = item._id;
 				app_content_menu.selection(pid);
 			}
-			if(storage_first_launch && Lincko.storage.get("projects", item._id)){
+			if(!storage_first_launch && Lincko.storage.get("projects", item._id)){
 				app_generic_state_action();
 			} else {
 				Lincko.storage.getLatest(false, app_generic_state_action);
@@ -344,7 +344,7 @@ var app_generic_state = {
 					}
 				}
 			}
-			if(storage_first_launch && Lincko.storage.get("tasks", item._id)){
+			if(!storage_first_launch && Lincko.storage.get("tasks", item._id)){
 				app_generic_state_action();
 			} else {
 				Lincko.storage.getLatest(false, app_generic_state_action);
@@ -363,7 +363,7 @@ var app_generic_state = {
 					}
 				}
 			}
-			if(storage_first_launch && Lincko.storage.get("notes", item._id)){
+			if(!storage_first_launch && Lincko.storage.get("notes", item._id)){
 				app_generic_state_action();
 			} else {
 				Lincko.storage.getLatest(false, app_generic_state_action);
@@ -418,7 +418,7 @@ var app_generic_state = {
 					}
 				}
 			}
-			if(storage_first_launch && Lincko.storage.get("files", item._id)){
+			if(!storage_first_launch && Lincko.storage.get("files", item._id)){
 				app_generic_state_action();
 			} else {
 				Lincko.storage.getLatest(false, app_generic_state_action);
@@ -442,7 +442,7 @@ var app_generic_state = {
 					submenu_Build("newchat", true, false, {'type': 'chats','id': target_id,'title': title}, false);
 				}
 			}
-			if(storage_first_launch && Lincko.storage.get("chats", item._id)){
+			if(!storage_first_launch && Lincko.storage.get("chats", item._id)){
 				app_generic_state_action();
 			} else {
 				Lincko.storage.getLatest(false, app_generic_state_action);
@@ -481,7 +481,7 @@ var app_generic_state = {
 					}
 				}
 			}
-			if(storage_first_launch && Lincko.storage.get("comments", item._id)){
+			if(!storage_first_launch && Lincko.storage.get("comments", item._id)){
 				app_generic_state_action();
 			} else {
 				Lincko.storage.getLatest(false, app_generic_state_action);
@@ -506,7 +506,7 @@ var app_generic_state = {
 					submenu_Build("newchat", true, false, {'type': parent._type,'id': parent._id,'title': title, find_item: "messages_"+target_id}, false);
 				}
 			}
-			if(storage_first_launch && Lincko.storage.get("messages", item._id)){
+			if(!storage_first_launch && Lincko.storage.get("messages", item._id)){
 				app_generic_state_action();
 			} else {
 				Lincko.storage.getLatest(false, app_generic_state_action);
@@ -546,7 +546,7 @@ var app_generic_state = {
 					}, 1000, menu, next, hide, param, preview, animate);
 				}
 			}
-			if(storage_first_launch){
+			if(!storage_first_launch){
 				app_generic_state_action();
 			} else {
 				Lincko.storage.getLatest(false, app_generic_state_action);
