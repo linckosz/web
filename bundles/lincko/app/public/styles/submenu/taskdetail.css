@@ -673,6 +673,11 @@ td.submenu_taskdetail_share .fa{
 .submenu_taskdetail_links_card [find=card_center]{
 	height: 64px;
 }
+.submenu_taskdetail_links_card [find=card_center] [find=title]{
+	word-break: break-all;
+    max-height: 58px;
+}
+
 .submenu_taskdetail_links_card [find=action_div]{
 	top: 0px;
     position: absolute;
