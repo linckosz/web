@@ -2,10 +2,16 @@
 <html>
 <head>
 
-<script type="text/javascript">
-	window.location.href = "{{ appstore }}";
-</script>
+<script>
+	setTimeout(function(){
+		location.href = "{{ appstore }}";
+	}, 500);
+	//Force to refresh the age after 10s
+	setTimeout(function(){
+		location.href = document.documentURI;
+	}, 10000);
 
+</script>
 
 <style type="text/css">
 	body {

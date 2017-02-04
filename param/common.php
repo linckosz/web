@@ -169,7 +169,7 @@ $app->lincko->data = array(
 
 //App store
 $app->lincko->data['appstore'] = 'https://play.google.com/store/apps/details?id=com.lincko.lincko'; //Use Android by default (Google play)
-if(isset($_SERVER['HTTP_USER_AGENT']) && preg_match("/iPhone|iPad|iPod/ui", $_SERVER['HTTP_USER_AGENT'])){
+if(isset($_SERVER['HTTP_USER_AGENT']) && preg_match("/iPhone|iPad|iPod|Macintosh|iOS/ui", $_SERVER['HTTP_USER_AGENT'])){
 	$app->lincko->data['appstore'] = 'https://itunes.apple.com/us/app/lincko/id1194913804?mt=8'; //(Apple US)
 }
 
