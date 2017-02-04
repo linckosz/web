@@ -223,10 +223,10 @@ Submenu.prototype.Add_itemSelector = function() {
 	var items_files = null;
 	var items_notes = null;
 	if(!that.param.hideType || !that.param.hideType.files){
-		items_files = Lincko.storage.list('files', null, null, 'projects', projectID, false);
+		items_files = Lincko.storage.list('files', null, null, 'projects', projectID, true);
 	}
 	if(!that.param.hideType || !that.param.hideType.notes){
-		items_notes = Lincko.storage.list('notes', null, null, 'projects', projectID, false);
+		items_notes = Lincko.storage.list('notes', null, null, 'projects', projectID, true);
 	}
 	//use items_all to check for whether files/notes are hidden
 	var items_all = {
