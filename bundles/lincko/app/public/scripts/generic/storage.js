@@ -51,12 +51,14 @@ var storage_cb_success = function(msg, err, status, data){
 };
 
 //Launch the onboadring sync the first time it receive the database
+var storage_launch_onboarding_timeout;
 var storage_launch_onboarding = function(){
 	if(storage_first_onboarding){
-		setTimeout(function(){
-			app_application_lincko.prepare('launch_onboarding', true);
+		clearTimeout(storage_launch_onboarding_timeout);
+		storage_launch_onboarding_timeout = setTimeout(function(){
+			storage_first_onboarding = !onboarding.launch();
+			//app_application_lincko.prepare('launch_onboarding', true);
 		}, 300); //The few ms help to make sure we finish previous operation that may make the focus lost
-		storage_first_onboarding = false;
 		return true;
 	}
 	return false;

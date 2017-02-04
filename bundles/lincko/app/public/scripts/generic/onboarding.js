@@ -87,13 +87,31 @@ var onboarding = {
 			|| !ob_settings.projects[1] 
 			|| !Lincko.storage.get('projects', ob_settings.projects[1])){ return false; }
 
+
 		//this onboarding has already been completed
 		if(	   	ob_settings 
 			&& 	ob_settings.sequence 
 			&& !ob_settings.sequence[1]){ return true; }
 
+
+		//open sample project
+		app_content_menu.selection(ob_settings.projects[1]);
+		if(app_content_menu.projects_id != ob_settings.projects[1]){ return false; } //onboarding launch fail if not directed to sample project
+
+
 		onboarding.on = true; //onboarding is on here to prevent forceOpen main menu
 		return onboarding.scripts.welcome(ob_settings.projects[1]);
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -769,8 +787,6 @@ onboarding.scripts[5] = function(fn_continue){
 
 //welcome onboarding
 onboarding.scripts['welcome'] = function(project_id){
-	var projectOpenSuccess = app_content_menu.selection(project_id);
-	if(!projectOpenSuccess){ return false; }
 
 	if(!$('#'+onboarding.id_welcome_bubble).length){
 		$('body').append($('<div>').prop('id', onboarding.id_welcome_bubble).addClass(onboarding.id_welcome_bubble));
@@ -1320,9 +1336,7 @@ onboarding.scripts['welcome'] = function(project_id){
 
 
 
-
-
-
+/* old method -- now onboarding.launch() is directly launched in storage_launch_onboarding in storage.js
 var id_onboarding_garbage_launch = app_application_garbage.add('onboarding_garbage_launch');
 app_application_lincko.add(id_onboarding_garbage_launch, ['launch_onboarding', 'settings'], function(){
 
@@ -1331,9 +1345,5 @@ app_application_lincko.add(id_onboarding_garbage_launch, ['launch_onboarding', '
 		app_application_garbage.remove(id_onboarding_garbage_launch);
 	}
 
-	/*var launched = onboarding.launch();
-	//stop looking for onboarding launch if it is already launched OR onboarding settings object exists but wasn't launched (user already finished)
-	if(launched){
-		app_application_garbage.remove(id_onboarding_garbage_launch);
-	}*/
 });
+*/
