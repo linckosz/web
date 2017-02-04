@@ -44,6 +44,7 @@
 	font-size: 14px;
 	max-height: 40px;
 	height: auto;
+	word-break: break-all;
 }
 
 .app_layers_notes_noteslist .skylist_card_time{

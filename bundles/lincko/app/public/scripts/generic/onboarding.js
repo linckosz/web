@@ -1,6 +1,6 @@
 var onboarding = {
 	forceOff: false,
-	clickAwaySkip: false,
+	clickAwaySkip: false, //if true, clicking on black overlay will skip
 	on: false, //will be set to true for the duration of onboarding
 	project_id: null, //onboarding project id
 	overlays: {}, //functions and other controls for main menu and content overlays
