@@ -167,6 +167,12 @@ $app->lincko->data = array(
 	'force_open_website' => true,
 );
 
+//App store
+$app->lincko->data['appstore'] = 'https://play.google.com/store/apps/details?id=com.lincko.lincko'; //Use Android by default (Google play)
+if(isset($_SERVER['HTTP_USER_AGENT']) && preg_match("/iPhone|iPad|iPod/ui", $_SERVER['HTTP_USER_AGENT'])){
+	$app->lincko->data['appstore'] = 'https://itunes.apple.com/us/app/lincko/id1194913804?mt=8'; //(Apple US)
+}
+
 //Messages to be sent along with rendering
 $app->lincko->flash = array();
 

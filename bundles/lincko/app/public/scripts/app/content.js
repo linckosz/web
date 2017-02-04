@@ -113,7 +113,7 @@ var app_content_menu = {
 		//Do nothing if we are in the same menu of the same project
 		if(app_content_menu.projects_id == projects_id && app_content_menu.menu == menu){
 			if(responsive.test("maxMobileL")){ app_application.forceClose(); }
-			return true;
+			return false;
 		} else {
 			submenu_Hideall(true);
 		}
@@ -240,6 +240,7 @@ var app_content_menu = {
 		} else {
 			app_application_lincko.prepare(false, true);
 		}
+		return true;
 	},
 }
 

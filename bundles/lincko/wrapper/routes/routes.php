@@ -24,6 +24,11 @@ $app->group('/wrapper', function () use ($app) {
 
 });
 
+$app->get('/appstore', function () use($app) {
+	$app->render('/bundles/lincko/wrapper/templates/appstore.twig');
+})
+->name('appstore');
+
 $app->get(
 	'/captcha(/:total_num(/:width(/:height)))',
 	'\bundles\lincko\wrapper\controllers\ControllerCaptcha:get_captcha'
