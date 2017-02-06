@@ -36,7 +36,7 @@ $app->get(
 ->conditions(array(
 	'total_num' => '\d+',
 	'width' => '\d+',
-	'height' => '\d+'
+	'height' => '\d+',
 ))
 ->name('captcha');
 

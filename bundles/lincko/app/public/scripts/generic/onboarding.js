@@ -369,6 +369,7 @@ onboarding.overlays = {
 			elem.click(function(){
 				onboarding.forceOff = true;
 				if(onboarding.currentTrip){
+					app_application_action(5); //Next onborading step
 					onboarding.currentTrip.stop();
 				}
 				onboarding.clear();

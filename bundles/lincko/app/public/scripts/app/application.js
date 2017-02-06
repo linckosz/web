@@ -683,6 +683,12 @@ $('#app_application_project_block').click(function(){
 	app_application.move('project');
 });
 
+var app_application_action = function(action){
+	if(typeof action == 'undefined'){
+		return false;
+	}
+	wrapper_sendAction({action: action}, 'post', 'info/action');
+}
 
 //BEGIN - highlight for quick create task feature
 var app_application_global_selection = "";
