@@ -314,17 +314,22 @@ burger_keyboard.prototype.destroy = function(){
 
 var burger_search = {
 	users: function(listToSearch, word){
-		var listToReturn = [];
+		var list_byUsername = [];
+		var list_byFullname = [];
 
 		$.each(listToSearch, function(i, obj){
 			var user = Lincko.storage.get('users', obj.val);
 			if(user){
-				var user_search_result = Lincko.storage.searchArray('word', word, [user], ['-firstname', '-lastname', '-username'], true);
-				if(user_search_result.length){ listToReturn.push(obj); }
+				if(Lincko.storage.searchArray('word', word, [user], ['-username'], true).length){
+					list_byUsername.push(obj);
+				}
+				else if(Lincko.storage.searchArray('word', word, [user], ['-firstname', '-lastname'], true).length){
+					list_byFullname.push(obj);
+				}
 			}
 		});
 
-		return listToReturn;
+		return list_byUsername.concat(list_byFullname);
 	},
 }
 
