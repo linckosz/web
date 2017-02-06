@@ -118,6 +118,19 @@ submenu_list['settings'] = {
 			}
 		},
 	},
+	"support": {
+		"style": "button",
+		"title": Lincko.Translation.get('app', 89, 'html'), //Contact Us
+		"action": function(){
+			window.location.href = wrapper_link['support'];
+		},
+		"class": "",
+		"now": function(Elem, subm){
+			if(isMobileApp()){
+				Elem.addClass('display_none');
+			}
+		},
+	},
 	"signout": {
 		"style": "button",
 		"title": Lincko.Translation.get('app', 38, 'html'), //Sign out
