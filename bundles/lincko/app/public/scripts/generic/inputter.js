@@ -913,4 +913,5 @@ inputter.prototype.buildLayer = function()
 		//dom.resize(); it will trigger the window.resize();
 	});
 
+
 }
