@@ -990,59 +990,54 @@ Submenu.prototype.Add_taskdetail = function() {
 	/*---END OF all meta---*/
 
 	/*---description---*/
-	elem = $('#-submenu_taskdetail_description').clone().prop('id',that.id+'_submenu_taskdetail_description');
-	var elem_description_text = elem.find('[find=description_text]');
-	elem_description_text.html(item['-comment']).focus(function(){
-
-	});
-
-	var load_img_timeout = null;
-	elem_description_text.find('img').one('load', function(){
-		clearTimeout(load_img_timeout);
-		load_img_timeout = setTimeout(function(){
-			$(window).resize();
-		}, 500);
-	});
-
-	if(taskid != 'new' && that.param.type != 'files'){
-		//description autosave for tasks, notes, files
-		elem_description_text.blur(function(event){ 
-			setTimeout(function(){
-				if(that.submenu_hide){ return; } //no need to update comment if this is after submenu_hide 
-				var old_comment = item['-comment'];
-				var new_comment = elem_description_text.html();
-				if(new_comment == '<p><br></p>'){ return false; } //dont update if it is ckedditor default empty elem
-
-				if(old_comment != new_comment){
-					var param = {id: taskid};
-					if(item['-comment']){ 
-						item['-comment'] = new_comment; 
-						param.comment = new_comment;
-					}
-
-					if(that.param.type == 'tasks'){
-						skylist.sendAction.tasks(param, item, routeObj.update);
-					}
-					else{
-						wrapper_sendAction(param, 'post', routeObj.update);
-					}
-					Lincko.storage.data[item._type][item._id] = item;
-					var param_prepare = {};
-					param_prepare[item._type+'_'+item._id] = {'-comment': true};
-					app_application_lincko.prepare(item._type+'_'+item._id, true, param_prepare);
-				}
-			}, 1000); //inside setTimeout to be able to occur after a possible submenu_hide
-				
-		});//end of blur event
-	}
-
-
 	if(that.param.type != 'files'){ //no file description for beta
-		
-		taskdetail_clean_descriptionFiles(elem);
-		taskdetail_description_attachFileClick(elem);
+		elem = $('#-submenu_taskdetail_description').clone().prop('id',that.id+'_submenu_taskdetail_description');
+		var elem_description_text = elem.find('[find=description_text]');
+		elem_description_text.html(item['-comment']).focus(function(){
+
+		});
+
+		var load_img_timeout = null;
+		elem_description_text.find('img').one('load', function(){
+			clearTimeout(load_img_timeout);
+			load_img_timeout = setTimeout(function(){
+				$(window).resize();
+			}, 500);
+		});
+
+		if(taskid != 'new' && that.param.type != 'files'){
+			//description autosave for tasks, notes, files
+			elem_description_text.blur(function(event){ 
+				setTimeout(function(){
+					if(that.submenu_hide){ return; } //no need to update comment if this is after submenu_hide 
+					var old_comment = item['-comment'];
+					var new_comment = elem_description_text.html();
+					if(new_comment == '<p><br></p>'){ return false; } //dont update if it is ckedditor default empty elem
+
+					if(old_comment != new_comment){
+						var param = {id: taskid};
+						if(item['-comment']){ 
+							item['-comment'] = new_comment; 
+							param.comment = new_comment;
+						}
+
+						if(that.param.type == 'tasks'){
+							skylist.sendAction.tasks(param, item, routeObj.update);
+						}
+						else{
+							wrapper_sendAction(param, 'post', routeObj.update);
+						}
+						Lincko.storage.data[item._type][item._id] = item;
+						var param_prepare = {};
+						param_prepare[item._type+'_'+item._id] = {'-comment': true};
+						app_application_lincko.prepare(item._type+'_'+item._id, true, param_prepare);
+					}
+				}, 1000); //inside setTimeout to be able to occur after a possible submenu_hide
+					
+			});//end of blur event
+		}
 		submenu_taskdetail.append(elem);
-	}
+	} //end of description
 
 
 	/*-----subtasks---------------------*/
@@ -2525,7 +2520,10 @@ Submenu.prototype.Add_taskdetail = function() {
 			}
 			elem_editorToolbar.empty(); //clear a simple div, no need for recursive
 			elem_description_text.prop('contenteditable', true).html(Lincko.storage.get(that.param.type, item['_id'], '-comment'));
+			taskdetail_clean_descriptionFiles(elem_description_text);
+
 			editorInst = linckoEditor('submenu_taskdetail_description_text_'+that.md5id, 'submenu_taskdetail_description_toolbar_'+that.md5id, editor_param);
+
 
 			//not already in focus, add overlay to cover toolbar
 			if(!elem_description_text.is(":focus")){
@@ -2586,6 +2584,10 @@ Submenu.prototype.Add_taskdetail = function() {
 			isLockedByMe = false;
 			var item_locked_by = Lincko.storage.get(that.param.type, item['_id']);
 			elem_description_text.prop('contenteditable', false).html(item_locked_by['-comment']);
+			taskdetail_clean_descriptionFiles(elem_description_text);
+			linckoEditor_attachFileClick(elem_description_text);
+
+
 			var id_elem_locked = elem_editorToolbar.prop('id')+'_locked';
 			elem_editorToolbar.empty().append($('#-submenu_taskdetail_description_toolbar_locked').clone().prop('id', id_elem_locked));
 
@@ -3016,25 +3018,6 @@ var taskdetail_generateCommentThread = function(rootComment, includeContainer, f
 
 }
 
-
-var taskdetail_description_attachFileClick = function(elem_description){
-	if(!(elem_description instanceof $)){ elem_description = $(elem_description); }
-	var elem_files = elem_description.find('.linckoEditor_fileWrapper');
-	if(elem_files.length){
-		$.each(elem_files, function(i, elem){
-			var elem = $(elem);
-			var id = elem.attr('files_id');
-			if(!id){ return; }
-			elem.click(function(){ 
-				submenu_Build( 'taskdetail', true, null, 
-					{
-						"type":'files', 
-						"id":id,
-					}, true);
-			});
-		});
-	}
-}
 
 var taskdetail_getRandomInt = function(min, max){
 	function getRandomInt(min, max) {

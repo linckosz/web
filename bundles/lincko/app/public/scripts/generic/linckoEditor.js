@@ -1,4 +1,19 @@
 /*-----linckoEditor------------------------------------*/
+
+//file icons inside the editor becomes clickable
+function linckoEditor_attachFileClick(elem){
+	if(!(elem instanceof $)){ elem = $(elem); }
+	elem.off('click.linckoEditor_files').on('click.linckoEditor_files', function(event){
+		var elem_file = $(event.target).closest('.linckoEditor_fileWrapper', elem);
+        if(elem_file.length && elem_file.attr('files_id')){
+        	submenu_Build( 'taskdetail', true, null, 
+				{
+					"type":'files', 
+					"id":elem_file.attr('files_id'),
+				}, false);
+        }
+	});
+}
 function linckoEditor(elem, toolbarID, param){
 	//editorInst = CKEDITOR.replace(elem);
 	var editorInst = CKEDITOR.inline( elem, {
@@ -12,10 +27,14 @@ function linckoEditor(elem, toolbarID, param){
 
 	//clicking on links will open in new tab/window
     $(editorInst.element.$).click(function(event) {
+    	var elem_editor = this;
         if(typeof event.target.href != 'undefined') {
         	device_download(event.target.href, '_blank', false);
+        	return;
         }
     });
+    linckoEditor_attachFileClick(editorInst.element.$);
+
 
 	editorInst.Lincko_param = {};
 	editorInst.Lincko_param = param;
@@ -106,9 +125,8 @@ function linckoEditor(elem, toolbarID, param){
 
 	            		var elem_fileUpload = $('<span temp_id="'+app_upload_files.lincko_files[val.index].lincko_temp_id+'" id="'+elem_img_id+'"class="linckoEditor_fileProgress" contenteditable="false">0</span>');
 	            		
-
 	            		var fileType = app_upload_files.lincko_files[val.index].files[0].type;
-	            		if(('image').indexOf(fileType.toLowerCase()) != -1){
+	            		if((fileType.toLowerCase()).indexOf('image') == -1){ //if it not an image
 	            			var fileName = app_upload_files.lincko_files[val.index].files[0].name;
 	            			var regex_fileExt = new RegExp(/\.([0-9a-z]+$)/);
 	            			var match = fileName.match(regex_fileExt);
@@ -159,35 +177,37 @@ function linckoEditor(elem, toolbarID, param){
 	            		&& !app_upload_files.lincko_files[val.index]
 	            		&& $elem_img_id.hasClass('linckoEditor_fileProgress')){ //on completion, replace with proper html
 
-	            		var elem_replace;
 	            		var tmp = editor.Lincko_param.files[elem_img_id].temp_id;
-		            	var file = Lincko.storage.list('files',1,{temp_id: tmp})[0];
+	            		var file = Lincko.storage.list('files',1,{temp_id: tmp})[0]; //check if file object is ready
+	            		if(file){
+	            			var elem_replace;
+			            	if($elem_img_id.hasClass('fa')){ //if file
+			            		$elem_img_id.removeClass('linckoEditor_fileProgress').html('&nbsp;').removeAttr('temp_id').removeAttr('contenteditable');
+			            		var elem_replace = $('#-linckoEditor_fileWrapper').clone().prop('id','').attr('file_id',file['_id']);
+			            		elem_replace.find('[find=icon]').append($elem_img_id.clone());
+			            		elem_replace.find('[find=name]').text(file['+name']);
+			            		elem_replace.click(function(){
+			            			submenu_Build(
+										'taskdetail', true, null, {
+											"type":'files', 
+											"id":file['_id'],
+										}, false);
+			            		});
+			            	}
+			            	else{//if image
+			            		var file_url = Lincko.storage.getLink(file['_id']);
+			            		elem_replace = $('<img>')
+			            				.prop('src',file_url)
+			            				.addClass('submenu_taskdetail_description_img')
+			            				.load(function(){
+			            					$(window).resize();
+			            				});
+			            	}
 
-		            	if($elem_img_id.hasClass('fa')){ //if file
-		            		$elem_img_id.removeClass('linckoEditor_fileProgress').html('&nbsp;').removeAttr('temp_id').removeAttr('contenteditable');
-		            		var elem_replace = $('#-linckoEditor_fileWrapper').clone().prop('id','').attr('file_id',file['_id']);
-		            		elem_replace.find('[find=icon]').append($elem_img_id.clone());
-		            		elem_replace.find('[find=name]').text(file['+name']);
-		            		elem_replace.click(function(){
-		            			submenu_Build(
-									'taskdetail', true, null, {
-										"type":'files', 
-										"id":file['_id'],
-									}, true);
-		            		});
-		            	}
-		            	else{//if image
-		            		var file_url = Lincko.storage.getLink(file['_id']);
-		            		elem_replace = $('<img>')
-		            				.prop('src',file_url)
-		            				.addClass('submenu_taskdetail_description_img')
-		            				.load(function(){
-		            					$(window).resize();
-		            				});
-		            	}
+			            	$elem_img_id.replaceWith(elem_replace);
+		            		$('#'+editorInst.Lincko_param.submenuInst.id).trigger('canSave');
 
-		            	$elem_img_id.replaceWith(elem_replace);
-	            		$('#'+editorInst.Lincko_param.submenuInst.id).trigger('canSave');
+	            		}            		
 	            	}
 	            	else{
 	            		if(app_upload_files.lincko_files[index]){
