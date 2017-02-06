@@ -14,7 +14,11 @@ submenu_list['newchat'] = {
 			Elem.find("[find=submenu_title]").prop('id', subm.id+'_customized_title');
 			if(subm.param.type == "history"){
 				app_application_lincko.add(subm.id+'_customized_title', "projects_"+subm.param.id, function() {
-					var title = '<span class="icon-projectActivity submenu_title_center_icon minMobileL">&nbsp;</span>'+Lincko.storage.getPlus("projects", subm.param.id);
+					if(subm.param.type=="projects" && subm.param.id==Lincko.storage.getMyPlaceholder()['_id']){
+						var title = '<span class="icon-projectActivity submenu_title_center_icon minMobileL">&nbsp;</span>'+Lincko.Translation.get('app', 2502, 'html'); //Personal Space
+					} else {
+						var title = '<span class="icon-projectActivity submenu_title_center_icon minMobileL">&nbsp;</span>'+Lincko.storage.getPlus("projects", subm.param.id);
+					}
 					Elem.find("[find=submenu_title]").html(title);
 				});
 			} else {

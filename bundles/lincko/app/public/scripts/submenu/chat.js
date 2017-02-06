@@ -69,6 +69,7 @@ submenu_list['chat_add_user'] = {
 		'hide': true,
 		"class": "base_pointer",
 		"action": function(Elem, subm) {
+			submenu_chat_search.value_qrcode = null;
 			if(base_scanner && 'dispose' in base_scanner){
 				base_scanner.dispose();
 				$("#"+subm.id+"_radar").recursiveEmpty();
@@ -80,10 +81,21 @@ submenu_list['chat_add_user'] = {
 		"title": Lincko.Translation.get('app', 77, 'html'), //Scan a user QR code
 		"action": function(Elem, subm){
 			if(base_has_webcam){
+				var input  = subm.Wrapper().find("[find=submenu_app_chat_search_input]");
+				input.val("");
+				var text_help = subm.Wrapper().find("[find=submenu_app_chat_search_text_help]");
+				if(text_help.is(':hidden')){
+					text_help.velocity("transition.fadeIn", {
+						mobileHA: hasGood3Dsupport,
+						duration: 100,
+						delay: 50,
+					});
+				}
 				submenu_chat_new_user_result(subm, null, "scanner");
 			}
 		},
 		"now": function(Elem, subm){
+			submenu_chat_search.value_qrcode = null;
 			if(!base_has_webcam){
 				Elem.addClass('display_none');
 			}
@@ -466,6 +478,7 @@ Submenu.prototype.Add_ChatAddUser = function() {
 		'submenu_hide_'+that.preview+'_'+that.id,
 		function(){
 			var subm = this.action_param;
+			submenu_chat_search.value_qrcode = null;
 			if(base_scanner && 'dispose' in base_scanner){
 				base_scanner.dispose();
 				$("#"+subm.id+"_radar").recursiveEmpty();
@@ -623,6 +636,7 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 	else if(chat_status == "scanner"){
 		Elem_scanner.removeClass("display_none");
 		Elem_radar.removeClass("display_none");
+		submenu_chat_search.value_qrcode = null;
 		if(base_scanner && 'dispose' in base_scanner){
 			base_scanner.dispose();
 			Elem_radar.recursiveEmpty();
@@ -655,6 +669,7 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 	}
 
 	if(chat_status != "scanner"){
+		submenu_chat_search.value_qrcode = null;
 		if(base_scanner && 'dispose' in base_scanner){
 			base_scanner.dispose();
 			Elem_radar.addClass("display_none");
