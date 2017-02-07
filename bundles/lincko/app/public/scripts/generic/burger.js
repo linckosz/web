@@ -151,7 +151,7 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter
 		var selection = getSelection();
 	    var focus_node = selection.focusNode;
 	    focus_node.normalize();
-	    if(focus_node.nodeValue){ latestChar = (focus_node.nodeValue).slice(-1); }
+	    if(focus_node.nodeValue){ latestChar_node = (focus_node.nodeValue).slice(-1); }
 	    
 
 	    var currentText = elem.text();
@@ -176,7 +176,11 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter
 
 	  	/*For Chinese only, when inputting pinyin:
 	      if waiting for combined character (229) but latestChar is not Chinese, return and act on next keyup*/
-	    if(latestChar && event.which == 229 && !latestChar.match(/[\u4E00-\u9FA5]/)){ 
+	    if(	   latestChar 
+	    	&& latestChar != burger_shortcuts.at 
+	    	&& latestChar != burger_shortcuts.plus 
+	    	&& latestChar != burger_shortcuts.plusAlt  
+	    	&& event.which == 229 && !latestChar.match(/[\u4E00-\u9FA5]/)){ 
 	    	latestChar_prev = latestChar;
 	    	return; 
 	    }
@@ -186,7 +190,7 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter
 			&& (	
 				(latestChar == burger_shortcuts.at && that.shortcuts.at)
 			|| 	(latestChar == burger_shortcuts.plus && that.shortcuts.plus)
-			|| 	(latestChar == burger_shortcuts.Alt && that.shortcuts.plus)		)){
+			|| 	(latestChar == burger_shortcuts.plusAlt && that.shortcuts.plus)		)){
 			
 			that.i_caretBegin = caretIndex;
 
