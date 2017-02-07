@@ -1321,7 +1321,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		}
 
 		//thumbnail or icons
-		if(item_link.category && item_link.category == 'image'){
+		if(item_link.category && (item_link.category == 'image' || item_link.category == 'video')){
 			var thumb_url = Lincko.storage.getLinkThumbnail(item_link['_id']);
 			if(thumb_url){
 				elem_linkcard.find('[find=card_leftbox]').append($('<img />').prop('src',thumb_url)).removeClass('fa-file-o').click(function(event){
