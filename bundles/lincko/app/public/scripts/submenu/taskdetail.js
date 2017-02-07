@@ -2595,7 +2595,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			var item_locked_by = Lincko.storage.get(that.param.type, item['_id']);
 			elem_description_text.prop('contenteditable', false).html(item_locked_by['-comment']);
 			taskdetail_clean_descriptionFiles(elem_description_text);
-			linckoEditor_attachFileClick(elem_description_text);
+			linckoEditor_attachFileClick(elem_description_text, that.preview);
 
 
 			var id_elem_locked = elem_editorToolbar.prop('id')+'_locked';

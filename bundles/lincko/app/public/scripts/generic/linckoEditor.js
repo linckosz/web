@@ -1,8 +1,10 @@
 /*-----linckoEditor------------------------------------*/
 
 //file icons inside the editor becomes clickable
-function linckoEditor_attachFileClick(elem){
+function linckoEditor_attachFileClick(elem, preview){
 	if(!(elem instanceof $)){ elem = $(elem); }
+	if(typeof preview != 'boolean'){ var preview = false; }
+
 	elem.off('click.linckoEditor_files').on('click.linckoEditor_files', function(event){
 		var elem_file = $(event.target).closest('.linckoEditor_fileWrapper', elem);
         if(elem_file.length && elem_file.attr('files_id')){
@@ -10,7 +12,7 @@ function linckoEditor_attachFileClick(elem){
 				{
 					"type":'files', 
 					"id":elem_file.attr('files_id'),
-				}, false);
+				}, preview);
         }
 	});
 }
@@ -25,6 +27,11 @@ function linckoEditor(elem, toolbarID, param){
 			}
 		} );
 
+
+	editorInst.Lincko_param = {};
+	editorInst.Lincko_param = param;
+	editorInst.Lincko_param.files = {};
+
 	//clicking on links will open in new tab/window
     $(editorInst.element.$).click(function(event) {
     	var elem_editor = this;
@@ -33,12 +40,10 @@ function linckoEditor(elem, toolbarID, param){
         	return;
         }
     });
-    linckoEditor_attachFileClick(editorInst.element.$);
+    var preview = false;
+    if(editorInst.Lincko_param.submenuInst){ preview = editorInst.Lincko_param.submenuInst.preview; }
+    linckoEditor_attachFileClick(editorInst.element.$, preview);
 
-
-	editorInst.Lincko_param = {};
-	editorInst.Lincko_param = param;
-	editorInst.Lincko_param.files = {};
 
 
 	var submenu_content = $('#'+editorInst.Lincko_param.submenuInst.id).find("[find=submenu_wrapper_content]");
