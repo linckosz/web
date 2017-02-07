@@ -259,9 +259,10 @@ Lincko.storage.getLatest = function(force, callback){
 		'lastvisit': lastvisit,
 		'show_error': false,
 	};
+	//If a previous action has been launched, we don't start it immediatly
 	//This helps to avoid too many backend runs
 	//http://www.ajax-tutor.com/130/handle-response/
-	if(storage_ajax_latest[lastvisit] && storage_ajax_latest[lastvisit]['readyState']!=4){
+	if(storage_ajax_latest[lastvisit] && storage_ajax_latest[lastvisit]['readyState']!=4 && lastvisit>0 && callback==null){
 		return true; //Don't launch anymore latest if one is already running
 	} else {
 		for(var i in storage_ajax_latest){
@@ -2348,7 +2349,9 @@ var storage_check_timing = {
 		if(typeof now !== 'boolean'){ now = false; }
 		if(typeof timer !== 'boolean'){ timer = false; }
 		if(now){
-			Lincko.storage.getLatest();
+			setTimeout(function(){
+				Lincko.storage.getLatest();
+			}, 3000); //In case we do send an action, there will be no flashing
 		}
 		if(clear || storage_check_timing.current != time){
 			storage_check_timing.current = time;
