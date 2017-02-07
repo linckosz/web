@@ -1,4 +1,16 @@
+.linckoEditor_fileProgress{
+    min-height: 100px;
+    min-width: 100px;
+    display: inline-block;
+    background-color: rgba(182, 214, 232, 0.20);
+    text-align: center;
+    line-height: 100px;
+    font-size: 40px;
+}
 .linckoEditor_fileProgress.fa{
+    min-height: auto;
+    min-width: auto;
+    line-height: normal;
 	font-size: 14px;
 	vertical-align: bottom;
 	display: inline-block;

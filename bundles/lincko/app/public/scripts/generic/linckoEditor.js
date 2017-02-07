@@ -160,12 +160,11 @@ function linckoEditor(elem, toolbarID, param){
 												'text-align': 'center',
 												'line-height': img.naturalHeight+'px',
 												'font-size': (img.naturalHeight)/3+'px',
+												'overflow': 'hidden',
 											});
 	            	}
 
 	            	var index = editor.Lincko_param.files[elem_img_id].index;
-
-
 
 
 
