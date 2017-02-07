@@ -1324,10 +1324,20 @@ Submenu.prototype.Add_taskdetail = function() {
 		if(item_link.category && (item_link.category == 'image' || item_link.category == 'video')){
 			var thumb_url = Lincko.storage.getLinkThumbnail(item_link['_id']);
 			if(thumb_url){
-				elem_linkcard.find('[find=card_leftbox]').append($('<img />').prop('src',thumb_url)).removeClass('fa-file-o').click(function(event){
-					event.stopPropagation();
-					previewer.pic(item_link['_id']);
-				});
+				var elem_leftbox = elem_linkcard.find('[find=card_leftbox]').append($('<img />').prop('src',thumb_url)).removeClass('fa-file-o');
+
+				if(item_link.category == 'image'){
+					elem_leftbox.click(function(event){
+						event.stopPropagation();
+						previewer.pic(item_link['_id']);
+					});
+				}
+				else if(item_link.category == 'video'){
+					elem_leftbox.click(function(event){
+						event.stopPropagation();
+						previewer.video(item_link['_id']);
+					});
+				}				
 			}
 		}
 		else if(item_link._type == 'tasks'){
