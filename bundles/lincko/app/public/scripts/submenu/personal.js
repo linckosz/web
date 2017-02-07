@@ -17,7 +17,6 @@ submenu_list['personal_settings'] = {
 		"style": "profile_input",
 		"title": Lincko.Translation.get('app', 47, 'html'), //Nickname
 		"value": function(){
-			debugger;
 			var val = Lincko.storage.get('users', wrapper_localstorage.uid, 'username');
 			if(!val){ return ""; }
 			return wrapper_to_html(val);
