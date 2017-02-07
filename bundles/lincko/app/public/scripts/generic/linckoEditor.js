@@ -113,7 +113,7 @@ function linckoEditor(elem, toolbarID, param){
             	progress: 0,
             };
 
-            app_application_lincko.add(elem, 'upload', function(){
+            app_application_lincko.add(elem, ['upload', 'files'], function(){
             	//use this.action_param, unique to each anonymous function
             	$.each(editor.Lincko_param.files, function(elem_img_id,val){
             		var $elem_img_id = $('#'+elem_img_id);
