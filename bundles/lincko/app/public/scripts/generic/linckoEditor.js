@@ -112,6 +112,7 @@ function linckoEditor(elem, toolbarID, param){
             	temp_id: null,
             	progress: 0,
             };
+            console.log(editor.Lincko_param.files);
 
             app_application_lincko.add(elem, ['upload', 'files'], function(){
             	//use this.action_param, unique to each anonymous function
@@ -182,16 +183,9 @@ function linckoEditor(elem, toolbarID, param){
 	            			var elem_replace;
 			            	if($elem_img_id.hasClass('fa')){ //if file
 			            		$elem_img_id.removeClass('linckoEditor_fileProgress').html('&nbsp;').removeAttr('temp_id').removeAttr('contenteditable');
-			            		var elem_replace = $('#-linckoEditor_fileWrapper').clone().prop('id','').attr('file_id',file['_id']);
-			            		elem_replace.find('[find=icon]').append($elem_img_id.clone());
+			            		var elem_replace = $('#-linckoEditor_fileWrapper').clone().prop('id','').attr('files_id',file['_id']);
+			            		elem_replace.find('[find=icon]').append($elem_img_id.clone().prop('id', ''));
 			            		elem_replace.find('[find=name]').text(file['+name']);
-			            		elem_replace.click(function(){
-			            			submenu_Build(
-										'taskdetail', true, null, {
-											"type":'files', 
-											"id":file['_id'],
-										}, false);
-			            		});
 			            	}
 			            	else{//if image
 			            		var file_url = Lincko.storage.getLink(file['_id']);
@@ -212,6 +206,7 @@ function linckoEditor(elem, toolbarID, param){
 	            		if(app_upload_files.lincko_files[index]){
 		            		var progress = app_upload_files.lincko_files[index].lincko_progress;
 			            	editor.Lincko_param.files[elem_img_id].progress = progress;
+			            	console.log($elem_img_id);
 			            	$elem_img_id.html(progress);
 			            }
 	            	}
