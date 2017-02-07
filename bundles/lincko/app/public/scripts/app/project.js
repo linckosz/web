@@ -93,12 +93,19 @@ var mainMenu = {
 				}
 				if(force || pid!=parseInt(item.attr('pid'), 10) || timestamp!=parseInt(item.attr('timestamp'), 10)){
 					item.find("[find=app_project_projects_title]").html(wrapper_to_html(projectList[i]['+title']));
+
+					var progress = app_models_projects_getPercentComplete(pid);
+					item.find('[find=app_project_projects_progress] [find=percent]').text(progress);
+					item.find('[find=app_project_projects_progress] [find=bar]').css('width', progress+'%');
+
+					/*
 					tasks = app_models_projects_adjust_format(Lincko.storage.cache.getStatistics('projects', pid, 'tasks'));
 					notes = app_models_projects_adjust_format(Lincko.storage.cache.getStatistics('projects', pid, 'notes'));
 					files = app_models_projects_adjust_format(Lincko.storage.cache.getStatistics('projects', pid, 'files'));
 					item.find("[find=app_project_projects_tasks]").html(wrapper_to_html(tasks));
 					item.find("[find=app_project_projects_notes]").html(wrapper_to_html(notes));
 					item.find("[find=app_project_projects_files]").html(wrapper_to_html(files));
+					*/
 					item.attr('pid', pid);
 					item.attr('timestamp', timestamp);
 				}
@@ -282,10 +289,12 @@ app_application_lincko.add("app_project_projects_tab", ["first_launch", "project
 	if(this.updated.first_launch || this.updated.projects){
 		if(app_project_update_block){
 			app_project_update_launch_projects = true;
-		} else if(!storage_first_launch){
-			mainMenu.initProjectTab();
-		} else {
-			mainMenu.initProjectTab(true);
+		}
+		else{
+			var force;
+			if(storage_first_launch){ force = true; }
+			if(this.updated.projects && this.updated.projects._children){ force = true; }
+			mainMenu.initProjectTab(force);
 		}
 	}
 });

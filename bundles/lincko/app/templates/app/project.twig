@@ -42,13 +42,16 @@
 					<div id="app_project_item_projects_{{ i }}" pid="-1" timestamp="-1" class="base_MainElementText app_project_projects_item display_none">
 						<div>
 							<div find="app_project_projects_title"></div>
-							<div class="app_project_projects_stats">
+							<div class="app_project_projects_stats display_none">
 								<span find="app_project_projects_tasks" class="font_monospace">&nbsp;&nbsp;0</span>
 								<span class="app_project_projects_stats_icon icon-Tasks"></span>&nbsp;
 								<span find="app_project_projects_notes" class="font_monospace">&nbsp;&nbsp;0</span>
 								<span class="app_project_projects_stats_icon icon-New-Notes"></span>&nbsp;
 								<span find="app_project_projects_files" class="font_monospace">&nbsp;&nbsp;0</span>
 								<span class="app_project_projects_stats_icon icon-Cloud-Files"></span>
+							</div>
+							<div find="app_project_projects_progress" class="app_project_projects_progress">
+								<div find="bar"><div find="percent"></div></div>
 							</div>
 						</div>
 					</div>
