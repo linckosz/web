@@ -112,7 +112,6 @@ function linckoEditor(elem, toolbarID, param){
             	temp_id: null,
             	progress: 0,
             };
-            console.log(editor.Lincko_param.files);
 
             app_application_lincko.add(elem, ['upload', 'files'], function(){
             	//use this.action_param, unique to each anonymous function
@@ -206,7 +205,6 @@ function linckoEditor(elem, toolbarID, param){
 	            		if(app_upload_files.lincko_files[index]){
 		            		var progress = app_upload_files.lincko_files[index].lincko_progress;
 			            	editor.Lincko_param.files[elem_img_id].progress = progress;
-			            	console.log($elem_img_id);
 			            	$elem_img_id.html(' '+app_upload_files.lincko_files[index].lincko_name +' -- '+progress);
 			            }
 	            	}
