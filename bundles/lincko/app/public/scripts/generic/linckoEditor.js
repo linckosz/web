@@ -207,7 +207,7 @@ function linckoEditor(elem, toolbarID, param){
 		            		var progress = app_upload_files.lincko_files[index].lincko_progress;
 			            	editor.Lincko_param.files[elem_img_id].progress = progress;
 			            	console.log($elem_img_id);
-			            	$elem_img_id.html(progress);
+			            	$elem_img_id.html(' '+app_upload_files.lincko_files[index].lincko_name +' -- '+progress);
 			            }
 	            	}
 
