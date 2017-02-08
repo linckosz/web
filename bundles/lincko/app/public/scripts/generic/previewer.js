@@ -39,8 +39,9 @@ var previewer = (function() {
 		}
 		else
 		{
-			popout.find('.pic_preview_icon').on("click", function(){
+			popout.find('.pic_preview_icon').on("click", function(event){
 				device_download(download, '_blank', name);
+				event.stopPropagation();
 			});
 		}
 		$("body").append(popout);
@@ -48,11 +49,9 @@ var previewer = (function() {
 			$('#'+event.data).recursiveRemove();
 		});
 
-		popout.find('.pic_preview_wrapper').click(function(event){
+		popout.find('.pic_preview_wrapper').click(function(event){debugger;
 			if(!responsive.test("maxMobileL")){return; }
-			if($(event.target).hasClass('pic_preview_wrapper') || $(event.target).hasClass('pic_wrapper')){
-				$('#'+Elem_id).recursiveRemove();
-			}
+			$('#'+Elem_id).recursiveRemove();
 		});
 
 		if(full){
@@ -103,8 +102,9 @@ var previewer = (function() {
 		}
 		else
 		{
-			popout.find('.pic_preview_icon').on("click", function(){
+			popout.find('.pic_preview_icon').on("click", function(event){
 				device_download(download, '_blank', name);
+				event.stopPropagation();
 			});
 		}
 		$("body").append(popout);
@@ -114,9 +114,7 @@ var previewer = (function() {
 
 		popout.find('.pic_preview_wrapper').click(function(event){
 			if(!responsive.test("maxMobileL")){ return; }
-			if($(event.target).hasClass('pic_preview_wrapper') || $(event.target).hasClass('pic_wrapper')){
-				$('#'+Elem_id).recursiveRemove();
-			}
+			$('#'+Elem_id).recursiveRemove();
 		});
 
 		app_previewer_StartPlayer('pic_wrapper_video_'+id, url, thumbnail, 100, true, true);

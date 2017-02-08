@@ -249,7 +249,7 @@ if($app->lincko->domain=='lincko.com'){
 $app->lincko->wrapper = array(
 	'url' => 'https://'.$app->lincko->data['lincko_back'].'api.'.$app->lincko->domain.':10443/',
 	'api_key' => '87f1eb12192652c8f1811804a7e18ef8', //API key for www.lincko.net
-	'captcha_timing' => 300, //How many second we avoid the same IP to creation account without Captcha
+	'captcha_timing' => 0, //[toto] 300, //How many second we avoid the same IP to creation account without Captcha
 );
 
 ////////////////////////////////////

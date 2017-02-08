@@ -54,6 +54,7 @@ var app_models_history = {
 				event.preventDefault();
 				if(link){
 					window.location.href = top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/#"+link;
+					window.focus();
 				}
 				this.close();
 			},
@@ -132,7 +133,7 @@ var app_models_history = {
 							app_models_history.notify(
 								Lincko.storage.getHistoryInfo(hist[i]).title,
 								wrapper_to_html(item["+title"]),
-								"tasks-"+hist[i]['id']
+								"tasks-"+btoa(hist[i]['id'])
 							);
 						}
 					}
@@ -166,9 +167,9 @@ var app_models_history = {
 							continue;
 						}
 						users = item['_users'];
-						target = "projects-"+hist[i]['id'];
+						target = "projects-"+btoa(hist[i]['id']);
 						if(hist[i]["par"] && hist[i]["par"]["tid"] && Lincko.storage.get("tasks", hist[i]["par"]["tid"])){
-							target = "tasks-"+hist[i]["par"]["tid"];
+							target = "tasks-"+btoa(hist[i]["par"]["tid"]);
 						}
 						if(users && users[wrapper_localstorage.uid]){
 							app_models_history.notify(
@@ -232,7 +233,7 @@ var app_models_history = {
 							app_models_history.notify(
 								msg,
 								title,
-								"messages-"+hist[i]['id']
+								"messages-"+btoa(hist[i]['id'])
 							);
 						}
 					}
@@ -290,7 +291,7 @@ var app_models_history = {
 							app_models_history.notify(
 								msg,
 								title,
-								"messages-"+list[i]['_id']
+								"messages-"+btoa(list[i]['_id'])
 							);
 						}
 					}
@@ -458,7 +459,7 @@ var app_models_history = {
 							app_models_history.notify(
 								msg,
 								title,
-								"comments-"+hist[i]['id'],
+								"comments-"+btoa(hist[i]['id']),
 								false,
 								profile_pic
 							);
@@ -529,7 +530,7 @@ var app_models_history = {
 							app_models_history.notify(
 								Lincko.storage.getHistoryInfo(hist[i]).title + ":\n  "+wrapper_to_html(item["+name"]),
 								title,
-								"files-"+hist[i]['id'],
+								"files-"+btoa(hist[i]['id']),
 								false,
 								profile_pic
 							);
@@ -559,7 +560,7 @@ var app_models_history = {
 						app_models_history.notify(
 							wrapper_to_html(list[i]["-username"]),
 							Lincko.Translation.get('app', 72, 'html'), //You have an invitation request
-							"submenu-chat_list%false%false%true",
+							"submenu-"+btoa("chat_list%false%false%true"),
 							24,
 							profile_pic
 						);
@@ -591,7 +592,7 @@ var app_models_history = {
 						app_models_history.notify(
 							wrapper_to_html(item["-username"]),
 							Lincko.Translation.get('app', 79, 'html'), //Invitation accepted
-							"submenu-chat_list%false%false%true",
+							"submenu-"+btoa("chat_list%false%false%true"),
 							24,
 							profile_pic
 						);

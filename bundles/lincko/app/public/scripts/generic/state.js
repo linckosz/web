@@ -277,24 +277,31 @@ var app_generic_state = {
 			var location_hash = url.split("#");
 			if(location_hash.length == 2)
 			{
-				var hash = location_hash[1].split("-");//url ='https://lincko.com/#tasks-56';
+				var hash = location_hash[1].split(/-(.*)/, 2);//url ='https://lincko.com/#tasks-base64(56)';
 			}
 			else
 			{
 				hash = [];
 			}
 		} else {
-			var hash = location.hash.substr(1).split("-");
+			var hash = location.hash.substr(1).split(/-(.*)/, 2);;
 		}
 		
 		if(hash.length==2){
 			var type = hash[0];
-			var id = parseInt(hash[1], 10);
-			this.quick_item = Lincko.storage.get(type, id);
+			try {
+				var id = atob(hash[1]);
+			} catch(e) {
+				var id = hash[1];
+			}
+			if($.isNumeric(id)){
+				id = parseInt(id, 10);
+				this.quick_item = Lincko.storage.get(type, id);
+			}
 			if(!this.quick_item){
 				this.quick_item = {
-					_type: hash[0],
-					_id: hash[1],
+					_type: type,
+					_id: id,
 				}
 			}
 		}

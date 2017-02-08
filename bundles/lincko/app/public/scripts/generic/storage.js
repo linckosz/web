@@ -86,7 +86,7 @@ var storage_local_storage = {
 			storage_local_storage.timing = 6000;
 		}
 		storage_local_storage.timeout = setTimeout(function(){
-			if(!storage_first_launch){
+			if(storage_first_launch){
 				storage_local_storage.stop();
 				storage_local_storage.timer();
 			}
@@ -115,7 +115,7 @@ var storage_local_storage = {
 			if(typeof Lincko.storage.last_visit != 'undefined' && Lincko.storage.last_visit !== null){
 				wrapper_localstorage.encrypt('lastvisit', Lincko.storage.last_visit);
 			}
-			clearTimeout(storage_local_storage.timeout);
+			storage_local_storage.stop();
 			storage_local_storage.timing = 6000;
 		}, storage_local_storage.timing);
 	},

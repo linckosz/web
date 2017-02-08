@@ -2,7 +2,7 @@ base_input_field.firstname = {
 	format: Lincko.Translation.get('web', 4, 'js'), //First name format: - 104 characters max
 	tags: {
 		pattern: "^.{0,104}$",
-		required: true,
+		required: "required",
 		maxlength: 104,
 	},
 	valid: function(text){
@@ -18,7 +18,7 @@ base_input_field.lastname = {
 	format: Lincko.Translation.get('web', 5, 'js'), //Last name format: - 104 characters max
 	tags: {
 		pattern: "^.{0,104}$",
-		required: true,
+		required: "required",
 		maxlength: 104,
 	},
 	valid: function(text){
@@ -34,7 +34,7 @@ base_input_field.username = {
 	format: Lincko.Translation.get('web', 3, 'js'), //Username format: - 104 characters max - Without space
 	tags: {
 		pattern: "^\\S{0,104}$",
-		required: true,
+		required: "required",
 		maxlength: 104,
 	},
 	valid: function(text){

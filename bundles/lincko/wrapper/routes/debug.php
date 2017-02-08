@@ -13,12 +13,12 @@ $app->group('/debug', function () use ($app) {
 		});
 		$app->get('/md5', function () use($app) {
 			include($app->lincko->path.'/error/md5.php');
-		});
+		})
+		->name('debug_md5_get');
 		$app->get('/twig', function () use($app) {
 			$app->render('/bundles/lincko/wrapper/templates/debug.twig', array(
 				'data' => 'a data',
-			))
-			->name('debug_md5_get');
+			));
 		});
 	}
 
