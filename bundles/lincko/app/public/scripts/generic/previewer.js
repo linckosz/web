@@ -49,7 +49,7 @@ var previewer = (function() {
 			$('#'+event.data).recursiveRemove();
 		});
 
-		popout.find('.pic_preview_wrapper').click(function(event){debugger;
+		popout.find('.pic_preview_wrapper').click(function(event){
 			if(!responsive.test("maxMobileL")){return; }
 			$('#'+Elem_id).recursiveRemove();
 		});
