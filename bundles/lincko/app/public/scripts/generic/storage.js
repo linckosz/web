@@ -349,7 +349,6 @@ Lincko.storage.update = function(partial, info){
 	var updatedAttributes = {};
 	var currentRange = '';
 	var children_list = {};
-	var _children = {};
 	for(var category in Lincko.storage.data) {
 		children_list[category] = {};
 		for(var id in Lincko.storage.data[category]) {
@@ -406,14 +405,40 @@ Lincko.storage.update = function(partial, info){
 					new_item = true;
 				}
 
-				if(Lincko.storage.data && Lincko.storage.data[i] && Lincko.storage.data[i][j] && Lincko.storage.data[i][j]['_children']){ //to keep _children. partial doesnt include _children. later, childrenList() will rebuild this anyways
-					_children = Lincko.storage.data[i][j]['_children'];
-					Lincko.storage.data[i][j] = partial[i][j];
-					Lincko.storage.data[i][j]._children = _children;
+
+				var _children = false;
+				var hist_at = false;
+				var hist_by = false;
+
+				if(Lincko.storage.data && Lincko.storage.data[i] && Lincko.storage.data[i][j]){
+					if(Lincko.storage.data[i][j]['_children']){ //to keep _children. partial doesnt include _children. later, childrenList() will rebuild this anyways
+						_children = Lincko.storage.data[i][j]['_children'];
+					}
+					if(Lincko.storage.data[i][j]['hist_at']){
+						hist_at = Lincko.storage.data[i][j]['hist_at'];
+					}
+					if(Lincko.storage.data[i][j]['hist_by']){
+						hist_by = Lincko.storage.data[i][j]['hist_by'];
+					}
 				}
-				else{
-					Lincko.storage.data[i][j] = partial[i][j];
-				}
+
+				Lincko.storage.data[i][j] = partial[i][j];
+
+				if(_children){ Lincko.storage.data[i][j]._children = _children; }
+				if(hist_at){ Lincko.storage.data[i][j].hist_at = hist_at; }
+				if(hist_by){ Lincko.storage.data[i][j].hist_by = hist_by; }
+
+
+
+
+				// if(Lincko.storage.data && Lincko.storage.data[i] && Lincko.storage.data[i][j] && Lincko.storage.data[i][j]['_children']){ //to keep _children. partial doesnt include _children. later, childrenList() will rebuild this anyways
+				// 	_children = Lincko.storage.data[i][j]['_children'];
+				// 	Lincko.storage.data[i][j] = partial[i][j];
+				// 	Lincko.storage.data[i][j]._children = _children;
+				// }
+				// else{
+				// 	Lincko.storage.data[i][j] = partial[i][j];
+				// }
 
 				/*
 				//build "new" for item
@@ -444,8 +469,16 @@ Lincko.storage.update = function(partial, info){
 			for(var j in partial[i]) {
 				if(typeof Lincko.storage.data[i][j] == 'undefined'){ Lincko.storage.data[i][j] = {}; }
 				for(var k in partial[i][j]) {
+					var hist = partial[i][j][k];
 					//We add, we don't overwrite
-					Lincko.storage.data[i][j][k] = partial[i][j][k];
+					Lincko.storage.data[i][j][k] = hist;
+
+					//add hist_at and hist_by to the appropriate object
+					if(!Lincko.storage.data[hist.type][hist.id].hist_at 
+					|| hist.timestamp > Lincko.storage.data[hist.type][hist.id].hist_at){
+						Lincko.storage.data[hist.type][hist.id].hist_at = hist.timestamp;
+						Lincko.storage.data[hist.type][hist.id].hist_by = hist.by;
+					}
 				}
 				storage_local_storage.prepare(i+"@"+j); //We split the hstory storage to limit CPU calculation
 			}

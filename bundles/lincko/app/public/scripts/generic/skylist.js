@@ -474,7 +474,10 @@ skylist.prototype.generate_Lincko_itemsList = function(){
 			that.Lincko_itemsList = Lincko.storage.sort_items(that.Lincko_itemsList, 'duedate', 0, -1, true);
 		}
 		else if( that.list_type == 'notes'){
-			that.Lincko_itemsList = Lincko.storage.sort_items(that.Lincko_itemsList, 'updated_at', 0, -1, false);
+			that.Lincko_itemsList = Lincko.storage.sort_items(that.Lincko_itemsList, 'hist_at'/*'updated_at'*/, 0, -1, false);
+		}
+		else if(that.list_type == 'files'){
+			//use the default sorting, which is by creation time
 		}
 	}
 }
@@ -562,7 +565,7 @@ skylist.prototype.filter_by_sort_alt = function(items, filter){
 	}
 	else{
 		if( that.list_type == "tasks" && filter ){
-			items_filtered = Lincko.storage.sort_items( items, 'updated_at', 0, -1, false );
+			items_filtered = Lincko.storage.sort_items( items, 'hist_at'/*'updated_at'*/, 0, -1, false );
 		}
 		else{
 			items_filtered = items;
@@ -1870,7 +1873,7 @@ skylist.prototype.addTask = function(item){
 
 	/* updated_at */
 	Elem.find('[find=quickInfo1]').html(Lincko.Translation.get('app', 53, 'html')+': ');
-	var updated_at = new wrapper_date(item['updated_at']);
+	var updated_at = new wrapper_date(item['hist_at'] || item['updated_at']);
 	if( skylist_textDate(updated_at) ){
 		updated_at = skylist_textDate(updated_at);
 	}
@@ -1880,7 +1883,7 @@ skylist.prototype.addTask = function(item){
 	Elem.find('[find=quickInfo2]').html(updated_at+',&nbsp;');
 
 	/* updated_by */
-	var updated_by = Lincko.storage.get("users", item['updated_by'] ,"username");
+	var updated_by = Lincko.storage.get("users", item['hist_by'] || item['updated_by'] ,"username");
 	Elem.find('[find=quickInfo3]').html(updated_by);
 
 	/*duedate = new wrapper_date(item.start + parseInt(item.duration,10));*/
@@ -2049,7 +2052,7 @@ skylist.draw_noteCard = function(item){
 
 	/* updated_by (quickInfo) */
 	Elem.find('[find=quickInfo1]').html(Lincko.Translation.get('app', 53, 'html')/*Updated*/+':&nbsp;');
-	var updated_by = Lincko.storage.get("users", item['updated_by'] ,"username");
+	var updated_by = Lincko.storage.get("users", item['hist_by'] || item['updated_by'] ,"username");
 	Elem.find('[find=quickInfo2]').html(updated_by);
 
 
@@ -2059,7 +2062,7 @@ skylist.draw_noteCard = function(item){
 	commentCount = comments.length;
 	Elem.find('[find=commentCount]').html(commentCount);
 
-	updated_at = new wrapper_date(item['updated_at']);
+	updated_at = new wrapper_date(item['hist_at'] || item['updated_at']);
 	if(skylist_textDate(updated_at)){
 		updated_at = skylist_textDate(updated_at);
 	}
@@ -2115,10 +2118,10 @@ skylist.prototype.addNote = function(item){
 	}
 
 	/* rightOptions - updated_by */
-	Elem_rightOptions.append(that.add_rightOptionsBox(item['updated_by'],'fa-user'));
+	Elem_rightOptions.append(that.add_rightOptionsBox(item['hist_by'] || item['updated_by'],'fa-user'));
 
 	/* rightOptions - duedate */
-	Elem_rightOptions.append(that.add_rightOptionsBox(item['updated_at'],'fa-calendar'));
+	Elem_rightOptions.append(that.add_rightOptionsBox(item['hist_at'] || item['updated_at'],'fa-calendar'));
 
 	Elem.data('item_id',item['_id']);
 	Elem.data('options',false);
@@ -2184,7 +2187,7 @@ skylist.draw_fileCard = function(item){
 	commentCount = comments.length;
 	Elem.find('[find=commentCount]').html(commentCount);
 
-	updated_at = new wrapper_date(item['updated_at']);
+	updated_at = new wrapper_date(item['hist_at'] || item['updated_at']);
 	if(skylist_textDate(updated_at)){
 		updated_at = skylist_textDate(updated_at);
 	}
@@ -2758,6 +2761,8 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 			'duration': duration,
 			'updated_by': wrapper_localstorage.uid,
 			'updated_at': time_now.timestamp,
+			'hist_by':  wrapper_localstorage.uid,
+			'hist_at': time_now.timestamp,
 			'new': true,
 			'approved': param.approved,
 		}
