@@ -3098,7 +3098,10 @@ skylist.prototype.menu_construct = function(){
 				var opacity_fade = Math.abs(1/(that.delX/50));
 				var opacity_show = 1 - opacity_fade;
 
-				if ( Math.abs(that.delX) < that.pan_range_max  && typeof that.elem_sorts_text == 'object' && typeof that.sort_array == 'object'){
+				if ( Math.abs(that.delX) < that.pan_range_max  
+					&& typeof that.elem_sorts_text == 'object' && typeof that.sort_array == 'object'
+					&& typeof that.elem_sorts_text[that.sort_array[that.sortnum]] == 'object'
+					&& typeof that.elem_sorts_text[that.sort_array[that.sortnum_new]] == 'object'){
 					that.elem_sorts_text[that.sort_array[that.sortnum]].css("left",that.delX).css("opacity",opacity_fade);
 					that.elem_sorts_text[that.sort_array[that.sortnum_new]].removeClass('display_none').css( "left",Math.sign(that.delX)*(Math.abs(that.delX)-that.pan_range_max) ).css("opacity",opacity_show);
 				}
