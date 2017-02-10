@@ -1047,7 +1047,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		var elem_newSubtask = elem_subtasks.find('[find=newSubtask]');
 		var elem_subtaskCount = elem_subtasks.find('[find=subtaskCount]');
 
-		var generate_subtaskCard = function(task_id, title){ 
+		var generate_subtaskCard = function(task_id, title, temp_id){
 			var subtask = null;
 			var elem_subtaskCard = $('#-submenu_taskdetail_subtasks_card').clone().prop('id','').removeClass('skylist_clickable');
 			if($.isNumeric(task_id)){
@@ -1068,6 +1068,9 @@ Submenu.prototype.Add_taskdetail = function() {
 				}
 			}
 			elem_subtaskCard.attr('task_id',task_id);
+			if(temp_id){
+				elem_subtaskCard.attr('temp_id', temp_id);
+			}
 
 
 			var update_subtaskTitle = function(new_title){
@@ -1093,17 +1096,17 @@ Submenu.prototype.Add_taskdetail = function() {
 
 
 			elem_subtaskCard.find('[find=checkbox]').click(function(){
-				task_id = parseInt(elem_subtaskCard.attr('task_id'),10);
+				task_id = parseInt( $(this).closest('.submenu_taskdetail_subtasks_card').attr('task_id'),10);
+				if(typeof task_id != 'number' || !task_id){ return false; }
 				subtask = Lincko.storage.get('tasks', task_id);
+				if(!subtask){
+					return false; //cannot update a non-existing task
+				}
+
 				elem_subtaskCard.toggleClass('submenu_taskdetail_subtasks_card_checked');
 				var approved = elem_subtaskCard.hasClass('submenu_taskdetail_subtasks_card_checked');
-				//elem_subtaskCard.find('[find=title]').attr('contenteditable', !approved);
-				if(!subtask){ //new task
-					taskdetail_subtaskQueue.queue[that.param.uniqueID][task_id].param.approved = approved;
-				}
-				else{
-					wrapper_sendAction({id: task_id, approved: approved}, 'post', 'task/update');
-				}
+				wrapper_sendAction({id: task_id, approved: approved}, 'post', 'task/update');
+
 
 				if(approved){
 					progressBarController.completed++;
@@ -1216,21 +1219,22 @@ Submenu.prototype.Add_taskdetail = function() {
 					var tempID = null;
 					var cb_begin = function(jqXHR, settings, temp_id){
 						tempID = temp_id;
-						elem_subtasks_wrapper.append(generate_subtaskCard(temp_id, subtask_title));
+						elem_subtasks_wrapper.append(generate_subtaskCard(taskdetail_getRandomInt(), subtask_title, tempID));
 						progressBarController.total++;
 						progressBarController.updateBar();
 					}
 					var cb_success = function(msg, data_error, data_status, data_msg){
-						var elem_toUpdate = elem_subtasks_wrapper.find('[task_id='+tempID+']');
+						var elem_toUpdate = elem_subtasks_wrapper.find('[temp_id='+tempID+']');
 						if(elem_toUpdate.length){
 							var real_subtask = Lincko.storage.list('tasks',1,{temp_id: tempID})[0];
 							if(real_subtask && real_subtask._id){
+								elem_toUpdate.removeAttr('temp_id');
 								elem_toUpdate.attr('task_id', real_subtask._id);
 							}
 						}
 					}
 					var cb_error = function(){
-						var elem_toRemove = elem_subtasks_wrapper.find('task_id', tempID);
+						var elem_toRemove = elem_subtasks_wrapper.find('temp_id', tempID);
 						if(elem_toRemove.length){
 							elem_toRemove.remove();
 						}
