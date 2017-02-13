@@ -593,6 +593,11 @@ var app_models_projects_chart_tasks_data = function(Elem_id, id, chart_display_r
 				pointHighlightFill: "#FFFFFF",
 				pointHighlightStroke: "rgba(230,230,230,0.8)",
 				data: [],
+
+				//v2.5.0
+				backgroundColor: "rgba(250,250,250,0.2)",
+        		borderColor: "rgba(250,250,250,0.35)",
+        		pointBackgroundColor: "rgba(255,255,255,1)",
 			},
 			{
 				label: Lincko.Translation.get('app', 2102, 'html'), //me
@@ -603,6 +608,11 @@ var app_models_projects_chart_tasks_data = function(Elem_id, id, chart_display_r
 				pointHighlightFill: "#FFFFFF",
 				pointHighlightStroke: "rgba(230,230,230,0.8)",
 				data: [],
+
+				//v2.5.0
+				backgroundColor: "rgba(250,250,250,0.5)",
+        		borderColor: "rgba(250,250,250,1)",
+        		pointBackgroundColor: "rgba(255,255,255,1)",
 			}
 		]
 	};
@@ -633,6 +643,49 @@ var app_models_projects_chart_tasks_data = function(Elem_id, id, chart_display_r
 		multiTooltipKeyBackground: "rgba(250,250,250,0.2)",
 		datasetStrokeWidth : 1,
 	};
+
+	var chart_options_v2 = { //v2.5.0
+		responsive: false,
+		maintainAspectRatio: false,
+		animation:{
+			easing: "easeInOutCirc",
+		},
+		legend: {
+            display: false,
+        },
+		 elements: {
+        	point: {
+        		radius: 0,
+        		borderWidth: 1,
+        		hitRadius: 10,
+        		hoverRadius: 2,
+        	},
+        	line: {
+        		borderWidth: 1,
+        	},
+        },
+		scales: {
+            yAxes: [{
+                display: false,
+                ticks: {
+                    beginAtZero: true,
+                },
+            }],
+            xAxes: [{
+            	display: false,
+            	ticks: {
+                    beginAtZero: true,
+                },
+            }],
+        },
+        tooltips:{
+        	titleFontSize: 10,
+        	titleFontStyle: "normal",
+        	backgroundColor: "rgba(0,0,0,0.2)",
+        	cornerRadius: 3,
+        },
+	};
+
 	if(chart_options_replace){
 		chart_options = $.extend(true, {}, chart_options, chart_options_replace);
 	}
@@ -754,7 +807,12 @@ var app_models_projects_chart_tasks_data = function(Elem_id, id, chart_display_r
 		chart_display.labels = chart_data.labels;
 		chart_display.datasets[0].data = chart_data.data_total;
 		chart_display.datasets[1].data = chart_data.data_me;
-		var chart = new Chart(ctx).Line(chart_display, chart_options);
+		//var chart = new Chart(ctx).Line(chart_display, chart_options);
+		//v2.5.0
+		var chart = Chart.Line(ctx, {
+		    data: chart_display,
+		    options: chart_options_v2,
+		});
 		return chart;
 	}
 	return false;
