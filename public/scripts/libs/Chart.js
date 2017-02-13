@@ -12267,3 +12267,4 @@ module.exports = function(Chart) {
 
 },{"1":1}]},{},[7])(7)
 });
+>>>>>>> SKY: chart.js updatd to v2.5.0
