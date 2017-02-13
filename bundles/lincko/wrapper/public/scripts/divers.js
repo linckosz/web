@@ -937,13 +937,13 @@ function wrapper_test(type, RCUD){
 		else if(RCUD==2){
 			wrapper_sendAction(
 				{
-					"id": 3,
+					"id": 1223,
 					//"username": "test"+Math.floor(Math.random() * 20), //OPTIONAL
 					//"firstname": "Bruno"+Math.floor(Math.random() * 20), //OPTIONAL
 					//"lastname": "Martin", //OPTIONAL
 					//"gender": 1, //OPTIONAL
 					"usersLinked>access": {
-						6: true,
+						1220: [true,false][Math.round(Math.random())],
 					},
 				},
 				'post',

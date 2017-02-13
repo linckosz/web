@@ -252,6 +252,62 @@ base_hideProgress = function(Elem){
 	}
 }
 
+//This code make sure that the inputter is visible when change the keyboard style on iphone
+var base_inputter_offset_target = false;
+var base_inputter_offset_interval = false;
+var base_inputter_offset = function(target){
+	clearInterval(base_inputter_offset_interval);
+	var reset = true;
+	if(target.is(':focus')){
+		var bottom_offset = $(window).outerHeight() - target.offset().top - target.outerHeight();
+		if(bottom_offset < 80){
+			base_inputter_offset_target = target;
+			base_inputter_offset_interval = setInterval(function(target){
+				if(target.is(':focus')){
+					$(window).scrollTop(400); //A iPhone keyboard is approximatively 315px, it seems that cannot refocus over 600px high
+				} else {
+					$(window).scrollTop(0);
+					clearInterval(base_inputter_offset_interval);
+					base_inputter_offset_interval = false;
+					base_inputter_offset_target = false;
+					base_inputter_offset_target.blur();
+					setTimeout(function(){
+						if(!base_inputter_offset_target){
+							$(window).scrollTop(0);
+						}
+					}, 500);
+				}
+			}, 300, target);
+			reset = false;
+		}
+	}
+	if(reset){
+		if(base_inputter_offset_interval){
+			setTimeout(function(){
+				if(!base_inputter_offset_target){
+					$(window).scrollTop(0);
+				}
+			}, 500);
+		}
+		if(base_inputter_offset_target){
+			base_inputter_offset_target.blur();
+		}
+		base_inputter_offset_interval = false;
+		base_inputter_offset_target = false;
+	}
+};
+if(isIOS){
+	$(window).on('click', function(event){
+		base_inputter_offset($(event.target));
+	});
+	$(window).on('touchend', function(event){
+		if(base_inputter_offset_interval && base_inputter_offset_target){
+			base_inputter_offset($(event.target));
+		}
+	});
+}
+
+
 var base_scanner = false;
 var base_video_device_current = 0;
 var base_video_device = [];
