@@ -72,8 +72,8 @@ var previewer = (function() {
 		var url = id;
 		var thumbnail = "";
 		var download = "";
-		//if(Lincko.storage.get("files", id, "name")<100){
-		if(true){ //toto => Need to verify that the player is working for all devices first
+		if(Lincko.storage.get("files", id, "name")<100){
+		//if(true){ //toto => Need to verify that the player is working for all devices first
 			return pic_preview(id, false);
 		}
 		if(isNum)
@@ -130,8 +130,10 @@ var previewer = (function() {
 
 var app_previewer_TimingPlay;
 function app_previewer_StartPlayer(elem_id, video, thumb, volume, fs, lecture){
+	console.log(video);
+	video ="https://file.lincko.co:8443/aaa.mp4";
 	jwplayer(elem_id).setup({
-		autostart: true,
+		autostart: false,
 		allowfullscreen: fs,
 		volume: volume,
 		//flashplayer: 'jwplayer/player.swf', //toto => adjust absolute link
@@ -160,7 +162,7 @@ function app_previewer_StartPlayer(elem_id, video, thumb, volume, fs, lecture){
 			onBeforePlay: function(){
 				clearTimeout(app_previewer_TimingPlay);
 			},
-			oonReady: function(){
+			onReady: function(){
 				clearTimeout(app_previewer_TimingPlay);
 				if(lecture){
 					app_previewer_TimingPlay = setTimeout(function(videoobject){

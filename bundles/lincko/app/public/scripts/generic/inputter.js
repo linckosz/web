@@ -42,7 +42,7 @@
 ***********************************************************************
 */
 
-
+var toto;
 
 var inputter = function(panel_id,position,upload_ptype,upload_pid,layer,burger)
 {
@@ -886,6 +886,8 @@ inputter.prototype.buildLayer = function()
 		});
 
 	}
+
+	
 	
 	if(this.burger != null){
 		// if(that.burger.enter_fn_param == 'inputter')
@@ -910,7 +912,6 @@ inputter.prototype.buildLayer = function()
 		mouseWheel: true, 
 		fadeScrollbars: true,
 	};
-
 
 	container.on('resize',function(){
 		//dom.resize(); it will trigger the window.resize();

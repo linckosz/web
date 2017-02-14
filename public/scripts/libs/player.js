@@ -1,14 +1,14 @@
 // This library depend on the jwplayer.js library,
 // needs to be load later
 (function() {
-        jwplayer.key="FZ41xVwzupK3fp5vvpjN6GbXFfY0YAMrlZE8QQ==";
-
+        //jwplayer.key="FZ41xVwzupK3fp5vvpjN6GbXFfY0YAMrlZE8QQ==";
+        jwplayer.key="Jge1RC/1+m2wBFYICUUVOyWrSxqP/WXcGG07rQ==";
 	$.fn.setupPlayer = function (video, thumbnail)
 	{
 		var playerInstance = jwplayer(this[0].id);
 		jwplayer().setup({
 			autostart: 'false',
-			flashplayer: './jwplayer-7.3.6/jwplayer.flash',
+			flashplayer: './jwplayer-7.9.1/jwplayer.flash',
 			file: video,
 			image: thumbnail,
 			rtmp: {

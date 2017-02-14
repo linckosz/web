@@ -1882,6 +1882,8 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 					if(typeof history_items[cat][id]['_parent'] != 'undefined'){
 						parent = history_items[cat][id]['_parent'];
 					}
+
+					
 					item = {
 						att: "created_at",
 						par_type: parent[0],
@@ -1948,6 +1950,7 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 							break;
 						}
 					}
+					
 					if(save){
 						if(typeof item.par=='undefined' || typeof item.par.un=='undefined'){
 							if(typeof item.par=='undefined'){

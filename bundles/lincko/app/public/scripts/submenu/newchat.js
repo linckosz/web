@@ -132,6 +132,9 @@ Submenu.prototype.Add_ChatContents = function() {
 	position.addClass('overthrow').addClass("submenu_chat_contents");
 
 	var submenu_wrapper_id = submenu_wrapper.prop("id");
+
+
+
 	app_application_lincko.add(that.id, [type_clear+"_" + id, "submenu_show_"+that.preview+"_"+that.id], function() {
 		var type = this.action_param[0];
 		var id = this.action_param[1];
@@ -213,8 +216,6 @@ Submenu.prototype.Add_ChatContents = function() {
 			app_submenu_scrollto(myIScrollList[overthrow_id], help_iscroll_elem, scroll_time);
 		}
 	}, [that.id, 0]);
-
-
 }
 
 Submenu.prototype.New_Add_ChatMenu  = function()

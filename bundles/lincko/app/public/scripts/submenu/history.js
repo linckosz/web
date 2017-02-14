@@ -740,6 +740,10 @@ var historyFeed = function(id,type,position,submenu)
 				}
 			});
 			//This is used when we move the bar manually
+			// IScroll.on('scrollStart', function(){
+			// 	$("[find=chat_textarea]").blur();
+			// });
+
 			IScroll.on('scrollEnd', function(){
 				if(!loading_timer){
 					if(IScroll.y >= 0){

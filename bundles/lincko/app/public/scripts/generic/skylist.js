@@ -752,7 +752,6 @@ skylist.prototype.addCard_all = function(){
 
 		that.paperView_inputter(that.list_wrapper, 'projects', app_content_menu.projects_id);
 	}
-	
 	var items;
 	items = that.list_filter();
 	if( items.length < 1 ){

@@ -706,7 +706,14 @@ var app_models_history = {
 			}
 			if(item['deleted_at']){
 				//We don't display deleted items in activity short description
-				return false;
+				if(item['_type'] != "files")
+				{
+					return false;
+				}
+				else{
+					hist["cod"] = 999;
+				}
+
 			}
 		}
 
@@ -748,6 +755,8 @@ var app_models_history = {
 		var info = {};
 
 		var exclude = false;
+
+
 		if(parent_type && parent_id && parent_type=="projects"){
 			//If parent is a project, .hist will reject automatically all chats activity inside it
 			// "Lincko.storage.cache.getExcludeProjects" is internally used in .hist()
@@ -756,6 +765,7 @@ var app_models_history = {
 			var hist_all = Lincko.storage.hist();
 			exclude = Lincko.storage.cache.getExcludeChats();
 		}
+
 
 		for(var i in hist_all){
 			root_item = this.getRoot(hist_all[i]["type"], hist_all[i]["id"]); //Accept only Chats and Projects
