@@ -42,7 +42,6 @@
 ***********************************************************************
 */
 
-var toto;
 
 var inputter = function(panel_id,position,upload_ptype,upload_pid,layer,burger)
 {
