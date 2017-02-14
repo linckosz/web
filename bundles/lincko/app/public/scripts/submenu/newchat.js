@@ -295,7 +295,9 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 				$(elem).text('');
 				app_application_lincko.prepare(["chat_contents_wrapper", "chats_" + sub_that.param.id]);
 				$(elem).focus();
-				
+				setTimeout(function(target){
+					base_inputter_offset(target);
+				}, 0, $(elem));
 			},
 			function(){
 				

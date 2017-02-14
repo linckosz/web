@@ -256,54 +256,57 @@ base_hideProgress = function(Elem){
 var base_inputter_offset_target = false;
 var base_inputter_offset_interval = false;
 var base_inputter_offset = function(target){
-	clearInterval(base_inputter_offset_interval);
-	var reset = true;
-	if(target.is(':focus')){
-		var bottom_offset = $(window).outerHeight() - target.offset().top - target.outerHeight();
-		if(bottom_offset < 80){
-			base_inputter_offset_target = target;
-			base_inputter_offset_interval = setInterval(function(target){
-				if(target.is(':focus')){
-					$(window).scrollTop(400); //A iPhone keyboard is approximatively 315px, it seems that cannot refocus over 600px high
-				} else {
+	if(isIOS){
+		clearInterval(base_inputter_offset_interval);
+		var reset = true;
+		if(target.is(':focus')){
+			var bottom_offset = $(window).outerHeight() - target.offset().top - target.outerHeight();
+			if(bottom_offset < 80){
+				base_inputter_offset_target = target;
+				base_inputter_offset_interval = setInterval(function(target){
+					if(target.is(':focus')){
+						$(window).scrollTop(400); //A iPhone keyboard is approximatively 315px, it seems that cannot refocus over 600px high
+					} else {
+						$(window).scrollTop(0);
+						clearInterval(base_inputter_offset_interval);
+						base_inputter_offset_interval = false;
+						base_inputter_offset_target = false;
+						var div = $('<div>');
+						$('body').append(div);
+						setTimeout(function(div){
+							div.remove();
+							if(!base_inputter_offset_target){
+								$(window).scrollTop(0);
+							}
+						}, 500, div);
+					}
+				}, 300, target);
+				reset = false;
+			}
+		}
+		if(reset){
+			if(base_inputter_offset_interval){
+				var div = $('<div>');
+				$('body').append(div);
+				setTimeout(function(div){
+					div.remove();
+					if(base_inputter_offset_target && base_inputter_offset_target.is(':focus')){
+						return true;
+					}
+					if(base_inputter_offset_target){
+						base_inputter_offset_target.blur();
+					}
 					$(window).scrollTop(0);
-					clearInterval(base_inputter_offset_interval);
 					base_inputter_offset_interval = false;
 					base_inputter_offset_target = false;
-					base_inputter_offset_target.blur();
-					setTimeout(function(){
-						if(!base_inputter_offset_target){
-							$(window).scrollTop(0);
-						}
-					}, 500);
-				}
-			}, 300, target);
-			reset = false;
+				}, 500, div);
+			}
 		}
-	}
-	if(reset){
-		if(base_inputter_offset_interval){
-			setTimeout(function(){
-				if(!base_inputter_offset_target){
-					$(window).scrollTop(0);
-				}
-			}, 500);
-		}
-		if(base_inputter_offset_target){
-			base_inputter_offset_target.blur();
-		}
-		base_inputter_offset_interval = false;
-		base_inputter_offset_target = false;
 	}
 };
 if(isIOS){
 	$(window).on('click', function(event){
 		base_inputter_offset($(event.target));
-	});
-	$(window).on('touchend', function(event){
-		if(base_inputter_offset_interval && base_inputter_offset_target){
-			base_inputter_offset($(event.target));
-		}
 	});
 }
 

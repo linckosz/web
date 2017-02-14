@@ -851,6 +851,9 @@ inputter.prototype.buildLayer = function()
 				burgerN.placeCaretAtEnd($(this), false);
 			}
 			that.focus_flag = true;
+			setTimeout(function(target){
+				base_inputter_offset(target);
+			}, 0, $(this));
 		});
 		input.find('[find=chat_textarea]').blur(function(event){
 			if(cancelBlur){
