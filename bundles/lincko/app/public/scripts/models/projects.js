@@ -679,10 +679,14 @@ var app_models_projects_chart_tasks_data = function(Elem_id, id, chart_display_r
             }],
         },
         tooltips:{
+        	mode: 'x',
         	titleFontSize: 10,
         	titleFontStyle: "normal",
         	backgroundColor: "rgba(0,0,0,0.2)",
         	cornerRadius: 3,
+        },
+        hover: {
+        	mode: 'x',
         },
 	};
 
