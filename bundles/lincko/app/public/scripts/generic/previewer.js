@@ -130,8 +130,6 @@ var previewer = (function() {
 
 var app_previewer_TimingPlay;
 function app_previewer_StartPlayer(elem_id, video, thumb, volume, fs, lecture){
-	console.log(video);
-	video ="https://file.lincko.co:8443/aaa.mp4";
 	jwplayer(elem_id).setup({
 		autostart: false,
 		allowfullscreen: fs,
