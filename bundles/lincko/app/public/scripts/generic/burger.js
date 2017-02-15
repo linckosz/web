@@ -138,7 +138,6 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter
     var latestChar_prev = null;
 	elem.on('keyup.burger_keyboard', function(event){
 		var which = event.which;
-
 		/*DO NOT TAKE ACTION*/
 		if(	which == 16 //shift
 			|| which == 38 // up arrow
@@ -165,7 +164,7 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter
 	  	}
 
 	  	//sometimes, for some input methods, focus_node.nodeValue reflects the latest typed characters
-	  	if(latestChar == latestChar_prev  && latestChar_node != latestChar_prev ){ 
+	  	if(latestChar == latestChar_prev  && latestChar_node != latestChar_prev && caretIndex != 0){ 
 	  		latestChar = latestChar_node; 
 	  		if(focus_node.nodeValue && (focus_node.nodeValue).length > 1){
 	  			latestChar_prev = ((focus_node.nodeValue).slice(-2))[0];
@@ -268,7 +267,7 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter
 		    }
 
 		    //if 'space' or caret is moved behind the burger_startIndex
-		    if( (which == 32 /*space*/ && !latestChar.replace(/\s/g, '').length /*space*/) || caretIndex < that.i_caretBegin ){
+		    if( typeof latestChar != 'string' || (which == 32 /*space*/ && !latestChar.replace(/\s/g, '').length /*space*/) || caretIndex < that.i_caretBegin ){
 				that.dropdownInst.hide();
 				return;
 			}
