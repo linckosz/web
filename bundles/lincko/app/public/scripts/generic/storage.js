@@ -483,11 +483,13 @@ Lincko.storage.update = function(partial, info){
 					//We add, we don't overwrite
 					Lincko.storage.data[i][j][k] = hist;
 
-					//add hist_at and hist_by to the appropriate object
-					if(!Lincko.storage.data[hist.type][hist.id].hist_at 
-					|| hist.timestamp > Lincko.storage.data[hist.type][hist.id].hist_at){
-						Lincko.storage.data[hist.type][hist.id].hist_at = hist.timestamp;
-						Lincko.storage.data[hist.type][hist.id].hist_by = hist.by;
+					if(i == '_history' && hist.type && hist.id && hist.timestamp){
+						//add hist_at and hist_by to the appropriate object
+						if(!Lincko.storage.data[hist.type][hist.id].hist_at 
+						|| hist.timestamp > Lincko.storage.data[hist.type][hist.id].hist_at){
+							Lincko.storage.data[hist.type][hist.id].hist_at = hist.timestamp;
+							Lincko.storage.data[hist.type][hist.id].hist_by = hist.by;
+						}
 					}
 				}
 				storage_local_storage.prepare(i+"@"+j); //We split the hstory storage to limit CPU calculation
