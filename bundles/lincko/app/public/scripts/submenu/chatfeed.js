@@ -1,19 +1,13 @@
 /* Category 31 */
 
 var checkExtension = function(id) {
-	var PIC_EXTENSION = ['bmp', 'gif', 'png', 'apng', 'jpg', 'jpeg'];
-	var VIDEO_EXTENSION = ['mp4', 'mkv', 'mov', 'xvid', 'x264', 'wmv', 'avi'];
-
-	var file_name = Lincko.storage.get('files', id, "+name");
-	if(!file_name){
-		return null;
-	}
-	var tmp = file_name.split(".");
-	var extension = tmp[tmp.length - 1].toLowerCase();
-	if ($.inArray(extension, PIC_EXTENSION)>-1) {
+	var category = Lincko.storage.get('files', id, "category");
+	if(category=='image'){
 		return 'pic';
-	} else if ($.inArray(extension, VIDEO_EXTENSION)>-1) {
+	} else if(category=='video'){
 		return 'video';
+	} else if(category=='audio'){
+		return 'audio';
 	} else {
 		return null;
 	}

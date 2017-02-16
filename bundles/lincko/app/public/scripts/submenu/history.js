@@ -360,6 +360,8 @@ FileContentCls.prototype.feed_action = function(elem,subm){
 			previewer['pic'](target_id);
 		}else if( file_category =='video'){
 			previewer['video'](target_id);
+		}else if( file_category =='audio'){
+			previewer['audio'](target_id);
 		}
 		else {
 			submenu_Build('taskdetail', -1, null, {'type':type, 'id':target_id}, subm.preview);
@@ -518,6 +520,8 @@ ActivityFileContentCls.prototype.feed_action = function(elem,subm){
 			previewer['pic'](target_id);
 		}else if( file_category =='video'){
 			previewer['video'](target_id);
+		}else if( file_category =='audio'){
+			previewer['audio'](target_id);
 		}
 		else {
 			submenu_Build('taskdetail', -1, null, {'type':type, 'id':target_id}, subm.preview);

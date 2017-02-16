@@ -127,11 +127,19 @@ var previewer = (function() {
 	return {
 		'pic': pic_preview,
 		'video': video_preview,
+		'audio': video_preview,
 	}
 })();
 
 var app_previewer_TimingPlay;
 function app_previewer_StartPlayer(elem_id, video, thumb, volume, fs, autostart){
+	//video = "http://bruno.file.lincko.cafe:8080/aaa.mp4";
+	//video = "http://bruno.file.lincko.cafe:8080/file/0/ZWtQR0k3L3NvUWtZMXVSQ1djYUNiOVladDhDeTJtUjgrQjJhYWFZRUxGaz0=/link/23111/VID-20170216-084203.mp4?1487206928";
+	//video = "http://bruno.file.lincko.cafe:8080/file/0/ZWtQR0k3L3NvUWtZMXVSQ1djYUNiOVladDhDeTJtUjgrQjJhYWFZRUxGaz0=/link/23111/ccc.mp4";
+	//video = "http://bruno.file.lincko.cafe:8080/file/0/ZWtQR0k3L3NvUWtZMXVSQ1djYUNiOVladDhDeTJtUjgrQjJhYWFZRUxGaz0=/link/23112/bbb.mp4";
+	//console.log(video);
+	//video = video + '?' + (new wrapper_date().timestamp);
+	//console.log(video);
 	jwplayer(elem_id).setup({
 		autostart: autostart,
 		allowfullscreen: fs,
