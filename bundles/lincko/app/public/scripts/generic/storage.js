@@ -414,6 +414,7 @@ Lincko.storage.update = function(partial, info){
 					if(Lincko.storage.data[i][j]['_children']){ //to keep _children. partial doesnt include _children. later, childrenList() will rebuild this anyways
 						_children = Lincko.storage.data[i][j]['_children'];
 					}
+
 					if(Lincko.storage.data[i][j]['hist_at']){
 						hist_at = Lincko.storage.data[i][j]['hist_at'];
 					}
@@ -425,8 +426,17 @@ Lincko.storage.update = function(partial, info){
 				Lincko.storage.data[i][j] = partial[i][j];
 
 				if(_children){ Lincko.storage.data[i][j]._children = _children; }
+
+				//if no hist_at, then latest hist is creation
 				if(hist_at){ Lincko.storage.data[i][j].hist_at = hist_at; }
+				else if(Lincko.storage.data[i][j]['created_at']){ 
+					Lincko.storage.data[i][j].hist_at = Lincko.storage.data[i][j]['created_at']; 
+				}
+
 				if(hist_by){ Lincko.storage.data[i][j].hist_by = hist_by; }
+				else if(Lincko.storage.data[i][j]['created_by']){ 
+					Lincko.storage.data[i][j].hist_by = Lincko.storage.data[i][j]['created_by']; 
+				}
 
 
 
