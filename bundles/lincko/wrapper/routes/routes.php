@@ -24,10 +24,22 @@ $app->group('/wrapper', function () use ($app) {
 
 });
 
-$app->get('/appstore', function () use($app) {
-	$app->render('/bundles/lincko/wrapper/templates/appstore.twig');
-})
-->name('appstore');
+$app->group('/appstore', function () use ($app) {
+
+	//This is default behavior to redirect properly according to the IP location of the user
+	$app->get('/', function () use($app) {
+		$app->render('/bundles/lincko/wrapper/templates/appstore.twig');
+	})
+	->name('appstore');
+
+	//Make sure that we reach us app stores, not foreign country ones
+	$app->get('/us', function () use($app) {
+		$app->lincko->data['appstore'] = $app->lincko->data['appstore_default'];
+		$app->render('/bundles/lincko/wrapper/templates/appstore.twig');
+	})
+	->name('appstore_us');
+
+});
 
 $app->get(
 	'/captcha(/:total_num(/:width(/:height)))',

@@ -49,9 +49,9 @@ var previewer = (function() {
 			$('#'+event.data).recursiveRemove();
 		});
 
-		popout.find('.pic_preview_wrapper').click(function(event){
+		popout.find('.pic_preview_wrapper').click(Elem_id, function(event){
 			if(!responsive.test("maxMobileL")){return; }
-			$('#'+Elem_id).recursiveRemove();
+			$('#'+event.data).recursiveRemove();
 		});
 
 		if(full){
@@ -73,7 +73,7 @@ var previewer = (function() {
 		var thumbnail = "";
 		var download = "";
 		if(Lincko.storage.get("files", id, "name")<100){
-		//if(true){ //toto => Need to verify that the player is working for all devices first
+		//Need to verify that the player is working for all devices first
 			return pic_preview(id, false);
 		}
 		if(isNum)
@@ -112,9 +112,11 @@ var previewer = (function() {
 			$('#'+event.data).recursiveRemove();
 		});
 
-		popout.find('.pic_preview_wrapper').click(function(event){
+		popout.find('.pic_preview_wrapper').click(Elem_id, function(event){
 			if(!responsive.test("maxMobileL")){ return; }
-			$('#'+Elem_id).recursiveRemove();
+			if($(event.target).is(this)){
+				$('#'+event.data).recursiveRemove();
+			}
 		});
 
 		app_previewer_StartPlayer('pic_wrapper_video_'+id, url, thumbnail, 100, true, true);
@@ -129,12 +131,11 @@ var previewer = (function() {
 })();
 
 var app_previewer_TimingPlay;
-function app_previewer_StartPlayer(elem_id, video, thumb, volume, fs, lecture){
+function app_previewer_StartPlayer(elem_id, video, thumb, volume, fs, autostart){
 	jwplayer(elem_id).setup({
-		autostart: false,
+		autostart: autostart,
 		allowfullscreen: fs,
 		volume: volume,
-		//flashplayer: 'jwplayer/player.swf', //toto => adjust absolute link
 		file: video,
 		image: thumb,
 		bufferlength: 4,
@@ -143,7 +144,10 @@ function app_previewer_StartPlayer(elem_id, video, thumb, volume, fs, lecture){
 		lightcolor: '66cc00',
 		backcolor: '111111',
 		controlbar: 'over',
-		//skin: 'jwplayer/skin/glow.zip', //toto => adjust absolute link
+		base: "/scripts/libs/jwplayer-7.9.1-lincko/",
+		skin: {
+			name: "seven",
+		},
 		dock: true,
 		icons: true,
 		width: '100%', //Small screen => 640 / Big screen => 800
@@ -153,8 +157,8 @@ function app_previewer_StartPlayer(elem_id, video, thumb, volume, fs, lecture){
 		wmode: 'opaque',
 		events: {
 			onComplete: function(){
-				this.stop();
 				clearTimeout(app_previewer_TimingPlay);
+				this.stop();
 				this.setFullscreen(false);
 			},
 			onBeforePlay: function(){
@@ -162,7 +166,7 @@ function app_previewer_StartPlayer(elem_id, video, thumb, volume, fs, lecture){
 			},
 			onReady: function(){
 				clearTimeout(app_previewer_TimingPlay);
-				if(lecture){
+				if(autostart){
 					app_previewer_TimingPlay = setTimeout(function(videoobject){
 						if(videoobject){
 							if('play' in videoobject){
@@ -172,8 +176,12 @@ function app_previewer_StartPlayer(elem_id, video, thumb, volume, fs, lecture){
 					}, 300, this);
 				} else {
 					app_previewer_TimingPlay = setTimeout(function(videoobject){
-						videoobject.stop();
-						videoobject = false; //Destroy the link to the object
+						if(videoobject){
+							if('stop' in videoobject){
+								videoobject.stop();
+							}
+							videoobject = false; //Destroy the link to the object
+						}
 					}, 100, this);
 				}
 			},
@@ -192,6 +200,15 @@ function app_previewer_StartPlayer(elem_id, video, thumb, volume, fs, lecture){
 			},
 			onFullscreen: function(){
 				clearTimeout(app_previewer_TimingPlay);
+			},
+			onRemove: function(){
+				clearTimeout(app_previewer_TimingPlay);
+				if(videoobject){
+					if('stop' in videoobject){
+						videoobject.stop();
+					}
+					videoobject = false; //Destroy the link to the object
+				}
 			},
 		},
 	});

@@ -476,8 +476,9 @@ Lincko.storage.update = function(partial, info){
 				update = true;
 			}
 		} else if(i=='_history_title' || i=='_history'){
+			if(typeof Lincko.storage.data[i] != 'object'){ Lincko.storage.data[i] = {}; }
 			for(var j in partial[i]) {
-				if(typeof Lincko.storage.data[i][j] == 'undefined'){ Lincko.storage.data[i][j] = {}; }
+				if(typeof Lincko.storage.data[i][j] != 'object'){ Lincko.storage.data[i][j] = {}; }
 				for(var k in partial[i][j]) {
 					var hist = partial[i][j][k];
 					//We add, we don't overwrite
@@ -2458,9 +2459,15 @@ JSfiles.finish(function(){
 					if(typeof Lincko.storage.data[category] == "undefined"){
 						Lincko.storage.data[category] = {};
 					}
-					Lincko.storage.data[category][item] = wrapper_localstorage.decrypt("data_"+field);
+					var decrypt = wrapper_localstorage.decrypt("data_"+field);
+					if(decrypt){
+						Lincko.storage.data[category][item] = decrypt;
+					}
 				} else {
-					Lincko.storage.data[category] = wrapper_localstorage.decrypt("data_"+field);
+					var decrypt = wrapper_localstorage.decrypt("data_"+field);
+					if(decrypt){
+						Lincko.storage.data[category] = decrypt;
+					}
 				}
 			}
 		});
