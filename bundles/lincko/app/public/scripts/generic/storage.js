@@ -366,11 +366,8 @@ Lincko.storage.update = function(partial, info){
 			for(var j in partial[i]) {
 
 				//remove line breaks added by php for 'comment' attribute of comments, messages, notes, and tasks objects
-				var prefix = null;
-				if(i == 'comments' || i == 'messages'){ prefix = '+'; }
-				else if(i == 'notes' || i == 'tasks'){ prefix = '-'; }
-				if(prefix){ 
-					partial[i][j][prefix+'comment'] = base_removeLineBreaks(partial[i][j][prefix+'comment']); 
+				if(i == 'notes' || i == 'tasks'){ 
+					partial[i][j]['-comment'] = base_removeLineBreaks(partial[i][j]['-comment']); 
 				}
 
 				update_real = false;
