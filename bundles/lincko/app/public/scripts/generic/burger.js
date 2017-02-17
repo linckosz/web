@@ -762,7 +762,7 @@ burger_list.projects = function(lincko_type, lincko_id){
 	if(Lincko.storage.getSettings().latestvisitProjects){
 		$.each(Lincko.storage.getSettings().latestvisitProjects, function(i, id){
 			var project = Lincko.storage.get('projects',id);
-			if(!project || project.personal_private){ return; }
+			if(!project || project.personal_private || project.deleted_at){ return; }
 			else{
 				latest_projects.push(
 					{
