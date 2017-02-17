@@ -438,9 +438,6 @@ Lincko.storage.update = function(partial, info){
 					Lincko.storage.data[i][j].hist_by = Lincko.storage.data[i][j]['created_by']; 
 				}
 
-
-
-
 				// if(Lincko.storage.data && Lincko.storage.data[i] && Lincko.storage.data[i][j] && Lincko.storage.data[i][j]['_children']){ //to keep _children. partial doesnt include _children. later, childrenList() will rebuild this anyways
 				// 	_children = Lincko.storage.data[i][j]['_children'];
 				// 	Lincko.storage.data[i][j] = partial[i][j];
