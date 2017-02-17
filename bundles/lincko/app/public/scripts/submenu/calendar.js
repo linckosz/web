@@ -52,21 +52,23 @@ Submenu.prototype.Add_calendar = function() {
 	var submenu_wrapper = this.Wrapper();
 	var submenu_content = submenu_wrapper.find("[find=submenu_wrapper_content]").addClass('submenu_calendar').removeClass('overthrow');
 	
-	var defaultDate = new Date().getTime();
+	var defaultDate = (new wrapper_date().getEndofDay() + 86400)*1000; //end of day tomorrow
 
 	var elem_timestamp = $('<input find="timestamp" type="text" readonly="readonly"/>');
-	if(that.param && that.param.elem_inputOrig){
-		defaultDate = that.param.elem_inputOrig.val();
-		elem_timestamp.val(defaultDate);
+	if(that.param.defaultDate){ 
+		defaultDate = that.param.defaultDate; 
 	}
+	else if(that.param && that.param.elem_inputOrig){
+		defaultDate = that.param.elem_inputOrig.val();
+	} 
+
+	elem_timestamp.val(defaultDate);
 	that.param.elem_inputTarget = elem_timestamp;
 
-	if(that.param.defaultDate){ defaultDate = that.param.defaultDate; }
-
+	
 	var fn_onSelect = function(timestamp, datepickerInst){
 		elem_timestamp.val(timestamp*1000);
 	}
-
 	var elem_datepicker = burger_renderCalendar(null, defaultDate, fn_onSelect);
 
 

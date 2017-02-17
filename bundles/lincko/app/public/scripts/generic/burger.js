@@ -1341,9 +1341,8 @@ burger_dropdown.prototype.destroy = function(){
 var burger_renderCalendar = function(id, defaultDate, fn_onSelect){
 	var elem_datepicker = $('<div>');
 	if(typeof id == 'strong'){ elem_datepicker.prop('id', id); }
-	if(typeof defaultDate == 'number' && defaultDate < 1000000000){ defaultDate = defaultDate*1000; }
-	else if(typeof defaultDate != 'number'){ var defaultDate = new Date().getTime(); }	
-	
+	if(typeof defaultDate != 'number'){ var defaultDate = new wrapper_date().getEndofDay() + 86400 }
+	if(typeof defaultDate == 'number' && defaultDate < 10000000000){ defaultDate = defaultDate*1000; }
 	if(typeof fn_onSelect != 'function'){ var fn_onSelect = function(){}; }
 
 	var update_monthControl = function(month){
