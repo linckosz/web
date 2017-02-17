@@ -461,6 +461,13 @@ skylist.prototype.generate_Lincko_itemsList = function(){
 	}
 	else {
 		that.Lincko_itemsList = Lincko.storage.list(that.list_type, null, null, 'projects', app_content_menu.projects_id, true);
+
+		//add hist_at and hist_by if doesnt exist. otherwise, sort_items will error
+		$.each(that.Lincko_itemsList, function(i, item){
+			if(!item.hist_at){ item.hist_at = item.created_at; }
+			if(!item.hist_by){ item.hist_by = item.created_by; }
+		});
+
 		if( that.list_type == "tasks" ){
 			var item;
 			for( var i in that.Lincko_itemsList ){
