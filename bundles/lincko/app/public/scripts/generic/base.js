@@ -197,7 +197,14 @@ function base_lincko_link_to_html(source)
 	var workspace = wrapper_localstorage.workspace == "" ? "" : wrapper_localstorage.workspace + ".";
 	var match_reg = new RegExp(top.location.protocol+'//'+app_application_dev_link() + workspace + document.domainRoot);
 
+	console.log(app_application_dev_link());
+
 	var str_target = match_reg.test(source) ? "target=\"_top\"" : "target=\"_blank\""; //if lincko links,open page on the same tag
+
+	if(typeof window.webkit != 'undefined' && typeof window.webkit.messageHandlers != 'undefined' && typeof window.webkit.messageHandlers.iOS){
+		str_target = "target=\"_top\"";
+	}
+
 	// var str_target = false ? "target=\"_self\"" : "target=\"_blank\"";
 	source = source.replace(reg, '<a ontouchstart="window.open(\'$1$3$4$5\')"' + str_target + '  href="$1$3$4$5">$1$3$4$5</a>');
 	

@@ -354,6 +354,7 @@ var app_generic_state = {
 			if(!storage_first_launch && Lincko.storage.get("tasks", item._id)){
 				app_generic_state_action();
 			} else {
+				base_show_error(Lincko.Translation.get('app', 91, 'js'),true);//You don't have permission to this task
 				Lincko.storage.getLatest(false, app_generic_state_action);
 			}
 		},
@@ -373,6 +374,7 @@ var app_generic_state = {
 			if(!storage_first_launch && Lincko.storage.get("notes", item._id)){
 				app_generic_state_action();
 			} else {
+				base_show_error(Lincko.Translation.get('app', 92, 'js'),true);//You don't have permission to this note
 				Lincko.storage.getLatest(false, app_generic_state_action);
 			}
 		},
@@ -428,6 +430,7 @@ var app_generic_state = {
 			if(!storage_first_launch && Lincko.storage.get("files", item._id)){
 				app_generic_state_action();
 			} else {
+				base_show_error(Lincko.Translation.get('app', 90, 'js'),true);//You don't  have permission to this file
 				Lincko.storage.getLatest(false, app_generic_state_action);
 			}
 		},

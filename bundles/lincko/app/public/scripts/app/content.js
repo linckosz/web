@@ -319,6 +319,16 @@ JSfiles.finish(function(){
 	app_content_menu_default();
 
 	//replace ElementQueries.js & ResizeSensor.js,use css 
+	//document.ready
+	if($("#app_content_dynamic_sub").width() <= 900)
+	{
+		$("#app_content_dynamic_sub").addClass("max-width-900");
+	}
+	else
+	{
+		$("#app_content_dynamic_sub").removeClass("max-width-900");
+	}
+
 	$("#app_content_dynamic_sub").resize(function(){
 		if($("#app_content_dynamic_sub").width() <= 900)
 		{
