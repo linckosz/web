@@ -464,8 +464,13 @@ Lincko.storage.update = function(partial, info){
 					app_models_history.refresh(i, j); //It helps to force updating any history info tab in the application
 					app_application_lincko.prepare(i+'_'+j, false, updatedAttributes);
 				}
-				if(new_item && (i=='projects' || i=='chats')){
-					app_models_history.reset();
+				if(new_item){
+					if(i=='projects' || i=='chats'){
+						app_models_history.reset();
+					} else if(i=='files'){
+						//Preload images if it's a file
+						Lincko.storage.thumbnailPreload(partial[i][j]['_id']);
+					}
 				}
 				if(update_real || new_item){
 					storage_local_storage.prepare(i);
@@ -491,6 +496,7 @@ Lincko.storage.update = function(partial, info){
 					}
 				}
 				storage_local_storage.prepare(i+"@"+j); //We split the hstory storage to limit CPU calculation
+				update = true;
 			}
 		}
 	}
@@ -2235,7 +2241,7 @@ Lincko.storage.getDownload = function(id){
 		var name = wrapper_to_url(Lincko.storage.get('files', id, 'name'));
 		var updated_at = Lincko.storage.get('files', id, 'updated_at');
 		var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domainRoot+':'+document.linckoBackPort+'/file';
-		return url+"/"+workid+"/"+sha+"/"+type+"/"+id+"/"+name+"?"+updated_at;
+		return url+"/"+workid+"/"+sha+"/"+type+"/"+id+"/"+name+"?"+updated_at + '&pukpic='+encodeURIComponent(getCookie('pukpic')); //Must pass temporary encrypted credential as get parameter to get authorization via external downloader
 	}
 	return false;
 }
@@ -2257,6 +2263,54 @@ Lincko.storage.getLinkThumbnail = function(id){
 		}
 	}
 	return thumbnail;
+}
+
+//Help to prepload the thumbnail faster
+Lincko.storage.thumbnailPreloaded = {}; //Keep a record of what as been preloaded to not double the calls
+Lincko.storage.thumbnailPreload = function(id, extend){
+	if(typeof extend == 'undefined'){ extend = false; }
+	if(typeof Lincko.storage.thumbnailPreloaded[id] != 'undefined'){
+		if(extend){
+			Lincko.storage.imagePreload(id);
+		}
+		return true;
+	}
+	Lincko.storage.thumbnailPreloaded[id] = true;
+	var url = Lincko.storage.getLinkThumbnail(id);
+	if(url){
+		Lincko.storage.thumbnailPreloaded[id] = new Image();
+		//The Timeout is there to avoid the code to freeze
+		setTimeout(function(url, id, extend){
+			if(extend){
+				//Also prepare the original picture
+				$(Lincko.storage.thumbnailPreloaded[id]).on('load', id, function(event) {
+					Lincko.storage.imagePreload(event.data);
+				});
+			}
+			Lincko.storage.thumbnailPreloaded[id].src = url;
+		}, 100, url, id, extend);
+	}
+}
+
+//Help to prepload the thumbnail faster
+Lincko.storage.imagePreloaded = {}; //Keep a record of what as been preloaded to not double the calls
+Lincko.storage.imagePreload = function(id){
+	if(typeof Lincko.storage.imagePreloaded[id] != 'undefined'){
+		return true;
+	}
+	Lincko.storage.imagePreloaded[id] = true;
+	if(Lincko.storage.get('files', id, 'category') != 'image'){ //If it's an image, we also preload it's original picture
+		return true;
+	}
+	var url = Lincko.storage.getLink(id);
+	if(url){
+		Lincko.storage.imagePreloaded[id] = new Image();
+		//The Timeout is there to avoid the code to freeze
+		setTimeout(function(url, id){
+			Lincko.storage.imagePreloaded[id] = new Image();
+			Lincko.storage.imagePreloaded[id].src = url;
+		}, 100, url, id);
+	}
 }
 
 /*
@@ -2482,6 +2536,11 @@ JSfiles.finish(function(){
 	} else {
 		storage_first_launch = false; //Help to trigger some action once the database is downloaded
 		setTimeout(function(){
+			//Preload thumbnail and images for users
+			var users = Lincko.storage.list('users', null, {profile_pic: ['!=', null]});
+			for(var i in users){
+				Lincko.storage.thumbnailPreload(users[i]['profile_pic']);
+			}
 			app_application_lincko.prepare('first_launch');
 			Lincko.storage.display(true, true);
 			wrapper_load_progress.move(90);

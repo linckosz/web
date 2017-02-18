@@ -97,6 +97,12 @@ submenu_list['newchat'] = {
 				});
 			}
 			app_application_lincko.prepare(subm.param.type+"_"+subm.param.id, true);
+
+			//preload project pictures
+			var files = Lincko.storage.list('files', null, null, subm.param.type, subm.param.id);
+			for(var i in files){
+				Lincko.storage.thumbnailPreload(files[i]['_id'], true);
+			}
 		},
 	},
 };

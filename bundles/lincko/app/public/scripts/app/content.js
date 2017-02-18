@@ -53,7 +53,6 @@ var app_content_menu = {
 	},
 
 	selection: function(projects_id, menu, param, hide_preview){
-		
 		//We do not allow to display anything until the personal project is available
 		if(typeof projects_id === 'undefined'){ return false; }
 		if(typeof menu === 'undefined'){ menu = 'tasks'; }
@@ -108,6 +107,16 @@ var app_content_menu = {
 
 		if($.inArray(menu, list) < 0){
 			menu = list[0];
+		}
+
+		//preload project pictures
+		var extend = false;
+		if(menu=='files'){
+			extend = true;
+		}
+		var files = Lincko.storage.list('files', null, null, 'projects', projects_id);
+		for(var i in files){
+			Lincko.storage.thumbnailPreload(files[i]['_id'], extend);
 		}
 
 		//Do nothing if we are in the same menu of the same project
@@ -240,6 +249,7 @@ var app_content_menu = {
 		} else {
 			app_application_lincko.prepare(false, true);
 		}
+
 		return true;
 	},
 }

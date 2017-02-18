@@ -91,7 +91,9 @@ $(window).resize(function(){
 	if(!isSafariIOS){
 		$('#base_iframe_message').css('height', body_height - $('#base_iframe_message').offset()['top']);
 	}
-	wrapper_IScroll(); //Need it for dropmenu
+	if(typeof wrapper_IScroll == 'function'){
+		wrapper_IScroll(); //Need it for dropmenu
+	}
 });
 
 dropmenu_list['settings'] = $.extend(

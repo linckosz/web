@@ -55,6 +55,23 @@ var isMobileBrowser = function(){
 	return /webOS|iPhone|iPad|BlackBerry|Windows Phone|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent);
 }
 
+//https://www.w3schools.com/js/js_cookies.asp
+function getCookie(cname) {
+	var name = cname + "=";
+	var decodedCookie = decodeURIComponent(document.cookie);
+	var ca = decodedCookie.split(';');
+	for(var i = 0; i <ca.length; i++) {
+		var c = ca[i];
+		while (c.charAt(0) == ' ') {
+			c = c.substring(1);
+		}
+		if (c.indexOf(name) == 0) {
+			return c.substring(name.length, c.length);
+		}
+	}
+	return "";
+} 
+
 //Help to detach all Nodes
 jQuery.prototype.recursiveEmpty = function(delay){
 	if(typeof delay == 'undefined'){ delay = 1000; } //By default delay by 1s
