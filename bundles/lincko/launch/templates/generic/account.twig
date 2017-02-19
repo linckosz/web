@@ -29,6 +29,7 @@
 			},
 		};
 		{% if integration_wechat_new %}
+			{% set integration_connection_error = false %}
 			account_integration.wechat.base = false;
 		{% endif %}
 		{% if integration_connection_error %}

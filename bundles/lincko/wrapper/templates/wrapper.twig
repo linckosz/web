@@ -120,7 +120,7 @@ document.linckoBackPort = 8443;
 {% endif %}
 
 var wrapper_force_open_website = false;
-{% if force_open_website %}
+{% if force_open_website or _route_name() != 'root' %}
 	wrapper_force_open_website = true;
 {% endif %}
 
@@ -389,12 +389,14 @@ $(function() {
 
 	if(
 		   wrapper_force_open_website
-		{% if _route_name() != 'root' %}|| true{% endif %} {# We force to hide the wall if other than root #}
 		|| !wrapper_localstorage.logged
 	){
-		if(!wrapper_localstorage.logged && !navigator.userAgent.match(/MicroMessenger/i)){
+		if(navigator.userAgent.match(/MicroMessenger/i) && !wrapper_localstorage.logged && !wrapper_force_open_website){
+			$("#wrapper_loading_home").addClass('display_none');
+		} else {
 			wrapper_load_progress.move(100);
 		}
+
 		var lincko_bot = new Image();
 		lincko_bot.src = "{{ _filelatest('/lincko/wrapper/images/logo/LinckoBotOrange.png') }}";
 		var img = $('<img>');
