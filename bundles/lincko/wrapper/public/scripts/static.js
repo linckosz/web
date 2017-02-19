@@ -43,6 +43,20 @@ var wrapper_to_url = function(text){
 	return text;
 }
 
+var wrapper_timeoffset = function(){
+	//Important: Note that getTimezoneOffset() is return posit value number (-8H for China instead of 8H)
+	//Reason is specs: http://stackoverflow.com/questions/21102435/why-does-javascript-date-gettimezoneoffset-consider-0500-as-a-positive-off
+	var timeoffset = (new Date()).getTimezoneOffset();
+	timeoffset = Math.floor(timeoffset/60);
+	if(timeoffset<0){
+		timeoffset = 24 + timeoffset; //24H - offset
+	}
+	if(timeoffset>=24){
+		timeoffset = 0;
+	}
+	return timeoffset;
+}
+
 //Help to detach all Nodes
 jQuery.prototype.recursiveEmpty = function(delay){
 	if(typeof delay == 'undefined'){ delay = 1000; } //By default delay by 1s
