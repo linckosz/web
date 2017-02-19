@@ -20,22 +20,22 @@ class ControllerWechat extends Controller {
 		return true;
 	}
 
-	public function weixinjs_get(){
+	public function weixinjs_get($timeoffset=0){
 		$app = $this->app;
 		$this->appid = $app->lincko->integration->wechat['dev_appid'];
 		$this->secret = $app->lincko->integration->wechat['dev_secretapp'];
-		$this->process('dev');
+		$this->process('dev', $timeoffset);
 	}
 
-	public function lincko_get(){
+	public function lincko_get($timeoffset=0){
 		$app = $this->app;
 		$app->lincko->data['force_open_website'] = false;
 		$this->appid = $app->lincko->integration->wechat['public_appid'];
 		$this->secret = $app->lincko->integration->wechat['public_secretapp'];
-		$this->process('pub');
+		$this->process('pub', $timeoffset);
 	}
 
-	protected function process($account){
+	protected function process($account, $timeoffset=0){
 		$app = $this->app;
 		$response = $this->get;
 		$access_token = false;
@@ -43,7 +43,14 @@ class ControllerWechat extends Controller {
 		$openid = false;
 		$state = false;
 		$valid = false;
-		$timeoffset = 0;
+
+		$timeoffset = (int) $timeoffset;
+		if($timeoffset<0){
+			$timeoffset = 24 + $timeoffset;
+		}
+		if($timeoffset>=24){
+			$timeoffset = 0;
+		}
 
 		if($response && isset($response['code']) && isset($response['state'])){
 			$state = $response['state'];
@@ -52,9 +59,6 @@ class ControllerWechat extends Controller {
 				'secret' => $this->secret,
 				'code' => $response['code'],
 			);
-			if(isset($response['timeoffset'])){
-				$timeoffset = $response['timeoffset'];
-			}
 			$response = $this->curl_get('authorization_code', $param);
 			if($response && $result = json_decode($response)){
 				if(isset($result->errcode)){
