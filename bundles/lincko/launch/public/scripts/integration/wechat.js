@@ -5,4 +5,3 @@ if(!wrapper_force_open_website && !wrapper_localstorage.logged && navigator.user
 		window.location.href = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="+account_integration.wechat.public_appid+"&redirect_uri=https%3A%2F%2F"+document.linckoFront+document.linckoBack+document.domain+"/integration/wechat/lincko?timeoffset="+account_timeoffset()+"&response_type=code&scope=snsapi_userinfo&state=snsapi_userinfo#wechat_redirect";
 	}
 }
-
