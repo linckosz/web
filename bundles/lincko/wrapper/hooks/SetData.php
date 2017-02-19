@@ -54,7 +54,6 @@ function SetData(){
 	}
 	
 	if($logged){
-		$app->lincko->data['force_open_website'] = false;
 		$app->lincko->translation['username'] = $yonghu;
 		//Trigger hashtag only once in the application
 		if(isset($_COOKIE['hashtag'])){

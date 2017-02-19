@@ -199,7 +199,7 @@ function account_select(select) {
 	$('#account_wrapper').find('.account_integration_icon').removeClass('account_integration_icon_active account_integration_icon_blur');
 	account_hide_error();
 	account_integration_account.stop();
-	if(integration_wechat()){
+	if(integration_wechat(true)){
 		return true;
 	}
 	if(select == 'forgot'){

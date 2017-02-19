@@ -8,6 +8,7 @@ $app = \Slim\Slim::getInstance();
 
 $app->get('/', function () use ($app) {
 	if($app->lincko->data['logged']){
+		$app->lincko->data['force_open_website'] = false;
 		$_SESSION['workspace'] = $app->lincko->data['workspace'];
 		$app->lincko->translation['workspace'] = $app->lincko->data['workspace'];
 		$app->lincko->data['reset_data'] = OneSeventySeven::get('reset_data');
