@@ -433,7 +433,7 @@ var account_integration_wechat_qrcode = function(){
 					id: "account_integration_top_info",
 					appid: account_integration.wechat.dev_appid, //This is using dev account, but openID is different from dev to public. Must use unionID to log in this scenario
 					scope: "snsapi_login",
-					redirect_uri: encodeURIComponent(top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/integration/wechat/weixinjs"),
+					redirect_uri: encodeURIComponent(top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/integration/wechat/weixinjs?timeoffset="+account_timeoffset()),
 					state: "snsapi_userinfo",
 					style: "black",
 					href: account_integration.wechat.href,
@@ -586,8 +586,7 @@ webworker_operation.account_show = function(select){
 	account_show(select);
 }
 
-JSfiles.finish(function(){
-	account_display_label($('#account_signin_email'), false);
+var account_timeoffset = function(){
 	//Important: Note that getTimezoneOffset() is return posit value number (-8H for China instead of 8H)
 	//Reason is specs: http://stackoverflow.com/questions/21102435/why-does-javascript-date-gettimezoneoffset-consider-0500-as-a-positive-off
 	var timeoffset = (new Date()).getTimezoneOffset();
@@ -598,7 +597,12 @@ JSfiles.finish(function(){
 	if(timeoffset>=24){
 		timeoffset = 0;
 	}
-	$('#account_joinus_timeoffset').val(timeoffset);
+	return timeoffset;
+}
+
+JSfiles.finish(function(){
+	account_display_label($('#account_signin_email'), false);
+	$('#account_joinus_timeoffset').val(account_timeoffset());
 	if(account_account_force){
 		account_show(true);
 	} else if(account_user_action){

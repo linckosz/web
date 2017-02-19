@@ -850,6 +850,11 @@ $(window).resize(function(){
 	app_application_submenu_position_timer = setTimeout(app_application_submenu_position, wrapper_timeout_timer);
 });
 
+wrapper_load_progress.add_cb_complete(function(){
+	$('body').addClass('base_color_bg_main_gradient');
+	app_application_lincko.prepare("hide_progress_wall", true);
+});
+
 JSfiles.finish(function(){
 	//Disable onboadring temporarly if the hashtag is called
 	if(app_application_hashtag && typeof onboarding != 'undefined'){

@@ -2299,6 +2299,16 @@ Lincko.storage.imagePreload = function(id){
 		return true;
 	}
 	Lincko.storage.imagePreloaded[id] = true;
+	//We disable this feature for mobile because oftenly used in non wifi mode
+	if(
+		   wrapper_connection_type != 'wifi'
+		&& (
+			   isMobileBrowser()
+			|| isMobileApp()
+		)
+	){
+		return true;
+	}
 	if(Lincko.storage.get('files', id, 'category') != 'image'){ //If it's an image, we also preload it's original picture
 		return true;
 	}

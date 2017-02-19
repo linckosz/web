@@ -311,3 +311,7 @@ var dropmenu_select = {
 	}
 
 }
+
+webworker_operation.launch_account_iframe = function(lincko_signin_bg){
+	$('#wphead_signin > span').velocity({backgroundColorAlpha: +lincko_signin_bg}, {delay: +lincko_signin_bg*100, duration: 200,});
+};

@@ -106,11 +106,11 @@
 
 		<img id="wphead_menu" class="base_pointer maxTablet" src="{{ _filelatest('/lincko/launch/images/generic/wphead/menu.png') }}" alt="{{ _trans('web', 2, 10, 'html') }}{# Menu #}" title="{{ _trans('web', 2, 10, 'html') }}{# Menu #}" />
 		<div class="wphead_div floatleft wphead_lincko_div"><span class="table_cell_center" id="wphead_lincko"><span>Lincko</span></span></div>
-		<div class="wphead_div floatleft minMobileL"><span class="table_cell_center" id="wphead_beta"><span>{{ _trans('web', 1, 11, 'html') }}{# Beta #}</span></span></div>
+		<div class="wphead_div floatleft minMobileL display_none"><span class="table_cell_center" id="wphead_beta"><span>{{ _trans('web', 1, 11, 'html') }}{# Beta #}</span></span></div>
 		{% if logged %}
 			<div class="wphead_div floatright"><span class="table_cell_center" id="wphead_account"><span>{{ _trans('web', 1, 7, 'html') }}{# My account #}</span></span></div>
 		{% elseif invitation_code or not youjian %}
-			<div class="wphead_div floatright"><span class="table_cell_center" id="wphead_joinus"><span>{{ _trans('web', 1, 8, 'html') }}{# Join us #}</span></span></div>
+			<div class="wphead_div floatright"><span class="table_cell_center" id="wphead_signin"><span>{{ _trans('web', 1, 9, 'html') }}{# Sign in #}</span></span></div>
 		{% else %}
 			<div class="wphead_div floatright"><span class="table_cell_center" id="wphead_signin"><span>{{ _trans('web', 1, 9, 'html') }}{# Sign in #}</span></span></div>
 		{% endif %}

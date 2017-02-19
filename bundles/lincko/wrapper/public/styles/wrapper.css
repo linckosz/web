@@ -66,3 +66,14 @@
 }
 
 /* Styled scrollbars end */
+
+.wrapper_loading_content_linckobot {
+	height: 282px;
+}
+
+/* Tablet in Portrait maxi*/
+@media only screen and (max-width: 900px){
+	.wrapper_loading_content_linckobot {
+		height: 185px;
+	}
+}

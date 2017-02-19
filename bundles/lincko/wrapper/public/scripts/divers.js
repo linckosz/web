@@ -5,54 +5,20 @@ var wrapper_browser = function(ua) {
 	return navigator.userAgent.toUpperCase().indexOf(ua.toUpperCase())>=0;
 };
 
-var wrapper_compareObjects = function(o1, o2) {
-	var k = '';
-	for(k in o1) if(o1[k] != o2[k]) return false;
-	for(k in o2) if(o1[k] != o2[k]) return false;
-	return true;
-};
-
-var wrapper_itemExists = function(haystack, needle) {
-	for(var i=0; i<haystack.length; i++) if(wrapper_compareObjects(haystack[i], needle)) return true;
-	return false;
-};
-
-var wrapper_to_html = function(text){
-	//text = php_htmlentities(text, true); //Need to enable double encoding
-	if(typeof text == 'undefined'){
-		text = '';
-	}
-	text = parseHTML(text);
-	text = php_nl2br(text);
-	return text;
-};
-
-var html_to_wrapper = function(text){
-	if(typeof text == 'undefined'){
-		text = '';
-	}
-	text = php_br2nl(text);
-	text = restoreHTML(text);
-	return text;
-};
-
-var wrapper_flat_text = function(text){
-	if(typeof text == 'undefined'){
-		text = '';
-	}
-	text = text.replace(/\r\n|\n\r|\r|\n/g, '&nbsp;');
-	return text;
-}
-
-var wrapper_to_url = function(text){
-	// based on the rules here: http://www.mtu.edu/umc/services/web/cms/characters-avoid/
-	text = text.replace(/[#%&{}\/\\<>*? $!'":@+`|=_]/g,'-');
-	return text;
-}
-
 //http://www.opentechguides.com/how-to/article/javascript/98/detect-mobile-device.html
 var isMobileBrowser = function(){
 	return /webOS|iPhone|iPad|BlackBerry|Windows Phone|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent);
+}
+
+//Check connection type
+//https://developer.mozilla.org/en-US/docs/Web/API/Network_Information_API
+var wrapper_connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+var wrapper_connection_type = false;
+if(typeof wrapper_connection != "undefined" && typeof wrapper_connection.type != "undefined"){
+	wrapper_connection_type = wrapper_connection.type;
+	wrapper_connection.addEventListener('typechange', function(){
+		wrapper_connection_type = wrapper_connection.type;
+	});
 }
 
 //https://www.w3schools.com/js/js_cookies.asp
@@ -70,124 +36,9 @@ function getCookie(cname) {
 		}
 	}
 	return "";
-} 
-
-//Help to detach all Nodes
-jQuery.prototype.recursiveEmpty = function(delay){
-	if(typeof delay == 'undefined'){ delay = 1000; } //By default delay by 1s
-	if(delay>0){
-		var Children = this.contents();
-		setTimeout(function(Children){
-			if(Children){
-				Children
-					.contents().each(function () {
-						$(this)
-							.recursiveEmpty(0)
-							.removeData()
-							.remove();
-					});
-			}
-		}, delay, Children);
-	} else {
-		this
-			.contents().each(function () {
-				$(this)
-					.recursiveEmpty(0)
-					.removeData()
-					.remove();
-			});
-	}
-
-	this
-		.off()
-		.removeAttr()
-		.empty();
-
-	return this;
-}
-
-//Help to detach all Nodes
-jQuery.prototype.recursiveRemove = function(delay){
-	if(typeof delay == 'undefined'){ delay = 1000; } //By default delay by 1s
-	this
-		.recursiveEmpty(delay)
-		.removeData()
-		.remove();
-	return this;
-}
-
-//Help to bloc all Nodes event
-jQuery.prototype.recursiveOff = function(delay){
-	if(typeof delay == 'undefined'){ delay = 0; }
-	if(delay>0){
-		var Children = this.contents();
-		setTimeout(function(Children){
-			if(Children){
-				Children
-					.contents().each(function () {
-						$(this)
-							.recursiveOff(0)
-					});
-			}
-		}, delay, Children);
-	} else {
-		this
-			.contents().each(function () {
-				$(this)
-					.recursiveOff(0)
-			});
-	}
-
-	this
-		.off();
-
-	return this;
-}
-
-function encode_utf8(s) {
-	return unescape(encodeURIComponent(s));
-}
-
-function decode_utf8(s) {
-	return decodeURIComponent(escape(s));
 }
 
 var supportsTouch = 'ontouchstart' in window || navigator.msMaxTouchPoints;
-
-var parseHTML = function(text) {
-	text = ''+text;
-	return text
-		.replaceAll('<', '&lt;')
-		.replaceAll('>', '&gt;')
-		.replaceAll('"', '&quot;')
-		.replaceAll("'", '&#39;')
-		.replaceAll('  ', '&nbsp;&nbsp;')
-	;
-};
-
-var restoreHTML = function(text) {
-	text = ''+text;
-	return text
-		.replaceAll('&lt;', '<')
-		.replaceAll('&gt;', '>')
-		.replaceAll('&quot;', '"')
-		.replaceAll('&#39;', "'")
-		.replaceAll('&nbsp;&nbsp;', '  ')
-	;
-};
-
-String.prototype.ucfirst = function() {
-	if(this.length > 0){
-		return this.charAt(0).toUpperCase() + this.slice(1);
-	} else {
-		return this;
-	}
-};
-
-String.prototype.replaceAll = function(find, replace) {
-	find = find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-	return this.replace(new RegExp(find, 'gi'), replace);
-};
 
 $.fn.hasScrollBar = function() {
 	return this.get(0).scrollHeight > this.height();

@@ -43,6 +43,7 @@ class ControllerWechat extends Controller {
 		$openid = false;
 		$state = false;
 		$valid = false;
+		$timeoffset = 0;
 
 		if($response && isset($response['code']) && isset($response['state'])){
 			$state = $response['state'];
@@ -51,6 +52,9 @@ class ControllerWechat extends Controller {
 				'secret' => $this->secret,
 				'code' => $response['code'],
 			);
+			if(isset($response['timeoffset'])){
+				$timeoffset = $response['timeoffset'];
+			}
 			$response = $this->curl_get('authorization_code', $param);
 			if($response && $result = json_decode($response)){
 				if(isset($result->errcode)){
@@ -96,6 +100,7 @@ class ControllerWechat extends Controller {
 				*/
 				$data->party = 'wechat';
 				$data->party_id = 'uid.'.$unionid;
+				$data->timeoffset = $timeoffset;
 				$result->account = $account;
 				$data->data = $result;
 				$controller = new ControllerWrapper($data, 'post', false);
@@ -153,6 +158,7 @@ class ControllerWechat extends Controller {
 					*/
 					$data->party = 'wechat';
 					$data->party_id = 'uid.'.$unionid;
+					$data->timeoffset = $timeoffset;
 					$result->account = $account;
 					$data->data = $result;
 					$controller = new ControllerWrapper($data, 'post', false);

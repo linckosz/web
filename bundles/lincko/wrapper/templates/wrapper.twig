@@ -88,6 +88,10 @@
 <script src="{{ _filelatest('/scripts/libs/trip/trip.min.js') }}" type="text/javascript"></script>
 <script src="{{ _filelatest('/scripts/libs/es6-promise.min.js') }}" type="text/javascript"></script>
 
+{# Minimal wrapper JS to load in priority #}
+<script src="{{ _filelatest('/lincko/wrapper/scripts/error.js') }}" type="text/javascript"></script>
+<script src="{{ _filelatest('/lincko/wrapper/scripts/static.js') }}" type="text/javascript"></script>
+
 <script>
 
 var wrapper_hash = document.location.hash;
@@ -177,10 +181,17 @@ var wrapper_load_progress = {
 	progress_wall: null, //ID of HTML element. The element will progressively disappear after the progress match 100%
 	progress: 0,
 	done: false,
+	cb_complete: [],
 	JSfiles_total: 0,
 	JSfiles_current: 0,
 	JSfiles_pourcentage_start: 10,
 	JSfiles_pourcentage_end: 60,
+
+	add_cb_complete: function(cb){
+		if(typeof cb == "function"){
+			this.cb_complete.push(cb);
+		}
+	},
 	
 	JSfiles_load: function(){
 		this.JSfiles_current++;
@@ -201,7 +212,6 @@ var wrapper_load_progress = {
 	},
 
 	hide_progress_wall: function(){
-		$('body').addClass('base_color_bg_main_gradient');
 		if($('#'+this.progress_wall).length>0){
 			$('#'+this.progress_wall).velocity(
 				{
@@ -211,9 +221,15 @@ var wrapper_load_progress = {
 					mobileHA: hasGood3Dsupport,
 					delay: 150,
 					duration: 100,
+					begin: function(){
+						for(var i in wrapper_load_progress.cb_complete){
+							if(typeof wrapper_load_progress.cb_complete[i] == "function"){
+								wrapper_load_progress.cb_complete[i]();
+							}
+						}
+					},
 					complete: function(){
 						$(this).hide().recursiveRemove();
-						app_application_lincko.prepare("hide_progress_wall", true);
 					},
 				}
 			);
@@ -226,9 +242,9 @@ var wrapper_load_progress = {
 		}
 		if(!this.done && $('#'+this.progress_bar).length>0){
 			if(warn){
-				$('#'+this.progress_bar).addClass('app_loading_progress_bar_warning');
+				$('#'+this.progress_bar).addClass('wrapper_loading_progress_bar_warning');
 			} else {
-				$('#'+this.progress_bar).removeClass('app_loading_progress_bar_warning');
+				$('#'+this.progress_bar).removeClass('wrapper_loading_progress_bar_warning');
 			}
 		}
 	},
@@ -250,6 +266,9 @@ var wrapper_load_progress = {
 			}
 			if(!this.done && $('#'+this.progress_bar).length>0){
 				value = Math.ceil(value);
+				if(value>=100){
+					this.done = true;
+				}
 				$('#'+this.progress_bar).clearQueue().stop().animate(
 					{
 						width: value+'%',
@@ -257,9 +276,9 @@ var wrapper_load_progress = {
 					{
 						duration: time,
 						complete: function(){
-							if(value>=100){
-								that.hide_progress_wall();
-								that.done = true;
+							if(wrapper_load_progress.progress>=100){
+								wrapper_load_progress.hide_progress_wall();
+								wrapper_load_progress.done = true;
 							}
 						},
 					}
@@ -344,7 +363,6 @@ JSfiles.loadLibraries = function(){
 	}, 20000);
 	setTimeout(function(){
 		wrapper_load_progress.move(99);
-		//wrapper_load_progress.warning();
 	}, 30000);
 	setTimeout(function(){//In all cases open the page after 45s
 		wrapper_load_progress.move(100);
@@ -369,6 +387,40 @@ wrapper_localstorage.uid = parseInt(wrapper_localstorage.uid, 10);
 
 //Load all JS libraries only after DOM load
 $(function() {
+
+	if(
+		   wrapper_force_open_website
+		{% if _route_name() != 'root' %}|| true{% endif %} {# We force to hide the wall if other than root #}
+		|| !wrapper_localstorage.logged
+	){
+		if(!wrapper_localstorage.logged && !navigator.userAgent.match(/MicroMessenger/i)){
+			wrapper_load_progress.move(100);
+		}
+		var lincko_bot = new Image();
+		lincko_bot.src = "{{ _filelatest('/lincko/wrapper/images/logo/LinckoBotOrange.png') }}";
+		var img = $('<img>');
+		img.prop('src', lincko_bot.src).addClass('wrapper_loading_content_linckobot');
+		$('#wrapper_loading_content').empty().append(img);
+		$('#wrapper_loading_progress').addClass('display_none');
+		var translateY = 40;
+		$('#wrapper_loading_cell_center')
+			.css('opacity', 0)
+			.velocity({ opacity: 1 }, {
+				delay: 400,
+				duration: 500,
+			});
+
+		$('#wrapper_loading_content')
+			.velocity({ translateY: translateY }, {
+				duration: 1100,
+				delay: 100,
+				easing: [ 0.455, 0.03, 0.515, 0.955 ],
+			})
+			.velocity("reverse", {
+				loop: true,
+			});
+	}
+
 	wrapper_load_progress.move(5);
 	for(var pri in JSfiles){
 		if($.isNumeric(pri) && ($.type(JSfiles[pri]) == 'array' || $.type(JSfiles[pri]) == 'object')){
@@ -380,7 +432,6 @@ $(function() {
 
 //Minimal libraries
 JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/null.js') }}", 0); //This empty file helps to load the first 304
-JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/error.js') }}", 1);
 JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/divers.js') }}", 1);
 JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/language.js') }}", 30);
 JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/date.js') }}", 30);
@@ -486,6 +537,40 @@ var webworker_operation = {
 	},
 };
 
+//http://www.opentechguides.com/how-to/article/javascript/98/detect-mobile-device.html
+var isMobileBrowser = function(){
+	return /webOS|iPhone|iPad|BlackBerry|Windows Phone|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent);
+}
+
+//Check connection type
+//https://developer.mozilla.org/en-US/docs/Web/API/Network_Information_API
+var wrapper_connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+var wrapper_connection_type = false;
+if(typeof wrapper_connection != "undefined" && typeof wrapper_connection.type != "undefined"){
+	wrapper_connection_type = wrapper_connection.type;
+	wrapper_connection.addEventListener('typechange', function(){
+		wrapper_connection_type = wrapper_connection.type;
+	});
+}
+
+
+//https://www.w3schools.com/js/js_cookies.asp
+function getCookie(cname) {
+	var name = cname + "=";
+	var decodedCookie = decodeURIComponent(document.cookie);
+	var ca = decodedCookie.split(';');
+	for(var i = 0; i <ca.length; i++) {
+		var c = ca[i];
+		while (c.charAt(0) == ' ') {
+			c = c.substring(1);
+		}
+		if (c.indexOf(name) == 0) {
+			return c.substring(name.length, c.length);
+		}
+	}
+	return "";
+} 
+
 </script>
 
 {#
@@ -500,6 +585,9 @@ var webworker_operation = {
 <script src="{{ _filelatest('/translation/date.js') }}" type="text/javascript"></script>
 
 </head>
+<div id="wrapper_loading">
+	{% include '/bundles/lincko/wrapper/templates/loading.twig' %}
+</div>
 {% block base %}
 {% endblock %}
 </html>
