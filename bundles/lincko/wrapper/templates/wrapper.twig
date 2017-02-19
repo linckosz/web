@@ -120,7 +120,7 @@ document.linckoBackPort = 8443;
 {% endif %}
 
 var wrapper_force_open_website = false;
-{% if force_open_website or _route_name() != 'root' %}
+{% if force_open_website %}
 	wrapper_force_open_website = true;
 {% endif %}
 
