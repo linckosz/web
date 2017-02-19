@@ -10,21 +10,21 @@ $app->group('/integration', function () use ($app) {
 
 		//Opened on Mobile within Wechat browser (Wechat JS API)
 		$app->get(
-			'/lincko:var',
+			'/lincko(/:timeoffset)',
 			'\bundles\lincko\wrapper\controllers\integration\ControllerWechat:lincko_get'
 		)
 		->conditions(array(
-			'var' => '\S*',
+			'timeoffset' => '\d*',
 		))
 		->name('integration_wechat_lincko_get');
 
 		//Opened by Desktop browser after Wechat confirmation on mobile (Wechat Native API)
 		$app->get(
-			'/weixinjs:var',
+			'/weixinjs(/:timeoffset)',
 			'\bundles\lincko\wrapper\controllers\integration\ControllerWechat:weixinjs_get'
 		)
 		->conditions(array(
-			'var' => '\S*',
+			'timeoffset' => '\d*',
 		))
 		->name('integration_wechat_dev_get');
 
