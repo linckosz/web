@@ -682,7 +682,6 @@ inputter.prototype.buildLayer = function()
 	var mobile_show_count = 0 ;
 	mobile_show_count = mobile_right_col_count;
 
-
 	input.find('[find=chat_textarea]').on('keyup',function(e){
 		if(!flag && e.keyCode == 13 && that.hasTask){
 			e.which = null;
@@ -740,13 +739,21 @@ inputter.prototype.buildLayer = function()
 			// 	.replace(/[\r\n]/g, ""));
 			$('.empty_show').addClass('mobile_hide');
 			$('.empty_hide').removeClass('mobile_hide');
+
+			content.removeClass('mobile-margin-right-' + mobile_show_count);
+			//content.addClass('mobile-margin-right-' + mobile_right_col_count);
+
+			var left_menu = container.find('[find=left_menu_wrapper]');
+			var right_menu = container.find('[find=right_menu_wrapper]');
+			mobile_show_count = right_menu.find("li:not(.mobile_hide)").length;
+			content.addClass('mobile-margin-right-' + mobile_show_count);
 		},0);
 	});
 
 	input.find('[find=chat_textarea]').on('cut',function(e,data){
 		var target = this;
 		setTimeout(function(){
-			if(target.innerText > 0)
+			if(target.innerText.length > 0)
 			{
 				$('.empty_show').addClass('mobile_hide');
 				$('.empty_hide').removeClass('mobile_hide');

@@ -1412,6 +1412,13 @@ skylist.prototype.make_fileLinkbox = function(fileID){
 			previewer.video(event.data);
 		});
 	}
+	else if(item_file['category'] == 'audio'){
+		fileType_class = 'fa fa-file-audio-o';
+		elem_linkbox.addClass(fileType_class).click(fileID, function(event){
+			event.stopPropagation();
+			previewer.audio(event.data);
+		});
+	}
 	else{
 		fileType_class = app_models_fileType.getClass(item_file.ori_ext);
 		elem_linkbox.addClass(fileType_class).click(function(event){

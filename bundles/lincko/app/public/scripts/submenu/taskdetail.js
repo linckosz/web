@@ -709,7 +709,6 @@ Submenu.prototype.Add_taskdetail = function() {
 		var elem_leftbox = $('<span></span>').addClass('skylist_card_leftbox_fileIcon');
 		var thumb_url = null;
 		if(item['category'] == 'image'){
-			fileType_class = 'fa fa-file-image-o';
 			thumb_url = Lincko.storage.getLinkThumbnail(item['_id']);
 			elem_leftbox = $('<img />').prop('src',thumb_url).click(item['_id'], function(event){
 				event.stopPropagation();
@@ -717,17 +716,24 @@ Submenu.prototype.Add_taskdetail = function() {
 			});
 		}
 		else if(item['category'] == 'video'){
-			fileType_class = 'fa fa-file-video-o';
 			thumb_url = Lincko.storage.getLinkThumbnail(item['_id']);
 			elem_leftbox = $('<img />').prop('src',thumb_url).click(item['_id'], function(event){
 				event.stopPropagation();
 				previewer.video(event.data);
 			});
 		}
+		else if(item['category'] == 'audio'){
+			fileType_class = app_models_fileType.getClass(item.ori_ext);
+			elem_leftbox.addClass(fileType_class);
+			elem_leftbox.click(item['_id'], function(event){
+				event.stopPropagation();
+				previewer.audio(event.data);
+			});
+		}
 		else{
-		 	fileType_class = app_models_fileType.getClass(item.ori_ext);
-		 	elem_leftbox.addClass(fileType_class);
-		 }
+			fileType_class = app_models_fileType.getClass(item.ori_ext);
+			elem_leftbox.addClass(fileType_class);
+		}
 
 		elem.find('[find=leftbox]').html(elem_leftbox);
 	}
@@ -1325,23 +1331,31 @@ Submenu.prototype.Add_taskdetail = function() {
 		}
 
 		//thumbnail or icons
-		if(item_link.category && (item_link.category == 'image' || item_link.category == 'video')){
+		if(item_link.category && (item_link.category == 'image' || item_link.category == 'video'
+			|| item_link.category == 'audio')){
 			var thumb_url = Lincko.storage.getLinkThumbnail(item_link['_id']);
 			if(thumb_url){
-				var elem_leftbox = elem_linkcard.find('[find=card_leftbox]').append($('<img />').prop('src',thumb_url)).removeClass('fa-file-o');
-
 				if(item_link.category == 'image'){
+					var elem_leftbox = elem_linkcard.find('[find=card_leftbox]').append($('<img />').prop('src',thumb_url)).removeClass('fa-file-o');
 					elem_leftbox.click(function(event){
 						event.stopPropagation();
 						previewer.pic(item_link['_id']);
 					});
 				}
 				else if(item_link.category == 'video'){
+					var elem_leftbox = elem_linkcard.find('[find=card_leftbox]').append($('<img />').prop('src',thumb_url)).removeClass('fa-file-o');
 					elem_leftbox.click(function(event){
 						event.stopPropagation();
 						previewer.video(item_link['_id']);
 					});
-				}				
+				}	
+				else  if(item_link.category == 'audio'){
+					var elem_leftbox = elem_linkcard.find('[find=card_leftbox]').addClass( app_models_fileType.getClass(item_link.ori_ext));
+					elem_leftbox.click(function(event){
+						event.stopPropagation();
+						previewer.audio(item_link['_id']);
+					});
+				}			
 			}
 		}
 		else if(item_link._type == 'tasks'){
