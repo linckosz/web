@@ -558,7 +558,13 @@ Submenu.prototype.Add_MenuButton = function(position) {
 	Elem.prop("id", '');
 	Elem.find("[find=submenu_button_title]").html(attribute.title);
 	if ("value" in attribute) {
-		Elem.find("[find=submenu_button_value]").html(attribute.value);
+		if(attribute.value){
+			Elem.find("[find=submenu_button_value]").removeClass("display_none").html(attribute.value);
+		} else {
+			Elem.find("[find=submenu_button_value]").addClass("display_none");
+		}
+	} else {
+		Elem.find("[find=submenu_button_value]").addClass("display_none");
 	}
 	if ("action" in attribute) {
 		if (!("action_param" in attribute)) {

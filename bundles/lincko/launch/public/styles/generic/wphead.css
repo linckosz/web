@@ -64,7 +64,22 @@
 	font-size: 30px;
 	font-family: Roboto;
 	font-weight: 200;
+	padding-left: 0px;
 }
+
+#wphead_logo {
+	color: #FBA026;
+	font-size: 0;
+	font-family: Roboto;
+	font-weight: 200;
+	padding-left: 6px;
+	padding-right: 14px;
+}
+
+#wphead_logo_img {
+	height: 34px;
+}
+
 
 #wphead_beta {
 	padding-left: 0px;
@@ -129,8 +144,8 @@
 
 #wphead_signin > span {
 	cursor: pointer; cursor: hand;
-	border: 3px solid #FBA026;
-	border-radius: 8px;
+	border: 2px solid #FBA026;
+	border-radius: 3px;
 	padding: 3px 16px;
 	background-color: rgba(251, 160, 38, 0);
 }

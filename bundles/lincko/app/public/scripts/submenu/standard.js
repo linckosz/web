@@ -118,11 +118,11 @@ submenu_list['settings'] = {
 			}
 		},
 	},
-	"support": {
+	"appstore": {
 		"style": "button",
-		"title": Lincko.Translation.get('app', 89, 'html'), //Contact Us
+		"title": Lincko.Translation.get('app', 93, 'html'), //Download our App
 		"action": function(){
-			window.location.href = wrapper_link['support'];
+			window.open(wrapper_link['appstore'], "_blank");
 		},
 		"class": "",
 		"now": function(Elem, subm){
@@ -130,6 +130,30 @@ submenu_list['settings'] = {
 				Elem.addClass('display_none');
 			}
 		},
+	},
+	"follow_facebook": {
+		"style": "button",
+		"title": Lincko.Translation.get('app', 94, 'html'), //Like us on Facebook
+		"action": function(){
+			window.open("https://www.facebook.com/linckoapp/", "_blank");
+		},
+		"class": "",
+	},
+	"follow_wechat": {
+		"style": "button",
+		"title": Lincko.Translation.get('app', 95, 'html'), //Follow us on Wechat
+		"action": function(){
+			previewer.pic_url(app_application_icon_single_wechat_account.src);
+		},
+		"class": "",
+	},
+	"support": {
+		"style": "button",
+		"title": Lincko.Translation.get('app', 89, 'html'), //Contact Us
+		"action": function(){
+			window.location.href = wrapper_link['support'];
+		},
+		"class": "",
 	},
 	"signout": {
 		"style": "button",

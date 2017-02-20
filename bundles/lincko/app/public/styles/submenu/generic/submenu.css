@@ -196,7 +196,7 @@
 }
 
 .submenu_deco_info_wrap {
-	white-space: normal;
+	white-space: normal !important;
 }
 
 .submenu_deco_neutral {
