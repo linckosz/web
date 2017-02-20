@@ -365,7 +365,7 @@ Lincko.storage.update = function(partial, info){
 		if(i.indexOf('_')!==0){ //Items
 			for(var j in partial[i]) {
 
-				//remove line breaks added by php for 'comment' attribute of comments, messages, notes, and tasks objects
+				//remove line breaks added by php for 'comment' attribute of notes, and tasks objects
 				if(i == 'notes' || i == 'tasks'){ 
 					partial[i][j]['-comment'] = base_removeLineBreaks(partial[i][j]['-comment']); 
 				}
@@ -499,6 +499,57 @@ Lincko.storage.update = function(partial, info){
 	}
 
 	if(update){
+
+		//loop through partial to update hist_at based on _children and other soft links
+		for(var i in partial){
+			if( i == 'tasks' || i == 'notes' || i == 'files' || i == 'comments'){ //other categories may be added later, if necessary
+				for(var j in partial[i]){
+					if(Lincko.storage.data[i][j]._children){
+						var hist_at_parent = Lincko.storage.data[i][j].hist_at;
+						$.each(Lincko.storage.data[i][j]._children, function(type, obj){
+							$.each(obj, function(id_child, b){
+								var child = Lincko.storage.get(type, id_child);
+								//at this point, updated_at should be the time link was made
+								if(child && child.updated_at && child.updated_at > hist_at_parent){
+									Lincko.storage.data[i][j].hist_at = child.updated_at;
+									delete Lincko.storage.data[i][j].hist_by;
+									if(child.updated_by){
+										Lincko.storage.data[i][j].hist_by = child.updated_by;
+									}
+								}
+								else if(child && child.created_at && child.created_at > hist_at_parent){
+									Lincko.storage.data[i][j].hist_at = child.created_at;
+									delete Lincko.storage.data[i][j].hist_by;
+									if(child.created_by){
+										Lincko.storage.data[i][j].hist_by = child.created_by;
+									}
+								}
+							});
+						});
+					}
+
+					var link_type_arr = ['_tasks', '_notes', '_files'];
+					for( var ii in link_type_arr){
+						var link_type = link_type_arr[ii];
+						if(Lincko.storage.data[i][j][link_type]){
+							var hist_at_parent = Lincko.storage.data[i][j].hist_at;
+							$.each(Lincko.storage.data[i][j][link_type], function(id_child, b){
+								var child = Lincko.storage.get(link_type.replace("_", ""), id_child);
+								//at this point, updated_at should be the time link was made
+								if(child && child.updated_at && child.updated_at > hist_at_parent){
+									Lincko.storage.data[i][j].hist_at = child.updated_at;
+									delete Lincko.storage.data[i][j].hist_by;
+									if(child.updated_by){
+										Lincko.storage.data[i][j].hist_by = child.updated_by;
+									}
+								}
+							});
+						}
+					}
+				}
+			}
+		}
+
 		setTimeout(function(){
 			//Lincko.storage.childrenList(partial, children_list);
 			Lincko.storage.childrenList(); //We should not scan the whole database, it slows down the list but Sky had an issue of getting _children visible for notes when adding a comment
