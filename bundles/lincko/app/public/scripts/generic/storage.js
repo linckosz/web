@@ -504,28 +504,38 @@ Lincko.storage.update = function(partial, info){
 		for(var i in partial){
 			if( i == 'tasks' || i == 'notes' || i == 'files' || i == 'comments'){ //other categories may be added later, if necessary
 				for(var j in partial[i]){
-					if(Lincko.storage.data[i][j]._children){
-						var hist_at_parent = Lincko.storage.data[i][j].hist_at;
-						$.each(Lincko.storage.data[i][j]._children, function(type, obj){
-							$.each(obj, function(id_child, b){
-								var child = Lincko.storage.get(type, id_child);
-								//at this point, updated_at should be the time link was made
-								if(child && child.updated_at && child.updated_at > hist_at_parent){
-									Lincko.storage.data[i][j].hist_at = child.updated_at;
-									delete Lincko.storage.data[i][j].hist_by;
-									if(child.updated_by){
-										Lincko.storage.data[i][j].hist_by = child.updated_by;
+					//for comments, update the hist of the parent
+					if( i == 'comments'){
+						var typeChild = i;
+						var idChild = j;
+						var typeParent = null;
+						var idParent = null;
+						var objParent = null;
+						var loopCount = 0;
+
+						//loop until parent is no longer comments
+						do{
+							typeParent = Lincko.storage.data[typeChild][idChild]._parent[0];
+							idParent = Lincko.storage.data[typeChild][idChild]._parent[1];
+							objParent = Lincko.storage.get(typeParent, idParent);
+							if(objParent){
+								typeChild = objParent._type;
+								idChild = objParent._id;
+								if(!objParent.hist_at){
+									objParent.hist_at = objParent.created_at;
+									objParent.hist_by = objParent.created_by;
+								}
+								if(Lincko.storage.data[i][j].hist_at > objParent.hist_at){
+									Lincko.storage.data[typeParent][idParent].hist_at = Lincko.storage.data[i][j].hist_at;
+									delete Lincko.storage.data[typeParent][idParent].hist_by;
+									if(Lincko.storage.data[i][j].hist_by){
+										Lincko.storage.data[typeParent][idParent].hist_by;
 									}
 								}
-								else if(child && child.created_at && child.created_at > hist_at_parent){
-									Lincko.storage.data[i][j].hist_at = child.created_at;
-									delete Lincko.storage.data[i][j].hist_by;
-									if(child.created_by){
-										Lincko.storage.data[i][j].hist_by = child.created_by;
-									}
-								}
-							});
-						});
+							}
+							loopCount++;
+						}
+						while(objParent && typeParent == 'comments' && loopCount < 100);							
 					}
 
 					var link_type_arr = ['_tasks', '_notes', '_files'];
