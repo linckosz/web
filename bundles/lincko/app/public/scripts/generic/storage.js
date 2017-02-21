@@ -535,24 +535,25 @@ Lincko.storage.update = function(partial, info){
 							});
 						}
 					}
-
-					//update parent hist_at if soft link objects have higher hist_at
-					var link_type_arr = ['_tasks', '_notes', '_files'];
-					for( var ii in link_type_arr){
-						var link_type = link_type_arr[ii];
-						if(Lincko.storage.data[i][j][link_type]){
-							var hist_at_parent = Lincko.storage.data[i][j].hist_at;
-							$.each(Lincko.storage.data[i][j][link_type], function(id_child, b){
-								var child = Lincko.storage.get(link_type.replace("_", ""), id_child);
-								//at this point, updated_at should be the time link was made
-								if(child && child.updated_at && child.updated_at > hist_at_parent){
-									Lincko.storage.data[i][j].hist_at = child.updated_at;
-									delete Lincko.storage.data[i][j].hist_by;
-									if(child.updated_by){
-										Lincko.storage.data[i][j].hist_by = child.updated_by;
+					else{ //tasks notes files
+						//update parent hist_at if soft link objects have higher hist_at
+						var link_type_arr = ['_tasks', '_notes', '_files'];
+						for( var ii in link_type_arr){
+							var link_type = link_type_arr[ii];
+							if(Lincko.storage.data[i][j][link_type]){
+								var hist_at_parent = Lincko.storage.data[i][j].hist_at;
+								$.each(Lincko.storage.data[i][j][link_type], function(id_child, b){
+									var child = Lincko.storage.get(link_type.replace("_", ""), id_child);
+									//at this point, updated_at should be the time link was made
+									if(child && child.updated_at && child.updated_at > hist_at_parent){
+										Lincko.storage.data[i][j].hist_at = child.updated_at;
+										delete Lincko.storage.data[i][j].hist_by;
+										if(child.updated_by){
+											Lincko.storage.data[i][j].hist_by = child.updated_by;
+										}
 									}
-								}
-							});
+								});
+							}
 						}
 					}
 				}
