@@ -217,6 +217,8 @@
 	position: absolute;
     top: 36px;
     bottom: 0px;
+    left: 0px;
+    right: 0px;
 }
 .app_models_projects_projectsDeck [find=deckWrapper_content]{
 	position: relative;
