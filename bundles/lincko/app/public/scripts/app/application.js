@@ -856,6 +856,7 @@ wrapper_load_progress.add_cb_complete(function(){
 });
 
 JSfiles.finish(function(){
+	app_application_action(1); //Logged
 	//Disable onboadring temporarly if the hashtag is called
 	if(app_application_hashtag && typeof onboarding != 'undefined'){
 		onboarding.forceOff = true;

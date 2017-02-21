@@ -33,7 +33,7 @@ $app->group('/appstore', function () use ($app) {
 	->name('appstore');
 
 	//Make sure that we reach us app stores, not foreign country ones
-	$app->get('/us', function () use($app) {
+	$app->get('/us/', function () use($app) {
 		$app->lincko->data['appstore'] = $app->lincko->data['appstore_default'];
 		$app->render('/bundles/lincko/wrapper/templates/appstore.twig');
 	})

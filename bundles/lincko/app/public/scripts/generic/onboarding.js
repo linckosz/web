@@ -144,6 +144,7 @@ var onboarding = {
 		app_content_menu.selection(id_pj_welcome);
 		app_application.project();
 		onboarding.overlays.show.content_sub();
+		app_application_action(2); //Start onboarding
 
 		var onboardingDelay = 0;
 		if(responsive.test('maxMobileL')){
@@ -189,6 +190,7 @@ var onboarding = {
 			close = true;
 		}
 		if(close){
+			app_application_action(4); //Finish onboarding
 			app_models_resume_onboarding_continue(null, 10102); //end onboarding
 		}
 		var that = this;
@@ -387,7 +389,7 @@ onboarding.overlays = {
 			elem.click(function(){
 				onboarding.forceOff = true;
 				if(onboarding.currentTrip){
-					app_application_action(5); //Next onborading step
+					app_application_action(5); //Skip onborading step
 					onboarding.currentTrip.stop();
 				}
 				onboarding.clear();

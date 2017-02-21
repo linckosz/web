@@ -98,6 +98,13 @@ class ControllerWrapper extends Controller {
 				$this->json['data']['integration_code'] = $_SESSION['integration_code'];
 			}
 		}
+
+		if(isset($_SERVER) && isset($_SERVER['REMOTE_ADDR'])){
+			$this->json['myip'] = $_SERVER['REMOTE_ADDR'];
+		} else {
+			$$this->json['myip'] = $app->request->getIp();
+		}
+		
 		return true;
 	}
 

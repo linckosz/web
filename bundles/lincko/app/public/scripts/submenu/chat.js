@@ -268,6 +268,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 				'user/update',
 				function(){
 					app_application_lincko.prepare('contacts_list', true);
+					app_application_action(10); //Accept invitation
 				}
 			);
 			Lincko.storage.data['users'][users_id]['_invitation'] = false;
@@ -288,6 +289,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 				'user/update',
 				function(){
 					app_application_lincko.prepare('contacts_list', true);
+					app_application_action(11); //Reject invitation
 				}
 			);
 			Lincko.storage.data['users'][users_id]['_invitation'] = false;
@@ -404,6 +406,7 @@ Submenu.prototype.Add_ChatAddUser = function() {
 	var submenu_wrapper = this.Wrapper();
 	var attribute = this.attribute;
 	this.chat_status = "noresult";
+	this.find_method = "unknown";
 
 	submenu_chat_search.data.sub_that = that;
 
@@ -619,6 +622,11 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 		Elem_info.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2312, 'js')); //Your invitation failed to send, please try again.
 	}
 	else if(chat_status == "invitationsuccess"){
+		if(sub_that.find_method=="email"){
+			app_application_action(6); //Invite by email
+		} else if(sub_that.find_method=="qrcode"){
+			app_application_action(7); //Invite by internal scan
+		}
 		Elem_info.removeClass("display_none");
 		Elem_info.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2309, 'js')); //Your invitation has been sent.
 		if(sub_that && sub_that.param && sub_that.param.prevSub && sub_that.param.prevSub.menu == 'app_projects_users_contacts'){
@@ -740,6 +748,7 @@ var submenu_chat_search = {
 	},
 
 	find_qrcode: function(sub_that, user_code){
+		sub_that.find_method = 'qrcode';
 		clearTimeout(submenu_chat_search.timing);
 		if(user_code.length>=2 && submenu_chat_search.value_qrcode !== user_code){
 			submenu_chat_new_user_result(sub_that, null, "searching");
@@ -763,6 +772,7 @@ var submenu_chat_search = {
 	},
 
 	find: function(sub_that, timer, force){
+		sub_that.find_method = 'email';
 		var Elem = $("#"+sub_that.id);
 		var input = Elem.find("[find=submenu_app_chat_search_input]");
 		var param = $.trim(input.val());
@@ -845,6 +855,7 @@ var submenu_chat_invite_cb_success = function(msg, error, status, data){
 	} else {
 		submenu_chat_new_user_result(submenu_chat_search.data.sub_that, null, "invitationfailed");
 	}
+	this.find_method = "unknown";
 };
 
 var submenu_chat_inviteqrcode_cb_success = function(msg, error, status, data){

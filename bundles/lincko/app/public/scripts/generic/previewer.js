@@ -95,7 +95,7 @@ var previewer = (function() {
 		var url = id;
 		var thumbnail = "";
 		var download = "";
-		if(Lincko.storage.get("files", id, "name")<100){
+		if(Lincko.storage.get("files", id, "progress")<100){
 		//Need to verify that the player is working for all devices first
 			return pic_preview(id, false);
 		}
