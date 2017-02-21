@@ -1377,7 +1377,7 @@ var burger_renderCalendar = function(id, defaultDate, fn_onSelect){
 		showOtherMonths: true,
 		dateFormat: '@',
 		gotoCurrent: true,
-		minDate: 0,
+		//minDate: 0, //set minDate 0 to allow date selection from today onwards
 		defaultDate: defaultDate.toString(),
 		onChangeMonthYear: function(year, month, inst){ //this is called before the calendar is redrawn, use timeout
 			update_monthControl(month-1);//to be used as index in array
