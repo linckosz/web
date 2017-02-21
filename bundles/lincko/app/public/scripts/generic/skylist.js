@@ -2168,6 +2168,7 @@ skylist.draw_fileCard = function(item){
 	var updated_by;
 	var updated_at;
 	var created_by;
+	var created_at;
 
 	/* title */
 	var elem_title = Elem.find('[find=title]');
@@ -2211,14 +2212,15 @@ skylist.draw_fileCard = function(item){
 	commentCount = comments.length;
 	Elem.find('[find=commentCount]').html(commentCount);
 
-	updated_at = new wrapper_date(item['hist_at'] || item['updated_at']);
-	if(skylist_textDate(updated_at)){
-		updated_at = skylist_textDate(updated_at);
+	/*created_at*/
+	created_at = new wrapper_date(item['created_at']);
+	if(skylist_textDate(created_at)){
+		created_at = skylist_textDate(created_at);
 	}
 	else{
-		updated_at = updated_at.display('date_very_short');
+		created_at = created_at.display('date_very_short');
 	}
-	Elem.find('[find=card_time]').html(updated_at);
+	Elem.find('[find=card_time]').html(created_at);
 
 
 	/* updated_by (quickInfo) */
