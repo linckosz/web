@@ -748,7 +748,7 @@ burger_list.in_charge = function(lincko_type, lincko_id){
 }
 
 burger_list.projects = function(lincko_type, lincko_id){
-	var latest_projects = [];
+	var projects_list = [];
 	var id_preSelect = null;
 
 	if(lincko_id && lincko_id != 'new'){
@@ -758,7 +758,63 @@ burger_list.projects = function(lincko_type, lincko_id){
 			var id_preSelect = parent_item[1];
 		}
 	}
+	
+	var projects_all = app_models_projects_list();
+	var projects_personal = projects_all[0];
+	var projects_recent = projects_all[1];
+	var projects_abc = projects_all[2];
+	var projects_count = projects_all[3];
 
+	projects_list.push(
+		{
+			text: Lincko.Translation.get('app', 2502, 'html'), //Personal Space
+			val: projects_personal['_id'],
+			preSelect: id_preSelect == projects_personal['_id'],
+			latestProjects: false,
+			personal: true,
+			addClass: 'burger_option_projects',
+		}
+	);
+
+
+	if(projects_recent.length){
+		$.each(projects_recent, function(i, project){
+			if(!project || project.personal_private || project.deleted_at){ return; }
+			else{
+				projects_list.push(
+					{
+						text: project['+title'],
+						val: project['_id'],
+						preSelect: id_preSelect == project['_id'],
+						latestProjects: true,
+						addClass: 'burger_option_projects',
+					}
+				);
+			}
+		});
+	}
+
+	//add border to last one in latest projects
+	if(projects_list.length){
+		projects_list[projects_list.length-1].addClass = 'burger_latestvisitProjects_border';
+	}
+
+	$.each(projects_abc, function(i, project){
+		projects_list.push(
+			{
+				text: project['+title'],
+				val: project['_id'],
+				preSelect: id_preSelect == project['_id'],
+				latestProjects: false,
+				addClass: 'burger_option_projects',
+			}
+		);
+	});
+
+	return projects_list;
+
+
+	//old code below
 	if(Lincko.storage.getSettings().latestvisitProjects){
 		$.each(Lincko.storage.getSettings().latestvisitProjects, function(i, id){
 			var project = Lincko.storage.get('projects',id);
