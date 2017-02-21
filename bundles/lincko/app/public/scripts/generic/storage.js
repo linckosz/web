@@ -512,28 +512,31 @@ Lincko.storage.update = function(partial, info){
 						var hist_by_new = Lincko.storage.data[i][j].hist_by;
 						if(!hist_by_new){ hist_by_new = Lincko.storage.data[i][j].created_by; }
 
-						var comments_tree = Lincko.storage.tree('comments', j, 'parents').comments;
+						var comments_tree = Lincko.storage.tree('comments', j, 'parents'); //include itself
+						if(comments_tree && comments_tree.comments){
+							comments_tree = comments_tree.comments;
+							$.each(comments_tree, function(id, b){
+								var comment_parent = Lincko.storage.get('comments', id);
 
-						$.each(comments_tree, function(id, b){
-							var comment_parent = Lincko.storage.get('comments', id);
-
-							//update all parent comment hist_at values
-							if(comment_parent && (!comment_parent.hist_at || comment_parent.hist_at < hist_at_new)){
-								Lincko.storage.data['comments'][id].hist_at = hist_at_new;
-								Lincko.storage.data['comments'][id].hist_by = hist_by_new;
-							}
-
-							//if any of parent comments' parent is a non-comment item, then update hist_at as well
-							if(comment_parent._parent[0] != 'comments'){
-								var comment_parent_parent = Lincko.storage.get(comment_parent._parent[0], comment_parent._parent[1]);
-								if(comment_parent_parent && (!comment_parent_parent.hist_at || comment_parent_parent.hist_at < hist_at_new)){
-									Lincko.storage.data[comment_parent._parent[0]][comment_parent._parent[1]].hist_at = hist_at_new;
-									Lincko.storage.data[comment_parent._parent[0]][comment_parent._parent[1]].hist_by = hist_by_new;
+								//update all parent comment hist_at values
+								if(comment_parent && (!comment_parent.hist_at || comment_parent.hist_at < hist_at_new)){
+									Lincko.storage.data['comments'][id].hist_at = hist_at_new;
+									Lincko.storage.data['comments'][id].hist_by = hist_by_new;
 								}
-							}
-						});
+
+								//if any of parent comments' parent is a non-comment item, then update hist_at as well
+								if(comment_parent._parent[0] != 'comments'){
+									var comment_parent_parent = Lincko.storage.get(comment_parent._parent[0], comment_parent._parent[1]);
+									if(comment_parent_parent && (!comment_parent_parent.hist_at || comment_parent_parent.hist_at < hist_at_new)){
+										Lincko.storage.data[comment_parent._parent[0]][comment_parent._parent[1]].hist_at = hist_at_new;
+										Lincko.storage.data[comment_parent._parent[0]][comment_parent._parent[1]].hist_by = hist_by_new;
+									}
+								}
+							});
+						}
 					}
 
+					//update parent hist_at if soft link objects have higher hist_at
 					var link_type_arr = ['_tasks', '_notes', '_files'];
 					for( var ii in link_type_arr){
 						var link_type = link_type_arr[ii];
