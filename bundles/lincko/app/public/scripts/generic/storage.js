@@ -483,7 +483,7 @@ Lincko.storage.update = function(partial, info){
 					//We add, we don't overwrite
 					Lincko.storage.data[i][j][k] = hist;
 
-					if(i == '_history' && hist.type && hist.id && hist.timestamp){
+					if(i == '_history' && hist.type && hist.id && hist.timestamp && Lincko.storage.get(hist.type, hist.id)){
 						//add hist_at and hist_by to the appropriate object
 						if(!Lincko.storage.data[hist.type][hist.id].hist_at 
 						|| hist.timestamp > Lincko.storage.data[hist.type][hist.id].hist_at){
