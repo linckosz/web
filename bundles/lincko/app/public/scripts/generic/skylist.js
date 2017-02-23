@@ -26,6 +26,7 @@ var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct, ri
 	this.that = this;
 	var that = this;
 
+	that.pid = app_content_menu.projects_id;
 	this.list_type = list_type;
 
 	if( subConstruct ){
@@ -3422,7 +3423,7 @@ skylist.prototype.filter_updateSettings = function(sendAction){
 	try{
 		var currentSettings = JSON.parse(JSON.stringify(that.Lincko_itemsList_filter));
 		if(typeof currentSettings == 'object'){ currentSettings.search = ''; }
-		if( JSON.stringify(settings_new.skylist.filter[app_content_menu.projects_id][that.list_type]) == JSON.stringify(currentSettings)){
+		if( JSON.stringify(settings_new.skylist.filter[that.pid][that.list_type]) == JSON.stringify(currentSettings)){
 			return false; //settings are already the same, no need to continue
 		}
 	}
@@ -3438,13 +3439,13 @@ skylist.prototype.filter_updateSettings = function(sendAction){
 	if($.type(settings_new.skylist.filter) != 'object'){
 		settings_new.skylist.filter = {};
 	}
-	if($.type(settings_new.skylist.filter[app_content_menu.projects_id]) != 'object'){
-		settings_new.skylist.filter[app_content_menu.projects_id]  = {};
+	if($.type(settings_new.skylist.filter[that.pid]) != 'object'){
+		settings_new.skylist.filter[that.pid]  = {};
 	}
 
 	if(!sendAction){
-		if(settings_new.skylist.filter[app_content_menu.projects_id][that.list_type]){
-			$.each(settings_new.skylist.filter[app_content_menu.projects_id][that.list_type], function(filterType, val){
+		if(settings_new.skylist.filter[that.pid][that.list_type]){
+			$.each(settings_new.skylist.filter[that.pid][that.list_type], function(filterType, val){
 				that.Lincko_itemsList_filter[filterType] = val;
 			});
 			//that.Lincko_itemsList_filter = settings_new.skylist.filter[app_content_menu.projects_id][that.list_type];
@@ -3452,8 +3453,8 @@ skylist.prototype.filter_updateSettings = function(sendAction){
 		return;
 	}
 	
-	settings_new.skylist.filter[app_content_menu.projects_id][that.list_type] = JSON.parse(JSON.stringify(that.Lincko_itemsList_filter));
-	settings_new.skylist.filter[app_content_menu.projects_id][that.list_type].search = ''; //search filter is not saved
+	settings_new.skylist.filter[that.pid][that.list_type] = JSON.parse(JSON.stringify(that.Lincko_itemsList_filter));
+	settings_new.skylist.filter[that.pid][that.list_type].search = ''; //search filter is not saved
 	Lincko.storage.settingsLocal = settings_new;
 	wrapper_sendAction({settings: JSON.stringify(settings_new)}, 'post', 'data/settings');
 	//offline settings
