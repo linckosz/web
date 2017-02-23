@@ -1593,7 +1593,9 @@ function submenu_Build_return(menu, next, hide, param, preview, animate) {
 	if (menu in submenu_list) {
 		if (preview) {
 			var temp = new Submenu(menu, next, param, preview, animate);
-			$('#app_content_submenu_preview').parent().addClass("with_preview");
+			//$('#app_content_submenu_preview').parent().addClass("with_preview");
+			$('#app_content_submenu_preview').addClass("with_preview");
+			$('#app_content_dynamic_layers').addClass("with_preview");
 			$('#app_content_submenu_preview').show();
 		} else {
 			var temp = new Submenu(menu, next, param, false, animate);
@@ -1640,7 +1642,9 @@ function submenu_content_block_hide(preview) {
 		}
 	}
 	if (preview) {
-		$('#app_content_submenu_preview').parent().removeClass("with_preview");
+		//$('#app_content_submenu_preview').parent().removeClass("with_preview");
+		$('#app_content_submenu_preview').removeClass("with_preview");
+			$('#app_content_dynamic_layers').removeClass("with_preview");
 	} else {
 		$('#app_application_submenu_block').hide();
 	}
