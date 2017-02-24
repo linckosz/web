@@ -210,7 +210,7 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 			}
 			wrapper_objForm = null;
 			//Force to open the page, if not we may stuck to the loading page in case the user does not have updates
-			if(this.url.indexOf('/wrapper/data/latest')===0){debuger;
+			if(this.url.indexOf('/wrapper/data/latest')===0){
 				setTimeout(function(){
 					wrapper_load_progress.move(100);
 				}, 200);
