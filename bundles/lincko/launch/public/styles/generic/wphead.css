@@ -65,6 +65,7 @@
 	font-family: Roboto;
 	font-weight: 200;
 	padding-left: 0px;
+	cursor: pointer;
 }
 
 #wphead_logo {
@@ -78,6 +79,7 @@
 
 #wphead_logo_img {
 	height: 34px;
+	cursor: pointer;
 }
 
 

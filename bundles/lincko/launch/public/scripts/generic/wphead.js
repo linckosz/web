@@ -23,6 +23,13 @@ $('#wphead_account').click(function(){
 	window.location.href = wphead_link['root'];
 });
 
+$('#wphead_logo_img, #wphead_lincko').click(function(){
+	$('#base_iframe_message')
+		.prop('src', wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix']+'/')
+		.prop('data', wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix']+'/');
+	wphead_active_menu('overview');
+});
+
 $('#wphead_menu').click(function(){
 	dropmenu_Build("settings", $('#wphead_dropmenu'));
 });

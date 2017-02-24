@@ -62,7 +62,7 @@ $app->get('/v/:sales_code', function ($sales_code) use ($app) {
 	}
 })
 ->conditions(array(
-	'sales_code' => '\d+',
+	'sales_code' => '[a-z\d]+',
 ))
 ->name('sales');
 
