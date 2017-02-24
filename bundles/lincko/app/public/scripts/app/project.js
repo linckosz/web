@@ -95,6 +95,11 @@ var mainMenu = {
 					item.find("[find=app_project_projects_title]").html(wrapper_to_html(projectList[i]['+title']));
 
 					var progress = app_models_projects_getPercentComplete(pid);
+					if(!progress){
+						item.find('[find=app_project_projects_progress]').addClass('app_project_projects_progress_zero');
+					} else{
+						item.find('[find=app_project_projects_progress]').removeClass('app_project_projects_progress_zero');
+					}
 					item.find('[find=app_project_projects_progress] [find=percent]').text(progress);
 					item.find('[find=app_project_projects_progress] [find=bar]').css('width', progress+'%');
 

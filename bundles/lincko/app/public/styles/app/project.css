@@ -291,13 +291,18 @@
     overflow: hidden;
     margin: 4px 0px;
 }
-.app_project_projects_progress:after {
+.app_project_projects_progress:after{
     content: '0%';
     left: 0px;
-    color: #d8d8d8;
+    padding-left: 4px;
+    color: rgba(68, 68, 68, 0.7);
+    opacity: 0;
     font-size: 10px;
     line-height: 10px;
     vertical-align: top;
+}
+.app_project_projects_progress.app_project_projects_progress_zero:after{
+	opacity: 1;
 }
 .app_project_projects_progress [find=bar]{
     position: absolute;
