@@ -24,12 +24,25 @@
 }
 
 .inputter_icon_big_size{
+	display: inline-block;
 	font-size: 37px !important;
+	width:37px !important;
+	height: 37px !important;
+	padding: 0;
+	margin: 0;
 }
 
 .inputter_icon_add_fix{
 	margin-right: 3px;
 	margin-top : -3px;
+}
+
+
+
+.inputter_menu_item{
+	height: 30px;
+	width: 40px;
+	text-align: center;
 }
 
 .inputter_checkbox
@@ -190,8 +203,8 @@
 
 .inputter_right_menu_wrapper ul li{
 	float : right;
-	margin-right:10px;
-	margin-bottom: 10px;
+	/*margin-right:10px;*/
+	/*margin-bottom: 10px;*/
 }
 
 .inputter_right_menu_wrapper ul:active{
