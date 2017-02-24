@@ -683,11 +683,15 @@ $('#app_application_project_block').click(function(){
 	app_application.move('project');
 });
 
-var app_application_action = function(action){
-	if(typeof action == 'undefined'){
-		return false;
+var app_application_action = function(action, info){
+	if(action > 0){
+		action = -action;
 	}
-	wrapper_sendAction({action: action}, 'post', 'info/action');
+	if(typeof info != 'undefined'){
+		wrapper_sendAction({action: action, info: info}, 'post', 'info/action');
+	} else {
+		wrapper_sendAction({action: action}, 'post', 'info/action');
+	}
 }
 
 //BEGIN - highlight for quick create task feature
@@ -856,7 +860,11 @@ wrapper_load_progress.add_cb_complete(function(){
 });
 
 JSfiles.finish(function(){
-	app_application_action(1); //Logged
+	if(isMobileApp()){
+		app_application_action(1, {2:'App'});
+	} else {
+		app_application_action(1); //Logged
+	}
 	//Disable onboadring temporarly if the hashtag is called
 	if(app_application_hashtag && typeof onboarding != 'undefined'){
 		onboarding.forceOff = true;

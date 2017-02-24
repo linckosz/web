@@ -60,7 +60,7 @@ function base_cloneCanvas(oldCanvas) {
 }
 
 var base_error_timing;
-
+var base_show_error_running = false;
 function base_show_error(msg, error) {
 	if(typeof error === 'undefined'){ error = false; }
 	if(error && $('#base_error').hasClass('base_message')){
@@ -73,15 +73,16 @@ function base_show_error(msg, error) {
 	msg = wrapper_to_html(msg); //Escape the whole string for HTML displaying
 	if(typeof msg == "string" && $('#base_error').length > 0 && php_nl2br(php_br2nl(msg)) != php_nl2br(php_br2nl($('#base_error').html()))){
 		$('#base_error').html(msg);
-		if($('#base_error').is(':hidden')){
+		if(!base_show_error_running && $('#base_error').is(':hidden')){
 			$("#base_error").velocity("transition.slideRightBigIn", {
 				mobileHA: hasGood3Dsupport,
 				duration: 260,
 				delay: 120,
 			});
 		} else {
-			$("#base_error").fadeTo( 80 , 0.8).fadeTo( 150 , 1);
+			$("#base_error").fadeTo( 60 , 0.9).fadeTo( 120 , 1);
 		}
+		base_show_error_running = true;
 	} else if(typeof msg != "string"){
 		JSerror.sendError(msg, 'base_show_error', 0);
 	}
@@ -91,6 +92,7 @@ function base_show_error(msg, error) {
 function base_hide_error(now) {
 	if(typeof now == 'undefined'){ now = false; }
 	$('#base_error').velocity("stop");
+	base_show_error_running = false;
 	if(now){
 		clearTimeout(base_error_timing);
 		$('#base_error').hide().recursiveEmpty();

@@ -22,8 +22,6 @@
 		{% if logged %}
 			<div class="head_div floatright minTablet"><span class="table_cell_center" id="head_signout"><span>{{ _trans('web', 1, 6, 'html') }}{# Sign out #}</span></span></div>
 			<div class="head_div floatright"><span class="table_cell_center" id="head_account"><span>{{ _trans('web', 1, 7, 'html') }}{# My account #}</span></span></div>
-		{% elseif invitation_code %}
-			<div class="head_div floatright"><span class="table_cell_center" id="head_joinus"><span>{{ _trans('web', 1, 8, 'html') }}{# Join us #}</span></span></div>
 		{% else %}
 			<div class="head_div floatright"><span class="table_cell_center" id="head_signin"><span>{{ _trans('web', 1, 9, 'html') }}{# Sign in #}</span></span></div>
 		{% endif %}

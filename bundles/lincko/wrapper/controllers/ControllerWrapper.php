@@ -3,6 +3,7 @@
 namespace bundles\lincko\wrapper\controllers;
 
 use \bundles\lincko\wrapper\models\Creation;
+use \bundles\lincko\wrapper\models\Action;
 use \libs\OneSeventySeven;
 use \libs\Controller;
 use \libs\Datassl;
@@ -63,6 +64,9 @@ class ControllerWrapper extends Controller {
 		if(isset($_SESSION['invitation_code'])){
 			$this->json['data']['invitation_code'] = $_SESSION['invitation_code'];
 		}
+		if(isset($_SESSION['sales_code'])){
+			$this->json['data']['sales_code'] = $_SESSION['sales_code'];
+		}
 		if(isset($_SESSION['user_code'])){
 			$this->json['user_code'] = $_SESSION['user_code'];
 		}
@@ -98,12 +102,6 @@ class ControllerWrapper extends Controller {
 				$this->json['data']['integration_code'] = $_SESSION['integration_code'];
 			}
 		}
-
-		if(isset($_SERVER) && isset($_SERVER['REMOTE_ADDR'])){
-			$this->json['myip'] = $_SERVER['REMOTE_ADDR'];
-		} else {
-			$$this->json['myip'] = $app->request->getIp();
-		}
 		
 		return true;
 	}
@@ -111,12 +109,36 @@ class ControllerWrapper extends Controller {
 	protected function sendCurl(){
 		$app = $this->app;
 
+		if($this->action=='info/action' && $this->json['method']=='POST'){
+			if(isset($this->json['data']['action'])){
+				$this->json['data']['action'] = intval($this->json['data']['action']);
+				if($this->json['data']['action'] > 0){
+					//Make sur we negate any value from front end
+					$this->json['data']['action'] = -1 * $this->json['data']['action'];
+				}
+				//For login
+				if($this->json['data']['action']==-1){
+					$user_info = Action::getUserInfo();
+					if(isset($this->json['data']['info']) && (gettype($this->json['data']['info'])=='array' || gettype($this->json['data']['info'])=='object')){
+						//Force to converr into an array
+						$this->json['data']['info'] = json_decode(json_encode($this->json['data']['info'], JSON_FORCE_OBJECT), true);
+						foreach ($user_info as $key => $value) {
+							if(isset($this->json['data']['info'][$key]) && $this->json['data']['info'][$key]){
+								$user_info[$key] = $this->json['data']['info'][$key];
+							}
+						}
+					}
+					$this->json['data']['info'] = $user_info;
+				}
+			}
+		}
+
 		$data = json_encode($this->json, JSON_FORCE_OBJECT);
 
 		$url = $app->lincko->wrapper['url'].$this->action;
 
 		$timeout = 36;
-		if($this->action==='translation/auto'){
+		if($this->action=='translation/auto'){
 			$timeout = 66; //Need more time because requesting a third party for translation
 		}
 		$ch = curl_init();
@@ -195,6 +217,11 @@ class ControllerWrapper extends Controller {
 				//Clean invitation_code because it has been used by the back end
 				if(isset($json_result->flash->unset_invitation_code)){
 					unset($_SESSION['invitation_code']);
+				}
+
+				//Clean sales_code because it has been used by the back end
+				if(isset($json_result->flash->unset_sales_code)){
+					unset($_SESSION['sales_code']);
 				}
 
 				//Set integration_code

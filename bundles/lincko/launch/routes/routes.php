@@ -50,6 +50,22 @@ $app->get('/invitation/:invitation_code', function ($invitation_code) use ($app)
 ))
 ->name('invitation');
 
+//URL invitation to login that include a user connection
+$app->get('/v/:sales_code', function ($sales_code) use ($app) {
+	$app->lincko->data['sales_code'] = $_SESSION['sales_code'] = $sales_code;
+	$app->lincko->data['link_reset'] = true;
+	$app->lincko->data['force_open_website'] = false;
+	if($app->lincko->data['logged']){
+		$app->router->getNamedRoute('root')->dispatch();
+	} else {
+		$app->router->getNamedRoute('home')->dispatch();
+	}
+})
+->conditions(array(
+	'sales_code' => '\d+',
+))
+->name('sales');
+
 //Link of user URL for direct connection (like scanning a QR code)
 $app->get('/uid/:user_code', function ($user_code) use ($app) {
 	//Need to grab the uri ourself because slim has a bug and convert "+" into a space

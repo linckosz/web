@@ -577,7 +577,7 @@ var app_models_history = {
 						}
 						app_models_history.notified["users_"+hist[i]['id']+"_"+hist[i]['hist']] = true;
 						item = Lincko.storage.get("users", hist[i]['id']);
-						if(!item){
+						if(!item || !item['_visible']){
 							continue;
 						}
 						var profile_pic = Lincko.storage.getLinkThumbnail(item['profile_pic']);
