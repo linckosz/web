@@ -47,13 +47,17 @@
 
 	{# for tasklist, goes inside skylist_menu_navbar_filter_pane #}
 	<div id="-skylist_filter_tasks_radio_wrapper" find="radio_wrapper">
-		<table find="option1" class="skylist_menu_navbar_filter_pane_optionWrapper skylist_clickable">
+		<table find="option1" val="due" class="skylist_menu_navbar_filter_pane_optionWrapper skylist_clickable">
 			<td find="radio" class="skylist_menu_navbar_filter_pane_radio fa fa-circle"></td>
 			<td find="text">{{ _trans('app', 13, 3, 'html') }}{#sort by due date#}</td>
 		</table>
-		<table find="option2" class="skylist_menu_navbar_filter_pane_optionWrapper skylist_clickable">
+		<table find="option2" val="updated" class="skylist_menu_navbar_filter_pane_optionWrapper skylist_clickable">
 			<td find="radio" class="skylist_menu_navbar_filter_pane_radio fa"></td>
 			<td find="text">{{ _trans('app', 13, 4, 'html') }}{#Sort by most recently updated#}</td>
+		</table>
+		<table find="option3" val="abc" class="skylist_menu_navbar_filter_pane_optionWrapper skylist_clickable">
+			<td find="radio" class="skylist_menu_navbar_filter_pane_radio fa"></td>
+			<td find="text">Sort by ABC {# toto #}</td>
 		</table>
 	</div>
 	<div id="-skylist_filter_tasks_divider" class="skylist_menu_navbar_filter_pane_divider"></div>

@@ -130,6 +130,7 @@ var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct, ri
 	};
 	if(that.list_type == 'tasks'){
 		that.Lincko_itemsList_filter.view = 'paper';
+		that.Lincko_itemsList_filter.sort_alt = 'due';
 	}
 	/*if( Lincko.storage.get("projects", app_content_menu.projects_id, 'personal_private') ){
 		this.Lincko_itemsList_filter.people = null;
@@ -571,13 +572,20 @@ skylist.prototype.filter_by_sort_alt = function(items, filter){
 	if( filter == null ){
 		return items;
 	}
-	else{
-		if( that.list_type == "tasks" && filter ){
+	else if(that.list_type == "tasks"){
+		if(filter == 'updated'){
 			items_filtered = Lincko.storage.sort_items( items, 'hist_at'/*'updated_at'*/, 0, -1, false );
 		}
+		else if(filter == 'abc'){
+			items_filtered = Lincko.storage.sort_items( items, '+title', 0, -1, true );
+		}
 		else{
+			filter = 'due';
 			items_filtered = items;
 		}
+	}
+	else{
+		items_filtered = items;
 	}
 	that.Lincko_itemsList_filter.sort_alt = filter;
 	return items_filtered;
@@ -3255,6 +3263,8 @@ skylist.prototype.addFilter_tasks = function(elem_filter_pane){
 
 	that.elem_navbar.find('[find=radio_wrapper] .skylist_menu_navbar_filter_pane_optionWrapper').click(function(){
 		var elem_radio = $(this).closest('[find=radio_wrapper]').find('.skylist_menu_navbar_filter_pane_optionWrapper [find=radio]');
+		var val = $(this).attr('val');
+
 		if( $(this).find('[find=radio]').hasClass('fa-circle') ){
 			that.tasklist_update('sort_alt', that.Lincko_itemsList_filter.sort_alt );
 			elem_filterIcon.click();
@@ -3263,7 +3273,8 @@ skylist.prototype.addFilter_tasks = function(elem_filter_pane){
 		else{
 			elem_radio.removeClass('fa-circle');
 			$(this).find('[find=radio]').toggleClass('fa-circle');
-			that.tasklist_update('sort_alt', !that.Lincko_itemsList_filter.sort_alt );
+			that.tasklist_update('sort_alt', val);
+			//that.tasklist_update('sort_alt', !that.Lincko_itemsList_filter.sort_alt );
 			elem_filterIcon.click();
 		}
 	});
@@ -3302,7 +3313,8 @@ skylist.prototype.addFilter_tasks = function(elem_filter_pane){
 
 	//make filter selection based on the Lincko_itemsList_filter object
 	if(that.Lincko_itemsList_filter.sort_alt){
-		that.elem_navbar.find('[find=radio_wrapper] [find=radio]').toggleClass('fa-circle');
+		that.elem_navbar.find('[find=radio_wrapper] [find=radio]').removeClass('fa-circle');
+		that.elem_navbar.find('[find=radio_wrapper] [val='+that.Lincko_itemsList_filter.sort_alt+'] [find=radio]').addClass('fa-circle');
 	}
 
 	if(that.Lincko_itemsList_filter.hide_completed){
