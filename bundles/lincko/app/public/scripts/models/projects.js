@@ -650,6 +650,9 @@ var app_models_projects_chart_tasks_data = function(Elem_id, id, chart_display_r
 		animation:{
 			easing: "easeInOutCirc",
 		},
+		layout: {
+			padding: 2,
+		},
 		legend: {
             display: false,
         },
@@ -657,7 +660,7 @@ var app_models_projects_chart_tasks_data = function(Elem_id, id, chart_display_r
         	point: {
         		radius: 0,
         		borderWidth: 1,
-        		hitRadius: 10,
+        		hitRadius: 8,
         		hoverRadius: 2,
         	},
         	line: {
@@ -679,6 +682,45 @@ var app_models_projects_chart_tasks_data = function(Elem_id, id, chart_display_r
             }],
         },
         tooltips:{
+        	caretSize: 0,
+        	custom: function(tooltip){
+				// tooltip will be false if tooltip is not visible or should be hidden
+				if (!tooltip) { return; }
+
+				var w_max = this._chart.width;
+				var h_max = this._chart.height;
+				var w_tip = tooltip.width;
+				var h_tip = tooltip.height;
+				var padding_outer = 10;
+
+				if(tooltip.yAlign == 'top'){
+					tooltip.y -= h_tip/2 + padding_outer;
+				}
+				else if(tooltip.yAlign == 'bottom'){
+					tooltip.y += h_tip/2 + padding_outer;
+				}
+
+				if(tooltip.xAlign == 'center'){
+					tooltip.x -= w_tip/2 + padding_outer;
+				}
+				else if(tooltip.xAlign == 'right'){
+					tooltip.x -= padding_outer;
+				}
+				else if(tooltip.xAlign == 'left'){
+					tooltip.x += padding_outer;
+				}
+
+				if(tooltip.x < padding_outer){ tooltip.x = padding_outer; }
+				else if(tooltip.x + w_tip + padding_outer > w_max){
+					tooltip.x = w_max - w_tip - padding_outer;
+				}
+
+				if(tooltip.y < padding_outer){ tooltip.y = padding_outer; }
+				else if(tooltip.y + h_tip + padding_outer > h_max){
+					tooltip.y = h_max - h_tip - padding_outer;
+				}
+                
+        	},
         	mode: 'x',
         	titleFontSize: 10,
         	titleFontStyle: "normal",
@@ -686,6 +728,7 @@ var app_models_projects_chart_tasks_data = function(Elem_id, id, chart_display_r
         	cornerRadius: 3,
         },
         hover: {
+        	animationDuration: 0,
         	mode: 'x',
         },
 	};
