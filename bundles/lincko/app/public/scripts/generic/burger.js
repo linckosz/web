@@ -33,9 +33,6 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter
 
 	that.burgerData = {};
 	if(burgerData && typeof burgerData == 'object' && typeof burgerData.at == 'object'){ that.burgerData.at = burgerData.at; }
-	else{
-		that.burgerData.at = burger_list.in_charge('projects', app_content_menu.projects_id);
-	}
 
 	if(!project_id){ var project_id = null; }
 	that.project_id = project_id;
@@ -197,12 +194,25 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter
 			if(latestChar == burger_shortcuts.at){
 				that.burgerMode = burger_shortcuts.at;
 
+				//build burger @ data here, for mobile and desktop
+				var burgerData_at;
+				if(that.burgerData.at){
+					burgerData_at = that.burger_data.at;
+				}
+				else if(that.project_id){
+					burgerData_at = burger_list.in_charge('projects', that.project_id);
+				}
+				else{
+					burgerData_at = burger_list.in_charge('projects', app_content_menu.projects_id);
+				}
+
+
 				//for mobile, just open submenu on the shortcuts
 	    		if(responsive.test("maxMobileL") && !submenu_get('burger_clickHandler_inCharge')){
 	    			var param = {};
 					//build contactsID from given list
 					param.contactsID = {};
-					$.each(that.burgerData.at, function(i, obj){
+					$.each(burgerData_at, function(i, obj){
 						var checked = false;
 						if(obj.preSelect){ checked = true; }
 						if(obj.val){
@@ -230,7 +240,7 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter
 					submenu_Build('burger_clickHandler_inCharge', true, null, param);
 	    		}
 	    		else{//for desktop
-	    			that.dropdownInst = new burger_dropdown('toto', that.burgerData.at, [coord.x, coord.y], that.lineHeight, that.dropdown_cb.cb_create, that.dropdown_cb.cb_select, that.dropdown_cb.cb_destroy, that.elem);
+	    			that.dropdownInst = new burger_dropdown('toto', burgerData_at, [coord.x, coord.y], that.lineHeight, that.dropdown_cb.cb_create, that.dropdown_cb.cb_select, that.dropdown_cb.cb_destroy, that.elem);
 	    		}			
 			}
 			else if(latestChar == burger_shortcuts.plus || latestChar == burger_shortcuts.plusAlt){ 
