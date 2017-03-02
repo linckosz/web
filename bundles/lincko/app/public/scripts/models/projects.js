@@ -574,7 +574,7 @@ var app_models_projects_create_cb_success = function(){
 var app_models_projects_chart_tasks_data = function(Elem_id, id, chart_display_replace, chart_options_replace){
 	if(typeof chart_display_replace != "object"){ chart_display_replace = false; }
 	if(typeof chart_options_replace != "object"){ chart_options_replace = false; }
-	wrapper_clean_chart();
+	wrapper_clean_chart(Elem_id);
 
 	if(typeof Lincko.storage.data["_history_title"] == "undefined" || typeof Lincko.storage.data["_history_title"]["tasks"] == "undefined" || Lincko.storage.data["_history_title"]["tasks"][0] == null){
 		return false;
@@ -725,7 +725,7 @@ var app_models_projects_chart_tasks_data = function(Elem_id, id, chart_display_r
         	},
         	callbacks: {
         		label: function(tooltipItem, data){
-        			return tooltipItem.yLabel+' ('+data.datasets[tooltipItem.datasetIndex].label+')';
+        			return ' '+tooltipItem.yLabel+' ('+data.datasets[tooltipItem.datasetIndex].label+')';
         		},
 
         		//transparency of rgba seems to not work for tooltip labels, so use solid color instead

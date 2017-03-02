@@ -569,9 +569,12 @@ $(window).resize(function(){
 	wrapper_IScroll_timer = setTimeout(wrapper_IScroll, wrapper_timeout_timer);
 });
 
-function wrapper_clean_chart(){
+function wrapper_clean_chart(id_elem_parent){
 	for(var i in Chart.instances){
-		if(!Chart.instances[i].chart.canvas.clientWidth){
+		if(id_elem_parent && id_elem_parent == Chart.instances[i].chart.canvas.offsetParent.id){
+			Chart.instances[i].destroy();
+		}
+		else if(!Chart.instances[i].chart.canvas.clientWidth){
 			Chart.instances[i].destroy();
 		}
 	}
