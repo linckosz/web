@@ -1104,10 +1104,6 @@ app_models_projects_projectsDeck.prototype.construct = function(){
 						if(thumb_url){
 							var elem_preview = $('<span>').css('background-image', 'url('+thumb_url+')').attr('find', 'image');
 							elem_p.find('[find=preview] [find=icon]').replaceWith(elem_preview);
-
-
-							// var elem_img = $('<img>').attr('src', thumb_url);
-							// elem_p.find('[find=preview] [find=icon]').replaceWith(elem_img);
 							return false;
 						}
 					}
@@ -1132,6 +1128,10 @@ app_models_projects_projectsDeck.prototype.construct = function(){
 			elem_p.click(p._id, function(event){
 				app_content_menu.selection(event.data);
 			});
+			elem_p.find('[find=icon_dashboard]').click(p._id, function(event){
+				event.stopPropagation();
+				app_content_menu.selection(event.data, 'dashboard');
+			});
 			elem_p.find('[find=icon_settings]').click({pid: p._id, elem: elem_p, deckInst: that}, function(event){
 				event.stopPropagation();
 				var pid = event.data.pid;
@@ -1146,23 +1146,6 @@ app_models_projects_projectsDeck.prototype.construct = function(){
 					next = submenu_Build_return("app_project_edit", that.layer_next, false, pid);
 					elem_p.attr('selected', true);
 				}
-				
-				// var subm_edit = submenu_Build_return("app_project_edit", that.layer_next, false, pid);
-				// that.elem_card_all.removeAttr('selected');
-				// if(subm_edit){
-				// 	elem_p.attr('selected', true); //toggle 'selected' attribute
-				// }
-				// else{
-				// 	elem_p.removeAttr('selected');
-				// }
-
-				// var next = submenu_get("app_project_edit");
-				// if(next && next.param == pid){
-				// 	next.Hide(true);
-				// } else {
-				// 	elem_p.attr('selected', true);
-				// 	submenu_Build("app_project_edit", that.layer_next, true, pid);
-				// }
 			});
 			elem_append.append(elem_p); //either elem_recentWrapper or elem_abcWrapper
 		});
