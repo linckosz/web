@@ -1,0 +1,45 @@
+{# category ? #}
+<div id="begin_app_layers_dashboard" class="visibility_hidden">
+	<script>
+		JSfiles.later("{{ _filelatest('/lincko/app/scripts/app/layers/dashboard.js') }}");
+	</script>
+	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/app/layers/dashboard.css') }}" type="text/css" />
+</div>
+<div id="end_app_layers_dashboard" class="visibility_hidden"></div>
+
+<div class="display_none">
+	<div id="-app_layers_dashboard" class="app_layers_dashboard">
+	</div>
+
+	<div id="-app_layers_dashboard_header" class="app_layers_dashboard_header">
+		<div find="date">{{ _trans('app', 8000, 3302, 'html') }} :&nbsp;</div>
+		<div class="app_project_projects_progress">
+			<div find="bar"><div find="percent"></div></div>
+		</div>
+	</div>
+
+	<div id="-app_layers_dashboard_burndown_wrapper" class="app_layers_dashboard_chartBlock app_layers_dashboard_burndown_wrapper">
+		<div find="header">Project Burndown</div>
+		<div find="btn_range" class="display_none"></div>
+		<div find="chartContainer">
+			<div find="legend">
+				<div find="open"></div>
+				<div find="completed" class="fa fa-check"></div>			
+			</div>
+			<canvas></canvas>
+		</div>
+	</div>
+
+	<div id="-app_layers_dashboard_taskHistory_wrapper" class="app_layers_dashboard_chartBlock app_layers_dashboard_taskHistory_wrapper">
+		<div find="header">Historical Task Accumulation</div>
+		<div find="btn_range" class="display_none"></div>
+		<div find="chartContainer">
+			<span find="legend">
+				<div find="team" dataset="0" class="icon-Multipler-Persona"></div>
+				<div find="user" dataset="1" class="icon-Single-Person"></div>
+			</span>
+			<canvas></canvas>
+		</div>
+	</div>
+
+</div>

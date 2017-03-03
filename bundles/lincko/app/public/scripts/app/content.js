@@ -110,6 +110,7 @@ var app_content_menu = {
 				'notes',
 				'chats',
 				'files',
+				'dashboard',
 			];
 		} else { //Personal space (default)
 			title = base_myplaceholder;
