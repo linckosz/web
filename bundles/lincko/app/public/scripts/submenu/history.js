@@ -203,6 +203,7 @@ BaseItemCls.prototype.item_display = function(position, subm, mode, scroll_time)
 	switch (mode)
 	{
 		case 'history' :
+			debugger;
 			elem.prependTo(position.find(".chat_contents_wrapper"));
 			if(this.lazy)
 			{

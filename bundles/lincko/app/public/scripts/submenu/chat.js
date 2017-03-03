@@ -46,7 +46,7 @@ submenu_list['chat'] = submenu_list['chat_list'] = {
 		"title": "",
 		"class": "base_pointer icon-AddPerson submenu_app_chat_title_right_button",
 		"action": function(Elem, subm) {
-			submenu_Build('chat_add_user', subm.layer+1, true, null, subm.preview)
+			submenu_Build('chat_add_user', subm.layer+1, true, null, subm.preview);
 		},
 	},
 	//It will create a form with a validation button

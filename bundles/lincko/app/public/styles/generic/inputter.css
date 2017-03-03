@@ -39,11 +39,7 @@
 
 
 
-.inputter_menu_item{
-	height: 30px;
-	width: 40px;
-	text-align: center;
-}
+
 
 .inputter_checkbox
 {
@@ -366,6 +362,11 @@
 }
 
     
+.inputter_menu_item{
+	height: 40px;
+	width: 40px;
+	text-align: center;
+}
 
 @media only screen and (max-width: 1279px){
 	.submenu_wrapper .inputter_line_10{

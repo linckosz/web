@@ -156,6 +156,14 @@ submenu_list['settings'] = {
 		},
 		"class": "",
 	},
+	"linckobot": {
+		"style": "button",
+		"title": "技术支持",//toto need translation
+		"action": function(Elem,subm){
+			submenu_backfeed_open_single(subm,54);
+		},
+		"class": "",
+	},
 	"signout": {
 		"style": "button",
 		"title": Lincko.Translation.get('app', 38, 'html'), //Sign out
