@@ -214,7 +214,7 @@ chatFeed.prototype.app_chat_feed_data_init = function()
 		{
 			suffix = '_' + data[i]['_type'] + '_models_thistory_' + data[i]['_id'];
 			item = new BaseItemCls(data[i], this.type);
-			if(item.style == '' || item.data.category == ''){
+			if(item == null || item.data == null || item.style == '' || item.data.category == ''){
 				continue;
 			}
 			this.records.push(item);
