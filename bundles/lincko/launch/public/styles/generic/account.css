@@ -200,6 +200,14 @@
 	display: block;
 }
 
+#account_joinus_email_format {
+	visibility: hidden;
+	font-size: 10px;
+	padding: 1px 4px;
+	color: #4377A0;
+	cursor: default;
+}
+
 .account_joinus_box_div {
 	border-top-left-radius: 0px !important;
 	text-align: left;

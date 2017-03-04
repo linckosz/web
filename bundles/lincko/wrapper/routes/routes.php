@@ -37,7 +37,10 @@ $app->group('/appstore', function () use ($app) {
 			$myip = $_SERVER['REMOTE_ADDR'];
 		}
 		
-		Action::record(-14, $myip); //Access Lincko appstore link
+		$get = $app->request->get();
+		$get['ip'] = $myip;
+
+		Action::record(-14, $get); //Access Lincko appstore link
 		
 		if(!$isoCode && filter_var($myip, FILTER_VALIDATE_IP)){
 			try {

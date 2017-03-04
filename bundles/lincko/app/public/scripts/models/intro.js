@@ -217,6 +217,7 @@ var intro = {
 		intro.gotoStep(0,fn);
 	},
 	gotoStep:function(step_index,fn){
+		app_application_action(3, step_index); //Next onborading step
 		$("#"+onboarding.id_welcome_bubble).css("height","auto");
 		if(typeof fn != "undefined" || fn == null)
 		{
@@ -388,7 +389,6 @@ var intro = {
 					}
 					item.click({pointTo:options[i].pointTo,pointType:options[i].pointType,fn:fn,target:target},function(event){
 						item.off("click");
-						app_application_action(3); //Next onborading step
 						var pointTo = event.data.pointTo;
 						var pointType = event.data.pointType;
 						var fn = event.data.fn;

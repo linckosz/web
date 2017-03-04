@@ -78,6 +78,7 @@
 			<form class="account_form" id="account_joinus_form" action="user/create" method="post" onsubmit="if(account_submit_running){return false;} return wrapper_sendForm(this, account_joinus_cb_success, account_joinus_cb_error, account_joinus_cb_begin, account_joinus_cb_complete);">
 				<div class="account_joinus_box_div">
 					<label class="account_label_inside selectable" for="account_joinus_email">
+						<div id="account_joinus_email_format">{{ _trans('web', 5, 24, 'html') }}{# Please ensure your e-mail format is correct. #}</div>
 						<span>{{ _trans('web', 5, 2, 'html') }}{# Email #}</span>
 						<input type="email" id="account_joinus_email" name="email" value="" class="selectable" />
 					</label>

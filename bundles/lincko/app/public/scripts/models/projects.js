@@ -123,6 +123,13 @@ submenu_list['app_project_edit'] = {
 		"class": "submenu_input_select_multiple models_projects_tab",
 		"next": "app_projects_users_contacts",
 	},
+	"_pre_action": {
+		"style": "preAction",
+		"action": function(Elem, subm){
+			app_projects_users_contacts_list = {};
+			app_projects_users_contacts_init(subm);
+		},
+	},
 	"mute": {
 		"style": "button",
 		"title": Lincko.Translation.get('app', 74, 'html'), //Mute notifications

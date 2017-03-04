@@ -87,41 +87,86 @@ var app_projects_users_contacts_init = function(subm){
 		}
 
 		var others = Lincko.storage.list('users', null, param);
+
+		//Add alphabetic username
 		for(var i in others){
-			submenu_list['app_projects_users_contacts']['users_'+others[i]['_id']] = {
-				"style": "radio",
-				"title": Lincko.storage.get('users', others[i]['_id'], 'username'),
-				"selected": false,
-				"action_param": { value: others[i]['_id'], },
-				"action": function(){
-					this.selected = !this.selected;
-					var param = {
-						id: projects_id,
-					}
-					param["users>access"] = {};
-					param["users>access"][this.action_param.value] = this.selected;
+			others[i]['alphabet_order'] = Pinyin.GetQP(others[i]['-username']);
+		}
+		others = Lincko.storage.sort_items(others, 'alphabet_order');
+
+		for(var i=0; i<=1; i++){
+			for(var j in others){
+				var selected = false;
+				//Place on top the selected
+				if(i==0 && $.inArray(others[j]['_id'], users_access) >= 0){
+						selected = true;
+				} else if(i==0 || $.inArray(others[j]['_id'], users_access) >= 0){
+					continue;
+				}
+				submenu_list['app_projects_users_contacts']['users_'+others[j]['_id']] = {
+					"style": "radio",
+					"title": Lincko.storage.get('users', others[j]['_id'], 'username'),
+					"selected": selected,
+					"action_param": { value: others[j]['_id'], },
+					"action": function(){
+						this.selected = !this.selected;
+						var project = Lincko.storage.get('projects', projects_id);
+						if(project){
+							if(this.selected){
+								project['_perm'][this.action_param.value] = [0, 0];
+								app_projects_users_contacts_list[this.action_param.value] = true;
+							} else {
+								delete project['_perm'][this.action_param.value];
+								app_projects_users_contacts_list[this.action_param.value] = false;
+							}
+						}
+						app_application_lincko.prepare(["select_multiple", "form_radio", "projects_"+projects_id], true);
+					},
+					"hide": false,
+					"class": "submenu_deco_info",
+				};
+			}
+		}
+
+		//submenu hide syncfunction
+		app_application_lincko.add(
+			subm.id,
+			"submenu_hide_"+subm.preview+"_"+subm.id,
+			function(){
+				var param = {
+					id: projects_id,
+				}
+				param["users>access"] = {};
+				var action = false;
+				for(var i in app_projects_users_contacts_list){
+					param["users>access"][i] = app_projects_users_contacts_list[i];
+					action = true;
+				}
+				if(action){
 					wrapper_sendAction(
 						param,
 						'post',
 						'project/update'
 					);
-					app_application_lincko.prepare(["select_multiple", "form_radio"], true);
-				},
-				"hide": false,
-				"class": "submenu_deco_info",
-			};
-			if($.inArray(others[i]['_id'], users_access) >= 0){
-				submenu_list['app_projects_users_contacts']['users_'+others[i]['_id']]["selected"] = true;
+				}
 			}
-		}
+		);
+
 	} else { //New
 		var others = Lincko.storage.list('users', null, { _id: ['!=', wrapper_localstorage.uid], _visible: true, });
+
+		//Add alphabetic username
 		for(var i in others){
-			submenu_list['app_projects_users_contacts']['users_'+others[i]['_id']] = {
+			others[i]['alphabet_order'] = Pinyin.GetQP(others[i]['-username']);
+		}
+		others = Lincko.storage.sort_items(others, 'alphabet_order');
+
+		for(var j in others){
+			submenu_list['app_projects_users_contacts']['users_'+others[j]['_id']] = {
 				"style": "radio",
-				"title": Lincko.storage.get('users', others[i]['_id'], 'username'),
+				"title": Lincko.storage.get('users', others[j]['_id'], 'username'),
 				"selected": false,
-				"action_param": { value: others[i]['_id'], },
+				"action_param": { value: others[j]['_id'], },
 				"action": function(Elem, subm){
 					this.selected = !this.selected;
 					if(this.selected){
@@ -134,8 +179,8 @@ var app_projects_users_contacts_init = function(subm){
 				"hide": false,
 				"class": "submenu_deco_info",
 			};
-			if(app_projects_users_contacts_list[others[i]['_id']]){
-				submenu_list['app_projects_users_contacts']['users_'+others[i]['_id']]["selected"] = true;
+			if(app_projects_users_contacts_list[others[j]['_id']]){
+				submenu_list['app_projects_users_contacts']['users_'+others[j]['_id']]["selected"] = true;
 			}
 		}
 	}

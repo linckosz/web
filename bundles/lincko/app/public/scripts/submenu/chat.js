@@ -217,6 +217,11 @@ Submenu.prototype.Add_ChatContacts = function() {
 	submenu_wrapper.find("[find=submenu_wrapper_content]").prop("id", wrapper_content_id);
 
 	var temp = Lincko.storage.list('users', null);
+	//Add alphabetic username
+	for(var i in temp){
+		temp[i]['alphabet_order'] = Pinyin.GetQP(temp[i]['-username']);
+	}
+
 	var visible = [];
 	var invitation = [];
 	var contacts = [];
@@ -236,7 +241,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 		Elem.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2304, 'html')); //A user has invited you
 		submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
 	}
-	contacts = Lincko.storage.sort_items(invitation, 'username');
+	contacts = Lincko.storage.sort_items(invitation, 'alphabet_order');
 	for(var i in contacts){
 		var Elem = $('#-submenu_app_chat_chat_contact').clone();
 		var Elem_id = that.id+"_submenu_app_chat_chat_contact_"+contacts[i]['_id'];
@@ -299,7 +304,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 		submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
 	}
 
-	contacts = Lincko.storage.sort_items(visible, 'username');
+	contacts = Lincko.storage.sort_items(visible, 'alphabet_order');
 	for(var i in contacts){
 		var Elem = $('#-submenu_app_chat_chat_contact').clone();
 		Elem.prop("id", that.id+"_submenu_app_chat_chat_contact_"+contacts[i]['_id']);

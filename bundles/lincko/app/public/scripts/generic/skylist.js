@@ -457,6 +457,8 @@ skylist.prototype.generate_Lincko_itemsList = function(){
 	that.Lincko_itemsList = [];
 	if (that.list_type == "chats") {
 		that.Lincko_itemsList = app_models_history.getList(false, 'projects', app_content_menu.projects_id);
+		//Reorder by created_at
+		that.Lincko_itemsList = Lincko.storage.sort_items(that.Lincko_itemsList, 'root_created_at');
 	}
 	else if (that.list_type == "global_chats") {
 		that.Lincko_itemsList = app_models_history.getList();

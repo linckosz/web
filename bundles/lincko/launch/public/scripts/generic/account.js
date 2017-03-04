@@ -547,7 +547,22 @@ $("#account_signin_submit").keyup(function(){
 //This help to clear the email field if there was an autocompletion issue (sometime chrome does keep empty after autocompletion, the yellow backgroubd effect)
 $('#account_joinus_email').on('blur', function(){
 	account_reset_autocompletion();
+	var email = $('#account_joinus_email').val();
+	if(base_input_field.email.valid(email)){
+		wrapper_sendAction({email: email, }, 'post', 'email/verify', function(msg, err, status, data){
+			if(err){
+				$('#account_joinus_email_format').css('visibility', 'visible');
+			}
+		});
+		
+	}
 });
+
+$('#account_joinus_email').on('keyup past cut', function(){
+	$('#account_joinus_email_format').css('visibility', 'hidden');
+});
+
+
 $('#account_signin_email').on('blur', function(){
 	account_reset_autocompletion();
 });

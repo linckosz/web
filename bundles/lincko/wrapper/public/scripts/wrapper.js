@@ -120,7 +120,7 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 			}
 
 			if(data.error){
-				JSerror.sendError(JSON.stringify(data, null, 4), '/wrapper.js/wrapper_ajax().success()', 0);
+				//JSerror.sendError(JSON.stringify(data, null, 4), '/wrapper.js/wrapper_ajax().success()', 0);
 				console.log(data);
 			}
 

@@ -66,7 +66,7 @@ submenu_list['personal_settings'] = {
 				msg = integration["lincko"];
 				title.append(msg);
 				title.addClass('submenu_deco_info submenu_personal_info_value');
-				Elem.off('click');
+				//Elem.off('click');
 			} else {
 				title.append(msg);
 				var next = $('<img>');
@@ -367,7 +367,7 @@ submenu_list['personal_lincko'] = {
 	},
 	"email": {
 		"style": "input_text",
-		"title": Lincko.Translation.get('app', 85, 'html'), //Email
+		"title": Lincko.Translation.get('app', 85, 'html')+"<span find='email_check' class='display_none submenu_personal_personal_lincko_email_check'>("+Lincko.Translation.get('app', 96, 'html')+")</span>", //Email (Please ensure your e-mail format is correct)
 		"name": "email",
 		"value": "",
 		"class": "submenu_input_text",
@@ -382,6 +382,67 @@ submenu_list['personal_lincko'] = {
 					$('#'+e.data.id+"_link").click();
 				}
 			});
+
+			var link_timer;
+			var email_previous = false;
+			Elem.find("[find=submenu_input]").on('keyup past cut focus change copy blur', subm, function(event){
+				var email = $(this).val();
+				if(email == email_previous){
+					return true;
+				}
+				var submenu_wrapper = event.data.Wrapper();
+				if(base_input_field.email.valid(email)){
+					var time = 1000;
+					if(event.type=='blur' || event.type=='focus' || event.type=='change'){
+						time = 0;
+					}
+					clearTimeout(link_timer);
+					link_timer = setTimeout(function(){
+						email_previous = email;
+						if(submenu_wrapper.length>0){
+							submenu_wrapper.find("[find=link_loading]").removeClass('display_none');
+							submenu_wrapper.find("[find=submenu_button_title]").addClass('display_none');
+							wrapper_sendAction({email: email}, 'post', 'email/exists', function(msg, err, status, data){
+								if(submenu_wrapper.length>0){
+									if(typeof data['exists'] == 'boolean' && data['exists']){
+										submenu_wrapper.find("[find=submenu_button_title]").removeClass('create').html(Lincko.Translation.get('app', 84, 'html')); //Link
+									} else {
+										submenu_wrapper.find("[find=submenu_button_title]").addClass('create').html(Lincko.Translation.get('app', 41, 'html')); //Create
+									}
+									submenu_wrapper.find("[find=submenu_button_title]").removeClass('display_none submenu_personal_link_button_active default');
+									submenu_wrapper.find("[find=link_loading]").addClass('display_none');
+								}
+							});
+						}
+					}, time, email, submenu_wrapper);
+				} else {
+					email_previous = email;
+					submenu_wrapper.find("[find=submenu_button_title]").addClass('display_none submenu_personal_link_button_active default');
+					submenu_wrapper.find("[find=link_loading]").addClass('display_none');
+				}
+			});
+			Elem.find("[find=submenu_input]").focus();
+			
+			var email_check = Elem.find("[find=email_check]");
+			if(email_check.length>0){
+				//This help to clear the email field if there was an autocompletion issue (sometime chrome does keep empty after autocompletion, the yellow backgroubd effect)
+				Elem.find("[find=submenu_input]").on('blur', email_check, function(event){
+					var email = $(this).val();
+					if(base_input_field.email.valid(email)){
+						var email_check = event.data;
+						wrapper_sendAction({email: email}, 'post', 'email/verify', function(msg, err, status, data){
+							if(err){
+								email_check.removeClass('display_none');
+							}
+						});
+						
+					}
+				});
+				Elem.find("[find=submenu_input]").on('keyup past cut', email_check, function(event){
+					event.data.addClass('display_none');
+				});
+			}
+			
 		},
 	},
 	"password": {
@@ -402,16 +463,35 @@ submenu_list['personal_lincko'] = {
 	},
 	"link": {
 		"style": "profile_button_link",
-		"title": Lincko.Translation.get('app', 84, 'html'), //Link
+		"title": Lincko.Translation.get('app', 41, 'html'), //Create
 		"name": "link",
 		"class": "submenu_personal_link",
 		"action": function(Elem, subm) {
 			var subm_Elem = subm.Wrapper();
 			var that_Elem = Elem;
+
+			var list = {
+				'email': subm_Elem.find("[name=email]").val(),
+				'password': subm_Elem.find("[name=password]").val(),
+			};
+			for(var i in list){
+				if(typeof base_input_field[i] == 'object'){
+					if(typeof base_input_field[i].valid == "function" && typeof base_input_field[i].error_msg == "function"){
+						if(!base_input_field[i].valid(list[i])){
+							var data = base_input_field[i].error_msg();
+							if(!base_input_field[i].hide && typeof base_show_error == 'function'){
+								base_show_error(data.msg, true);
+							}
+							return false; //Do not launch the sendAction
+						}
+					}
+				}
+			}
+
 			wrapper_sendAction(
 				{
-					email: subm_Elem.find("[name=email]").val(),
-					password: subm_Elem.find("[name=password]").val(),
+					email: list['email'],
+					password: list['password'],
 				},
 				'post',
 				'user/link_to',
@@ -420,7 +500,7 @@ submenu_list['personal_lincko'] = {
 				},
 				null,
 				function(jqXHR, settings, temp_id) {
-					that_Elem.find("[find=submenu_button_title]").addClass("submenu_personal_link_button_active");
+					that_Elem.find("[find=submenu_button_title]").addClass("submenu_personal_link_button_active").removeClass('default');
 					base_showProgress(that_Elem);
 				},
 				function(){
@@ -430,11 +510,14 @@ submenu_list['personal_lincko'] = {
 			);
 		},
 		"now": function(Elem, subm){
-			Elem.find("[find=submenu_button_title]").prop("id", subm.id+"_link");
+			Elem.find("[find=submenu_button_title]").prop("id", subm.id+"_link").addClass('display_none create');
 			//Add loading bar
 			var loading_bar = $("#-submit_progress_bar").clone();
 			loading_bar.prop('id', '');
 			Elem.append(loading_bar);
+			var link_loading = $('<img find="link_loading" class="submenu_personal_link_loading display_none">');
+			link_loading.prop('src', app_application_loading_bar.src);
+			Elem.prepend(link_loading);
 		},
 	},
 	"post_action": {

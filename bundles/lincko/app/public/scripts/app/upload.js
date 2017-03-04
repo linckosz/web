@@ -95,7 +95,7 @@ submenu_list['app_upload_destination'] = {
 };
 
 //This function is called only at the file submit moment because it can be different per file
-function app_upload_prepare_log(parent_type, parent_id, temp_id){
+function app_upload_prepare_log(parent_type, parent_id, temp_id, precompress){
 	if(typeof parent_type != 'string' && !$.isNumeric(parent_id)){
 		parent_type = 'projects';
 		parent_id = Lincko.storage.getMyPlaceholder()['_id'];
@@ -106,6 +106,7 @@ function app_upload_prepare_log(parent_type, parent_id, temp_id){
 	$('#app_upload_parent_id').val(parseInt(parent_id, 10));
 	$('#app_upload_workspace').val(wrapper_localstorage.workspace);
 	$('#app_upload_temp_id').val(temp_id);
+	$('#app_upload_precompress').val(precompress);
 }
 
 function app_upload_set_launcher(parent_type, parent_id, submenu, start, temp_id, param, precompress){
@@ -127,9 +128,13 @@ function app_upload_set_launcher(parent_type, parent_id, submenu, start, temp_id
 	app_upload_auto_launcher.submenu = submenu;
 	app_upload_auto_launcher.start = start;
 	app_upload_auto_launcher.param = param;
+	if(parent_type=="chats"){
+		precompress = true;
+	}
+	app_upload_auto_launcher.precompress = precompress;
 	if(precompress){
-		precompress = /Android(?!.*Chrome)|Opera/.test(window.navigator.userAgent);
-		$('#app_upload_fileupload').fileupload('option', {disableImageResize: precompress,});
+		//If we cannot compress on front, it will be on backend
+		$('#app_upload_fileupload').fileupload('option', {disableImageResize: /Android(?!.*Chrome)|Opera/.test(window.navigator.userAgent),});
 	} else {
 		$('#app_upload_fileupload').fileupload('option', {disableImageResize: true,});
 	}
@@ -244,6 +249,7 @@ $(function () {
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_size = data.files[0].size;
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_parent_id = app_upload_auto_launcher.parent_id;
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_parent_type = app_upload_auto_launcher.parent_type;
+			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_precompress = app_upload_auto_launcher.precompress;
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_start = app_upload_auto_launcher.start;
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_try = 2;
 
@@ -340,7 +346,8 @@ $(function () {
 			var parent_type = app_upload_files.lincko_files[data.lincko_files_index].lincko_parent_type;
 			var parent_id = app_upload_files.lincko_files[data.lincko_files_index].lincko_parent_id;
 			var temp_id = app_upload_files.lincko_files[data.lincko_files_index].lincko_temp_id;
-			app_upload_prepare_log(parent_type, parent_id, temp_id);
+			var precompress = app_upload_files.lincko_files[data.lincko_files_index].lincko_precompress;
+			app_upload_prepare_log(parent_type, parent_id, temp_id, precompress);
 			app_application_lincko.prepare('upload', true);
 		},
 		

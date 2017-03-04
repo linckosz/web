@@ -117,8 +117,8 @@ td.app_layers_dev_skytasks_checkbox {
 	right: 0;
 	line-height: 48px;
 	display: inline-block;
-    font-size: 30px;
-   	color: #ffffff;
+	font-size: 30px;
+	color: #ffffff;
 	padding: 0 6px;
 	cursor: pointer;
 }
@@ -249,24 +249,24 @@ td.submenu_taskdetail_share .fa{
 }
 .taskdetail_editorToolbar_locked{
 	font-family: inherit;
-    font-size: 10px;
-    font-weight: 300;
-    color: #9b9b9b;
+	font-size: 10px;
+	font-weight: 300;
+	color: #9b9b9b;
 }
 .taskdetail_editorToolbar_locked:before{
-    padding-right: 5px;
-    font: normal normal normal 14px/1 FontAwesome;
-    font-size: 12px;
-    color: #cacaca;
+	padding-right: 5px;
+	font: normal normal normal 14px/1 FontAwesome;
+	font-size: 12px;
+	color: #cacaca;
 }
 .taskdetail_editorToolbar_overlay{
-    position: absolute;
-    left: 0px;
-    right: 0px;
-    top: 0px;
-    bottom: -2px;
-    background-color: #FFFFFF;
-    z-index: 5;
+	position: absolute;
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	bottom: -2px;
+	background-color: #FFFFFF;
+	z-index: 5;
 }
 
 
@@ -350,7 +350,7 @@ td.submenu_taskdetail_share .fa{
 }
 .submenu_taskdetail_collapsable_button_disabled{
 	opacity: 0.5;
-    cursor: default;
+	cursor: default;
 }
 .submenu_taskdetail_collapsable_button [find=icon_arrow] {
 	width: 20px;
@@ -359,10 +359,10 @@ td.submenu_taskdetail_share .fa{
 .submenu_taskdetail_collapsable_button td[find=icomoon]{
 	display: table-cell;
 	width: 100%;
-    font-size: 20px;
-    line-height: 24px;
-    padding-top: 2px;
-    color: #53ADD2;
+	font-size: 20px;
+	line-height: 24px;
+	padding-top: 2px;
+	color: #53ADD2;
 }
 .submenu_taskdetail_collapsable_content {
 
@@ -379,8 +379,8 @@ td.submenu_taskdetail_share .fa{
 	line-height: 30px;
 	margin-right: 10px;
 	max-width: 30%;
-    display: inline-block;
-    color: #979797;
+	display: inline-block;
+	color: #979797;
 }
 .submenu_taskdetail_burgerBar_block.skylist_clickable{
 	color: #53ADD2;
@@ -446,14 +446,14 @@ td.submenu_taskdetail_share .fa{
 	width: 80px;
 }
 .submenu_taskdetail_meta_text[find=duedate_timestamp]{
-    position: absolute;
-    top: 0px;
-    bottom: 0px;
-    left: 0px;
-    opacity: 0;
-    padding: 0px;
-    width: 75px;
-    z-index: -1;
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	opacity: 0;
+	padding: 0px;
+	width: 75px;
+	z-index: -1;
 }
 .submenu_taskdetail_meta_text[find=user_text_hidden]{
 	position: absolute;
@@ -465,11 +465,11 @@ td.submenu_taskdetail_share .fa{
 }
 .submenu_taskdetail_meta_text[find=projects_text]{
 	max-width: 80px;
-    display: inline-block;
-    overflow: hidden;
-    white-space: nowrap;
-    vertical-align: bottom;
-    text-overflow: ellipsis;
+	display: inline-block;
+	overflow: hidden;
+	white-space: nowrap;
+	vertical-align: bottom;
+	text-overflow: ellipsis;
 }
 .submenu_taskdetail_meta_text[find=projects_id]{
 	position: absolute;
@@ -543,14 +543,14 @@ td.submenu_taskdetail_share .fa{
 .submenu_taskdetail_progressBar_wrapper [find=container]{
 	position: relative;
 	background-color: #d8d8d8;
-    height: 20px;
+	height: 20px;
 }
 .submenu_taskdetail_progressBar_wrapper [find=bar]{
 	position: absolute;
 	z-index: 10;
-    width: 0%;
-    background-color: #5bb0d4;
-    height: 100%;
+	width: 0%;
+	background-color: #5bb0d4;
+	height: 100%;
 }
 .submenu_taskdetail_progressBar_wrapper [find=zero_text]{
 	position: absolute;
@@ -559,9 +559,9 @@ td.submenu_taskdetail_share .fa{
 	color: #FFFFFF;
 }
 .submenu_taskdetail_progressBar_wrapper [find=percent]{
-    float: right;
-    color: #FFFFFF;
-    padding-right: 12px;
+	float: right;
+	color: #FFFFFF;
+	padding-right: 12px;
 }
 .submenu_taskdetail_progressBar_wrapper [find=percent]:after{
 	content:'%';
@@ -575,17 +575,17 @@ td.submenu_taskdetail_share .fa{
 	height: 100%;
 }
 .submenu_taskdetail_subtasks_card [find=checkbox_td]{
-    vertical-align: top;
-    padding-top: 6px;
-    padding-bottom: 4px;
+	vertical-align: top;
+	padding-top: 6px;
+	padding-bottom: 4px;
 }
 .submenu_taskdetail_subtasks_card [find=checkbox]{
 	cursor: pointer;
-    cursor: hand;
+	cursor: hand;
 	margin: 0px 4px;
 	border: solid 1px #615577;
-    border-radius: 4px;
-    font-size: 15px;
+	border-radius: 4px;
+	font-size: 15px;
 
 }
 .submenu_taskdetail_subtasks_card [find=checkbox]:before{
@@ -643,20 +643,20 @@ td.submenu_taskdetail_share .fa{
 }
 .submenu_taskdetail_links [find=existing_btn]{
 	min-width: 150px;
-    padding: 0px 15px;
+	padding: 0px 15px;
 }
 .submenu_taskdetail_links_card{
 	position: relative;
 	border-bottom: 1px solid rgba(0, 0, 0, 0.24);
 }
 .submenu_taskdetail_links_card [find=card_leftbox]{
-    font-size: 36px;
-    display: table-cell;
-    padding: 0px 8px;
-    height: 64px;
-    width: 80px;
-    box-sizing: border-box;
-    text-align: center;
+	font-size: 36px;
+	display: table-cell;
+	padding: 0px 8px;
+	height: 64px;
+	width: 80px;
+	box-sizing: border-box;
+	text-align: center;
 }
 .submenu_taskdetail_links_card [find=card_leftbox] img{
 	vertical-align: middle;
@@ -665,26 +665,26 @@ td.submenu_taskdetail_share .fa{
 }
 .submenu_taskdetail_links_notesABC{
 	background-image: url('/lincko/app/images/app/abc.png');
-    background-size: 28px;
-    background-repeat: no-repeat;
-    background-position: center;
-    /*background-position-x: 0px;*/
+	background-size: 28px;
+	background-repeat: no-repeat;
+	background-position: center;
+	/*background-position-x: 0px;*/
 }
 .submenu_taskdetail_links_card [find=card_center]{
 	height: 64px;
 }
 .submenu_taskdetail_links_card [find=card_center] [find=title]{
 	word-break: break-all;
-    max-height: 58px;
+	max-height: 58px;
 }
 
 .submenu_taskdetail_links_card [find=action_div]{
 	top: 0px;
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
-    padding-right: 10px;
-    color: #53ADD2;
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+	padding-right: 10px;
+	color: #53ADD2;
 }
 .submenu_taskdetail_links_card [find=action_div]{
 	display: none;
@@ -694,9 +694,9 @@ td.submenu_taskdetail_share .fa{
 	font-size:30px;
 	line-height: 64px;
 	height: 100%;
-    display: inline-block;
+	display: inline-block;
 	text-decoration: none;
-    color: inherit;
+	color: inherit;
 }
 
 .submenu_taskdetail_links_card:hover [find=action_div]{
@@ -895,6 +895,7 @@ styling for sub comments
 	padding-right: 120px;
 	max-height: 30px;
 	width: 100%;
+	overflow: hidden;
 }
 .submenu_content_taskdetail_files .submenu_taskdetail_tasktitle_fileInfo{
 	font-size: 14px;
@@ -958,9 +959,9 @@ styling for sub comments
 	.submenu_content_taskdetail_files [find=downloadIcon] {
 		line-height: normal;
 		font-size: 26px;
-	    margin: 0px;
-	    padding: 10px;
-	    cursor: pointer;
+		margin: 0px;
+		padding: 10px;
+		cursor: pointer;
 	}
 }
 

@@ -42,6 +42,8 @@ var app_content_menu = {
 
 	projects_id: null,
 
+	onboarding_id: false,
+
 	menu: null,
 
 	param: null,
@@ -66,8 +68,22 @@ var app_content_menu = {
 		var title = base_myplaceholder;
 		var new_project = false;
 
+		if(!this.onboarding_id){
+			var ob_settings = Lincko.storage.getOnboarding();
+			if(ob_settings && typeof ob_settings.sequence != 'undefined'){
+				this.onboarding_id = ob_settings.projects[1];
+			}
+		}
+
 		if(app_content_menu.projects_id != projects_id){
 			new_project = true;
+			if(this.onboarding_id == app_content_menu.projects_id){
+				app_application_action(15); //Exit onboarding project
+			} else if(this.onboarding_id == projects_id){
+				app_application_action(16); //Enter onboarding project
+			} else {
+				app_application_action(17); //Switch the project
+			}
 		}
 
 		if(projects_id >= 0){

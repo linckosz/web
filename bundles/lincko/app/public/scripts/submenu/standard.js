@@ -122,6 +122,7 @@ submenu_list['settings'] = {
 		"style": "button",
 		"title": Lincko.Translation.get('app', 93, 'html'), //Download our App
 		"action": function(){
+			app_application_action(14, {from: 'application'});
 			window.open(wrapper_link['appstore'], "_blank");
 		},
 		"class": "",

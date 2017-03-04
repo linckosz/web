@@ -190,7 +190,6 @@ var onboarding = {
 			close = true;
 		}
 		if(close){
-			app_application_action(4); //Finish onboarding
 			app_models_resume_onboarding_continue(null, 10102); //end onboarding
 		}
 		var that = this;
@@ -387,9 +386,9 @@ onboarding.overlays = {
 		var elem = $('<div>').prop('id',id).addClass('onboarding_overlay '+id);
 		if(id == 'onboarding_overlay_btnSkip'){ 
 			elem.click(function(){
+				app_application_action(5); //Skip onborading step
 				onboarding.forceOff = true;
 				if(onboarding.currentTrip){
-					app_application_action(5); //Skip onborading step
 					onboarding.currentTrip.stop();
 				}
 				onboarding.clear();
@@ -1310,6 +1309,7 @@ onboarding.scripts['welcome'] = function(project_id){
 				},
 				onEnd: function(tripIndex, tripObject){
 					if(onboarding.forceOff){ return false; }
+					app_application_action(4); //Finish onboarding
 					//$('.trip-overlay').css('display', 'none');
 					onboarding.clear();
 				},

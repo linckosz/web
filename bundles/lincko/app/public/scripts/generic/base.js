@@ -371,7 +371,9 @@ JSfiles.finish(function(){
 		base_has_webcam_sub = false;
 	}
 
-	w69b.qr.decoding.setWorkerUrl(w69b_qrcode_decodeworker);
+	if(!isIOS && !navigator.userAgent.match(/MicroMessenger/i) && typeof w69b != 'undefined'){
+		w69b.qr.decoding.setWorkerUrl(w69b_qrcode_decodeworker);
+	}
 });
 
 base_removeLineBreaks = function(str){

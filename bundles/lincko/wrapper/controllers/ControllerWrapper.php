@@ -401,6 +401,15 @@ class ControllerWrapper extends Controller {
 			$this->json['data']['password'] = false;
 		}
 
+		if($action=='email/verify' && $type=='POST' && isset($this->json['data']['email'])){
+			$ve = new \hbattat\VerifyEmail($this->json['data']['email'], 'noreply@'.$app->lincko->domain);
+			if($ve->verify()){
+				echo '{"show":false, "msg":"verify", "error":false, "status":200}';
+				//We know immediatly that it works, so no need to check twice
+				return true;
+			}
+		}
+
 		if($action=='user/signin' && $type=='POST' && isset($this->json['data']['email']) && isset($this->json['data']['password'])){
 
 			$log_action = true;

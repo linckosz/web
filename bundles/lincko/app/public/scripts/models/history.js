@@ -130,6 +130,9 @@ var app_models_history = {
 								)
 							)
 						){
+							if(hist[i]['par'] && hist[i]['par']['pvid'] && hist[i]['par']['pvid'] != wrapper_localstorage.uid && (hist[i]['cod'] == 551 || hist[i]['cod'] == 552)){
+								continue;
+							}
 							app_models_history.notify(
 								Lincko.storage.getHistoryInfo(hist[i]).title,
 								wrapper_to_html(item["+title"]),
@@ -803,6 +806,7 @@ var app_models_history = {
 					info[i].root_type = root_item["_type"];
 					info[i].root_id = root_item["_id"];
 					info[i].by = false;
+					info[i].root_created_at = root_item["created_at"];
 
 					info[i].notif = false;
 					if(Lincko.storage.cache.getNotify(root_item["_type"], root_item["_id"])){
@@ -825,6 +829,7 @@ var app_models_history = {
 							info[i].title = perso["-username"];
 							src = Lincko.storage.getLinkThumbnail(perso['profile_pic']);
 						}
+						var add_circle = true;
 						for(var j in root_item["_perm"]){
 							if(j!=wrapper_localstorage.uid){
 								perso = Lincko.storage.get('users', j);
@@ -832,6 +837,7 @@ var app_models_history = {
 								src = Lincko.storage.getLinkThumbnail(perso['profile_pic']);
 								if(j==0){
 									src = app_application_icon_roboto.src;
+									add_circle = false;
 								} else if(j==1){
 									src = app_application_icon_monkeyking.src;
 								}
@@ -839,9 +845,10 @@ var app_models_history = {
 							}
 						}
 						if(src){
-							info[i].picture
-								.css('background-image', 'url(' + src + ')')
-								.addClass('models_history_profile_pic');
+							info[i].picture.css('background-image', 'url(' + src + ')');
+							if(add_circle){
+								info[i].picture.addClass('models_history_profile_pic');
+							}
 						} else {
 							info[i].picture.addClass('icon-largerIndividual');
 						}

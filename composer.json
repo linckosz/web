@@ -11,6 +11,7 @@
         "html2text/html2text": "4.*",
         "smottt/wideimage": "*",
         "mongodb/mongodb": "*",
-        "geoip2/geoip2": "2.*"
+        "geoip2/geoip2": "2.*",
+        "hbattat/verifyemail": "*"
     }
 }

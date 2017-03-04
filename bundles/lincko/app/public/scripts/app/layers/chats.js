@@ -39,6 +39,8 @@ function app_layers_chats_feedChat(parent) {
 			var Elems = layer.find('[find=card]');
 
 			//For existing items
+			//Note: We do not reorder inside project list (only few chats, and helps to keep project activity on top)
+			/*
 			Elems.each(function(){
 				var Elem = $(this);
 				var list_bis = list;
@@ -70,12 +72,15 @@ function app_layers_chats_feedChat(parent) {
 					list_bis[ Elem.prop('id') ] = Elem.attr('timestamp');
 				}
 			});
+			*/
 
 			//For new items
 			for(var i in items){
 				var Elem = $('#'+ prefix + items[i]['root_type']+"_"+items[i]['root_id']);
 				if(Elem.length <= 0){
 					var Elem = this.action_param.addChat(items[i]);
+					//Note: We keep it at the end of the list (newest chats group is at the bottom)
+					/*
 					var parent = this.action_param.list
 					Elem.detach(); //cut
 					var timestamp = list[Elem.prop('id')];
@@ -93,6 +98,7 @@ function app_layers_chats_feedChat(parent) {
 					if(!attached){
 						parent.append(Elem);
 					}
+					*/
 				} else if(items[i]['timestamp'] != Elem.attr('timestamp')){
 					this.action_param.addChat(items[i]);
 				}
