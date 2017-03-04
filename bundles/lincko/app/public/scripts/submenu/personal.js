@@ -66,7 +66,7 @@ submenu_list['personal_settings'] = {
 				msg = integration["lincko"];
 				title.append(msg);
 				title.addClass('submenu_deco_info submenu_personal_info_value');
-				//Elem.off('click');
+				Elem.off('click');
 			} else {
 				title.append(msg);
 				var next = $('<img>');
