@@ -33,7 +33,7 @@ class Action {
 		return $controller->wrap_multi('info/action');
 	}
 
-	public static function getUserInfo($info=false){
+	public static function getUserInfo(){
 		$app = \Slim\Slim::getInstance();
 		if(!self::$user_info_done && isset($_SERVER)){
 			if(stripos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger')){

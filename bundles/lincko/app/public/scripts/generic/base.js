@@ -319,6 +319,47 @@ if(isIOS){
 
 
 var base_scanner = false;
+if(base_is_wechat){
+	base_scanner = {
+
+		If: true,
+
+		dispose: function(){},
+
+		cb_decoded: function(url_code){},
+
+		setDecodedCallback: function(fn) {
+			cb_decoded = fn;
+		},
+
+		render: function(Elem){
+			wx.scanQRCode({
+				needResult: 1,
+				desc: 'scanQRCode desc',
+				success: function (res) {
+					var error = false;
+					try {
+						base_show_error(Lincko.Translation.get('app', 2314, 'html'), false); //Operation failed.
+						var json = JSON.parse(res);
+						if(json.resultStr){
+							base_scanner.cb_decoded(json.resultStr);
+						} else {
+							error = true;
+						}
+					} catch(e){
+						error = false;
+					}
+					if(error){
+						base_show_error(Lincko.Translation.get('app', 2314, 'html'), true); //Operation failed.
+					}
+					alert(JSON.stringify(res));
+				}
+			});
+		},
+
+	};		
+}
+
 var base_video_device_current = 0;
 var base_video_device = [];
 var base_has_webcam = false;
@@ -371,7 +412,7 @@ JSfiles.finish(function(){
 		base_has_webcam_sub = false;
 	}
 
-	if(!isIOS && !navigator.userAgent.match(/MicroMessenger/i) && typeof w69b != 'undefined'){
+	if(!isIOS && !navigator.userAgent.match(/MicroMessenger/i) && typeof w69b != 'undefined' && typeof w69b_qrcode_decodeworker != 'undefined'){
 		w69b.qr.decoding.setWorkerUrl(w69b_qrcode_decodeworker);
 	}
 });

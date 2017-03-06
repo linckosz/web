@@ -1,5 +1,5 @@
 <?php
-
+use \libs\Wechat;
 /*
 	Write here anything you need as debugging information to be display on main page
 	For twig display use: {{ _debug() }} or {{ _debug(data) }}
@@ -15,3 +15,28 @@
 $app = \Slim\Slim::getInstance();
 //print_r($data);
 //phpinfo();
+
+//COM
+$option['appid'] = 'wx268709cdc1a8e280';
+$option['secret'] = '03fab389a36166cd1f75a2c94f5257a0';
+$open_id = 'og2amv--gbQqK3Pz4LUTtOsprWx4';
+$union_id = 'WqxPHuGPg2O4ND38AatZ8vi7U';
+
+
+//CO
+$option['appid'] = 'wxb315b38a8267ad72';
+$option['secret'] = 'e0a658f9d2b907ddb4bd61c3827542da';
+//$open_id = 'og2amv--gbQqK3Pz4LUTtOsprWx4';
+//$union_id = 'WqxPHuGPg2O4ND38AatZ8vi7U';
+
+
+$wechat = new Wechat($option);
+$tp = $wechat->getToken();
+$tp = $wechat->getQRUrl('123');
+
+echo $tp;
+
+\libs\Watch::php($wechat, '$tp', __FILE__, __LINE__, false, false, true);
+\libs\Watch::php($tp, '$tp', __FILE__, __LINE__, false, false, true);
+
+

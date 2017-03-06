@@ -4,17 +4,18 @@ namespace libs;
 //Modified by Bruno on Feb 1st, 2017
 //Work only with PUBLIC account
 
+//https://coding.net/u/cjango/p/wechat_sdk/git/blob/master/Wechat.class.php
 //https://gist.github.com/guweigang/a1f6eddcb96c5486ffd0
 /**
- * 微信PHP-SDK
+ * 微信PHP-SDK，用于开发单用户版微信公众号管理系统
  * 服务器端必须要有 CURL 支持
- * 2015年7月修正版本
+ * 2015年8月修正版本
+ * 增加：多客服管理相关接口
+ * 增加了企业付款和红包的接口
  * @author 、小陈叔叔 <cjango@163.com>
- * https://coding.net/u/cjango/p/wechat_sdk/git
- * 7月10日，完善红包功能，
+ * http://git.oschina.net/cjango/cjango-sdk
  */
-
-//namespace Tools; //bruno
+//namespace Tools;
 
 class Wechat {
 	/* 获取ACCESS_TOKEN URL */
@@ -40,6 +41,8 @@ class Wechat {
 	const OAUTH_AUTHORIZE_URL     = 'https://open.weixin.qq.com/connect/oauth2/authorize';
 	const OAUTH_USER_TOKEN_URL    = 'https://api.weixin.qq.com/sns/oauth2/access_token';
 	const OAUTH_GET_USERINFO	  = 'https://api.weixin.qq.com/sns/userinfo';
+	/* 获取模板ID */
+	const GET_TEMPLATE_ID         = 'https://api.weixin.qq.com/cgi-bin/template/api_add_template';
 	/* 消息模板 */
 	const TEMPLATE_SEND			  = 'https://api.weixin.qq.com/cgi-bin/message/template/send';
 	/* JSAPI_TICKET获取地址 */
@@ -54,16 +57,28 @@ class Wechat {
 	const PAY_REFUND_ORDER	      = 'https://api.mch.weixin.qq.com/secapi/pay/refund';
 	/* 退款查询地址 */
 	const REFUND_QUERY_URL        = 'https://api.mch.weixin.qq.com/pay/refundquery';
+	/* 企业付款 */
+	const PAY_TRANSFERS_URL       = 'https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers';
+	/* 企业付款查询 */
+	const GET_PAY_TRANSFERS       = 'https://api.mch.weixin.qq.com/mmpaymkttransfers/gettransferinfo';
 	/* 下载对账单 */
 	const DOWNLOAD_BILL_URL       = 'https://api.mch.weixin.qq.com/pay/downloadbill';
-	/* 转换短链接 */
-	const GET_SHORT_URL           = 'https://api.mch.weixin.qq.com/tools/shorturl';
 	/* 发放红包高级接口 */
 	const SEND_RED_PACK           = 'https://api.mch.weixin.qq.com/mmpaymkttransfers/sendredpack';
 	/* 发送裂变红包接口 */
 	const SEND_GROUP_RED_PACK     = 'https://api.mch.weixin.qq.com/mmpaymkttransfers/sendgroupredpack';
 	/* 红包查询接口 */
 	const GET_RED_PACK_INFO       = 'https://api.mch.weixin.qq.com/mmpaymkttransfers/gethbinfo';
+	/* 转换短链接 */
+	const GET_SHORT_URL           = 'https://api.mch.weixin.qq.com/tools/shorturl';
+	/* 多客服相关URL */
+	const GET_KF_LIST             = 'https://api.weixin.qq.com/cgi-bin/customservice/getkflist';
+	const GET_ONLINE_KF_LIST      = 'https://api.weixin.qq.com/cgi-bin/customservice/getonlinekflist';
+	const ADD_KF_URL              = 'https://api.weixin.qq.com/customservice/kfaccount/add';
+	const UPDATE_KF_URL           = 'https://api.weixin.qq.com/customservice/kfaccount/update';
+	const DELETE_KF_URL           = 'https://api.weixin.qq.com/customservice/kfaccount/del';
+	const UPLOAD_KF_HEADIMG       = 'Http://api.weixin.qq.com/customservice/kfaccount/uploadheadimg';
+	const GET_KF_MSGRECORD        = 'https://api.weixin.qq.com/customservice/msgrecord/getrecord';
 	/* 素材管理 */
 	const MEDIA_UPLOAD_URL        = 'https://api.weixin.qq.com/cgi-bin/media/upload';               // 新增临时素材
 	const MEDIA_GET_URL           = 'https://api.weixin.qq.com/cgi-bin/media/get';                  // 获取临时素材
@@ -75,6 +90,7 @@ class Wechat {
 	const MATERIAL_COUNT_URL      = 'https://api.weixin.qq.com/cgi-bin/material/get_materialcount'; // 获取永久素材数量 1
 	const MATERIAL_LISTS_URL      = 'https://api.weixin.qq.com/cgi-bin/material/batchget_material'; // 获取永久素材列表 1
 
+	private $account;
 	private $token;
 	private $appid;
 	private $secret;
@@ -94,15 +110,16 @@ class Wechat {
 	private $pemKey;
 
 	public function __construct($options = array()) {
+		$this->account      =  isset($options['account'])      ? $options['account']      : '';
 		$this->token        =  isset($options['token'])        ? $options['token']        : '';
 		$this->appid        =  isset($options['appid'])        ? $options['appid']        : '';
 		$this->secret       =  isset($options['secret'])       ? $options['secret']       : '';
 		$this->access_token =  isset($options['access_token']) ? $options['access_token'] : '';
 		$this->debug        =  isset($options['debug'])        ? $options['debug']        : false;
-		$this->encode       = !empty($options['encode'])       ? true : false;
+		$this->encode       = !empty($options['encode'])       ? true                     : false;
 		$this->AESKey       =  isset($options['aeskey'])       ? $options['aeskey']       : '';
 		$this->mch_id       =  isset($options['mch_id'])       ? $options['mch_id']       : '';
-		$this->payKey       =  isset($options['payKey'])       ? $options['payKey']       : '';
+		$this->payKey       =  isset($options['paykey'])       ? $options['paykey']       : '';
 		$this->pem          =  isset($options['pem'])          ? $options['pem']          : '';
 		if ($this->encode && strlen($this->AESKey) != 43) {
 			$this->error = 'AESKey Lenght Error';
@@ -110,6 +127,11 @@ class Wechat {
 		}
 	}
 
+	/**
+	 * 动态设置参数
+	 * @param  string $config 配置名称
+	 * @param  string $value  配置内容
+	 */
 	public function setConfig($config, $value) {
 		$this->$config = $value;
 	}
@@ -123,8 +145,8 @@ class Wechat {
 	}
 
 	/**
-	 * 验证URL有效性
-	 * @author 、小陈叔叔 <cjango@163.com>
+	 * 验证URL有效性,校验数据签名
+	 * @return string|boolean
 	 */
 	public function valid() {
 		$echoStr = $_GET["echostr"];
@@ -138,7 +160,7 @@ class Wechat {
 
 	/**
 	 * 检查用户签名信息
-	 * @author 、小陈叔叔 <cjango@163.com>
+	 * @return boolean
 	 */
 	public function checkSignature() {
 		//如果调试状态，直接返回真
@@ -160,7 +182,6 @@ class Wechat {
 	/**
 	 * 取得 access_token
 	 * @return string|boolean
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	public function getToken() {
 		$access_token = $this->access_token;
@@ -174,10 +195,10 @@ class Wechat {
 			}
 		}
 	}
-	
+
 	/**
 	 * 从远端接口获取ACCESS_TOKEN
-	 * @author 、小陈叔叔 <cjango@163.com>
+	 * @return string|boolean
 	 */
 	private function getAccessToken() {
 		$params = array(
@@ -201,7 +222,6 @@ class Wechat {
 	/**
 	 * 获取自定义菜单
 	 * @return array|boolean
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	public function menus() {
 		$params = array(
@@ -220,7 +240,6 @@ class Wechat {
 	 * 创建自定义菜单
 	 * @param  array $menus 自定义菜单数组
 	 * @return boolen
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	public function menu_create($menus = array()) {
 		if (empty($menus)) {
@@ -229,8 +248,8 @@ class Wechat {
 		}
 		//创建菜单之前，执行删除操作
 		//$this->menu_delete();
-		$params = $this->json_encode($menus);
-		$url    = self::MENU_CREATE_URL . '?access_token=' . $this->access_token;
+		$params  = $this->json_encode($menus);
+		$url     = self::MENU_CREATE_URL . '?access_token=' . $this->access_token;
 		$jsonStr = $this->http($url, $params, 'POST');
 		$jsonArr = $this->parseJson($jsonStr);
 		if ($jsonArr) {
@@ -243,7 +262,6 @@ class Wechat {
 	/**
 	 * 删除自定义菜单
 	 * @return boolean
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	public function menu_delete() {
 		$params = array(
@@ -261,7 +279,6 @@ class Wechat {
 	/**
 	 * 从远端获取用户分组
 	 * @return array|boolean
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	public function groups() {
 		$url = self::GROUP_GET_URL.'?access_token='.$this->access_token;
@@ -273,12 +290,11 @@ class Wechat {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * 添加用户分组
 	 * @param string $name 分组名称
 	 * @return boolean
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	public function group_add($name = '') {
 		if (empty($name)) {
@@ -300,13 +316,12 @@ class Wechat {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * 修改分组名
 	 * @param integer $gid 分组编号
 	 * @param string $name 分组名称
 	 * @return boolean
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	public function group_edit($gid = '', $name = '') {
 		if (empty($name) || empty($gid)) {
@@ -329,25 +344,24 @@ class Wechat {
 			return false;
 		}
 	}
-	
+
 	/**
-	 * 获取关注者列表 
+	 * 获取关注者列表
 	 * @param  sting $next_openid 第一个拉取的OPENID，不填默认从头开始拉取
 	 * @return array|boolean 返回用户信息的一个数组
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	public function users($next_openid = '') {
 		!empty($next_openid) && $params['next_openid'] = $next_openid;
 		$params['access_token'] = $this->access_token;
-		
+
 		$jsonStr = $this->http(self::USER_GET_URL, $params);
 		$jsonArr = $this->parseJson($jsonStr);
 		if ($jsonArr) {
 			//优化返回数组的结构
 			$openId = $jsonArr['data']['openid'];
 			unset($jsonArr['data']);
-			if ($jsonArr['total'] > $jsonArr['count']) {
-				$next   = self::getUsers($jsonArr['next_openid']);
+			while ($jsonArr['count'] == 10000) {
+				$next   = self::users($jsonArr['next_openid']);
 				$openId = array_merge($openId, $next);
 			}
 			unset($jsonArr['count']);
@@ -360,25 +374,9 @@ class Wechat {
 	}
 
 	/**
-	 * 返回多余的用户信息，目前只能支持到2W以内
-	 */
-	private function getUsers($next_openid = '') {
-		$params['next_openid']  = $next_openid;
-		$params['access_token'] = $this->access_token;
-		$jsonStr = $this->http(self::USER_GET_URL, $params);
-		$jsonArr = $this->parseJson($jsonStr);
-		if ($jsonArr) {
-			return $jsonArr['data']['openid'];
-		} else {
-			return false;
-		}
-	}
-
-	/**
 	 * 获取用户基本信息
 	 * @param  string $openid 用户的OPENID
 	 * @return array|boolean  返回用户信息的一个数组
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	public function user($openid = '') {
 		if (empty($openid)) {
@@ -405,7 +403,6 @@ class Wechat {
 	 * 查询用户所在分组
 	 * @param  string $openid  用户OPENID
 	 * @return integer|boolean 用户所在分组ID
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	public function user_in_group($openid = '') {
 		if (empty($openid)) {
@@ -431,7 +428,6 @@ class Wechat {
 	 * @param string  $openid 用户OPENID
 	 * @param integer $gid 移动到的分组编号
 	 * @return boolean
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	public function user_to_group($openid = '', $gid = '') {
 		if (empty($openid) || !is_numeric($gid)) {
@@ -439,7 +435,7 @@ class Wechat {
 			return false;
 		}
 		$params = array(
-			'openid' => $openid,
+			'openid'     => $openid,
 			'to_groupid' => $gid
 		);
 		$params = json_encode($params);
@@ -456,7 +452,6 @@ class Wechat {
 	/**
 	 * 获取微信推送的数据,将键值全部转换为小写后返回
 	 * @return array 转换为数组后的数据
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	public function request(){
 		$postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
@@ -480,7 +475,7 @@ class Wechat {
 		$data = (array)simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA);
 		return array_change_key_case($data, CASE_LOWER);
 	}
-	
+
 	/**
 	 * * 被动响应微信发送的信息（自动回复）
 	 * @param  string $to      接收用户名
@@ -489,7 +484,6 @@ class Wechat {
 	 * @param  string $type    消息类型
 	 * @param  string $flag    是否新标刚接受到的信息
 	 * @return string          XML字符串
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	public function response($content, $type = 'text', $flag = 0){
 		/* 基础数据 */
@@ -519,6 +513,7 @@ class Wechat {
 
 	/**
 	 * 对数据进行SHA1签名
+	 * @return string
 	 */
 	public function getSHA1($encrypt_msg, $nonce = '') {
 		$array = array($encrypt_msg, $this->token, NOW_TIME, $nonce);
@@ -530,16 +525,14 @@ class Wechat {
 	/**
 	 * 回复文本信息
 	 * @param  string $content 要回复的信息
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	private function text($content){
 		$this->data['Content'] = $content;
 	}
-	
+
 	/**
 	 * 回复音乐信息
 	 * @param  string $content 要回复的音乐
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	private function music($music){
 		list(
@@ -550,11 +543,10 @@ class Wechat {
 		) = $music;
 		$this->data['Music'] = $music;
 	}
-	
+
 	/**
 	 * 回复图文信息
 	 * @param  string $news 要回复的图文内容
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	private function news($news){
 		$articles = array();
@@ -570,7 +562,10 @@ class Wechat {
 		$this->data['ArticleCount'] = count($articles);
 		$this->data['Articles'] = $articles;
 	}
-	
+
+	/**
+	 * 将数组转换成XML
+	 */
 	private function _array2Xml($array) {
 		$xml  = new \SimpleXMLElement('<xml></xml>');
 		$this->_data2xml($xml, $array);
@@ -583,7 +578,6 @@ class Wechat {
 	 * @param  mixed  $data 数据
 	 * @param  string $item 数字索引时的节点名称
 	 * @return string xml
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	private function _data2xml($xml, $data, $item = 'item') {
 		foreach ($data as $key => $value) {
@@ -606,9 +600,30 @@ class Wechat {
 	}
 
 	/**
+	 * 获取模板ID
+	 * @param  string $tplId MP中的模板编号
+	 * @return string        模板ID
+	 */
+	public function getTemplateId($tplId) {
+		$params = array(
+			'template_id_short:' => $tplId
+		);
+		$params = json_encode($params);
+		$url    = self::GET_TEMPLATE_ID . '?access_token=' . $this->access_token;
+		$jsonStr = $this->http($url, $params, 'POST');
+		$jsonArr = $this->parseJson($jsonStr);
+		if ($jsonArr) {
+			return $jsonArr['template_id'];
+		}else {
+			return false;
+		}
+
+	}
+
+	/**
 	 * 发送模板消息
+	 * @param  array
 	 * @return boolean
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	public function sendTemplate($content) {
 		$params = self::json_encode($content);
@@ -624,13 +639,15 @@ class Wechat {
 
 	/**
 	 * 发送客服消息
+	 * @param  string  $openid
+	 * @param  string  $content
+	 * @param  string  $msgtype
 	 * @return boolean
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	public function sendMsg($openid, $content, $msgtype = 'text') {
 		/* 基础数据 */
-		$this->send ['touser'] = $openid;
-		$this->send ['msgtype'] = $msgtype;
+		$this->send['touser']  = $openid;
+		$this->send['msgtype'] = $msgtype;
 		/* 添加类型数据 */
 		$sendtype = 'send' . $msgtype;
 		$this->$sendtype($content);
@@ -649,7 +666,6 @@ class Wechat {
 	/**
 	 * 发送文本消息
 	 * @param string $content 要发送的信息
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	private function sendtext($content) {
 		$this->send['text'] = array(
@@ -660,7 +676,6 @@ class Wechat {
 	/**
 	 * 发送图片消息
 	 * @param string $content 要发送的信息
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	private function sendimage($content) {
 		$this->send['image'] = array(
@@ -671,7 +686,6 @@ class Wechat {
 	/**
 	 * 发送视频消息
 	 * @param  string $content 要发送的信息
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	private function sendvideo($video){
 		list (
@@ -679,41 +693,38 @@ class Wechat {
 			$video ['title'],
 			$video ['description']
 		) = $video;
-		
+
 		$this->send ['video'] = $video;
 	}
-	
+
 	/**
 	 * 发送语音消息
 	 * @param string $content 要发送的信息
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	private function sendvoice($content) {
 		$this->send['voice'] = array(
 			'media_id' => $content
 		);
 	}
-	
+
 	/**
 	 * 发送音乐消息
 	 * @param string $content 要发送的信息
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	private function sendmusic($music) {
-		list ( 
-			$music['title'], 
-			$music['description'], 
-			$music['musicurl'], 
-			$music['hqmusicurl'], 
+		list (
+			$music['title'],
+			$music['description'],
+			$music['musicurl'],
+			$music['hqmusicurl'],
 			$music['thumb_media_id']
 		) = $music;
 		$this->send['music'] = $music;
 	}
-	
+
 	/**
 	 * 发送图文消息
 	 * @param  string $news 要回复的图文内容
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	private function sendnews($news){
 		$articles = array();
@@ -726,27 +737,26 @@ class Wechat {
 			) = $value;
 			if($key >= 9) { break; } //最多只允许10条图文信息
 		}
+		$this->send['articles'] = $articles;
 		$this->send['news'] = array(
 			'articles' => $articles, //bruno
 		);
 	}
-	
+
 	/**
 	 * OAuth 授权跳转接口
 	 * @param string $callback 回调URI，填写完整地址，带http://
 	 * @param sting $state 重定向后会带上state参数，开发者可以填写a-zA-Z0-9的参数值
 	 * @param string snsapi_userinfo获取用户授权信息，snsapi_base直接返回openid
 	 * @return string
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	public function getOAuthRedirect($callback, $state='', $scope='snsapi_base'){
 		return self::OAUTH_AUTHORIZE_URL.'?appid='.$this->appid.'&redirect_uri='.urlencode($callback).'&response_type=code&scope='.$scope.'&state='.$state.'#wechat_redirect';
 	}
-	
+
 	/**
 	 * 通过code获取Access Token
 	 * @return array|boolean
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	public function getOauthAccessToken(){
 		$code = isset($_GET['code']) ? $_GET['code'] : '';
@@ -803,14 +813,13 @@ class Wechat {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * 获取二维码图像地址
 	 * @param  integer $scene_id 场景值 1-100000整数
 	 * @param  boolean $limit    true永久二维码 false 临时
 	 * @param  integer $expire   临时二维码有效时间
 	 * @return string|boolean    二维码图片地址
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	public function getQRUrl($scene_id = '', $limit = true, $expire = 1800) {
 		if (!isset($this->ticket)) {
@@ -825,7 +834,6 @@ class Wechat {
 	 * @param  boolean $limit    true永久二维码 false 临时
 	 * @param  integer $expire   临时二维码有效时间
 	 * @return string|boolean
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	private function qrcode($scene_id = '', $limit = true, $expire = 1800) {
 		if (empty($scene_id) || !is_numeric($scene_id) || $scene_id > 100000 || $scene_id < 1) {
@@ -845,12 +853,11 @@ class Wechat {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * 不转义中文字符和\/的 json 编码方法
 	 * @param  array $array
 	 * @return json
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	private function json_encode($array = array()) {
 		$array = str_replace("\\/", "/", json_encode($array));
@@ -867,7 +874,6 @@ class Wechat {
 	 * 解析JSON编码，如果有错误，则返回错误并设置错误信息d
 	 * @param json $json json数据
 	 * @return array
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	private function parseJson($json) {
 		$jsonArr = json_decode($json, true);
@@ -882,17 +888,6 @@ class Wechat {
 		}else {
 			return $jsonArr;
 		}
-	}
-
-	//得到用户信息
-	public function getuserinfo_uri($user_arr){
-		$obj = json_decode($user_arr,TRUE);
-		return self::OAUTH_GET_USERINFO . '?access_token='.$obj['access_token'].'&openid='.$obj['openid'].'&lang=zh_CN';
- 	}
-
-	//取得用户TOKEN
-	public function code2accesstoken($code){
-		return self::OAUTH_USER_TOKEN_URL .'?appid='.$this->appid.'&secret='.$this->secret.'&code='.$code.'&grant_type=authorization_code';
 	}
 
 	/**
@@ -948,7 +943,7 @@ class Wechat {
 		$xml_content = substr($content, 4, $xml_len);
 		$from_appid  = substr($content, $xml_len + 4);
 		if ($from_appid != $this->appid) {
-			$this->error = 'AESdecode AppId Error';
+			$this->errir = 'AESdecode AppId Error';
 			return false;
 		} else {
 			return self::_extractXml($xml_content);
@@ -1018,7 +1013,6 @@ class Wechat {
 	 * @param  string  $method 请求方法GET/POST
 	 * @param  boolean $ssl    是否进行SSL双向认证
 	 * @return array   $data   响应数据
-	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	private function http($url, $params = array(), $method = 'GET', $ssl = false){
 		$opts = array(
@@ -1056,9 +1050,6 @@ class Wechat {
 			$opts[CURLOPT_SSLKEYTYPE]  = 'PEM';
 			$opts[CURLOPT_SSLKEY]      = $pemKey;
 		}
-		/* nodejs 控制台输出日志 */
-		$CSdata = ($method == 'POST' ? json_decode($params, true) : '');
-		//K($opts[CURLOPT_URL], $CSdata); //bruno
 		/* 初始化并执行curl请求 */
 		$ch     = curl_init();
 		curl_setopt_array($ch, $opts);
@@ -1203,10 +1194,10 @@ class Wechat {
 
 	/**
 	 * 获取素材列表
-	 * @param  string  $type    素材的类型，图片（image）、视频（video）、语音 （voice）、图文（news） 
-	 * @param  integer $offset  起始位置偏移量 
+	 * @param  string  $type    素材的类型，图片（image）、视频（video）、语音 （voice）、图文（news）
+	 * @param  integer $offset  起始位置偏移量
 	 * @param  integer $count   返回数量
-	 * @return array  
+	 * @return array
 	 */
 	public function material_lists($type, $offset = 0, $count = 20) {
 		$params = array(
@@ -1223,57 +1214,6 @@ class Wechat {
 		}else {
 			return false;
 		}
-	}
-
-	/**
-	 * 网页生成支付URL
-	 * @param  integer $product_id
-	 * @param  string  $orderId
-	 * @param  float   $money
-	 * @param  string  $body
-	 * @param  string  $notify_url
-	 * @return string  URL
-	 */
-	public function webUnifiedOrder($product_id, $orderId, $money, $body, $notify_url = '', $extend = array()) {
-		if (strlen($body) > 127) $body = substr($body, 0, 127);
-		$params = array(
-			'appid'            => $this->appid,
-			'mch_id'           => $this->mch_id,
-			'nonce_str'        => self::_getRandomStr(),
-			'body'             => $body,
-			'out_trade_no'     => $orderId,
-			'total_fee'        => $money * 100, // 转换成分
-			'spbill_create_ip' => get_client_ip(),
-			'notify_url'       => $notify_url,
-			'product_id'       => $product_id,
-			'trade_type'       => 'NATIVE',
-		);
-		if (is_string($extend)) {
-			$params['attach']  = $extend;
-		} elseif (is_array($extend) && !empty($extend)) {
-			$params = array_merge($params, $extend);
-		}
-		$params['sign'] = self::_getOrderMd5($params);
-		$data = self::_array2Xml($params);
-		$data = $this->http(self::UNIFIED_ORDER_URL, $data, 'POST');
-		$data = self::_extractXml($data);
-		if ($data) {
-			if ($data['return_code'] == 'SUCCESS') {
-				if ($data['result_code'] == 'SUCCESS') {
-					return $data['code_url'];
-				} else {
-					$this->error = $data['err_code'];
-					return false;
-				}
-			} else {
-				$this->error = $data['return_msg'];
-				return false;
-			}
-		} else {
-			$this->error = '创建订单失败';
-			return false;
-		}
-
 	}
 
 	/**
@@ -1330,6 +1270,8 @@ class Wechat {
 
 	/**
 	 * 生成支付参数
+	 * @param  string $prepay_id 预支付单号
+	 * @return json
 	 */
 	private function createPayParams($prepay_id) {
 		if (empty($prepay_id)) {
@@ -1347,7 +1289,9 @@ class Wechat {
 
 	/**
 	 * 查询订单
-	 * @return boolean|array
+	 * @param  string $orderId 外部订单号或支付单号
+	 * @param  integer $type   1 支付单号 0 外部单号
+	 * @return array
 	 */
 	public function getOrderInfo($orderId, $type = 0) {
 		$params['appid']          = $this->appid;
@@ -1366,7 +1310,8 @@ class Wechat {
 
 	/**
 	 * 关闭订单
-	 * @return boolean|array
+	 * @param  string $orderId 外部订单号
+	 * @return array
 	 */
 	public function closeOrder($orderId) {
 		$params['appid']          = $this->appid;
@@ -1381,7 +1326,11 @@ class Wechat {
 
 	/**
 	 * 申请退款 需要证书操作
-	 * @return boolean|array
+	 * @param  string $orderId     外部订单号
+	 * @param  string $refundId    退款单号
+	 * @param  string $total_fee   订单金额
+	 * @param  string $refund_fee  退款金额，为空则全额退款
+	 * @return array
 	 */
 	public function refundOrder($orderId, $refundId, $total_fee, $refund_fee = '') {
 		$params['appid']          = $this->appid;
@@ -1389,8 +1338,9 @@ class Wechat {
 		$params['nonce_str']      = self::_getRandomStr();
 		$params['out_trade_no']   = $orderId;
 		$params['out_refund_no']  = $refundId;
-		$params['total_fee']      = $total_fee;
-		$params['refund_fee']     = $refund_fee;
+		$params['total_fee']      = $total_fee * 100;
+		$refund_fee = $refund_fee ?: $total_fee;
+		$params['refund_fee']     = $refund_fee * 100;
 		$params['op_user_id']     = $this->mch_id;
 		$params['sign']           = self::_getOrderMd5($params);
 		$data = self::_array2Xml($params);
@@ -1400,8 +1350,8 @@ class Wechat {
 
 	/**
 	 * 获取退款状态
-	 * @param  string $orderId 订单号
-	 * @return boolean|array
+	 * @param  string $orderId     外部订单号
+	 * @return array
 	 */
 	public function getRefundStatus($orderId) {
 		$params['appid']          = $this->appid;
@@ -1416,22 +1366,25 @@ class Wechat {
 
 	/**
 	 * 下载对账单
-	 * @param  date   $date 20150710 对账单日期
-	 * @param  string $type ALL，返回所有(默认值) SUCCESS，成功支付 REFUND，退款订单 REVOKED，已撤销的订单 
-	 * @return boolean|array
+	 * @param  integer $bill_date
+	 * @param  string  $bill_type ALL所有 SUCCESS，成功支付 REFUND，当日退款 REVOKED，已撤销
 	 */
-	public function downloadBill($date = '', $type = 'ALL') {
-		$date  = $date ?: date('Ymd');
-		$params['bill_date']      = $date;
-		$params['bill_type']      = $type;
+	public function downloadBill($bill_date, $bill_type = 'ALL') {
 		$params['appid']          = $this->appid;
 		$params['mch_id']         = $this->mch_id;
+		$params['bill_date']      = $bill_date;
+		$params['bill_type']      = $bill_type;
 		$params['nonce_str']      = self::_getRandomStr();
 		$params['sign']           = self::_getOrderMd5($params);
-		dump($params);
 		$data = self::_array2Xml($params);
 		$data = $this->http(self::DOWNLOAD_BILL_URL, $data, 'POST');
-		return self::parsePayRequest($data, false);
+		$result = self::_extractXml($data);
+		if (isset($result['return_code'])) {
+			$this->error = $result['return_msg'];
+			return false;
+		} else {
+			return $data;
+		}
 	}
 
 	/**
@@ -1441,8 +1394,56 @@ class Wechat {
 	private function createMchBillNo() {
 		$micro = microtime(true) * 100;
 		$micro = ceil($micro);
-		$rand  = substr($micro, -8) . \Tools\String::randNumber(0,99);
+		$rand  = substr($micro, -8) . sprintf("%02d", mt_rand(0, 99));
 		return   $this->mch_id . date('Ymd') . $rand;
+	}
+
+	/**
+	 * 向用户付款
+	 * @param  string $openid 收款用户OPENID
+	 * @param  float  $amount 付款金额
+	 * @param  string $check_name 真实姓名校验
+	 *         NO_CHECK：不校验真实姓名
+	 *         FORCE_CHECK：强校验真实姓名（未实名认证的用户会校验失败，无法转账）
+	 *         OPTION_CHECK：针对已实名认证的用户才校验真实姓名（未实名认证用户不校验，可以转账成功） 
+	 * @param  string $desc 描述
+	 * @return boolean|array
+	 */
+	public function transfers($openid, $amount, $desc, $check_name = 'NO_CHECK') {
+		$params['openid']           = $openid;
+		if ($check_name == 'NO_CHECK') {
+			$params['check_name']   = $check_name;
+		} else {
+			$params['check_name']   = 'OPTION_CHECK';
+			$params['re_user_name'] = $check_name;
+		}
+		$params['amount']           = $amount * 100;
+		$params['desc']             = $desc;
+		$params['spbill_create_ip'] = get_client_ip();
+		$params['partner_trade_no'] = self::createMchBillNo();
+		$params['mch_appid']        = $this->appid;
+		$params['mchid']            = $this->mch_id;
+		$params['nonce_str']        = self::_getRandomStr();
+		$params['sign']             = self::_getOrderMd5($params);
+		$data = self::_array2Xml($params);
+		$data = $this->http(self::PAY_TRANSFERS_URL, $data, 'POST', true);
+		return self::parsePayRequest($data);
+	}
+
+	/**
+	 * 获取付款信息
+	 * @param  string $orderId 商户订单号
+	 * @return boolean|array
+	 */
+	public function getTransfersInfo($orderId) {
+		$params['partner_trade_no'] = $orderId;
+		$params['appid']            = $this->appid;
+		$params['mch_id']           = $this->mch_id;
+		$params['nonce_str']        = self::_getRandomStr();
+		$params['sign']             = self::_getOrderMd5($params);
+		$data = self::_array2Xml($params);
+		$data = $this->http(self::GET_PAY_TRANSFERS, $data, 'POST');
+		return self::parsePayRequest($data);
 	}
 
 	/**
@@ -1476,7 +1477,7 @@ class Wechat {
 	 * 发送红包接口
 	 * @param  string $openid 用户OPENID
 	 * @param  string $money  发送金额RMB元
-	 * @param  array  $data   红包数据
+	 * @param  array  $data   红包数据 send_name，wishing，act_name，remark
 	 * @return boolean|array
 	 */
 	public function sendRedPack($openid, $money, $data) {
@@ -1520,22 +1521,18 @@ class Wechat {
 
 	/**
 	 * 解析支付接口的返回结果
-	 * @param  xmlstring $data      接口返回的数据
-	 * @param  boolean   $checkSign 是否需要签名校验
-	 * @return boolean|array
 	 */
-	private function parsePayRequest($data, $checkSign = true) {
+	public function parsePayRequest($data) {
 		$data = self::_extractXml($data);
 		if (empty($data)) {
 			$this->error = '支付返回内容解析失败';
 			return false;
 		}
-		if ($checkSign) {
-			if (!self::_checkSign($data)) return false;
-		}
 		// 有返回结果 并且是SUCCESS的时候
 		if ($data['return_code'] == 'SUCCESS') {
-			if ($data['result_code'] == 'SUCCESS') {
+			if (!self::_checkSign($data)) {
+				return false;
+			} elseif ($data['result_code'] == 'SUCCESS') {
 				return $data;
 			} else {
 				$this->error = $data['err_code'];
@@ -1549,7 +1546,6 @@ class Wechat {
 
 	/**
 	 * 接口通知接收
-	 * @return array
 	 */
 	public function getNotify() {
 		$data = $GLOBALS["HTTP_RAW_POST_DATA"];
@@ -1558,11 +1554,9 @@ class Wechat {
 
 	/**
 	 * 对支付回调接口返回成功通知
-	 * @param  string $return_msg 错误信息
-	 * @return xmlstring
 	 */
 	public function returnNotify($return_msg = true) {
-		if ($return_msg == true) {
+		if ($return_msg === true) {
 			$data = array(
 				'return_code' => 'SUCCESS',
 			);
@@ -1577,8 +1571,6 @@ class Wechat {
 
 	/**
 	 * 接收数据签名校验
-	 * @param  $data 接口返回的数据
-	 * @return boolean
 	 */
 	private function _checkSign($data) {
 		$sign = $data['sign'];
@@ -1593,8 +1585,6 @@ class Wechat {
 
 	/**
 	 * 本地MD5签名
-	 * @param  array $params 需要签名的数据
-	 * @return string        大写字母与数字签名（串32位）
 	 */
 	private function _getOrderMd5($params) {
 		ksort($params);
@@ -1603,8 +1593,164 @@ class Wechat {
 	}
 
 	/**
+	 * 获取客服列表
+	 * @return boolean|array
+	 */
+	public function get_kf() {
+		$url    = self::GET_KF_LIST . '?access_token=' . $this->access_token;
+		$jsonStr = $this->http($url);
+		$jsonArr = $this->parseJson($jsonStr);
+		if ($jsonArr) {
+			return $jsonArr['kf_list'];
+		}else {
+			return false;
+		}
+	}
+
+	/**
+	 * 获取在线客服列表
+	 * @return boolean|array
+	 */
+	public function get_online_kf() {
+		$url    = self::GET_ONLINE_KF_LIST . '?access_token=' . $this->access_token;
+		$jsonStr = $this->http($url);
+		$jsonArr = $this->parseJson($jsonStr);
+		if ($jsonArr) {
+			return $jsonArr['kf_online_list'];
+		}else {
+			return false;
+		}
+	}
+
+	/**
+	 * 添加客服
+	 * @param  string $account   客服账号
+	 * @param  string $nickname  昵称
+	 * @param  string $password  密码（明文）
+	 * @return boolean
+	 */
+	public function add_kf($account, $nickname, $password) {
+		$data = array(
+			'kf_account' => $account . '@' . $this->account,
+			'nickname'   => $nickname,
+			'password'   => MD5($password)
+		);
+		$params = $this->json_encode($data);
+		$url    = self::ADD_KF_URL . '?access_token=' . $this->access_token;
+		$jsonStr = $this->http($url, $params, 'POST');
+		$jsonArr = $this->parseJson($jsonStr);
+		if ($jsonArr) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+
+	/**
+	 * 修改客服
+	 * @param  string $account  客服账号
+	 * @param  string $nickname  昵称
+	 * @param  string $password  密码（明文）
+	 * @return boolean
+	 */
+	public function update_kf($account, $nickname, $password) {
+		$data = array(
+			'kf_account' => $account . '@' . $this->account,
+			'nickname'   => $nickname,
+			'password'   => MD5($password)
+		);
+		$params = $this->json_encode($data);
+		$url    = self::UPDATE_KF_URL . '?access_token=' . $this->access_token;
+		$jsonStr = $this->http($url, $params, 'POST');
+		$jsonArr = $this->parseJson($jsonStr);
+		if ($jsonArr) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+
+	/**
+	 * 上传客服头像，待完善
+	 * @param  string $account  客服账号
+	 * @param  image  $image    图片文件
+	 * @return boolean
+	 */
+	public function upload_kf_img($account, $image) {
+		$url    = self::UPLOAD_KF_HEADIMG . '?access_token=' . $this->access_token . '&kf_account=' . $account . '@' . $this->account;
+		$jsonStr = $this->http($url, $params, 'POST');
+		$jsonArr = $this->parseJson($jsonStr);
+		if ($jsonArr) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+
+	/**
+	 * 删除客服
+	 * @param  string $account  客服账号
+	 */
+	public function delete_kf($account) {
+		$params = array(
+			'access_token'   => $this->access_token,
+			'kf_account'     => $account . '@' . $this->account,
+		);
+		$jsonStr = $this->http(self::AUTH_URL, $params);
+		$jsonArr = $this->parseJson($jsonStr);
+		if ($jsonArr) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+
+	/**
+	 * 将用户转接到多客服系统
+	 * @param  string $account 客服账号
+	 */
+	public function transfer_service($account = '') {
+		$data = array(
+			'ToUserName'   => $this->data['fromusername'],
+			'FromUserName' => $this->data['tousername'],
+			'CreateTime'   => time(),
+			'MsgType'      => 'transfer_customer_service',
+		);
+		if (!empty($account)) {
+			$data['TransInfo']['KfAccount'] = $account . '@' . $this->account;
+		}
+		$response = self::_array2Xml($data);
+		exit($response);
+	}
+
+	/**
+	 * 获取客服聊天记录
+	 * @param  datetime $date 2015-08-10 只能获取一天内的聊天记录
+	 * @param  integer  $page
+	 * @return boolean|array
+	 */
+	public function get_msgrecord($date, $page = 1) {
+		$data = array(
+			'pageindex' => $page,
+			'pagesize'  => 50,
+			'starttime' => strtotime($date),
+			'endtime'   => strtotime($date) + 86400
+		);
+		$params = $this->json_encode($data);
+		$url    = self::GET_KF_MSGRECORD . '?access_token=' . $this->access_token;
+		$jsonStr = $this->http($url, $params, 'POST');
+		$jsonArr = $this->parseJson($jsonStr);
+		if ($jsonArr) {
+			return $jsonArr['recordlist'];
+		}else {
+			return false;
+		}
+	}
+
+	/**
 	 * 捕获错误信息
-	 * @return string 错误信息
+	 * @return string 中文错误信息
+	 * @author 、小陈叔叔 <cjango@163.com>
 	 */
 	public function getError() {
 		return $this->error;
