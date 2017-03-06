@@ -18,6 +18,7 @@
 }
 
 .app_layers_dashboard_chartBlock{
+    position: relative;
 	padding: 30px 0px;
     border-bottom: 1px solid #FFFFFF;
 }
@@ -29,6 +30,18 @@
 .app_layers_dashboard_chartBlock [find=btn_range]{
 	font-size: 12px;
 	color: #54add2;
+}
+.app_layers_dashboard_chartBlock [find=noChart]{
+    position: absolute;
+    text-align: center;
+    font-size: 26px;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
 }
 .app_layers_dashboard_chartBlock [find=chartContainer]{
 	position: relative;

@@ -1,12 +1,16 @@
 
-
 function app_layers_dashboard_launchPage(param){
 	if(typeof param === 'undefined'){ param = null; }
 	app_layers_dashboard_feedPage();
 }
 
+//keep track of chart instances here, then properly destroy on closePage function
+var app_layers_dashboard_chartInst = [];
 function app_layers_dashboard_closePage(){
-
+	$.each(app_layers_dashboard_chartInst, function(i, inst){
+		app_layers_dashboard_chartInst[i].destroy();
+	});
+	app_layers_dashboard_chartInst = [];
 };
 
 var app_layers_dashboard_feedPage = function(param){
@@ -68,7 +72,8 @@ var app_layers_dashboard_feedPage = function(param){
 
 	var burndown_stepSize_days = Math.floor(((duedate_last - p_created_at) / s_1day) / burndown_steps);
 	if(burndown_stepSize_days < 1){//NOT ENOUGH DATA if stepsize is less than 1 day
-		
+		elem_burndown_wrapper.find('[find=chartContainer]').css('visibility', 'hidden');
+		elem_burndown_wrapper.find('[find=noChart]').removeClass('display_none');
 	} else{
 		var burn_data = {
 			labels: [],
@@ -108,6 +113,7 @@ var app_layers_dashboard_feedPage = function(param){
 		});
 
 		var chart_burndown = app_layers_dashboard_build_burndown(ctx_burndown, burn_data.labels, burn_data.ideal, burn_data.completed, burn_data.open);
+		app_layers_dashboard_chartInst.push(chart_burndown);
 	}
 
 	
@@ -115,7 +121,8 @@ var app_layers_dashboard_feedPage = function(param){
 
 	var taskHistory_stepSize_days = Math.floor((now - p_created_at) / s_1day / taskHistory_steps);
 	if(taskHistory_stepSize_days < 1){//NOT ENOUGH DATA if stepsize is less than 1 day
-		
+		elem_taskHistory_wrapper.find('[find=chartContainer]').css('visibility', 'hidden');
+		elem_taskHistory_wrapper.find('[find=noChart]').removeClass('display_none');
 	} else{
 		var taskHistory_data = {
 			labels: [],
@@ -173,11 +180,8 @@ var app_layers_dashboard_feedPage = function(param){
 		});
 
 		var chart_taskHistory = app_layers_dashboard_build_taskHistory(ctx_taskHistory, taskHistory_data.labels, taskHistory_data.team, taskHistory_data.user, taskHistory_stepSize_days);
+		app_layers_dashboard_chartInst.push(chart_taskHistory);
 	}
-
-	
-
-
 
 
 };//end of app_layers_dashboard_feedPage()
@@ -221,7 +225,7 @@ function app_layers_dashboard_build_burndown(ctx, labels, ideal, completed, open
 	    },
 	    options: {
 	    	layout: {
-				padding: 2,
+				padding: 10,
 			},
 	    	hover: {
 	        	animationDuration: 0,
@@ -229,13 +233,13 @@ function app_layers_dashboard_build_burndown(ctx, labels, ideal, completed, open
 	        },
 	    	tooltips:{
 	    		mode: 'x',
+	    		callbacks: {
+	    			label: function(tooltip, data){
+	        			return ' '+Math.round(tooltip.yLabel)+' ('+data.datasets[tooltip.datasetIndex].label+')';
+	        		},
+	    		},
 	    	},
 	    	maintainAspectRatio: false,
-	    	/*layout: {
-				padding: {
-					left: 50,
-				},
-			},*/
 	    	legend: {
 	    		display: false,
 	    	},
@@ -273,20 +277,22 @@ function app_layers_dashboard_build_taskHistory(ctx, labels, data_team, data_use
 	    	labels: labels,
 	        datasets: [
 		        {
-		            label: 'Team Tasks',
+		            label: Lincko.Translation.get('app', 2101, 'html'), //total
 		            data: data_team,
 		            lineTension: 0,
 		            borderColor: "#f5a026",
+		            backgroundColor: "#f5a026",
 		            fill: false,
 		            pointRadius: 0,
 		            borderWidth: 2,
 		            hitRadius: 8,
 		        },
 		        {
-		            label: 'My Tasks',
+		            label: Lincko.Translation.get('app', 2102, 'html'), //me
 		            data: data_user,
 		            lineTension: 0,
 		            borderColor: "#475577",
+		            backgroundColor: "#475577",
 		            fill: false,
 		            pointRadius: 0,
 		            borderWidth: 2,
@@ -296,7 +302,7 @@ function app_layers_dashboard_build_taskHistory(ctx, labels, data_team, data_use
 	    },
 	    options: {
 	    	layout: {
-				padding: 2,
+				padding: 10,
 			},
 	    	animation: {
 			    duration: 500,
@@ -346,15 +352,18 @@ function app_layers_dashboard_build_taskHistory(ctx, labels, data_team, data_use
         			title: function(tooltip, data){
         				return (new wrapper_date(tooltip[0].xLabel)).display("date_very_short");
         			},
-        			label: function(tooltip, data){
-        				return  tooltip.yLabel+' tasks';
-        			},
+	        		label: function(tooltip, data){
+	        			return ' '+tooltip.yLabel+' ('+data.datasets[tooltip.datasetIndex].label+')';
+	        		},
         		},
         	},
 
 	        scales: {
 	        	yAxes: [{
 	    			display: false,
+	    			ticks: {
+	    				max: data_team[data_team.length-1].y ,
+	    			},
 	    		}],
 	            xAxes: [{
 	                type: 'linear',
@@ -378,3 +387,4 @@ function app_layers_dashboard_build_taskHistory(ctx, labels, data_team, data_use
 
 	return chart_taskHistory;
 }
+>>>>>>> SKY: more on dashboard layer
