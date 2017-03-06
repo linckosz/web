@@ -211,12 +211,14 @@ function app_layers_dashboard_build_burndown(ctx, labels, ideal, completed, open
 		         	type: 'bar',
 		            label: 'Completed Tasks',
 		            data: completed,
+		            borderColor:'#f5a026',
 		            backgroundColor: '#f5a026',
 		        },
 		        {
 		        	type: 'bar',
 		            label: 'Open Tasks',
 		            data: open,
+		            borderColor: '#d8d8d8',
 		            backgroundColor: '#d8d8d8',
 		        },
 		        
