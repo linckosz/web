@@ -35,7 +35,7 @@ class Action {
 
 	public static function getUserInfo(){
 		$app = \Slim\Slim::getInstance();
-		if(!self::$user_info_done && isset($_SERVER)){
+		if(!self::$user_info_done && isset($_SERVER) && isset($_SERVER['HTTP_USER_AGENT'])){
 			if(stripos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger')){
 				self::$user_info[2] = 'Wechat';
 			}
