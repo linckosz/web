@@ -71,13 +71,13 @@
 				<script>
 					base_is_wechat = true;
 					//injection authentication
-					alert("{% wechat_package_appId %}");
+					alert("{{ wechat_package_appId }}");
 					wx.config({
 						debug: false,
-						appId: "{% wechat_package_appId %}",
-						timestamp: "{% wechat_package_timestamp %}",
-						nonceStr: "{% wechat_package_nonceStr %}",
-						signature: "{% wechat_package_signature %}",
+						appId: "{{ wechat_package_appId }}",
+						timestamp: "{{ wechat_package_timestamp }}",
+						nonceStr: "{{ wechat_package_nonceStr }}",
+						signature: "{{ wechat_package_signature }}",
 						// list all APIs you are going to call in jsApiList
 						jsApiList: [
 							'scanQRCode'

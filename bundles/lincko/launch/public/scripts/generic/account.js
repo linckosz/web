@@ -443,7 +443,7 @@ var account_integration_wechat_qrcode = function(){
 				});
 				account_integration_account.start();
 			}
-		});	
+		});
 	}
 };
 
