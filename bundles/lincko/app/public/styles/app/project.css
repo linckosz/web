@@ -228,7 +228,7 @@
 .app_project_tab > div > div {
 	position: static;
 	padding-left: 5px;
-	padding-right: 5px;
+	padding-right: 38px;
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
@@ -274,7 +274,17 @@
 .app_project_projects_item_selected {
 	background-color: rgba(255, 255, 255, 0.63) !important;
 }
-
+.app_project_projects_item [find=icon_dashboard]{
+	position: absolute;
+    right: 6px;
+    bottom: 2px;
+    font-size: 26px;
+    color: #FFFFFF;
+    opacity: 0.6;
+}
+.app_project_projects_item [find=icon_dashboard]:hover{
+	opacity: 1;
+}
 .app_project_projects_item > div > div {
 	/*display: table-cell;*/
 	overflow: hidden;

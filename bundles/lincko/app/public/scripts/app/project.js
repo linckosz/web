@@ -91,6 +91,13 @@ var mainMenu = {
 						app_content_menu.selection(event.data, 'tasks');
 					});
 				}
+
+				//dashboard shortcut button
+				item.find('[find=icon_dashboard]').off('click').click(pid, function(event){
+					event.stopPropagation();
+					app_content_menu.selection(event.data, 'dashboard');
+				});
+
 				if(force || pid!=parseInt(item.attr('pid'), 10) || timestamp!=parseInt(item.attr('timestamp'), 10)){
 					item.find("[find=app_project_projects_title]").html(wrapper_to_html(projectList[i]['+title']));
 
@@ -103,14 +110,6 @@ var mainMenu = {
 					item.find('[find=app_project_projects_progress] [find=percent]').text(progress);
 					item.find('[find=app_project_projects_progress] [find=bar]').css('width', progress+'%');
 
-					/*
-					tasks = app_models_projects_adjust_format(Lincko.storage.cache.getStatistics('projects', pid, 'tasks'));
-					notes = app_models_projects_adjust_format(Lincko.storage.cache.getStatistics('projects', pid, 'notes'));
-					files = app_models_projects_adjust_format(Lincko.storage.cache.getStatistics('projects', pid, 'files'));
-					item.find("[find=app_project_projects_tasks]").html(wrapper_to_html(tasks));
-					item.find("[find=app_project_projects_notes]").html(wrapper_to_html(notes));
-					item.find("[find=app_project_projects_files]").html(wrapper_to_html(files));
-					*/
 					item.attr('pid', pid);
 					item.attr('timestamp', timestamp);
 				}
