@@ -251,13 +251,6 @@ foreach ($user_info as $key => $value) {
 	$app->lincko->data['user_info_'.$key] = $value;
 }
 
-if($app->lincko->data['user_info_2'] == 'Wechat' && $app->request->isGet()){
-	$wechat_package = ( new \libs\WechatJS($app->lincko->integration->wechat['public_appid'], $app->lincko->integration->wechat['public_secretapp']) )->getSignPackage();
-	foreach ($wechat_package as $key => $value) {
-		$app->lincko->data['wechat_package_'.$key] = $value;
-	}
-}
-
 ////////////////////////////////////
 // BUNDLE lincko/launch
 ////////////////////////////////////
