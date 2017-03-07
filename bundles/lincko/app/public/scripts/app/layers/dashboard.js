@@ -99,13 +99,19 @@ var app_layers_dashboard_feedPage = function(param){
 
 			burn_data.ideal[i] = i*(tasks.length / burndown_steps);
 
+			//completed tasks - include data from project creation to data right after 'now'
+			var timestamp_cutoff = now;
+			if(i == 0 || (i > 0 && burn_data.labels_timestamp[i-1] < now && now < timestamp)){
+				timestamp_cutoff = timestamp;
+			}
+
 			$.each(tasks, function(j, task){
 
 				//open task (task already created and not yet approved OR approved later)
 				if(task.created_at <= timestamp && (!task.approved_at || task.approved_at > timestamp)){
 					burn_data.open[i]++;
 				}
-				else if(timestamp < now && task.created_at <= timestamp && task.approved_at && task.approved_at < timestamp){
+				else if(timestamp <= timestamp_cutoff && task.created_at <= timestamp && task.approved_at && task.approved_at < timestamp){
 					burn_data.completed[i]++;
 				}
 
@@ -198,7 +204,7 @@ function app_layers_dashboard_build_burndown(ctx, labels, ideal, completed, open
 	        datasets: [
 	        	{
 	                type: 'line',
-	                label: 'Ideal Burndown',
+	                label: 'Ideal Completion', //toto
 	               	data: ideal,
 	               	lineTension: 0,
 	               	pointRadius: 0,
@@ -209,14 +215,14 @@ function app_layers_dashboard_build_burndown(ctx, labels, ideal, completed, open
 	            },
 	        	{
 		         	type: 'bar',
-		            label: 'Completed Tasks',
+		            label: 'Completed Tasks', //toto
 		            data: completed,
 		            borderColor:'#f5a026',
 		            backgroundColor: '#f5a026',
 		        },
 		        {
 		        	type: 'bar',
-		            label: 'Open Tasks',
+		            label: 'Open Tasks', //toto
 		            data: open,
 		            borderColor: '#d8d8d8',
 		            backgroundColor: '#d8d8d8',
