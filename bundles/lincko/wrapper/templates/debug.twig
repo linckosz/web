@@ -12,7 +12,23 @@
 <html>
 <head>
 
-
+<script>
+	alert("{{ wechat_package_appId }}");
+	wx.config({
+		debug: true,
+		appId: "{{ wechat_package_appId }}",
+		timestamp: "{{ wechat_package_timestamp }}",
+		nonceStr: "{{ wechat_package_nonceStr }}",
+		signature: "{{ wechat_package_signature }}",
+		// list all APIs you are going to call in jsApiList
+		jsApiList: [
+			'scanQRCode',
+		],
+	});
+	wx.ready(function(){
+		wx.scanQRCode();
+	});
+</script>
 
 <style type="text/css">
 	body {
@@ -25,7 +41,7 @@
 <body>
 
 
-<div><font face="Arial">Hello,</font></div><div><font face="Arial"><br></font></div><div><font face="Arial">@@mail_username~~ has invited you to join Lincko Beta. Lincko helps you accomplish great things by connecting your team in new ways. Use the link below to create an account and start collaborating with @@mail_username~~ on your projects.</font></div><div><font face="Arial"><br></font></div><div><font face="Arial" color="#faa027"><a href="@@mail_link~~">@@mail_link~~</a></font></div><div><font face="Arial"><br>We are currently in Beta and are hoping to get a lot of feedback to make our product better for you.<br><br></font></div><div><font face="Arial">Kind Regards,</font></div><div><font face="Arial">The Lincko Team</font></div>
+Hello
 
 </body>
 </html>
