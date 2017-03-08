@@ -313,6 +313,9 @@
 .app_project_projects_progress.app_project_projects_progress_zero:after{
 	opacity: 1;
 }
+.app_project_projects_progress_zero [find=bar]{
+	visibility: hidden;
+}
 .app_project_projects_progress [find=bar]{
     position: absolute;
     left: 0px;
@@ -325,6 +328,8 @@
     float: right;
     line-height: 100%;
     height: 100%;
+    width: 100%;
+    text-align: right;
 }
 .app_project_projects_progress [find=percent]:after{
 	content: '%';

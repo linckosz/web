@@ -7,16 +7,42 @@ function app_layers_dashboard_launchPage(param){
 //keep track of chart instances here, then properly destroy on closePage function
 var app_layers_dashboard_chartInst = [];
 function app_layers_dashboard_closePage(){
+	$(window).off("resize.app_layers_dashboard");
 	$.each(app_layers_dashboard_chartInst, function(i, inst){
 		app_layers_dashboard_chartInst[i].destroy();
 	});
 	app_layers_dashboard_chartInst = [];
 };
 
+var app_layers_dashboard_resize_timeout;
+var app_layers_dashboard_resize = function(){
+	clearTimeout(app_layers_dashboard_resize_timeout);
+	app_layers_dashboard_resize_timeout = setTimeout(function(){
+		var p_height = $(window).height();
+		if(responsive.test("maxMobileL")){
+			p_height -= $('#app_content_menu').outerHeight();
+		}
+		p_height -= $('#app_content_top').outerHeight();
+		$('#app_layers_dashboard').css('height', p_height);
+
+		if(myIScrollList['app_layers_dashboard_overthrow']){
+			myIScrollList['app_layers_dashboard_overthrow'].refresh();
+		}
+	},500);
+}
+
 var app_layers_dashboard_feedPage = function(param){
 	if(typeof param === 'undefined'){ param = null; }
 	var position = $('#app_layers_dashboard');
 	position.recursiveEmpty();
+
+	var elem_overthrow = $('<div>').prop('id', 'app_layers_dashboard_overthrow').addClass('overthrow');
+	position.append(elem_overthrow);
+
+	$(window).on("resize.app_layers_dashboard", function(){
+		app_layers_dashboard_resize();		
+	});
+	app_layers_dashboard_resize();
 
 	var s_1day = 86400;
 	var pid = app_content_menu.projects_id;
@@ -26,7 +52,7 @@ var app_layers_dashboard_feedPage = function(param){
 
 
 	var elem_header = $('#-app_layers_dashboard_header').clone().prop('id', '');
-	position.append(elem_header);
+	elem_overthrow.append(elem_header);
 
 	//today's date
 	elem_header.find('[find=date]').append((new wrapper_date()).display("date_medium_simple"));
@@ -45,12 +71,12 @@ var app_layers_dashboard_feedPage = function(param){
 	//burndown canvas
 	var elem_burndown_wrapper = $('#-app_layers_dashboard_burndown_wrapper').clone().prop('id', '');
 	var ctx_burndown = elem_burndown_wrapper.find('canvas');
-	position.append(elem_burndown_wrapper);
+	elem_overthrow.append(elem_burndown_wrapper);
 
 	//taskHistory canvas
 	var elem_taskHistory_wrapper = $('#-app_layers_dashboard_taskHistory_wrapper').clone().prop('id', '');
 	var ctx_taskHistory = elem_taskHistory_wrapper.find('canvas');
-	position.append(elem_taskHistory_wrapper);
+	elem_overthrow.append(elem_taskHistory_wrapper);
 
 
 
@@ -118,7 +144,11 @@ var app_layers_dashboard_feedPage = function(param){
 			});
 		});
 
-		var chart_burndown = app_layers_dashboard_build_burndown(ctx_burndown, burn_data.labels, burn_data.ideal, burn_data.completed, burn_data.open);
+		var percent_bike = 0;
+		percent_bike = (now - burn_data.labels_timestamp[0]) / (burn_data.labels_timestamp[burn_data.labels_timestamp.length -1] - burn_data.labels_timestamp[0]);
+
+
+		var chart_burndown = app_layers_dashboard_build_burndown(ctx_burndown, burn_data.labels, burn_data.ideal, burn_data.completed, burn_data.open, percent_bike);
 		app_layers_dashboard_chartInst.push(chart_burndown);
 	}
 
@@ -193,12 +223,112 @@ var app_layers_dashboard_feedPage = function(param){
 };//end of app_layers_dashboard_feedPage()
 
 
-function app_layers_dashboard_build_burndown(ctx, labels, ideal, completed, open){
+function app_layers_dashboard_build_burndown(ctx, labels, ideal, completed, open, percent_bike){
 	if(!ctx || !labels || !ideal || !completed || !open){ return false; }
 	var s_1day = 86400;
 
+	//change bar size for mobile
+	var barThickness = 30;
+	var categoryPercentage = 0.1;
+	if(responsive.test('maxMobile')){
+		barThickness = 24;
+		categoryPercentage = 0.3;
+	}
+
+	var animateBike = true;
+
+	var options = {
+		layout: {
+			padding: {
+				left: 50,
+				top: 10,
+			},
+		},
+    	hover: {
+			mode: 'index',
+			intersect: false,
+        	animationDuration: 0,
+        	onHover: function(){
+        		animateBike = false;
+        		setTimeout(function(){
+        			animateBike = true;
+        		}, 100);
+        	},
+        },
+    	tooltips:{
+    		mode: 'index',
+    		intersect: false,
+    		callbacks: {
+    			label: function(tooltip, data){
+        			return ' '+Math.round(tooltip.yLabel)+' ('+data.datasets[tooltip.datasetIndex].label+')';
+        		},
+    		},
+    	},
+    	maintainAspectRatio: false,
+    	legend: {
+    		display: false,
+    	},
+		cornerRadius: 10,
+    	scales: {
+    		yAxes: [{
+    			display: false,
+    			gridLines: {
+    				display: false,
+    				zeroLineWidth: 0,
+    				zeroLineColor: "rgba(0, 0, 0, 0)",
+    			}
+    		}],
+	        xAxes: [{
+	        	gridLines: {
+	        		display: false,
+	        		//offsetGridLines: false,
+	        		zeroLineWidth: 0,
+	        	},
+	    	 	barThickness: barThickness,
+	            barPercentage: 0.5,
+	            categoryPercentage: categoryPercentage,
+	        }],
+		},
+		animation: {
+			onComplete: function(){
+				if(animateBike && percent_bike && percent_bike <= 1){
+					var elem_bike = $(this.chart.ctx.canvas).siblings('[find=bike]').css('opacity', 1);
+					var w_bike = elem_bike.outerWidth();
+					var h_bike = elem_bike.outerHeight();
+
+					var dataset_meta = this.data.datasets[0]._meta[Object.keys(this.data.datasets[0]._meta)[0]];
+					var dataset_0_x = dataset_meta.data[0]._model.x;
+					var dataset_0_y = dataset_meta.data[0]._model.y;
+					var dataset_last_x = dataset_meta.data[dataset_meta.data.length-1]._model.x;
+
+					var t_bike = dataset_0_y - h_bike;
+					var l_bike_begin = dataset_0_x - w_bike;
+					var l_bike_end = dataset_0_x+(dataset_last_x - dataset_0_x)*percent_bike - w_bike;
+
+					elem_bike.css({
+						'visibility': 'visible',
+						'top': t_bike,
+						'left': l_bike_begin,
+					}).velocity("stop").velocity({
+						'left': l_bike_end,
+					}, {
+						mobileHA: hasGood3Dsupport,
+						duration: 1000,
+						easing: "easeOutQuad",
+					});
+				}
+			},
+		},
+    }
+
+    /*disable animation if necessary*/
+    if(!hasGood3Dsupport){
+    	options.animation.duration = 0;
+    }
+
 	var chart_burndown = new Chart(ctx, {
 	    type: 'bar',
+	    options: options,
 	    data: {
 	        labels: labels,
 	        datasets: [
@@ -208,10 +338,10 @@ function app_layers_dashboard_build_burndown(ctx, labels, ideal, completed, open
 	               	data: ideal,
 	               	lineTension: 0,
 	               	pointRadius: 0,
+		            borderWidth: 2,
 	               	fill: false,
 	               	backgroundColor: '#4a90e2',
 	               	borderColor: '#4a90e2',
-	               	pointBackgroundColor: '#4a90e2',
 	            },
 	        	{
 		         	type: 'bar',
@@ -231,47 +361,6 @@ function app_layers_dashboard_build_burndown(ctx, labels, ideal, completed, open
 		        
 	        ]
 	    },
-	    options: {
-	    	layout: {
-				padding: 10,
-			},
-	    	hover: {
-	        	animationDuration: 0,
-	        	mode: 'x',
-	        },
-	    	tooltips:{
-	    		mode: 'x',
-	    		callbacks: {
-	    			label: function(tooltip, data){
-	        			return ' '+Math.round(tooltip.yLabel)+' ('+data.datasets[tooltip.datasetIndex].label+')';
-	        		},
-	    		},
-	    	},
-	    	maintainAspectRatio: false,
-	    	legend: {
-	    		display: false,
-	    	},
-			cornerRadius: 10,
-	    	scales: {
-	    		yAxes: [{
-	    			display: false,
-	    			gridLines: {
-	    				display: false,
-	    				zeroLineWidth: 0,
-	    				zeroLineColor: "rgba(0, 0, 0, 0)",
-	    			}
-	    		}],
-		        xAxes: [{
-		        	gridLines: {
-		        		display: false,
-		        		zeroLineWidth: 0,
-		        	},
-		    	 	barThickness: 30,
-		            barPercentage: 0.5,
-		            categoryPercentage: 0.1,
-		        }],
-			}	    	
-	    }
 	});
 	return chart_burndown;
 }
@@ -279,8 +368,101 @@ function app_layers_dashboard_build_burndown(ctx, labels, ideal, completed, open
 function app_layers_dashboard_build_taskHistory(ctx, labels, data_team, data_user, stepSize_days){
 	if(!ctx || !labels || !data_team || !data_user || !stepSize_days){ return false; }
 	var s_1day = 86400;
+	var options = {
+		layout: {
+			padding: 10,
+		},
+    	animation: {
+		    duration: 500,
+		    easing: "easeOutQuart",
+		    onComplete: function(){
+		    	var vOffset = 0;
+		    	var elem_legend = $(this.chart.ctx.canvas).siblings('[find=legend]');
+		    	elem_legend.css('opacity', 1);
+		    	var elem_dataset_0 = elem_legend.find('[dataset=0]');
+		    	var elem_dataset_1 = elem_legend.find('[dataset=1]');
+
+		    	var url_pic = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", wrapper_localstorage.uid, 'profile_pic'));
+		    	if(url_pic){
+		    		elem_dataset_1.css({
+		    			'background-image': 'url("'+url_pic+'")',
+		    			'font-size': 0,
+		    		});
+		    	}
+
+		    	var dataset_0_meta = this.data.datasets[0]._meta;
+		    	var dataset_0_x = dataset_0_meta[Object.keys(dataset_0_meta)[0]].data[0]._model.x;
+		    	var dataset_0_y = dataset_0_meta[Object.keys(dataset_0_meta)[0]].data[0]._model.y;
+
+		    	var dataset_1_meta = this.data.datasets[1]._meta;
+		    	var dataset_1_x = dataset_1_meta[Object.keys(dataset_1_meta)[0]].data[0]._model.x;
+		    	var dataset_1_y = dataset_1_meta[Object.keys(dataset_1_meta)[0]].data[0]._model.y;
+
+		    	if(Math.abs(dataset_0_y - dataset_1_y) < elem_dataset_0.outerHeight()){
+		    		vOffset = elem_dataset_0.outerHeight();
+		    	}
+		    	elem_dataset_0.css('top', dataset_0_y - elem_dataset_0.outerHeight()/2 -vOffset);
+		    	elem_dataset_1.css('top', dataset_1_y - elem_dataset_0.outerHeight()/2);
+
+		    	
+
+		    	var left = dataset_0_x - elem_legend.outerWidth()/2;
+		    	elem_legend.css('left', left);
+		    	
+		    },
+		},
+    	maintainAspectRatio: false,
+    	legend: {
+    		display: false,
+    	},
+    	hover: {
+			mode: 'index',
+			intersect: false,
+        	animationDuration: 0,
+        },
+    	tooltips: {
+    		intersect: false,
+    		mode: 'index',
+    		callbacks: {
+    			title: function(tooltip, data){
+    				return (new wrapper_date(tooltip[0].xLabel)).display("date_very_short");
+    			},
+        		label: function(tooltip, data){
+        			return ' '+tooltip.yLabel+' ('+data.datasets[tooltip.datasetIndex].label+')';
+        		},
+    		},
+    	},
+        scales: {
+        	yAxes: [{
+    			display: false,
+    		}],
+            xAxes: [{
+                type: 'linear',
+                position: 'bottom',
+                autoSkip: false,
+                gridLines: {
+	        		display: false,
+	        	},
+    			ticks: {
+    				min: data_team[0].x,
+    				max: data_team[data_team.length-1].x,
+    				stepSize: s_1day*stepSize_days,
+                    callback: function(value, index, values) {
+                    	return (new wrapper_date(value)).display("date_very_short");
+                    }
+                },
+            }],
+        }
+    }
+
+    /*disable animation if necessary*/
+    if(!hasGood3Dsupport){
+    	options.animation.duration = 0;
+    }
+
 	var chart_taskHistory = new Chart(ctx, {
 	    type: 'line',
+	    options: options,
 	    data: {
 	    	labels: labels,
 	        datasets: [
@@ -308,91 +490,7 @@ function app_layers_dashboard_build_taskHistory(ctx, labels, data_team, data_use
 		        },
 	        ],
 	    },
-	    options: {
-	    	layout: {
-				padding: 10,
-			},
-	    	animation: {
-			    duration: 500,
-			    easing: "easeOutQuart",
-			    onComplete: function(chartInst){
-			    	var vOffset = 0;
-			    	var elem_legend = $(this.chart.ctx.canvas).siblings('[find=legend]').css('opacity', 1);
-			    	var elem_dataset_0 = elem_legend.find('[dataset=0]');
-			    	var elem_dataset_1 = elem_legend.find('[dataset=1]');
-
-			    	var url_pic = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", wrapper_localstorage.uid, 'profile_pic'));
-			    	if(url_pic){
-			    		elem_dataset_1.css({
-			    			'background-image': 'url("'+url_pic+'")',
-			    			'font-size': 0,
-			    		});
-			    	}
-
-			    	var dataset_0_meta = this.data.datasets[0]._meta;
-			    	var dataset_0_x = dataset_0_meta[Object.keys(dataset_0_meta)[0]].data[0]._model.x;
-			    	var dataset_0_y = dataset_0_meta[Object.keys(dataset_0_meta)[0]].data[0]._model.y;
-
-			    	var dataset_1_meta = this.data.datasets[1]._meta;
-			    	var dataset_1_x = dataset_1_meta[Object.keys(dataset_1_meta)[0]].data[0]._model.x;
-			    	var dataset_1_y = dataset_1_meta[Object.keys(dataset_1_meta)[0]].data[0]._model.y;
-
-			    	if(Math.abs(dataset_0_y - dataset_1_y) < elem_dataset_0.outerHeight()){
-			    		vOffset = elem_dataset_0.outerHeight();
-			    	}
-			    	elem_dataset_0.css('top', dataset_0_y - elem_dataset_0.outerHeight()/2 -vOffset);
-			    	elem_dataset_1.css('top', dataset_1_y - elem_dataset_0.outerHeight()/2);
-
-			    	
-
-			    	var left = dataset_0_x - elem_legend.outerWidth()/2;
-			    	elem_legend.css('left', left);
-			    	
-			    },
-			},
-	    	maintainAspectRatio: false,
-	    	legend: {
-	    		display: false,
-	    	},
-        	tooltips: {
-        		mode: 'x',
-        		callbacks: {
-        			title: function(tooltip, data){
-        				return (new wrapper_date(tooltip[0].xLabel)).display("date_very_short");
-        			},
-	        		label: function(tooltip, data){
-	        			return ' '+tooltip.yLabel+' ('+data.datasets[tooltip.datasetIndex].label+')';
-	        		},
-        		},
-        	},
-
-	        scales: {
-	        	yAxes: [{
-	    			display: false,
-	    			ticks: {
-	    				max: data_team[data_team.length-1].y ,
-	    			},
-	    		}],
-	            xAxes: [{
-	                type: 'linear',
-	                position: 'bottom',
-	                autoSkip: false,
-	                gridLines: {
-		        		display: false,
-		        	},
-        			ticks: {
-        				min: data_team[0].x,
-        				max: data_team[data_team.length-1].x,
-        				stepSize: s_1day*stepSize_days,
-	                    callback: function(value, index, values) {
-	                    	return (new wrapper_date(value)).display("date_very_short");
-	                    }
-	                }
-	            }],
-	        }
-	    }
 	});
 
 	return chart_taskHistory;
 }
->>>>>>> SKY: more on dashboard layer

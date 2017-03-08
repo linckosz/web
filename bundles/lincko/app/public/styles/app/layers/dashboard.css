@@ -1,5 +1,6 @@
 .app_layers_dashboard_header{
-	/*border-bottom: 1px solid #FFFFFF;*/
+	border-bottom: 1px solid #FFFFFF;
+    padding-bottom: 10px;
 }
 .app_layers_dashboard_header [find=date]{
 	text-align: center;
@@ -16,10 +17,14 @@
 .app_layers_dashboard_header .app_project_projects_progress:after{
 	line-height: 26px;
 }
+.app_layers_dashboard_header .app_project_projects_progress [find=bar]{
+    background-color: #f5a623;
+}
 
 .app_layers_dashboard_chartBlock{
     position: relative;
-	padding: 30px 0px;
+	padding-bottom: 30px;
+    padding-top: 10px;
     border-bottom: 1px solid #FFFFFF;
 }
 .app_layers_dashboard_chartBlock [find=header]{
@@ -50,6 +55,9 @@
 }
 
 /*burndown*/
+.app_layers_dashboard_burndown_wrapper [find=chartContainer]{
+    height: 300px;
+}
 .app_layers_dashboard_burndown_wrapper [find=legend]{
     position: absolute;
     top: 0px;
@@ -57,6 +65,13 @@
     left: 0px;
     width: 20px;
     margin: 0px 30px;
+}
+.app_layers_dashboard_burndown_wrapper [find=legend] [find=hoverText]{
+    position: absolute;
+    left: 24px;
+    white-space: nowrap;
+    font-size: 12px;
+    visibility: hidden;
 }
 .app_layers_dashboard_burndown_wrapper [find=legend] [find=open],
 .app_layers_dashboard_burndown_wrapper [find=legend] [find=completed]{
@@ -70,15 +85,31 @@
     border-radius: 3px;
     font-size: 18px;
     line-height: 18px;
-    
+}
+.app_layers_dashboard_burndown_wrapper [find=legend] [find=open]:hover [find=hoverText],
+.app_layers_dashboard_burndown_wrapper [find=legend] [find=completed]:hover [find=hoverText]{
+    visibility: visible;
 }
 .app_layers_dashboard_burndown_wrapper [find=legend] [find=open]{
-    top: 40px;
+    top: 70px;
+    color: #d8d8d8;
 }
 .app_layers_dashboard_burndown_wrapper [find=legend] [find=completed]{
-    bottom: 40px;
+    bottom: 70px;
     border-color: #f5a026;
     color: #f5a026;
+}
+.app_layers_dashboard_burndown_wrapper [find=bike]{
+    position: absolute;
+    margin-left: 20px; /*matches the container padding*/.
+    /*these get overridden during velocity animation, so must have !important*/
+    -moz-transform: scale(-1, 1) !important;
+    -webkit-transform: scale(-1, 1) !important;
+    -o-transform: scale(-1, 1) !important;
+    -ms-transform: scale(-1, 1) !important;
+    transform: scale(-1, 1) !important;
+    font-size: 12px;
+    visibility: hidden;
 }
 
 /*taskHistory*/
@@ -97,6 +128,7 @@
 	font-size: 30px;
 	height: 30px;
     width: 30px;
+    color: #FBA026;
 }
 .app_layers_dashboard_taskHistory_wrapper [find=legend] [find=user]{
 	border: 1px solid #FBA026;

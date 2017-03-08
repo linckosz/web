@@ -21,12 +21,13 @@
 	<div id="-app_layers_dashboard_burndown_wrapper" class="app_layers_dashboard_chartBlock app_layers_dashboard_burndown_wrapper">
 		<div find="header">Project Burndown</div>
 		<div find="btn_range" class="display_none"></div>
-		<div find="noChart" class="display_none">not enough data</div>
+		<div find="noChart" class="display_none">There is not enough data to display chart.</div>
 		<div find="chartContainer">
 			<div find="legend">
-				<div find="open"></div>
-				<div find="completed" class="fa fa-check"></div>			
+				<div find="open"><span find="hoverText">Open Tasks</span></div>
+				<div find="completed"><div class="fa fa-check"></div><span find="hoverText">Completed Tasks</span></div>			
 			</div>
+			<div find="bike">🚴</div>
 			<canvas></canvas>
 		</div>
 	</div>
@@ -34,7 +35,7 @@
 	<div id="-app_layers_dashboard_taskHistory_wrapper" class="app_layers_dashboard_chartBlock app_layers_dashboard_taskHistory_wrapper">
 		<div find="header">Historical Task Accumulation</div>
 		<div find="btn_range" class="display_none"></div>
-		<div find="noChart" class="display_none">not enough data</div>
+		<div find="noChart" class="display_none">There is not enough data to display chart.</div>
 		<div find="chartContainer">
 			<span find="legend">
 				<div find="team" dataset="0" class="icon-Multipler-Persona"></div>
@@ -45,3 +46,4 @@
 	</div>
 
 </div>
+
