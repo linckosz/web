@@ -31,11 +31,16 @@ $option['secret'] = 'e0a658f9d2b907ddb4bd61c3827542da';
 //$union_id = 'WqxPHuGPg2O4ND38AatZ8vi7U';
 
 
+/*
 $wechat = new Wechat($option);
 $wechat->getToken();
 $url = $wechat->getQRUrl('123');
 
 \libs\Watch::php($wechat, '$wechat', __FILE__, __LINE__, false, false, true);
 \libs\Watch::php($url, '$url', __FILE__, __LINE__, false, false, true);
+*/
+
+$wechat = new Wechat($option);
+$wechat->getJsapiTicket();
 
 

@@ -67,7 +67,7 @@
 				https://github.com/Schibum/barcode.js
 			#}
 
-			{% if user_info_2 == 'Wechat' %}
+			{% if user_info_2 == 'Wechat' and wechat_package_appId %}
 				<script src="{{ _filelatest('/scripts/libs/integration/jweixin-1.2.0.js') }}" type="text/javascript"></script>
 				<script>
 					base_is_wechat = true;

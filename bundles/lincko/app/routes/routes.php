@@ -15,7 +15,8 @@ $app->get('/', function () use ($app) {
 		if($app->lincko->data['reset_data']){
 			OneSeventySeven::unsetKey('reset_data');
 		}
-		if($app->lincko->data['user_info_2'] == 'Wechat' && $app->request->isGet()){
+		if(false){
+		//if($app->lincko->data['user_info_2'] == 'Wechat' && $app->request->isGet()){
 			$wechat_package = ( new \libs\WechatJS($app->lincko->integration->wechat['public_appid'], $app->lincko->integration->wechat['public_secretapp']) )->getSignPackage();
 			foreach ($wechat_package as $key => $value) {
 				$app->lincko->data['wechat_package_'.$key] = $value;

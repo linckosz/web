@@ -377,10 +377,7 @@ submenu_list['personal_lincko'] = {
 				Elem.find("[find=submenu_input]").val(subm.param);
 			}
 			Elem.on("keypress", subm, function(e) {
-				e.stopPropagation(); 
-				if((e.which || e.keyCode) == 13){
-					$('#'+e.data.id+"_link").click();
-				}
+				e.stopPropagation();
 			});
 
 			var link_timer;
