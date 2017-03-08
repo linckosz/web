@@ -156,11 +156,11 @@ submenu_list['settings'] = {
 		},
 		"class": "",
 	},
-	"linckobot": {
+	"feedback": {
 		"style": "button",
 		"title": "技术支持",//toto need translation
 		"action": function(Elem,subm){
-			submenu_backfeed_open_single(subm,54);
+			submenu_feedback_open_single(subm,0);
 		},
 		"class": "",
 	},

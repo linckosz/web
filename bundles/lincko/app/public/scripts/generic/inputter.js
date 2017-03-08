@@ -152,6 +152,13 @@ inputter.prototype.clearContent = function()
 	container.find('[find=files_queue]').html('');
 } 
 
+inputter.prototype.clearText = function()
+{
+	this.task_completed = false;
+	var container = $('#'+this.panel_id+'_inputter_container');
+	container.find('[find=chat_textarea]').get(0).innerHTML = '';
+} 
+
 
 
 inputter.prototype.buildLayer = function()
@@ -351,6 +358,7 @@ inputter.prototype.buildLayer = function()
 								if(this.layer['right_menu'][i][j].hasOwnProperty('click'))
 								{
 									item.click(this.layer['right_menu'][i][j]['click'],function(event){
+										debugger;
 									var files = app_upload_files.lincko_files;
 									var files_count = 0;
 									for(var i in files)

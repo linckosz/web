@@ -289,7 +289,6 @@
 	width:auto;
 	white-space:nowrap;
 	overflow: hidden;
-	display: inline-block;
 }
 
 .inputter_uploading_wrapper ul li
