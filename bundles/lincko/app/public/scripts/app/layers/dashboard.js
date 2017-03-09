@@ -81,21 +81,22 @@ var app_layers_dashboard_feedPage = function(param){
 
 
 	var project = Lincko.storage.get('projects', pid);
-	var tasks = Lincko.storage.list('tasks', -1, [{ _tasksup: null}, {deleted_at: ['!=', null]}], 'projects', pid);
 	var p_created_at = project.created_at;
+	var tasks = Lincko.storage.list('tasks', -1, [{ _tasksup: null}, {deleted_at: ['!=', null]}, {duration: ['>', 0]}], 'projects', pid);
 	var p_firstDay = new wrapper_date(p_created_at).getEndofDay(); //first day of the project
 	var now = new wrapper_date().timestamp;
 
-	var duedate_last = p_created_at;
+	var duedate_last = p_firstDay;
 	$.each(tasks, function(i, task){
 		if(task.start && task.duration){
 			var duedate = task.start + task.duration;
 			if(duedate > duedate_last){ duedate_last = duedate; }
 		}
 	});
+	duedate_last = new wrapper_date(duedate_last).getEndofDay();
 	
 
-	var burndown_stepSize_days = Math.floor(((duedate_last - p_created_at) / s_1day) / burndown_steps);
+	var burndown_stepSize_days = ((duedate_last - p_firstDay) / s_1day) / burndown_steps;
 	if(burndown_stepSize_days < 1){//NOT ENOUGH DATA if stepsize is less than 1 day
 		elem_burndown_wrapper.find('[find=chartContainer]').css('visibility', 'hidden');
 		elem_burndown_wrapper.find('[find=noChart]').removeClass('display_none');
@@ -110,9 +111,6 @@ var app_layers_dashboard_feedPage = function(param){
 
 		//build label and create array of 0's for bar graphs
 		for(var step = p_firstDay; step <= duedate_last; step += s_1day*burndown_stepSize_days){
-
-			if(step+s_1day*burndown_stepSize_days > duedate_last){ step = duedate_last; }
-
 			burn_data.labels.push((new wrapper_date(step)).display("date_very_short"));
 			burn_data.labels_timestamp.push(step);
 			burn_data.ideal.push(0);
@@ -123,7 +121,7 @@ var app_layers_dashboard_feedPage = function(param){
 		$.each(burn_data.labels_timestamp, function(i, timestamp){
 
 			//ideal line - straight line where tasks are linearly increased, starting from 0 to total number of tasks
-			burn_data.ideal[i] = i*(tasks.length / (burndown_steps+1));
+			burn_data.ideal[i] = i*(tasks.length / (burndown_steps));
 
 			//completed tasks - include data from project creation to data right after 'now'
 			var timestamp_cutoff = now;
@@ -137,19 +135,15 @@ var app_layers_dashboard_feedPage = function(param){
 				if(task.created_at <= timestamp && (!task.approved_at || task.approved_at > timestamp)){
 					burn_data.open[i]++;
 				}
-				else if(timestamp <= timestamp_cutoff && task.created_at <= timestamp && task.approved_at && task.approved_at < timestamp){
+				else if(timestamp <= timestamp_cutoff && task.created_at <= timestamp && task.approved_at && task.approved_at <= timestamp){
 					burn_data.completed[i]++;
 				}
 
 			});
 		});
 
-		console.log('task length: ', tasks.length);
-		console.log(burn_data);
-
 		var percent_bike = 0;
 		percent_bike = (now - burn_data.labels_timestamp[0]) / (burn_data.labels_timestamp[burn_data.labels_timestamp.length -1] - burn_data.labels_timestamp[0]);
-
 
 		var chart_burndown = app_layers_dashboard_build_burndown(ctx_burndown, burn_data.labels, burn_data.ideal, burn_data.completed, burn_data.open, percent_bike);
 		app_layers_dashboard_chartInst.push(chart_burndown);
