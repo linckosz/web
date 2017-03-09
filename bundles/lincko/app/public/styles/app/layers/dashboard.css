@@ -39,7 +39,7 @@
 .app_layers_dashboard_chartBlock [find=noChart]{
     position: absolute;
     text-align: center;
-    font-size: 12px;
+    font-size: 26px;
     top: 50%;
     left: 50%;
     -webkit-transform: translate(-50%, -50%);
@@ -69,14 +69,9 @@
 .app_layers_dashboard_burndown_wrapper [find=legend] [find=hoverText]{
     position: absolute;
     left: 24px;
-    top: -6px;
     white-space: nowrap;
     font-size: 12px;
     visibility: hidden;
-    color: #FFFFFF;
-    background-color: rgba(0,0,0,0.8);
-    padding: 6px 6px;
-    border-radius: 5px;
 }
 .app_layers_dashboard_burndown_wrapper [find=legend] [find=open],
 .app_layers_dashboard_burndown_wrapper [find=legend] [find=completed]{
@@ -106,24 +101,15 @@
 }
 .app_layers_dashboard_burndown_wrapper [find=bike]{
     position: absolute;
-    margin-left: 20px; /*matches the container padding*/
+    margin-left: 20px; /*matches the container padding*/.
+    /*these get overridden during velocity animation, so must have !important*/
+    -moz-transform: scale(-1, 1) !important;
+    -webkit-transform: scale(-1, 1) !important;
+    -o-transform: scale(-1, 1) !important;
+    -ms-transform: scale(-1, 1) !important;
+    transform: scale(-1, 1) !important;
     font-size: 12px;
     visibility: hidden;
-}
-.app_layers_dashboard_burndown_wrapper [find=bike] [find=hoverText]{
-    text-transform: capitalize;
-    visibility: hidden;
-}
-.app_layers_dashboard_burndown_wrapper [find=bike]:hover [find=hoverText]{
-    visibility: visible;
-}
-.app_layers_dashboard_burndown_wrapper [find=bike] [find=emoji]{
-    display: block; /*transform doesnt work with inline*/
-    -moz-transform: scale(-1, 1);
-    -webkit-transform: scale(-1, 1);
-    -o-transform: scale(-1, 1);
-    -ms-transform: scale(-1, 1);
-    transform: scale(-1, 1);
 }
 
 /*taskHistory*/
@@ -135,24 +121,6 @@
     left: 0px;
     opacity: 0;
     min-width: 30px;
-}
-.app_layers_dashboard_taskHistory_wrapper [find=legend] [find=hoverText]{
-    font-size: 12px;
-    white-space: nowrap;
-    position: absolute;
-    top: 0px;
-    left: 34px;
-    padding-left: 2px;
-    line-height: 30px;
-    visibility: hidden;
-    color: #FFFFFF;
-    background-color: rgba(0,0,0,0.8);
-    padding: 0px 6px;
-    border-radius: 5px;
-}
-.app_layers_dashboard_taskHistory_wrapper [find=legend] [find=team]:hover [find=hoverText],
-.app_layers_dashboard_taskHistory_wrapper [find=legend] [find=user]:hover [find=hoverText]{
-    visibility: visible;
 }
 .app_layers_dashboard_taskHistory_wrapper [find=legend] [find=team],
 .app_layers_dashboard_taskHistory_wrapper [find=legend] [find=user]{
