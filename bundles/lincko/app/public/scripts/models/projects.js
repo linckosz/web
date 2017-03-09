@@ -655,6 +655,7 @@ var app_models_projects_chart_tasks_data = function(Elem_id, id, chart_display_r
 		responsive: false,
 		maintainAspectRatio: false,
 		animation:{
+			duration: 0,
 			easing: "easeInOutCirc",
 		},
 		layout: {
@@ -747,7 +748,8 @@ var app_models_projects_chart_tasks_data = function(Elem_id, id, chart_display_r
         			};
         		},
         	},
-        	mode: 'x',
+        	mode: 'index',
+			intersect: false,
         	titleFontSize: 10,
         	titleFontStyle: "normal",
         	backgroundColor: "rgba(0,0,0,0.2)",
@@ -755,7 +757,8 @@ var app_models_projects_chart_tasks_data = function(Elem_id, id, chart_display_r
         },
         hover: {
         	animationDuration: 0,
-        	mode: 'x',
+        	mode: 'index',
+			intersect: false,
         },
 	};
 
