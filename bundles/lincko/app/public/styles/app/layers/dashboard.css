@@ -39,7 +39,7 @@
 .app_layers_dashboard_chartBlock [find=noChart]{
     position: absolute;
     text-align: center;
-    font-size: 26px;
+    font-size: 12px;
     top: 50%;
     left: 50%;
     -webkit-transform: translate(-50%, -50%);
