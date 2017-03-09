@@ -16,7 +16,6 @@
 $app = \Slim\Slim::getInstance();
 //print_r($data);
 //phpinfo();
-=======
  use \libs\Wechat;
 // /*
 // 	Write here anything you need as debugging information to be display on main page
