@@ -544,6 +544,7 @@ td.submenu_taskdetail_share .fa{
 	position: relative;
 	background-color: #d8d8d8;
 	height: 20px;
+	font-weight: normal;
 }
 .submenu_taskdetail_progressBar_wrapper [find=bar]{
 	position: absolute;
