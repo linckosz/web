@@ -605,6 +605,7 @@ var app_models_projects_chart_tasks_data = function(Elem_id, id, chart_display_r
 				backgroundColor: "rgba(250,250,250,0.2)",
         		borderColor: "rgba(250,250,250,0.35)",
         		pointBackgroundColor: "rgba(255,255,255,1)",
+        		borderWidth: 2,
 			},
 			{
 				label: Lincko.Translation.get('app', 2102, 'html'), //me
@@ -620,6 +621,7 @@ var app_models_projects_chart_tasks_data = function(Elem_id, id, chart_display_r
 				backgroundColor: "rgba(250,250,250,0.5)",
         		borderColor: "rgba(250,250,250,1)",
         		pointBackgroundColor: "rgba(255,255,255,1)",
+        		borderWidth: 2,
 			}
 		]
 	};

@@ -38,8 +38,12 @@
 		<div find="noChart" class="display_none">There is not enough data to display chart.</div>
 		<div find="chartContainer">
 			<span find="legend">
-				<div find="team" dataset="0" class="icon-Multipler-Persona"></div>
-				<div find="user" dataset="1" class="icon-Single-Person"></div>
+				<div find="team" dataset="0">
+					<div class="icon-Multipler-Persona"></div><span find="hoverText">Team Tasks</span>
+				</div>
+				<div find="user" dataset="1">
+					<div class="icon-Single-Person"></div><span find="hoverText">Personal Tasks</span>
+				</div>
 			</span>
 			<canvas></canvas>
 		</div>
