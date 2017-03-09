@@ -69,9 +69,14 @@
 .app_layers_dashboard_burndown_wrapper [find=legend] [find=hoverText]{
     position: absolute;
     left: 24px;
+    top: -6px;
     white-space: nowrap;
     font-size: 12px;
     visibility: hidden;
+    color: #FFFFFF;
+    background-color: rgba(0,0,0,0.8);
+    padding: 6px 6px;
+    border-radius: 5px;
 }
 .app_layers_dashboard_burndown_wrapper [find=legend] [find=open],
 .app_layers_dashboard_burndown_wrapper [find=legend] [find=completed]{
@@ -101,15 +106,24 @@
 }
 .app_layers_dashboard_burndown_wrapper [find=bike]{
     position: absolute;
-    margin-left: 20px; /*matches the container padding*/.
-    /*these get overridden during velocity animation, so must have !important*/
-    -moz-transform: scale(-1, 1) !important;
-    -webkit-transform: scale(-1, 1) !important;
-    -o-transform: scale(-1, 1) !important;
-    -ms-transform: scale(-1, 1) !important;
-    transform: scale(-1, 1) !important;
+    margin-left: 20px; /*matches the container padding*/
     font-size: 12px;
     visibility: hidden;
+}
+.app_layers_dashboard_burndown_wrapper [find=bike] [find=hoverText]{
+    text-transform: capitalize;
+    visibility: hidden;
+    display: block;
+}
+.app_layers_dashboard_burndown_wrapper [find=bike]:hover [find=hoverText]{
+    visibility: visible;
+}
+.app_layers_dashboard_burndown_wrapper [find=bike] [find=emoji]{
+    display: block; /*transform doesnt work with inline*/
+    -webkit-transform:rotateY(180deg);
+    -moz-transform:rotateY(180deg);
+    -o-transform:rotateY(180deg);
+    -ms-transform:rotateY(180deg);   
 }
 
 /*taskHistory*/
@@ -121,6 +135,24 @@
     left: 0px;
     opacity: 0;
     min-width: 30px;
+}
+.app_layers_dashboard_taskHistory_wrapper [find=legend] [find=hoverText]{
+    font-size: 12px;
+    white-space: nowrap;
+    position: absolute;
+    top: 0px;
+    left: 34px;
+    padding-left: 2px;
+    line-height: 30px;
+    visibility: hidden;
+    color: #FFFFFF;
+    background-color: rgba(0,0,0,0.8);
+    padding: 0px 6px;
+    border-radius: 5px;
+}
+.app_layers_dashboard_taskHistory_wrapper [find=legend] [find=team]:hover [find=hoverText],
+.app_layers_dashboard_taskHistory_wrapper [find=legend] [find=user]:hover [find=hoverText]{
+    visibility: visible;
 }
 .app_layers_dashboard_taskHistory_wrapper [find=legend] [find=team],
 .app_layers_dashboard_taskHistory_wrapper [find=legend] [find=user]{
