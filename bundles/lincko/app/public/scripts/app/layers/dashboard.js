@@ -122,7 +122,8 @@ var app_layers_dashboard_feedPage = function(param){
 
 		$.each(burn_data.labels_timestamp, function(i, timestamp){
 
-			burn_data.ideal[i] = i*(tasks.length / burndown_steps);
+			//ideal line - straight line where tasks are linearly increased, starting from 0 to total number of tasks
+			burn_data.ideal[i] = i*(tasks.length / (burndown_steps+1));
 
 			//completed tasks - include data from project creation to data right after 'now'
 			var timestamp_cutoff = now;
@@ -142,6 +143,9 @@ var app_layers_dashboard_feedPage = function(param){
 
 			});
 		});
+
+		console.log('task length: ', tasks.length);
+		console.log(burn_data);
 
 		var percent_bike = 0;
 		percent_bike = (now - burn_data.labels_timestamp[0]) / (burn_data.labels_timestamp[burn_data.labels_timestamp.length -1] - burn_data.labels_timestamp[0]);
