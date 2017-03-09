@@ -260,6 +260,22 @@ function app_layers_dashboard_build_burndown(ctx, labels, ideal, completed, open
         			return ' '+Math.round(tooltip.yLabel)+' ('+data.datasets[tooltip.datasetIndex].label+')';
         		},
     		},
+    		custom: function(tooltip){
+				// tooltip will be false if tooltip is not visible or should be hidden
+				if (!tooltip) { return; }
+
+				var padding_left = 0;
+				try{
+					padding_left = this._chart.config.options.layout.padding.left;
+				}catch(e){}
+
+				//dont allow tooltip to spillover to padding area. this is where custom legend is
+				if(padding_left && tooltip.x < padding_left && tooltip.xAlign == 'center'){
+					tooltip.xAlign = 'left';
+					tooltip.x = tooltip.caretX - tooltip.xPadding - tooltip.caretSize;
+				}
+                
+        	},
     	},
     	maintainAspectRatio: false,
     	legend: {
