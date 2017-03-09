@@ -104,6 +104,9 @@
     border-color: #f5a026;
     color: #f5a026;
 }
+.app_layers_dashboard_burndown_wrapper [find=legend] [find=completed]>div{
+    display: block;
+}
 .app_layers_dashboard_burndown_wrapper [find=bike]{
     position: absolute;
     margin-left: 20px; /*matches the container padding*/

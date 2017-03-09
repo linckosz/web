@@ -19,13 +19,13 @@
 	</div>
 
 	<div id="-app_layers_dashboard_burndown_wrapper" class="app_layers_dashboard_chartBlock app_layers_dashboard_burndown_wrapper">
-		<div find="header">Project Burndown</div>
+		<div find="header">{{ _trans('app', 19, 2, 'html') }}{# Project Burndown #}</div>
 		<div find="btn_range" class="display_none"></div>
-		<div find="noChart" class="display_none">There is not enough data to display chart.</div>
+		<div find="noChart" class="display_none">{{ _trans('app', 19, 1, 'html') }}{# There is not enough data to display chart. #}</div>
 		<div find="chartContainer">
 			<div find="legend">
-				<div find="open"><span find="hoverText">Open Tasks</span></div>
-				<div find="completed"><div class="fa fa-check"></div><span find="hoverText">Completed Tasks</span></div>			
+				<div find="open"><span find="hoverText">{{ _trans('app', 8000, 1903, 'html') }}{# Open Tasks #}</span></div>
+				<div find="completed"><div class="fa fa-check"></div><span find="hoverText">{{ _trans('app', 8000, 1902, 'html') }}{# Completed Tasks #}</span></div>			
 			</div>
 			<div find="bike">
 				<span find="hoverText">{{ _trans('app', 8000, 3302, 'html') }}{# Today #}</span>
@@ -36,16 +36,16 @@
 	</div>
 
 	<div id="-app_layers_dashboard_taskHistory_wrapper" class="app_layers_dashboard_chartBlock app_layers_dashboard_taskHistory_wrapper">
-		<div find="header">Historical Task Accumulation</div>
+		<div find="header">{{ _trans('app', 19, 3, 'html') }}{# Historical Task Accumulation #}</div>
 		<div find="btn_range" class="display_none"></div>
-		<div find="noChart" class="display_none">There is not enough data to display chart.</div>
+		<div find="noChart" class="display_none">{{ _trans('app', 19, 1, 'html') }}{# There is not enough data to display chart. #}</div>
 		<div find="chartContainer">
 			<span find="legend">
 				<div find="team" dataset="0">
-					<div class="icon-Multipler-Persona"></div><span find="hoverText">Team Tasks</span>
+					<div class="icon-Multipler-Persona"></div><span find="hoverText">{{ _trans('app', 8000, 2101, 'html') }}{# total #}</span>
 				</div>
 				<div find="user" dataset="1">
-					<div class="icon-Single-Person"></div><span find="hoverText">Personal Tasks</span>
+					<div class="icon-Single-Person"></div><span find="hoverText">{{ _trans('app', 8000, 2102, 'html') }}{# me #}</span>
 				</div>
 			</span>
 			<canvas></canvas>

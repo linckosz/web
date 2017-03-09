@@ -347,7 +347,7 @@ function app_layers_dashboard_build_burndown(ctx, labels, ideal, completed, open
 	        datasets: [
 	        	{
 	                type: 'line',
-	                label: 'Ideal Completion', //toto
+	                label: Lincko.Translation.get('app', 1901, 'html'), //'Ideal Completion'
 	               	data: ideal,
 	               	lineTension: 0,
 	               	pointRadius: 0,
@@ -358,14 +358,14 @@ function app_layers_dashboard_build_burndown(ctx, labels, ideal, completed, open
 	            },
 	        	{
 		         	type: 'bar',
-		            label: 'Completed Tasks', //toto
+		            label: Lincko.Translation.get('app', 1902, 'html'), //'Completed Tasks'
 		            data: completed,
 		            borderColor:'#f5a026',
 		            backgroundColor: '#f5a026',
 		        },
 		        {
 		        	type: 'bar',
-		            label: 'Open Tasks', //toto
+		            label: Lincko.Translation.get('app', 1903, 'html'), //'Open Tasks'
 		            data: open,
 		            borderColor: '#d8d8d8',
 		            backgroundColor: '#d8d8d8',
