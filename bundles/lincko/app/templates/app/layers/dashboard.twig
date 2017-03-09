@@ -27,7 +27,10 @@
 				<div find="open"><span find="hoverText">Open Tasks</span></div>
 				<div find="completed"><div class="fa fa-check"></div><span find="hoverText">Completed Tasks</span></div>			
 			</div>
-			<div find="bike">🚴</div>
+			<div find="bike">
+				<span find="hoverText">{{ _trans('app', 8000, 3302, 'html') }}{# Today #}</span>
+				<span find="emoji">🚴</span>
+			</div>
 			<canvas></canvas>
 		</div>
 	</div>
