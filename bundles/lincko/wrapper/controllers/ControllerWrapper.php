@@ -233,6 +233,11 @@ class ControllerWrapper extends Controller {
 				if(isset($json_result->flash->unset_integration_code)){
 					unset($_SESSION['integration_code']);
 				}
+
+				//Clean integration_code because it has been used by the back end
+				if(isset($json_result->flash->refresh) && $json_result->flash->refresh){
+					$json_result->refresh = true;
+				}
 				
 				if($this->print){
 					//"username_sha1" is a password used to encrypt data

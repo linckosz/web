@@ -378,6 +378,9 @@ submenu_list['personal_lincko'] = {
 			}
 			Elem.on("keypress", subm, function(e) {
 				e.stopPropagation();
+				if((e.which || e.keyCode) == 13){
+					Elem.blur();
+				}
 			});
 
 			var link_timer;
@@ -451,7 +454,14 @@ submenu_list['personal_lincko'] = {
 		"now": function(Elem, subm){
 			Elem.find("[find=submenu_input]").attr("autocomplete", "off").val('');
 			Elem.on("keypress", subm, function(e) {
-				e.stopPropagation(); 
+				e.stopPropagation();
+				if((e.which || e.keyCode) == 13){
+					Elem.blur();
+				}
+			});
+			Elem.find("[find=submenu_input]").on('keyup past cut focus change copy blur', subm, function(event){
+				var submenu_wrapper = event.data.Wrapper();
+				submenu_wrapper.find("[name=email]").trigger('change');
 			});
 		},
 	},
@@ -518,6 +528,7 @@ submenu_list['personal_lincko'] = {
 		"style": "postAction",
 		"action": function(Elem, subm){
 			base_format_form();
+			subm.Wrapper().find("[name=email]").trigger('change');
 		},
 	},
 	"space": {

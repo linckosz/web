@@ -115,6 +115,11 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 				window.location.href = wrapper_link['root'];
 			}
 
+			if(typeof data.refresh != 'undefined' && data.refresh){
+				//This helps to refresh the page with the new account merged
+				window.location.href = wrapper_link['root'];
+			}
+
 			if(typeof isOffline_update == 'function'){
 				isOffline_update(false);
 			}
