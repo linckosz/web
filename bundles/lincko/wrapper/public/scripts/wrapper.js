@@ -117,7 +117,9 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 
 			if(typeof data.refresh != 'undefined' && data.refresh){
 				//This helps to refresh the page with the new account merged
-				wrapper_sendAction('','post','user/signout', null, null, wrapper_signout_cb_begin, wrapper_signout_cb_complete); //toto => It's not the best way, but it helps to force to reload user data for integration (after linking wechat with new email, the email was not appearing as account in user settings within wechat)
+				Lincko.storage.getLatest(true, function(){
+					window.location.href = wrapper_link['root'];
+				});
 			}
 
 			if(typeof isOffline_update == 'function'){
