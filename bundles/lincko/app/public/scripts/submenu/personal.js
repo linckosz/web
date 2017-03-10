@@ -452,9 +452,6 @@ submenu_list['personal_lincko'] = {
 			Elem.find("[find=submenu_input]").attr("autocomplete", "off").val('');
 			Elem.on("keypress", subm, function(e) {
 				e.stopPropagation(); 
-				if((e.which || e.keyCode) == 13){
-					$('#'+e.data.id+"_link").click();
-				}
 			});
 		},
 	},
