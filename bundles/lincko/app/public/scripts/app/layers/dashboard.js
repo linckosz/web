@@ -323,13 +323,18 @@ function app_layers_dashboard_build_burndown(ctx, labels, ideal, completed, open
 						'visibility': 'visible',
 						'top': t_bike,
 						'left': l_bike_begin,
-					}).velocity("stop").velocity({
-						'left': l_bike_end,
-					}, {
-						mobileHA: hasGood3Dsupport,
-						duration: 1000,
-						easing: "easeOutQuad",
 					});
+
+					//NO RIDING BACKWARDS!
+					if(l_bike_end > l_bike_begin){
+						elem_bike.velocity("stop").velocity({
+							'left': l_bike_end,
+						}, {
+							mobileHA: hasGood3Dsupport,
+							duration: 1000,
+							easing: "easeOutQuad",
+						});
+					}
 				}
 			},
 		},
