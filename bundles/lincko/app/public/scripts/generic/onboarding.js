@@ -1134,7 +1134,7 @@ onboarding.scripts['welcome'] = function(project_id){
 			content: 'contentMenu',
 			position : "e",
 			expose: false,
-			delay: 3000,
+			delay: 2000,
 			onTripStart : function(i, tripData){
 				//force close main menu if open
 				if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
@@ -1162,7 +1162,7 @@ onboarding.scripts['welcome'] = function(project_id){
 			content: 'tasks',
 			position : "e",
 			expose: true,
-			delay: 3000,
+			delay: 2000,
 			onTripStart : function(i, tripData){
 				//force close main menu if open
 				if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
@@ -1178,7 +1178,7 @@ onboarding.scripts['welcome'] = function(project_id){
 			content: 'notes',
 			position : "e",
 			expose: true,
-			delay: 3000,
+			delay: 2000,
 			onTripStart : function(i, tripData){ 
 				//force close main menu if open
 				if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
@@ -1194,7 +1194,7 @@ onboarding.scripts['welcome'] = function(project_id){
 			content: 'chats',
 			position : "e",
 			expose: true,
-			delay: 3000,
+			delay: 2000,
 			onTripStart : function(i, tripData){
 				//force close main menu if open
 				if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
@@ -1210,7 +1210,7 @@ onboarding.scripts['welcome'] = function(project_id){
 			content: 'files',
 			position : "e",
 			expose: true,
-			delay: 3000,
+			delay: 200,
 			onTripStart : function(i, tripData){
 				//force close main menu if open
 				if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
