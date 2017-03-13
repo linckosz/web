@@ -2381,28 +2381,32 @@ Submenu.prototype.Add_taskdetail = function() {
 				}
 
 
-				if(!item._files && !item._notes){ return; }
-
-				var linkCount = 0;
-				$.each(item._files, function(id, obj){
-					var file = Lincko.storage.get('files', id);
-					if(file && !file.deleted_at){ linkCount++;
-						if(!elem.find('[files_id='+id+']').length){
-							addTo_linksWrapper(elem, 'files', id);
+				//currently 3 types of links - files, notes, tasks
+				if(item._files || item._notes || item._tasks){
+					var linkCount = 0;
+					var fn_each_updateLinks = function(type, id){
+						var item = Lincko.storage.get(type, id);
+						if(item && !item.deleted_at){ 
+							linkCount++;
+							if(!elem.find('['+type+'_id='+id+']').length){
+								addTo_linksWrapper(elem, type, id);
+							}
 						}
 					}
-				});
 
-				$.each(item._notes, function(id, obj){
-					var note = Lincko.storage.get('notes', id);
-					if(note && !note.deleted_at){ linkCount++;
-						if(!elem.find('[notes_id='+id+']').length){
-							addTo_linksWrapper(elem, 'notes', id);
-						}
-					}
-				});
+					$.each(item._files, function(id, obj){
+						fn_each_updateLinks('files', id);
+					});
+					$.each(item._notes, function(id, obj){
+						fn_each_updateLinks('notes', id);
+					});
+					$.each(item._tasks, function(id, obj){
+						fn_each_updateLinks('tasks', id);
+					});
 
-				elem.find('[find=linkCount]').text(linkCount);
+					elem.find('[find=linkCount]').text(linkCount);
+				}				
+
 
 			}
 		);
