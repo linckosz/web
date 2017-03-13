@@ -22,7 +22,7 @@ var searchbar = {
 				elem_overlay.removeClass('display_none');
 			}	
 		});
-		elem_input.keyup(function(){
+		elem_input.on('keyup paste', function(){
 			clearTimeout(keyupTimeout);
 			var elem_input = $(this);
 			if(elem_input.val() == ''){

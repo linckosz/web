@@ -3069,7 +3069,7 @@ skylist.prototype.menu_construct = function(){
 		that.tasklist_update('search', words);
 	}
 	searchbarInst = searchbar.construct(searchbar_keyup);
-	that.elem_navbar.append(searchbarInst.elem.addClass('skylist_menu_navbar_search'));
+	that.elem_navbar.find('[find=searchbar_wrapper]').append(searchbarInst.elem);
 	
 	that.list_wrapper.append(that.elem_navbar);
 
