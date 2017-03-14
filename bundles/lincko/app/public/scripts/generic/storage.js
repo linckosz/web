@@ -457,6 +457,7 @@ Lincko.storage.update = function(partial, info){
 
 				if(update_real){
 					//console.log("update ==> "+i+'_'+j);
+					Lincko.storage.update_data_abc(i, j, updatedAttributes[i+'_'+j]);
 					storage_items_updated[i] = true;
 					app_models_history.refresh(i, j); //It helps to force updating any history info tab in the application
 					app_application_lincko.prepare(i+'_'+j, false, updatedAttributes);
@@ -575,6 +576,30 @@ Lincko.storage.update = function(partial, info){
 	}
 	return update;
 };
+
+Lincko.storage.update_data_abc = function(type, id, updated){
+	if(!Lincko.storage.data_abc){ Lincko.storage.data_abc = {}; }
+	if(typeof updated != 'object' || Object.keys(updated) < 1){ var updated = true; }
+
+	var attributes = ['+title', '-comment', '-firstname', '-lastname', '-username'];
+
+	var attr, s_real, s_abc;
+
+	for(var i = 0; i < attributes.length; i++){
+		attr = attributes[i];
+		if(updated[attr] || updated === true){
+			s_real = Lincko.storage.get(type, id, attr); if(!s_real){return;}
+			s_abc = Pinyin.getPinyin(s_real);
+			console.log('pinyin operation');
+			if(md5(s_real) != md5(s_abc)){
+				if(!Lincko.storage.data_abc[type]){ Lincko.storage.data_abc[type] = {}; }
+				if(!Lincko.storage.data_abc[type][id]){ Lincko.storage.data_abc[type][id] = {}; }
+				Lincko.storage.data_abc[type][id][attr] = s_abc;
+				Lincko.storage.data_abc[type][id]['s_real'] = s_real;
+			}
+		}
+	}
+}
 
 //Function that check the javascript database schema
 /* PRIVATE METHOD */
@@ -1168,9 +1193,20 @@ Lincko.storage.searchArray = function(type, param, array, attr, pinyin){
 				}
 				else if(pinyin && (typeof pinyin == 'boolean' || $.inArray(prop, pinyin) > -1)){
 					try{ 
-						var pinyin_prop = Pinyin.GetQP(item[prop]);
-						var pinyin_param = Pinyin.GetQP(param);
-						if(pinyin_prop.indexOf(pinyin_param) !== -1){ //convert hanzi into pinyin and match
+						var pinyin_param = Pinyin.getPinyin(param);
+						var id_item = item['_id'];
+						var type_item = item['_type'];
+						if(Lincko.storage.data_abc 
+							&& Lincko.storage.data_abc[type_item] 
+							&& Lincko.storage.data_abc[type_item][id_item]
+							&& Lincko.storage.data_abc[type_item][id_item][prop]){
+							//both converted to pinyin and compare
+							if(Lincko.storage.data_abc[type_item][id_item][prop].indexOf(pinyin_param) !== -1){ //convert hanzi into pinyin and match
+							save_result = true;
+							}
+						}
+						else if(item[prop].indexOf(pinyin_param) !== -1){
+							//pinyin converted search word comparison to original string
 							save_result = true;
 						}
 					}
