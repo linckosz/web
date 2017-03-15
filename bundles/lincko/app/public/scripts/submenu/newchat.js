@@ -343,7 +343,7 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 		top_line : true,
 		mobile_top_line : false,
 		enter : fnSendMsg,
-		auto_upload : true,
+		auto_upload : false,
 
 		right_menu :
 		[	

@@ -119,7 +119,6 @@ Submenu.prototype.AddFilemanagerContent = function() {
 
 					item.height(item_height);
 					item.css("line-height",Math.floor(item_height)+"px");
-					
 				}
 				var preview = null;
 				try{
