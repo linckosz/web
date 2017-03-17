@@ -178,10 +178,11 @@ $app->lincko->integration->wechat = array(
 	'dev_secretapp' => '',
 	'public_appid' => '',
 	'public_secretapp' => '',
+	'public_token' => 'weixin360!@#',
 );
 if($app->lincko->domain=='lincko.cafe'){
-	$app->lincko->integration->wechat['public_appid'] = 'wxb315b38a8267ad72'; //Sandbox
-	$app->lincko->integration->wechat['public_secretapp'] = 'e0a658f9d2b907ddb4bd61c3827542da'; //Sandbox
+	$app->lincko->integration->wechat['public_appid'] = 'wx1d84f13b1addb1ba'; //Sandbox
+	$app->lincko->integration->wechat['public_secretapp'] = 'c35d9afab164b528d927db8cb0c394a1'; //Sandbox
 	$app->lincko->integration->wechat['dev_appid'] = 'aaaaaaaaaaaaaaaaaaaaa'; //Not available
 	$app->lincko->integration->wechat['dev_secretapp'] = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'; //Not available
 } else if($app->lincko->domain=='lincko.co'){

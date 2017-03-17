@@ -415,9 +415,12 @@ $('#account_integration_wechat').click(function(){
 var account_integration_wechat_timer;
 var account_integration_wechat_qrcode = function(){
 	clearInterval(account_integration_wechat_timer);
-	if(isMobileBrowser()){
+	//if(isMobileBrowser()){
+	if(true){
 		//Use Lincko QR code for integration
-		var url_qrcode = top.location.protocol+'//'+document.linckoBack+'file.'+document.domainRoot+':'+document.linckoBackPort+'/integration/qrcode/wechat?'+(new wrapper_date().timestamp);	
+		//var url_qrcode = top.location.protocol+'//'+document.linckoBack+'file.'+document.domainRoot+':'+document.linckoBackPort+'/integration/qrcode/wechat?'+(new wrapper_date().timestamp);	
+		var url_qrcode = top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domainRoot+'/integration/wechat/wxqrcode?'+(new wrapper_date().timestamp);
+
 		if($('#account_integration_top_info').find('img').length == 1){
 			$('#account_integration_top_info').find('img').attr('src', url_qrcode);
 		} else {

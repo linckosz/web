@@ -28,6 +28,24 @@ $app->group('/integration', function () use ($app) {
 		))
 		->name('integration_wechat_dev_get');
 
+		$app->get(
+			'/wxqrcode',
+			'\bundles\lincko\wrapper\controllers\integration\ControllerWechat:wxqrcode_get'
+		)
+		->name('integration_wechat_wxqrcode_get');
+
+		$app->get(
+			'/wxoffical',
+			'\bundles\lincko\wrapper\controllers\integration\ControllerWechat:offical_get'
+		)
+		->name('integration_wechat_offical_get');
+
+		$app->post(
+			'/wxoffical',
+			'\bundles\lincko\wrapper\controllers\integration\ControllerWechat:offical_post'
+		)
+		->name('integration_wechat_offical_post');
+
 	});
 
 	//Opened on Mobile after scanning after scanning Lincko integration QR code

@@ -6,6 +6,8 @@ use \bundles\lincko\wrapper\controllers\ControllerWrapper;
 use \libs\Controller;
 use \libs\OneSeventySeven;
 use \libs\Wechat;
+use WideImage\WideImage;
+
 
 class ControllerWechat extends Controller {
 
@@ -320,6 +322,83 @@ class ControllerWechat extends Controller {
 
 		@curl_close($ch);
 		return $result;
+	}
+
+	public function wxqrcode_get(){
+		$app = \Slim\Slim::getInstance();
+		$option['appid'] = $app->lincko->integration->wechat['public_appid'];
+		$option['secret'] = $app->lincko->integration->wechat['public_secretapp'];
+		$wechat = new Wechat($option);
+		$wechat->getToken();
+		$ticket = $wechat->getJsapiTicket();
+		$random = ''; 
+		for ($i = 0; $i < 10; $i++) 
+		{ 
+			$random .= chr(mt_rand(33, 126)); 
+		} 
+		$md5 = md5($random);
+		$_SESSION['integration_code'] = $md5;
+		$_SESSION['integration_code_expire'] = time() + 60; //valid 60s only
+		$url = $wechat->getQRUrlStr($md5, 1800);
+		WideImage::load($url)->output('png');
+		return exit(0);
+	}
+
+
+	public function offical_get(){
+		$app = \Slim\Slim::getInstance();
+		$option['token'] = $app->lincko->integration->wechat['public_token'];
+		$wechat = new Wechat($option);
+		$wechat->valid();
+		return exit(0);
+	}
+
+	public function offical_post(){
+		$app = \Slim\Slim::getInstance();
+		$option['appid'] = $app->lincko->integration->wechat['public_appid'];
+		$option['secret'] = $app->lincko->integration->wechat['public_secretapp'];
+		$wechat = new Wechat($option);
+		$wechat->getToken();
+
+		$body = $app->request->getBody();
+		$data = simplexml_load_string($body, null, LIBXML_NOCDATA);
+
+		switch($data->MsgType)
+		{
+			case 'event':	
+				case 'subscribe':
+					//send msg
+					$open_id = (string)$data->FromUserName;
+					if(isset($data->EventKey)){
+						$scene_str = substr($data->EventKey,strlen('qrscene_'),strlen($data->EventKey)-strlen('qrscene_')+1);
+						$user = $wechat->user($open_id);
+						//toto:evan,add an translation word
+						$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 1, 4));//follow msg
+						$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 1, 4));//login msg\
+					}
+					else
+					{
+						$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 1, 4));//follow msg
+						
+					}
+					
+					//toto:data storage
+				break;
+				case 'SCAN'://when the scanning user has followed before
+					//send msg
+					$open_id = (string)$data->FromUserName;
+					$scene_str = (string)$data->EventKey;
+					//toto:evan,add an translation word
+					$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 1, 4));//login msg
+					$user = $wechat->user($open_id);
+					//toto:data storage
+				break;
+			default:
+				break;
+		}
+
+		//\libs\Watch::php($data, 'Data', __FILE__, __LINE__, false, false, true);
+		return exit(0);
 	}
 
 }
