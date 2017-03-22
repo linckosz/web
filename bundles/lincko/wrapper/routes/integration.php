@@ -35,16 +35,16 @@ $app->group('/integration', function () use ($app) {
 		->name('integration_wechat_wxqrcode_get');
 
 		$app->get(
-			'/wxoffical',
-			'\bundles\lincko\wrapper\controllers\integration\ControllerWechat:offical_get'
+			'/wxofficial',
+			'\bundles\lincko\wrapper\controllers\integration\ControllerWechat:official_get'
 		)
-		->name('integration_wechat_offical_get');
+		->name('integration_wechat_official_get');
 
 		$app->post(
-			'/wxoffical',
-			'\bundles\lincko\wrapper\controllers\integration\ControllerWechat:offical_post'
+			'/wxofficial',
+			'\bundles\lincko\wrapper\controllers\integration\ControllerWechat:official_post'
 		)
-		->name('integration_wechat_offical_post');
+		->name('integration_wechat_official_post');
 
 	});
 

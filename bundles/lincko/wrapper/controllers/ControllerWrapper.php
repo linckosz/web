@@ -93,12 +93,14 @@ class ControllerWrapper extends Controller {
 				4) [MOB] We scan the QR code, the integration_code is recorded as a session on Front
 				5) [MOB] In integration confirmation process (user/integration) we do send the integration_code to the backend
 				6) [MOB] When the user is logged (new or existing account), it attaches into SQL the log_id to the integration_code
-				7) [MOB] The application is opened on mobile
-				8) [BRO] The setIterval cache the log_id and launch a auto-signin
-				9) [BRO] The application is opened on browser with the same account as the mobile
+				7) [BRO] The setInterval catches the log_id and launch a auto-signin
+				8) [BRO] The application is opened on browser with the user account
 		*/
+		if(isset($_SESSION['integration_code_expire']) && $_SESSION['integration_code_expire'] < time()){
+			//unset($_SESSION['integration_code']); //toto => I am not sure if it affects the fact that the qr code can be unusable sometimes
+		}
 		if(isset($_SESSION['integration_code'])){
-			if(strlen($_SESSION['integration_code'])==8){
+			if(strlen($_SESSION['integration_code'])>=1 && strlen($_SESSION['integration_code'])<=8){
 				$this->json['data']['integration_code'] = $_SESSION['integration_code'];
 			}
 		}

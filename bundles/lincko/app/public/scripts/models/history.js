@@ -580,7 +580,13 @@ var app_models_history = {
 						}
 						app_models_history.notified["users_"+hist[i]['id']+"_"+hist[i]['hist']] = true;
 						item = Lincko.storage.get("users", hist[i]['id']);
-						if(!item || !item['_visible']){
+						if(
+							   !item
+							|| !item['_visible']
+							|| typeof hist[i]['par'] == "undefined"
+							|| typeof hist[i]['par']['pvid'] == "undefined"
+							|| hist[i]['par']['pvid'] != wrapper_localstorage.uid
+						){
 							continue;
 						}
 						var profile_pic = Lincko.storage.getLinkThumbnail(item['profile_pic']);

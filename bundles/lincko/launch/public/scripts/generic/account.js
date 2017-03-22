@@ -322,7 +322,7 @@ var account_reset_time_left_init = function(email){
 	$("#account_reset_code, #account_reset_password").prop('disabled', false);
 	$("#account_reset_code, #account_reset_password").parent().removeClass("account_no_cursor");
 	$("#account_reset_submit").removeClass("account_no_cursor account_reset_submit_disabled").prop('disabled', false);
-	account_reset_time_left(1200); //Set timeout to 20 minutes
+	account_reset_time_left(120); //Set timeout to 2 minute
 }
 
 $('#account_close').click(function(){
@@ -419,7 +419,7 @@ var account_integration_wechat_qrcode = function(){
 	if(true){
 		//Use Lincko QR code for integration
 		//var url_qrcode = top.location.protocol+'//'+document.linckoBack+'file.'+document.domainRoot+':'+document.linckoBackPort+'/integration/qrcode/wechat?'+(new wrapper_date().timestamp);	
-		var url_qrcode = top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domainRoot+'/integration/wechat/wxqrcode?'+(new wrapper_date().timestamp);
+		var url_qrcode = top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domainRoot+'/integration/wechat/wxqrcode?timeoffset='+wrapper_timeoffset()+'&ts='+(new wrapper_date().timestamp);
 
 		if($('#account_integration_top_info').find('img').length == 1){
 			$('#account_integration_top_info').find('img').attr('src', url_qrcode);
@@ -439,7 +439,7 @@ var account_integration_wechat_qrcode = function(){
 					id: "account_integration_top_info",
 					appid: account_integration.wechat.dev_appid, //This is using dev account, but openID is different from dev to public. Must use unionID to log in this scenario
 					scope: "snsapi_login",
-					redirect_uri: encodeURIComponent(top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/integration/wechat/weixinjs/"+wrapper_timeoffset()),
+					redirect_uri: encodeURIComponent(top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+'/integration/wechat/weixinjs/'+wrapper_timeoffset()),
 					state: "snsapi_userinfo",
 					style: "black",
 					href: account_integration.wechat.href,
