@@ -151,15 +151,8 @@ submenu_list['settings'] = {
 	"support": {
 		"style": "button",
 		"title": Lincko.Translation.get('app', 89, 'html'), //Contact Us
-		"action": function(){
-			window.location.href = wrapper_link['support'];
-		},
-		"class": "",
-	},
-	"feedback": {
-		"style": "button",
-		"title": "技术支持",//toto need translation
 		"action": function(Elem,subm){
+			//window.location.href = wrapper_link['support'];
 			submenu_feedback_open_single(subm,0);
 		},
 		"class": "",
