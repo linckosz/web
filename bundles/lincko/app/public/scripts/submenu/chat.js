@@ -391,23 +391,24 @@ Submenu.prototype.Add_ChatAddUser = function() {
 	submenu_chat_search.data.sub_that = that;
 
 	//wechat notice banner
-	var Elem = $('#-submenu_app_chat_wxNotice').clone().prop('id', '').click(function(){
-		var elem_hand = $(this).find('.fa-hand-o-up');
-		if(elem_hand.hasClass('velocity-animating')){ return; }
+	if(base_is_wechat){
+		var Elem = $('#-submenu_app_chat_wxNotice').clone().prop('id', '').click(function(){
+			var elem_hand = $(this).find('.fa-hand-o-up');
+			if(elem_hand.hasClass('velocity-animating')){ return; }
 
-		var hand_bounce = [
-		    { e: elem_hand, p: {top: -48},	o: { easing: "easeInSine", duration: 300, mobileHA: hasGood3Dsupport } },
-		    { e: elem_hand, p: {top: 0}, 	o: { easing: "easeOutQuad", duration: 300, mobileHA: hasGood3Dsupport } },
-		];
-		elem_hand.velocity("stop");
-		$.Velocity.RunSequence(hand_bounce);
-	});
+			var hand_bounce = [
+			    { e: elem_hand, p: {top: -48},	o: { easing: "easeInSine", duration: 300, mobileHA: hasGood3Dsupport } },
+			    { e: elem_hand, p: {top: 0}, 	o: { easing: "easeOutQuad", duration: 300, mobileHA: hasGood3Dsupport } },
+			];
+			elem_hand.velocity("stop");
+			$.Velocity.RunSequence(hand_bounce);
+		});
 
-	var str_ellipsis = '<i class="fa fa-ellipsis-v"></i>';
-	if(isIOS){ str_ellipsis = '<i class="fa fa-ellipsis-h"></i>'; }
-	//Elem.find('[find=text]').html(Lincko.Translation.get('app', 3604, 'html', {date: str_ellipsis})); //toto
-
-	submenu_wrapper.find("[find=submenu_wrapper_bottom]").addClass('submenu_wrapper_bottom_wxNotice').append(Elem);
+		var str_ellipsis = '<i class="fa fa-ellipsis-v"></i>';
+		if(isIOS){ str_ellipsis = '<i class="fa fa-ellipsis-h"></i>'; }
+		//Elem.find('[find=text]').html(Lincko.Translation.get('app', 3604, 'html', {date: str_ellipsis})); //toto
+		submenu_wrapper.find("[find=submenu_wrapper_bottom]").addClass('submenu_wrapper_bottom_wxNotice').append(Elem);
+	}
 
 	//options - copy my url, my qr code, scanner
 	var Elem = $('#-submenu_app_chat_add_user_options').clone().prop('id', '');
@@ -502,15 +503,15 @@ Submenu.prototype.Add_ChatAddUser = function() {
 
 
 var submenu_chat_add_user_options_build = function(elem, subm){
-	//if wechat
-	elem.addClass('submenu_app_chat_add_user_options_wxMargin');
-
-	submenu_chat_add_user_options_attachClickEvent.myURL(elem.find('[find=btn_myURL]'), subm);
-	submenu_chat_add_user_options_attachClickEvent.myQR(elem.find('[find=btn_myQR]'), elem.find('[find=popup_QRcode_wrapper]'));
-	submenu_chat_add_user_options_attachClickEvent.scan(elem.find('[find=btn_scan]'), subm);
+	if(base_is_wechat){
+		elem.addClass('submenu_app_chat_add_user_options_wxMargin');
+	}
+	submenu_chat_add_user_options_build_btn.myURL(elem.find('[find=btn_myURL]'), subm);
+	submenu_chat_add_user_options_build_btn.myQR(elem.find('[find=btn_myQR]'), elem.find('[find=popup_QRcode_wrapper]'));
+	submenu_chat_add_user_options_build_btn.scan(elem.find('[find=btn_scan]'), subm);
 }
 
-var submenu_chat_add_user_options_attachClickEvent = {
+var submenu_chat_add_user_options_build_btn = {
 	myURL: function(elem, subm){
 		elem.attr('data-clipboard-text', Lincko.storage.generateMyURL());
 		var myurl = new Clipboard(elem[0]);
@@ -546,7 +547,18 @@ var submenu_chat_add_user_options_attachClickEvent = {
 	},
 	scan: function(elem, subm){
 		submenu_chat_search.value_qrcode = null;
-		if(base_has_webcam){
+		if(base_is_wechat && wx && wx.scanQRCode){
+			wx.scanQRCode({
+                desc: 'scanQRCode desc',
+                needResult: 1, // 0 by default, with the scanning result processed by WeChat. The scanning result is directly returned if it is 1.
+                scanType: ["qrCode","barCode"], // Scanning type, including QR code or bar code. Both by default.
+                success: function (res) {
+                    var result = res.resultStr; // Scanning result when needResult is 1
+                    alert(result);
+                }
+            });
+		} 
+		else if(base_has_webcam){
 			elem.click(function(){
 				if(subm.chat_status == 'scanner'){
 					submenu_chat_new_user_result(subm, null, "noresult");
@@ -567,29 +579,6 @@ var submenu_chat_add_user_options_attachClickEvent = {
 		} else {
 			elem.addClass('display_none');
 		}
-		// "style": "button",
-		// "title": Lincko.Translation.get('app', 77, 'html'), //Scan a user QR code
-		// "action": function(Elem, subm){
-		// 	if(base_has_webcam){
-		// 		var input  = subm.Wrapper().find("[find=submenu_app_chat_search_input]");
-		// 		input.val("");
-		// 		var text_help = subm.Wrapper().find("[find=submenu_app_chat_search_text_help]");
-		// 		if(text_help.is(':hidden')){
-		// 			text_help.velocity("transition.fadeIn", {
-		// 				mobileHA: hasGood3Dsupport,
-		// 				duration: 100,
-		// 				delay: 50,
-		// 			});
-		// 		}
-		// 		submenu_chat_new_user_result(subm, null, "scanner");
-		// 	}
-		// },
-		// "now": function(Elem, subm){
-		// 	submenu_chat_search.value_qrcode = null;
-		// 	if(!base_has_webcam){
-		// 		Elem.addClass('display_none');
-		// 	}
-		// },
 	},
 }
 

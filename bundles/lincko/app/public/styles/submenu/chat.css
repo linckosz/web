@@ -325,6 +325,8 @@
 	display: inline-block;
     vertical-align: middle;
     line-height: normal;
+    min-width: 106px;
+    white-space: nowrap;
 }
 .submenu_app_chat_add_user_options [find=options_wrapper] [find=icon]{
 	font-size: 40px;
