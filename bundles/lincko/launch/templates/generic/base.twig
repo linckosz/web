@@ -5,6 +5,8 @@
 			var base_input_field = {};
 			JSfiles.later("{{ _filelatest('/lincko/launch/scripts/generic/base.js') }}");
 			JSfiles.later("{{ _filelatest('/lincko/launch/scripts/input/_base.js') }}", 40);
+			var base_neutral = new Image();
+			base_neutral.src = "{{ _filelatest('/lincko/launch/images/generic/base/generic/neutral.png') }}";
 		</script>
 		<link rel="stylesheet" href="{{ _filelatest('/lincko/launch/styles/generic/base.css') }}" type="text/css" />
 		{% include '/bundles/lincko/launch/templates/generic/styles/base.css.twig' %}

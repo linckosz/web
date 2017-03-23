@@ -46,6 +46,11 @@
 	<script src="{{ _filelatest('/scripts/libs/integration/wxLogin.js') }}" type="text/javascript"></script>
 	
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/launch/styles/generic/account.css') }}" type="text/css" />
+	<style>
+		#account_integration_top_info > img {
+			background-image: url("{{ _filelatest('/lincko/launch/images/generic/base/generic/loading_bar.gif') }}");
+		}
+	</style>
 </div>
 <div id="account_wrapper" class="account_wrapper">
 	<img class="account_close" id="account_close" src="{{ _filelatest('/lincko/launch/images/generic/account/close.png') }}" alt="{{ _trans('web', 5, 10, 'html') }}{# Close #}" title="{{ _trans('web', 5, 10, 'html') }}{# Close #}" />

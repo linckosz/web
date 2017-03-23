@@ -415,8 +415,10 @@ $('#account_integration_wechat').click(function(){
 var account_integration_wechat_timer;
 var account_integration_wechat_qrcode = function(){
 	clearInterval(account_integration_wechat_timer);
-	//if(isMobileBrowser()){
-	if(true){
+	if(isMobileApp()){
+		//Call a native function
+	} else {
+		$('#account_integration_top_info').find('img').attr('src', base_neutral.src); //Change to a transarency picture
 		//Use Lincko QR code for integration
 		//var url_qrcode = top.location.protocol+'//'+document.linckoBack+'file.'+document.domainRoot+':'+document.linckoBackPort+'/integration/qrcode/wechat?'+(new wrapper_date().timestamp);	
 		var url_qrcode = top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domainRoot+'/integration/wechat/wxqrcode?timeoffset='+wrapper_timeoffset()+'&ts='+(new wrapper_date().timestamp);
@@ -429,24 +431,6 @@ var account_integration_wechat_qrcode = function(){
 			$('#account_integration_top_info').append(image);
 		}
 		account_integration_account.start();
-	} else if(isMobileApp()){
-		//Call a native function
-	} else {
-		//This code use the QR code genrate from Wechat, but this only do the connection on browser, does not use callbacks, and do no work on mobile
-		wrapper_sendAction(null, 'get', 'integration/setcode', function(msg, err, status, data){
-			if(data.code){
-				var obj = new WxLogin({
-					id: "account_integration_top_info",
-					appid: account_integration.wechat.dev_appid, //This is using dev account, but openID is different from dev to public. Must use unionID to log in this scenario
-					scope: "snsapi_login",
-					redirect_uri: encodeURIComponent(top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+'/integration/wechat/weixinjs/'+wrapper_timeoffset()),
-					state: "snsapi_userinfo",
-					style: "black",
-					href: account_integration.wechat.href,
-				});
-				account_integration_account.start();
-			}
-		});
 	}
 };
 

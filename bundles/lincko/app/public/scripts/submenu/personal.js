@@ -336,7 +336,29 @@ submenu_list['personal_info'] = {
 		"title": Lincko.Translation.get('app', 54, 'html'), //Send a message
 		"class": "submenu_deco",
 		"action": function(Elem, subm){
-			submenu_chat_open_single(subm, subm.param);
+			if(Lincko.storage.get('users', subm.param, '_visible')){
+				submenu_chat_open_single(subm, subm.param);
+			} else {
+				var param = {
+					exists: true,
+					users_id: subm.param,
+				}
+				wrapper_sendAction(
+					param,
+					'post',
+					'user/invite',
+					null,
+					null,
+					function(){
+						base_show_error(Lincko.Translation.get('app', 2309, 'js')); //Your invitation has been sent.
+					}
+				);
+			}
+		},
+		"now": function(Elem, subm){
+			if(!Lincko.storage.get('users', subm.param, '_visible')){
+				Elem.find("[find=submenu_button_title]").html(Lincko.Translation.get('app', 97, 'html')); //Send an invitation request
+			}
 		},
 	},
 	"space": {

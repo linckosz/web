@@ -616,6 +616,7 @@
 	font-size: 0;
 	padding-top: 16px;
 	padding-bottom: 4px;
+
 }
 
 #account_integration_top_info > div {
@@ -625,6 +626,12 @@
 #account_integration_top_info > iframe {
 	width: 222px;
 	height: 222px;
+}
+
+#account_integration_top_info > img {
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 120px 2px;
 }
 
 .account_integration_top_info_qrcode {

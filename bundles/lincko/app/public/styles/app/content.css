@@ -16,6 +16,7 @@
 }
 
 .app_content_top_cell {
+	position: relative;
 	vertical-align: top;
 	text-align: left;
 	width: 48px;
@@ -48,6 +49,22 @@
 	margin: 12px 0 0 12px;
 	padding: 0;
 	cursor: pointer; cursor: hand;
+}
+
+#app_content_top_contacts {
+	position: absolute;
+	top: 50%;
+	right: 0;
+	padding: 6px;
+	cursor: pointer; cursor: hand;
+	font-size: 36px;
+	transform: translateY(-50%);
+	-webkit-transform: translateY(-50%);
+	-moz-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	-o-transform: translateY(-50%);
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
 }
 
 #app_content_top_arrow {
