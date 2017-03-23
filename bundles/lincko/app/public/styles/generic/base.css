@@ -220,6 +220,13 @@ html, .font_sans_serif {
 	position: absolute !important;
 }
 
+.base_tapHighlight_off {
+    -moz-tap-highlight-color: rgba(0,0,0,0);
+    -moz-tap-highlight-color: transparent;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+	-webkit-tap-highlight-color: transparent;
+}
+
 /*
  * COLOR
  * http://paletton.com/#uid=30J0u0kryvvhaGqmlzpvmqAz1kX
