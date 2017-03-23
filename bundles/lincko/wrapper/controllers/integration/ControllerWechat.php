@@ -366,6 +366,7 @@ class ControllerWechat extends Controller {
 		$option['appid'] = $app->lincko->integration->wechat['public_appid'];
 		$option['secret'] = $app->lincko->integration->wechat['public_secretapp'];
 		$option['access_token'] = WechatPublic::access_token();
+
 		$wechat = new Wechat($option);
 		$wechat->getToken();
 
@@ -397,6 +398,7 @@ class ControllerWechat extends Controller {
 					$timeoffset = intval(substr($integration_code, -4, 2)); //set user timeoffset
 				}
 				$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 1, 4, array(), $lang)); //[toto] login msg
+
 				$user = $wechat->user($open_id);
 			}
 
