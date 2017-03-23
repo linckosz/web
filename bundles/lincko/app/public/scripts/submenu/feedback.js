@@ -268,7 +268,7 @@ Submenu.prototype.AddFeedbackContent = function() {
 
 				var preview = null;
 				try{
-					preview = files[i].files[0].preview.toDataURL();
+					preview = app_upload_files.lincko_files[i].files[0].preview.toDataURL();
 				}
 				catch(e)
 				{
@@ -298,6 +298,7 @@ Submenu.prototype.AddFeedbackContent = function() {
 						
 					}else
 					{
+						debugger;
 						elem.find(".submenu_feedback_shortcut_uploading_ico").addClass('display_none');
 						elem.find(".submenu_feedback_shortcut_uploading_pic")
 								.removeClass('display_none')
