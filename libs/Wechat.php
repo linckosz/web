@@ -815,6 +815,27 @@ class Wechat {
 		}
 	}
 
+	//added by Sky Park
+	//used for wechat JSSDK, for javascript wx.config parameters
+	public function getPackage(){
+		$this->getToken();
+		$ticket = $this->getJsapiTicket();
+		$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://';
+		$url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+		$nonceStr = $this->_getRandomStr();
+		$timestamp = time();
+		$string = "jsapi_ticket=$ticket&noncestr=$nonceStr&timestamp=$timestamp&url=$url";
+		$signature = sha1($string);
+
+		$result['appId'] = $this->appid;
+		$result['timestamp'] = $timestamp;
+		$result['nonceStr'] = $nonceStr;
+		$result['signature'] = $signature;
+		return $result;
+	}
+
+
+
 	/**
 	 * 获取二维码图像地址
 	 * @param  integer $scene_id 场景值 1-100000整数
