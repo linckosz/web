@@ -821,7 +821,8 @@ class Wechat {
 		$this->getToken();
 		$ticket = $this->getJsapiTicket();
 		$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? 'https://' : 'http://';
-		$url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+		//$url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+		$url = $protocol.$_SERVER['HTTP_HOST'].'/';
 		$nonceStr = $this->_getRandomStr();
 		$timestamp = time();
 		$string = "jsapi_ticket=$ticket&noncestr=$nonceStr&timestamp=$timestamp&url=$url";

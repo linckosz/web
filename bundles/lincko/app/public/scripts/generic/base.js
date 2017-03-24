@@ -387,12 +387,11 @@ JSfiles.finish(function(){
 	app_application_lincko.add(base_wechat_shareData_garbage, 'first_launch', function() {
 		if(!base_is_wechat || (wx && (!wx.onMenuShareAppMessage || !wx.onMenuShareTimeline))){
 			app_application_garbage.remove(base_wechat_shareData_garbage);
-			return;
 		}
 		else if(base_is_wechat && wx && wx.onMenuShareAppMessage && wx.onMenuShareTimeline){
 			base_wechat_shareData = {
 				title: 'Lincko - The way of projects',
-				desc: Lincko.storage.get('users', 5, 'username') + 'has invited you to collaborate using Lincko. \n https://lincko.com',
+				desc: Lincko.storage.get('users', wrapper_localstorage.uid, 'username')+'has invited you to collaborate using Lincko.\nhttps://'+document.domainRoot,
 				link: Lincko.storage.generateMyURL(),
 				imgUrl: base_wechat_shareImg,
 				trigger: function (res) {},
@@ -402,6 +401,7 @@ JSfiles.finish(function(){
 			}
 			wx.onMenuShareAppMessage(base_wechat_shareData);
 			wx.onMenuShareTimeline(base_wechat_shareData);
+			app_application_garbage.remove(base_wechat_shareData_garbage);
 		}		
 	});
 });
