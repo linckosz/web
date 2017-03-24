@@ -327,6 +327,9 @@ var base_video_device_current = 0;
 var base_video_device = [];
 var base_has_webcam = false;
 var base_has_webcam_sub = false;
+
+var base_wechat_shareData = null;
+var base_wechat_shareData_garbage = null;
 JSfiles.finish(function(){
 
 	//Depreciation of window.MediaStreamTrack.getSources
@@ -378,6 +381,29 @@ JSfiles.finish(function(){
 	if(!isIOS && !navigator.userAgent.match(/MicroMessenger/i) && typeof w69b != 'undefined' && typeof w69b_qrcode_decodeworker != 'undefined'){
 		w69b.qr.decoding.setWorkerUrl(w69b_qrcode_decodeworker);
 	}
+
+	//customize wechat share information here
+	base_wechat_shareData_garbage = app_application_garbage.add();
+	app_application_lincko.add(base_wechat_shareData_garbage, 'first_launch', function() {
+		if(!base_is_wechat || (wx && (!wx.onMenuShareAppMessage || !wx.onMenuShareTimeline))){
+			app_application_garbage.remove(base_wechat_shareData_garbage);
+			return;
+		}
+		else if(base_is_wechat && wx && wx.onMenuShareAppMessage && wx.onMenuShareTimeline){
+			base_wechat_shareData = {
+				title: 'Lincko - The way of projects',
+				desc: Lincko.storage.get('users', 5, 'username') + 'has invited you to collaborate using Lincko. \n https://lincko.com',
+				link: Lincko.storage.generateMyURL(),
+				imgUrl: base_wechat_shareImg,
+				trigger: function (res) {},
+				success: function (res) {},
+				cancel: function (res) {},
+				fail:function (res) {},
+			}
+			wx.onMenuShareAppMessage(base_wechat_shareData);
+			wx.onMenuShareTimeline(base_wechat_shareData);
+		}		
+	});
 });
 
 base_removeLineBreaks = function(str){

@@ -547,18 +547,7 @@ var submenu_chat_add_user_options_build_btn = {
 	},
 	scan: function(elem, subm){
 		submenu_chat_search.value_qrcode = null;
-		if(base_is_wechat && wx && wx.scanQRCode){
-			wx.scanQRCode({
-                desc: 'scanQRCode desc',
-                needResult: 1, // 0 by default, with the scanning result processed by WeChat. The scanning result is directly returned if it is 1.
-                scanType: ["qrCode","barCode"], // Scanning type, including QR code or bar code. Both by default.
-                success: function (res) {
-                    var result = res.resultStr; // Scanning result when needResult is 1
-                    alert(result);
-                }
-            });
-		} 
-		else if(base_has_webcam){
+		if(base_has_webcam || (base_is_wechat && wx && wx.scanQRCode)){
 			elem.click(function(){
 				if(subm.chat_status == 'scanner'){
 					submenu_chat_new_user_result(subm, null, "noresult");

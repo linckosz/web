@@ -14,6 +14,7 @@
 				var app_application_logo_wechat = new Image();
 				app_application_logo_wechat.src = "{{ _filelatest('/lincko/app/images/generic/base/logo/wechat.png') }}";
 				var base_is_wechat = false;
+				var base_wechat_shareImg = "{{ _filelatest('/lincko/app/images/generic/base/logo/lincko_applogo.png') }}";
 				var base_scanner = false;
 			</script>
 
@@ -71,6 +72,7 @@
 				<script src="{{ _filelatest('/scripts/libs/integration/jweixin-1.2.0.js') }}" type="text/javascript"></script>
 				<script>
 					base_is_wechat = true;
+
 					//injection authentication
 					wx.config({
 						debug: false,
@@ -81,6 +83,10 @@
 						// list all APIs you are going to call in jsApiList
 						jsApiList: [
 							'scanQRCode',
+							'showMenuItems',
+							'hideMenuItems',
+							'onMenuShareAppMessage',
+							'onMenuShareTimeline',
 						],
 					});
 
@@ -89,31 +95,25 @@
 						dispose: function(){},
 						cb_decoded: function(url_code){},
 						setDecodedCallback: function(fn) {
-							cb_decoded = fn;
+							this.cb_decoded = fn;
 						},
 						render: function(Elem){},
 					};
 
 					wx.ready(function(){
-					
+						//setup scanner to use wechat QR code scanner
 						base_scanner = {
-
 							If: true,
-
 							dispose: function(){},
-
 							cb_decoded: function(url_code){},
-
 							setDecodedCallback: function(fn) {
 								cb_decoded = fn;
 							},
-
 							render: function(Elem){
 								wx.scanQRCode({
 									needResult: 1,
-									desc: 'scanQRCode desc',
+									desc: 'Lincko scanQRCode',
 									success: function (res) {
-										alert(JSON.stringify(res));
 										var error = false;
 										if(res.resultStr){
 											base_scanner.cb_decoded(res.resultStr);
@@ -123,8 +123,27 @@
 									},
 								});
 							},
-
 						};
+						wx.hideMenuItems({
+							menuList: [
+								"menuItem:exposeArticle",
+								 "menuItem:setFont",
+								 "menuItem:favorite",
+							],
+						});
+						wx.showMenuItems({
+							menuList: [
+								"menuItem:copyUrl",
+								"menuItem:profile",
+								"menuItem:addContact",
+								"menuItem:share:appMessage",
+								"menuItem:share:timeline",
+								"menuItem:share:qq",
+								"menuItem:share:weiboApp",
+								"menuItem:share:facebook",
+								"menuItem:share:QZone",
+							],
+						});
 					});
 
 					var w69b_qrcode_decodeworker = null;
