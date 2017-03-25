@@ -1,0 +1,26 @@
+{# category 9 #}
+<div id="begin_wrapper_wechat" class="visibility_hidden">
+	<script>
+		JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/wechat.js') }}", 40);
+	</script>
+	<link rel="stylesheet" href="{{ _filelatest('/lincko/wrapper/styles/wechat.css') }}" type="text/css" />
+</div>
+<div id="wrapper_wechat_wall">
+	<div id="wrapper_wechat_wall_cell">
+		<table id="wrapper_wechat_table">
+			<tr>
+				<td></td>
+				<td id="wrapper_wechat_cell_center">
+					<div id="wrapper_wechat_content">Lincko</div>
+					<div id="wrapper_wechat_progress">
+						<div id="wrapper_wechat_progress_bar"></div>
+					</div>
+				</td>
+				<td></td>
+			</tr>
+		</table>
+	</div>
+	<div id="wrapper_wechat_later">{{ _trans('web', 9, 1, 'html') }}{# Home page #}</div>
+</div>
+<div id="end_wrapper_wechat" class="visibility_hidden"></div>
+

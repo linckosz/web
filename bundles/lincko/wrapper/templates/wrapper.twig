@@ -590,6 +590,11 @@ function getCookie(cname) {
 <div id="wrapper_loading">
 	{% include '/bundles/lincko/wrapper/templates/loading.twig' %}
 </div>
+{% if user_info_2 == 'Wechat' %}
+	<div id="wrapper_wechat">
+		{% include '/bundles/lincko/wrapper/templates/wechat.twig' %}
+	</div>
+{% endif %}
 {% block base %}
 {% endblock %}
 </html>
