@@ -71,6 +71,14 @@
 	height: 282px;
 }
 
+.wrapper_blur {
+	-webkit-filter: blur(2px);
+	-moz-filter: blur(2px);
+	-o-filter: blur(2px);
+	-ms-filter: blur(2px);
+	filter: blur(2px);
+}
+
 /* Tablet in Portrait maxi*/
 @media only screen and (max-width: 900px){
 	.wrapper_loading_content_linckobot {

@@ -614,6 +614,11 @@ function wrapper_mobile_hover(){
 	}
 }
 
+//Genereate
+var wrapper_wechat_login_qrcode = function(){
+	return top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domainRoot+'/integration/wechat/wxqrcode?timeoffset='+wrapper_timeoffset()+'&ts='+(new wrapper_date().timestamp);
+}
+
 //Set indice performance to run some javascript (mainly animation) on powerfull devices
 var wrapper_performance = {
 	indice: false,

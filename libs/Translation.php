@@ -27,6 +27,7 @@ class Translation {
 		'fr' => 'fr_FR.utf8',
 		'zh-chs' => 'zh_CN.utf8',
 		'zh-cht' => 'zh_TW.utf8',
+		'ko' => 'ko_KR.UTF-8',
 	);
 
 	public function __construct(){
@@ -86,7 +87,7 @@ class Translation {
 				if($category===true){
 					$result = TranslationModel::on($bundle)->get(array('category', 'phrase', $lang));
 				} else if(is_integer($category)){
-					$result = TranslationModel::on($bundle)->where('category', '=', $category)->get(array('category', 'phrase', $lang));
+					$result = TranslationModel::on($bundle)->where('category', $category)->get(array('category', 'phrase', $lang));
 				}
 				if($result){
 					foreach ($result as $key => $value) {
@@ -138,6 +139,32 @@ class Translation {
 		} else {
 			return $this->listfull;
 		}
+	}
+
+	public function getNumber(){
+		$langshort = mb_strtolower($this->getClientLanguage());
+		$num = 1; //"en" by default
+		$i = 0;
+		foreach ($this->default_locale_list as $key => $value) {
+			$i++;
+			if($langshort == mb_strtolower($key)){
+				$num = $i;
+				break;
+			}
+		}
+		return $num;
+	}
+
+	public function setLanguageNumber($num=1){
+		$i = 0;
+		foreach ($this->default_locale_list as $key => $value) {
+			$i++;
+			if($num == $i){
+				return $this->setLanguage($key);
+				break;
+			}
+		}
+		return $this->setLanguage();
 	}
 
 	public function getLanguagesShort($bundle = NULL){
@@ -211,7 +238,7 @@ class Translation {
 		return $text;
 	}
 
-	protected function get($bundle, $category, $phrase, $data, $force_lang=false){
+	protected function get($bundle, $category, $phrase, array $data = array(), $force_lang=false){
 		$app = $this->app;
 		$value = false;
 		if(!empty($data)){
@@ -222,7 +249,7 @@ class Translation {
 		}
 		if(isset($app->lincko->databases[$bundle])){
 			if(!empty($force_lang)){
-				if($value = TranslationModel::on($bundle)->where('category', '=', $category)->where('phrase', '=', $phrase)->first()){
+				if($value = TranslationModel::on($bundle)->where('category', $category)->where('phrase', $phrase)->first()){
 					$value = $value->getAttribute($force_lang);
 				}
 			} else if(isset($this->translation[$bundle][$category][$phrase])){
@@ -235,7 +262,7 @@ class Translation {
 					$value = $this->translation[$bundle][$category][$phrase];
 				} else if(isset($this->lang[$bundle])){
 					$lang = $this->lang[$bundle];
-					if($value = TranslationModel::on($bundle)->where('category', '=', $category)->where('phrase', '=', $phrase)->first(array($lang))){
+					if($value = TranslationModel::on($bundle)->where('category', $category)->where('phrase', $phrase)->first(array($lang))){
 						$value = $value->getAttribute($lang);
 					}
 				}

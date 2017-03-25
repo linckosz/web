@@ -97,10 +97,11 @@ class ControllerWrapper extends Controller {
 				8) [BRO] The application is opened on browser with the user account
 		*/
 		if(isset($_SESSION['integration_code_expire']) && $_SESSION['integration_code_expire'] < time()){
-			//unset($_SESSION['integration_code']); //toto => I am not sure if it affects the fact that the qr code can be unusable sometimes
+			unset($_SESSION['integration_code']);
+			unset($_SESSION['integration_code_expire']);
 		}
 		if(isset($_SESSION['integration_code'])){
-			if(strlen($_SESSION['integration_code'])>=1 && strlen($_SESSION['integration_code'])<=8){
+			if(strlen($_SESSION['integration_code'])>=1 && strlen($_SESSION['integration_code'])<=10){
 				$this->json['data']['integration_code'] = $_SESSION['integration_code'];
 			}
 		}

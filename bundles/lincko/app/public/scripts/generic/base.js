@@ -404,9 +404,13 @@ JSfiles.finish(function(){
 			app_application_garbage.remove(base_wechat_shareData_garbage);
 		}		
 	});
+
+	if(typeof wrapper_wechat_alert == 'function' && wrapper_wechat_show_official){
+		wrapper_wechat_alert(false);
+	}
 });
 
 base_removeLineBreaks = function(str){
 	if(typeof str != 'string'){ return false; }
-	return str.replace(/(\r\n|\n|\r)/gm,"");
+	return str.replace(/(\r\n|\n|\r)/gm, "");
 }

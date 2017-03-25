@@ -3,6 +3,7 @@
 namespace bundles\lincko\wrapper\controllers\integration;
 
 use \bundles\lincko\wrapper\controllers\ControllerWrapper;
+use \bundles\lincko\wrapper\models\WechatPublic;
 use \libs\Controller;
 use \libs\OneSeventySeven;
 use \libs\Wechat;
@@ -215,6 +216,20 @@ class ControllerWechat extends Controller {
 
 		}
 
+		if($valid && $account=='pub' && $openid){
+			$app->lincko->data['integration_wechat_show_official'] = true;
+			$app = \Slim\Slim::getInstance();
+			$option['appid'] = $app->lincko->integration->wechat['public_appid'];
+			$option['secret'] = $app->lincko->integration->wechat['public_secretapp'];
+			$option['access_token'] = WechatPublic::access_token();
+			$wechat = new Wechat($option);
+			if($result = $wechat->users()){
+				if(isset($result->data) && isset($result->data->openid) && isset($result->data->openid[$openid])){
+					$app->lincko->data['integration_wechat_show_official'] = false;
+				}
+			}
+		}
+
 		$app->lincko->data['link_reset'] = true;
 		if(!$response){
 			$app->lincko->data['integration_connection_error'] = true;
@@ -326,20 +341,23 @@ class ControllerWechat extends Controller {
 
 	public function wxqrcode_get(){
 		$app = \Slim\Slim::getInstance();
-		$controller = new ControllerWrapper(null, 'get', false);
-		if($response = $controller->wrap_multi('integration/set_wechat_qrcode')){
-			if(isset($response->msg) && isset($response->msg->code) && isset($response->msg->url) && !empty($response->msg->url)){
-				$_SESSION['integration_code'] = $response->msg->code;
-				$_SESSION['integration_code_expire'] = time() + 180; //valid 3 minutes only (the unset after expiration is handle by ControllerWrapper already)
-				WideImage::load($response->msg->url)->output('png');
-				if(isset($response->msg->access_token)){
-					$_SESSION['wechat_access_token'] = $response->msg->access_token;
+		$data = json_decode(json_encode($_GET, JSON_FORCE_OBJECT)); //convert to object
+		$loop = 3; //number of try
+		while($loop>0 && $loop){
+			$loop--;
+			$controller = new ControllerWrapper($data, 'post', false);
+			if($response = $controller->wrap_multi('integration/set_wechat_qrcode')){
+				if(isset($response->msg) && isset($response->msg->code) && isset($response->msg->url) && !empty($response->msg->url)){
+					$_SESSION['integration_code'] = $response->msg->code;
+					$_SESSION['integration_code_expire'] = time() + 180; //valid 3 minutes only (the unset after expiration is handle by ControllerWrapper already)
+					$loop = false;
+					WideImage::load($response->msg->url)->output('png');
+					return exit(0);
 				}
 			}
 		}
 		return exit(0);
 	}
-
 
 	public function official_get(){
 		$app = \Slim\Slim::getInstance();
@@ -351,19 +369,14 @@ class ControllerWechat extends Controller {
 
 	public function official_post(){
 		$app = \Slim\Slim::getInstance();
+		$app->trans->getList('default');
+		$lang = $app->trans->getClientLanguage(); //Will be "en" by default
+		$timeoffset = 16; //Chinese time is mostly probable to be used for wechat account
 		$option['appid'] = $app->lincko->integration->wechat['public_appid'];
 		$option['secret'] = $app->lincko->integration->wechat['public_secretapp'];
-		if(isset($_SESSION['wechat_access_token'])){
-			$option['access_token'] = $_SESSION['wechat_access_token'].'b';
-		}
+		$option['access_token'] = WechatPublic::access_token();
 		$wechat = new Wechat($option);
 		$wechat->getToken();
-
-		if(!$wechat->getJsapiTicket()){
-			unset($options['access_token']);
-			$wechat = new Wechat($options);
-			$option['access_token'] = $_SESSION['wechat_access_token'] = $wechat->getToken();
-		}
 
 		$body = $app->request->getBody();
 		$data = simplexml_load_string($body, null, LIBXML_NOCDATA);
@@ -374,17 +387,25 @@ class ControllerWechat extends Controller {
 			if(strtolower($data->Event) == 'subscribe'){
 				$open_id = (string) $data->FromUserName;
 				if(isset($data->EventKey)){
-					$_SESSION['integration_code'] = substr($data->EventKey, strlen('qrscene_'), strlen($data->EventKey)-strlen('qrscene_')+1);
-					$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 1, 4)); //[toto] follow msg
-					$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 1, 4)); //[toto] login msg
+					$integration_code = $_SESSION['integration_code'] = substr($data->EventKey, strlen('qrscene_'), strlen($data->EventKey)-strlen('qrscene_')+1);
+					if(strlen($integration_code) > 4){
+						$lang = $app->trans->setLanguageNumber(intval(substr($integration_code, -2, 2))); //set user laguage
+						$timeoffset = intval(substr($integration_code, -4, 2)); //set user timeoffset
+					}
+					$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 1, 4, array(), $lang)); //[toto] follow msg
+					$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 1, 4, array(), $lang)); //[toto] login msg
 					$user = $wechat->user($open_id);
 				} else {
-					$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 1, 4)); //[toto] follow msg
+					$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 1, 4, array(), $lang)); //[toto] follow msg
 				}
 			} else if(strtolower($data->Event) == 'scan'){
 				$open_id = (string) $data->FromUserName;
-				$_SESSION['integration_code'] = (string) $data->EventKey;
-				$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 1, 4)); //[toto] login msg
+				$integration_code = $_SESSION['integration_code'] = (string) $data->EventKey;
+				if(strlen($integration_code) > 4){
+					$lang = $app->trans->setLanguageNumber(intval(substr($integration_code, -2, 2))); //set user laguage
+					$timeoffset = intval(substr($integration_code, -4, 2)); //set user timeoffset
+				}
+				$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 1, 4, array(), $lang)); //[toto] login msg
 				$user = $wechat->user($open_id);
 			}
 
@@ -398,7 +419,7 @@ class ControllerWechat extends Controller {
 				*/
 				$data->party = 'wechat';
 				$data->party_id = 'uid.'.$user['unionid'];
-				$data->timeoffset = 16; //Chinese time is mostly probable to be used for wechat account
+				$data->timeoffset = $timeoffset; //Chinese time is mostly probable to be used for wechat account
 				$data->data = (object) $user;
 				$data->data->account = 'pub';
 				$controller = new ControllerWrapper($data, 'post', false);

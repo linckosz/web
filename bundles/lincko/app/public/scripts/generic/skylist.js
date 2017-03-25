@@ -2036,7 +2036,8 @@ skylist.draw_noteCard = function(item){
 	elem_title.html(item['+title']);
 
 	/* note description */
-	Elem.find('[find=description]').html($('<div>'+item['-comment']+'</div>').text());
+	var comment = item['-comment'].replace(/<br>|<br \/>/g, " ").replace(/<\/p><p>/g, "<\/p> <p>");
+	Elem.find('[find=description]').html($('<div>'+comment+'</div>').text());
 
 
 	/* note preview image */

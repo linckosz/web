@@ -570,7 +570,6 @@
 	margin-bottom: 3px;
 	font-size: 0;
 	text-align: left;
-	cursor: pointer;
 }
 
 .account_integration_icon {
@@ -581,6 +580,7 @@
 	opacity:0.8;
 	-moz-opacity:0.8;
 	-khtml-opacity:0.8;
+	cursor: pointer;
 }
 
 .account_integration_icon:hover {
@@ -638,6 +638,7 @@
 	width: 220px;
 	height: 220px;
 	border: solid 1px #999999;
+	cursor: pointer;
 }
 
 #account_integration_box > div {

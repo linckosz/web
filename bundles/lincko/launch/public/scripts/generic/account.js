@@ -409,8 +409,17 @@ $('#account_integration_wechat').click(function(){
 			return false;
 		}
 		account_integration_wechat_qrcode();
-	}, 1200000); //Refresh the QR code every 20min
+	}, 120000); //Refresh the QR code every 2min
+	if(!isMobileBrowser() && !isMobileApp()){ //allow click only for desktop
+		$('#account_integration_top_info').find('img').click(function(){
+			account_integration_wechat_qrcode();
+		});
+	}
 });
+
+var wechat_login_qrcode = function(){
+	return top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domainRoot+'/integration/wechat/wxqrcode?timeoffset='+wrapper_timeoffset()+'&ts='+(new wrapper_date().timestamp);
+}
 
 var account_integration_wechat_timer;
 var account_integration_wechat_qrcode = function(){
@@ -418,10 +427,10 @@ var account_integration_wechat_qrcode = function(){
 	if(isMobileApp()){
 		//Call a native function
 	} else {
-		$('#account_integration_top_info').find('img').attr('src', base_neutral.src); //Change to a transarency picture
+		$('#account_integration_top_info').find('img').attr('src', wrapper_neutral.src); //Change to a transarency picture
 		//Use Lincko QR code for integration
 		//var url_qrcode = top.location.protocol+'//'+document.linckoBack+'file.'+document.domainRoot+':'+document.linckoBackPort+'/integration/qrcode/wechat?'+(new wrapper_date().timestamp);	
-		var url_qrcode = top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domainRoot+'/integration/wechat/wxqrcode?timeoffset='+wrapper_timeoffset()+'&ts='+(new wrapper_date().timestamp);
+		var url_qrcode = wechat_login_qrcode();
 
 		if($('#account_integration_top_info').find('img').length == 1){
 			$('#account_integration_top_info').find('img').attr('src', url_qrcode);

@@ -1,3 +1,7 @@
+#wrapper_loading {
+	position: absolute;
+}
+
 #wrapper_loading_progress_wall {
 	position: fixed;
 	width: 100%;

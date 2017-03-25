@@ -15,4 +15,4 @@
 
 $app = \Slim\Slim::getInstance();
 //print_r($data);
-//phpinfo();
+phpinfo();

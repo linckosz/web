@@ -57,12 +57,20 @@ class STR {
 
 	//Convert BR to space
 	public static function br2space($text) {
-		return preg_replace("/<br\s*?\/?>/", ' ', $text);
+		return preg_replace("/<br\s*?\/?>/i", ' ', $text);
 	}
 
 	//Convert BR to LN
 	public static function br2ln($text) {
-		return preg_replace("/<br\s*?\/?>/", "\n", $text);
+		return preg_replace("/<br\s*?\/?>/i", "\n", $text);
+	}
+
+	//Add return line to a HTML content
+	public static function HTMLwithReturnLine($text) {
+		$text = preg_replace("/<br\s*?\/?>/i", "<br>\n", $text);
+		$text = str_ireplace('<\p>', "<\p>\n", $text);
+		$text = str_ireplace('<\div>', "<\div>\n", $text);
+		return $text;
 	}
 
 	private static function name_to_numerical($string) {
@@ -111,6 +119,15 @@ class STR {
 		}
 	}
 
+	//Get an hazard alphanumeric mix of lengh X
+	public static function random($lengh=16) {
+		$characters = '123456789abcdefghijklmnopqrstuvwxyz';
+		$string = '';
+		for($p=0; $p<$lengh; $p++) {
+			$string .= $characters[mt_rand(0,mb_strlen($characters)-1)];
+		}
+		return ''.$string; //To be sure it will return a string
+	}
 
 
 
@@ -228,16 +245,6 @@ class STR {
 	//Check if the value is pair or odd, return true if yes
 	public static function Odd_old($value) {
 	   return ($value & 1)==1; //=1 if odd
-	}
-
-	//Get an hazard alphanumeric mix of lengh X
-	public static function genRandomString_old($x) {
-		$characters = '123456789abcdefghijklmnopqrstuvwxyz';
-		$string=NULL;
-		for($p=0;$p<$x;$p++) {
-			$string.=$characters[mt_rand(0,mb_strlen($characters)-1)];
-		}
-		return "".$string; //To be sure it will return a string
 	}
 
 	//Idem as genRandomString($x) but we can play with words instead of alphanumerics

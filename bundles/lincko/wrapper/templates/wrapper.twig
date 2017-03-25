@@ -230,6 +230,7 @@ var wrapper_load_progress = {
 					},
 					complete: function(){
 						$(this).hide().recursiveRemove();
+						$('#wrapper_loading').addClass('display_none');
 					},
 				}
 			);
@@ -382,8 +383,15 @@ var wrapper_localstorage = {
 	logged: '{{ logged }}',
 };
 
-//Convert USer ID into integer
-wrapper_localstorage.uid = parseInt(wrapper_localstorage.uid, 10);
+//Convert User ID into integer
+if(wrapper_localstorage.uid){
+	wrapper_localstorage.uid = parseInt(wrapper_localstorage.uid, 10);
+} else {
+	wrapper_localstorage.uid = false;
+}
+
+var wrapper_neutral = new Image();
+wrapper_neutral.src = "{{ _filelatest('/lincko/launch/images/generic/base/generic/neutral.png') }}";
 
 //Load all JS libraries only after DOM load
 $(function() {
@@ -590,8 +598,8 @@ function getCookie(cname) {
 <div id="wrapper_loading">
 	{% include '/bundles/lincko/wrapper/templates/loading.twig' %}
 </div>
-{% if user_info_2 == 'Wechat' %}
-	<div id="wrapper_wechat">
+{% if user_info_2 == 'Wechat' and integration_wechat_show_official %}
+	<div id="wrapper_wechat" class="display_none">
 		{% include '/bundles/lincko/wrapper/templates/wechat.twig' %}
 	</div>
 {% endif %}

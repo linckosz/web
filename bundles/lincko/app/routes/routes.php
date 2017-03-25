@@ -3,6 +3,7 @@
 namespace bundles\lincko\app\routes;
 
 use \libs\OneSeventySeven;
+use \bundles\lincko\wrapper\models\WechatPublic;
 
 $app = \Slim\Slim::getInstance();
 
@@ -16,12 +17,10 @@ $app->get('/', function () use ($app) {
 			OneSeventySeven::unsetKey('reset_data');
 		}
 		if($app->lincko->data['user_info_2'] == 'Wechat' && $app->request->isGet()){
-			$option['appid'] = $app->lincko->integration->wechat['public_appid'];
-			$option['secret'] = $app->lincko->integration->wechat['public_secretapp'];
-			$wechat_package = (new \libs\Wechat($option))->getPackage();
-
-			foreach ($wechat_package as $key => $value) {
-				$app->lincko->data['wechat_package_'.$key] = $value;
+			if($wechat_package = WechatPublic::getPackage()){
+				foreach ($wechat_package as $key => $value) {
+					$app->lincko->data['wechat_package_'.$key] = $value;
+				}
 			}
 		}
 		$app->render('/bundles/lincko/app/templates/app/application.twig');
