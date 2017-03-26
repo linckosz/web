@@ -23,8 +23,7 @@ class ControllerMailchimp extends Controller {
 	public function __construct(){
 		$app = $this->app = \Slim\Slim::getInstance();
 		$datatp = (array)json_decode($app->request->getBody());
-		\libs\Watch::php($datatp, '$datatp', __FILE__, __LINE__, false, false, true);
-		if(isset($datatp['email_address'])){\libs\Watch::php('yes', '$datatp', __FILE__, __LINE__, false, false, true);
+		if(isset($datatp['email_address'])){
 			$this->json['email_address'] = $datatp['email_address'];
 		}
 		return true;

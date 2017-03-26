@@ -151,7 +151,7 @@
 	border-color: #E14A3E;
 }
 
-.submenu_app_chat_invitation_invite {
+.submenu_app_chat_invitation_invite, .submenu_app_chat_invitation_resend {
 	display: inline-block;
 	background-color: #F99F25;
 	padding: 4px 20px;
@@ -162,10 +162,10 @@
 	border-radius: 3px;
 	box-sizing: border-box;
 }
-.submenu_app_chat_invitation_invite:hover {
+.submenu_app_chat_invitation_invite:hover, .submenu_app_chat_invitation_resend:hover {
 	border-color: #FBC479;
 }
-.submenu_app_chat_invitation_invite:active {
+.submenu_app_chat_invitation_invite:active, .submenu_app_chat_invitation_resend:active {
 	background-color: #FBC479;
 	border-color: #FBC479;
 }
@@ -178,7 +178,7 @@
 	text-align: left;
 }
 .submenu_deco_read.submenu_app_chat_deco:last-child {
-	background-color: red;
+	
 }
 
 .submenu_deco.submenu_app_chat_deco {

@@ -85,7 +85,7 @@
 					<label class="account_label_inside selectable" for="account_joinus_email">
 						<div id="account_joinus_email_format">{{ _trans('web', 5, 24, 'html') }}{# Please ensure your e-mail format is correct. #}</div>
 						<span>{{ _trans('web', 5, 2, 'html') }}{# Email #}</span>
-						<input type="email" id="account_joinus_email" name="email" value="" class="selectable" />
+						<input type="email" id="account_joinus_email" name="email" value="{{ new_email|lower }}" class="selectable" />
 					</label>
 					<input type="password" name="foilautofill" value="" autocomplete="off" style="display:none;" />{# It avoids a behavior in Firefox which does not know Autocomplete tag, FF fulfill by default the first field #}
 					<label class="account_label_inside" for="account_joinus_password">

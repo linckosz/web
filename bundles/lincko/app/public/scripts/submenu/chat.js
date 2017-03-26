@@ -188,14 +188,21 @@ Submenu.prototype.Add_ChatContacts = function() {
 	var thumbnail = false;
 	var wrapper_content_id = this.id+"_chat_contacts";
 
-	submenu_wrapper.find("[find=submenu_wrapper_content]").empty();
-	submenu_wrapper.find("[find=submenu_wrapper_content]").prop("id", wrapper_content_id);
+	if($('#'+wrapper_content_id).length<=0){
+		submenu_wrapper.find("[find=submenu_wrapper_content]").recursiveEmpty();
+		submenu_wrapper.find("[find=submenu_wrapper_content]").prop("id", wrapper_content_id);
+	}
 
 	var temp = Lincko.storage.list('users', null);
 	//Add alphabetic username
 	for(var i in temp){
 		temp[i]['alphabet_order'] = Pinyin.GetQP(temp[i]['-username']);
 	}
+
+	var exists_tab = {};
+	submenu_wrapper.find('[find=tab_contact]').each(function(){
+		exists_tab[this.id] = true;
+	});
 
 	var visible = [];
 	var invitation = [];
@@ -210,17 +217,41 @@ Submenu.prototype.Add_ChatContacts = function() {
 		}
 	}
 
+	//Invitation
+	var div_id = that.id+"_submenu_app_chat_chat_invitationt_div";
+	var div = $('#'+div_id);
+	if(div.length<=0){
+		div = $('<div>');
+		div.prop("id", div_id);
+		submenu_wrapper.find("[find=submenu_wrapper_content]").append(div);
+	}
+
 	if(invitation.length > 0){
 		var Elem = $('#-submenu_app_chat_new_contact').clone();
-		Elem.prop("id", "");
-		Elem.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2304, 'html')); //A user has invited you
-		submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
+		var Elem_id = that.id+"_submenu_app_chat_chat_invitation";
+		if($('#'+Elem_id).length<=0){
+			Elem.prop("id", Elem_id);
+			if(invitation.length==1){
+				Elem.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2304, 'html')); //A user has invited you
+			} else {
+				Elem.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2318, 'html')); //Some users have invited you
+			}
+			div.append(Elem);
+			delete Elem;
+		}
+	} else {
+		$('#'+that.id+"_submenu_app_chat_chat_invitation").recursiveRemove();
 	}
+
 	contacts = Lincko.storage.sort_items(invitation, 'alphabet_order');
 	for(var i in contacts){
+		var Elem_id = that.id+"_submenu_app_chat_chat_invitation_"+contacts[i]['_id'];
+		delete exists_tab[Elem_id];
+		if($('#'+Elem_id).length>=1){
+			continue;
+		}
 		var Elem = $('#-submenu_app_chat_chat_contact').clone();
-		var Elem_id = that.id+"_submenu_app_chat_chat_contact_"+contacts[i]['_id'];
-		Elem.prop("id", "");
+		Elem.prop("id", Elem_id).attr("find", 'tab_contact');
 		Elem.removeClass("submenu_deco").addClass("submenu_deco_read");
 		thumbnail = Lincko.storage.getLinkThumbnail(contacts[i]['profile_pic']);
 		if(thumbnail){
@@ -234,7 +265,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 		}
 		Elem.find("[find=who]").html(wrapper_to_html(contacts[i]['-username']));
 		Elem.find("[find=invitation]").removeClass("display_none");
-		Elem.find("[find=invitation_accept]").removeClass("display_none").on("click", [contacts[i]['_id'], Elem_id], function(event) {
+		Elem.find("[find=invitation_accept]").removeClass("display_none").off('click').on("click", [contacts[i]['_id'], Elem_id], function(event) {
 			event.stopPropagation();
 			var users_id = event.data[0];
 			var param = {
@@ -255,7 +286,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 			Lincko.storage.data['users'][users_id]['_visible'] = true;
 			app_application_lincko.prepare('contacts_list', true);
 		});
-		Elem.find("[find=invitation_reject]").removeClass("display_none").on("click", [contacts[i]['_id'], Elem_id], function(event) {
+		Elem.find("[find=invitation_reject]").removeClass("display_none").off('click').on("click", [contacts[i]['_id'], Elem_id], function(event) {
 			event.stopPropagation();
 			var users_id = event.data[0];
 			var param = {
@@ -276,13 +307,100 @@ Submenu.prototype.Add_ChatContacts = function() {
 			Lincko.storage.data['users'][users_id]['_visible'] = false;
 			app_application_lincko.prepare('contacts_list', true);
 		});
-		submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
+		div.append(Elem);
+		delete Elem;
+	}
+
+	//Pending invitations
+	var div_id = that.id+"_submenu_app_chat_chat_pending_div";
+	var div = $('#'+div_id);
+	if(div.length<=0){
+		div = $('<div>');
+		div.prop("id", div_id);
+		submenu_wrapper.find("[find=submenu_wrapper_content]").append(div);
+	}
+
+	var pending = Lincko.storage.get('users', wrapper_localstorage.uid, 'pending');
+	var pending_length = 0;
+	for(var i in pending){
+		pending_length++;
+	}
+	if(pending_length > 0){
+		var Elem = $('#-submenu_app_chat_new_contact').clone();
+		var Elem_id = that.id+"_submenu_app_chat_chat_pending";
+		if($('#'+Elem_id).length<=0){
+			Elem.prop("id", Elem_id);
+			if(pending_length==1){
+				Elem.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2316, 'html')); //You have some pending invitations
+			} else {
+				Elem.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2317, 'html')); //You have some pending invitations
+			}
+			div.append(Elem);
+			delete Elem;
+		}
+	} else {
+		$('#'+that.id+"_submenu_app_chat_chat_pending").recursiveRemove();
+	}
+
+	for(var i in pending){
+		var Elem_id = that.id+"_submenu_app_chat_chat_pending_"+i;
+		delete exists_tab[Elem_id];
+		if($('#'+Elem_id).length>=1){
+			continue;
+		}
+		var Elem = $('#-submenu_app_chat_chat_contact').attr("find", 'tab_contact').clone();
+		Elem.prop("id", Elem_id);
+		Elem.removeClass("submenu_deco").addClass("submenu_deco_read");
+		thumbnail = Lincko.storage.getLinkThumbnail(pending[i][1]);
+		if(thumbnail){
+			Elem.find("[find=picture_src]").css('background-image','url("'+thumbnail+'")');
+		} else if(i==0){ //LinckoBot
+			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_roboto.src+'")');
+		} else if(i==1){ //Monkey King
+			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_monkeyking.src+'")');
+		} else {
+			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_single_user.src+'")');
+		}
+		Elem.find("[find=who]").html(wrapper_to_html(pending[i][0]));
+		Elem.find("[find=invitation]").removeClass("display_none");
+		Elem.find("[find=invitation_resend]").removeClass("display_none").off('click').on("click", [i, Elem_id], function(event) {
+			var param = {
+				exists: true,
+				users_id: event.data[0],
+			}
+			wrapper_sendAction(
+				param,
+				'post',
+				'user/invite',
+				null,
+				null,
+				function(){
+					base_show_error(Lincko.Translation.get('app', 2309, 'js')); //Your invitation has been sent.
+				}
+			);
+		});
+		div.append(Elem);
+		delete Elem;
+	}
+
+	//Contacts
+	var div_id = that.id+"_submenu_app_chat_chat_contact_div";
+	var div = $('#'+div_id);
+	if(div.length<=0){
+		div = $('<div>');
+		div.prop("id", div_id);
+		submenu_wrapper.find("[find=submenu_wrapper_content]").append(div);
 	}
 
 	contacts = Lincko.storage.sort_items(visible, 'alphabet_order');
 	for(var i in contacts){
-		var Elem = $('#-submenu_app_chat_chat_contact').clone();
-		Elem.prop("id", that.id+"_submenu_app_chat_chat_contact_"+contacts[i]['_id']);
+		var Elem_id = that.id+"_submenu_app_chat_chat_contact_"+contacts[i]['_id'];
+		delete exists_tab[Elem_id];
+		if($('#'+Elem_id).length>=1){
+			continue;
+		}
+		var Elem = $('#-submenu_app_chat_chat_contact').attr("find", 'tab_contact').clone();
+		Elem.prop("id", Elem_id);
 		thumbnail = Lincko.storage.getLinkThumbnail(contacts[i]['profile_pic']);
 		if(thumbnail){
 			Elem.find("[find=picture_src]").css('background-image','url("'+thumbnail+'")');
@@ -299,10 +417,18 @@ Submenu.prototype.Add_ChatContacts = function() {
 			event.stopPropagation();
 			submenu_chat_open_single(event.data[0], event.data[1]);
 		});
-		submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
+		div.append(Elem);
 		delete Elem;
 	}
-	$(window).resize();
+
+	//Delete elements that should not be in the list
+	for(var id in exists_tab){
+		$('#'+id).recursiveRemove();
+	}
+
+	//$(window).resize();
+	wrapper_IScroll_refresh();
+
 	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
 	delete submenu_wrapper;
 
@@ -621,7 +747,18 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 	}
 	else if(chat_status == "found" && data && data['id'] && typeof data['profile_pic']!="undefined" && typeof data['username']!="undefined"){
 		Elem_user.removeClass("display_none");
-		Elem_user.find("[find=invitation_invite]").removeClass("display_none").off("click");
+		
+		Elem_user.find("[find=invitation_invite]").off("click").addClass("display_none");
+		Elem_user.find("[find=invitation_resend]").off("click").addClass("display_none");
+
+		var field = 'invitation_invite';
+		var pending = Lincko.storage.get('users', wrapper_localstorage.uid, 'pending');
+		if(typeof pending == 'object' && typeof pending[data['id']] == 'object'){
+			field = 'invitation_resend';
+		}
+
+		Elem_user.find("[find="+field+"]").removeClass("display_none");
+		
 		var thumbnail = Lincko.storage.getProfileRaw(data['id'], data['updated_at']);
 		if(data['id']==0){ //LinckoBot
 			Elem_user.find("[find=picture_src]").css('background-image','url("'+app_application_icon_roboto.src+'")');
@@ -638,7 +775,7 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 		if(sub_that.param && typeof sub_that.param.invite_access != 'undefined'){
 			invite_access = sub_that.param.invite_access;
 		}
-		Elem_user.find("[find=invitation_invite]").click([param, invite_access], function(event){
+		Elem_user.find("[find="+field+"]").click([param, invite_access], function(event){
 			var param = {
 				exists: true,
 				users_id: event.data[0]['id'],
@@ -660,6 +797,7 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 		if(data && data['id'] && typeof data['profile_pic']!="undefined" && typeof data['username']!="undefined"){
 			Elem_user.removeClass("display_none");
 			Elem_user.find("[find=invitation_invite]").off("click").addClass("display_none");
+			Elem_user.find("[find=invitation_resend]").off("click").addClass("display_none");
 			var thumbnail = Lincko.storage.getProfileRaw(data['id'], data['updated_at']);
 			if(data['id']==0){ //LinckoBot
 				Elem_user.find("[find=picture_src]").css('background-image','url("'+app_application_icon_roboto.src+'")');

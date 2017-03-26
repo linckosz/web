@@ -53,7 +53,7 @@
 
 #app_content_top_contacts {
 	position: absolute;
-	top: 50%;
+	top: 24px;
 	right: 0;
 	padding: 6px;
 	cursor: pointer; cursor: hand;

@@ -191,6 +191,11 @@ submenu_list['app_project_edit'] = {
 				'post',
 				'project/delete'
 			);
+			var project = Lincko.storage.get('projects', projects_id);
+			if(project){
+				project['deleted_at'] = new wrapper_date().timestamp;
+				app_application_lincko.prepare(['projects', 'projects_'+projects_id], true);
+			}
 		},
 	},
 	/*
@@ -359,32 +364,6 @@ Submenu.prototype.Add_ProjectDIY = function(subm, diy, i, animation) {
 	}
 	return false;	
 }
-
-Submenu.prototype.Add_ProjectDeletion = function(subm) {
-	var that = this;
-	var submenu_wrapper = this.Wrapper();
-	var attribute = this.attribute;
-	var Elem = $('#-submenu_button').clone();
-	var preview = this.preview;
-	Elem.prop("id", '');
-	Elem.find("[find=submenu_button_title]").addClass("models_projects_deletion_button").html(attribute.title);
-	Elem.find("[find=submenu_button_value]").recursiveRemove();
-	if ("action" in attribute) {
-		if (!("action_param" in attribute)) {
-			attribute.action_param = null;
-		}
-		Elem.find("[find=submenu_button_title]").click(attribute.action_param, function(event){
-			attribute.action(Elem, that, event.data);
-		});
-	}
-	if ("class" in attribute) {
-		Elem.addClass(attribute['class']);
-	}
-	submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
-	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
-	delete submenu_wrapper;
-	return Elem;
-};
 
 Submenu.prototype.Add_ProjectNewField = function(subm) {
 	var that = this;

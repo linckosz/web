@@ -2,7 +2,9 @@
 
 namespace bundles\lincko\launch\routes;
 
+use \libs\OneSeventySeven;
 use \bundles\lincko\wrapper\models\Creation;
+use \bundles\lincko\wrapper\controllers\ControllerWrapper;
 
 $app = \Slim\Slim::getInstance();
 
@@ -42,6 +44,20 @@ $app->get('/invitation/:invitation_code', function ($invitation_code) use ($app)
 	if($app->lincko->data['logged']){
 		$app->router->getNamedRoute('root')->dispatch();
 	} else {
+		//It helps to fillin the field with proper email
+		if(!OneSeventySeven::get('youjian')){
+			$data = new \stdClass;
+			$data->invitation_code = $invitation_code;
+			$controller = new ControllerWrapper($data, 'post', false);
+			if($response = $controller->wrap_multi('invitation/email')){
+				if(isset($response->msg) && !empty($response->msg)){
+					$email = trim($response->msg);
+					if(filter_var($email, FILTER_VALIDATE_EMAIL)){
+						$app->lincko->data['new_email'] = $email;
+					}
+				}
+			}
+		}
 		$app->router->getNamedRoute('home')->dispatch();
 	}
 })

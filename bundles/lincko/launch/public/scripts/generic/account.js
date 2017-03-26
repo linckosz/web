@@ -242,7 +242,12 @@ function account_select(select) {
 		if($('#account_signin_email').val() != account_youjian){
 			$('#account_joinus_email').val($('#account_signin_email').val());
 		}
-		$('#account_joinus_email').focus();
+		if($('#account_joinus_email').val() != ''){
+			account_display_label($('#account_joinus_email'), false);
+			$('#account_joinus_password').focus();
+		} else {
+			$('#account_joinus_email').focus();
+		}
 	}
 }
 
