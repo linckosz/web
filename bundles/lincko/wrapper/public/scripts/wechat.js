@@ -9,14 +9,14 @@ function wrapper_wechat_alert(refresh){
 	if(typeof refresh == 'undefined'){
 		refresh = true;
 	}
-	$("#wrapper_wechat").removeClass('display_none');
+	$("#wrapper_wechat").css('display', 'block').removeClass('display_none');
 	$("#base_wrapper").addClass('wrapper_blur');
 	if(!wrapper_wechat_load || refresh){
 		wrapper_wechat_loader();
 	}
 }
 
-//We do not need to generate a dynamic QR code to follow the official account since we do not use it for login system here
+//We do not need to generate a dynamic QR code to follow the official account since we do not use it for login system here (we are already logged)
 //We keep the code, just in case we use it for login later
 function wrapper_wechat_loader(){
 	//$('#wrapper_wechat_qrcode').attr('src', wrapper_neutral.src); //Change to a transarency picture
@@ -26,4 +26,5 @@ function wrapper_wechat_loader(){
 
 if(wrapper_wechat_show_official){
 	wrapper_wechat_loader();
+	wrapper_wechat_alert();
 }

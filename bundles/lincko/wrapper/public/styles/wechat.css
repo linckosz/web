@@ -1,6 +1,7 @@
 
 #wrapper_wechat {
 	position: absolute;
+	display: none;
 }
 
 #wrapper_wechat_wall {
@@ -12,7 +13,7 @@
 	text-align: center;
 	background: rgba( 55, 55, 55, 0.9);
 	background-color: rgba( 55, 55, 55, 0.9);
-	z-index: 8000;
+	z-index: 9100;
 }
 
 #wrapper_wechat_box {
@@ -34,6 +35,10 @@
 
 #wrapper_wechat_info {
 	
+}
+
+#wrapper_wechat_domain {
+	font-size: 16px
 }
 
 #wrapper_wechat_qrcode {

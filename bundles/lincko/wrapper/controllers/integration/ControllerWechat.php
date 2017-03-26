@@ -217,14 +217,18 @@ class ControllerWechat extends Controller {
 		}
 
 		if($valid && $account=='pub' && $openid){
+			//It helps to track if we are using wechat browser and launch official account reminder
+			OneSeventySeven::set(array('wxpukoid' => $openid));
+		}
+
+		if($valid && $account=='pub' && $openid){
 			$app->lincko->data['integration_wechat_show_official'] = true;
-			$app = \Slim\Slim::getInstance();
 			$option['appid'] = $app->lincko->integration->wechat['public_appid'];
 			$option['secret'] = $app->lincko->integration->wechat['public_secretapp'];
 			$option['access_token'] = WechatPublic::access_token();
 			$wechat = new Wechat($option);
 			if($result = $wechat->users()){
-				if(isset($result->data) && isset($result->data->openid) && isset($result->data->openid[$openid])){
+				if(isset($result['openid']) && in_array($openid, $result['openid'])){
 					$app->lincko->data['integration_wechat_show_official'] = false;
 				}
 			}
