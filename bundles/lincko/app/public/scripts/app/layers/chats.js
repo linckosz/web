@@ -77,7 +77,11 @@ function app_layers_chats_feedChat(parent) {
 				var Elem = $('#'+ prefix + items[i]['root_type']+"_"+items[i]['root_id']);
 				if(Elem.length <= 0){
 					var Elem = this.action_param.addChat(items[i]);
-					var parent = this.action_param.list
+					var parent = this.action_param.list;
+					var parent_child  = $(parent).find(':first-child').first();
+					if(parent_child.length>0 && parent_child.hasClass('iscroll_sub_div')){
+						parent = parent_child;
+					}
 					Elem.detach(); //cut
 					var timestamp = list[Elem.prop('id')];
 					var Elems_bis = layer.find('[find=card]');
