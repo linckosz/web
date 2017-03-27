@@ -532,7 +532,7 @@ Submenu.prototype.Add_ChatAddUser = function() {
 
 		var str_ellipsis = '<i class="fa fa-ellipsis-v"></i>';
 		if(isIOS){ str_ellipsis = '<i class="fa fa-ellipsis-h"></i>'; }
-		//Elem.find('[find=text]').html(Lincko.Translation.get('app', 3604, 'html', {date: str_ellipsis})); //toto
+		Elem.find('[find=text]').html(Lincko.Translation.get('app', 2319, 'html', {ellipsis: str_ellipsis})); //Press [{ellipsis}] and Send to Chat or Moments to invite your WeChat contacts
 		submenu_wrapper.find("[find=submenu_wrapper_bottom]").addClass('submenu_wrapper_bottom_wxNotice').append(Elem);
 	}
 
@@ -633,7 +633,7 @@ var submenu_chat_add_user_options_build = function(elem, subm){
 		elem.addClass('submenu_app_chat_add_user_options_wxMargin');
 	}
 	submenu_chat_add_user_options_build_btn.myURL(elem.find('[find=btn_myURL]'), subm);
-	submenu_chat_add_user_options_build_btn.myQR(elem.find('[find=btn_myQR]'), elem.find('[find=popup_QRcode_wrapper]'));
+	submenu_chat_add_user_options_build_btn.myQR(elem.find('[find=btn_myQR]'));
 	submenu_chat_add_user_options_build_btn.scan(elem.find('[find=btn_scan]'), subm);
 }
 
@@ -662,13 +662,8 @@ var submenu_chat_add_user_options_build_btn = {
 		);
 	},
 	myQR: function(elem, elem_QR_popup){
-		elem_QR_popup.find('img').attr('src', Lincko.storage.generateMyQRcode());
-		//elem_QR_img.addClass('submenu_personal_profile_picture');
-		elem_QR_popup.click(function(){
-			$(this).addClass('display_none');
-		});
 		elem.click(function(){
-			elem_QR_popup.removeClass('display_none');
+			base_toggle_myQRcode();
 		});
 	},
 	scan: function(elem, subm){

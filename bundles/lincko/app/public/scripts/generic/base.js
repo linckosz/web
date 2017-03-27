@@ -390,8 +390,8 @@ JSfiles.finish(function(){
 		}
 		else if(base_is_wechat && wx && wx.onMenuShareAppMessage && wx.onMenuShareTimeline){
 			base_wechat_shareData = {
-				title: 'Lincko - The way of projects',
-				desc: Lincko.storage.get('users', wrapper_localstorage.uid, 'username')+'has invited you to collaborate using Lincko.\nhttps://'+document.domainRoot,
+				title: 'Lincko - '+Lincko.Translation.get('wrapper', 4, 'js'), //The way of projects
+				desc: Lincko.Translation.get('app', 2320, 'js', {username: Lincko.storage.get('users', wrapper_localstorage.uid, 'username')})+'\n'+top.location.protocol+'//'+document.domainRoot, //[{username}] has invited you to collaborate using Lincko.
 				link: Lincko.storage.generateMyURL(),
 				imgUrl: base_wechat_shareImg,
 				trigger: function (res) {},
@@ -413,4 +413,12 @@ JSfiles.finish(function(){
 base_removeLineBreaks = function(str){
 	if(typeof str != 'string'){ return false; }
 	return str.replace(/(\r\n|\n|\r)/gm, "");
+}
+
+base_toggle_myQRcode = function(){
+	var elem = $('#base_myQRcode_popup');
+	if(!elem.find('img').attr('src')){
+		elem.find('img').attr('src', Lincko.storage.generateMyQRcode());
+	}
+	elem.toggleClass('display_none');
 }

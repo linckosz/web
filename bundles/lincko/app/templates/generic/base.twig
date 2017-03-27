@@ -163,6 +163,10 @@
 		</div>
 		<div id="base_error"></div>
 		<input id="base_input_focusHelper" type="text" readonly="readonly" class="visibility_hidden" />{# this is an empty input used as focus control #}
+		<div id="base_myQRcode_popup" class="base_myQRcode_popup display_none base_pointer" onclick="base_toggle_myQRcode()">
+				<div></div>
+				<img />
+		</div>
 		{% block app_application %}
 		{% endblock %}
 		<div id="end_base" class="visibility_hidden">

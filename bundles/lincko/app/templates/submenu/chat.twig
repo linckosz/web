@@ -58,31 +58,26 @@
 		<div find="btn_myURL" class="base_pointer">
 			<span>
 				<div find="icon" class="fa fa-link base_color_text_linckoOrange"></div>
-				<div>My URL</div>
+				<div>{{ _trans('app', 8, 7, 'html') }}{# My URL #}</div>
 			</span>
 		</div>
 		<div find="btn_myQR" class="base_pointer">
 			<span>
 				<div find="icon" class="fa fa-qrcode"></div>
-				<div>My QR Code</div>
+				<div>{{ _trans('app', 8, 8, 'html') }}{# My QR Code #}</div>
 			</span>
 		</div>
 		<div find="btn_scan" class="base_pointer">
 			<span>
 				<div find="icon" class="icon-scan base_color_text_linckoOrange"></div>
-				<div>Scan</div>
+				<div>{{ _trans('app', 8, 9, 'html') }}{# Scan #}</div>
 			</span>
 		</div>
-	</div>
-	<div find="popup_QRcode_wrapper" class="display_none base_pointer">
-		<img />
 	</div>
 </div>
 
 <div id="-submenu_app_chat_wxNotice" class="submenu_app_chat_wxNotice base_pointer base_tapHighlight_off">
 	<i find="icon" class="fa fa-wechat"></i>
-	<div find="text">
-		Press <i class="fa fa-ellipsis-h"></i> and Send to Chat or Moments to invite your WeChat contacts
-	</div>
+	<div find="text">{# **use JS to add translation** Press [{ellipsis}] and Send to Chat or Moments to invite your WeChat contacts #}</div>
 	<i find="icon" class="fa fa-hand-o-up base_color_text_linckoOrange"></i>
 </div>

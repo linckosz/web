@@ -195,6 +195,28 @@ html, .font_sans_serif {
 	display: none;
 }
 
+.base_myQRcode_popup{
+	position: absolute;
+    top: 0px;
+    bottom: 0px;
+    background-color: rgba(0, 0, 0, 0.6);
+    left: 0px;
+    right: 0px;
+    z-index: 3001;
+}
+.base_myQRcode_popup img{
+	width: 70%;
+    max-width: 300px;
+    position: absolute;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    top: 46%;
+    left: 50%;
+}
+
 .cursor_progress {
 	cursor: progress !important;
 }
