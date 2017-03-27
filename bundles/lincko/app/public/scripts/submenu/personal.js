@@ -336,7 +336,7 @@ submenu_list['personal_info'] = {
 		"title": Lincko.Translation.get('app', 54, 'html'), //Send a message
 		"class": "submenu_deco",
 		"action": function(Elem, subm){
-			if(Lincko.storage.get('users', subm.param, '_visible')){
+			if(subm.param==wrapper_localstorage.uid || Lincko.storage.get('users', subm.param, '_visible')){
 				submenu_chat_open_single(subm, subm.param);
 			} else {
 				var param = {
@@ -356,7 +356,7 @@ submenu_list['personal_info'] = {
 			}
 		},
 		"now": function(Elem, subm){
-			if(!Lincko.storage.get('users', subm.param, '_visible')){
+			if(subm.param!=wrapper_localstorage.uid && !Lincko.storage.get('users', subm.param, '_visible')){
 				Elem.find("[find=submenu_button_title]").html(Lincko.Translation.get('app', 97, 'html')); //Send an invitation request
 			}
 		},

@@ -219,12 +219,12 @@ if(isset($_SERVER['LINCKO_WORKSPACE']) && !empty($_SERVER['LINCKO_WORKSPACE'])){
 //Information for coders
 $app->lincko->data['domain_debug'] = false;
 $subdomain = '';
-if(empty($_SERVER['LINCKO_BACK'])){
+if(empty($_SERVER['LINCKO_FRONT'])){
 	$subdomain .= 'master';
 } else {
-	$subdomain .= $_SERVER['LINCKO_BACK'];
+	$subdomain .= $_SERVER['LINCKO_FRONT'];
 }
-if(empty($_SERVER['LINCKO_FRONT'])){
+if(empty($_SERVER['LINCKO_BACK'])){
 	$subdomain .= '-master';
 } else {
 	$subdomain .= '-'.$_SERVER['LINCKO_BACK'];

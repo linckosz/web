@@ -331,9 +331,9 @@ Submenu.prototype.Add_ChatContacts = function() {
 		if($('#'+Elem_id).length<=0){
 			Elem.prop("id", Elem_id);
 			if(pending_length==1){
-				Elem.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2316, 'html')); //You have some pending invitations
+				Elem.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2321, 'html')); //Pending
 			} else {
-				Elem.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2317, 'html')); //You have some pending invitations
+				Elem.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2321, 'html')); //Pending
 			}
 			div.append(Elem);
 			delete Elem;
@@ -905,7 +905,7 @@ var submenu_chat_label = function(that, sub_that, focus, force) {
 	if(typeof force == 'undefined'){ force = false; }
 	Elem = $(that);
 	var input = Elem.find("[find=submenu_app_chat_search_input]");
-	var text_help = Elem.find("[find=submenu_app_chat_search_text_help]");
+	var text_help = Elem.find("[find=submenu_app_chat_search_text_help_span]");
 	var val = $.trim(input.val());
 	if(val.length<=0){
 		if(text_help.is(':hidden')){
