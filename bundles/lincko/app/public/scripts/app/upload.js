@@ -305,8 +305,17 @@ $(function () {
 					var temp_index = this.action_param;
 					if(app_upload_files.lincko_files[temp_index].lincko_start){
 						app_upload_files.lincko_files[temp_index].lincko_start = false;
-						setTimeout(function(temp_index) {
-							app_upload_files.lincko_files[temp_index].submit();
+						var uploadInterval = setInterval(function(temp_index) {
+							if(typeof app_upload_files.lincko_files[temp_index] == 'undefined'){
+								clearInterval(uploadInterval);
+							} else {
+								var data = app_upload_files.lincko_files[temp_index];
+								if(data._processQueue && data._processQueue.state && data._processQueue.state() != "pending")
+								{
+									app_upload_files.lincko_files[temp_index].submit();
+									clearInterval(uploadInterval);
+								}
+							}		
 						}, 300, temp_index);
 						app_application_garbage.remove(this.id);
 					}

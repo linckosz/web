@@ -407,7 +407,6 @@ inputter.prototype.buildLayer = function()
 								if(this.hasTask)
 								{
 									item.find(".inputter_ico").addClass("icon-links");
-
 								}
 								else
 								{

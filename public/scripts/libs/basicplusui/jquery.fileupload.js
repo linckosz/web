@@ -1039,6 +1039,7 @@
                     $.Event('add', {delegatedEvent: e}),
                     newData
                 );
+        
                 return result;
             });
             return result;

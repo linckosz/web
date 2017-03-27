@@ -203,6 +203,25 @@ Submenu.prototype.Add_ChatContents = function() {
 	app_application_lincko.add(submenu_wrapper_id, 'upload', function(){ //We cannot simplify because Elem is not the HTML object, it's a JS Submenu object
 		var chat_item = this.action_param[2];
 		chat_item.app_chat_feed_uploading_file();
+
+		//toto：to test uploading file
+		// var msg = '';
+		// for(var i in  app_upload_files.lincko_files)
+		// {
+		// 	 msg += app_upload_files.lincko_files[i].lincko_name + ':' + app_upload_files.lincko_files[i].lincko_status +':'+lincko_start+ '<br/>';
+		// 	 $("#1_submenu_wrapper_newchat_false_chat_contents_wrapper").append("<li>"+msg+"</li>");
+		// }
+
+		var submenu_id = this.action_param[0];
+		var scroll_time = this.action_param[1];
+		var overthrow_id = "overthrow_"+submenu_id;
+		var help_iscroll_elem =  $('#'+that.id+'_help_iscroll').get(0);
+		if(myIScrollList[overthrow_id] && help_iscroll_elem){
+			myIScrollList[overthrow_id].refresh();
+			app_submenu_scrollto(myIScrollList[overthrow_id], help_iscroll_elem, scroll_time);
+		}
+
+
 	}, [that.id, id, that.param.chatFeed, position]);
 
 	

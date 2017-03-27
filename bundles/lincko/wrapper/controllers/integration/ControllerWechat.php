@@ -397,7 +397,7 @@ class ControllerWechat extends Controller {
 					$lang = $app->trans->setLanguageNumber(intval(substr($integration_code, -2, 2))); //set user laguage
 					$timeoffset = intval(substr($integration_code, -4, 2)); //set user timeoffset
 				}
-				$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper',5 , 2, array(), $lang)); //[toto] login msg
+				$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper',5 , 2, array(), $lang).$app->trans->getBRUT('wrapper', 5, rand(,), array(), $lang))); //[toto] login msg
 
 				$user = $wechat->user($open_id);
 			}
