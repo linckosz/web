@@ -347,7 +347,6 @@ class ControllerWechat extends Controller {
 				}
 			}
 		}
-		\libs\Watch::php($response, '$response', __FILE__, __LINE__, false, false, true);
 		return exit(0);
 	}
 
@@ -385,11 +384,11 @@ class ControllerWechat extends Controller {
 						$lang = $app->trans->setLanguageNumber(intval(substr($integration_code, -2, 2))); //set user laguage
 						$timeoffset = intval(substr($integration_code, -4, 2)); //set user timeoffset
 					}
-					$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 1, 4, array(), $lang)); //[toto] follow msg
-					$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 1, 4, array(), $lang)); //[toto] login msg
+					$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 5, 1, array(), $lang)); //[toto] follow msg
+					$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 5, 2, array(), $lang)); //[toto] login msg
 					$user = $wechat->user($open_id);
 				} else {
-					$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 1, 4, array(), $lang)); //[toto] follow msg
+					$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 5, 1, array(), $lang)); //[toto] follow msg
 				}
 			} else if(strtolower($data->Event) == 'scan'){
 				$open_id = (string) $data->FromUserName;
@@ -398,7 +397,7 @@ class ControllerWechat extends Controller {
 					$lang = $app->trans->setLanguageNumber(intval(substr($integration_code, -2, 2))); //set user laguage
 					$timeoffset = intval(substr($integration_code, -4, 2)); //set user timeoffset
 				}
-				$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 1, 4, array(), $lang)); //[toto] login msg
+				$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper',5 , 2, array(), $lang)); //[toto] login msg
 
 				$user = $wechat->user($open_id);
 			}
