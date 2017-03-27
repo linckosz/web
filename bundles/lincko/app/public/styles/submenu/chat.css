@@ -210,8 +210,7 @@
 	position: absolute;
 	background-color: #FFFFFF;
 	box-sizing: border-box;
-	height: 24px;
-	padding: 16px 4px;
+	padding: 2px 4px 2px 4px;
 	margin-top: 5px;
 	margin-bottom: 5px;
 	width: 94%;
@@ -223,6 +222,9 @@
 	font-size: 14px;
 	font-weight: 200;
 	cursor: text;
+
+	height: 30px;
+    line-height: 30px;
 	z-index: 1;
 }
 
@@ -239,8 +241,8 @@
 
 .submenu_app_chat_search {
 	box-sizing: border-box;
-	height: 24px;
-	padding: 16px 4px;
+	height: 30px;
+	padding: 2px 4px 2px 4px;
 	margin-top: 5px;
 	margin-bottom: 5px;
 	width: 94%;
@@ -377,7 +379,7 @@
 }
 
 .submenu_app_chat_add_user>label{
-	
+
 }
 
 .submenu_app_chat_user_view {
