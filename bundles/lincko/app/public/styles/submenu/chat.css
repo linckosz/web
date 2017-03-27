@@ -347,7 +347,11 @@
 }
 .submenu_app_chat_add_user_options [find=options_wrapper] [find=icon]{
 	font-size: 40px;
+	line-height: 40px;
 	padding-bottom: 14px;
+}
+.submenu_app_chat_add_user_options [find=options_wrapper] [find=icon].fa-link{
+	font-size: 34px;
 }
 
 .submenu_app_chat_add_user_options [find=popup_QRcode_wrapper] {
