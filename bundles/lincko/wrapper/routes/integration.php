@@ -46,6 +46,13 @@ $app->group('/integration', function () use ($app) {
 		)
 		->name('integration_wechat_official_post');
 
+
+		$app->get(
+			'/wxgetmedia',
+			'\bundles\lincko\wrapper\controllers\integration\ControllerWechat:media_get'
+		)
+		->name('integration_wechat_media_get');
+
 	});
 
 	//Opened on Mobile after scanning after scanning Lincko integration QR code

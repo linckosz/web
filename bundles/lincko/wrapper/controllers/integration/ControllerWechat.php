@@ -347,6 +347,7 @@ class ControllerWechat extends Controller {
 				}
 			}
 		}
+		\libs\Watch::php($response, '$response', __FILE__, __LINE__, false, false, true);
 		return exit(0);
 	}
 
@@ -420,6 +421,123 @@ class ControllerWechat extends Controller {
 			}
 		}
 
+	}
+
+
+	public function media_get(){
+		$app = \Slim\Slim::getInstance();
+
+		$option['appid'] = 'wx268709cdc1a8e280';
+		$option['secret'] = '03fab389a36166cd1f75a2c94f5257a0';
+		$wechat = new Wechat($option);
+		$wechat->getToken();
+
+
+		ob_clean();
+		http_response_code(200);
+		
+		$list = $wechat->menus();
+		echo '<table>';
+		echo '<tr><td>title</td><td>type</td><td>subtitle</td><td>subtype</td><td>value</td></tr>';
+		\libs\Watch::php($list['button'], '$files', __FILE__, __LINE__, false, false, true);
+		 foreach ($list['button'] as $key => $value) {
+		 	echo '<tr>';
+		 	echo '<td>' . $value['name'] . '</td>';
+		 	echo '<td>' . (isset($value['type']) ? $value['type'] : '') . '</td>'; 
+		 
+		 	
+		 	if(isset($value['type'])){
+		 		echo '<td></td>';
+				echo '<td></td>';
+				echo '<td>' . $value['url'] . '</td>';
+				echo '</tr>';
+		 	}
+		 	else{
+
+			 	if(isset($value['sub_button'])){
+			 		foreach ($value['sub_button'] as $sub_key => $sub_value) {
+			 			if($sub_key == 0)
+			 			{
+			 				echo '<td>' . $sub_value['name'] . '</td>';
+							echo '<td>' . $sub_value['type'] . '</td>';
+							echo '<td>' . $sub_value['media_id'] . '</td>';
+							echo '</tr>';
+			 			}
+			 			else
+			 			{
+			 				echo '<tr>';
+		 					echo '<td></td>'; 
+		 					echo '<td></td>';
+					 		echo '<td>' . $sub_value['name'] . '</td>';
+							echo '<td>' . $sub_value['type'] . '</td>';
+							echo '<td>' . $sub_value['media_id'] . '</td>';
+							echo '</tr>';
+			 			}
+		 			}
+			 	}
+			 	else
+			 	{
+			 		echo '<td></td>';
+					echo '<td></td>';
+					echo '<td></td>';
+					echo '</tr>';
+	 			}
+		 		
+		 	}
+		 	
+		 }
+		 echo '</table>';
+		
+
+
+
+		echo '<style>
+			table {
+				border: none;
+				border-spacing: 0;
+				border-collapse: collapse;
+				padding: 4px;
+				white-space: nowrap;
+			}
+			tr, td {
+				border: solid 1px;
+				border-spacing: 0;
+				border-collapse: collapse;
+				padding: 4px 8px;
+			}
+			.perc {
+				float: left;
+				color:#979797;
+				padding-right: 20px;
+			}
+		</style>';
+
+
+
+		
+
+
+		// $list = $wechat->material_lists('news', 0, 20);
+		// echo '<table>';
+		// foreach ($list['item'] as $key => $value) {
+		// 	echo '<tr>';
+		// 	echo "<td>$key</td>";
+		// 	echo ('<td>' . $value['media_id'] . '</td>');
+		// 	echo '<td>';
+
+		// 	echo '<table>';
+		// 	foreach ($value['content']['news_item'] as $item_key => $item_value) {
+		// 		echo '<tr>';
+		// 			echo '<td>'.$item_value["title"].'</td>';
+		// 		echo '</tr>';
+		// 	}
+		// 	echo '</table>';
+
+		// 	echo '</td>';
+		// 	echo '</tr>';
+		// }
+		// echo '</table>';
+		return exit(0);
 	}
 
 }
