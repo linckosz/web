@@ -196,7 +196,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 	var temp = Lincko.storage.list('users', null);
 	//Add alphabetic username
 	for(var i in temp){
-		temp[i]['alphabet_order'] = Pinyin.GetQP(temp[i]['-username']);
+		temp[i]['alphabet_order'] = Pinyin.getPinyin(temp[i]['-username']);
 	}
 
 	var exists_tab = {};
