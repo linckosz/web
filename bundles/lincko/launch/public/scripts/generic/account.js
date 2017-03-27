@@ -458,7 +458,7 @@ $("#account_joinus_email, #account_joinus_password, #account_joinus_captcha, #ac
 	blur: function(){ account_display_label(this, false); },
 	change: function(){ account_display_label(this, false); },
 	copy: function(){ account_display_label(this, true); },
-	past: function(){ account_display_label(this, true); },
+	paste: function(){ account_display_label(this, true); },
 	cut: function(){ account_display_label(this, true); },
 	keyup: function(e) {
 		if (e.which != 13) {
@@ -584,7 +584,7 @@ $("#account_joinus_password").addClass('base_input_text_error').on({
 	},
 	change: function(){ account_joinus_password_tooltip(); },
 	copy: function(){ account_joinus_password_tooltip(); },
-	past: function(){ account_joinus_password_tooltip(); },
+	paste: function(){ account_joinus_password_tooltip(); },
 	cut: function(){ account_joinus_password_tooltip(); },
 	keyup: function() { account_joinus_password_tooltip(); },
 });

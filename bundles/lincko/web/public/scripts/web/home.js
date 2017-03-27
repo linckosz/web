@@ -101,7 +101,7 @@ $("#home_joinus_email, #home_joinus_password, #home_joinus_captcha").on({
 	blur: function(){ home_display_label(this, false); },
 	change: function(){ home_display_label(this, false); },
 	copy: function(){ home_display_label(this, true); },
-	past: function(){ home_display_label(this, true); },
+	paste: function(){ home_display_label(this, true); },
 	cut: function(){ home_display_label(this, true); },
 	keyup: function(e) {
 		if (e.which != 13) {

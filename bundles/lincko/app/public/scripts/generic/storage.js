@@ -2552,7 +2552,7 @@ $(window).on({
 	keyup:		function(){ storage_check_timing.set(storage_check_timing.fast, false, false, true); },
 	change:		function(){ storage_check_timing.set(storage_check_timing.fast, false, false, true); },
 	copy:		function(){ storage_check_timing.set(storage_check_timing.fast, false, false, true); },
-	past:		function(){ storage_check_timing.set(storage_check_timing.fast, false, false, true); },
+	paste:		function(){ storage_check_timing.set(storage_check_timing.fast, false, false, true); },
 	mousedown:	function(){ storage_check_timing.set(storage_check_timing.fast, false, false, true); },
 });
 

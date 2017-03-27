@@ -56,7 +56,7 @@ $("#home_news_email").on({
 	blur: function(){ home_display_label(this, false); },
 	change: function(){ home_display_label(this, false, true); },
 	copy: function(){ home_display_label(this, true, true); },
-	past: function(){ home_display_label(this, true, true); },
+	paste: function(){ home_display_label(this, true, true); },
 	cut: function(){ home_display_label(this, true, true); },
 	keyup: function(e) {
 		if (e.which != 13) {

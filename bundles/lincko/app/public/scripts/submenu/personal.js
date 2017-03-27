@@ -662,7 +662,7 @@ Submenu.prototype.Add_ProfileInput = function() {
 			blur: function(){ attribute.action(Elem, that, true, true) },
 			change: function(){ attribute.action(Elem, that) },
 			copy: function(){ attribute.action(Elem, that) },
-			past: function(){ attribute.action(Elem, that, true) },
+			paste: function(){ attribute.action(Elem, that, true) },
 			cut: function(){ attribute.action(Elem, that, true) },
 			keyup: function(e) {
 				if (e.which != 13) {

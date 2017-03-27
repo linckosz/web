@@ -163,7 +163,7 @@ $("#account_joinus_email, #account_joinus_password, #account_joinus_captcha, #ac
 	blur: function(){ account_display_label(this, false); },
 	change: function(){ account_display_label(this, false); },
 	copy: function(){ account_display_label(this, true); },
-	past: function(){ account_display_label(this, true); },
+	paste: function(){ account_display_label(this, true); },
 	cut: function(){ account_display_label(this, true); },
 	keyup: function(e) {
 		if (e.which != 13) {

@@ -550,7 +550,6 @@ Submenu.prototype.Add_ChatAddUser = function() {
 		blur: function(e){ e.stopPropagation(); submenu_chat_label(this, that); },
 		change: function(e){ e.stopPropagation(); submenu_chat_label(this, that); },
 		copy: function(e){ e.stopPropagation(); submenu_chat_label(this, that); },
-		past: function(e){ e.stopPropagation(); submenu_chat_label(this, that, true); },
 		paste: function(e){ e.stopPropagation(); submenu_chat_label(this, that, true); },
 		cut: function(e){ e.stopPropagation(); submenu_chat_label(this, that); },
 		keyup: function(e) {

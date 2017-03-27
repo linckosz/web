@@ -122,7 +122,7 @@ function base_form_field_show_error(input){
 	input.addClass('base_input_text_error').on({
 		change: function(){ base_form_field_hide_error(); },
 		copy: function(){ base_form_field_hide_error(); },
-		past: function(){ base_form_field_hide_error(); },
+		paste: function(){ base_form_field_hide_error(); },
 		cut: function(){ base_form_field_hide_error(); },
 		keyup: function(e) {
 			if (e.which != 13) {
