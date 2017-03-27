@@ -78,7 +78,12 @@ class WechatPublic {
 	public static function getPackage(){
 		$app = \Slim\Slim::getInstance();
 		$ticket = self::jsapi_ticket();
-		$url = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].'/';
+		$url = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'];
+		if($app->lincko->data['user_info_0'] == 'Macintosh'){
+			$url .= $_SERVER['REQUEST_URI'];
+		} else {
+			$url .= '/';
+		}
 		$nonceStr = STR::random(16);
 		$timestamp = time();
 		$signature = sha1("jsapi_ticket=$ticket&noncestr=$nonceStr&timestamp=$timestamp&url=$url");
