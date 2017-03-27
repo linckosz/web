@@ -384,11 +384,11 @@ class ControllerWechat extends Controller {
 						$lang = $app->trans->setLanguageNumber(intval(substr($integration_code, -2, 2))); //set user laguage
 						$timeoffset = intval(substr($integration_code, -4, 2)); //set user timeoffset
 					}
-					$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 5, 1, array(), $lang)); //[toto] follow msg
-					$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 5, 2, array(), $lang)); //[toto] login msg
+					$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 5, 1, array(), $lang)); //Welcome to Lincko Use the Lincko button to login...
+					$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 5, 2, array(), $lang)); //Login successful!
 					$user = $wechat->user($open_id);
 				} else {
-					$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 5, 1, array(), $lang)); //[toto] follow msg
+					$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 5, 1, array(), $lang)); //Welcome to Lincko Use the Lincko button to login...
 				}
 			} else if(strtolower($data->Event) == 'scan'){
 				$open_id = (string) $data->FromUserName;
@@ -397,7 +397,7 @@ class ControllerWechat extends Controller {
 					$lang = $app->trans->setLanguageNumber(intval(substr($integration_code, -2, 2))); //set user laguage
 					$timeoffset = intval(substr($integration_code, -4, 2)); //set user timeoffset
 				}
-				$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper',5 , 2, array(), $lang).$app->trans->getBRUT('app', 8000, rand(9901, 9946), array(), $lang))); //[toto] login msg
+				$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper',5 , 2, array(), $lang)."\n\n".$app->trans->getBRUT('app', 8000, rand(9901, 9946), array(), $lang)); //Login successful!
 
 				$user = $wechat->user($open_id);
 			}
