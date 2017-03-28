@@ -3428,6 +3428,9 @@ skylist.prototype.updateFakeCards = function(){
 					duration: 200,
 				}).velocity('fadeIn', {
 					mobileHA: hasGood3Dsupport,
+					complete: function(){
+						$(this).attr('style','');
+					},
 				});
 				updated = true;
 			}

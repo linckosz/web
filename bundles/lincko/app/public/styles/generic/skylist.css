@@ -296,6 +296,9 @@
 	margin-bottom: 3px;
 	/*height: 81px;*/
 }
+.skylist_card[fake] [find=card_center] {
+	opacity: 0.6;
+}
 .skylist_card_noCard {
 	text-align: center;
 	margin-right: 24px;
