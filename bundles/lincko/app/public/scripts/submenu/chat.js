@@ -684,6 +684,9 @@ var submenu_chat_add_user_options_build_btn = {
 						});
 					}
 					submenu_chat_new_user_result(subm, null, "scanner");
+					if(base_is_wechat){
+						base_scanner.subm = subm; //allow access to subm for wechat scan cancel and fail callbacks
+					}
 				}
 			});
 		} else {

@@ -110,6 +110,7 @@
 							setDecodedCallback: function(fn) {
 								this.cb_decoded = fn;
 							},
+							subm: null, //store subm here so that "noresult" can be called on cancel callback
 							render: function(Elem){
 								wx.scanQRCode({
 									needResult: 1,
@@ -120,6 +121,18 @@
 											base_scanner.cb_decoded(res.resultStr);
 										} else {
 											base_show_error(Lincko.Translation.get('app', 2314, 'html'), true); //Operation failed.
+										}
+									},
+									cancel: function(){
+										if(base_scanner.subm){
+											submenu_chat_new_user_result(base_scanner.subm, null, "noresult");
+											base_scanner.subm = null;											
+										}
+									},
+									fail: function(){
+										if(base_scanner.subm){
+											submenu_chat_new_user_result(base_scanner.subm, null, "noresult");
+											base_scanner.subm = null;											
 										}
 									},
 								});
