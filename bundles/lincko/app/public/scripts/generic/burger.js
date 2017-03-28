@@ -173,7 +173,7 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter
 	  	//sometimes, for some input methods, focus_node.nodeValue reflects the latest typed characters
 	  	if(latestChar == latestChar_prev  && latestChar_node != latestChar_prev && caretIndex != 0){ 
 	  		latestChar = latestChar_node; 
-	  		if(focus_node.nodeValue && (focus_node.nodeValue).length > 1){
+	  		if(focus_node && focus_node.nodeValue && (focus_node.nodeValue).length > 1){
 	  			latestChar_prev = ((focus_node.nodeValue).slice(-2))[0];
 	  		}
 	  		else{
