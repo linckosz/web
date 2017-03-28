@@ -564,10 +564,7 @@ var burger_attach_clickHandler = {
 				};
 
 				var cb_begin = function(){
-					if(!Lincko.storage.data[lincko_type][lincko_id]){ //probably tried to update fake item, but fake item has already been deleted
-						base_show_error(Lincko.Translation.get('app', 2314, 'html'), true); //Operation failed.
-					}
-					else if(Lincko.storage.data[lincko_type][lincko_id]['duration']){
+					if(Lincko.storage.data[lincko_type][lincko_id]['duration']){
 						Lincko.storage.data[lincko_type][lincko_id]['duration'] = duration;
 					}
 					

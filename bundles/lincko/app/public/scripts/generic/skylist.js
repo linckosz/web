@@ -1663,7 +1663,7 @@ skylist.prototype.addTask = function(item){
 
 	if(that.Lincko_itemsList_filter.view == 'paper'){
 		var elem_title_spanUser = burger_spanUser(in_chargeID, in_charge);
-		if(!Lincko.storage.get('projects', item._parent[1])['personal_private']){ 
+		if(!item.fake && !Lincko.storage.get('projects', item._parent[1])['personal_private']){ 
 			burger_attach_clickHandler.in_charge(elem_title_spanUser, item['_type'], item['_id'], null, true);
 		}
 		elem_title.append(elem_title_spanUser);
@@ -1671,7 +1671,7 @@ skylist.prototype.addTask = function(item){
 
 	//Elem.find('[find=name_hidden]').toggleClass('display_none');
 	Elem.find('[find=name]').html(in_charge);
-	if( !Lincko.storage.get("projects", app_content_menu.projects_id, 'personal_private') && !responsive.test("maxMobileL") ){
+	if(!item.fake && !Lincko.storage.get("projects", app_content_menu.projects_id, 'personal_private') && !responsive.test("maxMobileL") ){
 		//burgerN.assignTask(Elem.find('input[find=name_hidden]'), item);
 		var elem_nameWrapper = Elem.find('[find=nameWrapper]').click(function(event){
 			event.stopPropagation();
@@ -1939,7 +1939,9 @@ skylist.prototype.addTask = function(item){
 
 	if(that.Lincko_itemsList_filter.view == 'paper'){
 		var elem_title_spanDate = burger_spanDate(item['start']+item['duration'], duedate);
-		burger_attach_clickHandler.calendar(elem_title_spanDate, item['_type'], item['_id'], null, true);
+		if(!item.fake){
+			burger_attach_clickHandler.calendar(elem_title_spanDate, item['_type'], item['_id'], null, true);
+		}
 		elem_title.append(elem_title_spanDate);
 		elem_title.append(' ');
 	}
@@ -1956,7 +1958,7 @@ skylist.prototype.addTask = function(item){
 	// if(!responsive.test("maxMobileL")){
 	// 	burger_calendar(elem_calendar_timestamp, elem_calendar );
 	// }
-	if(!responsive.test("maxMobileL")){
+	if(!item.fake && !responsive.test("maxMobileL")){
 		elem_calendar.click(function(event){
 			event.stopPropagation();
 		});
