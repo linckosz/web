@@ -1455,10 +1455,10 @@ var burger_renderCalendar = function(id, defaultDate, fn_onSelect){
 		//minDate: 0, //set minDate 0 to allow date selection from today onwards
 		defaultDate: defaultDate.toString(),
 		onChangeMonthYear: function(year, month, inst){ //this is called before the calendar is redrawn, use timeout
-			update_monthControl(month-1);//to be used as index in array
+			update_monthControl(inst.selectedMonth);
 		},
 		onSelect: function(dateText, inst){
-			update_monthControl(inst.selectedMonth-1);//to be used as index in array
+			update_monthControl(inst.selectedMonth);
 			var timestamp = parseInt(dateText, 10)/1000 + 86399; //add 86399 to make it end of the day
 			fn_onSelect(timestamp, elem_datepicker);
 		},
