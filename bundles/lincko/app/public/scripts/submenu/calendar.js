@@ -71,65 +71,7 @@ Submenu.prototype.Add_calendar = function() {
 	}
 	var elem_datepicker = burger_renderCalendar(null, defaultDate, fn_onSelect);
 
-
-
-
-
-	// var elem_datepicker = $('<div>elem_datepicker</div>');
-	// var elem_datepicker_inline = null;
-
-	// if(that.param && that.param.elem_inputOrig){
-	// 	elem_timestamp.val(that.param.elem_inputOrig.val());
-	// }
-	// that.param.elem_inputTarget = elem_timestamp;
-
-	// var calendar_inst = {};
-	// calendar_inst.input = [];
-	// calendar_inst.input[0] = elem_datepicker;
-	// calendar_inst.lastVal = elem_timestamp.val();
-	
-	// elem_datepicker.datepicker(
-	// {
-	// 	//altFormat: "M d",
-	// 	//altField: elem_alt,
-	// 	dayNamesMin: (new wrapper_date()).day_very_short,
-	// 	monthNames: (new wrapper_date()).month,
-	// 	showOtherMonths: true,
-	// 	dateFormat: '@',
-	// 	gotoCurrent: true,
-	// 	minDate: 0,
-	// 	showAnim: "slideDown",
-	// 	beforeShow: function(input, inst){
-	// 		console.log('beforeShow');
-	// 		//console.log(inst);
-	// 		// submenu_content.find('.ui-datepicker-inline').addClass('burger_calendar');
-	// 		//burger_calendar_linckofy(inst);
-	// 	},
-	// 	onChangeMonthYear: function(year, month, inst){
-	// 		elem_datepicker_inline.addClass('burger_calendar');
-	// 		burger_calendar_linckofy(calendar_inst, elem_datepicker_inline);
-	// 	},
-	// 	onSelect: function(dateText, inst){
-	// 		var year = inst.selectedYear;
-	// 		var month = inst.selectedMonth;
-	// 		var day = inst.selectedDay;
-	// 		var timestamp = new Date(year, month, day).getTime() + 86399000;
-	// 		elem_timestamp.val(timestamp);
-	// 		calendar_inst.lastVal = timestamp;
-	// 		burger_calendar_linckofy(calendar_inst, elem_datepicker_inline);
-	// 	},
-	// });
-
-
-
 	submenu_content.append(elem_timestamp).append(elem_datepicker);
-
-	// elem_datepicker_inline = submenu_content.find('.ui-datepicker-inline').addClass('burger_calendar');
-	// elem_datepicker.datepicker('setDate',elem_timestamp.val());
-	// burger_calendar_linckofy(calendar_inst, elem_datepicker_inline);
-
-
-
 
 
 	$(document).on("submenuHide.calendar", function(){
