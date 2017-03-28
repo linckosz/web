@@ -358,7 +358,6 @@ inputter.prototype.buildLayer = function()
 								if(this.layer['right_menu'][i][j].hasOwnProperty('click'))
 								{
 									item.click(this.layer['right_menu'][i][j]['click'],function(event){
-										debugger;
 									var files = app_upload_files.lincko_files;
 									var files_count = 0;
 									for(var i in files)
@@ -738,7 +737,6 @@ inputter.prototype.buildLayer = function()
 	input.find('[find=chat_textarea]').on('paste',function(e,data){
 		var target = this;
 		setTimeout(function(){
-			//debugger;
 			target.innerHTML = cleanHtmlTag(target.innerHTML);
 			// target.innerHTML = cleanAndPaste(target.innerHTML
 			// 	.replace(/<(br).*?>/g,"<br/>")
