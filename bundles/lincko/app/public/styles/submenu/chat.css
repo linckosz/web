@@ -213,10 +213,7 @@
 	padding: 2px 4px 2px 4px;
 	margin-top: 5px;
 	margin-bottom: 5px;
-	width: 94%;
-	border: 1px solid;
-	border-radius: 3px;
-	border-color: transparent;
+	width: 80%;
 	outline: 0;
 	color: #FBA026;
 	font-size: 14px;
@@ -224,7 +221,7 @@
 	cursor: text;
 
 	height: 30px;
-    line-height: 30px;
+    line-height: 26px;
 	z-index: 1;
 }
 
@@ -245,10 +242,8 @@
 	padding: 2px 4px 2px 4px;
 	margin-top: 5px;
 	margin-bottom: 5px;
-	width: 94%;
-	border: 1px solid;
-	border-radius: 3px;
-	border-color: #B5B5B5;
+	width: 80%;
+	border: none;
 	outline: 0;
 	font-size: 16px;
 	font-weight: 200;
@@ -271,6 +266,23 @@
 	width: 100%;
 	background-color: #EFEFEF;
 	text-align: center;
+	padding: 16px 0px;
+	position: relative;
+}
+.submenu_app_chat_add_user>label{
+	background-color: #FFFFFF;
+	padding: 5px 0px;
+	margin-left: 50px;
+}
+.submenu_app_chat_add_user [find=icon_envelope]{
+	font-size: 36px;
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    line-height: 70px;
+    display: inline;
+    left: 3%;
+    color: #000000;
 }
 
 .submenu_wrapper_bottom_wxNotice{
