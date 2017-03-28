@@ -2740,6 +2740,7 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 
 		var title = parsedData.text;
 		var parent_id = app_content_menu.projects_id;
+		var comment = "<p><br></p>"; //ckeditor default empty content
 
 		//default not assigned
 		var in_charge_id = null;
@@ -2759,6 +2760,7 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 		var param = {
 			title: title,
 			parent_id: parent_id,
+			comment: comment,
 		}
 
 		//set in charge if not unassigned
@@ -2799,6 +2801,7 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 
 		var item = {
 			'+title': title,
+			'-comment': comment,
 			'_parent': ['projects', parent_id],
 			'_perm': Lincko.storage.get('projects', parent_id, '_perm'),
 			'_type': 'tasks',
