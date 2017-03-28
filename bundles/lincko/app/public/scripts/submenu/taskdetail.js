@@ -999,9 +999,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	if(that.param.type != 'files'){ //no file description for beta
 		elem = $('#-submenu_taskdetail_description').clone().prop('id',that.id+'_submenu_taskdetail_description');
 		var elem_description_text = elem.find('[find=description_text]');
-		elem_description_text.html(item['-comment']).focus(function(){
-
-		});
+		elem_description_text.html(item['-comment']);
 
 		var load_img_timeout = null;
 		elem_description_text.find('img').one('load', function(){
@@ -1525,28 +1523,6 @@ Submenu.prototype.Add_taskdetail = function() {
 	var comments_sorted = generateCommentsArray();
 	
 	
-
-	/*
-	var comments_primary = Lincko.storage.list('comments',null, null, this.param.type, taskid, false).reverse();
-	//var comments_primary = Lincko.storage.list('comments',null,{'_parent': [this.param.type,taskid]}).reverse();
-	var comments_sub;
-	var comments_sorted = [];
-	var comment_id;
-	var comment;
-	for( var i in comments_primary ){
-		comment = comments_primary[i];
-		comment_id = comment['_id'];
-		comments_sorted.push(comment);
-		//comments_sub = Lincko.storage.list('comments',null, null, 'comments', comment_id, true).reverse();
-		comments_sub = Lincko.storage.tree('comments', comment_id, 'children', false, true);
-		console.log(comments_sub);
-		if( comments_sub.length > 0 ){
-			for( var k in comments_sub ){
-				comments_sorted.push(comments_sub[k]);
-			}
-		}
-	}
-	*/
 
 	var generateCommentBubble = function(comment){
 		if(!comment || typeof comment != 'object') return;
@@ -2085,16 +2061,6 @@ Submenu.prototype.Add_taskdetail = function() {
 			//name or title
 			if(that.param.type == 'files'){
 				param['name'] = $('<div>').html(submenu_taskdetail.find('[find=title_text]').html()).text();
-				/*
-				if(param['name'] != item['+name']){
-					var regex = /^(?:(.+)\.(\.+))$/;
-					var filename_regex = param['name'].match(regex);
-					if(filename_regex){
-						param['name'] = filename_regex[1];
-					}
-					param['name'] = param['name']+'.'+item.ori_ext;
-				}
-				*/
 			}
 			else{
 				param['title'] = $.trim($('<div>').html(submenu_taskdetail.find('[find=title_text]').html()).text());
@@ -2672,37 +2638,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	}//end of !files
 	
 	
-
-
-
-
 	/*----------END OF CKEDITOR SETUP--------------------------------------------*/
-
-	/*--------EASY EDITOR SETUP--------------------------------------------------*/
-	/*var elem_description_text = submenu_wrapper.find('[find=description_text]');
-	var editorInst = null;
-	var destroyEditor_onBlur = true;
-
-	elem_description_text.focus(function(){
-		if(editorInst instanceof EasyEditor === false) {
-			editorInst = new linckoEditorEasy(this);
-			editorInst.$toolbarContainer.on('mousedown touchdown', function(){
-				destroyEditor_onBlur = false;
-			});
-			$(this).focus();
-		}
-	});
-	elem_description_text.blur(function(){
-		if(editorInst instanceof EasyEditor === true && destroyEditor_onBlur) {
-			editorInst.detachEvents();
-			editorInst = null;
-		}
-		else if(!destroyEditor_onBlur){
-			destroyEditor_onBlur = true;
-			elem_description_text.focus();
-		}
-	});*/
-	/*----------END OF EASY EDITOR SETUP---------------------------------------------*/
 
 	//Free memory
 	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
