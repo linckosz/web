@@ -378,15 +378,21 @@ class ControllerWechat extends Controller {
 			$scene_str = false;
 			if(strtolower($data->Event) == 'subscribe'){
 				$open_id = (string) $data->FromUserName;
+				$user = $wechat->user($open_id);
+				$event = false;
 				if(isset($data->EventKey)){
 					$integration_code = $_SESSION['integration_code'] = substr($data->EventKey, strlen('qrscene_'), strlen($data->EventKey)-strlen('qrscene_')+1);
 					if(strlen($integration_code) > 4){
+						$event = true;
 						$lang = $app->trans->setLanguageNumber(intval(substr($integration_code, -2, 2))); //set user laguage
 						$timeoffset = intval(substr($integration_code, -4, 2)); //set user timeoffset
 					}
+
+				}
+				if($event){
 					$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 5, 1, array(), $lang)); //Welcome to Lincko Use the Lincko button to login...
 					$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 5, 2, array(), $lang)); //Login successful!
-					$user = $wechat->user($open_id);
+					
 				} else {
 					$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 5, 1, array(), $lang)); //Welcome to Lincko Use the Lincko button to login...
 					$wechat->sendMsg($open_id, 'Ldywd-FyXd--19nkgvmNMG6AxxEI4GABI0cwrrlSDdM','image');
@@ -399,7 +405,6 @@ class ControllerWechat extends Controller {
 					$timeoffset = intval(substr($integration_code, -4, 2)); //set user timeoffset
 				}
 				$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper',5 , 2, array(), $lang)."\n\n".$app->trans->getBRUT('app', 8000, rand(9901, 9946), array(), $lang)); //Login successful!
-
 				$user = $wechat->user($open_id);
 			}
 
@@ -517,26 +522,28 @@ class ControllerWechat extends Controller {
 		
 
 
-		// $list = $wechat->material_lists('news', 0, 20);
-		// echo '<table>';
-		// foreach ($list['item'] as $key => $value) {
-		// 	echo '<tr>';
-		// 	echo "<td>$key</td>";
-		// 	echo ('<td>' . $value['media_id'] . '</td>');
-		// 	echo '<td>';
+		$list = $wechat->material_lists('image', 0, 20);
+		$wechat->sendMsg('og2amv2BiSiKMoDyYmpY7AmvJzxo', 'Ldywd-FyXd--19nkgvmNMBM3ELB8z1YIuPiKUFgkP-w','image');
+		echo '<table>';
+		foreach ($list['item'] as $key => $value) {
+			echo '<tr>';
+			echo "<td>$key</td>";
+			echo ('<td>' . $value['media_id'] . '</td>');
+			echo '<td>';
 
-		// 	echo '<table>';
-		// 	foreach ($value['content']['news_item'] as $item_key => $item_value) {
-		// 		echo '<tr>';
-		// 			echo '<td>'.$item_value["title"].'</td>';
-		// 		echo '</tr>';
-		// 	}
-		// 	echo '</table>';
 
-		// 	echo '</td>';
-		// 	echo '</tr>';
-		// }
-		// echo '</table>';
+			// echo '<table>';
+			// foreach ($value['content']['news_item'] as $item_key => $item_value) {
+			// 	echo '<tr>';
+			// 		echo '<td>'.$item_value["title"].'</td>';
+			// 	echo '</tr>';
+			// }
+			// echo '</table>';
+
+			echo '</td>';
+			echo '</tr>';
+		}
+		echo '</table>';
 		return exit(0);
 	}
 

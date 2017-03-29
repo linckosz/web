@@ -300,27 +300,42 @@ $(function () {
 			//Do not auto start by default
 			if(app_upload_auto_launcher.start){
 				var temp_index = app_upload_files.lincko_files_index-1;
-				var garbage = app_application_garbage.add(app_upload_auto_launcher.temp_id);
-				app_application_lincko.add(garbage, 'upload', function() {
-					var temp_index = this.action_param;
-					if(app_upload_files.lincko_files[temp_index].lincko_start){
-						app_upload_files.lincko_files[temp_index].lincko_start = false;
-						var uploadInterval = setInterval(function(temp_index) {
-							if(typeof app_upload_files.lincko_files[temp_index] == 'undefined'){
-								clearInterval(uploadInterval);
-							} else {
-								var data = app_upload_files.lincko_files[temp_index];
-								if(data._processQueue && data._processQueue.state && data._processQueue.state() != "pending")
-								{
-									app_upload_files.lincko_files[temp_index].submit();
-									clearInterval(uploadInterval);
-								}
-							}		
-						}, 300, temp_index);
-						app_application_garbage.remove(this.id);
+				setTimeout(function(temp_index){
+					if(typeof app_upload_files.lincko_files[temp_index] != "undefined")
+					{
+						app_upload_files.lincko_files[temp_index].submit();
 					}
-				}, temp_index);
+				},300,temp_index);	
+				setTimeout(function(temp_index){
+					if(typeof app_upload_files.lincko_files[temp_index] != "undefined")
+					{
+						app_upload_files.lincko_files[temp_index].submit();
+					}
+				},3000,temp_index);	
 			}
+			// if(app_upload_auto_launcher.start){
+			// 	var temp_index = app_upload_files.lincko_files_index-1;
+			// 	var garbage = app_application_garbage.add(app_upload_auto_launcher.temp_id);
+			// 	app_application_lincko.add(garbage, 'upload', function() {
+			// 		var temp_index = this.action_param;
+			// 		if(app_upload_files.lincko_files[temp_index].lincko_start){
+			// 			app_upload_files.lincko_files[temp_index].lincko_start = false;
+			// 			var uploadInterval = setInterval(function(temp_index) {
+			// 				if(typeof app_upload_files.lincko_files[temp_index] == 'undefined'){
+			// 					clearInterval(uploadInterval);
+			// 				} else {
+			// 					var data = app_upload_files.lincko_files[temp_index];
+			// 					if(data._processQueue && data._processQueue.state && data._processQueue.state() != "pending")
+			// 					{
+			// 						app_upload_files.lincko_files[temp_index].submit();
+			// 						clearInterval(uploadInterval);
+			// 					}
+			// 				}		
+			// 			}, 300, temp_index);
+			// 			app_application_garbage.remove(this.id);
+			// 		}
+			// 	}, temp_index);
+			// }
 
 			clearTimeout(app_upload_auto_launcher_timeout);
 			app_upload_auto_launcher_timeout = setTimeout(function() {
