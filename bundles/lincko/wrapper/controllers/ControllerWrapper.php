@@ -97,7 +97,7 @@ class ControllerWrapper extends Controller {
 				8) [BRO] The application is opened on browser with the user account
 		*/
 		if(isset($_SESSION['integration_code_expire']) && $_SESSION['integration_code_expire'] < time()){
-			unset($_SESSION['integration_code']);
+			//unset($_SESSION['integration_code']); //toto => need to observe, don't know why code is not sent
 			unset($_SESSION['integration_code_expire']);
 		}
 		if(isset($_SESSION['integration_code'])){
@@ -234,7 +234,7 @@ class ControllerWrapper extends Controller {
 
 				//Clean integration_code because it has been used by the back end
 				if(isset($json_result->flash->unset_integration_code)){
-					unset($_SESSION['integration_code']);
+					//unset($_SESSION['integration_code']); //toto => need to observe, don't know why code is not sent
 				}
 
 				//Clean integration_code because it has been used by the back end
