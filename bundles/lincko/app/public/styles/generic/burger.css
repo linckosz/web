@@ -131,6 +131,11 @@
 	width: 300px;
 	font-size: 14px;
 }
+.burger_calendar_prepend [find=row1] > span:hover, 
+.burger_calendar_prepend [find=row2] > span:hover{
+	color: #FBA026;
+    opacity: 0.7;
+}
 .burger_calendar_prepend [find=today_info]{
 	text-align: center;
 	font-size: 18px;
@@ -184,7 +189,7 @@
 	line-height: 24px;
 	color: #3F84B0;
 	border: none;
-
+	cursor: pointer; cursor: hand;
     width: 80px;
 }
 .burger_calendar .ui-datepicker-prev [find=text],
@@ -203,6 +208,10 @@
     display: inline-block;
     line-height: 24px;
     vertical-align: middle;
+}
+.burger_calendar .ui-datepicker-prev-hover [find=text],
+.burger_calendar .ui-datepicker-next-hover [find=text]{
+	opacity: 1;
 }
 .burger_calendar .ui-datepicker-header .icon-Forward{
 	font-size: 26px;
@@ -258,6 +267,9 @@
 	line-height: 25px;
 	display: inline-block;
 }
+.burger_calendar .ui-datepicker-calendar td a.ui-state-hover{
+	color: #FBA026;
+}
 
 .burger_calendar .ui-state-default{
 	height: 100%;
@@ -277,7 +289,7 @@
 	width: 27px;
 	border: none;
 	border-radius: 27px;
-	color: #FFFFFF;
+	color: #FFFFFF !important; /*prevent override by hover css*/
 }
 
 .burger_calendar_clickHandler{
