@@ -385,22 +385,36 @@ JSfiles.finish(function(){
 	//customize wechat share information here
 	base_wechat_shareData_garbage = app_application_garbage.add();
 	app_application_lincko.add(base_wechat_shareData_garbage, 'first_launch', function() {
+		//load my QR code image but dont show
+		base_toggle_myQRcode(false);
+
 		if(!base_is_wechat || (wx && (!wx.onMenuShareAppMessage || !wx.onMenuShareTimeline))){
 			app_application_garbage.remove(base_wechat_shareData_garbage);
 		}
 		else if(base_is_wechat && wx && wx.onMenuShareAppMessage && wx.onMenuShareTimeline){
-			base_wechat_shareData = {
-				title: 'Lincko - '+Lincko.Translation.get('wrapper', 4, 'js'), //The way of projects
-				desc: Lincko.Translation.get('app', 2320, 'js', {username: Lincko.storage.get('users', wrapper_localstorage.uid, 'username')})+'\n'+top.location.protocol+'//'+document.domainRoot, //[{username}] has invited you to collaborate using Lincko.
-				link: Lincko.storage.generateMyURL(),
-				imgUrl: base_wechat_shareImg,
-				trigger: function (res) {},
-				success: function (res) {},
-				cancel: function (res) {},
-				fail:function (res) {},
-			}
-			wx.onMenuShareAppMessage(base_wechat_shareData);
-			wx.onMenuShareTimeline(base_wechat_shareData);
+			//sometimes username name is not prepared at this time, so use setTimeout to be run at the end of sync function
+			setTimeout(function(){ 
+				var username = Lincko.storage.get('users', wrapper_localstorage.uid, 'username');
+				var desc;
+				if(username){
+					desc = Lincko.Translation.get('app', 2320, 'js', {username: username}); //[{username}] has invited you to collaborate using Lincko.
+				} else {
+					desc = Lincko.Translation.get('app', 2322, 'js'); //Your friend has invited you to collaborate using Lincko.
+				}
+
+				base_wechat_shareData = {
+					title: 'Lincko - '+Lincko.Translation.get('wrapper', 4, 'js'), //The way of projects
+					desc: desc += ('\n'+top.location.protocol+'//'+document.domainRoot),
+					link: Lincko.storage.generateMyURL(),
+					imgUrl: base_wechat_shareImg,
+					// trigger: function(res){},
+					// success: function(res){},
+					// cancel: function(res){},
+					// fail: function(res){},
+				}
+				wx.onMenuShareAppMessage(base_wechat_shareData);
+				wx.onMenuShareTimeline(base_wechat_shareData);
+			}, 0);
 			app_application_garbage.remove(base_wechat_shareData_garbage);
 		}		
 	});
@@ -415,10 +429,20 @@ base_removeLineBreaks = function(str){
 	return str.replace(/(\r\n|\n|\r)/gm, "");
 }
 
-base_toggle_myQRcode = function(){
+base_toggle_myQRcode = function(display){
 	var elem = $('#base_myQRcode_popup');
 	if(!elem.find('img').attr('src')){
 		elem.find('img').attr('src', Lincko.storage.generateMyQRcode());
 	}
-	elem.toggleClass('display_none');
+
+	if(typeof display == 'boolean'){
+		if(!display){
+			elem.addClass('visibility_hidden');
+		} else {
+			elem.removeClass('visibility_hidden');
+		}
+	}
+	else{
+		elem.toggleClass('visibility_hidden');
+	}
 }
