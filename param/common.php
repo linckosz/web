@@ -178,7 +178,7 @@ $app->lincko->integration->wechat = array(
 	'dev_secretapp' => '',
 	'public_appid' => '',
 	'public_secretapp' => '',
-	'public_token' => 'weixin360!@#',
+	'public_token' => 'weixin360',
 );
 if($app->lincko->domain=='lincko.cafe'){
 	$app->lincko->integration->wechat['public_appid'] = 'wx1d84f13b1addb1ba'; //Sandbox (evan)
