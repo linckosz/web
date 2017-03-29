@@ -395,7 +395,7 @@ class ControllerWechat extends Controller {
 					
 				} else {
 					$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 5, 1, array(), $lang)); //Welcome to Lincko Use the Lincko button to login...
-					$wechat->sendMsg($open_id, 'Ldywd-FyXd--19nkgvmNMG6AxxEI4GABI0cwrrlSDdM','image');
+					$wechat->sendMsg($open_id, 'Ldywd-FyXd--19nkgvmNMBM3ELB8z1YIuPiKUFgkP-w','image');
 				}
 			} else if(strtolower($data->Event) == 'scan'){
 				$open_id = (string) $data->FromUserName;
