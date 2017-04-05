@@ -38,7 +38,7 @@ After run
 $app->lincko = new \stdClass;
 
 //Used to track operation time
-$app->lincko->time_record = false;
+$app->lincko->time_record = false; //Turn at true to track and \time_checkpoint('ok');
 $app->lincko->time_start = 0;
 
 //Application title
@@ -132,6 +132,8 @@ $app->lincko->email->Abuse = 'abuse@'.$app->lincko->domain;
 $app->lincko->email->Sender = 'noreply@'.$app->lincko->domain;
 $app->lincko->email->From = 'noreply@'.$app->lincko->domain;
 $app->lincko->email->FromName = $app->lincko->title.' server';
+$app->lincko->email->Port = 587;
+$app->lincko->email->Host = 'service1';
 $app->lincko->email->List = array();
 
 //Translator parameters

@@ -18,6 +18,8 @@ class ControllerWrapper extends Controller {
 	protected $show_error = false;
 	protected $print = true;
 	protected $format = false;
+	protected $timeout = 36;
+	protected static $timeout_default = 36;
 
 	protected $json = array(
 		'api_key' => '', //Software authorization key
@@ -97,7 +99,7 @@ class ControllerWrapper extends Controller {
 				8) [BRO] The application is opened on browser with the user account
 		*/
 		if(isset($_SESSION['integration_code_expire']) && $_SESSION['integration_code_expire'] < time()){
-			//unset($_SESSION['integration_code']); //toto => need to observe, don't know why code is not sent
+			unset($_SESSION['integration_code']); //toto => need to observe, don't know why code is not sent
 			unset($_SESSION['integration_code_expire']);
 		}
 		if(isset($_SESSION['integration_code'])){
@@ -140,7 +142,7 @@ class ControllerWrapper extends Controller {
 
 		$url = $app->lincko->wrapper['url'].$this->action;
 
-		$timeout = 36;
+		$timeout = $this->timeout;
 		if($this->action=='translation/auto'){
 			$timeout = 66; //Need more time because requesting a third party for translation
 		}
@@ -234,7 +236,7 @@ class ControllerWrapper extends Controller {
 
 				//Clean integration_code because it has been used by the back end
 				if(isset($json_result->flash->unset_integration_code)){
-					//unset($_SESSION['integration_code']); //toto => need to observe, don't know why code is not sent
+					unset($_SESSION['integration_code']); //toto => need to observe, don't know why code is not sent
 				}
 
 				//Clean integration_code because it has been used by the back end
@@ -393,9 +395,14 @@ class ControllerWrapper extends Controller {
 		return true;
 	}
 
-	public function wrap_multi($action = NULL){
+	public function wrap_multi($action = NULL, $timeout = false){
 		
 		$app = $this->app;
+
+		$this->timeout = self::$timeout_default;
+		if($timeout){
+			$this->timeout = intval($timeout);
+		}
 
 		$type = $this->json['method'];
 

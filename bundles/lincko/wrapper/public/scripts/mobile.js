@@ -14,8 +14,7 @@ function setMobileAlias(){
 		}
 		window.webkit.messageHandlers.iOS.postMessage(obj);
 	}
-	if(typeof winPhone != 'undefined' )
-	{
+	if(typeof winPhone != 'undefined' ) {
 		winPhone.setAlias(sha);
 	}
 }
@@ -46,7 +45,7 @@ function device_download(url, target, name){
 	if(typeof name == 'undefined'){ name = 'file'; }
 
 	if(typeof android != 'undefined' && typeof android.download == 'function') {
-		android.download(url,document.cookie);
+		android.download(url, document.cookie);
 	}
 	else if(typeof window.webkit != 'undefined' && typeof window.webkit.messageHandlers != 'undefined' && typeof window.webkit.messageHandlers.iOS != 'undefined') {
 		var download_obj = {

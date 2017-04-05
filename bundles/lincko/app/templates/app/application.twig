@@ -73,6 +73,11 @@
 <div id="app_application_isOffline">
 	{% include '/bundles/lincko/app/templates/generic/isOffline.twig' %}
 </div>
+{% if workspace %}
+	<div id="app_application_entreprise">
+		{% include '/bundles/lincko/app/templates/generic/entreprise.twig' %}
+	</div>
+{% endif %}
 <div id="app_application_garbage" class="display_none"></div>
 <div id="end_app_application" class="visibility_hidden"></div>
 {% endblock %}

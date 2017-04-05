@@ -545,66 +545,70 @@ var app_models_history = {
 			//Grab Users notifications
 			var profile_pic;
 			if(app_models_history.first_check_invitation || typeof items['users'] != 'undefined'){
-				//Invitation request
-				app_models_history.first_check_invitation = false;
-				list = Lincko.storage.list('users', null, {_invitation: true, _id: ['!=', wrapper_localstorage.uid]});
-				//list = Lincko.storage.list('users', null, {_invitation: false, _id: ['!=', wrapper_localstorage.uid]}); //For debugging only
-				if(list.length>0){
-					for(var i in list){
-						//Avoid to double the same notification
-						if(app_models_history.notified["users_"+list[i]['_id']+"_invitation"]){
-							continue;
+				if(!wrapper_localstorage.workspace){ //Only available in shared workspace
+					//Invitation request
+					app_models_history.first_check_invitation = false;
+					list = Lincko.storage.list('users', null, {_invitation: true, _id: ['!=', wrapper_localstorage.uid]});
+					//list = Lincko.storage.list('users', null, {_invitation: false, _id: ['!=', wrapper_localstorage.uid]}); //For debugging only
+					if(list.length>0){
+						for(var i in list){
+							//Avoid to double the same notification
+							if(app_models_history.notified["users_"+list[i]['_id']+"_invitation"]){
+								continue;
+							}
+							app_models_history.notified["users_"+list[i]['_id']+"_invitation"] = true;
+							var profile_pic = Lincko.storage.getLinkThumbnail(list[i]['profile_pic']);
+							if(!profile_pic){
+								profile_pic = "favicon.png";
+							}
+							app_models_history.notify(
+								wrapper_to_html(list[i]["-username"]),
+								Lincko.Translation.get('app', 72, 'html'), //You have an invitation request
+								"submenu-"+btoa("chat_list%false%false%true"),
+								24,
+								profile_pic
+							);
 						}
-						app_models_history.notified["users_"+list[i]['_id']+"_invitation"] = true;
-						var profile_pic = Lincko.storage.getLinkThumbnail(list[i]['profile_pic']);
-						if(!profile_pic){
-							profile_pic = "favicon.png";
-						}
-						app_models_history.notify(
-							wrapper_to_html(list[i]["-username"]),
-							Lincko.Translation.get('app', 72, 'html'), //You have an invitation request
-							"submenu-"+btoa("chat_list%false%false%true"),
-							24,
-							profile_pic
-						);
 					}
 				}
-				//Invitation accepted
-				hist = Lincko.storage.hist('users', null, {cod: 697, by: ['!=', wrapper_localstorage.uid], timestamp: ['>', lastvisit]});
-				//hist = Lincko.storage.hist('users', null, {cod: 697, by: ['!=', wrapper_localstorage.uid]}); //For debugging only
-				if(hist.length>0){
-					for(var i in hist){
-						//Avoid to double the same notification
-						if(app_models_history.notified["users_"+hist[i]['id']+"_"+hist[i]['hist']]){
-							continue;
+				if(!wrapper_localstorage.workspace){//Only available in shared workspace
+					//Invitation accepted
+					hist = Lincko.storage.hist('users', null, {cod: 697, by: ['!=', wrapper_localstorage.uid], timestamp: ['>', lastvisit]});
+					//hist = Lincko.storage.hist('users', null, {cod: 697, by: ['!=', wrapper_localstorage.uid]}); //For debugging only
+					if(hist.length>0){
+						for(var i in hist){
+							//Avoid to double the same notification
+							if(app_models_history.notified["users_"+hist[i]['id']+"_"+hist[i]['hist']]){
+								continue;
+							}
+							app_models_history.notified["users_"+hist[i]['id']+"_"+hist[i]['hist']] = true;
+							item = Lincko.storage.get("users", hist[i]['id']);
+							if(
+								   !item
+								|| !item['_visible']
+								|| typeof hist[i]['par'] == "undefined"
+								|| typeof hist[i]['par']['pvid'] == "undefined"
+								|| hist[i]['par']['pvid'] != wrapper_localstorage.uid
+							){
+								continue;
+							}
+							var profile_pic = Lincko.storage.getLinkThumbnail(item['profile_pic']);
+							if(!profile_pic){
+								profile_pic = "favicon.png";
+							}
+							if(hist[i]['by']==0){
+								profile_pic = app_application_icon_roboto.src;
+							} else if(hist[i]['by']==1){
+								profile_pic = app_application_icon_monkeyking.src;
+							}
+							app_models_history.notify(
+								wrapper_to_html(item["-username"]),
+								Lincko.Translation.get('app', 79, 'html'), //Invitation accepted
+								"submenu-"+btoa("chat_list%false%false%true"),
+								24,
+								profile_pic
+							);
 						}
-						app_models_history.notified["users_"+hist[i]['id']+"_"+hist[i]['hist']] = true;
-						item = Lincko.storage.get("users", hist[i]['id']);
-						if(
-							   !item
-							|| !item['_visible']
-							|| typeof hist[i]['par'] == "undefined"
-							|| typeof hist[i]['par']['pvid'] == "undefined"
-							|| hist[i]['par']['pvid'] != wrapper_localstorage.uid
-						){
-							continue;
-						}
-						var profile_pic = Lincko.storage.getLinkThumbnail(item['profile_pic']);
-						if(!profile_pic){
-							profile_pic = "favicon.png";
-						}
-						if(hist[i]['by']==0){
-							profile_pic = app_application_icon_roboto.src;
-						} else if(hist[i]['by']==1){
-							profile_pic = app_application_icon_monkeyking.src;
-						}
-						app_models_history.notify(
-							wrapper_to_html(item["-username"]),
-							Lincko.Translation.get('app', 79, 'html'), //Invitation accepted
-							"submenu-"+btoa("chat_list%false%false%true"),
-							24,
-							profile_pic
-						);
 					}
 				}
 			}

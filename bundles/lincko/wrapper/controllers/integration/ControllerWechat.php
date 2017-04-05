@@ -7,6 +7,7 @@ use \bundles\lincko\wrapper\models\WechatPublic;
 use \libs\Controller;
 use \libs\OneSeventySeven;
 use \libs\Wechat;
+use \libs\Json;
 use WideImage\WideImage;
 
 
@@ -116,31 +117,7 @@ class ControllerWechat extends Controller {
 					if(!isset($response->status) || $response->status != 200){
 						$response = false;
 					} else {
-						$valid = true;
-						if(isset($response->flash->username_sha1) && isset($response->flash->uid)){
-							OneSeventySeven::set(array('sha' => substr($response->flash->username_sha1, 0, 20))); //Truncate to 20 character because phone alias notification limitation
-							OneSeventySeven::set(array('uid' => $response->flash->uid));
-						} else {
-							$valid = false;
-						}
-						//Helps to not keep real creadential information on user computer, but only an encrypted code
-						if(isset($response->flash->log_id)){
-							OneSeventySeven::set(array('hahaha' => $response->flash->log_id));
-						} else {
-							$valid = false;
-						}
-						//After signin, it return the username, it's only used once to display the user name faster than the local storage.
-						//It's almost useless
-						if(isset($response->flash->username)){
-							OneSeventySeven::set(array('yonghu' => $response->flash->username));
-						}
-						//Used to display/download files in a secured way and keep browser cache enable (same url)
-						if(isset($response->flash->pukpic)){
-							setcookie('pukpic', $response->flash->pukpic, time()+intval($app->lincko->cookies_lifetime), '/', $app->lincko->domain);
-							OneSeventySeven::set(array('pukpic' => $response->flash->pukpic));
-						} else {
-							$valid = false;
-						}
+						$valid = $this->setSession($response);
 					}
 					\bundles\lincko\wrapper\hooks\SetData(); //used to help log in immediatly
 				}
@@ -177,31 +154,7 @@ class ControllerWechat extends Controller {
 							if(!isset($response->status) || $response->status != 200){
 								$response = false;
 							} else {
-								$valid = true;
-								if(isset($response->flash->username_sha1) && isset($response->flash->uid)){
-									OneSeventySeven::set(array('sha' => substr($response->flash->username_sha1, 0, 20))); //Truncate to 20 character because phone alias notification limitation
-									OneSeventySeven::set(array('uid' => $response->flash->uid));
-								} else {
-									$valid = false;
-								}
-								//Helps to not keep real creadential information on user computer, but only an encrypted code
-								if(isset($response->flash->log_id)){
-									OneSeventySeven::set(array('hahaha' => $response->flash->log_id));
-								} else {
-									$valid = false;
-								}
-								//After signin, it return the username, it's only used once to display the user name faster than the local storage.
-								//It's almost useless
-								if(isset($response->flash->username)){
-									OneSeventySeven::set(array('yonghu' => $response->flash->username));
-								}
-								//Used to display/download files in a secured way and keep browser cache enable (same url)
-								if(isset($response->flash->pukpic)){
-									setcookie('pukpic', $response->flash->pukpic, time()+intval($app->lincko->cookies_lifetime), '/', $app->lincko->domain);
-									OneSeventySeven::set(array('pukpic' => $response->flash->pukpic));
-								} else {
-									$valid = false;
-								}
+								$valid = $this->setSession($response);
 							}
 							if($valid){
 								$app->lincko->data['integration_wechat_new'] = false;
@@ -230,6 +183,82 @@ class ControllerWechat extends Controller {
 		$app->router->getNamedRoute('root')->dispatch();
 
 		return true;
+	}
+
+	public function applog_post(){
+		$app = $this->app;
+		$app->lincko->http_code_ok = true;
+		if($post = (object) $app->request->post()){
+			if(isset($post->data)){
+				if($temp = json_decode($post->data)){
+					if(isset($temp->data) && isset($temp->data->unionid)){
+						$data = new \stdClass;
+						$data->party = 'wechat';
+						$data->party_id = 'uid.'.$temp->data->unionid;
+						$data->timeoffset = 16; //Default is 16 for china
+						if(isset($temp->timeoffset)){
+							$data->timeoffset = $temp->timeoffset;
+						}
+						$data->data = $temp->data;
+						$controller = new ControllerWrapper($data, 'post', false);
+						if($response = $controller->wrap_multi('integration/connect')){
+							if(!isset($response->status) || $response->status != 200){
+								$response = false;
+							} else {
+								$valid = false;
+								if(!isset($response->status) || $response->status != 200){
+									$response = false;
+								} else {
+									$valid = $this->setSession($response);
+								}
+								if($valid){
+									$app->lincko->data['integration_wechat_new'] = false;
+									OneSeventySeven::setCookies();
+								}
+							}
+						}
+						if($response){
+							$json = new Json('OK', false, 200, false, false, array(), false);
+							$json->render(200);
+							return exit(0);
+						}
+					}
+				}
+			}
+		}
+		$json = new Json('probem', false, 406, false, false, array(), false);
+		$json->render(406);
+		return exit(0);
+	}
+
+	protected function setSession($response){
+		$app = $this->app;
+		$valid = true;
+		if(isset($response->flash->username_sha1) && isset($response->flash->uid)){
+			OneSeventySeven::set(array('sha' => substr($response->flash->username_sha1, 0, 20))); //Truncate to 20 character because phone alias notification limitation
+			OneSeventySeven::set(array('uid' => $response->flash->uid));
+		} else {
+			$valid = false;
+		}
+		//Helps to not keep real creadential information on user computer, but only an encrypted code
+		if(isset($response->flash->log_id)){
+			OneSeventySeven::set(array('hahaha' => $response->flash->log_id));
+		} else {
+			$valid = false;
+		}
+		//After signin, it return the username, it's only used once to display the user name faster than the local storage.
+		//It's almost useless
+		if(isset($response->flash->username)){
+			OneSeventySeven::set(array('yonghu' => $response->flash->username));
+		}
+		//Used to display/download files in a secured way and keep browser cache enable (same url)
+		if(isset($response->flash->pukpic)){
+			setcookie('pukpic', $response->flash->pukpic, time()+intval($app->lincko->cookies_lifetime), '/', $app->lincko->domain);
+			OneSeventySeven::set(array('pukpic' => $response->flash->pukpic));
+		} else {
+			$valid = false;
+		}
+		return $valid;
 	}
 
 	public function curl_get($grant_type=false, $param=array()){
@@ -373,6 +402,8 @@ class ControllerWechat extends Controller {
 		$body = $app->request->getBody();
 		$data = simplexml_load_string($body, null, LIBXML_NOCDATA);
 
+		//\libs\Watch::php($data, '$data', __FILE__, __LINE__, false, false, true);
+
 		if(isset($data->MsgType) && isset($data->Event) && strtolower($data->MsgType) == 'event'){
 			$user = false;
 			$scene_str = false;
@@ -408,6 +439,8 @@ class ControllerWechat extends Controller {
 				$user = $wechat->user($open_id);
 			}
 
+			//\libs\Watch::php($user, '$user', __FILE__, __LINE__, false, false, true);
+
 			if($user && isset($user['unionid'])){
 				$data = new \stdClass;
 				/*
@@ -422,7 +455,7 @@ class ControllerWechat extends Controller {
 				$data->data = (object) $user;
 				$data->data->account = 'pub';
 				$controller = new ControllerWrapper($data, 'post', false);
-				$response = $controller->wrap_multi('integration/connect');
+				$response = $controller->wrap_multi('integration/connect', 1); //1s helps to close faster the connection, we don't need the response from the backend here, wechat only need a 200 OK
 			}
 		}
 

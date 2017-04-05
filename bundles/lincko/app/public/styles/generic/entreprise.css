@@ -1,0 +1,21 @@
+.base_color_bg_main_gradient {
+	background: #145287;
+	background-color: #145287;
+	background: -webkit-linear-gradient(#145287,#062746) !important; /* For Safari 5.1 to 6.0 */
+	background: -o-linear-gradient(#145287,#062746) !important; /* For Opera 11.1 to 12.0 */
+	background: -moz-linear-gradient(#145287,#062746) !important; /* For Firefox 3.6 to 15 */
+	background: linear-gradient(#145287,#062746) !important; /* Standard syntax */
+}
+
+.base_color_text_linckoOrange { color: #145287; }
+.base_color_text_linckoOrange_dark { color: #062746; }
+
+.entreprise_logo {
+	max-height: 42px;
+	max-width: 160px;
+	margin-top: 3px;
+}
+
+#app_content_menu {
+	border-right: 1px solid rgba(20, 82, 135, 0.40);
+}

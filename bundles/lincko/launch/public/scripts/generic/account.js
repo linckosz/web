@@ -1,4 +1,6 @@
 
+var account_integration_code = false;
+
 var account_submit_running = false;
 var account_joinus_cb_begin = function(){
 	account_submit_running = true;
@@ -616,7 +618,29 @@ JSfiles.finish(function(){
 	if(isMobileApp(true)){
 		$('#account_wrapper, .account_trans, .account_tab, #account_tab_lincko, .account_tab_joinus, .account_tab_signin, .account_form').addClass('account_wrapper_mobile_app');
 	}
-	if(isMobileApp() || navigator.userAgent.match(/MicroMessenger/i)){
+	if(navigator.userAgent.match(/MicroMessenger/i)){
 		$('#account_integration_wechat').addClass('display_none');
+	}
+
+	//For integration login, we request a code
+	if(isMobileApp()){
+		wrapper_sendAction(null, 'get', 'integration/setcode',
+			function(msg, err, status, data){
+				if(typeof data.code == 'string' && data.code.length >= 1){
+					account_integration_code = data.code;
+					var device = device_type();
+					if(device=='android'){
+						//toto => to be defined
+					} else if(device=='ios'){
+						var obj = {
+							integration_code: account_integration_code,
+						}
+						window.webkit.messageHandlers.iOS.postMessage(obj);
+					} else if(device=='android'){
+						//toto => to be defined
+					}
+				}
+			}
+		);
 	}
 });

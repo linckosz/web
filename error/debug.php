@@ -12,7 +12,6 @@
 	https://lincko.co/debug
 */
 
-
 $app = \Slim\Slim::getInstance();
 //print_r($data);
 //phpinfo();
