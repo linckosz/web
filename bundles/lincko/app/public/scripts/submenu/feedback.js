@@ -263,9 +263,10 @@ Submenu.prototype.AddFeedbackContent = function() {
 		{
 			if(app_upload_files.lincko_files[i].lincko_parent_type == "chat" 
 				&& app_upload_files.lincko_files[i].lincko_parent_id == that.param.id 
-				&& app_upload_files.lincko_files[i].lincko_param == that.id)
+				&& app_upload_files.lincko_files[i].lincko_param == that.id
+				&& (app_upload_files.lincko_files[i].lincko_status == "uploading"
+				|| app_upload_files.lincko_files[i].lincko_status == "done"))
 			{
-
 				var preview = null;
 				try{
 					preview = app_upload_files.lincko_files[i].files[0].preview.toDataURL();
@@ -292,13 +293,12 @@ Submenu.prototype.AddFeedbackContent = function() {
 
 					if(preview == null || preview == '')
 					{
-						elem.find(".submenu_feedback_shortcut_uploading_ico").removeClass('display_none');
 						elem.find(".submenu_feedback_shortcut_uploading_pic").addClass('display_none');
 						elem.find(".submenu_feedback_shortcut_uploading_ico").removeClass('display_none').find("i").addClass(app_models_fileType.getClass(this.ext));
 						
-					}else
+					}else 
 					{
-						debugger;
+						alert
 						elem.find(".submenu_feedback_shortcut_uploading_ico").addClass('display_none');
 						elem.find(".submenu_feedback_shortcut_uploading_pic")
 								.removeClass('display_none')
@@ -333,9 +333,19 @@ Submenu.prototype.AddFeedbackContent = function() {
 					}
 					
 					elem.find('[find=target]').html(app_upload_files.lincko_files[i].lincko_name);
-					elem.find('[find=progress_bar]').css('width', Math.floor(app_upload_files.lincko_files[i].lincko_progress) + '%');
-					elem.find('[find=progress_text]').addClass('uploading_file_progress_size').html( parseInt(app_upload_files.lincko_files[i].lincko_progress * app_upload_files.lincko_files[i].lincko_size / 1024 / 100)
+
+					if(app_upload_files.lincko_files[i].lincko_status == "done")
+					{
+						elem.find('.progress_bar_wrapper').addClass("display_none");
+						elem.find('[find=progress_text]').addClass("display_none");
+					}else{
+						elem.find('[find=progress_bar]').css('width', Math.floor(app_upload_files.lincko_files[i].lincko_progress) + '%');
+						elem.find('[find=progress_text]').addClass('uploading_file_progress_size').html( parseInt(app_upload_files.lincko_files[i].lincko_progress * app_upload_files.lincko_files[i].lincko_size / 1024 / 100)
 		+ ' K of ' + parseInt (app_upload_files.lincko_files[i].lincko_size/1024) + 'K');
+					}
+					
+
+
 
 				}
 			}
