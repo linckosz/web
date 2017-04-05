@@ -577,26 +577,39 @@ Lincko.storage.update = function(partial, info){
 	return update;
 };
 
+Lincko.storage.update_data_abc_all = function(){
+	$.each(Lincko.storage.data, function(type, items_obj){
+		if(type.indexOf('_')!==0){ //items only
+			$.each(items_obj, function(id, item){
+				Lincko.storage.update_data_abc(type, id, true);
+			});
+		}
+	});
+}
+
 Lincko.storage.update_data_abc = function(type, id, updated){
 	if(!Lincko.storage.data_abc){ Lincko.storage.data_abc = {}; }
 	if(typeof updated != 'object' || Object.keys(updated) < 1){ var updated = true; }
 
 	var attributes = ['+title', '-comment', '-firstname', '-lastname', '-username'];
 
-	var attr, s_real, s_abc;
+	var attr, s_orig, s_abc;
 
 	for(var i = 0; i < attributes.length; i++){
 		attr = attributes[i];
 		if(updated[attr] || updated === true){
-			s_real = Lincko.storage.get(type, id, attr); if(!s_real){return;}
-			s_abc = Pinyin.getPinyin(s_real);
-			console.log('pinyin operation');
-			if(md5(s_real) != md5(s_abc)){
-				if(!Lincko.storage.data_abc[type]){ Lincko.storage.data_abc[type] = {}; }
-				if(!Lincko.storage.data_abc[type][id]){ Lincko.storage.data_abc[type][id] = {}; }
-				Lincko.storage.data_abc[type][id][attr] = s_abc;
-				Lincko.storage.data_abc[type][id]['s_real'] = s_real;
-			}
+			s_orig = Lincko.storage.get(type, id, attr); 
+			if(!s_orig){continue;}
+
+			webworker.postMessage({
+				action: 'update_data_abc', 
+				data: {
+					type: type, 
+					id: id,
+					s_orig: s_orig,
+					attr: attr,
+				},
+			});
 		}
 	}
 }
@@ -689,6 +702,7 @@ Lincko.storage.firstLatest = function(){
 		storage_keep_messages = false; //The first time we open the application, we clean the local database
 		Lincko.storage.refreshHistory();
 		if(!$.isEmptyObject(Lincko.storage.data)){
+			Lincko.storage.update_data_abc_all();
 			Lincko.storage.display(true, true); //I don't think we need to force, probability of mismatching is almost null
 		} else {
 			//If we cannot get data object, we force to download the whole object
@@ -1165,7 +1179,8 @@ Lincko.storage.search = function(type, param, category){
 	array - array of items to conduct search
 	results - will return array not object
 	attr - optional: (str or array) specific attribute to search
-	pinyin - optional: true will do pinyin comparison for all, can also put array e.g. ['+title', '-comment']
+	pinyin	- optional: true will do pinyin comparison for all, can also put array e.g. ['+title', '-comment']
+			- also accepts string which will be used as the pinyin translated version
 */
 Lincko.storage.searchArray = function(type, param, array, attr, pinyin){
 	var results = [];
@@ -1173,7 +1188,11 @@ Lincko.storage.searchArray = function(type, param, array, attr, pinyin){
 	var save_result = false;
 	type = type.toLowerCase();
 	if(typeof param === 'string'){ param = param.toLowerCase(); }
+
+	var pinyin_param; //keep pinyin version of param here
 	if(!pinyin){ var pinyin = false; }
+	else if(typeof pinyin == 'string'){ pinyin_param = pinyin; }
+	else { pinyin_param = Pinyin.getPinyin(param); }
 
 	//List all items in a category that contain a word
 	find['word'] = function(item){
@@ -1188,29 +1207,25 @@ Lincko.storage.searchArray = function(type, param, array, attr, pinyin){
 			}
 
 			if((prop.indexOf('-')===0 || prop.indexOf('+')===0) && typeof item[prop]==='string'){
-				if(item[prop].toLowerCase().indexOf(param)!==-1){
+				if(item[prop].toLowerCase().indexOf(param)!==-1){ //straight search (no pinyin matching)
 					save_result = true;
 				}
-				else if(pinyin && (typeof pinyin == 'boolean' || $.inArray(prop, pinyin) > -1)){
-					try{ 
-						var pinyin_param = Pinyin.getPinyin(param);
-						var id_item = item['_id'];
-						var type_item = item['_type'];
-						if(Lincko.storage.data_abc 
-							&& Lincko.storage.data_abc[type_item] 
-							&& Lincko.storage.data_abc[type_item][id_item]
-							&& Lincko.storage.data_abc[type_item][id_item][prop]){
-							//both converted to pinyin and compare
-							if(Lincko.storage.data_abc[type_item][id_item][prop].indexOf(pinyin_param) !== -1){ //convert hanzi into pinyin and match
-							save_result = true;
-							}
-						}
-						else if(item[prop].indexOf(pinyin_param) !== -1){
-							//pinyin converted search word comparison to original string
-							save_result = true;
+				else if(pinyin_param || (pinyin && (typeof pinyin == 'boolean' || $.inArray(prop, pinyin) > -1))){
+					var id_item = item['_id'];
+					var type_item = item['_type'];
+					if(Lincko.storage.data_abc 
+						&& Lincko.storage.data_abc[type_item] 
+						&& Lincko.storage.data_abc[type_item][id_item]
+						&& Lincko.storage.data_abc[type_item][id_item][prop]){
+						//both converted to pinyin and compare
+						if(Lincko.storage.data_abc[type_item][id_item][prop].indexOf(pinyin_param) !== -1){ //convert hanzi into pinyin and match
+						save_result = true;
 						}
 					}
-					catch(e){/*pinyin error*/}
+					else if(item[prop].indexOf(pinyin_param) !== -1){
+						//pinyin converted search word comparison to original string
+						save_result = true;
+					}
 				}
 			}
 		}

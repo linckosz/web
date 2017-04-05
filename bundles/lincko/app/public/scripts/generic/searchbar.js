@@ -74,38 +74,52 @@ var searchbar = {
 		}
 		var items_filtered = [];
 		var item = null;
-		var push = false;
+		
 		var word = null;
 		var userid_array = null;
 		var userid = null;
-		for( var i=0; i < items.length; i++){ //for each item
-			item = items[i];
-			if(!item){continue;}
-			push = false;
 
-			for( var j=0; j < searchTerms.length; j++){ //for each word
-				word = searchTerms[j];
-				var burgerOnly = false;
-				if( word[0] == burger_shortcuts.at ){
-					word = word.slice(1);
-					burgerOnly = 'at';
-				}
-				//else if(word.substring(0,2) == '++'){
-				else if(word[0] == burger_shortcuts.plus || word[0] == burger_shortcuts.plusAlt){
-					//word = word.slice(2);
-					word = word.slice(1);
-					burgerOnly = 'plus';
-				}
+		for( var j=0; j < searchTerms.length; j++){ //for each word
+			word = searchTerms[j];
 
-				//users search
-				userid_array = searchbar.searchByUsername(word, Object.keys(item._perm));
+			var burgerOnly = false;
+			if( word[0] == burger_shortcuts.at ){
+				word = word.slice(1);
+				burgerOnly = 'at';
+			}
+			else if(word[0] == burger_shortcuts.plus || word[0] == burger_shortcuts.plusAlt){
+				//word = word.slice(2);
+				word = word.slice(1);
+				burgerOnly = 'plus';
+			}
 
-				//+title (tasks, projects) -comment and +name (files) search
-				if(!word.length || (Lincko.storage.searchArray('word', word, [item], ['+title', '+name', '-comment'], true /*['+title', '+name'] /*pinyin search*/).length > 0 && !burgerOnly) ){
-					push = true;
-					break;
-				}
-				else if( userid_array.length && (burgerOnly == false || burgerOnly == 'at') ){ //userOnly both true/false
+			//do pinyin translation once here, and pass it into searchArray function
+			var word_pinyin = Pinyin.getPinyin(word);
+
+
+			//regular text search
+			if(!word.length || !burgerOnly ){
+				items_filtered = Lincko.storage.searchArray('word', word, items, ['+title', '+name', '-comment'], word_pinyin);
+			}
+
+			//username and date search
+			$.each(items, function(i, item){
+				var push = false;
+				//check if it has been already pushed from regular text search
+				var already_pushed = false;
+				$.each(items_filtered, function(j, item_filtered){
+					if(item_filtered._id == item._id && item_filtered._type == item._type){ 
+						already_pushed = true;
+						return false; 
+					}
+				});
+				if(already_pushed){ return; }
+
+
+				//users search:
+				//look through any user in _perm. then, need to further match according to object type (i.e. in_charge, crated_by etc.)
+				userid_array = searchbar.searchByUsername(word, Object.keys(item._perm), word_pinyin);
+				if( userid_array.length && (burgerOnly == false || burgerOnly == 'at') ){ //userOnly both true/false
 					for( var k=0; k < userid_array.length; k++){
 						userid = userid_array[k];
 						if( item['_type'] == 'tasks' ){
@@ -133,25 +147,36 @@ var searchbar = {
 							}
 						}
 					}//END OF for each userid_array
-					if(push){
-						break;
-					}
-				}
+
+				} //date search
 				else if( searchbar.isDueThisTime(item, word) && (burgerOnly == false || burgerOnly == 'plus') ){
 					push = true;
-					break;
 				}
-			}//END OF for word
 
-			if(push){
-				items_filtered.push(item);
-			}
+				if(push){
+					items_filtered.push(item);
+				}
 
-		}//END OF for items
+			});
+		}//END OF for word
+
+
+		//reorder the filtered items list to match the original items list order
+		var items_filtered_reordered = [];
+		$.each(items, function(i, item_orig){
+			$.each(items_filtered, function(j, item_filtered){
+				if(item_orig._id == item_filtered._id && item_orig._type == item_filtered._type){
+					items_filtered_reordered.push(item_filtered);
+					return false;
+				}
+			});
+		});
+
 		return items_filtered;
 	},
 
-	searchByUsername: function(username, arr_ids){
+	searchByUsername: function(username, arr_ids, pinyin){
+		if(typeof pinyin == 'undefined'){ var pinyin = true; }
 		var userid_array = [];
 		if(typeof arr_ids == 'object' && arr_ids.length){ //search only within the given ids in arr_ids
 			var user_list = [];
@@ -159,7 +184,7 @@ var searchbar = {
 				var user = Lincko.storage.get('users', id);
 				if(user){ user_list.push(user); }
 			});
-			user_list = Lincko.storage.searchArray('word', username, user_list, true, true/*pinyin*/); //search the object to match the username
+			user_list = Lincko.storage.searchArray('word', username, user_list, true, pinyin); //search the object to match the username
 			if(user_list.length){
 				$.each(user_list, function(i, item){
 					userid_array.push(item._id);

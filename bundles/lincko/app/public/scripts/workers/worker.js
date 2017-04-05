@@ -92,5 +92,14 @@ var webworker_operation = {
 		self.postMessage({action: 'indicePerformance', data: indice,});
 	},
 
+	//need blueimp.md5.min.js, ChinesePY.js and ChinesePY.extensions.js
+	update_data_abc: function(obj_data){
+		var s_orig = obj_data.s_orig;
+		var s_abc = Pinyin.getPinyin(s_orig);
+		if(md5(s_orig) == md5(s_abc)){ s_abc = false; }
+		obj_data.s_abc = s_abc;
+		
+		self.postMessage({action: 'update_data_abc', data: obj_data,});
+	}
 };
 

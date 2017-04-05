@@ -470,6 +470,9 @@ if (typeof Worker != 'undefined') {
 if(webworker && webperf){
 	//Preload worker libraries needed
 	webworker.postMessage({action: 'importscript', data: "{{ _filelatest('/scripts/libs/LZipperLite.js') }}",});
+	webworker.postMessage({action: 'importscript', data: "{{ _filelatest('/scripts/libs/blueimp.md5.min.js') }}",});
+	webworker.postMessage({action: 'importscript', data: "{{ _filelatest('/scripts/libs/ChinesePY.js') }}",});
+	webworker.postMessage({action: 'importscript', data: "{{ _filelatest('/scripts/libs/ChinesePY.extensions.js') }}",});
 
 	//Return message
 	webworker.addEventListener("message", function(e){
@@ -545,6 +548,28 @@ var webworker_operation = {
 		}
 		wrapper_performance.setDelay();
 	},
+
+	update_data_abc: function(obj_data){
+		var type = obj_data.type;
+		var id = obj_data.id;
+		var attr = obj_data.attr;
+		var s_abc = obj_data.s_abc;
+		var s_orig = obj_data.s_orig;
+
+		//pinyin translation same as original string, then no need to add to data_abc
+		if(!s_abc 
+			&& Lincko.storage.data_abc[type] 
+			&& Lincko.storage.data_abc[type][id] 
+			&& Lincko.storage.data_abc[type][id][attr]){
+			delete Lincko.storage.data_abc[type][id][attr]; //delete any old translations
+		}
+		if(s_abc){
+			if(!Lincko.storage.data_abc[type]){ Lincko.storage.data_abc[type] = {}; }
+			if(!Lincko.storage.data_abc[type][id]){ Lincko.storage.data_abc[type][id] = {}; }
+			Lincko.storage.data_abc[type][id][attr] = s_abc;
+		}
+	}
+
 };
 
 //http://www.opentechguides.com/how-to/article/javascript/98/detect-mobile-device.html
