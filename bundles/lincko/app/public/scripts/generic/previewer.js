@@ -121,6 +121,7 @@ var previewer = (function() {
 		target.removeClass('display_none');
 		target.attr("src",url + '&pukpic=' + encodeURIComponent(getCookie('pukpic')));
 		target.mediaelementplayer({
+			alwaysShowControls:true,
 			setDimensions:false,
 			enableAutosize:true,
 			pluginPath: "/path/to/shims/", 
@@ -134,7 +135,6 @@ var previewer = (function() {
 		// or $('#mediaplayer').closest('.mejs-container').attr('id') in "legacy" stylesheet
 
 		var player = mejs.players[playerId];
-
 		// With iOS (iPhone), since it defaults always to QuickTime, you access the player directly;
 		// i.e., if you wanna exit fullscreen on iPhone using the player, use this:
 		// var player = $('#mediaplayer')[0];
@@ -176,90 +176,3 @@ var previewer = (function() {
 		'audio': video_preview,
 	}
 })();
-
-var app_previewer_TimingPlay;
-function app_previewer_StartPlayer(elem_id, video, thumb, volume, fs, autostart){
-	//app_previewer_StartPlayer('pic_wrapper_video_'+id, url, thumbnail, 100, true, true);
-
-	// video = video + '&pukpic='+encodeURIComponent(getCookie('pukpic')); //Must pass temporary encrypted credential as get parameter to get authorization via external players
-	// jwplayer(elem_id).setup({
-	// 	autostart: autostart,
-	// 	allowfullscreen: fs,
-	// 	volume: volume,
-	// 	file: video,
-	// 	image: thumb,
-	// 	bufferlength: 4,
-	// 	smoothing: true,
-	// 	frontcolor: 'cccccc',
-	// 	lightcolor: '66cc00',
-	// 	backcolor: '111111',
-	// 	controlbar: 'over',
-	// 	base: "/scripts/libs/jwplayer-7.9.1-lincko/",
-	// 	skin: {
-	// 		name: "seven",
-	// 	},
-	// 	dock: true,
-	// 	icons: true,
-	// 	width: '100%', //Small screen => 640 / Big screen => 800
-	// 	height: '100%', //Small screen => 360 / Big screen => 450
-	// 	stretching: 'uniform',
-	// 	seamlesstabbing: false, //Authorize to navigate into the menu bytabulation
-	// 	wmode: 'opaque',
-	// 	events: {
-	// 		onComplete: function(){
-	// 			clearTimeout(app_previewer_TimingPlay);
-	// 			this.stop();
-	// 			this.setFullscreen(false);
-	// 		},
-	// 		onBeforePlay: function(){
-	// 			clearTimeout(app_previewer_TimingPlay);
-	// 		},
-	// 		onReady: function(){
-	// 			clearTimeout(app_previewer_TimingPlay);
-	// 			if(autostart){
-	// 				app_previewer_TimingPlay = setTimeout(function(videoobject){
-	// 					if(videoobject){
-	// 						if('play' in videoobject){
-	// 							videoobject.play();
-	// 						}
-	// 					}
-	// 				}, 300, this);
-	// 			} else {
-	// 				app_previewer_TimingPlay = setTimeout(function(videoobject){
-	// 					if(videoobject){
-	// 						if('stop' in videoobject){
-	// 							videoobject.stop();
-	// 						}
-	// 						videoobject = false; //Destroy the link to the object
-	// 					}
-	// 				}, 100, this);
-	// 			}
-	// 		},
-	// 		onPlay: function(){
-	// 			this.setFullscreen(false);
-	// 			clearTimeout(app_previewer_TimingPlay);
-	// 		},
-	// 		onPause: function(){
-	// 			clearTimeout(app_previewer_TimingPlay);
-	// 		},
-	// 		onSeek: function(){
-	// 			clearTimeout(app_previewer_TimingPlay);
-	// 		},
-	// 		onVolume: function(){
-	// 			clearTimeout(app_previewer_TimingPlay);
-	// 		},
-	// 		onFullscreen: function(){
-	// 			clearTimeout(app_previewer_TimingPlay);
-	// 		},
-	// 		onRemove: function(){
-	// 			clearTimeout(app_previewer_TimingPlay);
-	// 			if(videoobject){
-	// 				if('stop' in videoobject){
-	// 					videoobject.stop();
-	// 				}
-	// 				videoobject = false; //Destroy the link to the object
-	// 			}
-	// 		},
-	// 	},
-	// });
-}

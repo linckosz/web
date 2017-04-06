@@ -123,14 +123,14 @@ var submenu_feedback_build_question = function(wrapper,container,question_id){
 	
 	item.addClass("models_feedback_others");
 
-	var content = "How can I help you?";
+	var content = Lincko.Translation.get('app', 4201, 'js');//"How can I help you?";
 	switch(question_id)
 	{
 		case 1 :
-			content = "How can I help you?";//toto
+			content = Lincko.Translation.get('app', 4201, 'js');//"How can I help you?";
 			break;
 		case 2 :
-			content = "Anything else?";//toto
+			content = Lincko.Translation.get('app', 4202, 'js');//"Anything else?";
 			break;
 	}
 
@@ -155,7 +155,7 @@ var submenu_feedback_build_options = function(wrapper,container){
 	item.prop("id","submenu_feedback_options");
 	var options = [
 		{
-			'text':'Report Bug',//toto:Report Bug
+			'text': Lincko.Translation.get('app', 4203, 'js'),//'Report Bug',
 			'action' : function(event){
 				wrapper.find("[find=chat_textarea]").addClass("submenu_feedback_space");
 				wrapper.find("[find=chat_textarea]").attr("space",this.text); 
@@ -171,7 +171,7 @@ var submenu_feedback_build_options = function(wrapper,container){
 			}
 		},
 		{
-			'text':'Feature Request',//toto:Feature Request
+			'text':Lincko.Translation.get('app', 4204, 'js'),//'Feature Request',
 			'action' : function(event){
 				wrapper.find("[find=chat_textarea]").addClass("submenu_feedback_space");
 				wrapper.find("[find=chat_textarea]").attr("space",this.text); 
@@ -186,7 +186,7 @@ var submenu_feedback_build_options = function(wrapper,container){
 			}
 		},
 		{
-			'text':'General',//toto:General
+			'text':Lincko.Translation.get('app', 4205, 'js'),//'General'
 			'action' : function(event){
 				wrapper.find("[find=chat_textarea]").addClass("submenu_feedback_space");
 				wrapper.find("[find=chat_textarea]").attr("space",this.text);  
@@ -206,7 +206,7 @@ var submenu_feedback_build_options = function(wrapper,container){
 	{
 		var option = $("#-submenu_feedback_options_item").clone();
 		option.prop("id","");
-		option.find("[find=option_content]").text(options[i].text);//toto:Report Bug
+		option.find("[find=option_content]").text(options[i].text);
 		item.find("[find=options_content]").append(option);
 		option.find("[find=option_content]").click({index:i},function(event){
 			var index = event.data.index;
