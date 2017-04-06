@@ -670,17 +670,18 @@ function wrapper_test(type, RCUD){
 		else if(RCUD==1){
 			wrapper_sendAction(
 				{
-					"parent_id": 3,
+					"parent_id": 3923,
 					"title": "It's a task title",
 					"comment": "It's a task content", //OPTIONAL {''}
 					//"start": 1462110422, //OPTIONAL { current_timestamp }
-					"duration": 86400, //OPTIONAL {86400}
+					"start": null,
+					//"duration": 86400, //OPTIONAL {86400}
 					//"fixed": 1, //OPTIONAL {0}
-					"status": 0, //OPTIONAL {0}
-					"progress": 50, //OPTIONAL {0}
-					"tasksup>access": {
-						57: true,
-					},
+					//"status": 0, //OPTIONAL {0}
+					//"progress": 50, //OPTIONAL {0}
+					//"tasksup>access": {
+					//	57: true,
+					//},
 				},
 				'post',
 				'task/create',
