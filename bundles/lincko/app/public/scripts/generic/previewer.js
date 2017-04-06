@@ -116,7 +116,31 @@ var previewer = (function() {
 		popout.prop("id", Elem_id);
 		var target = popout.find("[find=pic_wrapper_video]");
 		target.prop('id', 'pic_wrapper_video_'+id);
+		// target.find("[find=pic_wrapper_video_content]").attr("src",url);
+
 		target.removeClass('display_none');
+		target.attr("src",url + '&pukpic=' + encodeURIComponent(getCookie('pukpic')));
+		target.mediaelementplayer({
+			setDimensions:false,
+			enableAutosize:true,
+			pluginPath: "/path/to/shims/", 
+			success: function(mediaElement, originalNode) {
+			// do things
+			}
+		});
+
+		// To access player after its creation through jQuery use:
+		var playerId = target.closest('.mejs__container').attr('id');
+		// or $('#mediaplayer').closest('.mejs-container').attr('id') in "legacy" stylesheet
+
+		var player = mejs.players[playerId];
+
+		// With iOS (iPhone), since it defaults always to QuickTime, you access the player directly;
+		// i.e., if you wanna exit fullscreen on iPhone using the player, use this:
+		// var player = $('#mediaplayer')[0];
+		// player.webkitExitFullScreen();
+
+		
 		popout.find('.pic_preview_name').html(wrapper_to_html(name));
 
 		if(download == "")
@@ -142,8 +166,6 @@ var previewer = (function() {
 			}
 		});
 
-		app_previewer_StartPlayer('pic_wrapper_video_'+id, url, thumbnail, 100, true, true);
-
 		return popout;
 	}
 
@@ -157,85 +179,87 @@ var previewer = (function() {
 
 var app_previewer_TimingPlay;
 function app_previewer_StartPlayer(elem_id, video, thumb, volume, fs, autostart){
-	video = video + '&pukpic='+encodeURIComponent(getCookie('pukpic')); //Must pass temporary encrypted credential as get parameter to get authorization via external players
-	jwplayer(elem_id).setup({
-		autostart: autostart,
-		allowfullscreen: fs,
-		volume: volume,
-		file: video,
-		image: thumb,
-		bufferlength: 4,
-		smoothing: true,
-		frontcolor: 'cccccc',
-		lightcolor: '66cc00',
-		backcolor: '111111',
-		controlbar: 'over',
-		base: "/scripts/libs/jwplayer-7.9.1-lincko/",
-		skin: {
-			name: "seven",
-		},
-		dock: true,
-		icons: true,
-		width: '100%', //Small screen => 640 / Big screen => 800
-		height: '100%', //Small screen => 360 / Big screen => 450
-		stretching: 'uniform',
-		seamlesstabbing: false, //Authorize to navigate into the menu bytabulation
-		wmode: 'opaque',
-		events: {
-			onComplete: function(){
-				clearTimeout(app_previewer_TimingPlay);
-				this.stop();
-				this.setFullscreen(false);
-			},
-			onBeforePlay: function(){
-				clearTimeout(app_previewer_TimingPlay);
-			},
-			onReady: function(){
-				clearTimeout(app_previewer_TimingPlay);
-				if(autostart){
-					app_previewer_TimingPlay = setTimeout(function(videoobject){
-						if(videoobject){
-							if('play' in videoobject){
-								videoobject.play();
-							}
-						}
-					}, 300, this);
-				} else {
-					app_previewer_TimingPlay = setTimeout(function(videoobject){
-						if(videoobject){
-							if('stop' in videoobject){
-								videoobject.stop();
-							}
-							videoobject = false; //Destroy the link to the object
-						}
-					}, 100, this);
-				}
-			},
-			onPlay: function(){
-				this.setFullscreen(false);
-				clearTimeout(app_previewer_TimingPlay);
-			},
-			onPause: function(){
-				clearTimeout(app_previewer_TimingPlay);
-			},
-			onSeek: function(){
-				clearTimeout(app_previewer_TimingPlay);
-			},
-			onVolume: function(){
-				clearTimeout(app_previewer_TimingPlay);
-			},
-			onFullscreen: function(){
-				clearTimeout(app_previewer_TimingPlay);
-			},
-			onRemove: function(){
-				clearTimeout(app_previewer_TimingPlay);
-				if(videoobject){
-					if('stop' in videoobject){
-						videoobject.stop();
-					}
-					videoobject = false; //Destroy the link to the object
-				}
-			},
-		},
-	});
+	//app_previewer_StartPlayer('pic_wrapper_video_'+id, url, thumbnail, 100, true, true);
+
+	// video = video + '&pukpic='+encodeURIComponent(getCookie('pukpic')); //Must pass temporary encrypted credential as get parameter to get authorization via external players
+	// jwplayer(elem_id).setup({
+	// 	autostart: autostart,
+	// 	allowfullscreen: fs,
+	// 	volume: volume,
+	// 	file: video,
+	// 	image: thumb,
+	// 	bufferlength: 4,
+	// 	smoothing: true,
+	// 	frontcolor: 'cccccc',
+	// 	lightcolor: '66cc00',
+	// 	backcolor: '111111',
+	// 	controlbar: 'over',
+	// 	base: "/scripts/libs/jwplayer-7.9.1-lincko/",
+	// 	skin: {
+	// 		name: "seven",
+	// 	},
+	// 	dock: true,
+	// 	icons: true,
+	// 	width: '100%', //Small screen => 640 / Big screen => 800
+	// 	height: '100%', //Small screen => 360 / Big screen => 450
+	// 	stretching: 'uniform',
+	// 	seamlesstabbing: false, //Authorize to navigate into the menu bytabulation
+	// 	wmode: 'opaque',
+	// 	events: {
+	// 		onComplete: function(){
+	// 			clearTimeout(app_previewer_TimingPlay);
+	// 			this.stop();
+	// 			this.setFullscreen(false);
+	// 		},
+	// 		onBeforePlay: function(){
+	// 			clearTimeout(app_previewer_TimingPlay);
+	// 		},
+	// 		onReady: function(){
+	// 			clearTimeout(app_previewer_TimingPlay);
+	// 			if(autostart){
+	// 				app_previewer_TimingPlay = setTimeout(function(videoobject){
+	// 					if(videoobject){
+	// 						if('play' in videoobject){
+	// 							videoobject.play();
+	// 						}
+	// 					}
+	// 				}, 300, this);
+	// 			} else {
+	// 				app_previewer_TimingPlay = setTimeout(function(videoobject){
+	// 					if(videoobject){
+	// 						if('stop' in videoobject){
+	// 							videoobject.stop();
+	// 						}
+	// 						videoobject = false; //Destroy the link to the object
+	// 					}
+	// 				}, 100, this);
+	// 			}
+	// 		},
+	// 		onPlay: function(){
+	// 			this.setFullscreen(false);
+	// 			clearTimeout(app_previewer_TimingPlay);
+	// 		},
+	// 		onPause: function(){
+	// 			clearTimeout(app_previewer_TimingPlay);
+	// 		},
+	// 		onSeek: function(){
+	// 			clearTimeout(app_previewer_TimingPlay);
+	// 		},
+	// 		onVolume: function(){
+	// 			clearTimeout(app_previewer_TimingPlay);
+	// 		},
+	// 		onFullscreen: function(){
+	// 			clearTimeout(app_previewer_TimingPlay);
+	// 		},
+	// 		onRemove: function(){
+	// 			clearTimeout(app_previewer_TimingPlay);
+	// 			if(videoobject){
+	// 				if('stop' in videoobject){
+	// 					videoobject.stop();
+	// 				}
+	// 				videoobject = false; //Destroy the link to the object
+	// 			}
+	// 		},
+	// 	},
+	// });
 }
