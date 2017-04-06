@@ -5,6 +5,21 @@ var wrapper_objForm = null;
 var wrapper_set_shangzai = true;
 var wrapper_xhr_error = true; //At false, we make communication error message appearing once, at true never
 var wrapper_signing_out = false;
+var wrapper_version = false;
+var wrapper_version_new = false;
+
+//Use a timer to help to force the app be refreshed if not using it and not focused on for 30 minutes
+var wrapper_version_idle = false;
+var wrapper_version_timer = false;
+$(window).on('focus keyup change copy paste mousedown', function(){
+	wrapper_version_idle = false;
+	clearTimeout(wrapper_version_timer);
+});
+$(window).on('blur', function(){
+	wrapper_version_timer = setTimeout(function(){
+		wrapper_version_idle = true;
+	}, 1800000); //30 min
+});
 
 // Because "const" seems to not work in some browsers
 // http://stackoverflow.com/questions/24370447/the-const-keyword-in-javascript
@@ -166,6 +181,20 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 						//window.location.href = wrapper_link['root']; //toto => disable for debugging purpose
 					}
 				}, 500, data.language);
+			}
+
+			if(typeof data.version == 'string'){
+				if(wrapper_version){
+					if(wrapper_version != data.version){ //new version available
+						wrapper_version_new = true;
+						if(wrapper_version_idle){
+							wrapper_localstorage.encrypt('lastvisit', 0, false, true);
+							window.location.href = wrapper_link['root'];
+						}
+					}
+				} else {
+					wrapper_version = data.version;
+				}
 			}
 
 		},
@@ -355,18 +384,19 @@ function wrapper_get_shangzai(){
 	return false;
 }
 
-wrapper_localstorage.encrypt = function (link, data, tryit){
+wrapper_localstorage.encrypt = function (link, data, tryit, now){
 	if(!link){
 		return false;
 	}
 	if(typeof tryit == 'undefined'){ tryit = true; }
+	if(typeof now == 'undefined'){ now = true; }
 	var result = false;
 	//If we over quota once, we do not continue to avoid CPU usage, it slow down the first loading but it's an easy solution
 	//A more complex solution would be to progressively delete few elements, and only load them at start, but it's a CPU consumer method
 	if(typeof this.quota[link] != 'undefined' && !this.quota[link]){
 		return true;
 	} else {
-		if(webworker){
+		if(!now && webworker){
 			var webworker_data = {
 				action: 'compress',
 				data: {

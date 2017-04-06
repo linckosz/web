@@ -8,6 +8,7 @@ use \libs\OneSeventySeven;
 use \libs\Controller;
 use \libs\Datassl;
 use \libs\STR;
+use \libs\Version;
 
 class ControllerWrapper extends Controller {
 
@@ -243,7 +244,7 @@ class ControllerWrapper extends Controller {
 				if(isset($json_result->flash->refresh) && $json_result->flash->refresh){
 					$json_result->refresh = true;
 				}
-				
+
 				if($this->print){
 					//"username_sha1" is a password used to encrypt data
 					//"uid" is the main user ID
@@ -279,6 +280,10 @@ class ControllerWrapper extends Controller {
 			}
 			//We add current language to refresh the application if the settings changed
 			$json_result->language = $this->json['language'];
+
+			if($version = Version::find(1)){
+				$json_result->version = $version->version;
+			}	
 			
 			if($this->print){
 				if($this->format=='js'){ //javascript

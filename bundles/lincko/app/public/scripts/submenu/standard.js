@@ -157,6 +157,15 @@ submenu_list['settings'] = {
 		},
 		"class": "",
 	},
+	"refresh": {
+		"style": "button",
+		"title": Lincko.Translation.get('app', 98, 'html'), //Click to refresh the page
+		"action": function(){
+			wrapper_localstorage.encrypt('lastvisit', 0, false, true);
+			window.location.href = wrapper_link['root'];
+		},
+		"class": "",
+	},
 	"signout": {
 		"style": "button",
 		"title": Lincko.Translation.get('app', 38, 'html'), //Sign out

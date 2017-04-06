@@ -188,6 +188,7 @@ class ControllerWechat extends Controller {
 	public function applog_post(){
 		$app = $this->app;
 		$app->lincko->http_code_ok = true;
+		\libs\Watch::php($GLOBALS, '$GLOBALS', __FILE__, __LINE__, false, false, true);
 		if($post = (object) $app->request->post()){
 			if(isset($post->data)){
 				if($temp = json_decode($post->data)){
@@ -226,7 +227,7 @@ class ControllerWechat extends Controller {
 				}
 			}
 		}
-		$json = new Json('probem', false, 406, false, false, array(), false);
+		$json = new Json('problem', false, 406, false, false, array(), false);
 		$json->render(406);
 		return exit(0);
 	}
