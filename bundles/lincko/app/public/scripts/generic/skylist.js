@@ -1517,7 +1517,7 @@ skylist.prototype.addTask = function(item){
 	title
 	*/
 	var elem_title = Elem.find('[find=title]');
-	elem_title.html(item['+title']);
+	elem_title.text(item['+title']);
 	
 	var contenteditable = false;
 	if( typeof item == 'object' && '_perm' in item && wrapper_localstorage.uid in item['_perm'] && item['_perm'][wrapper_localstorage.uid][0] > 1 ){ //RCU and beyond
@@ -2035,11 +2035,11 @@ skylist.draw_noteCard = function(item){
 
 	/* title */
 	var elem_title = Elem.find('[find=title]');
-	elem_title.html(item['+title']);
+	elem_title.text(item['+title']);
 
 	/* note description */
 	var comment = item['-comment'].replace(/<br>|<br \/>/g, " ").replace(/<\/p><p>/g, "<\/p> <p>");
-	Elem.find('[find=description]').html($('<div>'+comment+'</div>').text());
+	Elem.find('[find=description]').text($('<div>'+comment+'</div>').text());
 
 
 	/* note preview image */
@@ -2196,7 +2196,7 @@ skylist.draw_fileCard = function(item){
 
 	/* title */
 	var elem_title = Elem.find('[find=title]');
-	elem_title.html(item['+name']);
+	elem_title.text(item['+name']);
 
 	/* file description and preview image */
 	 var fileType_class = 'fa fa-file-o';
