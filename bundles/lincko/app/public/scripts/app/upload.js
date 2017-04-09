@@ -420,6 +420,7 @@ $(function () {
 				}
 			}
 			app_application_lincko.prepare('upload', true);
+			Lincko.storage.getLatest();
 		},
 
 		//data => File object

@@ -218,9 +218,15 @@ class ControllerWechat extends Controller {
 							}
 						}
 						if($response){
+							/*
 							$json = new Json('OK', false, 200, false, false, array(), false);
 							$json->render(200);
 							return exit(0);
+							*/
+							\bundles\lincko\wrapper\hooks\SetData(); //used to help log in immediatly
+							$app->lincko->data['link_reset'] = true;
+							$app->router->getNamedRoute('root')->dispatch();
+							return true;
 						}
 					}
 				}

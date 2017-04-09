@@ -102,6 +102,29 @@ $app->get('/uid/:user_code', function ($user_code) use ($app) {
 ))
 ->name('uid');
 
+//Link of user URL for direct connection (like scanning a QR code)
+$app->get('/pid/:wid/:pid/:qrcode', function ($wid, $pid, $qrcode) use ($app) {
+	//Record the information to enter the opened project
+	$_SESSION['project_qrcode'] = array(
+		$wid,
+		$pid,
+		$qrcode,
+	);
+	$app->lincko->data['link_reset'] = true;
+	$app->lincko->data['force_open_website'] = false;
+	if($app->lincko->data['logged']){
+		$app->router->getNamedRoute('root')->dispatch();
+	} else {
+		$app->router->getNamedRoute('home')->dispatch();
+	}
+})
+->conditions(array(
+	'wid' => '\d+',
+	'pid' => '\d+',
+	'qrcode' => '\w{8}',
+))
+->name('pid');
+
 //used for direct linked "forgot password", "sigin", etc
 $app->get('/user/:user_action', function ($user_action='') use ($app) {
 	web_wrapper_user_created();

@@ -77,7 +77,7 @@ submenu_list['app_project_new'] = {
 		"title": Lincko.Translation.get('app', 31, 'html'), //Team
 		"name": "project_team_select_multiple",
 		"value": "",
-		"class": "submenu_input_select_multiple submenu_deco_borders",
+		"class": "submenu_input_select_multiple",
 		"next": "app_projects_users_contacts",
 	},
 	"description": {
@@ -85,7 +85,7 @@ submenu_list['app_project_new'] = {
 		"title": Lincko.Translation.get('app', 30, 'html'), //Short description
 		"name": "description",
 		"value": "",
-		"class": "submenu_input_textarea submenu_projects_description",
+		"class": "submenu_input_textarea submenu_projects_description models_projects_tab",
 	},
 };
 
@@ -144,7 +144,7 @@ submenu_list['app_project_edit'] = {
 			Elem.find("[find=submenu_button_value]").html(on_off);
 			Elem.removeClass('submenu_deco').addClass('submenu_select');
 		},
-		"class": "models_projects_tab submenu_select submenu_deco_borders",
+		"class": "models_projects_tab submenu_select models_projects_tab",
 		"action": function(Elem, subm){
 			var projects_id = subm.param;
 			var users = Lincko.storage.get('projects', projects_id, '_users');
@@ -169,12 +169,118 @@ submenu_list['app_project_edit'] = {
 			Elem.find("[find=submenu_button_value]").html(on_off);
 		},
 	},
+	"open_access": {
+		"style": "button",
+		"title": Lincko.Translation.get('app', 99, 'html'), //Open access QR code
+		"value": Lincko.Translation.get('app', 76, 'html'), //Off
+		"now": function(Elem, subm){
+			var projects_id = subm.param;
+			if(Lincko.storage.canI('edit', 'projects', projects_id)){
+				Elem.removeClass('display_none');
+			}
+			var on_off = Lincko.Translation.get('app', 76, 'html'); //Off
+			var project_open = Lincko.storage.get('projects', projects_id, 'public');
+			if(project_open){
+				on_off = Lincko.Translation.get('app', 75, 'html'); //On
+			}
+			Elem.find("[find=submenu_button_value]").html(on_off);
+			Elem.removeClass('submenu_deco').addClass('submenu_select');
+		},
+		"class": "models_projects_tab submenu_select display_none",
+		"action": function(Elem, subm){
+			var projects_id = subm.param;
+			if(!Lincko.storage.canI('edit', 'projects', projects_id)){
+				return false;
+			}
+			var on_off_invert = true;
+			var project_open = Lincko.storage.get('projects', projects_id, 'public');
+			if(project_open){
+				on_off_invert = false;
+			}
+			var on_off = Lincko.Translation.get('app', 76, 'html'); //Off
+			if(on_off_invert){
+				on_off = Lincko.Translation.get('app', 75, 'html'); //On
+			}
+			var that = this;
+			var subm_elem = subm.Wrapper();
+			var param = {
+				id: projects_id,
+				public: on_off_invert,
+			}
+			var img = subm_elem.find('[find=qrcode_img]');
+			wrapper_sendAction(
+				param,
+				'post',
+				'project/update',
+				function(){
+					//update the picture only
+					img.attr('src', Lincko.storage.generateProjectQRcode(projects_id));
+				},
+				function(){
+					that.fn_open_close(project_open, subm_elem, projects_id);
+				},
+				function(){
+					if(
+						   typeof Lincko.storage.data['projects'] == 'object'
+						&& typeof Lincko.storage.data['projects'][projects_id] == 'object'
+					){
+						Lincko.storage.data['projects'][projects_id]['public'] = on_off_invert;
+					}
+					that.fn_open_close(on_off_invert, subm_elem, projects_id);
+					//Hide the old QR code until the new one is accessible
+					img.addClass('submenu_projects_qrcode_loading');
+					img.attr('src', wrapper_neutral.src);
+				},
+				function(){
+					img.removeClass('submenu_projects_qrcode_loading');
+				}
+			);
+			Elem.find("[find=submenu_button_value]").html(on_off);
+		},
+		"fn_open_close": function(open, subm_elem, projects_id){
+			if(typeof open == 'undefined'){ open = false; }
+			if(Lincko.storage.canI('edit', 'projects', projects_id)){
+				var qrcode_elem = subm_elem.find('[find=qrcode]');
+				if(qrcode_elem.length>=1){
+					var img = qrcode_elem.find('[find=qrcode_img]');
+					if(img.length>=1){
+						img.attr('src', Lincko.storage.generateProjectQRcode(projects_id));
+						if(open){
+							qrcode_elem.removeClass('display_none');
+						} else {
+							qrcode_elem.addClass('display_none');
+						}
+					}
+				}
+			}
+		},
+	},
+	"qrcode": {
+		"style": "info",
+		"title": "",
+		"name": "description",
+		"value": function(){
+			var img = $('<img>');
+			img.addClass('submenu_projects_qrcode_img').attr('src', wrapper_neutral.src).attr('find', 'qrcode_img');
+			img.on('click', function(){
+				var src = img.prop('src');
+				if(src != wrapper_neutral.src){
+					device_download(src, '_blank');
+				}
+			});
+			return img;
+		},
+		"now": function(Elem, subm){
+			Elem.removeClass('submenu_deco').attr('find', 'qrcode');
+		},
+		"class": "submenu_deco_read submenu_projects_qrcode display_none",
+	},
 	"description": {
 		"style": "project_description_edit",
 		"title": Lincko.Translation.get('app', 30, 'html'), //Short description
 		"name": "description",
 		"value": "",
-		"class": "submenu_input_textarea submenu_projects_description",
+		"class": "submenu_input_textarea submenu_projects_description models_projects_tab",
 	},
 	"deletion": {
 		"style": "project_deletion",
@@ -222,13 +328,17 @@ submenu_list['app_project_edit'] = {
 			}
 		},
 	},
+	*/
 	"post_action": {
 		"style": "postAction",
 		"action": function(Elem, subm){
-			app_models_projects_build_diy(Elem, subm);
+			var projects_id = subm.param;
+			var subm_elem = subm.Wrapper();
+			var project_open = Lincko.storage.get('projects', projects_id, 'public');
+			subm.obj.open_access.fn_open_close(project_open, subm_elem, projects_id);
+			//app_models_projects_build_diy(Elem, subm);
 		},
 	},
-	*/
 };
 
 var app_models_projects_build_diy = function(Elem, subm){

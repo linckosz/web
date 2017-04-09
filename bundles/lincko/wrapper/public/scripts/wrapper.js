@@ -130,6 +130,20 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 				window.location.href = wrapper_link['root'];
 			}
 
+			if(wrapper_localstorage.workspace == "" && typeof data.workspace != 'undefined' && data.workspace != wrapper_localstorage.workspace){
+				//Switch to another workspace if different than the current one
+				var workspace = "";
+				if(data.workspace){
+					workspace = data.workspace+".";
+				}
+				//Stop database webworker
+				if(webworker){
+					webworker.terminate();
+				}
+				wrapper_localstorage.encrypt('lastvisit', 0, false, true);
+				window.location.href = top.location.protocol+'//'+document.linckoFront+document.linckoBack+workspace+document.domain;
+			}
+
 			if(typeof data.refresh != 'undefined' && data.refresh){
 				//This helps to refresh the page with the new account merged
 				Lincko.storage.getLatest(true, function(){

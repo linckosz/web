@@ -73,6 +73,9 @@ class ControllerWrapper extends Controller {
 		if(isset($_SESSION['user_code'])){
 			$this->json['user_code'] = $_SESSION['user_code'];
 		}
+		if(isset($_SESSION['project_qrcode']) && isset($_SESSION['project_qrcode'][2])){
+			$this->json['project_qrcode'] = $_SESSION['project_qrcode'][2];
+		}
 		if(!OneSeventySeven::get('yuyan')) {
 			OneSeventySeven::set(array('yuyan' => $this->json['language']));
 		}
@@ -233,6 +236,12 @@ class ControllerWrapper extends Controller {
 				//Set integration_code
 				if(isset($json_result->flash->integration_code)){
 					$_SESSION['integration_code'] = $json_result->flash->integration_code;
+				}
+
+				//Set the workspace
+				if(isset($json_result->flash->workspace) && !isset($_SESSION['workspace_switched'])){
+					$_SESSION['workspace_switched'] = true;
+					$json_result->workspace = $json_result->flash->workspace;
 				}
 
 				//Clean integration_code because it has been used by the back end
@@ -407,6 +416,9 @@ class ControllerWrapper extends Controller {
 		$this->timeout = self::$timeout_default;
 		if($timeout){
 			$this->timeout = intval($timeout);
+			if($this->timeout<1){
+				$this->timeout = 1; //Timeout bug below 1s
+			}
 		}
 
 		$type = $this->json['method'];

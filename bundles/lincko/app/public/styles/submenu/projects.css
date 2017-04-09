@@ -59,7 +59,29 @@
 }
 
 .submenu_projects_description {
-	margin-top: 12px;
+	padding-top: 12px;
+}
+
+.submenu_projects_qrcode {
+	text-align: center;
+	background-color: transparent;
+	border: none !important;
+}
+
+.submenu_projects_qrcode_img {
+	width: 160px;
+	height: 160px;
+	border: none;
+	margin: 20px;
+	cursor: pointer;
+}
+
+.submenu_projects_qrcode_loading {
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 140px 4px;
+	background-color: #FAFBFC;
+	cursor: default !important;
 }
 
 .submenu_projects_archives_restore {

@@ -5,14 +5,15 @@ namespace bundles\lincko\app\routes;
 use \libs\OneSeventySeven;
 use \libs\Wechat;
 use \bundles\lincko\wrapper\models\WechatPublic;
+use \bundles\lincko\wrapper\controllers\ControllerWrapper;
 
 $app = \Slim\Slim::getInstance();
 
 $app->get('/', function () use ($app) {
 	if($app->lincko->data['logged']){
 		
-		$app->lincko->data['force_open_website'] = false;
 		$_SESSION['workspace'] = $app->lincko->data['workspace'];
+		$app->lincko->data['force_open_website'] = false;
 		$app->lincko->translation['workspace'] = $app->lincko->data['workspace'];
 		$app->lincko->data['reset_data'] = OneSeventySeven::get('reset_data');
 		if($app->lincko->data['reset_data']){
@@ -37,6 +38,21 @@ $app->get('/', function () use ($app) {
 				}
 			}
 		}
+
+		//Auto add the open project
+		if(isset($_SESSION['project_qrcode'])){
+			$data = new \stdClass;
+			$data->{'id'} = $_SESSION['project_qrcode'][1];
+			$data->{'users>access'} = new \stdClass;
+			$data->{'users>access'}->{$app->lincko->data['uid']} = true;
+			$controller = new ControllerWrapper($data, 'post', false);
+			if($response = $controller->wrap_multi('project/update')){
+				if(isset($response->status) && $response->status==200){
+					unset($_SESSION['project_qrcode']);
+				}
+			}
+		}
+
 		$app->render('/bundles/lincko/app/templates/app/application.twig');
 	} else {
 		$app->lincko->data['force_open_website'] = false;

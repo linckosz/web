@@ -89,8 +89,8 @@ var app_projects_users_contacts_init = function(subm){
 		var others = Lincko.storage.list('users', null, param);
 
 		//Add alphabetic username
-		for(var i in others){
-			others[i]['alphabet_order'] = Pinyin.GetQP(others[i]['-username']);
+		for(var l in others){
+			others[l]['alphabet_order'] = Pinyin.GetQP(others[l]['-username']);
 		}
 		others = Lincko.storage.sort_items(others, 'alphabet_order');
 
@@ -156,8 +156,9 @@ var app_projects_users_contacts_init = function(subm){
 		var others = Lincko.storage.list('users', null, { _id: ['!=', wrapper_localstorage.uid], _visible: true, });
 
 		//Add alphabetic username
-		for(var i in others){
-			others[i]['alphabet_order'] = Pinyin.GetQP(others[i]['-username']);
+		//[unknow bug, already solved] => if use "var i" it become sometimes "users_?" instead of an integer, it seems that the scope was not taken into account
+		for(var k in others){
+			others[k]['alphabet_order'] = Pinyin.GetQP(others[k]['-username']);
 		}
 		others = Lincko.storage.sort_items(others, 'alphabet_order');
 

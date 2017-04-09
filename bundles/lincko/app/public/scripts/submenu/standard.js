@@ -164,7 +164,13 @@ submenu_list['settings'] = {
 			wrapper_localstorage.encrypt('lastvisit', 0, false, true);
 			window.location.href = wrapper_link['root'];
 		},
-		"class": "",
+		"class": function(){
+			var display = "display_none";
+			if(wrapper_domain_debug){
+				display = "";
+			}
+			return display;
+		},
 	},
 	"signout": {
 		"style": "button",

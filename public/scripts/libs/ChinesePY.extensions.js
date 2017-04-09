@@ -21,3 +21,7 @@ Pinyin.getPinyin=function(l1){
 
     return I1; 
 }
+
+Pinyin.GetQP=function(l1){
+    return Pinyin.getPinyin(l1);
+}

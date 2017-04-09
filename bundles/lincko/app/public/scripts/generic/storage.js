@@ -1,5 +1,6 @@
 var storage_first_request = true; //Help to launch getSchema within getLatest only once at the beginning to insure nothing is missing
 var storage_first_launch = true;
+var storage_remember_workspace = true;
 var storage_first_onboarding = true;
 var storage_keep_messages = false; //At false in .schema we delete messages, but at true we keep them because we may return only a part of
 var storage_items_updated = {};
@@ -573,6 +574,11 @@ Lincko.storage.update = function(partial, info){
 		setTimeout(function(){
 			wrapper_load_progress.move(100);
 		}, 200);
+	}
+	if(storage_remember_workspace){
+		storage_remember_workspace = false;
+		//Remember the workspace for next login
+		wrapper_sendAction({workspace: wrapper_localstorage.workspace}, 'post', 'user/workspace');
 	}
 	return update;
 };
@@ -2292,6 +2298,20 @@ Lincko.storage.generateLinkQRcode = function(mini){
 	var updated_at = Lincko.storage.get('users', wrapper_localstorage.uid, 'updated_at');
 	var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domainRoot+':'+document.linckoBackPort+'/file/link_from_qrcode';
 	return url+"/"+workid+"/"+sha+"/"+mini+"?"+updated_at;
+}
+
+Lincko.storage.generateProjectQRcode = function(id){
+	var url = wrapper_neutral.src;
+	var project = Lincko.storage.get("projects", id);
+	if(project){
+		var name = project['+title'];
+		name = name.replace(/[^\d\w]/g, "_");
+		if(name==''){ name = 'open_project'; }
+		var updated_at = project['updated_at'];
+		var workid = Lincko.storage.getWORKID();
+		var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domainRoot+':'+document.linckoBackPort+'/file/project_qrcode/'+workid+'/'+id+'/'+name+'.png?'+updated_at;
+	}
+	return url;
 }
 
 Lincko.storage.generateMyURL = function(){

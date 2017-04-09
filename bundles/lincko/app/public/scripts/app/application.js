@@ -877,11 +877,3 @@ JSfiles.finish(function(){
 	//}, 4000); //4s Demo
 	}, 15000); //15s Production
 });
-
-/*
-var worker = new Worker("/scripts/libs/hammer.min.js", { type: "module" });
-worker.onmessage
-function receiveFromWorker(e) {
-	console.log(e);
-}
-*/
