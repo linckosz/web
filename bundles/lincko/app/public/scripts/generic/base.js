@@ -328,6 +328,26 @@ var base_video_device = [];
 var base_has_webcam = false;
 var base_has_webcam_sub = false;
 
+var base_android_scanner = {
+	exists: false,
+	success: function(url){
+		if(typeof url == 'string'){
+			base_scanner.cb_decoded(url);
+		} else {
+			base_show_error(Lincko.Translation.get('app', 2314, 'html'), true); //Operation failed.
+		}
+	},
+	fail: function(){
+		if(base_scanner.subm){
+			submenu_chat_new_user_result(base_scanner.subm, null, "noresult");
+			base_scanner.subm = null;											
+		}
+	},
+	cancel: function(){
+		base_android_scanner.fail();
+	},
+}
+
 var base_wechat_shareData = null;
 var base_wechat_shareData_garbage = null;
 JSfiles.finish(function(){
@@ -372,10 +392,27 @@ JSfiles.finish(function(){
 		base_has_webcam = true;
 	}
 
-	//Disbale for app because not linked yet
+	//if android app, use java-js api code to setup scanner
 	if(isMobileApp()){
 		base_has_webcam = false;
 		base_has_webcam_sub = false;
+
+		if(typeof android.scanQRCode == 'function'){
+			base_android_scanner.exists = true;
+			base_scanner = {
+				If: true,
+				dispose: function(){},
+				cb_decoded: function(url_code){},
+				setDecodedCallback: function(fn) {
+					this.cb_decoded = fn;
+				},
+				subm: null, //store subm here so that "noresult" can be called on cancel callback
+				render: function(Elem){
+					//java to js function call will run js function in string format
+					android.scanQRCode('base_android_scanner.success', 'base_android_scanner.fail', 'base_android_scanner.cancel');
+				},
+			};
+		}
 	}
 
 	if(!isIOS && !navigator.userAgent.match(/MicroMessenger/i) && typeof w69b != 'undefined' && typeof w69b_qrcode_decodeworker != 'undefined'){

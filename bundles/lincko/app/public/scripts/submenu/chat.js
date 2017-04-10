@@ -675,7 +675,10 @@ var submenu_chat_add_user_options_build_btn = {
 					}
 				);
 			});
-		} else if(base_has_webcam || (base_is_wechat && wx && wx.scanQRCode)){
+		} else if(base_has_webcam //desktop webcam
+			|| base_android_scanner.exists //android rear camera
+			|| (base_is_wechat && wx && wx.scanQRCode) //inside wechat browser, using wechat jssdk scanner
+		){
 			elem.click(function(){
 				if(subm.chat_status == 'scanner'){
 					submenu_chat_new_user_result(subm, null, "noresult");
@@ -691,7 +694,7 @@ var submenu_chat_add_user_options_build_btn = {
 						});
 					}
 					submenu_chat_new_user_result(subm, null, "scanner");
-					if(base_is_wechat){
+					if(base_is_wechat || base_android_scanner.exists){
 						base_scanner.subm = subm; //allow access to subm for wechat scan cancel and fail callbacks
 					}
 				}
@@ -867,7 +870,7 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 			base_scanner.dispose();
 			Elem_radar.recursiveEmpty();
 		}
-		if(!base_is_wechat){
+		if(base_has_webcam){
 			base_scanner = new w69b.qr.ui.ContinuousScanner();
 		}
 		base_scanner.setDecodedCallback(function(url_code) {
