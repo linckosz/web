@@ -162,6 +162,8 @@ submenu_list['settings'] = {
 		"title": Lincko.Translation.get('app', 98, 'html'), //Click to refresh the page
 		"action": function(){
 			wrapper_localstorage.encrypt('lastvisit', 0, false, true);
+			wrapper_localstorage.cleanLocalUser();
+			wrapper_localstorage.cleanLocalWorkspace();
 			window.location.href = wrapper_link['root'];
 		},
 		"class": function(){

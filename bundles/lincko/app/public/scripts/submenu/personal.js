@@ -361,6 +361,66 @@ submenu_list['personal_info'] = {
 			}
 		},
 	},
+
+	"delete": {
+		"style": "profile_delete",
+		"title": function(){
+			if(Lincko.storage.getWORKID()>0){
+				return Lincko.Translation.get('app', 2323, 'html'); //Leave the workspace
+			} else {
+				return Lincko.Translation.get('app', 22, 'html'); //Delete
+			}
+		},
+		"name": "leave",
+		"class": "submenu_personal_deletion",
+		"action": function(Elem, subm){
+			if(Lincko.storage.getWORKID()>0){
+				if(Lincko.storage.canI('edit', 'workspaces', Lincko.storage.getWORKID())){
+					var param = {};
+					param[subm.param] = false; //Remove the user from the workspace
+					submenu_Hideall(subm.preview);
+					var username = Lincko.storage.get('users', subm.param, 'username');
+					wrapper_sendAction(
+						{
+							"id": Lincko.storage.getWORKID(),
+							"users>access": param,
+						},
+						'post',
+						'workspace/update',
+						function(){
+							base_show_error(Lincko.Translation.get('app', 101, 'html', {username: username}), false); //[{username}] has been removed from the workspace
+						}
+					);
+				}
+			} else {
+				if(subm.param != wrapper_localstorage.uid){
+					var param = {};
+					param[subm.param] = false; //Remove the user from the contact list
+					submenu_Hideall(subm.preview);
+					var username = Lincko.storage.get('users', subm.param, 'username');
+					wrapper_sendAction(
+						{
+							"id": wrapper_localstorage.uid,
+							"users>access": param,
+						},
+						'post',
+						'user/update',
+						function(){
+							base_show_error(Lincko.Translation.get('app', 100, 'html', {username: username}), false); //[{username}] has been deleted from your contact list
+						}
+					);
+				}
+			}
+		},
+		"now": function(Elem, subm){
+			if(Lincko.storage.getWORKID()>0 && !Lincko.storage.canI('edit', 'workspaces', Lincko.storage.getWORKID())){ //Not an super user
+				Elem.addClass('display_none');
+			} else if(subm.param == wrapper_localstorage.uid){ //Cannot delete yourself
+				Elem.addClass('display_none');
+			}
+		},
+	},
+
 	"space": {
 		"style": "space",
 		"title": "space",
@@ -607,6 +667,39 @@ Submenu_select.profile_info = function(subm) {
 
 Submenu_select.profile_button_link = function(subm){
 	subm.Add_ButtonLink(subm);
+};
+
+Submenu_select.profile_delete = function(subm){
+	subm.Add_ProfileDelete(subm);
+};
+
+Submenu.prototype.Add_ProfileDelete = function(subm) {
+	var that = this;
+	var submenu_wrapper = this.Wrapper();
+	var attribute = this.attribute;
+	var Elem = $('#-submenu_button').clone();
+	var preview = this.preview;
+	Elem.prop("id", '');
+	Elem.find("[find=submenu_button_title]").addClass("submenu_personal_deletion_button").html(attribute.title);
+	Elem.find("[find=submenu_button_value]").recursiveRemove();
+	if ("action" in attribute) {
+		if (!("action_param" in attribute)) {
+			attribute.action_param = null;
+		}
+		Elem.find("[find=submenu_button_title]").click(attribute.action_param, function(event){
+			attribute.action(Elem, that, event.data);
+		});
+	}
+	if ("class" in attribute) {
+		Elem.addClass(attribute['class']);
+	}
+	if ("now" in attribute && typeof attribute.now === "function") {
+		attribute.now(Elem, that);
+	}
+	submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
+	//submenu_wrapper = null; //In some places it bugs because it's used in a lower scope
+	delete submenu_wrapper;
+	return Elem;
 };
 
 var submenu_profile_timer = [];

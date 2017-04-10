@@ -187,10 +187,12 @@ Submenu.prototype.Add_ChatContacts = function() {
 	var preview = this.preview;
 	var thumbnail = false;
 	var wrapper_content_id = this.id+"_chat_contacts";
-
+	var position = submenu_wrapper.find("[find=submenu_wrapper_content]");
 	if($('#'+wrapper_content_id).length<=0){
-		submenu_wrapper.find("[find=submenu_wrapper_content]").recursiveEmpty();
-		submenu_wrapper.find("[find=submenu_wrapper_content]").prop("id", wrapper_content_id);
+		position
+			.addClass('overthrow')
+			.recursiveEmpty()
+			.prop("id", wrapper_content_id);
 	}
 
 	var temp = Lincko.storage.list('users', null);
@@ -854,6 +856,15 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 			Elem_info.find("[find=submenu_title]").append('<br/>'+Lincko.Translation.get('app', 2313, 'js')); //Once your invitation is accepted, the new contact will be added to this project and your Contacts list. Once added, you can assign tasks to them in this project. 
 		}
 	}
+	else if(chat_status == "invitationsuccessstr"){
+		if(sub_that.find_method=="email"){
+			app_application_action(6); //Invite by email
+		} else if(sub_that.find_method=="qrcode"){
+			app_application_action(7); //Invite by internal scan
+		}
+		Elem_info.removeClass("display_none");
+		Elem_info.find("[find=submenu_title]").html(data); //Your invitation has been sent.
+	}
 	else if(chat_status == "operationfailed"){
 		Elem_info.removeClass("display_none");
 		Elem_info.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2314, 'js')); //Operation failed.
@@ -879,7 +890,12 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 			if(data && data[1]){
 				submenu_chat_search.find_qrcode(submenu_chat_search.data.sub_that, data[1]);
 			} else {
-				alert(url_code);
+				var target = "_blank";
+				var domain = top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domainRoot;
+				if(url_code.indexOf(domain) === 0){ //same tab, same domain
+					target = "_top";
+				}
+				window.open(url_code, target);
 			}
 		});
 		base_scanner.render(Elem_radar.get(0));
@@ -1075,7 +1091,9 @@ var submenu_chat_invite_cb_success = function(msg, error, status, data){
 	} else {
 		data = false;
 	}
-	if(data){
+	if(typeof data == 'string'){
+		submenu_chat_new_user_result(submenu_chat_search.data.sub_that, data, "invitationsuccessstr");
+	} else if(data){
 		submenu_chat_new_user_result(submenu_chat_search.data.sub_that, null, "invitationsuccess");
 	} else {
 		submenu_chat_new_user_result(submenu_chat_search.data.sub_that, null, "invitationfailed");
@@ -1108,9 +1126,14 @@ var submenu_chat_invite_cb_begin = function(){
 Submenu.prototype.Add_ChatContent = function() {
 	var that = this;
 	var submenu_wrapper = this.Wrapper();
+	var wrapper_content_id = this.id+"_chat_content";
 	var position = submenu_wrapper.find("[find=submenu_wrapper_content]");
-	position.addClass('overthrow');
-	position.empty();
+	if($('#'+wrapper_content_id).length<=0){
+		position
+			.addClass('overthrow')
+			.recursiveEmpty()
+			.prop("id", wrapper_content_id);
+	}
 
 	var chatlist_subConstruct = function(){
 		this.list_wrapper.addClass("skylist_maxMobileL_force").addClass('submenu_content_chat');

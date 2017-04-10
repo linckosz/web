@@ -491,7 +491,10 @@ var ActivityFileContentCls = function(record,type)
 		clone_hist.par = {};
 	}
 	clone_hist.par.un = '';
-	this.action = php_nl2br(Lincko.storage.formatHistoryInfo(text, clone_hist)) + ':&nbsp;';
+	if(history.prev){
+		this.prev = Lincko.Translation.get('app', 102, 'html')+': '+history.prev;
+	}
+	this.action = Lincko.storage.formatHistoryInfo(text, clone_hist) + ':&nbsp;';
 }
 
 ActivityFileContentCls.prototype.feed_content = function(elem)
@@ -507,6 +510,9 @@ ActivityFileContentCls.prototype.feed_content = function(elem)
 	}
 	elem.find("[find=target]").html(app_models_fileType.cutFileTitle(this.target,10,0));
 	elem.find("[find=action]").html(wrapper_to_html($.trim(this.action).ucfirst()));
+	if(this.prev){
+		elem.find("[find=previous]").removeClass('display_none').html(this.prev);
+	}
 }
 
 ActivityFileContentCls.prototype.feed_action = function(elem,subm){
@@ -551,13 +557,19 @@ var ActivityContentCls = function(record,type)
 		clone_hist.par = {};
 	}
 	clone_hist.par.un = '';
-	this.action = php_nl2br(Lincko.storage.formatHistoryInfo(text, clone_hist)) + ':&nbsp;';
+	if(history.prev){
+		this.prev = Lincko.Translation.get('app', 102, 'html')+': '+history.prev; //Previous
+	}
+	this.action = Lincko.storage.formatHistoryInfo(text, clone_hist) + ':&nbsp;';
 }
 
 ActivityContentCls.prototype.feed_content = function(elem)
 {
 	elem.find("[find=target]").html(this.target);
 	elem.find("[find=action]").html(wrapper_to_html($.trim(this.action).ucfirst()));
+	if(this.prev){
+		elem.find("[find=previous]").removeClass('display_none').html(this.prev);
+	}
 }
 
 ActivityContentCls.prototype.feed_action = function(elem,subm)
@@ -602,13 +614,19 @@ var ActivityCommentContentCls = function(record,type)
 		clone_hist.par = {};
 	}
 	clone_hist.par.un = '';
-	this.action = php_nl2br(Lincko.storage.formatHistoryInfo(text, clone_hist)) + ':&nbsp;';
+	if(history.prev){
+		this.prev = Lincko.Translation.get('app', 102, 'html')+': '+history.prev; //Previous
+	}
+	this.action = Lincko.storage.formatHistoryInfo(text, clone_hist) + ':&nbsp;';
 }
 
 ActivityCommentContentCls.prototype.feed_content = function(elem)
 {
 	elem.find("[find=target]").html(this.target);
 	elem.find("[find=action]").html(wrapper_to_html($.trim(this.action).ucfirst()));
+	if(this.prev){
+		elem.find("[find=previous]").removeClass('display_none').html(this.prev);
+	}
 }
 
 ActivityCommentContentCls.prototype.feed_action = function(elem,subm)

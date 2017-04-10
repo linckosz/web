@@ -31,7 +31,7 @@ var wrapper_signout_cb_begin = function(){
 }
 var wrapper_signout_cb_complete = function(){
 	$(document.body).css('cursor', '');
-	window.location.href = wrapper_link['root'];
+	window.location.href = top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domainRoot;
 }
 var wrapper_js_response;
 function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_complete, ajax_objForm){
@@ -141,7 +141,12 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 					webworker.terminate();
 				}
 				wrapper_localstorage.encrypt('lastvisit', 0, false, true);
-				window.location.href = top.location.protocol+'//'+document.linckoFront+document.linckoBack+workspace+document.domain;
+				wrapper_localstorage.cleanLocalUser();
+				wrapper_localstorage.cleanLocalWorkspace();
+
+				setTimeout(function(){
+					window.location.href = top.location.protocol+'//'+document.linckoFront+document.linckoBack+workspace+document.domain;
+				}, 2000);
 			}
 
 			if(typeof data.refresh != 'undefined' && data.refresh){
@@ -198,11 +203,13 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 			}
 
 			if(typeof data.version == 'string'){
-				if(wrapper_version){
+				if(wrapper_version && data.version){
 					if(wrapper_version != data.version){ //new version available
 						wrapper_version_new = true;
 						if(wrapper_version_idle){
 							wrapper_localstorage.encrypt('lastvisit', 0, false, true);
+							wrapper_localstorage.cleanLocalUser();
+							wrapper_localstorage.cleanLocalWorkspace();
 							window.location.href = wrapper_link['root'];
 						}
 					}

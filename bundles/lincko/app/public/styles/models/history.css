@@ -207,7 +207,7 @@
 	text-overflow: ellipsis;
 }
 
-.models_history_standard_shortcut_wrapper > span{
+.models_history_standard_shortcut_wrapper > span {
 	vertical-align: top;
 }
 
@@ -232,6 +232,11 @@
 {
 	cursor: pointer;
 	cursor: hand;
+}
+
+.models_history_standard_previous {
+	color: #97C2DF;
+	font-size: 11px;
 }
 
 

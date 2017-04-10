@@ -842,7 +842,7 @@ function wrapper_test(type, RCUD){
 					//"firstname": "Bruno"+Math.floor(Math.random() * 20), //OPTIONAL
 					//"lastname": "Martin", //OPTIONAL
 					//"gender": 1, //OPTIONAL
-					"usersLinked>access": {
+					"users>access": {
 						1220: [true,false][Math.round(Math.random())],
 					},
 				},

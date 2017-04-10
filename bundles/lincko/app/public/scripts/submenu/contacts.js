@@ -339,6 +339,9 @@ Submenu.prototype.Add_ChatLeave = function(subm) {
 		if ("class" in attribute) {
 			Elem.addClass(attribute['class']);
 		}
+		if ("now" in attribute && typeof attribute.now === "function") {
+			attribute.now(Elem, that);
+		}
 		submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
 		//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
 		delete submenu_wrapper;

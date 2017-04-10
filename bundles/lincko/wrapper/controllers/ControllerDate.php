@@ -88,7 +88,7 @@ class ControllerDate extends Controller {
 
 				date_medium: \"".$app->trans->getJS('wrapper', 2, 2)."\", //July 8th, 2015
 
-				date_medium_simple: \"".$app->trans->getJS('wrapper', 2, 8)."\", //July 8th, 2015
+				date_medium_simple: \"".$app->trans->getJS('wrapper', 2, 8)."\", //July 8, 2015
 
 				date_long: \"".$app->trans->getJS('wrapper', 2, 3)."\", //8 Jul 2015 01:51 PM
 

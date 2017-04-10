@@ -1014,6 +1014,18 @@ Lincko.storage.getHistoryInfo = function(hist){
 		var date = new wrapper_date(hist.timestamp);
 		result.title = result.title.ucfirst();
 		result.date = date.display('date_very_short');
+		
+		//Format previous result
+		if(hist.old){
+			//Format data displayed
+			if(hist.cod==506){ //modified a task due date
+				if(hist.par && hist.par.dd){
+					result.prev = (new wrapper_date(hist.timestamp)).display('date_medium_simple');
+				}
+			} else {
+				result.prev = hist.old;
+			}
+		}
 
 		//console.log(hist);
 		if(hist.type=="comments" && (hist.by==0 || hist.by==1)){

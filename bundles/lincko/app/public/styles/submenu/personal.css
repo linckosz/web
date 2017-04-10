@@ -184,3 +184,27 @@
 	margin-left: auto;
 	margin-right: auto;
 }
+
+.submenu_personal_deletion {
+	padding-top: 30px;
+	padding-bottom: 30px;
+	text-align: center !important;
+	cursor: default !important;
+	background-color: transparent !important;
+	border-style: none !important;
+}
+
+.submenu_personal_deletion_button {
+	display: inline-block !important;
+	padding: 6px 32px !important;
+	color: #FFFFFF !important;
+	background-color: #BE2B1F !important;
+	border: solid 2px transparent;
+	border-radius: 4px;
+	cursor: pointer; cursor: hand;
+	box-sizing: border-box;
+}
+
+.submenu_personal_deletion_button:hover {
+	border-color: rgba(255, 255, 255, 0.3) !important;
+}
