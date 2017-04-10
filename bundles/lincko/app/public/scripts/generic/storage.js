@@ -1390,6 +1390,7 @@ Lincko.storage.cache = {
 	},
 	
 	notify: {},
+	notify_total: 0,
 	getNotify: function(type, id){
 		if(!this.first_init){
 			this.first_init = this.init();
@@ -1402,6 +1403,25 @@ Lincko.storage.cache = {
 			}
 		}
 		return false;
+	},
+	getTotalNotifyCount: function(){
+		var c_total = 0;
+		$.each(Lincko.storage.cache.notify, function(type, obj){
+			if(typeof obj == 'object'){
+				$.each(obj, function(id, count){
+					var item = Lincko.storage.get(type, id);
+					//don't add count for deleted/muted items
+					if(count < 1 || !item || item.deleted_at
+						|| !item._users 
+						|| !item._users[wrapper_localstorage.uid] 
+						|| item._users[wrapper_localstorage.uid].silence ){ return; }
+					else {
+						c_total = c_total + count;
+					}
+				});
+			}
+		});
+		return c_total;
 	},
 
 	statistics: {},
@@ -1616,6 +1636,19 @@ Lincko.storage.cache = {
 				app_application_lincko.prepare('projects_'+id_reset);
 			} else {
 				app_application_lincko.prepare('projects');
+			}
+		}
+
+		//red notification dot update for app
+		if(isMobileApp()){
+			var redDotCount = Lincko.storage.cache.getTotalNotifyCount();
+			//if new count is different from existing total, then update
+			if(Lincko.storage.cache.notify_total != redDotCount){
+				Lincko.storage.cache.notify_total = redDotCount;
+				//android
+				if(typeof android == 'object' && typeof android.applyRedCount == 'function'){
+					android.applyRedCount(redDotCount); //call native java function
+				}
 			}
 		}
 
