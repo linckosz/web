@@ -397,7 +397,7 @@ JSfiles.finish(function(){
 		base_has_webcam = false;
 		base_has_webcam_sub = false;
 
-		if(typeof android.scanQRCode == 'function'){
+		if(typeof android == 'object' && typeof android.scanQRCode == 'function'){
 			base_android_scanner.exists = true;
 			base_scanner = {
 				If: true,
