@@ -345,7 +345,7 @@
     left: 0px;
     right: 0px;
     top: 20px;
-    padding-right: 80px;
+    padding-right: 96px;
     color: #475577;
 }
 .app_models_projects_projectsDeck_card [find=info_main]>div,
@@ -360,8 +360,7 @@
     font-size: 26px;
     color: rgba(251, 160, 38, 0.75);
 }
-.app_models_projects_projectsDeck_card [find=icon_wrapper] [find=icon_dashboard],
-.app_models_projects_projectsDeck_card [find=icon_wrapper] [find=icon_settings]{
+.app_models_projects_projectsDeck_card [find=icon_wrapper]>span{
 	vertical-align: top;
 }
 .app_models_projects_projectsDeck_card [find=icon_wrapper] [find=icon_dashboard]:hover,
