@@ -9,7 +9,7 @@ use \libs\OneSeventySeven;
 use \libs\Wechat;
 use \libs\Json;
 use WideImage\WideImage;
-
+use \bundles\lincko\wrapper\models\Wechatcb;
 
 class ControllerWechat extends Controller {
 
@@ -408,7 +408,47 @@ class ControllerWechat extends Controller {
 		$body = $app->request->getBody();
 		$data = simplexml_load_string($body, null, LIBXML_NOCDATA);
 
-		//\libs\Watch::php($data, '$data', __FILE__, __LINE__, false, false, true);
+		//this is flipped true if the same call has been repeated within the given time
+		$ignore_cb = false;
+		$ignore_cb_duration = 30; //30s
+		$delete_cb_record_age = 120; //2min
+		$curtime = time();
+
+		foreach (Wechatcb::all() as $cb) {
+			if($curtime - $cb->first_cb_time > $delete_cb_record_age){
+				//delete record on database
+			}
+		}
+
+		//primary key for wechatcb database
+		$open_id_event_key = (string) $data->FromUserName.'_';
+		$EventKey = (string) $data->EventKey;
+		if(strlen($EventKey) < 1){
+			$open_id_event_key .= (string) $data->Event;
+		} else {
+			$open_id_event_key .= $EventKey;
+		}
+		
+		$prev_cb = Wechatcb::where('open_id_event_key', $open_id_event_key)->first();
+		
+		if(isset($prev_cb) && $curtime - $prev_cb->first_cb_time < $ignore_cb_duration){
+			$ignore_cb = true;
+		}
+		else{
+			//add current cb to database
+			$new_cb = new Wechatcb;
+			$new_cb->open_id_event_key = $open_id_event_key;
+			$new_cb->first_cb_time = $curtime;
+			$new_cb->save();
+		}
+
+		//dont go past here for repeat cbs
+		if($ignore_cb){
+			return;
+		}
+
+		//\libs\Watch::php($data->EventKey, '$data', __FILE__, __LINE__, false, false, false);
+		//\libs\Watch::php($user, '$user', __FILE__, __LINE__, false, false, false);
 
 		if(isset($data->MsgType) && isset($data->Event) && strtolower($data->MsgType) == 'event'){
 			$user = false;
