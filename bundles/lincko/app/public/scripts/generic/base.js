@@ -328,7 +328,8 @@ var base_video_device = [];
 var base_has_webcam = false;
 var base_has_webcam_sub = false;
 
-var base_android_scanner = {
+//for android and ios
+var base_app_scanner = {
 	exists: false,
 	success: function(url){
 		if(typeof url == 'string'){
@@ -344,7 +345,7 @@ var base_android_scanner = {
 		}
 	},
 	cancel: function(){
-		base_android_scanner.fail();
+		base_app_scanner.fail();
 	},
 }
 
@@ -398,7 +399,7 @@ JSfiles.finish(function(){
 		base_has_webcam_sub = false;
 
 		if(typeof android == 'object' && typeof android.scanQRCode == 'function'){
-			base_android_scanner.exists = true;
+			base_app_scanner.exists = true;
 			base_scanner = {
 				If: true,
 				dispose: function(){},
@@ -409,7 +410,30 @@ JSfiles.finish(function(){
 				subm: null, //store subm here so that "noresult" can be called on cancel callback
 				render: function(Elem){
 					//java to js function call will run js function in string format
-					android.scanQRCode('base_android_scanner.success', 'base_android_scanner.fail', 'base_android_scanner.cancel');
+					android.scanQRCode('base_app_scanner.success', 'base_app_scanner.fail', 'base_app_scanner.cancel');
+				},
+			};
+		}
+		else if(device_type()=='ios'){
+			base_app_scanner.exists = true;
+			base_scanner = {
+				If: true,
+				dispose: function(){},
+				cb_decoded: function(url_code){},
+				setDecodedCallback: function(fn) {
+					this.cb_decoded = fn;
+				},
+				subm: null, //store subm here so that "noresult" can be called on cancel callback
+				render: function(Elem){
+					//call native iOS function
+					window.webkit.messageHandlers.iOS.postMessage(
+						{
+							action: 'scanqrcode',
+							cb_success: 'base_app_scanner.success',
+							cb_fail: 'base_app_scanner.fail',
+							cb_cancel: 'base_app_scanner.cancel',
+						}
+					);
 				},
 			};
 		}

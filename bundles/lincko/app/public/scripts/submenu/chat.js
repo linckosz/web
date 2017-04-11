@@ -669,16 +669,8 @@ var submenu_chat_add_user_options_build_btn = {
 	},
 	scan: function(elem, subm){
 		submenu_chat_search.value_qrcode = null;
-		if(isMobileApp() && device_type()=='ios'){
-			elem.click(function(){
-				window.webkit.messageHandlers.iOS.postMessage(
-					{
-						action: 'scanqrcode',
-					}
-				);
-			});
-		} else if(base_has_webcam //desktop webcam
-			|| base_android_scanner.exists //android rear camera
+		if(base_has_webcam //desktop webcam
+			|| base_app_scanner.exists //rear camera for android and ios
 			|| (base_is_wechat && wx && wx.scanQRCode) //inside wechat browser, using wechat jssdk scanner
 		){
 			elem.click(function(){
@@ -696,7 +688,7 @@ var submenu_chat_add_user_options_build_btn = {
 						});
 					}
 					submenu_chat_new_user_result(subm, null, "scanner");
-					if(base_is_wechat || base_android_scanner.exists){
+					if(base_is_wechat || base_app_scanner.exists){
 						base_scanner.subm = subm; //allow access to subm for wechat scan cancel and fail callbacks
 					}
 				}
