@@ -433,7 +433,7 @@ var account_integration_wechat_qrcode = function(){
 	clearInterval(account_integration_wechat_timer);
 	if(isMobileApp()){
 		//Call a native function
-		if(typeof android == 'object' && typeof android.scanQRCode == 'function'){ //android wechat login
+		if(typeof android == 'object' && typeof android.wxLogin == 'function'){ //android wechat login
 			android.wxLogin(wrapper_timeoffset());
 		}
 	} else {
