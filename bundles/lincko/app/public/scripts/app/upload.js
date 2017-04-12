@@ -95,7 +95,7 @@ submenu_list['app_upload_destination'] = {
 };
 
 //This function is called only at the file submit moment because it can be different per file
-function app_upload_prepare_log(parent_type, parent_id, temp_id, precompress,real_orientation){
+function app_upload_prepare_log(parent_type, parent_id, temp_id, precompress, real_orientation){
 	if(typeof parent_type != 'string' && !$.isNumeric(parent_id)){
 		parent_type = 'projects';
 		parent_id = Lincko.storage.getMyPlaceholder()['_id'];
