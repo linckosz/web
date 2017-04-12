@@ -1,5 +1,5 @@
 /* Category 31 */
-var BaseItemCls = function(record,type)
+var BaseItemCls = function(record,type, disableActionClick)
 {
 
 	this.style = '';
@@ -93,6 +93,11 @@ var BaseItemCls = function(record,type)
 		default :
 			break;
 	}
+
+	if(typeof disableActionClick != 'boolean'){
+		var disableActionClick = false;
+	}
+	this.data.disableActionClick = disableActionClick;
 }
 
 BaseItemCls.prototype.data_category_cls = function(record,type)
@@ -351,6 +356,7 @@ FileContentCls.prototype.feed_content = function(elem)
 
 FileContentCls.prototype.feed_action = function(elem,subm){
 	var that = this;
+	if(that.disableActionClick){ return; } //dont add click event if disabled
 	elem.find("[find=shortcut]").click({'subm':subm,'type':that.category,'target_id':that.id,'file_category':that.file_category},function(event){
 		var subm = event.data.subm;
 		var target_id =  event.data.target_id;
@@ -517,6 +523,7 @@ ActivityFileContentCls.prototype.feed_content = function(elem)
 
 ActivityFileContentCls.prototype.feed_action = function(elem,subm){
 	var that = this;
+	if(that.disableActionClick){ return; } //dont add click event if disabled
 	elem.find("[find=shortcut]").click({'subm':subm,'type':that.category,'target_id':that.id,'file_category':that.file_category},function(event){
 		var subm = event.data.subm;
 		var target_id =  event.data.target_id;
@@ -575,6 +582,7 @@ ActivityContentCls.prototype.feed_content = function(elem)
 ActivityContentCls.prototype.feed_action = function(elem,subm)
 {
 	var that = this;
+	if(that.disableActionClick){ return; } //dont add click event if disabled
 	if(this.category != 'projects')
 	{
 		elem.find("[find=target]").click({'subm':subm,'type':that.category,'target_id':that.target_id},function(event){
@@ -632,6 +640,7 @@ ActivityCommentContentCls.prototype.feed_content = function(elem)
 ActivityCommentContentCls.prototype.feed_action = function(elem,subm)
 {
 	var that = this;
+	if(that.disableActionClick){ return; } //dont add click event if disabled
 	elem.find("[find=target]").click({'subm':subm,'type':that.target_category,'target_id':that.target_id},function(event){
 		var subm = event.data.subm;
 		var type = event.data.type;

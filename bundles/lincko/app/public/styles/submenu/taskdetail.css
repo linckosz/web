@@ -891,7 +891,9 @@ styling for sub comments
 .submenu_taskdetail_activity .models_history_line{
 	display: none;
 }
-
+.submenu_taskdetail_activity [find=target]{
+	cursor: default;
+}
 
 
 /*

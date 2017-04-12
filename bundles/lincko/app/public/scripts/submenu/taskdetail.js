@@ -1868,23 +1868,33 @@ Submenu.prototype.Add_taskdetail = function() {
 	var elem_submenu_taskdetail_activity = $('#-submenu_taskdetail_activity').clone().prop('id','submenu_taskdetail_activity_'+that.md5id);
 	submenu_taskdetail.append(elem_submenu_taskdetail_activity);
 	var elem_submenu_taskdetail_activity_main = elem_submenu_taskdetail_activity.find('.submenu_taskdetail_activity_main');
-	var hist_item = Lincko.storage.hist(that.param.type, null, [{id: taskid}], null, null, true, true);
-	
-	elem_submenu_taskdetail_activity.find('[find=activityCount]').text(hist_item.length);
-	
-	$.each(hist_item, function(i, hist){
-		var hist_obj = new BaseItemCls(hist, 'history');
-		hist_obj.item_display(elem_submenu_taskdetail_activity_main, that, 'history', 0);
-	});
 
+	//direct history
+	var hist_item = Lincko.storage.hist(that.param.type, null, [{id: taskid}]);
+	//add project history that has to do with this item
+	$.each(Lincko.storage.hist('projects', null, [{att: '_'+that.param.type}]), function(i, hist){
+		if(hist.par && hist.par.tid && hist.par.tid == taskid){
+			$.merge(hist_item, [hist]);
+		}
+	});
+	//add this item's children history
+	$.merge(hist_item, Lincko.storage.hist(null, null, [{type: ['!=', that.param.type]}, {id: ['!=', taskid]}], 'tasks', 26798, true));
+	hist_item = Lincko.storage.sort_items(hist_item, 'timestamp', 0, -1, false);
+	elem_submenu_taskdetail_activity.find('[find=activityCount]').text(hist_item.length);
+
+	var feedActivity = function(){
+		$.each(hist_item, function(i, hist){
+			var hist_obj = new BaseItemCls(hist, 'history', true);
+			hist_obj.item_display(elem_submenu_taskdetail_activity_main, that, 'history', 0);
+		});
+	}
 
 	/*attach collapsable_fn*/
-	var submenu_taskdetail_collapsable_fn = function(){
-		var elem_btn = $(this);
+	var submenu_taskdetail_collapsable_fn = function(elem_btn){
 		if(elem_btn.hasClass('submenu_taskdetail_collapsable_button_disabled')){ return; }
 
 		var elem_parent = elem_btn.parent();
-		var elem_content = $(this).siblings();
+		var elem_content = elem_btn.siblings();
 		var elem_arrow = elem_btn.find('[find=icon_arrow]');
 		if( elem_content.css('display')!='none' && !elem_parent.hasClass('submenu_taskdetail_collapsable_defaultCollapsed')){
 			elem_content.velocity('slideUp',{
@@ -1926,7 +1936,13 @@ Submenu.prototype.Add_taskdetail = function() {
 			});
 		}
 	}
-	submenu_taskdetail.find('.submenu_taskdetail_collapsable_button').click(submenu_taskdetail_collapsable_fn);
+	submenu_taskdetail.find('.submenu_taskdetail_collapsable_button').click(function(){
+		if($(this).attr('toFeed') == 'activity'){
+			feedActivity();
+			$(this).removeAttr('toFeed');
+		}
+		submenu_taskdetail_collapsable_fn($(this));
+	});
 	
 	//submenu_wrapper.find('[find=submenu_wrapper_content]').removeClass('overthrow');
 

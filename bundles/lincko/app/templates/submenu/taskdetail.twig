@@ -220,14 +220,14 @@
 </table>
 
 <div id="-submenu_taskdetail_activity" class="submenu_taskdetail_activity submenu_taskdetail_collapsable_defaultCollapsed">
-	<table class="submenu_taskdetail_collapsable_button submenu_taskdetail_paddingLeft">
-		<td find="icon_arrow" class="icon-Accordion base_color_text_linckoOrange fa-rotate-270"></td>
-		<td>Activity{#toto#}</td>
+	<table class="submenu_taskdetail_collapsable_button submenu_taskdetail_paddingLeft" toFeed="activity">
+		<td find="icon_arrow" class="icon-Accordion base_color_text_linckoOrange"></td>
+		<td>{{ _trans('app', 6, 3, 'html') }}{#Activity#}</td>
 		<td>(<span find="activityCount">0</span>)</td>
-		<td class="icon-Pencil" find="icomoon"></td>
+		<td class="icon-projectActivity" find="icomoon"></td>
 	</table>
-	<div class="submenu_taskdetail_activity_main submenu_taskdetail_paddingLeft">
-		<ul class="chat_contents_wrapper"></ul>
+	<div class="submenu_taskdetail_activity_main">
+		<ul class="chat_contents_wrapper submenu_taskdetail_paddingLeft"></ul>
 	</div>
 </div>
 
