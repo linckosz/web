@@ -395,21 +395,10 @@ class ControllerWechat extends Controller {
 
 	public function official_post(){
 		$app = \Slim\Slim::getInstance();
-		$app->trans->getList('default');
-		$lang = $app->trans->getClientLanguage(); //Will be "en" by default
-		$timeoffset = 16; //Chinese time is mostly probable to be used for wechat account
-		$option['appid'] = $app->lincko->integration->wechat['public_appid'];
-		$option['secret'] = $app->lincko->integration->wechat['public_secretapp'];
-		$option['access_token'] = WechatPublic::access_token();
-
-		$wechat = new Wechat($option);
-		$wechat->getToken();
-
 		$body = $app->request->getBody();
 		$data = simplexml_load_string($body, null, LIBXML_NOCDATA);
-
-		//this is flipped true if the same call has been repeated within the given time
-		$ignore_cb = false;
+		
+		$ignore_cb = false; //this is flipped true if the same call has been repeated within the given time
 		$ignore_cb_duration = 30; //30s
 		$delete_cb_record_age = 120; //2min
 		$curtime = time();
@@ -417,6 +406,7 @@ class ControllerWechat extends Controller {
 		foreach (Wechatcb::all() as $cb) {
 			if($curtime - $cb->first_cb_time > $delete_cb_record_age){
 				//delete record on database
+				//$cb->forceDelete();
 			}
 		}
 
@@ -431,8 +421,15 @@ class ControllerWechat extends Controller {
 		
 		$prev_cb = Wechatcb::where('open_id_event_key', $open_id_event_key)->first();
 		
-		if(isset($prev_cb) && $curtime - $prev_cb->first_cb_time < $ignore_cb_duration){
-			$ignore_cb = true;
+		if(isset($prev_cb)){
+			if($curtime - $prev_cb->first_cb_time < $ignore_cb_duration){ //same call was recently made
+				$ignore_cb = true;
+			}
+			else{
+				//it has been too long since last call, so just update timestamp
+				$prev_cb->first_cb_time = $curtime;
+				$prev_cb->save();
+			}
 		}
 		else{
 			//add current cb to database
@@ -448,7 +445,16 @@ class ControllerWechat extends Controller {
 		}
 
 		//\libs\Watch::php($data->EventKey, '$data', __FILE__, __LINE__, false, false, false);
-		//\libs\Watch::php($user, '$user', __FILE__, __LINE__, false, false, false);
+
+		$app->trans->getList('default');
+		$lang = $app->trans->getClientLanguage(); //Will be "en" by default
+		$timeoffset = 16; //Chinese time is mostly probable to be used for wechat account
+		$option['appid'] = $app->lincko->integration->wechat['public_appid'];
+		$option['secret'] = $app->lincko->integration->wechat['public_secretapp'];
+		$option['access_token'] = WechatPublic::access_token();
+
+		$wechat = new Wechat($option);
+		$wechat->getToken();
 
 		if(isset($data->MsgType) && isset($data->Event) && strtolower($data->MsgType) == 'event'){
 			$user = false;
