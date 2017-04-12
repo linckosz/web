@@ -1020,7 +1020,7 @@ Lincko.storage.getHistoryInfo = function(hist){
 			//Format data displayed
 			if(hist.cod==506){ //modified a task due date
 				if(hist.par && hist.par.dd){
-					result.prev = (new wrapper_date(hist.timestamp)).display('date_medium_simple');
+					result.prev = (new wrapper_date(hist.par.dd)).display('date_medium_simple');
 				}
 			} else {
 				result.prev = hist.old;

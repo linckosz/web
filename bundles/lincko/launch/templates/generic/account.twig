@@ -4,9 +4,9 @@
 		JSfiles.later("{{ _filelatest('/lincko/launch/scripts/generic/account.js') }}");
 		JSfiles.later("{{ _filelatest('/lincko/launch/scripts/integration/wechat.js') }}", 10);
 		var account_link = [];
-		account_link['root'] = "{{ urlFor('root') }}";
-		account_link['home'] = "{{ urlFor('home') }}";
-		account_link['info_integration'] = "{{ urlFor('info_integration_get') }}";
+		account_link['root'] = wrapper_link['root'];
+		account_link['home'] = wrapper_link['home'];
+		account_link['info_integration'] = top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"{{ urlFor('info_integration_get') }}";
 		
 		var account_account_force = false;
 		{% if invitation_code or user_code %}

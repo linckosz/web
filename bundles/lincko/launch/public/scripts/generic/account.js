@@ -77,7 +77,7 @@ var account_joinus_cb_success = account_signin_cb_success = function(msg, err, s
 		$("#account_captcha").prop("src", $("#account_captcha").prop("src"));
 		account_error_hide_timer();
 	} else {
-		window.location.href = account_link['root'];
+		window.location.href = wrapper_link['root'];
 	}
 };
 
@@ -114,7 +114,7 @@ var account_reset_cb_success = function(msg, err, status, data){
 		account_error_hide_timer();
 	} else {
 		//The server will setup credential session information
-		window.location.href = account_link['root'];
+		window.location.href = wrapper_link['root'];
 	}
 };
 
@@ -389,7 +389,7 @@ var account_integration_account = {
 						var div = $('<div>').html(wrapper_to_html(msg));
 						$('#account_integration_top_info').append(div);
 						account_integration_account.stop();
-						window.location.href = account_link['root'];
+						window.location.href = wrapper_link['root'];
 						return true;
 					}
 				}

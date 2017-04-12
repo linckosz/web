@@ -3,9 +3,9 @@
 	<script>
 		JSfiles.later("{{ _filelatest('/lincko/web/scripts/generic/account.js') }}");
 		var account_link = [];
-		account_link['root'] = "{{ urlFor('root') }}";
-		account_link['home'] = "{{ urlFor('home') }}";
-		account_link['account_forgot'] = "{{ urlFor('account_forgot') }}";
+		account_link['root'] = wrapper_link['root'];
+		account_link['home'] = wrapper_link['home'];
+		account_link['account_forgot'] =  top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"{{ urlFor('account_forgot') }}";
 	</script>
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/web/styles/generic/account.css') }}" type="text/css" />
 </div>

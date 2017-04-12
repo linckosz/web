@@ -395,6 +395,7 @@ class ControllerWrapper extends Controller {
 		unset($_SESSION['public_key']);
 		unset($_SESSION['private_key']);
 		unset($_SESSION['workspace']);
+		unset($_SESSION['workspace_switched']);
 		setcookie('pukpic', '', time()-1, '/', $app->lincko->domain);
 		return true;
 	}

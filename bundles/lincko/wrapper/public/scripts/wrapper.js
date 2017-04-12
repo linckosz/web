@@ -136,6 +136,7 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 				if(data.workspace){
 					workspace = data.workspace+".";
 				}
+				wrapper_link['root'] = top.location.protocol+'//'+document.linckoFront+document.linckoBack+workspace+document.domain+'/';
 				//Stop database webworker
 				if(webworker){
 					webworker.terminate();
