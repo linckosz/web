@@ -434,7 +434,7 @@ var account_integration_wechat_qrcode = function(){
 	if(isMobileApp()){
 		//Call a native function
 		if(typeof android == 'object' && typeof android.scanQRCode == 'function'){ //android wechat login
-			android.wxLogin();
+			android.wxLogin(wrapper_timeoffset());
 		}
 	} else {
 		$('#account_integration_top_info').find('img').attr('src', wrapper_neutral.src); //Change to a transarency picture
