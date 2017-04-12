@@ -296,9 +296,8 @@ Submenu.prototype.AddFeedbackContent = function() {
 						elem.find(".submenu_feedback_shortcut_uploading_pic").addClass('display_none');
 						elem.find(".submenu_feedback_shortcut_uploading_ico").removeClass('display_none').find("i").addClass(app_models_fileType.getClass(this.ext));
 						
-					}else 
-					{
-						alert
+					}
+					else {
 						elem.find(".submenu_feedback_shortcut_uploading_ico").addClass('display_none');
 						elem.find(".submenu_feedback_shortcut_uploading_pic")
 								.removeClass('display_none')
@@ -440,9 +439,10 @@ Submenu.prototype.AddFeedbackBottom = function() {
 
 				editor.removeClass("submenu_feedback_space");
 
+
 				$.each(app_upload_files.lincko_files, function(i, file){
 					if(file.lincko_param == that.id){
-						app_upload_files.lincko_files[i].lincko_parent_type = "chat";
+						app_upload_files.lincko_files[i].lincko_parent_type = type;
 						app_upload_files.lincko_files[i].lincko_parent_id = that.param.id;
 						app_upload_files.lincko_files[i].submit();
 					}

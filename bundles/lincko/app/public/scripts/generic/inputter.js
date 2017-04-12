@@ -81,7 +81,6 @@ var inputter = function(panel_id,position,upload_ptype,upload_pid,layer,burger)
 
 inputter.prototype.getContent = function()
 {
-
 	var container = $('#'+this.panel_id+'_inputter_container');
 	var text = container.find('[find=chat_textarea]').get(0).innerHTML.replace(/<div>/g,"<br>").replace(/<\/div>/g,"");
 	var html = container.find('[find=chat_textarea]').get(0).innerHTML;
@@ -428,6 +427,7 @@ inputter.prototype.buildLayer = function()
 									var pid = event.data.pid ;
 									var panel_id = event.data.panel_id ;
 									var position = event.data.position ;
+
 									if(supportsTouch)
 									{
 										var files_queue = container.find('[find=files_queue]');

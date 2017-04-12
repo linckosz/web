@@ -95,7 +95,7 @@ submenu_list['app_upload_destination'] = {
 };
 
 //This function is called only at the file submit moment because it can be different per file
-function app_upload_prepare_log(parent_type, parent_id, temp_id, precompress){
+function app_upload_prepare_log(parent_type, parent_id, temp_id, precompress,real_orientation){
 	if(typeof parent_type != 'string' && !$.isNumeric(parent_id)){
 		parent_type = 'projects';
 		parent_id = Lincko.storage.getMyPlaceholder()['_id'];
@@ -107,6 +107,7 @@ function app_upload_prepare_log(parent_type, parent_id, temp_id, precompress){
 	$('#app_upload_workspace').val(wrapper_localstorage.workspace);
 	$('#app_upload_temp_id').val(temp_id);
 	$('#app_upload_precompress').val(precompress);
+	$('#app_upload_real_orientation').val(real_orientation);
 }
 
 function app_upload_set_launcher(parent_type, parent_id, submenu, start, temp_id, param, precompress){
@@ -123,6 +124,7 @@ function app_upload_set_launcher(parent_type, parent_id, submenu, start, temp_id
 	}
 	if(typeof param == 'undefined'){ param = null; }
 	if(typeof precompress == 'undefined'){ precompress = false; }
+	if(typeof real_orientation == 'undefined'){ real_orientation = true; }
 	app_upload_auto_launcher.parent_type = parent_type;
 	app_upload_auto_launcher.parent_id = parent_id;
 	app_upload_auto_launcher.submenu = submenu;
@@ -132,6 +134,16 @@ function app_upload_set_launcher(parent_type, parent_id, submenu, start, temp_id
 		precompress = true;
 	}
 	app_upload_auto_launcher.precompress = precompress;
+
+	if(precompress && isIOS)
+	{
+		app_upload_auto_launcher.real_orientation = false;
+	}
+	else
+	{
+		app_upload_auto_launcher.real_orientation = true;
+	}
+
 	if(precompress){
 		//If we cannot compress on front, it will be on backend
 		$('#app_upload_fileupload').fileupload('option', {disableImageResize: /Android(?!.*Chrome)|Opera/.test(window.navigator.userAgent),});
@@ -170,6 +182,7 @@ var app_upload_auto_launcher = {
 	start: false,
 	temp_id: false,
 	param: null,
+	real_orientation:true,
 	init: function(){
 		this.parent_type = 'projects';
 		this.parent_id = parseInt(Lincko.storage.getMyPlaceholder()['_id'], 10);
@@ -177,6 +190,7 @@ var app_upload_auto_launcher = {
 		this.start = false;
 		this.temp_id = false;
 		this.param = null;
+		this.real_orientation = true;
 	},
 };
 
@@ -250,6 +264,7 @@ $(function () {
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_parent_id = app_upload_auto_launcher.parent_id;
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_parent_type = app_upload_auto_launcher.parent_type;
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_precompress = app_upload_auto_launcher.precompress;
+			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_real_orientation = app_upload_auto_launcher.real_orientation;
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_start = app_upload_auto_launcher.start;
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_try = 2;
 
@@ -371,7 +386,8 @@ $(function () {
 			var parent_id = app_upload_files.lincko_files[data.lincko_files_index].lincko_parent_id;
 			var temp_id = app_upload_files.lincko_files[data.lincko_files_index].lincko_temp_id;
 			var precompress = app_upload_files.lincko_files[data.lincko_files_index].lincko_precompress;
-			app_upload_prepare_log(parent_type, parent_id, temp_id, precompress);
+			var real_orientation = app_upload_files.lincko_files[data.lincko_files_index].lincko_real_orientation;
+			app_upload_prepare_log(parent_type, parent_id, temp_id, precompress,real_orientation);
 			app_application_lincko.prepare('upload', true);
 		},
 		
