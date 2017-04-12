@@ -1861,21 +1861,39 @@ Submenu.prototype.Add_taskdetail = function() {
 			toggleNewComment();
 		}
 	});
+	/*---end of comments------*/
+
+
+	//item activity
+	var elem_submenu_taskdetail_activity = $('#-submenu_taskdetail_activity').clone().prop('id','submenu_taskdetail_activity_'+that.md5id);
+	submenu_taskdetail.append(elem_submenu_taskdetail_activity);
+	var elem_submenu_taskdetail_activity_main = elem_submenu_taskdetail_activity.find('.submenu_taskdetail_activity_main');
+	var hist_item = Lincko.storage.hist(that.param.type, null, [{id: taskid}], null, null, true, true);
+	
+	elem_submenu_taskdetail_activity.find('[find=activityCount]').text(hist_item.length);
+	
+	$.each(hist_item, function(i, hist){
+		var hist_obj = new BaseItemCls(hist, 'history');
+		hist_obj.item_display(elem_submenu_taskdetail_activity_main, that, 'history', 0);
+	});
+
 
 	/*attach collapsable_fn*/
 	var submenu_taskdetail_collapsable_fn = function(){
 		var elem_btn = $(this);
 		if(elem_btn.hasClass('submenu_taskdetail_collapsable_button_disabled')){ return; }
+
+		var elem_parent = elem_btn.parent();
 		var elem_content = $(this).siblings();
 		var elem_arrow = elem_btn.find('[find=icon_arrow]');
-		if( elem_content.css('display')!='none' ){
+		if( elem_content.css('display')!='none' && !elem_parent.hasClass('submenu_taskdetail_collapsable_defaultCollapsed')){
 			elem_content.velocity('slideUp',{
 				mobileHA: hasGood3Dsupport,
 				begin: function(){
 					elem_content.css({
 						'background-color':'#FBFBFB',
 					});
-					elem_arrow.addClass('fa-rotate-360');
+					//elem_arrow.addClass('fa-rotate-360');
 				},
 				complete: function(){
 					myIScrollList[submenu_wrapper.find('[find=submenu_wrapper_content]').prop('id')].refresh();
@@ -1891,9 +1909,9 @@ Submenu.prototype.Add_taskdetail = function() {
 			elem_content.velocity('slideDown',{
 				begin: function(){
 					elem_content.css('background','#FBFBFB');
-					elem_arrow.removeClass('fa-rotate-360');
 				},
 				complete: function(){
+					elem_parent.removeClass('submenu_taskdetail_collapsable_defaultCollapsed');	
 					elem_content.removeAttr('style');
 					myIScrollList[submenu_wrapper.find('[find=submenu_wrapper_content]').prop('id')].refresh();
 				},
@@ -1902,6 +1920,9 @@ Submenu.prototype.Add_taskdetail = function() {
 				'rotateZ': 0,
 			}, {
 				mobileHA: hasGood3Dsupport,
+				begin: function(){
+					$.Velocity.hook(this, "rotateZ", -90); //prevent velocity from overriding transform
+				},
 			});
 		}
 	}
