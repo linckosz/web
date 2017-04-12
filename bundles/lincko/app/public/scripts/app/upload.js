@@ -292,7 +292,9 @@ $(function () {
 					try {
 						//Bug if the canvas is not loaded => 'parseMetaData' of undefined
 						result = $('#app_upload_fileupload').fileupload('process', data);
-					} catch(e){}
+					} catch(e){
+
+					}
 					return result;
 				})
 				.fail(function () {
@@ -320,13 +322,13 @@ $(function () {
 					{
 						app_upload_files.lincko_files[temp_index].submit();
 					}
-				},300,temp_index);	
+				}, 300, temp_index);	
 				setTimeout(function(temp_index){
 					if(typeof app_upload_files.lincko_files[temp_index] != "undefined")
 					{
 						app_upload_files.lincko_files[temp_index].submit();
 					}
-				},3000,temp_index);	
+				}, 3000, temp_index);	
 			}
 			// if(app_upload_auto_launcher.start){
 			// 	var temp_index = app_upload_files.lincko_files_index-1;
