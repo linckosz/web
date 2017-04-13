@@ -10,7 +10,7 @@ class Wechatcb extends Model {
 
 	protected $table = 'wechatcb';
 
-	protected $primaryKey = 'open_id_event_key';
+	protected $primaryKey = 'id';
 
 	public $timestamps = false;
 

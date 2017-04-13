@@ -400,26 +400,26 @@ class ControllerWechat extends Controller {
 		
 		$ignore_cb = false; //this is flipped true if the same call has been repeated within the given time
 		$ignore_cb_duration = 30; //30s
-		$delete_cb_record_age = 120; //2min
+		$delete_cb_record_age = 60; //1min
 		$curtime = time();
 
 		foreach (Wechatcb::all() as $cb) {
 			if($curtime - $cb->first_cb_time > $delete_cb_record_age){
 				//delete record on database
-				//$cb->forceDelete();
+				$cb->forceDelete();
 			}
 		}
 
 		//primary key for wechatcb database
-		$open_id_event_key = (string) $data->FromUserName.'_';
+		$id = (string) $data->FromUserName.'_';
 		$EventKey = (string) $data->EventKey;
 		if(strlen($EventKey) < 1){
-			$open_id_event_key .= (string) $data->Event;
+			$id .= (string) $data->Event;
 		} else {
-			$open_id_event_key .= $EventKey;
+			$id .= $EventKey;
 		}
 		
-		$prev_cb = Wechatcb::where('open_id_event_key', $open_id_event_key)->first();
+		$prev_cb = Wechatcb::where('id', $id)->first();
 		
 		if(isset($prev_cb)){
 			if($curtime - $prev_cb->first_cb_time < $ignore_cb_duration){ //same call was recently made
@@ -434,7 +434,7 @@ class ControllerWechat extends Controller {
 		else{
 			//add current cb to database
 			$new_cb = new Wechatcb;
-			$new_cb->open_id_event_key = $open_id_event_key;
+			$new_cb->id = $id;
 			$new_cb->first_cb_time = $curtime;
 			$new_cb->save();
 		}
