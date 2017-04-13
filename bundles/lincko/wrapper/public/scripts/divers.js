@@ -86,8 +86,9 @@ JSfiles.finish(function(){
 			var number = Math.floor(Math.random() * 20);
 			window.webkit.messageHandlers.iOS.postMessage(
 				{
-					action: 'reddot',
-					data: number,
+					action: 'notification',
+					title: 'notification title',
+					content: 'random content '+number,
 				}
 			);
 		}, 5000);

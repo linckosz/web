@@ -1657,9 +1657,16 @@ Lincko.storage.cache = {
 			//if new count is different from existing total, then update
 			if(Lincko.storage.cache.notify_total != redDotCount){
 				Lincko.storage.cache.notify_total = redDotCount;
-				//android
-				if(typeof android == 'object' && typeof android.applyRedCount == 'function'){
+				if(typeof android == 'object' && typeof android.applyRedCount == 'function'){ //android
 					android.applyRedCount(redDotCount); //call native java function
+				}
+				else if(device_type()=='ios'){ //ios
+					window.webkit.messageHandlers.iOS.postMessage(
+						{
+							action: 'reddot',
+							count: redDotCount,
+						}
+					);
 				}
 			}
 		}
