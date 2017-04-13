@@ -185,7 +185,7 @@ BaseItemCls.prototype.item_display = function(position, subm, mode, scroll_time)
 		}
 		var date = new wrapper_date(this.timestamp);
 		elem.find(".time", "[find=timestamp]").html(date.display('time_short'));
-		elem.find(".date", "[find=timestamp]").html(date.display('date_short'));
+		elem.find(".date", "[find=timestamp]").html(skylist_textDate(date) || date.display('date_short'));
 		this.feed_profile_action(elem,this.user_id,subm);
 		this.feed_content(elem, subm);
 		if(this.style == 'activity' || this.style == 'file') this.feed_action(elem,subm);
