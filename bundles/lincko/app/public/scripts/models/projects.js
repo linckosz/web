@@ -1219,22 +1219,15 @@ app_models_projects_projectsDeck.prototype.construct = function(){
 			elem_p.find('[find=info_progress] [find=bar]').css('width', percent+'%');
 
 			//overdue notice
-			var hasOverdue = false;
-			console.log(p._id);
 			var tasks = Lincko.storage.list('tasks', null, null, 'projects', p._id, false, false);
-			console.log(tasks.length);
 			var now_time = new wrapper_date().timestamp;
 			$.each(tasks, function(i, task){
 				if(!task.deleted_at && !task.approved_at && task.start && task.duration
-					&& task.start + task.duration > now_time){
-					console.log(task['+title']);
-					hasOverdue = true;
+					&& task.start + task.duration < now_time){
+					elem_p.find('[find=icon_overdue]').removeClass('display_none'); //show overdue icon
 					return false;
 				}
 			});
-			if(hasOverdue){
-				elem_p.find('[find=icon_overdue]').removeClass('display_none');
-			}
 
 
 			elem_p.click(p._id, function(event){
