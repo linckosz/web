@@ -1878,7 +1878,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		}
 	});
 	//add this item's children history
-	$.merge(hist_item, Lincko.storage.hist(null, null, [{type: ['!=', that.param.type]}, {id: ['!=', taskid]}], 'tasks', 26798, true));
+	$.merge(hist_item, Lincko.storage.hist(null, null, [{type: ['!=', that.param.type]}, {id: ['!=', taskid]}], that.param.type, taskid, true));
 	hist_item = Lincko.storage.sort_items(hist_item, 'timestamp', 0, -1, false);
 	elem_submenu_taskdetail_activity.find('[find=activityCount]').text(hist_item.length);
 
