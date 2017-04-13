@@ -873,7 +873,7 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 			base_scanner.dispose();
 			Elem_radar.recursiveEmpty();
 		}
-		if(base_has_webcam){
+		if(base_has_webcam && !base_app_scanner.exists){ //only for desktop webcam
 			base_scanner = new w69b.qr.ui.ContinuousScanner();
 		}
 		base_scanner.setDecodedCallback(function(url_code) {
