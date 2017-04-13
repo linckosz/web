@@ -734,19 +734,10 @@ td.submenu_taskdetail_share .fa{
 
 .submenu_taskdetail_comments {
 	/*background: #C7E9FF;*/
-	padding-bottom: 40px !important;
 }
-/*
-.submenu_taskdetail_comments_header {
-	height: 25px;
-	border-bottom: 2px solid orange;
-	margin: 10px;
-	padding: 5px;
+.submenu_taskdetail_addNewComment_wrapper{
+	padding-bottom: 40px;
 }
-.submenu_taskdetail_comments_header img {
-	height:100%;
-}
-*/
 .submenu_taskdetail_comments [find=addNewComment_text] {
 	display: block;
 	width: 100%;
