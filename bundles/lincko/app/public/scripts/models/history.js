@@ -44,34 +44,49 @@ var app_models_history = {
 		} else {
 			title = title.text();
 		}
-		var options = {
-			body: message,
-			icon: icon,
-			lang: app_language_short,
-			vibrate: [200, 100, 200], //Work only on android webview
-			timeout: timeout,
-			notifyClick: function(event){
-				event.preventDefault();
-				if(link){
-					window.location.href = top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/#"+link;
-					window.focus();
+		if(isMobileApp()){
+			var device = device_type();
+			var obj = {
+				action: 'notification',
+				title: title,
+				content: message,
+				url: window.location.href = top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/#"+link;
+			}
+			if(device=='ios'){
+				window.webkit.messageHandlers.iOS.postMessage(obj);
+			} else if(device=='android'){
+				android.notification(obj);
+			}
+		} else {
+			var options = {
+				body: message,
+				icon: icon,
+				lang: app_language_short,
+				vibrate: [200, 100, 200], //Work only on android webview
+				timeout: timeout,
+				notifyClick: function(event){
+					event.preventDefault();
+					if(link){
+						window.location.href = top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/#"+link;
+						window.focus();
+					}
+					this.close();
+				},
+			};
+			var notif = new Notify(
+				title,
+				options
+			);
+			try {
+				notif.show();
+			} catch(e) {
+				if (app_models_history.serviceWorker) {
+					app_models_history.serviceWorker.then(function (registration) {
+						registration.showNotification(title, options);
+					});
+				} else {
+					base_show_error(title+"\n"+message, false);
 				}
-				this.close();
-			},
-		};
-		var notif = new Notify(
-			title,
-			options
-		);
-		try {
-			notif.show();
-		} catch(e) {
-			if (app_models_history.serviceWorker) {
-				app_models_history.serviceWorker.then(function (registration) {
-					registration.showNotification(title, options);
-				});
-			} else {
-				base_show_error(title+"\n"+message, false);
 			}
 		}
 	},
