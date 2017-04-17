@@ -35,6 +35,12 @@ $app->group('/integration', function () use ($app) {
 		->name('integration_wechat_applog_post');
 
 		$app->get(
+			'/applog',
+			'\bundles\lincko\wrapper\controllers\integration\ControllerWechat:applog_get'
+		)
+		->name('integration_wechat_applog_get');
+
+		$app->get(
 			'/wxqrcode',
 			'\bundles\lincko\wrapper\controllers\integration\ControllerWechat:wxqrcode_get'
 		)

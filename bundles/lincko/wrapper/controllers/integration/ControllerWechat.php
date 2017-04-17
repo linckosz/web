@@ -185,12 +185,22 @@ class ControllerWechat extends Controller {
 		return true;
 	}
 
+	public function applog_get(){
+		$app = $this->app;
+		return $this->applog($app->request->get());
+	}
+
 	public function applog_post(){
 		$app = $this->app;
+		return $this->applog($app->request->post());
+	}
+
+	protected function applog($obj){
+		$app = $this->app;
 		$app->lincko->http_code_ok = true;
-		if($post = (object) $app->request->post()){
-			if(isset($post->data)){
-				if($temp = json_decode($post->data)){
+		if($obj = (object) $obj){
+			if(isset($obj->data)){
+				if($temp = json_decode($obj->data)){
 					if(isset($temp->data) && isset($temp->data->unionid)){
 						$data = new \stdClass;
 						$data->party = 'wechat';
@@ -213,16 +223,12 @@ class ControllerWechat extends Controller {
 								}
 								if($valid){
 									$app->lincko->data['integration_wechat_new'] = false;
+									OneSeventySeven::set(array('jizhu' => true));
 									OneSeventySeven::setCookies();
 								}
 							}
 						}
 						if($response){
-							/*
-							$json = new Json('OK', false, 200, false, false, array(), false);
-							$json->render(200);
-							return exit(0);
-							*/
 							\bundles\lincko\wrapper\hooks\SetData(); //used to help log in immediatly
 							$app->lincko->data['link_reset'] = true;
 							$app->router->getNamedRoute('root')->dispatch();

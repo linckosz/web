@@ -433,8 +433,14 @@ var account_integration_wechat_qrcode = function(){
 	clearInterval(account_integration_wechat_timer);
 	if(isMobileApp()){
 		//Call a native function
-		if(typeof android == 'object' && typeof android.wxLogin == 'function'){ //android wechat login
+		if(device_type() == 'android' && typeof android == 'object' && typeof android.wxLogin == 'function'){ //android wechat login
 			android.wxLogin(wrapper_timeoffset());
+		} else if(device_type() == 'ios'){
+			var login = {
+				action: 'wxlogin',
+				timeoffset: wrapper_timeoffset(),
+			};
+			window.webkit.messageHandlers.iOS.postMessage(login);
 		}
 	} else {
 		$('#account_integration_top_info').find('img').attr('src', wrapper_neutral.src); //Change to a transarency picture

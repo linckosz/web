@@ -192,7 +192,7 @@ text to <a></a>
 */
 function base_lincko_link_to_html(source)
 {
-	var reg = new RegExp("((?:https?|ftp)://[^\\s/$.?#].*)(?:\\s|\\Z|<)?", "gi");
+	var reg = new RegExp("(?:(?:https?|ftp)://)?([^\\s/$.?#]*\\.[^\\s|<|>]*)", "gi"); //stephenhay 
 
 	if(typeof window.webkit != 'undefined' && typeof window.webkit.messageHandlers != 'undefined' && typeof window.webkit.messageHandlers.iOS){
 		var str_target = 'target="_top"';

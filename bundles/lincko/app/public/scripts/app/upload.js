@@ -194,6 +194,9 @@ var app_upload_auto_launcher = {
 	},
 };
 
+//This help to clear all intervals
+var app_upload_start_interval = {};
+
 $(function () {
 	//Do not use 'use strict', it makes the code heavier, even if it's better for conventional coding
 
@@ -316,19 +319,32 @@ $(function () {
 			}
 			//Do not auto start by default
 			if(app_upload_auto_launcher.start){
+
 				var temp_index = app_upload_files.lincko_files_index-1;
+
+				app_upload_start_interval[temp_index] = setInterval(function(temp_index){
+					if(typeof app_upload_files.lincko_files[temp_index] == "undefined"){
+						clearInterval(app_upload_start_interval[temp_index]);
+					} else if(app_upload_files.lincko_files[temp_index].state()!='pending'){
+						clearInterval(app_upload_start_interval[temp_index]);
+						app_upload_files.lincko_files[temp_index].submit();
+					}
+				}, 300, temp_index);
+
+				/*
 				setTimeout(function(temp_index){
 					if(typeof app_upload_files.lincko_files[temp_index] != "undefined")
 					{
 						app_upload_files.lincko_files[temp_index].submit();
 					}
-				}, 300, temp_index);	
+				}, 300, temp_index);
 				setTimeout(function(temp_index){
 					if(typeof app_upload_files.lincko_files[temp_index] != "undefined")
 					{
 						app_upload_files.lincko_files[temp_index].submit();
 					}
-				}, 3000, temp_index);	
+				}, 3000, temp_index);
+				*/
 			}
 			// if(app_upload_auto_launcher.start){
 			// 	var temp_index = app_upload_files.lincko_files_index-1;

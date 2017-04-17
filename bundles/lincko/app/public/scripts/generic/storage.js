@@ -1019,7 +1019,9 @@ Lincko.storage.getHistoryInfo = function(hist){
 		if(hist.old){
 			//Format data displayed
 			if(hist.cod==506){ //modified a task due date
-				if(hist.par && hist.par.dd){
+				if(hist.par.dd === null){
+					result.prev = Lincko.Translation.get('app', 103, 'html'); //None
+				} else if(hist.par && hist.par.dd){
 					result.prev = (new wrapper_date(hist.par.dd)).display('date_medium_simple');
 				}
 			} else {

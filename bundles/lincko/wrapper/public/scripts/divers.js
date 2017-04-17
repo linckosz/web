@@ -74,38 +74,6 @@ if(
 	//wrapper_limit_json = 500; //Allow chunking for for ios crash (it seems working after reworking the database)
 }
 
-
-
-
-
-
-//toto
-JSfiles.finish(function(){
-	if(isMobileApp() && device_type()=='ios'){
-		setInterval(function(){
-			var number = Math.floor(Math.random() * 20);
-			window.webkit.messageHandlers.iOS.postMessage(
-				{
-					action: 'notification',
-					title: 'notification title',
-					content: 'random content '+number,
-				}
-			);
-		}, 5000);
-	}
-});
-
-var toto_scan = function(url){
-	alert(url);
-};
-
-var toto_mp3 = function(data){
-	alert('mp3');
-}
-
-
-
-
 var wrapper_test_result = null;
 function wrapper_test(type, RCUD){
 	if(typeof type==="undefined"){ type = null; }
