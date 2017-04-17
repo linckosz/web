@@ -344,8 +344,8 @@
     height: 32px;
     left: 0px;
     right: 0px;
-    top: 20px;
-    padding-right: 96px;
+    top: 18px;
+    padding-right: 118px;
     color: #475577;
 }
 .app_models_projects_projectsDeck_card [find=info_main]>div,
@@ -357,7 +357,7 @@
     right: 0px;
     top: 0px;
     bottom: 0px;
-    font-size: 26px;
+    font-size: 30px;
     color: rgba(251, 160, 38, 0.75);
 }
 .app_models_projects_projectsDeck_card [find=icon_wrapper]>span{
@@ -369,10 +369,10 @@
 }
 .app_models_projects_projectsDeck_card [find=icon_wrapper] [find=icon_overdue]{
 	position: relative;
-	height: 26px;
-    width: 26px;
+	height: 30px;
+    width: 30px;
     display: inline-block;
-    line-height: 26px;
+    line-height: 30px;
     text-align: center;
 }
 .app_models_projects_projectsDeck_card [find=icon_wrapper] [find=icon_overdue] [find=team]{
@@ -389,8 +389,8 @@
 }
 .app_models_projects_projectsDeck_card [find=icon_wrapper] [find=icon_overdue] [find=me]{
     position: absolute;
-    top: -6px;
-    right: -6px;
+    top: -4px;
+    right: -4px;
     font-size: 10px;
     color: #BE2B1f;
     height: 10px;
