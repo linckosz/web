@@ -107,61 +107,53 @@
 	border-radius: 3px;
 	text-align: center;
 	box-sizing: border-box;
+
+	height: 250px;
+	border: none;
 }
 
 .burger_calendar .ui-widget-header{
-	margin-top: 100px;
 	margin-bottom: 5px;
 }
 .burger_calendar .ui-datepicker-calendar{
 	height: 185px;
 	width: 267px;
-	/*border: 1px solid #FBA026;*/
 	border-radius: 5px;
 	display: inline-block;
 }
 
 .burger_calendar_prepend{
-	position: absolute;
 	text-align: center;
-}
-.burger_calendar_prepend [find=row1], .burger_calendar_prepend [find=row2]{
-	display: inline-block;
-	border: 1px solid #FFFFFF;
-	width: 300px;
-	font-size: 14px;
-}
-.burger_calendar_prepend [find=row1] > span:hover, 
-.burger_calendar_prepend [find=row2] > span:hover{
-	color: #FBA026;
-    opacity: 0.7;
+	background-color: #FFFFFF;
+	padding-bottom: 6px;
 }
 .burger_calendar_prepend [find=today_info]{
 	text-align: center;
 	font-size: 18px;
-	color: #000000;
+	color: #475577;
 	padding: 10px;
 }
-.burger_calendar_prepend [find=today_btn],
-.burger_calendar_prepend [find=twoDays_btn],
-.burger_calendar_prepend [find=tomorrow_btn],
-.burger_calendar_prepend [find=oneWeek_btn]{
-	width: 130px;
-	display: inline-block;
+.burger_calendar_prepend table{
+	width: 100%;
+	font-size: 16px;
+	padding: 0px 40px;
+}
+.burger_calendar_prepend td{
+	width: 33.33%;
+}
+.burger_calendar_prepend .burger_calendar_prepend_btn{
 	color: #3F84B0;
+	padding: 2px 0px;
+}
+.burger_calendar_prepend .burger_calendar_prepend_btn:hover{
+	color: #FBA026;
+    opacity: 0.7;
 }
 .burger_calendar_prepend [find=today_btn],
 .burger_calendar_prepend [find=tomorrow_btn]{
 	text-transform: capitalize;
 }
-.burger_calendar_prepend [find=today_btn], .burger_calendar_prepend [find=twoDays_btn]{
-	text-align: right;
-	padding-right: 5px;
-}
-.burger_calendar_prepend [find=tomorrow_btn], .burger_calendar_prepend [find=oneWeek_btn]{
-	text-align: left;
-	padding-left: 5px;
-}
+
 .burger_calendar_prepend_active {
 	color: #FBA026 !important;
 }

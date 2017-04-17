@@ -819,7 +819,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			elem_input_calendar.val((item['start'] + item.duration)*1000);
 
 			var duedate = tasks_calcDuedate(item['_id']);
-			if(!duedate){ duedate = new wrapper_date(item['start'] + item.duration); }
+			if(typeof duedate == 'boolean' && !duedate){ duedate = new wrapper_date(item['start'] + item.duration); }
 
 			if( skylist_textDate(duedate) ){
 				elem_text_calendar.text(skylist_textDate(duedate));
@@ -831,7 +831,11 @@ Submenu.prototype.Add_taskdetail = function() {
 
 			if(item['_id'] == 'new'){
 				var cb_select_calendar = function(timestamp, elem_datepicker){
-					item.start = timestamp - item.duration;
+					if(!timestamp){
+						item.start = null;
+					} else {
+						item.start = timestamp - item.duration;
+					}
 					if(elem_datepicker && elem_datepicker.blur){ 
 						burgerInst.calendar = elem_datepicker; 
 						elem_datepicker.blur(); 

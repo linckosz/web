@@ -22,14 +22,43 @@
 
 	<div id="-burger_calendar_prepend" class="burger_calendar_prepend">
 		<div find='today_info'></div>
+
+		<table>
+			<tr>
+				<td>
+					<div find='today_btn' dateOffset="0" class="burger_calendar_prepend_btn skylist_clickable">
+						{{ _trans('app', 8000, 3302, 'html') }}{#today#}
+					</div>
+					<div find='tomorrow_btn' dateOffset="1" class="burger_calendar_prepend_btn skylist_clickable">
+						{{ _trans('app', 8000, 3303, 'html') }}{#tomorrow#}
+					</div>
+				</td>
+				<td>
+					<div find='none_btn' class="burger_calendar_prepend_btn skylist_clickable">
+						{{ _trans('app', 8000, 103, 'html') }}{#None#}
+					</div>
+				</td>
+				<td>
+					<div find='twoDays_btn' dateOffset="2" class="burger_calendar_prepend_btn skylist_clickable">
+						{{ _trans('app', 12, 1, 'html') }}{#2 days later#}
+					</div>
+					<div find='oneWeek_btn' dateOffset="7" class="burger_calendar_prepend_btn skylist_clickable">
+						{{ _trans('app', 12, 2, 'html') }}{#1 week later#}
+					</div>
+				</td>
+			</tr>
+		</table>
+
+<!--
 		<div find='row1'>
-			<span find='today_btn' class="skylist_clickable">{{ _trans('app', 8000, 3302, 'html') }}</span>{#today#}
-			<span find='tomorrow_btn' class="skylist_clickable">{{ _trans('app', 8000, 3303, 'html') }}</span>{#tomorrow#}
+			<span find='today_btn' class="skylist_clickable">{{ _trans('app', 8000, 3302, 'html') }}{#today#}</span>
+			<span find='tomorrow_btn' class="skylist_clickable">{{ _trans('app', 8000, 3303, 'html') }}{#tomorrow#}</span>
 		</div>
 		<div find='row2'>
-			<span find='twoDays_btn' class="skylist_clickable">{{ _trans('app', 12, 1, 'html') }}</span>{#2 days later#}
-			<span find='oneWeek_btn' class="skylist_clickable">{{ _trans('app', 12, 2, 'html') }}</span>{#1 week later#}
+			<span find='twoDays_btn' class="skylist_clickable">{{ _trans('app', 12, 1, 'html') }}{#2 days later#}</span>
+			<span find='oneWeek_btn' class="skylist_clickable">{{ _trans('app', 12, 2, 'html') }}{#1 week later#}</span>
 		</div>
+-->
 	</div>
 
 	<div id="-burger_typeTask" class="burger_typeTask">

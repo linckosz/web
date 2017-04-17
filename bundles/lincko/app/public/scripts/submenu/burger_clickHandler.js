@@ -122,7 +122,12 @@ submenu_list['burger_clickHandler_calendar'] = {
 		'hide': true,
 		"class": "base_pointer",
 		'action': function(Elem, subm){
-			var timestamp = subm.param.elem_inputTarget.val()/1000;
+			var val = subm.param.elem_inputTarget.val();
+			if(!val){
+				var timestamp = null;
+			} else {
+				var timestamp = subm.param.elem_inputTarget.val()/1000;
+			}
 			if(subm.param && typeof subm.param.cb_select == 'function'){
 				subm.param.cb_select(timestamp);
 			}

@@ -543,9 +543,9 @@ var burger_attach_clickHandler = {
 		var dropdownDuration = 400;
 
 		if(!currentDate){
-			var currentDate = 0;
+			var currentDate = null;
 			var lincko_item = Lincko.storage.get(lincko_type, lincko_id);
-			if(lincko_item){
+			if(lincko_item && lincko_item.start){
 				currentDate = (lincko_item.start + lincko_item.duration)*1000;
 			}
 		}
@@ -556,7 +556,11 @@ var burger_attach_clickHandler = {
 				var lincko_item = Lincko.storage.get(lincko_type, lincko_id);
 				if(!lincko_item){ return false; }
 
-				var start = timestamp - lincko_item.duration;
+				if(!timestamp){
+					var start = null;
+				} else {
+					var start = timestamp - lincko_item.duration;
+				}
 
 				var param = {
 					id: lincko_id,
@@ -564,7 +568,7 @@ var burger_attach_clickHandler = {
 				};
 
 				var cb_begin = function(){
-					if(Lincko.storage.data[lincko_type][lincko_id]['start']){
+					if(Lincko.storage.data[lincko_type][lincko_id]){
 						Lincko.storage.data[lincko_type][lincko_id]['start'] = start;
 					}
 					
@@ -607,7 +611,7 @@ var burger_attach_clickHandler = {
 		    	event.preventDefault();
 			});
 
-			elem_datepicker.blur(function(){
+			elem_datepicker.blur(function(){return;
 				elem_datepicker.velocity('slideUp', {
 					duration: dropdownDuration,
 					mobileHA: hasGood3Dsupport,
@@ -1416,9 +1420,42 @@ burger_dropdown.prototype.destroy = function(){
 var burger_renderCalendar = function(id, defaultDate, fn_onSelect){
 	var elem_datepicker = $('<div>');
 	if(typeof id == 'strong'){ elem_datepicker.prop('id', id); }
-	if(typeof defaultDate != 'number'){ var defaultDate = new wrapper_date().getEndofDay() + 86400 }
-	if(typeof defaultDate == 'number' && defaultDate < 10000000000){ defaultDate = defaultDate*1000; }
 	if(typeof fn_onSelect != 'function'){ var fn_onSelect = function(){}; }
+
+	if(defaultDate != null){
+		if(typeof defaultDate != 'number'){ var defaultDate = new wrapper_date().getEndofDay() + 86400 }
+		if(typeof defaultDate == 'number' && defaultDate < 10000000000){ defaultDate = defaultDate*1000; }
+		defaultDate = defaultDate.toString();
+	}
+
+	//set to no due date
+	var removeDateSelection = function(){
+		var selectionDate = elem_datepicker.datepicker("getDate");
+		if(selectionDate){
+			elem_datepicker.datepicker('setDate',null);
+			//$.datepicker._clearDate(elem_datepicker);
+			update_monthControl(selectionDate.getMonth());
+			elem_datepicker.find('.ui-state-active').removeClass('ui-state-active');
+			update_prepend();
+		}
+	}
+
+	var update_prepend = function(){
+		elem_calendarPrepend.find('.burger_calendar_prepend_active').removeClass('burger_calendar_prepend_active');
+		 if(!elem_datepicker.datepicker('getDate')){ //no duedate
+		 	elem_prepend_none.addClass('burger_calendar_prepend_active');
+		 } else {
+			var date = new wrapper_date(elem_datepicker.datepicker('getDate').getTime()/1000);
+			var date_offsets = [0,1,2,7]; //offset date count from today
+			for(i = 0; i < date_offsets.length; i++){
+				if(date.happensSomeday(date_offsets[i])){
+					elem_calendarPrepend.find('[dateOffset='+date_offsets[i]+']').addClass('burger_calendar_prepend_active');
+					break;
+				}
+			}
+		}
+	}
+	
 
 	var update_monthControl = function(month){
 		setTimeout(function(month){
@@ -1453,66 +1490,41 @@ var burger_renderCalendar = function(id, defaultDate, fn_onSelect){
 		dateFormat: '@',
 		gotoCurrent: true,
 		//minDate: 0, //set minDate 0 to allow date selection from today onwards
-		defaultDate: defaultDate.toString(),
+		defaultDate: defaultDate,
 		onChangeMonthYear: function(year, month, inst){ //this is called before the calendar is redrawn, use timeout
 			update_monthControl(inst.selectedMonth);
 		},
 		onSelect: function(dateText, inst){
+			update_prepend();
 			update_monthControl(inst.selectedMonth);
 			var timestamp = parseInt(dateText, 10)/1000 + 86399; //add 86399 to make it end of the day
 			fn_onSelect(timestamp, elem_datepicker);
 		},
 	});
+
 	elem_datepicker.find('.ui-datepicker-inline').addClass('burger_calendar');
 
 	var elem_calendarPrepend = $('#-burger_calendar_prepend').clone().prop('id','burger_calendar_prepend');
 	elem_calendarPrepend.find('[find=today_info]').html(Lincko.Translation.get('app', 3604, 'html', {date: new wrapper_date().display('date_medium_simple'),}));
-
-
 	elem_datepicker.prepend(elem_calendarPrepend);
-	update_monthControl(elem_datepicker.datepicker( "getDate" ).getMonth());
 
-	var elem_prepend_today = elem_calendarPrepend.find('[find=today_btn]');
-	var elem_prepend_tomorrow =  elem_calendarPrepend.find('[find=tomorrow_btn]');
-	var elem_prepend_twoDays = elem_calendarPrepend.find('[find=twoDays_btn]');
-	var elem_prepend_oneWeek = elem_calendarPrepend.find('[find=oneWeek_btn]');
-
-	var prepend_select = function(elem_click){
-		elem_datepicker.find('.burger_calendar_prepend_active').removeClass('burger_calendar_prepend_active');
-		$(elem_click).addClass('burger_calendar_prepend_active');
+	var elem_prepend_none = elem_calendarPrepend.find('[find=none_btn]').click(function(){
+	 	removeDateSelection();
+	 	fn_onSelect(null, elem_datepicker);
+	 });
+	
+	elem_calendarPrepend.find('[dateOffset]').click(function(){
+		elem_datepicker.datepicker('setDate',parseInt($(this).attr('dateOffset'),10));
 		elem_datepicker.find('.ui-state-active').click();
-	}
-
-	elem_prepend_today.click(function(){
-		elem_datepicker.datepicker('setDate',0);
-		prepend_select(this);
-	});
-	elem_prepend_tomorrow.click(function(){
-		elem_datepicker.datepicker('setDate',1);
-		prepend_select(this);
-	});
-	elem_prepend_twoDays.click(function(){
-		elem_datepicker.datepicker('setDate',2);
-		prepend_select(this);
-	});
-	 elem_prepend_oneWeek.click(function(){
-		elem_datepicker.datepicker('setDate',7);
-		prepend_select(this);
 	});
 
-	var date = new wrapper_date(elem_datepicker.datepicker('getDate').getTime()/1000);
-	if( date.happensSomeday(0) ){
-		elem_prepend_today.addClass('burger_calendar_prepend_active');
+	update_monthControl(elem_datepicker.datepicker("getDate").getMonth());
+	if(defaultDate == null){
+		removeDateSelection();
+	} else {
+		update_prepend();
 	}
-	else if( date.happensSomeday(1) ){
-		elem_prepend_tomorrow.addClass('burger_calendar_prepend_active');
-	}
-	else if( date.happensSomeday(2) ){
-		elem_prepend_twoDays.addClass('burger_calendar_prepend_active');
-	}
-	else if( date.happensSomeday(7) ){
-		elem_prepend_oneWeek.addClass('burger_calendar_prepend_active');
-	}
+
 
 	return elem_datepicker;
 }

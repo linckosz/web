@@ -7,31 +7,18 @@
     background-color: #FFFFFF;
 }
 .submenu_calendar .burger_calendar {
-	/*position: absolute;*/
 	top: 0px;
     width: 100%;
     height: 100%;
     box-shadow: none;
     border: 0px;
 }
+
+
 .submenu_calendar .burger_calendar_prepend {
 	margin: 0 auto;
-	width: 300px;
+	max-width: 400px;
 	position: relative;
-}
-.submenu_calendar .burger_calendar_prepend [find=today_info]{
-	padding:15px 0px 0px 0px;
-}
-
-.submenu_calendar .burger_calendar_prepend [find=row1], 
-.submenu_calendar .burger_calendar_prepend [find=row2]{
-	font-size: 18px;
-}
-.submenu_calendar .burger_calendar_prepend [find=today_btn],
-.submenu_calendar .burger_calendar_prepend [find=twoDays_btn],
-.submenu_calendar .burger_calendar_prepend [find=tomorrow_btn],
-.submenu_calendar .burger_calendar_prepend [find=oneWeek_btn]{
-	padding-top: 20px;
 }
 
 .submenu_calendar .burger_calendar .ui-widget-header{

@@ -92,14 +92,22 @@ var tasks_get_inCharge_id = function(task_id, resultType){
 }
 
 var tasks_calcDuedate = function(id){
+	var duedate;
+	var task;
 	if(typeof id == 'object'){
-		return new wrapper_date(parseInt(id.start,10) + parseInt(id.duration,10));
+		task = id;
+	} else {
+		task = Lincko.storage.get('tasks', id);
 	}
-
-	var task = Lincko.storage.get('tasks', id);
 	if(!task){ return false; }
 
-	var duedate = new wrapper_date(parseInt(task.start,10) + parseInt(task.duration,10));
+
+	if(!task.start){
+		duedate = null;
+	} else {
+		duedate = new wrapper_date(parseInt(task.start,10) + parseInt(task.duration,10));
+	}
+
 	return duedate;
 }
 

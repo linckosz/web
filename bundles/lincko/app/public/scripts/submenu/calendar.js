@@ -55,7 +55,7 @@ Submenu.prototype.Add_calendar = function() {
 	var defaultDate = (new wrapper_date().getEndofDay() + 86400)*1000; //end of day tomorrow
 
 	var elem_timestamp = $('<input find="timestamp" type="text" readonly="readonly"/>');
-	if(that.param.defaultDate){ 
+	if(typeof that.param.defaultDate != 'undefined'){ 
 		defaultDate = that.param.defaultDate; 
 	}
 	else if(that.param && that.param.elem_inputOrig){
@@ -67,7 +67,11 @@ Submenu.prototype.Add_calendar = function() {
 
 	
 	var fn_onSelect = function(timestamp, datepickerInst){
-		elem_timestamp.val(timestamp*1000);
+		if(!timestamp){
+			elem_timestamp.val('');
+		} else {
+			elem_timestamp.val(timestamp*1000);
+		}
 	}
 	var elem_datepicker = burger_renderCalendar(null, defaultDate, fn_onSelect);
 

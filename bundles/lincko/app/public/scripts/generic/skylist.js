@@ -1,13 +1,21 @@
 //Category 36
 
 var skylist_calcDuedate = function(task_obj){
-	var duedate = new wrapper_date(parseInt(task_obj.start,10) + parseInt(task_obj.duration,10));
+	var duedate;
+	if(!task_obj.start){
+		duedate = null;
+	} else {
+		duedate = new wrapper_date(parseInt(task_obj.start,10) + parseInt(task_obj.duration,10));
+	}
 	return duedate;
 }
 var skylist_textDate = function(date){
-	//param: wrapper_date instance
+	//param: wrapper_date instance OR null
 	//returns text for TODAY, TOMORROW
 	//returns false if not
+	if(!date){
+		return Lincko.Translation.get('app', 103, 'js'); //None
+	}
 	if( date.happensSomeday(0) ){
 		return Lincko.Translation.get('app', 3302, 'js').toUpperCase()/*today*/;
 	}
@@ -567,7 +575,7 @@ skylist.prototype.filter_by_duedate = function(items, filter){
 		for( var i in items ){
 			item = items[i];
 			duedate = skylist_calcDuedate(item);
-			if(duedate.happensSomeday(filter)){
+			if(duedate && duedate.happensSomeday(filter)){
 				items_filtered.push(item);
 			}
 		}
@@ -1929,7 +1937,7 @@ skylist.prototype.addTask = function(item){
 	/*duedate = new wrapper_date(item.start + parseInt(item.duration,10));*/
 	duedate = skylist_calcDuedate(item);
 	var now = new wrapper_date();
-	if( now.time > duedate.time && !item.approved){
+	if( duedate && now.time > duedate.time && !item.approved){
 		Elem.addClass('skylist_card_overdue');
 	}
 	if(skylist_textDate(duedate)){
