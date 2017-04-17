@@ -50,7 +50,7 @@ var app_models_history = {
 				action: 'notification',
 				title: title,
 				content: message,
-				url: window.location.href = top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/#"+link;
+				url: window.location.href = top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/#"+link,
 			}
 			if(device=='ios'){
 				window.webkit.messageHandlers.iOS.postMessage(obj);
