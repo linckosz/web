@@ -3179,9 +3179,13 @@ var burger_timestampToText = function(timestamp){
 	if(timestamp instanceof wrapper_date){
 		date = timestamp;
 	}
+	else if(!timestamp){
+		return Lincko.Translation.get('app', 103, 'js'); //None
+	}
 	else{
 		date = new wrapper_date(timestamp);
 	}
+
 
 	//returns text for TODAY, TOMORROW, YESTERDAY, or the wrapper_date very_short form text
 	if( date.happensSomeday(0) ){
