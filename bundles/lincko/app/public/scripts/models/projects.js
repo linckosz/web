@@ -1241,9 +1241,11 @@ app_models_projects_projectsDeck.prototype.construct = function(){
 			//overdue notice
 			var overdue = app_models_projects_getOverdueCount(p._id, wrapper_localstorage.uid);
 			if(overdue.all){
+				if(overdue.all > 99){ overdue.all = '!'; }
 				elem_p.find('[find=icon_overdue] [find=team]').text(overdue.all).removeClass('display_none');
 			}
 			if(overdue[wrapper_localstorage.uid]){
+				if(overdue[wrapper_localstorage.uid] > 99){ overdue[wrapper_localstorage.uid] = '!'; }
 				elem_p.find('[find=icon_overdue] [find=me]').text(overdue[wrapper_localstorage.uid]).removeClass('display_none');
 			}
 
