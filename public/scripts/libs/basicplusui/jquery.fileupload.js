@@ -664,7 +664,7 @@
                 }
                 return this._processQueue || getPromise([this]);
             };
-            data.submit = function () {console.log(this.state());
+            data.submit = function () {
                 if (this.state() !== 'pending') {
                     data.jqXHR = this.jqXHR =
                         (that._trigger(
