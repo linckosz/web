@@ -367,6 +367,36 @@
 .app_models_projects_projectsDeck_card [find=icon_wrapper] [find=icon_settings]:hover{
 	color: #FFFFFF;
 }
+.app_models_projects_projectsDeck_card [find=icon_wrapper] [find=icon_overdue]{
+	position: relative;
+	height: 26px;
+    width: 26px;
+    display: inline-block;
+    line-height: 26px;
+    text-align: center;
+}
+.app_models_projects_projectsDeck_card [find=icon_wrapper] [find=icon_overdue] [find=team]{
+	height: 26px;
+    width: 26px;
+    display: inline-block;
+    line-height: 26px;
+    text-align: center;
+	font-size: 16px;
+    background-color: #BE2B1f;
+    color: #FFFFFF;
+    border-radius: 30px;
+    overflow: hidden;
+}
+.app_models_projects_projectsDeck_card [find=icon_wrapper] [find=icon_overdue] [find=me]{
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    font-size: 10px;
+    color: #BE2B1f;
+    height: 10px;
+    width: 10px;
+    line-height: 10px;
+}
 .app_models_projects_projectsDeck_card [find=info_progress]{
     position: absolute;
     height: 14px;

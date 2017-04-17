@@ -1092,6 +1092,26 @@ var app_models_projects_getPercentComplete = function(id, round){
 }
 
 
+var app_models_projects_getOverdueCount = function(pid, uid){
+	var result = {
+		all: 0,
+	}
+	if(uid){ result[uid] = 0; }
+	var now_time = new wrapper_date().timestamp;
+	var tasks = Lincko.storage.list('tasks', null, null, 'projects', pid, false, false);
+	$.each(tasks, function(i, task){
+		if(!task.deleted_at && !task.approved_at && task.start && task.duration
+			&& task.start + task.duration < now_time){
+			result.all++;
+			if(uid && task._users && task._users[uid] && task._users[uid].in_charge){
+				result[uid]++;
+			}
+		}
+	});
+
+	return result;
+}
+
 
 //projectsDeck class used in projectsDeck submenu
 var app_models_projects_projectsDeck = function(id, submenu){
@@ -1219,15 +1239,13 @@ app_models_projects_projectsDeck.prototype.construct = function(){
 			elem_p.find('[find=info_progress] [find=bar]').css('width', percent+'%');
 
 			//overdue notice
-			var tasks = Lincko.storage.list('tasks', null, null, 'projects', p._id, false, false);
-			var now_time = new wrapper_date().timestamp;
-			$.each(tasks, function(i, task){
-				if(!task.deleted_at && !task.approved_at && task.start && task.duration
-					&& task.start + task.duration < now_time){
-					elem_p.find('[find=icon_overdue]').removeClass('display_none'); //show overdue icon
-					return false;
-				}
-			});
+			var overdue = app_models_projects_getOverdueCount(p._id, wrapper_localstorage.uid);
+			if(overdue.all){
+				elem_p.find('[find=icon_overdue] [find=team]').text(overdue.all).removeClass('display_none');
+			}
+			if(overdue[wrapper_localstorage.uid]){
+				elem_p.find('[find=icon_overdue] [find=me]').text(overdue[wrapper_localstorage.uid]).removeClass('display_none');
+			}
 
 
 			elem_p.click(p._id, function(event){
