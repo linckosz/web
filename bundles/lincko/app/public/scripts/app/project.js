@@ -133,14 +133,32 @@ var mainMenu = {
 			if(typeof force == 'undefined'){ force=false; }
 			var not_all = false;
 			var content;
-			var histList = app_models_history.getList();
-			
-			for(var i in histList){
-				if(histList[i].notif){
+			var temp_histList = app_models_history.getList();
+			var histList = [];
+			for(var i in temp_histList){
+				if(temp_histList[i].notif){
 					not_all = true;
 					break;
 				}
 			}
+
+			for(var i in temp_histList){
+				var style = Lincko.storage.get(temp_histList[i].root_type,temp_histList[i].root_id,"style");
+				if(style)
+				{
+					if(style == 0)
+					{
+						histList.push(temp_histList[i]);
+					}
+				}
+				else
+				{
+					histList.push(temp_histList[i]);
+				}
+			}
+
+
+
 			
 			if(histList.length>0){
 				$("#app_project_chats_all").removeClass('app_project_tab_force_radius');
@@ -153,7 +171,6 @@ var mainMenu = {
 				$("#app_project_chats_all").find("[find=app_project_chats_notif]").addClass('display_none');
 			}
 			for (i = 0; i < 5; i++) { //5 have to be a fix integer to make sure we hide other tabs
-
 				var item = $("#app_project_item_chats_"+i);
 				if(item.length<=0){
 					continue;

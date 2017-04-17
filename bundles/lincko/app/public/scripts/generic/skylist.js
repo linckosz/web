@@ -941,6 +941,15 @@ skylist.prototype.addCard = function(item){
 }
 
 skylist.prototype.addChat = function(item){
+	var style = Lincko.storage.get(item.root_type,item.root_id,"style");
+	if(style)
+	{
+		if(style == 1)
+		{
+			return false;
+		}
+	}
+
 	var that = this;
 	var Elem_id = 'skylist_card_'+that.md5id+'_'+item['root_type']+'_'+item['root_id'];
 	var Elem = $('#'+Elem_id);

@@ -648,6 +648,7 @@ var app_models_history = {
 				}
 			}
 		} else {
+
 			if(parent_type && parent_id && (parent_type=="projects" || parent_type=="chats")){
 				for(var i in app_models_history.hist_root_recent){
 					if(app_models_history.hist_root_recent[i]['root_type']==parent_type && app_models_history.hist_root_recent[i]['root_id']==parent_id){
@@ -664,7 +665,6 @@ var app_models_history = {
 				histList = app_models_history.hist_root_recent;
 			}
 		}
-
 		return histList;
 	},
 

@@ -52,23 +52,13 @@ var submenu_feedback_open_single = function(subm, users_id){
 		return true;
 	}
 	submenu_feedback_open_single_running = true;
-	var chats = Lincko.storage.list('chats', null, {'single': true});
-	var chat_id = null;
-	for(var i in chats){
-		count = 0;
-		if(chats[i]["_perm"]){
-			for(var j in chats[i]["_perm"]){
-				count++;
-			}
-		}
-		if(chats[i]["_perm"] && count>=2 && users_id!=wrapper_localstorage.uid && chats[i]["_perm"][users_id] && chats[i]["_perm"][wrapper_localstorage.uid]){
-			chat_id = chats[i]["_id"];
-			break;
-		} else if(chats[i]["_perm"] && count==1 && users_id==wrapper_localstorage.uid && chats[i]["_perm"][wrapper_localstorage.uid]){
-			chat_id = chats[i]["_id"];
-			break;
-		}
+	var chats = Lincko.storage.list('chats', null, {'style':1});
+	var chat_id = false;
+	if(chats.length > 0)
+	{
+		chat_id = chats[0]._id;
 	}
+
 	var title = Lincko.storage.get('users', users_id, 'username');
 	var chat_temp_id;
 	if(chat_id){
@@ -76,6 +66,7 @@ var submenu_feedback_open_single = function(subm, users_id){
 			type: "chats",
 			id: chat_id,
 			title: title,
+			style:1,
 		});
 		clearTimeout(submenu_feedback_open_single_timer);
 		submenu_feedback_open_single_timer = setTimeout(function(){
@@ -85,9 +76,9 @@ var submenu_feedback_open_single = function(subm, users_id){
 		wrapper_sendAction(
 			{
 				'parent_type': null,
-				"parent_id": -1,
-				"title": "",
-				"single": users_id
+				'parent_id': -1,
+				'title': '',
+				'style':1,
 			},
 			'post',
 			'chat/create',
@@ -128,26 +119,59 @@ var submenu_feedback_build_question = function(wrapper,container,question_id){
 	{
 		case 1 :
 			content = Lincko.Translation.get('app', 4201, 'js');//"How can I help you?";
+			item.find("[find=content]").append(content);
+			item.find("[find=keyword]").remove();
+
+			setTimeout(function(){
+				container.append(item);
+				
+				wrapper_IScroll_refresh();
+				wrapper_IScroll();
+
+				var overthrow_id = wrapper.find("[find=container]").eq(0).prop("id");
+				myIScrollList[overthrow_id].scrollToElement(item.get(0), 100);
+
+				submenu_feedback_build_options(wrapper,container);
+			},500,wrapper,container,item);
 			break;
 		case 2 :
 			content = Lincko.Translation.get('app', 4202, 'js');//"Anything else?";
+			item.find("[find=content]").append(content);
+			item.find("[find=keyword]").remove();
+
+			setTimeout(function(){
+				container.append(item);
+				
+				wrapper_IScroll_refresh();
+				wrapper_IScroll();
+
+				var overthrow_id = wrapper.find("[find=container]").eq(0).prop("id");
+				myIScrollList[overthrow_id].scrollToElement(item.get(0), 100);
+
+				submenu_feedback_build_options(wrapper,container);
+			},500,wrapper,container,item);
+			break;
+		case 3 :
+			content = "Your feedback has been submitted. I cannot personally reply to every request, but rest assued we'll be taking a look at what you sent and seeing if we can make some improvements!";//Your feedback has been submitted. I cannot personally reply to every request, but rest assued we'll be taking a look at what you sent and seeing if we can make some improvements!;//toto:need translation
+			item.find("[find=content]").append(content);
+			item.find("[find=keyword]").remove();
+
+			setTimeout(function(){
+				container.append(item);
+				
+				wrapper_IScroll_refresh();
+				wrapper_IScroll();
+
+				var overthrow_id = wrapper.find("[find=container]").eq(0).prop("id");
+				myIScrollList[overthrow_id].scrollToElement(item.get(0), 100);
+
+			},500,wrapper,container,item);
+			break;
+		default:
 			break;
 	}
 
-	item.find("[find=content]").append(content);
-	item.find("[find=keyword]").remove();
-
-	setTimeout(function(){
-		container.append(item);
-		
-		wrapper_IScroll_refresh();
-		wrapper_IScroll();
-
-		var overthrow_id = wrapper.find("[find=container]").eq(0).prop("id");
-		myIScrollList[overthrow_id].scrollToElement(item.get(0), 100);
-
-		submenu_feedback_build_options(wrapper,container);
-	},500,wrapper,container,item);
+	
 }
 
 var submenu_feedback_build_options = function(wrapper,container){
@@ -261,7 +285,7 @@ Submenu.prototype.AddFeedbackContent = function() {
 	app_application_lincko.add('feedback_'+that.id, "upload",function(){
 		for(var i in app_upload_files.lincko_files)
 		{
-			if(app_upload_files.lincko_files[i].lincko_parent_type == "chat" 
+			if(app_upload_files.lincko_files[i].lincko_parent_type == "chats" 
 				&& app_upload_files.lincko_files[i].lincko_parent_id == that.param.id 
 				&& app_upload_files.lincko_files[i].lincko_param == that.id
 				&& (app_upload_files.lincko_files[i].lincko_status == "uploading"
@@ -342,10 +366,6 @@ Submenu.prototype.AddFeedbackContent = function() {
 						elem.find('[find=progress_text]').addClass('uploading_file_progress_size').html( parseInt(app_upload_files.lincko_files[i].lincko_progress * app_upload_files.lincko_files[i].lincko_size / 1024 / 100)
 		+ ' K of ' + parseInt (app_upload_files.lincko_files[i].lincko_size/1024) + 'K');
 					}
-					
-
-
-
 				}
 			}
 		}
@@ -359,6 +379,7 @@ Submenu.prototype.AddFeedbackBottom = function() {
 	var position = submenu_wrapper.find("[find=submenu_wrapper_bottom]").addClass('submenu_bottom');
 
 	function fnSendMsg(inputter) {
+
 		var data = inputter.getContent();
 		var elem = data.elem;
 		var editor = position.find("[find=chat_textarea]");
@@ -435,10 +456,15 @@ Submenu.prototype.AddFeedbackBottom = function() {
 				//script
 				var target = $("#submenu_feedback_content_wrapper_" + that.id);
 				var container = target.find("[find=container] ul");
-				submenu_feedback_build_question(sub_that.Wrapper(),container,2);
+
+
+				submenu_feedback_build_question(sub_that.Wrapper(),container,3);
+
+				setTimeout(function(){
+					submenu_feedback_build_question(sub_that.Wrapper(),container,2);
+				},500);
 
 				editor.removeClass("submenu_feedback_space");
-
 
 				$.each(app_upload_files.lincko_files, function(i, file){
 					if(file.lincko_param == that.id){
@@ -474,6 +500,8 @@ Submenu.prototype.AddFeedbackBottom = function() {
 		
 
 	};
+
+
 
 	var layer = {
 		row : 3,
