@@ -556,20 +556,20 @@ var burger_attach_clickHandler = {
 				var lincko_item = Lincko.storage.get(lincko_type, lincko_id);
 				if(!lincko_item){ return false; }
 
-				var duration = timestamp - lincko_item.start;
+				var start = timestamp - lincko_item.duration;
 
 				var param = {
 					id: lincko_id,
-					duration: duration,
+					start: start,
 				};
 
 				var cb_begin = function(){
-					if(Lincko.storage.data[lincko_type][lincko_id]['duration']){
-						Lincko.storage.data[lincko_type][lincko_id]['duration'] = duration;
+					if(Lincko.storage.data[lincko_type][lincko_id]['start']){
+						Lincko.storage.data[lincko_type][lincko_id]['start'] = start;
 					}
 					
 					var param_prepare = {};
-					param_prepare[lincko_type+'_'+lincko_id] = { 'duration': true };
+					param_prepare[lincko_type+'_'+lincko_id] = { 'start': true };
 					app_application_lincko.prepare(lincko_type+'_'+lincko_id, true, param_prepare); 
 				}
 
@@ -1765,8 +1765,6 @@ burgerN.typeTask = function(projectID, skylistInst, dropdownOffset){
 		projectID = app_content_menu.projects_id;
 	}
 	if(typeof dropdownOffset != 'number'){ dropdownOffset = null; }
-	var defaultDuration = 86400; //seconds
-	
 
 	var elem_typeTask = $('#-burger_typeTask').clone().prop('id','');
 	var elem_typingArea = elem_typeTask.find('[find=text]');
@@ -1841,7 +1839,8 @@ burgerN.typeTask = function(projectID, skylistInst, dropdownOffset){
 		}
 
 		//date logic
-		var duration = defaultDuration;
+		var duration = 86400; //default
+		var start = new wrapper_date().getEndofDay(); //midnight today
 		var time_now = new wrapper_date();
 		var timestamp = parsedData.timestamp;
 		if(typeof timestamp != 'number' && typeof timestamp != 'string' 
@@ -1849,22 +1848,17 @@ burgerN.typeTask = function(projectID, skylistInst, dropdownOffset){
 			&& skylistInst.Lincko_itemsList_filter 
 			&& skylistInst.Lincko_itemsList_filter.duedate 
 			&& skylistInst.Lincko_itemsList_filter.duedate == 0 ){ //if no burger time, and filter is set to today, then make it due end of today
-			duration = time_now.getEndofDay() - time_now.timestamp;
-		}
-		else if(timestamp == 0){
-			duration = time_now.getEndofDay() - time_now.timestamp;
+			start -= duration;
 		}
 		else if(timestamp == 1){
-			//do nothing, use DefaultDuration and also dont follow filter
+			//do nothing, use default duration and start
 		}
 		else if(timestamp){ //val == due date timestamp in seconds
-			duration = timestamp - time_now.timestamp;
+			start = timestamp - duration;
 		}
+		param.start = start;
 
-		param.start =  time_now.timestamp;
-		if(duration){
-			param.duration = duration;
-		}
+
 
 		var item = {
 			'+title': title,
@@ -1873,7 +1867,7 @@ burgerN.typeTask = function(projectID, skylistInst, dropdownOffset){
 			'_type': 'tasks',
 			'_users': {},
 			'created_at':time_now.timestamp,
-			'start': time_now.timestamp,
+			'start': start,
 			'duration': duration,
 			'updated_by': wrapper_localstorage.uid,
 			'updated_at': time_now.timestamp,

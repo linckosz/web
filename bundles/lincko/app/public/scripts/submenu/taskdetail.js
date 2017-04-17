@@ -425,7 +425,6 @@ Submenu.prototype.Add_taskdetail = function() {
 	var approved = false;
 	var elem;
 	var duedate;
-	var duration_timestamp = 86400;
 	var created_by;
 	var created_at;
 	var updated_by;
@@ -524,8 +523,8 @@ Submenu.prototype.Add_taskdetail = function() {
 		});
 		item['_users'][wrapper_localstorage.uid]['in_charge'] = true;
 		in_charge_id = wrapper_localstorage.uid;
-		item.start = new wrapper_date().timestamp;
-		item.duration = duration_timestamp;
+		item.start = new wrapper_date().getEndofDay(); //midnight today
+		item.duration = 86400; //24hrs by default
 		item['_type'] = that.param.type;
 	} 
 	else{
@@ -533,9 +532,6 @@ Submenu.prototype.Add_taskdetail = function() {
 		//if task doesnt exist
 		if(!item){
 			return;
-		}
-		if( that.param.type == "tasks" ){
-			duration_timestamp = item['duration'];
 		}
 
 		//if its fake, use the skylist queue system to update to real id when available
@@ -835,7 +831,7 @@ Submenu.prototype.Add_taskdetail = function() {
 
 			if(item['_id'] == 'new'){
 				var cb_select_calendar = function(timestamp, elem_datepicker){
-					item.duration = duration_timestamp = timestamp - item['start'];
+					item.start = timestamp - item.duration;
 					if(elem_datepicker && elem_datepicker.blur){ 
 						burgerInst.calendar = elem_datepicker; 
 						elem_datepicker.blur(); 
@@ -1202,7 +1198,7 @@ Submenu.prototype.Add_taskdetail = function() {
 				var param = {
 					parent_id: that.param.projID, 
 					title: subtask_title,
-					duration: 0,
+					start: null,
 				};
 				if(taskid == 'new'){
 					var fakeID = taskdetail_getRandomInt();
@@ -2114,7 +2110,7 @@ Submenu.prototype.Add_taskdetail = function() {
 
 				if(that.param.type == 'tasks'){
 					param['duration'] = item.duration;
-					param['start'] = item['start'];
+					param['start'] = item.start;
 
 					if(in_charge_id){
 						param['users>in_charge'] = {};
@@ -2198,6 +2194,7 @@ Submenu.prototype.Add_taskdetail = function() {
 				else if(this.updated[that.param.type+'_'+item['_id']]){
 					if(this.updated[that.param.type+'_'+item['_id']]._parent ||
 						this.updated[that.param.type+'_'+item['_id']].duration ||
+						this.updated[that.param.type+'_'+item['_id']].start ||
 						this.updated[that.param.type+'_'+item['_id']]._users){
 						doUpdate = true;
 					}
@@ -3170,7 +3167,7 @@ var taskdetail_subtaskQueue = {
 				if(!param){return;}
 				param['tasksup>access'] = {};
 				param['tasksup>access'][tasksupID] = true;
-				param.duration = 0; //no duedate for subtasks
+				param.start = null; //no duedate for subtasks
 
 				//if fav number is set, update the parent task
 				if(typeof obj.fav != 'undefined'){

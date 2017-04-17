@@ -779,8 +779,6 @@ skylist.prototype.addCard_all = function(){
 	var that = this;
 	if(that.list_type == 'tasks'){
 		that.list.append(burgerN.typeTask(null, that)); //top
-		//that.list_wrapper.append(burgerN.typeTask(null, that, 30)); //bottom
-
 		that.paperView_inputter(that.list_wrapper, 'projects', app_content_menu.projects_id);
 	}
 	var items;
@@ -1177,6 +1175,7 @@ skylist.prototype.paperview_partialUpdate = function(updated_tasks){
 		_children : true, //(i.e. comments)
 		_users : true,
 		duration: true,
+		start: true,
 		_tasksdown: true,
 
 		approved: true,
@@ -1202,7 +1201,7 @@ skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
 	var elem_card_rightbox = elem.find('[find=card_rightbox]');
 
 	//if update the text, title, '@', '+'
-	if((typeof updated == 'boolean' && updated) || updated['+title'] || updated._users || updated.duration){
+	if((typeof updated == 'boolean' && updated) || updated['+title'] || updated._users || updated.duration || updated.start){
 		var elem_title = elem.find('[find=title]');
 		elem_title.text(item['+title']);
 		var span_date = burger_spanDate(skylist_calcDuedate(item));
@@ -1216,7 +1215,7 @@ skylist.prototype.paperview_taskCard_update = function(elem, item, updated){
 	}
 
 	
-	if((typeof updated == 'boolean' && updated) || updated.duration || updated.approved || updated.approved_at || updated.approved_by){
+	if((typeof updated == 'boolean' && updated) || updated.duration || updated.start || updated.approved || updated.approved_at || updated.approved_by){
 		//if task duedate changed, adjust overdue class
 		var isOverdue = tasks_isOverdue(item._id);
 		if(isOverdue){
@@ -1485,8 +1484,8 @@ skylist.prototype.addTask = function(item){
 		item['_perm'][0] = 3; //RCUD
 		item['created_by'] = wrapper_localstorage.uid;
 		item['_users'][wrapper_localstorage.uid]['in_charge'] = true;
-		item.start = $.now()/1000;
-		item.duration = "86400";
+		item.start = new wrapper_date().getEndofDay(); //midnight today
+		item.duration = 86400;
 	}
 	Elem.prop('id','skylist_card_'+that.md5id+'_'+item['_id']);
 	Elem.attr('item_id', item['_id']);
@@ -1560,18 +1559,24 @@ skylist.prototype.addTask = function(item){
 				inChargeID_new = $(elem_users[0]).attr('userid');
 			}
 			
-			//++ burger
-			var duration = null;
+			//+ burger
+			var start = false;
+			var duration = item.duration;
 			var elem_dateWrapper = $(this).find('[find=dateWrapper]');
 			if(elem_dateWrapper.length){
 				var dateval = $(elem_dateWrapper[0]).attr('val');
-				if(dateval == 0){
+				if(dateval == 0){ //today
 					dateval = new wrapper_date().getEndofDay(); //end of day today
+					start = new wrapper_date().getEndofDay() - duration;
 				}
-				else if(dateval == 1){
-					dateval = new wrapper_date().getEndofDay() + 86400; //end of day tomorrow
+				else if(dateval == 1){ //tomorrow
+					start = new wrapper_date().getEndofDay() + 86400 - duration;
+				} else if(dateval == null){
+					start = null;
 				}
-				duration = dateval - item['start'];
+				else {
+					start = dateval - duration;
+				}
 			}
 
 
@@ -1580,7 +1585,7 @@ skylist.prototype.addTask = function(item){
 			}).text());
 			
 
-			if(new_text != item['+title'] || inChargeID_new || duration){
+			if(new_text != item['+title'] || inChargeID_new || start){
 				var param = {
 					id: item['_id']
 				};
@@ -1601,8 +1606,8 @@ skylist.prototype.addTask = function(item){
 					});
 				}
 
-				if(duration){
-					param.duration = duration;
+				if(start || start == null){
+					param.start = start;
 				}
 
 
@@ -1954,39 +1959,12 @@ skylist.prototype.addTask = function(item){
 	elem_calendar.html(duedate);
 	elem_calendar_timestamp.val((item['start']+item['duration'])*1000);
 	
-	//enable calendar burger for landscape tablet and up
-	// if(!responsive.test("maxMobileL")){
-	// 	burger_calendar(elem_calendar_timestamp, elem_calendar );
-	// }
 	if(!item.fake && !responsive.test("maxMobileL")){
 		elem_calendar.click(function(event){
 			event.stopPropagation();
 		});
 		burger_attach_clickHandler.calendar(elem_calendar, item['_type'], item['_id'], null, true);
 	}
-	// elem_calendar_timestamp.change(function(){
-	// 	var duration_timestamp = $(this).val()/1000 - item['start'];
-	// 	if( duration_timestamp < 0 ){
-	// 		console.log(item['start']+' duedate cant be before start date.'); //toto
-	// 	}
-	// 	else{
-	// 		var route = '';
-	// 		if( that.list_type == "tasks" ){
-	// 			route = 'task/update';
-	// 		}
-
-	// 		/*wrapper_sendAction({
-	// 			id: item['_id'],
-	// 			duration: duration_timestamp,
-	// 		}, 'post', route);*/
-
-	// 		skylist.sendAction.tasks(
-	// 			{
-	// 				id: item['_id'],
-	// 				duration: duration_timestamp,
-	// 			}, item, route);
-	// 	}
-	// });
 
 	/* rightOptions - duedate */
 	var elem_rightOptions_duedate = that.add_rightOptionsBox(duedate,'fa-calendar');
@@ -2773,33 +2751,26 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 
 		//date logic
 		var duration = 86400; //default
+		var start = new wrapper_date().getEndofDay(); //midnight today
 		var time_now = new wrapper_date();
 		var timestamp = parsedData.timestamp;
-		if(typeof timestamp != 'number' && typeof timestamp != 'string' 
+		if(timestamp == 0
+			|| (typeof timestamp != 'number' && typeof timestamp != 'string' 
 			&& that 
 			&& $.type(that.Lincko_itemsList_filter) == 'object'
-			&& that.Lincko_itemsList_filter.duedate == 0 ){ //if no burger time, and filter is set to today, then make it due end of today
-			duration = time_now.getEndofDay() - time_now.timestamp;
-		}
-		else if(timestamp == 0){
-			duration = time_now.getEndofDay() - time_now.timestamp;
+			&& that.Lincko_itemsList_filter.duedate == 0 )){ //if no burger time, and filter is set to today, then make it due end of today
+			start -= duration;
 		}
 		else if(timestamp == 1){
 			//do nothing, use DefaultDuration and also dont follow filter
 		}
 		else if(timestamp){ //val == due date timestamp in seconds
-			duration = timestamp - time_now.timestamp;
+			start = timestamp - duration;
 		}
-
-		param.start =  time_now.timestamp;
-		if(duration){
-			param.duration = duration;
-		}
-
+		param.start = start;
 
 		//approval
 		param.approved = inputterData.checked;
-
 
 		var item = {
 			'+title': title,
@@ -2808,8 +2779,8 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 			'_perm': Lincko.storage.get('projects', parent_id, '_perm'),
 			'_type': 'tasks',
 			'_users': {},
-			'created_at':time_now.timestamp,
-			'start': time_now.timestamp,
+			'created_at': time_now.timestamp,
+			'start': start,
 			'duration': duration,
 			'updated_by': wrapper_localstorage.uid,
 			'updated_at': time_now.timestamp,
