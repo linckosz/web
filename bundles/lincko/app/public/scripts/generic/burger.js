@@ -611,7 +611,7 @@ var burger_attach_clickHandler = {
 		    	event.preventDefault();
 			});
 
-			elem_datepicker.blur(function(){return;
+			elem_datepicker.blur(function(){
 				elem_datepicker.velocity('slideUp', {
 					duration: dropdownDuration,
 					mobileHA: hasGood3Dsupport,
