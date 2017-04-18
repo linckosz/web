@@ -195,11 +195,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 			.prop("id", wrapper_content_id);
 	}
 
-	var temp = Lincko.storage.list('users', null);
-	//Add alphabetic username
-	for(var i in temp){
-		temp[i]['alphabet_order'] = Pinyin.getPinyin(temp[i]['-username']);
-	}
+	var temp = Lincko.storage.sort_items(Lincko.storage.list('users', null), '-username');
 
 	var exists_tab = {};
 	submenu_wrapper.find('[find=tab_contact]').each(function(){
@@ -245,7 +241,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 		$('#'+that.id+"_submenu_app_chat_chat_invitation").recursiveRemove();
 	}
 
-	contacts = Lincko.storage.sort_items(invitation, 'alphabet_order');
+	contacts = Lincko.storage.sort_items(invitation, '-username');
 	for(var i in contacts){
 		var Elem_id = that.id+"_submenu_app_chat_chat_invitation_"+contacts[i]['_id'];
 		delete exists_tab[Elem_id];
@@ -394,7 +390,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 		submenu_wrapper.find("[find=submenu_wrapper_content]").append(div);
 	}
 
-	contacts = Lincko.storage.sort_items(visible, 'alphabet_order');
+	contacts = Lincko.storage.sort_items(visible, '-username');
 	for(var i in contacts){
 		var Elem_id = that.id+"_submenu_app_chat_chat_contact_"+contacts[i]['_id'];
 		delete exists_tab[Elem_id];
