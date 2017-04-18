@@ -1016,13 +1016,15 @@ Lincko.storage.getHistoryInfo = function(hist){
 		result.date = date.display('date_very_short');
 		
 		//Format previous result
-		if(hist.old){
+		if(typeof hist.old != 'undefined'){
 			//Format data displayed
-			if(hist.cod==506){ //modified a task due date
-				if(hist.par.dd === null){
-					result.prev = Lincko.Translation.get('app', 103, 'html'); //None
-				} else if(hist.par && hist.par.dd){
-					result.prev = (new wrapper_date(hist.par.dd)).display('date_medium_simple');
+			if(hist.cod==506 || hist.cod==507){ //modified a task due date
+				if(hist.par && typeof hist.par.dd != 'undefined'){
+					if($.isNumeric(hist.par.dd)){
+						result.prev = (new wrapper_date(hist.par.dd)).display('date_medium_simple');
+					} else {
+						result.prev = Lincko.Translation.get('app', 103, 'html'); //None
+					}
 				}
 			} else {
 				result.prev = hist.old;
