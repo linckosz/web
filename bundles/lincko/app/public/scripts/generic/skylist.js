@@ -1645,7 +1645,7 @@ skylist.prototype.addTask = function(item){
 			else{ //if no need to update
 				$(this).html(new_text);
 				if(that.Lincko_itemsList_filter.view == 'paper'){
-					$(this).append(burger_spanUser(in_chargeID)).append(burger_spanDate(item['start']+item['duration']));
+					$(this).append(burger_spanUser(in_chargeID)).append(burger_spanDate(item['start'] ? item['start']+item['duration'] : null));
 				}
 			}
 		});
@@ -1960,7 +1960,7 @@ skylist.prototype.addTask = function(item){
 	}
 
 	if(that.Lincko_itemsList_filter.view == 'paper'){
-		var elem_title_spanDate = burger_spanDate(item['start']+item['duration'], duedate);
+		var elem_title_spanDate = burger_spanDate(item['start'] ? item['start']+item['duration'] : null, duedate);
 		if(!item.fake){
 			burger_attach_clickHandler.calendar(elem_title_spanDate, item['_type'], item['_id'], null, true);
 		}
@@ -2780,6 +2780,9 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 		}
 		else if(timestamp == 1){
 			//do nothing, use DefaultDuration and also dont follow filter
+		}
+		else if(timestamp == null){
+			start = null;
 		}
 		else if(timestamp){ //val == due date timestamp in seconds
 			start = timestamp - duration;

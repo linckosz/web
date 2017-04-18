@@ -114,7 +114,7 @@ var tasks_calcDuedate = function(id){
 var tasks_isOverdue = function(id){
 	var duedate = tasks_calcDuedate(id);
 	var now = new wrapper_date();
-	if( now.time > duedate.time ){
+	if( duedate && now.time > duedate.time ){
 		return true;
 	}
 	else{

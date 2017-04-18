@@ -20,7 +20,9 @@
 	max-width: 400px;
 	position: relative;
 }
-
+.submenu_calendar .burger_calendar_prepend table{
+	padding: 0px 20px;
+}
 .submenu_calendar .burger_calendar .ui-widget-header{
 	margin-top: 20px;
 	margin-bottom: 10px;

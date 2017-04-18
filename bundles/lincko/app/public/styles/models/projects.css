@@ -357,7 +357,7 @@
     right: 0px;
     top: 0px;
     bottom: 0px;
-    font-size: 30px;
+    font-size: 28px;
     color: rgba(251, 160, 38, 0.75);
 }
 .app_models_projects_projectsDeck_card [find=icon_wrapper]>span{
@@ -369,17 +369,17 @@
 }
 .app_models_projects_projectsDeck_card [find=icon_wrapper] [find=icon_overdue]{
 	position: relative;
-	height: 30px;
-    width: 30px;
+	height: 28px;
+    width: 28px;
     display: inline-block;
-    line-height: 30px;
+    line-height: 28px;
     text-align: center;
 }
 .app_models_projects_projectsDeck_card [find=icon_wrapper] [find=icon_overdue] [find=team]{
-	height: 26px;
-    width: 26px;
+	height: 100%;
+    width: 100%;
     display: inline-block;
-    line-height: 26px;
+    line-height: 28px;
     text-align: center;
 	font-size: 16px;
     background-color: #BE2B1f;
@@ -390,7 +390,7 @@
 .app_models_projects_projectsDeck_card [find=icon_wrapper] [find=icon_overdue] [find=me]{
     position: absolute;
     top: 0px;
-    right: -6px;
+    right: -8px;
     font-size: 10px;
     color: #BE2B1f;
     height: 10px;

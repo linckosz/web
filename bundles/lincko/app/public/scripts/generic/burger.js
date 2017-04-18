@@ -62,7 +62,7 @@ var burger_keyboard = function(elem, lineHeight, shortcuts, burgerData, fn_enter
 		}
 	}
 	that.dropdown_cb.cb_select = function(data){
-		if(typeof data != 'object'){ var data = {val: data}; }
+		if(typeof data != 'object' || data == null){ var data = {val: data}; }
 		var str_elem_burgerSpan = null;
 		if(that.burgerMode == burger_shortcuts.at){
 			str_elem_burgerSpan = burger_spanUser(data.val, data.text).clone().wrap('<div/>').parent().html()+'&nbsp;';
@@ -1763,7 +1763,10 @@ var burger_parseHTML = function(elem){
 
 	//get date
 	var timestamp = elem.find('[find=dateWrapper]').eq(0).attr('val');
-	if(timestamp){
+	if(timestamp == null || 'none'){
+		parsedData.timestamp = null;
+	}
+	else if(timestamp){
 		parsedData.timestamp = parseInt(timestamp, 10);
 	}
 	
@@ -1864,6 +1867,9 @@ burgerN.typeTask = function(projectID, skylistInst, dropdownOffset){
 		}
 		else if(timestamp == 1){
 			//do nothing, use default duration and start
+		}
+		else if(timestamp == null){
+			start = null;
 		}
 		else if(timestamp){ //val == due date timestamp in seconds
 			start = timestamp - duration;
@@ -3166,6 +3172,10 @@ var burger_spanDate = function(timestamp, text){
 		var text = burger_timestampToText(timestamp);
 	}
 
+	if(timestamp == null){
+		timestamp = 'none';
+	}
+
 	var elem = $('<span find="dateWrapper" contenteditable="false"></span>')
 		.attr('val',timestamp)
 		.text(text)
@@ -3179,7 +3189,7 @@ var burger_timestampToText = function(timestamp){
 	if(timestamp instanceof wrapper_date){
 		date = timestamp;
 	}
-	else if(!timestamp){
+	else if(!timestamp || timestamp == 'none'){
 		return Lincko.Translation.get('app', 103, 'js'); //None
 	}
 	else{
