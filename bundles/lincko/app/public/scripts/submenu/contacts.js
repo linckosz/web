@@ -482,12 +482,7 @@ function submenu_contacts_gen_chatcontacts(projectId, alwaysMe, contacts) {
 				}
 			}
 		} else {
-			var list = Lincko.storage.list('users', null, {_visible: true});
-			//Add alphabetic username
-			for(var i in list){
-				list[i]['alphabet_order'] = Pinyin.GetQP(list[i]['-username']);
-			}
-			list = Lincko.storage.sort_items(list, 'alphabet_order');
+			list = Lincko.storage.sort_items(Lincko.storage.list('users', null, {_visible: true}), '-username');
 
 			for(var i in list){
 				user = list[i];
