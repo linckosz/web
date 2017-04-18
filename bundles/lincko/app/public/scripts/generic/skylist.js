@@ -597,7 +597,7 @@ skylist.prototype.filter_by_sort_alt = function(items, filter){
 			items_filtered = Lincko.storage.sort_items( items, 'hist_at'/*'updated_at'*/, 0, -1, false );
 		}
 		else if(filter == 'abc'){
-			items_filtered = Lincko.storage.sort_items( items, '+title', 0, -1, true );
+			items_filtered = Lincko.storage.sort_items( items, '+title', 0, -1, true );	
 		}
 		else{
 			filter = 'due';

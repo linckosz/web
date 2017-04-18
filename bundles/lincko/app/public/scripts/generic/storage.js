@@ -2516,6 +2516,7 @@ Lincko.storage.sort_items = function(array_items, att, page_start, page_end, asc
 	var results = [];
 	var temp = {};
 	var item;
+	var item_abc;
 	var value;
 	var save = false;
 	var type = "number";
@@ -2540,15 +2541,23 @@ Lincko.storage.sort_items = function(array_items, att, page_start, page_end, asc
 	for(var i in array_items){
 		item = array_items[i];
 		save = false;
+
+		item_abc = {}; //save abc translation to this object if available
+		if( Lincko.storage.data_abc
+			&& Lincko.storage.data_abc[item._type]
+			&& Lincko.storage.data_abc[item._type][item._id]){
+			item_abc = Lincko.storage.data_abc[item._type][item._id];
+		}
+
 		if(typeof item[att] != 'undefined'){
 			save = true;
-			value = item[att];
+			value = item_abc[att] || item[att];
 		} else if(typeof item["+"+att] != 'undefined'){
 			save = true;
-			value = item["+"+att];
+			value = item_abc["+"+att] || item["+"+att];
 		} else if(typeof item["-"+att] != 'undefined'){
 			save = true;
-			value = item["-"+att];
+			value = item_abc["-"+att] || item["-"+att];
 		} else {
 			continue;
 		}

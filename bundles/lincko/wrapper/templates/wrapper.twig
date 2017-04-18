@@ -555,7 +555,7 @@ var webworker_operation = {
 
 	update_data_abc: function(obj_data){
 		var type = obj_data.type;
-		var id = obj_data.id;
+		var id = parseInt(obj_data.id,10);
 		var attr = obj_data.attr;
 		var s_abc = obj_data.s_abc;
 		var s_orig = obj_data.s_orig;
@@ -571,6 +571,8 @@ var webworker_operation = {
 			if(!Lincko.storage.data_abc[type]){ Lincko.storage.data_abc[type] = {}; }
 			if(!Lincko.storage.data_abc[type][id]){ Lincko.storage.data_abc[type][id] = {}; }
 			Lincko.storage.data_abc[type][id][attr] = s_abc;
+			Lincko.storage.data_abc[type][id]._type = type;
+			Lincko.storage.data_abc[type][id]._id = id;
 		}
 	}
 
