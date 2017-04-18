@@ -420,6 +420,7 @@
     display: inline-block;
     line-height: 28px;
     text-align: center;
+    margin-right: 6px;
 }
 .app_models_projects_projectsDeck_card [find=icon_wrapper] [find=icon_overdue] [find=team]{
 	height: 100%;
