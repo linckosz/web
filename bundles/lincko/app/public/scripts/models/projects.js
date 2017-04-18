@@ -1091,6 +1091,18 @@ var app_models_projects_getPercentComplete = function(id, round){
 	return percent;
 }
 
+var app_models_projects_progressBar = function(percent){
+	var elem = $('#-models_projects_progressBar').clone().prop('id','');
+	if(!percent){
+		elem.addClass('models_projects_progressBar_zero');
+	} else{
+		elem.removeClass('models_projects_progressBar_zero');
+	}
+	elem.find('[find=percent]').text(percent);
+	elem.find('[find=bar]').css('width', percent+'%');
+	return elem;
+}
+
 
 var app_models_projects_getOverdueCount = function(pid, uid){
 	var result = {
@@ -1234,9 +1246,7 @@ app_models_projects_projectsDeck.prototype.construct = function(){
 			}
 
 			//progress
-			var percent = app_models_projects_getPercentComplete(p._id);
-			elem_p.find('[find=percent]').text(percent);
-			elem_p.find('[find=info_progress] [find=bar]').css('width', percent+'%');
+			elem_p.find('[find=info_progress]').html(app_models_projects_progressBar(app_models_projects_getPercentComplete(p._id)));
 
 			//overdue notice
 			var overdue = app_models_projects_getOverdueCount(p._id, wrapper_localstorage.uid);

@@ -10,14 +10,11 @@
     height: 40px;
     line-height: 40px;
 }
-.app_layers_dashboard_header .app_project_projects_progress{
+.app_layers_dashboard_header .models_projects_progressBar{
 	height: 24px;
 	font-size: 24px;
 }
-.app_layers_dashboard_header .app_project_projects_progress:after{
-	line-height: 26px;
-}
-.app_layers_dashboard_header .app_project_projects_progress [find=bar]{
+.app_layers_dashboard_header .models_projects_progressBar [find=bar]{
     background-color: #f5a623;
 }
 

@@ -101,14 +101,7 @@ var mainMenu = {
 				if(force || pid!=parseInt(item.attr('pid'), 10) || timestamp!=parseInt(item.attr('timestamp'), 10)){
 					item.find("[find=app_project_projects_title]").html(wrapper_to_html(projectList[i]['+title']));
 
-					var progress = app_models_projects_getPercentComplete(pid);
-					if(!progress){
-						item.find('[find=app_project_projects_progress]').addClass('app_project_projects_progress_zero');
-					} else{
-						item.find('[find=app_project_projects_progress]').removeClass('app_project_projects_progress_zero');
-					}
-					item.find('[find=app_project_projects_progress] [find=percent]').text(progress);
-					item.find('[find=app_project_projects_progress] [find=bar]').css('width', progress+'%');
+					item.find('[find=app_project_projects_progress]').html(app_models_projects_progressBar(app_models_projects_getPercentComplete(pid)));
 
 					item.attr('pid', pid);
 					item.attr('timestamp', timestamp);

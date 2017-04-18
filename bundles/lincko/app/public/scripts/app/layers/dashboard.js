@@ -58,14 +58,7 @@ var app_layers_dashboard_feedPage = function(param){
 	elem_header.find('[find=date]').append((new wrapper_date()).display("date_medium_simple"));
 
 	//progress
-	var percent = app_models_projects_getPercentComplete(pid);
-	if(!percent){
-		elem_header.find('.app_project_projects_progress').addClass('app_project_projects_progress_zero');
-	} else{
-		elem_header.find('.app_project_projects_progress').removeClass('app_project_projects_progress_zero');
-	}
-	elem_header.find('[find=percent]').text(percent);
-	elem_header.find('[find=bar]').css('width', percent+'%');
+	elem_header.find('[find=progressBar]').html(app_models_projects_progressBar(app_models_projects_getPercentComplete(pid)));
 
 
 	//burndown canvas

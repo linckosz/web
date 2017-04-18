@@ -291,50 +291,7 @@
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
-.app_project_projects_progress {
-	position: relative;
-    height: 10px;
-    background-color: #e9e9e9;
-    color: #FFFFFF;
-    font-size: 10px;
-    width: 100%;
-    overflow: hidden;
-    margin: 4px 0px;
-}
-.app_project_projects_progress:after{
-    content: '0%';
-    left: 0px;
-    padding-left: 4px;
-    color: rgba(68, 68, 68, 0.7);
-    opacity: 0;
-    line-height: 10px;
-    vertical-align: top;
-}
-.app_project_projects_progress.app_project_projects_progress_zero:after{
-	opacity: 1;
-}
-.app_project_projects_progress_zero [find=bar]{
-	visibility: hidden;
-}
-.app_project_projects_progress [find=bar]{
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    width: 0%;
-    background-color: rgba(251, 160, 38, 0.75);
-    height: 100%;
-}
-.app_project_projects_progress [find=percent]{
-    float: right;
-    line-height: 100%;
-    height: 100%;
-    width: 100%;
-    text-align: right;
-}
-.app_project_projects_progress [find=percent]:after{
-	content: '%';
-    padding-right: 5px;
-}
+
 
 .app_project_chats_item {
 	padding: 1px 0 !important;
