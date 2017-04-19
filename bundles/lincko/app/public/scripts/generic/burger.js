@@ -1763,7 +1763,7 @@ var burger_parseHTML = function(elem){
 
 	//get date
 	var timestamp = elem.find('[find=dateWrapper]').eq(0).attr('val');
-	if(timestamp == null || 'none'){
+	if(timestamp == null || timestamp == 'none'){
 		parsedData.timestamp = null;
 	}
 	else if(timestamp){
