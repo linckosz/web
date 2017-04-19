@@ -484,6 +484,7 @@ chatFeed.prototype.app_chat_feed_uploading_file = function()
 			'preview' : preview,
 			'category' : 'uploading_file',
 			'ext' : app_models_fileType.getExt(files[i].lincko_name),
+			'index' :files[i].lincko_files_index,
 		};
 		this.has_today = true;
 

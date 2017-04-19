@@ -202,6 +202,7 @@ Submenu.prototype.Add_ChatContents = function() {
 
 	app_application_lincko.add(submenu_wrapper_id, 'upload', function(){ //We cannot simplify because Elem is not the HTML object, it's a JS Submenu object
 		var chat_item = this.action_param[2];
+
 		chat_item.app_chat_feed_uploading_file();
 
 		//toto：to test uploading file
@@ -343,7 +344,7 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 		top_line : true,
 		mobile_top_line : false,
 		enter : fnSendMsg,
-		auto_upload : true,
+		auto_upload : false,
 
 		right_menu :
 		[	

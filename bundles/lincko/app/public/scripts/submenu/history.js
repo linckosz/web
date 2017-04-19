@@ -90,6 +90,7 @@ var BaseItemCls = function(record,type, disableActionClick)
 			break;
 		case 'file' :
 			this.data = new FileContentCls(record,type);
+			this.data.disableActionClick = disableActionClick;
 			break;
 		case 'upload' :
 			this.data = new UploadingContentCls(record,type);
@@ -190,7 +191,7 @@ BaseItemCls.prototype.item_display = function(position, subm, mode, scroll_time)
 		elem.find(".date", "[find=timestamp]").html(skylist_textDate(date) || date.display('date_short'));
 		this.feed_profile_action(elem,this.user_id,subm);
 		this.feed_content(elem, subm);
-		if(this.style == 'activity' || this.style == 'file') this.feed_action(elem,subm);
+		if(this.style == 'activity' || this.style == 'file' || this.style == 'upload') this.feed_action(elem,subm);
 	}
 
 	var timestamp = parseInt(this.timestamp, 10);
@@ -664,6 +665,7 @@ var UploadingContentCls = function(record,type)
 	this.file_size = record['file_size'];
 	this.preview = record['preview'];
 	this.ext = record['ext'];
+	this.index = record['index'];
 }
 
 UploadingContentCls.prototype.feed_content = function(elem)
@@ -680,12 +682,10 @@ UploadingContentCls.prototype.feed_content = function(elem)
 		elem.addClass(this.category);
 		elem.find('[find=target]').addClass('upload_file_title').html(this.file_name);
 		elem.find('[find=progress_bar]').css('width', Math.floor(this.progress) + '%');
-
-
 		elem.find('[find=progress_text]').addClass('uploading_file_progress_size').html( parseInt(this.progress * this.file_size / 1024 / 100)
 		+ ' K of ' + parseInt (this.file_size/1024) + 'K'); //toto => translation
 		elem.find(".uploading_action").html(Lincko.Translation.get('app', 7, 'html'));
-
+		elem.attr('index',this.index);
 		if(this.preview == null || this.preview == '')
 		{
 			elem.find(".models_history_standard_shortcut_ico").removeClass('display_none');
@@ -705,6 +705,20 @@ UploadingContentCls.prototype.feed_content = function(elem)
 
 UploadingContentCls.prototype.feed_action = function(elem,subm)
 {
+	if(elem)
+	{
+		var index = elem.attr('index');
+		elem.find(".uploading_action").click(index,function(e){
+			var index = e.data;
+			if(app_upload_files.lincko_files[index]){
+				app_upload_files.lincko_files[index].lincko_status = 'abort';
+				app_upload_files.lincko_files[index].abort();//Force to reinitialize before any start
+				var e; //undefined
+				$('#app_upload_fileupload').fileupload('option').destroy(e, app_upload_files.lincko_files[index]);
+			}
+			elem.recursiveRemove();
+		});
+	}
 	
 }
 
@@ -1118,6 +1132,7 @@ historyFeed.prototype.app_chat_feed_uploading_file = function()
 			'preview' : preview,
 			'category' : 'uploading_file',
 			'ext' : app_models_fileType.getExt(files[i].lincko_name),
+			'index' : files[i].lincko_files_index,
 		};
 		this.has_today = true;
 
