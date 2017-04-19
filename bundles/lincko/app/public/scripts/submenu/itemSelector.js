@@ -390,7 +390,6 @@ Submenu.prototype.Add_itemSelector = function() {
 		that.id,
 		'submenu_hide_'+that.id,
 		function(){
-			console.log('submenu hide');
 			enquire.unregister(responsive.maxMobileL, itemSelector_enquire.maxMobileL);
 		}
 	);

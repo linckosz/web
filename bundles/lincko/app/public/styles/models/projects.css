@@ -254,7 +254,6 @@
 
 .app_models_projects_projectsDeck [find=menuWrapper] [find=searchBar_wrapper]{
 	padding: 5px 10px;
-    padding-right: 20px;
 }
 
 

@@ -100,7 +100,11 @@ var searchbar = {
 
 			//regular text search
 			if(!word.length || !burgerOnly ){
-				items_filtered = Lincko.storage.searchArray('word', word, items, ['+title', '+name', '-comment'], word_pinyin);
+				items_filtered = Lincko.storage.searchArray(
+					'word', word, items, 
+					['+title', '+name', '-comment', '-username', '-firstname', '-lastname'], 
+					word_pinyin
+				);
 			}
 
 			//username and date search
@@ -119,7 +123,7 @@ var searchbar = {
 
 				//users search:
 				//look through any user in _perm. then, need to further match according to object type (i.e. in_charge, crated_by etc.)
-				userid_array = searchbar.searchByUsername(word, Object.keys(item._perm), word_pinyin);
+				userid_array = item._perm ? searchbar.searchByUsername(word, Object.keys(item._perm), word_pinyin) : [];
 				if( userid_array.length && (burgerOnly == false || burgerOnly == 'at') ){ //userOnly both true/false
 					for( var k=0; k < userid_array.length; k++){
 						userid = userid_array[k];

@@ -193,21 +193,49 @@ Submenu.prototype.Add_ChatContacts = function() {
 	var position = submenu_wrapper.find("[find=submenu_wrapper_content]");
 	if($('#'+wrapper_content_id).length<=0){
 		position
-			.addClass('overthrow')
+			.removeClass('overthrow')
 			.recursiveEmpty()
 			.prop("id", wrapper_content_id);
 	}
 
-	var temp = Lincko.storage.sort_items(Lincko.storage.list('users', null), '-username');
+	var visible = [];
+	var invitation = [];
+	var contacts = [];
+
+	//add searchbar
+	var fn_search = function(words){
+		var elem_contacts = $('#'+that.id+"_submenu_app_chat_chat_contact_div").find('[find=tab_contact]');
+		if(!words.length){
+			elem_contacts.removeClass('display_none');
+		} else {
+			var filtered = [];
+			$.each(searchbar.filterLinckoItems(Lincko.storage.list('users', null), words), function(i, item){
+				filtered.push(item['_id']);
+			});
+			$.each(elem_contacts, function(i, elem){
+				var uid = parseInt($(elem).attr('uid'),10);
+				if(filtered.indexOf(uid) != -1){ //if exists
+					$(elem).removeClass('display_none');
+				} else {
+					$(elem).addClass('display_none');
+				}
+			});
+		}
+		$(window).trigger('resize.chatContacts');
+	}
+	if(!$('#'+this.id+"_submenu_app_chat_contacts_searchbar_container").length){
+		var elem_searchbar_container = $('<div>').prop('id', this.id+"_submenu_app_chat_contacts_searchbar_container").addClass('submenu_app_chat_contacts_searchbar_container');
+		var searchbar_contacts = searchbar.construct(fn_search);
+		elem_searchbar_container.append(searchbar_contacts.elem);
+		position.append(elem_searchbar_container);
+	}
 
 	var exists_tab = {};
 	submenu_wrapper.find('[find=tab_contact]').each(function(){
 		exists_tab[this.id] = true;
 	});
 
-	var visible = [];
-	var invitation = [];
-	var contacts = [];
+	var temp = Lincko.storage.list('users', null);
 	if(temp){
 		for(var i in temp){
 			if(temp[i]['_invitation'] && temp[i]['_id']!=wrapper_localstorage.uid){
@@ -219,7 +247,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 	}
 
 	//Invitation
-	var div_id = that.id+"_submenu_app_chat_chat_invitationt_div";
+	var div_id = that.id+"_submenu_app_chat_chat_invitation_div";
 	var div = $('#'+div_id);
 	if(div.length<=0){
 		div = $('<div>');
@@ -389,7 +417,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 	var div = $('#'+div_id);
 	if(div.length<=0){
 		div = $('<div>');
-		div.prop("id", div_id);
+		div.prop("id", div_id).addClass('overthrow submenu_app_chat_chat_contact_div');
 		submenu_wrapper.find("[find=submenu_wrapper_content]").append(div);
 	}
 
@@ -401,7 +429,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 			continue;
 		}
 		var Elem = $('#-submenu_app_chat_chat_contact').attr("find", 'tab_contact').clone();
-		Elem.prop("id", Elem_id);
+		Elem.prop("id", Elem_id).attr('uid', contacts[i]['_id']);
 		thumbnail = Lincko.storage.getLinkThumbnail(contacts[i]['profile_pic']);
 		if(thumbnail){
 			Elem.find("[find=picture_src]").css('background-image','url("'+thumbnail+'")');
@@ -429,6 +457,30 @@ Submenu.prototype.Add_ChatContacts = function() {
 
 	//$(window).resize();
 	wrapper_IScroll_refresh();
+	var setContactListHeight_timeout;
+	$(window).on('resize.chatContacts', function(){
+		clearTimeout(setContactListHeight_timeout);
+		setContactListHeight_timeout = setTimeout(function(){
+			var id_elem = that.id+"_submenu_app_chat_chat_contact_div";
+			var elem_contacts = $('#'+id_elem);
+			var h_new = elem_contacts.parent().height();
+			$.each(elem_contacts.siblings(), function(i, elem){
+				h_new -= $(elem).outerHeight();
+			});
+			elem_contacts.height(h_new);
+			if(myIScrollList[id_elem]){
+				myIScrollList[id_elem].refresh();
+			}
+		}, 450);
+	});
+
+	app_application_lincko.add(
+		that.id,
+		'submenu_hide_'+that.id,
+		function(){
+			$(window).off('resize.chatContacts');
+		}
+	);
 
 	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
 	delete submenu_wrapper;

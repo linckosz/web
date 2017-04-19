@@ -170,6 +170,10 @@
 	border-color: #FBC479;
 }
 
+.submenu_app_chat_chat_contact_div{
+	position: relative;
+}
+
 .submenu_deco_read.submenu_app_chat_deco {
 	display: table;
 	white-space: nowrap;
@@ -456,4 +460,8 @@
 
 .submenu_app_chat_block {
 	display: block !important;
+}
+
+.submenu_app_chat_contacts_searchbar_container{
+	padding: 6px 10px;
 }
