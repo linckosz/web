@@ -49,8 +49,8 @@ function app_submenu_chatFeed() {
 		},
 		'upload_stopped_file': function(id, elem) {
 			/*var file = app_upload_files.lincko_files[id];
-			file.submit();
 			file.lincko_status = 'uploading';
+			file.lincko_submit();
 			$(elem).parents(".models_history_wrapper").removeClass("upload_stopped_file").addClass("uploading_file").attr("category", "uploading_file");
 			return false;*/
 			var file = Lincko.storage.get('files', id);

@@ -3106,7 +3106,9 @@ var taskdetail_uploadManager = function(uniqueID, temp_id, new_parent_type, new_
 			if(new_parent_id){
 				app_upload_files.lincko_files[i].lincko_parent_id = new_parent_id;
 			}
-			app_upload_files.lincko_files[i].submit();
+			app_upload_files.lincko_files[i].lincko_status = 'abort';
+			app_upload_files.lincko_files[i].abort(); //Force to reinitialize before any start
+			app_upload_files.lincko_files[i].lincko_submit();
 		}
 	}
 	

@@ -470,7 +470,9 @@ Submenu.prototype.AddFeedbackBottom = function() {
 					if(file.lincko_param == that.id){
 						app_upload_files.lincko_files[i].lincko_parent_type = type;
 						app_upload_files.lincko_files[i].lincko_parent_id = that.param.id;
-						app_upload_files.lincko_files[i].submit();
+						app_upload_files.lincko_files[i].lincko_status = 'abort';
+						app_upload_files.lincko_files[i].abort(); //Force to reinitialize before any start
+						app_upload_files.lincko_files[i].lincko_submit();
 					}
 				});
 

@@ -271,6 +271,24 @@ $(function () {
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_start = app_upload_auto_launcher.start;
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_try = 2;
 
+			//Note: This function help to avoid a trouble issue that would completely stop the file upoading system if it submits while the staus is pending
+			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_submit = function(){
+				var temp_index = this.lincko_files_index;
+				if(this.state() == 'pending'){
+					clearInterval(app_upload_start_interval[temp_index]);
+					app_upload_start_interval[temp_index] = setInterval(function(temp_index){
+						if(typeof app_upload_files.lincko_files[temp_index] == "undefined"){
+							clearInterval(app_upload_start_interval[temp_index]);
+						} else if(app_upload_files.lincko_files[temp_index].state()!='pending'){
+							clearInterval(app_upload_start_interval[temp_index]);
+							app_upload_files.lincko_files[temp_index].submit();
+						}
+					}, 300, temp_index);
+				} else {
+					app_upload_files.lincko_files[temp_index].submit();
+				}
+			};
+
 			if(app_upload_auto_launcher.temp_id){
 				app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_temp_id = app_upload_auto_launcher.temp_id;
 				app_upload_auto_launcher.temp_id = md5(Math.random());
@@ -319,56 +337,9 @@ $(function () {
 			}
 			//Do not auto start by default
 			if(app_upload_auto_launcher.start){
-
-				var temp_index = app_upload_files.lincko_files_index-1;
-
-				app_upload_start_interval[temp_index] = setInterval(function(temp_index){
-					if(typeof app_upload_files.lincko_files[temp_index] == "undefined"){
-						clearInterval(app_upload_start_interval[temp_index]);
-					} else if(app_upload_files.lincko_files[temp_index].state()!='pending'){
-						clearInterval(app_upload_start_interval[temp_index]);
-						app_upload_files.lincko_files[temp_index].submit();
-					}
-				}, 300, temp_index);
-
-				/*
-				setTimeout(function(temp_index){
-					if(typeof app_upload_files.lincko_files[temp_index] != "undefined")
-					{
-						app_upload_files.lincko_files[temp_index].submit();
-					}
-				}, 300, temp_index);
-				setTimeout(function(temp_index){
-					if(typeof app_upload_files.lincko_files[temp_index] != "undefined")
-					{
-						app_upload_files.lincko_files[temp_index].submit();
-					}
-				}, 3000, temp_index);
-				*/
+				var temp_index = app_upload_files.lincko_files_index - 1;
+				app_upload_files.lincko_files[temp_index].lincko_submit();
 			}
-			// if(app_upload_auto_launcher.start){
-			// 	var temp_index = app_upload_files.lincko_files_index-1;
-			// 	var garbage = app_application_garbage.add(app_upload_auto_launcher.temp_id);
-			// 	app_application_lincko.add(garbage, 'upload', function() {
-			// 		var temp_index = this.action_param;
-			// 		if(app_upload_files.lincko_files[temp_index].lincko_start){
-			// 			app_upload_files.lincko_files[temp_index].lincko_start = false;
-			// 			var uploadInterval = setInterval(function(temp_index) {
-			// 				if(typeof app_upload_files.lincko_files[temp_index] == 'undefined'){
-			// 					clearInterval(uploadInterval);
-			// 				} else {
-			// 					var data = app_upload_files.lincko_files[temp_index];
-			// 					if(data._processQueue && data._processQueue.state && data._processQueue.state() != "pending")
-			// 					{
-			// 						app_upload_files.lincko_files[temp_index].submit();
-			// 						clearInterval(uploadInterval);
-			// 					}
-			// 				}		
-			// 			}, 300, temp_index);
-			// 			app_application_garbage.remove(this.id);
-			// 		}
-			// 	}, temp_index);
-			// }
 
 			clearTimeout(app_upload_auto_launcher_timeout);
 			app_upload_auto_launcher_timeout = setTimeout(function() {
@@ -560,7 +531,7 @@ $(function () {
 						that.destroy(e, data);
 					} else if(typeof data.lincko_type !== 'undefined' && data.lincko_type === 'file'){
 						data.lincko_status = 'uploading';
-						data.submit();
+						data.lincko_submit();
 					}
 				}
 			});

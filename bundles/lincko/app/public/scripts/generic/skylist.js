@@ -2867,7 +2867,9 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 				if(file.lincko_param == tempID){
 					app_upload_files.lincko_files[i].lincko_parent_type = task._type;
 					app_upload_files.lincko_files[i].lincko_parent_id = task._id;
-					app_upload_files.lincko_files[i].submit();
+					app_upload_files.lincko_files[i].lincko_status = 'abort';
+					app_upload_files.lincko_files[i].abort(); //Force to reinitialize before any start
+					app_upload_files.lincko_files[i].lincko_submit();
 				}
 			});
 

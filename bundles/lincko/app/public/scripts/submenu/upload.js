@@ -356,7 +356,7 @@ Submenu.prototype.Add_MenuAppUploadSubFile = function() {
 				if(app_upload_files.lincko_files[lincko_files_index]){
 					app_upload_files.lincko_files[lincko_files_index].lincko_status = 'abort';
 					app_upload_files.lincko_files[lincko_files_index].abort(); //Force to reinitialize before any start
-					app_upload_files.lincko_files[lincko_files_index].submit();
+					app_upload_files.lincko_files[lincko_files_index].lincko_submit();
 				}
 			});
 			Elem.append(Elem_bt);
