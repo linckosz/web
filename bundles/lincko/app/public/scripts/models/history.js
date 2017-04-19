@@ -55,7 +55,7 @@ var app_models_history = {
 			}
 			if(device=='ios'){
 				window.webkit.messageHandlers.iOS.postMessage(obj);
-			} else if(device=='android'){
+			} else if(device=='android' && typeof android.notification == 'function'){
 				android.notification(obj.title, obj.content, obj.url, obj.reddot);
 			}
 		} else {
