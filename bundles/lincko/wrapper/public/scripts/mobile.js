@@ -39,7 +39,7 @@ function useMobileNotification(){
 			notif = true;
 		}
 		else if(device=='ios'){
-			notif = true;
+			notif = false;
 		}		
 	}
 	return notif;
