@@ -72,6 +72,9 @@ var BaseItemCls = function(record,type, disableActionClick)
 			break;
 	}
 
+	if(typeof disableActionClick != 'boolean'){
+		var disableActionClick = false;
+	}
 	//style:{report,comment,ativity{comments,notes,files,tasks},file,uploading}
 	switch(this.style)
 	{
@@ -83,6 +86,7 @@ var BaseItemCls = function(record,type, disableActionClick)
 			break;
 		case 'activity' :
 			this.data = this.data_category_cls(record,type);
+			this.data.disableActionClick = disableActionClick;
 			break;
 		case 'file' :
 			this.data = new FileContentCls(record,type);
@@ -94,10 +98,8 @@ var BaseItemCls = function(record,type, disableActionClick)
 			break;
 	}
 
-	if(typeof disableActionClick != 'boolean'){
-		var disableActionClick = false;
-	}
-	this.data.disableActionClick = disableActionClick;
+	
+	
 }
 
 BaseItemCls.prototype.data_category_cls = function(record,type)
