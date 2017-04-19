@@ -151,7 +151,7 @@ var app_projects_users_contacts_init = function(subm){
 
 		//Add alphabetic username
 		//[unknow bug, already solved] => if use "var i" it become sometimes "users_?" instead of an integer, it seems that the scope was not taken into account
-		var others = Lincko.storage.sort_items(Lincko.storage.list('users', null, { _id: ['!=', wrapper_localstorage.uid], _visible: true, });, '-username');
+		var others = Lincko.storage.sort_items(Lincko.storage.list('users', null, { _id: ['!=', wrapper_localstorage.uid], _visible: true, }), '-username');
 
 		for(var j in others){
 			submenu_list['app_projects_users_contacts']['users_'+others[j]['_id']] = {

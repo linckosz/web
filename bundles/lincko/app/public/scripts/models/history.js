@@ -50,12 +50,13 @@ var app_models_history = {
 				action: 'notification',
 				title: title,
 				content: message,
-				url: window.location.href = top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/#"+link,
+				url: top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/#"+link,
+				reddot: Lincko.storage.cache.getTotalNotifyCount(),
 			}
 			if(device=='ios'){
 				window.webkit.messageHandlers.iOS.postMessage(obj);
 			} else if(device=='android'){
-				android.notification(obj);
+				android.notification(obj.title, obj.content, obj.url, obj.reddot);
 			}
 		} else {
 			var options = {

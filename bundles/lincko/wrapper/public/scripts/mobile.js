@@ -34,7 +34,13 @@ function isMobileApp(check_website){
 function useMobileNotification(){
 	var notif = false;
 	if(isMobileApp()){
-		notif = true;
+		var device = device_type();
+		if(device=='android' && android.versionCode() < 4){
+			notif = true;
+		}
+		else if(device=='ios'){
+			notif = true;
+		}		
 	}
 	return notif;
 }
