@@ -1858,7 +1858,7 @@ burgerN.typeTask = function(projectID, skylistInst, dropdownOffset){
 		var start = new wrapper_date().getEndofDay(); //midnight today
 		var time_now = new wrapper_date();
 		var timestamp = parsedData.timestamp;
-		if(typeof timestamp != 'number' && typeof timestamp != 'string' 
+		if(typeof timestamp != 'number' && typeof timestamp != 'string' && timestamp !== null
 			&& skylistInst 
 			&& skylistInst.Lincko_itemsList_filter 
 			&& skylistInst.Lincko_itemsList_filter.duedate 
@@ -1868,7 +1868,7 @@ burgerN.typeTask = function(projectID, skylistInst, dropdownOffset){
 		else if(timestamp == 1){
 			//do nothing, use default duration and start
 		}
-		else if(timestamp == null){
+		else if(timestamp === null){
 			start = null;
 		}
 		else if(timestamp){ //val == due date timestamp in seconds
