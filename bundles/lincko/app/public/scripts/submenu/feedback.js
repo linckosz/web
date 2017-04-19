@@ -167,6 +167,22 @@ var submenu_feedback_build_question = function(wrapper,container,question_id){
 
 			},500,wrapper,container,item);
 			break;
+		case 4 :
+			content = "Your feedback has been submitted.";//Your feedback has been submitted. I cannot personally reply to every request, but rest assued we'll be taking a look at what you sent and seeing if we can make some improvements!;//toto:need translation
+			item.find("[find=content]").append(content);
+			item.find("[find=keyword]").remove();
+
+			setTimeout(function(){
+				container.append(item);
+				
+				wrapper_IScroll_refresh();
+				wrapper_IScroll();
+
+				var overthrow_id = wrapper.find("[find=container]").eq(0).prop("id");
+				myIScrollList[overthrow_id].scrollToElement(item.get(0), 100);
+
+			},500,wrapper,container,item);
+			break;
 		default:
 			break;
 	}
@@ -457,9 +473,15 @@ Submenu.prototype.AddFeedbackBottom = function() {
 				var target = $("#submenu_feedback_content_wrapper_" + that.id);
 				var container = target.find("[find=container] ul");
 
-
-				submenu_feedback_build_question(sub_that.Wrapper(),container,3);
-
+				if(container.find(".models_feedback_self").length > 1)
+				{
+					submenu_feedback_build_question(sub_that.Wrapper(),container,4);
+				}
+				else
+				{
+					submenu_feedback_build_question(sub_that.Wrapper(),container,3);
+				}
+				
 				setTimeout(function(){
 					submenu_feedback_build_question(sub_that.Wrapper(),container,2);
 				},500);
@@ -499,11 +521,7 @@ Submenu.prototype.AddFeedbackBottom = function() {
 				
 			}
 		);
-		
-
 	};
-
-
 
 	var layer = {
 		row : 3,
@@ -516,7 +534,6 @@ Submenu.prototype.AddFeedbackBottom = function() {
 		mobile_top_line : false,
 		enter : fnSendMsg,
 		auto_upload : false,
-
 
 		right_menu :
 		[	
