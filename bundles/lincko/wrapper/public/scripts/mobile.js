@@ -35,8 +35,11 @@ function useMobileNotification(){
 	var notif = false;
 	if(isMobileApp()){
 		var device = device_type();
-		if(device=='android' && android.versionCode() < 4){
-			notif = true;
+		if(device=='android'){
+			if(!android.vCode){ android.vCode = android.versionCode(); }
+			if(android.vCode < 4){ //for versionCode below 4, disable javascript triggered notification and use JPush instead
+				notif = true;
+			}
 		}
 		else if(device=='ios'){
 			notif = false;
