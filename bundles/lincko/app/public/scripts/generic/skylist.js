@@ -2772,7 +2772,7 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 		var time_now = new wrapper_date();
 		var timestamp = parsedData.timestamp;
 		if(timestamp == 0
-			|| (typeof timestamp != 'number' && typeof timestamp != 'string' 
+			|| (typeof timestamp != 'number' && typeof timestamp != 'string' && timestamp !== null
 			&& that 
 			&& $.type(that.Lincko_itemsList_filter) == 'object'
 			&& that.Lincko_itemsList_filter.duedate == 0 )){ //if no burger time, and filter is set to today, then make it due end of today
@@ -2781,7 +2781,7 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 		else if(timestamp == 1){
 			//do nothing, use DefaultDuration and also dont follow filter
 		}
-		else if(timestamp == null){
+		else if(timestamp === null){
 			start = null;
 		}
 		else if(timestamp){ //val == due date timestamp in seconds

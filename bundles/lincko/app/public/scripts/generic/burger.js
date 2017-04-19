@@ -1750,7 +1750,7 @@ var burger_parseHTML = function(elem){
 	var parsedData = {
 		text: null,
 		userid: null, //@
-		timestamp: null, //++
+		timestamp: undefined, //++
 	}
 
 	//get text
@@ -1763,7 +1763,7 @@ var burger_parseHTML = function(elem){
 
 	//get date
 	var timestamp = elem.find('[find=dateWrapper]').eq(0).attr('val');
-	if(timestamp == null || timestamp == 'none'){
+	if(timestamp === null || timestamp === 'none'){
 		parsedData.timestamp = null;
 	}
 	else if(timestamp){
