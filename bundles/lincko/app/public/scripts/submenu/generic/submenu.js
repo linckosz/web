@@ -1094,6 +1094,8 @@ Submenu.prototype.showSubmenu = function(time, delay, animate) {
 		submenu_wrapper_width();
 		that.FocusForm();
 		$(window).resize();
+		that.Wrapper().find("[find=submenu_wrapper_content]").focus();
+		app_application_lincko.prepare(["submenu_start", "submenu_start_"+that.preview+"_"+that.id], true);
 		setTimeout(function(sub_that){
 			sub_that.Wrapper().find("[find=submenu_wrapper_content]").focus();
 			app_application_lincko.prepare(["submenu_show", "submenu_show_"+sub_that.preview+"_"+sub_that.id], true);
@@ -1119,6 +1121,8 @@ Submenu.prototype.showSubmenu = function(time, delay, animate) {
 							});
 						}
 					}
+					that.Wrapper().find("[find=submenu_wrapper_content]").focus();
+					app_application_lincko.prepare(["submenu_start", "submenu_start_"+that.preview+"_"+that.id], true);
 				},
 				complete: function() {
 					//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas
@@ -1148,6 +1152,8 @@ Submenu.prototype.showSubmenu = function(time, delay, animate) {
 					easing: [.38, .1, .13, .9],
 					begin: function() {
 						$('#' + that.id).css('visibility', 'visible').show(0);
+						that.Wrapper().find("[find=submenu_wrapper_content]").focus();
+						app_application_lincko.prepare(["submenu_start", "submenu_start_"+that.preview+"_"+that.id], true);
 					},
 					complete: function() {
 						//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas
@@ -1191,6 +1197,8 @@ Submenu.prototype.showPreview = function(time, delay, animate) {
 		submenu_resize_content();
 		that.FocusForm();
 		$(window).resize();
+		that.Wrapper().find("[find=submenu_wrapper_content]").focus();
+		app_application_lincko.prepare(["submenu_start", "submenu_start_"+that.preview+"_"+that.id], true);
 		setTimeout(function(sub_that){
 			sub_that.Wrapper().find("[find=submenu_wrapper_content]").focus();
 			app_application_lincko.prepare(["submenu_show", "submenu_show_"+sub_that.preview+"_"+sub_that.id], true);
@@ -1205,6 +1213,8 @@ Submenu.prototype.showPreview = function(time, delay, animate) {
 				easing: [.38, .1, .13, .9],
 				begin: function() {
 					$('#' + that.id).css('visibility', 'visible').show(0);
+					that.Wrapper().find("[find=submenu_wrapper_content]").focus();
+					app_application_lincko.prepare(["submenu_start", "submenu_start_"+that.preview+"_"+that.id], true);
 				},
 				complete: function() {
 					//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas
@@ -1231,6 +1241,8 @@ Submenu.prototype.showPreview = function(time, delay, animate) {
 				easing: [.38, .1, .13, .9],
 				begin: function() {
 					$('#' + that.id).css('visibility', 'visible').show(0);
+					that.Wrapper().find("[find=submenu_wrapper_content]").focus();
+					app_application_lincko.prepare(["submenu_start", "submenu_start_"+that.preview+"_"+that.id], true);
 				},
 				complete: function() {
 					//The line below avoid a bug in Chrome that could make the scroll unavailable in some areas

@@ -226,11 +226,11 @@ Submenu.prototype.Add_ChatContents = function() {
 	}, [that.id, id, that.param.chatFeed, position]);
 
 	
-	app_application_lincko.add(that.id, "submenu_show_"+that.preview+"_"+that.id, function() {
+	app_application_lincko.add(that.id, ["submenu_start_"+that.preview+"_"+that.id, "submenu_show_"+that.preview+"_"+that.id], function() {
 		var submenu_id = this.action_param[0];
 		var scroll_time = this.action_param[1];
 		var overthrow_id = "overthrow_"+submenu_id;
-		var help_iscroll_elem =  $('#'+that.id+'_help_iscroll').get(0);
+		var help_iscroll_elem =  $('#'+submenu_id+'_help_iscroll').get(0);
 		if(that.param.find_item){
 			var find_item = submenu_wrapper.find("[item="+that.param.find_item+"]");
 			if(find_item.length > 0){
