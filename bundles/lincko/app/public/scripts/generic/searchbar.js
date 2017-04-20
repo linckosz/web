@@ -93,8 +93,9 @@ var searchbar = {
 				burgerOnly = 'plus';
 			}
 
-			//do pinyin translation once here, and pass it into searchArray function
-			var word_pinyin = Pinyin.getPinyin(word);
+
+			//var word_pinyin = Pinyin.getPinyin(word);
+			var word_pinyin = word; //no pinyin matching for search word
 
 
 			//regular text search
