@@ -869,7 +869,7 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 			base_scanner.dispose();
 			Elem_radar.recursiveEmpty();
 		}
-		if(base_has_webcam && !base_app_scanner.exists){ //for desktop and mobile browser
+		if(base_has_webcam && !base_app_scanner.exists && !base_is_wechat){ //for desktop and mobile browser
 			base_scanner = new w69b.qr.ui.ContinuousScanner();
 		}
 		base_scanner.setDecodedCallback(function(url_code) {
