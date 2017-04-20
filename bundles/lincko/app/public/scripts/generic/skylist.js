@@ -2790,8 +2790,12 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 		else if(timestamp == 1){
 			//do nothing, use DefaultDuration and also dont follow filter
 		}
-		else if(timestamp === null){
-			start = null;
+		else if(timestamp === null 
+			|| (typeof timestamp == 'undefined'
+			&& that 
+			&& $.type(that.Lincko_itemsList_filter) == 'object'
+			&& that.Lincko_itemsList_filter.duedate == -1 )){
+			start = null; //if set to no due date OR no due date is specified but filter is set to all
 		}
 		else if(timestamp){ //val == due date timestamp in seconds
 			start = timestamp - duration;
