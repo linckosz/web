@@ -1193,27 +1193,32 @@ Submenu.prototype.Add_ChatContent = function() {
 
 			//For new items
 			for(var i in items){
-				var Elem = $('#'+ prefix + items[i]['root_type']+"_"+items[i]['root_id']);
-				if(Elem.length <= 0){
+				var Elems = $('#'+ prefix + items[i]['root_type']+"_"+items[i]['root_id']);
+				if(Elems.length <= 0){
 					var Elem = this.action_param.addChat(items[i]);
-					var parent = this.action_param.list;
-					Elem.detach(); //cut
-					var timestamp = list[Elem.prop('id')];
-					var Elems_bis = layer.find('[find=card]');
-					var attached = false;
-					Elems_bis.each(function(){
-						var Elem_bis = $(this);
-						if(!attached && timestamp >= Elem_bis.attr('timestamp')){
-							attached = true;
-							Elem.attr('timestamp', timestamp);
-							Elem_bis.before(Elem);
-							return false;
+					if(Elem)
+					{
+						var parent = this.action_param.list;
+						Elem.detach(); //cut
+						
+						var timestamp = list[Elem.prop('id')];
+						var Elems_bis = layer.find('[find=card]');
+						var attached = false;
+						Elems_bis.each(function(){
+							var Elem_bis = $(this);
+							if(!attached && timestamp >= Elem_bis.attr('timestamp')){
+								attached = true;
+								Elem.attr('timestamp', timestamp);
+								Elem_bis.before(Elem);
+								return false;
+							}
+						});
+						if(!attached){
+							parent.append(Elem);
 						}
-					});
-					if(!attached){
-						parent.append(Elem);
 					}
-				} else if(items[i]['timestamp'] != Elem.attr('timestamp')){
+					
+				} else if(items[i]['timestamp'] != Elems.attr('timestamp')){
 					this.action_param.addChat(items[i]);
 				}
 			}
