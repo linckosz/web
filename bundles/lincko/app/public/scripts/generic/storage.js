@@ -218,7 +218,27 @@ Lincko.storage.setLastVisit = function(timestamp){
 	timestamp = parseInt(timestamp, 10);
 	if(timestamp>=0){
 		Lincko.storage.last_visit = timestamp;
+		if(device_type()=='ios'){ //ios
+			//This help to reset  native notification
+			window.webkit.messageHandlers.iOS.postMessage(
+				{
+					action: 'hidenotif',
+					value: false,
+				}
+			);
+		}
 	}
+};
+
+Lincko.storage.iosHideNotif = {
+	data: false,
+	set: function(value){
+		if(value){
+			Lincko.storage.iosHideNotif.data = true;
+		} else {
+			Lincko.storage.iosHideNotif.data = false;
+		}
+	},
 };
 
 //Function update all objects displayed

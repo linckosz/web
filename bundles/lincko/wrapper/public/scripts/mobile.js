@@ -40,9 +40,9 @@ function useMobileNotification(){
 				notif = true;
 			}
 		}
-		else if(device=='ios'){
-			notif = false;
-		}		
+		else if(device=='ios' && Lincko.storage.iosHideNotif.data){
+			notif = true;
+		}
 	}
 	return notif;
 }

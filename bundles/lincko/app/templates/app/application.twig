@@ -26,6 +26,20 @@
 		{% if hashtag %}
 			app_application_hashtag = "{{ hashtag }}";
 		{% endif %}
+		var app_application_ios_translation_string = {
+			cancel: "{{ _trans('app', 17, 1, 'js') }}",
+			scan: "{{ _trans('app', 17, 1, 'js') }}",
+		};
+		JSfiles.finish(function(){
+			if(device_type()=='ios'){ //ios
+				window.webkit.messageHandlers.iOS.postMessage(
+					{
+						action: 'translation_string',
+						data: app_application_ios_translation_string,
+					}
+				);
+			}
+		});
 	</script>
 	{% include '/bundles/lincko/app/templates/generic/scripts/storage.js.twig' %}
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/app/application.css') }}" type="text/css" />

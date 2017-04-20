@@ -51,7 +51,7 @@ var app_models_history = {
 				title: title,
 				content: message,
 				url: top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/#"+link,
-				reddot: Lincko.storage.cache.notify_total+1, //always short by 1 since notification count is updated after this call
+				reddot: Lincko.storage.cache.notify_total + 1,
 			}
 			if(device=='ios'){
 				window.webkit.messageHandlers.iOS.postMessage(obj);
