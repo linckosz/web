@@ -1865,28 +1865,30 @@ Submenu.prototype.Add_taskdetail = function() {
 
 
 	//item activity
-	var elem_submenu_taskdetail_activity = $('#-submenu_taskdetail_activity').clone().prop('id','submenu_taskdetail_activity_'+that.md5id);
-	submenu_taskdetail.append(elem_submenu_taskdetail_activity);
-	var elem_submenu_taskdetail_activity_main = elem_submenu_taskdetail_activity.find('.submenu_taskdetail_activity_main');
+	if(taskid != 'new'){
+		var elem_submenu_taskdetail_activity = $('#-submenu_taskdetail_activity').clone().prop('id','submenu_taskdetail_activity_'+that.md5id);
+		submenu_taskdetail.append(elem_submenu_taskdetail_activity);
+		var elem_submenu_taskdetail_activity_main = elem_submenu_taskdetail_activity.find('.submenu_taskdetail_activity_main');
 
-	//direct history
-	var hist_item = Lincko.storage.hist(that.param.type, null, [{id: taskid}]);
-	//add project history that has to do with this item
-	$.each(Lincko.storage.hist('projects', null, [{att: '_'+that.param.type}]), function(i, hist){
-		if(hist.par && hist.par.tid && hist.par.tid == taskid){
-			$.merge(hist_item, [hist]);
-		}
-	});
-	//add this item's children history
-	$.merge(hist_item, Lincko.storage.hist(null, null, [{type: ['!=', that.param.type]}, {id: ['!=', taskid]}], that.param.type, taskid, true));
-	hist_item = Lincko.storage.sort_items(hist_item, 'timestamp', 0, -1, false);
-	elem_submenu_taskdetail_activity.find('[find=activityCount]').text(hist_item.length);
-
-	var feedActivity = function(){
-		$.each(hist_item, function(i, hist){
-			var hist_obj = new BaseItemCls(hist, 'history', true);
-			hist_obj.item_display(elem_submenu_taskdetail_activity_main, that, 'history', 0);
+		//direct history
+		var hist_item = Lincko.storage.hist(that.param.type, null, [{id: taskid}]);
+		//add project history that has to do with this item
+		$.each(Lincko.storage.hist('projects', null, [{att: '_'+that.param.type}]), function(i, hist){
+			if(hist.par && hist.par.tid && hist.par.tid == taskid){
+				$.merge(hist_item, [hist]);
+			}
 		});
+		//add this item's children history
+		$.merge(hist_item, Lincko.storage.hist(null, null, [{type: ['!=', that.param.type]}, {id: ['!=', taskid]}], that.param.type, taskid, true));
+		hist_item = Lincko.storage.sort_items(hist_item, 'timestamp', 0, -1, false);
+		elem_submenu_taskdetail_activity.find('[find=activityCount]').text(hist_item.length);
+
+		var feedActivity = function(){
+			$.each(hist_item, function(i, hist){
+				var hist_obj = new BaseItemCls(hist, 'history', true);
+				hist_obj.item_display(elem_submenu_taskdetail_activity_main, that, 'history', 0);
+			});
+		}
 	}
 
 	/*attach collapsable_fn*/
