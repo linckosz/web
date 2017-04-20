@@ -76,7 +76,13 @@ var app_layers_dashboard_feedPage = function(param){
 
 	var project = Lincko.storage.get('projects', pid);
 	var p_created_at = project.created_at;
-	var tasks = Lincko.storage.list('tasks', -1, [{ _tasksup: null}, {deleted_at: ['!=', null]}, {duration: ['>', 0]}], 'projects', pid);
+	var tasks = Lincko.storage.list('tasks', -1, 
+		[
+			{ _tasksup: null}, //exclude subtasks
+			{start: ['!=', null]}, //exclude no duedate
+			{deleted_at: ['!=', null]}, //exclude deleted tasks
+			{duration: ['>', 0]}
+		], 'projects', pid);
 	var p_firstDay = new wrapper_date(p_created_at).getEndofDay(); //first day of the project
 	var now = new wrapper_date().timestamp;
 
