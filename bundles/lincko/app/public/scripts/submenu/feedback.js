@@ -152,7 +152,7 @@ var submenu_feedback_build_question = function(wrapper,container,question_id){
 			},500,wrapper,container,item);
 			break;
 		case 3 :
-			content = "Your feedback has been submitted. I cannot personally reply to every request, but rest assued we'll be taking a look at what you sent and seeing if we can make some improvements!";//Your feedback has been submitted. I cannot personally reply to every request, but rest assued we'll be taking a look at what you sent and seeing if we can make some improvements!;//toto:need translation
+			content = Lincko.Translation.get('app', 4206, 'js');//Your feedback has been submitted. I cannot personally reply to every request, but rest assued we'll be taking a look at what you sent and seeing if we can make some improvements!;//toto:need translation
 			item.find("[find=content]").append(content);
 			item.find("[find=keyword]").remove();
 
@@ -168,7 +168,7 @@ var submenu_feedback_build_question = function(wrapper,container,question_id){
 			},500,wrapper,container,item);
 			break;
 		case 4 :
-			content = "Your feedback has been submitted.";//Your feedback has been submitted. I cannot personally reply to every request, but rest assued we'll be taking a look at what you sent and seeing if we can make some improvements!;//toto:need translation
+			content = Lincko.Translation.get('app', 4207, 'js');///Your feedback has been submitted. 
 			item.find("[find=content]").append(content);
 			item.find("[find=keyword]").remove();
 

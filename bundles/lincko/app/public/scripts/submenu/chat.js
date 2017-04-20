@@ -1196,7 +1196,7 @@ Submenu.prototype.Add_ChatContent = function() {
 				var Elem = $('#'+ prefix + items[i]['root_type']+"_"+items[i]['root_id']);
 				if(Elem.length <= 0){
 					var Elem = this.action_param.addChat(items[i]);
-					var parent = this.action_param.list
+					var parent = this.action_param.list;
 					Elem.detach(); //cut
 					var timestamp = list[Elem.prop('id')];
 					var Elems_bis = layer.find('[find=card]');
