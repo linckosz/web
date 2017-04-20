@@ -497,10 +497,19 @@ skylist.prototype.generate_Lincko_itemsList = function(){
 					delete that.Lincko_itemsList[i];
 				}
 				else {
-					that.Lincko_itemsList[i]['duedate'] = that.Lincko_itemsList[i]['start'] + that.Lincko_itemsList[i]['duration'];
+					that.Lincko_itemsList[i]['duedate'] = that.Lincko_itemsList[i]['start'] ? that.Lincko_itemsList[i]['start'] + that.Lincko_itemsList[i]['duration'] : null;
 				}
 			}
-			that.Lincko_itemsList = Lincko.storage.sort_items(that.Lincko_itemsList, 'duedate', 0, -1, true);
+			var item_hasDueDate = [];
+			var items_noDueDate = []; //no due date tasks should be at the end of the list
+			$.each(Lincko.storage.sort_items(that.Lincko_itemsList, 'duedate', 0, -1, true), function(i, item){
+				if(item.start){
+					item_hasDueDate.push(item);
+				} else {
+					items_noDueDate.push(item);
+				}
+			});
+			that.Lincko_itemsList = $.merge(item_hasDueDate, items_noDueDate);
 		}
 		else if( that.list_type == 'notes'){
 			that.Lincko_itemsList = Lincko.storage.sort_items(that.Lincko_itemsList, 'hist_at'/*'updated_at'*/, 0, -1, false);
