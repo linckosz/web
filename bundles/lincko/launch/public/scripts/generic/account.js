@@ -217,7 +217,10 @@ function account_select(select) {
 	} else if(select == 'wechat'){
 		$('#account_integration_top_info').recursiveEmpty();
 		$('#account_integration_box').removeClass('display_none');
-		$('#account_integration_top_text').html(wrapper_to_html(Lincko.Translation.get('web', 14, 'html'))); //Scan the QR code to sign in using your Wechat account
+			$('#account_integration_top_text').html(
+				isMobileApp() ? 
+				wrapper_to_html(Lincko.Translation.get('web', 15, 'html')) //waiting for response from WeChat...
+			:	wrapper_to_html(Lincko.Translation.get('web', 14, 'html'))); //Scan the QR code to sign in using your Wechat account
 		$('#account_wrapper').find('.account_integration_icon').addClass('account_integration_icon_blur');
 		$('#account_integration_wechat').addClass('account_integration_icon_active').removeClass('account_integration_icon_blur');
 	} else if(select == 'signin'){
