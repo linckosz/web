@@ -218,7 +218,7 @@ Lincko.storage.setLastVisit = function(timestamp){
 	timestamp = parseInt(timestamp, 10);
 	if(timestamp>=0){
 		Lincko.storage.last_visit = timestamp;
-		if(device_type()=='ios'){ //ios
+		if(isMobileApp() && device_type()=='ios'){ //ios
 			//This help to reset  native notification
 			window.webkit.messageHandlers.iOS.postMessage(
 				{

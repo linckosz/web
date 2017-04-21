@@ -41,7 +41,7 @@
 			'ios_str_turn_off_light': "{{ _trans('app', 43, 10, 'js') }}", //'关闭照明灯',
 		};
 		JSfiles.finish(function(){
-			if(device_type()=='ios'){ //ios
+			if(isMobileApp() && device_type()=='ios'){ //ios
 				window.webkit.messageHandlers.iOS.postMessage(
 					{
 						action: 'translation_string',
