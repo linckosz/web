@@ -94,7 +94,8 @@ var app_models_history = {
 
 	notification: function(items, lastvisit){
 		//Skip notification if inside an app because we do mobile push
-		if(useMobileNotification()==true){
+		if(useMobileNotification()){
+			Lincko.storage.iosHideNotif.set(false);
 			return true;
 		}
 		if(typeof items == 'undefined'){ items = {}; }

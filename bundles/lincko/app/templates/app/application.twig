@@ -27,8 +27,20 @@
 			app_application_hashtag = "{{ hashtag }}";
 		{% endif %}
 		var app_application_ios_translation_string = {
-			cancel: "{{ _trans('app', 17, 1, 'js') }}",
-			scan: "{{ _trans('app', 17, 1, 'js') }}",
+			//cancel: "{{ _trans('app', 17, 1, 'js') }}",
+			//scan: "{{ _trans('app', 17, 1, 'js') }}",
+			'ios_str_cancel': "{{ _trans('app', 1, 4, 'js') }}", //'取消',
+			'ios_str_scan': "{{ _trans('app', 43, 1, 'js') }}", //'扫一扫',
+			'ios_str_alarm': "{{ _trans('app', 43, 2, 'js') }}", //'警告',
+			'ios_str_premission': "{{ _trans('app', 43, 3, 'js') }}", //'请去-> [设置 - 隐私 - 照片 - Lincko] 打开访问开关',
+			'ios_str_ok': "{{ _trans('app', 43, 4, 'js') }}", //'确定',
+			'ios_str_tags': "{{ _trans('app', 43, 5, 'js') }}", //'提示',
+			'ios_str_reason': "{{ _trans('app', 43, 6, 'js') }}", //'由于系统原因, 无法访问相册',
+			'ios_str_nice_tags': "{{ _trans('app', 43, 7, 'js') }}", //'温馨提示',
+			'ios_str_no_camera': "{{ _trans('app', 43, 8, 'js') }}", //'未检测到您的摄像头',
+			'ios_str_qrcode_info': "{{ _trans('app', 2, 21, 'js') }}", //'将二维码/条码放入框内, 即可自动扫描',
+			'ios_str_turn_on_light': "{{ _trans('app', 43, 9, 'js') }}", //'打开照明灯',
+			'ios_str_turn_off_light': "{{ _trans('app', 43, 10, 'js') }}", //'关闭照明灯',
 		};
 		JSfiles.finish(function(){
 			if(device_type()=='ios'){ //ios
