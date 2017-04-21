@@ -415,7 +415,7 @@ submenu_list['personal_info'] = {
 		"now": function(Elem, subm){
 			if(Lincko.storage.getWORKID()>0 && !Lincko.storage.canI('edit', 'workspaces', Lincko.storage.getWORKID())){ //Not an super user
 				Elem.addClass('display_none');
-			} else if(subm.param == wrapper_localstorage.uid){ //Cannot delete yourself
+			} else if(subm.param == wrapper_localstorage.uid || !Lincko.storage.get('users', subm.param, '_visible')){ //Cannot delete yourself
 				Elem.addClass('display_none');
 			}
 		},
