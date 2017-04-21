@@ -48,6 +48,11 @@
 						data: app_application_ios_translation_string,
 					}
 				);
+			} else if(device_type() == 'android' && typeof android.translationString == 'function'){
+				android.translationString(
+					app_application_ios_translation_string.ios_str_scan, 
+					app_application_ios_translation_string.ios_str_qrcode_info
+				);
 			}
 		});
 	</script>
