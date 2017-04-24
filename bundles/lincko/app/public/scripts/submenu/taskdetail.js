@@ -812,21 +812,13 @@ Submenu.prototype.Add_taskdetail = function() {
 		/*---calendar-----*/
 		var elem_box_calendar = elem.find('[find="calendar"]');
 		var elem_text_calendar = elem.find('[find=calendar] [find=text]');
-		elem_input_calendar = null;
 		if(that.param.type == 'tasks'){
 			elem_box_calendar.addClass('skylist_clickable');
-			elem_input_calendar = elem.find('[find=values] input[find=duedate_timestamp]');
-			elem_input_calendar.val((item['start'] + item.duration)*1000);
+			elem.find('[find=values] input[find=duedate_timestamp]').val((item['start'] + item.duration)*1000);
 
-			var duedate = tasks_calcDuedate(item['_id']);
-			if(typeof duedate == 'boolean' && !duedate){ duedate = new wrapper_date(item['start'] + item.duration); }
-
-			if( skylist_textDate(duedate) ){
-				elem_text_calendar.text(skylist_textDate(duedate));
-			}
-			else{
-				elem_text_calendar.text(duedate.display('date_very_short'));
-			}
+			//set text due date
+			var duedate = item.start === null ? false : new wrapper_date(item['start'] + item.duration);
+			elem_text_calendar.text(skylist_textDate(duedate) || duedate.display('date_very_short'));
 
 
 			if(item['_id'] == 'new'){
