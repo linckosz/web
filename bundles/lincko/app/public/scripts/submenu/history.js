@@ -736,8 +736,9 @@ var historyFeed = function(id,type,position,submenu)
 	this.has_today = false;
 
 	this.page_count = 15;
-	this.current_page = 0 ;
-	this.page_top = false ;
+	this.current_page = 0;
+	this.page_top = false;
+	this.get_all = false;
 
 	this.current = null;
 	this.pre = {
@@ -749,12 +750,15 @@ var historyFeed = function(id,type,position,submenu)
 		timestamp: null,
 	};
 
-	var data = this.app_chat_feed_data_init();
-	data = this.app_chat_feed_timeline(data);
+	this.records = this.app_chat_feed_timeline(this.app_chat_feed_data_init());
+	this.create_iscroll_container();
+	this.app_chat_feed_layer_display();
+	this.app_chat_feed_temp_history();
+	this.app_chat_feed_recall_init();
 
 	var that = this;
-
-	var loading_timer = false;
+	this.loading_timer = false;
+	this.allow_scrollEnd = true;
 	wrapper_IScroll_cb_creation[that.position.prop('id')] = function(){
 		
 		var IScroll = myIScrollList[that.position.prop('id')];
@@ -765,15 +769,22 @@ var historyFeed = function(id,type,position,submenu)
 		];
 		for(var i in events_list){
 			that.position.on(events_list[i], IScroll, function(event){
-				if(!loading_timer){
+				that.allow_scrollEnd = false;
+				setTimeout(function(allow_scrollEnd){
+					allow_scrollEnd = true;
+				}, 800, that.allow_scrollEnd); //time for scrollEnd is fixed to 400ms
+				if(!that.get_all && !that.loading_timer){
 					if(IScroll.y >= 0){
 						that.position.find(".models_history_loading").removeClass('models_history_loading_hide');
 					} else if(IScroll.y < -30){
 						that.position.find(".models_history_loading").addClass('models_history_loading_hide');
 					}
-					loading_timer = setTimeout(function(IScroll){
+					that.loading_timer = setTimeout(function(IScroll){
 						if(IScroll && IScroll.y >= 0){
 							that.position.find(".models_history_loading").remove();
+							if(!this.get_all){
+								that.records = that.app_chat_feed_timeline(that.app_chat_feed_data_init());
+							}
 							var first_li = that.position.find('li').eq(0); //Grab old first li element
 							that.app_chat_feed_layer_display();
 							IScroll.refresh();
@@ -781,26 +792,25 @@ var historyFeed = function(id,type,position,submenu)
 								IScroll.scrollToElement(first_li.get(0), 0, 0, -30);
 							}
 						}
-						clearTimeout(loading_timer);
-						loading_timer = false;
+						clearTimeout(that.loading_timer);
+						that.loading_timer = false;
 					}, 100, event.data);
 				}
 			});
-			//This is used when we move the bar manually
-			// IScroll.on('scrollStart', function(){
-			// 	$("[find=chat_textarea]").blur();
-			// });
 
 			IScroll.on('scrollEnd', function(){
-				if(!loading_timer){
+				if(!that.get_all && !that.loading_timer && that.allow_scrollEnd){
 					if(IScroll.y >= 0){
 						that.position.find(".models_history_loading").removeClass('models_history_loading_hide');
 					} else if(IScroll.y < -30){
 						that.position.find(".models_history_loading").addClass('models_history_loading_hide');
 					}
-					loading_timer = setTimeout(function(IScroll){
+					that.loading_timer = setTimeout(function(IScroll){
 						if(IScroll && IScroll.y >= 0){
 							that.position.find(".models_history_loading").remove();
+							if(!this.get_all){
+								that.records = that.app_chat_feed_timeline(that.app_chat_feed_data_init());
+							}
 							var first_li = that.position.find('li').eq(0); //Grab old first li element
 							that.app_chat_feed_layer_display();
 							IScroll.refresh();
@@ -808,20 +818,14 @@ var historyFeed = function(id,type,position,submenu)
 								IScroll.scrollToElement(first_li.get(0), 0, 0, -30);
 							}
 						}
-						clearTimeout(loading_timer);
-						loading_timer = false;
+						clearTimeout(that.loading_timer);
+						that.loading_timer = false;
 					}, 100, this);
 				}
 			});
 		}
 
 	}
-
-	this.records = data ;
-	this.create_iscroll_container();
-	this.app_chat_feed_layer_display();
-	this.app_chat_feed_temp_history();
-	this.app_chat_feed_recall_init();
 
 }
 
@@ -860,11 +864,14 @@ historyFeed.prototype.create_iscroll_container = function()
 	$('<div>').addClass('chat_contents_wrapper').prop('id', this.submenu.id+'_chat_contents_wrapper').appendTo(this.position).append($('#'+'-help_iscroll').clone().prop('id',this.submenu.id+'_help_iscroll'));
 }
 
-historyFeed.prototype.app_chat_feed_data_history = function()
+historyFeed.prototype.app_chat_feed_data_history = function(limit)
 {
+	if(typeof limit == 'undefined'){
+		limit = null;
+	}
 	var data = this.type == 'history' ? 
-			Lincko.storage.hist(null, null , {att:['!=','recalled_by']}, 'projects',this.id, true)
-			: Lincko.storage.list(null, null, {_type:'messages'}, 'chats', this.id, false);
+			Lincko.storage.hist(null, limit , {att:['!=','recalled_by']}, 'projects',this.id, true)
+			: Lincko.storage.list(null, limit, {_type:'messages'}, 'chats', this.id, false);
 	return data;
 }
 
@@ -908,24 +915,36 @@ historyFeed.prototype.app_chat_feed_data_format = function(data)
 	return records;
 }
 
-historyFeed.prototype.app_chat_feed_data_cache = function()
+historyFeed.prototype.app_chat_feed_data_cache = function(limit)
 {
-	if(typeof app_models_cache_history[this.type + '_' + this.id] === 'undefined')
+	if(typeof limit == 'undefined'){
+		limit = null;
+	}
+	if(limit || typeof app_models_cache_history[this.type + '_' + this.id] == 'undefined')
 	{
-		var data = this.app_chat_feed_data_history();
+		var data = this.app_chat_feed_data_history(limit);
 		var records = this.app_chat_feed_data_format(data);
 		var last_time =  records.length > 0 ? records[0]['timestamp'] : 0 ;
+		if(
+			   typeof app_models_cache_history[this.type + '_' + this.id] == 'object'
+			&& app_models_cache_history[this.type + '_' + this.id]['data']
+			&& app_models_cache_history[this.type + '_' + this.id]['data'].length != records.length
+		){
+			this.get_all = true;
+		}
+
 		app_models_cache_history[this.type + '_' + this.id] =
 		{
 			'data'				: records,
 			'last_time'			: last_time,
 			'running_last_time' : last_time,
-		} 
+		}
 	}
 	else
 	{
 		app_models_cache_history[this.type + '_' + this.id]['running_last_time'] = app_models_cache_history[this.type + '_' + this.id]['last_time'];
 	}
+
 	return app_models_cache_history[this.type + "_" + this.id];
 }
 
@@ -951,7 +970,9 @@ historyFeed.prototype.app_chat_feed_data_running = function()
 
 historyFeed.prototype.app_chat_feed_data_init = function()
 {
-	var cache = this.app_chat_feed_data_cache();
+	var limit = null;
+	//var limit = (this.current_page+1) * this.page_count; //If we enable this line makes no use of cache, and slighlty slower opening (still have scrolling issue), but do less calculation so it avoid iOS crashes
+	var cache = this.app_chat_feed_data_cache(limit);
 	var no_cache = this.app_chat_feed_data_format(this.app_chat_feed_data_running());
 	if(no_cache.length > 0)
 	{

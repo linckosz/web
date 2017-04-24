@@ -6,6 +6,12 @@
 //performance.now() Polyfill
 function perfnow(e){"performance"in e||(e.performance={});var o=e.performance;e.performance.now=o.now||o.mozNow||o.msNow||o.oNow||o.webkitNow||Date.now||function(){return(new Date).getTime()}}perfnow(self);
 
+//Only keep special characters line unicode
+base_remove_stdchar = function(str){
+	if(typeof str != 'string'){ return ""; }
+	return str.replace(/[\u0000-\u007F]/gm, "");
+}
+
 self.addEventListener("message", function(e){
 	/*
 	var object = false;
@@ -94,11 +100,14 @@ var webworker_operation = {
 
 	//need blueimp.md5.min.js, ChinesePY.js and ChinesePY.extensions.js
 	update_data_abc: function(obj_data){
-		var s_orig = obj_data.s_orig;
-		var s_abc = Pinyin.getPinyin(s_orig);
-		if(md5(s_orig) == md5(s_abc)){ s_abc = false; }
+		var s_orig = base_remove_stdchar(obj_data.s_orig);
+		if(!s_orig){
+			var s_abc = false;
+		} else {
+			var s_abc = Pinyin.getPinyin(s_orig);
+			if(md5(s_orig) == md5(s_abc)){ s_abc = false; }
+		}
 		obj_data.s_abc = s_abc;
-		
 		self.postMessage({action: 'update_data_abc', data: obj_data,});
 	}
 };

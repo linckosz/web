@@ -337,7 +337,7 @@ app_application_lincko.add("app_project_quick_access_chat", "users", function() 
 	} else {
 		$('#app_project_quick_access_chat').find("[find=notif]").addClass('display_none');
 	}
-	app_models_history.reset();
+	//app_models_history.reset(); //I don't see the use of it here, and it's very CPU hunger
 	if(app_project_update_block){
 		app_project_update_launch_chats = true;
 	} else {

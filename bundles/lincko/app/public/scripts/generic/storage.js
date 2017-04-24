@@ -484,9 +484,7 @@ Lincko.storage.update = function(partial, info){
 					app_application_lincko.prepare(i+'_'+j, false, updatedAttributes);
 				}
 				if(new_item){
-					if(i=='projects' || i=='chats'){
-						app_models_history.reset();
-					} else if(i=='files'){
+					if(i=='files'){
 						//Preload images if it's a file
 						Lincko.storage.thumbnailPreload(partial[i][j]['_id']);
 					}
@@ -624,8 +622,17 @@ Lincko.storage.update_data_abc = function(type, id, updated){
 	for(var i = 0; i < attributes.length; i++){
 		attr = attributes[i];
 		if(updated[attr] || updated === true){
-			s_orig = Lincko.storage.get(type, id, attr); 
-			if(!s_orig){continue;}
+			s_orig = Lincko.storage.get(type, id, attr);
+			if(s_orig===false){
+				if(
+					   Lincko.storage.data_abc[type] 
+					&& Lincko.storage.data_abc[type][id] 
+					&& Lincko.storage.data_abc[type][id][attr]
+				){
+					delete Lincko.storage.data_abc[type][id][attr];
+				}
+				continue;
+			}
 
 			webworker.postMessage({
 				action: 'update_data_abc', 
@@ -1541,6 +1548,7 @@ Lincko.storage.cache = {
 									&& item['created_at'] > last_notif
 									&& item['created_by'] != wrapper_localstorage.uid
 									&& (typeof exclude_notify[cat] == "undefined" || typeof exclude_notify[cat][id] == "undefined")
+									&& (typeof item['recalled_by'] == "undefined" || item['recalled_by']==null)
 								){
 									if(typeof this.notify[item_cat] == "undefined"){ this.notify[item_cat] = {}; }
 									if(typeof this.notify[item_cat][item_id] == "undefined"){
@@ -2300,7 +2308,7 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 
 	if(array_items.length>0){
 		if(type=='notifications'){
-			results = Lincko.storage.sort_items(array_items, 'id', page_start, page_end, false); //From newest (big timestamp) to oldest (small timestamp)
+			results = Lincko.storage.sort_items(array_items, 'id', 0, -1, false); //From newest (big timestamp) to oldest (small timestamp)
 			results = Lincko.storage.sort_items(results, 'timestamp', page_start, page_end, false); //From newest (big timestamp) to oldest (small timestamp)
 		} else {
 			results = Lincko.storage.sort_items(array_items, 'created_at', page_start, page_end, false); //From newest (big timestamp) to oldest (small timestamp)

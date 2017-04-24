@@ -26,6 +26,9 @@ if (!Math.sign) {
 	};
 }
 
+//performance.now() Polyfill
+function perfnow(e){"performance"in e||(e.performance={});var o=e.performance;e.performance.now=o.now||o.mozNow||o.msNow||o.oNow||o.webkitNow||Date.now||function(){return(new Date).getTime()}}perfnow(self);
+
 //string.trim() is not supported below IE9
 if (!String.prototype.trim) {
   String.prototype.trim = function () {

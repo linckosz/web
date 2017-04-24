@@ -137,10 +137,6 @@ Submenu.prototype.Add_ChatContents = function() {
 	var type_clear = type == 'history' ? 'projects' : type;
 	position.addClass('overthrow').addClass("submenu_chat_contents");
 
-	var submenu_wrapper_id = submenu_wrapper.prop("id");
-
-
-
 	app_application_lincko.add(that.id, [type_clear+"_" + id, "submenu_show_"+that.preview+"_"+that.id], function() {
 		var type = this.action_param[0];
 		var id = this.action_param[1];
@@ -200,7 +196,7 @@ Submenu.prototype.Add_ChatContents = function() {
 		}, [that.id, id, that.param.chatFeed, position]);
 	}
 
-	app_application_lincko.add(submenu_wrapper_id, 'upload', function(){ //We cannot simplify because Elem is not the HTML object, it's a JS Submenu object
+	app_application_lincko.add(that.id, 'upload', function(){ //We cannot simplify because Elem is not the HTML object, it's a JS Submenu object
 		var chat_item = this.action_param[2];
 
 		chat_item.app_chat_feed_uploading_file();
@@ -225,7 +221,6 @@ Submenu.prototype.Add_ChatContents = function() {
 
 	}, [that.id, id, that.param.chatFeed, position]);
 
-	
 	app_application_lincko.add(that.id, ["submenu_start_"+that.preview+"_"+that.id, "submenu_show_"+that.preview+"_"+that.id], function() {
 		var submenu_id = this.action_param[0];
 		var scroll_time = this.action_param[1];

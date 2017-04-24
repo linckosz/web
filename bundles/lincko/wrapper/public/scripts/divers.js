@@ -74,6 +74,51 @@ if(
 	//wrapper_limit_json = 500; //Allow chunking for for ios crash (it seems working after reworking the database)
 }
 
+var toto_mp3 = function(data){
+	//console.log(data);
+	//JSerror.sendError(data, 'data', 0);
+}
+
+/*
+	This commands help to track time spent in some functions
+	wrapper_time_checkpoint(false, true);
+	wrapper_time_checkpoint(1);
+	wrapper_time_checkpoint(2);
+*/
+var	wrapper_time_checkpoint_time = false;
+var wrapper_time_checkpoint = function(msg, reset, show){
+	if(typeof msg != 'undefined' && msg){
+		msg = '['+msg+'] ';
+	} else {
+		msg = '';
+	}
+	if(typeof reset == 'boolean' && reset){ 
+		wrapper_time_checkpoint_time = false;
+	} else {
+		reset = false;
+	}
+	if(typeof show == 'undefined'){
+		show = true;
+		if(reset){
+			show = false;
+		}
+	}
+	var now = Math.round(performance.now()); //round ms
+	var delay = false;
+	if(wrapper_time_checkpoint_time){
+		if(show){
+			var delay = now - wrapper_time_checkpoint_time;
+			console.log(msg+'time: '+delay);
+		}
+	} else {
+		if(show){
+			console.log(msg+'start')
+		}
+	}
+	wrapper_time_checkpoint_time = now;
+	return delay;
+}
+
 var wrapper_test_result = null;
 function wrapper_test(type, RCUD){
 	if(typeof type==="undefined"){ type = null; }

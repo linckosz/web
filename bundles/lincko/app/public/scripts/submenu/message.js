@@ -11,14 +11,16 @@ var chatFeed = function(id,type,position,submenu)
 	this.has_today = false;
 
 	this.page_count = 15;
+	this.download_pages = 4;
 	this.current_page = 0 ;
-	this.page_top = false ;
+	this.page_top = false;
+	this.pending_items = false;
 
 	this.current = null;
-	this.msg_hide_count = 0;
 	this.msg_over = false;
 	this.top_msg_id = 0;
 	this.top_time = 0;
+	this.min_time = 0;
 	this.last_data = false;
 
 	this.current_data = [];
@@ -204,7 +206,9 @@ chatFeed.prototype.app_chat_feed_data_running = function()
 chatFeed.prototype.app_chat_feed_data_init = function()
 {
 	var item;
-	var data = Lincko.storage.list(null, null , {'_type': ['!=', 'chats'],}, 'chats', this.id, false);
+
+	//calculate the minimum timestamp according to the earliest message stored
+	var data = Lincko.storage.list(null, this.page_count+1 , {'_type': ['!=', 'chats'],}, 'chats', this.id, false);
 	this.running_last_time = data.length > 0 ? data[0]['created_at'] : 0 ;
 
 	var suffix;
@@ -220,7 +224,6 @@ chatFeed.prototype.app_chat_feed_data_init = function()
 			this.records.push(item);
 			if(data[i]['_type']=='messages')
 			{
-				this.msg_hide_count = this.msg_hide_count -1 ;
 				this.top_msg_id = data[i]['_id'];
 			}
 			this.last_data = suffix;
@@ -250,8 +253,9 @@ chatFeed.prototype.app_chat_feed_data_init = function()
 
 chatFeed.prototype.app_chat_feed_more_msg = function(){
 	this.records = [];
-	if(!this.collecting){
-		var data = Lincko.storage.list(null, null , {'created_at': ['<=', this.top_time], '_type': ['!=', 'chats']}, 'chats', this.id, false);
+	if(!this.pending_items){
+		this.pending_items = true;
+		var data = Lincko.storage.list(null, this.page_count+1 , {'created_at': ['<=', this.top_time], '_type': ['!=', 'chats']}, 'chats', this.id, false);
 		var suffix;
 		var item;
 		for(var i in data)
@@ -268,15 +272,14 @@ chatFeed.prototype.app_chat_feed_more_msg = function(){
 					if(item.style == '' || item.data.category == ''){
 						continue;
 					}
-					this.records.push(item);
-					if(data[i]['_type'] == 'messages' && $('#'+elem_id).length == 0)
-					{
-						this.msg_hide_count = this.msg_hide_count -1 ;
-						this.top_msg_id = data[i]['_id'];
+					if(data[i]['created_at'] < this.min_time){
+						break;
 					}
+					this.records.push(item);
+					this.top_time = data[i]['created_at'];
+					this.pending_items = false;
 				}
 				this.last_data = suffix;
-				this.top_time = data[i]['created_at'];
 			}
 			else if(i == this.page_count)
 			{
@@ -287,28 +290,43 @@ chatFeed.prototype.app_chat_feed_more_msg = function(){
 				break;
 			}
 		}
-
-		if(this.msg_hide_count < (this.page_count) && !this.msg_over)
+	}
+	if(!this.collecting){
+		if(!this.msg_over)
 		{
 			var that = this;
 			this.collecting = true;
+
 			wrapper_sendAction(
 				{
 					"parent_id": that.id, //Chats ID
 					"id_max": that.top_msg_id, //OPTIONAL {false} Get all IDs below this ID (not included) , false value returns from the newest
-					"row_number": (that.page_count * 20), //OPTIONAL {30} Number of rows to get
+					"row_number": (that.page_count * that.download_pages), //ODownload 2 pages at a time, OPTIONAL {30} Number of rows to get
 				},
 				'post',
 				 'message/collect',
 				function(msg, data_error, data_status, data_msg) {//result
 					var length = 0;
-					if(data_msg.partial){
+					var min_time = false;
+					var top_msg_id = 0;
+					if(data_msg.partial && data_msg.partial[wrapper_localstorage.uid] && data_msg.partial[wrapper_localstorage.uid]['messages']){
 						length = Object.keys(data_msg.partial[wrapper_localstorage.uid]['messages']).length;
+						for(var i in data_msg.partial[wrapper_localstorage.uid]['messages']){
+							if(!min_time || data_msg.partial[wrapper_localstorage.uid]['messages'][i]['created_at'] < min_time){
+								min_time = data_msg.partial[wrapper_localstorage.uid]['messages'][i]['created_at'];
+								top_msg_id = i;
+							}
+						}
 					}
-					that.msg_hide_count = that.msg_hide_count + length;
-					if(length < that.page_count * 20)
+					if(length < that.page_count * that.download_pages)
 					{
 						that.msg_over = true;
+					}
+					if(min_time){
+						that.min_time = min_time;
+						that.top_msg_id = top_msg_id;
+					} else {
+						that.top_msg_id = 0;
 					}
 				},
 				null,
@@ -317,6 +335,7 @@ chatFeed.prototype.app_chat_feed_more_msg = function(){
 				},
 				function(){
 					that.collecting = false;
+					this.pending_items = false;
 				}
 			);
 		}

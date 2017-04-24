@@ -7,6 +7,7 @@ var app_models_history = {
 	hist_root_recent: [],
 	notified: {},
 	first_check_invitation: true,
+	list_reset: {},
 
 	//Ready the worker for browsers that does not support native Notification
 	serviceWorker: false,
@@ -14,6 +15,7 @@ var app_models_history = {
 	reset: function(){
 		app_models_history.hist_root = {};
 		app_models_history.hist_root_recent = [];
+		app_models_history.list_reset = {};
 	},
 
 	refresh: function(type, id){
@@ -24,8 +26,8 @@ var app_models_history = {
 			if(app_models_history.hist_root[type+'_'+id]){
 				app_models_history.hist_root[type+'_'+id] = null;
 				delete app_models_history.hist_root[type+'_'+id];
-				app_models_history.hist_root_recent = [];
 			}
+			app_models_history.list_reset[type+'_'+id] = true;
 		}
 	},
 
@@ -640,9 +642,13 @@ var app_models_history = {
 
 		var histList = [];
 		var item;
-		
 		if(app_models_history.hist_root_recent.length==0){
 			app_models_history.tabList();
+		} else {
+			for(var i in app_models_history.list_reset){
+				app_models_history.tabList(limit, parent_type, parent_id);
+				delete app_models_history.list_reset[parent_type+"_"+parent_id];
+			}
 		}
 
 		if(limit){
@@ -665,7 +671,6 @@ var app_models_history = {
 				}
 			}
 		} else {
-
 			if(parent_type && parent_id && (parent_type=="projects" || parent_type=="chats")){
 				for(var i in app_models_history.hist_root_recent){
 					if(app_models_history.hist_root_recent[i]['root_type']==parent_type && app_models_history.hist_root_recent[i]['root_id']==parent_id){
@@ -782,7 +787,9 @@ var app_models_history = {
 		var date = new wrapper_date();
 		var startOfDay = date.getDayStartTimestamp(); //timestamp of beginning of the day taking in account the timezone
 		var reset_order = false; //At true we sort the list for faster operation to grab information
+		var reset_order_obj = {}; //A list a item to reorder
 		var info = {};
+		var parent_name = false;
 
 		var exclude = false;
 
@@ -791,16 +798,27 @@ var app_models_history = {
 			//If parent is a project, .hist will reject automatically all chats activity inside it
 			// "Lincko.storage.cache.getExcludeProjects" is internally used in .hist()
 			var hist_all = Lincko.storage.hist(null, -1, null, parent_type, parent_id, true, true, false);
+			parent_name = parent_type+"_"+parent_id;
 		} else {
-			var hist_all = Lincko.storage.hist();
+			if(parent_type && parent_id){
+				var hist_all = Lincko.storage.hist(null, -1, null, parent_type, parent_id, true, true, false);
+				parent_name = parent_type+"_"+parent_id;
+			} else {
+				var hist_all = Lincko.storage.hist();
+			}
 			exclude = Lincko.storage.cache.getExcludeChats();
 		}
-
 
 		for(var i in hist_all){
 			root_item = this.getRoot(hist_all[i]["type"], hist_all[i]["id"]); //Accept only Chats and Projects
 			root_name = root_item["_type"]+"_"+root_item["_id"];
 			name = hist_all[i]["type"]+"_"+hist_all[i]["id"];
+			
+
+			if(parent_name && root_name!=parent_name){
+				continue;
+			}
+			
 			if(root_item && typeof hist_num[root_name] == "undefined" && root_item['deleted_at']==null){
 				item = Lincko.storage.get(hist_all[i]["type"], hist_all[i]["id"]);
 				if(!this.validHist(root_item, item, hist_all[i])){
@@ -826,6 +844,7 @@ var app_models_history = {
 					}
 				} else {
 					reset_order = true;
+					reset_order_obj[root_name] = true;
 					info[i] = {};
 					info[i].name = name;
 					info[i].type = hist_all[i]["type"];
@@ -979,9 +998,20 @@ var app_models_history = {
 			}
 		}
 
-		if(app_models_history.hist_root_recent.length==0 || reset_order){
+		if(app_models_history.hist_root_recent.length==0 && !limit){
 			//This is stored as an array
 			app_models_history.hist_root_recent = Lincko.storage.sort_items(app_models_history.hist_root, 'timestamp', 0 , -1, false);
+		} else if(reset_order && app_models_history.hist_root_recent.length>0){
+			for(var j in app_models_history.hist_root_recent){
+				root_name = app_models_history.hist_root_recent[j]["root_type"]+"_"+app_models_history.hist_root_recent[j]["root_id"];
+				if(reset_order_obj[root_name]){
+					delete app_models_history.hist_root_recent[j];
+				}
+				if(app_models_history.hist_root[root_name]){
+					app_models_history.hist_root_recent[j] = app_models_history.hist_root[root_name];
+				}
+			}
+			app_models_history.hist_root_recent = Lincko.storage.sort_items(app_models_history.hist_root_recent, 'timestamp', 0 , -1, false);
 		}
 
 		return histList;

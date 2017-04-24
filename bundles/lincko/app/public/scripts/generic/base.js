@@ -490,6 +490,12 @@ base_removeLineBreaks = function(str){
 	return str.replace(/(\r\n|\n|\r)/gm, "");
 }
 
+//Only keep special characters line unicode
+base_remove_stdchar = function(str){
+	if(typeof str != 'string'){ return ""; }
+	return str.replace(/[\u0000-\u007F]/gm, "");
+}
+
 base_toggle_myQRcode = function(display){
 	var elem = $('#base_myQRcode_popup');
 	if(!elem.find('img').attr('src')){
