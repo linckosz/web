@@ -498,10 +498,9 @@ base_remove_stdchar = function(str){
 
 base_toggle_myQRcode = function(display){
 	var elem = $('#base_myQRcode_popup');
-	if(!elem.find('img').attr('src')){
+	if(Lincko.storage.generateMyQRcode()){
 		elem.find('img').attr('src', Lincko.storage.generateMyQRcode());
 	}
-
 	if(typeof display == 'boolean'){
 		if(!display){
 			elem.addClass('visibility_hidden');

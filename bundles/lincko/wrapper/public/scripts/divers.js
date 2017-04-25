@@ -82,8 +82,8 @@ var toto_mp3 = function(data){
 /*
 	This commands help to track time spent in some functions
 	wrapper_time_checkpoint(false, true);
-	wrapper_time_checkpoint(1);
-	wrapper_time_checkpoint(2);
+	wrapper_time_checkpoint('01');
+	wrapper_time_checkpoint('02');
 */
 var	wrapper_time_checkpoint_time = false;
 var wrapper_time_checkpoint = function(msg, reset, show){

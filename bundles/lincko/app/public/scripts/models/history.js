@@ -27,7 +27,7 @@ var app_models_history = {
 				app_models_history.hist_root[type+'_'+id] = null;
 				delete app_models_history.hist_root[type+'_'+id];
 			}
-			app_models_history.list_reset[type+'_'+id] = true;
+			app_models_history.list_reset[type+'_'+id] = [type, id];
 		}
 	},
 
@@ -642,12 +642,26 @@ var app_models_history = {
 
 		var histList = [];
 		var item;
+		
 		if(app_models_history.hist_root_recent.length==0){
 			app_models_history.tabList();
-		} else {
-			for(var i in app_models_history.list_reset){
-				app_models_history.tabList(limit, parent_type, parent_id);
+		} else if(parent_type && parent_id){
+			if(app_models_history.list_reset[parent_type+"_"+parent_id]){
 				delete app_models_history.list_reset[parent_type+"_"+parent_id];
+				app_models_history.tabList(1, parent_type, parent_id);
+			}
+		} else {
+			var list = [];
+			for(var type_id in app_models_history.list_reset){
+				list.push(app_models_history.list_reset[type_id]);
+				delete app_models_history.list_reset[parent_type+"_"+parent_id];
+			}
+			if(list.length>2){
+				app_models_history.tabList();
+			} else {
+				for(var i in list){
+					app_models_history.tabList(1, list[i][0], list[i][1]);
+				}
 			}
 		}
 
@@ -770,6 +784,9 @@ var app_models_history = {
 		if(typeof limit != 'number' || limit<=0){ limit = false; }
 		if(typeof parent_type == 'undefined'){ parent_type = false; }
 		if(typeof parent_id == 'undefined'){ parent_id = false; }
+		if(parent_type && parent_id){
+			limit = 1;
+		}
 
 		var histList = [];
 		var hist_num = {};
@@ -790,9 +807,7 @@ var app_models_history = {
 		var reset_order_obj = {}; //A list a item to reorder
 		var info = {};
 		var parent_name = false;
-
 		var exclude = false;
-
 
 		if(parent_type && parent_id && parent_type=="projects"){
 			//If parent is a project, .hist will reject automatically all chats activity inside it

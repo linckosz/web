@@ -138,6 +138,7 @@ Submenu.prototype.Add_ChatMenu = function() {
 			$("#"+that.id+"_submenu_top_button_right").addClass("display_none");
 			that.Wrapper().find("[find=submenu_wrapper_top]").find("[find=submenu_title]").html(Lincko.Translation.get('app', 2301, 'html')); //Chats
 			that.Add_ChatContent();
+			$(window).resize();
 		}
 	});
 	Elem.find("[find=select_contacts]").click(that, function(event){
@@ -149,6 +150,7 @@ Submenu.prototype.Add_ChatMenu = function() {
 			$("#"+that.id+"_submenu_top_button_right").removeClass("display_none");
 			that.Wrapper().find("[find=submenu_wrapper_top]").find("[find=submenu_title]").html(Lincko.Translation.get('app', 2302, 'html')); //Contacts list
 			that.Add_ChatContacts();
+			$(window).resize();
 		}
 	});
 	app_application_lincko.add(that.id+"_submenu_app_chat_chatmenu", ["projects", "chats", "users", "contacts_list"], function(){
@@ -158,6 +160,7 @@ Submenu.prototype.Add_ChatMenu = function() {
 			//that.Add_ChatContent(); //toto => make scroll resert to beginning
 		} else if(Elem.find("[find=select_contacts]").hasClass('submenu_app_chat_chatmenu_icon_active')){
 			that.Add_ChatContacts(); //toto => make scroll resert to beginning, but less important if the list is short
+			wrapper_IScroll_refresh();
 		}
 	}, that);
 	if("class" in attribute){
@@ -1226,6 +1229,8 @@ Submenu.prototype.Add_ChatContent = function() {
 		},
 		app_layers_chats_list
 	);
+
+	wrapper_IScroll_refresh();
 
 	//Free memory
 	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope

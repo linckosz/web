@@ -168,7 +168,7 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 
 			if(data.shangzai){
 				wrapper_shangzai = data.shangzai;
-				wrapper_localstorage.encrypt('shangzai', data.shangzai);
+				wrapper_localstorage.encrypt('shangzai', data.shangzai, false, true);
 				wrapper_set_shangzai = false;
 			}
 
@@ -411,7 +411,7 @@ wrapper_localstorage.encrypt = function (link, data, tryit, now){
 		return false;
 	}
 	if(typeof tryit == 'undefined'){ tryit = true; }
-	if(typeof now == 'undefined'){ now = true; }
+	if(typeof now == 'undefined'){ now = false; }
 	var result = false;
 	//If we over quota once, we do not continue to avoid CPU usage, it slow down the first loading but it's an easy solution
 	//A more complex solution would be to progressively delete few elements, and only load them at start, but it's a CPU consumer method
