@@ -274,6 +274,11 @@ $('#app_project_quick_access_chat').click(function(){
 	submenu_Build('chat_list', false, true, true);
 });
 
+$('#app_project_workspace_title').click(function(){
+	$('#app_application_content').addClass('app_gobal_view');
+	app_content_menu.selection(0, 'tasks');
+});
+
 $('#app_project_placeholder').click(function(){
 	app_content_menu.selection(Lincko.storage.getMyPlaceholder()['_id'], 'tasks');
 });

@@ -414,7 +414,14 @@ Submenu.prototype.Add_taskdetail = function() {
 
 	that.param.uniqueID = md5(Math.random());
 	if(!that.param.projID){
-		that.param.projID = app_content_menu.projects_id;
+		if(app_content_menu.projects_id == 0) 
+		{
+			that.param.projID = Lincko.storage.getMyPlaceholder()['_id'];
+		}
+		else
+		{
+			that.param.projID = app_content_menu.projects_id;
+		}
 	}
 	var contactServer = false;
 	var isLockedByMe = false;

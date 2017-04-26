@@ -2750,7 +2750,7 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 
 
 		var title = parsedData.text;
-		var parent_id = app_content_menu.projects_id;
+		var parent_id = app_content_menu.projects_id == 0 ?  Lincko.storage.getMyPlaceholder()['_id'] : app_content_menu.projects_id ;
 		var comment = "<p><br></p>"; //ckeditor default empty content
 
 		//default not assigned
@@ -2860,6 +2860,12 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 			}
 
 			Lincko.storage.data.tasks[fakeID] = item;
+
+
+			if(parent_id == 0)
+			{
+				parent_id =  Lincko.storage.getMyPlaceholder()['_id'];
+			}
 			if(!('_children' in Lincko.storage.data.projects[parent_id])){
 				Lincko.storage.data.projects[parent_id]['_children'] = {};
 			}

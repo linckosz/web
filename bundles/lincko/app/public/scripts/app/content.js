@@ -83,17 +83,23 @@ var app_content_menu = {
 			}
 		}
 
-		if(projects_id >= 0){
+		if(projects_id > 0){
 			var project = Lincko.storage.get("projects", projects_id);
 			if(project && project["deleted_at"]!=null){
 				projects_id = Lincko.storage.getMyPlaceholder()['_id'];
 			}
 		}
 
-		if(projects_id < 0){ //Workspace
-			title = Lincko.storage.WORKNAME;
+		if(projects_id == 0){ //Workspace
+			// title = Lincko.storage.WORKNAME;
+			// list = [
+			// 	'projects',
+			// ];
+			title = '';
 			list = [
-				'projects',
+				'tasks',
+				'notes',
+				'files',
 			];
 		} else if(
 			   $.type(Lincko.storage.data['projects']) === 'object'
@@ -197,18 +203,21 @@ var app_content_menu = {
 				}
 				$('#app_content_top_title_project').html(wrapper_to_html(title));
 			} else {
-				var hist = Lincko.storage.hist("projects", 1, null, "projects", projects_id);
-				projects_id = Lincko.storage.getMyPlaceholder()['_id'];
-				if(hist.length>0 && hist[0]["att"]=="_delete"){
-					var msg = Lincko.storage.getHistoryInfo(hist[0]);
-					if(msg.content===false){ msg.content = ''; }
-					base_show_error(msg.title+"\n"+msg.content);
+				if(projects_id != 0)
+				{
+					var hist = Lincko.storage.hist("projects", 1, null, "projects", projects_id);
+					projects_id = Lincko.storage.getMyPlaceholder()['_id'];
+					if(hist.length>0 && hist[0]["att"]=="_delete"){
+						var msg = Lincko.storage.getHistoryInfo(hist[0]);
+						if(msg.content===false){ msg.content = ''; }
+						base_show_error(msg.title+"\n"+msg.content);
+					}
+					var proid = projects_id;
+					//The Timeout will help to avoid a loop.
+					setTimeout(function(){
+						app_content_menu.selection(proid);
+					}, 100);
 				}
-				var proid = projects_id;
-				//The Timeout will help to avoid a loop.
-				setTimeout(function(){
-					app_content_menu.selection(proid);
-				}, 100);
 			}
 		});
 
