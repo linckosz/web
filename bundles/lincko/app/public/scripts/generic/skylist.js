@@ -2266,6 +2266,11 @@ skylist.prototype.addFile = function(item){
 	if(!item['_perm'] || typeof item['_perm'] !== 'object'){ return false; }
 	var that = this;
 
+	//Skip voice record
+	if(item['category'] && item['category']=='voice'){
+		return false;
+	}
+
 	var Elem = skylist.draw_fileCard(item);
 	Elem.prop('id','skylist_card_'+that.md5id+'_'+item['_id']);
 

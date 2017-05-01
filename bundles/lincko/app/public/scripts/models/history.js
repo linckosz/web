@@ -829,7 +829,6 @@ var app_models_history = {
 			root_name = root_item["_type"]+"_"+root_item["_id"];
 			name = hist_all[i]["type"]+"_"+hist_all[i]["id"];
 			
-
 			if(parent_name && root_name!=parent_name){
 				continue;
 			}
@@ -1017,14 +1016,21 @@ var app_models_history = {
 			//This is stored as an array
 			app_models_history.hist_root_recent = Lincko.storage.sort_items(app_models_history.hist_root, 'timestamp', 0 , -1, false);
 		} else if(reset_order && app_models_history.hist_root_recent.length>0){
+			var hist_new = true;
 			for(var j in app_models_history.hist_root_recent){
 				root_name = app_models_history.hist_root_recent[j]["root_type"]+"_"+app_models_history.hist_root_recent[j]["root_id"];
 				if(reset_order_obj[root_name]){
+					hist_new = false;
 					delete app_models_history.hist_root_recent[j];
 				}
 				if(app_models_history.hist_root[root_name]){
 					app_models_history.hist_root_recent[j] = app_models_history.hist_root[root_name];
 				}
+			}
+			root_item = this.getRoot(hist_all[i]["type"], hist_all[i]["id"]); //Accept only Chats and Projects
+			root_name = root_item["_type"]+"_"+root_item["_id"];
+			if(hist_new && app_models_history.hist_root[root_name]){
+				app_models_history.hist_root_recent.push = app_models_history.hist_root[root_name];
 			}
 			app_models_history.hist_root_recent = Lincko.storage.sort_items(app_models_history.hist_root_recent, 'timestamp', 0 , -1, false);
 		}

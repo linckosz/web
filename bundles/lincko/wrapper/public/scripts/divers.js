@@ -74,11 +74,6 @@ if(
 	//wrapper_limit_json = 500; //Allow chunking for for ios crash (it seems working after reworking the database)
 }
 
-var toto_mp3 = function(data){
-	//console.log(data);
-	//JSerror.sendError(data, 'data', 0);
-}
-
 /*
 	This commands help to track time spent in some functions
 	wrapper_time_checkpoint(false, true);
@@ -547,6 +542,20 @@ function wrapper_test(type, RCUD){
 				wrapper_test_display
 			);
 		}
+		/*
+		else if(RCUD==5){
+			wrapper_sendAction(
+				{
+					"parent_type": 'chats',
+					"parent_id": 1370,
+					"data": divers_mp3_base64,
+				},
+				'post',
+				'file/voice',
+				wrapper_test_display
+			);
+		}
+		*/
 	}
 
 	if(type=='*' || type=='projects'){
