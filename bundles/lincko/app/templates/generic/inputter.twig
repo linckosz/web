@@ -24,15 +24,39 @@
 		
 	</ul>
 
+	<div id="-inputter_record_impression" class="inputter_record_impression display_none">
+		<div find="icon" class="inputter_record_impression_icon">
+			<span class="icon-audio"></span>
+		</div>
+		<div find="text" class="inputter_record_impression_text">
+			Swipe up to cancel
+		</div>
+	</div>
+
+
 	<div id="-inputter_element_set">
 		<div find="content" id="-inputter_element_content"  class="inputter_content">
 			{# <input find="chat_textarea" type="text"  class="textarea comments_input" /> #}
 			<div find="chat_textarea" contenteditable="true" class="textarea comments_input" autofocus="autofocus"></div>
+			<div find="chat_audio"  class="audioarea comments_input display_none">
+				Hold to chat
+			</div>
 		</div>
+
+		<li find="switch" id="-inputter_element_switch" class="inputter_element_switch">
+			<span class="inputter_ico needsclick"></span>
+		</li>
+
+		{# <li find="checkbox" id="-inputter_element_switch" class="inputter_element_checkbox audio">
+			<span class="inputter_ico inputter_audio icon-audio needsclick"></span>
+		</li>
+
+		<li find="checkbox" id="-inputter_element_keyboard" class="inputter_element_checkbox keyboard">
+			<span class="inputter_ico inputter_keyboard fa fa-keyboard-o needsclick"></span>
+		</li> #}
 		
 		<li find="checkbox" id="-inputter_element_checkbox" class="inputter_element_checkbox chk">
 			<span class="inputter_checkbox fa fa-check needsclick"></span>
-			
 		</li>
 		<li find='send' id="-inputter_element_send" class="inputter_menu_item send">
 			<span class="inputter_ico  needsclick"></span>

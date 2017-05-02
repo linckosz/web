@@ -341,6 +341,10 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 		enter : fnSendMsg,
 		auto_upload : true,
 
+		left_menu :[	
+			[{	element :'btSwitch',}],	
+		],
+
 		right_menu :
 		[	
 			[

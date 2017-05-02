@@ -47,6 +47,10 @@ var inputter = function(panel_id,position,upload_ptype,upload_pid,layer,burger)
 {
 	this.elements_lib = 
 	{
+		btSwitch :
+		{
+			target : 'switch',
+		},
 		chkTask :
 		{
 			target : 'checkbox',
@@ -260,9 +264,6 @@ inputter.prototype.buildLayer = function()
 											var sel = window.getSelection();
 											sel.removeAllRanges();
 											sel.addRange(range);
-
-											// input.find('[find=chat_textarea]').get(0).selectionStart = input.find('[find=chat_textarea]').get(0).value.length;   //选中区域左边界
-											// input.find('[find=chat_textarea]').get(0).selectionEnd = input.find('[find=chat_textarea]').get(0).value.length; //选中区域右边界
 										}
 									}
 									else
@@ -280,6 +281,32 @@ inputter.prototype.buildLayer = function()
 								});
 								item.on("touchstart mousedown",function(){
 									that.touch_now = true;
+								});
+								break;
+							case 'switch':
+								item.addClass('audio');
+								item.find('.inputter_ico').addClass('inputter_audio icon-audio');
+								item.click(function(){
+									if($(this).hasClass('audio'))
+									{
+										$(this).removeClass('audio');
+										$(this).find('.inputter_ico').removeClass('inputter_audio icon-audio');
+										$(this).addClass('keyboard');
+										$(this).find('.inputter_ico').addClass('inputter_keyboard fa fa-keyboard-o');
+
+										content.find('[find=chat_audio]').removeClass('display_none');
+										content.find('[find=chat_textarea]').addClass('display_none');
+									}
+									else if($(this).hasClass('keyboard'))
+									{
+										$(this).removeClass('keyboard');
+										$(this).find('.inputter_ico').removeClass('inputter_keyboard fa fa-keyboard-o');
+										$(this).addClass('audio');
+										$(this).find('.inputter_ico').addClass('inputter_audio icon-audio');
+
+										content.find('[find=chat_textarea]').removeClass('display_none');
+										content.find('[find=chat_audio]').addClass('display_none');
+									}
 								});
 								break;
 							default :
@@ -754,6 +781,129 @@ inputter.prototype.buildLayer = function()
 			content.addClass('mobile-margin-right-' + mobile_show_count);
 		},0);
 	});
+
+	var inputter_current_audio_touch_clientY = 0;
+	var inputter_start_audio_touch_clientY = 0;
+	var inputter_audio_operation_interval;
+	var inputter_audio_operation_status = 0; //1:send;2:cancel;
+	input.find('[find=chat_audio]').on('touchstart',function(event){
+		event.preventDefault();
+
+		inputter_current_audio_touch_clientY = 0;
+		inputter_start_audio_touch_clientY = 0;
+		inputter_audio_operation_status = 0;
+		
+
+		var inputter_record_impression;
+		if($('#inputter_record_impression').length == 0)
+		{
+			inputter_record_impression = $('#-inputter_record_impression').clone();
+			inputter_record_impression.prop('id','inputter_record_impression');//toto:need to name a good id
+
+			$('body').append(inputter_record_impression);
+		}
+		else
+		{
+			inputter_record_impression = $('#inputter_record_impression');		
+		}
+		inputter_record_impression.removeClass('display_none');
+		inputter_record_impression.find('[find=icon] span').removeClass('fa fa-undo inputter_record_impression_icon_samll');
+		inputter_record_impression.find('[find=icon] span').addClass('icon-audio');	
+		inputter_record_impression.find('[find=text]').text('Swipe up to cancel');//toto:transaltion
+
+		inputter_record_impression.css("top",($(window).height()-inputter_record_impression.height())/2);
+		inputter_record_impression.css("left",($(window).width()-inputter_record_impression.width())/2);
+		inputter_current_audio_touch_clientY = event.originalEvent.changedTouches[0].clientY;
+		inputter_start_audio_touch_clientY = inputter_current_audio_touch_clientY;
+		inputter_audio_operation_interval = setInterval(function(){
+			if(inputter_start_audio_touch_clientY - inputter_current_audio_touch_clientY >= 40){
+				if(inputter_audio_operation_status!==2)
+				{
+					inputter_audio_operation_status = 2;
+					inputter_record_impression.find('[find=icon] span').removeClass('icon-audio');
+					inputter_record_impression.find('[find=icon] span').addClass('fa fa-undo inputter_record_impression_icon_samll');
+					inputter_record_impression.find('[find=text]').text('Release to cancel');//toto:transaltion
+				}
+			}
+			else{
+				if(inputter_audio_operation_status!==1)
+				{
+					inputter_audio_operation_status = 1;
+					inputter_record_impression.find('[find=icon] span').removeClass('fa fa-undo inputter_record_impression_icon_samll');
+					inputter_record_impression.find('[find=icon] span').addClass('icon-audio');	
+					inputter_record_impression.find('[find=text]').text('Swipe up to cancel');//toto:transaltion
+				}
+			}
+		},200);
+
+		//toto:IOS、android FUNCTION Start
+		if(isMobileApp()){
+			if(device_type() == 'ios'){
+				window.webkit.messageHandlers.iOS.postMessage(
+				{
+					action: 'audio_start',
+				});
+			}
+			else if(device_type() == 'android'){
+				android.audio_start();
+			}
+			
+		}
+
+	});
+
+	input.find('[find=chat_audio]').on('touchmove',function(event){
+		var inputter_record_impression = $('#inputter_record_impression');
+		inputter_current_audio_touch_clientY = event.originalEvent.changedTouches[0].clientY;
+	});
+
+	input.find('[find=chat_audio]').on('touchend',function(event){
+		event.preventDefault();
+		var inputter_record_impression = $('#inputter_record_impression');
+		inputter_record_impression.addClass('display_none');
+		clearInterval(inputter_audio_operation_interval);
+
+		if(inputter_audio_operation_status==1){
+			//toto:IOS、android FUNCTION SEND
+
+			if(isMobileApp()){
+				if(device_type() == 'ios'){
+					window.webkit.messageHandlers.iOS.postMessage(
+					{
+						action: 'audio_send',
+						value:{
+							call_back:'audio_native_callback',
+						}
+					});
+				}
+				else if(device_type() == 'android'){
+					android.audio_send('audio_native_callback');
+				}	
+			}
+
+			function audio_native_callback(audio_base64){
+				//toto:sendAction
+				//toto:display
+			}
+
+		
+		}
+		else if(inputter_audio_operation_status==2){
+			//toto:IOS、android FUNCTION CANCEL
+			if(device_type() == 'ios'){
+				window.webkit.messageHandlers.iOS.postMessage(
+				{
+					action: 'audio_cancel',
+				});
+			}
+			else if(device_type() == 'android'){
+				android.audio_cancel();
+			}
+		
+		}
+
+	});
+
 
 	input.find('[find=chat_textarea]').on('cut',function(e,data){
 		var target = this;

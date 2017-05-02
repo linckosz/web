@@ -1,3 +1,4 @@
+
 //Initiiaze fields with same name
 function base_format_input(field){
 	if(field in base_input_field){
