@@ -198,6 +198,12 @@ BaseItemCls.prototype.item_display = function(position, subm, mode, scroll_time)
 		var date = new wrapper_date(this.timestamp);
 		elem.find(".time", "[find=timestamp]").html(date.display('time_short'));
 		elem.find(".date", "[find=timestamp]").html(skylist_textDate(date) || date.display('date_short'));
+
+		//add contenteditable for focus control, since now we have quick action popup for files
+		if(this.style == 'file'){
+			elem.find('.models_history_content').append('<div contenteditable="false" tabindex="1"></div>');
+		}
+
 		this.feed_profile_action(elem,this.user_id,subm);
 		this.feed_content(elem, subm);
 		if(this.style == 'activity' || this.style == 'audio' || this.style == 'file' || this.style == 'upload') this.feed_action(elem,subm);
@@ -376,6 +382,9 @@ var FileContentCls = function(record,type)
 
 FileContentCls.prototype.feed_content = function(elem)
 {
+	elem.attr('category',this.category);
+	elem.attr(this.category + '_id',this.id);
+
 	if(this.file_category =='image' || this.file_category =='video')
 	{
 		elem.find(".models_history_standard_shortcut_ico").addClass('display_none');

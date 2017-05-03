@@ -47,6 +47,20 @@
 }
 
 
+/*hidden contenteditable for focus control - hidden without using visibility or display:none */
+.models_history_wrapper[category=files] .models_history_content [contenteditable]{
+ 	position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 0px;
+    width: 0px;
+    overflow: hidden;
+    opacity: 0;
+}
+.models_history_wrapper[category=files] .app_models_chats_bubble_actionMenu [find=translate_btn],
+.models_history_wrapper[category=files] .app_models_chats_bubble_actionMenu [find=recall_btn]{
+	visibility: hidden;
+}
 
 .upload_stopped_file .models_history_content {
 	cursor: default;

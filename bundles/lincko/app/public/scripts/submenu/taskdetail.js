@@ -346,59 +346,6 @@ submenu_list['taskdetail_new'] = {
 	},
 };
 
-/*
-toto => use this to create new tasks
-submenu_list['task_new'] = {
-	//Set the title of the top
-	"_title": {
-		"style": "customized_title",
-		"title": function(that){
-			var title = that.param.type.slice(0,-1) + ' Information';
-			return title;
-		},
-		"class": function(that){
-			var className = 'submenu_wrapper_title submenu_wrapper_taskdetail_'+that.param.type;
-			return className;
-		},
-	},
-	"left_button": {
-		"style": "title_left_button",
-		"title": Lincko.Translation.get('app', 7, 'html'), //Close
-		'hide': true,
-		"class": "base_pointer",
-	},
-	"right_button": {
-		"style": "title_right_button",
-		"title": Lincko.Translation.get('app', 41, 'html'), //Create
-		"class": "base_pointer",
-		'hide': true,
-		"action": function(Elem, subm) {
-			console.log('A function to save')
-		},
-	},
-	"taskdetail": {
-		"style": "taskdetail",
-		"title": "taskdetail",
-		"class": "",
-	},
-	"projects_id": {
-		"style": "input_hidden",
-		"title": "",
-		"name": "task_parent_id_hidden",
-		"value": "",
-		"now": function(Elem, subm){
-			var currentProjID = app_content_menu.projects_id;
-			if(subm.param.projID){
-				currentProjID = subm.param.projID;
-			}
-			Elem.find("[find=submenu_input]").prop('value', subm.param.projID);
-		},
-		"class": "",
-	},
-};
-*/
-
-
 Submenu_select.taskdetail = function(subm){
 	subm.Add_taskdetail();
 };
@@ -690,23 +637,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		});
 
 	}
-	/* OLD CHECKBOX METHOD
-	elem.find("[type=checkbox]")
-		.prop(
-			{
-				'id':'app_layers_dev_skytasks_checkbox_'+taskid,
-				'checked': function(){
-					if(item['done_at'] == null){
-						return false;
-					}
-					else{
-						elem.toggleClass('app_layers_dev_skytasks_strike');
-						return true;
-					}
-				},
-			});
-	elem.find('.app_layers_dev_skytasks_checkbox label').prop('for','app_layers_dev_skytasks_checkbox_'+taskid);
-	*/
+
 	else if( item['_type'] == "files" ){
 		var fileType_class = 'fa fa-file-o';
 		var elem_leftbox = $('<span></span>').addClass('skylist_card_leftbox_fileIcon');
@@ -746,19 +677,6 @@ Submenu.prototype.Add_taskdetail = function() {
 	/*meta (general)*/
 	var elem_meta = $('#-submenu_taskdetail_burgerBar').clone().prop('id','submenu_taskdetail_burgerBar_'+that.md5id);
 
-	// deleteAccess variable is controlled by update_meta.on('deleteAccessFalse' and 'deleteAccessTrue')
-	var deleteAccess = true;
-
-	deleteActionClickFn = function(){
-		if(Lincko.storage.canI('delete', that.param.type, taskid)){
-			route_delete = true;
-			Lincko.storage.data[that.param.type][taskid].deleted_at = new wrapper_date().timestamp;
-			app_application_lincko.prepare(that.param.type+'_'+taskid, true);
-			submenu_Clean(null, null, that.preview);
-		} else {
-			base_show_error(Lincko.Translation.get('app', 51, 'html'), true); //Operation not allowed
-		}
-	}
 
 	var update_burgerBar = function(elem){
 		if(!elem){ var elem = elem_meta; }
@@ -970,18 +888,6 @@ Submenu.prototype.Add_taskdetail = function() {
 				});
 			}
 		});
-		elem_action_menu.find('[find=delete]').click(deleteActionClickFn);
-
-		elem_meta.on('deleteAccessFalse', function(){
-			deleteAccess = false;
-			$(this).find('[find=delete]').addClass('submenu_taskdetail_disabled').off('click');
-		}).on('deleteAccessTrue', function(){
-			deleteAccess = true;
-			$(this).find('[find=delete]').removeClass('submenu_taskdetail_disabled').click(deleteActionClickFn);
-		});
-		if(!Lincko.storage.canI('delete', that.param.type, taskid) || !deleteAccess){
-			elem_action_menu.find('[find=delete]').addClass("display_none");
-		}
 
 		//remove tooltips for disabled blocks
 		var elem_burgerBar_block_OFF = elem.find('.submenu_taskdetail_burgerBar_block:not(.skylist_clickable)').removeAttr('title');
@@ -1379,7 +1285,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			//remove linking
 			elem_linkcard.find('[find=removeIcon]').click(function(){
 				if(taskid == 'new' || !item['_id'] || item['_id'] == 'new'){
-					delete taskdetail_linkQueue.queue[item_link['temp_id']];
+					delete taskdetail_linkQueue.queue[item_link['_id'] || item_link['temp_id']];
 				}
 				else{
 					var obj = {};
@@ -1404,6 +1310,7 @@ Submenu.prototype.Add_taskdetail = function() {
 					mobileHA: hasGood3Dsupport,
 					complete: function(){
 						elem_linkcard.recursiveRemove();
+						tasketail_updateLinkCount(elem_links);
 					},
 				});
 			});
@@ -1441,23 +1348,30 @@ Submenu.prototype.Add_taskdetail = function() {
 		submenu_Build('itemSelector', true, null, param_itemSelector, true);
 	});
 	var elem_links_wrapper = elem_links.find('[find=links_wrapper]');
-	
+
 	var link_count = 0;
-	var item_linked = Lincko.storage.list_links(that.param.type, taskid); 
+	var item_linked = Lincko.storage.list_links(that.param.type, taskid) || that.param.files;
+
 	if(typeof item_linked == 'object'){
 		for(var category in item_linked){
 			$.each(item_linked[category], function(id,item){
 				if(item.deleted_at){ return; } //ignore deleted items
 				elem_links_wrapper.append(generate_linkCard(item));
 				link_count++;
+
+				if(taskid == 'new'){ //add to queue
+					taskdetail_linkQueue.queue[id] = {
+						uniqueID: that.param.uniqueID,
+						parent_type: that.param.type,
+						id: id,
+						type: category,
+					}
+				}
 			});
 		}
 	}
 
-	//cant delete file if it is linked to others (e.g. tasks/notes)
-	if(that.param.type == 'files' && link_count > 0){
-		elem_meta.trigger('deleteAccessFalse');
-	}
+	
 
 	elem_links.find('[find=linkCount]').text(link_count);
 
@@ -2124,7 +2038,6 @@ Submenu.prototype.Add_taskdetail = function() {
 					if(approved){
 						param['approved'] = approved;
 					}
-					
 				}
 			}
 
@@ -2292,12 +2205,12 @@ Submenu.prototype.Add_taskdetail = function() {
 	var registerSync_links = function(){
 		app_application_lincko.add(
 			'submenu_taskdetail_link_'+that.md5id,
-			[that.param.type+'_'+item['_id'], 'upload', 'show_queued_links'/*for new tasks/notes adding exising files/notes -- this is no longer used*/],
+			[that.param.type+'_'+item['_id'], 'upload', 'show_queued_links'/*used by itemSelector*/],
 			function(){
 				var elem = $('#'+this.id);
 				var item = Lincko.storage.get(that.param.type, taskid);
 
-				//for show_queued_links -- this is no longer used, file uploading to new tasks/notes are taken care of my takelist_uploadManager
+				//for show_queued_links -- used by itemSelector
 				if(this.updated && this.updated.show_queued_links){
 					$.each(taskdetail_linkQueue.queue, function(temp_id, obj){
 						if(obj.uniqueID == that.param.uniqueID && !obj.visible){
@@ -2308,8 +2221,7 @@ Submenu.prototype.Add_taskdetail = function() {
 							}
 						}
 					});
-					var linkCount = elem.find('.submenu_taskdetail_links_card').length;
-					elem_links.find('[find=linkCount]').text(linkCount);
+					tasketail_updateLinkCount(elem_links);
 				}
 
 
@@ -2373,12 +2285,14 @@ Submenu.prototype.Add_taskdetail = function() {
 									elem_linkcard.velocity('slideUp',{
 										complete: function(){
 											elem_linkcard.recursiveRemove();
+											tasketail_updateLinkCount(elem_links);
 										},
 									});
 
 								});
 
 								elem.find('[find=links_wrapper]').append(elem_linkcard);
+								tasketail_updateLinkCount(elem_links);
 							}
 
 						}
@@ -2684,6 +2598,15 @@ Submenu.prototype.Add_taskdetail = function() {
 	delete submenu_wrapper;
 	return true;
 };
+
+
+var tasketail_updateLinkCount = function(elem){
+	if(typeof elem == 'string'){ elem = $('#'+elem); }
+	var linkCount = elem.find('.submenu_taskdetail_links_card').length;
+	elem.find('[find=linkCount]').text(linkCount);
+}
+
+
 
 //use just before sendAction to manually update the local data
 var taskdetail_itemManualUpdate = function(param_sendAction, route){
