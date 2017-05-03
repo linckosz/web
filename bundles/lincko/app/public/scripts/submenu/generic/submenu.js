@@ -181,6 +181,7 @@ function Submenu(menu, next, param, preview, animate) {
 	this.display = true;
 	this.prefix = false;
 	this.attribute = null;
+	this.focuson = true;
 
 	function Constructor(subm) {
 		subm.changeState();
@@ -224,7 +225,7 @@ function Submenu(menu, next, param, preview, animate) {
 		for (var att in subm.obj) {
 			subm.attribute = subm.obj[att];
 			if ("style" in subm.attribute && subm.attribute.style == "preAction" && "action" in subm.attribute) {
-				if (typeof subm.attribute.action === "function") {
+				if (typeof subm.attribute.action == "function") {
 					subm.attribute.action(submenu_wrapper, subm);
 				}
 			}
@@ -233,7 +234,7 @@ function Submenu(menu, next, param, preview, animate) {
 		for (var att in subm.obj) {
 			subm.attribute = subm.obj[att];
 			if ("style" in subm.attribute && "title" in subm.attribute) {
-				if (typeof Submenu_select[subm.attribute.style] === "function") {
+				if (typeof Submenu_select[subm.attribute.style] == "function") {
 					Submenu_select[subm.attribute.style](subm);
 				}
 			}
@@ -242,7 +243,7 @@ function Submenu(menu, next, param, preview, animate) {
 		for (var att in subm.obj) {
 			subm.attribute = subm.obj[att];
 			if ("style" in subm.attribute && "items" in subm.attribute) {
-				if (typeof Submenu_select[subm.attribute.style] === "function") {
+				if (typeof Submenu_select[subm.attribute.style] == "function") {
 					Submenu_select[subm.attribute.style](subm);
 				}
 			}
@@ -253,7 +254,7 @@ function Submenu(menu, next, param, preview, animate) {
 		for (var att in subm.obj) {
 			subm.attribute = subm.obj[att];
 			if ("style" in subm.attribute && subm.attribute.style == "postAction" && "action" in subm.attribute) {
-				if (typeof subm.attribute.action === "function") {
+				if (typeof subm.attribute.action == "function") {
 					subm.attribute.action(submenu_wrapper, subm);
 				}
 			}
@@ -287,13 +288,13 @@ Submenu.prototype.Add_MenuTitle = function() {
 	var Elem = $('#-submenu_top').clone();
 	Elem.prop("id", '');
 	submenu_wrapper.prepend(Elem);
-	if( typeof attribute.title === "function" ){
+	if( typeof attribute.title == "function" ){
 		title = attribute.title(this);
 	}
 	else{
 		title = attribute.title;
 	}
-	if ("class" in attribute && typeof attribute.class === "function") {
+	if ("class" in attribute && typeof attribute.class == "function") {
 		submenu_wrapper.find('.submenu_top').addClass(attribute.class(this));
 	}
 	else if( "class" in attribute ){
@@ -317,14 +318,14 @@ Submenu.prototype.Add_CustomisedTitle = function() {
 	var title;
 	var className;
 	var span;
-	if( typeof attribute.title === "function" ){
+	if( typeof attribute.title == "function" ){
 		title = attribute.title(this);
 	}
 	else{
 		title = attribute.title;
 	}
 	
-	if ("class" in attribute && typeof attribute.class === "function") {
+	if ("class" in attribute && typeof attribute.class == "function") {
 		Elem.addClass(attribute.class(this));
 	}
 	else if( "class" in attribute ){
@@ -332,7 +333,7 @@ Submenu.prototype.Add_CustomisedTitle = function() {
 	}
 	Elem.find("[find=submenu_title]").html(title);
 
-	if ("now" in attribute && typeof attribute.now === "function") {
+	if ("now" in attribute && typeof attribute.now == "function") {
 		attribute.now(Elem, that);
 	}
 	
@@ -376,7 +377,7 @@ Submenu.prototype.Add_TitleSmall = function() {
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
-	if ("now" in attribute && typeof attribute.now === "function") {
+	if ("now" in attribute && typeof attribute.now == "function") {
 		attribute.now(Elem, that);
 	}
 	submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
@@ -585,7 +586,7 @@ Submenu.prototype.Add_MenuButton = function(position) {
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
-	if ("now" in attribute && typeof attribute.now === "function") {
+	if ("now" in attribute && typeof attribute.now == "function") {
 		attribute.now(Elem, that);
 	}
 	if (!position) {
@@ -610,7 +611,7 @@ Submenu.prototype.Add_MenuInfo = function(position) {
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
-	if ("now" in attribute && typeof attribute.now === "function") {
+	if ("now" in attribute && typeof attribute.now == "function") {
 		attribute.now(Elem, that);
 	}
 	if (!position) {
@@ -648,7 +649,7 @@ Submenu.prototype.Add_MenuSmallButton = function(position) {
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
-	if ("now" in attribute && typeof attribute.now === "function") {
+	if ("now" in attribute && typeof attribute.now == "function") {
 		attribute.now(Elem, that);
 	}
 	if (!position) {
@@ -669,7 +670,7 @@ Submenu.prototype.Add_Space = function() {
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
-	if ("now" in attribute && typeof attribute.now === "function") {
+	if ("now" in attribute && typeof attribute.now == "function") {
 		attribute.now(Elem, that);
 	}
 	if ("value" in attribute) {
@@ -718,7 +719,7 @@ Submenu.prototype.Add_MenuNext = function() {
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
-	if ("now" in attribute && typeof attribute.now === "function") {
+	if ("now" in attribute && typeof attribute.now == "function") {
 		attribute.now(Elem, that);
 	}
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
@@ -772,7 +773,7 @@ Submenu.prototype.Add_MenuRadio = function() {
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
-	if ("now" in attribute && typeof attribute.now === "function") {
+	if ("now" in attribute && typeof attribute.now == "function") {
 		attribute.now(Elem, that);
 	}
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
@@ -795,7 +796,7 @@ Submenu.prototype.Add_InputHidden = function() {
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
-	if ("now" in attribute && typeof attribute.now === "function") {
+	if ("now" in attribute && typeof attribute.now == "function") {
 		attribute.now(Elem, that);
 	}
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
@@ -818,7 +819,7 @@ Submenu.prototype.Add_InputText = function() {
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
-	if ("now" in attribute && typeof attribute.now === "function") {
+	if ("now" in attribute && typeof attribute.now == "function") {
 		attribute.now(Elem, that);
 	}
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
@@ -841,7 +842,7 @@ Submenu.prototype.Add_InputPassword = function() {
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
-	if ("now" in attribute && typeof attribute.now === "function") {
+	if ("now" in attribute && typeof attribute.now == "function") {
 		attribute.now(Elem, that);
 	}
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
@@ -866,7 +867,7 @@ Submenu.prototype.Add_InputTextarea = function() {
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
-	if ("now" in attribute && typeof attribute.now === "function") {
+	if ("now" in attribute && typeof attribute.now == "function") {
 		attribute.now(Elem, that);
 	}
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
@@ -926,7 +927,7 @@ Submenu.prototype.Add_SelectMultiple = function() {
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
-	if ("now" in attribute && typeof attribute.now === "function") {
+	if ("now" in attribute && typeof attribute.now == "function") {
 		attribute.now(Elem, that);
 	}
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
@@ -949,7 +950,7 @@ Submenu.prototype.Add_SubmitForm = function() {
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
-	if ("now" in attribute && typeof attribute.now === "function") {
+	if ("now" in attribute && typeof attribute.now == "function") {
 		attribute.now(Elem, that);
 	}
 	if (submenu_wrapper.find("[find=submenu_wrapper_bottom]").find(".submenu_bottom_cell").length == 0) {
@@ -1033,7 +1034,7 @@ Submenu.prototype.Add_MenuBottomButton = function() {
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
-	if ("now" in attribute && typeof attribute.now === "function") {
+	if ("now" in attribute && typeof attribute.now == "function") {
 		attribute.now(Elem, that);
 	}
 	if (submenu_wrapper.find("[find=submenu_wrapper_bottom]").find(".submenu_bottom_cell").length == 0) {
@@ -1050,7 +1051,7 @@ Submenu.prototype.Add_MenuBottomButton = function() {
 
 Submenu.prototype.FocusForm = function() {
 	var that = this;
-	if (!supportsTouch) {
+	if (!supportsTouch && this.focuson) {
 		setTimeout(function() {
 			submenu_wrapper = that.Wrapper();
 			var ElemFocus = submenu_wrapper.find("input:enabled:visible:first:not(.no_focus)");

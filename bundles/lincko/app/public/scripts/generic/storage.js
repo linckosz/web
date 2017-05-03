@@ -919,6 +919,38 @@ Lincko.storage.whoHasAccess = function(category, id){
 	return list;
 };
 
+Lincko.storage.amIsuper = function(){
+	var users = Lincko.storage.get('workspaces', Lincko.storage.getWORKID(), '_users');
+	if(users && users[wrapper_localstorage.uid] && users[wrapper_localstorage.uid]['super']){
+		return true;
+	}
+	return false;
+}
+
+Lincko.storage.myRolePerm = function(category){
+	roles_id = false; //Only read by default;
+	result = 0;
+	if(Lincko.storage.getWORKID()>0){
+		var perm = Lincko.storage.get('workspaces', Lincko.storage.getWORKID(), '_perm');
+		if(perm && perm[wrapper_localstorage.uid]){
+			roles_id = perm[wrapper_localstorage.uid][1];
+		}
+	} else {
+		roles_id = 1; //adminitsrator by default for shared workspace
+	}
+	if(roles_id!==false){
+		var role = Lincko.storage.get('roles', perm[wrapper_localstorage.uid][1]);
+		if(role){
+			if(typeof role['perm_'+category] != 'undefined'){
+				result = role['perm_'+category];
+			} else if(typeof role['perm_all'] != 'undefined'){
+				result = role['perm_all'];
+			}
+		}
+	}
+	return result;
+}
+
 Lincko.storage.canI = function(rcud, category, id, child_type){
 	if(typeof rcud == 'string'){
 		if(rcud=='read'){ rcud=0; }
@@ -953,6 +985,11 @@ Lincko.storage.canI = function(rcud, category, id, child_type){
 			} else if(rcud <= perm[wrapper_localstorage.uid][0]){
 				return true;
 			}
+		}
+	} else {
+		var val = Lincko.storage.myRolePerm(category);
+		if(rcud <= val){
+			return true;
 		}
 	}
 	return false;
@@ -2587,6 +2624,7 @@ Lincko.storage.sort_items = function(array_items, att, page_start, page_end, asc
 			save = true;
 			value = item_abc["-"+att] || item["-"+att];
 		} else {
+			//ATTENTION: this does not keep any item that do not have this attribe
 			continue;
 		}
 		if(save){

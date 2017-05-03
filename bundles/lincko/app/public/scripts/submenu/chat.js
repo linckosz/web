@@ -450,10 +450,17 @@ Submenu.prototype.Add_ChatContacts = function() {
 		}
 		Elem.find("[find=who]").html(wrapper_to_html(contacts[i]['-username']));
 		Elem.off("click");
-		Elem.click([that, contacts[i]['_id']], function(event){ //toto => why this is called multiple time when when switch few times from Contact list adn Chats list?
+		Elem.on('click', [that, contacts[i]['_id']], function(event){ //toto => why this is called multiple time when when switch few times from Contact list adn Chats list?
 			event.stopPropagation();
 			submenu_chat_open_single(event.data[0], event.data[1]);
 		});
+		if(contacts[i]['_id']>1){
+			Elem.find("[find=picture]").on('click', [that, contacts[i]['_id']], function(event){ //toto => why this is called multiple time when when switch few times from Contact list adn Chats list?
+				event.stopPropagation();
+				var subm = event.data[0];
+				submenu_Build("personal_info", subm.layer + 1, false, event.data[1], subm.preview);
+			});
+		}
 		div.append(Elem);
 		delete Elem;
 	}

@@ -76,11 +76,11 @@ submenu_list['settings'] = {
 		"class": "base_pointer",
 	},
 	//Profile
-	"personal_settings": {
+	"personal_info": {
 		"style": "profile_next",
 		"title": "",
 		"hide": true,
-		"next": "personal_settings",
+		"next": "personal_info",
 		"class": "",
 	},
 	//Change the language

@@ -26,7 +26,7 @@ $app->get('/', function () use ($app) {
 				}
 			}
 			if($openid = OneSeventySeven::get('wxpukoid')){
-				$app->lincko->data['integration_wechat_show_official'] = false; //true; keep it at true is annoying
+				$app->lincko->data['integration_wechat_show_official'] = true; //true; keeping it at true is annoying because it logs to Lincko then forward to wechat (so leaving Lincko)
 				$option['appid'] = $app->lincko->integration->wechat['public_appid'];
 				$option['secret'] = $app->lincko->integration->wechat['public_secretapp'];
 				$option['access_token'] = WechatPublic::access_token();

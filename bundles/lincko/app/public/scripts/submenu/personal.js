@@ -1,240 +1,3 @@
-submenu_list['personal_settings'] = {
-	"_title": {
-		"style": "customized_title",
-		"title": Lincko.Translation.get('app', 46, 'html'), //Personal Settings
-	},
-	"left_button": {
-		"style": "title_left_button",
-		"title": Lincko.Translation.get('app', 25, 'html'), //Close
-		'hide': true,
-		"class": "base_pointer",
-	},
-	"profile_picture": {
-		"style": "profile_photo",
-		"title": "",
-	},
-	"nickname": {
-		"style": "profile_input",
-		"title": Lincko.Translation.get('app', 47, 'html'), //Nickname
-		"value": function(){
-			var val = Lincko.storage.get('users', wrapper_localstorage.uid, 'username');
-			if(!val){ return ""; }
-			return wrapper_to_html(val);
-		},
-		"action": function(Elem, subm, now, force){
-			if(typeof now == "undefined"){ now = false; }
-			if(typeof force == "undefined"){ force = false; }
-			var val_old = Lincko.storage.get('users', wrapper_localstorage.uid, 'username');
-			var val_new = Elem.find("[find=submenu_value]").val();
-			if(!force && val_new==""){
-				return true;
-			}
-			var timer = wrapper_timeout_timer*10;
-			if(now){
-				timer = 0;
-			}
-			if(val_new != val_old){
-				clearTimeout(submenu_profile_timer['username']);
-				submenu_profile_timer['username'] = setTimeout(function(){
-					wrapper_sendAction(
-						{
-							"id": wrapper_localstorage.uid,
-							"username": val_new,
-						},
-						'post',
-						'user/update'
-					);
-				}, timer);
-			}
-		},
-	},
-	"personal_lincko": {
-		"style": "button",
-		"title": Lincko.Translation.get('app', 82, 'html'), //Create or Link a Lincko account
-		"action": function(Elem, subm){
-			submenu_Build('personal_lincko', subm.layer + 1, true, null, subm.preview);
-		},
-		"class": "submenu_deco_info_wrap submenu_deco_integration",
-		"now": function(Elem, subm){
-			Elem.find("[find=submenu_button_value]").remove();
-			var logo = $('<img>');
-			logo.addClass('submenu_personal_integration_icon floatleft').prop("src", app_application_logo_lincko.src);
-			var title = Elem.find("[find=submenu_button_title]").addClass("submenu_deco_info_wrap").empty().append(logo);
-			var msg = Lincko.Translation.get('app', 82, 'html'); //Create or Link a Lincko account
-			var integration = Lincko.storage.get('users', wrapper_localstorage.uid, 'integration');
-			if(integration && typeof integration["lincko"] != "undefined"){
-				msg = integration["lincko"];
-				title.append(msg);
-				title.addClass('submenu_deco_info submenu_personal_info_value');
-				Elem.off('click');
-			} else {
-				title.append(msg);
-				var next = $('<img>');
-				next.addClass('submenu_icon submenu_icon_next floatright').prop("src", submenu_personal_next_icon.src);
-				title.append(next);
-				title.addClass('submenu_deco_pointer');
-			}
-		},
-	},
-	"personal_integration_wechat": {
-		"style": "button",
-		"title": Lincko.Translation.get('app', 80, 'html'), //Attach my Wechat account 
-		"action": function(Elem, subm){
-			submenu_Build('personal_integration_wechat', subm.layer + 1, true, null, subm.preview);
-		},
-		"class": "submenu_deco_info_wrap submenu_deco_integration",
-		"now": function(Elem, subm){
-			Elem.find("[find=submenu_button_value]").remove();
-			var logo = $('<img>');
-			logo.addClass('submenu_personal_integration_icon floatleft').prop("src", app_application_logo_wechat.src);
-			var title = Elem.find("[find=submenu_button_title]").addClass("submenu_deco_info_wrap").empty().append(logo);
-			var msg = Lincko.Translation.get('app', 80, 'html'); //Attach my Wechat account
-			var integration = Lincko.storage.get('users', wrapper_localstorage.uid, 'integration');
-			if(integration && typeof integration["wechat"] != "undefined"){
-				msg = integration["wechat"];
-				title.append(msg);
-				title.addClass('submenu_deco_info submenu_personal_info_value');
-				Elem.off('click');
-			} else if(isMobileBrowser() || isMobileApp() || navigator.userAgent.match(/MicroMessenger/i)){ //We add the option because it's not convenient to register to wechat via a mobile or wechat itself
-				title.addClass('submenu_deco_info submenu_personal_info_value');
-				Elem.addClass('display_none');
-				Elem.off('click');
-			} else {
-				title.append(msg);
-				var next = $('<img>');
-				next.addClass('submenu_icon submenu_icon_next floatright').prop("src", submenu_personal_next_icon.src);
-				title.append(next);
-				title.addClass('submenu_deco_pointer');
-			}
-		},
-	},
-	"qrcode": {
-		"style": "profile_info",
-		"title": Lincko.Translation.get('app', 68, 'html'), //My QR code
-		"value": function(){
-			var qrcode = $('<img>');
-			qrcode.attr('src', Lincko.storage.generateMyQRcode());
-			qrcode.addClass('submenu_personal_profile_picture');
-			return qrcode;
-		},
-	},
-	"myurl": {
-		"style": "button",
-		"title": Lincko.Translation.get('app', 69, 'html'), //Copy My URL to the clipboard
-		"class": "submenu_deco submenu_deco_info_wrap display_none",
-		"now": function(Elem, subm){
-			Elem.removeClass('display_none');
-			Elem.find("[find=submenu_button_value]").remove();
-			Elem.attr('data-clipboard-text', Lincko.storage.generateMyURL());
-			var myurl = new Clipboard(Elem[0]);
-			myurl.on('success', function(e) {
-				base_show_error(Lincko.Translation.get('app', 70, 'html'), false); //URL copied to the clipboard
-				e.clearSelection();
-			});
-			myurl.on('error', function(e) {
-				base_show_error(Lincko.Translation.get('app', 71, 'html'), true); //Your system does not allow to copy to the clipboard
-				e.clearSelection();
-			});
-			app_application_lincko.add(
-				subm.id,
-				'submenu_hide_'+subm.preview+'_'+subm.id,
-				function(){
-					var myurl = this.action_param;
-					if(myurl){
-						myurl.destroy();
-					}
-				},
-				myurl
-			);
-		}
-	},
-	"given_name": {
-		"style": "profile_input",
-		"title": Lincko.Translation.get('app', 48, 'html'), //Given Name
-		"input": "firstname",
-		"value": function(){
-			var val = Lincko.storage.get('users', wrapper_localstorage.uid, 'firstname');
-			if(!val){ return ""; }
-			return wrapper_to_html(val);
-		},
-		"action": function(Elem, subm, now, force){
-			if(typeof now == "undefined"){ now = false; }
-			if(typeof force == "undefined"){ force = false; }
-			var val_old = Lincko.storage.get('users', wrapper_localstorage.uid, 'firstname');
-			var val_new = Elem.find("[find=submenu_value]").val();
-			if(!force && val_new==""){
-				return true;
-			}
-			var timer = wrapper_timeout_timer*10;
-			if(now){
-				timer = 0;
-			}
-			if(val_new != val_old){
-				clearTimeout(submenu_profile_timer['firstname']);
-				submenu_profile_timer['firstname'] = setTimeout(function(){
-					wrapper_sendAction(
-						{
-							"id": wrapper_localstorage.uid,
-							"firstname": val_new,
-						},
-						'post',
-						'user/update'
-					);
-				}, timer);
-			}
-		},
-	},
-	"family_name": {
-		"style": "profile_input",
-		"title": Lincko.Translation.get('app', 49, 'html'), //Family Name
-		"input": "lastname",
-		"value": function(){
-			var val = Lincko.storage.get('users', wrapper_localstorage.uid, 'lastname');
-			if(!val){ return ""; }
-			return wrapper_to_html(val);
-		},
-		"action": function(Elem, subm, now, force){
-			if(typeof now == "undefined"){ now = false; }
-			if(typeof force == "undefined"){ force = false; }
-			var val_old = Lincko.storage.get('users',  wrapper_localstorage.uid, 'lastname');
-			var val_new = Elem.find("[find=submenu_value]").val();
-			if(!force && val_new==""){
-				return true;
-			}
-			var timer = wrapper_timeout_timer*10;
-			if(now){
-				timer = 0;
-			}
-			if(val_new != val_old){
-				clearTimeout(submenu_profile_timer['lastname']);
-				submenu_profile_timer['lastname'] = setTimeout(function(){
-					wrapper_sendAction(
-						{
-							"id": wrapper_localstorage.uid,
-							"lastname": val_new,
-						},
-						'post',
-						'user/update'
-					);
-				}, timer);
-			}
-		},
-	},
-	"message": {
-		"style": "button",
-		"title": Lincko.Translation.get('app', 54, 'html'), //Send a message
-		"class": "submenu_deco",
-		"action": function(Elem, subm){
-			submenu_chat_open_single(subm, subm.param);
-		},
-	},
-	"space": {
-		"style": "space",
-		"title": "space",
-		"value": 80,
-	},
-};
-
 submenu_list['personal_info'] = {
 	"_title": {
 		"style": "customized_title",
@@ -246,13 +9,186 @@ submenu_list['personal_info'] = {
 		'hide': true,
 		"class": "base_pointer",
 	},
+	"_pre_action": {
+		"style": "preAction",
+		"action": function(Elem, subm){
+			subm.focuson = false;
+			subm.param_namecard = {};
+			//Priority on current Workspaces, then shared Workspaces, then Users
+			var val = Lincko.storage.get('users', subm.param);
+			subm.param_namecard.id = false;
+			subm.param_namecard.parent_id = subm.param;
+			subm.param_namecard.username = val['-username'];
+			if(val['-firstname']!=null){ subm.param_namecard.firstname = val['-firstname']; };
+			if(val['-lastname']!=null){ subm.param_namecard.lastname = val['-lastname']; };
+			if(Lincko.storage.getWORKID()>0){
+				if(val['email']!=null){ subm.param_namecard.email = val['email']; };
+			}
+			var namecards = Lincko.storage.list('namecards', -1, null, 'users', subm.param);
+			namecards = Lincko.storage.sort_items(namecards, 'workspaces_id', 0, -1, true); //From shared (0) to current (higher ID)
+			for(var i in namecards){
+				var val = namecards[i];
+				if(val['workspaces_id'] == Lincko.storage.getWORKID()){
+					subm.param_namecard.id = val['workspaces_id'];
+				}
+				if(val['workspaces_id']>0){
+					if(val['-username']!=null){ subm.param_namecard.username = val['-username']; };
+					if(val['-firstname']!=null){ subm.param_namecard.firstname = val['-firstname']; };
+					if(val['-lastname']!=null){ subm.param_namecard.lastname = val['-lastname']; };
+				}
+				if(val['address']!=null){ subm.param_namecard.address = $('<div>').text(val['address']).text(); };
+				if(val['phone']!=null){ subm.param_namecard.phone = val['phone']; };
+				if(val['business']!=null){ subm.param_namecard.business = $('<div>').text(val['business']).text(); };
+				if(val['additional']!=null){ subm.param_namecard.additional = $('<div>').text(val['additional']).text(); };
+				if(val['linkedin']!=null){ subm.param_namecard.linkedin = val['linkedin']; };
+			}
+		},
+	},
 	"profile_picture": {
 		"style": "profile_photo",
 		"title": "",
+	},
+	"nickname": {
+		"style": "profile_input",
+		"title": Lincko.Translation.get('app', 47, 'html'), //Nickname
 		"value": function(Elem, subm){
-			var val = Lincko.storage.get('users', subm.param, 'username');
+			var val = false;
+			if(typeof subm.param_namecard.username != 'undefined'){
+				val = subm.param_namecard.username;
+			}
 			if(!val){ return ""; }
 			return wrapper_to_html(val);
+		},
+		"action": function(Elem, subm, now, force){
+			if(typeof now == "undefined"){ now = false; }
+			if(typeof force == "undefined"){ force = false; }
+			var val_new = Elem.find("[find=submenu_value]").val();
+			if(!force && val_new==""){
+				return true;
+			}
+			//For shared workspace, do not update others
+			if(!Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id){
+				return true;
+			} else if(Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id && !Lincko.storage.amIsuper()){
+				return true;
+			}
+			var timer = wrapper_timeout_timer*10;
+			if(now){
+				timer = 0;
+			}
+			if(val_new != subm.param_namecard.username){
+				clearTimeout(submenu_profile_timer['username']);
+				submenu_profile_timer['username'] = setTimeout(function(namecard){
+					var val_old = namecard.username;
+					namecard.username = val_new;
+					if(!Lincko.storage.getWORKID()){
+						wrapper_sendAction(
+							{
+								"id": namecard.parent_id,
+								"username": val_new,
+							},
+							'post',
+							'user/update',
+							null,
+							function(){
+								namecard.username = val_old;
+							}
+						);
+					} else {
+						wrapper_sendAction(
+							{
+								"parent_id": namecard.parent_id,
+								"username": val_new,
+							},
+							'post',
+							'namecard/change',
+							null,
+							function(){
+								namecard.username = val_old;
+							}
+						);
+					}
+				}, timer, subm.param_namecard);
+			}
+		},
+		"now": function(Elem, subm){
+			if(wrapper_localstorage.uid!=subm.param_namecard.parent_id){
+				if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+					Elem.find("[find=submenu_value]")
+						.removeClass('selectable')
+						.addClass('unselectable')
+						.addClass('submenu_personal_input_readonly')
+						.prop('readonly', true);
+				}
+			}
+		},
+	},
+	"personal_lincko": {
+		"style": "button",
+		"title": Lincko.Translation.get('app', 82, 'html'), //Create or Link a Lincko account
+		"action": function(Elem, subm){
+			submenu_Build('personal_lincko', subm.layer + 1, true, null, subm.preview);
+		},
+		"class": "submenu_deco_info_wrap submenu_deco_integration",
+		"now": function(Elem, subm){
+			if(wrapper_localstorage.uid!=subm.param_namecard.parent_id){
+				Elem.addClass('display_none');
+			} else {
+				Elem.find("[find=submenu_button_value]").remove();
+				var logo = $('<img>');
+				logo.addClass('submenu_personal_integration_icon floatleft').prop("src", app_application_logo_lincko.src);
+				var title = Elem.find("[find=submenu_button_title]").addClass("submenu_deco_info_wrap").empty().append(logo);
+				var msg = Lincko.Translation.get('app', 82, 'html'); //Create or Link a Lincko account
+				var integration = Lincko.storage.get('users', wrapper_localstorage.uid, 'integration');
+				if(integration && typeof integration["lincko"] != "undefined"){
+					msg = integration["lincko"];
+					title.append(msg);
+					title.addClass('submenu_deco_info submenu_personal_info_value');
+					Elem.off('click');
+				} else {
+					title.append(msg);
+					var next = $('<img>');
+					next.addClass('submenu_icon submenu_icon_next floatright').prop("src", submenu_personal_next_icon.src);
+					title.append(next);
+					title.addClass('submenu_deco_pointer');
+				}
+			}
+		},
+	},
+	"personal_integration_wechat": {
+		"style": "button",
+		"title": Lincko.Translation.get('app', 80, 'html'), //Attach my Wechat account 
+		"action": function(Elem, subm){
+			submenu_Build('personal_integration_wechat', subm.layer + 1, true, null, subm.preview);
+		},
+		"class": "submenu_deco_info_wrap submenu_deco_integration",
+		"now": function(Elem, subm){
+			if(wrapper_localstorage.uid!=subm.param_namecard.parent_id){
+				Elem.addClass('display_none');
+			} else {
+				Elem.find("[find=submenu_button_value]").remove();
+				var logo = $('<img>');
+				logo.addClass('submenu_personal_integration_icon floatleft').prop("src", app_application_logo_wechat.src);
+				var title = Elem.find("[find=submenu_button_title]").addClass("submenu_deco_info_wrap").empty().append(logo);
+				var msg = Lincko.Translation.get('app', 80, 'html'); //Attach my Wechat account
+				var integration = Lincko.storage.get('users', wrapper_localstorage.uid, 'integration');
+				if(integration && typeof integration["wechat"] != "undefined"){
+					msg = integration["wechat"];
+					title.append(msg);
+					title.addClass('submenu_deco_info submenu_personal_info_value');
+					Elem.off('click');
+				} else if(isMobileBrowser() || isMobileApp() || navigator.userAgent.match(/MicroMessenger/i)){ //We add the option because it's not convenient to register to wechat via a mobile or wechat itself
+					title.addClass('submenu_deco_info submenu_personal_info_value');
+					Elem.addClass('display_none');
+					Elem.off('click');
+				} else {
+					title.append(msg);
+					var next = $('<img>');
+					next.addClass('submenu_icon submenu_icon_next floatright').prop("src", submenu_personal_next_icon.src);
+					title.append(next);
+					title.addClass('submenu_deco_pointer');
+				}
+			}
 		},
 	},
 	"qrcode": {
@@ -271,15 +207,6 @@ submenu_list['personal_info'] = {
 			if(subm.param == wrapper_localstorage.uid){
 				Elem.removeClass('display_none');
 			}
-		},
-	},
-	"nickname": {
-		"style": "profile_info",
-		"title": Lincko.Translation.get('app', 47, 'html'), //Nickname
-		"value": function(Elem,subm){
-			var val = Lincko.storage.get('users',  subm.param, 'username');
-			if(!val){ return ""; }
-			return wrapper_to_html(val);
 		},
 	},
 	"myurl": {
@@ -311,26 +238,541 @@ submenu_list['personal_info'] = {
 					myurl
 				);
 			}
-		}
+		},
 	},
 	"given_name": {
-		"style": "profile_info",
+		"style": "profile_input",
 		"title": Lincko.Translation.get('app', 48, 'html'), //Given Name
 		"value": function(Elem, subm){
-			var val = Lincko.storage.get('users', subm.param, 'firstname');
+			var val = false;
+			if(typeof subm.param_namecard.firstname != 'undefined'){
+				val = subm.param_namecard.firstname;
+			}
 			if(!val){ return ""; }
 			return wrapper_to_html(val);
+		},
+		"action": function(Elem, subm, now, force){
+			if(typeof now == "undefined"){ now = false; }
+			if(typeof force == "undefined"){ force = false; }
+			var val_new = Elem.find("[find=submenu_value]").val();
+			if(!force && val_new==""){
+				return true;
+			}
+			//For shared workspace, do not update others
+			if(!Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id){
+				return true;
+			} else if(Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id && !Lincko.storage.amIsuper()){
+				return true;
+			}
+			var timer = wrapper_timeout_timer*10;
+			if(now){
+				timer = 0;
+			}
+			if(val_new != subm.param_namecard.firstname){
+				clearTimeout(submenu_profile_timer['firstname']);
+				submenu_profile_timer['firstname'] = setTimeout(function(namecard){
+					var val_old = namecard.firstname;
+					namecard.firstname = val_new;
+					if(!Lincko.storage.getWORKID()){
+						wrapper_sendAction(
+							{
+								"id": namecard.parent_id,
+								"firstname": val_new,
+							},
+							'post',
+							'user/update',
+							null,
+							function(){
+								namecard.firstname = val_old;
+							}
+						);
+					} else {
+						wrapper_sendAction(
+							{
+								"parent_id": namecard.parent_id,
+								"firstname": val_new,
+							},
+							'post',
+							'namecard/change',
+							null,
+							function(){
+								namecard.firstname = val_old;
+							}
+						);
+					}
+				}, timer, subm.param_namecard);
+			}
+		},
+		"now": function(Elem, subm){
+			if(wrapper_localstorage.uid!=subm.param_namecard.parent_id){
+				if(!subm.param_namecard.firstname){
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+						Elem.addClass('display_none');
+					}
+				} else {
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+						Elem.find("[find=submenu_value]")
+							.removeClass('selectable')
+							.addClass('unselectable')
+							.addClass('submenu_personal_input_readonly')
+							.prop('readonly', true);
+					}
+				}
+			}
 		},
 	},
 	"family_name": {
-		"style": "profile_info",
+		"style": "profile_input",
 		"title": Lincko.Translation.get('app', 49, 'html'), //Family Name
 		"value": function(Elem, subm){
-			var val = Lincko.storage.get('users', subm.param, 'lastname');
+			var val = false;
+			if(typeof subm.param_namecard.lastname != 'undefined'){
+				val = subm.param_namecard.lastname;
+			}
 			if(!val){ return ""; }
 			return wrapper_to_html(val);
 		},
+		"action": function(Elem, subm, now, force){
+			if(typeof now == "undefined"){ now = false; }
+			if(typeof force == "undefined"){ force = false; }
+			var val_new = Elem.find("[find=submenu_value]").val();
+			if(!force && val_new==""){
+				return true;
+			}
+			//For shared workspace, do not update others
+			if(!Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id){
+				return true;
+			} else if(Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id && !Lincko.storage.amIsuper()){
+				return true;
+			}
+			var timer = wrapper_timeout_timer*10;
+			if(now){
+				timer = 0;
+			}
+			if(val_new != subm.param_namecard.lastname){
+				clearTimeout(submenu_profile_timer['lastname']);
+				submenu_profile_timer['lastname'] = setTimeout(function(namecard){
+					var val_old = namecard.lastname;
+					namecard.lastname = val_new;
+					if(!Lincko.storage.getWORKID()){
+						wrapper_sendAction(
+							{
+								"id": namecard.parent_id,
+								"lastname": val_new,
+							},
+							'post',
+							'user/update',
+							null,
+							function(){
+								namecard.lastname = val_old;
+							}
+						);
+					} else {
+						wrapper_sendAction(
+							{
+								"parent_id": namecard.parent_id,
+								"lastname": val_new,
+							},
+							'post',
+							'namecard/change',
+							null,
+							function(){
+								namecard.lastname = val_old;
+							}
+						);
+					}
+				}, timer, subm.param_namecard);
+			}
+		},
+		"now": function(Elem, subm){
+			if(wrapper_localstorage.uid!=subm.param_namecard.parent_id){
+				if(!subm.param_namecard.lastname){
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+						Elem.addClass('display_none');
+					}
+				} else {
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+						Elem.find("[find=submenu_value]")
+							.removeClass('selectable')
+							.addClass('unselectable')
+							.addClass('submenu_personal_input_readonly')
+							.prop('readonly', true);
+					}
+				}
+			}
+		},
 	},
+	"email": {
+		"style": "profile_info",
+		"title": Lincko.Translation.get('app', 85, 'html'), //Email
+		"class": "display_none",
+		"value": function(Elem, subm){
+			if(!Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id){
+				return "";
+			}
+			var val = Lincko.storage.get('users', subm.param, 'email');
+			if(!val){
+				return "";
+			}
+			Elem.removeClass('display_none');
+			return wrapper_to_html(val);
+		},
+	},
+	"linkedin": {
+		"style": "profile_input",
+		"title": "LinkedIn",
+		"value": function(Elem, subm){
+			var val = false;
+			if(typeof subm.param_namecard.linkedin != 'undefined'){
+				val = subm.param_namecard.linkedin;
+			}
+			if(!val){ return ""; }
+			return wrapper_to_html(val);
+		},
+		"action": function(Elem, subm, now, force){
+			if(typeof now == "undefined"){ now = false; }
+			if(typeof force == "undefined"){ force = false; }
+			var val_new = Elem.find("[find=submenu_value]").val();
+			if(!force && val_new==""){
+				return true;
+			}
+			//For shared workspace, do not update others
+			if(!Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id){
+				return true;
+			} else if(Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id && !Lincko.storage.amIsuper()){
+				return true;
+			}
+			var timer = wrapper_timeout_timer*10;
+			if(now){
+				timer = 0;
+			}
+			if(val_new != subm.param_namecard.linkedin){
+				clearTimeout(submenu_profile_timer['linkedin']);
+				submenu_profile_timer['linkedin'] = setTimeout(function(namecard){
+					var val_old = namecard.linkedin;
+					namecard.linkedin = val_new;
+					wrapper_sendAction(
+						{
+							"parent_id": namecard.parent_id,
+							"linkedin": val_new,
+						},
+						'post',
+						'namecard/change',
+						null,
+						function(){
+							namecard.linkedin = val_old;
+						}
+					);
+				}, timer, subm.param_namecard);
+			}
+		},
+		"now": function(Elem, subm){
+			if(wrapper_localstorage.uid!=subm.param_namecard.parent_id){
+				if(!subm.param_namecard.linkedin){
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+						Elem.addClass('display_none');
+					}
+				} else {
+					var namecard = subm.param_namecard;
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+						Elem.find("[find=submenu_value]")
+							.removeClass('selectable')
+							.addClass('unselectable')
+							.addClass('submenu_personal_linkedin_readonly')
+							.prop('readonly', true)
+							.on('focus', function(event){
+								event.stopPropagation();
+								window.open(namecard.linkedin, "_blank");
+								this.blur();
+							});
+						Elem
+							.addClass('submenu_personal_url')
+							.on('click', function(event){
+								window.open(namecard.linkedin, "_blank");
+							});
+							
+					}
+				}
+			}
+		},
+	},
+	"phone": {
+		"style": "profile_input",
+		"title": Lincko.Translation.get('app', 104, 'html'), //Phone
+		"value": function(Elem, subm){
+			var val = false;
+			if(typeof subm.param_namecard.phone != 'undefined'){
+				val = subm.param_namecard.phone;
+			}
+			if(!val){ return ""; }
+			return wrapper_to_html(val);
+		},
+		"action": function(Elem, subm, now, force){
+			if(typeof now == "undefined"){ now = false; }
+			if(typeof force == "undefined"){ force = false; }
+			var val_new = Elem.find("[find=submenu_value]").val();
+			if(!force && val_new==""){
+				return true;
+			}
+			//For shared workspace, do not update others
+			if(!Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id){
+				return true;
+			} else if(Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id && !Lincko.storage.amIsuper()){
+				return true;
+			}
+			var timer = wrapper_timeout_timer*10;
+			if(now){
+				timer = 0;
+			}
+			if(val_new != subm.param_namecard.phone){
+				clearTimeout(submenu_profile_timer['phone']);
+				submenu_profile_timer['phone'] = setTimeout(function(namecard){
+					var val_old = namecard.phone;
+					namecard.phone = val_new;
+					wrapper_sendAction(
+						{
+							"parent_id": namecard.parent_id,
+							"phone": val_new,
+						},
+						'post',
+						'namecard/change',
+						null,
+						function(){
+							namecard.phone = val_old;
+						}
+					);
+				}, timer, subm.param_namecard);
+			}
+		},
+		"now": function(Elem, subm){
+			if(wrapper_localstorage.uid!=subm.param_namecard.parent_id){
+				if(!subm.param_namecard.phone){
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+						Elem.addClass('display_none');
+					}
+				} else {
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+						Elem.find("[find=submenu_value]")
+							.removeClass('selectable')
+							.addClass('unselectable')
+							.addClass('submenu_personal_input_readonly')
+							.prop('readonly', true);
+					}
+				}
+			}
+		},
+	},
+	"address": {
+		"style": "profile_textarea",
+		"title": Lincko.Translation.get('app', 105, 'html'), //Address
+		"name": "address",
+		"value": function(Elem, subm){
+			var val = false;
+			if(typeof subm.param_namecard.address != 'undefined'){
+				val = subm.param_namecard.address;
+			}
+			if(!val){ return ""; }
+			return val;
+		},
+		"class": "submenu_deco_read_personal_textarea",
+		"action": function(Elem, subm, now, force){
+			if(typeof now == "undefined"){ now = false; }
+			if(typeof force == "undefined"){ force = false; }
+			var val_new = Elem.find("[find=submenu_value]").html();
+			val_new = $('<div>').text(php_br2nl(base_removeLineBreaks(val_new))).text();
+			if(!force && val_new==""){
+				return true;
+			}
+			//For shared workspace, do not update others
+			if(!Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id){
+				return true;
+			} else if(Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id && !Lincko.storage.amIsuper()){
+				return true;
+			}
+			var timer = wrapper_timeout_timer*10;
+			if(now){
+				timer = 0;
+			}
+			if(val_new != subm.param_namecard.address){
+				clearTimeout(submenu_profile_timer['address']);
+				submenu_profile_timer['address'] = setTimeout(function(namecard){
+					var val_old = namecard.address;
+					namecard.address = val_new;
+					wrapper_sendAction(
+						{
+							"parent_id": namecard.parent_id,
+							"address": val_new,
+						},
+						'post',
+						'namecard/change',
+						null,
+						function(){
+							namecard.address = val_old;
+						}
+					);
+				}, timer, subm.param_namecard);
+			}
+		},
+		"now": function(Elem, subm){
+			if(wrapper_localstorage.uid!=subm.param_namecard.parent_id){
+				if(!subm.param_namecard.address){
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+						Elem.addClass('display_none');
+					}
+				} else {
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+						Elem.find("[find=submenu_value]")
+							.removeClass('selectable')
+							.addClass('unselectable')
+							.addClass('submenu_personal_textarea_readonly')
+							.removeAttr('contenteditable')
+							.prop('readonly', true);
+					}
+				}
+			}
+		},
+	},
+	"business": {
+		"style": "profile_textarea",
+		"title": Lincko.Translation.get('app', 107, 'html'), //Business information
+		"name": "business",
+		"value": function(Elem, subm){
+			var val = false;
+			if(typeof subm.param_namecard.business != 'undefined'){
+				val = subm.param_namecard.business;
+			}
+			if(!val){ return ""; }
+			return val;
+		},
+		"class": "submenu_deco_read_personal_textarea",
+		"action": function(Elem, subm, now, force){
+			if(typeof now == "undefined"){ now = false; }
+			if(typeof force == "undefined"){ force = false; }
+			var val_new = Elem.find("[find=submenu_value]").html();
+			val_new = $('<div>').text(php_br2nl(base_removeLineBreaks(val_new))).text();
+			if(!force && val_new==""){
+				return true;
+			}
+			//For shared workspace, do not update others
+			if(!Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id){
+				return true;
+			} else if(Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id && !Lincko.storage.amIsuper()){
+				return true;
+			}
+			var timer = wrapper_timeout_timer*10;
+			if(now){
+				timer = 0;
+			}
+			if(val_new != subm.param_namecard.business){
+				clearTimeout(submenu_profile_timer['business']);
+				submenu_profile_timer['business'] = setTimeout(function(namecard){
+					var val_old = namecard.business
+					namecard.business = val_new;
+					wrapper_sendAction(
+						{
+							"parent_id": namecard.parent_id,
+							"business": val_new,
+						},
+						'post',
+						'namecard/change',
+						null,
+						function(){
+							namecard.business = val_old;
+						}
+					);
+				}, timer, subm.param_namecard);
+			}
+		},
+		"now": function(Elem, subm){
+			if(wrapper_localstorage.uid!=subm.param_namecard.parent_id){
+				if(!subm.param_namecard.business){
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+						Elem.addClass('display_none');
+					}
+				} else {
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+						Elem.find("[find=submenu_value]")
+							.removeClass('selectable')
+							.addClass('unselectable')
+							.addClass('submenu_personal_textarea_readonly')
+							.removeAttr('contenteditable')
+							.prop('readonly', true);
+					}
+				}
+			}
+		},
+	},
+	"additional": {
+		"style": "profile_textarea",
+		"title": Lincko.Translation.get('app', 106, 'html'), //Additional information
+		"name": "additional",
+		"value": function(Elem, subm){
+			var val = false;
+			if(typeof subm.param_namecard.additional != 'undefined'){
+				val = subm.param_namecard.additional;
+			}
+			if(!val){ return ""; }
+			return val;
+		},
+		"class": "submenu_deco_read_personal_textarea",
+		"action": function(Elem, subm, now, force){
+			if(typeof now == "undefined"){ now = false; }
+			if(typeof force == "undefined"){ force = false; }
+			var val_new = Elem.find("[find=submenu_value]").html();
+			val_new = $('<div>').text(php_br2nl(base_removeLineBreaks(val_new))).text();
+			if(!force && val_new==""){
+				return true;
+			}
+			//For shared workspace, do not update others
+			if(!Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id){
+				return true;
+			} else if(Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id && !Lincko.storage.amIsuper()){
+				return true;
+			}
+			var timer = wrapper_timeout_timer*10;
+			if(now){
+				timer = 0;
+			}
+			if(val_new != subm.param_namecard.additional){
+				clearTimeout(submenu_profile_timer['additional']);
+				submenu_profile_timer['additional'] = setTimeout(function(namecard){
+					var val_old = namecard.additional
+					namecard.additional = val_new;
+					wrapper_sendAction(
+						{
+							"parent_id": namecard.parent_id,
+							"additional": val_new,
+						},
+						'post',
+						'namecard/change',
+						null,
+						function(){
+							namecard.additional = val_old;
+						}
+					);
+				}, timer, subm.param_namecard);
+			}
+		},
+		"now": function(Elem, subm){
+			if(wrapper_localstorage.uid!=subm.param_namecard.parent_id){
+				if(!subm.param_namecard.additional){
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+						Elem.addClass('display_none');
+					}
+				} else {
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+						Elem.find("[find=submenu_value]")
+							.removeClass('selectable')
+							.addClass('unselectable')
+							.addClass('submenu_personal_textarea_readonly')
+							.removeAttr('contenteditable')
+							.prop('readonly', true);
+					}
+				}
+			}
+		},
+	},
+
 	"message": {
 		"style": "button",
 		"title": Lincko.Translation.get('app', 54, 'html'), //Send a message
@@ -661,6 +1103,10 @@ Submenu_select.profile_input = function(subm) {
 	subm.Add_ProfileInput();
 };
 
+Submenu_select.profile_textarea = function(subm) {
+	subm.Add_ProfileTextarea();
+},
+
 Submenu_select.profile_info = function(subm) {
 	subm.Add_ProfileInfo();
 };
@@ -693,7 +1139,7 @@ Submenu.prototype.Add_ProfileDelete = function(subm) {
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
-	if ("now" in attribute && typeof attribute.now === "function") {
+	if ("now" in attribute && typeof attribute.now == "function") {
 		attribute.now(Elem, that);
 	}
 	submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
@@ -724,7 +1170,7 @@ Submenu.prototype.Add_ButtonLink = function(subm) {
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
-	if ("now" in attribute && typeof attribute.now === "function") {
+	if ("now" in attribute && typeof attribute.now == "function") {
 		attribute.now(Elem, that);
 	}
 	submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
@@ -734,7 +1180,6 @@ Submenu.prototype.Add_ButtonLink = function(subm) {
 };
 
 Submenu.prototype.Add_ProfileInput = function() {
-	var perso = Lincko.storage.get('users', wrapper_localstorage.uid);
 	var that = this;
 	var attribute = this.attribute;
 	var Elem = $('#-submenu_app_personal_input').clone();
@@ -744,7 +1189,14 @@ Submenu.prototype.Add_ProfileInput = function() {
 		Elem.addClass(attribute['class']);
 	}
 	Elem.find("[find=submenu_title]").html(attribute.title);
-	Elem.find("[find=submenu_value]").val(attribute.value);
+	if ("value" in attribute) {
+		if(typeof attribute.value == "function"){
+			var value = attribute.value(Elem, that);
+			Elem.find("[find=submenu_value]").val(value);
+		} else {
+			Elem.find("[find=submenu_value]").val(attribute.value);
+		}
+	}
 
 	if ("action" in attribute) {
 		if (!("action_param" in attribute)) {
@@ -766,9 +1218,63 @@ Submenu.prototype.Add_ProfileInput = function() {
 			},
 		});
 	}
-	if ("now" in attribute && typeof attribute.now === "function") {
+	Elem.on('click', function(){
+		Elem.find("[find=submenu_value]").focus();
+	});
+	if ("now" in attribute && typeof attribute.now == "function") {
 		attribute.now(Elem, that);
 	}
+	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
+	return true;
+}
+
+Submenu.prototype.Add_ProfileTextarea = function() {
+	var that = this;
+	var attribute = this.attribute;
+	var Elem = $('#-submenu_app_personal_textarea').clone();
+	var preview = this.preview;
+	Elem.prop("id", '');
+	if ("class" in attribute) {
+		Elem.addClass(attribute['class']);
+	}
+	Elem.find("[find=submenu_title]").html(attribute.title);
+	if ("value" in attribute) {
+		if(typeof attribute.value == "function"){
+			var value = attribute.value(Elem, that);
+			value = php_nl2br(value);
+			Elem.find("[find=submenu_value]").html(value);
+		} else {
+			value = php_nl2br(value);
+			Elem.find("[find=submenu_value]").html(attribute.value);
+		}
+	}
+
+	if ("action" in attribute) {
+		if (!("action_param" in attribute)) {
+			attribute.action_param = null;
+		}
+		Elem.find("[find=submenu_value]").on({
+			focus: function(){ attribute.action(Elem, that) },
+			blur: function(){ attribute.action(Elem, that, true, true) },
+			change: function(){ attribute.action(Elem, that) },
+			copy: function(){ attribute.action(Elem, that) },
+			paste: function(){ attribute.action(Elem, that, true) },
+			cut: function(){ attribute.action(Elem, that, true) },
+			keyup: function(e) {
+				if (e.which != 13) {
+					attribute.action(Elem, that);
+				} else {
+					attribute.action(Elem, that, true, true);
+				}
+			},
+		});
+	}
+	if ("now" in attribute && typeof attribute.now == "function") {
+		attribute.now(Elem, that);
+	}
+	Elem.on('click', function(){
+		Elem.find("[find=submenu_value]").focus();
+	});
 	this.Wrapper().find("[find=submenu_wrapper_content]").append(Elem);
 	return true;
 }
@@ -810,7 +1316,7 @@ Submenu.prototype.Add_ProfileNext = function() {
 		}
 	}
 	Elem.click(function(){
-		submenu_Build("personal_settings", that.layer + 1, true, wrapper_localstorage.uid, that.preview);
+		submenu_Build("personal_info", that.layer + 1, true, wrapper_localstorage.uid, that.preview);
 	});
 	Elem_pic.click(function(event){
 		event.stopPropagation();
@@ -895,7 +1401,7 @@ Submenu.prototype.Add_ProfilePhoto = function() {
 			Elem.find("[find=submenu_profile_user]").html(attribute.value);
 		}
 	}
-	if ("now" in attribute && typeof attribute.now === "function") {
+	if ("now" in attribute && typeof attribute.now == "function") {
 		attribute.now(Elem, that);
 	}
 	var Elem_pic = Elem.find("[find=submenu_profile_upload_picture]");
@@ -992,7 +1498,7 @@ Submenu.prototype.Add_ProfileInfo = function() {
 			attribute.action(Elem, that, event.data);
 		});
 	}
-	if ("now" in attribute && typeof attribute.now === "function") {
+	if ("now" in attribute && typeof attribute.now == "function") {
 		attribute.now(Elem, that);
 	}
 	Elem.find("[find=submenu_title]").html(attribute.title);

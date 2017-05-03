@@ -133,7 +133,7 @@ var submenu_projects_build_archives = function(){
 				"style": "button",
 				"title": title,
 				"hide": true,
-				"value": 'click to restore', //toto
+				"value": Lincko.Translation.get('app', 2505, 'html'), //click to restore
 				"action_param": projects_id,
 				"action": function(Elem, subm, projects_id){
 					submenu_Hideall(subm.preview);

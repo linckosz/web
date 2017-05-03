@@ -92,18 +92,62 @@
 }
 
 .submenu_personal_input_value {
-	width: 100%;
-	border-color: transparent;
+	width: 96%;
+	border: solid 1px transparent;
 	background-color: transparent;
 	font-size: 14px;
+	padding: 8px 4px;
+	margin-left: -4px;
 }
 
-.submenu_personal_input_value:hover {
+.submenu_deco_read:hover .submenu_personal_input_value, .submenu_personal_input_value:focus {
 	background-color: rgba(255, 255, 255, 0.8);
+	border-color: #EBEFF3;
+}
+
+.submenu_personal_input_readonly, .submenu_personal_textarea_readonly {
+	background-color: transparent !important;
+	border-color: transparent !important;
+	cursor: default !important;
+}
+
+.submenu_personal_linkedin_readonly {
+	background-color: transparent !important;
+	border-color: transparent !important;
+	cursor: pointer !important;
 }
 
 .submenu_personal_info_value {
 	color: #ABABAB;
+}
+
+.submenu_deco_read_personal_textarea {
+	display: block;
+	height: auto;
+	padding: 6px 0;
+}
+
+.submenu_personal_textarea {
+	width: 86%;
+	padding: 4px;
+	font-size: 14px;
+	color: #000000;
+	background-color: transparent;
+	border-radius: 2px;
+	border: solid 1px transparent;
+	margin-left: 5%;
+	cursor: text;
+	resize: none;
+	min-height: 12px;
+}
+
+.submenu_deco_read:hover .submenu_personal_textarea, .submenu_personal_textarea:focus {
+	background-color: rgba(255, 255, 255, 0.8);
+	border-color: #EBEFF3;
+}
+
+.submenu_personal_url {
+	cursor: pointer !important;
 }
 
 .submenu_info_title {

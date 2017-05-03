@@ -33,7 +33,7 @@ function home_valid_email(email){
 	var valid = true;
 	if(typeof base_input_field === 'object'){
 		if("email" in base_input_field){
-			if(typeof base_input_field["email"].valid === "function" && typeof base_input_field["email"].error_msg === "function"){
+			if(typeof base_input_field["email"].valid == "function" && typeof base_input_field["email"].error_msg == "function"){
 				if(!base_input_field["email"].valid(email)){
 					var data = base_input_field["email"].error_msg();
 					if(typeof base_show_error === 'function'){
