@@ -782,6 +782,7 @@ inputter.prototype.buildLayer = function()
 		},0);
 	});
 
+
 	var inputter_current_audio_touch_clientY = 0;
 	var inputter_start_audio_touch_clientY = 0;
 	var inputter_audio_operation_interval;
@@ -845,6 +846,7 @@ inputter.prototype.buildLayer = function()
 				});
 			}
 			else if(device_type() == 'android'){
+				
 				android.audio_start();
 			}
 			
@@ -865,7 +867,6 @@ inputter.prototype.buildLayer = function()
 
 		if(inputter_audio_operation_status==1){
 			//toto:IOS、android FUNCTION SEND
-
 			if(isMobileApp()){
 				if(device_type() == 'ios'){
 					window.webkit.messageHandlers.iOS.postMessage(
@@ -873,31 +874,29 @@ inputter.prototype.buildLayer = function()
 						action: 'audio_send',
 						value:{
 							call_back:'audio_native_callback',
+							type:that.upload_ptype,
+							pid:that.upload_pid
 						}
 					});
 				}
 				else if(device_type() == 'android'){
-					android.audio_send('audio_native_callback');
+					android.audio_send('audio_native_callback',that.upload_ptype,that.upload_pid);
 				}	
 			}
 
-			function audio_native_callback(audio_base64){
-				//toto:sendAction
-				//toto:display
-			}
-
-		
 		}
 		else if(inputter_audio_operation_status==2){
 			//toto:IOS、android FUNCTION CANCEL
-			if(device_type() == 'ios'){
-				window.webkit.messageHandlers.iOS.postMessage(
-				{
-					action: 'audio_cancel',
-				});
-			}
-			else if(device_type() == 'android'){
-				android.audio_cancel();
+			if(isMobileApp()){
+				if(device_type() == 'ios'){
+					window.webkit.messageHandlers.iOS.postMessage(
+					{
+						action: 'audio_cancel',
+					});
+				}
+				else if(device_type() == 'android'){
+					android.audio_cancel();
+				}
 			}
 		
 		}
@@ -1077,6 +1076,28 @@ inputter.prototype.buildLayer = function()
 	container.on('resize',function(){
 		//dom.resize(); it will trigger the window.resize();
 	});
+}
 
 
+
+function audio_native_callback(base64,parm){
+	//toto:sendAction
+	if(typeof parm=='string')
+	{
+		parm = JSON.parse(parm);
+	}
+	wrapper_sendAction({data: base64, parent_type:parm.type,parent_id:parm.pid}, 'post', 'file/voice',function(){
+			alert(1);//成功
+		},
+		function(){
+			alert(2);//失败
+		},
+		function(){
+			alert(3);//发送准备
+		},
+		function(){
+			alert(4);//发送完成
+		}
+	);
+	//toto:display
 }

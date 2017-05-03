@@ -9,7 +9,6 @@
 </div>
 <div id="end_models_history" class="visibility_hidden"></div>
 <div class="display_none">
-
 	<li id="-models_history_loading" class="models_history_loading">
 		<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
 	</li>
@@ -121,6 +120,7 @@
 			</div>
 		</div>
 	</li>
+
 	<li id="-models_history_uploaded_file" class="clear models_history_wrapper">
 		{% include "/bundles/lincko/app/templates/models/include/history_base.twig" %}
 		<div class="models_history_content_wrapper">
@@ -139,6 +139,7 @@
 			</div>
 		</div>
 	</li>
+
 	<li id="-models_history_uploading_file" class="clear models_history_wrapper">
 		{% include "/bundles/lincko/app/templates/models/include/history_base.twig" %}
 		<div class="models_history_content_wrapper">
@@ -161,6 +162,20 @@
 						<p class="uploading_action"></p>
 					</div>
 				</div>
+			</div>
+		</div>
+	</li>
+
+
+	<li id="-models_history_audio" class="clear models_history_wrapper">
+		{% include "/bundles/lincko/app/templates/models/include/history_base.twig" %}
+		<div class="models_history_content_wrapper">
+			<div find="timestamp" class="models_history_standard_timestamp">
+				<p class="date"></p>
+				<p class="time"></p>
+			</div>
+			<div find="audio_containner" class="models_history_content">
+				
 			</div>
 		</div>
 	</li>

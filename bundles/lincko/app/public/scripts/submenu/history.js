@@ -1,7 +1,6 @@
 /* Category 31 */
 var BaseItemCls = function(record,type, disableActionClick)
 {
-
 	this.style = '';
 
 	//according to type
@@ -53,9 +52,14 @@ var BaseItemCls = function(record,type, disableActionClick)
 				this.profile = app_application_icon_monkeyking.src;
 			}
 			this.timestamp = record["created_at"];
-			if(record['_type'] == 'files')
-			{
-				this.style = 'file';
+			if(record['_type'] == 'files'){
+				console.log(record);
+				if(record['category'] == 'voice'){
+					this.style = 'audio';
+				}
+				else{
+					this.style = 'file';
+				}
 			}
 			else if(record['_type'] == 'comments' || record['_type'] == 'messages')
 			{
@@ -87,6 +91,9 @@ var BaseItemCls = function(record,type, disableActionClick)
 		case 'activity' :
 			this.data = this.data_category_cls(record,type);
 			this.data.disableActionClick = disableActionClick;
+			break;
+		case 'audio' :
+			this.data = new AudioContentCls(record,type);
 			break;
 		case 'file' :
 			this.data = new FileContentCls(record,type);
@@ -129,6 +136,9 @@ BaseItemCls.prototype.template_render = function()
 			break;
 		case 'activity' :
 			template = this.data.category == 'comments' ? '-models_history_comment_long' : '-models_history_' + this.data.category;
+			break;
+		case 'audio' :
+			template = '-models_history_audio' ;
 			break;
 		case 'file' :
 			template = '-models_history_files' ;
@@ -191,7 +201,7 @@ BaseItemCls.prototype.item_display = function(position, subm, mode, scroll_time)
 		elem.find(".date", "[find=timestamp]").html(skylist_textDate(date) || date.display('date_short'));
 		this.feed_profile_action(elem,this.user_id,subm);
 		this.feed_content(elem, subm);
-		if(this.style == 'activity' || this.style == 'file' || this.style == 'upload') this.feed_action(elem,subm);
+		if(this.style == 'activity' || this.style == 'audio' || this.style == 'file' || this.style == 'upload') this.feed_action(elem,subm);
 	}
 
 	var timestamp = parseInt(this.timestamp, 10);
@@ -330,6 +340,24 @@ BaseItemCls.prototype.feed_action = function(elem,subm)
 	this.data.feed_action(elem,subm);
 }
 
+var AudioContentCls = function(record,type)
+{
+	this.id = record['_id'];
+	this.category = record['_type'];
+	this.target = Lincko.storage.get(record['_type'] , record['_id'], 'name');
+	this.file_category = Lincko.storage.get(record['_type'], record['_id'],'category');
+	this.file_profile =  Lincko.storage.getLinkThumbnail(record['_id']);
+	this.ext = Lincko.storage.get(record['_type'], record['_id'],'ori_ext');
+	this.temp_id = record['temp_id'];
+}
+
+AudioContentCls.prototype.feed_content = function(elem)
+{
+	elem.find('[find=audio_containner]').append(app_models_audio.build(this.id));
+}
+
+AudioContentCls.prototype.feed_action = function(elem,subm){
+}
 
 var FileContentCls = function(record,type)
 {
