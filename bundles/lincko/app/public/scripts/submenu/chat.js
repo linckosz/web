@@ -204,14 +204,22 @@ Submenu.prototype.Add_ChatContacts = function() {
 
 	//add searchbar
 	var fn_search = function(words){
-		var elem_contacts = $('#'+that.id+"_submenu_app_chat_chat_contact_div").find('[find=tab_contact]');
+		var elem_pending = $('#'+that.id+'_submenu_app_chat_chat_pending_div');
+		var elem_contacts = $('#'+that.id+'_submenu_app_chat_chat_contact_div,'+'#'+that.id+'_submenu_app_chat_chat_pending_div').find('[find=tab_contact]');
 		if(!words.length){
+			elem_pending.removeClass('display_none');
 			elem_contacts.removeClass('display_none');
 		} else {
+			var showPending = false;
+			var pending = Lincko.storage.get('users', wrapper_localstorage.uid, 'pending');
+			
 			var filtered = [];
 			$.each(searchbar.filterLinckoItems(Lincko.storage.list('users', null), words), function(i, item){
 				filtered.push(item['_id']);
+				if(pending && pending[item['_id']]){ showPending = true; }
 			});
+			showPending ? elem_pending.removeClass('display_none') : elem_pending.addClass('display_none');
+
 			$.each(elem_contacts, function(i, elem){
 				var uid = parseInt($(elem).attr('uid'),10);
 				if(filtered.indexOf(uid) != -1){ //if exists
@@ -378,7 +386,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 			continue;
 		}
 		var Elem = $('#-submenu_app_chat_chat_contact').attr("find", 'tab_contact').clone();
-		Elem.prop("id", Elem_id);
+		Elem.prop("id", Elem_id).attr('uid', i);
 		Elem.removeClass("submenu_deco").addClass("submenu_deco_read");
 		thumbnail = Lincko.storage.getLinkThumbnail(pending[i][1]);
 		if(thumbnail){
