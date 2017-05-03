@@ -1087,16 +1087,16 @@ function audio_native_callback(base64,parm){
 		parm = JSON.parse(parm);
 	}
 	wrapper_sendAction({data: base64, parent_type:parm.type,parent_id:parm.pid}, 'post', 'file/voice',function(){
-			alert(1);//成功
+			
 		},
 		function(){
-			alert(2);//失败
+			
 		},
 		function(){
-			alert(3);//发送准备
+			
 		},
 		function(){
-			alert(4);//发送完成
+			
 		}
 	);
 	//toto:display
