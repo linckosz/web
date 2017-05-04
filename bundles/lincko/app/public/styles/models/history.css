@@ -36,9 +36,7 @@
 	position: relative;/*added this to position chat bubble actionMenu*/
 }
 
-.models_history_audio{
-	padding:0 !important;
-}
+
 
 .models_history_content:focus {
 	outline: 0;
@@ -451,6 +449,11 @@
 	border:1px solid rgba(182, 214, 232, 0.20);
 }
 
+.files .models_history_audio{
+	background-color: #ffffff;
+	border: 0 !important;
+	padding:0 !important;
+}
 /* Mobile phone in Portrait */
 
 @media only screen and (max-width: 479px) {

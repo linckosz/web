@@ -210,8 +210,16 @@ inputter.prototype.buildLayer = function()
 			{
 				for(var j = this.layer['left_menu'][i].length -1 ; j >= 0 ; j-- )//in this.layer['right_menu'][i])
 				{
+
 					var tmp = this.layer['left_menu'][i][j];
 					var elem = this.layer['left_menu'][i][j]['element'];
+					if(typeof this.layer['left_menu'][i][j]['compatibility'] !== 'undefined')
+					{
+						if(this.layer['left_menu'][i][j]['compatibility'] == 'app' && !isMobileApp())
+						{
+							break;
+						}
+					}
 					if(typeof this.elements_lib[elem] !== 'undefined')
 					{
 						var item = $('#-inputter_element_'+this.elements_lib[elem]['target']).clone();

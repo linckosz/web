@@ -347,7 +347,12 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 		auto_upload : true,
 
 		left_menu :[	
-			[{	element :'btSwitch',}],	
+			[
+				{	
+					element :'btSwitch',
+					compatibility : 'app',
+				}
+			],	
 		],
 
 		right_menu :

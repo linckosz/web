@@ -355,6 +355,10 @@ AudioContentCls.prototype.feed_content = function(elem)
 {
 	elem.find('[find=audio_containner]').addClass('models_history_audio');
 	elem.find('[find=audio_containner]').append(app_models_audio.build(this.id));
+	if(elem.hasClass('models_history_self'))
+	{
+		elem.find('[find=play]').removeClass('icon-audio').addClass('icon-audioopposite');
+	}
 }
 
 AudioContentCls.prototype.feed_action = function(elem,subm){
