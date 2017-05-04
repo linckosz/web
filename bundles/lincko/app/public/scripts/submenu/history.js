@@ -53,7 +53,6 @@ var BaseItemCls = function(record,type, disableActionClick)
 			}
 			this.timestamp = record["created_at"];
 			if(record['_type'] == 'files'){
-				console.log(record);
 				if(record['category'] == 'voice'){
 					this.style = 'audio';
 				}
