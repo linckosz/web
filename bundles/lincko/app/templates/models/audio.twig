@@ -1,0 +1,18 @@
+<div id="begin_app_models_audio" class="visibility_hidden">
+	<script>
+			JSfiles.later("{{ _filelatest('/lincko/app/scripts/models/audio.js') }}", 10);
+	</script>
+	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/models/audio.css') }}" type="text/css" />
+</div>
+
+<div id="end_app_models_audio" class="visibility_hidden"></div>
+<div class="display_none">
+	<div id="-app_models_lincko_audio" class="app_models_lincko_audio needsclick" contenteditable="false" tabindex="1">
+		<span find="play" class="icon-audio models_history_audio_shortcut"></span>
+		<span find="time" class="models_history_audio_duration" duration="20">
+		</span>
+	</div>
+	<audio id="-app_models_audio_control" class="display_none"></audio>
+</div>
+
+

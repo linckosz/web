@@ -1,0 +1,20 @@
+.app_models_lincko_audio{
+	height:20px;
+	line-height: 20px;
+	border-radius: 8px;
+	padding: 5px 8px;
+}
+
+
+.models_history_audio_shortcut{
+	display:inline-block;
+	color: #fba026;
+	font-size: 20px;
+}
+
+.models_history_audio_duration{
+	display: inline-block;
+	line-height: 20px;
+	height:20px;
+	width:60px;
+}

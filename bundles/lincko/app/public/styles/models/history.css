@@ -35,12 +35,20 @@
 	padding: 5px 8px;
 	position: relative;/*added this to position chat bubble actionMenu*/
 }
+
+.models_history_audio{
+	padding:0 !important;
+}
+
 .models_history_content:focus {
 	outline: 0;
 }
+
 .models_history_content [contenteditable]:focus {
 	outline: 0;
 }
+
+
 
 .upload_stopped_file .models_history_content {
 	cursor: default;
