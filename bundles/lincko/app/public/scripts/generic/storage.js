@@ -939,7 +939,7 @@ Lincko.storage.myRolePerm = function(category){
 		roles_id = 1; //adminitsrator by default for shared workspace
 	}
 	if(roles_id!==false){
-		var role = Lincko.storage.get('roles', perm[wrapper_localstorage.uid][1]);
+		var role = Lincko.storage.get('roles', roles_id);
 		if(role){
 			if(typeof role['perm_'+category] != 'undefined'){
 				result = role['perm_'+category];

@@ -284,12 +284,17 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 				// }
 
 				var key = type == 'projects' ? 'comments' : 'messages';
-				var list = data_msg.partial[wrapper_localstorage.uid][key];
-				$.each(list,function(key,data){
-					if(typeof app_models_chats_send_queue[list[key]['temp_id']] !== 'undefined'){
-						delete app_models_chats_send_queue[list[key]['temp_id']] ;
-					}
-				});
+				if(
+					   typeof data_msg.partial == 'object'
+					&& typeof data_msg.partial[wrapper_localstorage.uid] == 'object'
+				){
+					var list = data_msg.partial[wrapper_localstorage.uid][key];
+					$.each(list,function(key,data){
+						if(typeof app_models_chats_send_queue[list[key]['temp_id']] !== 'undefined'){
+							delete app_models_chats_send_queue[list[key]['temp_id']] ;
+						}
+					});
+				}
 			},
 			null,
 			function(jqXHR, settings, temp_id) {
