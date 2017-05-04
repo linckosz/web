@@ -20,7 +20,7 @@ var app_models_audio = {
 			audio_control.prop('id','app_models_audio_control');
 			$('body').append(audio_control);
 		}
-		$("#app_application_submenu_block").on('mousedown touchstart', '.app_models_lincko_audio', function(event) {
+		$("#app_application_submenu_block,#app_content_submenu_preview").on('mousedown touchstart', '.app_models_lincko_audio', function(event) {
 			var audio_id = $(this).attr('audio_id');
 			app_models_audio.pause();
 			app_models_audio.status = 1;
