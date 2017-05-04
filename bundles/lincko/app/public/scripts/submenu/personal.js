@@ -814,7 +814,7 @@ submenu_list['personal_info'] = {
 			}
 		},
 		"name": "leave",
-		"class": "submenu_personal_deletion",
+		"class": "submenu_personal_deletion display_none",
 		"action": function(Elem, subm){
 			if(Lincko.storage.getWORKID()>0){
 				if(Lincko.storage.canI('edit', 'workspaces', Lincko.storage.getWORKID())){

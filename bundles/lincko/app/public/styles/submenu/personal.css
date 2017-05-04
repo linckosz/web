@@ -139,6 +139,7 @@
 	cursor: text;
 	resize: none;
 	min-height: 12px;
+	white-space: normal;
 }
 
 .submenu_deco_read:hover .submenu_personal_textarea, .submenu_personal_textarea:focus {
