@@ -3,8 +3,8 @@
 	line-height: 24px;
 	border-radius: 8px;
 	padding: 3px 8px;
-	border: 1px solid rgba(151, 151, 151, 0.26);
 	background-color:rgba(182, 214, 232, 0.20);
+	overflow: hidden;
 }
 
 .app_models_lincko_audio:active{
@@ -23,7 +23,8 @@
 	float:left;
 	line-height: 24px;
 	height:24px;
-	width:60px;
+	width:40px;
+	text-align: right;
 }
 
 
@@ -34,6 +35,7 @@
 .models_history_self .models_history_audio_duration
 {
 	float:right !important;
+	text-align: left !important;
 }
 
 .app_models_lincko_audio_hidden {

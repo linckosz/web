@@ -3,8 +3,8 @@ var app_models_audio = {
 	src:'',
 	audio_id:0,
 	current_interval:0,
-	finish_interval:0,
 	current_dom:false,
+	current_mode:'',
 	buildTo:function(container,audio_id,elem_id){
 		var audio_dom = $('#-app_models_lincko_audio').clone();
 		audio_dom.prop('id',elem_id === 'undefined' ? '' : elem_id);
@@ -13,6 +13,12 @@ var app_models_audio = {
 	},
 	build:function(audio_id){
 		var audio_dom = $('#-app_models_lincko_audio').clone();
+		var duration = Lincko.storage.get('files' , audio_id, 'comment');
+		if(duration)
+		{
+			audio_dom.find('[find=time]').text(duration + '\'\'');
+			audio_dom.find('[find=time]').width(40 + duration * 2);
+		}
 		audio_dom.attr('audio_id',audio_id);
 		audio_dom.prop('id','');
 		return audio_dom;
@@ -25,23 +31,19 @@ var app_models_audio = {
 
 			audio_control.on('ended',function () {
 				clearInterval(app_models_audio.current_interval);
-				var mode = 'icon-audio';
 				if(app_models_audio.current_dom)
 				{
-					if(app_models_audio.current_dom.find('[find=play]').eq(0).hasClass('icon-audio1') || 
-					app_models_audio.current_dom.find('[find=play]').eq(0).hasClass('icon-audio2') ||
-					app_models_audio.current_dom.find('[find=play]').eq(0).hasClass('icon-audio') ){
-					mode = 'icon-audio';
-					}
-					else if(app_models_audio.current_dom.find('[find=play]').eq(0).hasClass('icon-audioopposite1') || 
-						app_models_audio.current_dom.find('[find=play]').eq(0).hasClass('icon-audioopposite2') ||
-						app_models_audio.current_dom.find('[find=play]').eq(0).hasClass('icon-audioopposite') ){
-						mode = 'icon-audioopposite';
-					}
-					app_models_audio.current_dom.find('[find=play]').removeClass(mode + '1');
-					app_models_audio.current_dom.find('[find=play]').removeClass(mode + '2');
-					app_models_audio.current_dom.find('[find=play]').addClass(mode);
+
+					app_models_audio.current_dom.find('[find=play]').removeClass(app_models_audio.current_mode + '1');
+					app_models_audio.current_dom.find('[find=play]').removeClass(app_models_audio.current_mode + '2');
+					app_models_audio.current_dom.find('[find=play]').addClass(app_models_audio.current_mode);
+
+					app_models_audio.status = 3;
+					app_models_audio.src = '';
+					app_models_audio.audio_id = 0;
+					app_models_audio.current_interval = 0;
 					app_models_audio.current_dom = false;
+					app_models_audio.current_mode = '';
 				}
 			});
 		}
@@ -58,46 +60,36 @@ var app_models_audio = {
 	animation:function(elem){
 		if(app_models_audio.current_dom)
 		{
-			var last_mode ='icon-audio'; //0 for other,1 for self;
-			if(app_models_audio.current_dom.find('[find=play]').eq(0).hasClass('icon-audio'))
-			{
-				last_mode ='icon-audio';
-			}
-			else if(app_models_audio.current_dom.find('[find=play]').eq(0).hasClass('icon-audioopposite'))
-			{
-				last_mode ='icon-audioopposite';
-			}
+			
 			if(app_models_audio.current_interval != 0)
 			{
 				clearInterval(app_models_audio.current_interval);
 				app_models_audio.current_interval = 0;
 				if(app_models_audio.current_dom)
 				{
-					app_models_audio.current_dom.find('[find=play]').removeClass(last_mode + '1');
-					app_models_audio.current_dom.find('[find=play]').removeClass(last_mode + '2');
-					app_models_audio.current_dom.find('[find=play]').addClass(last_mode);
+					app_models_audio.current_dom.find('[find=play]').removeClass(app_models_audio.current_mode + '1');
+					app_models_audio.current_dom.find('[find=play]').removeClass(app_models_audio.current_mode + '2');
+					app_models_audio.current_dom.find('[find=play]').addClass(app_models_audio.current_mode);
 				}
 			}
 		}
 
-
-		var mode = 'icon-audio';
-		if(elem.find('[find=play]').eq(0).hasClass('icon-audio')){
-			mode ='icon-audio';
-		}
-		else if(elem.find('[find=play]').eq(0).hasClass('icon-audioopposite')){
-			mode ='icon-audioopposite';
-		}
 		var icon_index = ['1','2',''];
 		var index = 0;
 		app_models_audio.current_dom = elem;
+		if(elem.find('[find=play]').hasClass('icon-audio')){
+			app_models_audio.current_mode = 'icon-audio';
+		}
+		else if(elem.find('[find=play]').hasClass('icon-audioopposite')){
+			app_models_audio.current_mode = 'icon-audioopposite';
+		}
 		app_models_audio.current_interval = setInterval(function(mode){
 			var audio_control = $('#app_models_audio_control');
 			elem.find('[find=play]').removeClass(mode + icon_index[((index+1) % 3)]);
 			elem.find('[find=play]').removeClass(mode + icon_index[((index+2) % 3)]);
 			elem.find('[find=play]').addClass(mode + icon_index[(index % 3)]);
 			index++;
-		},400,mode);
+		},400,app_models_audio.current_mode);
 	},
 	play:function(){
 		$('#app_models_audio_control').attr('src',app_models_audio.src);
@@ -111,6 +103,9 @@ var app_models_audio = {
 		app_models_audio.status = 0;
 		app_models_audio.src = '';
 		app_models_audio.audio_id = 0;
+		app_models_audio.current_interval = 0;
+		app_models_audio.current_dom = false;
+		app_models_audio.current_mode = '';
 	}
 }
 
