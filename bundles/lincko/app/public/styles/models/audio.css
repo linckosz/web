@@ -1,33 +1,39 @@
 .app_models_lincko_audio{
-	height:20px;
-	line-height: 20px;
+	height:24px;
+	line-height: 24px;
 	border-radius: 8px;
-	padding: 5px 8px;
+	padding: 3px 8px;
 	border: 1px solid rgba(151, 151, 151, 0.26);
 	background-color:rgba(182, 214, 232, 0.20);
 }
 
+.app_models_lincko_audio:active{
+	background-color:rgba(182, 214, 232, 0.40);
+}
+
 .models_history_audio_shortcut{
-	display:inline-block;
+	display:block;
+	float:left;
 	color: #fba026;
-	font-size: 20px;
+	font-size: 24px;
 }
 
 .models_history_audio_duration{
-	display: inline-block;
-	line-height: 20px;
-	height:20px;
+	display: block;
+	float:left;
+	line-height: 24px;
+	height:24px;
 	width:60px;
 }
 
 
 .models_history_self .models_history_audio_shortcut{
-	float:right;
+	float:right !important;
 }
 
 .models_history_self .models_history_audio_duration
 {
-	float:right;
+	float:right !important;
 }
 
 .app_models_lincko_audio_hidden {
