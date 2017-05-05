@@ -121,49 +121,62 @@ function app_models_chats_bubble_actionMenu(){
 				});//end of mousedown/touchstart event
 			}
 			/*------END OF translate action----------------*/
+		}
 
+		if(category == 'messages' || category == 'comments' || category == 'files'){
 			/*------------recall chat action----------------*/
 			var elem_recallBtn = elem_actionMenu.find('[find=recall_btn]');
-			elem_recallBtn.on("mousedown touchstart", function(){
-				var target = that.closest('[category='+category+']');
-				var date = new wrapper_date(Math.floor($.now()/1000));
 
-				var item = {
-					'is_working' : false,
-					'id' : id_item,
-					'style' : typeof target.attr("temp_id") === 'undefined' ? 'id' : 'temp_id',
-					'timestamp' : date.display('time_short'),
-					'category' : category,
-				}
-				app_models_chats_recall_queue[id_item] = item;
+			//cannot recall files that has already been added to task
+			if(category == 'files' && item.category != 'voice' && Lincko.storage.list_links('files', id_item)){
+				elem_recallBtn.addClass('display_none');
+			} else {
+				elem_recallBtn.on("mousedown touchstart", function(){
+					var target = that.closest('[category='+category+']');
+					var date = new wrapper_date(Math.floor($.now()/1000));
 
-				if(!app_models_chats_recall_queue[id_item]['is_working'] && app_models_chats_recall_queue[id_item]['style'] == 'id')
-				{
-					wrapper_sendAction(
-						{
-							"id": app_models_chats_recall_queue[id_item]['id'],
-						},
-						'post',
-						category == 'comments' ? 'comment/recall' : 'message/recall',
-						function(data){
-							delete app_models_chats_recall_queue[id_item];
-						},
-						null,
-						function()
-						{
-							app_models_chats_recall_queue[id_item]['is_working'] = true;
-						}
-					);
-				}
+					var item = {
+						'is_working' : false,
+						'id' : id_item,
+						'style' : typeof target.attr("temp_id") === 'undefined' ? 'id' : 'temp_id',
+						'timestamp' : date.display('time_short'),
+						'category' : category,
+					}
+					app_models_chats_recall_queue[id_item] = item;
 
-				var elem_id = target.prop('id');
-				var elem = $('#-models_history_comment_recalled').clone();
-				elem.prop('id',elem_id);
-				
-				elem.find("[find=timestamp]").html(date.display('time_short'));
-				elem.find("[find=msg]").text(Lincko.Translation.get('app', 3101, 'html', {username: Lincko.storage.get('users', wrapper_localstorage.uid ,'username')}));
-				target.replaceWith(elem);
-			});
+					if(!app_models_chats_recall_queue[id_item]['is_working'] && app_models_chats_recall_queue[id_item]['style'] == 'id')
+					{
+						var action = '';
+						if(category == 'comments'){ action = 'comment/recall'; }
+						else if (category == 'messages'){ action = 'message/recall'; }
+						else if(category == 'files'){ action = 'file/delete'; }
+
+						wrapper_sendAction(
+							{
+								"id": app_models_chats_recall_queue[id_item]['id'],
+							},
+							'post',
+							action,
+							function(data){
+								delete app_models_chats_recall_queue[id_item];
+							},
+							null,
+							function()
+							{
+								app_models_chats_recall_queue[id_item]['is_working'] = true;
+							}
+						);
+					}
+
+					var elem_id = target.prop('id');
+					var elem = $('#-models_history_comment_recalled').clone();
+					elem.prop('id',elem_id);
+					
+					elem.find("[find=timestamp]").html(date.display('time_short'));
+					elem.find("[find=msg]").text(Lincko.Translation.get('app', 3101, 'html', {username: Lincko.storage.get('users', wrapper_localstorage.uid ,'username')}));
+					target.replaceWith(elem);
+				});
+			}
 			/*---------END OF recall chat action----------------*/
 		}
 		
@@ -263,12 +276,17 @@ setInterval(function(){
 				var list  = Lincko.storage.list(category, 1,{'temp_id' : app_models_chats_recall_queue[key]['id']});
 				if(list.length > 0 && !app_models_chats_recall_queue[key]['is_working'] )
 				{
+					var action = '';
+					if(category == 'comments'){ action = 'comment/recall'; }
+					else if (category == 'messages'){ action = 'message/recall'; }
+					else if(category == 'files'){ action = 'file/delete'; }
+						
 					wrapper_sendAction(
 						{
 							"id": list[0]['_id'],
 						},
 						'post',
-						category == 'comments' ? 'comment/recall' : 'message/recall',
+						action,
 						function(data){
 							delete app_models_chats_recall_queue[key];
 						},

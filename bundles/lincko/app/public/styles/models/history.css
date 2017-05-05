@@ -57,9 +57,8 @@
     overflow: hidden;
     opacity: 0;
 }
-.models_history_wrapper[category=files] .app_models_chats_bubble_actionMenu [find=translate_btn],
-.models_history_wrapper[category=files] .app_models_chats_bubble_actionMenu [find=recall_btn]{
-	visibility: hidden;
+.models_history_wrapper[category=files] .app_models_chats_bubble_actionMenu [find=translate_btn]{
+	display: none;
 }
 
 .upload_stopped_file .models_history_content {
