@@ -174,9 +174,14 @@ function app_models_chats_bubble_actionMenu(){
 			var preview = $('#app_content_submenu_preview').has(that).length ? true : false;
 
 			var files = false;
+			var voice = false;
 			if(category=='files'){
-				files = {files: {}};
-				files.files[id_item] = item;
+				if(item.category == 'voice'){
+					voice = [id_item];
+				} else {
+					files = {files: {}};
+					files.files[id_item] = item;
+				}
 			}
 
 			submenu_Build("taskdetail_new", submenu_Getnext(preview), false, 
@@ -185,6 +190,7 @@ function app_models_chats_bubble_actionMenu(){
 					'title': textToAction,
 					projID: projectID,
 					files: files,
+					voice: voice,
 				}, preview);
 			that.blur();
 		});

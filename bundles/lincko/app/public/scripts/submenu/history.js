@@ -358,6 +358,8 @@ var AudioContentCls = function(record,type)
 
 AudioContentCls.prototype.feed_content = function(elem)
 {
+	elem.attr('category',this.category);
+	elem.attr(this.category + '_id',this.id);
 	elem.find('[find=audio_containner]').addClass('models_history_audio');
 	elem.find('[find=audio_containner]').append(app_models_audio.build(this.id));
 	if(elem.hasClass('models_history_self'))

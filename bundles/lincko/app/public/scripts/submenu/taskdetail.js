@@ -906,6 +906,12 @@ Submenu.prototype.Add_taskdetail = function() {
 		var elem_description_text = elem.find('[find=description_text]');
 		elem_description_text.html(item['-comment']);
 
+		if(that.param.voice){
+			$.each(that.param.voice, function(i, id_voice){
+				elem_description_text.append(app_models_audio.build(id_voice).attr('contenteditable',false));
+			});
+		}
+
 		var load_img_timeout = null;
 		elem_description_text.find('img').one('load', function(){
 			clearTimeout(load_img_timeout);
@@ -2470,8 +2476,12 @@ Submenu.prototype.Add_taskdetail = function() {
 				CKEDITOR.instances[elem_description_text.prop('id')].destroy();
 			}
 			elem_editorToolbar.empty(); //clear a simple div, no need for recursive
-			elem_description_text.prop('contenteditable', true).html(Lincko.storage.get(that.param.type, item['_id'], '-comment'));
-			taskdetail_clean_descriptionFiles(elem_description_text);
+			elem_description_text.prop('contenteditable', true)
+
+			if(taskid != 'new'){
+				elem_description_text.html(Lincko.storage.get(that.param.type, item['_id'], '-comment'));
+				taskdetail_clean_descriptionFiles(elem_description_text);
+			}
 
 			editorInst = linckoEditor('submenu_taskdetail_description_text_'+that.md5id, 'submenu_taskdetail_description_toolbar_'+that.md5id, editor_param);
 

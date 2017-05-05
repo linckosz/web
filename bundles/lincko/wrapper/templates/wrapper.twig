@@ -460,7 +460,9 @@ if(CKEDITOR){
 	//CKEDITOR.config.extraAllowedContent = 'img[src,alt,width,height];h1[*]';
 	//CKEDITOR.config.extraAllowedContent = 'h1[src,alt,width,height]';
 	//CKEDITOR.config.linkShowAdvancedTab = false
-  	CKEDITOR.config.linkShowTargetTab = false
+  	CKEDITOR.config.linkShowTargetTab = false;
+  	CKEDITOR.config.fillEmptyBlocks = false;
+  	CKEDITOR.dtd.$removeEmpty['span'] = false;
 }
 
 //Check if WebWorker is available
