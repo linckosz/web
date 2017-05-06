@@ -911,7 +911,7 @@ Lincko.storage.getPlus = function(category, id){
 Lincko.storage.whoHasAccess = function(category, id){
 	var list =  [];
 	var perm = Lincko.storage.get(category, id, '_perm');
-	if(perm){
+	if(typeof perm == 'object'){
 		for(var users_id in perm){
 			list.push(parseInt(users_id, 10));
 		}

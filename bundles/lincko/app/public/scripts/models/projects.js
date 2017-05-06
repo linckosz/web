@@ -117,7 +117,7 @@ submenu_list['app_project_edit'] = {
 	},
 	"team": {
 		"style": "project_team_edit",
-		"title": Lincko.Translation.get('app', 31, 'html'), //Team
+		"title": Lincko.Translation.get('app', 31, 'html'), //Add Teammates
 		"name": "project_team_select_multiple",
 		"value": "",
 		"class": "submenu_input_select_multiple models_projects_tab",
