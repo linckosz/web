@@ -70,6 +70,9 @@ class ControllerWrapper extends Controller {
 		if(isset($_SESSION['sales_code'])){
 			$this->json['data']['sales_code'] = $_SESSION['sales_code'];
 		}
+		if(isset($_SESSION['workspace_access_code'])){
+			$this->json['data']['workspace_access_code'] = $_SESSION['workspace_access_code'];
+		}
 		if(isset($_SESSION['user_code'])){
 			$this->json['user_code'] = $_SESSION['user_code'];
 		}
@@ -226,6 +229,11 @@ class ControllerWrapper extends Controller {
 				//Clean invitation_code because it has been used by the back end
 				if(isset($json_result->flash->unset_invitation_code)){
 					unset($_SESSION['invitation_code']);
+				}
+
+				//Clean workspace_access_code because it has been used by the back end
+				if(isset($json_result->flash->unset_workspace_access_code)){
+					unset($_SESSION['workspace_access_code']);
 				}
 
 				//Clean sales_code because it has been used by the back end

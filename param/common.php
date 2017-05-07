@@ -96,6 +96,7 @@ $app->lincko->publicPath = $app->lincko->path.'/public';
 $app->lincko->jsonException = false;
 
 $app->lincko->enableSession = true;
+$app->lincko->session = array(); //Used to edit and keep some session variable value before session_start command
 
 //Use true for development to show error message on browser screen
 //Do not allow that for production, in case of any single bug, all users will see the message
@@ -221,8 +222,8 @@ if(isset($_SERVER['LINCKO_FRONT']) && !empty($_SERVER['LINCKO_FRONT'])){
 	}
 }
 
-if(isset($_SERVER['LINCKO_WORKSPACE']) && !empty($_SERVER['LINCKO_WORKSPACE'])){
-	$app->lincko->data['workspace'] = $_SERVER['LINCKO_WORKSPACE'];
+if(isset($_SERVER['LINCKO_WORKSPACE'])){
+	$app->lincko->data['workspace'] = $app->lincko->session['workspace'] = $_SESSION['workspace'] = $_SERVER['LINCKO_WORKSPACE'];
 }
 
 //Information for coders

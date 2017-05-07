@@ -139,7 +139,7 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 				window.location.href = wrapper_link['root'];
 			}
 
-			if(wrapper_localstorage.workspace == "" && typeof data.workspace != 'undefined' && data.workspace != wrapper_localstorage.workspace){
+			if(typeof data.workspace != 'undefined' && data.workspace != wrapper_localstorage.workspace){
 				//Switch to another workspace if different than the current one
 				var workspace = "";
 				if(data.workspace){

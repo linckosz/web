@@ -61,6 +61,16 @@ $app->get('/', function () use ($app) {
 })
 ->name('root');
 
+//Open password to connect automatically to a workspace (security thread)
+$app->get('/workspace/access/:code', function ($code) use ($app) {
+	$_SESSION['workspace_access_code'] = $code;
+	$app->router->getNamedRoute('root')->dispatch();
+})
+->conditions(array(
+	'code' => '[a-z\d]+',
+))
+->name('workspace_access_code');
+
 /*
 toto => only use this way if user complain about speed or access to HK DC
 $app->get(
