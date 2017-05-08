@@ -827,15 +827,15 @@ inputter.prototype.buildLayer = function()
 		var index = 0;
 
 		
-		// inputter_audio_operation_icon_interval = setInterval(function(){
-		// 	inputter_record_impression.find('[find=icon] span')
-		// 		.removeClass('icon-audio' + icon_index[((index+1) % 3)]);
-		// 	inputter_record_impression.find('[find=icon] span')
-		// 		.removeClass('icon-audio' + icon_index[((index+2) % 3)]);
-		// 	inputter_record_impression.find('[find=icon] span')
-		// 		.addClass('icon-audio' + icon_index[(index % 3)]);
-		// 	index++;
-		// },400);
+		inputter_audio_operation_icon_interval = setInterval(function(){
+			inputter_record_impression.find('[find=icon] span')
+				.removeClass('icon-audio' + icon_index[((index+1) % 3)]);
+			inputter_record_impression.find('[find=icon] span')
+				.removeClass('icon-audio' + icon_index[((index+2) % 3)]);
+			inputter_record_impression.find('[find=icon] span')
+				.addClass('icon-audio' + icon_index[(index % 3)]);
+			index++;
+		},400);
 
 
 		//toto:IOS、android FUNCTION Start
@@ -858,27 +858,47 @@ inputter.prototype.buildLayer = function()
 		var inputter_record_impression = $('#inputter_record_impression');
 		inputter_current_audio_touch_clientY = event.originalEvent.changedTouches[0].clientY;
 
+		if(inputter_start_audio_touch_clientY - inputter_current_audio_touch_clientY >= 40){
+			
+			if(inputter_audio_operation_status!==2)
+			{
+				clearInterval(inputter_audio_operation_icon_interval);
+				inputter_audio_operation_icon_interval = 0;
+				inputter_record_impression.find('[find=text]').text(inputter_audio_operation_icon_interval);
+				inputter_audio_operation_status = 2;
+				inputter_record_impression.find('[find=icon] span').removeClass('icon-audio');
+				inputter_record_impression.find('[find=icon] span').removeClass('icon-audio1');
+				inputter_record_impression.find('[find=icon] span').removeClass('icon-audio2');
+				inputter_record_impression.find('[find=icon] span').addClass('fa fa-undo inputter_record_impression_icon_samll');
+				inputter_record_impression.find('[find=text]').text('Release to cancel');//toto:transaltion
+			}
+		}
+		else{
+			if(inputter_audio_operation_status!==1)
+			{
+				inputter_audio_operation_status = 1;
+				inputter_record_impression.find('[find=icon] span').removeClass('fa fa-undo inputter_record_impression_icon_samll');
+				inputter_record_impression.find('[find=icon] span').addClass('icon-audio');	
+				inputter_record_impression.find('[find=text]').text('Swipe up to cancel');//toto:transaltion
 
-		// if(inputter_start_audio_touch_clientY - inputter_current_audio_touch_clientY >= 40){
-		// 	if(inputter_audio_operation_status!==2)
-		// 	{
-		// 		clearInterval(inputter_audio_operation_icon_interval);
-		// 		inputter_record_impression.find('[find=text]').text(inputter_audio_operation_icon_interval);
-		// 		inputter_audio_operation_status = 2;
-		// 		inputter_record_impression.find('[find=icon] span').removeClass('icon-audio');
-		// 		inputter_record_impression.find('[find=icon] span').addClass('fa fa-undo inputter_record_impression_icon_samll');
-		// 		inputter_record_impression.find('[find=text]').text('Release to cancel');//toto:transaltion
-		// 	}
-		// }
-		// else{
-		// 	if(inputter_audio_operation_status!==1)
-		// 	{
-		// 		inputter_audio_operation_status = 1;
-		// 		inputter_record_impression.find('[find=icon] span').removeClass('fa fa-undo inputter_record_impression_icon_samll');
-		// 		inputter_record_impression.find('[find=icon] span').addClass('icon-audio');	
-		// 		inputter_record_impression.find('[find=text]').text('Swipe up to cancel');//toto:transaltion
-		// 	}
-		// }
+				var icon_index = ['1','2',''];
+				var index = 0;
+
+				if(inputter_audio_operation_icon_interval == 0)
+				{
+					inputter_audio_operation_icon_interval = setInterval(function(){
+						inputter_record_impression.find('[find=icon] span')
+							.removeClass('icon-audio' + icon_index[((index+1) % 3)]);
+						inputter_record_impression.find('[find=icon] span')
+							.removeClass('icon-audio' + icon_index[((index+2) % 3)]);
+						inputter_record_impression.find('[find=icon] span')
+							.addClass('icon-audio' + icon_index[(index % 3)]);
+						index++;
+					},400);
+				}
+				
+			}
+		}
 	});
 
 	input.find('[find=chat_audio]').on('touchend',function(event){

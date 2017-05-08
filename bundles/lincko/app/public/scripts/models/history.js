@@ -549,7 +549,15 @@ var app_models_history = {
 									}
 								}
 							}
-							if(item['category']=='voice' || parent['_type']=='chats'){
+							if(item['category']=='voice'){
+								app_models_history.notify(
+									Lincko.storage.getHistoryInfo(hist[i]).title,
+									title,
+									parent['_type']+"-"+btoa(parent['_id']),
+									false,
+									profile_pic
+								);
+							} else if(parent['_type']=='chats'){
 								app_models_history.notify(
 									Lincko.storage.getHistoryInfo(hist[i]).title + ":\n  "+wrapper_to_html(item["+name"]),
 									title,

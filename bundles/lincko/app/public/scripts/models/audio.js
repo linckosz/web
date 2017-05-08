@@ -5,6 +5,8 @@ var app_models_audio = {
 	current_interval:0,
 	current_dom:false,
 	current_mode:'',
+	timmer_interval:0,
+	timmer : 0,
 	buildTo:function(container,audio_id,elem_id){
 		var audio_dom = $('#-app_models_lincko_audio').clone();
 		audio_dom.prop('id',elem_id === 'undefined' ? '' : elem_id);
@@ -17,6 +19,7 @@ var app_models_audio = {
 		if(duration)
 		{
 			audio_dom.find('[find=time]').text(duration + '\'\'');
+			duration = duration > 60 ? 65 : duration;
 			audio_dom.find('[find=time]').width(40 + duration * 2);
 		}
 		audio_dom.attr('audio_id',audio_id);
@@ -47,14 +50,32 @@ var app_models_audio = {
 				}
 			});
 		}
-		$("#app_application_submenu_block,#app_content_submenu_preview").on('mouseup touchstart', '.app_models_lincko_audio', function(event) {
-				var audio_id = $(this).attr('audio_id');
-				app_models_audio.pause();
-				app_models_audio.animation($(this));
-				app_models_audio.status = 1;
-				app_models_audio.src = Lincko.storage.getLink(audio_id);
-				app_models_audio.audio_id = audio_id;
-				app_models_audio.play();
+
+		$("#app_application_submenu_block,#app_content_submenu_preview").on('mousedown touchstart', '.app_models_lincko_audio', function(event) {
+				app_models_audio.timmer_interval = setInterval(function(){
+					app_models_audio.timmer += 200;
+					if(app_models_audio.timmer >= 1000)
+					{
+						clearInterval(app_models_audio.timmer_interval);
+					}
+				},200);
+		});
+
+
+		$("#app_application_submenu_block,#app_content_submenu_preview").on('mouseup touchend', '.app_models_lincko_audio', function(event) {
+				if(app_models_audio.timmer < 1000)
+				{
+					var audio_id = $(this).attr('audio_id');
+					app_models_audio.pause();
+					app_models_audio.animation($(this));
+					app_models_audio.status = 1;
+					app_models_audio.src = Lincko.storage.getLink(audio_id);
+					app_models_audio.audio_id = audio_id;
+					app_models_audio.play();
+				}	
+				clearInterval(app_models_audio.timmer_interval);
+				app_models_audio.timmer = 0;
+				app_models_audio.timmer_interval = 0;
 		});
 	},
 	animation:function(elem){
@@ -103,6 +124,7 @@ var app_models_audio = {
 		app_models_audio.status = 0;
 		app_models_audio.src = '';
 		app_models_audio.audio_id = 0;
+		clearInterval(app_models_audio.current_interval);
 		app_models_audio.current_interval = 0;
 		app_models_audio.current_dom = false;
 		app_models_audio.current_mode = '';
@@ -119,9 +141,10 @@ app_application_lincko.add(
 	app_application_garbage.remove(audio_garbage_start_id);
 });
 
+var app_models_audio_all = app_application_garbage.add('app_models_audio_all');
 app_application_lincko.add(
-	"app_models_audio_all", 
+	app_models_audio_all, 
 	"submenu_hide", 
 	function() {
-	app_models_audio.clear();
+		app_models_audio.clear();
 });
