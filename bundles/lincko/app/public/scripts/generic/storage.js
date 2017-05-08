@@ -930,31 +930,31 @@ Lincko.storage.amIsuper = function(){
 	return false;
 }
 
-Lincko.storage.myRolePerm = function(category){
-	roles_id = false; //Only read by default;
-	result = 0;
-	if(Lincko.storage.getWORKID()>0){
-		var perm = Lincko.storage.get('workspaces', Lincko.storage.getWORKID(), '_perm');
-		if(perm && perm[wrapper_localstorage.uid]){
-			roles_id = perm[wrapper_localstorage.uid][1];
-		}
-	} else {
-		roles_id = 1; //adminitsrator by default for shared workspace
+Lincko.storage.userRole = function(user_id, category, id){
+	if(typeof user_id == 'undefined'){
+		user_id = wrapper_localstorage.uid;
 	}
-	if(roles_id!==false){
-		var role = Lincko.storage.get('roles', roles_id);
-		if(role){
-			if(typeof role['perm_'+category] != 'undefined'){
-				result = role['perm_'+category];
-			} else if(typeof role['perm_all'] != 'undefined'){
-				result = role['perm_all'];
-			}
+	if(typeof category == 'undefined'){
+		category = 'workspaces';
+		id = Lincko.storage.getWORKID();
+	}
+	var roles_id = 0; //Viewer by default
+	if(Lincko.storage.getWORKID()==0){
+		roles_id = 2; //Manager by default for shared workspace
+	}
+	var role = Lincko.storage.get('roles', roles_id);
+	var perm = Lincko.storage.get(category, id, '_perm');
+	if(perm && typeof perm[user_id] == 'object'){
+		var temp = Lincko.storage.get('roles', perm[user_id][1]);
+		if(temp){
+			role = temp;
 		}
 	}
-	return result;
-}
+	return role;
+};
 
-Lincko.storage.canI = function(rcud, category, id, child_type){
+// _perm => array(rcud, roles_id)
+Lincko.storage.canI = function(rcud, category, id){
 	if(typeof rcud == 'string'){
 		if(rcud=='read'){ rcud=0; }
 		else if(rcud=='create'){ rcud=1; }
@@ -963,37 +963,25 @@ Lincko.storage.canI = function(rcud, category, id, child_type){
 		else if(rcud=='restore'){ rcud=3; }
 	}
 	if($.isNumeric(rcud)){ rcud = parseInt(rcud, 10); }
-	if(rcud==1 && typeof child_type == 'string'){ id = parseInt(id, 10); }
 	if(rcud<0 || rcud>3){
 		return false;
 	}
+	var val = 0;
 	var perm = Lincko.storage.get(category, id, '_perm');
-	if(perm){
-		if(typeof perm[wrapper_localstorage.uid] != 'undefined'){
-			if(rcud == 1){ //create works with child type and role of current element
-				var role = Lincko.storage.get('roles', perm[wrapper_localstorage.uid][1]);
-				if(role){
-					for(var att in role){
-						if(typeof role['perm_'+child_type] != 'undefined'){
-							if(rcud <= role['perm_'+child_type]){
-								return true;
-							}
-						} else if(typeof role['perm_all'] != 'undefined'){
-							if(rcud <= role['perm_all']){
-								return true;
-							}
-						}
-					}
-				}
-			} else if(rcud <= perm[wrapper_localstorage.uid][0]){
-				return true;
+	if(perm && typeof perm[wrapper_localstorage.uid] == 'object'){
+		val = parseInt(perm[wrapper_localstorage.uid][0], 10);
+	} else {
+		var role = Lincko.storage.userRole(wrapper_localstorage.uid, category, id);
+		if(role){
+			if(typeof role['perm_'+category] != 'undefined'){
+				val = parseInt(role['perm_'+category], 10);
+			} else if(typeof role['perm_all'] != 'undefined'){
+				val = parseInt(role['perm_all'], 10);
 			}
 		}
-	} else {
-		var val = Lincko.storage.myRolePerm(category);
-		if(rcud <= val){
-			return true;
-		}
+	}
+	if(rcud <= val){
+		return true;
 	}
 	return false;
 };

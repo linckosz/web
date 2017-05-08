@@ -343,7 +343,6 @@ Submenu.prototype.Add_ChatLeave = function(subm) {
 			attribute.now(Elem, that);
 		}
 		submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
-		//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
 		delete submenu_wrapper;
 		return Elem;
 	}

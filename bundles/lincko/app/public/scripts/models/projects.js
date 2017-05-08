@@ -468,7 +468,6 @@ Submenu.prototype.Add_ProjectDIY = function(subm, diy, i, animation) {
 			submenu_resize_content();
 			$(window).resize();
 		}
-		//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
 		delete submenu_wrapper;
 		return Elem;
 	}
@@ -496,7 +495,6 @@ Submenu.prototype.Add_ProjectNewField = function(subm) {
 		Elem.addClass(attribute['class']);
 	}
 	submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
-	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
 	delete submenu_wrapper;
 	return Elem;
 };
@@ -593,7 +591,6 @@ Submenu.prototype.Add_ProjectDeletion = function(subm) {
 		Elem.addClass(attribute['class']);
 	}
 	submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
-	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
 	delete submenu_wrapper;
 	return Elem;
 };

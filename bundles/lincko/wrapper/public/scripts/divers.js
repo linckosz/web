@@ -647,20 +647,17 @@ function wrapper_test(type, RCUD){
 				wrapper_test_display
 			);
 		}
-		else if(RCUD==1){ //To run in a company workspace
+		else if(RCUD==1){ //To run in a company workspace (0, 2, 3) Create goes with edit for items allowed
 			wrapper_sendAction(
 				{
-					"parent_id": 1,
-					"name": "It's a role title",
+					"parent_id": Lincko.storage.getWORKID(),
+					"name": "Member",
 					//"perm_grant": false, //OPTIONAL {0}
 					"perm_all": 0, //OPTIONAL {0}
-					//"perm_workspaces": 0, //OPTIONAL {0}
 					//"perm_projects": 0, //OPTIONAL {0}
 					"perm_tasks": 2, //OPTIONAL {0}
 					"perm_notes": 2, //OPTIONAL {0}
 					"perm_files": 0, //OPTIONAL {0}
-					//"perm_chats": 0, //OPTIONAL {0}
-					//"perm_comments": 0, //OPTIONAL {0}
 				},
 				'post',
 				'role/create',
@@ -671,17 +668,14 @@ function wrapper_test(type, RCUD){
 			wrapper_sendAction(
 				{
 					"id": 4,
-					"parent_id": 1, //OPTIONAL
+					"parent_id": Lincko.storage.getWORKID(), //OPTIONAL
 					"name": "Role "+Math.floor(Math.random() * 20), //OPTIONAL
 					//"perm_grant": false, //OPTIONAL
 					"perm_all": 0, //OPTIONAL
-					//"perm_workspaces": 0, //OPTIONAL
 					"perm_projects": 0, //OPTIONAL
-					"perm_tasks": 1, //OPTIONAL
+					"perm_tasks": 2, //OPTIONAL
 					"perm_notes": 2, //OPTIONAL
 					//"perm_files": 0, //OPTIONAL
-					//"perm_chats": 0, //OPTIONAL
-					//"perm_comments": 0, //OPTIONAL
 				},
 				'post',
 				'role/update',

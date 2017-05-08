@@ -2610,7 +2610,6 @@ Submenu.prototype.Add_taskdetail = function() {
 	/*----------END OF CKEDITOR SETUP--------------------------------------------*/
 
 	//Free memory
-	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
 	delete submenu_wrapper;
 	return true;
 };

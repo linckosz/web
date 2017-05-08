@@ -123,6 +123,26 @@ submenu_list['personal_info'] = {
 			}
 		},
 	},
+	"role": {
+		"style": "next",
+		"title": Lincko.Translation.get('app', 108, 'html'), //Role
+		"next": "role_select",
+		"value": function(Elem, subm){
+			var role = Lincko.storage.userRole(subm.param, 'workspaces', Lincko.storage.getWORKID());
+			if(role['_id']==0){
+				return Lincko.Translation.get('app', 109, 'html'); //Guest
+			} else if(role['_id']==1){
+				return Lincko.Translation.get('app', 111, 'html'); //Adminstrator
+			} else if(role['_id']==2){
+				return Lincko.Translation.get('app', 110, 'html'); //Teammate
+			}
+			return role['+name'];
+		},
+		"now": function(Elem, subm){
+			submenu_role_build_list(subm.param, 'workspaces', Lincko.storage.getWORKID());
+		},
+		"class": "",
+	},
 	"personal_lincko": {
 		"style": "button",
 		"title": Lincko.Translation.get('app', 82, 'html'), //Create or Link a Lincko account
@@ -868,6 +888,67 @@ submenu_list['personal_info'] = {
 	},
 };
 
+submenu_list['role_select'] = {
+	"_title": {
+		"style": "customized_title",
+		"title": Lincko.Translation.get('app', 108, 'html'), //Role
+	},
+	"left_button": {
+		"style": "title_left_button",
+		"title": Lincko.Translation.get('app', 25, 'html'), //Close
+		'hide': true,
+		"class": "base_pointer",
+	},
+};
+
+var submenu_role_build_list = function(users_id, category, id){
+	var name;
+	var roles = Lincko.storage.list('roles');
+	var current_role = Lincko.storage.userRole(users_id, category, id);
+	for(var i in submenu_list['role_select']){
+
+	}
+	//List first Workspaces' workspace
+	for(var i in roles){
+		name = roles[i]['+name'];
+		if(roles[i]['_id']==0){
+			name = Lincko.Translation.get('app', 109, 'html'); //Guest
+		} else if(roles[i]['_id']==1){
+			name = Lincko.Translation.get('app', 111, 'html'); //Adminstrator
+		} else if(roles[i]['_id']==2){
+			name = Lincko.Translation.get('app', 110, 'html'); //Teammate
+		}
+		if(typeof submenu_list['role_select']['role_'+roles[i]['_id']] == 'undefined'){
+			submenu_list['role_select']['role_'+roles[i]['_id']] = {
+				"style": "radio",
+				"title": name,
+				"hide": true,
+				"action_param": {
+					users_id: users_id,
+					roles_id: roles[i]['_id'],
+				},
+				"action": function(Elem, subm, action_param){
+					debugger;
+					/*
+					wrapper_sendAction(
+						{
+							"id": action_param.roles_id,
+							"roles>roles_id"
+						},
+						'post',
+						'user/update'
+					);
+					*/
+				},
+				"selected": false,
+			};
+			if(roles[i]['_id'] == current_role['_id']){
+				submenu_list['role_select']['role_'+roles[i]['_id']].selected = true;
+			}
+		}
+	}
+};
+
 submenu_list['personal_lincko'] = {
 	"_title": {
 		"style": "customized_title",
@@ -1172,7 +1253,6 @@ Submenu.prototype.Add_ButtonLink = function(subm) {
 		attribute.now(Elem, that);
 	}
 	submenu_wrapper.find("[find=submenu_wrapper_content]").append(Elem);
-	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
 	delete submenu_wrapper;
 	return Elem;
 };

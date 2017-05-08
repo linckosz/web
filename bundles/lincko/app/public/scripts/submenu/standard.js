@@ -211,7 +211,7 @@ submenu_list['workspace'] = {
 
 
 var submenu_workspace_build_list = function(){
-	var workspaces = Lincko.storage.list('workspaces');
+	var workspaces = Lincko.storage.sort_items(Lincko.storage.list('workspaces'), 'name');
 	var url;
 	var name;
 	var username;

@@ -174,7 +174,6 @@ Submenu.prototype.Add_ChatMenu = function() {
 	}
 	
 	//Free memory
-	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
 	delete submenu_wrapper;
 	return true;
 };
@@ -514,7 +513,6 @@ Submenu.prototype.Add_ChatContacts = function() {
 		}
 	);
 
-	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
 	delete submenu_wrapper;
 
 	return true;
@@ -707,7 +705,7 @@ Submenu.prototype.Add_ChatAddUser = function() {
 	);
 
 	$(window).resize();
-	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
+	//Free memory
 	delete submenu_wrapper;
 	return true;
 };
@@ -1317,7 +1315,6 @@ Submenu.prototype.Add_ChatContent = function() {
 	wrapper_IScroll_refresh();
 
 	//Free memory
-	//submenu_wrapper = null; //In some placea it bugs because it's used in a lower scope
 	delete submenu_wrapper;
 	return true;
 };
