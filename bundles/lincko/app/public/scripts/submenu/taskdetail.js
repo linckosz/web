@@ -909,6 +909,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		if(that.param.voice){
 			$.each(that.param.voice, function(i, id_voice){
 				elem_description_text.append(app_models_audio.build(id_voice).attr('contenteditable',false));
+				elem_description_text.append('<p><br></p>');
 			});
 		}
 
@@ -2485,10 +2486,24 @@ Submenu.prototype.Add_taskdetail = function() {
 
 			editorInst = linckoEditor('submenu_taskdetail_description_text_'+that.md5id, 'submenu_taskdetail_description_toolbar_'+that.md5id, editor_param);
 
+			//don't allow focus if mousedown on contenteditable false
+			var cancelFocus = false;
+			editorInst.on('contentDom', function(){
+			    var editable = editorInst.editable();
+			    $(editable.$).find('[contenteditable=false]').mousedown(function(event){
+					cancelFocus = true;
+				});
+			});
 
 			//not already in focus, add overlay to cover toolbar
 			if(!elem_description_text.is(":focus")){
-				elem_description_text.focus(function(){ 
+				elem_description_text.focus(function(event){
+					if(cancelFocus){ 
+						cancelFocus = false;
+						$(this).blur();
+						event.preventDefault();
+						return; 
+					}
 					if(elem_editorToolbar_overlay){
 						elem_editorToolbar_overlay.recursiveRemove(0);
 						elem_editorToolbar_overlay = null;
@@ -2578,15 +2593,6 @@ Submenu.prototype.Add_taskdetail = function() {
 			}
 		);
 		onLoad_description.run();
-
-		elem_description_text.focus(function(){ 
-			if(elem_editorToolbar_overlay){
-				elem_editorToolbar_overlay.recursiveRemove(0);
-				elem_editorToolbar_overlay = null;
-				$(this).off('focus');
-			}
-			return;
-		});
 
 
 		//auto focus after submenu opens, and send check request for locking
