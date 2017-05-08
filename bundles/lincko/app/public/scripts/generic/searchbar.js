@@ -102,7 +102,7 @@ var searchbar = {
 			if(!word.length || !burgerOnly ){
 				items_filtered = Lincko.storage.searchArray(
 					'word', word, items, 
-					['+title', '+name', '-comment', '-username', '-firstname', '-lastname', 'email'], 
+					['+title', '+name', '-comment', '-username', '-firstname', '-lastname', '-email'], 
 					word_pinyin
 				);
 			}
