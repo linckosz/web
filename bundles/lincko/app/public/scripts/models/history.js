@@ -814,6 +814,7 @@ var app_models_history = {
 		var root_name;
 		var name;
 		var comment;
+		var file;
 		var message;
 		var content;
 		var src;
@@ -1016,6 +1017,13 @@ var app_models_history = {
 							info[i].content = ''; //This should not happen
 						}
 						info[i].content = hist_info.title;
+					}
+					if(hist_all[i]["type"]=="files" && (hist_all[i]["att"]=="_delete" || hist_all[i]["cod"]==999)){
+						file = Lincko.storage.get("files", hist_all[i]["id"]);
+						if(file['category']=='voice' || (hist_all[i]["cod"]==999 && hist_all[i]["par_type"]=="chats")){
+							var uname = wrapper_to_html(Lincko.storage.get('users', hist_all[i]["by"])['-username']);
+							info[i].content = Lincko.Translation.get('app', 3101, 'html', {username: uname }); //has recalled a message
+						}
 					}
 
 					app_models_history.hist_root[root_name] = info[i];
