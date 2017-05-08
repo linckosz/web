@@ -182,30 +182,34 @@ function app_models_chats_bubble_actionMenu(){
 		
 
 		/*------------create task action----------------*/
-		var elem_taskBtn = elem_actionMenu.find('[find=task_btn]');
-		elem_taskBtn.on("mousedown touchend", function(){
+		var elem_taskBtn = elem_actionMenu.find('[find=task_btn]').on("mousedown touchstart", function(){
 			var preview = $('#app_content_submenu_preview').has(that).length ? true : false;
 
 			var files = false;
 			var voice = false;
 			if(category=='files'){
 				if(item.category == 'voice'){
-					voice = [id_item];
+					voice = [id_item]; textToAction = '';
 				} else {
 					files = {files: {}};
 					files.files[id_item] = item;
 				}
 			}
 
-			submenu_Build("taskdetail_new", submenu_Getnext(preview), false, 
+			that.blur();
+			var submenu_taskdetail = submenu_Build_return("taskdetail_new", submenu_Getnext(preview), false, 
 				{
 					'id':'new', 'type':'tasks',
 					'title': textToAction,
 					projID: projectID,
 					files: files,
 					voice: voice,
-				}, preview);
-			that.blur();
+				}, preview, false);
+			if(submenu_taskdetail.param.elem_autoFocus){
+				setTimeout(function(){ //mousedown is too early to set focus, so use timeout
+					submenu_taskdetail.param.elem_autoFocus.focus();
+				},300);
+			}
 		});
 		
 
