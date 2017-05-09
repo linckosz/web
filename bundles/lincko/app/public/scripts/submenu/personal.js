@@ -630,6 +630,7 @@ submenu_list['personal_info'] = {
 					}
 				}
 			}
+			wrapper_editableFix(Elem);
 		},
 	},
 	"business": {
@@ -700,6 +701,7 @@ submenu_list['personal_info'] = {
 					}
 				}
 			}
+			wrapper_editableFix(Elem);
 		},
 	},
 	"additional": {
@@ -770,6 +772,7 @@ submenu_list['personal_info'] = {
 					}
 				}
 			}
+			wrapper_editableFix(Elem);
 		},
 	},
 

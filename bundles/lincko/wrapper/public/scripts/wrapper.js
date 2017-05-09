@@ -54,7 +54,16 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 	}
 
 	if(action.match(/\/create$/, '')){
-		param[param.length] = {name:'temp_id', value:unique_md5};
+		var create_temp_id = true;
+		for(var i in param){
+			if(typeof param[i].name != 'undefined' && param[i].name=='temp_id'){
+				create_temp_id = false;
+				break;
+			}
+		}
+		if(create_temp_id){
+			param[param.length] = {name:'temp_id', value:unique_md5};
+		}
 	}
 
 	//initialize file uploading
