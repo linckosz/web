@@ -3296,6 +3296,7 @@ function burger_regex_getCaretOffset(elem, noElemHeight) {
 
 var  getSelectionCoords = function(win) {
 	//http://stackoverflow.com/questions/6846230/coordinates-of-selected-text-in-browser-page
+	//modified by Sky
 	win = win || window;
 	var doc = win.document;
 	var sel = doc.selection, range, rects, rect;
@@ -3344,6 +3345,7 @@ var  getSelectionCoords = function(win) {
 			}
 			//to get coordinate at the end of the selection
 			var range = window.getSelection().getRangeAt(0);
+			range = range.cloneRange(); //clone to leave the original selection alone
 			range.collapse(false);
 			var dummy = document.createElement("span");
 			range.insertNode(dummy);
