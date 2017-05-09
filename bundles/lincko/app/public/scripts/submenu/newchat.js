@@ -141,6 +141,15 @@ Submenu.prototype.Add_ChatContents = function() {
 		var type = this.action_param[0];
 		var id = this.action_param[1];
 		var subm = this.action_param[2];
+
+		//user has not seen messages if app is not on foreground. relaunch this sync function on app resume
+		if(device_type() == 'android' && !android_foreground.state){
+			android_foreground.fn_list[type+'_'+id] = function(){
+				app_application_lincko.prepare(type+'_'+id, true);
+			};
+			return;
+		}
+
 		var route = false;
 		if(type=='chats'){
 			route = 'chat/update';

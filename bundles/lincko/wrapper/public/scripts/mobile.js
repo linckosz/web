@@ -91,3 +91,18 @@ function device_type(){
 	}
 	return "other";
 }
+
+var android_foreground = {
+	state: true,
+	resume: function(){
+		this.state = true;
+		$.each(this.fn_list, function(i, fn){
+			if(typeof fn == 'function'){ fn(); }
+		});
+		this.fn_list = {};
+	},
+	pause: function(){
+		this.state = false;
+	},
+	fn_list: {}, //functions to run on resume
+}
