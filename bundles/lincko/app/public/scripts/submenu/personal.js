@@ -630,7 +630,6 @@ submenu_list['personal_info'] = {
 					}
 				}
 			}
-			wrapper_editableFix(Elem);
 		},
 	},
 	"business": {
@@ -701,7 +700,6 @@ submenu_list['personal_info'] = {
 					}
 				}
 			}
-			wrapper_editableFix(Elem);
 		},
 	},
 	"additional": {
@@ -772,7 +770,6 @@ submenu_list['personal_info'] = {
 					}
 				}
 			}
-			wrapper_editableFix(Elem);
 		},
 	},
 
@@ -1247,8 +1244,8 @@ Submenu.prototype.Add_ProfileTextarea = function() {
 			value = php_nl2br(value);
 			Elem.find("[find=submenu_value]").html(value);
 		} else {
-			value = php_nl2br(value);
-			Elem.find("[find=submenu_value]").html(attribute.value);
+			value = php_nl2br(attribute.value);
+			Elem.find("[find=submenu_value]").html(value);
 		}
 	}
 

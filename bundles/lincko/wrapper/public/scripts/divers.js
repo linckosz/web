@@ -74,18 +74,6 @@ if(
 	//wrapper_limit_json = 500; //Allow chunking for for ios crash (it seems working after reworking the database)
 }
 
-// WebKit contentEditable focus bug workaround:
-// https://gist.github.com/shimondoodkin/1081133
-var editableFix = $('<input style="width:1px;height:1px;border:none;margin:0;padding:0;" class="visibility_hidden" tabIndex="-1">').appendTo('html');
-var wrapper_editableFix = function(Elem){
-	if(/AppleWebKit\/([\d.]+)/.exec(navigator.userAgent)) {
-		Elem.blur(function () {
-			editableFix[0].setSelectionRange(0, 0);
-			editableFix.blur();
-		});
-	}
-}
-
 /*
 	This commands help to track time spent in some functions
 	wrapper_time_checkpoint(false, true);
