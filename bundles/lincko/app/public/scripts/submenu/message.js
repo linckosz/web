@@ -431,6 +431,32 @@ chatFeed.prototype.app_chat_feed_send_msg = function(data)
 }
 
 
+chatFeed.prototype.app_chat_feed_send_audio = function(data){
+	var profile = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users",data.by,'profile_pic'));
+	if(!profile){
+			profile = app_application_icon_single_user.src;
+	}
+	var msg = 
+	{
+		'user_id' : data.by,
+		'user_name' : Lincko.storage.get('users',  data.by,'username'),
+		'profile' : profile,
+		'timestamp' : data.timestamp,
+		'timeline' : this.has_today ? null : Math.floor(data.timestamp / 86400) * 86400 ,
+		'style' : 'audio',
+		'id' : data.id,
+		'temp_id' :  data.id,
+		'category' : data.category,
+		'content' : data.content,
+		'duration' : data.duration,
+	};
+
+	this.has_today = true;
+	var item = new BaseItemCls(msg);
+	item.item_display(this.position,this.submenu,'insert');
+}
+
+
 chatFeed.prototype.app_chat_feed_load_recent = function()
 {
 	var mode = 'insert';

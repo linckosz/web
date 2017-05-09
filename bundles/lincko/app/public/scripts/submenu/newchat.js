@@ -308,7 +308,6 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 			null,
 			function(jqXHR, settings, temp_id) {
 				tmpID.push(temp_id);
-
 				var data = {
 					'id': temp_id,
 					'category': that.param.type == 'chats' ? "messages":'comments',

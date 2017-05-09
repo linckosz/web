@@ -37,7 +37,11 @@ var BaseItemCls = function(record,type, disableActionClick)
 			}
 			else
 			{
-				this.style = 'activity';
+				if(Lincko.storage.get(record['type'], record['id'],'category') == 'voice'){
+					this.style = 'audio';
+				}else{
+					this.style = 'activity';
+				}
 			}
 			break;
 		case "chats" :
@@ -347,21 +351,39 @@ BaseItemCls.prototype.feed_action = function(elem,subm)
 
 var AudioContentCls = function(record,type)
 {
-	this.id = record['_id'];
-	this.category = record['_type'];
-	this.target = Lincko.storage.get(record['_type'] , record['_id'], 'name');
-	this.file_category = Lincko.storage.get(record['_type'], record['_id'],'category');
-	this.file_profile =  Lincko.storage.getLinkThumbnail(record['_id']);
-	this.ext = Lincko.storage.get(record['_type'], record['_id'],'ori_ext');
-	this.temp_id = record['temp_id'];
+	if(type=="chats" || type == "history")
+	{
+		this.id = typeof record['par'] == 'undefined' ? record['_id'] :  record['id'] ;
+		this.category =  typeof record['par'] == 'undefined' ? record['_type'] :  record['type'] ;
+		this.target = Lincko.storage.get(this.category , this.id, 'name');
+		this.file_category = Lincko.storage.get(this.category, this.id,'category');
+		this.file_profile =  Lincko.storage.getLinkThumbnail(this.id);
+		this.ext = Lincko.storage.get(this.category, this.id,'ori_ext');
+		this.temp_id =  Lincko.storage.get(this.category , this.id, 'temp_id');
+	}
+	else
+	{
+		this.id =  record['id'];
+		this.category = 'files';
+		this.content = record['content'];
+		this.duration = record['duration'];
+	}
 }
 
 AudioContentCls.prototype.feed_content = function(elem)
 {
 	elem.attr('category',this.category);
-	elem.attr(this.category + '_id',this.id);
+	if(typeof this.content !== "undefined"){
+		elem.attr('data',this.duration);
+		elem.attr('data',this.content);
+		elem.find('[find=audio_containner]').append(app_models_audio.build(this.id,this.content,this.duration));
+	}
+	else{
+		elem.attr(this.category + '_id',this.id);
+		elem.find('[find=audio_containner]').append(app_models_audio.build(this.id));
+	}
 	elem.find('[find=audio_containner]').addClass('models_history_audio');
-	elem.find('[find=audio_containner]').append(app_models_audio.build(this.id));
+	
 	if(elem.hasClass('models_history_self'))
 	{
 		elem.find('[find=play]').removeClass('icon-audio').addClass('icon-audioopposite');
@@ -369,6 +391,7 @@ AudioContentCls.prototype.feed_content = function(elem)
 }
 
 AudioContentCls.prototype.feed_action = function(elem,subm){
+
 }
 
 var FileContentCls = function(record,type)
@@ -535,7 +558,6 @@ var ActivityFileContentCls = function(record,type)
 	this.file_category = Lincko.storage.get(record['type'], record['id'],'category');
 	this.file_profile =  Lincko.storage.getLinkThumbnail(record['id']);
 	this.ext = Lincko.storage.get(record['type'], record['id'],'ori_ext');
-
 	var history = Lincko.storage.getHistoryInfo(record);
 	var clone_hist = $.extend(true, {}, history.root.history);
 	var text = history.root.title;
@@ -1117,6 +1139,31 @@ historyFeed.prototype.app_chat_feed_send_msg = function(data)
 		'parent_id' : this.id,
 		'data' : item
 	}
+	item.item_display(this.position,this.submenu,'insert');
+}
+
+historyFeed.prototype.app_chat_feed_send_audio = function(data){
+	var profile = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users",data.by,'profile_pic'));
+	if(!profile){
+			profile = app_application_icon_single_user.src;
+	}
+	var msg = 
+	{
+		'user_id' : data.by,
+		'user_name' : Lincko.storage.get('users',  data.by,'username'),
+		'profile' : profile,
+		'timestamp' : data.timestamp,
+		'timeline' : this.has_today ? null : Math.floor(data.timestamp / 86400) * 86400 ,
+		'style' : 'audio',
+		'id' : data.id,
+		'temp_id' :  data.id,
+		'category' : data.category,
+		'content' : data.content,
+		'duration' : data.duration,
+	};
+
+	this.has_today = true;
+	var item = new BaseItemCls(msg);
 	item.item_display(this.position,this.submenu,'insert');
 }
 

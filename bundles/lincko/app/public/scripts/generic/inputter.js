@@ -795,13 +795,16 @@ inputter.prototype.buildLayer = function()
 	var inputter_audio_operation_interval;
 	var inputter_audio_operation_status = 0; //1:send;2:cancel;
 	var inputter_audio_operation_icon_interval;
+	var inputter_audio_duration = 0;
+	var inputter_audio_duration_interval;
 
 	input.find('[find=chat_audio]').on('touchstart',function(event){
 		event.preventDefault();
 
+		inputter_audio_duration = 0;
 		inputter_current_audio_touch_clientY = 0;
 		inputter_start_audio_touch_clientY = 0;
-		inputter_audio_operation_status = 0;
+		inputter_audio_operation_status = 1;
 		
 		var inputter_record_impression;
 		if($('#inputter_record_impression').length == 0){
@@ -826,7 +829,7 @@ inputter.prototype.buildLayer = function()
 		var icon_index = ['1','2',''];
 		var index = 0;
 
-		
+
 		inputter_audio_operation_icon_interval = setInterval(function(){
 			inputter_record_impression.find('[find=icon] span')
 				.removeClass('icon-audio' + icon_index[((index+1) % 3)]);
@@ -837,20 +840,23 @@ inputter.prototype.buildLayer = function()
 			index++;
 		},400);
 
+		inputter_audio_duration_interval= setInterval(function(){
+			inputter_audio_duration += 1000;
+		},1000);
+
 
 		//toto:IOS、android FUNCTION Start
-		if(isMobileApp()){
-			if(device_type() == 'ios'){
-				window.webkit.messageHandlers.iOS.postMessage(
-				{
-					action: 'audio_start',
-				});
-			}
-			else if(device_type() == 'android'){
-				
-				android.audio_start();
-			}
+
+		if(device_type() == 'ios'){
+			window.webkit.messageHandlers.iOS.postMessage(
+			{
+				action: 'audio_start',
+			});
 		}
+		else if(device_type() == 'android'){
+			android.audio_start();
+		}
+
 
 	});
 
@@ -859,7 +865,6 @@ inputter.prototype.buildLayer = function()
 		inputter_current_audio_touch_clientY = event.originalEvent.changedTouches[0].clientY;
 
 		if(inputter_start_audio_touch_clientY - inputter_current_audio_touch_clientY >= 40){
-			
 			if(inputter_audio_operation_status!==2)
 			{
 				clearInterval(inputter_audio_operation_icon_interval);
@@ -906,41 +911,37 @@ inputter.prototype.buildLayer = function()
 		var inputter_record_impression = $('#inputter_record_impression');
 		inputter_record_impression.addClass('display_none');
 		clearInterval(inputter_audio_operation_interval);
+		clearInterval(inputter_audio_duration_interval);
 
-		//1:for send
 		if(inputter_audio_operation_status==1){
 			//toto:IOS、android FUNCTION SEND
-			if(isMobileApp()){
-				if(device_type() == 'ios'){
-					window.webkit.messageHandlers.iOS.postMessage(
-					{
-						action: 'audio_send',
-						value:{
-							call_back:'audio_native_callback',
-							type:that.upload_ptype,
-							pid:that.upload_pid
-						}
-					});
-				}
-				else if(device_type() == 'android'){
-					android.audio_send('audio_native_callback',that.upload_ptype,that.upload_pid);
-				}	
+			if(device_type() == 'ios'){
+				window.webkit.messageHandlers.iOS.postMessage(
+				{
+					action: 'audio_send',
+					value:{
+						call_back:'audio_native_callback',
+						type:that.upload_ptype,
+						pid:that.upload_pid,
+						container:input.submenu_getWrapper()[0].id,
+						duration:inputter_audio_duration,
+					}
+				});
 			}
-
+			else if(device_type() == 'android'){
+				android.audio_send('audio_native_callback',that.upload_ptype,that.upload_pid,input.submenu_getWrapper()[0].id);
+			}	
 		}
-		//2:for cancel
 		else if(inputter_audio_operation_status==2){
 			//toto:IOS、android FUNCTION CANCEL
-			if(isMobileApp()){
-				if(device_type() == 'ios'){
-					window.webkit.messageHandlers.iOS.postMessage(
-					{
-						action: 'audio_cancel',
-					});
-				}
-				else if(device_type() == 'android'){
-					android.audio_cancel();
-				}
+			if(device_type() == 'ios'){
+				window.webkit.messageHandlers.iOS.postMessage(
+				{
+					action: 'audio_cancel',
+				});
+			}
+			else if(device_type() == 'android'){
+				android.audio_cancel();
 			}
 		}
 	});
@@ -1121,20 +1122,27 @@ inputter.prototype.buildLayer = function()
 
 
 
-function audio_native_callback(base64,parm){
+function audio_native_callback(base64,param){
 	//toto:sendAction
-	if(typeof parm=='string')
+	if(typeof param=='string')
 	{
-		parm = JSON.parse(parm);
+		param = JSON.parse(param);
 	}
-	wrapper_sendAction({data: base64, parent_type:parm.type,parent_id:parm.pid}, 'post', 'file/voice',function(){
-			
-		},
+	var temp_id = md5(Math.random());
+	wrapper_sendAction({data: base64, parent_type:param.type,parent_id:param.pid,temp_id:temp_id}, 'post', 'file/voice',
 		function(){
 			
 		},
-		function(){
-			
+		null,
+		function(jqXHR, settings, tmp_id) {
+			var data = {
+				'id': temp_id,
+				'by':  wrapper_localstorage.uid,
+				'timestamp': Math.floor((new Date()).getTime() / 1000),
+				'content' : base64,
+				'duration' : param.duration,
+			};
+			submenu_getById(param.container).param.chatFeed.app_chat_feed_send_audio(data);
 		},
 		function(){
 			

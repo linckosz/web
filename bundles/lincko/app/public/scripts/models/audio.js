@@ -13,16 +13,25 @@ var app_models_audio = {
 		audio_dom.attr('audio_id',audio_id);
 		container.append(audio_dom);
 	},
-	build:function(audio_id){
+	build:function(audio_id,content,timer){
 		var audio_dom = $('#-app_models_lincko_audio').clone();
-		var duration = Lincko.storage.get('files' , audio_id, 'comment');
-		if(duration)
-		{
-			audio_dom.find('[find=time]').text(duration + '\'\'');
-			duration = duration > 60 ? 65 : duration;
-			audio_dom.find('[find=time]').width(40 + duration * 2);
+		if(!isNaN(audio_id)){
+			var duration = Lincko.storage.get('files' , audio_id, 'comment');
+			if(duration){
+				audio_dom.find('[find=time]').text(duration + '\'\'');
+				duration = duration > 60 ? 65 : duration;
+				audio_dom.find('[find=time]').width(40 + duration * 2);
+			}
+			audio_dom.attr('audio_id',audio_id);
 		}
-		audio_dom.attr('audio_id',audio_id);
+		else if(typeof content !== 'undefined'){
+			audio_dom.attr('data',content);
+
+			timer = timer / 1000;
+			audio_dom.find('[find=time]').text(timer + '\'\'');
+			duration = timer > 60 ? 65 : timer;
+			audio_dom.find('[find=time]').width(40 + timer * 2);
+		}
 		audio_dom.prop('id','');
 		return audio_dom;
 	},
@@ -69,7 +78,14 @@ var app_models_audio = {
 					app_models_audio.pause();
 					app_models_audio.animation($(this));
 					app_models_audio.status = 1;
-					app_models_audio.src = Lincko.storage.getLink(audio_id);
+
+					if(isNaN(audio_id)){
+						app_models_audio.src = "data:audio/mp3;base64," + $(this).attr('data');
+					}
+					else{
+						app_models_audio.src = Lincko.storage.getLink(audio_id);
+					}
+					
 					app_models_audio.audio_id = audio_id;
 					app_models_audio.play();
 				}	
