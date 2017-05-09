@@ -182,7 +182,11 @@ function app_models_chats_bubble_actionMenu(){
 		
 
 		/*------------create task action----------------*/
-		var elem_taskBtn = elem_actionMenu.find('[find=task_btn]').on("mousedown touchstart", function(){
+		var elem_taskBtn = elem_actionMenu.find('[find=task_btn]').on("mousedown touchstart", function(event){
+			//prevent clicking into next submenu
+			event.stopPropagation();
+			event.preventDefault(); 
+
 			var preview = $('#app_content_submenu_preview').has(that).length ? true : false;
 
 			var files = false;
@@ -196,7 +200,6 @@ function app_models_chats_bubble_actionMenu(){
 				}
 			}
 
-			that.blur();
 			var submenu_taskdetail = submenu_Build_return("taskdetail_new", submenu_Getnext(preview), false, 
 				{
 					'id':'new', 'type':'tasks',
@@ -206,13 +209,11 @@ function app_models_chats_bubble_actionMenu(){
 					voice: voice,
 				}, preview, false);
 			if(submenu_taskdetail.param.elem_autoFocus){
-				setTimeout(function(){ //mousedown is too early to set focus, so use timeout
-					submenu_taskdetail.param.elem_autoFocus.focus();
-				},300);
+				burgerN.placeCaretAtEnd(submenu_taskdetail.param.elem_autoFocus);
 			}
-		});
-		
 
+			that.blur();
+		});
 	}//end of timeout_fn
 
 
