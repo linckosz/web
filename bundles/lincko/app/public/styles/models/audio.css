@@ -2,6 +2,7 @@
 	line-height: 24px;
 	overflow: hidden;
 	cursor:pointer;
+	display: inline-block;
 }
 
 .app_models_lincko_audio_content{
