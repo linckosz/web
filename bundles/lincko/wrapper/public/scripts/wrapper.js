@@ -706,7 +706,9 @@ if(responsive.test("minTablet")){
 JSfiles.finish(function(){
 	wrapper_IScroll();
 	wrapper_localstorage.cleanLocalUser();
-	FastClick.attach(document.body);
+	if(!isIOS){
+		FastClick.attach(document.body);
+	}
 	setTimeout(wrapper_mobile_hover, 100); //Load it in another thread to not slow down the page loading
 	setTimeout(function(){
 		//We don't use it yet because the indice seems not relevant enough
