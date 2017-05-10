@@ -25,8 +25,10 @@ var app_models_audio = {
 			audio_dom.attr('audio_id',audio_id);
 		}
 		else if(typeof content !== 'undefined'){
+			var lazy = $('#-app_models_lincko_audio_lazy').clone();
+			lazy.prop('id','')
+			audio_dom.append(lazy);
 			audio_dom.attr('data',content);
-
 			timer = timer / 1000;
 			audio_dom.find('[find=time]').text(timer + '\'\'');
 			duration = timer > 60 ? 65 : timer;

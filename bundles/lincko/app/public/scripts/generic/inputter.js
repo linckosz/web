@@ -819,7 +819,7 @@ inputter.prototype.buildLayer = function()
 		inputter_record_impression.removeClass('display_none');
 		inputter_record_impression.find('[find=icon] span').removeClass('fa fa-undo inputter_record_impression_icon_samll');
 		inputter_record_impression.find('[find=icon] span').addClass('icon-audio');	
-		inputter_record_impression.find('[find=text]').text('Swipe up to cancel');//toto:transaltion
+		inputter_record_impression.find('[find=text]').text('Swipe up to cancel');//Swipe up to cancel
 
 		inputter_record_impression.css("top",($(window).height()-inputter_record_impression.height())/2);
 		inputter_record_impression.css("left",($(window).width()-inputter_record_impression.width())/2);
@@ -844,8 +844,6 @@ inputter.prototype.buildLayer = function()
 			inputter_audio_duration += 1000;
 		},1000);
 
-
-		//toto:IOS、android FUNCTION Start
 
 		if(device_type() == 'ios'){
 			window.webkit.messageHandlers.iOS.postMessage(
@@ -875,7 +873,7 @@ inputter.prototype.buildLayer = function()
 				inputter_record_impression.find('[find=icon] span').removeClass('icon-audio1');
 				inputter_record_impression.find('[find=icon] span').removeClass('icon-audio2');
 				inputter_record_impression.find('[find=icon] span').addClass('fa fa-undo inputter_record_impression_icon_samll');
-				inputter_record_impression.find('[find=text]').text('Release to cancel');//toto:transaltion
+				inputter_record_impression.find('[find=text]').text('Release to cancel');//Release to cancel
 			}
 		}
 		else{
@@ -884,7 +882,7 @@ inputter.prototype.buildLayer = function()
 				inputter_audio_operation_status = 1;
 				inputter_record_impression.find('[find=icon] span').removeClass('fa fa-undo inputter_record_impression_icon_samll');
 				inputter_record_impression.find('[find=icon] span').addClass('icon-audio');	
-				inputter_record_impression.find('[find=text]').text('Swipe up to cancel');//toto:transaltion
+				inputter_record_impression.find('[find=text]').text('Swipe up to cancel');//Swipe up to cancel
 
 				var icon_index = ['1','2',''];
 				var index = 0;
@@ -913,7 +911,6 @@ inputter.prototype.buildLayer = function()
 		clearInterval(inputter_audio_duration_interval);
 
 		if(inputter_audio_operation_status==1){
-			//toto:IOS、android FUNCTION SEND
 			if(device_type() == 'ios'){
 				window.webkit.messageHandlers.iOS.postMessage(
 				{
@@ -932,7 +929,6 @@ inputter.prototype.buildLayer = function()
 			}	
 		}
 		else if(inputter_audio_operation_status==2){
-			//toto:IOS、android FUNCTION CANCEL
 			if(device_type() == 'ios'){
 				window.webkit.messageHandlers.iOS.postMessage(
 				{

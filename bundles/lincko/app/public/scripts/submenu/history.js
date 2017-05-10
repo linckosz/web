@@ -45,7 +45,7 @@ var BaseItemCls = function(record,type, disableActionClick)
 			}
 			break;
 		case "chats" :
-			this.user_id = record["created_by"] ;
+			this.user_id = record["created_by"];
 			this.user_name = Lincko.storage.get('users', record["created_by"] ,'username');
 			this.profile = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", record["created_by"],'profile_pic'));
 			if(!this.profile){
@@ -293,11 +293,15 @@ BaseItemCls.prototype.item_display = function(position, subm, mode, scroll_time)
 		case 'change' :
 				var temp_elem_id = subm.id + '_' + this.data.category + '_models_thistory_' + this.data.temp_id 
 				+ (typeof this.data.hist !== 'undefined' && this.data.hist != 0 ?  '_'+ this.data.hist : '');
-				if(this.data.category == 'comments' || this.data.category == 'messages' )
+				if(this.data.category == 'comments' || this.data.category == 'messages' || this.data.category == 'files')
 				{
 					$('#'+temp_elem_id).attr(this.data.category + '_id',this.data.id);
-
 					$('#'+temp_elem_id).removeAttr('temp_id');
+					if(this.data.category == 'files')
+					{
+						$('#'+temp_elem_id).removeAttr('data');
+						$('#'+temp_elem_id).find('[find=lazy]').remove();
+					}
 				}
 				$('#'+temp_elem_id).prop('id',elem_id);
 			break;
@@ -365,6 +369,7 @@ var AudioContentCls = function(record,type)
 	{
 		this.id =  record['id'];
 		this.category = 'files';
+		this.temp_id  = record['id'];
 		this.content = record['content'];
 		this.duration = record['duration'];
 	}

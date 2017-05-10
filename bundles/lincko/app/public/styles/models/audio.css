@@ -60,3 +60,22 @@
     overflow: hidden;
     opacity: 0;
 }
+
+.app_model_lincko_audio_lazy_container{
+	position:absolute;
+	display:block;
+	width:30px;
+	height:30px;
+}
+
+.app_model_lincko_audio_lazy{
+	position:relative;
+	left:-20px; 
+	line-height:30px;
+}
+
+.app_model_lincko_audio_lazy i{
+	font-size:13px; 
+	color:#dddddd;
+}
+
