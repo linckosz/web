@@ -270,13 +270,59 @@ Submenu.prototype.Add_ChatContacts = function() {
 		}
 	}
 
+	//Contacts
+	var div_id = that.id+"_submenu_app_chat_chat_contact_div";
+	var div = $('#'+div_id);
+	if(div.length<=0){
+		div = $('<div>');
+		div.prop("id", div_id).addClass('overthrow submenu_app_chat_chat_contact_div');
+		submenu_wrapper.find("[find=submenu_wrapper_content]").append(div);
+	}
+
+	contacts = Lincko.storage.sort_items(visible, '-username');
+	for(var i in contacts){
+		var Elem_id = that.id+"_submenu_app_chat_chat_contact_"+contacts[i]['_id'];
+		delete exists_tab[Elem_id];
+		if($('#'+Elem_id).length>=1){
+			continue;
+		}
+		var Elem = $('#-submenu_app_chat_chat_contact').attr("find", 'tab_contact').clone();
+		Elem.prop("id", Elem_id).attr('uid', contacts[i]['_id']);
+		thumbnail = Lincko.storage.getLinkThumbnail(contacts[i]['profile_pic']);
+		if(thumbnail){
+			Elem.find("[find=picture_src]").css('background-image','url("'+thumbnail+'")');
+		} else if(contacts[i]['_id']==0){ //LinckoBot
+			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_roboto.src+'")');
+		} else if(contacts[i]['_id']==1){ //Monkey King
+			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_monkeyking.src+'")');
+		} else {
+			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_single_user.src+'")');
+		}
+		Elem.find("[find=who]").html(wrapper_to_html(contacts[i]['-username']));
+		Elem.off("click");
+		Elem.on('click', [that, contacts[i]['_id']], function(event){ //toto => why this is called multiple time when when switch few times from Contact list adn Chats list?
+			event.stopPropagation();
+			submenu_chat_open_single(event.data[0], event.data[1]);
+		});
+		if(contacts[i]['_id']>1){
+			Elem.find("[find=picture]").on('click', [that, contacts[i]['_id']], function(event){ //toto => why this is called multiple time when when switch few times from Contact list adn Chats list?
+				event.stopPropagation();
+				var subm = event.data[0];
+				submenu_Build("personal_info", subm.layer + 1, false, event.data[1], subm.preview);
+			});
+		}
+		div.append(Elem);
+		delete Elem;
+	}
+
 	//Invitation
 	var div_id = that.id+"_submenu_app_chat_chat_invitation_div";
 	var div = $('#'+div_id);
 	if(div.length<=0){
 		div = $('<div>');
 		div.prop("id", div_id);
-		submenu_wrapper.find("[find=submenu_wrapper_content]").append(div);
+		//submenu_wrapper.find("[find=submenu_wrapper_content]").append(div);
+		$('#'+that.id+"_submenu_app_chat_chat_contact_div").prepend(div);
 	}
 
 	if(invitation.length > 0){
@@ -370,7 +416,8 @@ Submenu.prototype.Add_ChatContacts = function() {
 	if(div.length<=0){
 		div = $('<div>');
 		div.prop("id", div_id);
-		submenu_wrapper.find("[find=submenu_wrapper_content]").append(div);
+		//submenu_wrapper.find("[find=submenu_wrapper_content]").append(div);
+		$('#'+that.id+"_submenu_app_chat_chat_contact_div").prepend(div);
 	}
 
 	var pending = Lincko.storage.get('users', wrapper_localstorage.uid, 'pending');
@@ -432,51 +479,6 @@ Submenu.prototype.Add_ChatContacts = function() {
 				}
 			);
 		});
-		div.append(Elem);
-		delete Elem;
-	}
-
-	//Contacts
-	var div_id = that.id+"_submenu_app_chat_chat_contact_div";
-	var div = $('#'+div_id);
-	if(div.length<=0){
-		div = $('<div>');
-		div.prop("id", div_id).addClass('overthrow submenu_app_chat_chat_contact_div');
-		submenu_wrapper.find("[find=submenu_wrapper_content]").append(div);
-	}
-
-	contacts = Lincko.storage.sort_items(visible, '-username');
-	for(var i in contacts){
-		var Elem_id = that.id+"_submenu_app_chat_chat_contact_"+contacts[i]['_id'];
-		delete exists_tab[Elem_id];
-		if($('#'+Elem_id).length>=1){
-			continue;
-		}
-		var Elem = $('#-submenu_app_chat_chat_contact').attr("find", 'tab_contact').clone();
-		Elem.prop("id", Elem_id).attr('uid', contacts[i]['_id']);
-		thumbnail = Lincko.storage.getLinkThumbnail(contacts[i]['profile_pic']);
-		if(thumbnail){
-			Elem.find("[find=picture_src]").css('background-image','url("'+thumbnail+'")');
-		} else if(contacts[i]['_id']==0){ //LinckoBot
-			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_roboto.src+'")');
-		} else if(contacts[i]['_id']==1){ //Monkey King
-			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_monkeyking.src+'")');
-		} else {
-			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_single_user.src+'")');
-		}
-		Elem.find("[find=who]").html(wrapper_to_html(contacts[i]['-username']));
-		Elem.off("click");
-		Elem.on('click', [that, contacts[i]['_id']], function(event){ //toto => why this is called multiple time when when switch few times from Contact list adn Chats list?
-			event.stopPropagation();
-			submenu_chat_open_single(event.data[0], event.data[1]);
-		});
-		if(contacts[i]['_id']>1){
-			Elem.find("[find=picture]").on('click', [that, contacts[i]['_id']], function(event){ //toto => why this is called multiple time when when switch few times from Contact list adn Chats list?
-				event.stopPropagation();
-				var subm = event.data[0];
-				submenu_Build("personal_info", subm.layer + 1, false, event.data[1], subm.preview);
-			});
-		}
 		div.append(Elem);
 		delete Elem;
 	}

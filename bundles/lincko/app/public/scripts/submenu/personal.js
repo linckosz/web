@@ -139,9 +139,14 @@ submenu_list['personal_info'] = {
 			return role['+name'];
 		},
 		"now": function(Elem, subm){
-			submenu_role_build_list(subm.param, 'workspaces', Lincko.storage.getWORKID());
+			if(Lincko.storage.getWORKID()>0){
+				Elem.removeClass('display_none');
+				submenu_role_build_list(subm.param, 'workspaces', Lincko.storage.getWORKID());
+			} else {
+				Elem.off('click');
+			}
 		},
-		"class": "",
+		"class": "display_none",
 	},
 	"personal_lincko": {
 		"style": "button",
