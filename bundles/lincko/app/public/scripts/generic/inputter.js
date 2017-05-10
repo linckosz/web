@@ -901,7 +901,6 @@ inputter.prototype.buildLayer = function()
 						index++;
 					},400);
 				}
-				
 			}
 		}
 	});
@@ -929,7 +928,7 @@ inputter.prototype.buildLayer = function()
 				});
 			}
 			else if(device_type() == 'android'){
-				android.audio_send('audio_native_callback',that.upload_ptype,that.upload_pid,input.submenu_getWrapper()[0].id);
+				android.audio_send('audio_native_callback',that.upload_ptype,that.upload_pid,input.submenu_getWrapper()[0].id,inputter_audio_duration);
 			}	
 		}
 		else if(inputter_audio_operation_status==2){
