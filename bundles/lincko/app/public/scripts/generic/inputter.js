@@ -81,6 +81,15 @@ var inputter = function(panel_id,position,upload_ptype,upload_pid,layer,burger)
 	this.focus_flag = false;
 	this.touch_now = false;
 	this.buildLayer();
+
+
+	this.inputter_current_audio_touch_clientY = 0;
+	this.inputter_start_audio_touch_clientY = 0;
+	this.inputter_audio_operation_interval;
+	this.inputter_audio_operation_status = 0; //1:send;2:cancel;
+	this.inputter_audio_operation_icon_interval;
+	this.inputter_audio_duration = 0;
+	this.inputter_audio_duration_interval;
 }
 
 inputter.prototype.getContent = function()
@@ -790,21 +799,15 @@ inputter.prototype.buildLayer = function()
 		},0);
 	});
 
-	var inputter_current_audio_touch_clientY = 0;
-	var inputter_start_audio_touch_clientY = 0;
-	var inputter_audio_operation_interval;
-	var inputter_audio_operation_status = 0; //1:send;2:cancel;
-	var inputter_audio_operation_icon_interval;
-	var inputter_audio_duration = 0;
-	var inputter_audio_duration_interval;
+
 
 	input.find('[find=chat_audio]').on('touchstart',function(event){
 		event.preventDefault();
 
-		inputter_audio_duration = 0;
-		inputter_current_audio_touch_clientY = 0;
-		inputter_start_audio_touch_clientY = 0;
-		inputter_audio_operation_status = 1;
+		that.inputter_audio_duration = 0;
+		that.inputter_current_audio_touch_clientY = 0;
+		that.inputter_start_audio_touch_clientY = 0;
+		that.inputter_audio_operation_status = 1;
 		
 		var inputter_record_impression;
 		if($('#inputter_record_impression').length == 0){
@@ -823,14 +826,14 @@ inputter.prototype.buildLayer = function()
 
 		inputter_record_impression.css("top",($(window).height()-inputter_record_impression.height())/2);
 		inputter_record_impression.css("left",($(window).width()-inputter_record_impression.width())/2);
-		inputter_current_audio_touch_clientY = event.originalEvent.changedTouches[0].clientY;
-		inputter_start_audio_touch_clientY = inputter_current_audio_touch_clientY;
+		that.inputter_current_audio_touch_clientY = event.originalEvent.changedTouches[0].clientY;
+		that.inputter_start_audio_touch_clientY = that.inputter_current_audio_touch_clientY;
 
 		var icon_index = ['1','2',''];
 		var index = 0;
 
 
-		inputter_audio_operation_icon_interval = setInterval(function(){
+		that.inputter_audio_operation_icon_interval = setInterval(function(){
 			inputter_record_impression.find('[find=icon] span')
 				.removeClass('icon-audio' + icon_index[((index+1) % 3)]);
 			inputter_record_impression.find('[find=icon] span')
@@ -840,8 +843,8 @@ inputter.prototype.buildLayer = function()
 			index++;
 		},400);
 
-		inputter_audio_duration_interval= setInterval(function(){
-			inputter_audio_duration += 1000;
+		that.inputter_audio_duration_interval= setInterval(function(){
+			that.inputter_audio_duration += 1000;
 		},1000);
 
 
@@ -860,15 +863,15 @@ inputter.prototype.buildLayer = function()
 
 	input.find('[find=chat_audio]').on('touchmove',function(event){
 		var inputter_record_impression = $('#inputter_record_impression');
-		inputter_current_audio_touch_clientY = event.originalEvent.changedTouches[0].clientY;
+		that.inputter_current_audio_touch_clientY = event.originalEvent.changedTouches[0].clientY;
 
-		if(inputter_start_audio_touch_clientY - inputter_current_audio_touch_clientY >= 40){
-			if(inputter_audio_operation_status!==2)
+		if(that.inputter_start_audio_touch_clientY - that.inputter_current_audio_touch_clientY >= 40){
+			if(that.inputter_audio_operation_status!==2)
 			{
-				clearInterval(inputter_audio_operation_icon_interval);
-				inputter_audio_operation_icon_interval = 0;
-				inputter_record_impression.find('[find=text]').text(inputter_audio_operation_icon_interval);
-				inputter_audio_operation_status = 2;
+				clearInterval(that.inputter_audio_operation_icon_interval);
+				that.inputter_audio_operation_icon_interval = 0;
+				inputter_record_impression.find('[find=text]').text(that.inputter_audio_operation_icon_interval);
+				that.inputter_audio_operation_status = 2;
 				inputter_record_impression.find('[find=icon] span').removeClass('icon-audio');
 				inputter_record_impression.find('[find=icon] span').removeClass('icon-audio1');
 				inputter_record_impression.find('[find=icon] span').removeClass('icon-audio2');
@@ -877,9 +880,9 @@ inputter.prototype.buildLayer = function()
 			}
 		}
 		else{
-			if(inputter_audio_operation_status!==1)
+			if(that.inputter_audio_operation_status!==1)
 			{
-				inputter_audio_operation_status = 1;
+				that.inputter_audio_operation_status = 1;
 				inputter_record_impression.find('[find=icon] span').removeClass('fa fa-undo inputter_record_impression_icon_samll');
 				inputter_record_impression.find('[find=icon] span').addClass('icon-audio');	
 				inputter_record_impression.find('[find=text]').text('Swipe up to cancel');//Swipe up to cancel
@@ -887,9 +890,9 @@ inputter.prototype.buildLayer = function()
 				var icon_index = ['1','2',''];
 				var index = 0;
 
-				if(inputter_audio_operation_icon_interval == 0)
+				if(that.inputter_audio_operation_icon_interval == 0)
 				{
-					inputter_audio_operation_icon_interval = setInterval(function(){
+					that.inputter_audio_operation_icon_interval = setInterval(function(){
 						inputter_record_impression.find('[find=icon] span')
 							.removeClass('icon-audio' + icon_index[((index+1) % 3)]);
 						inputter_record_impression.find('[find=icon] span')
@@ -907,10 +910,11 @@ inputter.prototype.buildLayer = function()
 		event.preventDefault();
 		var inputter_record_impression = $('#inputter_record_impression');
 		inputter_record_impression.addClass('display_none');
-		clearInterval(inputter_audio_operation_interval);
-		clearInterval(inputter_audio_duration_interval);
+		clearInterval(that.inputter_audio_operation_interval);
+		clearInterval(that.inputter_audio_operation_icon_interval);
+		clearInterval(that.inputter_audio_duration_interval);
 
-		if(inputter_audio_operation_status==1){
+		if(that.inputter_audio_operation_status==1){
 			if(device_type() == 'ios'){
 				window.webkit.messageHandlers.iOS.postMessage(
 				{
@@ -920,15 +924,15 @@ inputter.prototype.buildLayer = function()
 						type:that.upload_ptype,
 						pid:that.upload_pid,
 						container:input.submenu_getWrapper()[0].id,
-						duration:inputter_audio_duration,
+						duration:that.inputter_audio_duration,
 					}
 				});
 			}
 			else if(device_type() == 'android'){
-				android.audio_send('audio_native_callback',that.upload_ptype,that.upload_pid,input.submenu_getWrapper()[0].id,inputter_audio_duration);
+				android.audio_send('audio_native_callback',that.upload_ptype,that.upload_pid,input.submenu_getWrapper()[0].id,that.inputter_audio_duration);
 			}	
 		}
-		else if(inputter_audio_operation_status==2){
+		else if(that.inputter_audio_operation_status==2){
 			if(device_type() == 'ios'){
 				window.webkit.messageHandlers.iOS.postMessage(
 				{
