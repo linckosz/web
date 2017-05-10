@@ -182,38 +182,43 @@ function app_models_chats_bubble_actionMenu(){
 		
 
 		/*------------create task action----------------*/
-		var elem_taskBtn = elem_actionMenu.find('[find=task_btn]').on("mousedown touchstart", function(event){
-			//prevent clicking into next submenu
-			event.stopPropagation();
-			event.preventDefault(); 
+		var elem_taskBtn = elem_actionMenu.find('[find=task_btn]');
+		if(!item && category == 'files'){ //grey out quick task button if file item is not ready (file and voice)
+			elem_taskBtn.addClass('app_models_chats_actionBtn_opaque');
+		} else {
+			elem_taskBtn.on("mousedown touchstart", function(event){
+				//prevent clicking into next submenu
+				event.stopPropagation();
+				event.preventDefault(); 
 
-			var preview = $('#app_content_submenu_preview').has(that).length ? true : false;
+				var preview = $('#app_content_submenu_preview').has(that).length ? true : false;
 
-			var files = false;
-			var voice = false;
-			if(category=='files'){
-				if(item.category == 'voice'){
-					voice = [id_item]; textToAction = '';
-				} else {
-					files = {files: {}};
-					files.files[id_item] = item;
+				var files = false;
+				var voice = false;
+				if(category=='files'){
+					if(item.category == 'voice'){
+						voice = [id_item]; textToAction = '';
+					} else {
+						files = {files: {}};
+						files.files[id_item] = item;
+					}
 				}
-			}
 
-			var submenu_taskdetail = submenu_Build_return("taskdetail_new", submenu_Getnext(preview), false, 
-				{
-					'id':'new', 'type':'tasks',
-					'title': textToAction,
-					projID: projectID,
-					files: files,
-					voice: voice,
-				}, preview, false);
-			if(submenu_taskdetail.param.elem_autoFocus){
-				burgerN.placeCaretAtEnd(submenu_taskdetail.param.elem_autoFocus);
-			}
+				var submenu_taskdetail = submenu_Build_return("taskdetail_new", submenu_Getnext(preview), false, 
+					{
+						'id':'new', 'type':'tasks',
+						'title': textToAction,
+						projID: projectID,
+						files: files,
+						voice: voice,
+					}, preview, false);
+				if(submenu_taskdetail.param.elem_autoFocus){
+					burgerN.placeCaretAtEnd(submenu_taskdetail.param.elem_autoFocus);
+				}
 
-			that.blur();
-		});
+				that.blur();
+			});
+		}
 	}//end of timeout_fn
 
 
