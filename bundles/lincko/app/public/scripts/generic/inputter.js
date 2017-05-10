@@ -876,7 +876,7 @@ inputter.prototype.buildLayer = function()
 				inputter_record_impression.find('[find=icon] span').removeClass('icon-audio1');
 				inputter_record_impression.find('[find=icon] span').removeClass('icon-audio2');
 				inputter_record_impression.find('[find=icon] span').addClass('fa fa-undo inputter_record_impression_icon_samll');
-				inputter_record_impression.find('[find=text]').text('Release to cancel');//Release to cancel
+				inputter_record_impression.find('[find=text]').text(Lincko.Translation.get('app', 112, 'js'));//Release to cancel
 			}
 		}
 		else{
@@ -885,7 +885,7 @@ inputter.prototype.buildLayer = function()
 				that.inputter_audio_operation_status = 1;
 				inputter_record_impression.find('[find=icon] span').removeClass('fa fa-undo inputter_record_impression_icon_samll');
 				inputter_record_impression.find('[find=icon] span').addClass('icon-audio');	
-				inputter_record_impression.find('[find=text]').text('Swipe up to cancel');//Swipe up to cancel
+				inputter_record_impression.find('[find=text]').text(Lincko.Translation.get('app', 113, 'js'));//Swipe up to cancel
 
 				var icon_index = ['1','2',''];
 				var index = 0;
@@ -1118,7 +1118,6 @@ inputter.prototype.buildLayer = function()
 		//dom.resize(); it will trigger the window.resize();
 	});
 }
-
 
 
 function audio_native_callback(base64,param){
