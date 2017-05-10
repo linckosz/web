@@ -630,7 +630,10 @@ JSfiles.finish(function(){
 	if(isMobileApp(true)){
 		$('#account_wrapper, .account_trans, .account_tab, #account_tab_lincko, .account_tab_joinus, .account_tab_signin, .account_form').addClass('account_wrapper_mobile_app');
 	}
-	if(navigator.userAgent.match(/MicroMessenger/i)){
+
+	if(	  navigator.userAgent.match(/MicroMessenger/i)
+	   || (android && typeof android.hasWechat && !android.hasWechat()) //if android APP and wechat is not installed
+	){
 		$('#account_integration_wechat').addClass('display_none');
 	}
 
