@@ -90,6 +90,7 @@ var inputter = function(panel_id,position,upload_ptype,upload_pid,layer,burger)
 	this.inputter_audio_operation_icon_interval;
 	this.inputter_audio_duration = 0;
 	this.inputter_audio_duration_interval;
+
 }
 
 inputter.prototype.getContent = function()
@@ -803,62 +804,74 @@ inputter.prototype.buildLayer = function()
 
 	input.find('[find=chat_audio]').on('touchstart',function(event){
 		event.preventDefault();
-
-		that.inputter_audio_duration = 0;
-		that.inputter_current_audio_touch_clientY = 0;
-		that.inputter_start_audio_touch_clientY = 0;
-		that.inputter_audio_operation_status = 1;
+		$(this).css('background-color','#f7cf99');
+		var showInfo = false;
 		
-		var inputter_record_impression;
-		if($('#inputter_record_impression').length == 0){
-			inputter_record_impression = $('#-inputter_record_impression').clone();
-			inputter_record_impression.prop('id','inputter_record_impression');//toto:need to name a good id
-
-			$('body').append(inputter_record_impression);
-		}
-		else{
-			inputter_record_impression = $('#inputter_record_impression');		
-		}
-		inputter_record_impression.removeClass('display_none');
-		inputter_record_impression.find('[find=icon] span').removeClass('fa fa-undo inputter_record_impression_icon_samll');
-		inputter_record_impression.find('[find=icon] span').addClass('icon-audio');	
-		inputter_record_impression.find('[find=text]').text('Swipe up to cancel');//Swipe up to cancel
-
-		inputter_record_impression.css("top",($(window).height()-inputter_record_impression.height())/2);
-		inputter_record_impression.css("left",($(window).width()-inputter_record_impression.width())/2);
-		that.inputter_current_audio_touch_clientY = event.originalEvent.changedTouches[0].clientY;
-		that.inputter_start_audio_touch_clientY = that.inputter_current_audio_touch_clientY;
-
-		var icon_index = ['1','2',''];
-		var index = 0;
-
-
-		that.inputter_audio_operation_icon_interval = setInterval(function(){
-			inputter_record_impression.find('[find=icon] span')
-				.removeClass('icon-audio' + icon_index[((index+1) % 3)]);
-			inputter_record_impression.find('[find=icon] span')
-				.removeClass('icon-audio' + icon_index[((index+2) % 3)]);
-			inputter_record_impression.find('[find=icon] span')
-				.addClass('icon-audio' + icon_index[(index % 3)]);
-			index++;
-		},400);
-
-		that.inputter_audio_duration_interval= setInterval(function(){
-			that.inputter_audio_duration += 1000;
-		},1000);
-
-
 		if(device_type() == 'ios'){
 			window.webkit.messageHandlers.iOS.postMessage(
 			{
 				action: 'audio_start',
 			});
+			showInfo = true;
 		}
 		else if(device_type() == 'android'){
-			android.audio_start();
+			if(android.hasAudioPermission()){
+				android.audio_start();
+				showInfo = android.hasAudioPermission();
+			}
+			if(android.getAndroidOS()>=21){
+				showInfo = true;
+			}
+			else{
+				showInfo = false;
+			}
 		}
 
+		that.inputter_audio_duration = 0;
+		that.inputter_current_audio_touch_clientY = 0;
+		that.inputter_start_audio_touch_clientY = 0;
+		that.inputter_audio_operation_status = 1;
 
+		if(showInfo)
+		{
+			var inputter_record_impression;
+			if($('#inputter_record_impression').length == 0){
+				inputter_record_impression = $('#-inputter_record_impression').clone();
+				inputter_record_impression.prop('id','inputter_record_impression');//toto:need to name a good id
+
+				$('body').append(inputter_record_impression);
+			}
+			else{
+				inputter_record_impression = $('#inputter_record_impression');		
+			}
+
+			inputter_record_impression.removeClass('display_none');
+			inputter_record_impression.find('[find=icon] span').removeClass('fa fa-undo inputter_record_impression_icon_samll');
+			inputter_record_impression.find('[find=icon] span').addClass('icon-audio');	
+			inputter_record_impression.find('[find=text]').text(Lincko.Translation.get('app', 113, 'js'));//Swipe up to cancel
+
+			inputter_record_impression.css("top",($(window).height()-inputter_record_impression.height())/2);
+			inputter_record_impression.css("left",($(window).width()-inputter_record_impression.width())/2);
+			that.inputter_current_audio_touch_clientY = event.originalEvent.changedTouches[0].clientY;
+			that.inputter_start_audio_touch_clientY = that.inputter_current_audio_touch_clientY;
+
+			var icon_index = ['1','2',''];
+			var index = 0;
+
+			that.inputter_audio_operation_icon_interval = setInterval(function(){
+				inputter_record_impression.find('[find=icon] span')
+					.removeClass('icon-audio' + icon_index[((index+1) % 3)]);
+				inputter_record_impression.find('[find=icon] span')
+					.removeClass('icon-audio' + icon_index[((index+2) % 3)]);
+				inputter_record_impression.find('[find=icon] span')
+					.addClass('icon-audio' + icon_index[(index % 3)]);
+				index++;
+			},400);			
+		}
+
+		that.inputter_audio_duration_interval= setInterval(function(){
+				that.inputter_audio_duration += 1000;
+		},1000);
 	});
 
 	input.find('[find=chat_audio]').on('touchmove',function(event){
@@ -906,8 +919,9 @@ inputter.prototype.buildLayer = function()
 		}
 	});
 
-	input.find('[find=chat_audio]').on('touchend',function(event){
-		event.preventDefault();
+
+	input.find('[find=chat_audio]').on('touchend',function(){
+		$(this).css('background-color','#fba026');
 		var inputter_record_impression = $('#inputter_record_impression');
 		inputter_record_impression.addClass('display_none');
 		clearInterval(that.inputter_audio_operation_interval);
@@ -929,6 +943,7 @@ inputter.prototype.buildLayer = function()
 				});
 			}
 			else if(device_type() == 'android'){
+
 				android.audio_send('audio_native_callback',that.upload_ptype,that.upload_pid,input.submenu_getWrapper()[0].id,that.inputter_audio_duration);
 			}	
 		}
