@@ -188,7 +188,7 @@ function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_
 					base_show_error(Lincko.Translation.get('app', 33, 'js')); //You are not allowed to access this workspace. (keep it blue to avoid it looking like a bug message)
 				}
 				setTimeout(function(){
-					wrapper_sendAction('','post','user/signout', null, null, wrapper_signout_cb_begin, wrapper_signout_cb_complete);
+					wrapper_sendAction('', 'post','user/signout', null, null, wrapper_signout_cb_begin, wrapper_signout_cb_complete);
 				}, 200);
 			}
 

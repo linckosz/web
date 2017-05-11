@@ -30,6 +30,11 @@
 	height: 97px;
 }
 
+.submenu_personal_role_select_info {
+	cursor: default !important;
+	font-style: normal !important;
+}
+
 .submenu_personal_profile_picture {
 	text-align: center;
 	width: 170px;

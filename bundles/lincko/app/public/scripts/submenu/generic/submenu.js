@@ -752,7 +752,7 @@ Submenu.prototype.Add_MenuRadio = function() {
 		} else {
 			Elem.find("[find=submenu_radio_value]").html("");
 		}
-	}, [Elem, attribute] )
+	}, [Elem, attribute] );
 
 	if ("action" in attribute) {
 		if (!("action_param" in attribute)) {

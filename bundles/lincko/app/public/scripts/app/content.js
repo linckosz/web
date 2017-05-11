@@ -132,7 +132,7 @@ var app_content_menu = {
 		//preload project pictures
 		var extend = false;
 		if(menu=='files'){
-			extend = true;
+			//extend = true;
 		}
 		var files = Lincko.storage.list('files', null, null, 'projects', projects_id);
 		for(var i in files){

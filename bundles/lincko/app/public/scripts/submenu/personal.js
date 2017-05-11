@@ -129,19 +129,41 @@ submenu_list['personal_info'] = {
 		"next": "role_select",
 		"value": function(Elem, subm){
 			var role = Lincko.storage.userRole(subm.param, 'workspaces', Lincko.storage.getWORKID());
-			if(role['_id']==0){
-				return Lincko.Translation.get('app', 109, 'html'); //Guest
-			} else if(role['_id']==1){
+			if(role['_id']==1){
 				return Lincko.Translation.get('app', 111, 'html'); //Adminstrator
 			} else if(role['_id']==2){
 				return Lincko.Translation.get('app', 110, 'html'); //Teammate
+			} else if(role['_id']==3){
+				return Lincko.Translation.get('app', 109, 'html'); //Guest
 			}
 			return role['+name'];
 		},
 		"now": function(Elem, subm){
+			grant = false;
 			if(Lincko.storage.getWORKID()>0){
+				var role = Lincko.storage.userRole(wrapper_localstorage.uid);
+				if(role && role.perm_grant){
+					grant = true;
+				}
+			}
+			if(grant && Lincko.storage.getWORKID()>0 && Lincko.storage.canI('edit', 'workspaces', Lincko.storage.getWORKID()) && subm.param != wrapper_localstorage.uid){
 				Elem.removeClass('display_none');
 				submenu_role_build_list(subm.param, 'workspaces', Lincko.storage.getWORKID());
+				var select_id = subm.id+"_"+md5(Math.random());
+				var select_elem = Elem.find("[find=submenu_next_value]");
+				select_elem.prop("id", select_id);
+				app_application_lincko.add(select_id, "role_select", function(){
+					var Elem = this.action_param[0];
+					var tab = this.action_param[1];
+					var subm = this.action_param[2];
+					if(typeof tab.value == 'function'){
+						Elem.find("[find=submenu_next_value]").html(tab.value(Elem, subm));
+					}
+				}, [Elem, this, subm] );
+			} else if(Lincko.storage.getWORKID()>0){
+				Elem.find("[find=submenu_next_image]").addClass('display_none');
+				Elem.find("[find=submenu_next_value]").addClass('submenu_personal_role_select_info');
+				Elem.removeClass('display_none').addClass('submenu_personal_role_select_info').off('click');
 			} else {
 				Elem.off('click');
 			}
@@ -911,39 +933,54 @@ var submenu_role_build_list = function(users_id, category, id){
 	var roles = Lincko.storage.list('roles');
 	var current_role = Lincko.storage.userRole(users_id, category, id);
 	for(var i in submenu_list['role_select']){
-
+		if(i.indexOf('role_')===0){
+			delete submenu_list['role_select'][i];
+		}
 	}
 	//List first Workspaces' workspace
 	for(var i in roles){
 		name = roles[i]['+name'];
-		if(roles[i]['_id']==0){
-			name = Lincko.Translation.get('app', 109, 'html'); //Guest
-		} else if(roles[i]['_id']==1){
+		if(roles[i]['_id']==1){
 			name = Lincko.Translation.get('app', 111, 'html'); //Adminstrator
 		} else if(roles[i]['_id']==2){
 			name = Lincko.Translation.get('app', 110, 'html'); //Teammate
+		} else if(roles[i]['_id']==3){
+			name = Lincko.Translation.get('app', 109, 'html'); //Guest
 		}
 		if(typeof submenu_list['role_select']['role_'+roles[i]['_id']] == 'undefined'){
 			submenu_list['role_select']['role_'+roles[i]['_id']] = {
 				"style": "radio",
 				"title": name,
-				"hide": true,
 				"action_param": {
 					users_id: users_id,
 					roles_id: roles[i]['_id'],
 				},
 				"action": function(Elem, subm, action_param){
-					debugger;
-					/*
-					wrapper_sendAction(
-						{
-							"id": action_param.roles_id,
-							"roles>roles_id"
-						},
-						'post',
-						'user/update'
-					);
-					*/
+					var perm = Lincko.storage.get('workspaces', Lincko.storage.getWORKID(), '_perm');
+					if(perm[action_param.users_id] && typeof perm[action_param.users_id][1] != 'undefined' && perm[action_param.users_id][1]!=action_param.roles_id){
+						perm[action_param.users_id][0] = 0;
+						perm[action_param.users_id][1] = action_param.roles_id;
+						for(var i in submenu_list['role_select']){
+							if(i.indexOf('role_')===0){
+								if(i=='role_'+action_param.roles_id){
+									submenu_list['role_select'][i].selected = true;
+								} else {
+									submenu_list['role_select'][i].selected = false;
+								}
+							}
+						}
+						app_application_lincko.prepare(["form_radio", "role_select"], true);
+						wrapper_sendAction(
+							{
+								"id": action_param.users_id,
+								"parent_type": "workspaces",
+								"parent_id": Lincko.storage.getWORKID(),
+								"role_id": action_param.roles_id,
+							},
+							'post',
+							'user/role'
+						);
+					}
 				},
 				"selected": false,
 			};

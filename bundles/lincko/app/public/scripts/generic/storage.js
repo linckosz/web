@@ -43,9 +43,7 @@ var storage_cb_success = function(msg, err, status, data){
 		Lincko.storage.setLastVisit(data.lastvisit);
 	}
 
-	if(storage_first_request){
-		Lincko.storage.firstLatest();
-	} else if(data && data.partial && data.partial.uncomplete){
+	if(!storage_first_request && data && data.partial && data.partial.uncomplete){
 		Lincko.storage.getSchema();
 	}
 	
@@ -300,6 +298,7 @@ Lincko.storage.getLatest = function(force, callback){
 			'post',
 			'data/latest',
 			 function(){
+			 	Lincko.storage.firstLatest();
 				var lastvisit = arr.lastvisit;
 				storage_ajax_latest[lastvisit] = null;
 				delete storage_ajax_latest[lastvisit];
@@ -326,7 +325,7 @@ Lincko.storage.getLatest = function(force, callback){
 	}
 };
 
-//Function that check for latest updates
+//Function that get history
 /* PRIVATE METHOD */
 Lincko.storage.refreshHistory = function(){
 	var arr = {
@@ -938,7 +937,7 @@ Lincko.storage.userRole = function(user_id, category, id){
 		category = 'workspaces';
 		id = Lincko.storage.getWORKID();
 	}
-	var roles_id = 0; //Viewer by default
+	var roles_id = 3; //Viewer by default
 	if(Lincko.storage.getWORKID()==0){
 		roles_id = 2; //Manager by default for shared workspace
 	}
