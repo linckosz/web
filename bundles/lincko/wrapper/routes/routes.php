@@ -63,7 +63,7 @@ $app->group('/appstore', function () use ($app) {
 				$app->lincko->data['appstore'] = 'http://a.app.qq.com/o/simple.jsp?pkgname=com.lincko.lincko'; //(QQ redirect to Apple China)
 			}
 		} else if($isoCode=='cn'){ //China
-			$app->lincko->data['appstore'] = 'http://app.xiaomi.com/detail/443977';
+			$app->lincko->data['appstore'] = 'http://a.app.qq.com/o/simple.jsp?pkgname=com.lincko.lincko';
 		}
 
 		$app->render('/bundles/lincko/wrapper/templates/appstore.twig');
