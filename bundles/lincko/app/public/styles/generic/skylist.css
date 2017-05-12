@@ -518,6 +518,11 @@
 	opacity: 0.5;
 }
 
+.skylist_pageLoadSpinner{
+	text-align: center;
+	font-size: 14px;
+}
+
 /*
  * Hover-----------------------------------------------------
  */

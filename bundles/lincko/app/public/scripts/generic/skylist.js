@@ -136,6 +136,20 @@ var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct, ri
 		'showLinks': true,
 		'view': 'card',
 	};
+
+	//paging
+	this.id_pageLoadSpinner = that.md5id+'_skylist_pageLoadSpinner';
+	this.Lincko_itemsList_paged = []; //list of items grouped into pages
+	this.pagesLoaded = {}; //stores boolean value for each page to indicate which pages are added to DOM
+	this.currentPage = 0;
+	this.itemPerPage = 20;
+	this.reversePaging = false;
+	this.allPagesLoaded = false;
+
+	this.inputterAddedItems = {}; //list of task ids
+
+
+
 	if(that.list_type == 'tasks'){
 		that.Lincko_itemsList_filter.view = 'paper';
 		that.Lincko_itemsList_filter.sort_alt = 'due';
@@ -241,8 +255,26 @@ skylist.prototype.construct = function(){
 
 		});
 
-		IScroll.on('scrollEnd', function(){
+		var skylist_paging_timeout;
+		IScroll.on('scrollEnd', function(){ console.log('scrollEnd '+this.y);
 			that.is_scrolling = false;
+			clearTimeout(skylist_paging_timeout);
+			//if next page exists
+			if(!that.allPagesLoaded && this.y <= this.maxScrollY && that.Lincko_itemsList_paged[that.currentPage+1] && !that.reversePaging){
+				skylist_paging_timeout = setTimeout(function(IScroll){
+					that.addNextPage();
+				}, 100, this);
+			} 
+			else if(!that.allPagesLoaded && this.y >= 0 && that.reversePaging){
+				skylist_paging_timeout = setTimeout(function(IScroll){
+					that.addPrevPage();
+				}, 100, this);
+			}
+
+
+
+
+
 		});//scrollEnd
 	}
 
@@ -320,102 +352,136 @@ skylist.prototype.subConstruct_default = function(){
 		that.list.prop('id'),
 		'projects_'+app_content_menu.projects_id,
 		function(){
-			if(typeof this.updated == 'object' && typeof this.updated['projects_'+app_content_menu.projects_id] == 'object' && !this.updated['projects_'+app_content_menu.projects_id]._children){ return; }
-
-			var scollToBottom = false;
-			var param = {};
-			param.new = true;
-
-			var itemlist_new = that.list_filter();
-
-			//check for fake items within the itemlist_new
-			var fakeItems = Lincko.storage.sort_items(itemlist_new, 'fake');
-			if(fakeItems.length){
-				var fakeItems_obj = {};
-				$.each(fakeItems, function(i, item){
-					fakeItems_obj[item.temp_id] = item;
-				});
-			}
-
-			var elem_cards = $('#'+this.id).find('[find=card]');
+			if( typeof this.updated == 'object' 
+				&& typeof this.updated['projects_'+app_content_menu.projects_id] == 'object' 
+				&& !this.updated['projects_'+app_content_menu.projects_id]._children){ return; }
 
 
-			if(elem_cards.length < 1){//if nothing on the list
+			if($('#'+this.id).find('[find=card]').length < 1){//if nothing on the list
 				that.tasklist_update();
 				return false;
 			}
-			if( itemlist_new.length > elem_cards.length ){
-				var i_old = 0;
-				for( var i_new =0; i_new < itemlist_new.length; i_new++ ){
-					var newItem_id = itemlist_new[i_new]['_id'];
-					var oldItem_id = $(elem_cards[i_old]).data('item_id');
-					if( oldItem_id != newItem_id || !oldItem_id ){
-						var elem_newCard = that.addCard(itemlist_new[i_new]);//.css('display','none');
-						if($('#'+elem_newCard.prop('id')).length){ //elem with same id exists, so skip' 
-							continue;
-						}
-						else if(fakeItems_obj && itemlist_new[i_new].fake && fakeItems_obj[itemlist_new[i_new].temp_id].elem_replaced){
-							//fake but already replaced
-							continue;
-						}
-						else if(fakeItems_obj && !itemlist_new[i_new].fake && fakeItems_obj[itemlist_new[i_new].temp_id] ){
-							var fakeItem = fakeItems_obj[itemlist_new[i_new].temp_id];
-							var elem_toReplace = $('#'+this.id).find('[item_id='+fakeItem['_id']+']');
 
-							if(elem_toReplace.hasClass('skylist_card_hover')){
-								elem_newCard.addClass('skylist_card_hover');
-							}
-							elem_toReplace.find('input').blur();
-							$(elem_toReplace.find('[find=card_time_calendar_timestamp]')).datepicker('hide');
-							//of elem_toReplace was a paperView_bottom elem, add the same attr
-							/*if(elem_toReplace.attr('paperView_bottom')){
-								elem_newCard.attr('paperView_bottom',true);
-							}*/
+			var jumpedToLastPage = false;
+			var param = {};
+			param.new = true;
+			var elem_iscroll = that.list.children('.iscroll_sub_div').length ? that.list.children('.iscroll_sub_div') : that.list;
 
-							elem_toReplace.replaceWith(elem_newCard);
-							that.DOM_updated();
 
-							//elem_newCard.velocity('fadeOut',{mobileHA: hasGood3Dsupport, duration: 200,}).velocity('fadeIn', {mobileHA: hasGood3Dsupport,});
+			var items_paged = that.update_pagingList(that.list_filter());
 
-							delete Lincko.storage.data[fakeItem._type][fakeItem['_id']];
-							fakeItems_obj[fakeItem.temp_id].elem_replaced = true;
-							continue;
-						}
-
-						//if item has paperView (fake one created by user in paperview), then attach all the way at the end
-						if(itemlist_new[i_new].paperView){
-							scollToBottom = true;
-							$(elem_cards.get(elem_cards.length-1)).after(elem_newCard);
-							if(!that.list_subwrapper.find('.skylist_paperView_divider').length){
-								that.list_subwrapper.find('.skylist_sortBtn').removeClass('display_none');
-								elem_newCard.before('<div class="skylist_paperView_divider"></div>');
-							}
-							
-						}
-						else if( oldItem_id ){
-							$(elem_cards[i_old]).before(elem_newCard);
-						}
-						else{//if new card should be attached at the end
-							i_old--;
-							$(elem_cards[i_old]).after(elem_newCard);
-						}
-						elem_newCard.velocity('slideDown',{
-							mobileHA: hasGood3Dsupport,
-							complete: function(){
-								$(this).attr('style','');
-								that.DOM_updated();
-								if(scollToBottom){
-									myIScrollList['skylist_'+that.md5id].scrollTo(0, myIScrollList['skylist_'+that.md5id].maxScrollY, 500);
-									scrollToBottom = false;
-								}
-							}
-						});
-					}
-					else{
-						i_old++;
-					}
-				} //END of for loop
+			//add last page if it hasnt been added and there are items in inputterAddedItems
+			if(!$.isEmptyObject(that.inputterAddedItems) && !that.reversePaging){
+				that.addLastPage();
+				elem_iscroll.append('<div class="skylist_paperView_divider"></div>'); //add blue divider
+				jumpedToLastPage = true;
 			}
+
+			var items_top = []; //items not generated by inputter
+			$.each(that.pagesLoaded, function(page, loaded){
+				if(loaded){
+					$.merge(items_top, items_paged[page]);
+				}
+			});
+
+			//from items_top remove any that should be in items_bottom
+			var items_top_clone = $.merge([],items_top);
+			var spliceOffset = 0;
+			$.each(items_top_clone, function(i, item){
+				if($.inArray(item.temp_id, Object.keys(that.inputterAddedItems)) > -1){
+					items_top.splice(i+spliceOffset);
+					spliceOffset--;
+				}
+			});
+
+
+			//divide dom elem into regular cards or cards added by inputter (below blue line)
+			var elem_cards_top = [];
+			var elem_cards_bottom = [];
+			$.each( $('#'+this.id).find('[find=card]'), function(i, elem){
+				var temp_id = $(elem).attr('temp_id');
+				if($.inArray(temp_id, Object.keys(that.inputterAddedItems)) > -1){
+					elem_cards_bottom.push($(elem));
+				} else {
+					elem_cards_top.push($(elem));
+				}
+			});
+
+
+
+			//funtion to add velocity slide down animation
+			var addVelocity = function(elem, scrollToBottom){
+				elem.velocity('slideDown',{
+					mobileHA: hasGood3Dsupport,
+					complete: function(){
+						$(this).attr('style','');
+						if(scrollToBottom){
+							that.DOM_updated();
+							var scrollTime = 500;
+							myIScrollList['skylist_'+that.md5id].scrollTo(0, myIScrollList['skylist_'+that.md5id].maxScrollY, scrollTime);
+							if(jumpedToLastPage && ('#'+that.id_pageLoadSpinner).length){
+								setTimeout(function(){
+									$('#'+that.id_pageLoadSpinner).prevAll('.skylist_card').addClass('display_none');
+									that.DOM_updated();
+								}, scrollTime+100);
+							}
+						} else { that.DOM_updated(); }
+					}
+				});
+				return elem;
+			}
+			
+
+
+			//add new cards to top
+			var i_elem = 0;
+			$.each(items_top, function(i, item){
+				var elem_card = $(elem_cards_top[i_elem]);
+				var temp_id_elem = elem_card.attr('temp_id');
+				var item_id_elem = elem_card.attr('item_id');
+
+				if(item.temp_id == temp_id_elem
+					&& elem_card.attr('fake') && !item.fake){ //card exists but it is fake, and new item is not fake
+					
+					var elem_newCard = that.addCard(item);
+					if(elem_card.hasClass('skylist_card_hover')){
+						elem_newCard.addClass('skylist_card_hover');
+					}
+					elem_card.find('input').blur();
+					$(elem_card.find('[find=card_time_calendar_timestamp]')).datepicker('hide');
+					elem_card.replaceWith(elem_newCard);
+					that.DOM_updated();
+
+					i_elem++;
+				}
+				else if(item._id == item_id_elem || item.temp_id == temp_id_elem){ //skip if card exists
+					i_elem++;
+				} 
+				else { //add new item card
+					var elem_newCard = that.addCard(item);
+					if(!$('#'+elem_newCard.prop('id')).legnth){ //extra check if element already exists
+						elem_card.before(elem_newCard);
+						addVelocity(elem_newCard, false);
+					}
+				}
+			});
+
+
+
+			//add cards to bottom
+			$.each(that.inputterAddedItems, function(temp_id, item){
+				var elem = that.list.find('[temp_id='+temp_id+']');
+				if(!elem.length){
+					var elem_newCard = that.addCard(item);
+					elem_iscroll.append(elem_newCard);
+					addVelocity(elem_newCard, true);
+				} 
+				else if(elem.attr('fake') && !item.fake){ //elem is fake, but item is real, then replace
+					elem.replaceWith(that.addCard(item));
+				}
+			});
+
+
 			//one last check to update any fake cards
 			that.updateFakeCards();
 		}//end of the function attached to this project range
@@ -482,7 +548,7 @@ skylist.prototype.generate_Lincko_itemsList = function(){
 		that.Lincko_itemsList = app_models_history.getList();
 	}
 	else {
-		that.Lincko_itemsList = Lincko.storage.list(that.list_type, null, null, 'projects', app_content_menu.projects_id, true);
+		that.Lincko_itemsList = Lincko.storage.list(that.list_type, null, {category: ['!=','voice']}, 'projects', app_content_menu.projects_id, true);
 
 		//add hist_at and hist_by if doesnt exist. otherwise, sort_items will error
 		$.each(that.Lincko_itemsList, function(i, item){
@@ -518,6 +584,36 @@ skylist.prototype.generate_Lincko_itemsList = function(){
 			//use the default sorting, which is by creation time
 		}
 	}
+}
+
+skylist.prototype.update_pagingList = function(list){
+	var that = this;
+	var itemPerPage = that.itemPerPage;
+	that.Lincko_itemsList_paged = [];
+
+	var book = [];
+	var page = [];
+	var c_page = 0;
+	var c_item = 0;
+	$.each(list, function(i, item){
+		page.push(item);
+		c_item++;
+
+		if(c_item >= itemPerPage){ //page is full
+			book[c_page] = page; //add page
+			page = []; c_item = 0; c_page++; //reset values
+		}
+		else if(i == list.length-1){ //very last item but page is not full
+			if(c_page > 0){
+				$.merge(book[c_page-1], page);
+			} else {
+				book[c_page] = page;
+			}
+		}
+	});
+
+	that.Lincko_itemsList_paged = book;
+	return $.merge([], book);
 }
 
 skylist.prototype.store_all_elem = function(){
@@ -736,26 +832,28 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 	if( type ){
 		that.Lincko_itemsList_filter[type] = filter_by;
 	}
-	var items_filtered = that.list_filter(type, filter_by);
 
-	var iscroll_elem;
-	var cards_elem;
+	//remove all current cards
+	var iscroll_elem, cards_elem;
 	if( that.list.children('.iscroll_sub_div').length > 0 ){
 		iscroll_elem = that.list.children('.iscroll_sub_div');
 	}else{
 		iscroll_elem = that.list;
 	}
 	cards_elem = iscroll_elem.children().not('.burger_typeTask');
-
 	cards_elem.recursiveRemove(0);
+
+	$('#'+that.id_pageLoadSpinner).remove();
+
+
+	//generate and add new cards
+	var items_filtered = that.list_filter(type, filter_by);
+	var items_paged = that.update_pagingList(items_filtered);
 	if( items_filtered.length < 1 ){
-		iscroll_elem.append(that.noResult_str.clone());
+		that.list.append(that.noResult_str.clone());
 	}
 	else{
-		for (var i in items_filtered){
-			var item = items_filtered[i];
-			iscroll_elem.append(that.addCard(item));
-		}
+		that.addNextPage(0);
 	}
 
 	//hide sort button
@@ -792,6 +890,111 @@ skylist.prototype.DOM_updated = function(){
 	that.iscrollRefresh();
 }
 
+skylist.prototype.addPrevPage = function(){
+	var that = this; if(that.allPagesLoaded){return;}
+
+	var prevPage = that.currentPage-1;
+	var elem_spinner = $('#'+that.id_pageLoadSpinner);
+	var elem_iscroll = that.list.children('.iscroll_sub_div').length ? that.list.children('.iscroll_sub_div') : that.list;
+	var iscroll_max = myIScrollList['skylist_'+that.md5id].maxScrollY;
+	var elem_top;
+
+	if(!that.pagesLoaded[prevPage]){
+		//add cards
+		$.each(that.Lincko_itemsList_paged[prevPage], function(i, item){
+			var elem_new = that.addCard(item);
+			if(!$('#'+elem_new.prop('id')).length){ //add only if doesnt exist
+				elem_spinner.before(elem_new);
+				if(i<1){ elem_top = elem_new; } //the first element added will be at the top
+			}
+		});
+		that.pagesLoaded[prevPage] = true;
+		 that.currentPage = prevPage;
+		elem_spinner.remove();
+		if(that.pagesLoaded[prevPage-1]){
+			that.allPagesLoaded = true;
+			elem_iscroll.find('.skylist_card.display_none').removeClass('display_none');
+		} else {
+			elem_top.before($('#-skylist_pageLoadSpinner').clone().prop('id', that.id_pageLoadSpinner));
+		}
+
+		that.DOM_updated();
+		myIScrollList['skylist_'+that.md5id].scrollTo(0, myIScrollList['skylist_'+that.md5id].maxScrollY-iscroll_max);
+	}
+}
+
+
+skylist.prototype.addNextPage = function(page){
+	var that = this; if(that.allPagesLoaded){return;}
+	var nextPage = typeof page !== 'undefined' ? page : that.currentPage+1;
+	if(that.Lincko_itemsList_paged[nextPage]){
+		var elem_iscroll = that.list.children('.iscroll_sub_div').length ? that.list.children('.iscroll_sub_div') : that.list;
+
+		//scroll iscroll to top
+		if( nextPage == 0 && myIScrollList && myIScrollList['skylist_'+that.md5id] ){
+			myIScrollList['skylist_'+that.md5id].scrollTo(0,0);
+		}
+
+		//add cards
+		$.each(that.Lincko_itemsList_paged[nextPage], function(i, item){
+			var elem_new = that.addCard(item);
+			if(!$('#'+elem_new.prop('id')).length){ //add only if doesnt exist
+				elem_iscroll.append(elem_new);
+			}
+		});
+
+		//record that the page was loaded into DOM
+		that.pagesLoaded[nextPage] = true;
+
+		//remove loading spinner
+		if($('#'+that.id_pageLoadSpinner).length){ $('#'+that.id_pageLoadSpinner).remove();	}
+
+		//if loading first page, reset
+		if(page === 0){ 
+			that.reversePaging = false; 
+			that.inputterAddedItems = {};
+			that.pagesLoaded = {0:true};
+		}
+
+		if(typeof page === 'undefined'){ that.currentPage = nextPage; }
+		if(that.Lincko_itemsList_paged[page ? page + 1 : that.currentPage+1]){
+			elem_iscroll.append($('#-skylist_pageLoadSpinner').clone().prop('id', that.id_pageLoadSpinner));
+		}
+		
+		that.DOM_updated();
+	}	
+}
+
+skylist.prototype.addLastPage = function(){
+	var that = this;
+	var i_lastPage = that.Lincko_itemsList_paged.length - 1;
+	if(that.currentPage >= i_lastPage){ return; } //last page already added
+	else {
+		var elem_iscroll = that.list.children('.iscroll_sub_div').length ? that.list.children('.iscroll_sub_div') : that.list;
+		
+		//add spinner at the top if there are more pages in between
+		if(i_lastPage - that.currentPage > 1){
+			if(!$('#'+that.id_pageLoadSpinner).length){
+				elem_iscroll.append($('#-skylist_pageLoadSpinner').clone().prop('id', that.id_pageLoadSpinner));
+			}
+		} else {
+			$('#'+that.id_pageLoadSpinner).remove();
+		}
+
+		//add cards
+		$.each(that.Lincko_itemsList_paged[i_lastPage], function(i, item){
+			elem_iscroll.append(that.addCard(item));
+		});
+
+		//record that the page was loaded into DOM
+		that.pagesLoaded[i_lastPage] = true;
+
+		that.currentPage = i_lastPage;
+		that.reversePaging = true;
+		that.DOM_updated();
+	}
+}
+
 skylist.prototype.addCard_all = function(){
 	var that = this;
 	if(that.list_type == 'tasks'){
@@ -800,21 +1003,17 @@ skylist.prototype.addCard_all = function(){
 	}
 	var items;
 	items = that.list_filter();
+	var items_paged = that.update_pagingList(items);
+
+
 	if( items.length < 1 ){
 		that.list.append(that.noResult_str.clone());
 	}
 	else{
-		var item;
-		var Elem_tp = $('<span>');
-		for (var i in items){
-			item = items[i];
-			item['duedate'];
-			Elem_tp.append(that.addCard(item));
-		}
-		that.list.append(Elem_tp.children());
+		that.addNextPage(0);
 	}
 	that.store_all_elem();
-	
+
 	//paperview - showLink filter
 	if(that.Lincko_itemsList_filter.view == 'paper'){
 		that.paperview_filter_showLinks();
@@ -2847,6 +3046,8 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 			item['_id'] = fakeID;
 			item['fake'] = true;
 
+			that.inputterAddedItems[tempID] = item;
+
 			//files - replace lincko_param with temp_id. do not start file upload yet
 			if(inputterData.files_index.length > 0){
 				item['showLinks'] = {};
@@ -2885,6 +3086,8 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 			skylist.sendActionQueue.tasks.run(tempID);
 			var task = Lincko.storage.list('tasks',1,{temp_id: tempID})[0];
 			if(!task){ return; }
+
+			that.inputterAddedItems[tempID] = task;
 
 			//files
 			$.each(app_upload_files.lincko_files, function(i, file){
