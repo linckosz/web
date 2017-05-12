@@ -173,7 +173,6 @@ var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct, ri
 	this.list_wrapper = list_wrapper;
 	this.list_subwrapper;
 	this.list;
-	this.task;
 	this.elem_newcardCircle;
 	this.elem_newcardBox;
 	this.detail;
@@ -848,10 +847,10 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 	var items_filtered = that.list_filter(type, filter_by);
 	var items_paged = that.update_pagingList(items_filtered);
 	if( items_filtered.length < 1 ){
-		that.list.append(that.noResult_str.clone());
-	}
-	else{
-		that.addNextPage(0);
+		var elem_iscroll = that.list.children('.iscroll_sub_div').length ? that.list.children('.iscroll_sub_div') : that.list;
+		elem_iscroll.append(that.noResult_str.clone());
+	} else { 
+		that.addNextPage(0); 
 	}
 
 	//hide sort button
@@ -1018,7 +1017,6 @@ skylist.prototype.addCard_all = function(){
 	var items;
 	items = that.list_filter();
 	var items_paged = that.update_pagingList(items);
-
 
 	if( items.length < 1 ){
 		that.list.append(that.noResult_str.clone());
