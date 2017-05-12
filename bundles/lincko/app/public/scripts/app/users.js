@@ -63,6 +63,9 @@ var app_projects_users_contacts_init = function(subm){
 		"selected": true,
 		"hide": false,
 		"class": "submenu_deco_info submenu_deco_fix",
+		"value": function(){
+			return 'toto';
+		},
 	};
 
 	var pid = subm.param;
@@ -119,6 +122,9 @@ var app_projects_users_contacts_init = function(subm){
 					},
 					"hide": false,
 					"class": "submenu_deco_info",
+					"value": function(){
+						return 'mm mmm mmmm m m mmmmm m m mmmm m m m m m';
+					},
 				};
 			}
 		}

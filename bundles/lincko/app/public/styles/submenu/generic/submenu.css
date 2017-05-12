@@ -232,7 +232,25 @@
 }
 
 .submenu_radio {
+	padding-right: 42px;
 	text-align: right !important;
+}
+
+.submenu_radio_text {
+	float: left;
+	width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.submenu_radio_check {
+	position: absolute;
+	transform: translateY(-50%);
+	-webkit-transform: translateY(-50%);
+	-moz-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	-o-transform: translateY(-50%);
 }
 
 .submenu_icon {

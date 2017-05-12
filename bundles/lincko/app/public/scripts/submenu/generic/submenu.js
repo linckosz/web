@@ -735,9 +735,9 @@ Submenu.prototype.Add_MenuRadio = function() {
 	Elem.find("[find=submenu_radio_title]").html(attribute.title);
 	if ("selected" in attribute) {
 		if (attribute.selected) {
-			Elem.find("[find=submenu_radio_value]").html("<img class='submenu_icon' src='/lincko/app/images/submenu/check.png' />");
+			Elem.find("[find=submenu_radio_check]").removeClass('visibility_hidden');
 		} else {
-			Elem.find("[find=submenu_radio_value]").html("");
+			Elem.find("[find=submenu_radio_check]").addClass('visibility_hidden');
 		}
 	}
 
@@ -748,9 +748,9 @@ Submenu.prototype.Add_MenuRadio = function() {
 		var Elem = this.action_param[0];
 		var attribute = this.action_param[1];
 		if (attribute.selected) {
-			Elem.find("[find=submenu_radio_value]").html("<img class='submenu_icon' src='/lincko/app/images/submenu/check.png' />");
+			Elem.find("[find=submenu_radio_check]").removeClass('visibility_hidden');
 		} else {
-			Elem.find("[find=submenu_radio_value]").html("");
+			Elem.find("[find=submenu_radio_check]").addClass('visibility_hidden');
 		}
 	}, [Elem, attribute] );
 
@@ -769,7 +769,13 @@ Submenu.prototype.Add_MenuRadio = function() {
 			});
 		}
 	}
-
+	if ("value" in attribute) {
+		if(typeof attribute.value == 'function'){
+			Elem.find("[find=submenu_radio_text]").html(attribute.value());
+		} else { 
+			Elem.find("[find=submenu_radio_text]").html(attribute.value);
+		}
+	}
 	if ("class" in attribute) {
 		Elem.addClass(attribute['class']);
 	}
