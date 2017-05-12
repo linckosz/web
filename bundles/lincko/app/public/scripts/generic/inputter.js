@@ -800,7 +800,24 @@ inputter.prototype.buildLayer = function()
 		},0);
 	});
 
+	input.find('[find=chat_audio]').on('touchcancel',function(event){
+		$(this).css('background-color','#fba026');
+		// var inputter_record_impression = $('#inputter_record_impression');
+		// inputter_record_impression.addClass('display_none');
+		// clearInterval(that.inputter_audio_operation_interval);
+		// clearInterval(that.inputter_audio_operation_icon_interval);
+		// clearInterval(that.inputter_audio_duration_interval);
 
+		if(device_type() == 'ios'){
+			window.webkit.messageHandlers.iOS.postMessage(
+			{
+				action: 'audio_cancel',
+			});
+		}
+		else if(device_type() == 'android'){
+			android.audio_cancel();
+		}
+	});
 
 	input.find('[find=chat_audio]').on('touchstart',function(event){
 		event.preventDefault();
@@ -815,16 +832,16 @@ inputter.prototype.buildLayer = function()
 			showInfo = true;
 		}
 		else if(device_type() == 'android'){
-			if(android.hasAudioPermission()){
-				android.audio_start();
+			if(android.getAndroidOS()>=23){
 				showInfo = android.hasAudioPermission();
-			}
-			if(android.getAndroidOS()>=21){
-				showInfo = true;
+				if(android.hasAudioPermission()){
+					android.audio_start();
+				}
 			}
 			else{
 				showInfo = false;
-			}
+				android.audio_start();
+			}	
 		}
 
 		that.inputter_audio_duration = 0;
@@ -873,6 +890,9 @@ inputter.prototype.buildLayer = function()
 				that.inputter_audio_duration += 1000;
 		},1000);
 	});
+
+
+
 
 	input.find('[find=chat_audio]').on('touchmove',function(event){
 		var inputter_record_impression = $('#inputter_record_impression');
@@ -943,7 +963,6 @@ inputter.prototype.buildLayer = function()
 				});
 			}
 			else if(device_type() == 'android'){
-
 				android.audio_send('audio_native_callback',that.upload_ptype,that.upload_pid,input.submenu_getWrapper()[0].id,that.inputter_audio_duration);
 			}	
 		}

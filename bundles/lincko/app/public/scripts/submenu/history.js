@@ -204,9 +204,9 @@ BaseItemCls.prototype.item_display = function(position, subm, mode, scroll_time)
 		elem.find(".date", "[find=timestamp]").html(skylist_textDate(date) || date.display('date_short'));
 
 		//add contenteditable for focus control, since now we have quick action popup for files
-		if(this.style == 'file'){
-			elem.find('.models_history_content').append('<div contenteditable="false" tabindex="1"></div>');
-		}
+		// if(this.style == 'file'){
+		// 	elem.find('.models_history_content').append('<div contenteditable="false" tabindex="1"></div>');
+		// }
 
 		this.feed_profile_action(elem,this.user_id,subm);
 		this.feed_content(elem, subm);
@@ -432,6 +432,7 @@ FileContentCls.prototype.feed_action = function(elem,subm){
 	var that = this;
 	if(that.disableActionClick){ return; } //dont add click event if disabled
 	elem.find("[find=shortcut]").click({'subm':subm,'type':that.category,'target_id':that.id,'file_category':that.file_category},function(event){
+		event.stopPropagation();
 		var subm = event.data.subm;
 		var target_id =  event.data.target_id;
 		var type =  event.data.type;
@@ -578,6 +579,8 @@ var ActivityFileContentCls = function(record,type)
 
 ActivityFileContentCls.prototype.feed_content = function(elem)
 {
+	elem.attr('category',this.category);
+	elem.attr(this.category + '_id',this.id);
 	if(this.file_category =='image' || this.file_category =='video')
 	{
 		elem.find(".models_history_standard_shortcut_ico").addClass('display_none');

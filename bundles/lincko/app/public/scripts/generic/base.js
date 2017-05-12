@@ -188,6 +188,17 @@ function base_lincko_img_to_html(source)
 	return source;
 }
 
+
+
+function ios_open_link(url){
+	window.webkit.messageHandlers.iOS.postMessage(
+    {
+		action: 'open_external_url',
+		value:{
+			url:url,
+		}
+    });
+}
 /*
 text to <a></a>
 */
@@ -195,23 +206,53 @@ function base_lincko_link_to_html(source)
 {
 	var reg = new RegExp("(?:(?:https?|ftp)://)([^\\s/$.?#]*\\.[^\\s|<|>]*)", "gi"); //stephenhay 
 
-	if(typeof window.webkit != 'undefined' && typeof window.webkit.messageHandlers != 'undefined' && typeof window.webkit.messageHandlers.iOS){
-		var str_target = 'target="_top"';
-	} else {
-		var workspace = wrapper_localstorage.workspace == "" ? "" : wrapper_localstorage.workspace + ".";
-		var match_reg = new RegExp(top.location.protocol+'//'+app_application_dev_link() + workspace + document.domainRoot);
-		var str_target = match_reg.test(source) ? 'target="_top"' : 'target="_blank"'; //if lincko links,open page on the same tag
-	}
+	var workspace = wrapper_localstorage.workspace == "" ? "" : wrapper_localstorage.workspace + ".";
+	var match_reg = new RegExp(top.location.protocol+'//'+app_application_dev_link() + workspace + document.domainRoot);
 
 	var list_url = source.match(reg);
 	var already = {};
+	var str_target = '';
+	var str_event = '';
+	var str_href = '';
+	var url_decoded = '';
+
+
 	for(var i in list_url){
 		if(typeof already[list_url[i]] != 'undefined'){
 			continue;
 		}
 		already[list_url[i]] = true;
-		var url_decoded = $('<div/>').html(list_url[i]).text();
-		source = source.replaceAll(list_url[i], '<a ontouchstart="window.open(\''+url_decoded+'\')" ' + str_target + ' href="'+url_decoded+'">'+list_url[i]+'</a>');
+		url_decoded = $('<div/>').html(list_url[i]).text();
+
+		str_target = '';
+		str_event = '';
+		str_href = ' href="' + url_decoded + '" ';
+		if(isMobileApp() && device_type() == 'ios'){
+			if(match_reg.test(source)){
+				str_target = ' target="_top" ';
+				str_event = ' ontouchstart="window.location.href=\'' + url_decoded + '\';" ';
+			}
+			else{
+				str_event = ' ontouchstart="ios_open_link(\'' + url_decoded + '\')" ';
+			}
+		}
+		else if(isMobileApp() && device_type() == 'android'){
+			if(match_reg.test(source)){
+				str_target = ' target="_top" ';
+				str_event = ' ontouchstart="window.location.href=\'' + url_decoded + '\';" ';
+				str_href = ' href="javascript:void(0);" ';
+			}
+			else{
+				str_event = ' ontouchstart="android.open_external_url(\'' + url_decoded + '\');" ';
+				str_href = ' href="javascript:void(0);" ';
+			}
+		}
+		else{
+			str_target = match_reg.test(source) ? ' target="_top" ' : ' target="_blank" '; //if lincko links,open page on the same tag
+		}
+
+		var str = '<a ' + str_event + str_target + str_href + '>' + list_url[i] + '</a>';
+		source = source.replaceAll(list_url[i], str);
 	}
 	
 	//[bruno] I don't understand the use of the code below

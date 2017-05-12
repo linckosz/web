@@ -80,11 +80,6 @@
 	border-radius: 3px;
 }
 
-.audioarea:active{
-	background-color: #f7cf99;
-}
-
-
 .inputter_keyboard{
 	cursor: pointer;
 	display: inline-block;

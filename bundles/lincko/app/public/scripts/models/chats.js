@@ -226,12 +226,13 @@ function app_models_chats_bubble_actionMenu(){
 	if(supportsTouch){
 		$('.models_history_wrapper .selectable').removeClass('selectable').addClass('unselectable');
 		//$('.models_history_content').prop('tabindex','1');
-
-
 		$("body").on("mousedown touchstart", '.models_history_content:not(.report)', function(event) {
 			var that = $(this);
 			if(that.has('[contenteditable]').length){
-				event.preventDefault();
+				var elem_target_find = $(event.target).attr('find');
+				if(elem_target_find != 'target' && elem_target_find != 'shortcut'){
+					event.preventDefault();
+				}
 				that.find('[contenteditable]').focus();
 				app_models_chats_bubble_timeout = setTimeout(function(){
 					timeout_fn(that);
