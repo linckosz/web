@@ -138,13 +138,15 @@ var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct, ri
 	};
 
 	//paging
+	this.itemPerPage = 20;
 	this.id_pageLoadSpinner = that.md5id+'_skylist_pageLoadSpinner';
 	this.Lincko_itemsList_paged = []; //list of items grouped into pages
-	this.pagesLoaded = {}; //stores boolean value for each page to indicate which pages are added to DOM
+	/*--reset these values upon new list---*/
 	this.currentPage = 0;
-	this.itemPerPage = 20;
+	this.pagesLoaded = {}; //stores boolean value for each page to indicate which pages are added to DOM
 	this.reversePaging = false;
 	this.allPagesLoaded = false;
+	/*--------------------------------------*/
 
 	this.inputterAddedItems = {}; //list of task ids
 
@@ -256,7 +258,7 @@ skylist.prototype.construct = function(){
 		});
 
 		var skylist_paging_timeout;
-		IScroll.on('scrollEnd', function(){ console.log('scrollEnd '+this.y);
+		IScroll.on('scrollEnd', function(){
 			that.is_scrolling = false;
 			clearTimeout(skylist_paging_timeout);
 			//if next page exists
@@ -270,11 +272,6 @@ skylist.prototype.construct = function(){
 					that.addPrevPage();
 				}, 100, this);
 			}
-
-
-
-
-
 		});//scrollEnd
 	}
 
@@ -371,9 +368,8 @@ skylist.prototype.subConstruct_default = function(){
 			var items_paged = that.update_pagingList(that.list_filter());
 
 			//add last page if it hasnt been added and there are items in inputterAddedItems
-			if(!$.isEmptyObject(that.inputterAddedItems) && !that.reversePaging){
+			if(!that.allPagesLoaded && !$.isEmptyObject(that.inputterAddedItems) && !that.reversePaging){
 				that.addLastPage();
-				elem_iscroll.append('<div class="skylist_paperView_divider"></div>'); //add blue divider
 				jumpedToLastPage = true;
 			}
 
@@ -472,6 +468,9 @@ skylist.prototype.subConstruct_default = function(){
 			$.each(that.inputterAddedItems, function(temp_id, item){
 				var elem = that.list.find('[temp_id='+temp_id+']');
 				if(!elem.length){
+					if(!elem_iscroll.find('.skylist_paperView_divider').length){
+						elem_iscroll.append('<div class="skylist_paperView_divider"></div>'); //add blue divider
+					}
 					var elem_newCard = that.addCard(item);
 					elem_iscroll.append(elem_newCard);
 					addVelocity(elem_newCard, true);
@@ -548,7 +547,11 @@ skylist.prototype.generate_Lincko_itemsList = function(){
 		that.Lincko_itemsList = app_models_history.getList();
 	}
 	else {
-		that.Lincko_itemsList = Lincko.storage.list(that.list_type, null, {category: ['!=','voice']}, 'projects', app_content_menu.projects_id, true);
+		var conditions = {
+			files: {category: ['!=','voice']},
+		}
+
+		that.Lincko_itemsList = Lincko.storage.list(that.list_type, null, conditions[that.list_type], 'projects', app_content_menu.projects_id, true);
 
 		//add hist_at and hist_by if doesnt exist. otherwise, sort_items will error
 		$.each(that.Lincko_itemsList, function(i, item){
@@ -925,7 +928,17 @@ skylist.prototype.addPrevPage = function(){
 
 
 skylist.prototype.addNextPage = function(page){
-	var that = this; if(that.allPagesLoaded){return;}
+	var that = this; 
+
+	//if loading first page, reset
+	if(page === 0){ 
+		that.reversePaging = false; 
+		that.inputterAddedItems = {};
+		that.pagesLoaded = {0:true};
+		that.allPagesLoaded = false;
+	}
+	else if(that.allPagesLoaded){return;}
+
 	var nextPage = typeof page !== 'undefined' ? page : that.currentPage+1;
 	if(that.Lincko_itemsList_paged[nextPage]){
 		var elem_iscroll = that.list.children('.iscroll_sub_div').length ? that.list.children('.iscroll_sub_div') : that.list;
@@ -949,11 +962,9 @@ skylist.prototype.addNextPage = function(page){
 		//remove loading spinner
 		if($('#'+that.id_pageLoadSpinner).length){ $('#'+that.id_pageLoadSpinner).remove();	}
 
-		//if loading first page, reset
-		if(page === 0){ 
-			that.reversePaging = false; 
-			that.inputterAddedItems = {};
-			that.pagesLoaded = {0:true};
+		
+		if(nextPage == that.Lincko_itemsList_paged.length - 1){
+			that.allPagesLoaded = true;
 		}
 
 		if(typeof page === 'undefined'){ that.currentPage = nextPage; }
