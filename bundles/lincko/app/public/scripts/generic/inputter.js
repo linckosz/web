@@ -90,6 +90,7 @@ var inputter = function(panel_id,position,upload_ptype,upload_pid,layer,burger)
 	this.inputter_audio_operation_icon_interval;
 	this.inputter_audio_duration = 0;
 	this.inputter_audio_duration_interval;
+	this.inputter_audio_ios_check_new = false;
 
 }
 
@@ -176,11 +177,9 @@ inputter.prototype.clearText = function()
 
 inputter.prototype.buildLayer = function()
 {
-
 	var that = this ;
 	var container = $('#-inputter_container').clone();
-	container.prop('id',this.panel_id+'_inputter_container');
-
+	container.prop('id',this.panel_id + '_inputter_container');
 
 	if(this.layer.hasOwnProperty('mobile_backgroup_flag') && this.layer['mobile_backgroup_flag'])
 	{
@@ -226,6 +225,14 @@ inputter.prototype.buildLayer = function()
 					if(typeof this.layer['left_menu'][i][j]['compatibility'] !== 'undefined')
 					{
 						if(this.layer['left_menu'][i][j]['compatibility'] == 'app' && !isMobileApp())
+						{
+							break;
+						}
+						else if (isMobileApp() && device_type() == 'android' && typeof android.audio_cancel == 'undefined')
+						{
+							break;
+						}
+						else if (isMobileApp() && device_type() == 'ios' && (typeof ios_app_version =='undefined' || ios_app_version <= 7))
 						{
 							break;
 						}
@@ -802,11 +809,11 @@ inputter.prototype.buildLayer = function()
 
 	input.find('[find=chat_audio]').on('touchcancel',function(event){
 		$(this).css('background-color','#fba026');
-		// var inputter_record_impression = $('#inputter_record_impression');
-		// inputter_record_impression.addClass('display_none');
-		// clearInterval(that.inputter_audio_operation_interval);
-		// clearInterval(that.inputter_audio_operation_icon_interval);
-		// clearInterval(that.inputter_audio_duration_interval);
+		var inputter_record_impression = $('#inputter_record_impression');
+		inputter_record_impression.addClass('display_none');
+		clearInterval(that.inputter_audio_operation_interval);
+		clearInterval(that.inputter_audio_operation_icon_interval);
+		clearInterval(that.inputter_audio_duration_interval);
 
 		if(device_type() == 'ios'){
 			window.webkit.messageHandlers.iOS.postMessage(

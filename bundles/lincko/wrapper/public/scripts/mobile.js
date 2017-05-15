@@ -1,4 +1,12 @@
-
+var ios_app_version ;
+function getIOSAppversion(){
+	if(typeof window !== 'undefined' &&  typeof window.webkit !== 'undefined' && typeof window.webkit.messageHandlers !== 'undefined' && typeof window.webkit.messageHandlers.iOS !== 'undefined'){
+			window.webkit.messageHandlers.iOS.postMessage({
+					action: 'ios_app_version',
+			});
+	}
+}
+getIOSAppversion();
 
 function setMobileAlias(){
 	var sha = wrapper_localstorage.sha;
@@ -106,3 +114,5 @@ var android_foreground = {
 	},
 	fn_list: {}, //functions to run on resume
 }
+
+
