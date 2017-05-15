@@ -880,6 +880,7 @@ inputter.prototype.buildLayer = function()
 			var icon_index = ['1','2',''];
 			var index = 0;
 
+			clearInterval(that.inputter_audio_operation_icon_interval);
 			that.inputter_audio_operation_icon_interval = setInterval(function(){
 				inputter_record_impression.find('[find=icon] span')
 					.removeClass('icon-audio' + icon_index[((index+1) % 3)]);
@@ -891,7 +892,8 @@ inputter.prototype.buildLayer = function()
 			},400);			
 		}
 
-		that.inputter_audio_duration_interval= setInterval(function(){
+		clearInterval(that.inputter_audio_duration_interval);
+		that.inputter_audio_duration_interval = setInterval(function(){
 				that.inputter_audio_duration += 1000;
 		},1000);
 	});
@@ -930,6 +932,7 @@ inputter.prototype.buildLayer = function()
 
 				if(that.inputter_audio_operation_icon_interval == 0)
 				{
+					clearInterval(that.inputter_audio_operation_icon_interval);
 					that.inputter_audio_operation_icon_interval = setInterval(function(){
 						inputter_record_impression.find('[find=icon] span')
 							.removeClass('icon-audio' + icon_index[((index+1) % 3)]);

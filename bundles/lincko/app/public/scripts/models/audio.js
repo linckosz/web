@@ -63,6 +63,7 @@ var app_models_audio = {
 		}
 
 		$("#app_application_submenu_block,#app_content_submenu_preview").on('mousedown touchstart', '.app_models_lincko_audio', function(event) {
+				clearInterval(app_models_audio.timmer_interval);
 				app_models_audio.timmer_interval = setInterval(function(){
 					app_models_audio.timmer += 200;
 					if(app_models_audio.timmer >= 1000)
@@ -77,20 +78,31 @@ var app_models_audio = {
 				if(app_models_audio.timmer < 1000)
 				{
 					var audio_id = $(this).attr('audio_id');
+
 					app_models_audio.pause();
-					app_models_audio.animation($(this));
+					
+					
 					app_models_audio.status = 1;
 
 					if(isNaN(audio_id)){
 						app_models_audio.src = "data:audio/mp3;base64," + $(this).attr('data');
+						if(isMobileApp() && device_type() == 'android' && android.getAndroidOS() < 23){
+							// do nothing
+						}
+						else{
+							app_models_audio.animation($(this));
+						}
+
 					}
-					else{
+					else {
 						app_models_audio.src = Lincko.storage.getLink(audio_id);
+						app_models_audio.animation($(this));
 					}
 					
 					app_models_audio.audio_id = audio_id;
+
 					app_models_audio.play();
-				}	
+				}
 				clearInterval(app_models_audio.timmer_interval);
 				app_models_audio.timmer = 0;
 				app_models_audio.timmer_interval = 0;
@@ -122,6 +134,7 @@ var app_models_audio = {
 		else if(elem.find('[find=play]').hasClass('icon-audioopposite')){
 			app_models_audio.current_mode = 'icon-audioopposite';
 		}
+		clearInterval(app_models_audio.current_interval);
 		app_models_audio.current_interval = setInterval(function(mode){
 			var audio_control = $('#app_models_audio_control');
 			elem.find('[find=play]').removeClass(mode + icon_index[((index+1) % 3)]);

@@ -299,7 +299,8 @@ BaseItemCls.prototype.item_display = function(position, subm, mode, scroll_time)
 					$('#'+temp_elem_id).removeAttr('temp_id');
 					if(this.data.category == 'files')
 					{
-						$('#'+temp_elem_id).removeAttr('data');
+						$('#'+temp_elem_id).find('.app_models_lincko_audio').attr('audio_id',this.data.id)
+						$('#'+temp_elem_id).find('.app_models_lincko_audio').removeAttr('data');
 						$('#'+temp_elem_id).find('[find=lazy]').remove();
 					}
 				}
