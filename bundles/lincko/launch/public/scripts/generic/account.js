@@ -632,7 +632,7 @@ JSfiles.finish(function(){
 	}
 
 	if(	  navigator.userAgent.match(/MicroMessenger/i)
-	   || (android && typeof android.hasWechat && !android.hasWechat()) //if android APP and wechat is not installed
+	   || (typeof android != 'undefined' && typeof android.hasWechat != 'undefined' && !android.hasWechat()) //if android APP and wechat is not installed
 	){
 		$('#account_integration_wechat').addClass('display_none');
 	}
