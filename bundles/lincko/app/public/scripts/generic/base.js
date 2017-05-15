@@ -204,10 +204,14 @@ text to <a></a>
 */
 function base_lincko_link_to_html(source)
 {
-	var reg = new RegExp("(?:(?:https?|ftp)://)([^\\s/$.?#]*\\.[^\\s|<|>]*)", "gi"); //stephenhay 
+	var reg = new RegExp("(?:(?:https?|ftp)://)([^\\s/$.?#]*\\.[^\\s|<|>]*)", "gi"); //stephenhay
+	
 
 	var workspace = wrapper_localstorage.workspace == "" ? "" : wrapper_localstorage.workspace + ".";
 	var match_reg = new RegExp(top.location.protocol+'//'+app_application_dev_link() + workspace + document.domainRoot);
+
+	var reg_replace = new RegExp("((?:https?|ftp)://)", "gi"); //stephenhay
+	var source = source.replace(reg_replace, function(match) {return match.toLowerCase();});
 
 	var list_url = source.match(reg);
 	var already = {};
@@ -216,7 +220,10 @@ function base_lincko_link_to_html(source)
 	var str_href = '';
 	var url_decoded = '';
 
-
+	//Minimize the schema because it may crash opening the link on android
+	for(var i in list_url){
+		list_url[i] = list_url[i].replace(reg_replace, function(match) {return match.toLowerCase();});
+	}
 	for(var i in list_url){
 		if(typeof already[list_url[i]] != 'undefined'){
 			continue;
