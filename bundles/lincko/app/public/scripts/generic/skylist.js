@@ -17,13 +17,13 @@ var skylist_textDate = function(date){
 		return Lincko.Translation.get('app', 103, 'js'); //None
 	}
 	if( date.happensSomeday(0) ){
-		return Lincko.Translation.get('app', 3302, 'js').toUpperCase()/*today*/;
+		return Lincko.Translation.get('app', 3302, 'js').toUpperCase(); //today
 	}
 	else if( date.happensSomeday(1) ){
-		return Lincko.Translation.get('app', 3303, 'js').toUpperCase()/*tomorrow*/;
+		return Lincko.Translation.get('app', 3303, 'js').toUpperCase(); //tomorrow
 	}
 	else if( date.happensSomeday(-1) ){
-		return Lincko.Translation.get('app', 3304, 'js').toUpperCase()/*yesterday*/;
+		return Lincko.Translation.get('app', 3304, 'js').toUpperCase(); //yesterday
 	}
 	else{
 		return false;
@@ -138,7 +138,8 @@ var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct, ri
 	};
 
 	//paging
-	this.itemPerPage = 20;
+	this.paging_triggerOffset = 500; //px
+	this.itemsPerPage = wrapper_performance.powerfull ? 80 : 20;
 	this.id_pageLoadSpinner = that.md5id+'_skylist_pageLoadSpinner';
 	this.Lincko_itemsList_paged = []; //list of items grouped into pages
 	/*--reset these values upon new list---*/
@@ -146,7 +147,7 @@ var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct, ri
 	this.pagesLoaded = {}; //stores boolean value for each page to indicate which pages are added to DOM
 	this.reversePaging = false;
 	this.allPagesLoaded = false;
-	this.inputterAddedItems = {}; //list of task ids
+	this.inputterAddedItems = {}; //keys are temp_ids
 	/*--------------------------------------*/
 
 	if(that.list_type == 'tasks'){
@@ -248,24 +249,16 @@ skylist.prototype.construct = function(){
 			burger_global_dropdown.hide_all();
 		});//scrollStart
 
-		IScroll.on('onScroll', function(){
-
-		});
-
-		var skylist_paging_timeout;
 		IScroll.on('scrollEnd', function(){
 			that.is_scrolling = false;
-			clearTimeout(skylist_paging_timeout);
-			//if next page exists
-			if(!that.allPagesLoaded && this.y <= this.maxScrollY && that.Lincko_itemsList_paged[that.currentPage+1] && !that.reversePaging){
-				skylist_paging_timeout = setTimeout(function(IScroll){
+
+			if(!that.allPagesLoaded){
+				if(!that.reversePaging && this.y <= this.maxScrollY + that.paging_triggerOffset && that.Lincko_itemsList_paged[that.currentPage+1]){
 					that.addNextPage();
-				}, 100, this);
-			} 
-			else if(!that.allPagesLoaded && this.y >= 0 && that.reversePaging){
-				skylist_paging_timeout = setTimeout(function(IScroll){
+				} 
+				else if(that.reversePaging && this.y >= 0 - that.paging_triggerOffset){
 					that.addPrevPage();
-				}, 100, this);
+				}
 			}
 		});//scrollEnd
 	}
@@ -585,7 +578,7 @@ skylist.prototype.generate_Lincko_itemsList = function(){
 
 skylist.prototype.update_pagingList = function(list){
 	var that = this;
-	var itemPerPage = that.itemPerPage;
+	var itemsPerPage = that.itemsPerPage;
 	that.Lincko_itemsList_paged = [];
 
 	var book = [];
@@ -596,7 +589,7 @@ skylist.prototype.update_pagingList = function(list){
 		page.push(item);
 		c_item++;
 
-		if(c_item >= itemPerPage){ //page is full
+		if(c_item >= itemsPerPage){ //page is full
 			book[c_page] = page; //add page
 			page = []; c_item = 0; c_page++; //reset values
 		}
@@ -893,7 +886,7 @@ skylist.prototype.addPrevPage = function(){
 	var prevPage = that.currentPage-1;
 	var elem_spinner = $('#'+that.id_pageLoadSpinner);
 	var elem_iscroll = that.list.children('.iscroll_sub_div').length ? that.list.children('.iscroll_sub_div') : that.list;
-	var iscroll_max = myIScrollList['skylist_'+that.md5id].maxScrollY;
+	var y_diff = myIScrollList['skylist_'+that.md5id].y - myIScrollList['skylist_'+that.md5id].maxScrollY;
 	var elem_top;
 
 	if(!that.pagesLoaded[prevPage]){
@@ -918,7 +911,7 @@ skylist.prototype.addPrevPage = function(){
 		}
 
 		that.DOM_updated();
-		myIScrollList['skylist_'+that.md5id].scrollTo(0, myIScrollList['skylist_'+that.md5id].maxScrollY-iscroll_max);
+		myIScrollList['skylist_'+that.md5id].scrollTo(0, myIScrollList['skylist_'+that.md5id].maxScrollY + y_diff);
 	}
 }
 
@@ -927,7 +920,7 @@ skylist.prototype.addNextPage = function(page){
 	var that = this; 
 
 	//if loading first page, reset
-	if(page === 0){ console.log(that);
+	if(page === 0){
 		that.currentPage = 0;
 		that.pagesLoaded = {0:true};
 		that.reversePaging = false; 
