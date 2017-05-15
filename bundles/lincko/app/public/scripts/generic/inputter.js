@@ -90,8 +90,6 @@ var inputter = function(panel_id,position,upload_ptype,upload_pid,layer,burger)
 	this.inputter_audio_operation_icon_interval;
 	this.inputter_audio_duration = 0;
 	this.inputter_audio_duration_interval;
-	this.inputter_audio_ios_check_new = false;
-
 }
 
 inputter.prototype.getContent = function()
@@ -232,7 +230,7 @@ inputter.prototype.buildLayer = function()
 						{
 							break;
 						}
-						else if (isMobileApp() && device_type() == 'ios' && (typeof ios_app_version =='undefined' || ios_app_version <= 7))
+						else if (isMobileApp() && device_type() == 'ios' && ( ios_app_version || ios_app_version <= 7))//for audio check ios version
 						{
 							break;
 						}
