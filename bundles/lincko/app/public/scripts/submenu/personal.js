@@ -127,6 +127,11 @@ submenu_list['personal_info'] = {
 		"style": "next",
 		"title": Lincko.Translation.get('app', 108, 'html'), //Role
 		"next": "role_select",
+		"action_param": {
+			users_id: false,
+			parent_type: 'workspaces',
+			parent_id: -1,
+		},
 		"value": function(Elem, subm){
 			var role = Lincko.storage.userRole(subm.param, 'workspaces', Lincko.storage.getWORKID());
 			if(role['_id']==1){
@@ -139,6 +144,8 @@ submenu_list['personal_info'] = {
 			return role['+name'];
 		},
 		"now": function(Elem, subm){
+			this.action_param.users_id = subm.param;
+			this.action_param.parent_id = Lincko.storage.getWORKID();
 			grant = false;
 			if(Lincko.storage.getWORKID()>0){
 				var role = Lincko.storage.userRole(wrapper_localstorage.uid);
@@ -152,7 +159,7 @@ submenu_list['personal_info'] = {
 				var select_id = subm.id+"_"+md5(Math.random());
 				var select_elem = Elem.find("[find=submenu_next_value]");
 				select_elem.prop("id", select_id);
-				app_application_lincko.add(select_id, "role_select", function(){
+				app_application_lincko.add(select_id, "role_select_"+subm.param, function(){
 					var Elem = this.action_param[0];
 					var tab = this.action_param[1];
 					var subm = this.action_param[2];
@@ -918,7 +925,13 @@ submenu_list['personal_info'] = {
 submenu_list['role_select'] = {
 	"_title": {
 		"style": "customized_title",
-		"title": Lincko.Translation.get('app', 108, 'html'), //Role
+		"title": function(subm){
+			var username = Lincko.storage.get('users', subm.param.users_id, 'username');
+			if(username){
+				return Lincko.Translation.get('app', 108, 'html')+' ('+username+')';
+			}
+			return Lincko.Translation.get('app', 108, 'html');
+		},
 	},
 	"left_button": {
 		"style": "title_left_button",
@@ -969,7 +982,7 @@ var submenu_role_build_list = function(users_id, category, id){
 								}
 							}
 						}
-						app_application_lincko.prepare(["form_radio", "role_select"], true);
+						app_application_lincko.prepare(["form_radio", "role_select_"+action_param.users_id], true);
 						wrapper_sendAction(
 							{
 								"id": action_param.users_id,

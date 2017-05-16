@@ -232,7 +232,7 @@
 }
 
 .submenu_radio {
-	padding-right: 42px;
+	padding-right: 48px;
 	text-align: right !important;
 }
 
@@ -242,20 +242,25 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+	min-width: 1px;
+	min-height: 1px;
+	line-height: 22px;
+	font-size: 12px;
 }
 
-.submenu_radio_check {
-	position: absolute;
-	transform: translateY(-50%);
-	-webkit-transform: translateY(-50%);
-	-moz-transform: translateY(-50%);
-	-ms-transform: translateY(-50%);
-	-o-transform: translateY(-50%);
+.submenu_radio_text_sub_click {
+	text-decoration: underline;
+	cursor: pointer;
+	color: #8EB6D5 !important;
+}
+
+.submenu_radio_text_sub {
+	color: #C2C2C2;
 }
 
 .submenu_icon {
 	height: 20px;
-	padding-left: 6px;
+	padding-left: 12px;
 	vertical-align: middle;
 }
 

@@ -55,18 +55,6 @@ var app_projects_users_contacts_init = function(subm){
 			delete submenu_list['app_projects_users_contacts'][i];
 		}
 	}
-	var me = Lincko.storage.list('users', 1, { _id: wrapper_localstorage.uid, });
-
-	submenu_list['app_projects_users_contacts']['users_'+me[0]['_id']] = {
-		"style": "radio",
-		"title": Lincko.Translation.get('app', 2401, 'html')+" ("+Lincko.storage.get('users', +me[0]['_id'], 'username')+")", //Me
-		"selected": true,
-		"hide": false,
-		"class": "submenu_deco_info submenu_deco_fix",
-		"value": function(){
-			return 'toto';
-		},
-	};
 
 	var pid = subm.param;
 	if(subm.param && subm.param.pid){
@@ -75,6 +63,28 @@ var app_projects_users_contacts_init = function(subm){
 	var project = Lincko.storage.get("projects", pid);
 	var projects_id = project["_id"];
 	if(project){ //Editing
+
+		var me = Lincko.storage.list('users', 1, { _id: wrapper_localstorage.uid, });
+
+		submenu_list['app_projects_users_contacts']['users_'+me[0]['_id']] = {
+			"style": "radio",
+			"title": Lincko.Translation.get('app', 2401, 'html')+" ("+Lincko.storage.get('users', +me[0]['_id'], 'username')+")", //Me
+			"selected": true,
+			"action_param": { value: me[0]['_id'], },
+			"hide": false,
+			"class": "submenu_deco_info submenu_deco_fix",
+			"value": function(){
+				var role = Lincko.storage.userRole(this.action_param.value, 'projects', projects_id);
+				if(role['_id']==1){
+					return Lincko.Translation.get('app', 111, 'html'); //Adminstrator
+				} else if(role['_id']==2){
+					return Lincko.Translation.get('app', 110, 'html'); //Teammate
+				} else if(role['_id']==3){
+					return Lincko.Translation.get('app', 109, 'html'); //Guest
+				}
+				return role['+name'];
+			},
+		};
 
 		var users_access = Lincko.storage.whoHasAccess("projects", projects_id);
 		var param = [
@@ -106,14 +116,17 @@ var app_projects_users_contacts_init = function(subm){
 					"title": Lincko.storage.get('users', others[j]['_id'], 'username'),
 					"selected": selected,
 					"action_param": { value: others[j]['_id'], },
-					"action": function(){
+					"action": function(Elem, subm){
 						this.selected = !this.selected;
 						var project = Lincko.storage.get('projects', projects_id);
 						if(project){
 							if(this.selected){
+								Elem.find("[find=submenu_radio_text]").removeClass('display_none');
 								project['_perm'][this.action_param.value] = [0, 0];
 								app_projects_users_contacts_list[this.action_param.value] = true;
+
 							} else {
+								Elem.find("[find=submenu_radio_text]").addClass('display_none');
 								delete project['_perm'][this.action_param.value];
 								app_projects_users_contacts_list[this.action_param.value] = false;
 							}
@@ -123,7 +136,56 @@ var app_projects_users_contacts_init = function(subm){
 					"hide": false,
 					"class": "submenu_deco_info",
 					"value": function(){
-						return 'mm mmm mmmm m m mmmmm m m mmmm m m m m m';
+						var role = Lincko.storage.userRole(this.action_param.value, 'projects', projects_id);
+						if(role['_id']==1){
+							return Lincko.Translation.get('app', 111, 'html'); //Adminstrator
+						} else if(role['_id']==2){
+							return Lincko.Translation.get('app', 110, 'html'); //Teammate
+						} else if(role['_id']==3){
+							return Lincko.Translation.get('app', 109, 'html'); //Guest
+						}
+						return role['+name'];
+					},
+					"now": function(Elem, subm){
+						grant = false;
+						if(Lincko.storage.getWORKID()>0){
+							var role = Lincko.storage.userRole(wrapper_localstorage.uid);
+							if(role && role.perm_grant){
+								grant = true;
+							}
+						}
+						if(grant && Lincko.storage.getWORKID()>0 && Lincko.storage.canI('edit', 'workspaces', Lincko.storage.getWORKID()) && this.action_param.value != wrapper_localstorage.uid){
+							Elem.removeClass('display_none');
+							Elem.find("[find=submenu_radio_text]").addClass('submenu_radio_text_sub_click');
+							var select_id = subm.id+"_"+md5(Math.random());
+							var select_elem = Elem.find("[find=submenu_radio_text]");
+							select_elem.prop("id", select_id);
+							app_application_lincko.add(select_id, "role_select_"+this.action_param.value, function(){
+								var Elem = this.action_param[0];
+								var tab = this.action_param[1];
+								if(typeof tab.value == 'function'){
+									Elem.find("[find=submenu_radio_text]").html(tab.value());
+								}
+							}, [Elem, this] );
+							var pid = subm.param;
+							if(subm.param && subm.param.pid){
+								pid = subm.param.pid;
+							}
+							Elem.find("[find=submenu_radio_text]").on('click', [pid, this.action_param.value], function(event){
+								event.stopPropagation();
+								var pid = event.data[0];
+								var uid = event.data[1];
+								submenu_role_build_list(uid, 'projects', pid);
+								submenu_Build("role_select", true, true, {users_id: uid, parent_type: 'projects', parent_id: pid, });
+							});
+						} else {
+							Elem.off('click');
+						}
+						if(this.selected){
+							Elem.find("[find=submenu_radio_text]").removeClass('display_none');
+						} else {
+							Elem.find("[find=submenu_radio_text]").addClass('display_none');
+						}
 					},
 				};
 			}

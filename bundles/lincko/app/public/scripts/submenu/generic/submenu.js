@@ -691,6 +691,9 @@ Submenu.prototype.Add_MenuNext = function() {
 			Elem.find("[find=submenu_next_value]").html(attribute.value);
 		}
 	}
+	if (!("action_param" in attribute)) {
+		attribute.action_param = null;
+	}
 	if ("next" in attribute) {
 		if (attribute.next in submenu_list) {
 			if (attribute.style == "title") {
@@ -704,11 +707,11 @@ Submenu.prototype.Add_MenuNext = function() {
 					}
 				}
 			}
-			Elem.click(function() {
+			Elem.click(attribute.action_param, function(event) {
 				$.each(that.Wrapper().find('.submenu_deco_next'), function() {
 					$(this).removeClass('submenu_deco_next');
 				});
-				if(submenu_Build(attribute.next, that.layer + 1, true, null, that.preview)) {
+				if(submenu_Build(attribute.next, that.layer + 1, true, event.data, that.preview)) {
 					$(this).addClass('submenu_deco_next');
 				}
 

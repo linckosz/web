@@ -205,7 +205,6 @@ text to <a></a>
 function base_lincko_link_to_html(source)
 {
 	var reg = new RegExp("(?:(?:https?|ftp)://)([^\\s/$.?#]*\\.[^\\s|<|>]*)", "gi"); //stephenhay
-	
 
 	var workspace = wrapper_localstorage.workspace == "" ? "" : wrapper_localstorage.workspace + ".";
 	var match_reg = new RegExp(top.location.protocol+'//'+app_application_dev_link() + workspace + document.domainRoot);
