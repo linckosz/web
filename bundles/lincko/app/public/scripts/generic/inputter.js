@@ -230,7 +230,7 @@ inputter.prototype.buildLayer = function()
 						{
 							break;
 						}
-						else if (isMobileApp() && device_type() == 'ios' &&  ios_app_version <= 7)//for audio check ios version
+						else if (isMobileApp() && device_type() == 'ios' &&  ios_app_version < 7)//for audio check ios version
 						{
 							break;
 						}
