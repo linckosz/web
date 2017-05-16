@@ -19,8 +19,8 @@ class ControllerWrapper extends Controller {
 	protected $show_error = false;
 	protected $print = true;
 	protected $format = false;
-	protected $timeout = 36;
-	protected static $timeout_default = 36;
+	protected $timeout = 60;
+	protected static $timeout_default = 60;
 
 	protected $json = array(
 		'api_key' => '', //Software authorization key

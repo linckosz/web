@@ -272,6 +272,8 @@ Lincko.storage.getLatest = function(force, callback){
 	var lastvisit = Lincko.storage.getLastVisit();
 	if(typeof force == 'boolean' && force == true){
 		lastvisit = 0; //Force to get the whole database
+	} else {
+		force = false;
 	}
 	if(typeof callback != 'function'){
 		callback = null;
@@ -283,7 +285,7 @@ Lincko.storage.getLatest = function(force, callback){
 	//If a previous action has been launched, we don't start it immediatly
 	//This helps to avoid too many backend runs
 	//http://www.ajax-tutor.com/130/handle-response/
-	if(storage_ajax_latest[lastvisit] && storage_ajax_latest[lastvisit]['readyState']!=4 && lastvisit>0 && callback==null){
+	if(storage_ajax_latest[lastvisit] && storage_ajax_latest[lastvisit]['readyState']!=4 && force && callback==null){
 		return true; //Don't launch anymore latest if one is already running
 	} else {
 		for(var i in storage_ajax_latest){
@@ -316,10 +318,11 @@ Lincko.storage.getLatest = function(force, callback){
 					storage_launch_onboarding();
 				}
 			},
-			null,
+			function(jqXHR){
+				storage_ajax_latest[lastvisit] = jqXHR;
+			},
 			callback
 		);
-		storage_ajax_latest[lastvisit] = wrapper_xhr;
 	}
 };
 
