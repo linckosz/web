@@ -402,7 +402,7 @@ $(function () {
 					wrapper_set_shangzai = true;
 					wrapper_force_resign(function(){
 						setTimeout(function(that, data_bis){
-							app_upload_files.lincko_files[data_bis.lincko_files_index].submit();
+							app_upload_files.lincko_files[data_bis.lincko_files_index].lincko_submit();
 						}, 600, that, data_bis);
 					});
 				} else if(app_upload_files.lincko_files[data.lincko_files_index].lincko_try<=0){
