@@ -32,8 +32,6 @@ submenu_list['taskdetail'] = {
 		},
 	},
 
-
-
 	"right_menu": {
 		"feature":"delete",
 		"style": "title_right_button_list",
@@ -90,7 +88,6 @@ submenu_list['taskdetail'] = {
 
 			},
 			"action": function(Elem, subm) {
-				var a =  event;
 				var linkToNotesCount = 0;
 				var linkToTasksCount = 0;
 
@@ -183,19 +180,20 @@ submenu_list['taskdetail'] = {
 			"feature":"copyLink",
 			"icon":'icon-CopyLink',
 			"display":function(subm){
-				var item = Lincko.storage.get(subm.param.type,subm.param.id);
+				// var item = Lincko.storage.get(subm.param.type,subm.param.id);
 
-				if(item._parent[0] == "chats"){
-					item = Lincko.storage.get("chats",subm.param.type,item._parent[0]);
-				}
-				if(item && item._parent[0]=="projects"){
-					var project = Lincko.storage.get("projects",item._parent[1]);
-					return (project && project.personal_private == null);
-				}
-				else
-				{
-					return false;
-				}
+				// if(item._parent[0] == "chats"){
+				// 	item = Lincko.storage.get("chats",subm.param.type,item._parent[0]);
+				// }
+				// if(item && item._parent[0]=="projects"){
+				// 	var project = Lincko.storage.get("projects",item._parent[1]);
+				// 	return (project && project.personal_private == null);
+				// }
+				// else
+				// {
+				// 	return false;
+				// }
+				return true;
 			},
 			"title": Lincko.Translation.get('app', 81, 'html'), //copy link
 			"prepare":function(Elem, subm) {
@@ -225,6 +223,19 @@ submenu_list['taskdetail'] = {
 			},
 			"action": function(Elem, subm) {
 				
+			},
+			
+		},{
+			"feature":"goToLink",
+			"icon":'fa fa-binoculars',
+			"display":function(subm){
+				return app_content_menu.projects_id == 0;
+			},
+			"title": 'View in Project', //toto:View in Project
+			"action": function(Elem, subm) {
+				var workspace = wrapper_localstorage.workspace == "" ? "" : wrapper_localstorage.workspace + ".";
+				var url = top.location.protocol+'//'+app_application_dev_link() + workspace + document.domainRoot+'/#'+subm.param.type+'-'+btoa(subm.param.id);
+				window.location.href = url;
 			},
 			
 		}]

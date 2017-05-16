@@ -790,7 +790,7 @@ skylist.prototype.isDueThisTime = function(item, time){
 	return isDueThisTime;
 }
 
-skylist.prototype.list_filter = function(filter_type){
+skylist.prototype.list_filter = function(filter_type,filter_by){
 	var that = this;
 	if(!that || !that.list_wrapper){ return false; }
 	that.list_wrapper.attr('view', that.Lincko_itemsList_filter.view);
