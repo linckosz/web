@@ -1,6 +1,5 @@
 var ios_app_version = false;
 function getIOSAppversion(){
-	ios_app_version =100;
 	if(typeof window !== 'undefined' &&  typeof window.webkit !== 'undefined' && typeof window.webkit.messageHandlers !== 'undefined' && typeof window.webkit.messageHandlers.iOS !== 'undefined'){
 			window.webkit.messageHandlers.iOS.postMessage({
 					action: 'ios_app_version',
