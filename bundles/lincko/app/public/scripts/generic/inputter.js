@@ -1156,9 +1156,6 @@ inputter.prototype.buildLayer = function()
 		fadeScrollbars: true,
 	};
 
-	container.on('resize',function(){
-		//dom.resize(); it will trigger the window.resize();
-	});
 }
 
 

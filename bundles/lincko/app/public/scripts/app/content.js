@@ -350,29 +350,29 @@ wrapper_IScroll_options_new['app_content_menu'] = {
 	scrollX: true,
 };
 
+var app_content_resize_timer;
+var app_content_resize = function(){
+	clearTimeout(app_content_resize_timer);
+	app_content_resize_timer = setTimeout(function(){
+		if($("#app_content_dynamic_sub").length > 0){
+			if($("#app_content_dynamic_sub").width() <= 900)
+			{
+				$("#app_content_dynamic_sub").addClass("max-width-900");
+			}
+			else
+			{
+				$("#app_content_dynamic_sub").removeClass("max-width-900");
+			}
+		}
+	}, 200);
+};
+
+$(window).resize(function(){
+	app_content_resize();
+});
+
 JSfiles.finish(function(){
 	app_application_lincko.add("body_lincko", "projects", null, null, app_content_menu_default);
 	app_content_menu_default();
-
-	//replace ElementQueries.js & ResizeSensor.js,use css 
-	//document.ready
-	if($("#app_content_dynamic_sub").width() <= 900)
-	{
-		$("#app_content_dynamic_sub").addClass("max-width-900");
-	}
-	else
-	{
-		$("#app_content_dynamic_sub").removeClass("max-width-900");
-	}
-
-	$("#app_content_dynamic_sub").resize(function(){
-		if($("#app_content_dynamic_sub").width() <= 900)
-		{
-			$("#app_content_dynamic_sub").addClass("max-width-900");
-		}
-		else
-		{
-			$("#app_content_dynamic_sub").removeClass("max-width-900");
-		}
-	});
 });
+
