@@ -837,7 +837,7 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 
 
 	//generate and add new cards
-	var items_filtered = that.list_filter(type, filter_by);
+	var items_filtered = that.list_filter(type);
 	var items_paged = that.update_pagingList(items_filtered);
 	if( items_filtered.length < 1 ){
 		var elem_iscroll = that.list.children('.iscroll_sub_div').length ? that.list.children('.iscroll_sub_div') : that.list;

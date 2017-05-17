@@ -100,11 +100,11 @@ var searchbar = {
 
 			//regular text search
 			if(!word.length || !burgerOnly ){
-				items_filtered = Lincko.storage.searchArray(
+				$.merge(items_filtered, Lincko.storage.searchArray(
 					'word', word, items, 
 					['+title', '+name', '-comment', '-username', '-firstname', '-lastname', '-email'], 
 					word_pinyin
-				);
+				));
 			}
 
 			//username and date search
@@ -177,7 +177,7 @@ var searchbar = {
 			});
 		});
 
-		return items_filtered;
+		return items_filtered_reordered;
 	},
 
 	searchByUsername: function(username, arr_ids, pinyin){
