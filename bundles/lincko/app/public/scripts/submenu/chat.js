@@ -421,6 +421,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 	}
 
 	var pending = Lincko.storage.get('users', wrapper_localstorage.uid, 'pending');
+	pending = Lincko.storage.sort_items(pending, 0);
 	var pending_length = 0;
 	for(var i in pending){
 		pending_length++;
