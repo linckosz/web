@@ -279,6 +279,27 @@ Submenu.prototype.Add_ChatContacts = function() {
 		submenu_wrapper.find("[find=submenu_wrapper_content]").append(div);
 	}
 
+	wrapper_IScroll_options_new[div_id] = { 
+		scrollbars: false,
+	};
+
+	var fn_alphaScroll_timeout = function(){
+		setTimeout(function(){
+			if(!myIScrollList[div_id].scrollerHeight){ //iscroll not ready
+				fn_alphaScroll_timeout();
+			} else if(myIScrollList[div_id].hasVerticalScroll){
+				var alphaScrollInst = new alphaScroll(myIScrollList[div_id]);
+			}
+		},200);
+	}
+	
+	wrapper_IScroll_cb_creation[div_id] = function(){
+		fn_alphaScroll_timeout();
+	}
+
+
+	var alpha_prev = '';
+	var alpha_now = '';
 	contacts = Lincko.storage.sort_items(visible, '-username');
 	for(var i in contacts){
 		var Elem_id = that.id+"_submenu_app_chat_chat_contact_"+contacts[i]['_id'];
@@ -288,6 +309,24 @@ Submenu.prototype.Add_ChatContacts = function() {
 		}
 		var Elem = $('#-submenu_app_chat_chat_contact').attr("find", 'tab_contact').clone();
 		Elem.prop("id", Elem_id).attr('uid', contacts[i]['_id']);
+
+
+		if(/^[a-zA-Z]+$/.test(contacts[i]['-username'][0])){
+			alpha_now = contacts[i]['-username'][0].toUpperCase();
+		}
+		else if( Lincko.storage.data_abc 
+				 && Lincko.storage.data_abc.users 
+				 && Lincko.storage.data_abc.users[i] 
+				 && Lincko.storage.data_abc.users[i]['-username']){
+			alpha_now = Lincko.storage.data_abc.users[i]['-username'][0].toUpperCase();
+		}
+
+		if(alpha_now != alpha_prev){
+			Elem.attr('alphascroll', alpha_now);
+			alpha_prev = alpha_now;
+		}
+
+
 		thumbnail = Lincko.storage.getLinkThumbnail(contacts[i]['profile_pic']);
 		if(thumbnail){
 			Elem.find("[find=picture_src]").css('background-image','url("'+thumbnail+'")');

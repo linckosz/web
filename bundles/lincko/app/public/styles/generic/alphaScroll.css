@@ -1,0 +1,119 @@
+.alphaScroll_slider{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    list-style: none;
+    padding: 2px;
+    margin: 0px;
+    text-align: center;
+    font-size: 12px;
+}
+.alphaScroll_slider li{
+	padding: 0px 2px 0px 2px;
+}
+.alphaScroll_slider_active{
+	background-color: rgba(0, 0, 0, 0.2);
+    color: #000000;
+}
+.alphaScroll_popupLetter{
+    font-size: 50px;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 6px;
+    height: 80px;
+    width: 80px;
+    line-height: 80px;
+    color: #FFFFFF;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+[alphascroll]:before{
+    display: table-caption;
+    background-color: rgba(128, 128, 128, 0.2);
+    padding: 2px 0px 2px 10px;
+}
+[alphascroll="A"]:before{
+	content: 'A';
+}
+[alphascroll="B"]:before{
+	content: 'B';
+}
+[alphascroll="C"]:before{
+	content: 'C';
+}
+[alphascroll="D"]:before{
+	content: 'D';
+}
+[alphascroll="E"]:before{
+	content: 'E';
+}
+[alphascroll="F"]:before{
+	content: 'F';
+}
+[alphascroll="G"]:before{
+	content: 'G';
+}
+[alphascroll="H"]:before{
+	content: 'H';
+}
+[alphascroll="I"]:before{
+	content: 'I';
+}
+[alphascroll="J"]:before{
+	content: 'J';
+}
+[alphascroll="K"]:before{
+	content: 'K';
+}
+[alphascroll="L"]:before{
+	content: 'L';
+}
+[alphascroll="M"]:before{
+	content: 'M';
+}
+[alphascroll="N"]:before{
+	content: 'N';
+}
+[alphascroll="O"]:before{
+	content: 'O';
+}
+[alphascroll="P"]:before{
+	content: 'P';
+}
+[alphascroll="Q"]:before{
+	content: 'Q';
+}
+[alphascroll="R"]:before{
+	content: 'R';
+}
+[alphascroll="S"]:before{
+	content: 'S';
+}
+[alphascroll="T"]:before{
+	content: 'T';
+}
+[alphascroll="U"]:before{
+	content: 'U';
+}
+[alphascroll="V"]:before{
+	content: 'V';
+}
+[alphascroll="W"]:before{
+	content: 'W';
+}
+[alphascroll="X"]:before{
+	content: 'X';
+}
+[alphascroll="Y"]:before{
+	content: 'Y';
+}
+[alphascroll="Z"]:before{
+	content: 'Z';
+}
