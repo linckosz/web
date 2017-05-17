@@ -538,7 +538,7 @@ skylist.prototype.generate_Lincko_itemsList = function(){
 			files: {category: ['!=','voice']},
 		}
 
-		that.Lincko_itemsList = Lincko.storage.list(that.list_type, null, conditions[that.list_type], 'projects', app_content_menu.projects_id, true);
+		that.Lincko_itemsList = Lincko.storage.list(that.list_type, null, conditions[that.list_type], 'projects', app_content_menu.projects_id || null, true);
 
 		//add hist_at and hist_by if doesnt exist. otherwise, sort_items will error
 		$.each(that.Lincko_itemsList, function(i, item){

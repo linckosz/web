@@ -180,23 +180,37 @@ var searchbar = {
 		return items_filtered_reordered;
 	},
 
-	searchByUsername: function(username, arr_ids, pinyin){
+	//search only within the given ids in arr_ids
+	searchByUsername: function(word, arr_ids, pinyin){
 		if(typeof pinyin == 'undefined'){ var pinyin = true; }
-		var userid_array = [];
-		if(typeof arr_ids == 'object' && arr_ids.length){ //search only within the given ids in arr_ids
-			var user_list = [];
-			$.each(arr_ids, function(i, id){ //get user object for each id
-				var user = Lincko.storage.get('users', id);
-				if(user){ user_list.push(user); }
-			});
-			user_list = Lincko.storage.searchArray('word', username, user_list, true, pinyin); //search the object to match the username
-			if(user_list.length){
-				$.each(user_list, function(i, item){
-					userid_array.push(item._id);
+		if(typeof arr_ids != 'object' || !arr_ids){ return false; }
+
+		var uid_result = []; //final list to be returned
+		var user_list = [];
+		$.each(arr_ids, function(i, id){ //get user object for each id
+			var user = Lincko.storage.get('users', id);
+			if(user){ user_list.push(user); }
+		});
+
+		var user_obj;
+		for(var i in user_list){
+			user_obj = user_list[i];
+			if(Lincko.storage.searchArray('word', word, [user_obj], true, pinyin).length){
+				uid_result.push(user_obj._id);
+				continue;
+			}
+			else if(user_obj._children && typeof user_obj._children.namecards == 'object'){
+				$.each(user_obj._children.namecards, function(id, b){
+					var namecard = Lincko.storage.get('namecards', id);
+					if(namecard && Lincko.storage.searchArray('word', word, [namecard], true, pinyin).length){
+						uid_result.push(user_obj._id);
+						return false;
+					}
 				});
 			}
-			return userid_array;
 		}
+
+		return uid_result;
 	},
 
 	//for tasks
