@@ -124,7 +124,13 @@ var searchbar = {
 				//users search:
 				//look through any user in _perm. then, need to further match according to object type (i.e. in_charge, crated_by etc.)
 				userid_array = item._perm ? searchbar.searchByUsername(word, Object.keys(item._perm), word_pinyin) : [];
-				if( userid_array.length && (burgerOnly == false || burgerOnly == 'at') ){ //userOnly both true/false
+				var mainword = 'unssigned';//toto:translation;
+				if( mainword.indexOf(word) >= 0 && (burgerOnly == false || burgerOnly == 'at') ){
+					if( item['_users'] == null){
+						push = true;
+					}
+				}
+				else if( userid_array.length && (burgerOnly == false || burgerOnly == 'at') ){ //userOnly both true/false
 					for( var k=0; k < userid_array.length; k++){
 						userid = userid_array[k];
 						if( item['_type'] == 'tasks' ){
@@ -155,6 +161,12 @@ var searchbar = {
 
 				} //date search
 				else if( searchbar.isDueThisTime(item, word) && (burgerOnly == false || burgerOnly == 'plus') ){
+					push = true;
+				}
+				else if( searchbar.isOverDue(item, word) && (burgerOnly == false || burgerOnly == 'plus') ){
+					push = true;
+				}
+				else if( searchbar.isNoneDue(item, word) && (burgerOnly == false || burgerOnly == 'plus') ){
 					push = true;
 				}
 
@@ -209,7 +221,6 @@ var searchbar = {
 				});
 			}
 		}
-
 		return uid_result;
 	},
 
@@ -234,8 +245,29 @@ var searchbar = {
 				return false;
 			}
 		});
-		
 		return isDueThisTime;
+	},
+
+	//for tasks
+	isOverDue: function(item, keyword){
+		var mainword = 'overdue';//toto:to translation
+		if(typeof item != 'object' || item._type != 'tasks' || !item.duration || !item.start || !keyword || mainword.indexOf(keyword) < 0 ){
+			return false;
+		}else if(tasks_isOverdue(item._id)){
+			return true;
+		}
+		return false;
+	},
+
+	//for tasks
+	isNoneDue: function(item, keyword){
+		var mainword = 'none';//toto:to translation
+		if(typeof item != 'object' || item._type != 'tasks' || !item.duration  || item.start != null || !keyword || mainword.indexOf(keyword) < 0 ){
+			return false;
+		}
+		else if(item.start == null && mainword.indexOf(keyword) >= 0){
+			return true;
+		}
 	},
 
 }

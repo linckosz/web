@@ -196,7 +196,6 @@ var app_content_menu = {
 			var project = Lincko.storage.get("projects", app_content_menu.projects_id);
 			var projects_id = app_content_menu.projects_id;
 			if(project && project["deleted_at"]==null){
-				console.log(projects_id);
 				var title = project["+title"];
 				if(projects_id == Lincko.storage.getMyPlaceholder()['_id']){
 					title = base_myplaceholder;
