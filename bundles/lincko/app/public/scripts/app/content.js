@@ -95,7 +95,7 @@ var app_content_menu = {
 			// list = [
 			// 	'projects',
 			// ];
-			title = '';
+			title = 'OverView';//toto：translation
 			list = [
 				'tasks',
 				'notes',
@@ -179,7 +179,7 @@ var app_content_menu = {
 		$('#app_content_menu_'+menu+' div:first-child').addClass('app_content_menu_icon_active');
 		$('#app_content_menu_'+menu).find(".app_content_menu_icon").off('click');
 
-		if(projects_id == Lincko.storage.getMyPlaceholder()['_id']){
+		if(projects_id == Lincko.storage.getMyPlaceholder()['_id'] || projects_id == 0){
 			$('#app_content_top_title_menu').addClass('app_content_cursor_default');
 			$('#app_content_top_title_settings').addClass('display_none');
 			//$('#app_content_statistics_settings').addClass('display_none');
@@ -192,11 +192,11 @@ var app_content_menu = {
 		$('#app_content_top_title_settings').velocity('fadeIn', 100);
 		
 		$('#app_content_top_title_project').html(wrapper_to_html(title));
-		app_application_lincko.add('app_content_top_title_project', 'projects_'+projects_id, function() {
+		app_application_lincko.add('app_content_top_title_project', 'projects_' + projects_id, function() {
 			var project = Lincko.storage.get("projects", app_content_menu.projects_id);
 			var projects_id = app_content_menu.projects_id;
-			
 			if(project && project["deleted_at"]==null){
+				console.log(projects_id);
 				var title = project["+title"];
 				if(projects_id == Lincko.storage.getMyPlaceholder()['_id']){
 					title = base_myplaceholder;
@@ -282,7 +282,7 @@ $('#app_content_top_home').click(function(){
 });
 
 $('#app_content_top_title_menu, #app_content_statistics_settings').click(function(){
-	if(app_content_menu.projects_id != Lincko.storage.getMyPlaceholder()['_id']){
+	if(!(app_content_menu.projects_id == Lincko.storage.getMyPlaceholder()['_id']  || app_content_menu.projects_id == 0)){
 		submenu_Build("app_project_edit", 1, false, app_content_menu.projects_id, false);
 	}
 });

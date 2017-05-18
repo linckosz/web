@@ -184,6 +184,10 @@ td.app_layers_dev_skytasks_checkbox {
 	line-height: 45px;
 }
 
+.submenu_menu_list i.fa-binoculars{
+	font-size: 22px !important;
+}
+
 
 .submenu_menu_list ul li span{
 	line-height: 45px;
@@ -198,10 +202,8 @@ td.app_layers_dev_skytasks_checkbox {
 	right:7px;
 	top:0px;
 	color: #5bb0d4;
-
 	line-height: 48px;
 	font-size: 30px;
-
 	display: inline-block;
 	font-size: 30px;
 }

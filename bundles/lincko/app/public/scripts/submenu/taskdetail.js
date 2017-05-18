@@ -237,7 +237,6 @@ submenu_list['taskdetail'] = {
 				var url = top.location.protocol+'//'+app_application_dev_link() + workspace + document.domainRoot+'/#'+subm.param.type+'-'+btoa(subm.param.id);
 				window.location.href = url;
 			},
-			
 		}]
 	},
 
