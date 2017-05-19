@@ -1900,7 +1900,8 @@ skylist.prototype.addTask = function(item){
 
 	if(that.Lincko_itemsList_filter.view == 'paper'){
 		var elem_title_spanUser = burger_spanUser(in_chargeID, in_charge);
-		if(!item.fake && !Lincko.storage.get('projects', item._parent[1])['personal_private']){ 
+
+		if(!item.fake && !Lincko.storage.get('projects', item._parent[1])['personal_private'] ){ 
 			burger_attach_clickHandler.in_charge(elem_title_spanUser, item['_type'], item['_id'], null, true);
 		}
 		elem_title.append(elem_title_spanUser);

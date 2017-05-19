@@ -1608,7 +1608,7 @@ function submenu_Build_return(menu, next, hide, param, preview, animate) {
 	if (menu in submenu_list) {
 		if (preview) {
 			var temp = new Submenu(menu, next, param, preview, animate);
-			//$('#app_content_submenu_preview').parent().addClass("with_preview");
+			//$('#app_content_submenu_preview').parent().addClass("with_preview")
 			$('#app_content_submenu_preview').addClass("with_preview");
 			$('#app_content_dynamic_layers').addClass("with_preview");
 			$('#app_content_submenu_preview').show();

@@ -101,6 +101,8 @@ var app_content_menu = {
 				'notes',
 				'files',
 			];
+			$('#app_content_submenu_preview_statistics').addClass('display_none');
+
 		} else if(
 			   $.type(Lincko.storage.data['projects']) === 'object'
 			&& $.type(Lincko.storage.data['projects'][projects_id]) === 'object'
@@ -115,6 +117,7 @@ var app_content_menu = {
 				'files',
 				'dashboard',
 			];
+			$('#app_content_submenu_preview_statistics').removeClass('display_none');
 		} else { //Personal space (default)
 			title = base_myplaceholder;
 			list = [
@@ -123,6 +126,7 @@ var app_content_menu = {
 				'chats',
 				'files',
 			];
+			$('#app_content_submenu_preview_statistics').removeClass('display_none');
 		}
 
 		if($.inArray(menu, list) < 0){
