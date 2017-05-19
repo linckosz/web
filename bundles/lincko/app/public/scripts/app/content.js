@@ -95,7 +95,7 @@ var app_content_menu = {
 			// list = [
 			// 	'projects',
 			// ];
-			title = 'OverView';//toto：translation
+			title = 'Global View';//toto：translation
 			list = [
 				'tasks',
 				'notes',
