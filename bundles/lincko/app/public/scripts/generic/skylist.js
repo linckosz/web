@@ -139,7 +139,7 @@ var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct, ri
 
 	//paging
 	this.paging_triggerOffset = 500; //px
-	this.itemsPerPage = wrapper_performance.powerfull ? 80 : 20;
+	this.itemsPerPage = wrapper_performance.powerfull ? 60 : 20;
 	this.id_pageLoadSpinner = that.md5id+'_skylist_pageLoadSpinner';
 	this.Lincko_itemsList_paged = []; //list of items grouped into pages
 	/*--reset these values upon new list---*/
@@ -193,7 +193,7 @@ var skylist_enquire = {};
 
 skylist.prototype.construct = function(){
 	var that = this;
-	that.list_wrapper = that.list_wrapper.recursiveEmpty(0).addClass('skylist_wrapper');
+	that.list_wrapper = that.list_wrapper.recursiveEmpty(0).addClass('skylist_wrapper').attr('pid', that.pid);
 	that.list_subwrapper = $('#-skylist_subwrapper').clone().prop('id','');
 	that.list = $('#-skylist').clone().prop('id','skylist_'+that.md5id);
 
@@ -1005,7 +1005,7 @@ skylist.prototype.addLastPage = function(){
 
 skylist.prototype.addCard_all = function(){
 	var that = this;
-	if(that.list_type == 'tasks'){
+	if(that.list_type == 'tasks' && that.pid > 0){
 		that.list.append(burgerN.typeTask(null, that)); //top
 		that.paperView_inputter(that.list_wrapper, 'projects', app_content_menu.projects_id);
 	}
@@ -3634,7 +3634,7 @@ skylist.prototype.updateFakeCards = function(){
 		var param = {
 			temp_id: temp_id,
 		}
-		var item_real = Lincko.storage.list(that.list_type, 1, param, 'projects', app_content_menu.projects_id, false);
+		var item_real = Lincko.storage.list(that.list_type, 1, param, 'projects', app_content_menu.projects_id || null, false);
 		$.each(item_real, function(j, item){
 			if(!item.fake){
 				var elem_newCard = that.addCard(item);
@@ -3734,7 +3734,7 @@ skylist.sendActionQueue = {
 	tasks: {
 		run: function(temp_id){
 			if(!skylist.sendActionQueue.tasks[temp_id]){ return; }
-			var items = Lincko.storage.list('tasks', null, {temp_id: temp_id}, 'projects', app_content_menu.projects_id, false);
+			var items = Lincko.storage.list('tasks', null, {temp_id: temp_id}, 'projects', null, false);
 			var id_real = null;
 			$.each(items, function(i,item){
 				if(!item.fake){
