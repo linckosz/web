@@ -80,7 +80,7 @@ var searchbar = {
 		var userid = null;
 
 		for( var j=0; j < searchTerms.length; j++){ //for each word
-			word = searchTerms[j];
+			word = searchTerms[j].toLowerCase();
 
 			var burgerOnly = false;
 			if( word[0] == burger_shortcuts.at ){
@@ -123,14 +123,20 @@ var searchbar = {
 
 				//users search:
 				//look through any user in _perm. then, need to further match according to object type (i.e. in_charge, crated_by etc.)
-				userid_array = item._perm ? searchbar.searchByUsername(word, Object.keys(item._perm), word_pinyin) : [];
-				var mainword = 'unssigned';//toto:translation;
-				if( mainword.indexOf(word) >= 0 && (burgerOnly == false || burgerOnly == 'at') ){
-					if( item['_users'] == null){
-						push = true;
+				if(burgerOnly == false || burgerOnly == 'at'){
+					userid_array = item._perm ? searchbar.searchByUsername(word, Object.keys(item._perm), word_pinyin) : [];
+				}
+				
+
+				if(burgerOnly == 'at' && word.toLowerCase() == Lincko.Translation.get('app', 3608, 'js')){ //@unassigned search
+					push = true;
+					if(item._users){
+						$.each(item._users, function(uid,obj){
+							if(obj.in_charge){ push = false; return false; }
+						});
 					}
 				}
-				else if( userid_array.length && (burgerOnly == false || burgerOnly == 'at') ){ //userOnly both true/false
+				else if((burgerOnly == false || burgerOnly == 'at') && userid_array.length){ //userOnly both true/false
 					for( var k=0; k < userid_array.length; k++){
 						userid = userid_array[k];
 						if( item['_type'] == 'tasks' ){
@@ -160,15 +166,16 @@ var searchbar = {
 					}//END OF for each userid_array
 
 				} //date search
-				else if( searchbar.isDueThisTime(item, word) && (burgerOnly == false || burgerOnly == 'plus') ){
+				else if(burgerOnly == 'plus' && word == 'overdue'/*toto-translation*/){
+					if(searchbar.isOverDue(item)){ push = true; }
+				}
+				else if(burgerOnly == 'plus' && word == Lincko.Translation.get('app', 103, 'js')){ //+none
+					if(searchbar.isNoneDue(item)){ push = true; }
+				}
+				else if((burgerOnly == false || burgerOnly == 'plus') && searchbar.isDueThisTime(item, word)){
 					push = true;
 				}
-				else if( searchbar.isOverDue(item, word) && (burgerOnly == false || burgerOnly == 'plus') ){
-					push = true;
-				}
-				else if( searchbar.isNoneDue(item, word) && (burgerOnly == false || burgerOnly == 'plus') ){
-					push = true;
-				}
+
 
 				if(push){
 					items_filtered.push(item);
@@ -249,9 +256,8 @@ var searchbar = {
 	},
 
 	//for tasks
-	isOverDue: function(item, keyword){
-		var mainword = 'overdue';//toto:to translation
-		if(typeof item != 'object' || item._type != 'tasks' || !item.duration || !item.start || !keyword || mainword.indexOf(keyword) < 0 ){
+	isOverDue: function(item){
+		if(typeof item != 'object' || item._type != 'tasks' || !item.duration || !item.start || item.approved_at){
 			return false;
 		}else if(tasks_isOverdue(item._id)){
 			return true;
@@ -260,13 +266,11 @@ var searchbar = {
 	},
 
 	//for tasks
-	isNoneDue: function(item, keyword){
-		var mainword = 'none';//toto:to translation
-		if(typeof item != 'object' || item._type != 'tasks' || !item.duration  || item.start != null || !keyword || mainword.indexOf(keyword) < 0 ){
-			return false;
-		}
-		else if(item.start == null && mainword.indexOf(keyword) >= 0){
+	isNoneDue: function(item){
+		if(typeof item == 'object' && item._type == 'tasks' && (!item.duration || !item.start)){
 			return true;
+		} else {
+			return false;
 		}
 	},
 
