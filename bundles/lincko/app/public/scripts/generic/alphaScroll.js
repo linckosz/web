@@ -1,4 +1,4 @@
-var alphaScroll = function(iscroll){
+var alphaScroll = function(iscroll){ console.log('alphascroll');
 	var that = this;
 	this.iscroll = iscroll; if(!iscroll.hasVerticalScroll){ return false; }
 	this.elem_iscroll_wrapper = $(iscroll.wrapper);

@@ -284,11 +284,12 @@ Submenu.prototype.Add_ChatContacts = function() {
 	};
 
 	var fn_alphaScroll_timeout = function(){
+		var id_iscroll = that.id+"_submenu_app_chat_chat_contact_div";
 		setTimeout(function(){
-			if(!myIScrollList[div_id].scrollerHeight){ //iscroll not ready
+			if(!myIScrollList[id_iscroll] || !myIScrollList[id_iscroll].scrollerHeight){ //iscroll not ready
 				fn_alphaScroll_timeout();
-			} else if(myIScrollList[div_id].hasVerticalScroll){
-				var alphaScrollInst = new alphaScroll(myIScrollList[div_id]);
+			} else if(myIScrollList[id_iscroll].hasVerticalScroll){
+				var alphaScrollInst = new alphaScroll(myIScrollList[id_iscroll]);
 			}
 		},200);
 	}
