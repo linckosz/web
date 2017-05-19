@@ -1083,7 +1083,6 @@ skylist.prototype.addCard = function(item){
 					var item_new = Lincko.storage.get(that.list_type , item['_id']);
 
 					if( /*!item_new ||*/ (typeof item_new == 'object' && 'deleted_at' in item_new && item_new['deleted_at']) || (typeof item_new == 'object' && app_content_menu.projects_id > 0 && item_new._parent[1] != app_content_menu.projects_id) ){ //for delete
-						debugger;
 						elem.velocity('slideUp',{
 							mobileHA: hasGood3Dsupport,
 							complete: function(){

@@ -426,7 +426,7 @@ var burger_attach_clickHandler = {
 				var list_genOnClick = null;
 				if(list){ list_genOnClick = list; }
 				else{
-					list_genOnClick = burger_list.in_charge(lincko_type, lincko_id); console.log(list_genOnClick);
+					list_genOnClick = burger_list.in_charge(lincko_type, lincko_id);
 				}
 
 				if(responsiveRange == true || responsive.test(responsiveRange)){
@@ -1404,7 +1404,7 @@ burger_dropdown.prototype.show = function(){
 	});
 }
 
-burger_dropdown.prototype.hide = function(){return;//toto
+burger_dropdown.prototype.hide = function(){
 	var that = this;
 	var elem_dropdown = that.elem;
 	if(elem_dropdown){
