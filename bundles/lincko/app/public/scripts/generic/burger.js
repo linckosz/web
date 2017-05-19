@@ -361,6 +361,9 @@ var burger_attach_clickHandler = {
 		if(typeof cb_destroy != 'function'){ var cb_destroy = null; }
 		if(typeof responsiveRange != 'boolean' && typeof resonsiveRange != 'string'){ var responsiveRange = 'minTablet'; } //responsiveRange true is minTablet
 
+		var parent = Lincko.storage.get('tasks',10188, '_parent');
+		parent = Lincko.storage.get(parent[0], parent[1]);
+
 		//default cb_select for in_charge
 		if(cb_select && typeof cb_select == 'boolean'){
 			var cb_select = function(data){
@@ -423,11 +426,18 @@ var burger_attach_clickHandler = {
 				var list_genOnClick = null;
 				if(list){ list_genOnClick = list; }
 				else{
-					list_genOnClick = burger_list.in_charge(lincko_type, lincko_id);
+					list_genOnClick = burger_list.in_charge(lincko_type, lincko_id); console.log(list_genOnClick);
 				}
 
 				if(responsiveRange == true || responsive.test(responsiveRange)){
-					dropdownInst = new burger_dropdown('toto', list_genOnClick, elem, null, null, cb_select, null, false); 
+					var extra = {};
+					if(parent && parent._type == 'projects'){
+						var title = !parent.personal_private ? parent['+title'] : Lincko.Translation.get('app', 2502, 'html');//personal space
+						extra = {
+							header: '<span class="burger_dropdown_header"><span class="icon-projectBlack"></span><span find="text">'+title+'</span></span>',
+						}
+					}
+					dropdownInst = new burger_dropdown('toto', list_genOnClick, elem, null, null, cb_select, null, false, false, extra); 
 				}
 				else {
 					var param = {};
@@ -1107,7 +1117,7 @@ var burger_global_dropdown = {
 	position: jquery elem or [left, top]
 	submenu: bool
 */
-var burger_dropdown = function(id, data, position, lineHeight, cb_create, cb_select, cb_destroy, focus_elem, flipped){
+var burger_dropdown = function(id, data, position, lineHeight, cb_create, cb_select, cb_destroy, focus_elem, flipped, extra){
 	if(!data || typeof cb_select != 'function'){ return false; }
 	if(typeof submenu != 'boolean'){ var submenu = false; }
 	if(!position){ var position = [0,0]; }
@@ -1131,6 +1141,7 @@ var burger_dropdown = function(id, data, position, lineHeight, cb_create, cb_sel
 	//burger settings
 	that.elem = null;
 	that.data = data;
+	that.extra = typeof extra == 'object' ? extra : {};
 	that.md5id = md5(Math.random());
 	that.id_dropdown = 'burger_dropdown_'+that.md5id;
 	that.id_iscroll = 'burger_iscroll_'+that.md5id;
@@ -1288,7 +1299,12 @@ burger_dropdown.prototype.build_elem_data = function(data){
 		elem_dropdown_inner = elem_dropdown_inner.children('.iscroll_sub_div');
 	}
 
-	var elem_option = $('#-burger_option').clone().prop('id','');//.addClass('burger_option_users');
+	//add headers
+	if(that.extra.header){
+		elem_dropdown_inner.append('<div>'+that.extra.header+'</div>');
+	}
+
+	var elem_option = $('#-burger_option').clone().removeAttr('id');//.addClass('burger_option_users');
 
 	//if there is no contacts to display
 	if(data.length < 1){
@@ -1388,7 +1404,7 @@ burger_dropdown.prototype.show = function(){
 	});
 }
 
-burger_dropdown.prototype.hide = function(){
+burger_dropdown.prototype.hide = function(){return;//toto
 	var that = this;
 	var elem_dropdown = that.elem;
 	if(elem_dropdown){
