@@ -331,15 +331,16 @@ skylist.prototype.subConstruct_default = function(){
 	}
 
 
-
-
+	var sync_range = app_content_menu.projects_id ? 'projects_'+app_content_menu.projects_id : 'projects';
+	app_application_lincko.clean(that.list.prop('id'));
 	app_application_lincko.add(
 		that.list.prop('id'),
-		'projects_'+app_content_menu.projects_id,
+		sync_range,
 		function(){
+			var sync_range = this.action_param;
 			if( typeof this.updated == 'object' 
-				&& typeof this.updated['projects_'+app_content_menu.projects_id] == 'object' 
-				&& !this.updated['projects_'+app_content_menu.projects_id]._children){ return; }
+				&& typeof this.updated[sync_range] == 'object' 
+				&& !this.updated[sync_range]._children){ return; }
 
 
 			if($('#'+this.id).find('[find=card]').length < 1){//if nothing on the list
@@ -470,7 +471,8 @@ skylist.prototype.subConstruct_default = function(){
 
 			//one last check to update any fake cards
 			that.updateFakeCards();
-		}//end of the function attached to this project range
+		},//end of the function attached to this project range
+		sync_range,
 	);
 
 }//END OF subConstruct_default
@@ -1080,7 +1082,8 @@ skylist.prototype.addCard = function(item){
 					var elem = $('#'+this.id);
 					var item_new = Lincko.storage.get(that.list_type , item['_id']);
 
-					if( /*!item_new ||*/ (typeof item_new == 'object' && 'deleted_at' in item_new && item_new['deleted_at']) || (typeof item_new == 'object' && item_new._parent[1] != app_content_menu.projects_id) ){ //for delete
+					if( /*!item_new ||*/ (typeof item_new == 'object' && 'deleted_at' in item_new && item_new['deleted_at']) || (typeof item_new == 'object' && app_content_menu.projects_id > 0 && item_new._parent[1] != app_content_menu.projects_id) ){ //for delete
+						debugger;
 						elem.velocity('slideUp',{
 							mobileHA: hasGood3Dsupport,
 							complete: function(){
