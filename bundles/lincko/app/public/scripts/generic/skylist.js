@@ -472,7 +472,7 @@ skylist.prototype.subConstruct_default = function(){
 			//one last check to update any fake cards
 			that.updateFakeCards();
 		},//end of the function attached to this project range
-		sync_range,
+		sync_range
 	);
 
 }//END OF subConstruct_default
