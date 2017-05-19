@@ -361,7 +361,7 @@ var burger_attach_clickHandler = {
 		if(typeof cb_destroy != 'function'){ var cb_destroy = null; }
 		if(typeof responsiveRange != 'boolean' && typeof resonsiveRange != 'string'){ var responsiveRange = 'minTablet'; } //responsiveRange true is minTablet
 
-		var parent = Lincko.storage.get('tasks',10188, '_parent');
+		var parent = Lincko.storage.get(lincko_type, lincko_id, '_parent');
 		parent = Lincko.storage.get(parent[0], parent[1]);
 
 		//default cb_select for in_charge
@@ -427,6 +427,9 @@ var burger_attach_clickHandler = {
 				if(list){ list_genOnClick = list; }
 				else{
 					list_genOnClick = burger_list.in_charge(lincko_type, lincko_id);
+					if(parent && parent._type == 'projects' && parent.personal_private){
+						list_genOnClick.pop();
+					}
 				}
 
 				if(responsiveRange == true || responsive.test(responsiveRange)){
@@ -1118,7 +1121,7 @@ var burger_global_dropdown = {
 	submenu: bool
 */
 var burger_dropdown = function(id, data, position, lineHeight, cb_create, cb_select, cb_destroy, focus_elem, flipped, extra){
-	if(!data || typeof cb_select != 'function'){ return false; }
+	if(!data){ return false; }
 	if(typeof submenu != 'boolean'){ var submenu = false; }
 	if(!position){ var position = [0,0]; }
 	else if(base_isElement(position) && !position instanceof $){ var position = $(position); }
@@ -1355,12 +1358,15 @@ burger_dropdown.prototype.build_elem_data = function(data){
 		if(obj.addClass){
 			elem_option_clone.addClass(obj.addClass);
 		}
+
 		if(typeof that.cb_select == 'function'){
 			elem_option_clone.click(obj, function(event){
 				if(typeof event.data.onClick == 'function'){ event.data.onClick(); }
 				else{ that.cb_select(event.data); }
 				that.hide();
 			});
+		} else {
+			elem_option_clone.removeClass('skylist_clickable').addClass('burger_option_disabled');
 		}
 
 		elem_dropdown_inner.append(elem_option_clone);
