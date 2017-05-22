@@ -893,15 +893,24 @@ skylist.prototype.addPrevPage = function(){
 
 	if(!that.pagesLoaded[prevPage]){
 		//add cards
+		var elem_tmp = $('<div>');
 		$.each(that.Lincko_itemsList_paged[prevPage], function(i, item){
 			if(!that.inputterAddedItems[item.temp_id]){ //dont add if was added by inputter
 				var elem_new = that.addCard(item);
 				if(!$('#'+elem_new.prop('id')).length){ //add only if doesnt exist
-					elem_spinner.before(elem_new);
+					elem_tmp.append(elem_new);
 					if(i<1){ elem_top = elem_new; } //the first element added will be at the top
 				}
 			}
 		});
+
+		//add cards from temp div to iscroll
+		elem_tmp = elem_tmp.children();
+		if(elem_tmp.length){
+			elem_spinner.before(elem_tmp);
+		}
+
+
 		that.pagesLoaded[prevPage] = true;
 		 that.currentPage = prevPage;
 		elem_spinner.remove();
@@ -920,7 +929,6 @@ skylist.prototype.addPrevPage = function(){
 
 skylist.prototype.addNextPage = function(page){
 	var that = this; 
-
 	//if loading first page, reset
 	if(page === 0){
 		that.currentPage = 0;
@@ -940,16 +948,23 @@ skylist.prototype.addNextPage = function(page){
 			myIScrollList['skylist_'+that.md5id].scrollTo(0,0);
 		}
 
-		//add cards
+		//add cards to temp div
+		var elem_tmp = $('<div>');
 		$.each(that.Lincko_itemsList_paged[nextPage], function(i, item){
 			if(!that.inputterAddedItems[item.temp_id]){ //dont add if was added by inputter
 				var elem_new = that.addCard(item);
 				if(!$('#'+elem_new.prop('id')).length){ //add only if doesnt exist
-					elem_iscroll.append(elem_new);
+					elem_tmp.append(elem_new);
 				}
 			}
 			
 		});
+
+		//add cards from temp div to iscroll
+		elem_tmp = elem_tmp.children();
+		if(elem_tmp.length){
+			elem_iscroll.append(elem_tmp);
+		}
 
 		//record that the page was loaded into DOM
 		that.pagesLoaded[nextPage] = true;
@@ -988,11 +1003,20 @@ skylist.prototype.addLastPage = function(){
 		}
 
 		//add cards
+		var elem_tmp = $('<div>');
 		$.each(that.Lincko_itemsList_paged[i_lastPage], function(i, item){
 			if(!that.inputterAddedItems[item.temp_id]){ //dont add if was added by inputter
-				elem_iscroll.append(that.addCard(item));
+				elem_tmp.append(that.addCard(item));
 			}
 		});
+
+		//add cards from temp div to iscroll
+		elem_tmp = elem_tmp.children();
+		if(elem_tmp.length){
+			elem_iscroll.append(elem_tmp);
+		}
+
+
 
 		//record that the page was loaded into DOM
 		that.pagesLoaded[i_lastPage] = true;

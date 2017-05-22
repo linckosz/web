@@ -675,7 +675,7 @@
 .skylist_wrapper[view=paper] .skylist_subwrapper {
 	/*bottom: 120px;*/
 }
-.skylist_wrapper[view=paper]:not([pid=0]) .skylist_newcardCircle{
+.skylist_wrapper[view=paper]:not([pid="0"]) .skylist_newcardCircle{
 	display: none;
 }
 .skylist_wrapper[view=paper] .skylist .iscroll_sub_div.scrollY{
