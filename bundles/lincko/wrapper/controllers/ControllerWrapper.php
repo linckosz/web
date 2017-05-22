@@ -154,7 +154,6 @@ class ControllerWrapper extends Controller {
 			$timeout = 66; //Need more time because requesting a third party for translation
 			//Shorten the request by doing the operation on front
 			if(isset($this->json['data']['text'])){
-				\libs\Watch::php($this->json['data']['text'], '$var', __FILE__, __LINE__, false, false, true);
 				$translator = new \libs\OnlineTranslator();
 				$text = json_encode($translator->translate($this->json['data']['text']));
 				$echo = '{"show":false,"msg":'.$text.',"error":false,"status":200}';
