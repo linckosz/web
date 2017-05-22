@@ -15,6 +15,9 @@
     display: block;
     height: 18px;
     line-height: 18px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .burger_dropdown_header .icon-projectBlack{
 	padding: 0px 4px;
