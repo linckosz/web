@@ -43,7 +43,7 @@
 */
 
 
-var inputter = function(panel_id,position,upload_ptype,upload_pid,layer,burger)
+var inputter = function(panel_id,position,upload_ptype,upload_pid,layer,burger,resize_call)
 {
 	this.elements_lib = 
 	{
@@ -80,8 +80,9 @@ var inputter = function(panel_id,position,upload_ptype,upload_pid,layer,burger)
 	this.task_completed = false;
 	this.focus_flag = false;
 	this.touch_now = false;
-	this.buildLayer();
+	this.resize_call = resize_call;
 
+	this.buildLayer();
 
 	this.inputter_current_audio_touch_clientY = 0;
 	this.inputter_start_audio_touch_clientY = 0;
@@ -90,6 +91,8 @@ var inputter = function(panel_id,position,upload_ptype,upload_pid,layer,burger)
 	this.inputter_audio_operation_icon_interval;
 	this.inputter_audio_duration = 0;
 	this.inputter_audio_duration_interval;
+
+
 }
 
 inputter.prototype.getContent = function()
@@ -770,6 +773,25 @@ inputter.prototype.buildLayer = function()
 		content.addClass('mobile-margin-right-' + mobile_show_count);
 	});
 
+	if(typeof that.resize_call == 'function'){
+		input.find('[find=chat_textarea]').on('focus',function(){
+			var control = $(this);
+			clearInterval(that.resize_interval);
+			that.resize_interval = setInterval(function(){
+				if(that.height != control.height()){
+					that.resize_call();
+					that.height = control.height()
+				}
+			},400);
+			
+		});
+
+		input.find('[find=chat_textarea]').on('blur',function(){
+			clearInterval(that.resize_interval);
+		});
+	}
+	
+
 
 	function cleanHtmlTag(source){
 		if(typeof removeBr == 'undefined') {
@@ -1147,6 +1169,24 @@ inputter.prototype.buildLayer = function()
 	}
 
 	container.appendTo(this.position);
+
+	//toto
+	if(typeof that.resize_call == 'function')
+	{
+		setTimeout(function(){
+			that.resize_call();
+		},1000);
+
+		$(window).resize(function(){
+			clearTimeout(that.resize_timer);
+			that.resize_timer = setTimeout(function(){
+				that.resize_call();
+			},400);
+		});
+	}
+	
+
+
 
 	$('#'+this.panel_id + "_files_queue_wrapper").addClass("overthrow");
 	wrapper_IScroll_options_new[this.panel_id + "_files_queue_wrapper"] = { 

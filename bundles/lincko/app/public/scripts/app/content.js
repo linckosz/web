@@ -364,7 +364,7 @@ var app_content_resize = function(){
 				$("#app_content_dynamic_sub").removeClass("max-width-900");
 			}
 		}
-	}, 200);
+	}, 400);
 };
 
 $(window).resize(function(){

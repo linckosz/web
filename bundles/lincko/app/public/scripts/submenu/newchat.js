@@ -114,16 +114,18 @@ Submenu_select.new_chat_menu = function(subm) {
 	subm.New_Add_ChatMenu();
 };
 
+var app_submenu_scrollto_timeout;
 var app_submenu_scrollto = function(iScroll, last, scroll_time){
 	if(typeof scroll_time == 'undefined'){
 		scroll_time = 0;
 	}
-	setTimeout(function(last){
+	clearTimeout(app_submenu_scrollto_timeout);
+	app_submenu_scrollto_timeout = setTimeout(function(last){
 		submenu_resize_content();
 		if(last){
 			iScroll.scrollToElement(last, scroll_time);
 		}
-	}, 50, last);
+	}, 200, last);
 }
 
 Submenu.prototype.Add_ChatContents = function() {
@@ -386,9 +388,28 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 		],
 	};
 
-	var type = that.param.type == 'history' ? "projects":'chats';
-	var chat_inputter = new inputter(this.id,position,type,that.param.id,layer,null);
 
 	var height = position.height();
 	submenu_wrapper.find("[find=submenu_wrapper_content]").css('bottom', height);
+
+	var type = that.param.type == 'history' ? "projects":'chats';
+	var chat_inputter = new inputter(this.id,position,type,that.param.id,layer,null,
+		function(){
+			var submenu_height = submenu_wrapper.outerHeight();
+			var title_height = submenu_wrapper.find("[find=submenu_wrapper_top]").outerHeight();
+			var inputter_height = submenu_wrapper.find("[find=submenu_wrapper_bottom]").outerHeight();
+			submenu_wrapper.find("[find=submenu_wrapper_content]").css('height', submenu_height -inputter_height - title_height);
+			submenu_wrapper.find("[find=submenu_wrapper_content]").css('bottom', inputter_height);
+
+			var submenu_id = that.id;
+			var scroll_time = 50;
+			var overthrow_id = "overthrow_"+submenu_id;
+			var help_iscroll_elem =  $('#'+that.id+'_help_iscroll').get(0);
+			if(myIScrollList[overthrow_id] && help_iscroll_elem){
+				myIScrollList[overthrow_id].refresh();
+				app_submenu_scrollto(myIScrollList[overthrow_id], help_iscroll_elem, scroll_time);
+			}
+		});
+
+	
 }

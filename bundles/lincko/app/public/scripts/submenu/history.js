@@ -853,6 +853,7 @@ var historyFeed = function(id,type,position,submenu)
 					} else if(IScroll.y < -30){
 						that.position.find(".models_history_loading").addClass('models_history_loading_hide');
 					}
+					
 					that.loading_timer = setTimeout(function(IScroll){
 						if(IScroll && IScroll.y >= 0){
 							that.position.find(".models_history_loading").remove();
@@ -888,7 +889,7 @@ var historyFeed = function(id,type,position,submenu)
 							var first_li = that.position.find('li').eq(0); //Grab old first li element
 							that.app_chat_feed_layer_display();
 							IScroll.refresh();
-							if(first_li.length>0){
+							if(first_li.length > 0){
 								IScroll.scrollToElement(first_li.get(0), 0, 0, -30);
 							}
 						}

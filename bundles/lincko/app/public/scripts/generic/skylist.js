@@ -3213,8 +3213,13 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 	}
 
 	//that.inputterInst = new inputter('skylist_'+that.list_type+'_'+that.md5id, elem_appendTo, upload_parent_type, upload_parent_id, inputter_setting, burgerParam);
-	that.inputterInst = new inputter('skylist_'+that.list_type+'_'+that.md5id, elem_appendTo, upload_parent_type, upload_parent_id, inputter_setting, true);
-
+	that.inputterInst = new inputter('skylist_'+that.list_type+'_'+that.md5id, elem_appendTo, upload_parent_type, upload_parent_id, inputter_setting, true, function(){
+		that.setHeight();
+		if( myIScrollList['skylist_'+that.md5id] ){
+			myIScrollList['skylist_'+that.md5id].refresh();
+		}
+	});
+	
 	return true;
 }
 /*
