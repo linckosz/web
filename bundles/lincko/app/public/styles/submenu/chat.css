@@ -466,3 +466,27 @@
 .submenu_app_chat_contacts_searchbar_container{
 	padding: 6px 10px;
 }
+
+.submenu_app_chat_contacts_csv {
+	position: absolute;
+	right: 6px;
+	top: 6px;
+	padding: 2px 6px 3px 6px;
+	color: #A4A4A4;
+	border: solid 1px #A4A4A4;
+	border-radius: 3px;
+	z-index: 10;
+	cursor: pointer;
+	background-color: #FFFFFF;
+}
+
+.submenu_app_chat_contacts_csv:hover {
+	color: #838383;
+	border-color: #838383;
+}
+
+.submenu_app_chat_contacts_csv:active {
+	color: #838383;
+	border-color: #838383;
+	background-color: #F4F4F4;
+}

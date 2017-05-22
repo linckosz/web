@@ -145,10 +145,9 @@ $app->lincko->email->Host = 'service1';
 $app->lincko->email->List = array();
 
 //Translator parameters
-//brunoocto@gmail.com / m*m*3*
+//brmicrosoft@lincko.com/ lin**2**5**@#
 $app->lincko->translator = array(
-	'client_id' => 'bd0c3bc3-d917-4a1c-810a-74835f62674f',
-	'client_secret' => 'q7gZN2eqcX7TJo83+OOgXBc8mQhj2NuaNCYoZGVECZQ=',
+	'text_key1' => '8b5032784084462c97cfe442cf489577',
 );
 
 //Translation list

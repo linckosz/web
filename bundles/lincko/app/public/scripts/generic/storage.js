@@ -582,6 +582,20 @@ Lincko.storage.update = function(partial, info){
 			}
 		}
 
+		//Make sure we overwrite the usernmae/firstname/lastname by the namecard for company workspace
+		if(typeof partial['namecards'] == 'object' && Lincko.storage.getWORKID()>0){
+			for(var i in partial['namecards']){
+				if(partial['namecards'][i]['workspaces_id'] == Lincko.storage.getWORKID()){
+					var user = Lincko.storage.get('users', partial['namecards'][i]['_parent'][1]);
+					if(user){
+						if(typeof partial['namecards'][i]['-username'] != 'undefined' && partial['namecards'][i]['-username']!=null){ user['-username'] = partial['namecards'][i]['-username']; };
+						if(typeof partial['namecards'][i]['-firstname'] != 'undefined' && partial['namecards'][i]['-firstname']!=null){ user['-firstname'] = partial['namecards'][i]['-firstname']; };
+						if(typeof partial['namecards'][i]['-lastname'] != 'undefined' && partial['namecards'][i]['-lastname']!=null){ user['-lastname'] = partial['namecards'][i]['-lastname']; };
+					}
+				}
+			}
+		}
+
 		setTimeout(function(){
 			//Lincko.storage.childrenList(partial, children_list);
 			Lincko.storage.childrenList(); //We should not scan the whole database, it slows down the list but Sky had an issue of getting _children visible for notes when adding a comment
@@ -603,6 +617,57 @@ Lincko.storage.update = function(partial, info){
 	return update;
 };
 
+Lincko.storage.export = function(category, id){
+	if(typeof id != 'undefined'){
+		var items = [Lincko.storage.get(category, id)];
+	} else if(category=='users'){
+		var items = Lincko.storage.sort_items(Lincko.storage.list('users', null, [{ _id: wrapper_localstorage.uid}, {_visible: true}]), '-username');
+	} else {
+		var items = Lincko.storage.list(category);
+	}
+	var data = [];
+	if(items){
+		for(var i in items){
+			var item = items[i];
+			if(category=='users'){
+				data[i] = {
+					id: item['_id'],
+					username: item['-username'],
+					firstname: item['-firstname'],
+					lastname: item['-lastname'],
+					email: item['-email'],
+					address: '',
+					phone: '',
+					business: '',
+					additional: '',
+					linkedin: '',
+				};
+				var namecards = Lincko.storage.list('namecards', -1, null, 'users', item['_id']);
+				namecards = Lincko.storage.sort_items(namecards, 'workspaces_id', 0, -1, true); //From shared (0) to current (higher ID)
+				for(var j in namecards){
+					var namecard = namecards[j];
+					if(namecard['workspaces_id']>0){
+						if(typeof namecard['-username'] != 'undefined' && namecard['-username']!=null){ data[i]['username'] = namecard['-username']; }
+						if(typeof namecard['-firstname'] != 'undefined' && namecard['-firstname']!=null){ data[i]['firstname'] = namecard['-firstname']; }
+						if(typeof namecard['-lastname'] != 'undefined' && namecard['-lastname']!=null){ data[i]['lastname'] = namecard['-lastname']; }
+					}
+					if(typeof namecard['-email'] != 'undefined' && namecard['-email']!=null){ data[i]['email'] = namecard['-email']; }
+					if(typeof namecard['-address'] != 'undefined' && namecard['-address']!=null){ data[i]['address'] = $('<div>').text(namecard['-address']).text(); }
+					if(typeof namecard['-phone'] != 'undefined' && namecard['-phone']!=null){ data[i]['phone'] = namecard['-phone']; }
+					if(typeof namecard['-business'] != 'undefined' && namecard['-business']!=null){ data[i]['business'] = $('<div>').text(namecard['-business']).text(); }
+					if(typeof namecard['-additional'] != 'undefined' && namecard['-additional']!=null){ data[i]['additional'] = $('<div>').text(namecard['-additional']).text(); }
+					if(typeof namecard['linkedin'] != 'undefined' && namecard['linkedin']!=null){ data[i]['linkedin'] = namecard['linkedin']; }
+				}
+			}
+		}
+		if(data.length>0){
+			wrapper_export(data);
+			return true;
+		}
+	}
+	return false;
+};
+
 Lincko.storage.update_data_abc_all = function(){
 	$.each(Lincko.storage.data, function(type, items_obj){
 		if(type.indexOf('_')!==0){ //items only
@@ -611,7 +676,7 @@ Lincko.storage.update_data_abc_all = function(){
 			});
 		}
 	});
-}
+};
 
 Lincko.storage.update_data_abc = function(type, id, updated){
 	if(!Lincko.storage.data_abc){ Lincko.storage.data_abc = {}; }
@@ -647,7 +712,7 @@ Lincko.storage.update_data_abc = function(type, id, updated){
 			});
 		}
 	}
-}
+};
 
 //Function that check the javascript database schema
 /* PRIVATE METHOD */
@@ -657,7 +722,9 @@ Lincko.storage.schema = function(schema){
 	var update = false;
 	var missing = {};
 
-	storage_first_request = false; //No need to launch firstLatest()
+	if(storage_first_request){
+		return false; //Must wait that the first getLatest is received
+	}
 
 	//Step 1: Delete all unlinked items (only check 2 levels deep)
 	for(var i in Lincko.storage.data) {

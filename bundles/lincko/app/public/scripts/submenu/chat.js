@@ -201,6 +201,25 @@ Submenu.prototype.Add_ChatContacts = function() {
 	var invitation = [];
 	var contacts = [];
 
+	var admin = false;
+	if(Lincko.storage.getWORKID()>0){
+		if(!$('#'+this.id+"_submenu_app_chat_contacts_csv").length){
+			var role = Lincko.storage.userRole(wrapper_localstorage.uid, 'workspaces', Lincko.storage.getWORKID());
+			if(role['_id']==1){ //Administrator
+				admin = true;
+				//add CSV export
+				var elem_csv = $('<div>')
+								.prop('id', this.id+"_submenu_app_chat_contacts_csv")
+								.addClass('submenu_app_chat_contacts_csv')
+								.html('csv')
+								.on('click', function(){
+									Lincko.storage.export('users');
+								});
+				position.append(elem_csv);
+			}
+		}
+	}
+
 	//add searchbar
 	var fn_search = function(words){
 		var elem_pending = $('#'+that.id+'_submenu_app_chat_chat_pending_div');
@@ -252,7 +271,15 @@ Submenu.prototype.Add_ChatContacts = function() {
 		var searchbar_contacts = searchbar.construct(fn_search);
 		elem_searchbar_container.append(searchbar_contacts.elem);
 		position.append(elem_searchbar_container);
+		//If the CSV exporter is visible, we reduce the length of the search bar
+		if(admin && $('#'+this.id+"_submenu_app_chat_contacts_csv").length==1){
+			setTimeout(function(id){
+				$('#'+id+"_submenu_app_chat_contacts_searchbar_container").css('padding-right', 12 + $('#'+id+"_submenu_app_chat_contacts_csv").outerWidth());
+			}, 100, this.id)
+		}
 	}
+
+	
 
 	var exists_tab = {};
 	submenu_wrapper.find('[find=tab_contact]').each(function(){

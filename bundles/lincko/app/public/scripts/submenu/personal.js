@@ -32,15 +32,15 @@ submenu_list['personal_info'] = {
 					subm.param_namecard.id = val['workspaces_id'];
 				}
 				if(val['workspaces_id']>0){
-					if(val['-username']!=null){ subm.param_namecard.username = val['-username']; };
-					if(val['-firstname']!=null){ subm.param_namecard.firstname = val['-firstname']; };
-					if(val['-lastname']!=null){ subm.param_namecard.lastname = val['-lastname']; };
+					if(typeof val['-username'] != 'undefined' && val['-username']!=null){ subm.param_namecard.username = val['-username']; };
+					if(typeof val['-firstname'] != 'undefined' && val['-firstname']!=null){ subm.param_namecard.firstname = val['-firstname']; };
+					if(typeof val['-lastname'] != 'undefined' && val['-lastname']!=null){ subm.param_namecard.lastname = val['-lastname']; };
 				}
-				if(val['address']!=null){ subm.param_namecard.address = $('<div>').text(val['address']).text(); };
-				if(val['phone']!=null){ subm.param_namecard.phone = val['phone']; };
-				if(val['business']!=null){ subm.param_namecard.business = $('<div>').text(val['business']).text(); };
-				if(val['additional']!=null){ subm.param_namecard.additional = $('<div>').text(val['additional']).text(); };
-				if(val['linkedin']!=null){ subm.param_namecard.linkedin = val['linkedin']; };
+				if(typeof val['-address'] != 'undefined' && val['-address']!=null){ subm.param_namecard.address = $('<div>').text(val['-address']).text(); };
+				if(typeof val['-phone'] != 'undefined' && val['-phone']!=null){ subm.param_namecard.phone = val['-phone']; };
+				if(typeof val['-business'] != 'undefined' && val['-business']!=null){ subm.param_namecard.business = $('<div>').text(val['-business']).text(); };
+				if(typeof val['-additional'] != 'undefined' && val['-additional']!=null){ subm.param_namecard.additional = $('<div>').text(val['-additional']).text(); };
+				if(typeof val['linkedin'] != 'undefined' && val['linkedin']!=null){ subm.param_namecard.linkedin = val['linkedin']; };
 			}
 		},
 	},
@@ -135,7 +135,7 @@ submenu_list['personal_info'] = {
 		"value": function(Elem, subm){
 			var role = Lincko.storage.userRole(subm.param, 'workspaces', Lincko.storage.getWORKID());
 			if(role['_id']==1){
-				return Lincko.Translation.get('app', 111, 'html'); //Adminstrator
+				return Lincko.Translation.get('app', 111, 'html'); //Administrator
 			} else if(role['_id']==2){
 				return Lincko.Translation.get('app', 110, 'html'); //Teammate
 			} else if(role['_id']==3){
@@ -954,7 +954,7 @@ var submenu_role_build_list = function(users_id, category, id){
 	for(var i in roles){
 		name = roles[i]['+name'];
 		if(roles[i]['_id']==1){
-			name = Lincko.Translation.get('app', 111, 'html'); //Adminstrator
+			name = Lincko.Translation.get('app', 111, 'html'); //Administrator
 		} else if(roles[i]['_id']==2){
 			name = Lincko.Translation.get('app', 110, 'html'); //Teammate
 		} else if(roles[i]['_id']==3){
@@ -969,7 +969,7 @@ var submenu_role_build_list = function(users_id, category, id){
 					roles_id: roles[i]['_id'],
 				},
 				"action": function(Elem, subm, action_param){
-					var perm = Lincko.storage.get('workspaces', Lincko.storage.getWORKID(), '_perm');
+					var perm = Lincko.storage.get(subm.param.parent_type, subm.param.parent_id, '_perm');
 					if(perm[action_param.users_id] && typeof perm[action_param.users_id][1] != 'undefined' && perm[action_param.users_id][1]!=action_param.roles_id){
 						perm[action_param.users_id][0] = 0;
 						perm[action_param.users_id][1] = action_param.roles_id;
@@ -986,8 +986,8 @@ var submenu_role_build_list = function(users_id, category, id){
 						wrapper_sendAction(
 							{
 								"id": action_param.users_id,
-								"parent_type": "workspaces",
-								"parent_id": Lincko.storage.getWORKID(),
+								"parent_type": subm.param.parent_type,
+								"parent_id": subm.param.parent_id,
 								"role_id": action_param.roles_id,
 							},
 							'post',

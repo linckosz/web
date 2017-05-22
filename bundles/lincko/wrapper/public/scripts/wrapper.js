@@ -703,6 +703,12 @@ if(responsive.test("minTablet")){
 	wrapper_performance.delay = 50;
 }
 
+function wrapper_export(data, format){
+	if(typeof format==="undefined"){ format = 'csv'; }
+	var param = encodeURIComponent(JSON.stringify(data));
+	device_download('/export/data.'+format+'?param='+param, '_blank', 'data.'+format);
+}
+
 JSfiles.finish(function(){
 	wrapper_IScroll();
 	wrapper_localstorage.cleanLocalUser();

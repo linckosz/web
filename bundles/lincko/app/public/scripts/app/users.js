@@ -74,15 +74,18 @@ var app_projects_users_contacts_init = function(subm){
 			"hide": false,
 			"class": "submenu_deco_info submenu_deco_fix",
 			"value": function(){
-				var role = Lincko.storage.userRole(this.action_param.value, 'projects', projects_id);
-				if(role['_id']==1){
-					return Lincko.Translation.get('app', 111, 'html'); //Adminstrator
-				} else if(role['_id']==2){
-					return Lincko.Translation.get('app', 110, 'html'); //Teammate
-				} else if(role['_id']==3){
-					return Lincko.Translation.get('app', 109, 'html'); //Guest
+				if(Lincko.storage.getWORKID()>0){
+					var role = Lincko.storage.userRole(this.action_param.value, 'projects', projects_id);
+					if(role['_id']==1){
+						return Lincko.Translation.get('app', 111, 'html'); //Administrator
+					} else if(role['_id']==2){
+						return Lincko.Translation.get('app', 110, 'html'); //Teammate
+					} else if(role['_id']==3){
+						return Lincko.Translation.get('app', 109, 'html'); //Guest
+					}
+					return role['+name'];
 				}
-				return role['+name'];
+				return '';
 			},
 		};
 
@@ -136,15 +139,18 @@ var app_projects_users_contacts_init = function(subm){
 					"hide": false,
 					"class": "submenu_deco_info",
 					"value": function(){
-						var role = Lincko.storage.userRole(this.action_param.value, 'projects', projects_id);
-						if(role['_id']==1){
-							return Lincko.Translation.get('app', 111, 'html'); //Adminstrator
-						} else if(role['_id']==2){
-							return Lincko.Translation.get('app', 110, 'html'); //Teammate
-						} else if(role['_id']==3){
-							return Lincko.Translation.get('app', 109, 'html'); //Guest
+						if(Lincko.storage.getWORKID()>0){
+							var role = Lincko.storage.userRole(this.action_param.value, 'projects', projects_id);
+							if(role['_id']==1){
+								return Lincko.Translation.get('app', 111, 'html'); //Administrator
+							} else if(role['_id']==2){
+								return Lincko.Translation.get('app', 110, 'html'); //Teammate
+							} else if(role['_id']==3){
+								return Lincko.Translation.get('app', 109, 'html'); //Guest
+							}
+							return role['+name'];
 						}
-						return role['+name'];
+						return '';
 					},
 					"now": function(Elem, subm){
 						grant = false;

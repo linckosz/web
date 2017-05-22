@@ -1,5 +1,4 @@
 <?php
-
 /*
 	Write here anything you need as debugging information to be display on main page
 	For twig display use: {{ _debug() }} or {{ _debug(data) }}

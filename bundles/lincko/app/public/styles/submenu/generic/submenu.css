@@ -256,11 +256,13 @@
 
 .submenu_radio_text_sub {
 	color: #C2C2C2;
+	display: inline-block;
+	margin-right: 12px;
+	padding: 2px;
 }
 
 .submenu_icon {
 	height: 20px;
-	padding-left: 12px;
 	vertical-align: middle;
 }
 
