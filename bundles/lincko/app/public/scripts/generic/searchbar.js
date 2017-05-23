@@ -184,10 +184,16 @@ var searchbar = {
 
 				//date search for tasks
 				if(!push && item._type == 'tasks'){
-					if(burgerOnly == 'plus' && word == Lincko.Translation.get('app', 3630, 'js').toLowerCase()){ //+overdue
+					var str_overdue = Lincko.Translation.get('app', 3630, 'js').toLowerCase(); //overdue
+					var str_none = Lincko.Translation.get('app', 103, 'js').toLowerCase(); //none
+					if( burgerOnly == 'plus' 
+						&&( word == str_overdue
+							||(app_language_short.indexOf('zh') !== -1 && word == Pinyin.getPinyin(str_overdue))) ){ //+overdue
 						if(searchbar.isOverDue(item)){ push = true; }
 					}
-					else if(burgerOnly == 'plus' && word == Lincko.Translation.get('app', 103, 'js').toLowerCase()){ //+none
+					else if( burgerOnly == 'plus' 
+							 &&( word == str_none 
+							 	||(app_language_short.indexOf('zh') !== -1 && word == Pinyin.getPinyin(str_none))) ){ //+none
 						if(searchbar.isNoneDue(item)){ push = true; }
 					}
 					else if((burgerOnly == false || burgerOnly == 'plus') && searchbar.isDueThisTime(item, word)){
