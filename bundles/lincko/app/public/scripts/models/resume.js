@@ -601,4 +601,3 @@ var app_models_resume_listup = function(Elem, list, color, link, comments_id){
 		});
 	}
 };
-var toto;

@@ -95,7 +95,7 @@ var app_content_menu = {
 			// list = [
 			// 	'projects',
 			// ];
-			title = 'Global View';//toto：translation
+			title = Lincko.Translation.get('app', 201, 'js');//Global View
 			list = [
 				'tasks',
 				'notes',

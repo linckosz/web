@@ -2,7 +2,7 @@ submenu_list['feedback'] = {
 	//Set the title of the top
 	"_title": {
 		"style": "customized_title",
-		"title": "Support",//toto
+		"title": Lincko.Translation.get('app', 114, 'html'), //Support
 		"class": "submenu_top_itemSelector",
 	},
 	"left_button": {

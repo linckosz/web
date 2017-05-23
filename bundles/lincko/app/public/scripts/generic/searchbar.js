@@ -182,7 +182,7 @@ var searchbar = {
 					}//END OF for each userid_array
 
 				} //date search
-				else if(burgerOnly == 'plus' && word == 'overdue'/*toto-translation*/){
+				else if(burgerOnly == 'plus' && word == Lincko.Translation.get('app', 3630, 'js')){ //overdue
 					if(searchbar.isOverDue(item)){ push = true; }
 				}
 				else if(burgerOnly == 'plus' && word == Lincko.Translation.get('app', 103, 'js')){ //+none

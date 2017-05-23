@@ -90,7 +90,7 @@ submenu_list['taskdetail'] = {
 			"display":function(subm){
 				return app_content_menu.projects_id == 0;
 			},
-			"title": 'View in Project', //toto:View in Project
+			"title": Lincko.Translation.get('app', 3629, 'js'), //View in Project
 			"action": function(Elem, subm) {
 				var workspace = wrapper_localstorage.workspace == "" ? "" : wrapper_localstorage.workspace + ".";
 				var url = top.location.protocol+'//'+app_application_dev_link() + workspace + document.domainRoot+'/#'+subm.param.type+'-'+btoa(subm.param.id);

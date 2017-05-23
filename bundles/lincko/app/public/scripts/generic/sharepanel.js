@@ -8,12 +8,12 @@ var sharepanel = function(category,target_id)
 		{
 			name : 'copy_link',
 			ico : 'ico-remove',
-			title : '复制链接',
+			title : Lincko.Translation.get('app', 81, 'js'), //Copy Link
 			action : function(event){
 				//debugger;
 				var url = top.location.protocol+'//'+app_application_dev_link()+document.domain + '/#' + that.category + '-' + btoa(that.target_id);
 				//console.log(event);
-				base_show_error('复制成功！'); //toto
+				base_show_error(Lincko.Translation.get('app', 70, 'html')); //URL copied to the clipboard
 				$("#app_public_sharepanel").hide();
 			}
 		},
