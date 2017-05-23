@@ -138,7 +138,7 @@ var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct, ri
 	};
 
 	//paging
-	this.paging_triggerOffset = 500; //px
+	this.paging_triggerOffset = wrapper_performance.powerfull ? 500 : 0; //px
 	this.itemsPerPage = wrapper_performance.powerfull ? 60 : 20;
 	this.id_pageLoadSpinner = that.md5id+'_skylist_pageLoadSpinner';
 	this.Lincko_itemsList_paged = []; //list of items grouped into pages
@@ -194,7 +194,7 @@ var skylist_enquire = {};
 skylist.prototype.construct = function(){
 	var that = this;
 	that.list_wrapper = that.list_wrapper.recursiveEmpty(0).addClass('skylist_wrapper').attr('pid', that.pid);
-	that.list_subwrapper = $('#-skylist_subwrapper').clone().prop('id','');
+	that.list_subwrapper = $('#-skylist_subwrapper').clone().removeAttr('id');
 	that.list = $('#-skylist').clone().prop('id','skylist_'+that.md5id);
 
 	that.filter_updateSettings(false); //must be before menu_construct to know which filter to be on when loaded
@@ -330,17 +330,17 @@ skylist.prototype.subConstruct_default = function(){
 		that.list_subwrapper.append(elem_sort);
 	}
 
-
 	var sync_range = app_content_menu.projects_id ? 'projects_'+app_content_menu.projects_id : 'projects';
 	app_application_lincko.clean(that.list.prop('id'));
 	app_application_lincko.add(
 		that.list.prop('id'),
 		sync_range,
 		function(){
-			var sync_range = this.action_param;
+			var sync_range = this.action_param.sync_range;
 			if( typeof this.updated == 'object' 
 				&& typeof this.updated[sync_range] == 'object' 
 				&& !this.updated[sync_range]._children){ return; }
+			var that = this.action_param.skylist;
 
 
 			if($('#'+this.id).find('[find=card]').length < 1){//if nothing on the list
@@ -474,7 +474,7 @@ skylist.prototype.subConstruct_default = function(){
 			//one last check to update any fake cards
 			that.updateFakeCards();
 		},//end of the function attached to this project range
-		sync_range
+		{sync_rage: sync_range, skylist: that, }
 	);
 
 }//END OF subConstruct_default
