@@ -2171,13 +2171,16 @@ Submenu.prototype.Add_taskdetail = function() {
 							//dont show if task doesnt exist or it doesnt match the project of the parent task
 							if(!subtask || subtask.deleted_at || subtask._parent[1] != that.param.projID ) return;
 							else{
-								if(subtask.temp_id && elem_subtasks_wrapper.children('[task_id='+subtask.temp_id+']').length){ //if any temp task, modify
-									elem_subtasks_wrapper.children('[task_id='+subtask.temp_id+']').eq(0).attr('task_id', subtask_id);
+								subtask_count++;
+								var elem_temp_id = subtask.temp_id?elem_subtasks_wrapper.children('[temp_id='+subtask.temp_id+']'):[];
+								var elem_id = !elem_temp_id.length?elem_subtasks_wrapper.children('[task_id='+subtask_id+']'):[];
+
+								if(elem_temp_id.length){
+									elem_temp_id.removeAttr('temp_id').attr('task_id', subtask_id);
 								}
-								else if(!elem_subtasks_wrapper.children('[task_id='+subtask_id+']').length){
+								else if(!elem_id.length){
 									elem_subtasks_wrapper.append(generate_subtaskCard(subtask_id));
 								}
-								subtask_count++;
 							}
 						});
 					}
@@ -3295,24 +3298,6 @@ var taskdetail_linkQueue = {
 
 		delete taskdetail_linkQueue.queue[temp_id];
 		return true;
-
-
-		/*var param = {
-			'files>access': {},
-		};
-		param['files>access'][queueObj.id] = true;
-		param.id = queueObj.parent_id;
-		console.log(param['files>access']);
-		var route = queueObj.parent_type.slice(0,-1) + '/update';
-		wrapper_sendAction(param, 'post', route);
-
-		if(queueObj.projectID){
-			//wrapper_sendAction({id:queueObj.id, parent_id:queueObj.projectID}, 'post', 'file/update');
-		}
-		delete taskdetail_linkQueue.queue[temp_id];
-		return true;*/
-
-
 	},
 };
 
