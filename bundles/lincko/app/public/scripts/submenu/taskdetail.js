@@ -88,7 +88,11 @@ submenu_list['taskdetail'] = {
 			"feature":"goToLink",
 			"icon":'fa fa-binoculars',
 			"display":function(subm){
-				return app_content_menu.projects_id == 0;
+				if(subm.param.type && subm.param.id){
+					return Lincko.storage.hasProjectParent(subm.param.type,subm.param.id);
+				} else {
+					return false;
+				}
 			},
 			"title": Lincko.Translation.get('app', 3629, 'js'), //View in Project
 			"action": function(Elem, subm) {
