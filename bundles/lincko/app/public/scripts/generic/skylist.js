@@ -460,6 +460,7 @@ skylist.prototype.subConstruct_default = function(){
 				if(!elem.length){
 					if(!elem_iscroll.find('.skylist_paperView_divider').length){
 						elem_iscroll.append('<div class="skylist_paperView_divider"></div>'); //add blue divider
+						that.list_subwrapper.children('.skylist_sortBtn').removeClass('display_none');
 					}
 					var elem_newCard = that.addCard(item);
 					elem_iscroll.append(elem_newCard);
