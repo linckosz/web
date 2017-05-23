@@ -542,6 +542,7 @@ skylist.prototype.generate_Lincko_itemsList = function(){
 			files: {category: ['!=','voice']},
 		}
 
+		//include children, espeically for files inside project chats
 		that.Lincko_itemsList = Lincko.storage.list(that.list_type, null, conditions[that.list_type], 'projects', app_content_menu.projects_id || null, true);
 
 		//add hist_at and hist_by if doesnt exist. otherwise, sort_items will error
@@ -575,6 +576,24 @@ skylist.prototype.generate_Lincko_itemsList = function(){
 			that.Lincko_itemsList = Lincko.storage.sort_items(that.Lincko_itemsList, 'hist_at'/*'updated_at'*/, 0, -1, false);
 		}
 		else if(that.list_type == 'files'){
+			//for global view, hide files in global chats (e.g. must be descendant of a project)
+			if(that.pid == 0){
+				var hasProjectParent = function(item){
+					if(!item || !item._parent || !item._parent[0]){ return false; }
+					if(item._parent[0] == 'projects'){ return true; }
+					else {
+						return hasProjectParent(Lincko.storage.get(item._parent[0],item._parent[1]));
+					}
+				}
+				var excludeGlobalChatFiles = [];
+				var parent = [];
+				for(var i in that.Lincko_itemsList){
+					if(hasProjectParent(that.Lincko_itemsList[i])){
+						excludeGlobalChatFiles.push(that.Lincko_itemsList[i]);
+					}
+				}
+				that.Lincko_itemsList = excludeGlobalChatFiles;
+			}
 			//use the default sorting, which is by creation time
 		}
 	}
