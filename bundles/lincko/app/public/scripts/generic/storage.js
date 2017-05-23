@@ -134,6 +134,15 @@ Lincko.storage.getParent = function(type, id, attr) {
 	return parent;
 };
 
+Lincko.storage.hasProjectParent = function(type, id){
+	var item = Lincko.storage.get(type, id);
+	if(!item || !item._parent || !item._parent[0]){ return false; }
+	if(item._parent[0] == 'projects'){ return true; }
+	else {
+		return this.hasProjectParent(item._parent[0],item._parent[1]);
+	}
+}
+
 Lincko.storage.getLastNotif = function(type, id) {
 	var elem = Lincko.storage.get(type, id);
 	if(elem && elem["_users"] && elem["_users"][wrapper_localstorage.uid] && elem["_users"][wrapper_localstorage.uid]["noticed"]){

@@ -578,17 +578,10 @@ skylist.prototype.generate_Lincko_itemsList = function(){
 		else if(that.list_type == 'files'){
 			//for global view, hide files in global chats (e.g. must be descendant of a project)
 			if(that.pid == 0){
-				var hasProjectParent = function(item){
-					if(!item || !item._parent || !item._parent[0]){ return false; }
-					if(item._parent[0] == 'projects'){ return true; }
-					else {
-						return hasProjectParent(Lincko.storage.get(item._parent[0],item._parent[1]));
-					}
-				}
 				var excludeGlobalChatFiles = [];
 				var parent = [];
 				for(var i in that.Lincko_itemsList){
-					if(hasProjectParent(that.Lincko_itemsList[i])){
+					if(Lincko.storage.hasProjectParent(that.Lincko_itemsList[i]._type, that.Lincko_itemsList[i]._id)){
 						excludeGlobalChatFiles.push(that.Lincko_itemsList[i]);
 					}
 				}
