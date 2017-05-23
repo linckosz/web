@@ -136,16 +136,11 @@ var mainMenu = {
 			}
 
 			for(var i in temp_histList){
-				var style = Lincko.storage.get(temp_histList[i].root_type,temp_histList[i].root_id,"style");
-				if(style)
-				{
-					if(style == 0)
-					{
+				if(temp_histList[i].root_type == 'chats'){
+					if(Lincko.storage.get(temp_histList[i].root_type, temp_histList[i].root_id, "style") == 0){
 						histList.push(temp_histList[i]);
 					}
-				}
-				else
-				{
+				} else {
 					histList.push(temp_histList[i]);
 				}
 			}
@@ -271,7 +266,7 @@ $('#app_project_quick_access_chat').click(function(){
 	submenu_Build('chat_list', false, true, true);
 });
 
-$('#app_project_workspace_title').click(function(){
+$('#app_project_workspace').click(function(){
 	$('#app_application_content').addClass('app_gobal_view');
 	app_content_menu.selection(0, 'tasks');
 });
@@ -315,7 +310,8 @@ app_application_lincko.add("app_project_projects_tab", ["first_launch", "project
 	}
 });
 //toto => the range of this function need to be adjusted over the time according to new items if any more
-app_application_lincko.add("app_project_chats_tab", ["first_launch", "projects", "chats", "tasks", "files", "notes", "comments"], function() {
+//app_application_lincko.add("app_project_chats_tab", ["first_launch", "projects", "chats", "tasks", "files", "notes", "comments"], function() {
+app_application_lincko.add("app_project_chats_tab", ["first_launch", "update"], function() {
 	if(app_project_update_block){
 		app_project_update_launch_chats = true;
 	} else if(!storage_first_launch){

@@ -16,11 +16,13 @@
 			<div class="app_project_line_first minTablet display_none"><div></div></div>
 			<div class="app_project_space minTablet display_none"></div>
 			{# {% if workspace %} #}
-			<div class="app_project_tab">
-				<div id="app_project_workspace">
-					<div id="app_project_workspace_title" class="base_MainElementText">
-						{{ _trans('app', 8000, 201, 'html') }}{# Global View #}
-					</div>
+			<div class="app_project_tab app_project_tab_line">
+				<div id="app_project_workspace" class="base_MainElementText">
+					{{ _trans('app', 8000, 201, 'html') }}{# Global View #}
+				</div>
+				<div class="app_project_tab_line_separate"></div>
+				<div id="app_project_placeholder" class="base_MainElementText">
+					{{ _trans('app', 2, 4, 'html') }}{# Personal Space #}
 				</div>
 			</div>
 
@@ -50,14 +52,6 @@
 						<span find="icon_dashboard" class="fa fa-dashboard"></span>
 					</div>
 				{% endfor %}
-			</div>
-			<div class="app_project_space"></div>
-			<div class="app_project_tab">
-				<div id="app_project_placeholder" class="base_MainElementText">
-					<div>
-						{{ _trans('app', 2, 4, 'html') }}{# Personal Space #}
-					</div>
-				</div>
 			</div>
 			<div class="app_project_space"></div>
 			<div id="app_project_chats_tab" class="app_project_tab">

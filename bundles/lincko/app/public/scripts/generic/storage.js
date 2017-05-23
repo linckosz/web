@@ -377,6 +377,7 @@ Lincko.storage.update = function(partial, info){
 	var item_new;
 	var update = false;
 	var update_real = false;
+	var update_real_main = false;
 	var new_item = false;
 	var updatedAttributes = {};
 	var currentRange = '';
@@ -488,6 +489,7 @@ Lincko.storage.update = function(partial, info){
 				*/
 
 				if(update_real){
+					update_real_main = true;
 					//console.log("update ==> "+i+'_'+j);
 					Lincko.storage.update_data_abc(i, j, updatedAttributes[i+'_'+j]);
 					storage_items_updated[i] = true;
@@ -530,7 +532,6 @@ Lincko.storage.update = function(partial, info){
 	}
 
 	if(update){
-
 		//loop through partial to update hist_at based on _children and other soft links
 		for(var i in partial){
 			if( i == 'tasks' || i == 'notes' || i == 'files' || i == 'comments'){ //other categories may be added later, if necessary
@@ -605,11 +606,14 @@ Lincko.storage.update = function(partial, info){
 			}
 		}
 
-		setTimeout(function(){
+		setTimeout(function(update_real_main){
 			//Lincko.storage.childrenList(partial, children_list);
 			Lincko.storage.childrenList(); //We should not scan the whole database, it slows down the list but Sky had an issue of getting _children visible for notes when adding a comment
 			Lincko.storage.display();
-		}, 300);
+			if(update_real_main){
+				app_application_lincko.prepare('update');
+			}
+		}, 300, update_real_main);
 	}
 	if(storage_first_launch){
 		storage_first_launch = false; //Help to trigger some action once the database is downloaded

@@ -187,6 +187,29 @@
 	padding: 0 4px 0 0;
 }
 
+.app_project_tab_line > .app_project_tab_line_separate {
+	width: 2px !important;
+	background-color: transparent !important;
+	border: none !important;
+}
+
+.app_project_tab_line {
+	display: table;
+	table-layout: fixed;
+	box-sizing: border-box;
+	width: 94%;
+	right: 0;
+	left: 0;
+	margin: auto;
+	text-align: center;
+}
+
+.app_project_tab_line > div {
+	display: table-cell;
+	width: auto !important;
+	text-align: center;
+}
+
 .app_project_tab > div {
 	position: relative;
 	width: 94%;
@@ -202,11 +225,11 @@
 	box-sizing: border-box;
 }
 
-.app_project_tab > div:hover {
+.app_project_tab > div:hover, .app_project_tab_line > div:hover {
 	background-color: rgba(255, 255, 255, 0.55);
 }
 
-.app_project_tab > div:active {
+.app_project_tab > div:active, .app_project_tab_line > div:active {
 	border-color: rgba(255, 255, 255, 0.47);
 }
 
@@ -215,17 +238,25 @@
 	border-top-left-radius: 3px;
 }
 
-.app_project_tab_force_radius {
-	border-bottom-right-radius: 3px;
-	border-bottom-left-radius: 3px;
-}
-
 .app_project_tab > div:last-of-type {
 	border-bottom-right-radius: 3px;
 	border-bottom-left-radius: 3px;
 }
 
-.app_project_tab > div > div {
+.app_project_tab_line > div:first-of-type {
+	border-radius: 3px 0 0 3px !important;
+}
+
+.app_project_tab_line > div:last-of-type {
+	border-radius: 0 3px 3px 0 !important;
+}
+
+.app_project_tab_force_radius {
+	border-bottom-right-radius: 3px;
+	border-bottom-left-radius: 3px;
+}
+
+.app_project_tab > div > div, .app_project_tab_line > div > div {
 	position: static;
 	padding-left: 5px;
 	padding-right: 38px;
@@ -239,6 +270,8 @@
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 }
+
+
 
 #app_project_placeholder {
 	margin-top: 0;
@@ -276,11 +309,11 @@
 }
 .app_project_projects_item [find=icon_dashboard]{
 	position: absolute;
-    right: 6px;
-    bottom: 2px;
-    font-size: 26px;
-    color: #FFFFFF;
-    opacity: 0.6;
+	right: 6px;
+	bottom: 2px;
+	font-size: 26px;
+	color: #FFFFFF;
+	opacity: 0.6;
 }
 .app_project_projects_item [find=icon_dashboard]:hover{
 	opacity: 1;

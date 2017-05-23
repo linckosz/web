@@ -5,6 +5,8 @@ var alphaScroll = function(iscroll){
 	this.currentVal = '';
 	this.sliderData = [];
 	this.elem_slider;
+	this.move_timer = null;
+	this.move_running = false;
 
 	//build slider
 	this.buildSliderData();
@@ -15,7 +17,6 @@ var alphaScroll = function(iscroll){
 	this.elem_slider.on('mouseup mouseleave touchend', this, this.event_handlers.end);
 	this.elem_slider.on('mousemove touchmove', this, this.event_handlers.move);
 
-
 	this.centerSlider();
 }
 
@@ -23,7 +24,8 @@ alphaScroll.prototype.buildSlider = function(){
 	var that = this;
 	that.elem_slider = $('<ul>').addClass('alphaScroll_slider needsclick').removeAttr('id');
 	$.each(that.sliderData, function(i, data){
-		that.elem_slider.append('<li alphaScroll-slider-val="'+data.val+'">'+data.show+'</li>');
+		var li = $('<li alphaScroll-slider-val="'+data.val+'"><span alphaScroll-slider-val="'+data.val+'" class="alphaScroll_slider_text">'+data.show+'</span></li>');
+		that.elem_slider.append(li);
 	});
 	this.elem_iscroll_wrapper.append(that.elem_slider);
 }
@@ -32,7 +34,7 @@ alphaScroll.prototype.buildSliderData = function(){
 	var that = this;
 	that.sliderData.push({
 		val: "top",
-		show: '<span class="fa fa-arrow-up"></span>', //arrow symbol for going to top
+		show: '<span alphaScroll-slider-val="top" class="fa fa-arrow-up"></span>', //arrow symbol for going to top
 	});
 	for(var i = 65; i <= 90; i++){ //A to Z
 		var letter = String.fromCharCode(i); //capital alpha
@@ -73,7 +75,13 @@ alphaScroll.prototype.event_handlers = {
 		var that = e.data;
 		e.stopPropagation(); //don't scroll iscroll when using alphaScroll
 		$(this).addClass('alphaScroll_slider_active');
-		that.scrollToVal($(e.target).attr('alphaScroll-slider-val'), $(e.target).html());
+		var val = $(e.target).attr('alphaScroll-slider-val');
+		if(val=='top'){
+			var text = '<span class="fa fa-arrow-up"></span>';
+		} else {
+			var text = $(e.target).text();
+		}
+		that.scrollToVal(val, text);
 	},
 	end: function(e){
 		if(e instanceof $.Event){
@@ -85,25 +93,45 @@ alphaScroll.prototype.event_handlers = {
 		else if(e instanceof alphaScroll){ var that = e; }
 		
 		that.currentVal = '';
-		$('#'+that.iscroll.wrapper.getAttribute('id')+'_alphaScroll_popup').remove();
-		$(this).removeClass('alphaScroll_slider_active');
+		$('.alphaScroll_popup').remove();
+		$('.alphaScroll_slider_active').removeClass('alphaScroll_slider_active');
 	},
 	move: function(e){
-		var that = e.data;
 		e.preventDefault(); //for iOS, prevent grabbing and attempting to scroll entire document
-		if(e.which == 1 || e.type == 'touchmove'){ //mouse is down
-			var elem_target;
-			if(e.type == 'touchmove'){
-				var touches = e.originalEvent.touches[0];
-				elem_target = $(document.elementFromPoint(touches.clientX, touches.clientY));
-			} else {
-				elem_target = $(e.target);
+		if(alphaScroll.move_running){
+			return true;
+		}
+		clearTimeout(alphaScroll.move_timer);
+		alphaScroll.move_running = true;
+		var timing = 10;
+		if(isIOS){
+			timing = 50;
+		}
+		alphaScroll.move_timer = setTimeout(function(event){
+			var that = e.data;
+			if(e.which == 1 || e.type == 'touchmove'){ //mouse is down
+				var elem_target = false;;
+				if(e.type == 'touchmove'){
+					var touches = e.originalEvent.touches[0];
+					elem_target = $(document.elementFromPoint(touches.clientX, touches.clientY));
+				} else {
+					elem_target = $(e.target);
+				}
+				if(elem_target){
+					var val = elem_target.attr('alphaScroll-slider-val');
+					if(val=='top'){
+						var text = '<span class="fa fa-arrow-up"></span>';
+					} else {
+						var text = elem_target.text();
+					}
+					that.scrollToVal(val, text);
+				}
 			}
-			that.scrollToVal(elem_target.attr('alphaScroll-slider-val'), elem_target.html());
-		}
-		else if(that.currentVal && e.type == 'mousemove' && e.which != 1){
-			that.event_handlers.end(that);
-		}
+			else if(that.currentVal && e.type == 'mousemove' && e.which != 1){
+				that.event_handlers.end(that);
+			}
+			alphaScroll.move_running = false;
+		}, timing, e.data);
 	},
 }
 
@@ -133,3 +161,6 @@ alphaScroll.prototype.scrollToVal = function(val, show){
 		}
 	}
 }
+
+
+$('body').on('mouseup mouseleave touchend', alphaScroll, alphaScroll.event_handlers.end);

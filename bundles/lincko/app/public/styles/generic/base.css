@@ -93,7 +93,7 @@ html, .font_sans_serif {
 
 /* MONOSPACE */
 .font_monospace {
-	font-family: "Bitstream Vera Sans Mono", "Courier 10 Pitch", "Nimbus Mono L", Monaco, "Courier New", Courier, "OCR A Extended", "DejaVu Sans Mono", "Lucida Console", monospace;
+	font-family: monospace, Monaco, Courier, "Bitstream Vera Sans Mono", "Courier 10 Pitch", "Nimbus Mono L","Courier New", "OCR A Extended", "DejaVu Sans Mono", "Lucida Console";
 }
 
 /* CURSIVE */
