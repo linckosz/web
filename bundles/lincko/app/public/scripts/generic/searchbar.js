@@ -84,9 +84,10 @@ var searchbar = {
 	filterLinckoItems: function(items, searchTerms){
 		if(!items){return false;}
 		if(typeof searchTerms == 'string'){ searchTerms = [searchTerms]; }
-		else if( !searchTerms.length ){ //if searchTerm is empty string ""
+		if( searchTerms.length == 1 && !searchTerms[0].length ){ //if searchTerm is empty string ""
 			return items;
 		}
+		
 		var items_filtered = [];
 		var item = null;
 		
