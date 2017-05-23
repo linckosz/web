@@ -432,12 +432,15 @@ var burger_attach_clickHandler = {
 					}
 				}
 
+				//build project title header
+				var header = !parent.personal_private ? parent['+title'] : Lincko.Translation.get('app', 2502, 'html');//personal space
+
 				if(responsiveRange == true || responsive.test(responsiveRange)){
 					var extra = {};
 					if(parent && parent._type == 'projects'){
-						var title = !parent.personal_private ? parent['+title'] : Lincko.Translation.get('app', 2502, 'html');//personal space
+						header = '<span class="burger_dropdown_header"><span class="icon-projectBlack"></span><span find="text">'+header+'</span></span>';
 						extra = {
-							header: '<span class="burger_dropdown_header"><span class="icon-projectBlack"></span><span find="text">'+title+'</span></span>',
+							header: header,
 						}
 					}
 					dropdownInst = new burger_dropdown('toto', list_genOnClick, elem, null, null, cb_select, null, false, false, extra); 
@@ -445,6 +448,8 @@ var burger_attach_clickHandler = {
 				else {
 					var param = {};
 
+					param.header = '<span class="submenu_contact_inCharge_header"><span class="icon-projectBlack"></span><span find="text">'+header+'</span></span>';
+					
 					//param.contactsID = burgerN.generate_contacts(Lincko.storage.get(lincko_type, lincko_id));
 					//build contactsID from given list
 					param.contactsID = {};

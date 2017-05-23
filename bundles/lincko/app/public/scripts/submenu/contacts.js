@@ -536,6 +536,11 @@ Submenu.prototype.Add_ContactContents = function(live) {
 	var position = $("[find='submenu_wrapper_content']", submenu_wrapper);
 	position.addClass('overthrow');
 
+	//add header (e.g. project title)
+	if(this.param.header){
+		position.append(this.param.header);
+	}
+
 	var lock_list = false; //At true it locks the whole list
 	var parent = Lincko.storage.getParent(this.param.type, this.param.id);
 	if(
@@ -647,7 +652,7 @@ Submenu.prototype.Add_ContactContents = function(live) {
 	}
 
 
-	if(that.param.project_id){
+	if(that.param.project_id && !Lincko.storage.get('projects',that.param.project_id,'personal_private')){
 		var elem_addTeammates = $('<div class="submenu_contacts_addTeammates"></div>').text(Lincko.Translation.get('app', 31, 'html')/*Add Teammates*/).click(function(){
 			var param = {
 				pid: that.param.project_id,

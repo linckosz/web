@@ -1,3 +1,18 @@
+.submenu_contact_inCharge_header{
+	color: #979797;
+    padding: 4px 0px 0px 10px;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 14px;
+    height: 16px;
+    line-height: 16px;
+}
+.submenu_contact_inCharge_header .icon-projectBlack {
+    padding: 0px 4px;
+}
+
 .submenu_contact_item {
 	padding-left: 10px;
 	list-style-type: none;
