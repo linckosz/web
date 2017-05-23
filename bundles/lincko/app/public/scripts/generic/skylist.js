@@ -443,7 +443,9 @@ skylist.prototype.subConstruct_default = function(){
 				} 
 				else { //add new item card
 					var elem_newCard = that.addCard(item);
-					if(!$('#'+elem_newCard.prop('id')).legnth){ //extra check if element already exists
+					if($('#'+elem_newCard.prop('id')).length){ //extra check if element already exists
+						i_elem++;
+					} else {
 						elem_card.before(elem_newCard);
 						addVelocity(elem_newCard, false);
 					}
