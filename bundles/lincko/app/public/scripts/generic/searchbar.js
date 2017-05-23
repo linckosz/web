@@ -66,9 +66,24 @@ var searchbar = {
 		};
 	},
 
+	search: function(items, searchTerms, or_logic){
+		if(or_logic || typeof searchTerms == 'string' || ($.type(searchTerms) === 'array' && searchTerms.length == 1)){
+			//OR logic
+			return this.filterLinckoItems(items, searchTerms);
+		} else {
+			//AND logic
+			var filtered = items;
+			for(var i in searchTerms){
+				filtered = this.filterLinckoItems(filtered, searchTerms[i]);
+			}
+			return filtered;
+		}
+	},
+
 	//items must be array of Lincko.storage.data items such as tasks, notes, files, etc
 	filterLinckoItems: function(items, searchTerms){
 		if(!items){return false;}
+		if(typeof searchTerms == 'string'){ searchTerms = [searchTerms]; }
 		else if( !searchTerms.length ){ //if searchTerm is empty string ""
 			return items;
 		}

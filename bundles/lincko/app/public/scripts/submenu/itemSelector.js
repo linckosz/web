@@ -233,7 +233,7 @@ Submenu.prototype.Add_itemSelector = function() {
 			elem_cards_all.removeClass('display_none');
 		}
 		else{
-			$.each(searchbar.filterLinckoItems(items_all[currentView], words), function(i, item){
+			$.each(searchbar.search(items_all[currentView], words), function(i, item){
 				filteredIDs.push(item['_id']);
 			});
 

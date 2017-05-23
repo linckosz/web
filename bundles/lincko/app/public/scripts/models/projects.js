@@ -1165,7 +1165,7 @@ app_models_projects_projectsDeck.prototype.construct = function(){
 			that.elem_card_all.removeClass('display_none');
 		}
 		else{
-			$.each(searchbar.filterLinckoItems(that.linckoProjects_all, words), function(i, p){
+			$.each(searchbar.search(that.linckoProjects_all, words), function(i, p){
 				filteredIDs.push(p._id);
 			});
 			$.each(that.elem_card_all, function(i, elem){

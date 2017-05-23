@@ -248,7 +248,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 			filtered.length ? elem_pending.removeClass('display_none') : elem_pending.addClass('display_none');
 			
 			//search main contact list
-			$.each(searchbar.filterLinckoItems(Lincko.storage.list('users', null), words), function(i, item){
+			$.each(searchbar.search(Lincko.storage.list('users', null), words), function(i, item){
 				filtered.push(item['_id']);
 				if(item._invitation){ showInvitation = true; }
 			});

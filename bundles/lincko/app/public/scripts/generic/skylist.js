@@ -749,7 +749,7 @@ skylist.prototype.filter_by_search = function(items, filter){
 		items_filtered = that.search_chat(items, filter);
 	}
 	else{
-		$.each(searchbar.filterLinckoItems(items, filter), function(i, item){
+		$.each(searchbar.search(items, filter), function(i, item){
 			items_filtered.push(item);
 		});
 	}
