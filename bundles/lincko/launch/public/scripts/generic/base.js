@@ -83,11 +83,11 @@ $('#base_error').click(function(){
 var IMGcaptcha = new Image();
 IMGcaptcha.src = "/captcha/4/320/120";
 
-$("img[name=captcha]").prop("src",IMGcaptcha.src);
+$("img[name=captcha]").prop("src", IMGcaptcha.src);
 
 $("img[name=captcha]").click(function(){
 	IMGcaptcha.src = IMGcaptcha.src;
-	$("img[name=captcha]").prop("src",IMGcaptcha.src);
+	$("img[name=captcha]").prop("src", IMGcaptcha.src);
 });
 
 //If Safari iOS we make the object bigger and indeed allow the scroll of the main page (not inside the iFrame)
@@ -95,7 +95,7 @@ if(isSafariIOS){
 	$('#base_wrapper').addClass('base_wrapper_scroll_y');
 }
 webworker_operation.launch_base_iframe = function(child_body_height){
-	if(isSafariIOS){
+	if(isIOS){
 		if(child_body_height > 0){
 			var wrapper_height = $('#base_iframe_message').offset()['top'] + child_body_height;
 			$('#base_iframe_message').css('height', child_body_height);

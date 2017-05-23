@@ -25,8 +25,8 @@ $('#wphead_account').click(function(){
 
 $('#wphead_logo_img, #wphead_lincko').click(function(){
 	$('#base_iframe_message')
-		.prop('src', wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix']+'/')
-		.prop('data', wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix']+'/');
+		.prop('src', wphead_link['blog_prefix']+'/product'+wphead_link['blog_suffix']+'/')
+		.prop('data', wphead_link['blog_prefix']+'/product'+wphead_link['blog_suffix']+'/');
 	wphead_active_menu('overview');
 });
 
@@ -53,8 +53,8 @@ $('#wphead_bar_features').click(function(){
 $('#wphead_bar_overview').click(function(){
 	if(!isMobileApp(true)){
 		$('#base_iframe_message')
-			.prop('src', wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix']+'/')
-			.prop('data', wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix']+'/');
+			.prop('src', wphead_link['blog_prefix']+'/product'+wphead_link['blog_suffix']+'/')
+			.prop('data', wphead_link['blog_prefix']+'/product'+wphead_link['blog_suffix']+'/');
 		wphead_active_menu('overview');
 	}
 });
@@ -116,7 +116,7 @@ dropmenu_list['settings'] = $.extend(
 					wphead_active_menu('overview');
 				}
 			},
-			"action_param": wphead_link['blog_prefix']+'/overview'+wphead_link['blog_suffix']+'/',
+			"action_param": wphead_link['blog_prefix']+'/product'+wphead_link['blog_suffix']+'/',
 			"class": "wphead_dropmenu_first",
 		},
 
