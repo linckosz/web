@@ -7,23 +7,12 @@
 function perfnow(e){"performance"in e||(e.performance={});var o=e.performance;e.performance.now=o.now||o.mozNow||o.msNow||o.oNow||o.webkitNow||Date.now||function(){return(new Date).getTime()}}perfnow(self);
 
 //Only keep special characters line unicode
-base_remove_stdchar = function(str){
+var base_remove_stdchar = function(str){
 	if(typeof str != 'string'){ return ""; }
 	return str.replace(/[\u0000-\u007F]/gm, "");
 }
 
 self.addEventListener("message", function(e){
-	/*
-	var object = false;
-	try {
-		object = JSON.parse(e.data);
-		if(typeof object != "object"){
-			object = false;
-		}
-	} catch(e){
-		object = false;
-	}
-	*/
 	var object = e.data;
 	if(object && object.action){
 		var data = null;
@@ -64,10 +53,14 @@ var webworker_operation = {
 		var sha = obj_data.sha;
 		var prefix = obj_data.prefix;
 		try {
-			//var compressed_data = sha+btoa(utf8_encode(data)); //Don't use btoa, it's too heavy
-			//var compressed_data = LZString.compressToUTF16(JSON.stringify(data)); //Good
-			//var compressed_data = LZipper.compress(link+sha+utf8_encode(JSON.stringify(obj_data.data))); //Best
-			var compressed_data = LZipper.compress(link+sha+JSON.stringify(obj_data.data)); //Best
+				//var compressed_data = sha+btoa(utf8_encode(data)); //Don't use btoa, it's too heavy
+				//var compressed_data = LZString.compressToUTF16(JSON.stringify(data)); //Good
+				//var compressed_data = LZipper.compress(link+sha+utf8_encode(JSON.stringify(obj_data.data))); //Best
+			if(navigator.userAgent.match(/iPhone|iPad|iPod/i)){
+				var compressed_data = link+sha+JSON.stringify(obj_data.data); //Do not compress because IOS crash
+			} else {
+				var compressed_data = LZipper.compress(link+sha+JSON.stringify(obj_data.data)); //Best
+			}
 			obj_data.data = compressed_data;
 			self.postMessage({action: 'LocalStorageIn', data: obj_data,});
 		} catch(e) {

@@ -149,9 +149,6 @@ var mainMenu = {
 					histList.push(temp_histList[i]);
 				}
 			}
-
-
-
 			
 			if(histList.length>0){
 				$("#app_project_chats_all").removeClass('app_project_tab_force_radius');

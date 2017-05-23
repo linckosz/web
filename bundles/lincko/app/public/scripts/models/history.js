@@ -660,6 +660,10 @@ var app_models_history = {
 
 		var histList = [];
 		var item;
+
+		if(parent_type && parent_id && !Lincko.storage.get(parent_type, parent_id)){
+			return histList;
+		}
 		
 		if(app_models_history.hist_root_recent.length==0){
 			app_models_history.tabList();

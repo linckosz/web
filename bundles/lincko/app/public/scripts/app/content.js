@@ -316,11 +316,13 @@ app_application_lincko.add("app_content_submenu_preview_statistics", ["hide_prog
 });
 
 app_application_lincko.add("app_content_menu_notif", "projects", function() {
-	var histList = app_models_history.getList(false, 'projects', app_content_menu.projects_id);
-	for(var i in histList){
-		if(histList[i].notif){
-			$("#app_content_menu_notif").removeClass('display_none');
-			return true;
+	if(app_content_menu.projects_id>0 && Lincko.storage.get('projects', app_content_menu.projects_id)){
+		var histList = app_models_history.getList(false, 'projects', app_content_menu.projects_id);
+		for(var i in histList){
+			if(histList[i].notif){
+				$("#app_content_menu_notif").removeClass('display_none');
+				return true;
+			}
 		}
 	}
 	$("#app_content_menu_notif").addClass('display_none');

@@ -443,8 +443,12 @@ wrapper_localstorage.encrypt = function (link, data, tryit, now){
 			}
 		} else {
 			try {
-				//var store_data = LZipper.compress(link+wrapper_localstorage.sha+utf8_encode(JSON.stringify(data))); //Best
-				var store_data = LZipper.compress(link+wrapper_localstorage.sha+JSON.stringify(data)); //Best
+					//var store_data = LZipper.compress(link+wrapper_localstorage.sha+utf8_encode(JSON.stringify(data))); //Best
+				if(isIOS){
+					var store_data = link+wrapper_localstorage.sha+JSON.stringify(data); //Do not compress because IOS crash
+				} else {
+					var store_data = LZipper.compress(link+wrapper_localstorage.sha+JSON.stringify(data)); //Best
+				}
 				var time = 1000*3600*24*90; //Keep the value for 3 months
 				result = amplify.store(wrapper_localstorage.prefix+link, store_data, { expires: time });
 			} catch(e) {
@@ -458,21 +462,22 @@ wrapper_localstorage.encrypt = function (link, data, tryit, now){
 };
 
 wrapper_localstorage.decrypt = function (link){
-	var result = false;
 	var temp;
 	//If we cannot decrypt, the data might be conrupted, so we delete it
 	try {
-		temp = LZipper.decompress(amplify.store(this.prefix+link));
+		if(isIOS){
+			temp = amplify.store(this.prefix+link); //Do not compress because IOS crash
+		} else {
+			temp = LZipper.decompress(amplify.store(this.prefix+link));
+		}
 		if(temp.indexOf(link+this.sha)===0){
 			data = temp.substr(link.length+this.sha.length);
 			//return JSON.parse(utf8_decode(data)); //Best
 			return JSON.parse(data); //Best
 		}
-	} catch(e) {
-		amplify.store(this.prefix+link, null);
-		result = false;
-	}
-	return result;
+	} catch(e) {}
+	amplify.store(this.prefix+link, null);
+	return false;
 };
 
 //Force to delete all data that are not linked to the workspace to release some space
