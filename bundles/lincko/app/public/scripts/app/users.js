@@ -127,7 +127,6 @@ var app_projects_users_contacts_init = function(subm){
 								Elem.find("[find=submenu_radio_text]").removeClass('display_none');
 								project['_perm'][this.action_param.value] = [0, 0];
 								app_projects_users_contacts_list[this.action_param.value] = true;
-
 							} else {
 								Elem.find("[find=submenu_radio_text]").addClass('display_none');
 								delete project['_perm'][this.action_param.value];
@@ -184,7 +183,7 @@ var app_projects_users_contacts_init = function(subm){
 								submenu_role_build_list(uid, 'projects', pid);
 								submenu_Build("role_select", true, true, {users_id: uid, parent_type: 'projects', parent_id: pid, });
 							});
-						} else {
+						} else if(Lincko.storage.getWORKID()>0){
 							Elem.off('click');
 						}
 						if(this.selected){
