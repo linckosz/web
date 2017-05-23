@@ -144,7 +144,7 @@ var searchbar = {
 				}
 				
 
-				if(burgerOnly == 'at' && word.toLowerCase() == Lincko.Translation.get('app', 3608, 'js')){ //@unassigned search
+				if(burgerOnly == 'at' && word == Lincko.Translation.get('app', 3608, 'js').toLowerCase()){ //@unassigned search
 					push = true;
 					if(item._users){
 						$.each(item._users, function(uid,obj){
@@ -180,18 +180,20 @@ var searchbar = {
 							}
 						}
 					}//END OF for each userid_array
-
-				} //date search
-				else if(burgerOnly == 'plus' && word == Lincko.Translation.get('app', 3630, 'js')){ //overdue
-					if(searchbar.isOverDue(item)){ push = true; }
-				}
-				else if(burgerOnly == 'plus' && word == Lincko.Translation.get('app', 103, 'js')){ //+none
-					if(searchbar.isNoneDue(item)){ push = true; }
-				}
-				else if((burgerOnly == false || burgerOnly == 'plus') && searchbar.isDueThisTime(item, word)){
-					push = true;
 				}
 
+				//date search for tasks
+				if(!push && item._type == 'tasks'){
+					if(burgerOnly == 'plus' && word == Lincko.Translation.get('app', 3630, 'js').toLowerCase()){ //+overdue
+						if(searchbar.isOverDue(item)){ push = true; }
+					}
+					else if(burgerOnly == 'plus' && word == Lincko.Translation.get('app', 103, 'js').toLowerCase()){ //+none
+						if(searchbar.isNoneDue(item)){ push = true; }
+					}
+					else if((burgerOnly == false || burgerOnly == 'plus') && searchbar.isDueThisTime(item, word)){
+						push = true;
+					}
+				}
 
 				if(push){
 					items_filtered.push(item);
