@@ -5,7 +5,11 @@ var mainMenu = {
 	projectSelect: function(){
 		pid = app_content_menu.projects_id;
 		$("#app_project_projects_tab").find("[pid]").removeClass("app_project_projects_item_selected");
-		if(pid != Lincko.storage.getMyPlaceholder()['_id']){
+		$("#app_project_placeholder").removeClass("app_project_projects_item_selected");
+		$("#app_project_globalview").removeClass("app_project_projects_item_selected");
+		if(pid==0){
+			$("#app_project_globalview").addClass("app_project_projects_item_selected");
+		} else if(pid != Lincko.storage.getMyPlaceholder()['_id']){
 			$("#app_project_placeholder").removeClass("app_project_projects_item_selected");
 			var item = $("#app_project_projects_tab").find("[pid="+pid+"]");
 			if(item.length>0){
@@ -266,7 +270,7 @@ $('#app_project_quick_access_chat').click(function(){
 	submenu_Build('chat_list', false, true, true);
 });
 
-$('#app_project_workspace').click(function(){
+$('#app_project_globalview').click(function(){
 	$('#app_application_content').addClass('app_gobal_view');
 	app_content_menu.selection(0, 'tasks');
 });
