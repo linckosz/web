@@ -105,7 +105,7 @@ alphaScroll.prototype.event_handlers = {
 		alphaScroll.move_running = true;
 		var timing = 10;
 		if(isIOS){
-			timing = 50;
+			timing = 70;
 		}
 		alphaScroll.move_timer = setTimeout(function(event){
 			var that = e.data;
