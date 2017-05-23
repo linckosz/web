@@ -1597,7 +1597,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			var comment = Lincko.storage.list('comments',1,{temp_id: tmpID});
 			if(comment.length){
 				comment = comment[0];
-				var elem = taskdetail_generateCommentBubble(comment, item['_id'], sendAction_newComment);
+				var elem = taskdetail_generateCommentBubble(comment, item['_id'], sendAction_newComment, that);
 				var elem_toReplace = submenu_taskdetail.find('[comment_id='+tmpID+']').closest('.submenu_taskdetail_commentbubble');
 				elem_toReplace.replaceWith(elem);
 			}
@@ -1634,10 +1634,10 @@ Submenu.prototype.Add_taskdetail = function() {
 
 				if( commentObj['_parent'][0] == that.param.type ){
 					//submenu_taskdetail.find('.submenu_taskdetail_comments_main').append(taskdetail_generateCommentThread(commentObj, true));
-					submenu_taskdetail.find('.submenu_taskdetail_comments_main').append(taskdetail_generateCommentBubble(commentObj, item['_id'], sendAction_newComment));
+					submenu_taskdetail.find('.submenu_taskdetail_comments_main').append(taskdetail_generateCommentBubble(commentObj, item['_id'], sendAction_newComment, that));
 				}
 				else{
-					submenu_taskdetail.find('[comment_id=new]').closest('.submenu_taskdetail_commentbubble[parent_id='+parent_id+']').replaceWith(taskdetail_generateCommentBubble(commentObj, item['_id'], sendAction_newComment));
+					submenu_taskdetail.find('[comment_id=new]').closest('.submenu_taskdetail_commentbubble[parent_id='+parent_id+']').replaceWith(taskdetail_generateCommentBubble(commentObj, item['_id'], sendAction_newComment, that));
 				}
 
 				//update count
@@ -1702,11 +1702,11 @@ Submenu.prototype.Add_taskdetail = function() {
 					
 					//elem_rootcomment.attr('rootcomment_id', comment['_id']);
 					if(animation){
-					elem_toShow_wrapper.prepend(taskdetail_generateCommentThread(comment, true, true));
+					elem_toShow_wrapper.prepend(taskdetail_generateCommentThread(comment, true, true, that));
 					//elem_toShow_wrapper.prepend(elem_rootcomment);
 					}
 					else{
-						elem_comments_main.prepend(taskdetail_generateCommentThread(comment, true, true));
+						elem_comments_main.prepend(taskdetail_generateCommentThread(comment, true, true, that));
 						//elem_comments_main.prepend(elem_rootcomment);
 					}
 					//elem_rootcomment = $('<div rootcomment_id = true></div>');
@@ -2412,10 +2412,10 @@ Submenu.prototype.Add_taskdetail = function() {
 				$.each(primaryComments, function(i, comment){
 					if(created_at_latest && comment.created_at < created_at_latest){return;}
 					else if(created_at_latest && comment.created_at > created_at_latest){
-						elem_primaryComment_existing_latest.after(taskdetail_generateCommentThread(comment, true, true));
+						elem_primaryComment_existing_latest.after(taskdetail_generateCommentThread(comment, true, true, that));
 					}
 					else if(!created_at_latest){
-						elem_comments_main.append(taskdetail_generateCommentThread(comment, true, true));
+						elem_comments_main.append(taskdetail_generateCommentThread(comment, true, true, that));
 					}
 				});
 
@@ -2445,7 +2445,7 @@ Submenu.prototype.Add_taskdetail = function() {
 					var newComment_id = comments_array[i_array]['_id'];
 					var elem_id = $(elem_commentBubbles[i_bubble]).find('[find=comment_id]').attr('comment_id');
 					if( elem_id != newComment_id ){
-						$(elem_commentBubbles[i_bubble]).before(taskdetail_generateCommentBubble(comments_array[i_array], item['_id'], sendAction_newComment));
+						$(elem_commentBubbles[i_bubble]).before(taskdetail_generateCommentBubble(comments_array[i_array], item['_id'], sendAction_newComment), that);
 					}
 					else { i_bubble++;	}
 				}
@@ -2807,7 +2807,7 @@ var taskdetail_generateNewCommentBubble = function(parent_type, parent_id, sendA
 	return elem_newCommentBubble;
 }
 
-var taskdetail_generateCommentBubble = function(comment, root_id, sendAction_reply){
+var taskdetail_generateCommentBubble = function(comment, root_id, sendAction_reply, subm){
 	if(!comment || typeof comment != 'object') return;
 	//if(!comment) return false;
 	//comment is a Lincko.storage.data comment object
@@ -2844,7 +2844,12 @@ var taskdetail_generateCommentBubble = function(comment, root_id, sendAction_rep
 	} else if(comment['created_by']==1){ //Monkey King
 		thumb_url = app_application_icon_monkeyking.src;
 	}
-	elem.find('[find=profile_pic]').css('background-image','url("'+thumb_url+'")');
+	elem.find('[find=profile_pic]')
+		.css('background-image','url("'+thumb_url+'")')
+		.addClass('base_pointer')
+		.click([subm, comment['created_by']], function(event){
+			submenu_Build("personal_info", event.data[0].layer+1, false, event.data[1], event.data[0].preview);
+		});
 
 	var created_at = new wrapper_date(comment['created_at']);
 	created_at = created_at.display('date_very_short');
@@ -2934,7 +2939,7 @@ var taskdetail_generateCommentBubble = function(comment, root_id, sendAction_rep
 	return elem;
 }
 
-var taskdetail_generateCommentThread = function(rootComment, includeContainer, fn_sync){
+var taskdetail_generateCommentThread = function(rootComment, includeContainer, fn_sync, subm){
 	if(!rootComment || typeof rootComment != 'object') return;
 	if(typeof includeContainer != 'boolean'){ var includeContainer = false; }
 
@@ -2947,7 +2952,7 @@ var taskdetail_generateCommentThread = function(rootComment, includeContainer, f
 	//elem_container.append(taskdetail_generateCommentBubble(rootComment, rootComment['_parent'][1]));
 
 	$.each(allComments, function(i, comment){
-		elem_container.append(taskdetail_generateCommentBubble(comment, rootComment['_parent'][1]));
+		elem_container.append(taskdetail_generateCommentBubble(comment, rootComment['_parent'][1], null, subm));
 	});
 
 	if(includeContainer && fn_sync){
@@ -2955,7 +2960,7 @@ var taskdetail_generateCommentThread = function(rootComment, includeContainer, f
 			var fn_sync = function(){
 				if((this.updated && typeof this.updated[this.action_param.range] == 'boolean')
 					|| this.updated[this.action_param.range] && this.updated[this.action_param.range]._children){
-					$('#'+this.id).replaceWith(taskdetail_generateCommentThread(rootComment, includeContainer, true));
+					$('#'+this.id).replaceWith(taskdetail_generateCommentThread(rootComment, includeContainer, true, subm));
 				}
 			}
 		}
