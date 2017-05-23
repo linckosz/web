@@ -1,3 +1,6 @@
+.submenu_calendar input[find="timestamp"][readonly]{
+	visibility: hidden;
+}
 .submenu_calendar .hasDatepicker{
 	position: absolute;
     top: 0px;
