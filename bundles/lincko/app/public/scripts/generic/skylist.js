@@ -136,6 +136,11 @@ var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct, ri
 		'showLinks': true,
 		'view': 'card',
 	};
+	if(this.list_type == 'tasks'){
+		this.Lincko_itemsList_filter.view = 'paper';
+		this.Lincko_itemsList_filter.sort_alt = 'due';
+		this.Lincko_itemsList_filter.hide_completed = this.pid > 0 ? false:true;
+	}
 
 	//paging
 	this.paging_triggerOffset = wrapper_performance.powerfull ? 500 : 0; //px
@@ -150,13 +155,8 @@ var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct, ri
 	this.inputterAddedItems = {}; //keys are temp_ids
 	/*--------------------------------------*/
 
-	if(that.list_type == 'tasks'){
-		that.Lincko_itemsList_filter.view = 'paper';
-		that.Lincko_itemsList_filter.sort_alt = 'due';
-	}
-	/*if( Lincko.storage.get("projects", app_content_menu.projects_id, 'personal_private') ){
-		this.Lincko_itemsList_filter.people = null;
-	}*/
+	
+
 
 	this.searchTimeout;
 	this.noResult_str = $('<div class="skylist_card_noCard"></div>');
