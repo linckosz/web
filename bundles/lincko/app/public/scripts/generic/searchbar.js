@@ -143,8 +143,10 @@ var searchbar = {
 					userid_array = item._perm ? searchbar.searchByUsername(word, Object.keys(item._perm), word_pinyin) : [];
 				}
 				
-
-				if(burgerOnly == 'at' && word == Lincko.Translation.get('app', 3608, 'js').toLowerCase()){ //@unassigned search
+				var str_unassigned =  Lincko.Translation.get('app', 3608, 'js').toLowerCase();
+				if(	burgerOnly == 'at' 
+					&& ( word == str_unassigned
+						||(app_language_short.indexOf('zh') !== -1 && word == Pinyin.getPinyin(str_unassigned))) ){ //@unassigned search
 					push = true;
 					if(item._users){
 						$.each(item._users, function(uid,obj){
