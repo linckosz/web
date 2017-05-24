@@ -59,7 +59,8 @@ alphaScroll.prototype.centerSlider = function(){
 		h_inner += $(elem).outerHeight();
 	});
 
-	if(h_inner > h_slider){
+	//8px is approximately quarter of a letter height
+	if(h_inner - h_slider > 4){
 		that.elem_slider.css('font-size','10px');
 		return false;
 	} else {
