@@ -17,6 +17,7 @@ var alphaScroll = function(iscroll){
 	this.elem_slider.on('mouseup mouseleave touchend', this, this.event_handlers.end);
 	this.elem_slider.on('mousemove touchmove', this, this.event_handlers.move);
 
+	//vertically center the alphabet
 	this.centerSlider();
 }
 
@@ -93,24 +94,23 @@ alphaScroll.prototype.event_handlers = {
 		else if(e instanceof alphaScroll){ var that = e; }
 		
 		that.currentVal = '';
-		$('.alphaScroll_popup').remove();
-		$('.alphaScroll_slider_active').removeClass('alphaScroll_slider_active');
+		$('#'+that.iscroll.wrapper.getAttribute('id')+'_alphaScroll_popup').remove();
+		that.elem_slider.removeClass('alphaScroll_slider_active');
+		clearTimeout(that.move_timer);
+		that.move_running = false;
 	},
 	move: function(e){
 		e.preventDefault(); //for iOS, prevent grabbing and attempting to scroll entire document
-		if(alphaScroll.move_running){
+		var that = e.data;
+		if(that.move_running){
 			return true;
 		}
-		clearTimeout(alphaScroll.move_timer);
-		alphaScroll.move_running = true;
-		var timing = 10;
-		if(isIOS){
-			timing = 70;
-		}
-		alphaScroll.move_timer = setTimeout(function(event){
+		clearTimeout(that.move_timer);
+		that.move_running = true;
+		that.move_timer = setTimeout(function(event){
 			var that = e.data;
 			if(e.which == 1 || e.type == 'touchmove'){ //mouse is down
-				var elem_target = false;;
+				var elem_target = false;
 				if(e.type == 'touchmove'){
 					var touches = e.originalEvent.touches[0];
 					elem_target = $(document.elementFromPoint(touches.clientX, touches.clientY));
@@ -130,8 +130,8 @@ alphaScroll.prototype.event_handlers = {
 			else if(that.currentVal && e.type == 'mousemove' && e.which != 1){
 				that.event_handlers.end(that);
 			}
-			alphaScroll.move_running = false;
-		}, timing, e.data);
+			that.move_running = false;
+		}, isIOS?70:10, that);
 	},
 }
 
