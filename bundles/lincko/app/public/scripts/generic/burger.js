@@ -361,9 +361,13 @@ var burger_attach_clickHandler = {
 		if(typeof cb_destroy != 'function'){ var cb_destroy = null; }
 		if(typeof responsiveRange != 'boolean' && typeof resonsiveRange != 'string'){ var responsiveRange = 'minTablet'; } //responsiveRange true is minTablet
 
-		var parent = Lincko.storage.get(lincko_type, lincko_id, '_parent');
-		parent = Lincko.storage.get(parent[0], parent[1]);
-
+		if(lincko_type == 'projects'){
+			var parent = Lincko.storage.get(lincko_type,lincko_id);
+		} else {
+			var parent = Lincko.storage.get(lincko_type, lincko_id, '_parent');
+			parent = Lincko.storage.get(parent[0], parent[1]);
+		}
+		
 		//default cb_select for in_charge
 		if(cb_select && typeof cb_select == 'boolean'){
 			var cb_select = function(data){
@@ -433,7 +437,10 @@ var burger_attach_clickHandler = {
 				}
 
 				//build project title header
-				var header = !parent.personal_private ? parent['+title'] : Lincko.Translation.get('app', 2502, 'html');//personal space
+				var header = false;
+				if(parent){
+					header = !parent.personal_private ? parent['+title'] : Lincko.Translation.get('app', 2502, 'html');//personal space
+				}
 
 				if(responsiveRange == true || responsive.test(responsiveRange)){
 					var extra = {};
@@ -448,7 +455,9 @@ var burger_attach_clickHandler = {
 				else {
 					var param = {};
 
-					param.header = '<span class="submenu_contact_inCharge_header"><span class="icon-projectBlack"></span><span find="text">'+header+'</span></span>';
+					if(header){
+						param.header = '<span class="submenu_contact_inCharge_header"><span class="icon-projectBlack"></span><span find="text">'+header+'</span></span>';
+					}
 					
 					//param.contactsID = burgerN.generate_contacts(Lincko.storage.get(lincko_type, lincko_id));
 					//build contactsID from given list
