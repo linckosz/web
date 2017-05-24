@@ -88,9 +88,6 @@ alphaScroll.prototype.event_handlers = {
 	end: function(e){
 		if(e instanceof $.Event){
 			var that = e.data;
-			if(e.type == 'mouseleave' && that.elem_iscroll_wrapper.find(e.toElement).length){
-				return;
-			}
 		}
 		else if(e instanceof alphaScroll){ var that = e; }
 		
