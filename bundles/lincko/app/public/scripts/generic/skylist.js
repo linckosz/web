@@ -340,7 +340,9 @@ skylist.prototype.subConstruct_default = function(){
 			if( typeof this.updated == 'object' 
 				&& typeof this.updated[sync_range] == 'object' 
 				&& !this.updated[sync_range]._children){ return; }
+			
 			var that = this.action_param.skylist;
+			var exitSync = false;
 
 
 			if($('#'+this.id).find('[find=card]').length < 1){//if nothing on the list
@@ -356,6 +358,9 @@ skylist.prototype.subConstruct_default = function(){
 
 			var items_paged = that.update_pagingList(that.list_filter());
 
+			//there are no items. item deletion is done inside the individual item sync function
+			if(items_paged[0].length < 1){ return false; }
+
 			//add last page if it hasnt been added and there are items in inputterAddedItems
 			if(!that.allPagesLoaded && !$.isEmptyObject(that.inputterAddedItems) && !that.reversePaging){
 				that.addLastPage();
@@ -365,9 +370,16 @@ skylist.prototype.subConstruct_default = function(){
 			var items_top = []; //all the items that have already been loaded
 			$.each(that.pagesLoaded, function(page, loaded){
 				if(loaded){
+					//pages loaded and items paged in the instance are inconsistent, so reset list
+					if(typeof items_paged[page] != 'object'){
+						that.tasklist_update();
+						exitSync = true;
+						return false;
+					}
 					$.merge(items_top, items_paged[page]);
 				}
 			});
+			if(exitSync){ return false; } //due to inconsistency, sync function no longer valid
 
 			//from items_top remove any that were added by inputter
 			var items_top_clone = $.merge([],items_top);
@@ -618,6 +630,11 @@ skylist.prototype.update_pagingList = function(list){
 			}
 		}
 	});
+
+	//if no pages have been added, add empty first page
+	if(book.length < 1){
+		book.push([]); 
+	}
 
 	that.Lincko_itemsList_paged = book;
 	return $.merge([], book);
