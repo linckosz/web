@@ -80,6 +80,91 @@ var searchbar = {
 		}
 	},
 
+	search_item: {
+		projects: function(item, word, burgerOnly){
+			var push = false;
+
+			if(burgerOnly == false || burgerOnly == 'at'){
+				//can be tweaked to filter based on permission level
+				if(item._perm && searchbar.searchByUsername(word, Object.keys(item._perm), true).length){
+					push = true;
+				}
+			}
+
+			return push;
+		},
+		tasks: function(item, word, burgerOnly){
+			var push = false;
+			var userid_array = [];
+
+			if(burgerOnly == false || burgerOnly == 'at'){
+				userid_array = item._perm ? searchbar.searchByUsername(word, Object.keys(item._perm), true) : [];
+			}
+
+			var str_unassigned =  Lincko.Translation.get('app', 3608, 'js').toLowerCase();
+			if(	burgerOnly == 'at'
+				&& ( word == str_unassigned
+					||(app_language_short.indexOf('zh') !== -1 && word == Pinyin.getPinyin(str_unassigned))) ){ //@unassigned search
+				push = true;
+				if(item._users){
+					$.each(item._users, function(uid,obj){
+						if(obj.in_charge){ push = false; return false; }
+					});
+				}
+			}
+			else if((burgerOnly == false || burgerOnly == 'at') && userid_array.length){ //userOnly both true/false
+				for( var k=0; k < userid_array.length; k++){
+					userid = userid_array[k];
+					if( item['_type'] == 'tasks' ){
+						if(!item['_users']){ 
+							break; 
+						}
+						else if( userid in item['_users'] && item['_users'][userid]['in_charge'] ){
+							push = true;
+							break;
+						}
+					}
+				}
+			}
+
+			//date search for tasks
+			if(!push && item._type == 'tasks'){
+				var str_overdue = Lincko.Translation.get('app', 3630, 'js').toLowerCase(); //overdue
+				var str_none = Lincko.Translation.get('app', 103, 'js').toLowerCase(); //none
+				if( burgerOnly == 'plus' 
+					&&( word == str_overdue
+						||(app_language_short.indexOf('zh') !== -1 && word == Pinyin.getPinyin(str_overdue))) ){ //+overdue
+					if(searchbar.isOverDue(item)){ push = true; }
+				}
+				else if( burgerOnly == 'plus' 
+						 &&( word == str_none 
+						 	||(app_language_short.indexOf('zh') !== -1 && word == Pinyin.getPinyin(str_none))) ){ //+none
+					if(searchbar.isNoneDue(item)){ push = true; }
+				}
+				else if((burgerOnly == false || burgerOnly == 'plus') && searchbar.isDueThisTime(item, word)){
+					push = true;
+				}
+			}
+
+			return push;
+		},
+		files: function(item, word, burgerOnly){
+			var push = false;
+			var userid_array = [];
+
+			if(burgerOnly == false || burgerOnly == 'at'){
+				var user = Lincko.storage.get('users', item['created_by']);
+				if(user && Lincko.storage.searchArray('word', word, [user], true, true).length){
+					push = true;
+				}
+			}
+
+			return push;
+		},
+		notes: this.files, //same rules as files
+
+	},
+
 	//items must be array of Lincko.storage.data items such as tasks, notes, files, etc
 	filterLinckoItems: function(items, searchTerms){
 		if(!items){return false;}
@@ -137,71 +222,7 @@ var searchbar = {
 				if(already_pushed){ return; }
 
 
-				//users search:
-				//look through any user in _perm. then, need to further match according to object type (i.e. in_charge, crated_by etc.)
-				if(burgerOnly == false || burgerOnly == 'at'){
-					userid_array = item._perm ? searchbar.searchByUsername(word, Object.keys(item._perm), word_pinyin) : [];
-				}
-				
-				var str_unassigned =  Lincko.Translation.get('app', 3608, 'js').toLowerCase();
-				if(	burgerOnly == 'at' 
-					&& ( word == str_unassigned
-						||(app_language_short.indexOf('zh') !== -1 && word == Pinyin.getPinyin(str_unassigned))) ){ //@unassigned search
-					push = true;
-					if(item._users){
-						$.each(item._users, function(uid,obj){
-							if(obj.in_charge){ push = false; return false; }
-						});
-					}
-				}
-				else if((burgerOnly == false || burgerOnly == 'at') && userid_array.length){ //userOnly both true/false
-					for( var k=0; k < userid_array.length; k++){
-						userid = userid_array[k];
-						if( item['_type'] == 'tasks' ){
-							if(!item['_users']){ 
-								break; 
-							}
-							else if( userid in item['_users'] && item['_users'][userid]['in_charge'] ){
-								push = true;
-								break;
-							}
-						}
-						else if( item['_type'] == 'notes' || item['_type'] == 'files' ){ 
-							if( item['created_by'] == userid ){ 
-								push = true; 
-								break; 
-							}
-						}
-						else if( item['_type'] == 'projects'){
-							if(!item['_users']){ 
-								break; 
-							}
-							else if(userid in item['_users']){ 
-								push = true; 
-								break; 
-							}
-						}
-					}//END OF for each userid_array
-				}
-
-				//date search for tasks
-				if(!push && item._type == 'tasks'){
-					var str_overdue = Lincko.Translation.get('app', 3630, 'js').toLowerCase(); //overdue
-					var str_none = Lincko.Translation.get('app', 103, 'js').toLowerCase(); //none
-					if( burgerOnly == 'plus' 
-						&&( word == str_overdue
-							||(app_language_short.indexOf('zh') !== -1 && word == Pinyin.getPinyin(str_overdue))) ){ //+overdue
-						if(searchbar.isOverDue(item)){ push = true; }
-					}
-					else if( burgerOnly == 'plus' 
-							 &&( word == str_none 
-							 	||(app_language_short.indexOf('zh') !== -1 && word == Pinyin.getPinyin(str_none))) ){ //+none
-						if(searchbar.isNoneDue(item)){ push = true; }
-					}
-					else if((burgerOnly == false || burgerOnly == 'plus') && searchbar.isDueThisTime(item, word)){
-						push = true;
-					}
-				}
+				push = searchbar.search_item[item._type](item, word, burgerOnly);
 
 				if(push){
 					items_filtered.push(item);
