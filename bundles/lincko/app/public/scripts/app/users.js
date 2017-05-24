@@ -56,15 +56,21 @@ var app_projects_users_contacts_init = function(subm){
 		}
 	}
 
+	var me = Lincko.storage.list('users', 1, { _id: wrapper_localstorage.uid, });
+
+	var project = false;
+
 	var pid = subm.param;
 	if(subm.param && subm.param.pid){
 		pid = subm.param.pid;
 	}
-	var project = Lincko.storage.get("projects", pid);
-	var projects_id = project["_id"];
+	if(pid){
+		project = Lincko.storage.get("projects", pid);
+	}
+	
 	if(project){ //Editing
 
-		var me = Lincko.storage.list('users', 1, { _id: wrapper_localstorage.uid, });
+		var projects_id = project["_id"];
 
 		submenu_list['app_projects_users_contacts']['users_'+me[0]['_id']] = {
 			"style": "radio",
@@ -221,6 +227,29 @@ var app_projects_users_contacts_init = function(subm){
 		);
 
 	} else { //New
+
+		submenu_list['app_projects_users_contacts']['users_'+me[0]['_id']] = {
+			"style": "radio",
+			"title": Lincko.Translation.get('app', 2401, 'html')+" ("+Lincko.storage.get('users', +me[0]['_id'], 'username')+")", //Me
+			"selected": true,
+			"action_param": { value: me[0]['_id'], },
+			"hide": false,
+			"class": "submenu_deco_info submenu_deco_fix",
+			"value": function(){
+				if(Lincko.storage.getWORKID()>0){
+					var role = Lincko.storage.userRole(this.action_param.value, 'workspaces', Lincko.storage.getWORKID());
+					if(role['_id']==1){
+						return Lincko.Translation.get('app', 111, 'html'); //Administrator
+					} else if(role['_id']==2){
+						return Lincko.Translation.get('app', 110, 'html'); //Teammate
+					} else if(role['_id']==3){
+						return Lincko.Translation.get('app', 109, 'html'); //Guest
+					}
+					return role['+name'];
+				}
+				return '';
+			},
+		};
 
 		//Add alphabetic username
 		//[unknow bug, already solved] => if use "var i" it become sometimes "users_?" instead of an integer, it seems that the scope was not taken into account
