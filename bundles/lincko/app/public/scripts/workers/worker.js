@@ -94,9 +94,13 @@ var webworker_operation = {
 	//need blueimp.md5.min.js, ChinesePY.js and ChinesePY.extensions.js
 	update_data_abc: function(obj_data){
 		var s_orig = base_remove_stdchar(obj_data.s_orig);
+		
 		if(!s_orig){
 			var s_abc = false;
 		} else {
+			if(obj_data.keep_stdchar){
+				s_orig = obj_data.s_orig;
+			}
 			var s_abc = Pinyin.getPinyin(s_orig);
 			if(md5(s_orig) == md5(s_abc)){ s_abc = false; }
 		}

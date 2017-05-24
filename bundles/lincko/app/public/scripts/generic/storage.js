@@ -698,9 +698,14 @@ Lincko.storage.update_data_abc = function(type, id, updated){
 	var attributes = ['+title', '-comment', '-firstname', '-lastname', '-username'];
 
 	var attr, s_orig, s_abc;
+	var keep_stdchar = false;
 
 	for(var i = 0; i < attributes.length; i++){
 		attr = attributes[i];
+
+		//for first/last/usernames, don't keep std chars
+		keep_stdchar = attr.indexOf('name') !== -1 ? true : false;
+
 		if(updated[attr] || updated === true){
 			s_orig = Lincko.storage.get(type, id, attr);
 			if(s_orig===false){
@@ -721,6 +726,7 @@ Lincko.storage.update_data_abc = function(type, id, updated){
 					id: id,
 					s_orig: s_orig,
 					attr: attr,
+					keep_stdchar: keep_stdchar,
 				},
 			});
 		}
