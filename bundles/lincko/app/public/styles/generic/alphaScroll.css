@@ -1,5 +1,6 @@
 .alphaScroll_slider{
     position: absolute;
+    cursor: pointer; cursor: hand;
     top: 0;
     bottom: 0;
     right: 0;

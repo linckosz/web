@@ -60,6 +60,7 @@ alphaScroll.prototype.centerSlider = function(){
 	});
 
 	if(h_inner > h_slider){
+		that.elem_slider.css('font-size','10px');
 		return false;
 	} else {
 		var padding = (h_slider-h_inner)/2;
