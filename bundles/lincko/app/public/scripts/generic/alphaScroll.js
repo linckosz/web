@@ -48,7 +48,7 @@ alphaScroll.prototype.buildSliderData = function(){
 
 alphaScroll.prototype.centerSlider = function(){
 	var that = this;
-
+	that.elem_slider.removeAttr('style');
 
 	var h_slider = that.elem_slider.outerHeight();
 	var elem_children = that.elem_slider.children();
@@ -59,8 +59,7 @@ alphaScroll.prototype.centerSlider = function(){
 		h_inner += $(elem).outerHeight();
 	});
 
-	//8px is approximately quarter of a letter height
-	if(h_inner - h_slider > 4){
+	if(h_inner - h_slider > 4){ //4px is approximately quarter of a letter height
 		that.elem_slider.css('font-size','10px');
 		return false;
 	} else {
