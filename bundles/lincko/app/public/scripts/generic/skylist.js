@@ -710,7 +710,10 @@ skylist.prototype.filter_by_duedate = function(items, filter){
 		}
 	}
 	
-	this.Lincko_itemsList_filter.duedate = filter;
+	//if this function is used outside instance, then wont have that
+	if(that){
+		that.Lincko_itemsList_filter.duedate = filter;
+	}
 	return items_filtered;
 }
 
@@ -3290,6 +3293,15 @@ skylist.prototype.menu_construct = function(){
 	//navbar
 	that.elem_navbar = $('#-skylist_menu_navbar').clone().prop('id','skylist_menu_navbar');
 
+	that.menu_construct_addClickEvent_peopleToggle();
+	that.menu_construct_add_btnFilter();
+	that.menu_construct_add_searchbar();
+	that.menu_construct_addTimesort();
+
+} //construct END
+
+skylist.prototype.menu_construct_addClickEvent_peopleToggle = function(){
+	var that = this;
 	//individual or group selection in navbar
 	var elem_people1 = that.elem_navbar.find('[people=1]');
 	var elem_people2 = that.elem_navbar.find('[people=2]');
@@ -3318,55 +3330,25 @@ skylist.prototype.menu_construct = function(){
 		elem_people1.toggleClass('skylist_menu_selected');
 		elem_people2.toggleClass('skylist_menu_selected');
 	}
-	
 
-	/*
-		filter
-	*/
-	var elem_filter_pane = that.elem_navbar.find('.skylist_menu_navbar_filter_pane');
-	var elem_filterBtn = that.elem_navbar.find('.skylist_menu_navbar_filter_icon');
-	elem_filterBtn.click(function(){
-		if( elem_filter_pane.css('display')=='none' ){
-			elem_filterBtn.attr('active',true);
-			elem_filter_pane.velocity('slideDown',{
-				mobileHA: hasGood3Dsupport,
-				complete: function(){
-					elem_filter_pane.focus();
-				}
-			});
-		}
-		else{
-			elem_filter_pane.blur();
-		}
-	});
-	that.elem_navbar.find('.skylist_menu_navbar_filter_pane').blur(function(){
-		elem_filterBtn.attr('active',false);
-		$(this).velocity('slideUp', {
-			mobileHA: hasGood3Dsupport,
-		});
-	});
-
-
-	//populate the filter_pane
-	if( that.list_type == 'tasks' ){
-		that.addFilter_tasks(elem_filter_pane);
+	//add tooltips
+	if(that.list_type == 'tasks'){
+		elem_people1.attr('title', Lincko.Translation.get('app', 3616, 'js')); //View your tasks
+		elem_people2.attr('title', Lincko.Translation.get('app', 3615, 'js')); //View the team's tasks
 	}
-
-
-	//build searchbar
-	var searchbarInst = null;
-	var searchbar_keyup = function(words){
-		that.tasklist_update('search', words);
+	else if(that.list_type == 'notes'){
+		elem_people1.attr('title', Lincko.Translation.get('app', 3622, 'js')); //View notes you created
+		elem_people2.attr('title', Lincko.Translation.get('app', 3621, 'js')); //View team's notes
 	}
-	searchbarInst = searchbar.construct(searchbar_keyup);
-	that.elem_navbar.find('[find=searchbar_wrapper]').append(searchbarInst.elem);
-	
-	that.list_wrapper.append(that.elem_navbar);
+	else if(that.list_type == 'files'){
+		elem_people1.attr('title', Lincko.Translation.get('app', 3625, 'js')); //View files you uploaded
+		elem_people2.attr('title', Lincko.Translation.get('app', 3624, 'js')); //View team's files
+	}
+}
 
-
-	/*
-	 * TIMESORT-----------------------------------------------------------------------------------------
-	 */
+skylist.prototype.menu_construct_addTimesort = function(){
+	var that = this;
+	//timesort
 	if( !that.sort_arrayText ){
 		if( Lincko.storage.get("projects", app_content_menu.projects_id, 'personal_private') ){
 			that.elem_navbar.find('.skylist_menu_timesort').addClass('display_none');
@@ -3477,27 +3459,61 @@ skylist.prototype.menu_construct = function(){
 
 		});//end of panend
 		/*hammer.js END--------------------------------------*/
-	}// end of TIMESORT
+	}
 	
 
 	//menubar tooltips
 	if(that.list_type == 'tasks'){
-		elem_people1.attr('title', Lincko.Translation.get('app', 3616, 'js')); //View your tasks
-		elem_people2.attr('title', Lincko.Translation.get('app', 3615, 'js')); //View the team's tasks
 		that.elem_Jsorts.eq(0).attr('title', Lincko.Translation.get('app', 3617, 'js')); //View tasks due any date
 		that.elem_Jsorts.eq(1).attr('title', Lincko.Translation.get('app', 3618, 'js')); //View tasks due today
 		that.elem_Jsorts.eq(2).attr('title', Lincko.Translation.get('app', 3619, 'js')); //View tasks due tomorrow
 	}
-	else if(that.list_type == 'notes'){
-		elem_people1.attr('title', Lincko.Translation.get('app', 3622, 'js')); //View notes you created
-		elem_people2.attr('title', Lincko.Translation.get('app', 3621, 'js')); //View team's notes
-	}
-	else if(that.list_type == 'files'){
-		elem_people1.attr('title', Lincko.Translation.get('app', 3625, 'js')); //View files you uploaded
-		elem_people2.attr('title', Lincko.Translation.get('app', 3624, 'js')); //View team's files
-	}
+}
+skylist.prototype.menu_construct_add_btnFilter = function(){
+	var that = this;
+	//filter btn
+	var elem_filter_pane = that.elem_navbar.find('.skylist_menu_navbar_filter_pane');
+	var elem_filterBtn = that.elem_navbar.find('.skylist_menu_navbar_filter_icon');
+	elem_filterBtn.click(function(){
+		if( elem_filter_pane.css('display')=='none' ){
+			elem_filterBtn.attr('active',true);
+			elem_filter_pane.velocity('slideDown',{
+				mobileHA: hasGood3Dsupport,
+				complete: function(){
+					elem_filter_pane.focus();
+				}
+			});
+		}
+		else{
+			elem_filter_pane.blur();
+		}
+	});
+	that.elem_navbar.find('.skylist_menu_navbar_filter_pane').blur(function(){
+		elem_filterBtn.attr('active',false);
+		$(this).velocity('slideUp', {
+			mobileHA: hasGood3Dsupport,
+		});
+	});
 
-} //construct END
+
+	//populate the filter_pane
+	if( that.list_type == 'tasks' ){
+		that.addFilter_tasks(elem_filter_pane);
+	}
+}
+
+skylist.prototype.menu_construct_add_searchbar = function(){
+	var that = this;
+	//build searchbar
+	var searchbarInst = null;
+	var searchbar_keyup = function(words){
+		that.tasklist_update('search', words);
+	}
+	searchbarInst = searchbar.construct(searchbar_keyup);
+	that.elem_navbar.find('[find=searchbar_wrapper]').append(searchbarInst.elem);
+	
+	that.list_wrapper.append(that.elem_navbar);
+}
 
 skylist.prototype.menu_makeSelection = function(selection){
 	var that = this;
