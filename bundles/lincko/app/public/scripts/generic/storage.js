@@ -692,20 +692,45 @@ Lincko.storage.update_data_abc_all = function(){
 };
 
 Lincko.storage.update_data_abc = function(type, id, updated){
+	var allowedTypes = {
+		tasks: true,
+		notes: true,
+		files: true,
+		users: true,
+		projects: true,
+		namecards: true,
+
+		chats: false,
+		comments: false,
+		messages: false,
+	}
+	if(!allowedTypes[type]){ return false; }
+	var item = Lincko.storage.get(type, id);
+	if(!item){ return false; }
 	if(!Lincko.storage.data_abc){ Lincko.storage.data_abc = {}; }
 	if(typeof updated != 'object' || Object.keys(updated) < 1){ var updated = true; }
 
-	var attributes = ['+title', '-comment', '-firstname', '-lastname', '-username'];
+	var attributes = [
+		'+title', 
+		'-comment', 
+		'-firstname', 
+		'-lastname', 
+		'-username',
+		'-additional',
+		'-address',
+		'-business',
+	];
+
+	//for first/last/usernames, don't keep std chars
+	var keepStdChar = {
+		'-username': true,
+		'-firstname': true,
+		'-lastname': true,
+	};
 
 	var attr, s_orig, s_abc;
-	var keep_stdchar = false;
-
-	for(var i = 0; i < attributes.length; i++){
+	for(var i in attributes){
 		attr = attributes[i];
-
-		//for first/last/usernames, don't keep std chars
-		keep_stdchar = attr.indexOf('name') !== -1 ? true : false;
-
 		if(updated[attr] || updated === true){
 			s_orig = Lincko.storage.get(type, id, attr);
 			if(s_orig===false){
@@ -726,7 +751,7 @@ Lincko.storage.update_data_abc = function(type, id, updated){
 					id: id,
 					s_orig: s_orig,
 					attr: attr,
-					keep_stdchar: keep_stdchar,
+					keep_stdchar: keepStdChar[attr] ? true : false,
 				},
 			});
 		}
