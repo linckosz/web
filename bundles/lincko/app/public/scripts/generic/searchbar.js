@@ -80,25 +80,49 @@ var searchbar = {
 		}
 	},
 
-	search_item: {
-		projects: function(item, word, burgerOnly){
+	typeSearch: {
+		generic: function(item, burgerOnly, word, param_pinyin){
 			var push = false;
-
-			if(burgerOnly == false || burgerOnly == 'at'){
+			if(!burgerOnly || burgerOnly == 'at'){
 				//can be tweaked to filter based on permission level
-				if(item._perm && searchbar.searchByUsername(word, Object.keys(item._perm), true).length){
+				if(item._perm && searchbar.searchByUsername(word, Object.keys(item._perm), param_pinyin).length){
 					push = true;
 				}
 			}
-
 			return push;
 		},
-		tasks: function(item, word, burgerOnly){
+		users: function(item, burgerOnly, word, param_pinyin){
+			var push = false;
+			var namecard, id_namecard;
+			if(!burgerOnly || burgerOnly == 'at'){
+				if(item._children && typeof item._children.namecards == 'object'){
+					for(id_namecard in item._children.namecards){
+						namecard = Lincko.storage.get('namecards', id_namecard);
+						if(namecard && Lincko.storage.searchArray('word', word, [namecard], true, param_pinyin).length){
+							push = true;
+							break;
+						}
+					}
+				}
+			}
+			return push;
+		},
+		projects: function(item, burgerOnly, word, param_pinyin){
+			var push = false;
+			if(burgerOnly == false || burgerOnly == 'at'){
+				//can be tweaked to filter based on permission level
+				if(item._perm && searchbar.searchByUsername(word, Object.keys(item._perm), param_pinyin).length){
+					push = true;
+				}
+			}
+			return push;
+		},
+		tasks: function(item, burgerOnly, word, param_pinyin){
 			var push = false;
 			var userid_array = [];
 
-			if(burgerOnly == false || burgerOnly == 'at'){
-				userid_array = item._perm ? searchbar.searchByUsername(word, Object.keys(item._perm), true) : [];
+			if(!burgerOnly || burgerOnly == 'at'){
+				userid_array = item._perm ? searchbar.searchByUsername(word, Object.keys(item._perm), param_pinyin) : [];
 			}
 
 			var str_unassigned =  Lincko.Translation.get('app', 3608, 'js').toLowerCase();
@@ -112,7 +136,7 @@ var searchbar = {
 					});
 				}
 			}
-			else if((burgerOnly == false || burgerOnly == 'at') && userid_array.length){ //userOnly both true/false
+			else if((!burgerOnly || burgerOnly == 'at') && userid_array.length){ //userOnly both true/false
 				for( var k=0; k < userid_array.length; k++){
 					userid = userid_array[k];
 					if( item['_type'] == 'tasks' ){
@@ -128,7 +152,7 @@ var searchbar = {
 			}
 
 			//date search for tasks
-			if(!push && item._type == 'tasks'){
+			if(!push){
 				var str_overdue = Lincko.Translation.get('app', 3630, 'js').toLowerCase(); //overdue
 				var str_none = Lincko.Translation.get('app', 103, 'js').toLowerCase(); //none
 				if( burgerOnly == 'plus' 
@@ -148,13 +172,13 @@ var searchbar = {
 
 			return push;
 		},
-		files: function(item, word, burgerOnly){
+		files: function(item, burgerOnly, word, param_pinyin){
 			var push = false;
 			var userid_array = [];
 
-			if(burgerOnly == false || burgerOnly == 'at'){
+			if(!burgerOnly || burgerOnly == 'at'){
 				var user = Lincko.storage.get('users', item['created_by']);
-				if(user && Lincko.storage.searchArray('word', word, [user], true, true).length){
+				if(user && Lincko.storage.searchArray('word', word, [user], true, param_pinyin).length){
 					push = true;
 				}
 			}
@@ -195,22 +219,20 @@ var searchbar = {
 			}
 
 
-			//var word_pinyin = Pinyin.getPinyin(word);
-			var word_pinyin = word; //no pinyin matching for search word
-
+			//var param_pinyin = Pinyin.getPinyin(word);
+			var param_pinyin = null; //one way pinyin search
 
 			//regular text search
-			if(!word.length || !burgerOnly ){
+			if(!word.length || !burgerOnly){
 				$.merge(items_filtered, Lincko.storage.searchArray(
 					'word', word, items, 
 					['+title', '+name', '-comment', '-username', '-firstname', '-lastname', '-email'], 
-					word_pinyin
+					param_pinyin
 				));
 			}
 
 			//username and date search
 			$.each(items, function(i, item){
-				var push = false;
 				//check if it has been already pushed from regular text search
 				var already_pushed = false;
 				$.each(items_filtered, function(j, item_filtered){
@@ -221,8 +243,13 @@ var searchbar = {
 				});
 				if(already_pushed){ return; }
 
-
-				push = searchbar.search_item[item._type](item, word, burgerOnly);
+				var push = false;
+				if(typeof searchbar.typeSearch[item._type] == 'function'){
+					push = searchbar.typeSearch[item._type](item, burgerOnly, word, param_pinyin);
+				} else {
+					push = searchbar.typeSearch.generic(item, burgerOnly, word, param_pinyin);
+				}
+				
 
 				if(push){
 					items_filtered.push(item);
@@ -247,8 +274,7 @@ var searchbar = {
 	},
 
 	//search only within the given ids in arr_ids
-	searchByUsername: function(word, arr_ids, pinyin){
-		if(typeof pinyin == 'undefined'){ var pinyin = true; }
+	searchByUsername: function(word, arr_ids, param_pinyin){
 		if(typeof arr_ids != 'object' || !arr_ids){ return false; }
 
 		var uid_result = []; //final list to be returned
@@ -261,18 +287,9 @@ var searchbar = {
 		var user_obj;
 		for(var i in user_list){
 			user_obj = user_list[i];
-			if(Lincko.storage.searchArray('word', word, [user_obj], true, pinyin).length){
+			if(Lincko.storage.searchArray('word', word, [user_obj], true, param_pinyin).length){
 				uid_result.push(user_obj._id);
 				continue;
-			}
-			else if(user_obj._children && typeof user_obj._children.namecards == 'object'){
-				$.each(user_obj._children.namecards, function(id, b){
-					var namecard = Lincko.storage.get('namecards', id);
-					if(namecard && Lincko.storage.searchArray('word', word, [namecard], true, pinyin).length){
-						uid_result.push(user_obj._id);
-						return false;
-					}
-				});
 			}
 		}
 		return uid_result;

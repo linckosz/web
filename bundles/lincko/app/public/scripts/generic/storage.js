@@ -1341,20 +1341,41 @@ Lincko.storage.search = function(type, param, category){
 	array - array of items to conduct search
 	results - will return array not object
 	attr - optional: (str or array) specific attribute to search
-	pinyin	- optional: true will do pinyin comparison for all, can also put array e.g. ['+title', '-comment']
-			- also accepts string which will be used as the pinyin translated version
+
+	param_pinyin
+	true (two way pinyin comparison, both search term and search target)
+		- will use pinyin lib to convert search term into pinyin, then search storage.data_abc
+		- if data_abc is missing, then search original target with converted pinyin search term
+		- e.g. search '你好' and 'nihao' with both match both '你好' and 'nihao'
+	false (no pinyin comparison)
+		- will not use pinyin lib and will not look inside storage.data_abc
+		- e.g. '你好' match '你好', 'nihao' match 'nihao' only
+	string (two way pinyin comparison, but search term is translated outside the function)
+		- will not use pinyin lib, but will use this string to compare inside storage.data_abc
+		- if data_abc is missing, then search original target with converted pinyin search term
+		- result is same as "true", except the pinyin is passed in from outside
+	null/undefined (one way pinyin comparison, search term not converted, but compare pinyin target)
+		- this is the default behavior.
+		- will not use pinyin lib, but look inside storage.data_abc with original search term
+		- e.g. search '你好' will only match '你好', search 'nihao' will match '你好' and 'nihao'
 */
-Lincko.storage.searchArray = function(type, param, array, attr, pinyin){
+Lincko.storage.searchArray = function(type, param, array, attr, param_pinyin){
 	var results = [];
 	var find = [];
 	var save_result = false;
 	type = type.toLowerCase();
-	if(typeof param === 'string'){ param = param.toLowerCase(); }
 
-	var pinyin_param; //keep pinyin version of param here
-	if(!pinyin){ var pinyin = false; }
-	else if(typeof pinyin == 'string'){ pinyin_param = pinyin; }
-	else { pinyin_param = Pinyin.getPinyin(param); }
+	//case insentitive search
+	if(typeof param === 'string'){ param = param.toLowerCase(); }
+	else{ return []; }
+
+	//set pinyin options
+	if(param_pinyin === true){
+		param_pinyin = Pinyin.getPinyin(param);
+	}
+	else if(typeof param_pinyin != 'boolean' && typeof param_pinyin != 'string'){
+		var param_pinyin = param;
+	}
 
 	//List all items in a category that contain a word
 	find['word'] = function(item){
@@ -1372,20 +1393,19 @@ Lincko.storage.searchArray = function(type, param, array, attr, pinyin){
 				if(item[prop].toLowerCase().indexOf(param)!==-1){ //straight search (no pinyin matching)
 					save_result = true;
 				}
-				else if(pinyin_param || (pinyin && (typeof pinyin == 'boolean' || $.inArray(prop, pinyin) > -1))){
+				else if(param_pinyin){
 					var id_item = item['_id'];
 					var type_item = item['_type'];
 					if(Lincko.storage.data_abc 
 						&& Lincko.storage.data_abc[type_item] 
 						&& Lincko.storage.data_abc[type_item][id_item]
 						&& Lincko.storage.data_abc[type_item][id_item][prop]){
-						//both converted to pinyin and compare
-						if(Lincko.storage.data_abc[type_item][id_item][prop].indexOf(pinyin_param) !== -1){ //convert hanzi into pinyin and match
-						save_result = true;
-						}
+						if(Lincko.storage.data_abc[type_item][id_item][prop].indexOf(param_pinyin) !== -1){
+							save_result = true;
+						}else{}
 					}
-					else if(item[prop].indexOf(pinyin_param) !== -1){
-						//pinyin converted search word comparison to original string
+					else if(param != param_pinyin 
+						&& item[prop].toLowerCase().indexOf(param_pinyin) !== -1){
 						save_result = true;
 					}
 				}
