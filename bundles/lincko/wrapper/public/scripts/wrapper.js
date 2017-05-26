@@ -307,6 +307,7 @@ function wrapper_sendForm(objForm, cb_success, cb_error, cb_begin, cb_complete, 
 				if(typeof base_input_field[this.name].valid == "function" && typeof base_input_field[this.name].error_msg == "function"){
 					if(!base_input_field[this.name].valid($(this).val())){
 						var data = base_input_field[this.name].error_msg();
+						JSerror.sendError($(this).val(), 'wrapper_sendForm: '+this.name, 0);
 						if(!base_input_field[this.name].hide && typeof base_show_error == 'function'){
 							base_show_error(data.msg, true);
 						}

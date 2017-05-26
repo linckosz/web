@@ -445,7 +445,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 				'user/update',
 				function(){
 					app_application_lincko.prepare('contacts_list', true);
-					app_application_action(10); //Accept invitation
+					app_application_action(10, users_id); //Accept invitation
 				}
 			);
 			Lincko.storage.data['users'][users_id]['_invitation'] = false;
@@ -466,7 +466,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 				'user/update',
 				function(){
 					app_application_lincko.prepare('contacts_list', true);
-					app_application_action(11); //Reject invitation
+					app_application_action(11, users_id); //Reject invitation
 				}
 			);
 			Lincko.storage.data['users'][users_id]['_invitation'] = false;

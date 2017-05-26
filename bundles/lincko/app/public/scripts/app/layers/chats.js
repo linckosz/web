@@ -82,7 +82,9 @@ function app_layers_chats_feedChat(parent) {
 					if(parent_child.length>0 && parent_child.hasClass('iscroll_sub_div')){
 						parent = parent_child;
 					}
-					Elem.detach(); //cut
+					if('detach' in Elem){
+						Elem.detach(); //cut
+					}
 					var timestamp = list[Elem.prop('id')];
 					var Elems_bis = layer.find('[find=card]');
 					var attached = false;

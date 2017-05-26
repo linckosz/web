@@ -877,8 +877,10 @@ var app_models_history = {
 						app_models_history.hist_root[root_name].date = date.display('time_short');
 					}
 					app_models_history.hist_root[root_name].notif = false;
-					if(Lincko.storage.cache.getNotify(root_item["_type"], root_item["_id"])){
-						app_models_history.hist_root[root_name].notif = true;
+					var notify_nbr = Lincko.storage.cache.getNotify(root_item["_type"], root_item["_id"]);
+					console.log(notify_nbr);
+					if(notify_nbr){
+						app_models_history.hist_root[root_name].notif = notify_nbr;
 					}
 				} else {
 					reset_order = true;
@@ -893,8 +895,9 @@ var app_models_history = {
 					info[i].root_created_at = root_item["created_at"];
 
 					info[i].notif = false;
-					if(Lincko.storage.cache.getNotify(root_item["_type"], root_item["_id"])){
-						info[i].notif = true;
+					var notify_nbr = Lincko.storage.cache.getNotify(root_item["_type"], root_item["_id"]);
+					if(notify_nbr){
+						info[i].notif = notify_nbr;
 					}
 
 					if(root_item["_type"]=="projects" && root_item["_id"]==Lincko.storage.getMyPlaceholder()['_id']){

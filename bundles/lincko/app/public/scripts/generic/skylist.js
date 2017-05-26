@@ -1357,9 +1357,13 @@ skylist.prototype.addChat = function(item){
 	//var last_notif_root = Lincko.storage.getLastNotif(item['root_type'], item['root_id']);
 	//if(item['timestamp'] > last_notif_root){
 	if(item['notif']){
-		notif.removeClass('display_none');
+		notif
+			.removeClass('display_none')
+			.text(item['notif']);
 	} else {
-		notif.addClass('display_none');
+		notif
+			.addClass('display_none')
+			.text('');
 	}
 		
 	Elem.find('[find=title]')

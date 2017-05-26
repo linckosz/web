@@ -155,9 +155,15 @@ var mainMenu = {
 				$("#app_project_chats_all").addClass('app_project_tab_force_radius');
 			}
 			if(not_all){
-				$("#app_project_chats_all").find("[find=app_project_chats_notif]").removeClass('display_none');
+				$("#app_project_chats_all")
+					.find("[find=app_project_chats_notif]")
+					.removeClass('display_none')
+					.text(Lincko.storage.cache.getTotalNotifyCount());
 			} else {
-				$("#app_project_chats_all").find("[find=app_project_chats_notif]").addClass('display_none');
+				$("#app_project_chats_all")
+					.find("[find=app_project_chats_notif]")
+					.addClass('display_none')
+					.text('');
 			}
 			for (i = 0; i < 5; i++) { //5 have to be a fix integer to make sure we hide other tabs
 				var item = $("#app_project_item_chats_"+i);
@@ -196,9 +202,15 @@ var mainMenu = {
 				//var last_notif_root = Lincko.storage.getLastNotif(histList[i]['root_type'], histList[i]['root_id']);
 				//if(histList[i]['timestamp'] > last_notif_root){
 				if(histList[i]['notif']){
-					item.find("[find=app_project_chats_notif]").removeClass('display_none');
+					item
+						.find("[find=app_project_chats_notif]")
+						.removeClass('display_none')
+						.text(histList[i]['notif']);
 				} else {
-					item.find("[find=app_project_chats_notif]").addClass('display_none');
+					item
+						.find("[find=app_project_chats_notif]")
+						.addClass('display_none')
+						.text('');
 				}
 				if(force || name!=item.attr('name') || timestamp!=parseInt(item.attr('timestamp'), 10) || timestamp_root!=parseInt(item.attr('timestamp_root'), 10)){
 					item.find("[find=app_project_chats_title]").html(wrapper_to_html(histList[i]['title']));
