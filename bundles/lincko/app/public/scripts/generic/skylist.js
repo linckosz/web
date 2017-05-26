@@ -707,6 +707,14 @@ skylist.prototype.filter_by_duedate = function(items, filter){
 	if( filter == null || filter == -1 ){ 
 		items_filtered = items; 
 	}
+	else if(filter == 'overdue'){
+		now = new wrapper_date().time;
+		for(var i in items){
+			if(tasks_isOverdue(items[i]),now){
+				items_filtered.push(items[i]);
+			}
+		}
+	}
 	else if( filter < 2 ){
 
 		for( var i in items ){
@@ -3526,6 +3534,20 @@ skylist.prototype.menu_construct_returnRing = function(fill, total, count, name)
 skylist.prototype.menu_construct_addRingFilters = function(){
 	var that = this;
 	var elem_pane = that.elem_navbar.find('.skylist_menu_timesort');
+
+	var items_overdue = [];
+	var now = new wrapper_date().time;
+	$.each(that.Lincko_itemsList, function(i, item){
+		if(tasks_isOverdue(item, now)){
+			items_overdue.push(item);
+		}
+	});
+	var elem_overdue = $('#-skylist_menu_ringFilter').clone().removeAttr('id').addClass('skylist_menu_ringFilter_overdue');
+	elem_overdue.find('[find=name]').text(Lincko.Translation.get('app', 3630, 'js'));//overdue
+	elem_overdue.find('[find=count]').text(items_overdue.length);
+	elem_pane.append(elem_overdue);
+
+
 	
 	var items_today = skylist.prototype.filter_by_duedate(that.Lincko_itemsList, 0);
 	var approved_today = 0;
@@ -3566,7 +3588,10 @@ skylist.prototype.menu_construct_addRingFilters = function(){
 
 
 	//add selected css class based on filter settings
-	if(that.Lincko_itemsList_filter.duedate == 0){
+	if(that.Lincko_itemsList_filter.duedate == 'overdue'){
+		elem_overdue.addClass('skylist_menu_ringFilter_selected');
+	}
+	else if(that.Lincko_itemsList_filter.duedate == 0){
 		elem_today.addClass('skylist_menu_ringFilter_selected');
 	}
 	else if(that.Lincko_itemsList_filter.duedate == 1){
@@ -3576,7 +3601,7 @@ skylist.prototype.menu_construct_addRingFilters = function(){
 
 	var e_data = {
 		that: that, 
-		btns: [elem_today, elem_tmr], 
+		btns: [elem_overdue, elem_today, elem_tmr], 
 	};
 
 	var fn_clickHandler = function(val, e, elem){
@@ -3594,6 +3619,9 @@ skylist.prototype.menu_construct_addRingFilters = function(){
 		}
 	}
 
+	elem_overdue.click(e_data, function(e){
+		fn_clickHandler('overdue',e,$(this));
+	});
 	elem_today.click(e_data, function(e){
 		fn_clickHandler(0,e,$(this));
 	});
@@ -3604,6 +3632,16 @@ skylist.prototype.menu_construct_addRingFilters = function(){
 
 skylist.prototype.updateRings = function(){
 	var that = this;
+
+	var items_overdue = [];
+	var now = new wrapper_date().time;
+	$.each(that.Lincko_itemsList, function(i, item){
+		if(tasks_isOverdue(item, now)){
+			items_overdue.push(item);
+		}
+	});
+	that.elem_navbar.find('.skylist_menu_ringFilter_overdue [find="count"]').text(items_overdue.length);
+
 	$.each(that.rings, function(key, ring){
 		if(ring instanceof  Chart.Controller){
 			var date;

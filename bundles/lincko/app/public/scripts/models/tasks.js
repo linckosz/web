@@ -92,32 +92,17 @@ var tasks_get_inCharge_id = function(task_id, resultType){
 }
 
 var tasks_calcDuedate = function(id){
-	var duedate;
-	var task;
-	if(typeof id == 'object'){
-		task = id;
-	} else {
-		task = Lincko.storage.get('tasks', id);
-	}
+	var task = typeof id == 'object' ? id : Lincko.storage.get('tasks',id);
 	if(!task){ return false; }
-
-
-	if(!task.start){
-		duedate = null;
-	} else {
-		duedate = new wrapper_date(parseInt(task.start,10) + parseInt(task.duration,10));
-	}
-
-	return duedate;
+	return !task.start ? null : new wrapper_date(parseInt(task.start,10) + parseInt(task.duration,10));
 }
 
-var tasks_isOverdue = function(id){
-	var duedate = tasks_calcDuedate(id);
-	var now = new wrapper_date();
-	if( duedate && now.time > duedate.time ){
-		return true;
-	}
-	else{
-		return false;
-	}
+var tasks_isOverdue = function(id, wrapper_time){
+	var task = typeof id == 'object' ? id : Lincko.storage.get('tasks',id);
+	if(!task){ return false; }
+	if(task.approved){ return false; }
+
+	var duedate = tasks_calcDuedate(task);
+	var now = wrapper_time ? wrapper_time : new wrapper_date().time;
+	return duedate && now > duedate.time ? true : false;
 }
