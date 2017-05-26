@@ -196,24 +196,22 @@ skylist.prototype.construct = function(){
 	that.list_wrapper = that.list_wrapper.recursiveEmpty(0).addClass('skylist_wrapper').attr('pid', that.pid);
 	that.list_subwrapper = $('#-skylist_subwrapper').clone().removeAttr('id');
 	that.list = $('#-skylist').clone().prop('id','skylist_'+that.md5id);
-
-	that.filter_updateSettings(false); //must be before menu_construct to know which filter to be on when loaded
-	that.menu_construct();
-
 	that.list_wrapper.append(that.list_subwrapper);
 	that.list_subwrapper.append(that.list);
-	
 	that.elem_newcardCircle = $('#-skylist_newcardCircle').clone()
 		.prop('id','skylist_newcardCircle_'+that.md5id);
 
+	
+	//filte_update settings must be before menu_construct to know which filter to be on when loaded
+	that.filter_updateSettings(false); 
 	that.addCard_all();
-	//that.setHeight();
+	that.menu_construct();
+
 
 	/*functions that are specific to each module*/
 	if( that.subConstruct ){
 		that.subConstruct();
-	}
-	else{
+	} else {
 		that.subConstruct_default();
 	}
 
@@ -711,7 +709,7 @@ skylist.prototype.filter_by_duedate = function(items, filter){
 	}
 	
 	//if this function is used outside instance, then wont have that
-	if(that){
+	if(that instanceof skylist){
 		that.Lincko_itemsList_filter.duedate = filter;
 	}
 	return items_filtered;
@@ -1068,8 +1066,8 @@ skylist.prototype.addCard_all = function(){
 		that.list.append(burgerN.typeTask(null, that)); //top
 		that.paperView_inputter(that.list_wrapper, 'projects', app_content_menu.projects_id);
 	}
-	var items;
-	items = that.list_filter();
+
+	var items = that.list_filter();
 	var items_paged = that.update_pagingList(items);
 
 	if( items.length < 1 ){
@@ -3292,11 +3290,19 @@ skylist.prototype.menu_construct = function(){
 	var that = this;
 	//navbar
 	that.elem_navbar = $('#-skylist_menu_navbar').clone().prop('id','skylist_menu_navbar');
+	that.list_wrapper.prepend(that.elem_navbar);
 
 	that.menu_construct_addClickEvent_peopleToggle();
 	that.menu_construct_add_btnFilter();
 	that.menu_construct_add_searchbar();
-	that.menu_construct_addTimesort();
+
+	if(that.list_type == 'tasks'){
+		if(that.pid > 0){
+			that.menu_construct_addTimesort();
+		} else {
+			that.menu_construct_addRingFilters();
+		}
+	}
 
 } //construct END
 
@@ -3350,7 +3356,7 @@ skylist.prototype.menu_construct_addTimesort = function(){
 	var that = this;
 	//timesort
 	if( !that.sort_arrayText ){
-		if( Lincko.storage.get("projects", app_content_menu.projects_id, 'personal_private') ){
+		if( Lincko.storage.get("projects", that.pid, 'personal_private') ){
 			that.elem_navbar.find('.skylist_menu_timesort').addClass('display_none');
 		}
 	}
@@ -3469,6 +3475,116 @@ skylist.prototype.menu_construct_addTimesort = function(){
 		that.elem_Jsorts.eq(2).attr('title', Lincko.Translation.get('app', 3619, 'js')); //View tasks due tomorrow
 	}
 }
+skylist.prototype.menu_construct_returnRing = function(fill, total, count, name){
+	var container = $('#-skylist_menu_ringFilter').clone().removeAttr('id');
+	var ctx = container.find('canvas');
+	container.find('[find=count]').text(count);
+	container.children('[find=name]').text(name);
+	var data = {
+	    datasets: [
+		    {
+		        data: [fill, total-fill],
+		        backgroundColor: ["#f5a026", '#d8d8d8'],
+		        hoverBackgroundColor: ["#f5a026", '#d8d8d8'],
+		        borderWidth: 0,
+		    }
+	    ],
+	};
+	var ring = new Chart(ctx, {
+	    type: 'doughnut',
+	    data: data,
+	    options: {
+	    	legend: {
+	    		display: false,
+	    	},
+	    	maintainAspectRatio: false,
+	    	cutoutPercentage: 85,
+	    	tooltips: {
+	    		enabled: false,
+	    	},
+	    }
+	});
+
+	return container;
+}
+
+
+skylist.prototype.menu_construct_addRingFilters = function(){
+	var that = this;
+	var elem_pane = that.elem_navbar.find('.skylist_menu_timesort');
+	
+	var items_today = skylist.prototype.filter_by_duedate(that.Lincko_itemsList, 0);
+	var approved_today = 0;
+	for(var i in items_today){
+		if(items_today[i].approved){
+			approved_today++;
+		}
+	}
+
+	var elem_today = that.menu_construct_returnRing(
+		approved_today, 
+		items_today.length, 
+		items_today.length-approved_today,
+		Lincko.Translation.get('app', 3302, 'js').toUpperCase() //today
+	);
+	elem_pane.append(elem_today);
+
+
+	var items_tmr = skylist.prototype.filter_by_duedate(that.Lincko_itemsList, 1);
+	var approved_tmr = 0;
+	for(var i in items_tmr){
+		if(items_tmr[i].approved){
+			approved_tmr++;
+		}
+	}
+
+	var elem_tmr = that.menu_construct_returnRing(
+		approved_tmr, 
+		items_tmr.length, 
+		items_tmr.length-approved_tmr,
+		Lincko.Translation.get('app', 3303, 'js').toUpperCase() //tomorrow
+	);
+	elem_pane.append(elem_tmr);
+
+
+	//add selected css class based on filter settings
+	if(that.Lincko_itemsList_filter.duedate == 0){
+		elem_today.addClass('skylist_menu_ringFilter_selected');
+	}
+	else if(that.Lincko_itemsList_filter.duedate == 1){
+		elem_tmr.addClass('skylist_menu_ringFilter_selected');
+	}
+
+
+	elem_today.click({
+			that: that, 
+			btns: [elem_today, elem_tmr], 
+		}, 
+		function(e){
+			var that = e.data.that;
+			$.each(e.data.btns, function(i, elem){
+				elem.removeClass('skylist_menu_ringFilter_selected');
+			});
+			$(this).addClass('skylist_menu_ringFilter_selected');
+			that.tasklist_update('duedate',0);
+		}
+	);
+
+	elem_tmr.click({
+			that: that, 
+			btns: [elem_today, elem_tmr], 
+		}, 
+		function(e){
+			var that = e.data.that;
+			$.each(e.data.btns, function(i, elem){
+				elem.removeClass('skylist_menu_ringFilter_selected');
+			});
+			$(this).addClass('skylist_menu_ringFilter_selected');
+			that.tasklist_update('duedate',1);
+		}
+	);
+}
+
 skylist.prototype.menu_construct_add_btnFilter = function(){
 	var that = this;
 	//filter btn
@@ -3511,8 +3627,6 @@ skylist.prototype.menu_construct_add_searchbar = function(){
 	}
 	searchbarInst = searchbar.construct(searchbar_keyup);
 	that.elem_navbar.find('[find=searchbar_wrapper]').append(searchbarInst.elem);
-	
-	that.list_wrapper.append(that.elem_navbar);
 }
 
 skylist.prototype.menu_makeSelection = function(selection){
