@@ -3570,33 +3570,32 @@ skylist.prototype.menu_construct_addRingFilters = function(){
 	}
 
 
-	elem_today.click({
-			that: that, 
-			btns: [elem_today, elem_tmr], 
-		}, 
-		function(e){
-			var that = e.data.that;
-			$.each(e.data.btns, function(i, elem){
-				elem.removeClass('skylist_menu_ringFilter_selected');
-			});
-			$(this).addClass('skylist_menu_ringFilter_selected');
-			that.tasklist_update('duedate',0);
-		}
-	);
+	var e_data = {
+		that: that, 
+		btns: [elem_today, elem_tmr], 
+	};
 
-	elem_tmr.click({
-			that: that, 
-			btns: [elem_today, elem_tmr], 
-		}, 
-		function(e){
-			var that = e.data.that;
+	var fn_clickHandler = function(val, e, elem){
+		var that = e.data.that;
+		
+		if(elem.hasClass('skylist_menu_ringFilter_selected')){
+			elem.removeClass('skylist_menu_ringFilter_selected');
+			that.tasklist_update('duedate',-1);
+		} else {
 			$.each(e.data.btns, function(i, elem){
 				elem.removeClass('skylist_menu_ringFilter_selected');
 			});
-			$(this).addClass('skylist_menu_ringFilter_selected');
-			that.tasklist_update('duedate',1);
+			elem.addClass('skylist_menu_ringFilter_selected');
+			that.tasklist_update('duedate',val);
 		}
-	);
+	}
+
+	elem_today.click(e_data, function(e){
+		fn_clickHandler(0,e,$(this));
+	});
+	elem_tmr.click(e_data, function(e){
+		fn_clickHandler(1,e,$(this));
+	});
 }
 
 skylist.prototype.updateRings = function(){

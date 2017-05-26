@@ -122,10 +122,14 @@
 	width: 70px;
 	display: inline-block;
 }
-.skylist_menu_ringFilter_selected,
 .skylist_menu_ringFilter:hover{
+	background-color: rgba(84, 173, 210, 0.1);
+}
+.skylist_menu_ringFilter_selected,
+.skylist_menu_ringFilter_selected:hover{
 	background-color: rgba(84, 173, 210, 0.2);
 }
+
 .skylist_menu_ringFilter [find="canvasContainer"]{
 	position:relative;
 	height: 44px;
@@ -139,6 +143,8 @@
     top: 0;
     left: 0;
     text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-size: 24px;
     color: #475577;
     line-height: 44px; /*height of canvas*/
