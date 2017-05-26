@@ -129,6 +129,15 @@
 .skylist_menu_ringFilter_selected:hover{
 	background-color: rgba(84, 173, 210, 0.2);
 }
+
+.skylist_menu_timesort_divider{
+	padding-left: 1px;
+    height: 46px;
+    margin: 12px 4px;
+    display: inline-block;
+    background-color: #fba026;
+}
+
 .skylist_menu_ringFilter.skylist_menu_ringFilter_overdue canvas{
 	width: 44px;
     height: 44px;

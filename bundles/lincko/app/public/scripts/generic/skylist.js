@@ -3534,6 +3534,7 @@ skylist.prototype.menu_construct_returnRing = function(fill, total, count, name)
 skylist.prototype.menu_construct_addRingFilters = function(){
 	var that = this;
 	var elem_pane = that.elem_navbar.find('.skylist_menu_timesort');
+	elem_pane.append('<div class="skylist_menu_timesort_divider"></div>');
 
 	var items_overdue = [];
 	var now = new wrapper_date().time;
