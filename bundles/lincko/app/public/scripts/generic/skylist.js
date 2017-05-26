@@ -49,6 +49,8 @@ var skylist = function(list_type, list_wrapper, sort_arrayText, subConstruct, ri
 	
 	this.window_resize_timeout = null;
 
+	//chartJS doughnut chart instances
+	this.rings = {};
 
 	//timesort-------------------------------------------------
 	this.elem_navbar;
@@ -345,6 +347,9 @@ skylist.prototype.subConstruct_default = function(){
 
 			if($('#'+this.id).find('[find=card]').length < 1){//if nothing on the list
 				that.tasklist_update();
+				if(that.pid == 0){
+					that.updateRings();
+				}
 				return false;
 			}
 
@@ -355,6 +360,11 @@ skylist.prototype.subConstruct_default = function(){
 
 
 			var items_paged = that.update_pagingList(that.list_filter());
+
+			//update global view rings
+			if(that.pid == 0){
+				that.updateRings();
+			}
 
 			//there are no items. item deletion is done inside the individual item sync function
 			if(items_paged[0].length < 1){ return false; }
@@ -485,7 +495,7 @@ skylist.prototype.subConstruct_default = function(){
 			//one last check to update any fake cards
 			that.updateFakeCards();
 		},//end of the function attached to this project range
-		{sync_rage: sync_range, skylist: that, }
+		{sync_range: sync_range, skylist: that, }
 	);
 
 }//END OF subConstruct_default
@@ -3475,11 +3485,12 @@ skylist.prototype.menu_construct_addTimesort = function(){
 		that.elem_Jsorts.eq(2).attr('title', Lincko.Translation.get('app', 3619, 'js')); //View tasks due tomorrow
 	}
 }
+
 skylist.prototype.menu_construct_returnRing = function(fill, total, count, name){
-	var container = $('#-skylist_menu_ringFilter').clone().removeAttr('id');
-	var ctx = container.find('canvas');
-	container.find('[find=count]').text(count);
-	container.children('[find=name]').text(name);
+	var elem = $('#-skylist_menu_ringFilter').clone().removeAttr('id');
+	var ctx = elem.find('canvas');
+	elem.find('[find=count]').text(count);
+	elem.children('[find=name]').text(name);
 	var data = {
 	    datasets: [
 		    {
@@ -3505,9 +3516,8 @@ skylist.prototype.menu_construct_returnRing = function(fill, total, count, name)
 	    }
 	});
 
-	return container;
+	return [elem, ring];
 }
-
 
 skylist.prototype.menu_construct_addRingFilters = function(){
 	var that = this;
@@ -3521,12 +3531,14 @@ skylist.prototype.menu_construct_addRingFilters = function(){
 		}
 	}
 
-	var elem_today = that.menu_construct_returnRing(
+	var ring_today = that.menu_construct_returnRing(
 		approved_today, 
 		items_today.length, 
 		items_today.length-approved_today,
 		Lincko.Translation.get('app', 3302, 'js').toUpperCase() //today
 	);
+	var elem_today = ring_today[0];
+	that.rings.today = ring_today[1];
 	elem_pane.append(elem_today);
 
 
@@ -3538,12 +3550,14 @@ skylist.prototype.menu_construct_addRingFilters = function(){
 		}
 	}
 
-	var elem_tmr = that.menu_construct_returnRing(
+	var ring_tmr = that.menu_construct_returnRing(
 		approved_tmr, 
 		items_tmr.length, 
 		items_tmr.length-approved_tmr,
 		Lincko.Translation.get('app', 3303, 'js').toUpperCase() //tomorrow
 	);
+	var elem_tmr = ring_tmr[0];
+	that.rings.tmr = ring_tmr[1];
 	elem_pane.append(elem_tmr);
 
 
@@ -3583,6 +3597,37 @@ skylist.prototype.menu_construct_addRingFilters = function(){
 			that.tasklist_update('duedate',1);
 		}
 	);
+}
+
+skylist.prototype.updateRings = function(){
+	var that = this;
+	$.each(that.rings, function(key, ring){
+		if(ring instanceof  Chart.Controller){
+			var date;
+			if(key == 'today'){ date = 0; }
+			else if(key == 'tmr'){ date = 1; }
+			if(typeof date == 'number'){
+				var approved_old = ring.data.datasets[0].data[0];
+				var total_old = approved_old + ring.data.datasets[0].data[1];
+
+				var items_all = skylist.prototype.filter_by_duedate(that.Lincko_itemsList, date);
+				var approved = 0;
+				for(var i in items_all){
+					if(items_all[i].approved){
+						approved++;
+					}
+				}
+
+				//update if different
+				if(total_old != items_all.length || approved_old != approved){
+					ring.data.datasets[0].data[0] = approved;
+					ring.data.datasets[0].data[1] = items_all.length - approved;
+					ring.update();
+					$(ring.chart.canvas.parentElement).find('[find=count]').text(items_all.length - approved);
+				}
+			}
+		}
+	});
 }
 
 skylist.prototype.menu_construct_add_btnFilter = function(){
