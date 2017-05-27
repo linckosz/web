@@ -3337,8 +3337,9 @@ skylist.prototype.menu_construct_add_peopleDropdown = function(){
 	var that = this;
 	var elem_target = $('#-skylist_menu_people_dropdown').clone().removeAttr('id');
 	var elem_selected = elem_target.find('[find=selected]');
-	var elem_dropdown = elem_target.find('[find=dropdown]');
+	var elem_dropdown = elem_target.find('[find=dropdown]').addClass('overthrow');
 	that.elem_navbar.children('.skylist_menu_people').append(elem_target);
+
 
 	var return_elem_dropdownBlock = function(uid){
 		var elem_person = $('#-skylist_menu_people_dropdownBlock').clone().removeAttr('id');
@@ -3351,14 +3352,18 @@ skylist.prototype.menu_construct_add_peopleDropdown = function(){
 		}
 
 		elem_person.click({elem_dropdown: elem_dropdown, elem_selected: elem_selected, uid: uid,}, function(evt){
-			console.log(evt.data.uid);
 			if(!$.contains(evt.data.elem_selected.get(0), this)){
-				var elem_prev = evt.data.elem_selected.children().clone(true);
-				evt.data.elem_selected.children().replaceWith($(this));
-				$(this).velocity('fadeIn');
-				
-				evt.data.elem_dropdown.append(elem_prev).velocity('slideUp', {
+				var elem_now = $(this).clone(true);
+				evt.data.elem_selected.html(elem_now);
+				evt.data.elem_selected.velocity('fadeIn');
+
+				var elem_this = $(this);
+				evt.data.elem_dropdown.velocity('slideUp', {
 					duration: 150,
+					begin: function(){
+						evt.data.elem_dropdown.find('.skylist_menu_people_dropdownBlock').removeClass('display_none');
+						elem_this.addClass('display_none');
+					},
 					complete: function(){
 						evt.data.elem_dropdown.removeClass('skylist_menu_people_showDropdown');
 						that.tasklist_update('people',evt.data.uid);
@@ -3371,28 +3376,39 @@ skylist.prototype.menu_construct_add_peopleDropdown = function(){
 	}
 
 
+	var users = Lincko.storage.sort_items(Lincko.storage.list('users'), '-username');
+	for(var i in users){
+		if(that.Lincko_itemsList_filter.people && users[i]._id == that.Lincko_itemsList_filter.people){
+			elem_selected.append(return_elem_dropdownBlock(users[i]._id));
+		} else {
+			elem_dropdown.append(return_elem_dropdownBlock(users[i]._id));
+		}
+	}
+
 	if(that.Lincko_itemsList_filter.people == null){
 		elem_selected.append(return_elem_dropdownBlock(null));
-		elem_dropdown.append(return_elem_dropdownBlock(wrapper_localstorage.uid));
-	}
-	else {
-		elem_selected.append(return_elem_dropdownBlock(wrapper_localstorage.uid));
-		elem_dropdown.append(return_elem_dropdownBlock(null));
+	} else {
+		elem_dropdown.prepend(return_elem_dropdownBlock(null));
 	}
 
 	elem_selected.click({elem_dropdown: elem_dropdown}, function(evt){
-		var elem_drop = evt.data.elem_dropdown;
-		if(elem_drop.hasClass('skylist_menu_people_showDropdown')){
-			elem_drop.velocity('slideUp',{
+		var elem_dropdown = evt.data.elem_dropdown;
+		if(elem_dropdown.hasClass('skylist_menu_people_showDropdown')){
+			elem_dropdown.velocity('slideUp',{
 				duration: 150,
 				complete: function(){
-					elem_drop.removeClass('skylist_menu_people_showDropdown');
+					elem_dropdown.removeClass('skylist_menu_people_showDropdown');
 				}
 			});
 		} else {
-			elem_drop.addClass('skylist_menu_people_showDropdown');
-			elem_drop.velocity('slideDown',{
+			elem_dropdown.addClass('skylist_menu_people_showDropdown');
+			elem_dropdown.velocity('slideDown', {
 				duration: 150,
+				complete: function(){
+					if(myIScrollList[elem_dropdown.prop('id')]){
+						myIScrollList[elem_dropdown.prop('id')].refresh();
+					}
+				},
 			});
 		}
 	});
