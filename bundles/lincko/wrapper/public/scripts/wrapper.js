@@ -34,7 +34,7 @@ var wrapper_signout_cb_complete = function(){
 	window.location.href = top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domainRoot;
 }
 var wrapper_js_response;
-function wrapper_ajax(param, method, action, cb_success, cb_error, cb_begin, cb_complete, ajax_objForm){
+var wrapper_ajax = function(param, method, action, cb_success, cb_error, cb_begin, cb_complete, ajax_objForm){
 	if(typeof cb_success==="undefined" || cb_success===null){ cb_success = function(){}; }
 	if(typeof cb_error==="undefined" || cb_error===null){ cb_error = function(){}; }
 	if(typeof cb_begin==="undefined" || cb_begin===null){ cb_begin = function(){}; }

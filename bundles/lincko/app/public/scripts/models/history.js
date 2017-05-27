@@ -878,7 +878,6 @@ var app_models_history = {
 					}
 					app_models_history.hist_root[root_name].notif = false;
 					var notify_nbr = Lincko.storage.cache.getNotify(root_item["_type"], root_item["_id"]);
-					console.log(notify_nbr);
 					if(notify_nbr){
 						app_models_history.hist_root[root_name].notif = notify_nbr;
 					}

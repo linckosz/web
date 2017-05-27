@@ -129,7 +129,21 @@ class STR {
 		return ''.$string; //To be sure it will return a string
 	}
 
-
+	public static function searchString($text){
+		$text = strip_tags($text);
+		$text = trim($text);
+		$text = str_replace(array("\r\n", "\r", "\n", CHR(10), CHR(13), '&nbsp;'), ' ', $text); 
+		$text = html_entity_decode($text);
+		$text = preg_replace('/\p{P}/u', ' ', $text);
+		$text = preg_replace('/\s\s+/u', ' ', $text);
+		$text = strtolower($text);
+		//$text = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE ', $text); //remove accents
+		//pinyin converter: https://github.com/bullsoft/php-pinyin
+		$text = explode(' ', $text);
+		$text = array_unique($text);
+		$text = implode(',', $text);
+		return $text;
+	}
 
 
 

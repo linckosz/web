@@ -320,8 +320,8 @@ app_application_lincko.add("app_content_menu_notif", "projects", function() {
 		var histList = app_models_history.getList(false, 'projects', app_content_menu.projects_id);
 		var notif = 0;
 		for(var i in histList){
-			if(histList[i].notif){
-				notif++;
+			if(histList[i].notif > 0){
+				notif = notif + histList[i].notif;
 			}
 		}
 		if(notif>0){
