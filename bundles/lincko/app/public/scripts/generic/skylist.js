@@ -3417,8 +3417,8 @@ skylist.prototype.menu_construct_add_peopleDropdown = function(){
 skylist.prototype.menu_construct_add_peopleToggle = function(){
 	var that = this;
 	//individual or group selection in navbar
-	var elem_people2 = $('<span people="2" class="skylist_menu_selected"></span>');
-	var elem_people1 = $('<span people="1"></span>');
+	var elem_people2 = $('<span people="2" class="skylist_menu_selected base_pointer"></span>');
+	var elem_people1 = $('<span people="1" class="base_pointer"></span>');
 	that.elem_navbar.children('.skylist_menu_people').append(elem_people2);
 	that.elem_navbar.children('.skylist_menu_people').append(elem_people1);
 

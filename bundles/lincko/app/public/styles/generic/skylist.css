@@ -201,8 +201,8 @@
 	width: 70px;
 	display: inline-block;
 }
-.skylist_menu_people_dropdownBlock:hover,
-.skylist_menu_ringFilter:hover{
+.skylist_menu_people_dropdownBlock.base_pointer:hover,
+.skylist_menu_ringFilter.base_pointer:hover{
 	background-color: rgba(84, 173, 210, 0.1);
 }
 .skylist_menu_ringFilter_selected,
@@ -1173,6 +1173,11 @@
 	overflow: hidden;
 	margin: 0px 67px 0px 67px;
 	line-height: 25px;
+}
+.skylist_maxMobileL .skylist_menu_navbar_globalTask .skylist_menu_timesort{
+	margin: 0px;
+    margin-left: 82px;
+    text-align: left;
 }
 /*.skylist_maxMobileL_force .skylist_menu_timesort_text_wrapper,*/
 .skylist_maxMobileL .skylist_menu_timesort_text_wrapper {
