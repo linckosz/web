@@ -93,14 +93,46 @@ var searchbar = {
 		},
 		users: function(item, burgerOnly, word, param_pinyin){
 			var push = false;
-			var namecard, id_namecard;
-			if(!burgerOnly || burgerOnly == 'at'){
-				if(item._children && typeof item._children.namecards == 'object'){
-					for(id_namecard in item._children.namecards){
-						namecard = Lincko.storage.get('namecards', id_namecard);
-						if(namecard && Lincko.storage.searchArray('word', word, [namecard], true, param_pinyin).length){
+			var namecard, id_namecard, id_work;
+			var namecard_first = null; //workspace namecard
+			var namecard_second = null; //shared namecard
+			if((!burgerOnly || burgerOnly == 'at')
+				&& item._children && typeof item._children.namecards == 'object'){
+				id_work = Lincko.storage.getWORKID();
+				for(id_namecard in item._children.namecards){
+					namecard = Lincko.storage.get('namecards', id_namecard);
+					if(namecard){
+						if(!namecard_first){ 
+							namecard_first = namecard;
+						}
+						else if(id_work && namecard.workspaces_id == id_work){
+							namecard_second = namecard_first;
+							namrcard_first = namecard;
+						} else {
+							namecard_second = namecard;
+						}
+					}
+				}
+
+				//namecard_first has priority in search result
+				for(var attr in namecard_first){
+					if(attr[0] == '-' || attr[0] == '+'){
+						if(Lincko.storage.searchArray('word', word, [namecard_first], attr, param_pinyin).length){
 							push = true;
 							break;
+						}
+					}
+				}
+
+				if(!push && namecard_second){
+					for(var attr in namecard_second){
+						//if field is defined in namecard_first, skip
+						if((typeof namecard_first[attr] == null || typeof typeof namecard_first[attr] == 'undefined') 
+							&& (attr[0] == '-' || attr[0] == '+')){
+							if(Lincko.storage.searchArray('word', word, [namecard_second], attr, param_pinyin).length){
+								push = true;
+								break;
+							}
 						}
 					}
 				}
