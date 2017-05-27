@@ -3314,7 +3314,13 @@ skylist.prototype.menu_construct = function(){
 	that.elem_navbar = $('#-skylist_menu_navbar').clone().prop('id','skylist_menu_navbar');
 	that.list_wrapper.prepend(that.elem_navbar);
 
-	that.menu_construct_addClickEvent_peopleToggle();
+	if(that.pid == 0 && that.list_type == 'tasks'){
+		that.elem_navbar.addClass('skylist_menu_navbar_globalTask');
+		that.menu_construct_add_peopleDropdown();
+	} else {
+		that.menu_construct_add_peopleToggle();
+	}
+	
 	that.menu_construct_add_btnFilter();
 	that.menu_construct_add_searchbar();
 
@@ -3325,14 +3331,81 @@ skylist.prototype.menu_construct = function(){
 			that.menu_construct_addRingFilters();
 		}
 	}
+}
 
-} //construct END
+skylist.prototype.menu_construct_add_peopleDropdown = function(){
+	var that = this;
+	var elem_target = $('#-skylist_menu_people_dropdown').clone().removeAttr('id');
+	var elem_selected = elem_target.find('[find=selected]');
+	var elem_dropdown = elem_target.find('[find=dropdown]');
+	that.elem_navbar.children('.skylist_menu_people').append(elem_target);
 
-skylist.prototype.menu_construct_addClickEvent_peopleToggle = function(){
+	var return_elem_dropdownBlock = function(uid){
+		var elem_person = $('#-skylist_menu_people_dropdownBlock').clone().removeAttr('id');
+		if(uid){
+			var id_pic = Lincko.storage.get("users", uid, 'profile_pic');
+			var url = id_pic ? Lincko.storage.getLinkThumbnail(id_pic) : app_application_icon_single_user.src;
+			elem_person.find('[find="profile"]').css('background-image', 'url('+url+')');
+			elem_person.find('[find="name"]').text(Lincko.storage.get("users", uid, '-username'));
+			elem_person.addClass('skylist_menu_people_dropdownBlock_profile');
+		}
+
+		elem_person.click({elem_dropdown: elem_dropdown, elem_selected: elem_selected, uid: uid,}, function(evt){
+			console.log(evt.data.uid);
+			if(!$.contains(evt.data.elem_selected.get(0), this)){
+				var elem_prev = evt.data.elem_selected.children().clone(true);
+				evt.data.elem_selected.children().replaceWith($(this));
+				$(this).velocity('fadeIn');
+				
+				evt.data.elem_dropdown.append(elem_prev).velocity('slideUp', {
+					duration: 150,
+					complete: function(){
+						evt.data.elem_dropdown.removeClass('skylist_menu_people_showDropdown');
+						that.tasklist_update('people',evt.data.uid);
+					}
+				});
+			}
+		});
+
+		return elem_person;
+	}
+
+
+	if(that.Lincko_itemsList_filter.people == null){
+		elem_selected.append(return_elem_dropdownBlock(null));
+		elem_dropdown.append(return_elem_dropdownBlock(wrapper_localstorage.uid));
+	}
+	else {
+		elem_selected.append(return_elem_dropdownBlock(wrapper_localstorage.uid));
+		elem_dropdown.append(return_elem_dropdownBlock(null));
+	}
+
+	elem_selected.click({elem_dropdown: elem_dropdown}, function(evt){
+		var elem_drop = evt.data.elem_dropdown;
+		if(elem_drop.hasClass('skylist_menu_people_showDropdown')){
+			elem_drop.velocity('slideUp',{
+				duration: 150,
+				complete: function(){
+					elem_drop.removeClass('skylist_menu_people_showDropdown');
+				}
+			});
+		} else {
+			elem_drop.addClass('skylist_menu_people_showDropdown');
+			elem_drop.velocity('slideDown',{
+				duration: 150,
+			});
+		}
+	});
+}
+
+skylist.prototype.menu_construct_add_peopleToggle = function(){
 	var that = this;
 	//individual or group selection in navbar
-	var elem_people1 = that.elem_navbar.find('[people=1]');
-	var elem_people2 = that.elem_navbar.find('[people=2]');
+	var elem_people2 = $('<span people="2" class="skylist_menu_selected"></span>');
+	var elem_people1 = $('<span people="1"></span>');
+	that.elem_navbar.children('.skylist_menu_people').append(elem_people2);
+	that.elem_navbar.children('.skylist_menu_people').append(elem_people1);
+
 	if( Lincko.storage.get("projects", app_content_menu.projects_id, 'personal_private') ){
 		elem_people2.addClass('display_none');
 		elem_people1.addClass('display_none');
@@ -3498,8 +3571,8 @@ skylist.prototype.menu_construct_addTimesort = function(){
 	}
 }
 
-skylist.prototype.menu_construct_returnRing = function(fill, total, count, name){
-	var elem = $('#-skylist_menu_ringFilter').clone().removeAttr('id');
+skylist.prototype.menu_construct_returnRing = function(elem_appendTo, fill, total, count, name){
+	var elem = $('#-skylist_menu_ringFilter').clone().removeAttr('id').appendTo(elem_appendTo);
 	var ctx = elem.find('canvas');
 	elem.find('[find=count]').text(count);
 	elem.children('[find=name]').text(name);
@@ -3559,6 +3632,7 @@ skylist.prototype.menu_construct_addRingFilters = function(){
 	}
 
 	var ring_today = that.menu_construct_returnRing(
+		elem_pane,
 		approved_today, 
 		items_today.length, 
 		items_today.length-approved_today,
@@ -3566,7 +3640,6 @@ skylist.prototype.menu_construct_addRingFilters = function(){
 	);
 	var elem_today = ring_today[0];
 	that.rings.today = ring_today[1];
-	elem_pane.append(elem_today);
 
 
 	var items_tmr = skylist.prototype.filter_by_duedate(that.Lincko_itemsList, 1);
@@ -3578,6 +3651,7 @@ skylist.prototype.menu_construct_addRingFilters = function(){
 	}
 
 	var ring_tmr = that.menu_construct_returnRing(
+		elem_pane,
 		approved_tmr, 
 		items_tmr.length, 
 		items_tmr.length-approved_tmr,
@@ -3585,7 +3659,6 @@ skylist.prototype.menu_construct_addRingFilters = function(){
 	);
 	var elem_tmr = ring_tmr[0];
 	that.rings.tmr = ring_tmr[1];
-	elem_pane.append(elem_tmr);
 
 
 	//add selected css class based on filter settings

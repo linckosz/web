@@ -10,16 +10,7 @@
 <div class="display_none">
 
 	<div id="-skylist_menu_navbar" class="skylist_menu_navbar">
-		<span class = "skylist_menu_people skylist_clickable">
-			<span people="2" class="skylist_menu_selected">
-				{#<i find="noSelect" class="icon-Multiple-People"></i>  uncomment this to use icons #} 
-				{#<i find="Select" class="icon-Multiple-People-Selected"></i>#}
-			</span>
-			<span people="1">
-				{#<i find="noSelect" class="icon-Single-Person"></i>  uncomment this to use icons #} 
-				{#<i find="Select" class="icon-Single-Person-Selected"></i>#}
-			</span>
-		</span>
+		<span class = "skylist_menu_people skylist_clickable"></span>
 		<div class="skylist_menu_timesort"></div>
 		<span title="{{ _trans('app', 13, 21, 'html') }}{#Filter your tasks or change views#}" class="skylist_menu_navbar_filter_icon icon-viewIcon skylist_clickable"></span>
 		<div class="skylist_menu_navbar_filter_pane" tabindex="1">
@@ -37,6 +28,17 @@
 		<span find='indicator' class="minTablet"></span>
 		<span find='text' class="skylist_menu_timesort_text"></span>
 	</span>
+
+	<div id="-skylist_menu_people_dropdown" class="skylist_menu_people_dropdown">
+		<span find="arrow" class="fa fa-caret-down"></span>
+		<div find="selected"></div>
+		<div find="dropdown"></div>
+	</div>
+
+	<div id="-skylist_menu_people_dropdownBlock" class="skylist_menu_people_dropdownBlock">
+		<span find="profile"></span>
+		<span find="name">{{ _trans('app', 2, 5, 'html') }}{# All #}</span>
+	</div>
 
 	<span id="-skylist_menu_ringFilter" class="skylist_menu_ringFilter base_pointer">
 		<div find="canvasContainer">

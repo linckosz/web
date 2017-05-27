@@ -35,6 +35,13 @@
 	float: left;
 	line-height: 48px;
 }
+.skylist_menu_navbar_globalTask .skylist_menu_people{    
+	position: absolute;
+	left: 0px;
+    top: 0px;
+    height: 70px;
+    z-index: 12;
+}
 
 /*
 .skylist_menu_people [find=noSelect], .skylist_menu_people .skylist_menu_selected [find=Select] {
@@ -44,7 +51,7 @@
 	display: none;
 }
 */
-
+.skylist_menu_people_dropdownBlock [find="profile"],
 .skylist_menu_people [people]{
 	padding: 0px 18px;
 	background-size: 28px;
@@ -60,10 +67,53 @@
 .skylist_menu_people [people='2']{
 	background-image: url('/lincko/app/images/app/icons/Multiple_People_Blue.png');
 }
+.skylist_menu_people_dropdownBlock [find="profile"],
 .skylist_menu_people [people='2'].skylist_menu_selected{
 	background-image: url('/lincko/app/images/app/icons/Multiple_People_Orange.png');
 }
 
+.skylist_menu_people_dropdown {
+	background-color: #FFFFFF;
+}
+.skylist_menu_people_dropdown [find="arrow"]{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    height: 70px;
+    line-height: 70px;
+    font-size: 16px;
+    color: #54add2;
+}
+.skylist_menu_people_dropdown [find=dropdown]{
+	height: 0px;
+	overflow: hidden;
+}
+.skylist_menu_people_dropdown [find=dropdown].skylist_menu_people_showDropdown{
+	height: auto;
+}
+.skylist_menu_people_dropdownBlock{
+    position: relative;
+    height: 60px;
+    width: 70px;
+    margin: 0px 4px;
+    padding-top: 10px;
+}
+.skylist_menu_people_dropdownBlock [find="profile"]{
+    display: block;
+    width: 40px;
+    height: 40px;
+    padding: 0px;
+    background-size: 36px;
+    margin: auto;
+}
+.skylist_menu_people_dropdownBlock_profile [find="profile"]{
+	border: 1px solid #FBA026;
+    border-radius: 40px;
+}
+
+.skylist_menu_navbar_globalTask .skylist_menu_timesort{
+	margin-left: 78px;
+}
 .skylist_menu_timesort {
 	position: relative;
 	overflow: hidden;
@@ -169,6 +219,7 @@
     color: #475577;
     line-height: 44px; /*height of canvas*/
 }
+.skylist_menu_people_dropdownBlock [find="name"],
 .skylist_menu_ringFilter [find="name"]{
     position: absolute;
     bottom: 0px;
