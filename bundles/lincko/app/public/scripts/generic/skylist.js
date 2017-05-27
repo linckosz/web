@@ -710,7 +710,7 @@ skylist.prototype.filter_by_duedate = function(items, filter){
 	else if(filter == 'overdue'){
 		now = new wrapper_date().time;
 		for(var i in items){
-			if(tasks_isOverdue(items[i]),now){
+			if(tasks_isOverdue(items[i], now)){
 				items_filtered.push(items[i]);
 			}
 		}
