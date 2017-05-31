@@ -807,24 +807,48 @@ inputter.prototype.buildLayer = function()
 	}
 
 	input.find('[find=chat_textarea]').on('paste',function(e,data){
+		e.preventDefault();
+
+		var pasteText = '';
+		if(window.clipboardData && clipboardData.setData) {// IE
+			pasteText = window.clipboardData.getData('text');
+		} else {
+			pasteText = (e.originalEvent || e).clipboardData.getData('text/plain');
+		}
+		if (document.body.createTextRange) {    
+			if (document.selection) {
+			    textRange = document.selection.createRange();
+			} else if (window.getSelection) {
+			    sel = window.getSelection();
+			    var range = sel.getRangeAt(0);
+			    var tempEl = document.createElement("span");
+				tempEl.innerHTML = "&#FEFF;";
+			    range.deleteContents();
+			    range.insertNode(tempEl);
+			    textRange = document.body.createTextRange();
+			    textRange.moveToElementText(tempEl);
+			    tempEl.parentNode.removeChild(tempEl);
+			}
+			textRange.text = pasteText;
+			textRange.collapse(false);
+			textRange.select();
+		} 
+		else {
+			document.execCommand("insertText", false, pasteText);
+		}
+
 		var target = this;
-		setTimeout(function(){
-			target.innerHTML = cleanHtmlTag(target.innerHTML);
-			// target.innerHTML = cleanAndPaste(target.innerHTML
-			// 	.replace(/<(br).*?>/g,"<br/>")
-			// 	.replace(/<(?!br).*?>/g,"")
-			// 	.replace(/[\r\n]/g, ""));
-			$('.empty_show').addClass('mobile_hide');
-			$('.empty_hide').removeClass('mobile_hide');
+		
+		$('.empty_show').addClass('mobile_hide');
+		$('.empty_hide').removeClass('mobile_hide');
 
-			content.removeClass('mobile-margin-right-' + mobile_show_count);
-			//content.addClass('mobile-margin-right-' + mobile_right_col_count);
+		content.removeClass('mobile-margin-right-' + mobile_show_count);
 
-			var left_menu = container.find('[find=left_menu_wrapper]');
-			var right_menu = container.find('[find=right_menu_wrapper]');
-			mobile_show_count = right_menu.find("li:not(.mobile_hide)").length;
-			content.addClass('mobile-margin-right-' + mobile_show_count);
-		},0);
+		var left_menu = container.find('[find=left_menu_wrapper]');
+		var right_menu = container.find('[find=right_menu_wrapper]');
+		mobile_show_count = right_menu.find("li:not(.mobile_hide)").length;
+		content.addClass('mobile-margin-right-' + mobile_show_count);
+		
 	});
 
 	input.find('[find=chat_audio]').on('touchcancel',function(event){
