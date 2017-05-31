@@ -821,13 +821,13 @@ inputter.prototype.buildLayer = function()
 			} else if (window.getSelection) {
 			    sel = window.getSelection();
 			    var range = sel.getRangeAt(0);
-			    var tempEl = document.createElement("span");
-				tempEl.innerHTML = "&#FEFF;";
+			    var helper = document.createElement("span");
+				helper.innerHTML = "&#FEFF;";
 			    range.deleteContents();
-			    range.insertNode(tempEl);
+			    range.insertNode(helper);
 			    textRange = document.body.createTextRange();
-			    textRange.moveToElementText(tempEl);
-			    tempEl.parentNode.removeChild(tempEl);
+			    textRange.moveToElementText(helper);
+			    helper.parentNode.removeChild(helper);
 			}
 			textRange.text = pasteText;
 			textRange.collapse(false);
@@ -837,13 +837,10 @@ inputter.prototype.buildLayer = function()
 			document.execCommand("insertText", false, pasteText);
 		}
 
-		var target = this;
-		
 		$('.empty_show').addClass('mobile_hide');
 		$('.empty_hide').removeClass('mobile_hide');
 
 		content.removeClass('mobile-margin-right-' + mobile_show_count);
-
 		var left_menu = container.find('[find=left_menu_wrapper]');
 		var right_menu = container.find('[find=right_menu_wrapper]');
 		mobile_show_count = right_menu.find("li:not(.mobile_hide)").length;
