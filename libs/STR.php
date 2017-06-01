@@ -130,19 +130,36 @@ class STR {
 	}
 
 	public static function searchString($text){
+		$pinyin = new Pinyin();
 		$text = strip_tags($text);
 		$text = trim($text);
+		$text = strtolower($text);
 		$text = str_replace(array("\r\n", "\r", "\n", CHR(10), CHR(13), '&nbsp;'), ' ', $text); 
+		$text_ori = $text;
 		$text = html_entity_decode($text);
 		$text = preg_replace('/\p{P}/u', ' ', $text);
 		$text = preg_replace('/(\p{Han})/u', ' $1 ', $text); //Espace chinese characters
 		$text = preg_replace('/\s\s+/u', ' ', $text);
-		$text = strtolower($text);
-		//$text = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE ', $text); //remove accents
-		//pinyin converter: https://github.com/bullsoft/php-pinyin
 		$text = explode(' ', $text);
 		$text = array_unique($text);
-		$text = implode(',', $text);
+		$text_bis = array();
+		
+		foreach ($text as $key => $value) {
+			$text_bis[] = $value;
+			$temp = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $value); //remove accents
+			if($temp != $value){
+				if(preg_match('/[a-z0-9]+/u', $temp)){
+					$text_bis[] = $temp;
+				} else if(preg_match('/(\p{Han})/u', $value)){
+					$text_bis[] = implode('', $pinyin->convert($value));
+				}
+			}
+		}
+		$text_bis = array_unique($text_bis);
+		$text = implode(' ', $text_bis);
+		if($text == $text_ori){
+			$text = false; //Note: For some small content, it may search through some html tags, we better to use .text() on front
+		}
 		return $text;
 	}
 
