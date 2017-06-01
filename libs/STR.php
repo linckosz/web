@@ -135,6 +135,7 @@ class STR {
 		$text = str_replace(array("\r\n", "\r", "\n", CHR(10), CHR(13), '&nbsp;'), ' ', $text); 
 		$text = html_entity_decode($text);
 		$text = preg_replace('/\p{P}/u', ' ', $text);
+		$text = preg_replace('/(\p{Han})/u', ' $1 ', $text); //Espace chinese characters
 		$text = preg_replace('/\s\s+/u', ' ', $text);
 		$text = strtolower($text);
 		//$text = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE ', $text); //remove accents

@@ -265,8 +265,7 @@ var app_content_menu = {
 			if(i > -1){ settings_new.latestvisitProjects.splice(i,1) }
 
 			settings_new.latestvisitProjects.unshift(projects_id);
-			Lincko.storage.settingsLocal = settings_new;
-			wrapper_sendAction({settings: JSON.stringify(settings_new)}, 'post', 'data/settings');
+			Lincko.storage.setSettings(settings_new);
 			app_application_lincko.prepare("settings");
 		}
 

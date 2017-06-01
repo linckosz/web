@@ -4079,8 +4079,8 @@ skylist.prototype.filter_updateSettings = function(sendAction){
 	
 	settings_new.skylist.filter[that.pid][that.list_type] = JSON.parse(JSON.stringify(that.Lincko_itemsList_filter));
 	settings_new.skylist.filter[that.pid][that.list_type].search = ''; //search filter is not saved
-	Lincko.storage.settingsLocal = settings_new;
-	wrapper_sendAction({settings: JSON.stringify(settings_new)}, 'post', 'data/settings');
+	Lincko.storage.setSettings(settings_new);
+
 	//offline settings
 	/*Lincko.storage.settings = settings_new;
 	wrapper_localstorage.encrypt('settings', Lincko.storage.settings);*/

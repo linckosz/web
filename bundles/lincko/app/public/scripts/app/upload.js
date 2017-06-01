@@ -274,14 +274,34 @@ $(function () {
 			//Note: This function help to avoid a trouble issue that would completely stop the file upoading system if it submits while the staus is pending
 			app_upload_files.lincko_files[app_upload_files.lincko_files_index].lincko_submit = function(){
 				var temp_index = this.lincko_files_index;
-				if(this.state() == 'pending'){
+				var nbr_uploading = 0;
+				for(var i in app_upload_files.lincko_files){
+					if(i!=temp_index && app_upload_files.lincko_files[i].lincko_status == 'uploading'){
+						nbr_uploading++;
+					}
+					if(nbr_uploading>=app_upload_files.lincko_limit){
+						break;
+					}
+				}
+				if(nbr_uploading>=app_upload_files.lincko_limit || this.state() == 'pending'){
 					clearInterval(app_upload_start_interval[temp_index]);
 					app_upload_start_interval[temp_index] = setInterval(function(temp_index){
-						if(typeof app_upload_files.lincko_files[temp_index] == "undefined"){
-							clearInterval(app_upload_start_interval[temp_index]);
-						} else if(app_upload_files.lincko_files[temp_index].state()!='pending'){
-							clearInterval(app_upload_start_interval[temp_index]);
-							app_upload_files.lincko_files[temp_index].submit();
+						var nbr_uploading = 0;
+						for(var i in app_upload_files.lincko_files){
+							if(i!=temp_index && app_upload_files.lincko_files[i].lincko_status == 'uploading'){
+								nbr_uploading++;
+							}
+							if(nbr_uploading>=app_upload_files.lincko_limit){
+								break;
+							}
+						}
+						if(nbr_uploading<app_upload_files.lincko_limit){
+							if(typeof app_upload_files.lincko_files[temp_index] == "undefined"){
+								clearInterval(app_upload_start_interval[temp_index]);
+							} else if(app_upload_files.lincko_files[temp_index].state()!='pending'){
+								clearInterval(app_upload_start_interval[temp_index]);
+								app_upload_files.lincko_files[temp_index].submit();
+							}
 						}
 					}, 300, temp_index);
 				} else {
@@ -530,7 +550,7 @@ $(function () {
 						data.lincko_status = 'deleted';
 						that.destroy(e, data);
 					} else if(typeof data.lincko_type !== 'undefined' && data.lincko_type === 'file'){
-						data.lincko_status = 'uploading';
+						data.lincko_status = 'pause';
 						data.lincko_submit();
 					}
 				}

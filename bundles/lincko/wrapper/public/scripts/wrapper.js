@@ -139,7 +139,7 @@ var wrapper_ajax = function(param, method, action, cb_success, cb_error, cb_begi
 				window.location.href = wrapper_link['root'];
 			}
 
-			if(typeof data.workspace != 'undefined' && data.workspace != wrapper_localstorage.workspace){
+			if(!wrapper_localstorage.logged && typeof data.workspace != 'undefined' && data.workspace != wrapper_localstorage.workspace){
 				//Switch to another workspace if different than the current one
 				var workspace = "";
 				if(data.workspace){
@@ -416,6 +416,29 @@ function wrapper_get_shangzai(){
 	return false;
 }
 
+wrapper_localstorage.encrypt_queue = {};
+wrapper_localstorage.encrypt_running = false;
+wrapper_localstorage.encrypt_timer = false;
+wrapper_localstorage.encrypt_start = function(link, data){
+	if(!webworker){ return false; }
+	wrapper_localstorage.encrypt_queue[link] = data;
+	if(!wrapper_localstorage.encrypt_timer){
+		wrapper_localstorage.encrypt_timer = setInterval(function(){
+			if(!wrapper_localstorage.encrypt_running){
+				for(var key in wrapper_localstorage.encrypt_queue){
+					wrapper_localstorage.encrypt_running = true;
+					webworker.postMessage(wrapper_localstorage.encrypt_queue[key]);
+					delete wrapper_localstorage.encrypt_queue[key];
+					return true;
+				}
+				clearInterval(wrapper_localstorage.encrypt_timer);
+				wrapper_localstorage.encrypt_timer = false;
+			}
+		}, isIOS?30:10);
+	}
+	return true;
+};
+
 wrapper_localstorage.encrypt = function (link, data, tryit, now){
 	if(!link){
 		return false;
@@ -439,7 +462,7 @@ wrapper_localstorage.encrypt = function (link, data, tryit, now){
 					prefix: wrapper_localstorage.prefix,
 				},
 			};
-			if(!webworker.postMessage(webworker_data)){
+			if(!wrapper_localstorage.encrypt_start(link, webworker_data)){
 				result = false;
 			}
 		} else {
