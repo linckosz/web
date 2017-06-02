@@ -192,12 +192,12 @@ function base_lincko_img_to_html(source)
 
 function ios_open_link(url){
 	window.webkit.messageHandlers.iOS.postMessage(
-    {
+	{
 		action: 'open_external_url',
 		value:{
 			url:url,
 		}
-    });
+	});
 }
 /*
 text to <a></a>
@@ -397,9 +397,87 @@ var base_app_scanner = {
 	},
 }
 
+var base_hexToRgb = function(hex) {
+	var result = /^#([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+	return result ? {
+		r: parseInt(result[1], 16),
+		g: parseInt(result[2], 16),
+		b: parseInt(result[3], 16)
+	} : null;
+};
+
+/* customization */
+var base_customize_color = function(color_one, color_two, image){
+	$('#base_customize_color').remove();
+	if(typeof color_one == 'string' && typeof color_two == 'string'){
+		var rgb_one = base_hexToRgb(color_one);
+		var rgb_two = base_hexToRgb(color_two);
+		if(!rgb_one || !rgb_two){
+			return false;
+		}
+		$("head").append('<style id="base_customize_color" type="text/css"></style>');
+		var newStyleElement = $("head").children(':last');
+		var color_one_r = rgb_one.r;
+		var color_one_g = rgb_one.g;
+		var color_one_b = rgb_one.b;
+		newStyleElement.html(
+			 ".base_color_text_linckoOrange.customize { color: "+color_one+"; } "
+			+".base_color_text_linckoOrange_dark.customize { color: "+color_two+"; } "
+			+".base_color_bg_main_gradient.customize {"
+				+"background: "+color_one+";"
+				+"background-color: "+color_one+";"
+				+"background: -webkit-linear-gradient("+color_one+", "+color_two+") !important;"
+				+"background: -o-linear-gradient("+color_one+", "+color_two+") !important;"
+				+"background: -moz-linear-gradient("+color_one+", "+color_two+") !important;"
+				+"background: linear-gradient("+color_one+", "+color_two+") !important;"
+			+"} "
+			+".app_content_menu.customize { border-right-color: rgba("+color_one_r+", "+color_one_g+", "+color_one_b+", 0.40) !important; } "
+		);
+	}
+};
+/* customization */
+var base_customize_logo = function(image){
+	if(typeof image == 'string' && image){
+		var entreprise_logo = $('<img>').attr('src', image).addClass('base_customize_logo');
+		$('#app_project_logo_span').recursiveEmpty().append(entreprise_logo);
+	} else {
+		$('#app_project_logo_span').recursiveEmpty().removeClass('base_customize_logo').html(wrapper_main_title);
+	}
+};
+
 var base_wechat_shareData = null;
 var base_wechat_shareData_garbage = null;
+var base_workspace_garbage = null;
 JSfiles.finish(function(){
+
+	//customize wechat share information here
+	base_workspace_garbage = app_application_garbage.add();
+	app_application_lincko.add(base_workspace_garbage, 'workspaces', function() {
+		//Enable to upload a picture for the logo
+		if(Lincko.storage.WORKID!==null){
+			if(Lincko.storage.amIsuper()){
+				$('#app_project_logo_span').addClass('base_pointer').click(function(event){
+					event.stopPropagation();
+					app_upload_open_photo_single('workspaces', Lincko.storage.getWORKID(), false, true);
+				});
+			}
+			if(Lincko.storage.getWORKID()){
+				var workspace = Lincko.storage.get('workspaces', Lincko.storage.getWORKID());
+				if(workspace){
+					if(
+						   typeof workspace['cus_color_one'] == 'string'
+						&& typeof workspace['cus_color_two'] == 'string'
+					){
+						base_customize_color(workspace['cus_color_one'], workspace['cus_color_two']);
+					}
+					if(typeof workspace['cus_logo'] != 'undefined' && workspace['cus_logo']>0){
+						base_customize_logo(Lincko.storage.getWorkspaceRaw());
+					}
+				}
+			}
+			app_application_garbage.remove(base_workspace_garbage);
+		}
+	});
 
 	//Depreciation of window.MediaStreamTrack.getSources
 	//Make sure the DOM is loaded first
@@ -494,6 +572,7 @@ JSfiles.finish(function(){
 	//customize wechat share information here
 	base_wechat_shareData_garbage = app_application_garbage.add();
 	app_application_lincko.add(base_wechat_shareData_garbage, 'first_launch', function() {
+
 		//load my QR code image but dont show
 		base_toggle_myQRcode(false);
 
@@ -525,7 +604,7 @@ JSfiles.finish(function(){
 				wx.onMenuShareTimeline(base_wechat_shareData);
 			}, 0);
 			app_application_garbage.remove(base_wechat_shareData_garbage);
-		}		
+		}
 	});
 
 	if(typeof wrapper_wechat_alert == 'function' && wrapper_wechat_show_official){

@@ -351,6 +351,12 @@ html, .font_sans_serif {
 	background-color: rgba(66, 117, 159, 0.8) !important;
 }
 
+.base_customize_logo {
+	max-height: 42px;
+	max-width: 160px;
+	margin-top: 3px;
+}
+
 /*
 	http://html5-demos.appspot.com/static/css/filters/index.html
 	http://bennettfeely.com/filters/

@@ -979,103 +979,105 @@ skylist.prototype.addPrevPage = function(){
 
 
 skylist.prototype.addNextPage = function(page){
-	var that = this; 
-	//if loading first page, reset
-	if(page === 0){
-		that.currentPage = 0;
-		that.pagesLoaded = {0:true};
-		that.reversePaging = false; 
-		that.allPagesLoaded = false;
-		that.inputterAddedItems = {};
-	}
-	else if(that.allPagesLoaded){return;}
-
-	var nextPage = typeof page !== 'undefined' ? page : that.currentPage+1;
-	if(that.Lincko_itemsList_paged[nextPage]){
-		var elem_iscroll = that.list.children('.iscroll_sub_div').length ? that.list.children('.iscroll_sub_div') : that.list;
-
-		//scroll iscroll to top
-		if( nextPage == 0 && myIScrollList && myIScrollList['skylist_'+that.md5id] ){
-			myIScrollList['skylist_'+that.md5id].scrollTo(0,0);
+	setTimeout(function(that){
+		//var that = this;
+		//if loading first page, reset
+		if(page === 0){
+			that.currentPage = 0;
+			that.pagesLoaded = {0:true};
+			that.reversePaging = false; 
+			that.allPagesLoaded = false;
+			that.inputterAddedItems = {};
 		}
+		else if(that.allPagesLoaded){return;}
 
-		//add cards to temp div
-		var elem_tmp = $('<div>');
-		$.each(that.Lincko_itemsList_paged[nextPage], function(i, item){
-			if(!that.inputterAddedItems[item.temp_id]){ //dont add if was added by inputter
-				var elem_new = that.addCard(item);
-				if(!$('#'+elem_new.prop('id')).length){ //add only if doesnt exist
-					elem_tmp.append(elem_new);
+		var nextPage = typeof page !== 'undefined' ? page : that.currentPage+1;
+		if(that.Lincko_itemsList_paged[nextPage]){
+			var elem_iscroll = that.list.children('.iscroll_sub_div').length ? that.list.children('.iscroll_sub_div') : that.list;
+
+			//scroll iscroll to top
+			if( nextPage == 0 && myIScrollList && myIScrollList['skylist_'+that.md5id] ){
+				myIScrollList['skylist_'+that.md5id].scrollTo(0,0);
+			}
+
+			//add cards to temp div
+			var elem_tmp = $('<div>');
+			$.each(that.Lincko_itemsList_paged[nextPage], function(i, item){
+				if(!that.inputterAddedItems[item.temp_id]){ //dont add if was added by inputter
+					var elem_new = that.addCard(item);
+					if(!$('#'+elem_new.prop('id')).length){ //add only if doesnt exist
+						elem_tmp.append(elem_new);
+					}
 				}
+				
+			});
+
+			//add cards from temp div to iscroll
+			elem_tmp = elem_tmp.children();
+			if(elem_tmp.length){
+				elem_iscroll.append(elem_tmp);
+			}
+
+			//record that the page was loaded into DOM
+			that.pagesLoaded[nextPage] = true;
+
+			//remove loading spinner
+			if($('#'+that.id_pageLoadSpinner).length){ $('#'+that.id_pageLoadSpinner).remove();	}
+
+			
+			if(nextPage == that.Lincko_itemsList_paged.length - 1){
+				that.allPagesLoaded = true;
+			}
+
+			if(typeof page === 'undefined'){ that.currentPage = nextPage; }
+			if(that.Lincko_itemsList_paged[page ? page + 1 : that.currentPage+1]){
+				elem_iscroll.append($('#-skylist_pageLoadSpinner').clone().prop('id', that.id_pageLoadSpinner));
 			}
 			
-		});
-
-		//add cards from temp div to iscroll
-		elem_tmp = elem_tmp.children();
-		if(elem_tmp.length){
-			elem_iscroll.append(elem_tmp);
+			that.DOM_updated();
 		}
-
-		//record that the page was loaded into DOM
-		that.pagesLoaded[nextPage] = true;
-
-		//remove loading spinner
-		if($('#'+that.id_pageLoadSpinner).length){ $('#'+that.id_pageLoadSpinner).remove();	}
-
-		
-		if(nextPage == that.Lincko_itemsList_paged.length - 1){
-			that.allPagesLoaded = true;
-		}
-
-		if(typeof page === 'undefined'){ that.currentPage = nextPage; }
-		if(that.Lincko_itemsList_paged[page ? page + 1 : that.currentPage+1]){
-			elem_iscroll.append($('#-skylist_pageLoadSpinner').clone().prop('id', that.id_pageLoadSpinner));
-		}
-		
-		that.DOM_updated();
-	}	
+	}, 10, this);
 }
 
 skylist.prototype.addLastPage = function(){
-	var that = this;
-	var i_lastPage = that.Lincko_itemsList_paged.length - 1;
-	if(that.currentPage >= i_lastPage){ return; } //last page already added
-	else {
-		var elem_iscroll = that.list.children('.iscroll_sub_div').length ? that.list.children('.iscroll_sub_div') : that.list;
-		
-		//add spinner at the top if there are more pages in between
-		if(i_lastPage - that.currentPage > 1){
-			if(!$('#'+that.id_pageLoadSpinner).length){
-				elem_iscroll.append($('#-skylist_pageLoadSpinner').clone().prop('id', that.id_pageLoadSpinner));
+	setTimeout(function(that){
+		//var that = this;
+		var i_lastPage = that.Lincko_itemsList_paged.length - 1;
+		if(that.currentPage >= i_lastPage){ return; } //last page already added
+		else {
+			var elem_iscroll = that.list.children('.iscroll_sub_div').length ? that.list.children('.iscroll_sub_div') : that.list;
+			
+			//add spinner at the top if there are more pages in between
+			if(i_lastPage - that.currentPage > 1){
+				if(!$('#'+that.id_pageLoadSpinner).length){
+					elem_iscroll.append($('#-skylist_pageLoadSpinner').clone().prop('id', that.id_pageLoadSpinner));
+				}
+			} else {
+				$('#'+that.id_pageLoadSpinner).remove();
 			}
-		} else {
-			$('#'+that.id_pageLoadSpinner).remove();
-		}
 
-		//add cards
-		var elem_tmp = $('<div>');
-		$.each(that.Lincko_itemsList_paged[i_lastPage], function(i, item){
-			if(!that.inputterAddedItems[item.temp_id]){ //dont add if was added by inputter
-				elem_tmp.append(that.addCard(item));
+			//add cards
+			var elem_tmp = $('<div>');
+			$.each(that.Lincko_itemsList_paged[i_lastPage], function(i, item){
+				if(!that.inputterAddedItems[item.temp_id]){ //dont add if was added by inputter
+					elem_tmp.append(that.addCard(item));
+				}
+			});
+
+			//add cards from temp div to iscroll
+			elem_tmp = elem_tmp.children();
+			if(elem_tmp.length){
+				elem_iscroll.append(elem_tmp);
 			}
-		});
 
-		//add cards from temp div to iscroll
-		elem_tmp = elem_tmp.children();
-		if(elem_tmp.length){
-			elem_iscroll.append(elem_tmp);
+			//record that the page was loaded into DOM
+			that.pagesLoaded[i_lastPage] = true;
+
+			that.currentPage = i_lastPage;
+			that.reversePaging = true;
+			that.DOM_updated();
 		}
-
-
-
-		//record that the page was loaded into DOM
-		that.pagesLoaded[i_lastPage] = true;
-
-		that.currentPage = i_lastPage;
-		that.reversePaging = true;
-		that.DOM_updated();
-	}
+	}, 10, this);
 }
 
 skylist.prototype.addCard_all = function(){

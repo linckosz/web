@@ -6,12 +6,12 @@
 	</script>
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/app/project.css') }}" type="text/css" />
 </div>
-<div id="app_project_content" class="app_project_content app_application_width_child base_color_bg_main base_color_bg_main_gradient base_color_text_white">
+<div id="app_project_content" class="app_project_content app_application_width_child base_color_bg_main base_color_bg_main_gradient customize base_color_text_white">
 	<div class="app_project_div_content app_application_width_child overthrow">
 		<div id="app_project_top">
 			<div id="app_project_header">
 				<div id="app_project_settings" title="{{ _trans('app', 2, 2, 'html') }}{# Settings #}" class="icon-Settings app_project_settings"></div>
-				<div id="app_project_logo">{{ title|ucfirst }}</div>
+				<div id="app_project_logo"><span id="app_project_logo_span">{{ title|ucfirst }}</span></div>
 			</div>
 			<div class="app_project_line_first minTablet display_none"><div></div></div>
 			<div class="app_project_space minTablet display_none"></div>
@@ -71,7 +71,7 @@
 				{% for i in 0..4 %}
 					<div id="app_project_item_chats_{{ i }}" name="_" timestamp="-1" class="base_MainElementText app_project_chats_item display_none">
 						<div>
-							<div find="app_project_chats_picture" class="app_project_chats_picture base_color_text_linckoOrange_dark">
+							<div find="app_project_chats_picture" class="app_project_chats_picture base_color_text_linckoOrange_dark customize">
 								<div find="app_project_chats_notif" class="app_project_chats_notif display_none"></div>
 							</div>
 							<div find="app_project_chats_date" class="app_project_chats_date"></div>

@@ -1187,7 +1187,11 @@ Lincko.storage.getSettings = function(){
 	if(!Lincko.storage.settingsLocal){
 		var settings = Lincko.storage.get("settings", wrapper_localstorage.uid);
 		if(settings && typeof settings['setup'] != 'undefined'){
-			Lincko.storage.settingsLocal = JSON.parse(settings['setup']);
+			try {
+				Lincko.storage.settingsLocal = JSON.parse(settings['setup']);
+			} catch(e) {
+				Lincko.storage.settingsLocal = false;
+			}
 		}
 	}
 	return Lincko.storage.settingsLocal;
@@ -2669,6 +2673,14 @@ Lincko.storage.getProfileRaw = function(uid, timestamp){
 	return top.location.protocol+'//'+document.linckoBack+'file.'+document.domainRoot+':'+document.linckoBackPort+'/file/profile/'+workid+'/'+uid+'?'+timestamp;
 }
 
+Lincko.storage.getWorkspaceRaw = function(timestamp){
+	if(typeof timestamp == 'undefined'){
+		timestamp = new wrapper_date().timestamp; //Always refresh
+	}
+	var workid = Lincko.storage.getWORKID();
+	return top.location.protocol+'//'+document.linckoBack+'file.'+document.domainRoot+':'+document.linckoBackPort+'/file/workspace/'+workid+'?'+timestamp;
+}
+
 
 Lincko.storage.getLink = function(id){
 	var file = Lincko.storage.get('files', id);
@@ -2978,37 +2990,37 @@ JSfiles.finish(function(){
 					if(match.length==2){
 						category = match[0];
 						item = match[1];
+						loop = false;
 					}
 				}
 				if(field.indexOf('#')>0){ //@ equals to a subfolder, it helps to limit the caculation for local storage
 					var match = field.split("#");
 					if(match.length==2){
 						category = match[0];
-						item = match[1];
 						loop = true;
 					}
 				}
 				if(item){
-					if(typeof Lincko.storage.data[category] == "undefined"){
-						Lincko.storage.data[category] = {};
-					}
 					var decrypt = wrapper_localstorage.decrypt("data_"+field);
 					if(decrypt){
-						if(loop){
-							if(typeof Lincko.storage.data[category][item] == "undefined"){
-								Lincko.storage.data[category][item] = {};
-							}
-							for(var id in decrypt){
-								Lincko.storage.data[category][item][id] = decrypt[id];
-							}
-						} else {
-							Lincko.storage.data[category][item] = decrypt;
+						if(typeof Lincko.storage.data[category] == "undefined"){
+							Lincko.storage.data[category] = {};
 						}
+						Lincko.storage.data[category][item] = decrypt;
 					}
 				} else {
 					var decrypt = wrapper_localstorage.decrypt("data_"+field);
 					if(decrypt){
-						Lincko.storage.data[category] = decrypt;
+						if(loop){
+							if(typeof Lincko.storage.data[category] == "undefined"){
+								Lincko.storage.data[category] = {};
+							}
+							for(var id in decrypt){
+								Lincko.storage.data[category][id] = decrypt[id];
+							}
+						} else {
+							Lincko.storage.data[category] = decrypt;
+						}
 					}
 				}
 			}

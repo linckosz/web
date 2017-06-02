@@ -390,6 +390,7 @@ $(function () {
 
 		//data => File object
 		submit: function (e, data) {
+			clearInterval(app_upload_start_interval[data.lincko_files_index]);
 			app_upload_files.lincko_files[data.lincko_files_index].lincko_status = 'uploading';
 			var parent_type = app_upload_files.lincko_files[data.lincko_files_index].lincko_parent_type;
 			var parent_id = app_upload_files.lincko_files[data.lincko_files_index].lincko_parent_id;
@@ -437,6 +438,7 @@ $(function () {
 				$('#app_upload_fileupload').fileupload('option').progressall(e, this);
 				app_application_lincko.prepare('upload', true, false, true); //procedural launch
 				delete app_upload_files.lincko_files[data.lincko_files_index];
+				clearInterval(app_upload_start_interval[data.lincko_files_index]);
 				that.reindex(e, this);
 				app_application_lincko.prepare('files');
 				//Force to update elements if the function is available
@@ -523,6 +525,7 @@ $(function () {
 				app_upload_files.lincko_files[data.lincko_files_index].lincko_status = 'error';
 				app_upload_files.lincko_files[data.lincko_files_index].lincko_error = Lincko.Translation.get('app', 18, 'html'); //Server error
 			}
+			clearInterval(app_upload_start_interval[data.lincko_files_index]);
 			$('#app_upload_fileupload').fileupload('option').progressall(e, this);
 		},
 
@@ -536,6 +539,7 @@ $(function () {
 			app_application_lincko.prepare('upload', true, false, true); //procedural launch
 			$('#app_upload_fileupload').fileupload('option').progressall(e, this);
 			delete app_upload_files.lincko_files[data.lincko_files_index];
+			clearInterval(app_upload_start_interval[data.lincko_files_index]);
 			that.reindex(e, this);
 			$('#app_upload_fileupload').fileupload('option').progressall(e, this);
 		},
