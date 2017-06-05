@@ -3386,21 +3386,24 @@ skylist.prototype.menu_construct_add_peopleDropdown = function(){
 		return elem_person;
 	}
 
-
-	var users = Lincko.storage.sort_items(Lincko.storage.list('users'), '-username');
-	for(var i in users){
-		if(that.Lincko_itemsList_filter.people && users[i]._id == that.Lincko_itemsList_filter.people){
-			elem_selected.append(return_elem_dropdownBlock(users[i]._id));
-			elem_dropdown.append(return_elem_dropdownBlock(users[i]._id).addClass('display_none'));
-		} else {
-			elem_dropdown.append(return_elem_dropdownBlock(users[i]._id));
-		}
+	var u_all = [null];
+	//build list of users
+	if(false/*paid version*/){
+		$.each(Lincko.storage.sort_items(Lincko.storage.list('users'), '-username'), function(i, user){
+			u_all.push(user._id);
+		});
+	} else { //free version
+		u_all.push(wrapper_localstorage.uid);
 	}
 
-	if(that.Lincko_itemsList_filter.people == null){
-		elem_selected.append(return_elem_dropdownBlock(null));
-	} else {
-		elem_dropdown.prepend(return_elem_dropdownBlock(null));
+	//add to DOM
+	for(var i in u_all){
+		if(u_all[i] == that.Lincko_itemsList_filter.people){
+			elem_dropdown.append(return_elem_dropdownBlock(u_all[i]).addClass('display_none'));
+			elem_selected.append(return_elem_dropdownBlock(that.Lincko_itemsList_filter.people));
+		} else {
+			elem_dropdown.append(return_elem_dropdownBlock(u_all[i]));
+		}
 	}
 
 	elem_selected.click({elem_dropdown: elem_dropdown}, function(evt){
