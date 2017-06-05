@@ -792,7 +792,9 @@ burger_list.in_charge = function(lincko_type, lincko_id){
 		addClass: 'burger_option_users burger_option_inviteUser',
 	}
 
-	userList.push(inviteNewUser);
+	if(Lincko.storage.getWORKID()==0 || Lincko.storage.amIadmin()){
+		userList.push(inviteNewUser);
+	}
 
 	return userList;
 }

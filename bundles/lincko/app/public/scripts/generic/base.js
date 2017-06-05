@@ -460,6 +460,8 @@ JSfiles.finish(function(){
 					event.stopPropagation();
 					app_upload_open_photo_single('workspaces', Lincko.storage.getWORKID(), false, true);
 				});
+			} else {
+				$('#app_content_top_contacts, .icon-AddPerson').addClass('display_none');
 			}
 			if(Lincko.storage.getWORKID()){
 				var workspace = Lincko.storage.get('workspaces', Lincko.storage.getWORKID());

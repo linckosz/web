@@ -3,6 +3,8 @@
 
 namespace libs;
 
+use Overtrue\Pinyin\Pinyin;
+
 class Ord_table {
 	// Hold an instance of the class
 	private static $instance;

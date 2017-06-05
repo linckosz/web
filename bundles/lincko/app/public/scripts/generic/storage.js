@@ -426,18 +426,17 @@ Lincko.storage.update = function(partial, info){
 		if(i.indexOf('_')!==0){ //Items
 			for(var j in partial[i]) {
 
-				/*
 				//remove line breaks added by php for 'comment' attribute of notes, and tasks objects
+				//If not, it will continously update a task comment each time we consult it because CKeditor does not have return lines
 				if(i == 'notes' || i == 'tasks'){
 					if(typeof partial[i][j]['-comment'] != 'undefined' && partial[i][j]['-comment']){
-						if(typeof Lincko.storage.data_nocache[i] == 'undefined'){ Lincko.storage.data_nocache[i] = {}; }
-						if(typeof Lincko.storage.data_nocache[i][j] == 'undefined'){ Lincko.storage.data_nocache[i][j] = {}; }
+						//if(typeof Lincko.storage.data_nocache[i] == 'undefined'){ Lincko.storage.data_nocache[i] = {}; }
+						//if(typeof Lincko.storage.data_nocache[i][j] == 'undefined'){ Lincko.storage.data_nocache[i][j] = {}; }
 						partial[i][j]['-comment'] = base_removeLineBreaks(partial[i][j]['-comment']);
-						Lincko.storage.data_nocache[i][j]['-comment'] = partial[i][j]['-comment'];
+						//Lincko.storage.data_nocache[i][j]['-comment'] = partial[i][j]['-comment'];
 						//delete partial[i][j]['-comment'];
 					}
 				}
-				*/
 
 				update_real = false;
 				new_item = false;
@@ -445,17 +444,7 @@ Lincko.storage.update = function(partial, info){
 				updatedAttributes = {};
 				updatedAttributes[currentRange] = {};
 				//If only update_at (parent->touch), we do not prepare for update
-				for(var k in partial[i][j]){
-					if(k.indexOf('-')===0 || k.indexOf('+')===0){
-						if(typeof Lincko.storage.data_abc[i] == 'undefined'){ Lincko.storage.data_abc[i] = {}; }
-						if(typeof Lincko.storage.data_abc[i][j] == 'undefined'){ Lincko.storage.data_abc[i][j] = {}; }
-						if(typeof partial[i][j]['search'] == 'object' && partial[i][j]['search'] != null && typeof partial[i][j]['search'][k] == 'string'){
-							Lincko.storage.data_abc[i][j][k] = partial[i][j]['search'][k];
-						} else if(typeof partial[i][j][k] == 'string' && partial[i][j][k]){
-							Lincko.storage.data_abc[i][j][k] = $('<div>'+partial[i][j][k]+'</div>').text().toLowerCase();
-						}
-					}
-				}
+
 				if(typeof Lincko.storage.data[i][j] != 'undefined'){
 					for(var k in partial[i][j]){
 						if(k!="_children" && k!="_id" && k!="type" && k!="created_at" && k!="created_by" && k!="updated_by"){
@@ -498,6 +487,8 @@ Lincko.storage.update = function(partial, info){
 				}
 
 				Lincko.storage.data[i][j] = partial[i][j];
+
+				Lincko.storage.buildABC(i, j);
 
 				if(_children){ Lincko.storage.data[i][j]._children = _children; }
 
@@ -675,6 +666,29 @@ Lincko.storage.update = function(partial, info){
 		wrapper_sendAction({workspace: wrapper_localstorage.workspace}, 'post', 'user/workspace');
 	}
 	return update;
+};
+
+Lincko.storage.buildABC = function(category, id){
+	for(var k in Lincko.storage.data[category][id]){
+		if(k.indexOf('-')===0 || k.indexOf('+')===0){
+			if(typeof Lincko.storage.data_abc[category] == 'undefined'){ Lincko.storage.data_abc[category] = {}; }
+			if(typeof Lincko.storage.data_abc[category][id] == 'undefined'){ Lincko.storage.data_abc[category][id] = {}; }
+			if(typeof Lincko.storage.data[category][id]['search'] == 'object' && Lincko.storage.data[category][id]['search'] != null && typeof Lincko.storage.data[category][id]['search'][k] == 'string'){
+				Lincko.storage.data_abc[category][id][k] = Lincko.storage.data[category][id]['search'][k];
+			} else if(typeof Lincko.storage.data[category][id][k] == 'string' && Lincko.storage.data[category][id][k]){
+				delete Lincko.storage.data_abc[category][id][k];
+				//Lincko.storage.data_abc[category][id][k] = $('<div>'+Lincko.storage.data[category][id][k]+'</div>').text().toLowerCase(); //toto => using jquery text convertion is killing CPU perf
+			}
+		}
+	}
+};
+
+Lincko.storage.buildABCall = function(){
+	for(var category in Lincko.storage.data){
+		for(var id in Lincko.storage.data[category]){
+			Lincko.storage.buildABC(category, id);
+		}
+	}
 };
 
 Lincko.storage.export = function(category, id){
@@ -3039,6 +3053,7 @@ JSfiles.finish(function(){
 					}
 				}
 			}
+			Lincko.storage.buildABCall();
 		});
 	}
 	if(!Lincko.storage.data){

@@ -44,9 +44,14 @@ submenu_list['chat'] = submenu_list['chat_list'] = {
 	"right_button": {
 		"style": "title_right_button",
 		"title": "",
-		"class": "base_pointer icon-AddPerson submenu_app_chat_title_right_button",
+		"class": "base_pointer icon-AddPerson submenu_app_chat_title_right_button display_none",
 		"action": function(Elem, subm) {
 			submenu_Build('chat_add_user', subm.layer+1, true, null, subm.preview);
+		},
+		"now": function(Elem, subm) {
+			if(Lincko.storage.getWORKID()==0 || Lincko.storage.amIadmin()){
+				Elem.removeClass('display_none');
+			}
 		},
 	},
 	//It will create a form with a validation button
@@ -147,7 +152,9 @@ Submenu.prototype.Add_ChatMenu = function() {
 		if(!$(this).hasClass('submenu_app_chat_chatmenu_icon_active')){
 			submenu_chat_select('contacts', Elem);
 			submenu_Clean(that.layer+1, true);
-			$("#"+that.id+"_submenu_top_button_right").removeClass("display_none");
+			if(Lincko.storage.getWORKID()==0 || Lincko.storage.amIadmin()){
+				$("#"+that.id+"_submenu_top_button_right").removeClass("display_none");
+			}
 			that.Wrapper().find("[find=submenu_wrapper_top]").find("[find=submenu_title]").html(Lincko.Translation.get('app', 2302, 'html')); //Contacts list
 			that.Add_ChatContacts();
 			$(window).resize();

@@ -18,7 +18,7 @@ submenu_list['app_projects_users_contacts'] = {
 	"right_button": {
 		"style": "title_right_button",
 		"title": "",
-		"class": "base_pointer icon-AddPerson submenu_app_chat_title_right_button",
+		"class": "base_pointer icon-AddPerson submenu_app_chat_title_right_button display_none",
 		"action": function(Elem, subm) {
 			var param = {
 				prevSub: subm,
@@ -35,6 +35,9 @@ submenu_list['app_projects_users_contacts'] = {
 			//hide invite new user button if no invite_access (because can't auto add them to project after invite)
 			if(!subm.param || (typeof subm.param == 'object' && !subm.param.invite_access)){
 				Elem.addClass('display_none');
+			}
+			if(Lincko.storage.getWORKID()==0 || Lincko.storage.amIadmin()){
+				Elem.removeClass('display_none');
 			}
 		},
 	},
@@ -165,7 +168,7 @@ var app_projects_users_contacts_init = function(subm){
 								grant = true;
 							}
 						}
-						if(grant && Lincko.storage.getWORKID()>0 && Lincko.storage.canI('edit', 'workspaces', Lincko.storage.getWORKID()) && this.action_param.value != wrapper_localstorage.uid){
+						if(grant && Lincko.storage.getWORKID()>0 && Lincko.storage.canI('edit', 'projects', projects_id) && this.action_param.value != wrapper_localstorage.uid){
 							Elem.removeClass('display_none');
 							Elem.find("[find=submenu_radio_text]").addClass('submenu_radio_text_sub_click');
 							var select_id = subm.id+"_"+md5(Math.random());

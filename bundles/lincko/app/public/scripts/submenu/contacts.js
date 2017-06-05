@@ -651,18 +651,19 @@ Submenu.prototype.Add_ContactContents = function(live) {
 		position.append(Elem);
 	}
 
-
-	if(that.param.project_id && !Lincko.storage.get('projects',that.param.project_id,'personal_private')){
-		var elem_addTeammates = $('<div class="submenu_contacts_addTeammates"></div>').text(Lincko.Translation.get('app', 31, 'html')/*Add Teammates*/).click(function(){
-			var param = {
-				pid: that.param.project_id,
-				invite_access: {
-					projects: that.param.project_id,
-				},
-			}
-			submenu_Build('app_projects_users_contacts',  that.layer, false, param);
-		}).prepend('<span find="icon" class="icon-AddPerson"></span>');
-		submenu_wrapper.children('[find=submenu_wrapper_bottom]').addClass('submenu_wrapper_bottom_contacts_hasAddTeammates').append(elem_addTeammates);
-	}	
+	if(Lincko.storage.getWORKID()==0 || Lincko.storage.amIadmin()){
+		if(that.param.project_id && !Lincko.storage.get('projects',that.param.project_id,'personal_private')){
+			var elem_addTeammates = $('<div class="submenu_contacts_addTeammates"></div>').text(Lincko.Translation.get('app', 31, 'html')/*Add Teammates*/).click(function(){
+				var param = {
+					pid: that.param.project_id,
+					invite_access: {
+						projects: that.param.project_id,
+					},
+				}
+				submenu_Build('app_projects_users_contacts',  that.layer, false, param);
+			}).prepend('<span find="icon" class="icon-AddPerson"></span>');
+			submenu_wrapper.children('[find=submenu_wrapper_bottom]').addClass('submenu_wrapper_bottom_contacts_hasAddTeammates').append(elem_addTeammates);
+		}
+	}
 
 }
