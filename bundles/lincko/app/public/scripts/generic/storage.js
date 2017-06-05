@@ -1106,11 +1106,26 @@ Lincko.storage.amIsuper = function(){
 	return false;
 }
 
+Lincko.storage.amIadmin = function(category, id){
+	if(Lincko.storage.amIsuper()){
+		return true;
+	}
+	if(typeof category == 'undefined' || typeof id == 'undefined'){
+		category = 'workspaces';
+		id = Lincko.storage.getWORKID();
+	}
+	var role = Lincko.storage.userRole(wrapper_localstorage.uid, category, id);
+	if(role && role['_id']==1){
+		return true;
+	}
+	return false;
+}
+
 Lincko.storage.userRole = function(user_id, category, id){
 	if(typeof user_id == 'undefined'){
 		user_id = wrapper_localstorage.uid;
 	}
-	if(typeof category == 'undefined'){
+	if(typeof category == 'undefined' || typeof id == 'undefined'){
 		category = 'workspaces';
 		id = Lincko.storage.getWORKID();
 	}
@@ -1558,7 +1573,7 @@ Lincko.storage.getAllow = function(category, id){
 	var item;
 	var role;
 	var limit = 100; //by security limit to 100 loops
-	alert('Add comparison with authoization table, grant and owner, no need to scanne if maxi 0');
+	//console.log('Add comparison with authorization table, grant and owner, no need to scan if max 0');
 	while(item = Lincko.storage.get(category, id) && limit>0){
 		if(typeof item['_perm']!=='undefined'){
 			if(typeof item['_perm']['single']!=='undefined'){

@@ -630,15 +630,16 @@ function getCookie(cname) {
 <script src="{{ _filelatest('/translation/date.js') }}" type="text/javascript"></script>
 
 </head>
-
-<div id="wrapper_loading">
-	{% include '/bundles/lincko/wrapper/templates/loading.twig' %}
-</div>
-{% if user_info_2 == 'Wechat' and integration_wechat_show_official %}
-	<div id="wrapper_wechat" class="display_none">
-		{% include '/bundles/lincko/wrapper/templates/wechat.twig' %}
+<body id="body_lincko" class="base_color_text_white unselectable">
+	<div id="wrapper_loading">
+		{% include '/bundles/lincko/wrapper/templates/loading.twig' %}
 	</div>
-{% endif %}
-{% block base %}
-{% endblock %}
+	{% if user_info_2 == 'Wechat' and integration_wechat_show_official %}
+		<div id="wrapper_wechat" class="display_none">
+			{% include '/bundles/lincko/wrapper/templates/wechat.twig' %}
+		</div>
+	{% endif %}
+	{% block base %}
+	{% endblock %}
+</body>
 </html>

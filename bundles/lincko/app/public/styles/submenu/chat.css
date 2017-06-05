@@ -337,9 +337,13 @@
 	margin-top: 55px;
 }
 .submenu_app_chat_add_user_options [find=options_wrapper]{
+	/*
 	display:-moz-box;
     display:-webkit-box;
     display:box;
+    */
+    display: table;
+    table-layout: fixed;
     -moz-box-orient:horizontal;
     -webkit-box-orient:horizontal;
     box-orient:horizontal;
@@ -350,10 +354,13 @@
     color: #000000;
 }
 
-.submenu_app_chat_add_user_options [find=options_wrapper] > div{ 
+.submenu_app_chat_add_user_options [find=options_wrapper] > div {
+	/*
     -moz-box-flex:1;
     -webkit-box-flex:1;
     box-flex:1;
+    */
+    display: table-cell;
 }
 .submenu_app_chat_add_user_options [find=options_wrapper] > div:hover{
 	background-color: #FAFBFC;

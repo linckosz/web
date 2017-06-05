@@ -382,173 +382,177 @@ Submenu.prototype.Add_ChatContacts = function() {
 		delete Elem;
 	}
 
-	//Invitation
-	var div_id = that.id+"_submenu_app_chat_chat_invitation_div";
-	var div = $('#'+div_id);
-	if(div.length<=0){
-		div = $('<div>');
-		div.prop("id", div_id);
-		//submenu_wrapper.find("[find=submenu_wrapper_content]").append(div);
-		$('#'+that.id+"_submenu_app_chat_chat_contact_div").prepend(div);
-	}
+	if(Lincko.storage.getWORKID==0){ //Only for shared workspace
+		//Invitation
+		var div_id = that.id+"_submenu_app_chat_chat_invitation_div";
+		var div = $('#'+div_id);
+		if(div.length<=0){
+			div = $('<div>');
+			div.prop("id", div_id);
+			//submenu_wrapper.find("[find=submenu_wrapper_content]").append(div);
+			$('#'+that.id+"_submenu_app_chat_chat_contact_div").prepend(div);
+		}
 
-	if(invitation.length > 0){
-		var Elem = $('#-submenu_app_chat_new_contact').clone();
-		var Elem_id = that.id+"_submenu_app_chat_chat_invitation";
-		if($('#'+Elem_id).length<=0){
-			Elem.prop("id", Elem_id);
-			if(invitation.length==1){
-				Elem.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2304, 'html')); //A user has invited you
-			} else {
-				Elem.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2318, 'html')); //Some users have invited you
+		if(invitation.length > 0){
+			var Elem = $('#-submenu_app_chat_new_contact').clone();
+			var Elem_id = that.id+"_submenu_app_chat_chat_invitation";
+			if($('#'+Elem_id).length<=0){
+				Elem.prop("id", Elem_id);
+				if(invitation.length==1){
+					Elem.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2304, 'html')); //A user has invited you
+				} else {
+					Elem.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2318, 'html')); //Some users have invited you
+				}
+				div.append(Elem);
+				delete Elem;
 			}
+		} else {
+			$('#'+that.id+"_submenu_app_chat_chat_invitation").recursiveRemove();
+		}
+
+		contacts = Lincko.storage.sort_items(invitation, '-username');
+		for(var i in contacts){
+			var Elem_id = that.id+"_submenu_app_chat_chat_invitation_"+contacts[i]['_id'];
+			delete exists_tab[Elem_id];
+			if($('#'+Elem_id).length>=1){
+				continue;
+			}
+			var Elem = $('#-submenu_app_chat_chat_contact').clone();
+			Elem.prop("id", Elem_id).attr("find", 'tab_contact').attr('uid', contacts[i]['_id']);
+			Elem.removeClass("submenu_deco").addClass("submenu_deco_read");
+			thumbnail = Lincko.storage.getLinkThumbnail(contacts[i]['profile_pic']);
+			if(thumbnail){
+				Elem.find("[find=picture_src]").css('background-image','url("'+thumbnail+'")');
+			} else if(contacts[i]['_id']==0){ //LinckoBot
+				Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_roboto.src+'")');
+			} else if(contacts[i]['_id']==1){ //Monkey King
+				Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_monkeyking.src+'")');
+			} else {
+				Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_single_user.src+'")');
+			}
+			Elem.find("[find=who]").html(wrapper_to_html(contacts[i]['-username']));
+			Elem.find("[find=invitation]").removeClass("display_none");
+			Elem.find("[find=invitation_accept]").removeClass("display_none").off('click').on("click", [contacts[i]['_id'], Elem_id], function(event) {
+				event.stopPropagation();
+				var users_id = event.data[0];
+				var param = {
+					id: wrapper_localstorage.uid,
+					"users>access": {},
+				};
+				param["users>access"][users_id] = true;
+				wrapper_sendAction(
+					param,
+					'post',
+					'user/update',
+					function(){
+						app_application_lincko.prepare('contacts_list', true);
+						app_application_action(10, users_id); //Accept invitation
+					}
+				);
+				Lincko.storage.data['users'][users_id]['_invitation'] = false;
+				Lincko.storage.data['users'][users_id]['_visible'] = true;
+				app_application_lincko.prepare('contacts_list', true);
+			});
+			Elem.find("[find=invitation_reject]").removeClass("display_none").off('click').on("click", [contacts[i]['_id'], Elem_id], function(event) {
+				event.stopPropagation();
+				var users_id = event.data[0];
+				var param = {
+					id: wrapper_localstorage.uid,
+					"users>access": {},
+				};
+				param["users>access"][users_id] = false;
+				wrapper_sendAction(
+					param,
+					'post',
+					'user/update',
+					function(){
+						app_application_lincko.prepare('contacts_list', true);
+						app_application_action(11, users_id); //Reject invitation
+					}
+				);
+				Lincko.storage.data['users'][users_id]['_invitation'] = false;
+				Lincko.storage.data['users'][users_id]['_visible'] = false;
+				app_application_lincko.prepare('contacts_list', true);
+			});
 			div.append(Elem);
 			delete Elem;
 		}
-	} else {
-		$('#'+that.id+"_submenu_app_chat_chat_invitation").recursiveRemove();
-	}
 
-	contacts = Lincko.storage.sort_items(invitation, '-username');
-	for(var i in contacts){
-		var Elem_id = that.id+"_submenu_app_chat_chat_invitation_"+contacts[i]['_id'];
-		delete exists_tab[Elem_id];
-		if($('#'+Elem_id).length>=1){
-			continue;
+		//Pending invitations
+		var div_id = that.id+"_submenu_app_chat_chat_pending_div";
+		var div = $('#'+div_id);
+		if(div.length<=0){
+			div = $('<div>');
+			div.prop("id", div_id);
+			//submenu_wrapper.find("[find=submenu_wrapper_content]").append(div);
+			$('#'+that.id+"_submenu_app_chat_chat_contact_div").prepend(div);
 		}
-		var Elem = $('#-submenu_app_chat_chat_contact').clone();
-		Elem.prop("id", Elem_id).attr("find", 'tab_contact').attr('uid', contacts[i]['_id']);
-		Elem.removeClass("submenu_deco").addClass("submenu_deco_read");
-		thumbnail = Lincko.storage.getLinkThumbnail(contacts[i]['profile_pic']);
-		if(thumbnail){
-			Elem.find("[find=picture_src]").css('background-image','url("'+thumbnail+'")');
-		} else if(contacts[i]['_id']==0){ //LinckoBot
-			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_roboto.src+'")');
-		} else if(contacts[i]['_id']==1){ //Monkey King
-			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_monkeyking.src+'")');
-		} else {
-			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_single_user.src+'")');
+
+		var pending = Lincko.storage.get('users', wrapper_localstorage.uid);
+		pending = pending['pending'];
+		pending = Lincko.storage.sort_items(pending, 0);
+		var pending_length = 0;
+		for(var i in pending){
+			pending_length++;
 		}
-		Elem.find("[find=who]").html(wrapper_to_html(contacts[i]['-username']));
-		Elem.find("[find=invitation]").removeClass("display_none");
-		Elem.find("[find=invitation_accept]").removeClass("display_none").off('click').on("click", [contacts[i]['_id'], Elem_id], function(event) {
-			event.stopPropagation();
-			var users_id = event.data[0];
-			var param = {
-				id: wrapper_localstorage.uid,
-				"users>access": {},
-			};
-			param["users>access"][users_id] = true;
-			wrapper_sendAction(
-				param,
-				'post',
-				'user/update',
-				function(){
-					app_application_lincko.prepare('contacts_list', true);
-					app_application_action(10, users_id); //Accept invitation
+		if(pending_length > 0){
+			var Elem = $('#-submenu_app_chat_new_contact').clone();
+			var Elem_id = that.id+"_submenu_app_chat_chat_pending";
+			if($('#'+Elem_id).length<=0){
+				Elem.prop("id", Elem_id);
+				if(pending_length==1){
+					Elem.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2321, 'html')); //Pending
+				} else {
+					Elem.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2321, 'html')); //Pending
 				}
-			);
-			Lincko.storage.data['users'][users_id]['_invitation'] = false;
-			Lincko.storage.data['users'][users_id]['_visible'] = true;
-			app_application_lincko.prepare('contacts_list', true);
-		});
-		Elem.find("[find=invitation_reject]").removeClass("display_none").off('click').on("click", [contacts[i]['_id'], Elem_id], function(event) {
-			event.stopPropagation();
-			var users_id = event.data[0];
-			var param = {
-				id: wrapper_localstorage.uid,
-				"users>access": {},
-			};
-			param["users>access"][users_id] = false;
-			wrapper_sendAction(
-				param,
-				'post',
-				'user/update',
-				function(){
-					app_application_lincko.prepare('contacts_list', true);
-					app_application_action(11, users_id); //Reject invitation
-				}
-			);
-			Lincko.storage.data['users'][users_id]['_invitation'] = false;
-			Lincko.storage.data['users'][users_id]['_visible'] = false;
-			app_application_lincko.prepare('contacts_list', true);
-		});
-		div.append(Elem);
-		delete Elem;
-	}
-
-	//Pending invitations
-	var div_id = that.id+"_submenu_app_chat_chat_pending_div";
-	var div = $('#'+div_id);
-	if(div.length<=0){
-		div = $('<div>');
-		div.prop("id", div_id);
-		//submenu_wrapper.find("[find=submenu_wrapper_content]").append(div);
-		$('#'+that.id+"_submenu_app_chat_chat_contact_div").prepend(div);
-	}
-
-	var pending = Lincko.storage.get('users', wrapper_localstorage.uid, 'pending');
-	pending = Lincko.storage.sort_items(pending, 0);
-	var pending_length = 0;
-	for(var i in pending){
-		pending_length++;
-	}
-	if(pending_length > 0){
-		var Elem = $('#-submenu_app_chat_new_contact').clone();
-		var Elem_id = that.id+"_submenu_app_chat_chat_pending";
-		if($('#'+Elem_id).length<=0){
-			Elem.prop("id", Elem_id);
-			if(pending_length==1){
-				Elem.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2321, 'html')); //Pending
-			} else {
-				Elem.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2321, 'html')); //Pending
+				div.append(Elem);
+				delete Elem;
 			}
+		} else {
+			$('#'+that.id+"_submenu_app_chat_chat_pending").recursiveRemove();
+		}
+
+		for(var i in pending){
+			var Elem_id = that.id+"_submenu_app_chat_chat_pending_"+i;
+			delete exists_tab[Elem_id];
+			if($('#'+Elem_id).length>=1){
+				continue;
+			}
+			var Elem = $('#-submenu_app_chat_chat_contact').attr("find", 'tab_contact').clone();
+			Elem.prop("id", Elem_id).attr('uid', i);
+			Elem.removeClass("submenu_deco").addClass("submenu_deco_read");
+			thumbnail = Lincko.storage.getLinkThumbnail(pending[i][1]);
+			if(thumbnail){
+				Elem.find("[find=picture_src]").css('background-image','url("'+thumbnail+'")');
+			} else if(i==0){ //LinckoBot
+				Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_roboto.src+'")');
+			} else if(i==1){ //Monkey King
+				Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_monkeyking.src+'")');
+			} else {
+				Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_single_user.src+'")');
+			}
+			Elem.find("[find=who]").html(wrapper_to_html(pending[i][0]));
+			Elem.find("[find=invitation]").removeClass("display_none");
+			Elem.find("[find=invitation_resend]").removeClass("display_none").off('click').on("click", [i, Elem_id], function(event) {
+				var param = {
+					exists: true,
+					users_id: event.data[0],
+				}
+				wrapper_sendAction(
+					param,
+					'post',
+					'user/invite',
+					null,
+					null,
+					function(){
+						base_show_error(Lincko.Translation.get('app', 2309, 'js')); //Your invitation has been sent.
+					}
+				);
+			});
 			div.append(Elem);
 			delete Elem;
 		}
-	} else {
-		$('#'+that.id+"_submenu_app_chat_chat_pending").recursiveRemove();
-	}
 
-	for(var i in pending){
-		var Elem_id = that.id+"_submenu_app_chat_chat_pending_"+i;
-		delete exists_tab[Elem_id];
-		if($('#'+Elem_id).length>=1){
-			continue;
-		}
-		var Elem = $('#-submenu_app_chat_chat_contact').attr("find", 'tab_contact').clone();
-		Elem.prop("id", Elem_id).attr('uid', i);
-		Elem.removeClass("submenu_deco").addClass("submenu_deco_read");
-		thumbnail = Lincko.storage.getLinkThumbnail(pending[i][1]);
-		if(thumbnail){
-			Elem.find("[find=picture_src]").css('background-image','url("'+thumbnail+'")');
-		} else if(i==0){ //LinckoBot
-			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_roboto.src+'")');
-		} else if(i==1){ //Monkey King
-			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_monkeyking.src+'")');
-		} else {
-			Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_single_user.src+'")');
-		}
-		Elem.find("[find=who]").html(wrapper_to_html(pending[i][0]));
-		Elem.find("[find=invitation]").removeClass("display_none");
-		Elem.find("[find=invitation_resend]").removeClass("display_none").off('click').on("click", [i, Elem_id], function(event) {
-			var param = {
-				exists: true,
-				users_id: event.data[0],
-			}
-			wrapper_sendAction(
-				param,
-				'post',
-				'user/invite',
-				null,
-				null,
-				function(){
-					base_show_error(Lincko.Translation.get('app', 2309, 'js')); //Your invitation has been sent.
-				}
-			);
-		});
-		div.append(Elem);
-		delete Elem;
 	}
 
 	//Delete elements that should not be in the list
@@ -787,34 +791,42 @@ var submenu_chat_add_user_options_build = function(elem, subm){
 	if(base_is_wechat){
 		elem.addClass('submenu_app_chat_add_user_options_wxMargin');
 	}
-	submenu_chat_add_user_options_build_btn.myURL(elem.find('[find=btn_myURL]'), subm);
+	if(Lincko.storage.getWORKID==0){
+		submenu_chat_add_user_options_build_btn.myURL(elem.find('[find=btn_myURL]'), subm);
+	} else {
+		elem.find('[find=btn_myURL]').addClass('display_none');
+	}
 	submenu_chat_add_user_options_build_btn.myQR(elem.find('[find=btn_myQR]'));
 	submenu_chat_add_user_options_build_btn.scan(elem.find('[find=btn_scan]'), subm);
 }
 
 var submenu_chat_add_user_options_build_btn = {
 	myURL: function(elem, subm){
-		elem.attr('data-clipboard-text', Lincko.storage.generateMyURL());
-		var myurl = new Clipboard(elem[0]);
-		myurl.on('success', function(e) {
-			base_show_error(Lincko.Translation.get('app', 70, 'html'), false); //URL copied to the clipboard
-			e.clearSelection();
-		});
-		myurl.on('error', function(e) {
-			base_show_error(Lincko.Translation.get('app', 71, 'html'), true); //Your system does not allow to copy to the clipboard
-			e.clearSelection();
-		});
-		app_application_lincko.add(
-			subm.id,
-			['submenu_hide_'+subm.preview+'_'+subm.id, 'myURL_fake'/*there are more than 1 sync function with same id and range*/],
-			function(){
-				var myurl = this.action_param;
-				if(myurl){
-					myurl.destroy();
-				}
-			},
-			myurl
-		);
+		if(Lincko.storage.getWORKID==0){
+			elem.attr('data-clipboard-text', Lincko.storage.generateMyURL());
+			var myurl = new Clipboard(elem[0]);
+			myurl.on('success', function(e) {
+				base_show_error(Lincko.Translation.get('app', 70, 'html'), false); //URL copied to the clipboard
+				e.clearSelection();
+			});
+			myurl.on('error', function(e) {
+				base_show_error(Lincko.Translation.get('app', 71, 'html'), true); //Your system does not allow to copy to the clipboard
+				e.clearSelection();
+			});
+			app_application_lincko.add(
+				subm.id,
+				['submenu_hide_'+subm.preview+'_'+subm.id, 'myURL_fake'/*there are more than 1 sync function with same id and range*/],
+				function(){
+					var myurl = this.action_param;
+					if(myurl){
+						myurl.destroy();
+					}
+				},
+				myurl
+			);
+		} else {
+			base_show_error(Lincko.Translation.get('app', 51, 'html'), true); //Operation not allowed
+		}
 	},
 	myQR: function(elem, elem_QR_popup){
 		elem.click(function(){
@@ -1037,7 +1049,7 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 				submenu_chat_search.find_qrcode(submenu_chat_search.data.sub_that, data[1]);
 			} else {
 				var target = "_blank";
-				var domain = top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domainRoot;
+				var domain = top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain;
 				if(url_code.indexOf(domain) === 0){ //same tab, same domain
 					target = "_top";
 				}

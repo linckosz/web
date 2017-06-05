@@ -166,6 +166,7 @@ $app->lincko->data = array(
 	'workspace' => '',
 	'lincko_back' => '', //Only used for development purpose "master-[bruno.]lincko.cafe"
 	'lincko_front' => '', //Only used for development purpose "[master-]bruno.lincko.cafe"
+	'subdomain' => '',
 	'lincko_show_dev' => 'false', //Display some error for developpers on JS (NOTE: it has to be a string because of Twig conversion to JS)
 	'api_upload' => 'lknscklb798w98eh9cwde8bc897q09wj',
 	'link_reset' => false,
@@ -238,11 +239,20 @@ if(empty($_SERVER['LINCKO_BACK'])){
 } else {
 	$subdomain .= '-'.$_SERVER['LINCKO_BACK'];
 }
-$app->lincko->data['domain_debug'] = $subdomain.'.'.$app->lincko->domain;
+if(!empty($app->lincko->data['workspace'])){
+	$subdomain .= '.'.$app->lincko->data['workspace'];
+}
+if(!empty($subdomain)){
+	$subdomain .= '.';
+}
+
+$app->lincko->data['subdomain'] = $subdomain;
 if($app->lincko->domain=='lincko.com'){
 	$app->lincko->data['domain_debug'] = false;
 } else if($app->lincko->domain=='lincko.co'){
 	$app->lincko->data['domain_debug'] = $app->lincko->domain;
+} else {
+	$app->lincko->data['domain_debug'] = $subdomain.$app->lincko->domain;
 }
 
 ////////////////////////////////////

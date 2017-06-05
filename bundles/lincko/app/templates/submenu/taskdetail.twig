@@ -13,8 +13,10 @@
 
 <div id="-submenu_taskdetail_description" class="submenu_taskdetail_description">
 	<table class="submenu_taskdetail_collapsable_button submenu_taskdetail_paddingLeft">
-		<td find="icon_arrow" class="icon-Accordion base_color_text_linckoOrange"></td>
-		<td>{{ _trans('app', 10, 4, 'html') }}{#description#}</td>
+		<tr>
+			<td find="icon_arrow" class="icon-Accordion base_color_text_linckoOrange"></td>
+			<td>{{ _trans('app', 10, 4, 'html') }}{#description#}</td>
+		</tr>
 	</table>
 	<div find="description_text" contenteditable="true" class="needsclick selectable submenu_taskdetail_collapsable_content submenu_taskdetail_paddingLeft" tabindex="2"></div>
 </div>
@@ -106,16 +108,20 @@
 
 <div id="-submenu_taskdetail_subtasks" class="submenu_taskdetail_subtasks">
 	<table class="submenu_taskdetail_collapsable_button submenu_taskdetail_paddingLeft">
-		<td find="icon_arrow" class="icon-Accordion base_color_text_linckoOrange"></td>
-		<td>{{ _trans('app', 13, 12, 'html') }}{# Subtasks #}</td>
-		<td>(<span find="subtaskCount"></span>)</td>
-		<td class="fa fa-sitemap" find="icomoon"></td>
+		<tr>
+			<td find="icon_arrow" class="icon-Accordion base_color_text_linckoOrange"></td>
+			<td>{{ _trans('app', 13, 12, 'html') }}{# Subtasks #}</td>
+			<td>(<span find="subtaskCount"></span>)</td>
+			<td class="fa fa-sitemap" find="icomoon"></td>
+		</tr>
 	</table>
 	<div find="subtasks_wrapper" class="needsclick submenu_taskdetail_collapsable_content">
 	</div>
 	<table find="newSubtask" class="display_none submenu_taskdetail_paddingLeft submenu_taskdetail_subtasks_card">
-		<td find="checkbox_td"><span find="checkbox" class="fa fa-check"></span></td>
-		<td><div find="title" contenteditable="true"></div></td>
+		<tr>
+			<td find="checkbox_td"><span find="checkbox" class="fa fa-check"></span></td>
+			<td><div find="title" contenteditable="true"></div></td>
+		</tr>
 	</table>
 	<div find="subtasks_btns" class="submenu_taskdetail_paddingLeft">
 		<span find="new_btn" class="skylist_clickable needsclick">{{ _trans('app', 13, 13, 'html') }}{#New Subtask #}</span>
@@ -140,10 +146,12 @@
 
 <div id="-submenu_taskdetail_links" class="submenu_taskdetail_links">
 	<table class="submenu_taskdetail_collapsable_button submenu_taskdetail_paddingLeft">
-		<td find="icon_arrow" class="icon-Accordion base_color_text_linckoOrange"></td>
-		<td>{{ _trans('app', 15, 1, 'html') }}{# Links #}</td>
-		<td>(<span find="linkCount"></span>)</td>
-		<td class="icon-links" find="icomoon"></td>
+		<tr>
+			<td find="icon_arrow" class="icon-Accordion base_color_text_linckoOrange"></td>
+			<td>{{ _trans('app', 15, 1, 'html') }}{# Links #}</td>
+			<td>(<span find="linkCount"></span>)</td>
+			<td class="icon-links" find="icomoon"></td>
+		</tr>
 	</table>
 	<div find="links_wrapper" class="needsclick submenu_taskdetail_collapsable_content">
 	</div>
@@ -175,10 +183,12 @@
 
 <div id="-submenu_taskdetail_comments" class="submenu_taskdetail_comments">
 	<table class="submenu_taskdetail_collapsable_button submenu_taskdetail_paddingLeft">
-		<td find="icon_arrow" class="icon-Accordion base_color_text_linckoOrange"></td>
-		<td>{{ _trans('app', 10, 3, 'html') }}{#comments#}</td>
-		<td>(<span find="commentCount"></span>)</td>
-		<td class="icon-Pencil" find="icomoon"></td>
+		<tr>
+			<td find="icon_arrow" class="icon-Accordion base_color_text_linckoOrange"></td>
+			<td>{{ _trans('app', 10, 3, 'html') }}{#comments#}</td>
+			<td>(<span find="commentCount"></span>)</td>
+			<td class="icon-Pencil" find="icomoon"></td>
+		</tr>
 	</table>
 	<div class="submenu_taskdetail_comments_seePrev">
 		<span find="seePrev_btn" class="submeu_taskdetail_blueButton display_none">{{ _trans('app', 14, 1, 'html') }}...{#See previous comments#}</span>
@@ -186,13 +196,15 @@
 	<div class="submenu_taskdetail_comments_main submenu_taskdetail_paddingLeft"></div>
 	<div class="submenu_taskdetail_addNewComment_wrapper submenu_taskdetail_paddingLeft">
 		<table find="addNewComment_bubble_wrapper" class="submenu_taskdetail_commentbubble display_none">
-			<td class="submenu_taskdetail_commentbubble_profile">
-				<div find="profile_pic"></div>
-				<div find="name"></div>
-			</td>
-			<td class="submenu_taskdetail_commentbubble_text">
-				<input type="text" find="addNewComment_text">
-			</td>
+			<tr>
+				<td class="submenu_taskdetail_commentbubble_profile">
+					<div find="profile_pic"></div>
+					<div find="name"></div>
+				</td>
+				<td class="submenu_taskdetail_commentbubble_text">
+					<input type="text" find="addNewComment_text">
+				</td>
+			</tr>
 		</table>
 		<span find='addNewComment_btn' class="submeu_taskdetail_blueButton">{{ _trans('app', 14, 2, 'html') }}{#Add new comment#}</span>
 	</div>
@@ -200,31 +212,35 @@
 
 
 <table id="-submenu_taskdetail_commentbubble" class="submenu_taskdetail_commentbubble">
-	<td find="comment_id" class="display_none"></td>
-	<td class="submenu_taskdetail_commentbubble_bar"></td>
-	<td class="submenu_taskdetail_commentbubble_profile">
-		<div find="profile_pic"></div>
-		<div find="name" class="ellipsis"></div>
-	</td>
-	<td class="submenu_taskdetail_commentbubble_text">
-		<input type="text" find="addNewComment_text" />
-		<div find="text" class="selectable"></div>
-		<div find="text_translated" class="display_none selectable"></div>
-		<div class="submenu_taskdetail_commentbubble_quickAction">
-			<span find="replyBtn" class="base_color_text_linckoOrange skylist_clickable">{{ _trans('app', 14, 3, 'html') }}{#Reply#}</span>
-			<span find="translateBtn" class="base_color_text_linckoOrange skylist_clickable"></span>
-			<span find="seeAllBtn" class="base_color_text_linckoOrange skylist_clickable display_none">{{ _trans('app', 14, 4, 'html') }}{#see all#}</span>
-			<span find="date"></span>
-		</div>
-	</td>
+	<tr>
+		<td find="comment_id" class="display_none"></td>
+		<td class="submenu_taskdetail_commentbubble_bar"></td>
+		<td class="submenu_taskdetail_commentbubble_profile">
+			<div find="profile_pic"></div>
+			<div find="name" class="ellipsis"></div>
+		</td>
+		<td class="submenu_taskdetail_commentbubble_text">
+			<input type="text" find="addNewComment_text" />
+			<div find="text" class="selectable"></div>
+			<div find="text_translated" class="display_none selectable"></div>
+			<div class="submenu_taskdetail_commentbubble_quickAction">
+				<span find="replyBtn" class="base_color_text_linckoOrange skylist_clickable">{{ _trans('app', 14, 3, 'html') }}{#Reply#}</span>
+				<span find="translateBtn" class="base_color_text_linckoOrange skylist_clickable"></span>
+				<span find="seeAllBtn" class="base_color_text_linckoOrange skylist_clickable display_none">{{ _trans('app', 14, 4, 'html') }}{#see all#}</span>
+				<span find="date"></span>
+			</div>
+		</td>
+	</tr>
 </table>
 
 <div id="-submenu_taskdetail_activity" class="submenu_taskdetail_activity submenu_taskdetail_collapsable_defaultCollapsed">
 	<table class="submenu_taskdetail_collapsable_button submenu_taskdetail_paddingLeft" toFeed="activity">
-		<td find="icon_arrow" class="icon-Accordion base_color_text_linckoOrange"></td>
-		<td>{{ _trans('app', 6, 3, 'html') }}{#Activity#}</td>
-		<td>(<span find="activityCount">0</span>)</td>
-		<td class="icon-projectActivity" find="icomoon"></td>
+		<tr>
+			<td find="icon_arrow" class="icon-Accordion base_color_text_linckoOrange"></td>
+			<td>{{ _trans('app', 6, 3, 'html') }}{#Activity#}</td>
+			<td>(<span find="activityCount">0</span>)</td>
+			<td class="icon-projectActivity" find="icomoon"></td>
+		</tr>
 	</table>
 	<div class="submenu_taskdetail_activity_main">
 		<ul class="chat_contents_wrapper submenu_taskdetail_paddingLeft"></ul>

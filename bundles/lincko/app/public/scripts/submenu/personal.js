@@ -69,7 +69,7 @@ submenu_list['personal_info'] = {
 			//For shared workspace, do not update others
 			if(!Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id){
 				return true;
-			} else if(Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id && !Lincko.storage.amIsuper()){
+			} else if(Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id && !Lincko.storage.amIadmin()){
 				return true;
 			}
 			var timer = wrapper_timeout_timer*10;
@@ -113,7 +113,7 @@ submenu_list['personal_info'] = {
 		},
 		"now": function(Elem, subm){
 			if(wrapper_localstorage.uid!=subm.param_namecard.parent_id){
-				if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+				if(!Lincko.storage.getWORKID() || !Lincko.storage.amIadmin()){
 					Elem.find("[find=submenu_value]")
 						.removeClass('selectable')
 						.addClass('unselectable')
@@ -143,7 +143,7 @@ submenu_list['personal_info'] = {
 			}
 			return role['+name'];
 		},
-		"now": function(Elem, subm){
+		"now": function(Elem, subm){debugger;
 			this.action_param.users_id = subm.param;
 			this.action_param.parent_id = Lincko.storage.getWORKID();
 			grant = false;
@@ -268,7 +268,7 @@ submenu_list['personal_info'] = {
 		"title": Lincko.Translation.get('app', 69, 'html'), //Copy My URL to the clipboard
 		"class": "submenu_deco display_none",
 		"now": function(Elem, subm){
-			if(subm.param == wrapper_localstorage.uid){
+			if(subm.param == wrapper_localstorage.uid && Lincko.storage.getWORKID()==0){
 				Elem.removeClass('display_none');
 				Elem.attr('data-clipboard-text', Lincko.storage.generateMyURL());
 				var myurl = new Clipboard(Elem[0]);
@@ -315,7 +315,7 @@ submenu_list['personal_info'] = {
 			//For shared workspace, do not update others
 			if(!Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id){
 				return true;
-			} else if(Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id && !Lincko.storage.amIsuper()){
+			} else if(Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id && !Lincko.storage.amIadmin()){
 				return true;
 			}
 			var timer = wrapper_timeout_timer*10;
@@ -360,11 +360,11 @@ submenu_list['personal_info'] = {
 		"now": function(Elem, subm){
 			if(wrapper_localstorage.uid!=subm.param_namecard.parent_id){
 				if(!subm.param_namecard.firstname){
-					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIadmin()){
 						Elem.addClass('display_none');
 					}
 				} else {
-					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIadmin()){
 						Elem.find("[find=submenu_value]")
 							.removeClass('selectable')
 							.addClass('unselectable')
@@ -396,7 +396,7 @@ submenu_list['personal_info'] = {
 			//For shared workspace, do not update others
 			if(!Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id){
 				return true;
-			} else if(Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id && !Lincko.storage.amIsuper()){
+			} else if(Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id && !Lincko.storage.amIadmin()){
 				return true;
 			}
 			var timer = wrapper_timeout_timer*10;
@@ -441,11 +441,11 @@ submenu_list['personal_info'] = {
 		"now": function(Elem, subm){
 			if(wrapper_localstorage.uid!=subm.param_namecard.parent_id){
 				if(!subm.param_namecard.lastname){
-					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIadmin()){
 						Elem.addClass('display_none');
 					}
 				} else {
-					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIadmin()){
 						Elem.find("[find=submenu_value]")
 							.removeClass('selectable')
 							.addClass('unselectable')
@@ -493,7 +493,7 @@ submenu_list['personal_info'] = {
 			//For shared workspace, do not update others
 			if(!Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id){
 				return true;
-			} else if(Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id && !Lincko.storage.amIsuper()){
+			} else if(Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id && !Lincko.storage.amIadmin()){
 				return true;
 			}
 			var timer = wrapper_timeout_timer*10;
@@ -523,12 +523,12 @@ submenu_list['personal_info'] = {
 		"now": function(Elem, subm){
 			if(wrapper_localstorage.uid!=subm.param_namecard.parent_id){
 				if(!subm.param_namecard.linkedin){
-					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIadmin()){
 						Elem.addClass('display_none');
 					}
 				} else {
 					var namecard = subm.param_namecard;
-					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIadmin()){
 						Elem.find("[find=submenu_value]")
 							.removeClass('selectable')
 							.addClass('unselectable')
@@ -571,7 +571,7 @@ submenu_list['personal_info'] = {
 			//For shared workspace, do not update others
 			if(!Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id){
 				return true;
-			} else if(Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id && !Lincko.storage.amIsuper()){
+			} else if(Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id && !Lincko.storage.amIadmin()){
 				return true;
 			}
 			var timer = wrapper_timeout_timer*10;
@@ -601,11 +601,11 @@ submenu_list['personal_info'] = {
 		"now": function(Elem, subm){
 			if(wrapper_localstorage.uid!=subm.param_namecard.parent_id){
 				if(!subm.param_namecard.phone){
-					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIadmin()){
 						Elem.addClass('display_none');
 					}
 				} else {
-					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIadmin()){
 						Elem.find("[find=submenu_value]")
 							.removeClass('selectable')
 							.addClass('unselectable')
@@ -640,7 +640,7 @@ submenu_list['personal_info'] = {
 			//For shared workspace, do not update others
 			if(!Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id){
 				return true;
-			} else if(Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id && !Lincko.storage.amIsuper()){
+			} else if(Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id && !Lincko.storage.amIadmin()){
 				return true;
 			}
 			var timer = wrapper_timeout_timer*10;
@@ -670,11 +670,11 @@ submenu_list['personal_info'] = {
 		"now": function(Elem, subm){
 			if(wrapper_localstorage.uid!=subm.param_namecard.parent_id){
 				if(!subm.param_namecard.address){
-					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIadmin()){
 						Elem.addClass('display_none');
 					}
 				} else {
-					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIadmin()){
 						Elem.find("[find=submenu_value]")
 							.removeClass('selectable')
 							.addClass('unselectable')
@@ -710,7 +710,7 @@ submenu_list['personal_info'] = {
 			//For shared workspace, do not update others
 			if(!Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id){
 				return true;
-			} else if(Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id && !Lincko.storage.amIsuper()){
+			} else if(Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id && !Lincko.storage.amIadmin()){
 				return true;
 			}
 			var timer = wrapper_timeout_timer*10;
@@ -740,11 +740,11 @@ submenu_list['personal_info'] = {
 		"now": function(Elem, subm){
 			if(wrapper_localstorage.uid!=subm.param_namecard.parent_id){
 				if(!subm.param_namecard.business){
-					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIadmin()){
 						Elem.addClass('display_none');
 					}
 				} else {
-					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIadmin()){
 						Elem.find("[find=submenu_value]")
 							.removeClass('selectable')
 							.addClass('unselectable')
@@ -780,7 +780,7 @@ submenu_list['personal_info'] = {
 			//For shared workspace, do not update others
 			if(!Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id){
 				return true;
-			} else if(Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id && !Lincko.storage.amIsuper()){
+			} else if(Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id && !Lincko.storage.amIadmin()){
 				return true;
 			}
 			var timer = wrapper_timeout_timer*10;
@@ -810,11 +810,11 @@ submenu_list['personal_info'] = {
 		"now": function(Elem, subm){
 			if(wrapper_localstorage.uid!=subm.param_namecard.parent_id){
 				if(!subm.param_namecard.additional){
-					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIadmin()){
 						Elem.addClass('display_none');
 					}
 				} else {
-					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIsuper()){
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIadmin()){
 						Elem.find("[find=submenu_value]")
 							.removeClass('selectable')
 							.addClass('unselectable')

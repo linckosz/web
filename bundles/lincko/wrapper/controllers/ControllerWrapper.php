@@ -31,6 +31,7 @@ class ControllerWrapper extends Controller {
 		'language' => 'en', //By default use English
 		'fingerprint' => '', //A way to identify which browser the user is using, help to avoid cookies copy/paste fraud
 		'workspace' => '', //the url (=ID unique string) of the workspace, by default use "Shared workspace"
+		'subdomain' => '', //keep track of full subdomain (bruno-bruno.toto)
 	);
 
 	public function __construct($data_bis=false, $force_method=false, $print=true, $format=false){
@@ -61,6 +62,7 @@ class ControllerWrapper extends Controller {
 		$this->json['language'] = $app->trans->getClientLanguage();
 		$this->json['fingerprint'] = $app->lincko->data['fingerprint'];
 		$this->json['workspace'] = $app->lincko->data['workspace'];
+		$this->json['subdomain'] = $app->lincko->data['subdomain'];
 		if(isset($_SESSION['workspace'])){
 			$this->json['workspace'] = $_SESSION['workspace'];
 		}

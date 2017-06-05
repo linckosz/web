@@ -455,7 +455,7 @@ JSfiles.finish(function(){
 	app_application_lincko.add(base_workspace_garbage, 'workspaces', function() {
 		//Enable to upload a picture for the logo
 		if(Lincko.storage.WORKID!==null){
-			if(Lincko.storage.amIsuper()){
+			if(Lincko.storage.amIadmin()){
 				$('#app_project_logo_span').addClass('base_pointer').click(function(event){
 					event.stopPropagation();
 					app_upload_open_photo_single('workspaces', Lincko.storage.getWORKID(), false, true);

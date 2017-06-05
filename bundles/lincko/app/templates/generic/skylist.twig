@@ -15,11 +15,13 @@
 		<span title="{{ _trans('app', 13, 21, 'html') }}{#Filter your tasks or change views#}" class="skylist_menu_navbar_filter_icon icon-viewIcon skylist_clickable"></span>
 		<div class="skylist_menu_navbar_filter_pane" tabindex="1">
 			<table>
-				<td find="filter_block1">
-				</td>
-				<td find="filter_block2">
-					<div find="filter_header_1">{{ _trans('app', 13, 1, 'html') }}{#Filter#}:</div>
-				</td>
+				<tr>
+					<td find="filter_block1">
+					</td>
+					<td find="filter_block2">
+						<div find="filter_header_1">{{ _trans('app', 13, 1, 'html') }}{#Filter#}:</div>
+					</td>
+				</tr>
 			</table>
 		</div>
 		<div find="searchbar_wrapper" class="skylist_menu_navbar_search"></div>
@@ -51,16 +53,22 @@
 	{# for tasklist, goes inside skylist_menu_navbar_filter_pane #}
 	<div id="-skylist_filter_tasks_radio_wrapper" find="radio_wrapper">
 		<table find="option1" val="due" class="skylist_menu_navbar_filter_pane_optionWrapper skylist_clickable">
-			<td find="radio" class="skylist_menu_navbar_filter_pane_radio fa fa-circle"></td>
-			<td find="text">{{ _trans('app', 13, 3, 'html') }}{#sort by due date#}</td>
+			<tr>
+				<td find="radio" class="skylist_menu_navbar_filter_pane_radio fa fa-circle"></td>
+				<td find="text">{{ _trans('app', 13, 3, 'html') }}{#sort by due date#}</td>
+			</tr>
 		</table>
 		<table find="option2" val="updated" class="skylist_menu_navbar_filter_pane_optionWrapper skylist_clickable">
-			<td find="radio" class="skylist_menu_navbar_filter_pane_radio fa"></td>
-			<td find="text">{{ _trans('app', 13, 4, 'html') }}{#Sort by most recently updated#}</td>
+			<tr>
+				<td find="radio" class="skylist_menu_navbar_filter_pane_radio fa"></td>
+				<td find="text">{{ _trans('app', 13, 4, 'html') }}{#Sort by most recently updated#}</td>
+			</tr>
 		</table>
 		<table find="option3" val="abc" class="skylist_menu_navbar_filter_pane_optionWrapper skylist_clickable">
-			<td find="radio" class="skylist_menu_navbar_filter_pane_radio fa"></td>
-			<td find="text">{{ _trans('app', 13, 22, 'html') }}{# Sort by task name #}</td>
+			<tr>
+				<td find="radio" class="skylist_menu_navbar_filter_pane_radio fa"></td>
+				<td find="text">{{ _trans('app', 13, 22, 'html') }}{# Sort by task name #}</td>
+			</tr>
 		</table>
 	</div>
 	<div id="-skylist_filter_tasks_divider" class="skylist_menu_navbar_filter_pane_divider"></div>
@@ -112,29 +120,27 @@
 		</div>
 		<div find='card_rightOptions' class="skylist_card_rightOptions maxMobileL skylist_clickable"></div>
 		<table find='card_center' class="skylist_card_center">
-			<tbody>
-				<tr>
-					<td find='card_spacestick' class="skylist_card_spacestick display_none">&nbsp;</td>
-					<td find='card_leftbox' class="skylist_card_center_leftbox"></td>
-					<td find='card_textwrapper' class="skylist_card_textwrapper">
-						<div find='title' contenteditable="false" class="selectable"></div>
-						<div find='description'></div>
-					</td>
-					<td find='card_rightbox'>
-						<span find='links_wrapper' title="{{ _trans('app', 13, 20, 'html') }}{#View/Add files#}">
-							<span find="links_icon" class="icon-links"></span>
-							<span find='links' class="skylist_icon_text">(<span find="linkCount"></span>)</span>
-						</span>
-						<span find='comments_wrapper' title="{{ _trans('app', 13, 19, 'html') }}{#View/Add comments#}">
-							<span find="comments_icon" class="icon-Pencil"></span>
-							<span find='comments' class="skylist_icon_text">(<span find="commentCount"></span>)</span>
-						</span>
-					</td>
-					<input type="text" find="card_time_calendar_timestamp" class="skylist_card_time_hidden skylist_clickable display_none" readonly="readonly"/>
-					<span find='card_time' class="fa fa-lock skylist_card_time floatright skylist_paddingRight"></span>
-				</tr>
-			</tbody>
+			<tr>
+				<td find='card_spacestick' class="skylist_card_spacestick display_none">&nbsp;</td>
+				<td find='card_leftbox' class="skylist_card_center_leftbox"></td>
+				<td find='card_textwrapper' class="skylist_card_textwrapper">
+					<div find='title' contenteditable="false" class="selectable"></div>
+					<div find='description'></div>
+				</td>
+				<td find='card_rightbox'>
+					<span find='links_wrapper' title="{{ _trans('app', 13, 20, 'html') }}{#View/Add files#}">
+						<span find="links_icon" class="icon-links"></span>
+						<span find='links' class="skylist_icon_text">(<span find="linkCount"></span>)</span>
+					</span>
+					<span find='comments_wrapper' title="{{ _trans('app', 13, 19, 'html') }}{#View/Add comments#}">
+						<span find="comments_icon" class="icon-Pencil"></span>
+						<span find='comments' class="skylist_icon_text">(<span find="commentCount"></span>)</span>
+					</span>
+				</td>
+			</tr>
 		</table>
+		<input type="text" find="card_time_calendar_timestamp" class="skylist_card_time_hidden skylist_clickable display_none" readonly="readonly"/>
+		<span find='card_time' class="fa fa-lock skylist_card_time floatright skylist_paddingRight"></span>
 		<div class="skylist_card_progress skylist_card_progress_hidden">
 			<div find="bar">
 				<div find="percent"></div>
@@ -147,20 +153,22 @@
 			<span find="btn_addNew" class="submeu_taskdetail_blueButton">{{ _trans('app', 14, 2, 'html') }}</span>
 		</div>
 		<table find="card_bottom" class="skylist_card_bottom skylist_paddingRight ellipsis">
-			<td>
-				<span find="quickInfo1" class="floatleft"></span>
-				<span find="quickInfo2" class="floatleft"></span>
-				<span find="quickInfo3" class="floatleft"></span>
-				<div find="nameWrapper">
-					<span find="name_icon" class="icon-SmallPersonaiconBlack"></span>
-					<span find='name' class="skylist_icon_text ellipsis"></span>
-				</div>
-				{# <input type="text" find='name_hidden' class="skylist_icon_text" readonly="readonly"/> #}
-				<div find="commentsWrapper">
-					<span find="comments_icon" class="icon-Pencil"></span>
-					<span find='comments' class="skylist_icon_text">(<span find="commentCount"></span>)</span>
-				</div>
-			</td>
+			<tr>
+				<td>
+					<span find="quickInfo1" class="floatleft"></span>
+					<span find="quickInfo2" class="floatleft"></span>
+					<span find="quickInfo3" class="floatleft"></span>
+					<div find="nameWrapper">
+						<span find="name_icon" class="icon-SmallPersonaiconBlack"></span>
+						<span find='name' class="skylist_icon_text ellipsis"></span>
+					</div>
+					{# <input type="text" find='name_hidden' class="skylist_icon_text" readonly="readonly"/> #}
+					<div find="commentsWrapper">
+						<span find="comments_icon" class="icon-Pencil"></span>
+						<span find='comments' class="skylist_icon_text">(<span find="commentCount"></span>)</span>
+					</div>
+				</td>
+			</tr>
 		</table>
 	</div>
 
