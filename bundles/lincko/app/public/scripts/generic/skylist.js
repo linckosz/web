@@ -3597,7 +3597,7 @@ skylist.prototype.menu_construct_returnRing = function(elem_appendTo, fill, tota
 	var data = {
 	    datasets: [
 		    {
-		        data: [fill, total-fill],
+		        data: [fill, total ? total-fill : 1],
 		        backgroundColor: ["#f5a026", '#d8d8d8'],
 		        hoverBackgroundColor: ["#f5a026", '#d8d8d8'],
 		        borderWidth: 0,
@@ -3753,8 +3753,14 @@ skylist.prototype.updateRings = function(){
 
 				//update if different
 				if(total_old != items_all.length || approved_old != approved){
-					ring.data.datasets[0].data[0] = approved;
-					ring.data.datasets[0].data[1] = items_all.length - approved;
+					//special handling for zero ring
+					if(items_all.length < 1){
+						ring.data.datasets[0].data[0] = 0;
+						ring.data.datasets[0].data[1] = 1;
+					} else {
+						ring.data.datasets[0].data[0] = approved;
+						ring.data.datasets[0].data[1] = items_all.length - approved;
+					}
 					ring.update();
 					$(ring.chart.canvas.parentElement).find('[find=count]').text(items_all.length - approved);
 				}
