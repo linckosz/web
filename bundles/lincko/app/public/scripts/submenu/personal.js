@@ -143,7 +143,7 @@ submenu_list['personal_info'] = {
 			}
 			return role['+name'];
 		},
-		"now": function(Elem, subm){debugger;
+		"now": function(Elem, subm){
 			this.action_param.users_id = subm.param;
 			this.action_param.parent_id = Lincko.storage.getWORKID();
 			grant = false;
