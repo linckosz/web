@@ -203,6 +203,10 @@ skylist.prototype.construct = function(){
 	that.elem_newcardCircle = $('#-skylist_newcardCircle').clone()
 		.prop('id','skylist_newcardCircle_'+that.md5id);
 
+
+	//touch specific css (i.e. no hover for touch)
+	that.list_wrapper.addClass(supportsTouch ? 'skylist_hasTouch' : 'skylist_noTouch');
+
 	
 	//filte_update settings must be before menu_construct to know which filter to be on when loaded
 	that.filter_updateSettings(false); 
@@ -3608,6 +3612,9 @@ skylist.prototype.menu_construct_returnRing = function(elem_appendTo, fill, tota
 	    type: 'doughnut',
 	    data: data,
 	    options: {
+	    	animation: {
+	    		duration: wrapper_performance.powerfull ? 1000 : 0,
+	    	},
 	    	legend: {
 	    		display: false,
 	    	},
