@@ -673,26 +673,28 @@ skylist.prototype.window_resize = function(){
 	}
 }
 
-skylist.prototype.filter_by_people = function(items,filter){
+skylist.prototype.filter_by_people = function(items, filter){
 	var that = this;
 	var items_filtered = [];
 	var item;
 	if( filter == null ){
 		return items;
-	}
-	else if( that.list_type == "tasks" || that.list_type == "notes" || that.list_type == "files"){
+	} else {
 		for( var i in items ){
 			item = items[i];
-			if( that.list_type == "tasks" && item['_users'] && item['_users'][filter] && item['_users'][filter]['in_charge']){
+			if( item._type == "tasks" && item['_users'] && item['_users'][filter] && item['_users'][filter]['in_charge']){
 				items_filtered.push(item);
 			}
-			else if( that.list_type != "tasks" && 'created_by' in item && item['created_by'] && item['created_by'] == filter ){
+			else if( item._type != "tasks" && 'created_by' in item && item['created_by'] && item['created_by'] == filter ){
 				items_filtered.push(item);
 			}
 		}
 	}
 
-	that.Lincko_itemsList_filter.people = filter;
+	//if this function is used outside instance, then wont have that
+	if(that instanceof skylist){
+		that.Lincko_itemsList_filter.people = filter;
+	}
 
 	return items_filtered;
 }
@@ -917,6 +919,9 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 			//paperview - showLink filter
 			if(that.Lincko_itemsList_filter && that.Lincko_itemsList_filter.view == 'paper'){
 				that.paperview_filter_showLinks();
+			}
+			if(that.pid == 0){
+				that.updateRings();
 			}
 			that.window_resize();
 		}
@@ -3650,6 +3655,7 @@ skylist.prototype.menu_construct_addRingFilters = function(){
 
 	
 	var items_today = skylist.prototype.filter_by_duedate(that.Lincko_itemsList, 0);
+	items_today = skylist.prototype.filter_by_people(items_today, that.Lincko_itemsList_filter.people);
 	var approved_today = 0;
 	for(var i in items_today){
 		if(items_today[i].approved){
@@ -3669,6 +3675,7 @@ skylist.prototype.menu_construct_addRingFilters = function(){
 
 
 	var items_tmr = skylist.prototype.filter_by_duedate(that.Lincko_itemsList, 1);
+	items_tmr = skylist.prototype.filter_by_people(items_tmr, that.Lincko_itemsList_filter.people);
 	var approved_tmr = 0;
 	for(var i in items_tmr){
 		if(items_tmr[i].approved){
@@ -3732,49 +3739,51 @@ skylist.prototype.menu_construct_addRingFilters = function(){
 
 skylist.prototype.updateRings = function(){
 	var that = this;
-
-	var items_overdue = [];
+	var count_overdue = 0;
 	var now = new wrapper_date().time;
-	$.each(that.Lincko_itemsList, function(i, item){
+	$.each(skylist.prototype.filter_by_people(that.Lincko_itemsList, that.Lincko_itemsList_filter.people), function(i, item){
 		if(tasks_isOverdue(item, now)){
-			items_overdue.push(item);
+			count_overdue++;
 		}
 	});
-	that.elem_navbar.find('.skylist_menu_ringFilter_overdue [find="count"]').text(items_overdue.length);
+	that.elem_navbar.find('.skylist_menu_ringFilter_overdue [find="count"]').text(count_overdue);
 
-	$.each(that.rings, function(key, ring){
-		if(ring instanceof  Chart.Controller){
-			var date;
-			if(key == 'today'){ date = 0; }
-			else if(key == 'tmr'){ date = 1; }
-			if(typeof date == 'number'){
-				var approved_old = ring.data.datasets[0].data[0];
-				var total_old = approved_old + ring.data.datasets[0].data[1];
+	if(that.rings && !$.isEmptyObject(that.rings)){
+		$.each(that.rings, function(key, ring){
+			if(ring instanceof  Chart.Controller){
+				var date;
+				if(key == 'today'){ date = 0; }
+				else if(key == 'tmr'){ date = 1; }
+				if(typeof date == 'number'){
+					var approved_old = ring.data.datasets[0].data[0];
+					var total_old = approved_old + ring.data.datasets[0].data[1];
 
-				var items_all = skylist.prototype.filter_by_duedate(that.Lincko_itemsList, date);
-				var approved = 0;
-				for(var i in items_all){
-					if(items_all[i].approved){
-						approved++;
+					var items_all = skylist.prototype.filter_by_duedate(that.Lincko_itemsList, date);
+					items_all = skylist.prototype.filter_by_people(items_all, that.Lincko_itemsList_filter.people);
+					var approved = 0;
+					for(var i in items_all){
+						if(items_all[i].approved){
+							approved++;
+						}
 					}
-				}
 
-				//update if different
-				if(total_old != items_all.length || approved_old != approved){
-					//if there are no tasks, then consider 100% filled
-					if(items_all.length < 1){
-						ring.data.datasets[0].data[0] = 1;
-						ring.data.datasets[0].data[1] = 0;
-					} else {
-						ring.data.datasets[0].data[0] = approved;
-						ring.data.datasets[0].data[1] = items_all.length - approved;
+					//update if different
+					if(total_old != items_all.length || approved_old != approved){
+						//if there are no tasks, then consider 100% filled
+						if(items_all.length < 1){
+							ring.data.datasets[0].data[0] = 1;
+							ring.data.datasets[0].data[1] = 0;
+						} else {
+							ring.data.datasets[0].data[0] = approved;
+							ring.data.datasets[0].data[1] = items_all.length - approved;
+						}
+						ring.update();
+						$(ring.chart.canvas.parentElement).find('[find=count]').text(items_all.length - approved);
 					}
-					ring.update();
-					$(ring.chart.canvas.parentElement).find('[find=count]').text(items_all.length - approved);
 				}
 			}
-		}
-	});
+		});
+	}
 }
 
 skylist.prototype.menu_construct_add_btnFilter = function(){
