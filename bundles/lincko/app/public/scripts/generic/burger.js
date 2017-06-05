@@ -792,7 +792,7 @@ burger_list.in_charge = function(lincko_type, lincko_id){
 		addClass: 'burger_option_users burger_option_inviteUser',
 	}
 
-	if(Lincko.storage.getWORKID()==0 || Lincko.storage.amIadmin()){
+	if(Lincko.storage.getWORKID()==0 || Lincko.storage.amIadmin() || Lincko.storage.canI('edit', 'projects', project_id)){
 		userList.push(inviteNewUser);
 	}
 

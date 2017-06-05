@@ -168,9 +168,9 @@ var app_projects_users_contacts_init = function(subm){
 								grant = true;
 							}
 						}
-						if(grant && Lincko.storage.getWORKID()>0 && Lincko.storage.canI('edit', 'projects', projects_id) && this.action_param.value != wrapper_localstorage.uid){
+						if(Lincko.storage.getWORKID()>0 && Lincko.storage.canI('edit', 'projects', projects_id) && this.action_param.value != wrapper_localstorage.uid){
 							Elem.removeClass('display_none');
-							Elem.find("[find=submenu_radio_text]").addClass('submenu_radio_text_sub_click');
+							Elem.find("[find=submenu_radio_text]");
 							var select_id = subm.id+"_"+md5(Math.random());
 							var select_elem = Elem.find("[find=submenu_radio_text]");
 							select_elem.prop("id", select_id);
@@ -181,17 +181,21 @@ var app_projects_users_contacts_init = function(subm){
 									Elem.find("[find=submenu_radio_text]").html(tab.value());
 								}
 							}, [Elem, this] );
-							var pid = subm.param;
-							if(subm.param && subm.param.pid){
-								pid = subm.param.pid;
+							if(grant){
+								var pid = subm.param;
+								if(subm.param && subm.param.pid){
+									pid = subm.param.pid;
+								}
+								Elem.find("[find=submenu_radio_text]")
+								.addClass('submenu_radio_text_sub_click')
+								.on('click', [pid, this.action_param.value], function(event){
+									event.stopPropagation();
+									var pid = event.data[0];
+									var uid = event.data[1];
+									submenu_role_build_list(uid, 'projects', pid);
+									submenu_Build("role_select", true, true, {users_id: uid, parent_type: 'projects', parent_id: pid, });
+								});
 							}
-							Elem.find("[find=submenu_radio_text]").on('click', [pid, this.action_param.value], function(event){
-								event.stopPropagation();
-								var pid = event.data[0];
-								var uid = event.data[1];
-								submenu_role_build_list(uid, 'projects', pid);
-								submenu_Build("role_select", true, true, {users_id: uid, parent_type: 'projects', parent_id: pid, });
-							});
 						} else if(Lincko.storage.getWORKID()>0){
 							Elem.off('click');
 						}
