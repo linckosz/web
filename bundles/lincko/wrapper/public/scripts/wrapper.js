@@ -31,6 +31,7 @@ var wrapper_signout_cb_begin = function(){
 }
 var wrapper_signout_cb_complete = function(){
 	$(document.body).css('cursor', '');
+	wrapper_localstorage.emptyStorage();
 	window.location.href = top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domainRoot;
 }
 var wrapper_js_response;
