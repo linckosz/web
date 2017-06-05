@@ -3386,6 +3386,7 @@ skylist.prototype.menu_construct_add_peopleDropdown = function(){
 	for(var i in users){
 		if(that.Lincko_itemsList_filter.people && users[i]._id == that.Lincko_itemsList_filter.people){
 			elem_selected.append(return_elem_dropdownBlock(users[i]._id));
+			elem_dropdown.append(return_elem_dropdownBlock(users[i]._id).addClass('display_none'));
 		} else {
 			elem_dropdown.append(return_elem_dropdownBlock(users[i]._id));
 		}
