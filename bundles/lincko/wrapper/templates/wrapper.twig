@@ -528,6 +528,9 @@ var webworker_operation = {
 		try {
 			var time = 1000*3600*24*90; //Keep the value for 3 months
 			result = amplify.store(prefix+link, store_data, { expires: time });
+			if(!result){
+				this.LocalStorageInFailed();
+			}
 		} catch(e) {
 			console.log(e);
 			this.LocalStorageInFailed();
@@ -535,6 +538,7 @@ var webworker_operation = {
 	},
 
 	LocalStorageInFailed: function(obj_data){
+		wrapper_localstorage.emptyStorage();
 		wrapper_localstorage.encrypt_running = false;
 		if(typeof obj_data == 'undefined' || typeof obj_data.link == 'undefined'){
 			return false;

@@ -3008,6 +3008,7 @@ JSfiles.finish(function(){
 		//Force to redownload all data to get language support
 		Lincko.storage.setLastVisit(0);
 	} else {
+		var cleanall = false;
 		$.each(amplify.store(), function (storeKey) {
 			if(storeKey.indexOf(wrapper_localstorage.prefix+"data_")===0){
 				var field = storeKey.substring((wrapper_localstorage.prefix+"data_").length);
@@ -3036,6 +3037,8 @@ JSfiles.finish(function(){
 							Lincko.storage.data[category] = {};
 						}
 						Lincko.storage.data[category][item] = decrypt;
+					} else {
+						cleanall = true;
 					}
 				} else {
 					var decrypt = wrapper_localstorage.decrypt("data_"+field);
@@ -3050,11 +3053,17 @@ JSfiles.finish(function(){
 						} else {
 							Lincko.storage.data[category] = decrypt;
 						}
+					} else {
+						cleanall = true;
 					}
 				}
 			}
 			Lincko.storage.buildABCall();
 		});
+		if(cleanall){
+			wrapper_localstorage.emptyStorage();
+			Lincko.storage.setLastVisit(0);
+		}
 	}
 	if(!Lincko.storage.data){
 		Lincko.storage.data = {};

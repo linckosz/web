@@ -439,8 +439,9 @@ wrapper_localstorage.encrypt_start = function(link, data){
 	return true;
 };
 
+wrapper_localstorage.encrypt_ok = true;
 wrapper_localstorage.encrypt = function (link, data, tryit, now){
-	if(!link){
+	if(!link || !wrapper_localstorage.encrypt_ok){
 		return false;
 	}
 	if(typeof tryit == 'undefined'){ tryit = true; }
@@ -477,7 +478,8 @@ wrapper_localstorage.encrypt = function (link, data, tryit, now){
 				result = amplify.store(wrapper_localstorage.prefix+link, store_data, { expires: time });
 			} catch(e) {
 				wrapper_localstorage.quota[link] = false;
-				amplify.store(wrapper_localstorage.prefix+link, null);
+				//amplify.store(wrapper_localstorage.prefix+link, null);
+				wrapper_localstorage.emptyStorage();
 				console.log(e);
 			}
 		}
@@ -502,6 +504,18 @@ wrapper_localstorage.decrypt = function (link){
 	} catch(e) {}
 	amplify.store(this.prefix+link, null);
 	return false;
+};
+
+//Force to delete all data that are not linked to the workspace to release some space
+wrapper_localstorage.emptyStorage = function(){
+	wrapper_localstorage.encrypt_ok = false;
+	var result = false;
+	$.each(amplify.store(), function (storeKey) {
+		result = true;
+		amplify.store(storeKey, null);
+	});
+	//console.log(result);
+	return result;
 };
 
 //Force to delete all data that are not linked to the workspace to release some space
