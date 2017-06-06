@@ -250,7 +250,7 @@ submenu_list['personal_info'] = {
 		"title": Lincko.Translation.get('app', 68, 'html'), //My QR code
 		"class": "display_none",
 		"value": function(Elem, subm){
-			if(subm.param == wrapper_localstorage.uid){
+			if(subm.param == wrapper_localstorage.uid && Lincko.storage.getWORKID()==0){
 				var qrcode = $('<img>');
 				qrcode.attr('src', Lincko.storage.generateMyQRcode());
 				qrcode.addClass('submenu_personal_profile_picture');
@@ -258,7 +258,7 @@ submenu_list['personal_info'] = {
 			}
 		},
 		"now": function(Elem, subm){
-			if(subm.param == wrapper_localstorage.uid){
+			if(subm.param == wrapper_localstorage.uid && Lincko.storage.getWORKID()==0){
 				Elem.removeClass('display_none');
 			}
 		},
