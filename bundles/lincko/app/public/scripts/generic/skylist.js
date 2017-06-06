@@ -3351,10 +3351,24 @@ skylist.prototype.menu_construct = function(){
 skylist.prototype.menu_construct_add_peopleDropdown = function(){
 	var that = this;
 	var elem_target = $('#-skylist_menu_people_dropdown').clone().removeAttr('id');
-	var elem_selected = elem_target.find('[find=selected]');
-	var elem_dropdown = elem_target.find('[find=dropdown]').addClass('overthrow');
 	that.elem_navbar.children('.skylist_menu_people').append(elem_target);
-
+	var elem_selected = elem_target.find('[find=selected]');
+	var elem_dropdown = elem_target.find('[find=dropdown]').addClass('overthrow')
+		.mousedown(function(evt){
+			evt.preventDefault();//for IE, prevent premature trigger of blur
+		}).blur(function(e){
+			var elem_this = $(this);
+			if(elem_this.hasClass('skylist_menu_people_showDropdown')){
+				elem_this.velocity('slideUp',{
+					duration: 150,
+					mobileHA: hasGood3Dsupport,
+					complete: function(){
+						elem_this.removeClass('skylist_menu_people_showDropdown');
+					}
+				});
+			}
+		});
+	
 
 	var return_elem_dropdownBlock = function(uid){
 		var elem_person = $('#-skylist_menu_people_dropdownBlock').clone().removeAttr('id');
@@ -3433,15 +3447,7 @@ skylist.prototype.menu_construct_add_peopleDropdown = function(){
 
 	elem_selected.click({elem_dropdown: elem_dropdown}, function(evt){
 		var elem_dropdown = evt.data.elem_dropdown;
-		if(elem_dropdown.hasClass('skylist_menu_people_showDropdown')){
-			elem_dropdown.velocity('slideUp',{
-				duration: 150,
-				mobileHA: hasGood3Dsupport,
-				complete: function(){
-					elem_dropdown.removeClass('skylist_menu_people_showDropdown');
-				}
-			});
-		} else {
+		if(!elem_dropdown.hasClass('skylist_menu_people_showDropdown')){
 			elem_dropdown.addClass('skylist_menu_people_showDropdown');
 			elem_dropdown.velocity('slideDown', {
 				duration: 150,
@@ -3450,6 +3456,7 @@ skylist.prototype.menu_construct_add_peopleDropdown = function(){
 					if(myIScrollList[elem_dropdown.prop('id')]){
 						myIScrollList[elem_dropdown.prop('id')].refresh();
 					}
+					elem_dropdown.focus();
 				},
 			});
 		}
