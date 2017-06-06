@@ -3341,7 +3341,7 @@ skylist.prototype.menu_construct = function(){
 skylist.prototype.menu_construct_add_peopleDropdown = function(){
 	var that = this;
 	var elem_target = $('#-skylist_menu_people_dropdown').clone().removeAttr('id');
-	that.elem_navbar.children('.skylist_menu_people').append(elem_target);
+	that.elem_navbar.find('.skylist_menu_people').append(elem_target);
 	var elem_selected = elem_target.find('[find=selected]');
 	var elem_dropdown = elem_target.find('[find=dropdown]').addClass('overthrow')
 		.mousedown(function(evt){
@@ -3458,8 +3458,8 @@ skylist.prototype.menu_construct_add_peopleToggle = function(){
 	//individual or group selection in navbar
 	var elem_people2 = $('<span people="2" class="skylist_menu_selected base_pointer"></span>');
 	var elem_people1 = $('<span people="1" class="base_pointer"></span>');
-	that.elem_navbar.children('.skylist_menu_people').append(elem_people2);
-	that.elem_navbar.children('.skylist_menu_people').append(elem_people1);
+	that.elem_navbar.find('.skylist_menu_people').append(elem_people2);
+	that.elem_navbar.find('.skylist_menu_people').append(elem_people1);
 
 	if( Lincko.storage.get("projects", app_content_menu.projects_id, 'personal_private') ){
 		elem_people2.addClass('display_none');
