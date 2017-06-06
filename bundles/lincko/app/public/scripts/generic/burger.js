@@ -1953,6 +1953,10 @@ burgerN.typeTask = function(projectID, skylistInst, dropdownOffset){
 			item['temp_id'] = temp_id;
 			item['_id'] = fakeID;
 			item['fake'] = true;
+			//its possible to not have tasks obj if it is brand new acct with no tasks
+			if(!Lincko.storage.data.tasks){
+				Lincko.storage.data.tasks = {};
+			}
 			Lincko.storage.data.tasks[fakeID] = item;
 			if(!('_children' in Lincko.storage.data.projects[projectID])){
 				Lincko.storage.data.projects[projectID]['_children'] = {};

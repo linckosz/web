@@ -3154,6 +3154,10 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 				});
 			}
 
+			//its possible to have the task object missing, if this is a new acct without any tasks
+			if(!Lincko.storage.data.tasks){
+				Lincko.storage.data.tasks = {};
+			}
 			Lincko.storage.data.tasks[fakeID] = item;
 
 
