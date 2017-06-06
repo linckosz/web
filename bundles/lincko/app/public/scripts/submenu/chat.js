@@ -389,7 +389,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 		delete Elem;
 	}
 
-	if(Lincko.storage.getWORKID==0){ //Only for shared workspace
+	if(Lincko.storage.getWORKID()==0){ //Only for shared workspace
 		//Invitation
 		var div_id = that.id+"_submenu_app_chat_chat_invitation_div";
 		var div = $('#'+div_id);
@@ -447,12 +447,17 @@ Submenu.prototype.Add_ChatContacts = function() {
 					"users>access": {},
 				};
 				param["users>access"][users_id] = true;
+				var new_user = Lincko.storage.get('users', users_id);
+				if(new_user){
+					new_user['_invitation'] = false;
+					new_user['_visible'] = true;
+				}
 				wrapper_sendAction(
 					param,
 					'post',
 					'user/update',
 					function(){
-						app_application_lincko.prepare('contacts_list', true);
+						app_application_lincko.prepare(['contacts_list', 'users'], true);
 						app_application_action(10, users_id); //Accept invitation
 					}
 				);

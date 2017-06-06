@@ -107,7 +107,7 @@ var searchbar = {
 						}
 						else if(id_work && namecard.workspaces_id == id_work){
 							namecard_second = namecard_first;
-							namrcard_first = namecard;
+							namecard_first = namecard;
 						} else {
 							namecard_second = namecard;
 						}
@@ -127,7 +127,7 @@ var searchbar = {
 				if(!push && namecard_second){
 					for(var attr in namecard_second){
 						//if field is defined in namecard_first, skip
-						if((typeof namecard_first[attr] == null || typeof typeof namecard_first[attr] == 'undefined') 
+						if((typeof namecard_first[attr] == null || typeof namecard_first[attr] == 'undefined') 
 							&& (attr[0] == '-' || attr[0] == '+')){
 							if(Lincko.storage.searchArray('word', word, [namecard_second], attr, param_pinyin).length){
 								push = true;
