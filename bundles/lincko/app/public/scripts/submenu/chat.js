@@ -388,7 +388,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 		div.append(Elem);
 		delete Elem;
 	}
-
+//debugger;
 	if(Lincko.storage.getWORKID()==0){ //Only for shared workspace
 		//Invitation
 		var div_id = that.id+"_submenu_app_chat_chat_invitation_div";
