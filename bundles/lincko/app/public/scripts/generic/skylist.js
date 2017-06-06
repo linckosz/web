@@ -3366,11 +3366,14 @@ skylist.prototype.menu_construct_add_peopleDropdown = function(){
 			if(!$.contains(evt.data.elem_selected.get(0), this)){
 				var elem_now = $(this).clone(true);
 				evt.data.elem_selected.html(elem_now);
-				evt.data.elem_selected.velocity('fadeIn');
+				evt.data.elem_selected.velocity('fadeIn', {
+					mobileHA: hasGood3Dsupport,
+				});
 
 				var elem_this = $(this);
 				evt.data.elem_dropdown.velocity('slideUp', {
 					duration: 150,
+					mobileHA: hasGood3Dsupport,
 					begin: function(){
 						evt.data.elem_dropdown.find('.skylist_menu_people_dropdownBlock').removeClass('display_none');
 						elem_this.addClass('display_none');
@@ -3411,6 +3414,7 @@ skylist.prototype.menu_construct_add_peopleDropdown = function(){
 		if(elem_dropdown.hasClass('skylist_menu_people_showDropdown')){
 			elem_dropdown.velocity('slideUp',{
 				duration: 150,
+				mobileHA: hasGood3Dsupport,
 				complete: function(){
 					elem_dropdown.removeClass('skylist_menu_people_showDropdown');
 				}
@@ -3419,6 +3423,7 @@ skylist.prototype.menu_construct_add_peopleDropdown = function(){
 			elem_dropdown.addClass('skylist_menu_people_showDropdown');
 			elem_dropdown.velocity('slideDown', {
 				duration: 150,
+				mobileHA: hasGood3Dsupport,
 				complete: function(){
 					if(myIScrollList[elem_dropdown.prop('id')]){
 						myIScrollList[elem_dropdown.prop('id')].refresh();
@@ -3798,6 +3803,7 @@ skylist.prototype.menu_construct_add_btnFilter = function(){
 		if( elem_filter_pane.css('display')=='none' ){
 			elem_filterBtn.attr('active',true);
 			elem_filter_pane.velocity('slideDown',{
+				duration: 150,
 				mobileHA: hasGood3Dsupport,
 				complete: function(){
 					elem_filter_pane.focus();
@@ -3811,6 +3817,7 @@ skylist.prototype.menu_construct_add_btnFilter = function(){
 	that.elem_navbar.find('.skylist_menu_navbar_filter_pane').blur(function(){
 		elem_filterBtn.attr('active',false);
 		$(this).velocity('slideUp', {
+			duration: 150,
 			mobileHA: hasGood3Dsupport,
 		});
 	});
