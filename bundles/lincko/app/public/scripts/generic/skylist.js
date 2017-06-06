@@ -3392,9 +3392,27 @@ skylist.prototype.menu_construct_add_peopleDropdown = function(){
 	var u_all = [null];
 	//build list of users
 	if(false/*paid version*/){
-		$.each(Lincko.storage.sort_items(Lincko.storage.list('users'), '-username'), function(i, user){
+		var u_list = [];
+		var id_work = Lincko.storage.getWORKID();
+		if(id_work > 0 && Lincko.storage.data.workspaces && Lincko.storage.data.workspaces[id_work]){//workspaces
+			var u_obj = false;
+			var obj_perm = Lincko.storage.get('workspaces', id_work, '_perm');
+			if(typeof obj_perm == 'object'){
+				for(var key in obj_perm){
+					u_obj = Lincko.storage.get('users', key);
+					if(u_obj){
+						u_list.push(u_obj);
+					}
+				}
+			}
+		} else {
+			u_list = Lincko.storage.list('users');
+		}
+
+		//alphabetical sorting
+		$.each(Lincko.storage.sort_items(u_list, '-username'), function(i, user){
 			u_all.push(user._id);
-		});
+		});		
 	} else { //free version
 		u_all.push(wrapper_localstorage.uid);
 	}
