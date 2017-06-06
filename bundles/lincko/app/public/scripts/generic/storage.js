@@ -730,7 +730,7 @@ Lincko.storage.export = function(category, id){
 					if(typeof namecard['-phone'] != 'undefined' && namecard['-phone']!=null){ data[i]['phone'] = namecard['-phone']; }
 					if(typeof namecard['-business'] != 'undefined' && namecard['-business']!=null){ data[i]['business'] = $('<div>').text(namecard['-business']).text(); }
 					if(typeof namecard['-additional'] != 'undefined' && namecard['-additional']!=null){ data[i]['additional'] = $('<div>').text(namecard['-additional']).text(); }
-					if(typeof namecard['linkedin'] != 'undefined' && namecard['linkedin']!=null){ data[i]['linkedin'] = namecard['linkedin']; }
+					if(typeof namecard['-linkedin'] != 'undefined' && namecard['-linkedin']!=null){ data[i]['linkedin'] = namecard['-linkedin']; }
 				}
 			}
 		}

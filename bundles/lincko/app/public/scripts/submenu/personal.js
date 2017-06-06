@@ -40,7 +40,7 @@ submenu_list['personal_info'] = {
 				if(typeof val['-phone'] != 'undefined' && val['-phone']!=null){ subm.param_namecard.phone = val['-phone']; };
 				if(typeof val['-business'] != 'undefined' && val['-business']!=null){ subm.param_namecard.business = $('<div>').text(val['-business']).text(); };
 				if(typeof val['-additional'] != 'undefined' && val['-additional']!=null){ subm.param_namecard.additional = $('<div>').text(val['-additional']).text(); };
-				if(typeof val['linkedin'] != 'undefined' && val['linkedin']!=null){ subm.param_namecard.linkedin = val['linkedin']; };
+				if(typeof val['-linkedin'] != 'undefined' && val['-linkedin']!=null){ subm.param_namecard.linkedin = val['-linkedin']; };
 			}
 		},
 	},
@@ -477,8 +477,8 @@ submenu_list['personal_info'] = {
 		"title": "LinkedIn",
 		"value": function(Elem, subm){
 			var val = false;
-			if(typeof subm.param_namecard.linkedin != 'undefined'){
-				val = subm.param_namecard.linkedin;
+			if(typeof subm.param_namecard['-linkedin'] != 'undefined'){
+				val = subm.param_namecard['-linkedin'];
 			}
 			if(!val){ return ""; }
 			return wrapper_to_html(val);
@@ -500,11 +500,11 @@ submenu_list['personal_info'] = {
 			if(now){
 				timer = 0;
 			}
-			if(val_new != subm.param_namecard.linkedin){
+			if(val_new != subm.param_namecard['-linkedin']){
 				clearTimeout(submenu_profile_timer['linkedin']);
 				submenu_profile_timer['linkedin'] = setTimeout(function(namecard){
-					var val_old = namecard.linkedin;
-					namecard.linkedin = val_new;
+					var val_old = namecard['-linkedin'];
+					namecard['-linkedin'] = val_new;
 					wrapper_sendAction(
 						{
 							"parent_id": namecard.parent_id,
@@ -514,7 +514,7 @@ submenu_list['personal_info'] = {
 						'namecard/change',
 						null,
 						function(){
-							namecard.linkedin = val_old;
+							namecard['-linkedin'] = val_old;
 						}
 					);
 				}, timer, subm.param_namecard);
@@ -522,7 +522,7 @@ submenu_list['personal_info'] = {
 		},
 		"now": function(Elem, subm){
 			if(wrapper_localstorage.uid!=subm.param_namecard.parent_id){
-				if(!subm.param_namecard.linkedin){
+				if(!subm.param_namecard['-linkedin']){
 					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIadmin()){
 						Elem.addClass('display_none');
 					}
@@ -536,13 +536,13 @@ submenu_list['personal_info'] = {
 							.prop('readonly', true)
 							.on('focus', function(event){
 								event.stopPropagation();
-								window.open(namecard.linkedin, "_blank");
+								window.open(namecard['-linkedin'], "_blank");
 								this.blur();
 							});
 						Elem
 							.addClass('submenu_personal_url')
 							.on('click', function(event){
-								window.open(namecard.linkedin, "_blank");
+								window.open(namecard['-linkedin'], "_blank");
 							});
 							
 					}
