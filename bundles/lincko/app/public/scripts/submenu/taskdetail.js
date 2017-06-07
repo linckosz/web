@@ -1366,7 +1366,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		if(item['_type'] == 'notes'){
 			param_itemSelector.hideType = { notes: true };
 		}
-		submenu_Build('itemSelector', true, null, param_itemSelector, true);
+		submenu_Build('itemSelector', true, null, param_itemSelector, that.preview);
 	});
 	var elem_links_wrapper = elem_links.find('[find=links_wrapper]');
 
