@@ -268,6 +268,10 @@ var wrapper_ajax = function(param, method, action, cb_success, cb_error, cb_begi
 			this.show_error = false;
 		},
 		complete: function(){
+			//Reanble getting latest
+			if(typeof Lincko.storage != 'undefined' && typeof Lincko.storage.getting_latest != 'undefined'){
+				Lincko.storage.getting_latest = false;
+			}
 			//Get back the form object if it was sent from a form
 			wrapper_objForm = ajax_objForm;
 			wrapper_xhr = false;
@@ -386,6 +390,7 @@ function wrapper_sendAction(param, method, action, cb_success, cb_error, cb_begi
 	//Add lastvisit to help saving some unecessary codes
 	if(typeof param['lastvisit'] == 'undefined' && typeof Lincko.storage == 'object' && typeof Lincko.storage.getLastVisit == 'function'){
 		param['lastvisit'] = Lincko.storage.getLastVisit();
+		Lincko.storage.getting_latest = true;
 	}
 	
 	//Convert the array to the same format as jQuery does with forms

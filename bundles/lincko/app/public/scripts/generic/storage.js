@@ -303,6 +303,7 @@ Lincko.storage.display = function(prepare, force){
 //Function that check for latest updates
 /* PRIVATE METHOD */
 var storage_ajax_latest = {};
+Lincko.storage.getting_latest = false;
 Lincko.storage.getLatest = function(force, callback){
 	var lastvisit = Lincko.storage.getLastVisit();
 	if(typeof force == 'boolean' && force == true){
@@ -320,7 +321,9 @@ Lincko.storage.getLatest = function(force, callback){
 	//If a previous action has been launched, we don't start it immediatly
 	//This helps to avoid too many backend runs
 	//http://www.ajax-tutor.com/130/handle-response/
-	if(storage_ajax_latest[lastvisit] && storage_ajax_latest[lastvisit]['readyState']!=4 && !force && callback==null){
+	if(!force && Lincko.storage.getting_latest && callback==null){
+		return true; //Don't launch anymore latest if in a middle of latest request by update or creation
+	} else if(storage_ajax_latest[lastvisit] && storage_ajax_latest[lastvisit]['readyState']!=4 && !force && callback==null){
 		return true; //Don't launch anymore latest if one is already running
 	} else {
 		for(var i in storage_ajax_latest){
@@ -355,6 +358,7 @@ Lincko.storage.getLatest = function(force, callback){
 				}
 			},
 			function(jqXHR){
+				Lincko.storage.getting_latest = true;
 				storage_ajax_latest[lastvisit] = jqXHR;
 			},
 			callback

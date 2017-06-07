@@ -16,13 +16,15 @@ class ControllerExport extends Controller {
 	//http://code.stephenmorley.org/php/creating-downloadable-csv-files/
 	public function csv_get(){
 		$app = $this->app;
-		$app->response->headers->set('Content-Type', 'text/csv; charset=UTF-8,');
+		$app->response->headers->set('Content-Encoding', 'UTF-8');
+		$app->response->headers->set('Content-Type', 'text/csv; charset=UTF-8');
 		$app->response->headers->set('Cache-Control', 'no-cache, must-revalidate');
 		$app->response->headers->set('Expires', 'Fri, 12 Aug 2011 14:57:00 GMT');
 		$app->response->headers->set('Content-Disposition', 'attachment; filename=data.csv');
 		$get = $app->request->get();
-		if($get && isset($get['param']) && $json = json_decode($get['param'])){			
+		if($get && isset($get['param']) && $json = json_decode($get['param'])){		
 			$output = fopen('php://output', 'w');
+			fputs($output, $bom =( chr(0xEF) . chr(0xBB) . chr(0xBF) )); //UTF-8 BOM
 			$array = json_decode(json_encode($json), true);
 			$fields = array();
 			if(count($array)>0){

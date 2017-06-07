@@ -229,15 +229,17 @@ if(isset($_SERVER['LINCKO_WORKSPACE'])){
 //Information for coders
 $app->lincko->data['domain_debug'] = false;
 $subdomain = '';
-if(empty($_SERVER['LINCKO_FRONT'])){
-	$subdomain .= 'master';
-} else {
-	$subdomain .= $_SERVER['LINCKO_FRONT'];
-}
-if(empty($_SERVER['LINCKO_BACK'])){
-	$subdomain .= '-master';
-} else {
-	$subdomain .= '-'.$_SERVER['LINCKO_BACK'];
+if($app->lincko->domain!='lincko.com' && $app->lincko->domain!='lincko.co'){
+	if(empty($_SERVER['LINCKO_FRONT'])){
+		$subdomain .= 'master';
+	} else {
+		$subdomain .= $_SERVER['LINCKO_FRONT'];
+	}
+	if(empty($_SERVER['LINCKO_BACK'])){
+		$subdomain .= '-master';
+	} else {
+		$subdomain .= '-'.$_SERVER['LINCKO_BACK'];
+	}
 }
 if(!empty($app->lincko->data['workspace'])){
 	$subdomain .= '.'.$app->lincko->data['workspace'];
@@ -250,7 +252,7 @@ $app->lincko->data['subdomain'] = $subdomain;
 if($app->lincko->domain=='lincko.com'){
 	$app->lincko->data['domain_debug'] = false;
 } else if($app->lincko->domain=='lincko.co'){
-	$app->lincko->data['domain_debug'] = $app->lincko->domain;
+	$app->lincko->data['domain_debug'] = $subdomain.$app->lincko->domain;
 } else {
 	$app->lincko->data['domain_debug'] = $subdomain.$app->lincko->domain;
 }

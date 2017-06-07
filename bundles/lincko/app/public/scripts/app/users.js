@@ -163,7 +163,7 @@ var app_projects_users_contacts_init = function(subm){
 					"now": function(Elem, subm){
 						grant = false;
 						if(Lincko.storage.getWORKID()>0){
-							var role = Lincko.storage.userRole(wrapper_localstorage.uid);
+							var role = Lincko.storage.userRole(wrapper_localstorage.uid, 'projects', projects_id);
 							if(role && role.perm_grant){
 								grant = true;
 							}
