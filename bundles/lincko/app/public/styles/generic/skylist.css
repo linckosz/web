@@ -90,7 +90,7 @@
     line-height: 70px;
     font-size: 16px;
     color: #54add2;
-    padding-right: 8px;
+    padding-right: 6px;
 }
 .skylist_menu_people_dropdown [find=dropdown]{
 	position: relative;
@@ -136,6 +136,9 @@
     padding: 2px 0px;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+.skylist_menu_ringFilter [find="name"]{
+	text-transform: capitalize;
 }
 .skylist_menu_people_dropdownBlock [find="name"]{
     width: auto;
@@ -235,8 +238,14 @@
 .skylist_menu_ringFilter [find="canvasContainer"]{
 	position:relative;
 	height: 44px;
+	width: 44px;
+	margin: 0px auto;
+    margin-top: 6px;
+}
+.skylist_menu_ringFilter [find="canvasContainer"] canvas{
 	width: 100%;
-	margin-top: 6px;
+	height: 100%;
+	margin: 0 auto;
 }
 .skylist_menu_ringFilter [find="count"]{
     position: absolute;

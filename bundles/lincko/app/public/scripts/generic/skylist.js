@@ -3626,15 +3626,15 @@ skylist.prototype.menu_construct_addTimesort = function(){
 	}
 }
 
-skylist.prototype.menu_construct_returnRing = function(elem_appendTo, fill, total, count, name){
+skylist.prototype.menu_construct_returnRing = function(elem_appendTo, name){
+	//append first -- sometimes chart doesnt appear if elem is not already added to the DOM
 	var elem = $('#-skylist_menu_ringFilter').clone().removeAttr('id').appendTo(elem_appendTo);
 	var ctx = elem.find('canvas');
-	elem.find('[find=count]').text(count);
 	elem.children('[find=name]').text(name);
 	var data = {
 	    datasets: [
 		    {
-		        data: [total ? fill : 1, total-fill],
+		        data: [0, 0], //dummy values, use that.updateRings to calculate real values
 		        backgroundColor: ["#f5a026", '#d8d8d8'],
 		        hoverBackgroundColor: ["#f5a026", '#d8d8d8'],
 		        borderWidth: 0,
@@ -3645,6 +3645,7 @@ skylist.prototype.menu_construct_returnRing = function(elem_appendTo, fill, tota
 	    type: 'doughnut',
 	    data: data,
 	    options: {
+	    	responsive: false,
 	    	animation: {
 	    		duration: wrapper_performance.powerfull ? 1000 : 0,
 	    	},
@@ -3667,58 +3668,27 @@ skylist.prototype.menu_construct_addRingFilters = function(){
 	var elem_pane = that.elem_navbar.find('.skylist_menu_timesort');
 	elem_pane.append('<div class="skylist_menu_timesort_divider"></div>');
 
-	var items_overdue = [];
-	var now = new wrapper_date().time;
-	$.each(that.Lincko_itemsList, function(i, item){
-		if(tasks_isOverdue(item, now)){
-			items_overdue.push(item);
-		}
-	});
+	//build overdue ring
 	var elem_overdue = $('#-skylist_menu_ringFilter').clone().removeAttr('id').addClass('skylist_menu_ringFilter_overdue');
 	elem_overdue.find('[find=name]').text(Lincko.Translation.get('app', 3630, 'js'));//overdue
-	elem_overdue.find('[find=count]').text(items_overdue.length);
 	elem_pane.append(elem_overdue);
 
-
-	
-	var items_today = skylist.prototype.filter_by_duedate(that.Lincko_itemsList, 0);
-	items_today = skylist.prototype.filter_by_people(items_today, that.Lincko_itemsList_filter.people);
-	var approved_today = 0;
-	for(var i in items_today){
-		if(items_today[i].approved){
-			approved_today++;
-		}
-	}
-
+	//build today ring
 	var ring_today = that.menu_construct_returnRing(
-		elem_pane,
-		approved_today, 
-		items_today.length, 
-		items_today.length-approved_today,
-		Lincko.Translation.get('app', 3302, 'js').toUpperCase() //today
+		elem_pane, Lincko.Translation.get('app', 3302, 'js').toUpperCase() //today
 	);
 	var elem_today = ring_today[0];
 	that.rings.today = ring_today[1];
 
-
-	var items_tmr = skylist.prototype.filter_by_duedate(that.Lincko_itemsList, 1);
-	items_tmr = skylist.prototype.filter_by_people(items_tmr, that.Lincko_itemsList_filter.people);
-	var approved_tmr = 0;
-	for(var i in items_tmr){
-		if(items_tmr[i].approved){
-			approved_tmr++;
-		}
-	}
-
+	//build tomorrow ring
 	var ring_tmr = that.menu_construct_returnRing(
-		elem_pane,
-		approved_tmr, 
-		items_tmr.length, 
-		items_tmr.length-approved_tmr,
-		Lincko.Translation.get('app', 3303, 'js').toUpperCase() //tomorrow
+		elem_pane, Lincko.Translation.get('app', 3303, 'js').toUpperCase() //tomorrow
 	);
 	var elem_tmr = ring_tmr[0];
 	that.rings.tmr = ring_tmr[1];
+
+	//update values for overdue, today, tomorrow rings
+	that.updateRings();
 
 
 	//add selected css class based on filter settings
