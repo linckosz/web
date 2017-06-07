@@ -351,5 +351,9 @@
 }
 
 #app_content_dynamic_sub.max-width-900 #app_content_dynamic_layers.with_preview {
-	display: none !important;
+	/*display: none !important; toto => this breaks any chartjs graphs*/
+	width:0;
+	height: 0;
+	overflow: hidden;
+	z-index: 0;
 }
