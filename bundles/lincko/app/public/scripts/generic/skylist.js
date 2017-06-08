@@ -362,7 +362,7 @@ skylist.prototype.subConstruct_default = function(){
 			var items_paged = that.update_pagingList(that.list_filter());
 			
 			//update global view rings
-			if(that.pid == 0){ that.updateRings(); }
+			if(/*that.pid == 0*/true){ that.updateRings(); }
 
 			//there are no items. item deletion is done inside the individual item sync function
 			if(items_paged[0].length < 1){ return false; }
@@ -596,7 +596,7 @@ skylist.prototype.generate_Lincko_itemsList = function(){
 		}
 		else if(that.list_type == 'files'){
 			//for global view, hide files in global chats (e.g. must be descendant of a project)
-			if(that.pid == 0){
+			if(/*that.pid == 0*/true){
 				var excludeGlobalChatFiles = [];
 				var parent = [];
 				for(var i in that.Lincko_itemsList){
@@ -905,7 +905,7 @@ skylist.prototype.tasklist_update = function(type, filter_by){
 		that.elem_btn_sort.addClass('display_none');
 	}
 
-	if(that.pid == 0){ that.updateRings(); }
+	if(/*that.pid == 0*/true){ that.updateRings(); }
 	that.store_all_elem();
 
 	that.elem_card_all.velocity("fadeIn",{
@@ -3319,7 +3319,7 @@ skylist.prototype.menu_construct = function(){
 	that.elem_navbar = $('#-skylist_menu_navbar').clone().prop('id','skylist_menu_navbar');
 	that.list_wrapper.prepend(that.elem_navbar);
 
-	if(that.pid == 0 && that.list_type == 'tasks'){
+	if(/*that.pid == 0*/true && that.list_type == 'tasks'){
 		that.elem_navbar.addClass('skylist_menu_navbar_globalTask');
 		that.menu_construct_add_peopleDropdown();
 	} else {
@@ -3330,7 +3330,7 @@ skylist.prototype.menu_construct = function(){
 	that.menu_construct_add_searchbar();
 
 	if(that.list_type == 'tasks'){
-		if(that.pid > 0){
+		if(/*that.pid > 0*/false){
 			that.menu_construct_addTimesort();
 		} else {
 			that.menu_construct_addRingFilters();

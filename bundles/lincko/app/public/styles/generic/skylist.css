@@ -194,10 +194,10 @@
 }
 
 /*global view tasks layer*/
-.app_layers_tasks_tasklist[pid="0"] .skylist_menu_timesort{
+.app_layers_tasks_tasklist/*[pid="0"]*/ .skylist_menu_timesort{
 	height: 70px;
 }
-.app_layers_tasks_tasklist[pid="0"] .skylist_menu_navbar_filter_icon{
+.app_layers_tasks_tasklist/*[pid="0"]*/ .skylist_menu_navbar_filter_icon{
 	line-height: 70px;
 }
 .skylist_menu_ringFilter{
@@ -828,7 +828,7 @@
 .skylist_wrapper[view=paper] .skylist_subwrapper {
 	/*bottom: 120px;*/
 }
-.skylist_wrapper[view=paper]:not([pid="0"]) .skylist_newcardCircle{
+.skylist_wrapper[view=paper]/*:not([pid="0"])*/ .skylist_newcardCircle{
 	display: none;
 }
 .skylist_wrapper[view=paper] .skylist .iscroll_sub_div.scrollY{
