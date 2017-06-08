@@ -3634,7 +3634,7 @@ skylist.prototype.menu_construct_returnRing = function(elem_appendTo, name){
 	var data = {
 	    datasets: [
 		    {
-		        data: [0, 0], //dummy values, use that.updateRings to calculate real values
+		        data: [1, 0], //dummy values, use that.updateRings to calculate real values
 		        backgroundColor: ["#f5a026", '#d8d8d8'],
 		        hoverBackgroundColor: ["#f5a026", '#d8d8d8'],
 		        borderWidth: 0,
