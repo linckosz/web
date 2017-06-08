@@ -204,9 +204,13 @@ submenu_list['taskdetail'] = {
 							base_show_error(Lincko.Translation.get('app', 51, 'html'), true); //Operation not allowed
 						}
 					}
-				}
-				else
-				{
+				} else if(subm.param.type == "tasks"){
+					base_show_error(Lincko.Translation.get('app', 3631, 'html'), true); //You don't have enough permission to delete a task you did not create
+				} else if(subm.param.type == "notes"){
+					base_show_error(Lincko.Translation.get('app', 3632, 'html'), true); //You don't have enough permission to delete a note you did not create
+				} else if(subm.param.type == "files"){
+					base_show_error(Lincko.Translation.get('app', 3633, 'html'), true); //You don't have enough permission to delete a file you did not create
+				} else {
 					base_show_error(Lincko.Translation.get('app', 51, 'html'), true); //Operation not allowed
 				}
 

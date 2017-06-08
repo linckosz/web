@@ -2696,6 +2696,12 @@ skylist.prototype.add_cardEvents = function(Elem){
 			};
 			that.clearOptions(Elem, begin_fn, complete_fn);
 			
+		} else if( that.list_type == "tasks" ){
+			base_show_error(Lincko.Translation.get('app', 3631, 'html'), true); //You don't have enough permission to delete a task you did not create
+		} else if( that.list_type == "notes" ){
+			base_show_error(Lincko.Translation.get('app', 3632, 'html'), true); //You don't have enough permission to delete a note you did not create
+		} else if( that.list_type == "files" ){
+			base_show_error(Lincko.Translation.get('app', 3633, 'html'), true); //You don't have enough permission to delete a file you did not create
 		} else {
 			base_show_error(Lincko.Translation.get('app', 51, 'html'), true); //Operation not allowed
 		}
