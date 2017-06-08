@@ -28,6 +28,11 @@
     margin: 0px 10px;
     border-radius: 3px;
     padding: 0px 4px;
+    position: relative;
+    z-index: 11;
+}
+.skylist_menu_navbar_globalTask .skylist_menu_navbar_top{
+	padding:0px;
 }
 
 .skylist_menu_navbar .icon-Indicator {
@@ -40,8 +45,6 @@
 	line-height: 48px;
 }
 .skylist_menu_navbar_globalTask .skylist_menu_people{    
-	position: absolute;
-	left: 10px;
     top: 0px;
     height: 70px;
     z-index: 12;
@@ -77,6 +80,7 @@
 }
 
 .skylist_menu_people_dropdown {
+	position: relative;
 	width: 84px;
 }
 .skylist_menu_people_dropdown .iScrollVerticalScrollbar{
@@ -145,9 +149,7 @@
     left: 4px;
     right: 4px;
 }
-.skylist_menu_navbar_globalTask .skylist_menu_timesort{
-	margin-left: 82px;
-}
+
 .skylist_menu_timesort {
 	position: relative;
 	overflow: hidden;
@@ -221,6 +223,9 @@
     margin: 12px 4px;
     display: inline-block;
     background-color: #fba026;
+   	position: absolute;
+    right: -6px;
+    top: 0px;
 }
 
 .skylist_menu_ringFilter.skylist_menu_ringFilter_overdue canvas{
@@ -268,7 +273,7 @@
 	top: 0;
 	right: 0;
 	font-size: 25px;
-	padding: 0px 20px;
+	padding: 0px 10px;
 	line-height: 48px;
 	color: #54add2;
 }
@@ -828,7 +833,7 @@
 .skylist_wrapper[view=paper] .skylist_subwrapper {
 	/*bottom: 120px;*/
 }
-.skylist_wrapper[view=paper]/*:not([pid="0"])*/ .skylist_newcardCircle{
+.skylist_wrapper[view=paper]:not([pid="0"]) .skylist_newcardCircle{
 	display: none;
 }
 .skylist_wrapper[view=paper] .skylist .iscroll_sub_div.scrollY{
@@ -1186,18 +1191,18 @@
 	line-height: 25px;
 }
 .skylist_maxMobileL .skylist_menu_people_dropdown{
-	width: 64px;
+	width: 68px;
 }
 .skylist_maxMobileL .skylist_menu_people_dropdown [find="arrow"]{
-	padding-right: 0px;
+	padding-right: 2px;
 }
 .skylist_maxMobileL .skylist_menu_ringFilter{
-	width: 58px;
+	width: 62px;
 }
 .skylist_maxMobileL .skylist_menu_navbar_globalTask .skylist_menu_timesort{
 	margin: 0px;
-    margin-left: 64px;
     text-align: left;
+    padding-left: 2px;
 }
 /*.skylist_maxMobileL_force .skylist_menu_timesort_text_wrapper,*/
 .skylist_maxMobileL .skylist_menu_timesort_text_wrapper {

@@ -3319,21 +3319,27 @@ skylist.prototype.menu_construct = function(){
 	that.elem_navbar = $('#-skylist_menu_navbar').clone().prop('id','skylist_menu_navbar');
 	that.list_wrapper.prepend(that.elem_navbar);
 
+	var personal = Lincko.storage.get("projects", that.pid, 'personal_private');
+
 	if(/*that.pid == 0*/true && that.list_type == 'tasks'){
 		that.elem_navbar.addClass('skylist_menu_navbar_globalTask');
-		that.menu_construct_add_peopleDropdown();
-	} else {
+		if(!personal){
+			that.menu_construct_add_peopleDropdown();
+		}
+	}
+	else if(!personal){
 		that.menu_construct_add_peopleToggle();
 	}
+
 	
 	that.menu_construct_add_btnFilter();
 	that.menu_construct_add_searchbar();
 
 	if(that.list_type == 'tasks'){
-		if(/*that.pid > 0*/false){
-			that.menu_construct_addTimesort();
-		} else {
+		if(/*that.pid == 0*/true){
 			that.menu_construct_addRingFilters();
+		} else {
+			that.menu_construct_addTimesort();
 		}
 	}
 }
@@ -3364,7 +3370,7 @@ skylist.prototype.menu_construct_add_peopleDropdown = function(){
 		var elem_person = $('#-skylist_menu_people_dropdownBlock').clone().removeAttr('id');
 		if(uid){
 			var id_pic = Lincko.storage.get("users", uid, 'profile_pic');
-			var url = id_pic ? Lincko.storage.getLinkThumbnail(id_pic) : app_application_icon_single_user.src;
+			var url = Lincko.storage.getLinkThumbnail(id_pic) || app_application_icon_single_user.src;
 			elem_person.find('[find="profile"]').css('background-image', 'url('+url+')');
 			elem_person.find('[find="name"]').text(Lincko.storage.get("users", uid, '-username'));
 			elem_person.addClass('skylist_menu_people_dropdownBlock_profile');
@@ -3464,7 +3470,7 @@ skylist.prototype.menu_construct_add_peopleToggle = function(){
 	if( Lincko.storage.get("projects", app_content_menu.projects_id, 'personal_private') ){
 		elem_people2.addClass('display_none');
 		elem_people1.addClass('display_none');
-	}
+	} 
 
 	elem_people1.click(function(){
 		if( !$(this).hasClass('skylist_menu_selected')){
@@ -3666,7 +3672,6 @@ skylist.prototype.menu_construct_returnRing = function(elem_appendTo, name){
 skylist.prototype.menu_construct_addRingFilters = function(){
 	var that = this;
 	var elem_pane = that.elem_navbar.find('.skylist_menu_timesort');
-	elem_pane.append('<div class="skylist_menu_timesort_divider"></div>');
 
 	//build overdue ring
 	var elem_overdue = $('#-skylist_menu_ringFilter').clone().removeAttr('id').addClass('skylist_menu_ringFilter_overdue');
