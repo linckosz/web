@@ -688,7 +688,9 @@ $(window).resize(function(){
 
 function wrapper_clean_chart(id_elem_parent){
 	for(var i in Chart.instances){
-		if(id_elem_parent && id_elem_parent == Chart.instances[i].chart.canvas.offsetParent.id){
+		if(id_elem_parent 
+			&& Chart.instances[i].chart.canvas.offsetParent 
+			&& id_elem_parent == Chart.instances[i].chart.canvas.offsetParent.id){
 			Chart.instances[i].destroy();
 		}
 		else if(!Chart.instances[i].chart.canvas.clientWidth){

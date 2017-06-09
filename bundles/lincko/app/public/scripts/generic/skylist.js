@@ -521,7 +521,9 @@ skylist.prototype.destroy = function(){
 	$(window).off("resize.skylist_"+that.md5id);
 	$('body').off("mouseleave.skylist_"+that.md5id);
 	$(document).off("submenuHide.skylist_"+that.md5id);
+
 	for( var g in that ){
+		clearTimeout(that[g]);
 		that[g] = null;
 		delete that[g];
 	}
