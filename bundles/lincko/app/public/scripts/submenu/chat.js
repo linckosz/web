@@ -944,7 +944,7 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 
 		var field = 'invitation_invite';
 		var pending = Lincko.storage.get('users', wrapper_localstorage.uid, 'pending');
-		if(typeof pending == 'object' && typeof pending[data['id']] == 'object'){
+		if(pending && typeof pending == 'object' && typeof pending[data['id']] == 'object'){
 			field = 'invitation_resend';
 		}
 
