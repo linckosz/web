@@ -71,6 +71,11 @@ var app_layers_dashboard_feedPage = function(param){
 	var ctx_taskHistory = elem_taskHistory_wrapper.find('canvas');
 	elem_overthrow.append(elem_taskHistory_wrapper);
 
+	//team canvas
+	var elem_team_wrapper = $('#-app_layers_dashboard_team_wrapper').clone().prop('id', '');
+	var ctx_team = elem_team_wrapper.find('canvas');
+	elem_overthrow.append(elem_team_wrapper);
+
 
 
 
@@ -129,7 +134,6 @@ var app_layers_dashboard_feedPage = function(param){
 			}
 
 			$.each(tasks, function(j, task){
-
 				//open task (task already created and not yet approved OR approved later)
 				if(task.created_at <= timestamp && (!task.approved_at || task.approved_at > timestamp)){
 					burn_data.open[i]++;
@@ -137,7 +141,6 @@ var app_layers_dashboard_feedPage = function(param){
 				else if(timestamp <= timestamp_cutoff && task.created_at <= timestamp && task.approved_at && task.approved_at <= timestamp){
 					burn_data.completed[i]++;
 				}
-
 			});
 		});
 
@@ -211,12 +214,344 @@ var app_layers_dashboard_feedPage = function(param){
 			});
 		});
 
+		
 		var chart_taskHistory = app_layers_dashboard_build_taskHistory(ctx_taskHistory, taskHistory_data.labels, taskHistory_data.team, taskHistory_data.user, taskHistory_stepSize_days);
 		app_layers_dashboard_chartInst.push(chart_taskHistory);
+
 	}
 
 
+	var access_list = Lincko.storage.whoHasAccess('projects', pid);
+	var each_member_list = {};
+
+
+	var each_tasks = Lincko.storage.list('tasks', -1, 
+	[{
+		_tasksup: null, //exclude subtasks
+		duration: ['>', 0],			
+	}], 'projects', pid, false, false);
+
+
+	var data = {};
+	data.users = [];
+	data.count = [];
+	data.completed = [];
+	data.open = [];
+	data.overdue = [];
+	data.helper = [];
+	for(var i in each_tasks){
+		var approved = each_tasks[i]['approved'];
+		//console.log(approved);
+		$.each(each_tasks[i]['_users'],function(key,value){
+			if(value.in_charge)
+			{
+				if(typeof each_member_list[key] == 'undefined'){
+					each_member_list[key] = {
+						id : key,
+						user_name : Lincko.storage.get('users',key,'username'),
+						count : 1,
+						completed : approved ? 1 : 0 ,
+						overdue : tasks_isOverdue(each_tasks[i]) ? 1 : 0,
+					}
+				}
+				else{
+					each_member_list[key].count ++ ;
+					if(approved){
+						each_member_list[key].completed ++ ;
+					}
+					if(tasks_isOverdue(each_tasks[i])){
+						each_member_list[key].overdue ++ ;
+					}
+				}
+			}
+		});
+	}
+
+	$.each(each_member_list,function(key,value){
+		data.users.push(key);
+		data.count.push(value.count);
+		data.completed.push(value.completed);
+		data.open.push(value.count - value.completed);
+		data.overdue.push(value.overdue);
+		data.helper.push('');
+	});
+
+
+	elem_team_wrapper.find('[find=canvasWrapper]').prop('id','app_layers_dashboard_build_team_wrapper');
+	
+	elem_team_wrapper.find('[find=canvasContainer]').css('height','300px');
+	elem_team_wrapper.find('[find=canvasWrapper]').css('width','100%');
+
+	if(data.users.length > 7)
+	{
+		elem_team_wrapper.find('[find=canvasWrapper]').css('height','360px');
+		elem_team_wrapper.find('[find=canvasContainer]').css('width',(parseInt(data.users.length  * elem_team_wrapper.find('[find=canvasWrapper]').width() / 7)  + 'px' ) );
+		//elem_team_wrapper.find('[find=canvasContainer]').css('width','100%');
+		//elem_team_wrapper.find('canvas').css('width', '100%');
+		
+		elem_team_wrapper.find('[find=canvasContainer]').css('position','relative');
+		elem_team_wrapper.find('[find=canvasWrapper]').addClass('overthrow');
+		wrapper_IScroll_options_new['app_layers_dashboard_build_team_wrapper'] = { 
+			scrollX: true, 
+			scrollY: false, 
+			mouseWheel: false, 
+			fadeScrollbars: true,
+		};
+	}
+	else
+	{
+		elem_team_wrapper.find('[find=canvasWrapper]').css('height','300px');
+		elem_team_wrapper.find('[find=canvasContainer]').css('width',elem_team_wrapper.find('[find=canvasWrapper]').width());
+	}
+	
+
+	var chart_team = app_layers_dashboard_build_team(ctx_team,data);
+		app_layers_dashboard_chartInst.push(chart_team);
+
+
+	
+
+
+
 };//end of app_layers_dashboard_feedPage()
+
+function app_layers_dashboard_build_team(ctx,data){
+	var options = {
+		layout: {
+			padding: {
+				left: 50,
+				top: 10,
+			},
+		},
+    	hover: {
+			mode: 'index',
+			intersect: false,
+        	animationDuration: 0,
+        	onHover: function(){
+
+        	},
+        },
+    	tooltips: {
+			mode:'index',
+			intersect: false,
+			callbacks: {
+				label: function(tooltip, cdata){
+					return ' ' + Math.round(tooltip.yLabel) + ' (' + cdata.datasets[tooltip.datasetIndex].label + ')';
+				},
+				labelColor:function(tooltip, cdata){
+					if(tooltip.datasetIndex == 2){
+						return { 
+							backgroundColor:'rgb(208, 1, 27)'
+						};
+					}
+					else{
+						return { 
+							backgroundColor:cdata.data.datasets[tooltip.datasetIndex].backgroundColor 
+						};
+					}
+				},
+				title : function(tooltip, cdata){
+					return Lincko.storage.get('users',data.users[tooltip[0].index],'username');
+				}
+			}
+		},
+		maintainAspectRatio: false,
+		legend: {
+			display: false,
+    	},
+		cornerRadius: 10,
+    	scales: {
+    		yAxes: [{
+    			display: false,
+    			gridLines: {
+    				display: false,
+    				zeroLineWidth: 0,
+    				zeroLineColor: "rgba(0, 0, 0, 0)",
+    			}
+    		}],
+	        xAxes: [{
+	        	gridLines: {
+	        		display: false,
+	        		//offsetGridLines: false,
+	        		zeroLineWidth: 0,
+	        	},
+	    	 	barThickness: 30,
+	            barPercentage: 0.5,
+	            categoryPercentage: 0.1,
+	        }],
+		},
+		datasetFill : true,   
+		animation: {
+			onComplete: function(){
+				var dataset_meta = this.data.datasets[0]._meta[Object.keys(this.data.datasets[0]._meta)[0]];
+				var dataset_meta1 = this.data.datasets[1]._meta[Object.keys(this.data.datasets[1]._meta)[0]];
+				var offset = dataset_meta.data.length > 7 ? 20 :0;
+ 				for(var i in dataset_meta.data)
+ 				{
+ 					var dataset_x = dataset_meta.data[i]._model.x;
+					var dataset_y = dataset_meta.data[i]._model.y;
+					var dataset_width = dataset_meta.data[i]._model.width;
+
+ 					var show_completed_num = $('#dashboard_task_completed_index_' + i);
+ 					if(show_completed_num.length <= 0)
+ 					{
+ 						show_completed_num = $('<span>' + data.completed[i] + '</span>');
+ 						show_completed_num.prop('id','dashboard_task_completed_index_' + i);
+ 						$('#app_layers_dashboard .app_layers_dashboard_team_wrapper').find('canvas').after(show_completed_num); 	
+ 					}
+
+ 					show_completed_num.css({
+						'visibility': 'visible',
+						'display':'block',
+						'width':dataset_width,
+						'bottom': 30,
+						'left': dataset_x + 5 - offset,
+						'text-align':'center',
+						'position':'absolute',
+						'z-index':'99',
+					});
+
+ 					dataset_x = dataset_meta1.data[i]._model.x;
+					dataset_y = dataset_meta1.data[i]._model.y;
+					dataset_width = dataset_meta1.data[i]._model.width;
+
+
+
+					var show_all_num = $('#dashboard_task_all_index_' + i);
+ 					if(show_all_num.length <= 0)
+ 					{
+ 						show_all_num = $('<span>' + data.open[i] + '</span>');
+ 						show_all_num.prop('id','dashboard_task_all_index_' + i);
+ 						$('#app_layers_dashboard .app_layers_dashboard_team_wrapper').find('canvas').after(show_all_num);
+ 					}
+ 					show_all_num.css({
+						'visibility': 'visible',
+						'display':'block',
+						'width':dataset_width - 4,
+						'padding-right':4,
+						'color':'#ffffff',
+						'top': dataset_y,
+						'left': dataset_x + 5  - offset,
+						'text-align':'right',
+						'position':'absolute',
+						'z-index':'99',
+					});
+					
+ 					
+
+
+					var show_profile = $('#dashboard_task_profile_index_' + i);
+ 					if(show_profile.length <= 0)
+ 					{
+ 						var url_pic = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", data.users[i], 'profile_pic'));
+
+ 						if(!url_pic){
+							url_pic = app_application_icon_single_user.src;
+						}
+
+						show_profile = $('<div/>');
+	 					show_profile.prop('id','dashboard_task_profile_index_' + i);
+	 					$('#app_layers_dashboard .app_layers_dashboard_team_wrapper').find('canvas').after(show_profile); 	
+
+ 						show_profile.css({
+							'background-image': 'url("' + url_pic + '")',
+							'background-color': '#ffffff',
+							'font-size': 0,
+							'height': 30,
+							'width': 30,
+							'bottom': -10,
+							'left': dataset_x ,
+							'position':'absolute',
+							'border': '1px solid #FBA026',
+							'border-radius': '50%',
+							'background-position': 'center',
+							'background-size': 'cover',
+							'background-repeat': 'no-repeat',
+						});
+		   	 		}
+
+
+		   	 		show_profile.css({
+						'left': dataset_x  - offset,	
+					});
+
+
+					var show_overdue = $('#dashboard_task_overdue_index_' + i);
+					if(show_overdue.length <= 0 && data.overdue[i] > 0 ){
+						show_overdue = $('<span/>');
+						show_overdue.text(data.overdue[i]);
+	 					show_overdue.prop('id','dashboard_task_overdue_index_' + i);
+	 					$('#app_layers_dashboard .app_layers_dashboard_team_wrapper').find('canvas').after(show_overdue); 	
+	 					var height = 16 + 2 * (data.overdue[i] - 1);
+	 					var bottom = -30 - 2 * (data.overdue[i] - 1);
+	 					// var height = 16;
+	 					// var bottom = -30;
+	 					var radius = 8 ;
+	 					show_overdue.css({
+	 						'display':'block',
+	 						'width': 30,
+	 						'background-color': '#d0011b',
+							'height': height,
+							'font-size':12,
+							'line-height': height +'px',
+							'bottom': bottom,
+							'color': '#ffffff',
+							'border-radius': radius ,
+							'position':'absolute',
+							'text-align':'center',
+							'background-position': 'center',
+							'background-size': 'cover',
+							'background-repeat': 'no-repeat',
+						});
+					}
+
+
+					show_overdue.css({
+						'left': dataset_x  - offset,		
+					});
+
+
+ 				}
+
+			},
+		},
+    }
+
+
+
+	var chart_team = new Chart(ctx, {
+	    type: 'bar',
+	    options: options,
+	    data: {
+	        labels: data.helper,
+	        datasets: [	       		
+		        {
+					type: 'bar',
+					label: Lincko.Translation.get('app', 1902, 'html'), //'Completed Tasks'
+					data: data.completed,
+					borderColor:'#f5a026',
+					backgroundColor: '#f5a026'
+		        },
+				{
+					type: 'bar',
+					label: Lincko.Translation.get('app', 1903, 'html'), //'All The Tasks'
+					data:  data.open,
+					borderColor: '#d8d8d8',
+					backgroundColor: '#d8d8d8'
+				},
+				{
+					type: 'bar',
+					label:Lincko.Translation.get('app', 3630, 'html'), //'Overdue'
+					data:  data.overdue,
+					backgroundColor: 'transparent'
+				},
+
+	        ]
+	    },
+	});
+	
+	return chart_team;
+}
 
 
 function app_layers_dashboard_build_burndown(ctx, labels, ideal, completed, open, percent_bike){
@@ -315,7 +650,7 @@ function app_layers_dashboard_build_burndown(ctx, labels, ideal, completed, open
 
 					var t_bike = dataset_0_y - h_bike;
 					var l_bike_begin = dataset_0_x - w_bike;
-					var l_bike_end = dataset_0_x+(dataset_last_x - dataset_0_x)*percent_bike - w_bike;
+					var l_bike_end = dataset_0_x + (dataset_last_x - dataset_0_x) * percent_bike - w_bike;
 
 					elem_bike.css({
 						'visibility': 'visible',
@@ -400,12 +735,11 @@ function app_layers_dashboard_build_taskHistory(ctx, labels, data_team, data_use
 		    	var elem_dataset_1 = elem_legend.find('[dataset=1]');
 
 		    	var url_pic = Lincko.storage.getLinkThumbnail(Lincko.storage.get("users", wrapper_localstorage.uid, 'profile_pic'));
-		    	if(url_pic){
-		    		elem_dataset_1.css({
-		    			'background-image': 'url("'+url_pic+'")',
-		    			'font-size': 0,
-		    		});
-		    	}
+
+				elem_dataset_1.css({
+	    			'background-image': 'url("'+url_pic+'")',
+					'font-size': 0,
+				});
 
 		    	var dataset_0_meta = this.data.datasets[0]._meta;
 		    	var dataset_0_x = dataset_0_meta[Object.keys(dataset_0_meta)[0]].data[0]._model.x;
@@ -418,13 +752,11 @@ function app_layers_dashboard_build_taskHistory(ctx, labels, data_team, data_use
 		    	if(Math.abs(dataset_0_y - dataset_1_y) < elem_dataset_0.outerHeight()){
 		    		vOffset = elem_dataset_0.outerHeight();
 		    	}
-		    	elem_dataset_0.css('top', dataset_0_y - elem_dataset_0.outerHeight()/2 -vOffset);
+		    	elem_dataset_0.css('top', dataset_0_y - elem_dataset_0.outerHeight()/2 - vOffset);
 		    	elem_dataset_1.css('top', dataset_1_y - elem_dataset_0.outerHeight()/2);
 
-		    	
-
 		    	var left = dataset_0_x - elem_legend.outerWidth()/2;
-		    	elem_legend.css('left', left);
+				elem_legend.css('left', left);
 		    	
 		    },
 		},
@@ -495,15 +827,15 @@ function app_layers_dashboard_build_taskHistory(ctx, labels, data_team, data_use
 		            hitRadius: 8,
 		        },
 		        {
-		            label: Lincko.Translation.get('app', 2102, 'html'), //me
-		            data: data_user,
-		            lineTension: 0,
-		            borderColor: "#475577",
-		            backgroundColor: "#475577",
-		            fill: false,
-		            pointRadius: 0,
-		            borderWidth: 2,
-		            hitRadius: 8,
+					label: Lincko.Translation.get('app', 2102, 'html'), //me
+					data: data_user,
+					lineTension: 0,
+					borderColor: "#475577",
+					backgroundColor: "#475577",
+					fill: false,
+					pointRadius: 0,
+					borderWidth: 2,
+					hitRadius: 8,
 		        },
 	        ],
 	    },

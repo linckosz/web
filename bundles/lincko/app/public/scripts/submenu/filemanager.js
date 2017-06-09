@@ -251,15 +251,10 @@ Submenu.prototype.AddFilemanagerContent = function() {
 		}
 	}
 
-
-	
-
 	setTimeout(function(){
 		file_refresh(that.param.upload_type,that.param.upload_pid,that.param.upload_param,that.param.old_upload_flag,that.param.upload_flag,target,item_width,item_height,border_size,true);
 	},200);
 	
-
-
 	//sysn
 	app_application_lincko.add('filemanager_'+that.id, "upload",function(){
 		var upload_type = this.action_param[0];

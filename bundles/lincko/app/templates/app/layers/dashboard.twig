@@ -20,6 +20,7 @@
 		<div find="header">{{ _trans('app', 19, 2, 'html') }}{# Project Burndown #}</div>
 		<div find="btn_range" class="display_none"></div>
 		<div find="noChart" class="display_none">{{ _trans('app', 19, 1, 'html') }}{# There is not enough data to display chart. #}</div>
+
 		<div find="chartContainer">
 			<div find="legend">
 				<div find="open"><span find="hoverText">{{ _trans('app', 8000, 1903, 'html') }}{# Open Tasks #}</span></div>
@@ -47,6 +48,23 @@
 				</div>
 			</span>
 			<canvas></canvas>
+		</div>
+	</div>
+
+	<div id="-app_layers_dashboard_team_wrapper" class="app_layers_dashboard_chartBlock app_layers_dashboard_team_wrapper">
+		<div find="header">团队</div>
+		<div find="btn_range" class="display_none"></div>
+		<div find="noChart" class="display_none">{{ _trans('app', 19, 1, 'html') }}{# There is not enough data to display chart. #}</div>
+		<div find="chartContainer">
+			<div find="legend">
+				<div find="open"><span find="hoverText">{{ _trans('app', 8000, 1903, 'html') }}{# Open Tasks #}</span></div>
+				<div find="completed"><div class="fa fa-check"></div><span find="hoverText">{{ _trans('app', 8000, 1902, 'html') }}{# Completed Tasks #}</span></div>			
+			</div>
+			<div find="canvasWrapper">
+				<div find="canvasContainer">
+					<canvas></canvas>
+				</div>
+			</div>
 		</div>
 	</div>
 

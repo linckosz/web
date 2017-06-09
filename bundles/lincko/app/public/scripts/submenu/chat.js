@@ -293,6 +293,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 		exists_tab[this.id] = true;
 	});
 
+
 	var temp = Lincko.storage.list('users', null);
 	if(temp){
 		for(var i in temp){

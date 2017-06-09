@@ -52,12 +52,21 @@
 	position: relative;
 	padding: 0px 20px 0px 20px;
 	height: 200px;
+    margin-bottom: 50px !important;
 }
 
-/*burndown*/
+
+
+/*burndown、team*/
+.app_layers_dashboard_team_wrapper [find=chartContainer]{
+     height: auto;
+}
+
 .app_layers_dashboard_burndown_wrapper [find=chartContainer]{
     height: 300px;
 }
+
+.app_layers_dashboard_team_wrapper [find=legend],
 .app_layers_dashboard_burndown_wrapper [find=legend]{
     position: absolute;
     top: 0px;
@@ -66,6 +75,7 @@
     width: 20px;
     margin: 0px 30px;
 }
+.app_layers_dashboard_team_wrapper [find=legend] [find=hoverText],
 .app_layers_dashboard_burndown_wrapper [find=legend] [find=hoverText]{
     position: absolute;
     left: 24px;
@@ -78,7 +88,9 @@
     padding: 6px 6px;
     border-radius: 5px;
 }
+.app_layers_dashboard_team_wrapper [find=legend] [find=open],
 .app_layers_dashboard_burndown_wrapper [find=legend] [find=open],
+.app_layers_dashboard_team_wrapper [find=legend] [find=completed],
 .app_layers_dashboard_burndown_wrapper [find=legend] [find=completed]{
 	border: solid 1px #d8d8d8;
 	position: absolute;
@@ -91,19 +103,27 @@
     font-size: 18px;
     line-height: 18px;
 }
+.app_layers_dashboard_team_wrapper [find=legend] [find=open]:hover [find=hoverText],
 .app_layers_dashboard_burndown_wrapper [find=legend] [find=open]:hover [find=hoverText],
+.app_layers_dashboard_team_wrapper [find=legend] [find=completed]:hover [find=hoverText],
 .app_layers_dashboard_burndown_wrapper [find=legend] [find=completed]:hover [find=hoverText]{
     visibility: visible;
 }
+
+.app_layers_dashboard_team_wrapper [find=legend] [find=open],
 .app_layers_dashboard_burndown_wrapper [find=legend] [find=open]{
     top: 70px;
     color: #d8d8d8;
 }
+
+.app_layers_dashboard_team_wrapper [find=legend] [find=completed],
 .app_layers_dashboard_burndown_wrapper [find=legend] [find=completed]{
     bottom: 70px;
     border-color: #f5a026;
     color: #f5a026;
 }
+
+.app_layers_dashboard_team_wrapper [find=legend] [find=completed]>div,
 .app_layers_dashboard_burndown_wrapper [find=legend] [find=completed]>div{
     display: block;
 }
