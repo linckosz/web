@@ -3695,7 +3695,7 @@ skylist.prototype.menu_construct_addRingFilters = function(){
 	var elem_pane = that.elem_navbar.find('.skylist_menu_timesort');
 
 	//build overdue ring
-	var elem_overdue = $('#-skylist_menu_ringFilter').clone().removeAttr('id').addClass('skylist_menu_ringFilter_overdue');
+	var elem_overdue = $('#-skylist_menu_ringFilter').clone().removeAttr('id').attr('find','overdue');
 	elem_overdue.find('[find=name]').text(Lincko.Translation.get('app', 3630, 'js'));//overdue
 	elem_pane.append(elem_overdue);
 
@@ -3762,6 +3762,9 @@ skylist.prototype.menu_construct_addRingFilters = function(){
 
 skylist.prototype.updateRings = function(){
 	var that = this;
+
+	//update overview ring
+	var elem_overdue = that.elem_navbar.find('[find="overdue"]');
 	var count_overdue = 0;
 	var now = new wrapper_date().time;
 	$.each(skylist.prototype.filter_by_people(that.Lincko_itemsList, that.Lincko_itemsList_filter.people), function(i, item){
@@ -3769,8 +3772,14 @@ skylist.prototype.updateRings = function(){
 			count_overdue++;
 		}
 	});
-	that.elem_navbar.find('.skylist_menu_ringFilter_overdue [find="count"]').text(count_overdue);
+	if(count_overdue > 0){
+		elem_overdue.addClass('skylist_menu_ringFilter_overdue');
+	} else {
+		elem_overdue.removeClass('skylist_menu_ringFilter_overdue');
+	}
+	elem_overdue.find('[find="count"]').text(count_overdue);
 
+	//update today and tomorrow chartjs rings
 	if(that.rings && !$.isEmptyObject(that.rings)){
 		$.each(that.rings, function(key, ring){
 			if(ring instanceof  Chart.Controller){
