@@ -783,7 +783,6 @@ inputter.prototype.buildLayer = function()
 					that.height = control.height()
 				}
 			},400);
-			
 		});
 
 		input.find('[find=chat_textarea]').on('blur',function(){

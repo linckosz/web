@@ -123,6 +123,7 @@ var app_submenu_scrollto = function(iScroll, last, scroll_time){
 	app_submenu_scrollto_timeout = setTimeout(function(last){
 		submenu_resize_content();
 		if(last){
+
 			iScroll.scrollToElement(last, scroll_time);
 		}
 	}, 200, last);
@@ -407,7 +408,7 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 			var help_iscroll_elem =  $('#'+that.id+'_help_iscroll').get(0);
 			if(myIScrollList[overthrow_id] && help_iscroll_elem){
 				myIScrollList[overthrow_id].refresh();
-				app_submenu_scrollto(myIScrollList[overthrow_id], help_iscroll_elem, scroll_time);
+				//app_submenu_scrollto(myIScrollList[overthrow_id], help_iscroll_elem, scroll_time);
 			}
 		});
 

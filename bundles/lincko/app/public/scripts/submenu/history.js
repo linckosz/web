@@ -662,14 +662,15 @@ ActivityContentCls.prototype.feed_action = function(elem,subm)
 	if(that.disableActionClick){ return; } //dont add click event if disabled
 	if(this.category != 'projects')
 	{
-		elem.find("[find=target]").click({'subm':subm,'type':that.category,'target_id':that.target_id},function(event){
-			var subm = event.data.subm;
-			var type = event.data.type;
-			var target_id = event.data.target_id;
-			submenu_Build('taskdetail', -1 , null,  {'type':type, 'id': target_id},  subm.preview);
+
+		elem.find("[find=target]").click({'subm':subm,'type':that.category,'target_id':that.target_id},
+			function(event){
+				var subm = event.data.subm;
+				var type = event.data.type;
+				var target_id = event.data.target_id;
+				submenu_Build('taskdetail', -1 , null,  {'type':type, 'id': target_id},  subm.preview);
 		});
 	}
-	
 }
 
 var ActivityCommentContentCls = function(record,type)
