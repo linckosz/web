@@ -2553,11 +2553,13 @@ Submenu.prototype.Add_taskdetail = function() {
 					});
 				}
 
+				app_application_lincko.clean(elem_editorToolbar.prop('id'));
 				app_application_lincko.add(
 					elem_editorToolbar.prop('id'),
 					that.param.type+'_'+item['_id'],
 					function(){
-						var locked_by = Lincko.storage.get(that.param.type, item['_id'], 'locked_by');						
+						var item_latest = Lincko.storage.get(that.param.type, item['_id']);
+						var locked_by = item_latest.locked_by;					
 						if(locked_by && locked_by != wrapper_localstorage.uid
 							&& CKEDITOR && CKEDITOR.instances && CKEDITOR.instances[elem_description_text.prop('id')]){
 							editorInst = null;
@@ -2567,10 +2569,10 @@ Submenu.prototype.Add_taskdetail = function() {
 						else if(this.updated 
 							 && this.updated[that.param.type+'_'+item['_id']] 
 							 && this.updated[that.param.type+'_'+item['_id']]['-comment']
-							 && Lincko.storage.get(that.param.type, item['_id'], 'updated_by') != wrapper_localstorage.uid){
+							 && item_latest.updated_by != wrapper_localstorage.uid){
 							//even when editing, if there is a comment change with updated_by != editor, then update text
 							//once starting to edit, should not be issue since it is locked and nobody else can update
-							elem_description_text.html(locked_by['-comment']);
+							elem_description_text.html(item_latest['-comment']);
 						}
 					}
 				);
@@ -2589,6 +2591,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			elem_editorToolbar.empty().append($('#-submenu_taskdetail_description_toolbar_locked').clone().prop('id', id_elem_locked));
 
 			$('#'+id_elem_locked).text(Lincko.Translation.get('app', 3614, 'html', {username: Lincko.storage.get('users', item_locked_by.locked_by,'username')}));
+			app_application_lincko.clean(id_elem_locked);
 			app_application_lincko.add(
 				id_elem_locked,
 				that.param.type+'_'+item['_id'],
