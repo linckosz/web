@@ -2157,28 +2157,42 @@ skylist.prototype.addTask = function(item){
 			});
 		}
 		setTimeout(function(){
+			//sync function to update the linkbox once uploading is finished
+			app_application_lincko.add(elem_expandable_links.prop('id'), 'files', function(){
+				var elem_id = this.id;
+				var parent_type = this.action_param.parent_type;
+				var parent_id = this.action_param.parent_id;
+				
+				var triggerParentSync = false;
+				var elem_temp_id = $('#'+elem_id).find('[temp_id]');
+				if(elem_temp_id.length){
+					$.each(elem_temp_id, function(i, elem){
+						var temp_id = $(elem).attr('temp_id');
+						var item_file = Lincko.storage.list('files',1,{temp_id: temp_id})[0];
+						if(item_file){
+							if(!Lincko.storage.data[parent_type][parent_id]._files){
+								Lincko.storage.data[parent_type][parent_id]._files = {};
+							}
+							if(!Lincko.storage.data[parent_type][parent_id]._files[item_file._id]){
+								Lincko.storage.data[parent_type][parent_id]._files[item_file._id] = true;
+							}
+							triggerParentSync = true;
+						}
+					});
+				}
+				if(triggerParentSync){
+					var prepare_param = {};
+					prepare_param[parent_type+'_'+parent_id] = {_files: true};
+					app_application_lincko.prepare(parent_type+'_'+parent_id, true, prepare_param);
+				}
+
+			}, {parent_type: item._type, parent_id: item._id});
+
+			//sync function to show upload progress
 			app_application_lincko.add(elem_expandable_links.prop('id'), 'upload', function(){
 				var elem_id = this.id;
 				var parent_type = this.action_param.parent_type;
 				var parent_id = this.action_param.parent_id;
-
-				var elem_temp_id = $('#'+elem_id).find('[temp_id]');
-				$.each(elem_temp_id, function(i, elem){
-					var temp_id = $(elem).attr('temp_id');
-					var item_file = Lincko.storage.list('files',1,{temp_id: temp_id})[0];
-					if(item_file){
-						if(!Lincko.storage.data[parent_type][parent_id]._files){
-							Lincko.storage.data[parent_type][parent_id]._files = {};
-						}
-						if(Lincko.storage.data[parent_type][parent_id]._files[item_file._id]){return;}
-
-						Lincko.storage.data[parent_type][parent_id]._files[item_file._id] = true;
-						var prepare_param = {};
-						prepare_param[parent_type+'_'+parent_id] = {_files: true};
-						app_application_lincko.prepare(parent_type+'_'+parent_id, true, prepare_param);
-					}
-				});
-
 				
 				$.each(app_upload_files.lincko_files, function(i, lincko_file){
 					//if parent matches
@@ -2196,11 +2210,13 @@ skylist.prototype.addTask = function(item){
 							}
 						}
 
-
 						var elem_temp_id = $('#'+elem_id).find('[temp_id='+temp_id+']');
 						if(status == 'done' && elem_temp_id.length){
-								//elem_temp_id.recursiveRemove();
-								//elem_temp_id = null;
+						//even when 'done', the file object is not available yet
+							// var preview = null;	
+							// try{
+							// 	preview = lincko_file.files[0].preview.toDataURL();	
+							// } catch(e){}
 						}
 						else if(elem_temp_id.length){
 							//update progress bar or number
@@ -2208,7 +2224,6 @@ skylist.prototype.addTask = function(item){
 						}
 						else{
 							$('#'+elem_id).find('[find=btn_addNew]').before(that.paperView_uploadingBox(lincko_file.lincko_name, temp_id));
-
 							//force expand if not expanded
 							if($('#'+elem_id).css('display') != 'block'){
 								that.paperView_toggleExpandable($('#'+elem_id));
@@ -2989,7 +3004,7 @@ skylist.prototype.paperView_toggleExpandable = function(elem_expandable, forceOp
 
 	elem_expandable.removeClass('display_none');
 	if(!forceClose && elem_expandable.css('display') != 'block'){
-		elem_expandable.velocity("slideDown", {
+		elem_expandable.velocity('stop').velocity("slideDown", {
 			mobileHA: hasGood3Dsupport,
 			complete: function(){
 				if(typeof cb_complete == 'function'){ cb_complete(); }
