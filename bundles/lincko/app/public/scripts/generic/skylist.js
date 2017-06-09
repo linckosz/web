@@ -1479,6 +1479,7 @@ skylist.prototype.paperview_partialUpdate = function(updated_tasks){
 		locked_by: true,
 		_perm: true,
 		new: true,
+		search: true,
 
 		'+title': true,
 		_files : true,
