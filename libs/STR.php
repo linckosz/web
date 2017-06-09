@@ -141,13 +141,13 @@ class STR {
 		$text = html_entity_decode($text);
 		$text = preg_replace('/\p{P}/u', ' ', $text);
 		$text = preg_replace('/\s\s+/u', ' ', $text);
+		$text = preg_replace('/(\p{Han}+)/u', ' $1 ', $text);
 		$text = explode(' ', $text);
 		$text = array_unique($text);
 		$text_bis = array();
 		$text_orig = array(); //original char is merged to the end
 		foreach ($text as $key => $value) {
 			$temp = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $value); //remove accents
-			echo($temp.' remove accents<br>');
 			if($temp != $value){
 				if(preg_match('/[a-z0-9]+/u', $temp)){
 					$text_bis[] = $temp;
