@@ -779,13 +779,18 @@ $('#app_application_menu_icon').click(function(){
 
 function app_application_menu_icon_toggle(show){
 	if(typeof show != 'boolean'){ return false; }
-
+	var elem_dot = $("#app_application_menu_icon_dot");
 	if(show){
-		if(!$('#app_application_project').hasClass('app_application_visible')){
-			$("#app_application_menu_icon_dot").removeClass('display_none');
+		if(elem_dot.hasClass('display_none') && !$('#app_application_project').hasClass('app_application_visible')){
+				elem_dot.velocity('fadeOut', {
+					begin: function(){
+						elem_dot.removeClass('display_none');
+					}
+				}).velocity('fadeIn');
+			
 		}
 	} else {
-		$("#app_application_menu_icon_dot").addClass('display_none');
+		elem_dot.addClass('display_none');
 	}
 }
 
