@@ -198,6 +198,7 @@
 /*global view tasks layer*/
 .app_layers_tasks_tasklist/*[pid="0"]*/ .skylist_menu_timesort{
 	height: 70px;
+	padding-left: 2px;
 }
 .app_layers_tasks_tasklist/*[pid="0"]*/ .skylist_menu_navbar_filter_icon{
 	line-height: 70px;
@@ -207,6 +208,19 @@
 	height: 100%;
 	width: 70px;
 	display: inline-block;
+}
+.skylist_menu_ringFilter_x{
+	position: absolute;
+    top: 0px;
+    right: 0px;
+    padding: 2px;
+    font-size: 10px;
+    height: 10px;
+    line-height: 10px;
+    display: none;
+}
+.skylist_menu_ringFilter_selected .skylist_menu_ringFilter_x{
+	display: block;
 }
 .skylist_noTouch .skylist_menu_people_dropdownBlock.base_pointer:hover,
 .skylist_noTouch .skylist_menu_ringFilter.base_pointer:hover{
