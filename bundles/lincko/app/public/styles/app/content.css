@@ -120,12 +120,18 @@
 	border-collapse: separate;
 	border-spacing: 5px;
 	z-index: 5;
+	border-spacing: 0px;
 }
 
 .app_content_menu_cell {
 	display: table-row;
 	vertical-align: middle;
 	text-align: center;
+}
+.app_content_menu_cell_name{
+	width: 46px;
+    margin: 0px auto;
+    color: #000000;
 }
 
 .app_content_menu_notif {
@@ -148,6 +154,7 @@
 	-moz-opacity:0.30;
 	-khtml-opacity:0.30;
 	border: none;
+	padding: 10px 0px 1px 0px;
 }
 
 .app_content_menu_icon:hover {
@@ -176,6 +183,7 @@
 .app_content_menu_icon > img {
 	display: block;
 	width: 32px;
+	margin: 0px auto;
 }
 
 #app_content_dynamic_layers {
@@ -314,11 +322,8 @@
 	#app_content_dynamic {
 		margin-left: 0;
 	}
-	#app_content_dynamic_layers.with_preview  {
+	#app_content_dynamic_layers.with_preview {
 		margin-right: 0;
-	}
-	.app_content_top_title {
-		padding-left: 0px;
 	}
 }
 
