@@ -652,6 +652,10 @@ function app_application_move_menu(Elem, Blur, Block, Button, force_blur) {
 				delay: delay,
 				//easing: "linear",
 				easing: [ 24 ],
+				begin: function(){
+					//remove main menu icon red dot
+					app_application_menu_icon_toggle(false);
+				},
 				progress: function(){
 					if(responsive.test("minTablet")){
 						app_content_dynamic_position();
@@ -772,6 +776,18 @@ $('#app_application_menu_icon').click(function(){
 		app_application.move('project');
 	}
 });
+
+function app_application_menu_icon_toggle(show){
+	if(typeof show != 'boolean'){ return false; }
+
+	if(show){
+		if(!$('#app_application_project').hasClass('app_application_visible')){
+			$("#app_application_menu_icon_dot").removeClass('display_none');
+		}
+	} else {
+		$("#app_application_menu_icon_dot").addClass('display_none');
+	}
+}
 
 function app_application_dev_link(){
 	//Used for development site only

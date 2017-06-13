@@ -1960,23 +1960,33 @@ Lincko.storage.cache = {
 			}
 		}
 
+		//update notification count
+		var updateMobileApp = false;
+		var redDotCount = Lincko.storage.cache.getTotalNotifyCount();
+		//if new count is different from existing total, then update
+		if(redDotCount != Lincko.storage.cache.notify_total){
+			if(isMobileApp()){ updateMobileApp = true; }	
+			if(redDotCount > Lincko.storage.cache.notify_total){
+				app_application_menu_icon_toggle(true);
+			}
+			else if(redDotCount == 0){
+				app_application_menu_icon_toggle(false);
+			}			
+			Lincko.storage.cache.notify_total = redDotCount;
+		}
+
 		//red notification dot update for app
-		if(isMobileApp()){
-			var redDotCount = Lincko.storage.cache.getTotalNotifyCount();
-			//if new count is different from existing total, then update
-			if(Lincko.storage.cache.notify_total != redDotCount){
-				Lincko.storage.cache.notify_total = redDotCount;
-				if(typeof android == 'object' && typeof android.applyRedCount == 'function'){ //android
-					android.applyRedCount(redDotCount); //call native java function
-				}
-				else if(device_type()=='ios'){ //ios
-					window.webkit.messageHandlers.iOS.postMessage(
-						{
-							action: 'reddot',
-							count: redDotCount,
-						}
-					);
-				}
+		if(updateMobileApp){
+			if(typeof android == 'object' && typeof android.applyRedCount == 'function'){ //android
+				android.applyRedCount(redDotCount); //call native java function
+			}
+			else if(device_type()=='ios'){ //ios
+				window.webkit.messageHandlers.iOS.postMessage(
+					{
+						action: 'reddot',
+						count: redDotCount,
+					}
+				);
 			}
 		}
 

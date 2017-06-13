@@ -61,7 +61,9 @@
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/app/application.css') }}" type="text/css" />
 </div>
 <div id="app_application_main">	
-	<span id="app_application_menu_icon" class="base_pointer icon-projectBlack" src="{{ _filelatest('/lincko/app/images/app/menu.png') }}" alt="{{ _trans('app', 17, 1, 'html') }}{# Main Menu #}" title="{{ _trans('app', 17, 1, 'html') }}{# Main Menu #}" ></span>
+	<span id="app_application_menu_icon" class="base_pointer icon-projectBlack" src="{{ _filelatest('/lincko/app/images/app/menu.png') }}" alt="{{ _trans('app', 17, 1, 'html') }}{# Main Menu #}" title="{{ _trans('app', 17, 1, 'html') }}{# Main Menu #}" >
+		<span id="app_application_menu_icon_dot" class="display_none"></span>
+	</span>
 	<div id="app_application_project" class="accelerated_bughiddenonsomemobile">
 		{% include '/bundles/lincko/app/templates/app/project.twig' %}
 	</div>

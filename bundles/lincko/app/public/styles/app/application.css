@@ -80,6 +80,16 @@
 	color: #FFFFFF;
 }
 
+#app_application_menu_icon_dot{
+    position: absolute;
+    top: 2px;
+    right: -4px;
+    background-color: #d0011b;
+    width: 10px;
+    height: 10px;
+    border-radius: 50px;
+}
+
 .app_application_width {
 	width: 320px !important;
 }
