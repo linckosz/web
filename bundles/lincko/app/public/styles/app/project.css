@@ -356,8 +356,9 @@
 }
 
 #app_project_projects_all, #app_project_chats_all {
-	background-color: rgba(255, 255, 255, 0.2);
-	border: 2px solid transparent;
+	background-color: rgba(255, 255, 255, 0.14);
+	border: 1px solid rgba(255, 255, 255, 0.35);
+	border-bottom-color: transparent;
 	overflow: visible;
 }
 
@@ -375,7 +376,6 @@
 
 .app_project_projects_all_reset, .app_project_chats_all_reset {
 	background-color: rgba(255, 255, 255, 0.2) !important;
-	border: 2px solid transparent !important;
 }
 
 .app_project_new_img {

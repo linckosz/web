@@ -141,7 +141,8 @@ var mainMenu = {
 
 			for(var i in temp_histList){
 				if(temp_histList[i].root_type == 'chats'){
-					if(Lincko.storage.get(temp_histList[i].root_type, temp_histList[i].root_id, "style") == 0){
+					var style = Lincko.storage.get(temp_histList[i].root_type, temp_histList[i].root_id, "style");
+					if(style != 1){ //Exclude feedbacks
 						histList.push(temp_histList[i]);
 					}
 				} else {
@@ -265,7 +266,7 @@ $('#app_project_projects_new').click(function(event){
 
 $('#app_project_chats_new').click(function(event){
 	event.stopPropagation();
-	submenu_Build("app_chat_new");
+	submenu_Build('new_group', false, true, {type: 'chats', alwaysMe: true, });
 })
 .mouseenter(function(){
 	$('#app_project_chats_all').addClass('app_project_chats_all_reset');

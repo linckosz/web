@@ -12,6 +12,8 @@
 			app_application_logo_lincko.src = "{{ _filelatest('/lincko/app/images/generic/base/logo/lincko.png') }}";
 			var app_application_logo_wechat = new Image();
 			app_application_logo_wechat.src = "{{ _filelatest('/lincko/app/images/generic/base/logo/wechat.png') }}";
+			var app_application_cloud = new Image();
+			app_application_cloud.src = "{{ _filelatest('/lincko/app/images/generic/base/cloud11d.png') }}";
 			var base_is_wechat = false;
 			var base_wechat_shareImg = wrapper_link.root+"{{ _filelatest('/lincko/app/images/generic/base/logo/lincko_applogo.png') }}";
 			var base_scanner = false;
@@ -60,6 +62,17 @@
 		<link rel="stylesheet" href="{{ _filelatest('/styles/libs/easyeditor.css') }}" type="text/css" />
 		<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/font-icon/style.css') }}" type="text/css" />
 		<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/generic/base.css') }}" type="text/css" />
+		<style>
+			/* MAIN GRADIENT MAIN to THIRD */
+			.base_color_bg_main_gradient {
+				background-repeat: repeat;
+				background-color: #FBA026;
+				background-image: -webkit-linear-gradient(#FBA026, #FECE4D) !important; /* For Safari 5.1 to 6.0 */
+				background-image: -o-linear-gradient(#FBA026, #FECE4D) !important; /* For Opera 11.1 to 12.0 */
+				background-image: -moz-linear-gradient(#FBA026, #FECE4D) !important; /* For Firefox 3.6 to 15 */
+				background-image: url("{{ _filelatest('/lincko/app/images/generic/base/cloud11d.png') }}"), linear-gradient(#FBA026, #FECE4D) !important; /* Standard syntax */
+			}
+		</style>
 
 		{# QR code scanner - http://dwa012.github.io/html5-qrcode/ #}
 		{#<script src="{{ _filelatest('/scripts/libs/jsqrcode-combined.bruno.min.js') }}" type="text/javascript"></script>#}

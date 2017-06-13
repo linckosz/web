@@ -2420,8 +2420,8 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 						hist: cat+"-"+id,
 						cod: parseInt(model['histcode'], 10), //Creation code
 					};
-					if(item['by']<=1 && item['type']=='comments'){
-						save = true; //For auto resume (Roboto user)
+					if(item['by']<=1 && (item['type']=='comments' || item['type']=='messages')){
+						save = true; //For auto resume (Roboto user) and alerts
 					} else if(
 						   item['by']<1 //Exclude LinckoBot
 						|| typeof Lincko.storage.data['users']=='undefined'

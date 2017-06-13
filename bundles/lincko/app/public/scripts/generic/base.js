@@ -424,12 +424,11 @@ var base_customize_color = function(color_one, color_two, image){
 			 ".base_color_text_linckoOrange.customize { color: "+color_one+"; } "
 			+".base_color_text_linckoOrange_dark.customize { color: "+color_two+"; } "
 			+".base_color_bg_main_gradient.customize {"
-				+"background: "+color_one+";"
 				+"background-color: "+color_one+";"
-				+"background: -webkit-linear-gradient("+color_one+", "+color_two+") !important;"
-				+"background: -o-linear-gradient("+color_one+", "+color_two+") !important;"
-				+"background: -moz-linear-gradient("+color_one+", "+color_two+") !important;"
-				+"background: linear-gradient("+color_one+", "+color_two+") !important;"
+				+"background-image: -webkit-linear-gradient("+color_one+", "+color_two+") !important;"
+				+"background-image: -o-linear-gradient("+color_one+", "+color_two+") !important;"
+				+"background-image: -moz-linear-gradient("+color_one+", "+color_two+") !important;"
+				+"background-image: url('"+app_application_cloud.src+"'), linear-gradient("+color_one+", "+color_two+") !important;"
 			+"} "
 			+".app_content_menu.customize { border-right-color: rgba("+color_one_r+", "+color_one_g+", "+color_one_b+", 0.40) !important; } "
 		);
@@ -449,6 +448,10 @@ var base_wechat_shareData = null;
 var base_wechat_shareData_garbage = null;
 var base_workspace_garbage = null;
 JSfiles.finish(function(){
+
+	//Background transparency pattern
+	var bg_linear = $('#body_lincko').css('background-image');
+	$('#body_lincko').css('background-image','url("'+app_application_cloud.src+'") repeat, '+bg_linear);
 
 	//customize wechat share information here
 	base_workspace_garbage = app_application_garbage.add();

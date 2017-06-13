@@ -850,9 +850,11 @@ var app_models_history = {
 
 		for(var i in hist_all){
 			root_item = this.getRoot(hist_all[i]["type"], hist_all[i]["id"]); //Accept only Chats and Projects
+			if(!root_item){
+				continue;
+			}
 			root_name = root_item["_type"]+"_"+root_item["_id"];
 			name = hist_all[i]["type"]+"_"+hist_all[i]["id"];
-			
 			if(parent_name && root_name!=parent_name){
 				continue;
 			}
@@ -939,8 +941,15 @@ var app_models_history = {
 							info[i].picture.addClass('icon-largerIndividual');
 						}
 					} else {
-						//toto => use multi picture if group of users
-						info[i].picture.addClass('icon-largerGroup');
+						if(root_item["_type"]=='chats' && typeof root_item["style"] != 'undefined' && root_item["style"]==2){
+							info[i].picture.css('background-image', 'url(' + app_application_icon_roboto.src + ')');
+							if(add_circle){
+								info[i].picture.addClass('models_history_profile_pic');
+							}
+						} else {
+							//toto => use multi picture if group of users
+							info[i].picture.addClass('icon-largerGroup');
+						}
 					}
 
 					info[i].timestamp = hist_all[i]["timestamp"];
