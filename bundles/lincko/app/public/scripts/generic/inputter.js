@@ -92,6 +92,8 @@ var inputter = function(panel_id,position,upload_ptype,upload_pid,layer,burger,r
 	this.inputter_audio_duration = 0;
 	this.inputter_audio_duration_interval;
 
+	this.resize_interval;
+
 
 }
 
@@ -139,6 +141,10 @@ inputter.prototype.destroy = function()
 		}
 	}
 	$('#'+this.panel_id+'_inputter_container').recursiveRemove();
+	clearInterval(this.inputter_audio_operation_icon_interval);
+	clearInterval(this.inputter_audio_duration_interval);
+	clearInterval(this.inputter_audio_operation_interval);
+	clearInterval(this.resize_interval);
 	delete this;
 }
 
@@ -854,6 +860,7 @@ inputter.prototype.buildLayer = function()
 		clearInterval(that.inputter_audio_operation_interval);
 		clearInterval(that.inputter_audio_operation_icon_interval);
 		clearInterval(that.inputter_audio_duration_interval);
+		clearInterval(that.resize_interval);
 
 		if(device_type() == 'ios'){
 			window.webkit.messageHandlers.iOS.postMessage(
@@ -997,6 +1004,7 @@ inputter.prototype.buildLayer = function()
 		clearInterval(that.inputter_audio_operation_interval);
 		clearInterval(that.inputter_audio_operation_icon_interval);
 		clearInterval(that.inputter_audio_duration_interval);
+		clearInterval(that.resize_interval);
 
 		if(that.inputter_audio_operation_status==1){
 			if(device_type() == 'ios'){
@@ -1140,7 +1148,7 @@ inputter.prototype.buildLayer = function()
 				base_inputter_offset(target);
 			}, 0, $(this));
 		});
-		input.find('[find=chat_textarea]').blur(function(event){
+		input.find('[find=chat_textarea]').blur(function(event,param){
 			if(cancelBlur){
 				event.preventDefault();
 				$(this).focus();

@@ -301,7 +301,7 @@ var app_layers_dashboard_feedPage = function(param){
 	else
 	{
 		elem_team_wrapper.find('[find=canvasWrapper]').css('height','300px');
-		elem_team_wrapper.find('[find=canvasContainer]').css('width',elem_team_wrapper.find('[find=canvasWrapper]').width());
+		elem_team_wrapper.find('[find=canvasContainer]').css('width','100%');
 	}
 	
 

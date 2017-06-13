@@ -3317,6 +3317,8 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 			myIScrollList['skylist_'+that.md5id].refresh();
 		}
 	});
+
+
 	
 	return true;
 }
@@ -3996,6 +3998,7 @@ skylist.prototype.addFilter_tasks = function(elem_filter_pane){
 		that.tasklist_update();
 		elem_filterIcon.click();
 		elem_block1.find('td').toggleClass('skylist_lightblueBG');
+
 	});
 
 

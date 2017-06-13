@@ -140,6 +140,11 @@ Submenu.prototype.Add_ChatContents = function() {
 	var type_clear = type == 'history' ? 'projects' : type;
 	position.addClass('overthrow').addClass("submenu_chat_contents");
 
+	position.on('touchstart',function(){
+		var bottom = submenu_wrapper.find("[find=submenu_wrapper_bottom]");
+		bottom.find('[find=chat_textarea]').blur();
+	});
+
 	app_application_lincko.add(that.id, [type_clear+"_" + id, "submenu_show_"+that.preview+"_"+that.id], function() {
 		var type = this.action_param[0];
 		var id = this.action_param[1];
