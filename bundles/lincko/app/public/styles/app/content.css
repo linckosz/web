@@ -131,12 +131,18 @@
 .app_content_menu_cell_name{
 	width: 36px;
     margin: 0px auto;
-    color: #000000;
+    color: #C7C7C7;
 }
-
+.app_content_menu_icon:hover .app_content_menu_cell_name{
+	color: #000000;
+}
+.app_content_menu_icon_active .app_content_menu_cell_name{
+	color: #fba026 !important;
+}
 .app_content_menu_notif {
 	top: 2px !important;
 	right: 2px !important;
+	z-index: 2;
 }
 
 .app_content_menu_icon {
@@ -149,34 +155,30 @@
 	padding: 4px;
 	box-sizing: border-box;
 	margin: auto;
-	filter:alpha(opacity=30);
-	opacity:0.30;
-	-moz-opacity:0.30;
-	-khtml-opacity:0.30;
 	border: none;
 	padding: 10px 0px 1px 0px;
 }
 
-.app_content_menu_icon:hover {
+.app_content_menu_icon .app_content_menu_icon_opacity{
+	filter:alpha(opacity=30);
+	opacity:0.30;
+	-moz-opacity:0.30;
+	-khtml-opacity:0.30;
+}
+.app_content_menu_icon:hover .app_content_menu_icon_opacity{
 	filter:alpha(opacity=80);
 	opacity:0.80;
 	-moz-opacity:0.80;
 	-khtml-opacity:0.80;
 }
 
-.app_content_menu_icon:active {
+.app_content_menu_icon:active .app_content_menu_icon_opacity,
+.app_content_menu_icon_active .app_content_menu_icon_opacity,
+.app_content_menu_icon_active:active .app_content_menu_icon_opacity{
 	filter:alpha(opacity=100) !important;
 	opacity:1.00 !important;
 	-moz-opacity:1.00 !important;
 	-khtml-opacity:1.00 !important;
-}
-
-.app_content_menu_icon_active, .app_content_menu_icon_active:hover, .app_content_menu_icon_active:active {
-	cursor: default !important;
-	filter:alpha(opacity=80) !important;
-	opacity:0.80 !important;
-	-moz-opacity:0.80 !important;
-	-khtml-opacity:0.80 !important;
 }
 
 
