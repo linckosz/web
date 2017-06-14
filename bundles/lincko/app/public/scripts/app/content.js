@@ -285,7 +285,129 @@ $('#app_content_top_home').click(function(){
 
 $('#app_content_top_title_menu, #app_content_statistics_settings').click(function(){
 	if(!(app_content_menu.projects_id == Lincko.storage.getMyPlaceholder()['_id']  || app_content_menu.projects_id == 0)){
-		submenu_Build("app_project_edit", 1, false, app_content_menu.projects_id, false);
+		//evan_prepare
+		var menu_data = [
+			{
+				icon:'icon-AddPerson',
+				title : 'Add teammates to this project',
+				action : function(project_id){
+					var param = {
+						pid: project_id,
+						invite_access: {
+							projects: project_id,
+							//tasks: task_id, //null if not available (i.e. brand new task) toto - not ready yet
+						},
+					}
+					submenu_Build('app_projects_users_contacts', true, false, param);
+				},
+			},
+			{
+				icon:'icon-createproject',
+				title : 'Create a new project',
+				action : function(){
+					submenu_Build("app_project_new");
+				},
+			},
+			{
+				icon:function(projects_id){
+					var users = Lincko.storage.get('projects', projects_id, '_users');
+					var icon = 'icon-audiomute';
+					if(users[wrapper_localstorage.uid] && users[wrapper_localstorage.uid]['silence']){
+						icon = 'icon-audio';
+					}
+					return icon;
+				},
+				title : 'Mute notifications',
+				action : function(projects_id,elem){
+					var users = Lincko.storage.get('projects', projects_id, '_users');
+					var on_off_invert = true;
+					if(users[wrapper_localstorage.uid] && users[wrapper_localstorage.uid]['silence']){
+						on_off_invert = false;
+					}
+					var param = {
+						id: projects_id,
+						"users>silence": {},
+					}
+					param["users>silence"][wrapper_localstorage.uid] = on_off_invert;
+					wrapper_sendAction(
+						param,
+						'post',
+						'project/update'
+					);
+					users[wrapper_localstorage.uid]['silence'] = on_off_invert;
+					if(on_off_invert){
+						elem.find('[find=icon]').removeClass('icon-audiomute');
+						elem.find('[find=icon]').addClass('icon-audio');
+					}
+					else{
+						elem.find('[find=icon]').removeClass('icon-audio');
+						elem.find('[find=icon]').addClass('icon-audiomute');
+					}
+				},
+			},
+			{
+				icon:'icon-Settings',
+				title : 'Other Project Settings',
+				action : function(project_id){
+					submenu_Build("app_project_edit", 1, false, project_id, false);
+				},
+			},
+		];
+
+		var elems;
+		if($('#app_content_top_title_drop_down_menu').length == 0)
+		{
+			elems = $('#-submenu_menu_list_container').clone();
+			elems.prop('id', 'app_content_top_title_drop_down_menu');
+			$('#app_content_top_title_menu').closest('.app_content_top_title').css('overflow','visible');
+			$('#app_content_top_title_menu').closest('.app_content_top_title').append(elems);
+
+			elems.find('.submenu_menu_list_more').remove();
+
+			for(var i in menu_data)
+			{
+				var elems_item = $('#-submenu_menu_list_item').clone();
+				elems_item.prop("id","");
+
+				if(typeof menu_data[i].icon === 'function'){
+					elems_item.find("[find=icon]").addClass(menu_data[i].icon(app_content_menu.projects_id));
+				}
+				else{
+					elems_item.find("[find=icon]").addClass(menu_data[i].icon);
+				}
+				
+				elems_item.find("[find=title]").html(menu_data[i].title);
+				elems_item.click(i,function(event){
+					var i = event.data;
+					menu_data[i].action(app_content_menu.projects_id,$(this));
+				});
+				elems.find("ul").eq(0).append(elems_item);
+			}
+
+			elems.find("ul").on("blur",function(){
+				elems.velocity('slideUp', {
+					mobileHA: hasGood3Dsupport,
+				});
+			});
+		}
+		else{
+			elems = $("#app_content_top_title_drop_down_menu");
+			for(var i in menu_data)
+			{
+				if(typeof menu_data[i].icon == 'function')
+				{
+					elems.find('li').eq(i).find("[find=icon]").removeAttr('class');
+					elems.find('li').eq(i).find("[find=icon]").addClass(menu_data[i].icon(app_content_menu.projects_id));
+				}
+			}
+		}
+
+		elems.velocity('slideDown', {
+			mobileHA: hasGood3Dsupport,
+			complete: function(){
+				elems.find("ul").focus();
+			}
+		});	
 	}
 });
 

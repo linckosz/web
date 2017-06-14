@@ -283,6 +283,25 @@
 }
 
 
+#app_content_top_title_drop_down_menu{
+	position:relative;
+	height:auto;
+	z-index: 99999;
+
+}
+#app_content_top_title_drop_down_menu ul{
+	width:320px;
+	right:auto !important;
+	height:auto;
+	overflow: hidden;
+}
+
+#app_content_top_title_drop_down_menu li{
+	height:auto;
+	overflow: hidden;
+}
+
+
 /* Mobile phone in Portrait maximum */
 @media only screen and (max-width: 479px){
 	#app_content_top {

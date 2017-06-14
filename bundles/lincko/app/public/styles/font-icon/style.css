@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?snmw1i');
-  src:  url('fonts/icomoon.eot?snmw1i#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?snmw1i') format('truetype'),
-    url('fonts/icomoon.woff?snmw1i') format('woff'),
-    url('fonts/icomoon.svg?snmw1i#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?207ma4');
+  src:  url('fonts/icomoon.eot?207ma4#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?207ma4') format('truetype'),
+    url('fonts/icomoon.woff?207ma4') format('woff'),
+    url('fonts/icomoon.svg?207ma4#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,18 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-switchworkspace:before {
+  content: "\e93b";
+}
+.icon-projectBlack:before {
+  content: "\e924";
+}
+.icon-audiomute:before {
+  content: "\e939";
+}
+.icon-createproject:before {
+  content: "\e93a";
+}
 .icon-audio2:before {
   content: "\e935";
 }
@@ -53,12 +65,15 @@
 }
 .icon-LinckoBotMonk2Icon:before {
   content: "\e92f";
+  color: #ffae43;
 }
 .icon-LinckoBotFaceIcon:before {
   content: "\e92d";
+  color: #ffae43;
 }
 .icon-LinckoBotMonk1:before {
   content: "\e92e";
+  color: #ffae43;
 }
 .icon-simplifiedViewIcon:before {
   content: "\e92a";
@@ -83,9 +98,6 @@
 }
 .icon-links:before {
   content: "\e927";
-}
-.icon-projectBlack:before {
-  content: "\e924";
 }
 .icon-SmallPersonaiconBlack:before {
   content: "\e923";
@@ -195,4 +207,3 @@
 .icon-Tasks-unchecked:before {
   content: "\e920";
 }
-
