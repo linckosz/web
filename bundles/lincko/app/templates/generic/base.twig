@@ -72,6 +72,11 @@
 				background-image: -moz-linear-gradient(#FBA026, #FECE4D) !important; /* For Firefox 3.6 to 15 */
 				background-image: url("{{ _filelatest('/lincko/app/images/generic/base/cloud9e.png') }}"), linear-gradient(#FBA026, #FECE4D) !important; /* Standard syntax */
 			}
+			@media only screen and (max-width: 900px) {
+				.base_color_bg_main_gradient.noimage {
+					background-image: linear-gradient(#FBA026, #FECE4D) !important; /* Standard syntax */
+				}
+			}
 		</style>
 
 		{# QR code scanner - http://dwa012.github.io/html5-qrcode/ #}

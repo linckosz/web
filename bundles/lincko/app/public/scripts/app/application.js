@@ -876,7 +876,7 @@ $(window).resize(function(){
 });
 
 wrapper_load_progress.add_cb_complete(function(){
-	$('body').addClass('base_color_bg_main_gradient customize');
+	$('#body_lincko').addClass('base_color_bg_main_gradient customize noimage');
 	app_application_lincko.prepare("hide_progress_wall", true);
 });
 

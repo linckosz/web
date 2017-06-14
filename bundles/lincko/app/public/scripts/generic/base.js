@@ -449,10 +449,6 @@ var base_wechat_shareData_garbage = null;
 var base_workspace_garbage = null;
 JSfiles.finish(function(){
 
-	//Background transparency pattern
-	var bg_linear = $('#body_lincko').css('background-image');
-	$('#body_lincko').css('background-image','url("'+app_application_cloud.src+'") repeat, '+bg_linear);
-
 	//customize wechat share information here
 	base_workspace_garbage = app_application_garbage.add();
 	app_application_lincko.add(base_workspace_garbage, 'workspaces', function() {

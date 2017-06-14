@@ -358,7 +358,8 @@
 #app_project_projects_all, #app_project_chats_all {
 	background-color: rgba(255, 255, 255, 0.14);
 	border: 1px solid rgba(255, 255, 255, 0.35);
-	border-bottom-color: transparent;
+	/*border-bottom-color: transparent;*/
+	margin-bottom: -1px;
 	overflow: visible;
 }
 
