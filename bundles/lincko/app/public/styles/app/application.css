@@ -93,10 +93,11 @@
     position: absolute;
     padding: 1px;
     background-color: #ffffff;
-    opacity: 0.4;
+    opacity: 0.12;
     right: -6px;
     top: 2px;
     bottom: 2px;
+    cursor: default;
 }
 
 .app_application_width {
