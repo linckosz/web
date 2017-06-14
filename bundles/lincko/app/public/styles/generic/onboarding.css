@@ -1,7 +1,8 @@
 .onboarding_noBorder {
 	border: none !important;
 }
-.onboarding_noBorder .app_content_menu_icon{
+.onboarding_noBorder .app_content_menu_icon,
+.onboarding_noBorder .app_content_menu_icon .app_content_menu_icon_opacity{
 	opacity: 1 !important;
 	-moz-opacity: 1 !important;
     -khtml-opacity: 1 !important;
@@ -88,7 +89,8 @@
 	background-color: #FBA026;
 	outline: 4px solid #FBA026;
 }
-.trip-exposed#app_project_projects_new {
+.trip-exposed#app_project_projects_new,
+.trip-exposed#app_project_chats_new {
 	background: none;
 	position: absolute !important;
 	opacity: 1;

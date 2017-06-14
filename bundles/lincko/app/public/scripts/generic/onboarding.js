@@ -576,493 +576,510 @@ onboarding.scripts['welcome'] = function(project_id){
 		},
 	}
 
-	var array_openMainMenu = [
-		{
-			sel: $('#app_application_menu_icon'),
-			content: 'LINCKO',
-			position : "s",
-			expose : true,
-			delay: -1,
-			onTripStart : function(i, tripData){
-				if(tripTracker.check(this, i)){ 
-					if($('#app_application_project').hasClass('app_application_visible')){
-						tripData.sel.removeClass('trip-exposed'); 
-					}
-					return false;
-				}
-				var tripObj = this;			
-				
-				tripData.sel.off('click.trip').on('click.trip', function(event){
-					$(this).off('click.trip');
-					event.stopPropagation();
-					$(this).removeClass('trip-exposed');
-					onboarding.overlays.project().css('opacity', 0);
-					var id_onboarding_garbage_mainMenuOpen = app_application_garbage.add('onboarding_garbage_mainMenuOpen');
-					app_application_lincko.add(id_onboarding_garbage_mainMenuOpen, 'mainmenu_open_complete', 
-						function(){
-							app_application_garbage.remove(id_onboarding_garbage_mainMenuOpen);
-							tripObj.stop();
+	function trip_openMainMenu(){
+		var array_openMainMenu = [
+			{
+				sel: $('#app_application_menu_icon'),
+				content: 'LINCKO',
+				position : "s",
+				expose : true,
+				delay: -1,
+				onTripStart : function(i, tripData){
+					if(tripTracker.check(this, i)){ 
+						if($('#app_application_project').hasClass('app_application_visible')){
+							tripData.sel.removeClass('trip-exposed'); 
 						}
-					);
-				});
-
-				var fn_next = function(){
-					$('#app_application_menu_icon').click();
-				}
-				intro.gotoStep(1, fn_next);
-				onboarding.fn_next = fn_next;
-				onboarding.welcome_bubble_reposition(null, 700);
-			},
-		},
-	];
-	var trip_openMainMenu = new Trip(array_openMainMenu, {
-		enableKeyBinding: false,
-		overlayHolder: '#app_application_content',
-		tripClass: 'onboarding_trip_welcome',
-		onStart: function(){
-			onboarding.currentTrip = this;
-			this.id_trip = 'openMainMenu';
-			tripTracker[this.id_trip] = {};
-		},
-		onEnd: function(var1, var2){
-			$('#app_application_menu_icon').off('click.trip');
-			if(onboarding.forceOff){ return false; }
-			onboarding.overlays.content().css('opacity', 0);
-			delete trip_openMainMenu;
-			trip_exploreMainMenu.start();
-		}
-	});
-
-	var array_exploreMainMenu = [
-		{
-			sel: $('#app_project_projects_new'),
-			content: 'new project',
-			position : 'e',
-			expose: true,
-			delay: -1,
-			onTripStart : function(i, tripData){
-				//force open main menu if closed
-				if(!$('#app_application_project').hasClass('app_application_visible')){
-					app_application.move('project', true);
-				}
-				onboarding.welcome_bubble_reposition();
-				if(tripTracker.check(this, i)){return false;}
-
-				var tripObj = this;
-				onboarding.overlays.content().attr('style', '');
-
-				var elem_overlay_project = onboarding.overlays.project().off('click.trip').on('click.trip', function(event){
-					var elem_overlay = $(this);
-					if(tripObj.tripIndex == 1){
-						$(this).off('click.trip');
+						return false;
 					}
+					var tripObj = this;			
 					
-					//if the main menu overlay was clicked, flash
-					if($(event.target).hasClass('onboarding_overlay')){
-						elem_overlay.velocity({opacity: 0}, {
-							mobileHA: hasGood3Dsupport,
-							begin: function(){
-								$('#app_project_chats_tab').attr('style', '');
-								elem_overlay.css({
-									'background-color': '#FFFFFF',
-									opacity: 1,
-									border: '4px solid #FFFFFF',
-								});
-							},
-						});
-					}
-
-					if(tripObj.tripIndex == 1){
+					tripData.sel.off('click.trip').on('click.trip', function(event){
 						$(this).off('click.trip');
+						event.stopPropagation();
+						$(this).removeClass('trip-exposed');
+						onboarding.overlays.project().css('opacity', 0);
+						var id_onboarding_garbage_mainMenuOpen = app_application_garbage.add('onboarding_garbage_mainMenuOpen');
+						app_application_lincko.add(id_onboarding_garbage_mainMenuOpen, 'mainmenu_open_complete', 
+							function(){
+								app_application_garbage.remove(id_onboarding_garbage_mainMenuOpen);
+								tripObj.stop();
+							}
+						);
+					});
 
-						//if main menu is closed, no close animation
-						if(!$('#app_application_project').hasClass('app_application_visible')){
-							tripObj.stop();
-							return;
+					var fn_next = function(){
+						$('#app_application_menu_icon').click();
+					}
+					intro.gotoStep(1, fn_next);
+					onboarding.fn_next = fn_next;
+					onboarding.welcome_bubble_reposition(null, 700);
+				},
+			},
+		];
+		return new Trip(array_openMainMenu, {
+			enableKeyBinding: false,
+			overlayHolder: '#app_application_content',
+			tripClass: 'onboarding_trip_welcome',
+			onStart: function(){
+				onboarding.currentTrip = this;
+				this.id_trip = 'openMainMenu';
+				tripTracker[this.id_trip] = {};
+			},
+			onEnd: function(var1, var2){
+				$('#app_application_menu_icon').off('click.trip');
+				if(onboarding.forceOff){ return false; }
+				onboarding.overlays.content().css('opacity', 0);
+				delete trip_openMainMenu;
+				trip_exploreMainMenu().start();
+			}
+		});
+	}
+
+	function trip_exploreMainMenu(){
+		var array_exploreMainMenu = [
+			{
+				sel: $('#app_project_projects_new'),
+				content: 'new project',
+				position : 'e',
+				expose: true,
+				delay: -1,
+				onTripStart : function(i, tripData){
+					//force open main menu if closed
+					if(!$('#app_application_project').hasClass('app_application_visible')){
+						app_application.move('project', true);
+					}
+					onboarding.welcome_bubble_reposition();
+					if(tripTracker.check(this, i)){return false;}
+
+					var tripObj = this;
+					onboarding.overlays.content().removeAttr('style');
+
+					var elem_overlay_project = onboarding.overlays.project().off('click.trip').on('click.trip', function(event){
+						var elem_overlay = $(this);
+						if(tripObj.tripIndex == 1){
+							$(this).off('click.trip');
+						}
+						
+						//if the main menu overlay was clicked, flash
+						if($(event.target).hasClass('onboarding_overlay')){
+							elem_overlay.velocity({opacity: 0}, {
+								mobileHA: hasGood3Dsupport,
+								begin: function(){
+									$('#app_project_chats_new').removeAttr('style');
+									elem_overlay.css({
+										'background-color': '#FFFFFF',
+										opacity: 1,
+										border: '4px solid #FFFFFF',
+									});
+								},
+							});
 						}
 
-						$('#app_application_menu_icon').velocity('fadeOut', {
-							mobileHA: hasGood3Dsupport,
-							begin: function(){
-								$('#'+onboarding.id_welcome_bubble).velocity({left: 50, top: 58}, {
-									mobileHA: hasGood3Dsupport,
-									begin: function(){
-										$('#'+onboarding.id_welcome_bubble).css({top: $('#'+onboarding.id_welcome_bubble).offset().top, bottom: ''});
-									}
-								});
-								$('#app_application_menu_icon').css({
-									outline: '4px solid #FFFFFF',
-								});
-							},
-						}).velocity('fadeIn', {
-							mobileHA: hasGood3Dsupport,
-							complete: function(){
-								$('#app_application_menu_icon').attr('style', '');
-								app_application.move('project', true);
+						if(tripObj.tripIndex == 1){
+							$(this).off('click.trip');
+
+							//if main menu is closed, no close animation
+							if(!$('#app_application_project').hasClass('app_application_visible')){
 								tripObj.stop();
-								//trip_exploreContent.start();
+								return;
 							}
-						});								
+
+							$('#app_application_menu_icon').velocity('fadeOut', {
+								mobileHA: hasGood3Dsupport,
+								begin: function(){
+									$('#'+onboarding.id_welcome_bubble).velocity({left: 50, top: 58}, {
+										mobileHA: hasGood3Dsupport,
+										begin: function(){
+											$('#'+onboarding.id_welcome_bubble).css({top: $('#'+onboarding.id_welcome_bubble).offset().top, bottom: ''});
+										}
+									});
+									$('#app_application_menu_icon').css({
+										outline: '4px solid #FFFFFF',
+									});
+								},
+							}).velocity('fadeIn', {
+								mobileHA: hasGood3Dsupport,
+								complete: function(){
+									$('#app_application_menu_icon').attr('style', '');
+									app_application.move('project', true);
+									tripObj.stop();
+									//trip_exploreContent.start();
+								}
+							});								
+						}
+						else{
+							tripObj.next();
+						}
+					});
+					var fn_next = function(){
+						elem_overlay_project.trigger('click.trip');
 					}
-					else{
-						tripObj.next();
+					intro.gotoStep(2, fn_next);
+					onboarding.fn_next = fn_next;
+					var cb_complete = function(){
+						setTimeout(function(){
+							$('.trip-overlay').velocity({opacity: 0},{mobileHA: hasGood3Dsupport,});
+						}, 2000);
 					}
-				});
-				var fn_next = function(){
-					elem_overlay_project.trigger('click.trip');
+					onboarding.welcome_bubble_reposition(null, null, cb_complete);
+				},
+				onTripEnd : function(i, tripData){
+					$('#app_project_projects_new').attr('style', '');
 				}
-				intro.gotoStep(2, fn_next);
-				onboarding.fn_next = fn_next;
-				var cb_complete = function(){
+			},
+			{
+				sel: $('#app_project_chats_new'),
+				content: 'chats tab',
+				position : "e",
+				expose: true,
+				delay: -1,
+				onTripStart : function(i, tripData){
+					//force open main menu if closed
+					if(!$('#app_application_project').hasClass('app_application_visible')){
+						app_application.move('project', true);
+					}
+					onboarding.welcome_bubble_reposition(tripData);
+					$('#app_project_projects_new').removeAttr('style');
+					if(tripTracker.check(this, i)){return false;}
+
+					
+					//tripData.sel.css('border', '4px solid #FFFFFF');
+					$('.trip-overlay').css('opacity', '');
 					setTimeout(function(){
 						$('.trip-overlay').velocity({opacity: 0},{mobileHA: hasGood3Dsupport,});
 					}, 2000);
-				}
-				onboarding.welcome_bubble_reposition(null, null, cb_complete);
-			},
-			onTripEnd : function(i, tripData){
-				$('#app_project_projects_new').attr('style', '');
-			}
-		},
-		{
-			sel: $('#app_project_chats_tab'),
-			content: 'chats tab',
-			position : "e",
-			expose: true,
-			delay: -1,
-			onTripStart : function(i, tripData){
-				//force open main menu if closed
-				if(!$('#app_application_project').hasClass('app_application_visible')){
-					app_application.move('project', true);
-				}
-				onboarding.welcome_bubble_reposition(tripData);
-				$('#app_project_projects_new').attr('style', '');
-				if(tripTracker.check(this, i)){return false;}
 
-				
-				tripData.sel.css('border', '4px solid #FFFFFF');
-				$('.trip-overlay').css('opacity', '');
-				setTimeout(function(){
-					$('.trip-overlay').velocity({opacity: 0},{mobileHA: hasGood3Dsupport,});
-				}, 2000);
-
-				var fn_next = function(){
-					onboarding.overlays.project().trigger('click.trip');
-				}
-				intro.gotoStep(3, fn_next);
-				onboarding.fn_next = fn_next;
-				onboarding.welcome_bubble_reposition(tripData);
-			},
-			onTripEnd: function(i, tripData){
-				//tripData.sel.attr('style', '');
-			}
-		},
-	];
-	var trip_exploreMainMenu = new Trip(array_exploreMainMenu, {
-		enableKeyBinding: false,
-		overlayHolder: '#app_project_content .iscroll_sub_div',
-		tripClass: 'onboarding_trip_welcome onboarding_trip_exploreMainMenu',
-		onStart: function(){
-			onboarding.currentTrip = this;
-			this.id_trip = 'exploreMainMenu';
-			tripTracker[this.id_trip] = {};
-
-			if(responsive.test("maxMobileL")){
-				this.tripData[0].position = 's';
-				this.tripData[1].position = 's';
-			}
-			else{
-				this.tripData[0].content = '<div style="height: 100px;"></div>';
-				this.tripData[1].content = '<div style="height: 100px;"></div>';
-			}
-
-			onboarding.overlays.content();
-			$('#app_project_projects_new').off('click.trip').addClass('onboarding_forceAbsolute');
-
-			
-		},
-		onEnd: function(){
-			$('#app_project_chats_tab').attr('style', '');
-			if(onboarding.forceOff){ return false; }
-			//if main menu is opened
-			if($('#app_application_project').hasClass('app_application_visible')){
-				var id_onboarding_garbage_mainMenuClose = app_application_garbage.add('onboarding_garbage_mainMenuClose');
-				app_application_lincko.add(id_onboarding_garbage_mainMenuClose, 'mainmenu_close_complete', 
-					function(){
-						app_application_garbage.remove(id_onboarding_garbage_mainMenuClose);
-						onboarding.overlays.project().attr('style', '');
-						setTimeout(function(){
-							trip_exploreContentTop.start();
-						}, 1000);
+					var fn_next = function(){
+						onboarding.overlays.project().trigger('click.trip');
 					}
-				);
-			}
-			else{
-				onboarding.overlays.project().attr('style', '');
-				trip_exploreContentTop.start();
-			}
-			
-			
-			delete trip_exploreMainMenu;
-		}
-	});
-
-
-	var array_exploreContentTop = [
-		{
-			sel: $('#app_content_top_title_menu'),
-			content: '<div style="width: 120px;">project_settings</div>',
-			position : "s",
-			expose: true,
-			delay: -1,
-			onTripStart : function(i, tripData){
-				//force close main menu if open
-				if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
-					app_application.move('project', false);
-				}
-				onboarding.welcome_bubble_reposition();
-				if(tripTracker.check(this, i)){return false;}
-				var tripObj = this;
-				onboarding.overlays.content(false);
-				onboarding.overlays.content_dynamic_sub();
-				onboarding.overlays.content_menu();
-				onboarding.overlays.content_top().css('opacity', 0).off('click.trip').on('click.trip', function(event){
-					var elem_overlay = $(this);
-
-					//if next is triggered by clicking on overlay, flash
-					if($(event.target).hasClass('onboarding_overlay')){
-						elem_overlay.velocity({opacity: 0}, {
-							mobileHA: hasGood3Dsupport,
-							begin: function(){
-								elem_overlay.css({
-									'background-color': '#FFFFFF',
-									opacity: 1,
-									border: '4px solid #FFFFFF',
-								});
-							},
-							complete: function(){
-								onboarding.overlays.content_top().attr('style', '');
-								tripObj.stop();
-							}
-						});
-					}
-					$(this).off('click.trip');
-				});
-
-				var fn_next = function(){
-					onboarding.overlays.content_top().attr('style', '');
-					onboarding.overlays.content_top().off('click.trip');
-					tripObj.stop();
-				}
-				intro.gotoStep(4, fn_next);
-				onboarding.fn_next = fn_next;
-				onboarding.welcome_bubble_reposition();
-			},
-		}
-	];
-
-	var trip_exploreContentTop = new Trip(array_exploreContentTop, {
-		enableKeyBinding: false,
-		overlayHolder: '#app_content_top_title',
-		tripClass: 'onboarding_trip_welcome onboarding_trip_exploreContentTop',
-		onStart: function(){
-			onboarding.currentTrip = this;
-			this.id_trip = 'exploreContentTop';
-			tripTracker[this.id_trip] = {};
-			
-		},
-		onEnd: function(tripIndex, tripObject){
-			if(onboarding.forceOff){ return false; }
-			trip_exploreContentMenu.start();
-		},
-	});
-
-
-	var array_exploreContentMenu = [
-		{
-			sel: $('#app_content_menu_tasks img'),
-			content: 'contentMenu',
-			position : "e",
-			expose: false,
-			delay: 2000,
-			onTripStart : function(i, tripData){
-				//force close main menu if open
-				if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
-					app_application.move('project', false);
-				}
-				onboarding.welcome_bubble_reposition(tripData);
-				if(tripTracker.check(this, i)){return false;}
-				var tripObj = this;
-				
-				var trip_index_counter = 0; //cyle through tasks, notes, chats, files
-				var elem_overlay = onboarding.overlays.content_menu();
-				elem_overlay.css('opacity', 0);
-				elem_overlay.off('click.trip');
-
-				var fn_next = function(){
-					tripObj.stop();
-				}
-				intro.gotoStep(5, fn_next);
-				onboarding.fn_next = fn_next;
-				onboarding.welcome_bubble_reposition(tripData);
-			},
-		},
-		{
-			sel: $('#app_content_menu_tasks img'),
-			content: 'tasks',
-			position : "e",
-			expose: true,
-			delay: 2000,
-			onTripStart : function(i, tripData){
-				//force close main menu if open
-				if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
-					app_application.move('project', false);
-				}
-				onboarding.welcome_bubble_reposition(tripData);
-				if(tripTracker.check(this, i)){return false;}
-				intro.gotoScript(1);
-			},
-		},
-		{
-			sel: $('#app_content_menu_notes img'),
-			content: 'notes',
-			position : "e",
-			expose: true,
-			delay: 2000,
-			onTripStart : function(i, tripData){ 
-				//force close main menu if open
-				if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
-					app_application.move('project', false);
-				}
-				onboarding.welcome_bubble_reposition(tripData);
-				if(tripTracker.check(this, i)){return false;}
-				intro.gotoScript(2);
-			},
-		},
-		{
-			sel: $('#app_content_menu_chats img'),
-			content: 'chats',
-			position : "e",
-			expose: true,
-			delay: 2000,
-			onTripStart : function(i, tripData){
-				//force close main menu if open
-				if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
-					app_application.move('project', false);
-				}
-				onboarding.welcome_bubble_reposition(tripData);
-				if(tripTracker.check(this, i)){return false;}
-				intro.gotoScript(3);
-			},
-		},
-		{
-			sel: $('#app_content_menu_files img'),
-			content: 'files',
-			position : "e",
-			expose: true,
-			delay: 200,
-			onTripStart : function(i, tripData){
-				//force close main menu if open
-				if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
-					app_application.move('project', false);
-				}
-				onboarding.welcome_bubble_reposition(tripData);
-				if(tripTracker.check(this, i)){return false;}
-				intro.gotoScript(4);
-			},
-		},
-		{
-			sel: $('#app_content_menu_files img'),
-			content: 'files',
-			position : "e",
-			expose: true,
-			delay: -1,
-			onTripStart : function(i, tripData){
-				//force close main menu if open
-				if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
-					app_application.move('project', false);
-				}
-				onboarding.welcome_bubble_reposition(tripData);
-				if(tripTracker.check(this, i)){return false;}
-				intro.gotoScript(5);
-			},
-		}
-
-	];
-
-
-	var trip_exploreContentMenu = new Trip(array_exploreContentMenu, {
-		enableKeyBinding: false,
-		overlayHolder: '#app_content_menu_table',
-		tripClass: 'onboarding_trip_welcome onboarding_trip_exploreContentMenu',
-		onStart: function(){
-			onboarding.currentTrip = this;
-			this.id_trip = 'exploreContentMenu';
-			tripTracker[this.id_trip] = {};
-
-			if(responsive.test("maxMobileL")){
-				$.each(this.tripData, function(i, obj){
-					obj.position = 'n';
-				});
-			}
-
-			
-		},
-		onEnd: function(tripIndex, tripObject){
-			if(onboarding.forceOff){ return false; }
-			onboarding.overlays.content_dynamic_sub(false);
-			onboarding.overlays.content_top(false);
-			onboarding.overlays.content_menu().off('click.trip').attr('style', '');
-			var array_inputter = [
-				{
-					sel: $('#skylist_tasks_layer_tasks_inputter_container'),
-					content: 'inputter',
-					position : "n",
-					expose: true,
-					delay: -1,
-					onTripStart : function(i, tripData){
-						//force close main menu if open
-						if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
-							app_application.move('project', false);
-						}
-						if(tripTracker.check(this, i)){
-							onboarding.welcome_bubble_reposition(tripData);
-							return false;
-						}
-
-						var tripObj = this;
-						var fn_next = function(){
-							tripObj.stop();
-						}
-						intro.gotoStep(6, fn_next);
-						onboarding.fn_next = fn_next;
-						onboarding.welcome_bubble_reposition(tripData);
-					},
+					intro.gotoStep(3, fn_next);
+					onboarding.fn_next = fn_next;
+					onboarding.welcome_bubble_reposition(tripData);
 				},
-			];
-			var trip_inputter = new Trip(array_inputter, {
-				enableKeyBinding: false,
-				overlayHolder: '#app_content_dynamic_layers',
-				tripClass: 'onboarding_trip_welcome onboarding_trip_inputter',
-				onStart: function(){
-					onboarding.currentTrip = this;
-					this.id_trip = 'inputter';
-					tripTracker[this.id_trip] = {};
+				onTripEnd: function(i, tripData){
+					//tripData.sel.attr('style', '');
+				}
+			},
+		];
+		return new Trip(array_exploreMainMenu, {
+			enableKeyBinding: false,
+			overlayHolder: '#app_project_content .iscroll_sub_div',
+			tripClass: 'onboarding_trip_welcome onboarding_trip_exploreMainMenu',
+			onStart: function(){
+				onboarding.currentTrip = this;
+				this.id_trip = 'exploreMainMenu';
+				tripTracker[this.id_trip] = {};
+
+				if(responsive.test("maxMobileL")){
+					this.tripData[0].position = 's';
+					this.tripData[1].position = 's';
+				}
+				else{
+					this.tripData[0].content = '<div style="height: 100px;"></div>';
+					this.tripData[1].content = '<div style="height: 100px;"></div>';
+				}
+
+				onboarding.overlays.content();
+				$('#app_project_projects_new').off('click.trip').addClass('onboarding_forceAbsolute');
+
+				
+			},
+			onEnd: function(){
+				$('#app_project_chats_new').removeAttr('style')
+				if(onboarding.forceOff){ return false; }
+				//if main menu is opened
+				if($('#app_application_project').hasClass('app_application_visible')){
+					var id_onboarding_garbage_mainMenuClose = app_application_garbage.add('onboarding_garbage_mainMenuClose');
+					app_application_lincko.add(id_onboarding_garbage_mainMenuClose, 'mainmenu_close_complete', 
+						function(){
+							app_application_garbage.remove(id_onboarding_garbage_mainMenuClose);
+							onboarding.overlays.project().attr('style', '');
+							setTimeout(function(){
+								//trip_exploreContentTop().start();
+
+								//go straight to the end
+								onboarding.overlays.content(false);
+								onboarding.overlays.content_menu().off('click.trip').removeAttr('style');
+								trip_inputter().start();
+							}, 1000);
+						}
+					);
+				}
+				else{
+					onboarding.overlays.project().attr('style', '');
+					//trip_exploreContentTop().start();
+
+					//go straight to the end
+					onboarding.overlays.content(false);
+					onboarding.overlays.content_menu().off('click.trip').removeAttr('style');
+					trip_inputter().start();
+				}
+			}
+		});
+	}
+
+	function trip_exploreContentTop(){
+		var array_exploreContentTop = [
+			{
+				sel: $('#app_content_top_title_menu'),
+				content: '<div style="width: 120px;">project_settings</div>',
+				position : "s",
+				expose: true,
+				delay: -1,
+				onTripStart : function(i, tripData){
+					//force close main menu if open
+					if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
+						app_application.move('project', false);
+					}
+					onboarding.welcome_bubble_reposition();
+					if(tripTracker.check(this, i)){return false;}
+					var tripObj = this;
+					onboarding.overlays.content(false);
+					onboarding.overlays.content_dynamic_sub();
+					onboarding.overlays.content_menu();
+					onboarding.overlays.content_top().css('opacity', 0).off('click.trip').on('click.trip', function(event){
+						var elem_overlay = $(this);
+
+						//if next is triggered by clicking on overlay, flash
+						if($(event.target).hasClass('onboarding_overlay')){
+							elem_overlay.velocity({opacity: 0}, {
+								mobileHA: hasGood3Dsupport,
+								begin: function(){
+									elem_overlay.css({
+										'background-color': '#FFFFFF',
+										opacity: 1,
+										border: '4px solid #FFFFFF',
+									});
+								},
+								complete: function(){
+									onboarding.overlays.content_top().attr('style', '');
+									tripObj.stop();
+								}
+							});
+						}
+						$(this).off('click.trip');
+					});
+
+					var fn_next = function(){
+						onboarding.overlays.content_top().attr('style', '');
+						onboarding.overlays.content_top().off('click.trip');
+						tripObj.stop();
+					}
+					intro.gotoStep(4, fn_next);
+					onboarding.fn_next = fn_next;
+					onboarding.welcome_bubble_reposition();
+				},
+			}
+		];
+
+		return new Trip(array_exploreContentTop, {
+			enableKeyBinding: false,
+			overlayHolder: '#app_content_top_title',
+			tripClass: 'onboarding_trip_welcome onboarding_trip_exploreContentTop',
+			onStart: function(){
+				onboarding.currentTrip = this;
+				this.id_trip = 'exploreContentTop';
+				tripTracker[this.id_trip] = {};
+				
+			},
+			onEnd: function(tripIndex, tripObject){
+				if(onboarding.forceOff){ return false; }
+				trip_exploreContentMenu().start();
+			},
+		});
+	}
+
+	function trip_exploreContentMenu(){
+		var array_exploreContentMenu = [
+			{
+				sel: $('#app_content_menu_tasks img'),
+				content: 'contentMenu',
+				position : "e",
+				expose: false,
+				delay: 2000,
+				onTripStart : function(i, tripData){
+					//force close main menu if open
+					if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
+						app_application.move('project', false);
+					}
+					onboarding.welcome_bubble_reposition(tripData);
+					if(tripTracker.check(this, i)){return false;}
+					var tripObj = this;
 					
+					var trip_index_counter = 0; //cyle through tasks, notes, chats, files
+					var elem_overlay = onboarding.overlays.content_menu();
+					elem_overlay.css('opacity', 0);
+					elem_overlay.off('click.trip');
+
+					var fn_next = function(){
+						tripObj.stop();
+					}
+					intro.gotoStep(5, fn_next);
+					onboarding.fn_next = fn_next;
+					onboarding.welcome_bubble_reposition(tripData);
 				},
-				onEnd: function(tripIndex, tripObject){
-					if(onboarding.forceOff){ return false; }
-					app_application_action(4); //Finish onboarding
-					//$('.trip-overlay').css('display', 'none');
-					onboarding.clear();
+			},
+			{
+				sel: $('#app_content_menu_tasks img'),
+				content: 'tasks',
+				position : "e",
+				expose: true,
+				delay: 2000,
+				onTripStart : function(i, tripData){
+					//force close main menu if open
+					if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
+						app_application.move('project', false);
+					}
+					onboarding.welcome_bubble_reposition(tripData);
+					if(tripTracker.check(this, i)){return false;}
+					intro.gotoScript(1);
 				},
-			});
-			trip_inputter.start();
-		},
-	});
+			},
+			{
+				sel: $('#app_content_menu_notes img'),
+				content: 'notes',
+				position : "e",
+				expose: true,
+				delay: 2000,
+				onTripStart : function(i, tripData){ 
+					//force close main menu if open
+					if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
+						app_application.move('project', false);
+					}
+					onboarding.welcome_bubble_reposition(tripData);
+					if(tripTracker.check(this, i)){return false;}
+					intro.gotoScript(2);
+				},
+			},
+			{
+				sel: $('#app_content_menu_chats img'),
+				content: 'chats',
+				position : "e",
+				expose: true,
+				delay: 2000,
+				onTripStart : function(i, tripData){
+					//force close main menu if open
+					if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
+						app_application.move('project', false);
+					}
+					onboarding.welcome_bubble_reposition(tripData);
+					if(tripTracker.check(this, i)){return false;}
+					intro.gotoScript(3);
+				},
+			},
+			{
+				sel: $('#app_content_menu_files img'),
+				content: 'files',
+				position : "e",
+				expose: true,
+				delay: 200,
+				onTripStart : function(i, tripData){
+					//force close main menu if open
+					if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
+						app_application.move('project', false);
+					}
+					onboarding.welcome_bubble_reposition(tripData);
+					if(tripTracker.check(this, i)){return false;}
+					intro.gotoScript(4);
+				},
+			},
+			{
+				sel: $('#app_content_menu_files img'),
+				content: 'files',
+				position : "e",
+				expose: true,
+				delay: -1,
+				onTripStart : function(i, tripData){
+					//force close main menu if open
+					if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
+						app_application.move('project', false);
+					}
+					onboarding.welcome_bubble_reposition(tripData);
+					if(tripTracker.check(this, i)){return false;}
+					intro.gotoScript(5);
+				},
+			}
+
+		];
+
+		return new Trip(array_exploreContentMenu, {
+			enableKeyBinding: false,
+			overlayHolder: '#app_content_menu_table',
+			tripClass: 'onboarding_trip_welcome onboarding_trip_exploreContentMenu',
+			onStart: function(){
+				onboarding.currentTrip = this;
+				this.id_trip = 'exploreContentMenu';
+				tripTracker[this.id_trip] = {};
+
+				if(responsive.test("maxMobileL")){
+					$.each(this.tripData, function(i, obj){
+						obj.position = 'n';
+					});
+				}
+
+				
+			},
+			onEnd: function(tripIndex, tripObject){
+				if(onboarding.forceOff){ return false; }
+				onboarding.overlays.content_dynamic_sub(false);
+				onboarding.overlays.content_top(false);
+				onboarding.overlays.content_menu().off('click.trip').attr('style', '');
+				trip_inputter().start();
+			},
+		});
+	}
+
+	function trip_inputter(){
+		var array_inputter = [
+			{
+				sel: $('#skylist_tasks_layer_tasks_inputter_container'),
+				content: 'inputter',
+				position : "n",
+				expose: true,
+				delay: -1,
+				onTripStart : function(i, tripData){
+					//force close main menu if open
+					if(responsive.test("maxMobileL") && $('#app_application_project').hasClass('app_application_visible')){
+						app_application.move('project', false);
+					}
+					if(tripTracker.check(this, i)){
+						onboarding.welcome_bubble_reposition(tripData);
+						return false;
+					}
+
+					var tripObj = this;
+					var fn_next = function(){
+						tripObj.stop();
+					}
+					intro.gotoStep(6, fn_next);
+					onboarding.fn_next = fn_next;
+					onboarding.welcome_bubble_reposition(tripData);
+				},
+			},
+		];
+
+		return new Trip(array_inputter, {
+			enableKeyBinding: false,
+			overlayHolder: '#app_content_dynamic_layers',
+			tripClass: 'onboarding_trip_welcome onboarding_trip_inputter',
+			onStart: function(){
+				onboarding.currentTrip = this;
+				this.id_trip = 'inputter';
+				tripTracker[this.id_trip] = {};
+				
+			},
+			onEnd: function(tripIndex, tripObject){
+				if(onboarding.forceOff){ return false; }
+				app_application_action(4); //Finish onboarding
+				//$('.trip-overlay').css('display', 'none');
+				onboarding.clear();
+			},
+		});
+	}
+	
 
 	var fn_next = function(){
-		trip_openMainMenu.start();
+		trip_openMainMenu().start();
 		onboarding.overlays.body(false);
 	}
 
