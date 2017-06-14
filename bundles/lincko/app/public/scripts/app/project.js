@@ -56,11 +56,13 @@ var mainMenu = {
 			var files;
 
 			var projects_length = "";
-			if(projects_total>2){
+			if(projects_total>0){
 				$("#app_project_projects_all").removeClass('app_project_tab_force_radius');
-				projects_length = "("+projects_total+")";
 			} else {
 				$("#app_project_projects_all").addClass('app_project_tab_force_radius');
+			}
+			if(projects_total>2){
+				projects_length = "("+projects_total+")";
 			}
 			$("#app_project_projects_all").find("[find=app_project_projects_all_number]").html(wrapper_to_html(projects_length));
 			//For new user, open the mainmenu by default
