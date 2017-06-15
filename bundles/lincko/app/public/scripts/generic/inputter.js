@@ -42,7 +42,6 @@
 ***********************************************************************
 */
 
-
 var inputter = function(panel_id,position,upload_ptype,upload_pid,layer,burger,resize_call)
 {
 	this.elements_lib = 
@@ -76,7 +75,7 @@ var inputter = function(panel_id,position,upload_ptype,upload_pid,layer,burger,r
 	this.upload_pid = upload_pid;
 	this.layer = layer;
 	this.burger = burger;
-	this.hasTask = false;
+	this.hasTask = typeof layer.hasTask !== 'undefined' ? layer.hasTask : false;
 	this.task_completed = false;
 	this.focus_flag = false;
 	this.touch_now = false;
@@ -93,6 +92,8 @@ var inputter = function(panel_id,position,upload_ptype,upload_pid,layer,burger,r
 	this.inputter_audio_duration_interval;
 
 	this.resize_interval;
+
+	this.blur_helper = true;
 
 
 }
@@ -226,7 +227,6 @@ inputter.prototype.buildLayer = function()
 			{
 				for(var j = this.layer['left_menu'][i].length -1 ; j >= 0 ; j-- )//in this.layer['right_menu'][i])
 				{
-
 					var tmp = this.layer['left_menu'][i][j];
 					var elem = this.layer['left_menu'][i][j]['element'];
 					if(typeof this.layer['left_menu'][i][j]['compatibility'] !== 'undefined')
@@ -404,8 +404,11 @@ inputter.prototype.buildLayer = function()
 							case 'send':
 								if(this.hasTask)
 								{
+									var elem = item.find(".inputter_ico");
 									item.attr("title",Lincko.Translation.get('app', 4001, 'js'));//Create the task
-									item.find(".inputter_ico").addClass("icon-Big-Add inputter_icon_blue inputter_icon_big_size inputter_icon_add_fix");
+									elem.addClass("icon_button");
+									elem.removeClass('inputter_ico');
+									elem.text('Create');
 								}
 								else
 								{
@@ -468,7 +471,6 @@ inputter.prototype.buildLayer = function()
 								}
 								break;
 							case 'attachment' :
-
 								if(this.hasTask)
 								{
 									item.find(".inputter_ico").addClass("icon-links");
@@ -481,7 +483,7 @@ inputter.prototype.buildLayer = function()
 								item.attr("title",Lincko.Translation.get('app', 4003, 'js'));//Attach a new file 
 								var auto_upload = this.layer.hasOwnProperty('auto_upload') ? this.layer['auto_upload'] : true;
 								item.click({'type':this.upload_ptype,'pid':this.upload_pid,'panel_id':this.panel_id,'position':this.position},function(event){
-									
+									that.blur_helper = false;
 									var type = event.data.type ;
 									var pid = event.data.pid ;
 									var panel_id = event.data.panel_id ;
@@ -704,6 +706,48 @@ inputter.prototype.buildLayer = function()
 	input.prop('id','');
 	input.appendTo(content);
 
+
+	//for toggle add button & input
+	if(this.hasTask)
+	{
+		container.addClass('tip_add_task_button_partial_display');
+		container.find('[find=toggle_to_add]').on('click',function(){
+			container.removeClass('tip_add_task_button_partial_display');
+			container.fadeIn();
+			setTimeout(function(){
+				input.find('[find=chat_textarea]').focus();
+			});	
+		});
+
+		input.find('[find=chat_textarea]').blur(function(event){
+			var files_count = 0;
+			var files = app_upload_files.lincko_files;
+			for(var i in files)
+			{
+				if(files[i].lincko_parent_type == that.upload_ptype
+					&& files[i].lincko_parent_id == that.upload_pid
+					&& files[i].lincko_param == that.panel_id)
+				{
+					files_count++;
+				}
+			}
+			if(input.find('[find=chat_textarea]').text().length == 0 && files_count == 0)
+			{
+				setTimeout(function(){
+					if(that.blur_helper)
+					{
+						container.addClass('tip_add_task_button_partial_display');
+					}
+					else
+					{
+						that.blur_helper = true;
+					}
+				},200);
+			}
+		});
+
+
+	}
 
 
 	if(this.layer.hasOwnProperty('row'))
@@ -1157,7 +1201,7 @@ inputter.prototype.buildLayer = function()
 			}
 			else if(!supportsTouch)
 			{
-				var focus_help = $("<input readonly='readonly'/>");
+				var focus_help = $('<input readonly="readonly" style="position:absolute;z-index:-9999"/>');
 				focus_help.appendTo($("body"));
 				focus_help.focus();
 				focus_help.recursiveRemove(0);

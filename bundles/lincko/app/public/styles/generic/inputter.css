@@ -23,6 +23,18 @@
 	color: #475577 !important;
 }
 
+.icon_button{
+	padding:0 5px;
+	line-height: 24px;
+	padding: 4px;
+	border-radius: 3px;
+	background-color: rgba(251, 160, 38, 0.99);
+	border: solid 1px #d5d5d5;
+	font-size: 12px !important;
+	color:#ffffff !important;
+	display:inline-block;
+}
+
 .inputter_icon_big_size{
 	display: inline-block;
 	font-size: 37px !important;
@@ -131,11 +143,13 @@
 	display: inline !important;
 }
 
-.inputter_container ul,.inputter_container ul li
-{
-	height:auto;
-	margin: 0;
+.inputter_container ul{
 	padding: 0;
+	margin: 0;
+}
+
+.inputter_container ul li
+{
 	list-style: none;
 }
 
@@ -200,8 +214,8 @@
 
 
 .inputter_ico{
-	width:30px;
-	height:30px;
+	width:34px;
+	height:34px;
 	font-size: 30px;
 	cursor: pointer; 
 	cursor: hand;
@@ -254,8 +268,8 @@
 
 .inputter_right_menu_wrapper{
 	position : absolute;
-	top : 10px;
-	right : 0;
+	top : 8px;
+	right : 5px;
 	width : auto;
 	height : auto;
 	overflow: hidden;
@@ -269,8 +283,6 @@
 
 .inputter_right_menu_wrapper ul li{
 	float : right;
-	/*margin-right:10px;*/
-	/*margin-bottom: 10px;*/
 }
 
 .inputter_right_menu_wrapper ul:active{
@@ -432,9 +444,57 @@
 
     
 .inputter_menu_item{
-	height: 40px;
-	width: 40px;
 	text-align: center;
+}
+
+.toggle_to_add{
+	display: none;
+	color:white;
+	line-height: 24px;
+    font-size: 16px;
+    padding: 4px 0;
+	text-align: center;
+	border-radius: 3px;
+	background-color: #556282;
+	border: solid 1px #d5d5d5;
+}
+
+.tip_add_task_button_partial_display [find=left_menu_wrapper]{
+	display: block;
+}
+
+.tip_add_task_button_partial_display [find=content_wrapper]{
+	display: block;
+}
+
+.tip_add_task_button_partial_display [find=right_menu_wrapper]{
+	display: block;
+}
+
+.tip_add_task_button_partial_display [find=toggle_to_add]{
+	display: none;
+}
+
+.max-width-900  .tip_add_task_button_partial_display [find=left_menu_wrapper]{
+	display:none;
+}
+
+.max-width-900  .tip_add_task_button_partial_display [find=content_wrapper]{
+	display:none;
+}
+
+.max-width-900  .tip_add_task_button_partial_display [find=right_menu_wrapper]{
+	display:none;
+}
+
+
+.max-width-900  [find=toggle_to_add]{
+	display:none;
+}
+
+
+.max-width-900  .tip_add_task_button_partial_display [find=toggle_to_add]{
+	display:block;
 }
 
 @media only screen and (max-width: 1279px){

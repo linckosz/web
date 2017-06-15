@@ -3251,7 +3251,8 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 		return true;
 	}
 
-	var inputter_setting = {												
+	var inputter_setting = {	
+		hasTask : true,											
 		row : 3,//desktop height
 		max_row : 3,//desk top max height
 		mobile_row : 1,//mobile height
@@ -3262,9 +3263,9 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 		mobile_top_line : false, //mobile inputter top line
 		enter : fn_createTask, //enter event
 		auto_upload : false,
-		left_menu :[	
-			[{	element :'chkTask',	}],	
-		],
+		// left_menu :[	
+		// 	[{	element :'chkTask',	}],	
+		// ],
 		right_menu :	
 		[															
 			[														
