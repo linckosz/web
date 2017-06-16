@@ -105,20 +105,35 @@ var onboarding = {
 	}, //END OF launch
 
 	clear_fn_list: [], //any function that needs to be run on onboarding.clear can be put here
-	clear: function(submenuHide, close){
-		if(typeof close != 'boolean'){
-			close = true;
+	clear: function(submenuHide, sendAction, fade){
+		if(typeof sendAction != 'boolean'){
+			sendAction = true;
 		}
-		if(close){
+		if(sendAction){
 			app_models_resume_onboarding_continue(null, 10102); //end onboarding
+			app_application_action(4); //Finish onboarding
 		}
 		var that = this;
 		onboarding.on = false;
 		onboarding.currentTripInst = null;
 		this.scripts.completed = {};
-		this.overlays.off();
-		$('#'+this.id_welcome_bubble).recursiveRemove(0);
-		$('.trip-overlay').recursiveRemove();
+		this.overlays.off(fade);
+
+		var id_welcome_bubble = this.id_welcome_bubble;
+		if(fade){
+			$('.trip-overlay').velocity('fadeOut', {
+				mobileHA: hasGood3Dsupport,
+				duration: onboarding.overlays.fadeOutDuration,
+				complete: function(){
+					$('#'+id_welcome_bubble).recursiveRemove(0);
+					$('.trip-overlay').recursiveRemove();
+				},
+			});
+		} else {
+			$('#'+id_welcome_bubble).recursiveRemove(0);
+			$('.trip-overlay').recursiveRemove();
+		}
+		
 		$(document).off('click.onboarding');
 		return;
 
@@ -226,7 +241,7 @@ onboarding.overlays = {
 			return false;
 		}	
 	},
-	body: function(on){
+	body: function(on, fade){
 		var id = this.id.body;
 		var elem_overlay = $('#'+id);
 		var exists = false;
@@ -243,7 +258,7 @@ onboarding.overlays = {
 				$('#body_lincko').append(elem_overlay);
 			}
 			else if(!on){
-				elem_overlay.recursiveRemove(0);
+				this.fadeOut(elem_overlay, fade);
 			}
 		}
 		else {
@@ -282,15 +297,32 @@ onboarding.overlays = {
 		content_dynamic_sub: 'onboarding_overlay_content_dynamic_sub',
 	},
 
-	off: function(){
-		this.master.off();
-		this.btnSkip(false);
-		this.body(false);
-		this.content(false);
-		this.project(false);
-		this.content_menu(false);
-		this.content_top(false);
-		this.content_dynamic_sub(false);
+	off: function(fade){
+		this.master.off(fade);
+		this.btnSkip(false, fade);
+		this.body(false, fade);
+		this.content(false, fade);
+		this.project(false, fade);
+		this.content_menu(false, fade);
+		this.content_top(false, fade);
+		this.content_dynamic_sub(false, fade);
+	},
+
+	fadeOutDuration: 800,
+
+	fadeOut: function(elem, fade){
+		if(!elem.is(':visible')){ return false; }
+		if(fade){
+			elem.velocity('fadeOut', {
+				mobileHA: hasGood3Dsupport,
+				duration: onboarding.overlays.fadeOutDuration,
+				complete: function(){
+					elem.recursiveRemove();
+				}
+			});
+		} else {
+			elem.recursiveRemove(0);
+		}
 	},
 
 	show: {
@@ -320,7 +352,7 @@ onboarding.overlays = {
 		return elem;
 	},
 
-	project: function(on){
+	project: function(on, fade){
 		var id = this.id.project;
 		var elem_overlay = $('#'+id);
 		var exists = false;
@@ -337,7 +369,7 @@ onboarding.overlays = {
 				$('#app_application_project').append(elem_overlay);
 			}
 			else if(!on){
-				elem_overlay.recursiveRemove(0);
+				this.fadeOut($('#'+id), fade);
 			}
 		}
 		else {
@@ -357,7 +389,7 @@ onboarding.overlays = {
 			return false;
 		}
 	},
-	content: function(on){
+	content: function(on, fade){
 		var id = this.id.content;
 		var elem_overlay = $('#'+id);
 		var exists = false;
@@ -374,7 +406,7 @@ onboarding.overlays = {
 				$('#app_application_content').append(elem_overlay);
 			}
 			else if(!on){
-				elem_overlay.recursiveRemove(0);
+				this.fadeOut($('#'+id), fade);
 			}
 		}
 		else {
@@ -395,7 +427,7 @@ onboarding.overlays = {
 		}
 	},
 
-	content_dynamic_sub: function(on){
+	content_dynamic_sub: function(on, fade){
 		var id = this.id.content_dynamic_sub;
 		var elem_overlay = $('#'+id);
 		var exists = false;
@@ -412,7 +444,7 @@ onboarding.overlays = {
 				$('#app_content_dynamic_sub').append(elem_overlay);
 			}
 			else if(!on){
-				elem_overlay.recursiveRemove(0);
+				this.fadeOut(elem_overlay, fade);
 			}
 		}
 		else {
@@ -438,10 +470,10 @@ onboarding.overlays = {
 	master: {
 		that: null,
 		id: null,
-		off: function(){
+		off: function(fade){
 			var id = this.that.id.master;
 			if($('#'+id).length){
-				$('#'+id).recursiveRemove();
+				this.fadeOut($('#'+id), fade);
 			}
 		},
 		menu: function(){
@@ -461,7 +493,7 @@ onboarding.overlays = {
 	},
 
 
-	content_menu: function(on){
+	content_menu: function(on, fade){
 		var id = this.id.content_menu;
 		var elem_overlay = $('#'+id);
 		var exists = false;
@@ -479,7 +511,7 @@ onboarding.overlays = {
 			}
 			else if(!on){
 				$('#app_content_menu').removeClass('onboarding_noBorder');
-				elem_overlay.recursiveRemove(0);
+				this.fadeOut(elem_overlay, fade);
 			}
 		}
 		else {
@@ -500,7 +532,7 @@ onboarding.overlays = {
 		}
 	},
 
-	content_top: function(on){
+	content_top: function(on, fade){
 		var id = this.id.content_top;
 		var elem_overlay = $('#'+id);
 		var exists = false;
@@ -517,7 +549,7 @@ onboarding.overlays = {
 				$('#app_content_top').append(elem_overlay);
 			}
 			else if(!on){
-				elem_overlay.recursiveRemove(0);
+				this.fadeOut(elem_overlay, fade);
 			}
 		}
 		else {
@@ -1049,8 +1081,12 @@ onboarding.scripts['welcome'] = function(project_id){
 
 					var tripObj = this;
 					var fn_next = function(){
-						tripObj.stop();
+						onboarding.clear(null, null, true);
+						setTimeout(function(){
+							tripObj.stop();
+						}, onboarding.overlays.fadeOutDuration);
 					}
+
 					intro.gotoStep(6, fn_next);
 					onboarding.fn_next = fn_next;
 					onboarding.welcome_bubble_reposition(tripData);
@@ -1070,9 +1106,8 @@ onboarding.scripts['welcome'] = function(project_id){
 			},
 			onEnd: function(tripIndex, tripObject){
 				if(onboarding.forceOff){ return false; }
-				app_application_action(4); //Finish onboarding
 				//$('.trip-overlay').css('display', 'none');
-				onboarding.clear();
+				//onboarding.clear(null, null, true);
 			},
 		});
 	}
