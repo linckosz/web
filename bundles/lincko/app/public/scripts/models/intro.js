@@ -14,36 +14,38 @@ var intro = {
 			{
 				line:12001,//"I’m here to start you on your journey using Lincko.",
 				lazy:1500,
-				options:[ 
-					{
-						line:13001,//"Who are you, LinckoBot?",
-						delay:500,
-						pointType:"script",
-						pointTo:1,
-						finger:"show",
-					},
-				],
+				// options:[ 
+				// 	{
+				// 		line:13001,//"Who are you, LinckoBot?",
+				// 		delay:500,
+				// 		pointType:"script",
+				// 		pointTo:1,
+				// 		finger:"show",
+				// 	},
+				// ],
 				head:"show",
 			},//0
-			{
-				line:12002,//"I'm your guide in the way of projects and collaboration. I'll give you updates on how your projects are going.",
-				lazy:2000,
-				head:"hidden",
-			},//1
+			// {
+			// 	line:12002,//"I'm your guide in the way of projects and collaboration. I'll give you updates on how your projects are going.",
+			// 	lazy:2000,
+			// 	head:"hidden",
+			// },//1
 			{
 				line:12003,//"Let me show you quickly how to get around.",
 				lazy:2000,
-				options:[ 
-					{
-						line:13002,//"next",7
-						delay:200,
-						pointType:"step",
-						pointTo:1,
-						finger:"show",
-					}
-				],
+				// options:[ 
+				// 	{
+				// 		line:13002,//"next",7
+				// 		delay:200,
+				// 		pointType:"step",
+				// 		pointTo:1,
+				// 		finger:"show",
+				// 	}
+				// ],
+				callback:null,
+				callbackLazy :2000,
 				head:"hidden",
-			},//2
+			},//1
 		],
 		[//intro.step.new_project:1
 			{
@@ -81,7 +83,7 @@ var intro = {
 		],
 		[//intro.step.linckobot_chat:3
 			{
-				line:12006,//"I'm also located here - find me in the Chats section.",
+				line:12006,//toto:change data to "You can start a chat group here." on database,
 				lazy:1500,
 				options:[ 
 					{
@@ -179,15 +181,17 @@ var intro = {
 				line:12015,//"Feel free to explore the sample project.",
 				lazy:1500,
 				head:"hidden",
-				options:[ 
-					{
-						line:13005,//"Start using Lincko!
-						delay:1000,
-						pointType:"step",
-						pointTo:-1,
-						finger:"show",
-					}
-				],
+				// options:[ 
+				// 	{
+				// 		line:13005,//"Start using Lincko!
+				// 		delay:1000,
+				// 		pointType:"step",
+				// 		pointTo:-1,
+				// 		finger:"show",
+				// 	}
+				// ],
+				callback:null,
+				callbackLazy :2000,
 			},
 		],	
 
@@ -228,6 +232,8 @@ var intro = {
 				{
 					intro.script[step_index][index]["options"][i]["callback"] = fn;
 				}	
+			}else{
+				intro.script[step_index][index]["callback"] = fn;
 			}
 		}
 		intro.current_step = step_index;
@@ -318,6 +324,20 @@ var intro = {
 					var iscroll_help = wrapper.find("[find=iscroll_helper]").get(0);
 					myIScrollList["body_models_intro_wrapper"].scrollToElement(iscroll_help, 0);
 				}
+
+				if(intro.script[intro.current_step][script_index].hasOwnProperty("callback")){
+					var callback_timer = 2000;
+					if(intro.script[intro.current_step][script_index].hasOwnProperty("callbackLazy"))
+					{
+						callback_timer = intro.script[intro.current_step][script_index]["callbackLazy"];
+					}
+					var fn = intro.script[intro.current_step][script_index]["callback"];
+					setTimeout(function(){
+						fn();
+					},callback_timer);
+					
+				}
+
 			}
 			// else{
 			// 	intro.startStep(position);
