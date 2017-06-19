@@ -608,6 +608,10 @@
 	-webkit-box-sizing: border-box;
 }
 
+.app_project_quick_item{
+	display: inline-block;
+}
+
 .app_project_quick_access_title_prog {
 	border-color: #FFFFFF !important;
 	cursor: pointer; cursor: hand;

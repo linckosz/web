@@ -453,6 +453,15 @@ JSfiles.finish(function(){
 	base_workspace_garbage = app_application_garbage.add();
 	app_application_lincko.add(base_workspace_garbage, 'workspaces', function() {
 		//Enable to upload a picture for the logo
+
+		var workspaces = Lincko.storage.list('workspaces');
+		if(workspaces.length > 0){
+			$('#app_project_quick_access_workspace').closest('.app_project_quick_item').removeClass('display_none');
+		}
+		else{
+			$('#app_project_quick_access_workspace').closest('.app_project_quick_item').addClass('display_none');
+		}
+
 		if(Lincko.storage.WORKID!==null){
 			if(Lincko.storage.getWORKID()==0 || Lincko.storage.amIadmin()){
 				$('#app_project_logo_span').addClass('base_pointer').click(function(event){
@@ -479,6 +488,8 @@ JSfiles.finish(function(){
 			app_application_garbage.remove(base_workspace_garbage);
 		}
 	});
+
+
 
 	//Depreciation of window.MediaStreamTrack.getSources
 	//Make sure the DOM is loaded first

@@ -422,6 +422,20 @@ $('#app_project_quick_access_upload').click(function(){
 	}
 });
 
+$('#app_project_quick_access_workspace').click(function(){
+	var workspaces = Lincko.storage.list('workspaces');
+	if(workspaces.length == 1){
+		if(wrapper_localstorage.workspace == ''){
+			app_application_change_workspace(workspaces[0].url);
+		}else{
+			app_application_change_private();
+		}
+	}
+	else if(workspaces.length > 1){
+		submenu_Build('workspace',  1 , true , null , false);
+	}
+});
+
 $('#app_project_quick_upload_block').click(function(){
 	app_project_quick_upload_display(null, false);
 	$('#app_project_quick_upload_block').hide();
