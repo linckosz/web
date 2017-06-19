@@ -744,9 +744,14 @@ $("body").on("mousedown.app_application_selectable", ".selectable", function() {
 
 $("body").on("mouseup.app_application_selectable", function(e){
 	if(app_application_iscroll_disabled && app_application_iscroll_disabled.enable){
-		app_application_iscroll_disabled.enable();
 		app_application_iscroll_disabled = null;
 		app_application_global_selection_handler();
+		//fix but with settimeout: was causing click on mouseup
+		//conflict with iscroll option.click = true
+		setTimeout(function(){
+			app_application_iscroll_disabled.enable();
+		},0);
+		
 	}
 });
 
@@ -764,8 +769,14 @@ if(supportsTouch){
 
 $("#app_application_lincko_action").click(function() {
 	$(this).hide();
-	var preview = true; //This is no way to know if we are in preview or submenu
-	submenu_Build("taskdetail_new", submenu_Getnext(preview), false, {'id':'new', 'title': app_application_global_selection, 'type':'tasks'}, preview); 
+	var preview = submenu_Getnext(false) == 1 ? false : false;
+	submenu_Build(
+		"taskdetail_new", 
+		submenu_Getnext(preview), 
+		false, 
+		{'id':'new', 'title': app_application_global_selection, 'type':'tasks'}, 
+		preview
+	); 
 });
 
 //END - highlight for quick create task feature
