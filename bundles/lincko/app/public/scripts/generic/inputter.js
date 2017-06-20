@@ -714,9 +714,7 @@ inputter.prototype.buildLayer = function()
 		container.find('[find=toggle_to_add]').on('click',function(){
 			container.removeClass('tip_add_task_button_partial_display');
 			container.fadeIn();
-			setTimeout(function(){
-				input.find('[find=chat_textarea]').focus();
-			});	
+			input.find('[find=chat_textarea]').focus();
 		});
 
 		input.find('[find=chat_textarea]').blur(function(event){
@@ -1267,6 +1265,17 @@ inputter.prototype.buildLayer = function()
 		mouseWheel: true, 
 		fadeScrollbars: true,
 	};
+
+
+	//if(wrapper_user_info[1] == 'Mobile' || wrapper_user_info[1] == 'Tablet' ){
+		// setInterval(function(){
+		// 	if(input.find('[find=chat_textarea]').html().length > 0)
+		// 	{
+		// 		$('.empty_show').removeClass('mobile_hide');
+		// 		$('.empty_hide').addClass('mobile_hide');
+		// 	}
+		// },500);
+	//}
 
 }
 

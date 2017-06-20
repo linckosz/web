@@ -80,6 +80,14 @@
 
 <script>
 
+var wrapper_user_info = [
+	"{{ user_info_0 }}",
+	"{{ user_info_1 }}",
+	"{{ user_info_2 }}",
+	"{{ user_info_3 }}"
+];
+
+
 var wrapper_hash = document.location.hash;
 {% if link_reset %}
 	//Clean the URL
@@ -590,6 +598,7 @@ if(typeof wrapper_connection != "undefined" && typeof wrapper_connection.type !=
 }
 
 
+
 //https://www.w3schools.com/js/js_cookies.asp
 function getCookie(cname) {
 	var name = cname + "=";
@@ -606,6 +615,8 @@ function getCookie(cname) {
 	}
 	return "";
 } 
+
+
 
 </script>
 

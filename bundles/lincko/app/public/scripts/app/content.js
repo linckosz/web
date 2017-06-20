@@ -289,7 +289,7 @@ $('#app_content_top_title_menu, #app_content_statistics_settings').click(functio
 		var menu_data = [
 			{
 				icon:'icon-AddPerson',
-				title : 'Add teammates to this project',
+				title : 'Add teammates to project',
 				action : function(project_id){
 					var param = {
 						pid: project_id,
@@ -301,19 +301,13 @@ $('#app_content_top_title_menu, #app_content_statistics_settings').click(functio
 					submenu_Build('app_projects_users_contacts', true, false, param);
 				},
 			},
-			{
-				icon:'icon-createproject',
-				title : 'Create a new project',
-				action : function(){
-					submenu_Build("app_project_new");
-				},
-			},
+		
 			{
 				icon:function(projects_id){
 					var users = Lincko.storage.get('projects', projects_id, '_users');
-					var icon = 'icon-audiomute';
+					var icon = 'icon-audio';
 					if(users[wrapper_localstorage.uid] && users[wrapper_localstorage.uid]['silence']){
-						icon = 'icon-audio';
+						icon = 'icon-audiomute';
 					}
 					return icon;
 				},
@@ -336,12 +330,12 @@ $('#app_content_top_title_menu, #app_content_statistics_settings').click(functio
 					);
 					users[wrapper_localstorage.uid]['silence'] = on_off_invert;
 					if(on_off_invert){
-						elem.find('[find=icon]').removeClass('icon-audiomute');
-						elem.find('[find=icon]').addClass('icon-audio');
-					}
-					else{
 						elem.find('[find=icon]').removeClass('icon-audio');
 						elem.find('[find=icon]').addClass('icon-audiomute');
+					}
+					else{
+						elem.find('[find=icon]').removeClass('icon-audiomute');
+						elem.find('[find=icon]').addClass('icon-audio');
 					}
 				},
 			},
@@ -350,6 +344,26 @@ $('#app_content_top_title_menu, #app_content_statistics_settings').click(functio
 				title : 'Other Project Settings',
 				action : function(project_id){
 					submenu_Build("app_project_edit", 1, false, project_id, false);
+				},
+			},
+
+			{
+				icon:null,
+				title:'line',
+			},
+
+			{
+				icon:'icon-createproject',
+				title : 'Create a new project',
+				action : function(){
+					submenu_Build("app_project_new");
+				},
+			},
+			{
+				icon:'icon-projectBlack',
+				title : 'Open another project',
+				action : function(){
+					submenu_Build("projectsDeck");
 				},
 			},
 		];
@@ -366,22 +380,29 @@ $('#app_content_top_title_menu, #app_content_statistics_settings').click(functio
 
 			for(var i in menu_data)
 			{
-				var elems_item = $('#-submenu_menu_list_item').clone();
-				elems_item.prop("id","");
+				if(menu_data[i].icon == null){
+					var elems_item = $('#-submenu_menu_list_line').clone();
+					elems_item.prop("id","");
+					elems.find("ul").eq(0).append(elems_item);
+				}else{
+					var elems_item = $('#-submenu_menu_list_item').clone();
+					elems_item.prop("id","");
 
-				if(typeof menu_data[i].icon === 'function'){
-					elems_item.find("[find=icon]").addClass(menu_data[i].icon(app_content_menu.projects_id));
-				}
-				else{
-					elems_item.find("[find=icon]").addClass(menu_data[i].icon);
+					if(typeof menu_data[i].icon === 'function'){
+						elems_item.find("[find=icon]").addClass(menu_data[i].icon(app_content_menu.projects_id));
+					}
+					else{
+						elems_item.find("[find=icon]").addClass(menu_data[i].icon);
+					}
+					
+					elems_item.find("[find=title]").html(menu_data[i].title);
+					elems_item.click(i,function(event){
+						var i = event.data;
+						menu_data[i].action(app_content_menu.projects_id,$(this));
+					});
+					elems.find("ul").eq(0).append(elems_item);
 				}
 				
-				elems_item.find("[find=title]").html(menu_data[i].title);
-				elems_item.click(i,function(event){
-					var i = event.data;
-					menu_data[i].action(app_content_menu.projects_id,$(this));
-				});
-				elems.find("ul").eq(0).append(elems_item);
 			}
 
 			elems.find("ul").on("blur",function(){

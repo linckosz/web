@@ -167,6 +167,28 @@ td.app_layers_dev_skytasks_checkbox {
 }
 
 
+.submenu_menu_list ul li.submenu_menu_list_line:hover{
+	background-color: #FFFFFF;
+	cursor:default;
+}
+
+.submenu_menu_list ul li.submenu_menu_list_line{
+	height:auto;
+	overflow: hidden;
+	font-size: 1px;
+	line-height: 1px;
+	text-align: center;
+}
+
+.submenu_menu_list_line span{
+	display: inline-block;
+	height: 1;
+	border-top: 1px solid #DBEBF4;
+	width:80%;
+	margin:0 auto;
+}
+
+
 .submenu_menu_list_item_icon_wrapper{
 	width: 50px;
 	height:45px; 

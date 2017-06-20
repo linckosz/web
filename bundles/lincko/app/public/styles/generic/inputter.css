@@ -19,6 +19,10 @@
 	padding:8px;
 }
 
+#skylist_tasks_layer_tasks_inputter_container.inputter_container{
+	padding:8px 0px !important;
+}
+
 .inputter_icon_blue{
 	color: #475577 !important;
 }
@@ -29,7 +33,6 @@
 	padding: 4px;
 	border-radius: 3px;
 	background-color: rgba(251, 160, 38, 0.99);
-	border: solid 1px #d5d5d5;
 	font-size: 12px !important;
 	color:#ffffff !important;
 	display:inline-block;
@@ -44,10 +47,7 @@
 	margin: 0;
 }
 
-.inputter_icon_add_fix{
-	margin-right: 3px;
-	margin-top : -3px;
-}
+
 
 .inputter_icon_add_fix_link {
 	margin-right: 3px;
@@ -275,6 +275,10 @@
 	overflow: hidden;
 }
 
+.max-width-900 #skylist_tasks_layer_tasks_inputter_container .inputter_right_menu_wrapper{
+	right : 0 !important;
+}
+
 .inputter_right_menu_wrapper ul{
 	width : auto;
 	height : auto;
@@ -283,6 +287,7 @@
 
 .inputter_right_menu_wrapper ul li{
 	float : right;
+	margin-left:3px;
 }
 
 .inputter_right_menu_wrapper ul:active{

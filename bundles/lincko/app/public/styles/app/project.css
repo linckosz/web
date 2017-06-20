@@ -610,6 +610,7 @@
 
 .app_project_quick_item{
 	display: inline-block;
+	margin:0 6px;
 }
 
 .app_project_quick_access_title_prog {
