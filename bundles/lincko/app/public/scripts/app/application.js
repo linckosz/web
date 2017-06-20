@@ -728,7 +728,13 @@ var app_application_global_selection_handler = function(timeout, offsetLeft, off
 	}
 }
 
+
+/*
+	iscroll is disabled between mousedown and mouseup to prevent scrolling during highlighting
+	if options.click is set to true, it is set to false during this time to prevent unwanted click on mouseup
+*/
 var app_application_iscroll_disabled = null;
+var app_application_iscroll_optionsClick = null;
 $("body").on("mousedown.app_application_selectable", ".selectable", function() {
 	$("#app_application_lincko_action").hide();
 	if(app_application_iscroll_disabled && app_application_iscroll_disabled.enable){
@@ -737,6 +743,8 @@ $("body").on("mousedown.app_application_selectable", ".selectable", function() {
 	}
 	var scroll = myIScrollList[$(this).parents(".overthrow").prop("id")];//find iScroll
 	if(scroll){
+		app_application_iscroll_optionsClick = scroll.options.click;
+		scroll.options.click = false;
 		scroll.disable();//disables the iScroll
 		app_application_iscroll_disabled = scroll;
 	}
@@ -744,12 +752,14 @@ $("body").on("mousedown.app_application_selectable", ".selectable", function() {
 
 $("body").on("mouseup.app_application_selectable", function(e){
 	if(app_application_iscroll_disabled && app_application_iscroll_disabled.enable){
-		app_application_iscroll_disabled = null;
 		app_application_global_selection_handler();
-		//fix but with settimeout: was causing click on mouseup
-		//conflict with iscroll option.click = true
+		app_application_iscroll_disabled.enable();
 		setTimeout(function(){
-			app_application_iscroll_disabled.enable();
+			if(app_application_iscroll_optionsClick){
+				app_application_iscroll_disabled.options.click = app_application_iscroll_optionsClick;
+			}
+			app_application_iscroll_optionsClick = null;
+			app_application_iscroll_disabled = null;
 		},0);
 		
 	}
@@ -769,7 +779,7 @@ if(supportsTouch){
 
 $("#app_application_lincko_action").click(function() {
 	$(this).hide();
-	var preview = submenu_Getnext(false) == 1 ? false : false;
+	var preview = submenu_Getnext(false) == 1 ? true : false;
 	submenu_Build(
 		"taskdetail_new", 
 		submenu_Getnext(preview), 
