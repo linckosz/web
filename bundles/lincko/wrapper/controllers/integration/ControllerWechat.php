@@ -348,7 +348,7 @@ class ControllerWechat extends Controller {
 			)
 		);
 
-		$verbose_show = true;
+		$verbose_show = false;
 		if($verbose_show){
 			$verbose = fopen('php://temp', 'w+');
 			curl_setopt($ch, CURLOPT_VERBOSE, true);

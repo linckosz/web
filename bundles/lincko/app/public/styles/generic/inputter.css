@@ -37,6 +37,10 @@
 	margin-top : -3px;
 }
 
+.inputter_icon_add_fix_link {
+	margin-right: 3px;
+}
+
 .inputter_record_impression{
 	position: absolute;
 	width:150px;

@@ -404,7 +404,7 @@ inputter.prototype.buildLayer = function()
 								else
 								{
 									item.attr("title",Lincko.Translation.get('app', 4002, 'js'));//Send
-									item.find(".inputter_ico").addClass("fa fa-send-o");
+									item.find(".inputter_ico").addClass("fa fa-send-o inputter_icon_add_fix_link");
 								}
 								
 								if(this.layer['right_menu'][i][j].hasOwnProperty('click'))
