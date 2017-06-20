@@ -374,7 +374,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	this.md5id = this.id;//md5(Math.random()); //This help to avoid memory leak
 	var submenu_wrapper = this.Wrapper();
 	var submenu_content = submenu_wrapper.find("[find=submenu_wrapper_content]");
-	submenu_content.prop('id','taskdetail_'+that.md5id).addClass('submenu_content_taskdetail_'+that.param.type);
+	submenu_content.prop('id','taskdetail_'+that.md5id).addClass('submenu_content_taskdetail submenu_content_taskdetail_'+that.param.type);
 	var submenu_taskdetail = $('#-submenu_taskdetail').clone().prop('id','submenu_taskdetail_'+that.md5id);
 
 
@@ -2552,6 +2552,7 @@ Submenu.prototype.Add_taskdetail = function() {
 						return; 
 					}
 					if(elem_editorToolbar_overlay){
+						elem_editorToolbar.removeClass('taskdetail_editorToolbar_hasOverlay');
 						elem_editorToolbar_overlay.recursiveRemove(0);
 						elem_editorToolbar_overlay = null;
 						$(this).off('focus');
@@ -2562,7 +2563,7 @@ Submenu.prototype.Add_taskdetail = function() {
 				elem_editorToolbar_overlay = $('<div>').addClass('taskdetail_editorToolbar_overlay').click(function(){
 						elem_description_text.focus();
 					});
-				elem_editorToolbar.append(elem_editorToolbar_overlay);
+				elem_editorToolbar.addClass('taskdetail_editorToolbar_hasOverlay').append(elem_editorToolbar_overlay);
 			}
 
 			//if it is not a new task, add the locking mechanism
@@ -2614,7 +2615,10 @@ Submenu.prototype.Add_taskdetail = function() {
 
 
 			var id_elem_locked = elem_editorToolbar.prop('id')+'_locked';
-			elem_editorToolbar.empty().append($('#-submenu_taskdetail_description_toolbar_locked').clone().prop('id', id_elem_locked));
+			elem_editorToolbar
+				.empty()
+				.removeClass('taskdetail_editorToolbar_hasOverlay')
+				.append($('#-submenu_taskdetail_description_toolbar_locked').clone().prop('id', id_elem_locked));
 
 			$('#'+id_elem_locked).text(Lincko.Translation.get('app', 3614, 'html', {username: Lincko.storage.get('users', item_locked_by.locked_by,'username')}));
 			app_application_lincko.clean(id_elem_locked);
@@ -3122,25 +3126,33 @@ var taskdetail_uploadManager = function(uniqueID, temp_id, new_parent_type, new_
 }
 
 
-
-
 var taskdetail_setEditorBarPosition = function(that){
+	var editor = $('#submenu_taskdetail_description_text_'+that.md5id);
+	var top = editor.position().top;
+	var height = editor.outerHeight();
+	var toolbar;
 
-
-	console.log('preview: '+that.preview);
-			var toolbar = $('#submenu_taskdetail_description_toolbar_'+that.md5id);
-			var editor = $('#submenu_taskdetail_description_text_'+that.md5id);
-			toolbar.removeClass('display_none');
+	//if editor is visible
+	if(top + height >= 0){
+		toolbar = $('#submenu_taskdetail_description_toolbar_'+that.md5id);
+		if(top > 0){
+			toolbar.css('top', top+48); //48 is height of submenu_top
+		} else {
 			toolbar.removeAttr('style');
-			var top = editor.position().top;
-			console.log(top);
-			if(top <= 0){
-				toolbar.addClass('taskdetail_editorToolbar_fixed');
-			} else {
-				toolbar.css('top', top+48); //48 is height of submenu_top
-			}
-}
+		}
 
+		if(toolbar.hasClass('taskdetail_editorToolbar_hasOverlay')){
+			toolbar.removeClass('display_none');
+		} else {
+			toolbar.velocity('stop').velocity('fadeIn', {
+				mobileHA: hasGood3Dsupport,
+				begin: function(){
+					toolbar.removeClass('display_none');
+				},
+			});
+		}
+	}	
+}
 
 
 /*
