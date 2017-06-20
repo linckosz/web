@@ -377,6 +377,31 @@ Submenu.prototype.Add_taskdetail = function() {
 	submenu_content.prop('id','taskdetail_'+that.md5id).addClass('submenu_content_taskdetail_'+that.param.type);
 	var submenu_taskdetail = $('#-submenu_taskdetail').clone().prop('id','submenu_taskdetail_'+that.md5id);
 
+
+	wrapper_IScroll_cb_creation[submenu_content.prop('id')] = function(){
+		var IScroll = myIScrollList[submenu_content.prop('id')];
+		
+		IScroll.on('scrollStart', function(){
+			$('#submenu_taskdetail_description_toolbar_'+that.md5id).addClass('display_none');
+		});//scrollStart
+
+		IScroll.on('scrollEnd', function(){
+			taskdetail_setEditorBarPosition(that);
+			
+		});//scrollEnd
+
+
+		$(window).on('resize.taskdetail_barpos', function(){
+			$(window).off('resize.taskdetail_barpos');
+			taskdetail_setEditorBarPosition(that);
+		});
+	}
+
+
+
+
+
+
 	that.param.uniqueID = md5(Math.random());
 	if(!that.param.projID){
 		if(app_content_menu.projects_id == 0) 
@@ -2480,7 +2505,8 @@ Submenu.prototype.Add_taskdetail = function() {
 
 	//div for the toolbar
 	var elem_editorToolbar = $('#-submenu_taskdetail_description_toolbar').clone().prop('id', 'submenu_taskdetail_description_toolbar_'+that.md5id);
-	elem_description_text.before(elem_editorToolbar);
+	//elem_description_text.before(elem_editorToolbar);
+	submenu_content.before(elem_editorToolbar);
 
 
 	elem_editorToolbar_overlay = null;
@@ -3095,6 +3121,25 @@ var taskdetail_uploadManager = function(uniqueID, temp_id, new_parent_type, new_
 
 }
 
+
+
+
+var taskdetail_setEditorBarPosition = function(that){
+
+
+	console.log('preview: '+that.preview);
+			var toolbar = $('#submenu_taskdetail_description_toolbar_'+that.md5id);
+			var editor = $('#submenu_taskdetail_description_text_'+that.md5id);
+			toolbar.removeClass('display_none');
+			toolbar.removeAttr('style');
+			var top = editor.position().top;
+			console.log(top);
+			if(top <= 0){
+				toolbar.addClass('taskdetail_editorToolbar_fixed');
+			} else {
+				toolbar.css('top', top+48); //48 is height of submenu_top
+			}
+}
 
 
 

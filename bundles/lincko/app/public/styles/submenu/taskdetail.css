@@ -240,6 +240,7 @@ td.submenu_taskdetail_share .fa{
 	padding-right: 15px;
 	margin: 0px;
 	border: none;
+	margin-top: 40px;
 }
 .submenu_taskdetail_description_img {
 	max-width: 100%;
@@ -268,6 +269,14 @@ td.submenu_taskdetail_share .fa{
 	bottom: -2px;
 	background-color: #FFFFFF;
 	z-index: 5;
+}
+
+.taskdetail_editorToolbar_fixed{
+	position: absolute;
+    width: 100%;
+    background-color: #FFFFFF;
+    z-index: 3001;
+    top: 48px;
 }
 
 
