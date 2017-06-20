@@ -711,13 +711,7 @@ Submenu.prototype.Add_MenuNext = function() {
 				$.each(that.Wrapper().find('.submenu_deco_next'), function() {
 					$(this).removeClass('submenu_deco_next');
 				});
-				debugger;
-				console.log(attribute.next);
-					console.log(that.layer);
-					console.log(event.data);
-					console.log(that.preview);
 				if(submenu_Build(attribute.next, that.layer + 1, true, event.data, that.preview)) {
-
 					$(this).addClass('submenu_deco_next');
 				}
 
