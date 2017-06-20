@@ -407,7 +407,7 @@ var base_hexToRgb = function(hex) {
 };
 
 /* customization */
-var base_customize_color = function(color_one, color_two, image){
+var base_customize_color = function(color_one, color_two){
 	$('#base_customize_color').remove();
 	if(typeof color_one == 'string' && typeof color_two == 'string'){
 		var rgb_one = base_hexToRgb(color_one);
@@ -431,6 +431,11 @@ var base_customize_color = function(color_one, color_two, image){
 				+"background-image: url('"+app_application_cloud.src+"'), linear-gradient("+color_one+", "+color_two+") !important;"
 			+"} "
 			+".app_content_menu.customize { border-right-color: rgba("+color_one_r+", "+color_one_g+", "+color_one_b+", 0.40) !important; } "
+			+"@media only screen and (max-width: 900px) {"
+				+".base_color_bg_main_gradient.noimage.customize {"
+					+"background-image: linear-gradient("+color_one+", "+color_two+") !important; /* Standard syntax */"
+				+"} "
+			+"} "
 		);
 	}
 };

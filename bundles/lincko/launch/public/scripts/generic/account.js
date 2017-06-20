@@ -651,7 +651,7 @@ JSfiles.finish(function(){
 							integration_code: account_integration_code,
 						}
 						window.webkit.messageHandlers.iOS.postMessage(obj);
-					} else if(device=='android'){
+					} else if(device=='winphone'){
 						//toto => to be defined
 					}
 				}

@@ -1,19 +1,17 @@
 {% extends '/bundles/lincko/wrapper/templates/wrapper.twig' %}
 {% block base %}
-	<body class="unselectable">
-		<script>
-			var base_input_field = {};
-			JSfiles.later("{{ _filelatest('/lincko/launch/scripts/generic/base.js') }}");
-			JSfiles.later("{{ _filelatest('/lincko/launch/scripts/input/_base.js') }}", 40);
-		</script>
-		<link rel="stylesheet" href="{{ _filelatest('/lincko/launch/styles/generic/base.css') }}" type="text/css" />
-		{% include '/bundles/lincko/launch/templates/generic/styles/base.css.twig' %}
-		
-		{% include '/bundles/lincko/launch/templates/generic/account.twig' %}
-		<div id="base_error"></div>
-		<div class="base_wrapper display_none" id="base_wrapper">
-			{% include '/bundles/lincko/launch/templates/generic/wphead.twig' %}
-			<object class="base_iframe_message" id="base_iframe_message" data="" type="text/html"></object>
-		</div>
-	</body>
+	<script>
+		var base_input_field = {};
+		JSfiles.later("{{ _filelatest('/lincko/launch/scripts/generic/base.js') }}");
+		JSfiles.later("{{ _filelatest('/lincko/launch/scripts/input/_base.js') }}", 40);
+	</script>
+	<link rel="stylesheet" href="{{ _filelatest('/lincko/launch/styles/generic/base.css') }}" type="text/css" />
+	{% include '/bundles/lincko/launch/templates/generic/styles/base.css.twig' %}
+	
+	{% include '/bundles/lincko/launch/templates/generic/account.twig' %}
+	<div id="base_error"></div>
+	<div class="base_wrapper display_none" id="base_wrapper">
+		{% include '/bundles/lincko/launch/templates/generic/wphead.twig' %}
+		<object class="base_iframe_message" id="base_iframe_message" data="" type="text/html"></object>
+	</div>
 {% endblock %}
