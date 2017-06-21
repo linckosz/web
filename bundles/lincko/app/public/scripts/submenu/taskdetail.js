@@ -378,23 +378,34 @@ Submenu.prototype.Add_taskdetail = function() {
 	var submenu_taskdetail = $('#-submenu_taskdetail').clone().prop('id','submenu_taskdetail_'+that.md5id);
 
 
+	//iscroll creation callback
 	wrapper_IScroll_cb_creation[submenu_content.prop('id')] = function(){
 		var IScroll = myIScrollList[submenu_content.prop('id')];
 		
 		IScroll.on('scrollStart', function(){
-			$('#submenu_taskdetail_description_toolbar_'+that.md5id).addClass('display_none');
+			taskdetail_hideEditorBar(that);
 		});//scrollStart
 
 		IScroll.on('scrollEnd', function(){
 			taskdetail_setEditorBarPosition(that);
-			
 		});//scrollEnd
 
-
-		$(window).on('resize.taskdetail_barpos', function(){
-			$(window).off('resize.taskdetail_barpos');
-			taskdetail_setEditorBarPosition(that);
+		var timeout_resize;
+		$(window).on('resize.taskdetail', function(){
+			clearTimeout(timeout_resize);
+			if($('#'+that.id).is(':visible')){
+				$(window).off('resize.taskdetail');
+				taskdetail_setEditorBarPosition(that, false);
+			} else {
+				timeout_resize = setTimeout(function(){
+					$(window).trigger('resize.taskdetail');
+				},100);
+			}
 		});
+
+		timeout_resize = setTimeout(function(){
+			$(window).trigger('resize.taskdetail');
+		},100);
 	}
 
 
@@ -1865,6 +1876,10 @@ Submenu.prototype.Add_taskdetail = function() {
 			elem_content.velocity('slideUp',{
 				mobileHA: hasGood3Dsupport,
 				begin: function(){
+					//description text
+					if(elem_content.prop('id') == 'submenu_taskdetail_description_text_'+that.md5id){
+						taskdetail_hideEditorBar(that);
+					}
 					elem_content.css({
 						'background-color':'#FBFBFB',
 					});
@@ -1882,6 +1897,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		}
 		else{
 			elem_content.velocity('slideDown',{
+				mobileHA: hasGood3Dsupport,
 				begin: function(){
 					elem_content.css('background','#FBFBFB');
 				},
@@ -1889,6 +1905,10 @@ Submenu.prototype.Add_taskdetail = function() {
 					elem_parent.removeClass('submenu_taskdetail_collapsable_defaultCollapsed');	
 					elem_content.removeAttr('style');
 					myIScrollList[submenu_wrapper.find('[find=submenu_wrapper_content]').prop('id')].refresh();
+					//description text
+					if(elem_content.prop('id') == 'submenu_taskdetail_description_text_'+that.md5id){
+						taskdetail_setEditorBarPosition(that, false);
+					}
 				},
 			});
 			elem_arrow.velocity({
@@ -3125,14 +3145,20 @@ var taskdetail_uploadManager = function(uniqueID, temp_id, new_parent_type, new_
 
 }
 
+var taskdetail_hideEditorBar = function(that){
+	$('#submenu_taskdetail_description_toolbar_'+that.md5id).addClass('display_none');
+}
 
-var taskdetail_setEditorBarPosition = function(that){
+var taskdetail_setEditorBarPosition = function(that, fadeIn){ 
 	var editor = $('#submenu_taskdetail_description_text_'+that.md5id);
+	if(!editor.is(':visible')){ return false; }
+	if(typeof fadeIn != 'boolean'){ var fadeIn = true; }
+
 	var top = editor.position().top;
 	var height = editor.outerHeight();
 	var toolbar;
 
-	//if editor is visible
+	//if editor is within viewable iscroll
 	if(top + height >= 0){
 		toolbar = $('#submenu_taskdetail_description_toolbar_'+that.md5id);
 		if(top > 0){
@@ -3141,7 +3167,7 @@ var taskdetail_setEditorBarPosition = function(that){
 			toolbar.removeAttr('style');
 		}
 
-		if(toolbar.hasClass('taskdetail_editorToolbar_hasOverlay')){
+		if(!fadeIn || toolbar.hasClass('taskdetail_editorToolbar_hasOverlay')){
 			toolbar.removeClass('display_none');
 		} else {
 			toolbar.velocity('stop').velocity('fadeIn', {
