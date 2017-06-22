@@ -19,7 +19,7 @@
 	padding:8px;
 }
 
-#skylist_tasks_layer_tasks_inputter_container.inputter_container{
+.max-width-900  #skylist_tasks_layer_tasks_inputter_container.inputter_container{
 	padding:8px 0px !important;
 }
 
@@ -36,6 +36,7 @@
 	font-size: 12px !important;
 	color:#ffffff !important;
 	display:inline-block;
+	font-weight: 400;
 }
 
 .inputter_icon_big_size{

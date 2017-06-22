@@ -301,7 +301,6 @@ $('#app_content_top_title_menu, #app_content_statistics_settings').click(functio
 					submenu_Build('app_projects_users_contacts', true, false, param);
 				},
 			},
-		
 			{
 				icon:function(projects_id){
 					var users = Lincko.storage.get('projects', projects_id, '_users');
@@ -351,7 +350,6 @@ $('#app_content_top_title_menu, #app_content_statistics_settings').click(functio
 				icon:null,
 				title:'line',
 			},
-
 			{
 				icon:'icon-createproject',
 				title : 'Create a new project',
@@ -402,11 +400,12 @@ $('#app_content_top_title_menu, #app_content_statistics_settings').click(functio
 					});
 					elems.find("ul").eq(0).append(elems_item);
 				}
-				
 			}
+
 
 			elems.find("ul").on("blur",function(){
 				elems.velocity('slideUp', {
+					duration: 400,
 					mobileHA: hasGood3Dsupport,
 				});
 			});
@@ -423,12 +422,14 @@ $('#app_content_top_title_menu, #app_content_statistics_settings').click(functio
 			}
 		}
 
+
 		elems.velocity('slideDown', {
+			duration: 400,
 			mobileHA: hasGood3Dsupport,
 			complete: function(){
 				elems.find("ul").focus();
 			}
-		});	
+		});
 	}
 });
 

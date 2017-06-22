@@ -408,6 +408,10 @@ inputter.prototype.buildLayer = function()
 									item.attr("title",Lincko.Translation.get('app', 4001, 'js'));//Create the task
 									elem.addClass("icon_button");
 									elem.removeClass('inputter_ico');
+									elem.css('filter','alpha(Opacity=50)');
+									elem.css('-moz-opacity',0.5);
+									elem.css('opacity',0.5);
+									elem.addClass('disable');
 									elem.text('Create');
 								}
 								else
@@ -419,6 +423,10 @@ inputter.prototype.buildLayer = function()
 								if(this.layer['right_menu'][i][j].hasOwnProperty('click'))
 								{
 									item.click(this.layer['right_menu'][i][j]['click'],function(event){
+									if($(this).find(".icon_button").length > 0 && $(this).find(".icon_button").hasClass('disable'))
+									{
+										return;
+									}
 									var files = app_upload_files.lincko_files;
 									var files_count = 0;
 									for(var i in files)
@@ -720,24 +728,19 @@ inputter.prototype.buildLayer = function()
 		input.find('[find=chat_textarea]').blur(function(event){
 			var files_count = 0;
 			var files = app_upload_files.lincko_files;
-			for(var i in files)
-			{
+			for(var i in files){
 				if(files[i].lincko_parent_type == that.upload_ptype
 					&& files[i].lincko_parent_id == that.upload_pid
-					&& files[i].lincko_param == that.panel_id)
-				{
+					&& files[i].lincko_param == that.panel_id){
 					files_count++;
 				}
 			}
-			if(input.find('[find=chat_textarea]').text().length == 0 && files_count == 0)
-			{
+			if(input.find('[find=chat_textarea]').text().length == 0 && files_count == 0){
 				setTimeout(function(){
-					if(that.blur_helper)
-					{
+					if(that.blur_helper){
 						container.addClass('tip_add_task_button_partial_display');
 					}
-					else
-					{
+					else{
 						that.blur_helper = true;
 					}
 				},200);
@@ -791,9 +794,14 @@ inputter.prototype.buildLayer = function()
 
 	input.find('[find=chat_textarea]').on('keyup',function(e){
 		if(!flag && e.keyCode == 13 && that.hasTask){
+			debugger;
 			e.which = null;
 			e.keyCode = null;
 			e.preventDefault();
+
+			if(container.find(".icon_button").length > 0 && container.find(".icon_button").hasClass('disable')){
+				return;
+			}
 		}
 
 
@@ -801,11 +809,20 @@ inputter.prototype.buildLayer = function()
 		{
 			if($.trim(this.innerText).length > 0)
  			{
+ 				container.find('.icon_button').css('filter','alpha(Opacity=100)');
+				container.find('.icon_button').css('-moz-opacity',1);
+				container.find('.icon_button').css('opacity',1);
+				container.find('.icon_button').removeClass('disable');				
  				$('.empty_show').addClass('mobile_hide');
  				$('.empty_hide').removeClass('mobile_hide');
  			}
  			else
  			{
+ 				container.find('.icon_button').css('filter','alpha(Opacity=50)');
+				container.find('.icon_button').css('-moz-opacity',0.5);
+				container.find('.icon_button').css('opacity',0.5);
+				container.find('.icon_button').addClass('disable');
+ 				$('.empty_show').addClass('mobile_hide');
  				$('.empty_show').removeClass('mobile_hide');
  				$('.empty_hide').addClass('mobile_hide');
  			}
