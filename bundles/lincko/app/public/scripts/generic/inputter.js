@@ -794,7 +794,6 @@ inputter.prototype.buildLayer = function()
 
 	input.find('[find=chat_textarea]').on('keyup',function(e){
 		if(!flag && e.keyCode == 13 && that.hasTask){
-			debugger;
 			e.which = null;
 			e.keyCode = null;
 			e.preventDefault();
