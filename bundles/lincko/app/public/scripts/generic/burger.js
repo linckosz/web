@@ -423,6 +423,7 @@ var burger_attach_clickHandler = {
 		
 		var dropdownInst = null;
 		elem.off('click.burger').on('click.burger', function(){
+			var elem = $(this);
 			if( (!dropdownInst || dropdownInst.destroyed) && 
 				(lincko_id == 'new' || !lincko_id || Lincko.storage.canI('edit', lincko_type, lincko_id))){
 				
@@ -532,6 +533,7 @@ var burger_attach_clickHandler = {
 		var dropdownInst = null;
 
 		elem.off('click.burger').on('click.burger', function(){
+			var elem = $(this);
 			if( (!dropdownInst || dropdownInst.destroyed) && 
 				(lincko_id == 'new' || !lincko_id || Lincko.storage.canI('edit', lincko_type, lincko_id))){
 
@@ -617,7 +619,7 @@ var burger_attach_clickHandler = {
 			}
 		}//END OF default cb_select
 
-		var launch = function(){
+		var launch = function(elem){
 			if(elem_datepicker){ return; }
 			if($('#burger_calendar_clickHandler').length){ $('#burger_calendar_clickHandler').recursiveRemove(); }
 			var md5id = md5(Math.random());
@@ -694,10 +696,11 @@ var burger_attach_clickHandler = {
 
 
 		elem.off('click.burger').on('click.burger', function(){
+			var elem = $(this);
 			if( !elem_datepicker && 
 				(lincko_id == 'new' || !lincko_id || Lincko.storage.canI('edit', lincko_type, lincko_id))){
 				if(responsiveRange == true || responsive.test(responsiveRange)){
-					launch();
+					launch(elem);
 				}
 				else{
 					var param = {};
@@ -1191,6 +1194,7 @@ var burger_dropdown = function(id, data, position, lineHeight, cb_create, cb_sel
 		top: 0,
 		bottom: 0,
 	};
+
 	if(position instanceof $){
 		var coord = position.offset();
 		that.coord.left = coord.left;
