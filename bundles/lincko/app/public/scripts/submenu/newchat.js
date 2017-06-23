@@ -269,6 +269,7 @@ Submenu.prototype.New_Add_ChatMenu  = function()
 	function fnSendMsg(inputter) {
 		var data = inputter.getContent();
 		var elem = data.elem;
+		var button  = data.button;
 		var content = data.text;
 		var type = that.param.type == 'history' ? "projects":'chats';
 		var sub_that = that;

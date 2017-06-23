@@ -289,7 +289,7 @@ $('#app_content_top_title_menu, #app_content_statistics_settings').click(functio
 		var menu_data = [
 			{
 				icon:'icon-AddPerson',
-				title : 'Add teammates to project',
+				title : Lincko.Translation.get('app', 31, 'html'), //Add Teammates
 				action : function(project_id){
 					var param = {
 						pid: project_id,
@@ -310,7 +310,7 @@ $('#app_content_top_title_menu, #app_content_statistics_settings').click(functio
 					}
 					return icon;
 				},
-				title : 'Mute notifications',
+				title : Lincko.Translation.get('app', 74, 'html'),//'Mute notifications'
 				action : function(projects_id,elem){
 					var users = Lincko.storage.get('projects', projects_id, '_users');
 					var on_off_invert = true;
@@ -340,7 +340,7 @@ $('#app_content_top_title_menu, #app_content_statistics_settings').click(functio
 			},
 			{
 				icon:'icon-Settings',
-				title : 'Other Project Settings',
+				title : Lincko.Translation.get('app', 2002, 'html'), //Project settings
 				action : function(project_id){
 					submenu_Build("app_project_edit", 1, false, project_id, false);
 				},
@@ -352,14 +352,14 @@ $('#app_content_top_title_menu, #app_content_statistics_settings').click(functio
 			},
 			{
 				icon:'icon-createproject',
-				title : 'Create a new project',
+				title : Lincko.Translation.get('app', 116, 'html'),//'Create a new project',
 				action : function(){
 					submenu_Build("app_project_new");
 				},
 			},
 			{
 				icon:'icon-projectBlack',
-				title : 'Open another project',
+				title : Lincko.Translation.get('app', 117, 'html'),//'Open another project',
 				action : function(){
 					submenu_Build("projectsDeck");
 				},
@@ -402,6 +402,14 @@ $('#app_content_top_title_menu, #app_content_statistics_settings').click(functio
 				}
 			}
 
+			
+			elems.velocity('slideDown', {
+				duration: 400,
+				mobileHA: hasGood3Dsupport,
+				complete: function(){
+					elems.find("ul").focus();
+				}
+			});
 
 			elems.find("ul").on("blur",function(){
 				elems.velocity('slideUp', {
@@ -412,24 +420,36 @@ $('#app_content_top_title_menu, #app_content_statistics_settings').click(functio
 		}
 		else{
 			elems = $("#app_content_top_title_drop_down_menu");
-			for(var i in menu_data)
+			if(elems.css("display") == "none")
 			{
-				if(typeof menu_data[i].icon == 'function')
+				for(var i in menu_data)
 				{
-					elems.find('li').eq(i).find("[find=icon]").removeAttr('class');
-					elems.find('li').eq(i).find("[find=icon]").addClass(menu_data[i].icon(app_content_menu.projects_id));
+					if(typeof menu_data[i].icon == 'function')
+					{
+						elems.find('li').eq(i).find("[find=icon]").removeAttr('class');
+						elems.find('li').eq(i).find("[find=icon]").addClass(menu_data[i].icon(app_content_menu.projects_id));
+					}
 				}
+				elems.velocity('slideDown', {
+					duration: 400,
+					mobileHA: hasGood3Dsupport,
+					complete: function(){
+						elems.find("ul").focus();
+					}
+				});
 			}
+			else
+			{
+				elems.velocity('slideUp', {
+					duration: 400,
+					mobileHA: hasGood3Dsupport,
+				});
+			}
+			
 		}
 
 
-		elems.velocity('slideDown', {
-			duration: 400,
-			mobileHA: hasGood3Dsupport,
-			complete: function(){
-				elems.find("ul").focus();
-			}
-		});
+		
 	}
 });
 

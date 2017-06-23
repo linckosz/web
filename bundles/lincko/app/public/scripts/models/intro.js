@@ -57,7 +57,7 @@ var intro = {
 						delay:200,
 						pointType:"step",
 						pointTo:2,
-						finger:"hidden",
+						finger:"show",
 					}
 				],
 				finger:"hidden",
@@ -74,7 +74,7 @@ var intro = {
 						delay:200,
 						pointType:"step",
 						pointTo:3,
-						finger:"hidden",
+						finger:"show",
 					}
 				],
 				finger:"hidden",
@@ -91,7 +91,7 @@ var intro = {
 						delay:200,
 						pointType:"step",
 						pointTo:4,
-						finger:"hidden",
+						finger:"show",
 					}
 				],
 				finger:"hidden",
@@ -108,10 +108,9 @@ var intro = {
 						delay:200,
 						pointType:"step",
 						pointTo:5,
-						finger:"hidden",
+						finger:"show",
 					}
 				],
-				finger:"hidden",
 				head:"show",
 			},
 		],
@@ -157,7 +156,7 @@ var intro = {
 						delay:200,
 						pointType:"step",
 						pointTo:6,
-						finger:"hidden",
+						finger:"show",
 					}
 				],
 				head:"hidden",
@@ -168,7 +167,7 @@ var intro = {
 
 		[//feel_free:6
 			{
-				line:12014,//"Type a task name. You can type @ to assign an owner, and + to assign a date.",
+				line:12014,//"Click here to create a task. You can type @ to assign an owner, and + to assign a date.",
 				lazy:1500,
 				head:"show",
 			},

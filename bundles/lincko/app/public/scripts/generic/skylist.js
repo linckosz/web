@@ -3203,9 +3203,16 @@ skylist.prototype.paperView_inputter = function(elem_appendTo, upload_parent_typ
 			app_application_lincko.prepare('projects_'+parent_id, true);
 			skylist.sendActionQueue.tasks[temp_id] = [];
 
-		
+
+			var sendButton = inputterInst.getContent().button;
+			sendButton.css('filter','alpha(Opacity=50)');
+			sendButton.css('-moz-opacity',0.5);
+			sendButton.css('opacity',0.5);
+			sendButton.addClass('disable');
+
 			//clear inputter (text, checkbox, files)
 			inputterInst.clearContent();
+
 		}
 
 		var cb_success = function(){

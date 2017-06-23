@@ -117,6 +117,7 @@ inputter.prototype.getContent = function()
 
 	var data = {
 		elem:container.find('[find=chat_textarea]'),
+		button:container.find('.icon_button'),
 		text:text,
 		html:html,
 		files_index:files_index,
@@ -427,6 +428,7 @@ inputter.prototype.buildLayer = function()
 									{
 										return;
 									}
+
 									var files = app_upload_files.lincko_files;
 									var files_count = 0;
 									for(var i in files)
@@ -871,7 +873,6 @@ inputter.prototype.buildLayer = function()
 
 	input.find('[find=chat_textarea]').on('paste',function(e,data){
 		e.preventDefault();
-
 		var pasteText = '';
 		if(window.clipboardData && clipboardData.setData) {// IE
 			pasteText = window.clipboardData.getData('text');
