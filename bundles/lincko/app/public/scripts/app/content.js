@@ -371,10 +371,16 @@ $('#app_content_top_title_menu, #app_content_statistics_settings').click(functio
 		{
 			elems = $('#-submenu_menu_list_container').clone();
 			elems.prop('id', 'app_content_top_title_drop_down_menu');
-			$('#app_content_top_title_menu').closest('.app_content_top_title').css('overflow','visible');
-			$('#app_content_top_title_menu').closest('.app_content_top_title').append(elems);
+			//$('#app_content_top_title_menu').closest('.app_content_top_title').css('overflow','visible');
+			//$('#app_content_top_title_menu').closest('.app_content_top_title').append(elems);
+			$('body').append(elems);
 
 			elems.find('.submenu_menu_list_more').remove();
+			var offset = $('#app_content_top_title_menu').closest('.app_content_top_title').offset();
+			var height = $('#app_content_top_title_menu').closest('.app_content_top_title').height();
+			elems.css('top',offset.top + height - 20);
+			elems.css('left',offset.left);
+
 
 			for(var i in menu_data)
 			{
@@ -420,6 +426,10 @@ $('#app_content_top_title_menu, #app_content_statistics_settings').click(functio
 		}
 		else{
 			elems = $("#app_content_top_title_drop_down_menu");
+			var offset = $('#app_content_top_title_menu').closest('.app_content_top_title').offset();
+			var height = $('#app_content_top_title_menu').closest('.app_content_top_title').height();
+			elems.css('top',offset.top + height - 20);
+			elems.css('left',offset.left);
 			if(elems.css("display") == "none")
 			{
 				for(var i in menu_data)

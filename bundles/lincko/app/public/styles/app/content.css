@@ -284,10 +284,9 @@
 
 
 #app_content_top_title_drop_down_menu{
-	position:relative;
+	position:absolute;
 	height:auto;
-	z-index: 99999;
-
+	z-index: 2000;
 }
 #app_content_top_title_drop_down_menu ul{
 	width:320px;
