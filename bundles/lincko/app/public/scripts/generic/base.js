@@ -203,6 +203,16 @@ function ios_open_link(url){
 		}
 	});
 }
+
+function base_isLinckoLinkRegex(){
+	var workspace = wrapper_localstorage.workspace == "" ? "" : wrapper_localstorage.workspace+".";
+	return top.location.protocol+'//'+app_application_dev_link() + workspace + document.domainRoot;
+}
+
+function base_isLinckoLink(url){
+	var match_reg = new RegExp(base_isLinckoLinkRegex());
+	return match_reg.test(url);
+}
 /*
 text to <a></a>
 */
@@ -210,8 +220,7 @@ function base_lincko_link_to_html(source)
 {
 	var reg = new RegExp("(?:(?:https?|ftp)://)([^\\s/$.?#]*\\.[^\\s|<|>]*)", "gi"); //stephenhay
 
-	var workspace = wrapper_localstorage.workspace == "" ? "" : wrapper_localstorage.workspace + ".";
-	var match_reg = new RegExp(top.location.protocol+'//'+app_application_dev_link() + workspace + document.domainRoot);
+	var match_reg = new RegExp(base_isLinckoLinkRegex());
 
 	var reg_replace = new RegExp("((?:https?|ftp)://)", "gi"); //stephenhay
 	var source = source.replace(reg_replace, function(match) {return match.toLowerCase();});
