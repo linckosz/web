@@ -1114,8 +1114,10 @@ onboarding.scripts['welcome'] = function(project_id){
 	
 
 	var fn_next = function(){
-		trip_openMainMenu().start();
-		onboarding.overlays.body(false);
+		if(onboarding.on){
+			trip_openMainMenu().start();
+			onboarding.overlays.body(false);
+		}
 	}
 
 	$('#'+onboarding.id_welcome_bubble).append(intro.showPanel());
