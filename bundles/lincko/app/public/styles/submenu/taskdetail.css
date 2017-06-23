@@ -128,6 +128,7 @@ td.app_layers_dev_skytasks_checkbox {
 	height: auto;
 	height: 48px;
 	outline: none;
+	z-index: 1003;
 }
 
 .submenu_menu_list:focus{
