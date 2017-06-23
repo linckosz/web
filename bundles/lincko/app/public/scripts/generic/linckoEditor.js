@@ -36,8 +36,7 @@ function linckoEditor(elem, toolbarID, param){
     $(editorInst.element.$).click(function(event) {
     	var elem_editor = this;
         if(typeof event.target.href != 'undefined') {
-        	device_download(event.target.href, '_blank', false);
-        	return;
+        	device_download(event.target.href, '_blank', false); 
         }
     });
     var preview = false;

@@ -60,15 +60,24 @@ function device_download(url, target, name){
 	if(typeof target == 'undefined'){ target = '_blank'; }
 	if(typeof name == 'undefined'){ name = 'file'; }
 
-	if(typeof android != 'undefined' && typeof android.download == 'function') {
-		android.download(url, document.cookie);
+	if(typeof android != 'undefined'){
+		if(name == 'files' && typeof android.download == 'function'){
+			android.download(url, document.cookie);
+		} 
+		else if(name != 'files' && typeof android.open_external_url == 'function'){
+			android.open_external_url(url);
+		}
 	}
 	else if(typeof window.webkit != 'undefined' && typeof window.webkit.messageHandlers != 'undefined' && typeof window.webkit.messageHandlers.iOS != 'undefined') {
-		var download_obj = {
-			url: url,
-			cookie: document.cookie,
-		};
-		window.webkit.messageHandlers.iOS.postMessage(download_obj);
+		if(name == 'file'){
+			var download_obj = {
+				url: url,
+				cookie: document.cookie,
+			};
+			window.webkit.messageHandlers.iOS.postMessage(download_obj);
+		} else {
+			ios_open_link(url);
+		}		
 	}
 	else if(typeof winPhone != 'undefined' && typeof winPhone.download == 'function') {
 		winPhone.download(url);
