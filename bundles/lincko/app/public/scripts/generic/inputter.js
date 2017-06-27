@@ -413,7 +413,7 @@ inputter.prototype.buildLayer = function()
 									elem.css('-moz-opacity',0.5);
 									elem.css('opacity',0.5);
 									elem.addClass('disable');
-									elem.text('Create');
+									elem.text(Lincko.Translation.get('app', 41, 'js'));
 								}
 								else
 								{
