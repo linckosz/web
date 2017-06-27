@@ -817,7 +817,7 @@ onboarding.scripts['welcome'] = function(project_id){
 				
 			},
 			onEnd: function(){
-				$('#app_project_chats_new').removeAttr('style')
+				$('#app_project_chats_new').removeAttr('style');
 				if(onboarding.forceOff){ return false; }
 				//if main menu is opened
 				if($('#app_application_project').hasClass('app_application_visible')){
@@ -830,9 +830,11 @@ onboarding.scripts['welcome'] = function(project_id){
 								//trip_exploreContentTop().start();
 
 								//go straight to the end
-								onboarding.overlays.content(false);
-								onboarding.overlays.content_menu().off('click.trip').removeAttr('style');
-								trip_inputter().start();
+								if(onboarding.on){
+									onboarding.overlays.content(false);
+									onboarding.overlays.content_menu().off('click.trip').removeAttr('style');
+									trip_inputter().start();
+								}
 							}, 1000);
 						}
 					);
