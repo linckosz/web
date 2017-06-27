@@ -754,7 +754,7 @@ $("body").on("mouseup.app_application_selectable", function(e){
 	if(app_application_iscroll_disabled && app_application_iscroll_disabled.enable){
 		var icon = app_application_global_selection_handler();
 		if(icon){
-			app_application_iscroll_optionsClick = scroll.options.click;
+			app_application_iscroll_optionsClick = app_application_iscroll_disabled.options.click;
 			app_application_iscroll_disabled.options.click = false;
 		}
 		app_application_iscroll_disabled.enable();
