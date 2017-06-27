@@ -293,6 +293,7 @@
 	right:auto !important;
 	height:auto;
 	overflow: hidden;
+	position:static;
 }
 
 #app_content_top_title_drop_down_menu li{
