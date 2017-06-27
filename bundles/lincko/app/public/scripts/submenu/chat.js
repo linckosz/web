@@ -817,7 +817,7 @@ var submenu_chat_add_user_options_build = function(elem, subm){
 		//Prepare the QRcode link (backend need few second for it)
 		var img = new Image();
 		var invite_access = false;
-		if(typeof subm.param.invite_access == 'object' && subm.param.invite_access!=null){
+		if(typeof subm.param == 'object' && subm.param!=null && typeof subm.param.invite_access == 'object' && subm.param.invite_access!=null){
 			invite_access = btoa(JSON.stringify(subm.param.invite_access));
 		}
 		img.src = Lincko.storage.generateMyQRcode(invite_access);
@@ -833,7 +833,7 @@ var submenu_chat_add_user_options_build = function(elem, subm){
 var submenu_chat_add_user_options_build_btn = {
 	myURL: function(elem, subm){
 		var invite_access = false;
-		if(typeof subm.param.invite_access == 'object' && subm.param.invite_access!=null){
+		if(typeof subm.param == 'object' && subm.param!=null && typeof subm.param.invite_access == 'object' && subm.param.invite_access!=null){
 			invite_access = btoa(JSON.stringify(subm.param.invite_access));
 		}
 		if(Lincko.storage.getWORKID()==0){
@@ -864,7 +864,7 @@ var submenu_chat_add_user_options_build_btn = {
 	},
 	myQR: function(elem, subm){
 		var invite_access = false;
-		if(typeof subm.param.invite_access == 'object' && subm.param.invite_access!=null){
+		if(typeof subm.param == 'object' && subm.param!=null && typeof subm.param.invite_access == 'object' && subm.param.invite_access!=null){
 			invite_access = btoa(JSON.stringify(subm.param.invite_access));
 		}
 		elem.click(invite_access, function(event){
