@@ -2645,7 +2645,7 @@ Lincko.storage.list_links = function(type, id/*, projectID*/){
 	return links;
 }
 
-Lincko.storage.generateMyQRcode = function(){
+Lincko.storage.generateMyQRcode = function(guest_access){
 	var user = Lincko.storage.get('users', wrapper_localstorage.uid);
 	if(user){
 		var workid = Lincko.storage.getWORKID();
@@ -2657,7 +2657,11 @@ Lincko.storage.generateMyQRcode = function(){
 		if(name==''){ name = 'user'; }
 		var created_at = Lincko.storage.get('users', wrapper_localstorage.uid, 'created_at');
 		var url = top.location.protocol+'//'+document.linckoBack+'file.'+document.domainRoot+':'+document.linckoBackPort+'/file';
-		return url+"/"+workid+"/"+sha+"/"+type+"/"+uid+"/"+name+".png?"+created_at;
+		var link = url+"/"+workid+"/"+sha+"/"+type+"/"+uid+"/"+name+".png?"+created_at;
+		if(guest_access && typeof guest_access == 'string'){
+			link = link+"&guest_access="+guest_access;
+		}
+		return link;
 	}
 	return false;
 }
@@ -2685,8 +2689,12 @@ Lincko.storage.generateProjectQRcode = function(id){
 	return url;
 }
 
-Lincko.storage.generateMyURL = function(){
-	return top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domainRoot+"/uid/"+wrapper_localstorage.ucode;
+Lincko.storage.generateMyURL = function(guest_access){
+	var link = top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domainRoot+"/uid/"+wrapper_localstorage.ucode;
+	if(guest_access && typeof guest_access == 'string'){
+		link = link+"_"+guest_access;
+	}
+	return link;
 }
 
 Lincko.storage.getProfile = function(uid){

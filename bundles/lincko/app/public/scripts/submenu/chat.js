@@ -313,7 +313,7 @@ Submenu.prototype.Add_ChatContacts = function() {
 		div = $('<div>');
 		div.prop("id", div_id).addClass('overthrow submenu_app_chat_chat_contact_div');
 		submenu_wrapper.find("[find=submenu_wrapper_content]").append(div);
-		div_start = $('<div class="display_none" uid="'+current_uid+'">');
+		div_start = $('<div class="display_none" find="tab_contact" uid="'+current_uid+'">');
 		div.append(div_start);
 	}
 	var alphaScrollInst;
@@ -535,27 +535,27 @@ Submenu.prototype.Add_ChatContacts = function() {
 		}
 
 		for(var i in pending){
-			var Elem_id = that.id+"_submenu_app_chat_chat_pending_"+i;
+			var Elem_id = that.id+"_submenu_app_chat_chat_pending_"+pending[i][2];
 			delete exists_tab[Elem_id];
 			if($('#'+Elem_id).length>=1){
 				continue;
 			}
 			var Elem = $('#-submenu_app_chat_chat_contact').attr("find", 'tab_contact').clone();
-			Elem.prop("id", Elem_id).attr('uid', i);
+			Elem.prop("id", Elem_id).attr('uid', pending[i][2]);
 			Elem.removeClass("submenu_deco").addClass("submenu_deco_read");
 			thumbnail = Lincko.storage.getLinkThumbnail(pending[i][1]);
 			if(thumbnail){
 				Elem.find("[find=picture_src]").css('background-image','url("'+thumbnail+'")');
-			} else if(i==0){ //LinckoBot
+			} else if(pending[i][2]==0){ //LinckoBot
 				Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_roboto.src+'")');
-			} else if(i==1){ //Monkey King
+			} else if(pending[i][2]==1){ //Monkey King
 				Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_monkeyking.src+'")');
 			} else {
 				Elem.find("[find=picture_src]").css('background-image','url("'+app_application_icon_single_user.src+'")');
 			}
 			Elem.find("[find=who]").html(wrapper_to_html(pending[i][0]));
 			Elem.find("[find=invitation]").removeClass("display_none");
-			Elem.find("[find=invitation_resend]").removeClass("display_none").off('click').on("click", [i, Elem_id], function(event) {
+			Elem.find("[find=invitation_resend]").removeClass("display_none").off('click').on("click", [pending[i][2], Elem_id], function(event) {
 				var param = {
 					exists: true,
 					users_id: event.data[0],
@@ -814,6 +814,13 @@ var submenu_chat_add_user_options_build = function(elem, subm){
 		elem.addClass('submenu_app_chat_add_user_options_wxMargin');
 	}
 	if(Lincko.storage.getWORKID()==0){
+		//Prepare the QRcode link (backend need few second for it)
+		var img = new Image();
+		var invite_access = false;
+		if(typeof subm.param.invite_access == 'object' && subm.param.invite_access!=null){
+			invite_access = btoa(JSON.stringify(subm.param.invite_access));
+		}
+		img.src = Lincko.storage.generateMyQRcode(invite_access);
 		submenu_chat_add_user_options_build_btn.myURL(elem.find('[find=btn_myURL]'), subm);
 		submenu_chat_add_user_options_build_btn.myQR(elem.find('[find=btn_myQR]'), subm);
 	} else {
@@ -825,8 +832,12 @@ var submenu_chat_add_user_options_build = function(elem, subm){
 
 var submenu_chat_add_user_options_build_btn = {
 	myURL: function(elem, subm){
+		var invite_access = false;
+		if(typeof subm.param.invite_access == 'object' && subm.param.invite_access!=null){
+			invite_access = btoa(JSON.stringify(subm.param.invite_access));
+		}
 		if(Lincko.storage.getWORKID()==0){
-			elem.attr('data-clipboard-text', Lincko.storage.generateMyURL());
+			elem.attr('data-clipboard-text', Lincko.storage.generateMyURL(invite_access));
 			var myurl = new Clipboard(elem[0]);
 			myurl.on('success', function(e) {
 				base_show_error(Lincko.Translation.get('app', 70, 'html'), false); //URL copied to the clipboard
@@ -851,9 +862,13 @@ var submenu_chat_add_user_options_build_btn = {
 			base_show_error(Lincko.Translation.get('app', 51, 'html'), true); //Operation not allowed
 		}
 	},
-	myQR: function(elem, elem_QR_popup){
-		elem.click(function(){
-			base_toggle_myQRcode();
+	myQR: function(elem, subm){
+		var invite_access = false;
+		if(typeof subm.param.invite_access == 'object' && subm.param.invite_access!=null){
+			invite_access = btoa(JSON.stringify(subm.param.invite_access));
+		}
+		elem.click(invite_access, function(event){
+			base_toggle_myQRcode(event.data);
 		});
 	},
 	scan: function(elem, subm){
@@ -1033,6 +1048,7 @@ var submenu_chat_new_user_result = function(sub_that, data, chat_status, param) 
 		}
 		Elem_info.removeClass("display_none");
 		Elem_info.find("[find=submenu_title]").html(Lincko.Translation.get('app', 2309, 'js')); //Your invitation has been sent.
+		console.log(sub_that.param);
 		if(sub_that && sub_that.param && sub_that.param.prevSub && sub_that.param.prevSub.menu == 'app_projects_users_contacts'){
 			Elem_info.find("[find=submenu_title]").append('<br/>'+Lincko.Translation.get('app', 2313, 'js')); //Once your invitation is accepted, the new contact will be added to this project and your Contacts list. Once added, you can assign tasks to them in this project. 
 		}

@@ -81,12 +81,18 @@ $app->get('/v/:sales_code', function ($sales_code) use ($app) {
 ->name('sales');
 
 //Link of user URL for direct connection (like scanning a QR code)
-$app->get('/uid/:user_code', function ($user_code) use ($app) {
+$app->get('/uid/:user_code(_:guest_access)', function ($user_code, $guest_access=false) use ($app) {
 	//Need to grab the uri ourself because slim has a bug and convert "+" into a space
-	if(preg_match("/^\/uid\/(\S+)$/ui", $app->request->getResourceUri(), $matches)){
-		$user_code = $matches[1];
+	$user_code = str_replace(' ', '+', $user_code);
+	if($guest_access){
+		$guest_access = str_replace(' ', '+', $guest_access);
 	}
 	$app->lincko->data['user_code'] = $_SESSION['user_code'] = $user_code;
+	if($guest_access){
+		if($guest_access = base64_decode($guest_access)){
+			$app->lincko->data['guest_access'] = $_SESSION['guest_access'] = $guest_access;
+		}
+	}
 	$app->lincko->data['link_reset'] = true;
 	$app->lincko->data['force_open_website'] = false;
 	if($app->lincko->data['logged']){
@@ -96,7 +102,8 @@ $app->get('/uid/:user_code', function ($user_code) use ($app) {
 	}
 })
 ->conditions(array(
-	'user_code' => '\S+',
+	'user_code' => '[A-Za-z0-9+/=]+',
+	'guest_access' => '[A-Za-z0-9+/=]+',
 ))
 ->name('uid');
 

@@ -458,7 +458,6 @@ JSfiles.finish(function(){
 	base_workspace_garbage = app_application_garbage.add();
 	app_application_lincko.add(base_workspace_garbage, 'workspaces', function() {
 		//Enable to upload a picture for the logo
-
 		var workspaces = Lincko.storage.list('workspaces');
 		if(workspaces.length > 0){
 			$('#app_project_quick_access_workspace').closest('.app_project_quick_item').removeClass('display_none');
@@ -468,15 +467,15 @@ JSfiles.finish(function(){
 		}
 
 		if(Lincko.storage.WORKID!==null){
-			if(Lincko.storage.getWORKID()==0 || Lincko.storage.amIadmin()){
-				$('#app_project_logo_span').addClass('base_pointer').click(function(event){
-					event.stopPropagation();
-					app_upload_open_photo_single('workspaces', Lincko.storage.getWORKID(), false, true);
-				});
-			} else {
-				$('#app_content_top_contacts, .icon-AddPerson').addClass('display_none');
-			}
 			if(Lincko.storage.getWORKID()){
+				if(Lincko.storage.amIadmin()){
+					$('#app_project_logo_span').addClass('base_pointer').click(function(event){
+						event.stopPropagation();
+						app_upload_open_photo_single('workspaces', Lincko.storage.getWORKID(), false, true);
+					});
+				} else {
+					$('#app_content_top_contacts, .icon-AddPerson').addClass('display_none');
+				}
 				var workspace = Lincko.storage.get('workspaces', Lincko.storage.getWORKID());
 				if(workspace){
 					if(
@@ -591,7 +590,7 @@ JSfiles.finish(function(){
 	app_application_lincko.add(base_wechat_shareData_garbage, 'first_launch', function() {
 
 		//load my QR code image but dont show
-		base_toggle_myQRcode(false);
+		base_toggle_myQRcode(false, false);
 
 		if(!base_is_wechat || (wx && (!wx.onMenuShareAppMessage || !wx.onMenuShareTimeline))){
 			app_application_garbage.remove(base_wechat_shareData_garbage);
@@ -640,10 +639,11 @@ base_remove_stdchar = function(str){
 	return str.replace(/[\u0000-\u007F]/gm, "");
 }
 
-base_toggle_myQRcode = function(display){
+base_toggle_myQRcode = function(invite_access, display){
 	var elem = $('#base_myQRcode_popup');
-	if(Lincko.storage.generateMyQRcode()){
-		elem.find('img').attr('src', Lincko.storage.generateMyQRcode());
+	var myQRcode = Lincko.storage.generateMyQRcode(invite_access);
+	if(myQRcode){
+		elem.find('img').attr('src', myQRcode);
 	}
 	if(typeof display == 'boolean'){
 		if(!display){

@@ -28,6 +28,16 @@ $app->group('/integration', function () use ($app) {
 		))
 		->name('integration_wechat_dev_get');
 
+		//Redirect URL
+		$app->get(
+			'/redirect(/:redirect)',
+			'\bundles\lincko\wrapper\controllers\integration\ControllerWechat:redirect_get'
+		)
+		->conditions(array(
+			'redirect' => '\w*',
+		))
+		->name('integration_wechat_redirect_get');
+
 		$app->post(
 			'/applog',
 			'\bundles\lincko\wrapper\controllers\integration\ControllerWechat:applog_post'
@@ -73,7 +83,7 @@ $app->group('/integration', function () use ($app) {
 		'\bundles\lincko\wrapper\controllers\integration\ControllerIntegration:code_get'
 	)
 	->conditions(array(
-		'var' => '^\S{8}$',
+		'code' => '^\S{8}$',
 	))
 	->name('integration_code_get');
 

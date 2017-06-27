@@ -78,6 +78,9 @@ class ControllerWrapper extends Controller {
 		if(isset($_SESSION['user_code'])){
 			$this->json['user_code'] = $_SESSION['user_code'];
 		}
+		if(isset($_SESSION['guest_access'])){
+			$this->json['guest_access'] = $_SESSION['guest_access'];
+		}
 		if(isset($_SESSION['project_qrcode']) && isset($_SESSION['project_qrcode'][2])){
 			$this->json['project_qrcode'] = $_SESSION['project_qrcode'][2];
 		}
@@ -240,6 +243,11 @@ class ControllerWrapper extends Controller {
 				//Clean user_code because it has been used by the back end
 				if(isset($json_result->flash->unset_user_code)){
 					unset($_SESSION['user_code']);
+				}
+
+				//Clean guest_access because it has been used by the back end
+				if(isset($json_result->flash->unset_guest_access)){
+					unset($_SESSION['guest_access']);
 				}
 
 				//Clean invitation_code because it has been used by the back end
