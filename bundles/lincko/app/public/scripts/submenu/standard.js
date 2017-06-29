@@ -97,12 +97,10 @@ submenu_list['settings'] = {
 		"title": Lincko.Translation.get('app', 39, 'html'), //Workspace
 		"next": "workspace",
 		"value": function(){ return Lincko.storage.WORKNAME; },
-		"class": function(){
-			if(Lincko.storage.list('workspaces').length>0){
-				submenu_workspace_build_list();
-				return "";
+		"now": function(Elem, subm){
+			if(Lincko.storage.list('workspaces').length==0){
+				Elem.addClass('display_none');
 			}
-			return "display_none";
 		},
 	},
 	"home": {
@@ -205,6 +203,12 @@ submenu_list['workspace'] = {
 		"title": Lincko.Translation.get('app', 25, 'html'), //Close
 		'hide': true,
 		"class": "base_pointer",
+	},
+	"pre_action": {
+		"style": "preAction",
+		"action": function(Elem, subm){
+			submenu_workspace_build_list();
+		},
 	},
 };
 
