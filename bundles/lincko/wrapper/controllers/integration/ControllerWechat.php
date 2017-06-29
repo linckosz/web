@@ -20,7 +20,14 @@ class ControllerWechat extends Controller {
 
 	public function __construct(){
 		$app = $this->app = \Slim\Slim::getInstance();
-		$this->get = $app->request->get();
+		$this->get = (array) $app->request->get();
+		if(isset($this->get['wechat_response'])){
+			if($response = base64_decode($this->get['wechat_response'])){
+				if($response = json_decode($response)){
+					$this->get = (array) $response;
+				}
+			}
+		}
 		return true;
 	}
 
@@ -193,7 +200,7 @@ class ControllerWechat extends Controller {
 			$app->lincko->data['integration_connection_error'] = true;
 			$app->lincko->translation['party'] = 'Wechat';
 		}
-		$app->lincko->data['link_reset'] = true;
+		
 		$app->router->getNamedRoute('root')->dispatch();
 
 		return true;

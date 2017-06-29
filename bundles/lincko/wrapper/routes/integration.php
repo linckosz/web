@@ -34,7 +34,7 @@ $app->group('/integration', function () use ($app) {
 			'\bundles\lincko\wrapper\controllers\integration\ControllerWechat:redirect_get'
 		)
 		->conditions(array(
-			'redirect' => '\w*',
+			'redirect' => '[A-Za-z0-9+/=]+',
 		))
 		->name('integration_wechat_redirect_get');
 

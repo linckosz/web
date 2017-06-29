@@ -26,7 +26,7 @@
 				dev_appid: "{{ integration_wechat_dev_appid }}",
 				public_appid: "{{ integration_wechat_public_appid }}",
 				href: top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"{{ _filelatest('/lincko/launch/styles/integration/wechat.css') }}",
-				redirect: btoa(window.location.href),
+				redirect: btoa(top.location.protocol+'//'+document.linckoFront+document.linckoBack+document.domain+"/integration/wechat/lincko/"+wrapper_timeoffset()),
 			},
 		};
 		{% if integration_wechat_new %}
@@ -35,7 +35,9 @@
 		{% endif %}
 		{% if integration_connection_error %}
 			JSfiles.finish(function(){
-				base_show_error("{{ _trans('web', 5, 25, 'js') }}", true); //You were not able to login using @@party~~.
+				if(!account_integration.wechat.base){
+					base_show_error("{{ _trans('web', 5, 25, 'js') }}", true); //You were not able to login using @@party~~.
+				}
 			});
 		{% endif %}
 		if(wrapper_hash){
