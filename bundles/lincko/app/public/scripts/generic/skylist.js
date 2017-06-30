@@ -345,7 +345,7 @@ skylist.prototype.subConstruct_default = function(){
 			if( typeof this.updated == 'object' 
 				&& typeof this.updated[sync_range] == 'object' 
 				&& !this.updated[sync_range]._children){ return; }
-			
+
 			var that = this.action_param.skylist;
 			var exitSync = false;
 
@@ -362,6 +362,7 @@ skylist.prototype.subConstruct_default = function(){
 
 			var items_paged = that.update_pagingList(that.list_filter());
 			
+
 			//update global view rings
 			if(/*that.pid == 0*/true){ that.updateRings(); }
 
@@ -457,7 +458,8 @@ skylist.prototype.subConstruct_default = function(){
 
 					i_elem++;
 				}
-				else if(item._id == item_id_elem || item.temp_id == temp_id_elem){ //skip if card exists
+				else if(	item._id == item_id_elem 
+						||(	item.temp_id && temp_id_elem && item.temp_id == temp_id_elem)){ //skip if card exists
 					i_elem++;
 				} 
 				else { //add new item card
