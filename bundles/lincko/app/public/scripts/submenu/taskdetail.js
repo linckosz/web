@@ -101,6 +101,45 @@ submenu_list['taskdetail'] = {
 				window.location.href = url;
 			},
 		},{
+			"feature":"copy",
+			"icon":'fa fa-clone',
+			"display":function(subm){
+				if(subm.param.type!='tasks' && subm.param.type!='notes' && subm.param.type!='files'){
+					return false;
+				}
+				return true;
+			},
+			"title": function(Elem, subm){
+				if(subm.param.type=='tasks'){
+					return Lincko.Translation.get('app', 203, 'js'); //Copy the task
+				} else if(subm.param.type=='notes'){
+					return Lincko.Translation.get('app', 204, 'js'); //Copy the note
+				} else if(subm.param.type=='files'){
+					return Lincko.Translation.get('app', 205, 'js'); //Copy the file
+				}
+				Elem.addClass('display_none');
+				return '';
+			},
+			"action": function(Elem, subm) {
+				var route = false;
+				if(subm.param.type=='tasks'){
+					route = 'task/clone';
+				} else if(subm.param.type=='notes'){
+					route = 'note/clone';
+				} else if(subm.param.type=='files'){
+					route = 'file/clone';
+				}
+				if(route){
+					wrapper_sendAction(
+						{
+							"id": subm.param.id,
+						},
+						'post',
+						route
+					);
+				}
+			},
+		},{
 			"icon":'icon-Trash',
 			"title": Lincko.Translation.get('app',22, 'html'), //delete
 			"enabled":function(subm){

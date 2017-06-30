@@ -352,9 +352,22 @@ $('#app_content_top_title_menu, #app_content_statistics_settings').click(functio
 			},
 			{
 				icon:'icon-createproject',
-				title : Lincko.Translation.get('app', 116, 'html'),//'Create a new project',
+				title : Lincko.Translation.get('app', 116, 'html'), //'Create a new project',
 				action : function(){
 					submenu_Build("app_project_new");
+				},
+			},
+			{
+				icon: 'fa fa-clone',
+				title : Lincko.Translation.get('app', 202, 'html'), //Copy the project
+				action : function(project_id){
+					wrapper_sendAction(
+						{
+							"id": project_id,
+						},
+						'post',
+						'project/clone'
+					);
 				},
 			},
 			{

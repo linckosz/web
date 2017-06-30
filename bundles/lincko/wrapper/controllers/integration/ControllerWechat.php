@@ -46,12 +46,12 @@ class ControllerWechat extends Controller {
 		$this->process('pub', $timeoffset);
 	}
 
-	public function redirect_get($redirect){
+	public function redirect_get($account, $redirect){
 		$app = $this->app;
 		$app->response->headers->set('Content-Type', 'text/html; charset=UTF-8');
 		$app->response->headers->set('Cache-Control', 'no-cache, must-revalidate');
 		$app->response->headers->set('Expires', 'Fri, 12 Aug 2011 14:57:00 GMT');
-		$url = base64_decode($redirect).'?wechat_response='.base64_encode(json_encode($_GET));
+		$url = base64_decode($redirect).'?wechat_account='.$account.'wechat_response='.base64_encode(json_encode($_GET));
 		echo '
 			<script>
 				window.location.href = "'.$url.'";
@@ -196,7 +196,7 @@ class ControllerWechat extends Controller {
 		}
 
 		$app->lincko->data['link_reset'] = true;
-		if(!$response){
+		if(!$response && !$app->lincko->data['integration_wechat_new']){
 			$app->lincko->data['integration_connection_error'] = true;
 			$app->lincko->translation['party'] = 'Wechat';
 		}

@@ -459,7 +459,14 @@ Submenu.prototype.Add_TitleRightButtonList = function() {
 	var Elem = $('#-submenu_menu_list_main').clone();
 	var preview = this.preview;
 	Elem.prop("id", "");
-	Elem.html(attribute.title);
+	var title;
+	if( typeof attribute.title == "function" ){
+		title = attribute.title(Elem, this);
+	}
+	else{
+		title = attribute.title;
+	}
+	Elem.html(title);
 	this.Wrapper().find("[find=submenu_wrapper_top]").append(Elem);
 
 	var elems ;
@@ -489,7 +496,14 @@ Submenu.prototype.Add_TitleRightButtonList = function() {
 						elems_item.find("[find=icon]").addClass(attribute.items[i].icon);
 
 						if(enabled){
-							elems_item.find("[find=title]").html(attribute.items[i].title);
+							var title;
+							if( typeof attribute.items[i].title == "function" ){
+								title = attribute.items[i].title($(this), that);
+							}
+							else{
+								title = attribute.items[i].title;
+							}
+							elems_item.find("[find=title]").html(title);
 						}
 						else
 						{

@@ -30,10 +30,11 @@ $app->group('/integration', function () use ($app) {
 
 		//Redirect URL
 		$app->get(
-			'/redirect(/:redirect)',
+			'/redirect/:account/:redirect',
 			'\bundles\lincko\wrapper\controllers\integration\ControllerWechat:redirect_get'
 		)
 		->conditions(array(
+			'account' => 'pub|dev',
 			'redirect' => '[A-Za-z0-9+/=]+',
 		))
 		->name('integration_wechat_redirect_get');
