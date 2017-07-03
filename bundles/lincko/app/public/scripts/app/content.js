@@ -361,12 +361,33 @@ $('#app_content_top_title_menu, #app_content_statistics_settings').click(functio
 				icon: 'fa fa-clone font24',
 				title : Lincko.Translation.get('app', 202, 'html'), //Copy the project
 				action : function(project_id){
+					var clone_temp_id = false;
 					wrapper_sendAction(
 						{
 							"id": project_id,
 						},
 						'post',
-						'project/clone'
+						'project/clone',
+						function(msg, err, status, data){
+							if(
+								   clone_temp_id
+								&& data
+								&& typeof data.partial == 'object'
+								&& typeof data.partial[wrapper_localstorage.uid] == 'object'
+								&& typeof data.partial[wrapper_localstorage.uid].projects == 'object'
+							){
+								for(var i in data.partial[wrapper_localstorage.uid].projects){
+									if(typeof data.partial[wrapper_localstorage.uid].projects[i].temp_id != 'undefined' && data.partial[wrapper_localstorage.uid].projects[i].temp_id == clone_temp_id){
+										app_content_menu.selection(data.partial[wrapper_localstorage.uid].projects[i]._id, 'tasks');
+										return true;
+									}
+								}
+							}
+						},
+						null,
+						function(jqXHR, settings, temp_id){
+							clone_temp_id = temp_id;
+						}
 					);
 				},
 			},
@@ -393,7 +414,6 @@ $('#app_content_top_title_menu, #app_content_statistics_settings').click(functio
 			var height = $('#app_content_top_title_menu').closest('.app_content_top_title').height();
 			elems.css('top',offset.top + height - 20);
 			elems.css('left',offset.left);
-
 
 			for(var i in menu_data)
 			{

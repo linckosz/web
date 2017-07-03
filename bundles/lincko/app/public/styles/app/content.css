@@ -275,10 +275,11 @@
 	top: 8px;
 	right: 0;
 	font-size: 14px;
-	margin-right: -14px;
+	margin-right: 2px;
 }
 
 #app_content_top_title_menu {
+	padding-right: 16px;
 	position: relative;
 }
 

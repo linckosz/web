@@ -21,6 +21,7 @@
 			base_customize_color();
 			base_customize_logo();
 			document.title = wrapper_main_title+" - "+wrapper_title;
+			$('#app_content_top_title_drop_down_menu').recursiveRemove();
 			$('#app_project_projects_all').attr("title", "{{ _trans('app', 2, 15, 'html') }}"); //See All Projects
 			$('#app_project_projects_title').html("{{ _trans('app', 2, 7, 'html') }}"); //Projects
 			$('#app_project_projects_new').attr("title", "{{ _trans('app', 2, 16, 'html') }}"); //Create New Project

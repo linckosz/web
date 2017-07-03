@@ -124,32 +124,41 @@ submenu_list['taskdetail'] = {
 			"action": function(Elem, subm) {
 				//for files, use the backend clone feature
 				if(subm.param.type == 'files'){
-					var cb_success = function(msg, data_error, data_status, data_msg){
-						var item = null;
-						$.each(data_msg.partial[wrapper_localstorage.uid][subm.param.type], function(id, obj){
-							item = Lincko.storage.get(subm.param.type, id);
-							//double check to make sure this is the right item
-							//there is still maybe a chance that this is the wrong item.
-							//i would use temp_id but it is not available for cloning
-							if(item.created_by == wrapper_localstorage.uid){
-								return false;
-							} else {
-								item = null;
-							}
-						});
-						if(item){
-							submenu_Build('taskdetail', true, false, 
-							{
-								"type":subm.param.type,
-							}, subm.preview);
-						}
-					}
+					var clone_temp_id = false;
 					wrapper_sendAction(
 						{
 							"id": subm.param.id,
 						},
 						'post', 'file/clone',
-						cb_success, null
+						function(msg, err, status, data){
+							if(
+								   clone_temp_id
+								&& data
+								&& typeof data.partial == 'object'
+								&& typeof data.partial[wrapper_localstorage.uid] == 'object'
+								&& typeof data.partial[wrapper_localstorage.uid].files == 'object'
+							){
+								for(var i in data.partial[wrapper_localstorage.uid].files){
+									if(typeof data.partial[wrapper_localstorage.uid].files[i].temp_id != 'undefined' && data.partial[wrapper_localstorage.uid].files[i].temp_id == clone_temp_id){
+										submenu_Build(
+											'taskdetail',
+											true,
+											false, 
+											{
+												"type": "files",
+												"id": data.partial[wrapper_localstorage.uid].files[i]._id,
+											},
+											subm.preview
+										);
+										return true;
+									}
+								}
+							}
+						},
+						null,
+						function(jqXHR, settings, temp_id){
+							clone_temp_id = temp_id;
+						}
 					);
 				} else {
 					submenu_Build('taskdetail_new', true, false, 

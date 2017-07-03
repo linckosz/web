@@ -53,8 +53,8 @@ var wrapper_ajax = function(param, method, action, cb_success, cb_error, cb_begi
 	if(action == 'translation/auto'){
 		timeout = 80000; //60s, Because the translation request has to request a third party
 	}
-
-	if(action.match(/\/create$/, '')){
+	
+	if(action.match(/\/create|clone$/, '')){
 		var create_temp_id = true;
 		for(var i in param){
 			if(typeof param[i].name != 'undefined' && param[i].name=='temp_id'){
