@@ -12,55 +12,77 @@
 			if(typeof index == 'undefined' || typeof this[index] == 'undefined'){
 				index = 0;
 			}
+			Lincko.styling.reset();
 			this[index].fn();
+		},
+
+		reset: function(){
+			app_application_cloud.src = "{{ _filelatest('/lincko/app/images/generic/base/cloud9e.png') }}";
+			base_customize_color();
+			base_customize_logo();
+			document.title = wrapper_main_title+" - "+wrapper_title;
+			$('#app_project_projects_all').attr("title", "{{ _trans('app', 2, 15, 'html') }}"); //See All Projects
+			$('#app_project_projects_title').text("{{ _trans('app', 2, 7, 'html') }}"); //Projects
+			$('#app_project_projects_new').attr("title", "{{ _trans('app', 2, 16, 'html') }}"); //Create New Project
+			Lincko.Translation.reset();
+			Lincko.styling.text();
+		},
+
+		text: function(){
+			if(typeof submenu_list['app_project_new'] != 'undefined' && typeof submenu_list['app_project_new']["_title"] != 'undefined'){
+				submenu_list['app_project_new']["_title"]["title"] = Lincko.Translation.get('app', 2001, 'html'); //New project
+			}
+			if(typeof submenu_list['app_project_edit'] != 'undefined'){
+				if(typeof submenu_list['app_project_edit']["_title"] != 'undefined'){
+					submenu_list['app_project_edit']["_title"]["title"] = Lincko.Translation.get('app', 2002, 'html'); //Project settings
+				}
+				if(typeof submenu_list['app_project_edit']["deletion"] != 'undefined'){
+					submenu_list['app_project_edit']["deletion"]["title"] = Lincko.Translation.get('app', 2503, 'html'); //Archive the project
+				}
+			}
+			if(typeof submenu_list['projects_list'] != 'undefined' && typeof submenu_list['projects_list']["_title"] != 'undefined'){
+				submenu_list['projects_list']["_title"]["title"] = Lincko.Translation.get('app', 2501, 'html'); //Projects list
+			}
+			if(typeof submenu_list['projectsDeck'] != 'undefined' && typeof submenu_list['projectsDeck']["_title"] != 'undefined'){
+				submenu_list['projectsDeck']["_title"]["title"] = Lincko.Translation.get('app', 2501, 'html'); //Projects list
+			}
 		},
 
 		0: {
 			title: 'Lincko',
-			fn: function(){
-				app_application_cloud.src = "{{ _filelatest('/lincko/app/images/generic/base/cloud9e.png') }}";
-				base_customize_color();
-				base_customize_logo();
-				document.title = wrapper_main_title+" - "+wrapper_title;
-				$('#app_project_projects_all').attr("title", "{{ _trans('app', 2, 15, 'html') }}"); //See All Projects
-				$('#app_project_projects_title').text("{{ _trans('app', 2, 7, 'html') }}"); //Projects
-				$('#app_project_projects_new').attr("title", "{{ _trans('app', 2, 16, 'html') }}"); //Create New Project
-				Lincko.Translation.reset();
-				if(typeof submenu_list['app_project_new'] != 'undefined' && typeof submenu_list['app_project_new']["_title"] != 'undefined'){
-					submenu_list['app_project_new']["_title"]["title"] = Lincko.Translation.get('app', 2001, 'html'); //New project
-				}
-				if(typeof submenu_list['projects_list'] != 'undefined' && typeof submenu_list['projects_list']["_title"] != 'undefined'){
-					submenu_list['projects_list']["_title"]["title"] = Lincko.Translation.get('app', 2501, 'html'); //Projects list
-				}
-				if(typeof submenu_list['projectsDeck'] != 'undefined' && typeof submenu_list['projectsDeck']["_title"] != 'undefined'){
-					submenu_list['projectsDeck']["_title"]["title"] = Lincko.Translation.get('app', 2501, 'html'); //Projects list
-				}
-			},
+			visible: true,
+			fn: function(){},
 		},
 
 		1: {
-			title: '教育',
+			title: wrapper_main_title+" - 教育",
+			visible: true,
 			fn: function(){
 				app_application_cloud.src = "{{ _filelatest('/lincko/app/images/generic/base/bg02.png') }}";
-				//app_application_cloud.src = "";
 				base_customize_color('#1A79C6', '#3B9CC1');
 				base_customize_logo(this.title);
-				document.title = wrapper_main_title+" - "+this.title;
+				document.title = this.title;
 				$('#app_project_projects_all').attr("title", "查看所有班课"); //See All Projects
 				$('#app_project_projects_title').text("班课"); //Projects
 				$('#app_project_projects_new').attr("title", "创建新班课"); //Create New Project
-
-				if(typeof submenu_list['app_project_new'] != 'undefined' && typeof submenu_list['app_project_new']["_title"] != 'undefined'){
-					submenu_list['app_project_new']["_title"]["title"] = "新班课";
-				}
-				if(typeof submenu_list['projects_list'] != 'undefined' && typeof submenu_list['projects_list']["_title"] != 'undefined'){
-					submenu_list['projects_list']["_title"]["title"] = "班课列表";
-				}
-				if(typeof submenu_list['projectsDeck'] != 'undefined' && typeof submenu_list['projectsDeck']["_title"] != 'undefined'){
-					submenu_list['projectsDeck']["_title"]["title"] = "班课列表";
-				}
-				Lincko.Translation.redirect('app', 2501, '班课列表');
+				Lincko.Translation.redirect('app', 116, '创建新班课');
+				Lincko.Translation.redirect('app', 117, '打开其他班课');
+				Lincko.Translation.redirect('app', 202, '复制班课');
 				Lincko.Translation.redirect('app', 2001, '新班课');
+				Lincko.Translation.redirect('app', 2002, '班课设置');
+				Lincko.Translation.redirect('app', 2501, '班课列表');
+				Lincko.Translation.redirect('app', 2503, '班课归档');
+				Lincko.Translation.redirect('app', 3629, '在班课中打开');
+				Lincko.styling.text();
+			},
+		},
+
+		2: {
+			title: wrapper_main_title+" - Deep Blue",
+			visible: false,
+			fn: function(){
+				app_application_cloud.src = "{{ _filelatest('/lincko/app/images/generic/base/bg02.png') }}";
+				base_customize_color('#023762', '#00719c');
 			},
 		},
 
@@ -83,7 +105,7 @@
 
 		for(var key in Lincko.styling){
 			if(key==0 || parseInt(key) > 0){
-				if(typeof Lincko.styling[key] == 'object'){
+				if(typeof Lincko.styling[key] == 'object' && Lincko.styling[key].visible){
 					submenu_list['style'][Lincko.styling[key].title] = {
 						"style": "radio",
 						"title": Lincko.styling[key].title,

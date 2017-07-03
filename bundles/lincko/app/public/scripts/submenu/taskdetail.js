@@ -102,7 +102,7 @@ submenu_list['taskdetail'] = {
 			},
 		},{
 			"feature":"copy",
-			"icon":'fa fa-clone',
+			"icon":'fa fa-clone font24',
 			"display":function(subm){
 				if(subm.param.type!='tasks' && subm.param.type!='notes' && subm.param.type!='files'){
 					return false;

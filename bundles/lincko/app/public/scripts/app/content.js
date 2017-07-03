@@ -358,7 +358,7 @@ $('#app_content_top_title_menu, #app_content_statistics_settings').click(functio
 				},
 			},
 			{
-				icon: 'fa fa-clone',
+				icon: 'fa fa-clone font24',
 				title : Lincko.Translation.get('app', 202, 'html'), //Copy the project
 				action : function(project_id){
 					wrapper_sendAction(
