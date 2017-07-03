@@ -22,8 +22,10 @@
 			base_customize_logo();
 			document.title = wrapper_main_title+" - "+wrapper_title;
 			$('#app_project_projects_all').attr("title", "{{ _trans('app', 2, 15, 'html') }}"); //See All Projects
-			$('#app_project_projects_title').text("{{ _trans('app', 2, 7, 'html') }}"); //Projects
+			$('#app_project_projects_title').html("{{ _trans('app', 2, 7, 'html') }}"); //Projects
 			$('#app_project_projects_new').attr("title", "{{ _trans('app', 2, 16, 'html') }}"); //Create New Project
+			$("[find=header_recent]").html("{{ _trans('app', 6, 4, 'html') }}"); //Recent Projects
+			$("[find=archived_projects]").html("{{ _trans('app', 6, 2, 'html') }}"); //Archived projects
 			Lincko.Translation.reset();
 			Lincko.styling.text();
 		},
@@ -46,6 +48,12 @@
 			if(typeof submenu_list['projectsDeck'] != 'undefined' && typeof submenu_list['projectsDeck']["_title"] != 'undefined'){
 				submenu_list['projectsDeck']["_title"]["title"] = Lincko.Translation.get('app', 2501, 'html'); //Projects list
 			}
+			if(typeof submenu_list['burger_clickHandler_projects'] != 'undefined' && typeof submenu_list['burger_clickHandler_projects']["_title"] != 'undefined'){
+				submenu_list['burger_clickHandler_projects']["_title"]["title"] = Lincko.Translation.get('app', 2203, 'html'); //Select Project
+			}
+			if(typeof submenu_list['burger_projects'] != 'undefined' && typeof submenu_list['burger_projects']["_title"] != 'undefined'){
+				submenu_list['burger_projects']["_title"]["title"] = Lincko.Translation.get('app', 2203, 'html'); //Select Project
+			}
 		},
 
 		0: {
@@ -58,18 +66,19 @@
 			title: wrapper_main_title+" - 教育",
 			visible: true,
 			fn: function(){
-				app_application_cloud.src = "{{ _filelatest('/lincko/app/images/generic/base/bg02.png') }}";
-				base_customize_color('#1A79C6', '#3B9CC1');
 				base_customize_logo(this.title);
 				document.title = this.title;
 				$('#app_project_projects_all').attr("title", "查看所有班课"); //See All Projects
-				$('#app_project_projects_title').text("班课"); //Projects
+				$('#app_project_projects_title').html("班课"); //Projects
 				$('#app_project_projects_new').attr("title", "创建新班课"); //Create New Project
+				$("[find=header_recent]").html("最近打开的班课"); //Recent Projects
+				$("[find=archived_projects]").html("归档班课"); //Archived projects
 				Lincko.Translation.redirect('app', 116, '创建新班课');
 				Lincko.Translation.redirect('app', 117, '打开其他班课');
 				Lincko.Translation.redirect('app', 202, '复制班课');
 				Lincko.Translation.redirect('app', 2001, '新班课');
 				Lincko.Translation.redirect('app', 2002, '班课设置');
+				Lincko.Translation.redirect('app', 2203, '选择班课');
 				Lincko.Translation.redirect('app', 2501, '班课列表');
 				Lincko.Translation.redirect('app', 2503, '班课归档');
 				Lincko.Translation.redirect('app', 3629, '在班课中打开');
