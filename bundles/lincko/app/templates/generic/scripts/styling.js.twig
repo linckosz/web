@@ -1,0 +1,126 @@
+<script>
+	Lincko.styling = {
+
+		title: function(index){
+			if(typeof index == 'undefined' || typeof this[index] == 'undefined'){
+				index = 0;
+			}
+			return this[index].title;
+		},
+
+		update: function(index){
+			if(typeof index == 'undefined' || typeof this[index] == 'undefined'){
+				index = 0;
+			}
+			this[index].fn();
+		},
+
+		0: {
+			title: 'Lincko',
+			fn: function(){
+				app_application_cloud.src = "{{ _filelatest('/lincko/app/images/generic/base/cloud9e.png') }}";
+				base_customize_color();
+				base_customize_logo();
+				document.title = wrapper_main_title+" - "+wrapper_title;
+				$('#app_project_projects_all').attr("title", "{{ _trans('app', 2, 15, 'html') }}"); //See All Projects
+				$('#app_project_projects_title').text("{{ _trans('app', 2, 7, 'html') }}"); //Projects
+				$('#app_project_projects_new').attr("title", "{{ _trans('app', 2, 16, 'html') }}"); //Create New Project
+				Lincko.Translation.reset();
+				if(typeof submenu_list['app_project_new'] != 'undefined' && typeof submenu_list['app_project_new']["_title"] != 'undefined'){
+					submenu_list['app_project_new']["_title"]["title"] = Lincko.Translation.get('app', 2001, 'html'); //New project
+				}
+				if(typeof submenu_list['projects_list'] != 'undefined' && typeof submenu_list['projects_list']["_title"] != 'undefined'){
+					submenu_list['projects_list']["_title"]["title"] = Lincko.Translation.get('app', 2501, 'html'); //Projects list
+				}
+				if(typeof submenu_list['projectsDeck'] != 'undefined' && typeof submenu_list['projectsDeck']["_title"] != 'undefined'){
+					submenu_list['projectsDeck']["_title"]["title"] = Lincko.Translation.get('app', 2501, 'html'); //Projects list
+				}
+			},
+		},
+
+		1: {
+			title: '教育',
+			fn: function(){
+				app_application_cloud.src = "{{ _filelatest('/lincko/app/images/generic/base/bg02.png') }}";
+				//app_application_cloud.src = "";
+				base_customize_color('#1A79C6', '#3B9CC1');
+				base_customize_logo(this.title);
+				document.title = wrapper_main_title+" - "+this.title;
+				$('#app_project_projects_all').attr("title", "查看所有班课"); //See All Projects
+				$('#app_project_projects_title').text("班课"); //Projects
+				$('#app_project_projects_new').attr("title", "创建新班课"); //Create New Project
+
+				if(typeof submenu_list['app_project_new'] != 'undefined' && typeof submenu_list['app_project_new']["_title"] != 'undefined'){
+					submenu_list['app_project_new']["_title"]["title"] = "新班课";
+				}
+				if(typeof submenu_list['projects_list'] != 'undefined' && typeof submenu_list['projects_list']["_title"] != 'undefined'){
+					submenu_list['projects_list']["_title"]["title"] = "班课列表";
+				}
+				if(typeof submenu_list['projectsDeck'] != 'undefined' && typeof submenu_list['projectsDeck']["_title"] != 'undefined'){
+					submenu_list['projectsDeck']["_title"]["title"] = "班课列表";
+				}
+				Lincko.Translation.redirect('app', 2501, '班课列表');
+				Lincko.Translation.redirect('app', 2001, '新班课');
+			},
+		},
+
+	};
+	
+	JSfiles.finish(function(){
+		
+		submenu_list['style'] = {
+			"_title": {
+				"style": "customized_title",
+				"title": Lincko.Translation.get('app', 122, 'html'), //Style
+			},
+			"left_button": {
+				"style": "title_left_button",
+				"title": Lincko.Translation.get('app', 25, 'html'), //Close
+				'hide': true,
+				"class": "base_pointer",
+			},
+		};
+
+		for(var key in Lincko.styling){
+			if(key==0 || parseInt(key) > 0){
+				if(typeof Lincko.styling[key] == 'object'){
+					submenu_list['style'][Lincko.styling[key].title] = {
+						"style": "radio",
+						"title": Lincko.styling[key].title,
+						"hide": true,
+						"action_param": key,
+						"action": function(Elem, subm, action_param){
+							for(var i in submenu_list['style']){
+								if(typeof submenu_list['style'][i]['selected']){
+									submenu_list['style'][i]['selected'] = false;
+								}
+							}
+							wrapper_localstorage.styling = action_param;
+							Lincko.styling.update(wrapper_localstorage.styling);
+							this.selected = true;
+							var me = Lincko.storage.get('users', wrapper_localstorage.uid);
+							if(me){
+								me.styling = wrapper_localstorage.styling;
+								var suffix = me['_parent'][0]+'-'+me['_parent'][1];
+								storage_local_storage.prepare("users#"+suffix);
+							}
+							wrapper_sendAction(
+							{
+								"id": wrapper_localstorage.uid,
+								"styling": wrapper_localstorage.styling,
+							},
+							'post',
+							'user/update'
+						);
+
+						},
+						"selected": key == wrapper_localstorage.styling,
+					}
+				}
+			}
+		}
+
+		Lincko.styling.update(wrapper_localstorage.styling);
+	});
+
+</script>

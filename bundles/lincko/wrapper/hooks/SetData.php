@@ -36,6 +36,7 @@ function SetData(){
 	$jizhu = OneSeventySeven::get('jizhu');
 	$uid = OneSeventySeven::get('uid');
 	$sha = OneSeventySeven::get('sha');
+	$styling = OneSeventySeven::get('styling');
 	$ucode = Datassl::encrypt($uid, 'invitation');
 	$hashtag = false;
 
@@ -74,6 +75,7 @@ function SetData(){
 			'jizhu' => $jizhu,
 			'uid' => $uid,
 			'sha' => $sha,
+			'styling' => $styling,
 			'ucode' => $ucode,
 			'hashtag' => $hashtag,
 			'logged' => $logged,

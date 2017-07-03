@@ -302,6 +302,10 @@ class ControllerWrapper extends Controller {
 					if(isset($json_result->flash->username)){
 						OneSeventySeven::set(array('yonghu' => $json_result->flash->username));
 					}
+					//Front styling used
+					if(isset($json_result->flash->styling)){
+						OneSeventySeven::set(array('styling' => $json_result->flash->styling));
+					}
 					//Used to display/download files in a secured way and keep browser cache enable (same url)
 					if(isset($json_result->flash->pukpic)){
 						setcookie('pukpic', $json_result->flash->pukpic, time()+intval($app->lincko->cookies_lifetime), '/', $app->lincko->domain);

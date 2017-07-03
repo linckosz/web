@@ -442,10 +442,14 @@ var base_customize_color = function(color_one, color_two){
 /* customization */
 var base_customize_logo = function(image){
 	if(typeof image == 'string' && image){
-		var entreprise_logo = $('<img>').attr('src', image).addClass('base_customize_logo');
-		$('#app_project_logo_span').recursiveEmpty().append(entreprise_logo);
+		if(image.match(/https?:\/\//i)){
+			var entreprise_logo = $('<img>').attr('src', image).addClass('base_customize_logo');
+			$('#app_project_logo_span').recursiveEmpty().append(entreprise_logo);
+		} else {
+			$('#app_project_logo_span').recursiveEmpty().removeClass('base_customize_logo').text(image);
+		}
 	} else {
-		$('#app_project_logo_span').recursiveEmpty().removeClass('base_customize_logo').html(wrapper_main_title);
+		$('#app_project_logo_span').recursiveEmpty().removeClass('base_customize_logo').text(wrapper_main_title);
 	}
 };
 

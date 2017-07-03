@@ -16,7 +16,8 @@ class TranslationListJS {
 		$app = \Slim\Slim::getInstance();
 		$list = $app->trans->getList(true, 8000);
 		$script = "Lincko.Translation = {};\n";
-		$script .= "Lincko.Translation._list = [];\n";
+		$script .= "Lincko.Translation._list = {};\n";
+		$script .= "Lincko.Translation._redirect = {};\n";
 		foreach ($list as $bundle => $list_bundles) {
 			foreach ($list_bundles as $category => $list_categories) {
 				foreach ($list_categories as $phrase => $value) {
@@ -28,16 +29,32 @@ class TranslationListJS {
 			}
 		}
 		$script .= "
+		Lincko.Translation.redirect = function(bundle, phrase, text){
+			Lincko.Translation._redirect[bundle+'_8000_'+phrase] = {
+				js: JSON.stringify(text),
+				html: php_htmlentities(text),
+			};
+		};\n";
+		$script .= "
+		Lincko.Translation.reset = function(){
+			Lincko.Translation._redirect = {};
+		};\n";
+		$script .= "
 		Lincko.Translation.get = function(bundle, phrase, format, param){
 			var format_tp = 'js';
 			var category = '8000'; //Default category for JS sentences
-			if(bundle+'_'+category+'_'+phrase in Lincko.Translation._list){
+			if(bundle+'_'+category+'_'+phrase in Lincko.Translation._redirect){
+				var list = Lincko.Translation._redirect;
+			} else {
+				var list = Lincko.Translation._list;
+			}
+			if(bundle+'_'+category+'_'+phrase in list){
 				if(typeof format !== 'undefined') {
-					if(format in Lincko.Translation._list[bundle+'_'+category+'_'+phrase]){
+					if(format in list[bundle+'_'+category+'_'+phrase]){
 						format_tp = format;
 					}
 				}
-				var text = Lincko.Translation._list[bundle+'_'+category+'_'+phrase][format_tp];
+				var text = list[bundle+'_'+category+'_'+phrase][format_tp];
 				if(typeof param == 'object'){
 					text = Translation_filter(text, param,false);
 				}

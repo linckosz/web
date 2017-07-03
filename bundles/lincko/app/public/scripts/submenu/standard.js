@@ -91,6 +91,16 @@ submenu_list['settings'] = {
 		"value": submenu_language_full,
 		"class": "",
 	},
+	//Change the style
+	"style": {
+		"style": "next",
+		"title": Lincko.Translation.get('app', 122, 'html'), //Style
+		"next": "style",
+		"value": function(){
+			return Lincko.styling.title(wrapper_localstorage.styling);
+		},
+		"class": "",
+	},
 	//Change the workspace
 	"workspace": {
 		"style": "next",
