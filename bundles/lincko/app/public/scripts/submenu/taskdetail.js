@@ -102,7 +102,8 @@ submenu_list['taskdetail'] = {
 			},
 		},{
 			"feature":"copy",
-			"icon":'fa fa-clone font24',
+			//"icon":'fa fa-clone',
+			"icon": 'fa fa-files-o',
 			"display":function(subm){
 				if(subm.param.type!='tasks' && subm.param.type!='notes' && subm.param.type!='files'){
 					return false;
@@ -121,22 +122,42 @@ submenu_list['taskdetail'] = {
 				return '';
 			},
 			"action": function(Elem, subm) {
-				var route = false;
-				if(subm.param.type=='tasks'){
-					route = 'task/clone';
-				} else if(subm.param.type=='notes'){
-					route = 'note/clone';
-				} else if(subm.param.type=='files'){
-					route = 'file/clone';
-				}
-				if(route){
+				//for files, use the backend clone feature
+				if(subm.param.type == 'files'){
+					var cb_success = function(msg, data_error, data_status, data_msg){
+						var item = null;
+						$.each(data_msg.partial[wrapper_localstorage.uid][subm.param.type], function(id, obj){
+							item = Lincko.storage.get(subm.param.type, id);
+							//double check to make sure this is the right item
+							//there is still maybe a chance that this is the wrong item.
+							//i would use temp_id but it is not available for cloning
+							if(item.created_by == wrapper_localstorage.uid){
+								return false;
+							} else {
+								item = null;
+							}
+						});
+						if(item){
+							submenu_Build('taskdetail', true, false, 
+							{
+								"type":subm.param.type,
+							}, subm.preview);
+						}
+					}
 					wrapper_sendAction(
 						{
 							"id": subm.param.id,
 						},
-						'post',
-						route
+						'post', 'file/clone',
+						cb_success, null
 					);
+				} else {
+					submenu_Build('taskdetail_new', true, false, 
+					{
+						"type":subm.param.type,
+						"id": 'new', 
+						"id_toCopy": subm.param.id,
+					}, subm.preview);
 				}
 			},
 		},{
@@ -448,11 +469,13 @@ Submenu.prototype.Add_taskdetail = function() {
 	}
 
 
-
-
-
+	var itemToCopy = Lincko.storage.get(that.param.type, that.param.id_toCopy) || {};
 
 	that.param.uniqueID = md5(Math.random());
+
+	if(itemToCopy._parent && itemToCopy._parent[0] == 'projects'){
+		that.param.projID = itemToCopy._parent[1];
+	}
 	if(!that.param.projID){
 		if(app_content_menu.projects_id == 0) 
 		{
@@ -477,7 +500,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	var updated_by;
 	var updated_at;
 	var in_charge = '';
-	var in_charge_id = null;
+	var in_charge_id = wrapper_localstorage.uid;
 
 	var nextSubtaskFav = 0;
 
@@ -551,27 +574,41 @@ Submenu.prototype.Add_taskdetail = function() {
 
 
 	if(taskid == 'new' ){
-		if(that.param.title){
-			item['+title'] = that.param.title;
-		}
-		else{
-			item['+title'] = newTitle;
-		}
+		item['+title'] = itemToCopy['+title'] || that.param.title || newTitle;
 		item['_id'] = taskid;
-		item['_parent'] = ['projects', that.param.projID];
-		item['created_by'] = wrapper_localstorage.uid;
-		item['updated_by'] = wrapper_localstorage.uid;
-		item['_users'] = {};
-		var accessList = Lincko.storage.whoHasAccess('projects', that.param.projID);
-		if($.inArray(wrapper_localstorage.uid, accessList)<0){ return false; }
-		$.each(accessList, function(i,val){
-			item['_users'][val] = {};
-			item['_users'][val]['in_charge'] = false;
-		});
-		item['_users'][wrapper_localstorage.uid]['in_charge'] = true;
-		in_charge_id = wrapper_localstorage.uid;
-		item.start = new wrapper_date().getEndofDay(); //midnight today
-		item.duration = 86400; //24hrs by default
+		item['_parent'] = itemToCopy['_parent'] || ['projects', that.param.projID];
+		item['created_by'] = itemToCopy['created_by'] || wrapper_localstorage.uid;
+		item['updated_by'] = itemToCopy['updated_by'] || wrapper_localstorage.uid;
+		item['-comment'] = typeof itemToCopy['-comment'] != 'undefined' ? itemToCopy['-comment'] : undefined;
+
+		//checkbox
+		if(typeof itemToCopy.approved == 'boolean'){
+			approved = item.approved = itemToCopy.approved;
+		}
+		
+		if(itemToCopy._users){
+			in_charge_id = null;
+			item['_users'] = itemToCopy._users;
+			$.each(itemToCopy._users, function(uid, obj){
+				if(obj.in_charge){
+					in_charge_id = uid;
+					return false;
+				}
+			});
+		} else {
+			item['_users'] = {};
+			var accessList = Lincko.storage.whoHasAccess('projects', that.param.projID);
+			if($.inArray(wrapper_localstorage.uid, accessList)<0){ return false; }
+			$.each(accessList, function(i,val){
+				item['_users'][val] = {};
+				item['_users'][val]['in_charge'] = false;
+			});
+			item['_users'][wrapper_localstorage.uid]['in_charge'] = true;
+		}
+		
+		
+		item.start = typeof itemToCopy.start != 'undefined' ? itemToCopy.start : new wrapper_date().getEndofDay(); //midnight today
+		item.duration = typeof itemToCopy.duration != 'undefined' ? itemToCopy.duration : 86400; //24hrs by default
 		item['_type'] = that.param.type;
 	} 
 	else{
@@ -1056,7 +1093,8 @@ Submenu.prototype.Add_taskdetail = function() {
 		var elem_newSubtask = elem_subtasks.find('[find=newSubtask]');
 		var elem_subtaskCount = elem_subtasks.find('[find=subtaskCount]');
 
-		var generate_subtaskCard = function(task_id, title, temp_id){
+		var generate_subtaskCard = function(task_id, title, temp_id, approved){
+			var approved = typeof approved == 'boolean' ? approved : false;
 			var subtask = null;
 			var elem_subtaskCard = $('#-submenu_taskdetail_subtasks_card').clone().prop('id','').removeClass('skylist_clickable');
 			if($.isNumeric(task_id)){
@@ -1071,11 +1109,13 @@ Submenu.prototype.Add_taskdetail = function() {
 			}
 			else{
 				elem_subtaskCard_title.text(subtask['+title']);
-				if(subtask.approved){
-					elem_subtaskCard.addClass('submenu_taskdetail_subtasks_card_checked');
-					//elem_subtaskCard.find('[find=title]').attr('contenteditable', false);
-				}
 			}
+
+			//checkbox
+			if(approved || (subtask && subtask.approved)){
+				elem_subtaskCard.addClass('submenu_taskdetail_subtasks_card_checked');
+			}
+
 			elem_subtaskCard.attr('task_id',task_id);
 			if(temp_id){
 				elem_subtaskCard.attr('temp_id', temp_id);
@@ -1264,7 +1304,6 @@ Submenu.prototype.Add_taskdetail = function() {
 			}
 		});
 
-
 		submenu_taskdetail.append(elem_subtasks);
 
 
@@ -1278,6 +1317,45 @@ Submenu.prototype.Add_taskdetail = function() {
 
 		elem_meta.before(elem_progressbar);
 		/*--- END OF progress bar-------------------*/
+
+
+		//copy subtasks if needed
+		if(itemToCopy._tasksdown){
+			var preloadSubtasklist = [];
+			$.each(itemToCopy._tasksdown, function(id, obj){
+				var subtask = Lincko.storage.get('tasks', id);
+				if(subtask){
+					if(preloadSubtasklist[obj.fav]){
+						preloadSubtasklist.push(subtask);
+					} else {
+						preloadSubtasklist[obj.fav] = subtask;
+					}
+				}
+			});
+
+			//generate new subtasks and add them to queue
+			for(var i in preloadSubtasklist){
+				var subtask = preloadSubtasklist[i];
+				var fakeID = taskdetail_getRandomInt();
+				elem_subtasks_wrapper.append(generate_subtaskCard(fakeID, subtask['+title'], null, subtask.approved));
+				progressBarController.total++;
+				progressBarController.updateBar();
+				if(!taskdetail_subtaskQueue.queue[that.param.uniqueID]){
+					taskdetail_subtaskQueue.queue[that.param.uniqueID] = {};
+				}
+				taskdetail_subtaskQueue.queue[that.param.uniqueID][fakeID] = { 
+					param: {
+						parent_id: that.param.projID, 
+						title: subtask['+title'],
+						start: null,
+						approved: subtask.approved,
+					}, 
+					fav: nextSubtaskFav,
+				};
+				nextSubtaskFav++;
+			}
+		}
+		
 
 	};
 	/*-----END OF subtasks--------------*/
@@ -1450,7 +1528,7 @@ Submenu.prototype.Add_taskdetail = function() {
 	var elem_links_wrapper = elem_links.find('[find=links_wrapper]');
 
 	var link_count = 0;
-	var item_linked = Lincko.storage.list_links(that.param.type, taskid) || that.param.files;
+	var item_linked = Lincko.storage.list_links(that.param.type, that.param.id_toCopy || taskid) || that.param.files;
 
 	if(typeof item_linked == 'object'){
 		for(var category in item_linked){
