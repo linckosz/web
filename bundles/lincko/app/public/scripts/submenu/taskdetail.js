@@ -122,52 +122,12 @@ submenu_list['taskdetail'] = {
 				return '';
 			},
 			"action": function(Elem, subm) {
-				//for files, use the backend clone feature
-				if(subm.param.type == 'files'){
-					var clone_temp_id = false;
-					wrapper_sendAction(
-						{
-							"id": subm.param.id,
-						},
-						'post', 'file/clone',
-						function(msg, err, status, data){
-							if(
-								   clone_temp_id
-								&& data
-								&& typeof data.partial == 'object'
-								&& typeof data.partial[wrapper_localstorage.uid] == 'object'
-								&& typeof data.partial[wrapper_localstorage.uid].files == 'object'
-							){
-								for(var i in data.partial[wrapper_localstorage.uid].files){
-									if(typeof data.partial[wrapper_localstorage.uid].files[i].temp_id != 'undefined' && data.partial[wrapper_localstorage.uid].files[i].temp_id == clone_temp_id){
-										submenu_Build(
-											'taskdetail',
-											true,
-											false, 
-											{
-												"type": "files",
-												"id": data.partial[wrapper_localstorage.uid].files[i]._id,
-											},
-											subm.preview
-										);
-										return true;
-									}
-								}
-							}
-						},
-						null,
-						function(jqXHR, settings, temp_id){
-							clone_temp_id = temp_id;
-						}
-					);
-				} else {
-					submenu_Build('taskdetail_new', true, false, 
-					{
-						"type":subm.param.type,
-						"id": 'new', 
-						"id_toCopy": subm.param.id,
-					}, subm.preview);
-				}
+				submenu_Build('taskdetail_new', true, false, 
+				{
+					"type":subm.param.type,
+					"id": 'new', 
+					"id_toCopy": subm.param.id,
+				}, subm.preview);
 			},
 		},{
 			"icon":'icon-Trash',
@@ -588,7 +548,14 @@ Submenu.prototype.Add_taskdetail = function() {
 		item['_parent'] = itemToCopy['_parent'] || ['projects', that.param.projID];
 		item['created_by'] = itemToCopy['created_by'] || wrapper_localstorage.uid;
 		item['updated_by'] = itemToCopy['updated_by'] || wrapper_localstorage.uid;
-		item['-comment'] = typeof itemToCopy['-comment'] != 'undefined' ? itemToCopy['-comment'] : undefined;
+		item['-comment'] = itemToCopy['-comment'] || '';
+
+		if(that.param.type == 'files'){
+			item['+name'] = itemToCopy['+name'] || "";
+			item['size'] = itemToCopy['size'] || 0;
+			item['ori_ext'] = itemToCopy['ori_ext'] || 'txt';
+			item['category'] = itemToCopy['category'] || 'files';
+		}
 
 		//checkbox
 		if(typeof itemToCopy.approved == 'boolean'){
@@ -610,9 +577,13 @@ Submenu.prototype.Add_taskdetail = function() {
 			if($.inArray(wrapper_localstorage.uid, accessList)<0){ return false; }
 			$.each(accessList, function(i,val){
 				item['_users'][val] = {};
-				item['_users'][val]['in_charge'] = false;
+				if(that.param.type == 'tasks'){
+					item['_users'][val]['in_charge'] = false;
+				}
 			});
-			item['_users'][wrapper_localstorage.uid]['in_charge'] = true;
+			if(that.param.type == 'tasks'){
+				item['_users'][wrapper_localstorage.uid]['in_charge'] = true;
+			}
 		}
 		
 		
@@ -644,6 +615,8 @@ Submenu.prototype.Add_taskdetail = function() {
 		}		
 	}
 
+
+
 	/*---tasktitle---*/
 	elem = $('#-submenu_taskdetail_tasktitle').clone().prop('id','');
 	elem.find("[find=taskid]").html(taskid);
@@ -660,7 +633,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		elem_title_fileInfo.find('[find=ori_ext]').html(item['ori_ext'].toUpperCase());
 		elem_title_text.after(elem_title_fileInfo);
 		elem_title_fileInfo.find('[find=downloadIcon]').on('click', function(){
-			device_download(Lincko.storage.getDownload(item['_id'], '_blank', item['+name']));
+			device_download(Lincko.storage.getDownload(itemToCopy._id || item['_id'], '_blank', item['+name']));
 		});
 	}
 	else{
@@ -776,35 +749,34 @@ Submenu.prototype.Add_taskdetail = function() {
 		});
 
 	}
-
 	else if( item['_type'] == "files" ){
 		var fileType_class = 'fa fa-file-o';
 		var elem_leftbox = $('<span></span>').addClass('skylist_card_leftbox_fileIcon');
 		var thumb_url = null;
 		if(item['category'] == 'image'){
-			thumb_url = Lincko.storage.getLinkThumbnail(item['_id']);
-			elem_leftbox = $('<img />').prop('src',thumb_url).click(item['_id'], function(event){
+			thumb_url = Lincko.storage.getLinkThumbnail(itemToCopy._id || item['_id']);
+			elem_leftbox = $('<img />').prop('src',thumb_url).click(itemToCopy._id || item['_id'], function(event){
 				event.stopPropagation();
 				previewer.pic(event.data);
 			});
 		}
 		else if(item['category'] == 'video'){
-			thumb_url = Lincko.storage.getLinkThumbnail(item['_id']);
-			elem_leftbox = $('<img />').prop('src',thumb_url).click(item['_id'], function(event){
+			thumb_url = Lincko.storage.getLinkThumbnail(itemToCopy._id || item['_id']);
+			elem_leftbox = $('<img />').prop('src',thumb_url).click(itemToCopy._id || item['_id'], function(event){
 				event.stopPropagation();
 				previewer.video(event.data);
 			});
 		}
 		else if(item['category'] == 'audio'){
-			fileType_class = app_models_fileType.getClass(item.ori_ext);
+			fileType_class = app_models_fileType.getClass(itemToCopy.ori_ext || item.ori_ext);
 			elem_leftbox.addClass(fileType_class);
-			elem_leftbox.click(item['_id'], function(event){
+			elem_leftbox.click(itemToCopy._id || item['_id'], function(event){
 				event.stopPropagation();
 				previewer.audio(event.data);
 			});
 		}
 		else{
-			fileType_class = app_models_fileType.getClass(item.ori_ext);
+			fileType_class = app_models_fileType.getClass(itemToCopy.ori_ext || item.ori_ext);
 			elem_leftbox.addClass(fileType_class);
 		}
 
@@ -1537,7 +1509,11 @@ Submenu.prototype.Add_taskdetail = function() {
 	var elem_links_wrapper = elem_links.find('[find=links_wrapper]');
 
 	var link_count = 0;
-	var item_linked = Lincko.storage.list_links(that.param.type, that.param.id_toCopy || taskid) || that.param.files;
+	var item_linked = false;
+	//dont clone links for files
+	if(!(that.param.type == 'files' && that.param.id_toCopy)){
+		item_linked = Lincko.storage.list_links(that.param.type, that.param.id_toCopy || taskid) || that.param.files;
+	}
 
 	if(typeof item_linked == 'object'){
 		for(var category in item_linked){
@@ -1546,7 +1522,8 @@ Submenu.prototype.Add_taskdetail = function() {
 				elem_links_wrapper.append(generate_linkCard(item));
 				link_count++;
 
-				if(taskid == 'new'){ //add to queue
+				if(taskid == 'new'){
+					//add to queue
 					taskdetail_linkQueue.queue[md5(Math.random())] = {
 						uniqueID: that.param.uniqueID,
 						parent_type: that.param.type,
@@ -2256,7 +2233,11 @@ Submenu.prototype.Add_taskdetail = function() {
 					route += 'file';
 				}
 
-				if( taskid == 'new' ){
+				if(taskid == 'new' && that.param.type == 'files' && that.param.id_toCopy){
+					param.id = that.param.id_toCopy;
+					route += '/clone';
+				}
+				else if( taskid == 'new' ){
 					route += '/create';
 				}
 				else if( route_delete ){
