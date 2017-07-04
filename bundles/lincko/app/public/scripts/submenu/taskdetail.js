@@ -1547,7 +1547,7 @@ Submenu.prototype.Add_taskdetail = function() {
 				link_count++;
 
 				if(taskid == 'new'){ //add to queue
-					taskdetail_linkQueue.queue[id] = {
+					taskdetail_linkQueue.queue[md5(Math.random())] = {
 						uniqueID: that.param.uniqueID,
 						parent_type: that.param.type,
 						id: id,
