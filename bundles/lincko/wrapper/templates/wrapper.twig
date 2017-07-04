@@ -415,6 +415,19 @@ var wrapper_loading_sentences_change = function(){
 
 //Load all JS libraries only after DOM load
 $(function() {
+
+	if(
+		   wrapper_force_open_website
+		|| !wrapper_localstorage.logged
+	){
+		if(navigator.userAgent.match(/MicroMessenger/i) && !wrapper_localstorage.logged && !wrapper_force_open_website){
+			$("#wrapper_loading_home").addClass('display_none');
+		} else {
+			wrapper_load_progress.move(100);
+		}
+		$('#wrapper_loading_progress').addClass('visibility_hidden');
+	}
+
 	wrapper_loading_sentences_change();
 	wrapper_load_progress.move(5);
 	for(var pri in JSfiles){
