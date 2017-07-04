@@ -298,7 +298,7 @@ $('#app_content_top_title_menu, #app_content_statistics_settings').click(functio
 							//tasks: task_id, //null if not available (i.e. brand new task) toto - not ready yet
 						},
 					}
-					submenu_Build('app_projects_users_contacts', true, false, param);
+					submenu_Build('app_projects_users_contacts', 1, false, param, false);
 				},
 			},
 			{
@@ -437,6 +437,7 @@ $('#app_content_top_title_menu, #app_content_statistics_settings').click(functio
 					elems_item.click(i,function(event){
 						var i = event.data;
 						menu_data[i].action(app_content_menu.projects_id,$(this));
+						elems.find("ul").blur();
 					});
 					elems.find("ul").eq(0).append(elems_item);
 				}
