@@ -402,7 +402,12 @@ wrapper_loading_sentences_timer = setInterval(function(){
 var wrapper_loading_sentences_change = function(){
 	if($('#wrapper_loading_sentences').length > 0){
 		var min = 14001;
-		var max = 14014;
+		var max = 14010;
+		var day = (new Date()).getDay();
+		if(day==0 || day==6){
+			var min = 14011;
+			var max = 14016;
+		}
 		var random = Math.floor(Math.random() * (max - min + 1)) + min;
 		$('#wrapper_loading_sentences').text(Lincko.Translation.get('app', random, 'html'));
 	}
