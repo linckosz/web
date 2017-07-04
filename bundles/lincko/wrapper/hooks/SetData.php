@@ -2,6 +2,7 @@
 
 namespace bundles\lincko\wrapper\hooks;
 
+use \bundles\lincko\app\models\Data;
 use \bundles\lincko\wrapper\models\Creation;
 use \bundles\lincko\wrapper\models\TranslationListJS;
 use \libs\OneSeventySeven;
@@ -63,6 +64,12 @@ function SetData(){
 			if($app->request->getResourceUri()=='/wrapper/data/latest'){
 				unset($_COOKIE['hashtag']);
 				setcookie('hashtag', $hashtag, time()-3600, '/');
+			}
+		}
+		if($sha && isset($_SESSION['get_nosql'])){
+			unset($_SESSION['get_nosql']);
+			if($data = Data::find($sha)){
+				$app->lincko->data['datajs'] = $data->lastvisit;
 			}
 		}
 	}

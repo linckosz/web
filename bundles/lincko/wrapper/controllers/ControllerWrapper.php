@@ -4,6 +4,7 @@ namespace bundles\lincko\wrapper\controllers;
 
 use \bundles\lincko\wrapper\models\Creation;
 use \bundles\lincko\wrapper\models\Action;
+use \bundles\lincko\app\models\Data;
 use \libs\OneSeventySeven;
 use \libs\Controller;
 use \libs\Datassl;
@@ -287,6 +288,15 @@ class ControllerWrapper extends Controller {
 				}
 
 				if($this->print){
+					//Grab NoSQL data
+					if(isset($json_result->flash->log_id) && isset($json_result->flash->username_sha1)){
+						if(!OneSeventySeven::get('hahaha') && !OneSeventySeven::get('sha')){
+							$sha = substr($json_result->flash->username_sha1, 0, 20);
+							if($data = Data::find($sha)){
+								$_SESSION['get_nosql'] = true;
+							}
+						}
+					}
 					//"username_sha1" is a password used to encrypt data
 					//"uid" is the main user ID
 					if(isset($json_result->flash->username_sha1) && isset($json_result->flash->uid)){

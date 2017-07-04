@@ -580,43 +580,6 @@ var webworker_operation = {
 
 };
 
-//http://www.opentechguides.com/how-to/article/javascript/98/detect-mobile-device.html
-var isMobileBrowser = function(){
-	return /webOS|iPhone|iPad|BlackBerry|Windows Phone|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent);
-}
-
-//Check connection type
-//https://developer.mozilla.org/en-US/docs/Web/API/Network_Information_API
-var wrapper_connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-var wrapper_connection_type = false;
-if(typeof wrapper_connection != "undefined" && typeof wrapper_connection.type != "undefined"){
-	wrapper_connection_type = wrapper_connection.type;
-	wrapper_connection.addEventListener('typechange', function(){
-		wrapper_connection_type = wrapper_connection.type;
-	});
-}
-
-
-
-//https://www.w3schools.com/js/js_cookies.asp
-function getCookie(cname) {
-	var name = cname + "=";
-	var decodedCookie = decodeURIComponent(document.cookie);
-	var ca = decodedCookie.split(';');
-	for(var i = 0; i <ca.length; i++) {
-		var c = ca[i];
-		while (c.charAt(0) == ' ') {
-			c = c.substring(1);
-		}
-		if (c.indexOf(name) == 0) {
-			return c.substring(name.length, c.length);
-		}
-	}
-	return "";
-} 
-
-
-
 </script>
 
 {#

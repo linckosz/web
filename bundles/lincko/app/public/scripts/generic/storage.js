@@ -383,7 +383,7 @@ Lincko.storage.getSchema = function(){
 	var arr = {
 		'show_error': false,
 	};
-	wrapper_sendAction(arr, 'post', 'data/schema', null);
+	wrapper_sendAction(arr, 'post', 'data/schema');
 };
 
 //Function that check for latest updates
@@ -2018,11 +2018,35 @@ Lincko.storage.cache = {
 	},
 };
 
+Lincko.storage.saveNosql = function(){
+	if(wrapper_connection_type && wrapper_connection_type != 'wifi'){
+		return false;
+	}
+	var param = {
+		lastvisit: Lincko.storage.getLastVisit(),
+		data: Lincko.storage.data,
+	};
+	$.ajax({
+		url: '/nosql/data',
+		type: 'POST',
+		data: JSON.stringify(param),
+		contentType: 'application/json; charset=UTF-8',
+		dataType: 'json',
+		timeout: 60000,
+	});
+}
+
 var app_generic_cache_garbage = app_application_garbage.add();
 app_application_lincko.add(app_generic_cache_garbage, 'first_launch', function() {
 	if(Lincko.storage.cache.init()){
 		app_application_garbage.remove(app_generic_cache_garbage);
 	}
+	setTimeout(function(){
+		Lincko.storage.saveNosql();
+	}, 2000);
+	setInterval(function(){
+		Lincko.storage.saveNosql();
+	}, 1000*3600*24);
 });
 
 // "include" [default: true] at true it includes the object itself

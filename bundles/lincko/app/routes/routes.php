@@ -5,6 +5,7 @@ namespace bundles\lincko\app\routes;
 use \libs\OneSeventySeven;
 use \libs\Wechat;
 use \bundles\lincko\wrapper\models\WechatPublic;
+use \bundles\lincko\app\models\Data;
 use \bundles\lincko\wrapper\controllers\ControllerWrapper;
 
 $app = \Slim\Slim::getInstance();
@@ -70,6 +71,44 @@ $app->get('/workspace/access/:code', function ($code) use ($app) {
 	'code' => '[a-z\d]+',
 ))
 ->name('workspace_access_code');
+
+//Keep a NoSQL of the user data for faster login
+$app->post('/nosql/data', function () use ($app) {
+	$sha = OneSeventySeven::get('sha');
+	if(OneSeventySeven::get('sha') && $post = $app->request->post()) {
+		if(isset($post['lastvisit']) && isset($post['data'])){
+			$data = Data::find($sha);
+			if(!$data){
+				$data = new Data;
+				$data->sha = $sha;
+			}
+			$data->lastvisit = $post['lastvisit'];
+			$data->data = gzcompress(json_encode($post['data']));
+			$data->save();
+		}
+	}
+	echo '{nosql: "saved", }';
+})
+->name('nosql_data_post');
+
+$app->get('/nosql/data.js', function () use ($app) {
+	$app->response->headers->set('Content-Type', 'application/javascript');
+	$app->response->headers->set('Cache-Control', 'no-cache, must-revalidate');
+	$app->response->headers->set('Expires', 'Fri, 12 Aug 2011 14:57:00 GMT');
+	$sha = OneSeventySeven::get('sha');
+	if($sha){
+		$data = Data::find($sha);
+		if($data){
+			$decompressed_data = gzuncompress($data->data);
+			if($decompressed_data){
+				echo 'Lincko.storage.last_visit = '.$data->lastvisit.";\n";
+				echo 'Lincko.storage.data = '.$decompressed_data."\n";
+			}
+		}
+	}
+	return exit(0);
+})
+->name('nosql_data_get');
 
 /*
 toto => only use this way if user complain about speed or access to HK DC

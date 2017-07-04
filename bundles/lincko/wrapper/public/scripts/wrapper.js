@@ -521,7 +521,11 @@ wrapper_localstorage.emptyStorage = function(){
 		result = true;
 		amplify.store(storeKey, null);
 	});
-	//console.log(result);
+	if(localStorage){
+		for(var storeKey in localStorage){
+			localStorage.removeItem(storeKey);
+		}
+	}
 	return result;
 };
 
@@ -534,7 +538,14 @@ wrapper_localstorage.cleanLocalWorkspace = function(){
 			amplify.store(storeKey, null);
 		}
 	});
-	//console.log(result);
+	if(localStorage){
+		for(var storeKey in localStorage){
+			result = true;
+			if(storeKey.indexOf("__amplify__"+wrapper_localstorage.prefix)!==0){
+				localStorage.removeItem(storeKey);
+			}
+		}
+	}
 	return result;
 };
 
@@ -545,6 +556,13 @@ wrapper_localstorage.cleanLocalUser = function(){
 			amplify.store(storeKey, null);
 		}
 	});
+	if(localStorage){
+		for(var storeKey in localStorage){
+			if(storeKey.indexOf("__amplify__"+wrapper_localstorage.prefixuid)!==0){
+				localStorage.removeItem(storeKey);
+			}
+		}
+	}
 };
 
 //Default is Mobile
