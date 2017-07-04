@@ -62,8 +62,10 @@ function base_cloneCanvas(oldCanvas) {
 
 var base_error_timing;
 var base_show_error_running = false;
-function base_show_error(msg, error) {
-	if(typeof error === 'undefined'){ error = false; }
+function base_show_error(msg, error, time, escape_html) {
+	if(typeof error == 'undefined'){ error = false; }
+	if(typeof time == 'undefined'){ time = 4000; }
+	if(typeof escape_html == 'undefined'){ escape_html = true; }
 	if(error && $('#base_error').hasClass('base_message')){
 		$('#base_error').removeClass('base_message');
 	} else if(!error && !$('#base_error').hasClass('base_message')){
@@ -71,7 +73,9 @@ function base_show_error(msg, error) {
 	}
 	clearTimeout(base_error_timing);
 	//This avoid a double call
-	msg = wrapper_to_html(msg); //Escape the whole string for HTML displaying
+	if(escape_html){
+		msg = wrapper_to_html(msg); //Escape the whole string for HTML displaying
+	}
 	if(typeof msg == "string" && $('#base_error').length > 0 && php_nl2br(php_br2nl(msg)) != php_nl2br(php_br2nl($('#base_error').html()))){
 		$('#base_error').html(msg);
 		if(!base_show_error_running && $('#base_error').is(':hidden')){
@@ -87,7 +91,7 @@ function base_show_error(msg, error) {
 	} else if(typeof msg != "string"){
 		JSerror.sendError(msg, 'base_show_error', 0);
 	}
-	base_error_timing = setTimeout(function(){ base_hide_error(); }, 4000);
+	base_error_timing = setTimeout(function(){ base_hide_error(); }, time);
 }
 
 function base_hide_error(now) {
@@ -96,7 +100,7 @@ function base_hide_error(now) {
 	base_show_error_running = false;
 	if(now){
 		clearTimeout(base_error_timing);
-		$('#base_error').hide().recursiveEmpty();
+		$('#base_error').hide().empty();
 	} else if($('#base_error').is(':visible')){
 		$("#base_error").velocity("transition.slideRightBigOut", {
 			mobileHA: hasGood3Dsupport,
@@ -104,7 +108,7 @@ function base_hide_error(now) {
 			delay: 80,
 			complete: function(){
 				clearTimeout(base_error_timing);
-				$('#base_error').hide().recursiveEmpty();
+				$('#base_error').hide().empty();
 			},
 		});
 	}

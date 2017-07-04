@@ -302,6 +302,11 @@
 	overflow: hidden;
 }
 
+.app_content_loading_bar {
+	height: 2px;
+	width: 80px;
+}
+
 
 /* Mobile phone in Portrait maximum */
 @media only screen and (max-width: 479px){

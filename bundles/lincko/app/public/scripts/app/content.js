@@ -358,7 +358,14 @@ $('#app_content_top_title_menu, #app_content_statistics_settings').click(functio
 				},
 			},
 			{
-				icon: 'fa fa-clone font24',
+				icon:'icon-projectBlack',
+				title : Lincko.Translation.get('app', 117, 'html'),//'Open another project',
+				action : function(){
+					submenu_Build("projectsDeck");
+				},
+			},
+			{
+				icon: 'fa fa-files-o',
 				title : Lincko.Translation.get('app', 202, 'html'), //Copy the project
 				action : function(project_id){
 					var clone_temp_id = false;
@@ -386,16 +393,10 @@ $('#app_content_top_title_menu, #app_content_statistics_settings').click(functio
 						},
 						null,
 						function(jqXHR, settings, temp_id){
+							base_show_error(Lincko.Translation.get('app', 123, 'html')+'<br /><img class="app_content_loading_bar" src="'+app_application_loading_bar.src+'" />', false, 60000, false); //Copying, please wait few seconds
 							clone_temp_id = temp_id;
 						}
 					);
-				},
-			},
-			{
-				icon:'icon-projectBlack',
-				title : Lincko.Translation.get('app', 117, 'html'),//'Open another project',
-				action : function(){
-					submenu_Build("projectsDeck");
 				},
 			},
 		];

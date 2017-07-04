@@ -140,6 +140,12 @@ Submenu.prototype.Add_ChatContents = function() {
 	var type_clear = type == 'history' ? 'projects' : type;
 	position.addClass('overthrow').addClass("submenu_chat_contents");
 
+	var start_at = 0;
+	var created_at = Lincko.storage.get(type_clear, id, 'created_at');
+	if(created_at > 0){
+		start_at = created_at;
+	}
+
 	position.on('touchstart',function(){
 		var bottom = submenu_wrapper.find("[find=submenu_wrapper_bottom]");
 		bottom.find('[find=chat_textarea]').blur();
@@ -197,9 +203,8 @@ Submenu.prototype.Add_ChatContents = function() {
 		}
 	}, [type_clear, id, that]);
 
-
 	if (type == 'history') {
-		that.param.chatFeed = new historyFeed(id,type,position,that);
+		that.param.chatFeed = new historyFeed(id, type, position, that, start_at);
 		app_application_lincko.add(this.id+"_chat_contents_wrapper", "projects_" + id, function() {
 			var chat_item = this.action_param[2];
 			chat_item.app_chat_feed_load_recent();

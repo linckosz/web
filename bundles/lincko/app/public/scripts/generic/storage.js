@@ -1787,9 +1787,20 @@ Lincko.storage.cache = {
 		item_cat = "chats";
 		if(typeof type_reset == 'undefined' || type_reset==item_cat){
 			for(var item_id in Lincko.storage.data[item_cat]){
+				//Exclude mute
+				var item = Lincko.storage.get(item_cat, item_id);
+				if(
+					   item
+					&& item._users
+					&& item._users[wrapper_localstorage.uid]
+					&& item._users[wrapper_localstorage.uid].silence
+				){
+					continue;
+				}
 				if(typeof type_reset != 'undefined' && typeof id_reset != 'undefined' && id_reset!=item_id){
 					continue;
 				}
+				var start_at = item.created_at;
 				last_notif = Lincko.storage.getLastNotif(item_cat, item_id);
 				
 				if(typeof this.exclude_projects[item_cat] == "undefined"){ this.exclude_projects[item_cat] = {}; }
@@ -1822,6 +1833,7 @@ Lincko.storage.cache = {
 								var item = Lincko.storage.get(cat, id);
 								if(
 									   item
+									&& item['created_at'] >= start_at
 									&& item['created_at'] > last_notif
 									&& item['created_by'] != wrapper_localstorage.uid
 									&& (typeof exclude_notify[cat] == "undefined" || typeof exclude_notify[cat][id] == "undefined")
@@ -1872,9 +1884,20 @@ Lincko.storage.cache = {
 		item_cat = "projects";
 		if(typeof type_reset == 'undefined' || type_reset==item_cat){
 			for(var item_id in Lincko.storage.data[item_cat]){
+				//Exclude mute
+				var item = Lincko.storage.get(item_cat, item_id);
+				if(
+					   item
+					&& item._users
+					&& item._users[wrapper_localstorage.uid]
+					&& item._users[wrapper_localstorage.uid].silence
+				){
+					continue;
+				}
 				if(typeof type_reset != 'undefined' && typeof id_reset != 'undefined' && id_reset!=item_id){
 					continue;
 				}
+				var start_at = item.created_at;
 				last_notif = Lincko.storage.getLastNotif(item_cat, item_id);
 				if(typeof Lincko.storage.data['_history'] != 'undefined' && typeof Lincko.storage.data['_history'][item_cat+'-'+item_id] != 'undefined'){
 					for(var hist_id in Lincko.storage.data['_history'][item_cat+'-'+item_id]){
@@ -1915,6 +1938,7 @@ Lincko.storage.cache = {
 							var item = Lincko.storage.get(cat, id);
 							if(
 								   item
+								&& item['created_at'] >= start_at
 								&& item['created_at'] > last_notif
 								&& item['created_by'] != wrapper_localstorage.uid
 								&& (typeof exclude_notify[cat] == "undefined" || typeof exclude_notify[cat][id] == "undefined")

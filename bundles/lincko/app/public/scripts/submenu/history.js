@@ -801,7 +801,7 @@ UploadingContentCls.prototype.feed_action = function(elem,subm)
 /*
 * chatFeed
 */
-var historyFeed = function(id,type,position,submenu)
+var historyFeed = function(id, type, position, submenu, start_at)
 {
 	this.max_id;
 	this.id = id;
@@ -814,6 +814,10 @@ var historyFeed = function(id,type,position,submenu)
 	this.current_page = 0;
 	this.page_top = false;
 	this.get_all = false;
+
+	//Don't display anything before this timestamp (usually chat and project creation)
+	if(typeof start_at == 'undefined'){ start_at = 0; }
+	this.start_at = start_at;
 
 	this.current = null;
 	this.pre = {
@@ -946,7 +950,7 @@ historyFeed.prototype.app_chat_feed_data_history = function(limit)
 		limit = null;
 	}
 	var data = this.type == 'history' ? 
-			Lincko.storage.hist(null, limit , {att:['!=','recalled_by']}, 'projects',this.id, true)
+			Lincko.storage.hist(null, limit , {att:['!=','recalled_by']}, 'projects', this.id, true)
 			: Lincko.storage.list(null, limit, {_type:'messages'}, 'chats', this.id, false);
 	return data;
 }
@@ -958,6 +962,9 @@ historyFeed.prototype.app_chat_feed_data_format = function(data)
 	for(var i in data)
 	{
 		this.current = data[i];
+		if(this.current.timestamp < this.start_at){
+			continue;
+		}
 		if(
 			   this.type == 'history'
 			&& this.pre.cod !== null

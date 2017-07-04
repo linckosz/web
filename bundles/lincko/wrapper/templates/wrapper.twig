@@ -212,6 +212,7 @@ var wrapper_load_progress = {
 	},
 
 	hide_progress_wall: function(){
+		clearInterval(wrapper_loading_sentences_change);
 		if($('#'+this.progress_wall).length>0){
 			$('#'+this.progress_wall).velocity(
 				{
@@ -393,44 +394,23 @@ if(wrapper_localstorage.uid){
 var wrapper_neutral = new Image();
 wrapper_neutral.src = "{{ _filelatest('/lincko/wrapper/images/generic/neutral.png') }}";
 
+//Loading sentences changer
+var wrapper_loading_sentences_timer;
+wrapper_loading_sentences_timer = setInterval(function(){
+	wrapper_loading_sentences_change();
+}, 4000);
+var wrapper_loading_sentences_change = function(){
+	if($('#wrapper_loading_sentences').length > 0){
+		var min = 14001;
+		var max = 14014;
+		var random = Math.floor(Math.random() * (max - min + 1)) + min;
+		$('#wrapper_loading_sentences').text(Lincko.Translation.get('app', random, 'html'));
+	}
+};
+
 //Load all JS libraries only after DOM load
 $(function() {
-
-	if(
-		   wrapper_force_open_website
-		|| !wrapper_localstorage.logged
-	){
-		if(navigator.userAgent.match(/MicroMessenger/i) && !wrapper_localstorage.logged && !wrapper_force_open_website){
-			$("#wrapper_loading_home").addClass('display_none');
-		} else {
-			wrapper_load_progress.move(100);
-		}
-
-		var lincko_bot = new Image();
-		lincko_bot.src = "{{ _filelatest('/lincko/wrapper/images/logo/LinckoBotOrange.png') }}";
-		var img = $('<img>');
-		img.prop('src', lincko_bot.src).addClass('wrapper_loading_content_linckobot');
-		$('#wrapper_loading_content').empty().append(img);
-		$('#wrapper_loading_progress').addClass('display_none');
-		var translateY = 40;
-		$('#wrapper_loading_cell_center')
-			.css('opacity', 0)
-			.velocity({ opacity: 1 }, {
-				delay: 400,
-				duration: 500,
-			});
-
-		$('#wrapper_loading_content')
-			.velocity({ translateY: translateY }, {
-				duration: 1100,
-				delay: 100,
-				easing: [ 0.455, 0.03, 0.515, 0.955 ],
-			})
-			.velocity("reverse", {
-				loop: true,
-			});
-	}
-
+	wrapper_loading_sentences_change();
 	wrapper_load_progress.move(5);
 	for(var pri in JSfiles){
 		if($.isNumeric(pri) && ($.type(JSfiles[pri]) == 'array' || $.type(JSfiles[pri]) == 'object')){

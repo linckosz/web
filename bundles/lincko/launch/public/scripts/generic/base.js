@@ -32,8 +32,9 @@ base_format_form();
 
 var base_error_timing;
 
-function base_show_error(msg, error) {
-	if(typeof error === 'undefined'){ error = false; }
+function base_show_error(msg, error, time) {
+	if(typeof error == 'undefined'){ error = false; }
+	if(typeof time == 'undefined'){ time = 4000; }
 	if(error && $('#base_error').hasClass('base_message')){
 		$('#base_error').removeClass('base_message');
 	} else if(!error && !$('#base_error').hasClass('base_message')){
@@ -55,7 +56,7 @@ function base_show_error(msg, error) {
 	} else if(typeof msg != "string"){
 		JSerror.sendError(msg, 'base_show_error', 0);
 	}
-	base_error_timing = setTimeout(function(){ base_hide_error(); }, 4000);
+	base_error_timing = setTimeout(function(){ base_hide_error(); }, time);
 }
 
 function base_hide_error(now) {
@@ -63,14 +64,14 @@ function base_hide_error(now) {
 	$('#base_error').velocity("stop");
 	if(now){
 		clearTimeout(base_error_timing);
-		$('#base_error').hide().recursiveEmpty();
+		$('#base_error').hide().empty();
 	} else if($('#base_error').is(':visible')){
 		$("#base_error").velocity("transition.slideRightBigOut", {
 			duration: 160,
 			delay: 80,
 			complete: function(){
 				clearTimeout(base_error_timing);
-				$('#base_error').hide().recursiveEmpty();
+				$('#base_error').hide().empty();
 			},
 		});
 	}

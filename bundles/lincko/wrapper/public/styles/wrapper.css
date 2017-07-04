@@ -67,8 +67,8 @@
 
 /* Styled scrollbars end */
 
-.wrapper_loading_content_linckobot {
-	height: 282px;
+#wrapper_loading_content_linckobot {
+	width: 180px;
 }
 
 .wrapper_blur {
@@ -81,7 +81,7 @@
 
 /* Tablet in Portrait maxi*/
 @media only screen and (max-width: 900px){
-	.wrapper_loading_content_linckobot {
-		height: 185px;
+	#wrapper_loading_content_linckobot {
+		width: 140px;
 	}
 }
