@@ -3150,6 +3150,20 @@ JSfiles.finish(function(){
 	if($.isEmptyObject(Lincko.storage.data)){
 		Lincko.storage.setLastVisit(0);
 	} else {
+		if(Lincko.storage.prepare_data){
+			for(var category in Lincko.storage.data){
+				for(var id in Lincko.storage.data[category]){
+					if(category=='_history_title' || category=='_history'){
+						storage_local_storage.prepare(category+"@"+id); //We split the history storage to limit CPU calculation
+					} else {
+						if(typeof Lincko.storage.data[category][id]['_parent'] == 'object'){
+							var suffix = Lincko.storage.data[category][id]['_parent'][0]+'-'+Lincko.storage.data[category][id]['_parent'][1];
+							storage_local_storage.prepare(category+"#"+suffix);
+						}
+					}
+				}
+			}
+		}
 		storage_first_launch = false; //Help to trigger some action once the database is downloaded
 		setTimeout(function(){
 			//Preload thumbnail and images for users
@@ -3172,6 +3186,7 @@ JSfiles.finish(function(){
 		}, 1000);
 
 	}
+	Lincko.storage.prepare_data = false;
 	Lincko.storage.getLatest();
 	//Launch the time interval for back server data check
 	storage_check_timing.launch();

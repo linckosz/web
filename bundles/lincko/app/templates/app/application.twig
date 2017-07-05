@@ -60,6 +60,9 @@
 	{% include '/bundles/lincko/app/templates/generic/scripts/storage.js.twig' %}
 	{% include '/bundles/lincko/app/templates/generic/scripts/styling.js.twig' %}
 	{% if data_js %}
+		<script>
+			Lincko.storage.prepare_data = true;
+		</script>
 		<script src="/cache/nosql/data.js?{{ data_js }}" type="text/javascript"></script>
 	{% endif %}
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/app/application.css') }}" type="text/css" />
