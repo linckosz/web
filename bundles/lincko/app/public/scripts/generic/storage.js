@@ -2056,7 +2056,7 @@ app_application_lincko.add(app_generic_cache_garbage, 'first_launch', function()
 		}, 2000);
 		setInterval(function(){
 			Lincko.storage.saveNosql();
-		}, 1000*3600*24);
+		}, 1000*3600*25); //Every 25H to insure to not match always the same schedule (in case on the road without wifi)
 	}
 });
 
