@@ -2019,7 +2019,7 @@ Lincko.storage.cache = {
 };
 
 Lincko.storage.saveNosql = function(){
-	if(wrapper_connection_type && wrapper_connection_type != 'wifi'){
+	if(wrapper_user_info[1]!="Desktop" && (!wrapper_connection_type || wrapper_connection_type != 'wifi')){
 		return false;
 	}
 	var param = {
