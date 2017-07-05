@@ -258,6 +258,25 @@ td.submenu_taskdetail_share .fa{
 	/*height: 20%;*/
 	/*overflow: auto;*/
 }
+.submenu_taskdetail_description_textContainer{
+	position: relative;
+	margin-top: 40px;
+}
+.submenu_taskdetail_description_textContainer_resizeIframe{
+	display: block;
+    overflow: hidden;
+    border: 0px;
+    margin: 0px;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    pointer-events: none;
+    z-index: -1;
+}
 .submenu_taskdetail_description [find=description_text] {
 	color: #131313;
 	padding-top: 6px;
@@ -265,7 +284,6 @@ td.submenu_taskdetail_share .fa{
 	padding-right: 15px;
 	margin: 0px;
 	border: none;
-	margin-top: 40px;
 }
 .submenu_taskdetail_description_img {
 	max-width: 100%;

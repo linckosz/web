@@ -1063,6 +1063,15 @@ Submenu.prototype.Add_taskdetail = function() {
 					
 			});//end of blur event
 		}
+
+
+		elem.find('iframe').on('load', function(){
+			$(elem.find('iframe').get(0).contentWindow).resize(function(){
+				$(window).resize();
+				taskdetail_setEditorBarPosition(that, false);
+			});
+		});
+		
 		submenu_taskdetail.append(elem);
 	} //end of description
 
@@ -3256,13 +3265,13 @@ var taskdetail_hideEditorBar = function(that){
 	$('#submenu_taskdetail_description_toolbar_'+that.md5id).addClass('display_none');
 }
 
-var taskdetail_setEditorBarPosition = function(that, fadeIn){ 
-	var editor = $('#submenu_taskdetail_description_text_'+that.md5id);
-	if(!editor.is(':visible')){ return false; }
+var taskdetail_setEditorBarPosition = function(that, fadeIn){
+	var textContainer = $('#'+that.md5id+'_submenu_taskdetail_description').find('[find=textContainer]');
+	if(!textContainer.is(':visible')){ return false; }
 	if(typeof fadeIn != 'boolean'){ var fadeIn = true; }
 
-	var top = editor.position().top;
-	var height = editor.outerHeight();
+	var top = textContainer.position().top;
+	var height = textContainer.outerHeight();
 	var toolbar;
 
 	//if editor is within viewable iscroll
