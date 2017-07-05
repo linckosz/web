@@ -69,7 +69,7 @@ function SetData(){
 			}
 		}
 		if($sha){
-			if($data = Data::find($sha)){
+			if($data = Data::where('sha', $sha)->where('workspace', $app->lincko->data['workspace'])->first()){
 				$data_nosql = $data->lastvisit;
 				if(isset($_SESSION['get_nosql'])){
 					unset($_SESSION['get_nosql']);

@@ -77,10 +77,11 @@ $app->post('/nosql/data', function () use ($app) {
 	$sha = OneSeventySeven::get('sha');
 	if(OneSeventySeven::get('sha') && $post = $app->request->post()) {
 		if(isset($post['lastvisit']) && isset($post['data'])){
-			$data = Data::find($sha);
+			$data = Data::where('sha', $sha)->where('workspace', $app->lincko->data['workspace'])->first();
 			if(!$data){
 				$data = new Data;
 				$data->sha = $sha;
+				$data->workspace = $app->lincko->data['workspace'];
 			}
 			$data->lastvisit = $post['lastvisit'];
 			$data->data = gzcompress(json_encode($post['data']));
@@ -99,7 +100,7 @@ $app->get('/cache/nosql/data.js', function () use ($app) {
 	$app->response->headers->set('Expires', $expire_string);
 	$sha = OneSeventySeven::get('sha');
 	if($sha){
-		$data = Data::find($sha);
+		$data = Data::where('sha', $sha)->where('workspace', $app->lincko->data['workspace'])->first();
 		if($data){
 			$decompressed_data = gzuncompress($data->data);
 			if($decompressed_data){

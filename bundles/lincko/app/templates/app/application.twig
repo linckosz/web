@@ -64,6 +64,22 @@
 			Lincko.storage.prepare_data = true;
 		</script>
 		<script src="/cache/nosql/data.js?{{ data_js }}" type="text/javascript"></script>
+	{% else %}
+		<div id="app_application_datajs" class="display_none">
+		</div>	
+		<script>
+			var amplify_items = 0;
+			$.each(amplify.store(), function (storeKey) {
+				if(storeKey.indexOf(wrapper_localstorage.prefix+"data_")===0){
+					amplify_items++;
+				}
+			});
+			//We force to import the cache if there is no localStorage stored
+			if(amplify_items==0){
+				$.cachedScript( "/cache/nosql/data.js?{{ data_nosql }}" );
+				Lincko.storage.prepare_data = true;
+			}
+		</script>
 	{% endif %}
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/app/styles/app/application.css') }}" type="text/css" />
 </div>
