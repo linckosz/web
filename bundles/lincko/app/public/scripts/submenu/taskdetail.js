@@ -107,8 +107,11 @@ submenu_list['taskdetail'] = {
 			"display":function(subm){
 				if(subm.param.type!='tasks' && subm.param.type!='notes' && subm.param.type!='files'){
 					return false;
+				} else if(!Lincko.storage.hasProjectParent(subm.param.type, subm.param.id)){
+					return false;
+				} else {
+					return true;
 				}
-				return true;
 			},
 			"title": function(Elem, subm){
 				if(subm.param.type=='tasks'){
@@ -362,10 +365,12 @@ submenu_list['taskdetail_new'] = {
 		'hide': true,
 		"class": "base_pointer",
 		"action": function(Elem, subm) {
+			subm.cancel = false;
 			base_showProgress(Elem);
 			Elem.recursiveOff();
 		},
 		"now": function(Elem, subm){
+			subm.cancel = true; //false only if 'create' is clicked
 			//Add loading bar
 			var loading_bar = $("#-submit_progress_bar").clone();
 			loading_bar.prop('id', '');
@@ -442,19 +447,14 @@ Submenu.prototype.Add_taskdetail = function() {
 
 	that.param.uniqueID = md5(Math.random());
 
-	if(itemToCopy._parent && itemToCopy._parent[0] == 'projects'){
-		that.param.projID = itemToCopy._parent[1];
-	}
 	if(!that.param.projID){
-		if(app_content_menu.projects_id == 0) 
-		{
-			that.param.projID = Lincko.storage.getMyPlaceholder()['_id'];
-		}
-		else
-		{
-			that.param.projID = app_content_menu.projects_id;
-		}
+		that.param.projID = Lincko.storage.getProjectParentID(that.param.type, that.param.id_toCopy) || that.param.projID;
 	}
+	//fallback
+	if(!that.param.projID){
+		that.param.projID = app_content_menu.projects_id == 0 ? Lincko.storage.getMyPlaceholder()['_id'] : app_content_menu.projects_id;
+	}
+
 	var contactServer = false;
 	var isLockedByMe = false;
 	var action_menu_opened = false;
@@ -546,8 +546,8 @@ Submenu.prototype.Add_taskdetail = function() {
 		item['+title'] = itemToCopy['+title'] || that.param.title || newTitle;
 		item['_id'] = taskid;
 		item['_parent'] = itemToCopy['_parent'] || ['projects', that.param.projID];
-		item['created_by'] = itemToCopy['created_by'] || wrapper_localstorage.uid;
-		item['updated_by'] = itemToCopy['updated_by'] || wrapper_localstorage.uid;
+		item['created_by'] = wrapper_localstorage.uid;
+		item['updated_by'] = wrapper_localstorage.uid;
 		item['-comment'] = itemToCopy['-comment'] || '';
 
 		if(that.param.type == 'files'){
