@@ -427,7 +427,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		var timeout_resize;
 		$(window).on('resize.taskdetail', function(){
 			clearTimeout(timeout_resize);
-			if($('#'+that.id).is(':visible')){
+			if($('#'+that.id).is(':visible') && !$('#'+that.id).hasClass('velocity-animating')){
 				$(window).off('resize.taskdetail');
 				taskdetail_setEditorBarPosition(that, false);
 			} else {
