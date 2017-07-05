@@ -2047,13 +2047,13 @@ var app_generic_cache_garbage = app_application_garbage.add();
 app_application_lincko.add(app_generic_cache_garbage, 'first_launch', function() {
 	if(Lincko.storage.cache.init()){
 		app_application_garbage.remove(app_generic_cache_garbage);
+		setTimeout(function(){
+			Lincko.storage.saveNosql();
+		}, 2000);
+		setInterval(function(){
+			Lincko.storage.saveNosql();
+		}, 1000*3600*24);
 	}
-	setTimeout(function(){
-		Lincko.storage.saveNosql();
-	}, 2000);
-	setInterval(function(){
-		Lincko.storage.saveNosql();
-	}, 1000*3600*24);
 });
 
 // "include" [default: true] at true it includes the object itself
