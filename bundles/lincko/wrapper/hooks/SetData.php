@@ -40,6 +40,8 @@ function SetData(){
 	$styling = OneSeventySeven::get('styling');
 	$ucode = Datassl::encrypt($uid, 'invitation');
 	$hashtag = false;
+	$data_js = 0;
+	$data_nosql = 0;
 
 	$shangzai = false;
 	if($pukpic = OneSeventySeven::get('pukpic')){
@@ -66,10 +68,19 @@ function SetData(){
 				setcookie('hashtag', $hashtag, time()-3600, '/');
 			}
 		}
+		if($sha){
+			if($data = Data::find($sha)){
+				$data_nosql = $data->lastvisit;
+				if(isset($_SESSION['get_nosql'])){
+					unset($_SESSION['get_nosql']);
+					$data_js = $data->lastvisit;
+				}
+			}
+		}
 		if($sha && isset($_SESSION['get_nosql'])){
 			unset($_SESSION['get_nosql']);
 			if($data = Data::find($sha)){
-				$app->lincko->data['datajs'] = $data->lastvisit;
+				$data_js = $data->lastvisit;
 			}
 		}
 	}
@@ -88,6 +99,8 @@ function SetData(){
 			'logged' => $logged,
 			'fingerprint' => $fingerprint,
 			'shangzai' => $shangzai,
+			'data_js' => $data_js, //receive
+			'data_nosql' => $data_nosql, //send
 		)
 	);
 	return true;

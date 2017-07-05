@@ -7,14 +7,14 @@ use \libs\File;
 
 class ControllerDynscript extends Controller {
 
-	//toto => I am not sure how to generate this file with cache enable in heaer yet
+	//toto => I am not sure how to generate this file with cache enable in header yet
 	public function regroup_get($md5){
 		$app = \Slim\Slim::getInstance();
 		$script = '';
-		$expire_seconds = 6;//86400;
+		$expire_seconds = 86400;
 		$expire_string = gmdate(DATE_RFC1123, time()+$expire_seconds);
 		$app->response->headers->set('Content-Type', 'application/javascript');
-		$app->response->headers->set('Cache-Control', 'public, no-transform , max-age='.$expire_seconds);
+		$app->response->headers->set('Cache-Control', 'public, no-transform , max-age='.$expire_seconds); //This will be overwriten by nginx (must be setup from nginx)
 		$app->response->headers->set('Expires', $expire_string);
 
 		if($get = $app->request->get()){

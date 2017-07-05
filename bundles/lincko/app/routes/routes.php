@@ -91,10 +91,12 @@ $app->post('/nosql/data', function () use ($app) {
 })
 ->name('nosql_data_post');
 
-$app->get('/nosql/data.js', function () use ($app) {
+$app->get('/cache/nosql/data.js', function () use ($app) {
+	$expire_seconds = 7*86400; //Last for one week
+	$expire_string = gmdate(DATE_RFC1123, time()+$expire_seconds);
 	$app->response->headers->set('Content-Type', 'application/javascript');
-	$app->response->headers->set('Cache-Control', 'no-cache, must-revalidate');
-	$app->response->headers->set('Expires', 'Fri, 12 Aug 2011 14:57:00 GMT');
+	$app->response->headers->set('Cache-Control', 'public, no-transform , max-age='.$expire_seconds); //This will be overwriten by nginx (must be setup from nginx)
+	$app->response->headers->set('Expires', $expire_string);
 	$sha = OneSeventySeven::get('sha');
 	if($sha){
 		$data = Data::find($sha);
@@ -102,11 +104,10 @@ $app->get('/nosql/data.js', function () use ($app) {
 			$decompressed_data = gzuncompress($data->data);
 			if($decompressed_data){
 				echo 'Lincko.storage.last_visit = '.$data->lastvisit.";\n";
-				echo 'Lincko.storage.data = '.$decompressed_data."\n";
+				echo 'Lincko.storage.data = '.$decompressed_data.";\n";
 			}
 		}
 	}
-	return exit(0);
 })
 ->name('nosql_data_get');
 

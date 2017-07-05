@@ -2019,7 +2019,14 @@ Lincko.storage.cache = {
 };
 
 Lincko.storage.saveNosql = function(){
+	//If Desktop, always send out
+	//If mobile, make sure we are using wifi first
 	if(wrapper_user_info[1]!="Desktop" && (!wrapper_connection_type || wrapper_connection_type != 'wifi')){
+		return false;
+	}
+	var date_nosql = new wrapper_date(Lincko.storage.data_nosql);
+	var date_now = new wrapper_date();
+	if ( date_nosql.getYear()+"-"+date_nosql.getMonth()+"-"+date_nosql.getDate() == date_now.getYear()+"-"+date_now.getMonth()+"-"+date_now.getDate() ){
 		return false;
 	}
 	var param = {
