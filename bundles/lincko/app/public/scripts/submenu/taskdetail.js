@@ -1453,7 +1453,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			//remove linking
 			elem_linkcard.find('[find=removeIcon]').click(function(){
 				if(taskid == 'new' || !item['_id'] || item['_id'] == 'new'){
-					taskdetail_linkQueue.clearQueue_uniqueID(that.param.uniqueID);
+					taskdetail_linkQueue.removeQueue(that.param.uniqueID, item_link['_id']);
 				}
 				else{
 					var obj = {};
@@ -1508,6 +1508,7 @@ Submenu.prototype.Add_taskdetail = function() {
 		var param_itemSelector = {
 			item:item,
 			uniqueID: that.param.uniqueID,
+			hideItems: taskdetail_linkQueue.getQueued(that.param.uniqueID),
 		}
 		if(taskid != 'new'){ param_itemSelector.item = Lincko.storage.get(item['_type'], item['_id']); }
 		if(item['_type'] == 'notes'){
@@ -1538,6 +1539,7 @@ Submenu.prototype.Add_taskdetail = function() {
 						parent_type: that.param.type,
 						id: id,
 						type: category,
+						visible: true,
 					}
 				}
 			});
@@ -2488,32 +2490,33 @@ Submenu.prototype.Add_taskdetail = function() {
 					});
 				}
 
-
-				//currently 3 types of links - files, notes, tasks
-				if(item._files || item._notes || item._tasks){
-					var linkCount = 0;
-					var fn_each_updateLinks = function(type, id){
-						var item = Lincko.storage.get(type, id);
-						if(item && !item.deleted_at){ 
-							linkCount++;
-							if(!elem.find('['+type+'_id='+id+']').length){
-								addTo_linksWrapper(elem, type, id);
+				if(taskid != 'new'){
+					//currently 3 types of links - files, notes, tasks
+					if(item._files || item._notes || item._tasks){
+						var linkCount = 0;
+						var fn_each_updateLinks = function(type, id){
+							var item = Lincko.storage.get(type, id);
+							if(item && !item.deleted_at){ 
+								linkCount++;
+								if(!elem.find('['+type+'_id='+id+']').length){
+									addTo_linksWrapper(elem, type, id);
+								}
 							}
 						}
+
+						$.each(item._files, function(id, obj){
+							fn_each_updateLinks('files', id);
+						});
+						$.each(item._notes, function(id, obj){
+							fn_each_updateLinks('notes', id);
+						});
+						$.each(item._tasks, function(id, obj){
+							fn_each_updateLinks('tasks', id);
+						});
+
+						elem.find('[find=linkCount]').text(linkCount);
 					}
-
-					$.each(item._files, function(id, obj){
-						fn_each_updateLinks('files', id);
-					});
-					$.each(item._notes, function(id, obj){
-						fn_each_updateLinks('notes', id);
-					});
-					$.each(item._tasks, function(id, obj){
-						fn_each_updateLinks('tasks', id);
-					});
-
-					elem.find('[find=linkCount]').text(linkCount);
-				}				
+				}		
 
 
 			}
@@ -3388,6 +3391,27 @@ var taskdetail_linkQueue = {
 			},
 			etc
 		*/
+	},
+	getQueued: function(uniqueID){
+		if(!uniqueID){ return {}; }
+		var items = {};
+		$.each(taskdetail_linkQueue.queue, function(temp_id, obj){
+			if(obj.uniqueID == uniqueID){
+				if(!items[obj.type]){
+					items[obj.type] = {};
+				}
+				items[obj.type][obj.id] = true;
+			}
+		});
+		return items;
+	},
+	removeQueue: function(uniqueID, id){
+		if(!uniqueID || !id){ return false; }
+		$.each(taskdetail_linkQueue.queue, function(temp_id, obj){
+			if(obj.uniqueID == uniqueID && obj.id == id){
+				delete taskdetail_linkQueue.queue[temp_id];
+			}
+		});
 	},
 	//to clear queues with a specific uniqueID
 	//used during submenu_hide when task/note creation is cancelled

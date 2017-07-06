@@ -316,6 +316,10 @@ Submenu.prototype.Add_itemSelector = function() {
 
 	if(items_all.files){
 		$.each(items_all.files, function(i, item){
+			if(that.param.hideItems && that.param.hideItems.files && that.param.hideItems.files[item._id]){
+				return;
+			}
+
 			//if it is already linked, skip
 			if(!item || (item_parent && item_parent['_files'] && item_parent['_files'][item['_id']])){
 				items_all.files[i] = null;
@@ -333,6 +337,10 @@ Submenu.prototype.Add_itemSelector = function() {
 
 	if(items_all.notes){
 		$.each(items_notes, function(i, item){
+			if(that.param.hideItems && that.param.hideItems.notes && that.param.hideItems.notes[item._id]){
+				return;
+			}
+
 			//if it is already linked, skip
 			if(!item || (item_parent && item_parent['_notes'] && item_parent['_notes'][item['_id']])){
 				items_all.notes[i] = null;
