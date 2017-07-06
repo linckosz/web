@@ -240,7 +240,7 @@ Submenu.prototype.Add_MenuProjects = function() {
 	if ("hide" in attribute) {
 		if (attribute.hide) {
 			Elem.click(function() {
-				submenu_Clean(this.layer, false, preview);
+				submenu_Clean(that.layer, false, preview);
 			});
 		}
 	}

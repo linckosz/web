@@ -1,31 +1,31 @@
 .app_layers_dashboard_header{
 	border-bottom: 1px solid #FFFFFF;
-    padding-bottom: 10px;
+	padding-bottom: 10px;
 }
 .app_layers_dashboard_header [find=date]{
 	text-align: center;
 	text-transform: capitalize;
-    font-size: 18px;
-    color: #141414;
-    height: 40px;
-    line-height: 40px;
+	font-size: 18px;
+	color: #141414;
+	height: 40px;
+	line-height: 40px;
 }
 .app_layers_dashboard_header .models_projects_progressBar{
 	height: 24px;
 	font-size: 24px;
 }
 .app_layers_dashboard_header .models_projects_progressBar [find=bar]{
-    background-color: #f5a623;
+	background-color: #f5a623;
 }
 
 .app_layers_dashboard_chartBlock{
-    position: relative;
+	position: relative;
 	padding-bottom: 30px;
-    padding-top: 10px;
-    border-bottom: 1px solid #FFFFFF;
+	padding-top: 10px;
+	border-bottom: 1px solid #FFFFFF;
 }
 .app_layers_dashboard_chartBlock canvas{
-    -webkit-tap-highlight-color: rgba(0,0,0,0);
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 .app_layers_dashboard_chartBlock [find=header]{
 	font-size: 14px;
@@ -37,56 +37,56 @@
 	color: #54add2;
 }
 .app_layers_dashboard_chartBlock [find=noChart]{
-    position: absolute;
-    text-align: center;
-    font-size: 12px;
-    top: 50%;
-    left: 50%;
-    -webkit-transform: translate(-50%, -50%);
-    -moz-transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
-    -o-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
+	position: absolute;
+	text-align: center;
+	font-size: 12px;
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	-o-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
 }
 .app_layers_dashboard_chartBlock [find=chartContainer]{
 	position: relative;
 	padding: 0px 20px 0px 20px;
 	height: 200px;
-    margin-bottom: 50px !important;
+	margin-bottom: 50px !important;
 }
 
 
 
 /*burndown、team*/
 .app_layers_dashboard_team_wrapper [find=chartContainer]{
-     height: auto;
+	 height: auto;
 }
 
 .app_layers_dashboard_burndown_wrapper [find=chartContainer]{
-    height: 300px;
+	height: 300px;
 }
 
 .app_layers_dashboard_team_wrapper [find=legend],
 .app_layers_dashboard_burndown_wrapper [find=legend]{
-    position: absolute;
-    top: 0px;
-    bottom: 0px;
-    left: 0px;
-    width: 20px;
-    margin: 0px 30px;
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	width: 20px;
+	margin: 0px 30px;
 }
 .app_layers_dashboard_team_wrapper [find=legend] [find=hoverText],
 .app_layers_dashboard_burndown_wrapper [find=legend] [find=hoverText]{
-    position: absolute;
-    left: 24px;
-    top: -6px;
-    white-space: nowrap;
-    font-size: 12px;
-    visibility: hidden;
-    color: #FFFFFF;
-    background-color: rgba(0,0,0,0.8);
-    padding: 6px 6px;
-    border-radius: 5px;
+	position: absolute;
+	left: 24px;
+	top: -6px;
+	white-space: nowrap;
+	font-size: 12px;
+	visibility: hidden;
+	color: #FFFFFF;
+	background-color: rgba(0,0,0,0.8);
+	padding: 6px 6px;
+	border-radius: 5px;
 }
 .app_layers_dashboard_team_wrapper [find=legend] [find=open],
 .app_layers_dashboard_burndown_wrapper [find=legend] [find=open],
@@ -94,104 +94,104 @@
 .app_layers_dashboard_burndown_wrapper [find=legend] [find=completed]{
 	border: solid 1px #d8d8d8;
 	position: absolute;
-    height: 20px;
-    box-sizing: border-box;
-    text-align: center;
-    left: 0px;
-    right: 0px;
-    border-radius: 3px;
-    font-size: 18px;
-    line-height: 18px;
+	height: 20px;
+	box-sizing: border-box;
+	text-align: center;
+	left: 0px;
+	right: 0px;
+	border-radius: 3px;
+	font-size: 18px;
+	line-height: 18px;
 }
 .app_layers_dashboard_team_wrapper [find=legend] [find=open]:hover [find=hoverText],
 .app_layers_dashboard_burndown_wrapper [find=legend] [find=open]:hover [find=hoverText],
 .app_layers_dashboard_team_wrapper [find=legend] [find=completed]:hover [find=hoverText],
 .app_layers_dashboard_burndown_wrapper [find=legend] [find=completed]:hover [find=hoverText]{
-    visibility: visible;
+	visibility: visible;
 }
 
 .app_layers_dashboard_team_wrapper [find=legend] [find=open],
 .app_layers_dashboard_burndown_wrapper [find=legend] [find=open]{
-    top: 70px;
-    color: #d8d8d8;
+	top: 70px;
+	color: #d8d8d8;
 }
 
 .app_layers_dashboard_team_wrapper [find=legend] [find=completed],
 .app_layers_dashboard_burndown_wrapper [find=legend] [find=completed]{
-    bottom: 70px;
-    border-color: #f5a026;
-    color: #f5a026;
+	bottom: 70px;
+	border-color: #f5a026;
+	color: #f5a026;
 }
 
 .app_layers_dashboard_team_wrapper [find=legend] [find=completed]>div,
 .app_layers_dashboard_burndown_wrapper [find=legend] [find=completed]>div{
-    display: block;
+	display: block;
 }
 .app_layers_dashboard_burndown_wrapper [find=bike]{
-    position: absolute;
-    margin-left: 20px; /*matches the container padding*/
-    font-size: 12px;
-    visibility: hidden;
-    z-index: 10; /*above canvas*/
+	position: absolute;
+	margin-left: 20px; /*matches the container padding*/
+	font-size: 12px;
+	visibility: hidden;
+	z-index: 10; /*above canvas*/
 }
 .app_layers_dashboard_burndown_wrapper [find=bike] [find=hoverText]{
-    text-transform: capitalize;
-    visibility: hidden;
-    display: block;
+	text-transform: capitalize;
+	visibility: hidden;
+	display: block;
 }
 .app_layers_dashboard_burndown_wrapper [find=bike]:hover [find=hoverText]{
-    visibility: visible;
+	visibility: visible;
 }
 .app_layers_dashboard_burndown_wrapper [find=bike] [find=emoji]{
-    display: block; /*transform doesnt work with inline*/
-    -webkit-transform:rotateY(180deg);
-    -moz-transform:rotateY(180deg);
-    -o-transform:rotateY(180deg);
-    -ms-transform:rotateY(180deg);   
+	display: block; /*transform doesnt work with inline*/
+	-webkit-transform:rotateY(180deg);
+	-moz-transform:rotateY(180deg);
+	-o-transform:rotateY(180deg);
+	-ms-transform:rotateY(180deg);   
 }
 
 /*taskHistory*/
 .app_layers_dashboard_taskHistory_wrapper [find=legend]{
 	position: absolute;
 	display: inline-block;
-    height: 100%;
-    margin-left: 20px;
-    left: 0px;
-    opacity: 0;
-    min-width: 30px;
+	height: 100%;
+	margin-left: 20px;
+	left: 0px;
+	opacity: 0;
+	min-width: 30px;
 }
 .app_layers_dashboard_taskHistory_wrapper [find=legend] [find=hoverText]{
-    font-size: 12px;
-    white-space: nowrap;
-    position: absolute;
-    top: 0px;
-    left: 34px;
-    padding-left: 2px;
-    line-height: 30px;
-    visibility: hidden;
-    color: #FFFFFF;
-    background-color: rgba(0,0,0,0.8);
-    padding: 0px 6px;
-    border-radius: 5px;
+	font-size: 12px;
+	white-space: nowrap;
+	position: absolute;
+	top: 0px;
+	left: 34px;
+	padding-left: 2px;
+	line-height: 30px;
+	visibility: hidden;
+	color: #FFFFFF;
+	background-color: rgba(0,0,0,0.8);
+	padding: 0px 6px;
+	border-radius: 5px;
 }
 .app_layers_dashboard_taskHistory_wrapper [find=legend] [find=team]:hover [find=hoverText],
 .app_layers_dashboard_taskHistory_wrapper [find=legend] [find=user]:hover [find=hoverText]{
-    visibility: visible;
+	visibility: visible;
 }
 .app_layers_dashboard_taskHistory_wrapper [find=legend] [find=team],
 .app_layers_dashboard_taskHistory_wrapper [find=legend] [find=user]{
 	position: absolute;
 	font-size: 30px;
 	height: 30px;
-    width: 30px;
-    color: #FBA026;
+	width: 30px;
+	color: #FBA026;
 }
 .app_layers_dashboard_taskHistory_wrapper [find=legend] [find=user]{
 	border: 1px solid #FBA026;
 	color: #FBA026;
-    border-radius: 50px;
-    /*display: inline-block;*/
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
+	border-radius: 50px;
+	/*display: inline-block;*/
+	background-position: center;
+	background-size: cover;
+	background-repeat: no-repeat;
 }

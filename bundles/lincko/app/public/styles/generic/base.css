@@ -69,6 +69,31 @@
 	cursor: pointer; cursor: hand;
 }
 
+#base_wall_info {
+	position: fixed;
+	z-index: 2000;
+	height: 100%;
+	width: 100%;
+	text-align: center;
+	vertical-align: middle;
+	background-color: rgba(17, 17, 17, 0.7);
+}
+
+#base_wall_info [find=info] {
+	font-size: 14px;
+	color: #FFFFFF;
+	position: absolute;
+	text-align: center;
+	vertical-align: middle;
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	-o-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+}
+
 html, body {
 	height: 100%;
 	overflow: hidden;
@@ -197,24 +222,24 @@ html, .font_sans_serif {
 
 .base_myQRcode_popup{
 	position: absolute;
-    top: 0px;
-    bottom: 0px;
-    background-color: rgba(0, 0, 0, 0.6);
-    left: 0px;
-    right: 0px;
-    z-index: 3001;
+	top: 0px;
+	bottom: 0px;
+	background-color: rgba(0, 0, 0, 0.6);
+	left: 0px;
+	right: 0px;
+	z-index: 3001;
 }
 .base_myQRcode_popup img{
 	width: 70%;
-    max-width: 300px;
-    position: absolute;
-    -webkit-transform: translate(-50%, -50%);
-    -moz-transform: translate(-50%, -50%);
-    -ms-transform: translate(-50%, -50%);
-    -o-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-    top: 46%;
-    left: 50%;   
+	max-width: 300px;
+	position: absolute;
+	-webkit-transform: translate(-50%, -50%);
+	-moz-transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	-o-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	top: 46%;
+	left: 50%;   
 }
 
 .cursor_progress {
@@ -243,8 +268,8 @@ html, .font_sans_serif {
 }
 
 .base_tapHighlight_off {
-    -moz-tap-highlight-color: rgba(0,0,0,0);
-    -moz-tap-highlight-color: transparent;
+	-moz-tap-highlight-color: rgba(0,0,0,0);
+	-moz-tap-highlight-color: transparent;
 	-webkit-tap-highlight-color: rgba(0,0,0,0);
 	-webkit-tap-highlight-color: transparent;
 }

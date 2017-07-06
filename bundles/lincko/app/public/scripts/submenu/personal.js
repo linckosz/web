@@ -36,6 +36,7 @@ submenu_list['personal_info'] = {
 					if(typeof val['-firstname'] != 'undefined' && val['-firstname']!=null){ subm.param_namecard.firstname = val['-firstname']; };
 					if(typeof val['-lastname'] != 'undefined' && val['-lastname']!=null){ subm.param_namecard.lastname = val['-lastname']; };
 				}
+				if(typeof val['-email'] != 'undefined' && val['-email']!=null){ subm.param_namecard.email = val['-email']; };
 				if(typeof val['-address'] != 'undefined' && val['-address']!=null){ subm.param_namecard.address = $('<div>').text(val['-address']).text(); };
 				if(typeof val['-phone'] != 'undefined' && val['-phone']!=null){ subm.param_namecard.phone = val['-phone']; };
 				if(typeof val['-business'] != 'undefined' && val['-business']!=null){ subm.param_namecard.business = $('<div>').text(val['-business']).text(); };
@@ -457,19 +458,71 @@ submenu_list['personal_info'] = {
 		},
 	},
 	"email": {
-		"style": "profile_info",
+		"style": "profile_input",
 		"title": Lincko.Translation.get('app', 85, 'html'), //Email
-		"class": "display_none",
 		"value": function(Elem, subm){
-			if(!Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id){
-				return "";
+			var val = false;
+			if(typeof subm.param_namecard.email != 'undefined'){
+				val = subm.param_namecard.email;
 			}
-			var val = Lincko.storage.get('users', subm.param, 'email');
 			if(!val){
 				return "";
 			}
-			Elem.removeClass('display_none');
 			return wrapper_to_html(val);
+		},
+		"action": function(Elem, subm, now, force){
+			if(typeof now == "undefined"){ now = false; }
+			if(typeof force == "undefined"){ force = false; }
+			var val_new = Elem.find("[find=submenu_value]").val();
+			if(!force && val_new==""){
+				return true;
+			}
+			//For shared workspace, do not update others
+			if(!Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id){
+				return true;
+			} else if(Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id && !Lincko.storage.amIadmin()){
+				return true;
+			}
+			var timer = wrapper_timeout_timer*10;
+			if(now){
+				timer = 0;
+			}
+			if(val_new != subm.param_namecard.email && (val_new=="" || base_input_field.email.valid(val_new))){
+				clearTimeout(submenu_profile_timer['email']);
+				submenu_profile_timer['email'] = setTimeout(function(namecard){
+					var val_old = namecard.email;
+					namecard.email = val_new;
+					wrapper_sendAction(
+						{
+							"parent_id": namecard.parent_id,
+							"email": val_new,
+						},
+						'post',
+						'namecard/change',
+						null,
+						function(){
+							namecard.email = val_old;
+						}
+					);
+				}, timer, subm.param_namecard);
+			}
+		},
+		"now": function(Elem, subm){
+			if(wrapper_localstorage.uid!=subm.param_namecard.parent_id){
+				if(!subm.param_namecard.email){
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIadmin()){
+						Elem.addClass('display_none');
+					}
+				} else {
+					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIadmin()){
+						Elem.find("[find=submenu_value]")
+							.removeClass('selectable')
+							.addClass('unselectable')
+							.addClass('submenu_personal_input_readonly')
+							.prop('readonly', true);
+					}
+				}
+			}
 		},
 	},
 	"linkedin": {

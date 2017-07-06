@@ -196,27 +196,73 @@ submenu_list['settings'] = {
 	},
 };
 
-/*
+//submenu_Build("welcome", 1, false, false, false);
 submenu_list['welcome'] = {
 	//Set the title of the top
 	"_title": {
 		"style": "customized_title",
-		"title": Lincko.Translation.get('app', 2, 'html'), //Lincko Settings
+		"title": Lincko.Translation.get('app', 124, 'html'), //Welcome
+	},	
+	"_pre_action": {
+		"style": "preAction",
+		"action": function(Elem, subm){
+			$('#base_wall_info').removeClass("display_none");
+			subm.focuson = false;
+			subm.param_namecard = {};
+			//Priority on current Workspaces, then shared Workspaces, then Users
+			var val = Lincko.storage.get('users', wrapper_localstorage.uid);
+			subm.param_namecard.id = false;
+			subm.param_namecard.parent_id = wrapper_localstorage.uid;
+			subm.param_namecard.username = val['-username'];
+			if(val['-firstname']!=null){ subm.param_namecard.firstname = val['-firstname']; };
+			if(val['-lastname']!=null){ subm.param_namecard.lastname = val['-lastname']; };
+			if(Lincko.storage.getWORKID()>0){
+				if(val['email']!=null){ subm.param_namecard.email = val['email']; };
+			}
+			var namecards = Lincko.storage.list('namecards', -1, null, 'users', wrapper_localstorage.uid);
+			namecards = Lincko.storage.sort_items(namecards, 'workspaces_id', 0, -1, true); //From shared (0) to current (higher ID)
+			for(var i in namecards){
+				var val = namecards[i];
+				if(val['workspaces_id'] == Lincko.storage.getWORKID()){
+					subm.param_namecard.id = val['workspaces_id'];
+				}
+				if(val['workspaces_id']>0){
+					if(typeof val['-username'] != 'undefined' && val['-username']!=null){ subm.param_namecard.username = val['-username']; };
+					if(typeof val['-firstname'] != 'undefined' && val['-firstname']!=null){ subm.param_namecard.firstname = val['-firstname']; };
+					if(typeof val['-lastname'] != 'undefined' && val['-lastname']!=null){ subm.param_namecard.lastname = val['-lastname']; };
+				}
+				if(typeof val['-email'] != 'undefined' && val['-email']!=null){ subm.param_namecard.email = val['-email']; };
+				if(typeof val['-address'] != 'undefined' && val['-address']!=null){ subm.param_namecard.address = $('<div>').text(val['-address']).text(); };
+				if(typeof val['-phone'] != 'undefined' && val['-phone']!=null){ subm.param_namecard.phone = val['-phone']; };
+				if(typeof val['-business'] != 'undefined' && val['-business']!=null){ subm.param_namecard.business = $('<div>').text(val['-business']).text(); };
+				if(typeof val['-additional'] != 'undefined' && val['-additional']!=null){ subm.param_namecard.additional = $('<div>').text(val['-additional']).text(); };
+				if(typeof val['-linkedin'] != 'undefined' && val['-linkedin']!=null){ subm.param_namecard.linkedin = val['-linkedin']; };
+			}
+		},
 	},
-	"right_button": {
-		"style": "title_right_button",
-		"title": "OK",
-		"class": "base_pointer",
-		"action": function(Elem, subm) {
-			base_showProgress(Elem);
-			Elem.recursiveOff();
+	"_hide_action": {
+		"style": "hideAction",
+		"action": function(Elem, subm){
+			//We give a bit time in case the user just close the webpage or the app
+			setTimeout(function(){
+				//app_models_resume_onboarding_continue(null, 10101);
+			}, 300);
+			$('#base_wall_info').addClass("display_none");
 		},
+	},
+	"info": {
+		"style": "info",
+		"title": "",
+		"value": Lincko.Translation.get('app', 125, 'html'), //Before we get started, please provide some information.
+		"class": "submenu_deco_info submenu_standard_welcome",
 		"now": function(Elem, subm){
-			//Add loading bar
-			var loading_bar = $("#-submit_progress_bar").clone();
-			loading_bar.prop('id', '');
-			Elem.append(loading_bar);
-		},
+			Elem.find("[find=submenu_info_title]").addClass("submenu_standard_welcome_title");
+		}
+	},
+	"start": {
+		"style": "bottom_button",
+		"title": Lincko.Translation.get('app', 5, 'html'), //Start
+		'hide': true,
 	},
 	//Change the language
 	"language": {
@@ -224,7 +270,6 @@ submenu_list['welcome'] = {
 		"title": Lincko.Translation.get('app', 1, 'html'), //Language
 		"next": "language",
 		"value": submenu_language_full,
-		"class": "",
 	},
 	"nickname": {
 		"style": "profile_input",
@@ -283,33 +328,50 @@ submenu_list['welcome'] = {
 				}, timer, subm.param_namecard);
 			}
 		},
-		"now": function(Elem, subm){
-			if(wrapper_localstorage.uid!=subm.param_namecard.parent_id){
-				if(!Lincko.storage.getWORKID() || !Lincko.storage.amIadmin()){
-					Elem.find("[find=submenu_value]")
-						.removeClass('selectable')
-						.addClass('unselectable')
-						.addClass('submenu_personal_input_readonly')
-						.prop('readonly', true);
-				}
-			}
-		},
 	},
-	/*
 	"email": {
-		"style": "profile_info",
+		"style": "profile_input",
 		"title": Lincko.Translation.get('app', 85, 'html'), //Email
-		"class": "display_none",
 		"value": function(Elem, subm){
-			if(!Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id){
-				return "";
+			var val = false;
+			if(typeof subm.param_namecard.email != 'undefined'){
+				val = subm.param_namecard.email;
 			}
-			var val = Lincko.storage.get('users', subm.param, 'email');
 			if(!val){
 				return "";
 			}
-			Elem.removeClass('display_none');
 			return wrapper_to_html(val);
+		},
+		"action": function(Elem, subm, now, force){
+			if(typeof now == "undefined"){ now = false; }
+			if(typeof force == "undefined"){ force = false; }
+			var val_new = Elem.find("[find=submenu_value]").val();
+			if(!force && val_new==""){
+				return true;
+			}
+			var timer = wrapper_timeout_timer*10;
+			if(now){
+				timer = 0;
+			}
+			if(val_new != subm.param_namecard.email && (val_new=="" || base_input_field.email.valid(val_new))){
+				clearTimeout(submenu_profile_timer['email']);
+				submenu_profile_timer['email'] = setTimeout(function(namecard){
+					var val_old = namecard.email;
+					namecard.email = val_new;
+					wrapper_sendAction(
+						{
+							"parent_id": namecard.parent_id,
+							"email": val_new,
+						},
+						'post',
+						'namecard/change',
+						null,
+						function(){
+							namecard.email = val_old;
+						}
+					);
+				}, timer, subm.param_namecard);
+			}
 		},
 	},
 	"phone": {
@@ -328,12 +390,6 @@ submenu_list['welcome'] = {
 			if(typeof force == "undefined"){ force = false; }
 			var val_new = Elem.find("[find=submenu_value]").val();
 			if(!force && val_new==""){
-				return true;
-			}
-			//For shared workspace, do not update others
-			if(!Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id){
-				return true;
-			} else if(Lincko.storage.getWORKID() && wrapper_localstorage.uid!=subm.param_namecard.parent_id && !Lincko.storage.amIadmin()){
 				return true;
 			}
 			var timer = wrapper_timeout_timer*10;
@@ -360,26 +416,9 @@ submenu_list['welcome'] = {
 				}, timer, subm.param_namecard);
 			}
 		},
-		"now": function(Elem, subm){
-			if(wrapper_localstorage.uid!=subm.param_namecard.parent_id){
-				if(!subm.param_namecard.phone){
-					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIadmin()){
-						Elem.addClass('display_none');
-					}
-				} else {
-					if(!Lincko.storage.getWORKID() || !Lincko.storage.amIadmin()){
-						Elem.find("[find=submenu_value]")
-							.removeClass('selectable')
-							.addClass('unselectable')
-							.addClass('submenu_personal_input_readonly')
-							.prop('readonly', true);
-					}
-				}
-			}
-		},
 	},
 };
-*/
+
 
 if(wrapper_domain_debug){
 	submenu_list['settings']['domain_debug'] = {
