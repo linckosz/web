@@ -82,8 +82,10 @@ function device_download(url, target, name){
 	else if(typeof winPhone != 'undefined' && typeof winPhone.download == 'function') {
 		winPhone.download(url);
 	}
+	else if(/firefox|opera/i.test(navigator.userAgent)){
+		window.open(url, target);
+	}
 	else {
-		//window.open(url, target);
 		//Another method if some browser (safari?) do not work
 		var anchor = document.createElement('a');
 		anchor.href = url;
