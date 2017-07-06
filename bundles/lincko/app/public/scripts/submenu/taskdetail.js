@@ -1453,7 +1453,7 @@ Submenu.prototype.Add_taskdetail = function() {
 			//remove linking
 			elem_linkcard.find('[find=removeIcon]').click(function(){
 				if(taskid == 'new' || !item['_id'] || item['_id'] == 'new'){
-					delete taskdetail_linkQueue.queue[item_link['_id'] || item_link['temp_id']];
+					taskdetail_linkQueue.clearQueue_uniqueID(that.param.uniqueID);
 				}
 				else{
 					var obj = {};
