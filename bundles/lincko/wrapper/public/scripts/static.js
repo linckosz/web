@@ -66,8 +66,11 @@ jQuery.prototype.recursiveEmpty = function(delay){
 			if(Children){
 				Children
 					.contents().each(function () {
-						$(this)
+						$(this).not('iframe')
 							.recursiveEmpty(0)
+							.removeData()
+							.remove();
+						$(this)
 							.removeData()
 							.remove();
 					});
@@ -75,9 +78,12 @@ jQuery.prototype.recursiveEmpty = function(delay){
 		}, delay, Children);
 	} else {
 		this
-			.contents().each(function () {
-				$(this)
+			.contents().each(function () { 
+				$(this).not('iframe')
 					.recursiveEmpty(0)
+					.removeData()
+					.remove();
+				$(this)
 					.removeData()
 					.remove();
 			});
