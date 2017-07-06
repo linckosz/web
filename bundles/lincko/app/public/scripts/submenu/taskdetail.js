@@ -1067,7 +1067,7 @@ Submenu.prototype.Add_taskdetail = function() {
 
 		//use iframe to detect editor size change and adjust iscroll accordingly
 		elem.find('iframe').on('load', function(){
-			$(elem.find('iframe').get(0).contentWindow).resize(submenu_content.prop('id'), function(e){
+			$(this.contentWindow).resize(submenu_content.prop('id'), function(e){
 				var iscroll = myIScrollList[e.data];
 				if(iscroll){
 					var wrapper = $(iscroll.wrapper);
