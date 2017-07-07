@@ -285,6 +285,9 @@ td.submenu_taskdetail_share .fa{
 	margin: 0px;
 	border: none;
 }
+.submenu_taskdetail_description [find=description_text] a{
+	cursor: hand; cursor: pointer;
+}
 .submenu_taskdetail_description_img {
 	max-width: 100%;
 }

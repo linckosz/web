@@ -34,9 +34,9 @@ function linckoEditor(elem, toolbarID, param){
 
 	//clicking on links will open in new tab/window
     $(editorInst.element.$).click(function(event) {
-    	var elem_editor = this;
         if(typeof event.target.href != 'undefined'){
-        	device_download(event.target.href, '_blank', false); 
+        	var target = base_isLinckoLink(event.target.href) ? '_self' : '_blank';
+        	device_download(event.target.href, target, false); 
         }
     });
     var preview = false;
