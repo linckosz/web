@@ -87,6 +87,9 @@
 	color: #9D9D9D;
 	white-space: nowrap;
 	position: absolute;
+	left: 0;
+	right: 0;
+	text-align: center;
 }
 
 .wrapper_loading_progress_bar_warning {

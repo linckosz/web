@@ -100,6 +100,12 @@ submenu_list['settings'] = {
 			return Lincko.styling.title(wrapper_localstorage.styling);
 		},
 		"class": "",
+		"now": function(Elem, subm){
+			app_application_lincko.add(subm.id, "users", function() {
+				var Elem = this.action_param;
+				Elem.find("[find=submenu_next_value]").html(Lincko.styling.title(wrapper_localstorage.styling));
+			}, Elem);
+		},
 	},
 	//Change the workspace
 	"workspace": {

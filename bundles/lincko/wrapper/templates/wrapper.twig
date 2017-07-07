@@ -409,7 +409,7 @@ var wrapper_loading_sentences_change = function(){
 			var max = 14013;
 		}
 		var random = Math.floor(Math.random() * (max - min + 1)) + min;
-		$('#wrapper_loading_sentences').text(Lincko.Translation.get('app', random, 'html'));
+		$('#wrapper_loading_sentences').html(Lincko.Translation.get('app', random, 'html'));
 	}
 };
 
