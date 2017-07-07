@@ -487,6 +487,10 @@ wrapper_localstorage.encrypt = function (link, data, tryit, now){
 				wrapper_localstorage.quota[link] = false;
 				//amplify.store(wrapper_localstorage.prefix+link, null);
 				wrapper_localstorage.emptyStorage();
+				setTimeout(function(){
+					wrapper_localstorage.emptyStorage();
+				}, 10000);
+				console.log(link);
 				console.log(e);
 			}
 		}

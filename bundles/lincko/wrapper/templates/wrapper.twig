@@ -533,6 +533,9 @@ var webworker_operation = {
 
 	LocalStorageInFailed: function(obj_data){
 		wrapper_localstorage.emptyStorage();
+		setTimeout(function(){
+			wrapper_localstorage.emptyStorage();
+		}, 10000);
 		wrapper_localstorage.encrypt_running = false;
 		if(typeof obj_data == 'undefined' || typeof obj_data.link == 'undefined'){
 			return false;
