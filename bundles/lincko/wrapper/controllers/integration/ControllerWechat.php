@@ -51,7 +51,13 @@ class ControllerWechat extends Controller {
 		$app->response->headers->set('Content-Type', 'text/html; charset=UTF-8');
 		$app->response->headers->set('Cache-Control', 'no-cache, must-revalidate');
 		$app->response->headers->set('Expires', 'Fri, 12 Aug 2011 14:57:00 GMT');
-		$url = base64_decode($redirect).'?wechat_account='.$account.'&wechat_response='.base64_encode(json_encode($_GET));
+		$url = base64_decode($redirect);
+		if(strpos($url, '?')){
+			$url .= '&';
+		} else {
+			$url .= '?';
+		}
+		$url .= 'wechat_account='.$account.'&wechat_response='.base64_encode(json_encode($_GET));
 		echo '
 			<script>
 				window.location.href = "'.$url.'";

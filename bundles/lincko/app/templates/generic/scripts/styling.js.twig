@@ -14,6 +14,14 @@
 			}
 			Lincko.styling.reset();
 			this[index].fn();
+			wrapper_sendAction(
+				{
+					"id": wrapper_localstorage.uid,
+					"styling": index,
+				},
+				'post',
+				'user/update'
+			);
 		},
 
 		reset: function(){
@@ -137,15 +145,6 @@
 								storage_local_storage.prepare("users#"+suffix);
 								app_application_lincko.prepare('users', true);
 							}
-							wrapper_sendAction(
-							{
-								"id": wrapper_localstorage.uid,
-								"styling": wrapper_localstorage.styling,
-							},
-							'post',
-							'user/update'
-						);
-
 						},
 						"selected": key == wrapper_localstorage.styling,
 					}

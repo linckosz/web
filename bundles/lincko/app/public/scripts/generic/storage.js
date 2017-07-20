@@ -308,6 +308,7 @@ Lincko.storage.display = function(prepare, force){
 /* PRIVATE METHOD */
 var storage_ajax_latest = {};
 Lincko.storage.getting_latest = false;
+Lincko.storage.getting_timer = null;
 Lincko.storage.getLatest = function(force, callback){
 	var lastvisit = Lincko.storage.getLastVisit();
 	if(typeof force == 'boolean' && force == true){
@@ -337,6 +338,11 @@ Lincko.storage.getLatest = function(force, callback){
 			storage_ajax_latest[i] = null;
 			delete storage_ajax_latest[i];
 		}
+		clearTimeout(Lincko.storage.getting_timer);
+		//Make sure we clean it every minute to avoid having the getLatest blocked while the mobile phone is idle
+		Lincko.storage.getting_timer = setTimeout(function(){
+			Lincko.storage.getting_latest = false;
+		}, 60000);
 		wrapper_sendAction(
 			arr,
 			'post',
@@ -405,6 +411,32 @@ Lincko.storage.getMissing = function(missing){
 	}
 };
 
+//Make sure we don't work with array, it's trouble
+Lincko.storage.cleanData = function(){
+	for(var category in Lincko.storage.data) {
+		if($.type(Lincko.storage.data[category]) == "array"){
+			//convert to object
+			var obj = {};
+			for(var id in Lincko.storage.data[category]) {
+				if(Lincko.storage.data[category][id]!=null && $.type(Lincko.storage.data[category]) == "object"){
+					obj[id] = Lincko.storage.data[category][id];
+				}
+			}
+			delete Lincko.storage.data[category];
+			Lincko.storage.data[category] = {};
+			for(var id in obj) {
+				Lincko.storage.data[category][id] = obj[id];
+			}
+		} else {
+			for(var id in Lincko.storage.data[category]) {
+				if(Lincko.storage.data[category][id]==null){
+					delete Lincko.storage.data[category][id];
+				}
+			}
+		}
+	}
+}
+
 //Function that update the localweb database
 /* PRIVATE METHOD */
 Lincko.storage.update = function(partial, info){
@@ -419,10 +451,11 @@ Lincko.storage.update = function(partial, info){
 	var currentRange = '';
 	var children_list = {};
 	var item_search = false;
+	Lincko.storage.cleanData();
 	for(var category in Lincko.storage.data) {
 		children_list[category] = {};
 		for(var id in Lincko.storage.data[category]) {
-			if(typeof Lincko.storage.data[category][id]['_children'] != 'undefined'){
+			if(Lincko.storage.data[category][id] != null && typeof Lincko.storage.data[category][id]['_children'] != 'undefined'){
 				children_list[category][id] = JSON.stringify(Lincko.storage.data[category][id]['_children']);
 			}
 		}
@@ -595,6 +628,9 @@ Lincko.storage.update = function(partial, info){
 							comments_tree = comments_tree.comments;
 							$.each(comments_tree, function(id, b){
 								var comment_parent = Lincko.storage.get('comments', id);
+								if(!comment_parent){
+									return false;
+								}
 
 								//update all parent comment hist_at values
 								if(comment_parent && (!comment_parent.hist_at || comment_parent.hist_at < hist_at_new)){
@@ -3123,6 +3159,9 @@ JSfiles.finish(function(){
 					}
 				} else {
 					var decrypt = wrapper_localstorage.decrypt("data_"+field);
+					if($.type(decrypt)=='array'){
+						loop = true; // make sure we use array
+					}
 					if(decrypt){
 						if(loop){
 							if(typeof Lincko.storage.data[category] == "undefined"){
@@ -3148,6 +3187,8 @@ JSfiles.finish(function(){
 	}
 	if(!Lincko.storage.data){
 		Lincko.storage.data = {};
+	} else {
+		Lincko.storage.cleanData();
 	}
 
 	wrapper_load_progress.move(70);

@@ -95,20 +95,25 @@ function device_download(url, target, name){
 	}
 }
 
+var device_type_record = false;
 function device_type(){
-	if(typeof android != 'undefined') {
-		return "android";
+	if(!device_type_record){
+		if(typeof android != 'undefined') {
+			device_type_record = "android";
+		}
+		else if(typeof window.webkit != 'undefined' && typeof window.webkit.messageHandlers != 'undefined' && typeof window.webkit.messageHandlers.iOS != 'undefined') {
+			device_type_record = "ios";
+		}
+		else if(typeof winPhone != 'undefined') {
+			device_type_record = "winphone";
+		}
+		else if(/webOS|iPhone|iPad|BlackBerry|Windows Phone|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent)) {
+			device_type_record = "mobilebrowser";
+		} else {
+			device_type_record = "computer";
+		}
 	}
-	else if(typeof window.webkit != 'undefined' && typeof window.webkit.messageHandlers != 'undefined' && typeof window.webkit.messageHandlers.iOS) {
-		return "ios";
-	}
-	else if(typeof winPhone != 'undefined') {
-		return "winphone";
-	}
-	else if(/webOS|iPhone|iPad|BlackBerry|Windows Phone|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent)) {
-		return "mobilebrowser";
-	}
-	return "other";
+	return device_type_record;
 }
 
 var android_foreground = {
