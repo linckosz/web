@@ -3068,13 +3068,23 @@ var storage_check_timing_interval;
 var storage_check_timing_timeout;
 var storage_check_timing_speed = 1; //Default = 1, use 4 for demo purpose only
 var storage_check_timing = {
+	/*
 	slow: Math.floor(60000/storage_check_timing_speed), //60s
 	medium: Math.floor(30000/storage_check_timing_speed), //30s
 	fast: Math.floor(15000/storage_check_timing_speed), //15s
 	real: Math.floor(8000/storage_check_timing_speed), //8s
-	
-	timeout: 60000, //60s
+
+	timeout: 60000, //60s (how long do we have to wait before entering into idle mode)
 	current: Math.floor(30000/storage_check_timing_speed), //30s
+	*/
+
+	slow: Math.floor(600000/storage_check_timing_speed), //10min
+	medium: Math.floor(120000/storage_check_timing_speed), //2min
+	fast: Math.floor(60000/storage_check_timing_speed), //1min
+	real: Math.floor(15000/storage_check_timing_speed), //15s
+
+	timeout: 60000, //60s (how long do we have to wait before entering into idle mode)
+	current: Math.floor(120000/storage_check_timing_speed), //2min
 
 	set: function(time, clear, now, timer){
 		if(typeof clear !== 'boolean'){ clear = false; }
