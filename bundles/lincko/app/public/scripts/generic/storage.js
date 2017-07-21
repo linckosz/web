@@ -43,6 +43,11 @@ var storage_cb_success = function(msg, err, status, data){
 		Lincko.storage.setLastVisit(data.lastvisit);
 	}
 	
+
+	if(info == "getlatest")
+	{
+		Lincko.storage.getLatest();
+	}
 };
 
 //Launch the onboadring sync the first time it receive the database

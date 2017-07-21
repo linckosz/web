@@ -413,9 +413,10 @@ var wrapper_loading_sentences_change = function(){
 	}
 };
 
+
+
 //Load all JS libraries only after DOM load
 $(function() {
-
 	if(
 		   wrapper_force_open_website
 		|| !wrapper_localstorage.logged
@@ -436,7 +437,11 @@ $(function() {
 		}
 	}
 	JSfiles.loadLibraries();
+
+
 });
+
+
 
 //Minimal libraries
 JSfiles.later("{{ _filelatest('/lincko/wrapper/scripts/null.js') }}", 0); //This empty file helps to load the first 304

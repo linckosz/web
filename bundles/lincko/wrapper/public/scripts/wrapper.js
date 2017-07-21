@@ -26,6 +26,125 @@ $(window).on('blur', function(){
 // const fingerprint = wrapper_fp;
 var fingerprint = wrapper_fp;
 
+
+var wrapper_ajax_success = function(data,cb_success,ajax_objForm){
+	//Those 3 following lines are only for debug purpose
+	//var msg = JSON.stringify(data); //for test
+	//var msg = data; //for test
+	//var msg = JSON.parse(data.msg); //for test
+	//console.log(data);
+	if(typeof cb_success==="undefined" || cb_success===null){ cb_success = function(){}; }
+	if(typeof ajax_objForm==="undefined" || ajax_objForm===null || !ajax_objForm.is('form')){ ajax_objForm = null; }
+	//This is importat because sometime in msg we return an object with some information inside
+	var msg = data.msg;
+	if(typeof data.show == 'string'){
+		msg = data.show;
+	} else if($.type(msg) == 'object' && msg.msg){
+		msg = msg.msg;
+	} else if(typeof msg != 'string'){
+		msg = '';
+	}
+	
+	if(data.show && typeof base_show_error == 'function'){
+		base_show_error(msg, data.error);
+	}
+
+	if(wrapper_localstorage.logged && data.sha && wrapper_localstorage.sha!=data.sha){
+		//This helps to refresh the page with the new account merged
+		window.location.href = wrapper_link['root'];
+	}
+
+	if(false){
+	//if(!wrapper_localstorage.logged && typeof data.workspace != 'undefined' && data.workspace != wrapper_localstorage.workspace){
+		//Switch to another workspace if different than the current one
+		var workspace = "";
+		if(data.workspace){
+			workspace = data.workspace+".";
+		}
+		wrapper_link['root'] = top.location.protocol+'//'+document.linckoFront+document.linckoBack+workspace+document.domain+'/';
+		//Stop database webworker
+		if(webworker){
+			webworker.terminate();
+		}
+		wrapper_localstorage.encrypt('lastvisit', 0, false, true);
+		wrapper_localstorage.cleanLocalUser();
+		wrapper_localstorage.cleanLocalWorkspace();
+
+		setTimeout(function(){
+			window.location.href = top.location.protocol+'//'+document.linckoFront+document.linckoBack+workspace+document.domain;
+		}, 2000);
+	}
+
+	if(typeof data.refresh != 'undefined' && data.refresh){
+		//This helps to refresh the page with the new account merged
+		Lincko.storage.getLatest(true, function(){
+			window.location.href = wrapper_link['root'];
+		});
+	}
+
+	if(typeof isOffline_update == 'function'){
+		isOffline_update(false);
+	}
+
+	if(data.error){
+		//JSerror.sendError(JSON.stringify(data, null, 4), '/wrapper.js/wrapper_ajax().success()', 0);
+		console.log(data);
+	}
+
+	if(data.shangzai){
+		wrapper_shangzai = data.shangzai;
+		wrapper_localstorage.encrypt('shangzai', data.shangzai, false, true);
+		wrapper_set_shangzai = false;
+	}
+
+	//Exit if we are signout
+	if(data.signout && !wrapper_signing_out && wrapper_localstorage.logged){
+		wrapper_signing_out = true; //Avoid a loop
+		if(data.show && typeof base_show_error == 'function'){
+			base_show_error(Lincko.Translation.get('app', 33, 'js')); //You are not allowed to access this workspace. (keep it blue to avoid it looking like a bug message)
+		}
+		setTimeout(function(){
+			wrapper_sendAction('', 'post','user/signout', null, null, wrapper_signout_cb_begin, wrapper_signout_cb_complete);
+		}, 200);
+	}
+
+	//Get back the form object if it was sent from a form
+	wrapper_objForm = ajax_objForm;
+
+	//Force to update elements if the function is available
+	if(typeof storage_cb_success == 'function'){
+		storage_cb_success(msg, data.error, data.status, data.msg);
+	}
+
+	// Below is the production information with "dataType: 'json'"
+	cb_success(msg, data.error, data.status, data.msg);
+
+	//If the language changed, we force to refresh the page
+	if(typeof data.language != 'undefined'){
+		setTimeout(function(language){
+			if(typeof app_language_short != 'undefined' && typeof language != 'undefined' && app_language_short != language){
+				//window.location.href = wrapper_link['root']; //toto => disable for debugging purpose
+			}
+		}, 500, data.language);
+	}
+
+	if(typeof data.version == 'string'){
+		if(wrapper_version && data.version){
+			if(wrapper_version != data.version){ //new version available
+				wrapper_version_new = true;
+				if(wrapper_version_idle){
+					wrapper_localstorage.encrypt('lastvisit', 0, false, true);
+					wrapper_localstorage.cleanLocalUser();
+					wrapper_localstorage.cleanLocalWorkspace();
+					window.location.href = wrapper_link['root'];
+				}
+			}
+		} else {
+			wrapper_version = data.version;
+		}
+	}
+}
+
 var wrapper_signout_cb_begin = function(){
 	$(document.body).css('cursor', 'progress');
 }
@@ -115,121 +234,7 @@ var wrapper_ajax = function(param, method, action, cb_success, cb_error, cb_begi
 		},
 		
 		success: function(data){
-			//Those 3 following lines are only for debug purpose
-			//var msg = JSON.stringify(data); //for test
-			//var msg = data; //for test
-			//var msg = JSON.parse(data.msg); //for test
-			//console.log(data);
-
-			//This is importat because sometime in msg we return an object with some information inside
-			var msg = data.msg;
-			if(typeof data.show == 'string'){
-				msg = data.show;
-			} else if($.type(msg) == 'object' && msg.msg){
-				msg = msg.msg;
-			} else if(typeof msg != 'string'){
-				msg = '';
-			}
-			
-			if(data.show && typeof base_show_error == 'function'){
-				base_show_error(msg, data.error);
-			}
-
-			if(wrapper_localstorage.logged && data.sha && wrapper_localstorage.sha!=data.sha){
-				//This helps to refresh the page with the new account merged
-				window.location.href = wrapper_link['root'];
-			}
-
-			if(false){
-			//if(!wrapper_localstorage.logged && typeof data.workspace != 'undefined' && data.workspace != wrapper_localstorage.workspace){
-				//Switch to another workspace if different than the current one
-				var workspace = "";
-				if(data.workspace){
-					workspace = data.workspace+".";
-				}
-				wrapper_link['root'] = top.location.protocol+'//'+document.linckoFront+document.linckoBack+workspace+document.domain+'/';
-				//Stop database webworker
-				if(webworker){
-					webworker.terminate();
-				}
-				wrapper_localstorage.encrypt('lastvisit', 0, false, true);
-				wrapper_localstorage.cleanLocalUser();
-				wrapper_localstorage.cleanLocalWorkspace();
-
-				setTimeout(function(){
-					window.location.href = top.location.protocol+'//'+document.linckoFront+document.linckoBack+workspace+document.domain;
-				}, 2000);
-			}
-
-			if(typeof data.refresh != 'undefined' && data.refresh){
-				//This helps to refresh the page with the new account merged
-				Lincko.storage.getLatest(true, function(){
-					window.location.href = wrapper_link['root'];
-				});
-			}
-
-			if(typeof isOffline_update == 'function'){
-				isOffline_update(false);
-			}
-
-			if(data.error){
-				//JSerror.sendError(JSON.stringify(data, null, 4), '/wrapper.js/wrapper_ajax().success()', 0);
-				console.log(data);
-			}
-
-			if(data.shangzai){
-				wrapper_shangzai = data.shangzai;
-				wrapper_localstorage.encrypt('shangzai', data.shangzai, false, true);
-				wrapper_set_shangzai = false;
-			}
-
-			//Exit if we are signout
-			if(data.signout && !wrapper_signing_out && wrapper_localstorage.logged){
-				wrapper_signing_out = true; //Avoid a loop
-				if(data.show && typeof base_show_error == 'function'){
-					base_show_error(Lincko.Translation.get('app', 33, 'js')); //You are not allowed to access this workspace. (keep it blue to avoid it looking like a bug message)
-				}
-				setTimeout(function(){
-					wrapper_sendAction('', 'post','user/signout', null, null, wrapper_signout_cb_begin, wrapper_signout_cb_complete);
-				}, 200);
-			}
-
-			//Get back the form object if it was sent from a form
-			wrapper_objForm = ajax_objForm;
-
-			//Force to update elements if the function is available
-			if(typeof storage_cb_success == 'function'){
-				storage_cb_success(msg, data.error, data.status, data.msg);
-			}
-
-			// Below is the production information with "dataType: 'json'"
-			cb_success(msg, data.error, data.status, data.msg);
-
-			//If the language changed, we force to refresh the page
-			if(typeof data.language != 'undefined'){
-				setTimeout(function(language){
-					if(typeof app_language_short != 'undefined' && typeof language != 'undefined' && app_language_short != language){
-						//window.location.href = wrapper_link['root']; //toto => disable for debugging purpose
-					}
-				}, 500, data.language);
-			}
-
-			if(typeof data.version == 'string'){
-				if(wrapper_version && data.version){
-					if(wrapper_version != data.version){ //new version available
-						wrapper_version_new = true;
-						if(wrapper_version_idle){
-							wrapper_localstorage.encrypt('lastvisit', 0, false, true);
-							wrapper_localstorage.cleanLocalUser();
-							wrapper_localstorage.cleanLocalWorkspace();
-							window.location.href = wrapper_link['root'];
-						}
-					}
-				} else {
-					wrapper_version = data.version;
-				}
-			}
-
+			wrapper_ajax_success(data,cb_success,ajax_objForm);
 		},
 		
 		error: function(xhr_err, ajaxOptions, thrownError){
