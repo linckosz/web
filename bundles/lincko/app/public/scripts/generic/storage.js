@@ -43,9 +43,7 @@ var storage_cb_success = function(msg, err, status, data){
 		Lincko.storage.setLastVisit(data.lastvisit);
 	}
 	
-
-	if(info == "getlatest")
-	{
+	if(info == "getlatest"){
 		Lincko.storage.getLatest();
 	}
 };

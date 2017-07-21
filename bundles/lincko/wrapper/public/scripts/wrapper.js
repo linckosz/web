@@ -396,7 +396,6 @@ function wrapper_sendAction(param, method, action, cb_success, cb_error, cb_begi
 	//Add lastvisit to help saving some unecessary codes
 	if(typeof param['lastvisit'] == 'undefined' && typeof Lincko.storage == 'object' && typeof Lincko.storage.getLastVisit == 'function'){
 		param['lastvisit'] = Lincko.storage.getLastVisit();
-		Lincko.storage.getting_latest = true;
 	}
 	
 	//Convert the array to the same format as jQuery does with forms
