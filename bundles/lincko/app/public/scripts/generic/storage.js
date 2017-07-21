@@ -14,14 +14,14 @@ var storage_cb_success = function(msg, err, status, data){
 	var lastvisit_prev = Lincko.storage.getLastVisit();
 	storage_items_updated = {};
 	var allow_set_lastvisit = true;
-	if($.type(data) === 'object' && $.type(data.info) === 'string'){
+	if($.type(data) == 'object' && $.type(data.info) == 'string'){
 		info = data.info;
 	}
 
 	//Need to keep ".iud" to insure we receive the same user data
-	if($.type(data) === 'object' && $.type(data.partial) === 'object' && $.type(data.partial[wrapper_localstorage.uid]) === 'object' && !$.isEmptyObject(data.partial[wrapper_localstorage.uid])){
+	if($.type(data) == 'object' && $.type(data.partial) == 'object' && $.type(data.partial[wrapper_localstorage.uid]) == 'object' && !$.isEmptyObject(data.partial[wrapper_localstorage.uid])){
 		if(Lincko.storage.update(data.partial[wrapper_localstorage.uid], info)){
-			if(info === 'reset'){
+			if(info == 'reset'){
 				Lincko.storage.schema(data.partial[wrapper_localstorage.uid]);
 				wrapper_localstorage.cleanLocalWorkspace();
 				schema = false;
@@ -35,16 +35,12 @@ var storage_cb_success = function(msg, err, status, data){
 	app_models_history.notification(storage_items_updated, lastvisit_prev);
 	storage_items_updated = {};
 
-	if(schema && $.type(data) === 'object' && $.type(data.schema) === 'object' && $.type(data.schema[wrapper_localstorage.uid]) === 'object' && !$.isEmptyObject(data.schema[wrapper_localstorage.uid])){
+	if(schema && $.type(data) == 'object' && $.type(data.schema) == 'object' && $.type(data.schema[wrapper_localstorage.uid]) == 'object' && !$.isEmptyObject(data.schema[wrapper_localstorage.uid])){
 		Lincko.storage.schema(data.schema[wrapper_localstorage.uid]);
 	}
 	//Update the last visit day only if we are sure the update is finish
-	if(allow_set_lastvisit && $.type(data) === 'object' && typeof data.lastvisit === 'number'){
+	if(allow_set_lastvisit && $.type(data) == 'object' && typeof data.lastvisit == 'number'){
 		Lincko.storage.setLastVisit(data.lastvisit);
-	}
-
-	if(!storage_first_request && data && data.partial && data.partial.uncomplete){
-		Lincko.storage.getSchema();
 	}
 	
 };
