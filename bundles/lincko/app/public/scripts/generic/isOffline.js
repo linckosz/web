@@ -13,7 +13,8 @@ var isOffline_update = function(DC){
 			isOffline = false;
 			if($('#isOffline_popup').length){ $('#isOffline_popup').recursiveRemove(); }
 			base_show_error( Lincko.Translation.get('app', 1801, 'html')); //You are back online.
-			Lincko.storage.getLatest(true); //redownload all data
+			//Lincko.storage.getLatest(true); //redownload all data
+			Lincko.storage.getLatest();
 		}
 	}
 	else if(DC && !isOffline){ //disconnected, but offline is still set to false
