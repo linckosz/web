@@ -104,7 +104,7 @@ var wrapper_ajax_success = function(data,cb_success,ajax_objForm){
 			base_show_error(Lincko.Translation.get('app', 33, 'js')); //You are not allowed to access this workspace. (keep it blue to avoid it looking like a bug message)
 		}
 		setTimeout(function(){
-			wrapper_sendAction('', 'post','user/signout', null, null, wrapper_signout_cb_begin, wrapper_signout_cb_complete);
+			wrapper_sendAction('', 'post', 'user/signout', null, null, wrapper_signout_cb_begin, wrapper_signout_cb_complete);
 		}, 200);
 	}
 
@@ -274,10 +274,6 @@ var wrapper_ajax = function(param, method, action, cb_success, cb_error, cb_begi
 			this.show_error = false;
 		},
 		complete: function(){
-			//Reanble getting latest
-			if(typeof Lincko.storage != 'undefined' && typeof Lincko.storage.getting_latest != 'undefined'){
-				Lincko.storage.getting_latest = false;
-			}
 			//Get back the form object if it was sent from a form
 			wrapper_objForm = ajax_objForm;
 			wrapper_xhr = false;

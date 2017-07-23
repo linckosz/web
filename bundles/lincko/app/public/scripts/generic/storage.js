@@ -308,35 +308,53 @@ Lincko.storage.display = function(prepare, force){
 var storage_ajax_latest = {};
 Lincko.storage.getting_latest = false;
 Lincko.storage.getting_timer = null;
+Lincko.storage.getting_waiting = false;
+Lincko.storage.getting_timeout = false;
 Lincko.storage.getLatest = function(force, callback){
-	var lastvisit = Lincko.storage.getLastVisit();
-	if(typeof force == 'boolean' && force == true){
-		lastvisit = 0; //Force to get the whole database
-	} else {
-		force = false;
+	if(typeof force != 'boolean'){ force = false; }
+	var timer = 30000;
+	if(force || storage_first_request){
+		timer = 0;
 	}
-	if(typeof callback != 'function'){
-		callback = null;
+	if(force){
+		clearTimeout(Lincko.storage.getting_timeout);
+		Lincko.storage.getting_waiting = false;
+	} else if(Lincko.storage.getting_waiting){
+		return false;
 	}
-	var arr = {
-		'lastvisit': lastvisit,
-		'show_error': false,
-	};
-	//If a previous action has been launched, we don't start it immediatly
-	//This helps to avoid too many backend runs
-	//http://www.ajax-tutor.com/130/handle-response/
-	if(!force && Lincko.storage.getting_latest && callback==null){
-		return true; //Don't launch anymore latest if in a middle of latest request by update or creation
-	} else if(storage_ajax_latest[lastvisit] && storage_ajax_latest[lastvisit]['readyState']!=4 && !force && callback==null){
-		return true; //Don't launch anymore latest if one is already running
-	} else {
-		for(var i in storage_ajax_latest){
-			if('abort' in storage_ajax_latest[i]){
-				storage_ajax_latest[i].abort();
-			}
-			storage_ajax_latest[i] = null;
-			delete storage_ajax_latest[i];
+	Lincko.storage.getting_waiting = true;
+	Lincko.storage.getting_timeout = setTimeout(function(force, callback){
+		Lincko.storage.getting_waiting = false;
+		var lastvisit = Lincko.storage.getLastVisit();
+		if(typeof force == 'boolean' && force == true){
+			lastvisit = 0; //Force to get the whole database
+		} else {
+			force = false;
 		}
+		if(typeof callback != 'function'){
+			callback = null;
+		}
+
+		if(!force && Lincko.storage.getting_latest && callback==null){
+			return true; //Don't launch anymore latest if in a middle of latest request by update or creation
+		} else if(storage_ajax_latest[lastvisit] && storage_ajax_latest[lastvisit]['readyState']!=4 && !force && callback==null){
+			return true; //Don't launch anymore latest if one is already running
+		}
+		
+		if(force){
+			for(var i in storage_ajax_latest){
+				if('abort' in storage_ajax_latest[i]){
+					storage_ajax_latest[i].abort();
+				}
+				storage_ajax_latest[i] = null;
+				delete storage_ajax_latest[i];
+			}
+		}
+		var arr = {
+			'lastvisit': lastvisit,
+			'show_error': false,
+		};
+
 		clearTimeout(Lincko.storage.getting_timer);
 		//Make sure we clean it every minute to avoid having the getLatest blocked while the mobile phone is idle
 		Lincko.storage.getting_timer = setTimeout(function(){
@@ -370,9 +388,14 @@ Lincko.storage.getLatest = function(force, callback){
 				Lincko.storage.getting_latest = true;
 				storage_ajax_latest[lastvisit] = jqXHR;
 			},
-			callback
+			function(){
+				Lincko.storage.getting_latest = false;
+				if(typeof callback == 'function'){
+					callback();
+				}
+			}
 		);
-	}
+	}, timer, force, callback);
 };
 
 //Function that get history
