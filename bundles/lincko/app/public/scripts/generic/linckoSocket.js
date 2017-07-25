@@ -1,6 +1,6 @@
 var linckoSocket = function(){
 	this.socket = null;
-	this.server_url = (location.protocol == 'https:' ? 'wss:' : 'ws:' + '//wss.' + document.domainRoot + ':7443');
+	this.server_url = ((location.protocol == 'https:' ? 'wss:' : 'ws:') + '//wss.' + document.domainRoot + ':7443');
 }
 
 linckoSocket.prototype.connect = function(){
