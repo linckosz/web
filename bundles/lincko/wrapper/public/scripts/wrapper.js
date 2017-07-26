@@ -512,8 +512,9 @@ wrapper_localstorage.decrypt = function (link){
 			//return JSON.parse(utf8_decode(data)); //Best
 			return JSON.parse(data); //Best
 		}
-	} catch(e) {}
-	amplify.store(this.prefix+link, null);
+	} catch(e) {
+		amplify.store(this.prefix+link, null);
+	}
 	return false;
 };
 
