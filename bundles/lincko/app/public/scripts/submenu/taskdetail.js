@@ -2847,7 +2847,7 @@ var taskdetail_itemManualUpdate = function(param_sendAction, route){
 			Lincko.storage.data[type][id]['-comment'] = comment;
 			var param_prepare = {};
 			param_prepare[type+'_'+id] = { '-comment': true };
-			app_application_lincko.prepare(type+'_'+id, true, param_prepare);
+			app_application_lincko.prepare(type+'_'+id, false, param_prepare);
 		}
 	}
 
