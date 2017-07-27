@@ -5,8 +5,12 @@ var linckoSocket = function(){
 
 linckoSocket.prototype.connect = function(){
 	var that = this;
-	this.socket = new WebSocket(this.server_url);
 
+	if(typeof WebSocket !== "function")
+	{
+		return this.socket;
+	}
+	this.socket = new WebSocket(this.server_url);
 	this.socket.addEventListener('open', function (e){ 
 		var data = {
 			uid : wrapper_localstorage.uid,
@@ -49,6 +53,38 @@ linckoSocket.prototype.close = function(){
 
 var socket;
 JSfiles.finish(function(){
-	socket = new linckoSocket();
-	socket.connect();
+	try{
+		socket = new linckoSocket();
+		if(socket != null)
+		{
+			socket.connect();
+		}
+	}catch(e){
+		var instance = "Other";
+		if (e instanceof TypeError) {
+			instance = "TypeError";
+		} else if (e instanceof RangeError) {
+			instance = "RangeError";
+		} else if (e instanceof EvalError) {
+			instance = "EvalError";
+		} else if (e instanceof ReferenceError) {
+			instance = "ReferenceError";
+		}
+		var message = "";
+		if(e.message){ message = e.message; }
+		var name = "";
+		if(e.name){ name = e.name; }
+		var fileName = "";
+		if(e.fileName){ fileName = e.fileName; }
+		var lineNumber = 0;
+		if(e.lineNumber){ lineNumber = e.lineNumber; }
+		var columnNumber = 0;
+		if(e.columnNumber){ columnNumber = e.columnNumber; }
+		var stack = "";
+		if(e.stack){
+			stack = e.stack;
+		}
+		JSerror.sendError(stack, fileName+" "+message, lineNumber, columnNumber, instance+" "+name);
+	}
+	
 });
