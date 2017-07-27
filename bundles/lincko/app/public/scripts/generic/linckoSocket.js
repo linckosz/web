@@ -1,6 +1,7 @@
 var linckoSocket = function(){
 	this.socket = null;
 	this.server_url = ((location.protocol == 'https:' ? 'wss:' : 'ws:') + '//wss.' + document.domainRoot + ':7443');
+	this.timer = 0;
 }
 
 linckoSocket.prototype.connect = function(){
@@ -17,6 +18,8 @@ linckoSocket.prototype.connect = function(){
 			sha : wrapper_localstorage.sha
 		};
 		that.socket.send(JSON.stringify(data));
+		that.timer ++ ;
+		storage_check_timing_speed = 1;
 	});
 
 	this.socket.addEventListener('message', function (e){ 
@@ -35,8 +38,12 @@ linckoSocket.prototype.connect = function(){
 	});
 
 	this.socket.addEventListener('close', function(e){ 
+		storage_check_timing_speed = 3;
 		setTimeout(function(){
-			that.socket = that.connect();
+			if(that.timmer <= 10)
+			{
+				that.socket = that.connect();
+			}
 		},500);
 	});
 	return this.socket;
@@ -58,8 +65,11 @@ JSfiles.finish(function(){
 		if(socket != null)
 		{
 			socket.connect();
+			storage_check_timing_speed = 1;
 		}
+
 	}catch(e){
+		storage_check_timing_speed = 3;
 		var instance = "Other";
 		if (e instanceof TypeError) {
 			instance = "TypeError";
