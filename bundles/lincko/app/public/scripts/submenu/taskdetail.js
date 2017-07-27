@@ -2405,6 +2405,8 @@ Submenu.prototype.Add_taskdetail = function() {
 			'submenu_taskdetail_link_'+that.md5id,
 			[that.param.type+'_'+item['_id'], 'upload', 'show_queued_links'/*used by itemSelector*/],
 			function(){
+				var that = this.action_param.subm;
+				var taskid = this.action_param.id_item;
 				var elem = $('#'+this.id);
 				var item = Lincko.storage.get(that.param.type, taskid);
 
@@ -2427,20 +2429,22 @@ Submenu.prototype.Add_taskdetail = function() {
 				if(this.updated && this.updated.upload){
 
 					//check card with temp_ids, and if file finished uploading, then update the parent item accordingly
-					var elem_temp_id = elem.find('[temp_id]');
-					$.each(elem_temp_id, function(i, elem){
-						var temp_id = $(elem).attr('temp_id');
-						var item_file = Lincko.storage.list('files',1,{temp_id: temp_id})[0];
-						if(item_file){
-							if(!Lincko.storage.data[that.param.type][taskid]._files){
-								Lincko.storage.data[that.param.type][taskid]._files = {};
-							}
-							if(Lincko.storage.data[that.param.type][taskid]._files[item_file._id]){return;}
+					if(Lincko.storage.data[that.param.type][taskid]){ //not for taskid == 'new'
+						var elem_temp_id = elem.find('[temp_id]');
+						$.each(elem_temp_id, function(i, elem){
+							var temp_id = $(elem).attr('temp_id');
+							var item_file = Lincko.storage.list('files',1,{temp_id: temp_id})[0];
+							if(item_file){
+								if(!Lincko.storage.data[that.param.type][taskid]._files){
+									Lincko.storage.data[that.param.type][taskid]._files = {};
+								}
+								if(Lincko.storage.data[that.param.type][taskid]._files[item_file._id]){return;}
 
-							Lincko.storage.data[that.param.type][taskid]._files[item_file._id] = true;
-							item = Lincko.storage.get(that.param.type, taskid);
-						}
-					});
+								Lincko.storage.data[that.param.type][taskid]._files[item_file._id] = true;
+								item = Lincko.storage.get(that.param.type, taskid);
+							}
+						});
+					}
 
 
 					$.each(app_upload_files.lincko_files, function(i, lincko_file){
@@ -2526,6 +2530,10 @@ Submenu.prototype.Add_taskdetail = function() {
 				}		
 
 
+			}, 
+			{	//action_param
+				subm: that,
+				id_item: taskid,
 			}
 		);
 	}
