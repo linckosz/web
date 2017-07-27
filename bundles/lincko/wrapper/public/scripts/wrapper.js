@@ -447,6 +447,9 @@ wrapper_localstorage.encrypt_start = function(link, data){
 };
 
 wrapper_localstorage.encrypt_ok = true;
+if(isIOS){
+	wrapper_localstorage.encrypt_ok = false;
+}
 wrapper_localstorage.encrypt = function (link, data, tryit, now){
 	if(!link || !wrapper_localstorage.encrypt_ok){
 		return false;
