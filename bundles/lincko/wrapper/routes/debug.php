@@ -22,7 +22,7 @@ $app->group('/debug', function () use ($app) {
 		
 		$app->get('/twig', function () use($app) {
 			$app->render('/bundles/lincko/wrapper/templates/debug.twig', array(
-				'data' => 'a data',
+				'data' => time(),
 			));
 		});
 	}

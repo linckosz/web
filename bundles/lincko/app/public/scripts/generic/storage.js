@@ -1999,6 +1999,7 @@ Lincko.storage.cache = {
 							if(this.exclude_projects[cat] && this.exclude_projects[cat][id]){
 								continue;
 							}
+							/*
 							//Creation notification
 							var item = Lincko.storage.get(cat, id);
 							if(
@@ -2020,6 +2021,7 @@ Lincko.storage.cache = {
 									this.notify[item_cat][item_id]++;
 								}
 							}
+							*/
 							//Record statistics tasks/notes/files
 							if(
 								!Lincko.storage.data[cat][id]['deleted_at']
@@ -2506,6 +2508,7 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 			}
 		}
 
+		/*
 		//We add creation here, it save data stored and calculation on backend
 		for(var cat in Lincko.storage.data){
 			if(only_items && typeof only_items[cat]=='undefined'){
@@ -2622,6 +2625,7 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 				}
 			}
 		}
+		*/
 	} else { //elements
 		for(var cat in Lincko.storage.data){
 			if(only_items && typeof only_items[cat]=='undefined'){
