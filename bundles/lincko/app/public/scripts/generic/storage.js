@@ -607,6 +607,9 @@ Lincko.storage.update = function(partial, info){
 					if(typeof partial[i][j]['_parent'] == 'object'){
 						var suffix = partial[i][j]['_parent'][0]+'-'+partial[i][j]['_parent'][1];
 						storage_local_storage.prepare(i+"#"+suffix);
+						//Add parent for the sync because we won't update it from backend
+						//app_models_history.refresh(partial[i][j]['_parent'][0], partial[i][j]['_parent'][1]); //It helps to force updating any history info tab in the application
+						//app_application_lincko.prepare(partial[i][j]['_parent'][0]+'_'+partial[i][j]['_parent'][1]);
 					}
 				}
 				update = true;
@@ -2508,9 +2511,12 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 			}
 		}
 
-		/*
 		//We add creation here, it save data stored and calculation on backend
 		for(var cat in Lincko.storage.data){
+			//Only build things related to Chats
+			if(cat!='messages' && cat!='files' && cat!='chats'){
+				continue;
+			}
 			if(only_items && typeof only_items[cat]=='undefined'){
 				continue;
 			}
@@ -2541,6 +2547,9 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 						parent = history_items[cat][id]['_parent'];
 					}
 
+					if(cat!='chats' && parent[0]!='chats'){
+						continue;
+					}
 					
 					item = {
 						att: "created_at",
@@ -2625,7 +2634,7 @@ Lincko.storage.list_multi = function(type, category, page_end, conditions, paren
 				}
 			}
 		}
-		*/
+		
 	} else { //elements
 		for(var cat in Lincko.storage.data){
 			if(only_items && typeof only_items[cat]=='undefined'){

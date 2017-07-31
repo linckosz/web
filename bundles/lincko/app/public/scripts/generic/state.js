@@ -284,7 +284,7 @@ var app_generic_state = {
 				hash = [];
 			}
 		} else {
-			var hash = location.hash.substr(1).split(/-(.*)/, 2);;
+			var hash = document.location.hash.substr(1).split(/-(.*)/, 2);
 		}
 		
 		if(hash.length==2){
