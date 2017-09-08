@@ -161,4 +161,8 @@ alphaScroll.prototype.scrollToVal = function(val, show){
 }
 
 
-$('body').on('mouseup mouseleave touchend', alphaScroll, alphaScroll.event_handlers.end);
+$('body').on('mouseup mouseleave touchend', function(event){
+	if(typeof alphaScroll != 'undefined' && typeof alphaScroll.event_handlers == 'object'){
+		alphaScroll.event_handlers.end(event);
+	}
+});

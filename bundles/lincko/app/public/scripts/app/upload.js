@@ -531,7 +531,7 @@ $(function () {
 
 		//data => File object
 		destroy: function (e, data) {
-			if (typeof e !== 'undefined' && e.isDefaultPrevented()) { return false; }
+			if (typeof e != 'undefined' && e && e.isDefaultPrevented()) { return false; }
 			var that = $('#app_upload_fileupload').fileupload('option');
 			app_upload_files.lincko_files[data.lincko_files_index].abort();
 			app_upload_files.lincko_files[data.lincko_files_index].lincko_status = 'deleted';
@@ -546,7 +546,7 @@ $(function () {
 
 
 		_startHandler: function (e) {
-			if(typeof e !== 'undefined'){ e.preventDefault(); }
+			if(typeof e !== 'undefined' && e){ e.preventDefault(); }
 			var that = this;
 			$.each(app_upload_files.lincko_files, function(index, data){
 				if($.type(data) === 'object'){

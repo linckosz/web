@@ -529,7 +529,7 @@ wrapper_localstorage.emptyStorage = function(){
 		result = true;
 		amplify.store(storeKey, null);
 	});
-	if(localStorage){
+	if(typeof localStorage == 'object'){
 		for(var storeKey in localStorage){
 			localStorage.removeItem(storeKey);
 		}
@@ -673,28 +673,35 @@ function wrapper_IScroll(){
 var wrapper_IScroll_refresh = function(){
 	var Elem = false;
 	var Child = null;
+	var destroy = false;
 	for(var i in myIScrollList){
 		Elem = $('#'+i);
-		Child = Elem.children().first();
+		destroy = true;
 		if(Elem.length>0){
 			if(Elem.hasClass('overthrow')){
 				if('refresh' in myIScrollList[i]){
 					myIScrollList[i].refresh();
+					destroy = false;
 					continue;
 				}
 			} else {
 				if('destroy' in myIScrollList[i]){
+					Child = Elem.children().first();
 					if(Child.length>0 && Child.hasClass('iscroll_sub_div')){
 						Child.addClass('iscroll_destroyed');
 					}
 				}
-				myIScrollList[i].destroy();
 			}
 		}
-		myIScrollList[i] = null;
-		delete myIScrollList[i];
+		if(destroy){
+			if('destroy' in myIScrollList[i]){
+				myIScrollList[i].destroy();
+			}
+			myIScrollList[i] = null;
+			delete myIScrollList[i];
+		}
 	}
-}
+};
 
 var wrapper_timeout_timer = 200;
 var wrapper_IScroll_timer;
@@ -789,3 +796,6 @@ JSfiles.finish(function(){
 		wrapper_performance.init();
 	}, 1000);
 });
+
+//WARNING [toto]: I am disabling amplify to work only with Front NoSQL
+wrapper_localstorage.emptyStorage();

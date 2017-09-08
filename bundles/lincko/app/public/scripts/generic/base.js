@@ -62,7 +62,7 @@ function base_cloneCanvas(oldCanvas) {
 
 var base_error_timing;
 var base_show_error_running = false;
-function base_show_error(msg, error, time, escape_html) {
+var base_show_error = function(msg, error, time, escape_html) {
 	if(typeof error == 'undefined'){ error = false; }
 	if(typeof time == 'undefined'){ time = 4000; }
 	if(typeof escape_html == 'undefined'){ escape_html = true; }
@@ -92,9 +92,9 @@ function base_show_error(msg, error, time, escape_html) {
 		JSerror.sendError(msg, 'base_show_error', 0);
 	}
 	base_error_timing = setTimeout(function(){ base_hide_error(); }, time);
-}
+};
 
-function base_hide_error(now) {
+var base_hide_error = function(now) {
 	if(typeof now == 'undefined'){ now = false; }
 	$('#base_error').velocity("stop");
 	base_show_error_running = false;
@@ -112,7 +112,7 @@ function base_hide_error(now) {
 			},
 		});
 	}
-}
+};
 
 $('#base_error').click(function(){
 	base_hide_error();
@@ -632,6 +632,13 @@ JSfiles.finish(function(){
 					// success: function(res){},
 					// cancel: function(res){},
 					// fail: function(res){},
+					/*
+					//Note: temporary to help generate any other customized links liek for the pitch enhancer
+					title: 'Pitch Enhancer',
+					desc: '跟观众最有效的互动方式！',
+					link: 'https://pitch.lincko.com',
+					imgUrl: 'https://pitch.lincko.com/lincko/wrapper/images/wechat/quiz.png',
+					*/
 				}
 				wx.onMenuShareAppMessage(base_wechat_shareData);
 				wx.onMenuShareTimeline(base_wechat_shareData);

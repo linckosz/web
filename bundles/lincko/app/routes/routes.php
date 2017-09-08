@@ -83,9 +83,11 @@ $app->post('/nosql/data', function () use ($app) {
 				$data->sha = $sha;
 				$data->workspace = $app->lincko->data['workspace'];
 			}
-			$data->lastvisit = $post['lastvisit'];
-			$data->data = gzcompress(json_encode($post['data']));
-			$data->save();
+			if($post['lastvisit'] > $data->lastvisit){
+				$data->lastvisit = $post['lastvisit'];
+				$data->data = gzcompress(json_encode($post['data']));
+				$data->save();
+			}
 		}
 	}
 	echo '{nosql: "saved", }';

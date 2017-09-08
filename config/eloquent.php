@@ -30,5 +30,3 @@ foreach($app->lincko->databases as $key => $database) {
 
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
-
-$app->lincko->data['capsule'] = $capsule;

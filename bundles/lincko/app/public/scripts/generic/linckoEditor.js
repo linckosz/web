@@ -24,7 +24,8 @@ function linckoEditor(elem, toolbarID, param){
 			removePlugins: 'floatingspace,maximize,resize,about',
 			sharedSpaces: {
 				top: toolbarID,
-			}
+			},
+			removeButtons: 'Cut,Copy,Paste,Undo,Redo,Anchor,Underline,Strike,Subscript,Superscript',
 		} );
 
 

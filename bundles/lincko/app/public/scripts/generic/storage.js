@@ -80,7 +80,7 @@ var storage_local_storage = {
 		storage_local_storage.timeout = null;
 	},
 	timer: function(){
-		if(storage_local_storage.timeout){
+		if(!wrapper_localstorage.encrypt_ok || storage_local_storage.timeout){
 			return false;
 		}
 		if(!isIOS){
@@ -284,9 +284,10 @@ Lincko.storage.iosHideNotif = {
 
 //Function update all objects displayed
 /* PRIVATE METHOD */
+var storage_run_hash = true;
 Lincko.storage.display = function(prepare, force){
-	if(typeof prepare != 'undefined'){ prepare  = false; }
-	if(typeof force != 'undefined'){ force  = false; }
+	if(typeof prepare == 'undefined'){ prepare  = false; }
+	if(typeof force == 'undefined'){ force  = false; }
 	if(typeof app_application_lincko != 'undefined'){
 		if(force){
 			app_application_lincko.prepare(prepare, true); //Update now
@@ -294,14 +295,16 @@ Lincko.storage.display = function(prepare, force){
 			app_application_lincko.prepare(prepare); //Wait for timer
 		}
 		if(!storage_first_request){
+		//if(force || !storage_first_request){ //It's risky because the user may open an outdated item, but the page opening is much more faster
 			setTimeout(function(){
 				wrapper_load_progress.move(100);
 			}, 100);
-			if(app_application_hashtag){
-				onboarding.forceOff = true;
-				onboarding.clear(false, false); //Just hide the onboarding process
-				document.location.hash = app_application_hashtag;
-			}
+		}
+		if(!storage_first_launch && storage_run_hash && app_application_hashtag){
+			storage_run_hash = false;
+			onboarding.forceOff = true;
+			onboarding.clear(false, false); //Just hide the onboarding process
+			document.location.hash = app_application_hashtag;
 		}
 	}
 };
@@ -999,6 +1002,7 @@ Lincko.storage.firstLatest = function(){
 			//If we cannot get data object, we force to download the whole object
 			Lincko.storage.setLastVisit(0);
 		}
+		Lincko.storage.saveNosql();
 	}
 };
 
@@ -2088,19 +2092,36 @@ Lincko.storage.cache = {
 	},
 };
 
+Lincko.storage.saveNosql_timer = false;
 Lincko.storage.saveNosql = function(){
+	clearTimeout(Lincko.storage.saveNosql_timer);
+	if(storage_first_request){
+		//We need to make sure we get the latest data before to update the cache
+		return false;
+	}
 	//If Desktop, always send out
 	//If mobile, make sure we are using wifi first
 	if(wrapper_user_info[1]!="Desktop" && (!wrapper_connection_type || wrapper_connection_type != 'wifi')){
+		Lincko.storage.saveNosql_timer = setTimeout(function(){
+			Lincko.storage.saveNosql();
+		}, 60000); //Try every minute
+		return false;
+	}
+	var last_visit = Lincko.storage.getLastVisit();
+	if(last_visit<=0){
+		Lincko.storage.saveNosql_timer = setTimeout(function(){
+			Lincko.storage.saveNosql();
+		}, 5000); //Try every 5s
 		return false;
 	}
 	var date_nosql = new wrapper_date(Lincko.storage.data_nosql);
 	var date_now = new wrapper_date();
+	//Skip if the same day
 	if ( date_nosql.getYear()+"-"+date_nosql.getMonth()+"-"+date_nosql.getDate() == date_now.getYear()+"-"+date_now.getMonth()+"-"+date_now.getDate() ){
-		return false;
+		//return false;
 	}
 	var param = {
-		lastvisit: Lincko.storage.getLastVisit(),
+		lastvisit: last_visit,
 		data: Lincko.storage.data,
 	};
 	$.ajax({
@@ -2118,11 +2139,11 @@ app_application_lincko.add(app_generic_cache_garbage, 'first_launch', function()
 	if(Lincko.storage.cache.init()){
 		app_application_garbage.remove(app_generic_cache_garbage);
 		setTimeout(function(){
-			Lincko.storage.saveNosql();
+			Lincko.storage.saveNosql_timer = Lincko.storage.saveNosql();
 		}, 2000);
 		setInterval(function(){
 			Lincko.storage.saveNosql();
-		}, 1000*3600*25); //Every 25H to insure to not match always the same schedule (in case on the road without wifi)
+		}, 1000*3600*5); //Every 5H to insure to not match always the same schedule (in case on the road without wifi)
 	}
 });
 

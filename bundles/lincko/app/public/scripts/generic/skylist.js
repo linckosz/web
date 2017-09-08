@@ -2954,25 +2954,27 @@ skylist.prototype.checkboxClick = function(event,elem_checkbox){
 	elem_task.toggleClass('skylist_card_opacity');
 	*/
 	var task = Lincko.storage.get('tasks', elem_task.data('item_id'));
-	var approved = task['approved'];
-	if(approved){
-		approved = false;
-	}
-	else{
-		approved = true;
-	}
+	if(task){
+		var approved = task['approved'];
+		if(approved){
+			approved = false;
+		}
+		else{
+			approved = true;
+		}
 
-	var param = {
-		"id": elem_task.data('item_id'),
-		"approved": approved,
-	};
-	skylist.sendAction.tasks(param, task, 'task/update');
-	//wrapper_sendAction( param, 'post', 'task/update');
-	Lincko.storage.data.tasks[task._id].approved = approved;
+		var param = {
+			"id": elem_task.data('item_id'),
+			"approved": approved,
+		};
+		skylist.sendAction.tasks(param, task, 'task/update');
+		//wrapper_sendAction( param, 'post', 'task/update');
+		Lincko.storage.data.tasks[task._id].approved = approved;
 
-	var updated = {};
-	updated['tasks_'+task._id] = { approved: true };
-	app_application_lincko.prepare('tasks_'+task._id, true, updated);
+		var updated = {};
+		updated['tasks_'+task._id] = { approved: true };
+		app_application_lincko.prepare('tasks_'+task._id, true, updated);
+	}
 }
 
 skylist.prototype.taskClick = function(event,task_elem){

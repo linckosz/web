@@ -82,7 +82,7 @@ function device_download(url, target, name){
 	else if(typeof winPhone != 'undefined' && typeof winPhone.download == 'function') {
 		winPhone.download(url);
 	}
-	else if(/firefox|opera/i.test(navigator.userAgent)){
+	else if(/MicroMessenger|firefox|opera/i.test(navigator.userAgent)){
 		window.open(url, target);
 	}
 	else {

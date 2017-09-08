@@ -1,72 +1,3 @@
-
-$(window).on('popstate', function(event){
-	//If it's triggered by hash only
-	if(document.location.hash){
-		app_generic_state.openItem();
-		return true;
-	}
-	if(app_generic_state.manual){ //Only trigger manual user action (button)
-		var action = false;
-		var change = false;
-		var data = history.state;
-		if(data){
-			for(var i=0; i<app_generic_state.priority.length; i++){
-				var key = app_generic_state.priority[i];
-				if(app_generic_state.type[key]=='boolean'){
-					if(typeof data[key] != 'undefined' && app_generic_state.current[key]!=app_generic_state.default[key]){
-						data[key] = app_generic_state.default[key];
-						change = app_generic_state.downKey(key, data[key]);
-						if(change){
-							if(typeof app_generic_state.action[key] == 'function'){
-								app_generic_state.action[key](data);
-							}
-							action = true;
-							break; //We only modify one element at a time
-						}
-						action = true;
-					}
-				} else if(app_generic_state.type[key]=='increase'){
-					if(typeof data[key] != 'undefined' && data[key]!=app_generic_state.current[key]){
-						if(data[key]<0){
-							data[key] = 0;
-						}
-						change = app_generic_state.downKey(key, data[key]);
-						if(change){
-							if(typeof app_generic_state.action[key] == 'function'){
-								app_generic_state.action[key](data);
-							}
-							action = true;
-							break; //We only modify one element at a time
-						}
-						action = true;
-					}
-				}
-			}
-		}
-		if(!action){
-			if(supportsTouch){
-				base_show_error(Lincko.Translation.get('app', 61, 'js')); //Tap again to exit the application
-				clearTimeout(app_generic_state.close_timer);
-				app_generic_state.close_timer = setTimeout(function(){
-					base_hide_error();
-					app_generic_state.reset();
-					app_generic_state.openItem();
-					window.history.pushState(app_generic_state.default, app_generic_state.getTitle(), "/");
-					app_generic_state.close_timer = false;
-				}, 3000);
-			} else {
-				app_generic_state.reset();
-				app_generic_state.openItem();
-				window.history.replaceState(app_generic_state.default, app_generic_state.getTitle(), "/");
-			}
-		} else if(!change){
-			app_generic_state.manual = true;
-			window.history.go(-1);
-		}
-	}
-	app_generic_state.manual = true;
-});
-
 var app_generic_state = {
 	
 	allowed: false, //At true pushState and replaceState are available
@@ -309,8 +240,8 @@ var app_generic_state = {
 	},
 	openItem: function(old, url){
 		if(!this.allowed){ return false; }
-		if(typeof url == 'undefined'){ url = false; }
 		if(typeof old == 'undefined'){ old = false; }
+		if(typeof url == 'undefined'){ url = false; }
 		if(old){
 			var item = this.quick_item;
 		} else { //get url hash
@@ -579,6 +510,75 @@ var app_generic_state = {
 	},
 
 };
+
+
+$(window).on('popstate', function(event){
+	//If it's triggered by hash only
+	if(document.location.hash){
+		app_generic_state.openItem(false, document.location.hash);
+		return true;
+	}
+	if(app_generic_state.manual){ //Only trigger manual user action (button)
+		var action = false;
+		var change = false;
+		var data = history.state;
+		if(data){
+			for(var i=0; i<app_generic_state.priority.length; i++){
+				var key = app_generic_state.priority[i];
+				if(app_generic_state.type[key]=='boolean'){
+					if(typeof data[key] != 'undefined' && app_generic_state.current[key]!=app_generic_state.default[key]){
+						data[key] = app_generic_state.default[key];
+						change = app_generic_state.downKey(key, data[key]);
+						if(change){
+							if(typeof app_generic_state.action[key] == 'function'){
+								app_generic_state.action[key](data);
+							}
+							action = true;
+							break; //We only modify one element at a time
+						}
+						action = true;
+					}
+				} else if(app_generic_state.type[key]=='increase'){
+					if(typeof data[key] != 'undefined' && data[key]!=app_generic_state.current[key]){
+						if(data[key]<0){
+							data[key] = 0;
+						}
+						change = app_generic_state.downKey(key, data[key]);
+						if(change){
+							if(typeof app_generic_state.action[key] == 'function'){
+								app_generic_state.action[key](data);
+							}
+							action = true;
+							break; //We only modify one element at a time
+						}
+						action = true;
+					}
+				}
+			}
+		}
+		if(!action){
+			if(supportsTouch){
+				base_show_error(Lincko.Translation.get('app', 61, 'js')); //Tap again to exit the application
+				clearTimeout(app_generic_state.close_timer);
+				app_generic_state.close_timer = setTimeout(function(){
+					base_hide_error();
+					app_generic_state.reset();
+					app_generic_state.openItem();
+					window.history.pushState(app_generic_state.default, app_generic_state.getTitle(), "/");
+					app_generic_state.close_timer = false;
+				}, 3000);
+			} else {
+				app_generic_state.reset();
+				app_generic_state.openItem();
+				window.history.replaceState(app_generic_state.default, app_generic_state.getTitle(), "/");
+			}
+		} else if(!change){
+			app_generic_state.manual = true;
+			window.history.go(-1);
+		}
+	}
+	app_generic_state.manual = true;
+});
 
 var app_generic_state_garbage = app_application_garbage.add();
 app_application_lincko.add(app_generic_state_garbage, 'first_launch', function() {

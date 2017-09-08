@@ -1,27 +1,40 @@
 <!doctype html>
 <html>
 <head>
+	<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
+	<title>Lincko - {{ _trans('app', 8000, 93, 'html') }}{# Download our App #}</title>
+	<link rel="shortcut icon" href="{{ _filelatest('/favicon.ico') }}" />
+	<link rel="icon" href="{{ _filelatest('/favicon.png') }}" type="image/png" />
+	<link rel="apple-touch-icon" href="{{ _filelatest('/favicon.png') }}" type="image/png" />
+	<meta name="description" content="{{ _trans('app', 8000, 93, 'html') }}{# Download our App #}" />
 
-<script>
-	setTimeout(function(){
-		location.href = "{{ appstore }}";
-	}, 500);
-	//Force to refresh the age after 10s
-	setTimeout(function(){
-		location.href = document.documentURI;
-	}, 10000);
+	<script>
+		setTimeout(function(){
+			location.href = "{{ appstore }}";
+		}, 500);
+		//Force to refresh the page after 10s
+		setTimeout(function(){
+			location.href = document.documentURI;
+		}, 10000);
 
-</script>
+		window.history.replaceState(null, null, "/appstore");
 
-<style type="text/css">
-	body {
-		margin: 0;
-		padding: 0;
-	}
-</style>
+	</script>
+
+	<style type="text/css">
+		body {
+			margin: 0;
+			padding: 0;
+		}
+	</style>
 
 </head>
 <body>
-
+	<div onclick='window.open("{{ appstore }}", "_blank");'>
+		{{ _trans('app', 8000, 93, 'html') }}{# Download our App #}<br /><br />
+		<img id="" width="256" height="256" src="{{ _filelatest('/favicon.png') }}" />
+	</div>
 </body>
 </html>

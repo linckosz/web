@@ -240,10 +240,12 @@ class ControllerWechat extends Controller {
 						$controller = new ControllerWrapper($data, 'post', false);
 						if($response = $controller->wrap_multi('integration/connect')){
 							if(!isset($response->status) || $response->status != 200){
+								\libs\Watch::php($response, '$response', __FILE__, __LINE__, true); //(toto tempo) Watch, because someone had issue to connect to wechat
 								$response = false;
 							} else {
 								$valid = false;
 								if(!isset($response->status) || $response->status != 200){
+									\libs\Watch::php($response, '$response', __FILE__, __LINE__, true); //(toto tempo) Watch, because someone had issue to connect to wechat
 									$response = false;
 								} else {
 									$valid = $this->setSession($response);
@@ -511,7 +513,7 @@ class ControllerWechat extends Controller {
 					
 				} else {
 					$wechat->sendMsg($open_id, $app->trans->getBRUT('wrapper', 5, 1, array(), $lang)); //Welcome to Lincko Use the Lincko button to login...
-					$wechat->sendMsg($open_id, 'Ldywd-FyXd--19nkgvmNMBM3ELB8z1YIuPiKUFgkP-w','image');
+					$wechat->sendMsg($open_id, '1N0RoXWr9998ejY1poKcky7ARGRoStsb-b3gbCbzJwEl7IWwjknaU6peeYrMPXLW','image');
 				}
 			} else if(strtolower($data->Event) == 'scan'){
 				$open_id = (string) $data->FromUserName;
