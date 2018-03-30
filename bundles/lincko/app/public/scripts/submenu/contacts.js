@@ -629,7 +629,8 @@ Submenu.prototype.Add_ContactContents = function(live) {
 					}
 				}
 				
-				if (that.param.selectOne) {
+				//We keep others if we hold CTRL
+				if (that.param.selectOne && wrapper_keydown!=17) {
 					$(this).siblings().find(".check").removeClass("checked");
 				}
 				

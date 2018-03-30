@@ -375,11 +375,15 @@ var burger_attach_clickHandler = {
 					id: lincko_id,
 					'users>in_charge': {},
 				};
-				if(data.preSelect){
-					param['users>in_charge'][data.val] = false;
-				}
-				else{
-					param['users>in_charge'][data.val] = true;
+				var in_charge_array = {};
+				if($.isNumeric(data.val)){
+					in_charge_array[data.val] = data.val;
+				} else if(typeof data.val == "object"){
+					for(var i in data.val){
+						in_charge_array[data.val[i]] = data.val[i];
+					}
+				} else {
+					return;
 				}
 
 				var lincko_item = Lincko.storage.get(lincko_type, lincko_id);
@@ -388,11 +392,23 @@ var burger_attach_clickHandler = {
 				if(lincko_item._users){
 					//unassign anyone that have been previously assigned
 					$.each(lincko_item._users, function(userid, obj){
-						if(data.val == userid){return;}
+						if(typeof in_charge_array[userid] != "undefined"){
+							return;
+						}
 						if(obj.in_charge){
-							param['users>in_charge'][userid] = false;
+							//If we hold down CTRL key we keep previous selected user 
+							param['users>in_charge'][userid] = wrapper_keydown==17;
 						}
 					});
+				}
+
+				for(var i in in_charge_array){
+					if(data.preSelect){
+						param['users>in_charge'][in_charge_array[i]] = false;
+					}
+					else{
+						param['users>in_charge'][in_charge_array[i]] = true;
+					}
 				}
 
 				skylist.sendAction.tasks(
@@ -408,14 +424,16 @@ var burger_attach_clickHandler = {
 							obj.in_charge = false;
 						});
 
-						if(!Lincko.storage.data[lincko_type][lincko_id]['_users'][data.val]){
-							Lincko.storage.data[lincko_type][lincko_id]['_users'][data.val] = {};
+						for(var i in in_charge_array){
+							if(!Lincko.storage.data[lincko_type][lincko_id]['_users'][in_charge_array[i]]){
+								Lincko.storage.data[lincko_type][lincko_id]['_users'][in_charge_array[i]] = {};
+							}
+							Lincko.storage.data[lincko_type][lincko_id]['_users'][in_charge_array[i]].in_charge = !data.preSelect;
 						}
-						Lincko.storage.data[lincko_type][lincko_id]['_users'][data.val].in_charge = !data.preSelect;
 						
 						var param_prepare = {};
 						param_prepare[lincko_type+'_'+lincko_id] = { '_users': true };
-						app_application_lincko.prepare(lincko_type+'_'+lincko_id, true, param_prepare); 
+						app_application_lincko.prepare(lincko_type+'_'+lincko_id, true, param_prepare);
 					}
 				);
 			}

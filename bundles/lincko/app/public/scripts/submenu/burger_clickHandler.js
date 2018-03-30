@@ -54,11 +54,13 @@ submenu_list['burger_clickHandler_inCharge'] = {
 				});
 			}
 			else if(IDList.length == 1){ //single select
-				var uid = IDList[0];
-				data_select.val = uid;
+				data_select.val = IDList[0];
 			}
 			else{ //multi select
-
+				data_select.val = {};
+				for(var i in IDList){
+					data_select.val[IDList[i]] = IDList[i];
+				}
 			}
 
 			if(subm.param && typeof subm.param.cb_select == 'function'){

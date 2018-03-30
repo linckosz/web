@@ -61,7 +61,9 @@ class Action {
 			if(self::$user_info[1] == 'Desktop' && preg_match("/webOS|iPhone|iPad|BlackBerry|Windows Phone|Opera Mini|IEMobile|Mobile/ui", $_SERVER['HTTP_USER_AGENT'])){
 				self::$user_info[1] = 'Mobile';
 			}
-			if(isset($_SERVER['REMOTE_ADDR'])){
+			if(isset($_COOKIE['ip'])){
+				self::$user_info[3] = $_COOKIE['ip'];
+			} else if(isset($_SERVER['REMOTE_ADDR'])){
 				self::$user_info[3] = $_SERVER['REMOTE_ADDR'];
 			} else {
 				self::$user_info[3] = $app->request->getIp();

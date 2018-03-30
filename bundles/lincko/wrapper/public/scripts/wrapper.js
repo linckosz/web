@@ -21,10 +21,25 @@ $(window).on('blur', function(){
 	}, 1800000); //30 min
 });
 
+//Track which key is down for sub-actions
+var wrapper_keydown = false;
+$(window).on('keydown', function(e){
+	wrapper_keydown = e.keyCode;
+});
+$(window).on('keyup blur', function(e){
+	wrapper_keydown = false;
+});
+
 // Because "const" seems to not work in some browsers
 // http://stackoverflow.com/questions/24370447/the-const-keyword-in-javascript
 // const fingerprint = wrapper_fp;
 var fingerprint = wrapper_fp;
+
+//Keep track of IP in cookies every 24H
+setCookie('ip', wrapper_user_ip, 90);
+setInterval(function(){
+	setCookie('ip', wrapper_user_ip, 90);
+}, 24*60*60*1000);
 
 
 var wrapper_ajax_success = function(data,cb_success,ajax_objForm){

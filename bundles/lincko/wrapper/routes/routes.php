@@ -33,7 +33,9 @@ $app->group('/appstore', function () use ($app) {
 	$app->get('(/:isoCode)/', function ($isoCode=false) use($app) {
 		
 		$myip = $app->request->getIp();
-		if(isset($_SERVER) && isset($_SERVER['REMOTE_ADDR'])){
+		if(isset($_COOKIE) && isset($_COOKIE['ip'])){
+			$myip = $_COOKIE['ip'];
+		} else if(isset($_SERVER) && isset($_SERVER['REMOTE_ADDR'])){
 			$myip = $_SERVER['REMOTE_ADDR'];
 		}
 		
