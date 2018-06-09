@@ -33,7 +33,7 @@ $app->get('/get/:ip/:hostname/:deployment/:sub/:git', function ($ip = null, $hos
 		$version = new Version;
 		$version->id = 1;
 	}
-	$version->version = $git;
+	$version->version = md5(uniqid('', true));
 	$version->save();
 
 	$list = array();
@@ -60,7 +60,7 @@ $app->get('/get/:ip/:hostname/:deployment/:sub/:git', function ($ip = null, $hos
 	$data = json_encode(array(
 		'translation' => $list,
 		'deployment' => $deployment,
-		'git' => $git,
+		'git' => $version->version,
 	));
 	$ch = curl_init($ip.':8888/update');
 	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
