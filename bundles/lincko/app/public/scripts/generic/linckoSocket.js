@@ -7,6 +7,11 @@ var linckoSocket = function(){
 linckoSocket.prototype.connect = function(){
 	var that = this;
 
+	if(location.protocol == "http:"){
+		console.log("WebSocket communication disabled in Non-SSL protocol")
+		return false;
+	}
+
 	if(typeof WebSocket !== "function")
 	{
 		return this.socket;

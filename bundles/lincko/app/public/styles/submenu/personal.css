@@ -258,3 +258,17 @@
 .submenu_personal_deletion_button:hover {
 	border-color: rgba(255, 255, 255, 0.3) !important;
 }
+
+.submenu_personal_wechat_close_info {
+	padding: 32px 16px;
+	font-size: 16px;
+	box-sizing: border-box;
+}
+
+.submenu_personal_wechat_close_img {
+	float: left;
+	border-radius: 4px;
+	margin: 16px 16px 16px 0;
+	width: 48px;
+	height: 48px;
+}

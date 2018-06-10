@@ -1249,6 +1249,66 @@ submenu_list['personal_lincko'] = {
 	},
 };
 
+
+
+
+
+
+//NOTIFICATION because we won't support WeChat in November 2018
+submenu_list['personal_wechat_close'] = {
+	"_title": {
+		"style": "customized_title",
+		"title": Lincko.Translation.get('app', 127, 'html'), //Important notification
+	},
+	"left_button": {
+		"style": "title_left_button",
+		"title": Lincko.Translation.get('app', 25, 'html'), //Close
+		'hide': true,
+		"class": "base_pointer",
+	},
+	"info": {
+		"style": "info",
+		"title": "<img find='wechat_logo' class='submenu_personal_wechat_close_img visibility_hidden' src='' />"+Lincko.Translation.get('app', 126, 'js'), //Please note that all WeChat features will no longer be supported by Lincko starting from October 1st 2018. Please note that all WeChat features will no longer be supported by Lincko starting from October 1st 2018.
+		"class": "submenu_deco_info submenu_deco_info_wrap submenu_personal_wechat_close_info",
+		"now": function(Elem, subm){
+			Elem.find("[find=submenu_info_title]").addClass("submenu_deco_info_wrap");
+		},
+	},
+	"post_action": {
+		"style": "postAction",
+		"action": function(Elem, subm){
+			base_format_form();
+			subm.Wrapper().find("[name=email]").trigger('change');
+			subm.Wrapper().find("[find=wechat_logo]").removeClass("visibility_hidden").attr("src", app_application_logo_wechat.src);
+		},
+	},
+};
+submenu_list['personal_wechat_close']['email'] = submenu_list['personal_lincko']['email'];
+submenu_list['personal_wechat_close']['password'] = submenu_list['personal_lincko']['password'];
+submenu_list['personal_wechat_close']['link'] = submenu_list['personal_lincko']['link'];
+submenu_list['personal_wechat_close']['space'] = submenu_list['personal_lincko']['space'];
+
+var submenu_personal_wechat_close_interval = setInterval(function(){
+	if(typeof onboarding != "undefined" && onboarding.on){
+		//Do nothing while onboarding
+		return true;
+	}
+	var integration = Lincko.storage.get('users', wrapper_localstorage.uid, 'integration');
+	if(integration && typeof integration["lincko"] == "undefined"){
+		if(!submenu_get('personal_wechat_close')){
+			submenu_Build('personal_wechat_close', 1, false);
+		}
+	} else {
+		clearInterval(submenu_personal_wechat_close_interval);
+	}
+}, 5000);
+
+
+
+
+
+
+
 submenu_list['personal_integration_wechat'] = {
 	"_title": {
 		"style": "customized_title",

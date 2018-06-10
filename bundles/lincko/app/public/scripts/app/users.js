@@ -77,7 +77,7 @@ var app_projects_users_contacts_init = function(subm){
 
 		submenu_list['app_projects_users_contacts']['users_'+me[0]['_id']] = {
 			"style": "radio",
-			"title": Lincko.Translation.get('app', 2401, 'html')+" ("+Lincko.storage.get('users', +me[0]['_id'], 'username')+")", //Me
+			"title": "<span>"+Lincko.Translation.get('app', 2401, 'html')+" ("+Lincko.storage.get('users', +me[0]['_id'], 'username')+")" + "</span><br /><span find='logs' class='app_projects_users_contacts_users_logs'><span class='fa fa-circle-o-notch fa-spin'></span></span>", //Me
 			"selected": true,
 			"action_param": { value: me[0]['_id'], },
 			"hide": false,
@@ -95,6 +95,24 @@ var app_projects_users_contacts_init = function(subm){
 					return role['+name'];
 				}
 				return '';
+			},
+			"now": function(Elem, subm){
+				Elem.find("[find=submenu_radio_title]").addClass("app_projects_users_contacts_users");
+				Elem.find("[find=submenu_radio_value]").addClass("app_projects_users_contacts_users_value");
+				var subm_bis = subm;
+				wrapper_sendAction({uid: this.action_param.value}, 'post', 'user/connection', function(msg, err, status, data){
+					if(typeof data.logs == "undefined" || data.last == "undefined"){
+						Elem.find("[find=logs]").html(Lincko.Translation.get('app', 131, 'html')); //no login record found
+					}
+					var logs = data.logs;
+					var last = (new wrapper_date(data.last)).display('date_long');
+					if(logs>1){
+						var text = Lincko.Translation.get('app', 129, 'js', {logs: logs, last: last});// [{logs}] logins - Last seen: [{last}]
+					} else {
+						var text = Lincko.Translation.get('app', 130, 'js', {logs: logs, last: last});// [{logs}] login - Last seen: [{last}]
+					}
+					Elem.find("[find=logs]").html(text);
+				});
 			},
 		};
 
@@ -125,7 +143,7 @@ var app_projects_users_contacts_init = function(subm){
 				}
 				submenu_list['app_projects_users_contacts']['users_'+others[j]['_id']] = {
 					"style": "radio",
-					"title": Lincko.storage.get('users', others[j]['_id'], 'username'),
+					"title": "<span>"+Lincko.storage.get('users', others[j]['_id'], 'username')+ "</span><br /><span find='logs' class='app_projects_users_contacts_users_logs'><span class='fa fa-circle-o-notch fa-spin'></span></span>", //Me
 					"selected": selected,
 					"action_param": { value: others[j]['_id'], },
 					"action": function(Elem, subm){
@@ -161,7 +179,22 @@ var app_projects_users_contacts_init = function(subm){
 						return '';
 					},
 					"now": function(Elem, subm){
-						grant = false;
+						//Logins
+						Elem.find("[find=submenu_radio_title]").addClass("app_projects_users_contacts_users");
+						Elem.find("[find=submenu_radio_value]").addClass("app_projects_users_contacts_users_value");
+						var subm_bis = subm;
+						wrapper_sendAction({uid: this.action_param.value}, 'post', 'user/connection', function(msg, err, status, data){
+							var logs = data.logs;
+							var last = (new wrapper_date(data.last)).display('date_long');
+							if(logs>1){
+								var text = Lincko.Translation.get('app', 129, 'js', {logs: logs, last: last});// [{logs}] logins - Last seen: [{last}]
+							} else {
+								var text = Lincko.Translation.get('app', 130, 'js', {logs: logs, last: last});// [{logs}] login - Last seen: [{last}]
+							}
+							Elem.find("[find=logs]").html(text);
+						});
+
+						var grant = false;
 						if(Lincko.storage.getWORKID()>0){
 							var role = Lincko.storage.userRole(wrapper_localstorage.uid, 'projects', projects_id);
 							if(role && role.perm_grant){

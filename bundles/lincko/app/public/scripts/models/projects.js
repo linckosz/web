@@ -521,7 +521,15 @@ Submenu_select.project_new_field = function(subm){
 
 Submenu_select.project_id = function(subm){
 	var Elem = subm.Add_TitleSmall();
-	Elem.find("[find=submenu_title]").html("ID: "+subm.param);
+	var text = subm.param;
+	var project_by = Lincko.storage.get("projects", subm.param, "created_by");
+	if(project_by){
+		var username = Lincko.storage.get("users", project_by, "username");
+		if(username){
+			text = text + " ("+Lincko.Translation.get('app', 128, 'html')+username+")"; //created by: 
+		}
+	}
+	Elem.find("[find=submenu_title]").html("ID: "+text);
 };
 
 
