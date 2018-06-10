@@ -103,6 +103,7 @@ var app_projects_users_contacts_init = function(subm){
 				wrapper_sendAction({uid: this.action_param.value}, 'post', 'user/connection', function(msg, err, status, data){
 					if(typeof data.logs == "undefined" || data.last == "undefined"){
 						Elem.find("[find=logs]").html(Lincko.Translation.get('app', 131, 'html')); //no login record found
+						return true;
 					}
 					var logs = data.logs;
 					var last = (new wrapper_date(data.last)).display('date_long');
@@ -184,6 +185,10 @@ var app_projects_users_contacts_init = function(subm){
 						Elem.find("[find=submenu_radio_value]").addClass("app_projects_users_contacts_users_value");
 						var subm_bis = subm;
 						wrapper_sendAction({uid: this.action_param.value}, 'post', 'user/connection', function(msg, err, status, data){
+							if(typeof data.logs == "undefined" || data.last == "undefined"){
+								Elem.find("[find=logs]").html(Lincko.Translation.get('app', 131, 'html')); //no login record found
+								return true;
+							}
 							var logs = data.logs;
 							var last = (new wrapper_date(data.last)).display('date_long');
 							if(logs>1){
