@@ -100,6 +100,10 @@ linckoSocket.prototype.close = function(){
 
 var socket;
 JSfiles.finish(function(){
+	//Do not use Websocket because it's buggy (was working before)
+	storage_check_timing_speed = 3;
+	return true;
+	
 	socket = new linckoSocket();
 	if(socket != null)
 	{
