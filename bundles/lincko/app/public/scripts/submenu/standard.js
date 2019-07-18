@@ -196,7 +196,7 @@ submenu_list['settings'] = {
 		"class": "",
 		"now": function(Elem, subm){
 			if(navigator.userAgent.match(/MicroMessenger/i)){
-				Elem.addClass('display_none');
+				//Elem.addClass('display_none');
 			}
 		},
 	},
