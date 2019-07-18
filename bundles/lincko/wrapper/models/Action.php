@@ -37,7 +37,7 @@ class Action {
 		$app = \Slim\Slim::getInstance();
 		if(!self::$user_info_done && isset($_SERVER) && isset($_SERVER['HTTP_USER_AGENT'])){
 			if(stripos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger')){
-				self::$user_info[2] = 'Wechat';
+				//self::$user_info[2] = 'Wechat';
 			}
 			if(preg_match("/iPhone|iPad|iPod|Macintosh|iOS/ui", $_SERVER['HTTP_USER_AGENT'])){
 				self::$user_info[0] = 'Macintosh';
