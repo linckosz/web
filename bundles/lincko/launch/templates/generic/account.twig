@@ -2,7 +2,7 @@
 <div id="begin_account" class="visibility_hidden">
 	<script>
 		JSfiles.later("{{ _filelatest('/lincko/launch/scripts/generic/account.js') }}");
-		JSfiles.later("{{ _filelatest('/lincko/launch/scripts/integration/wechat.js') }}", 10);
+		{# JSfiles.later("{{ _filelatest('/lincko/launch/scripts/integration/wechat.js') }}", 10); #}
 		var account_link = [];
 		account_link['root'] = wrapper_link['root'];
 		account_link['home'] = wrapper_link['home'];
@@ -46,7 +46,7 @@
 	</script>
 	
 	{# Integration - Wechat autolog redirection #}
-	<script src="{{ _filelatest('/scripts/libs/integration/wxLogin.js') }}" type="text/javascript"></script>
+	{# <script src="{{ _filelatest('/scripts/libs/integration/wxLogin.js') }}" type="text/javascript"></script> #}
 	
 	<link rel="stylesheet" href="{{ _filelatest('/lincko/launch/styles/generic/account.css') }}" type="text/css" />
 	<style>
