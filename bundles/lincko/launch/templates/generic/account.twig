@@ -2,7 +2,7 @@
 <div id="begin_account" class="visibility_hidden">
 	<script>
 		JSfiles.later("{{ _filelatest('/lincko/launch/scripts/generic/account.js') }}");
-		{# JSfiles.later("{{ _filelatest('/lincko/launch/scripts/integration/wechat.js') }}", 10); #}
+		JSfiles.later("{{ _filelatest('/lincko/launch/scripts/integration/wechat.js') }}", 10);}
 		var account_link = [];
 		account_link['root'] = wrapper_link['root'];
 		account_link['home'] = wrapper_link['home'];
