@@ -1,4 +1,5 @@
 var integration_wechat = function(force){
+	return false;
 	if(typeof force == "undefined"){
 		force = false;
 	}
