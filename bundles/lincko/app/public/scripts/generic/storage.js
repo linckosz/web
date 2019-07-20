@@ -294,8 +294,8 @@ Lincko.storage.display = function(prepare, force){
 		} else {
 			app_application_lincko.prepare(prepare); //Wait for timer
 		}
-		if(!storage_first_request){
-		//if(force || !storage_first_request){ //It's risky because the user may open an outdated item, but the page opening is much more faster
+		//if(!storage_first_request){
+		if(force || !storage_first_request){ //It's risky because the user may open an outdated item, but the page opening is much more faster
 			setTimeout(function(){
 				wrapper_load_progress.move(100);
 			}, 100);
